@@ -118,7 +118,6 @@ class MotTestType
         ];
     }
 
-
     /**
      * Is Type should generate VT32 report (Advisory)
      *
@@ -144,6 +143,25 @@ class MotTestType
     public static function isRetest($testTypeCode)
     {
         return $testTypeCode === MotTestTypeCode::RE_TEST;
+    }
+
+    /**
+     * Passing a test that has one of these types will move the vehicle expiry date forward.
+     * If you do a test that has other type, even if the test passed, won't make the vehicle certified,
+     * thus the expiry date will not be moved renewed.
+     *
+     * @return string[]
+     */
+    public static function getExpiryDateDefiningTypes()
+    {
+        return [
+            MotTestTypeCode::NORMAL_TEST,
+            MotTestTypeCode::PARTIAL_RETEST_LEFT_VTS,
+            MotTestTypeCode::PARTIAL_RETEST_REPAIRED_AT_VTS,
+            MotTestTypeCode::INVERTED_APPEAL,
+            MotTestTypeCode::STATUTORY_APPEAL,
+            MotTestTypeCode::RE_TEST,
+        ];
     }
 
     /**

@@ -9,6 +9,7 @@ use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\Date\TestDateTimeHolder;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
 use DvsaEntities\Repository\ConfigurationRepository;
@@ -319,14 +320,18 @@ class CertificateExpiryServiceTest extends AbstractServiceTestCase
 
     protected function createVehicle($id = self::VEHICLE_ID, $vehicleClassCode = 4, $newAtFirstReg = false)
     {
+
+        $vehicleClass = new VehicleClass();
+        $vehicleClass->setCode($vehicleClassCode);
+
+        $modelDetail = new ModelDetail();
+        $modelDetail->setVehicleClass($vehicleClass);
+
         $vehicle = new Vehicle();
         $vehicle->setId($id);
         $vehicle->setVin("TEST-VIN-001");
         $vehicle->setNewAtFirstReg($newAtFirstReg);
-
-        $vehicleClass = new VehicleClass();
-        $vehicleClass->setCode($vehicleClassCode);
-        $vehicle->setVehicleClass($vehicleClass);
+        $vehicle->setModelDetail($modelDetail);
 
         return $vehicle;
     }

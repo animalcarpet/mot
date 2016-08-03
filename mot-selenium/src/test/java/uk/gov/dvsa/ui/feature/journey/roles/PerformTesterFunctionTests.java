@@ -50,7 +50,7 @@ public class PerformTesterFunctionTests extends DslTest {
         assertThat(personProfilePage.verifyEmailIsChanged(newEmail), is(true));
     }
 
-    @Test (groups = {"BVT", "Regression"})
+    @Test (groups = {"Regression"})
     public void viewPerformanceDashboard() throws Exception {
 
         //Given I have done only 1 mot test
@@ -68,7 +68,7 @@ public class PerformTesterFunctionTests extends DslTest {
         assertThat(performanceDashBoardPage.getPassedTestText(), equalTo("1"));
     }
 
-    @Test (groups = {"BVT", "Regression"})
+    @Test (groups = {"BVT"})
     public void verifyTheCorrectAeAndVtsIsDisplayed() throws Exception {
 
         //Given I am logged as a Tester and I am on my homepage
@@ -81,7 +81,7 @@ public class PerformTesterFunctionTests extends DslTest {
         assertThat(homePage.getSiteName(), equalTo(testSite.getSiteNameAndNumberInHomePageFormat()));
     }
 
-    @Test (groups = {"BVT", "Regression"})
+    @Test (groups = {"BVT"})
     public void myRoleIsDisplayedAsTester() throws Exception {
 
         //Given I am logged as a Tester and I am on my homepage

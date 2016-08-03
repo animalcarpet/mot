@@ -85,6 +85,7 @@ class ColumnOptionsTest extends \PHPUnit_Framework_TestCase
             ['sortBy', 'testSortBy'],
             ['thClass', 'testThClass'],
             ['tdClass', 'testTdClass'],
+            ['escapeHtml', false, false],
             [
                 'property' => 'sub',
                 'value'    => $sub,

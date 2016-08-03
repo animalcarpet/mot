@@ -1,9 +1,0 @@
-!contents -R2 -g -p -f -h
-!| GenerateTestDataForOtherFitnesseTests|
-|token?                                 |
-|$token=                                |
-
-!| Helpdesk_Vm8713RegisteredUserChangesPassword|
-|token             |token valid?      |
-|invalidToken      |false             |
-|$token            |true              |

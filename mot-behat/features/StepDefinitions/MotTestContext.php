@@ -615,27 +615,83 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function thereIsAMot($status, $test = 'normal')
     {
-        $this->sessionContext->iAmLoggedInAsATester();
+        $this->createCompletedMotTest($status, $test);
+    }
 
-        $mot = $this->getMotTest($test);
-        $this->motTestData = $mot->startMotTest($this->sessionContext->getCurrentAccessToken());
+    public function createCompletedMotTest($status, $testType, array $params = [])
+    {
+        $default = [
+            "vehicleId" => 3,
+            "vehicleClass" => 4,
+            "siteId" => 1,
+            "token" => null,
+            "rfrId" => null
+        ];
+
+        $params = array_replace($default, $params);
+
+        $vehicleId = $params["vehicleId"];
+        $vehicleClass = $params["vehicleClass"];
+        $siteId = $params["siteId"];
+        $token = $params["token"];
+        $rfrId = $params["rfrId"];
+
+        if ($token === null) {
+            $this->sessionContext->iAmLoggedInAsATester();
+            $token = $this->sessionContext->getCurrentAccessToken();
+        }
+
+        if ($testType === 'contingency') {
+            $response = $this->startStartAContingencyMOTTest($token, $vehicleClass, $siteId);
+            $lastMotTestNumber = $response->getBody()->toArray()["data"]["motTestNumber"];
+            $mot = $this->motTest;
+        } elseif ($testType === 'demo') {
+            $mot = $this->getMotTest($testType);
+            $this->motTestData = $mot->startMotTest($token, $vehicleId, $vehicleClass);
+            $lastMotTestNumber = $mot->getLastMotTestNumber();
+        } else {
+            $mot = $this->getMotTest($testType);
+            $this->motTestData = $mot->startMotTest($token, $vehicleId, $vehicleClass, ["vehicleTestingStationId" => $siteId]);
+            $lastMotTestNumber = $mot->getLastMotTestNumber();
+        }
 
         // Set the bits so that we can pass or fail the test
-        $this->odometerReading->addMeterReading($this->sessionContext->getCurrentAccessToken(), $mot->getLastMotTestNumber(), 658, 'mi');
-        $this->brakeTestResult->addBrakeTestDecelerometerClass3To7($this->sessionContext->getCurrentAccessToken(), $mot->getLastMotTestNumber());
+        $this->odometerReading->addMeterReading($token, $lastMotTestNumber, 658, 'mi');
+
+        if ($rfrId === null) {
+            $rfrId = ($vehicleClass < 3) ? 356 : 8455;
+        }
+
+        if ($vehicleClass < 3) {
+            $this->brakeTestResult->addBrakeTestDecelerometerClass1To2($token, $lastMotTestNumber);
+        } else {
+            $this->brakeTestResult->addBrakeTestDecelerometerClass3To7($token, $lastMotTestNumber);
+        }
 
         switch($status) {
             case 'passed':
-                $mot->passed($this->sessionContext->getCurrentAccessToken(), $mot->getLastMotTestNumber());
+                $mot->passed($token, $lastMotTestNumber);
                 break;
             case 'failed':
-                $this->reasonForRejection->addFailure($this->sessionContext->getCurrentAccessToken(), $mot->getLastMotTestNumber());
-                $mot->failed($this->sessionContext->getCurrentAccessToken(), $mot->getLastMotTestNumber());
+                $this->reasonForRejection->addFailure($token, $lastMotTestNumber, $rfrId);
+                $mot->failed($token, $lastMotTestNumber);
+                break;
+            case 'prs':
+                $this->reasonForRejection->addPrs($token, $lastMotTestNumber, $rfrId);
+                $mot->passed($token, $this->getMotTestNumber());
+                break;
+            case 'abandoned':
+                $mot->abandon($token, $lastMotTestNumber, 23);
+                break;
+            case 'aborted':
+                $mot->abandon($token, $lastMotTestNumber, 5);
                 break;
             default:
                 throw new \Exception("Unrecognised status '{$status}'");
                 break;
         }
+
+        return $mot;
     }
 
     /**
@@ -664,18 +720,25 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iStartAContingencyMOTTest()
     {
-        $testClass = 4;
+        $this->startStartAContingencyMOTTest($this->sessionContext->getCurrentAccessToken(), 4);
+    }
+
+    public function startStartAContingencyMOTTest($token, $testClass, $siteId = 1)
+    {
         $vehicleId = $this->vehicleContext->createVehicle(['testClass' => $testClass]);
-        $this->contingencyTestContext->createContingencyCode();
+        $this->contingencyTestContext->createContingencyCode('12345A', 'SO', null, $token, $siteId);
 
         $emergencyLogId = $this->contingencyTestContext->getEmergencyLogId();
 
         $this->motTestData = $this->contingencyTest->startContingencyTest(
-            $this->sessionContext->getCurrentAccessToken(),
+            $token,
             $emergencyLogId,
             $vehicleId,
-            $testClass
+            $testClass,
+            $siteId
         );
+
+        return $this->motTestData;
     }
 
     /**
@@ -906,18 +969,27 @@ class MotTestContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @Given I Create a new vehicle
+     */
+    public function iCreateANewVehicle()
+    {
+        $this->vehicleContext->createVehicle();
+    }
+
+
+    /**
      * @Given :number passed MOT tests have been created for the same vehicle
      */
     public function passedMotTestsHaveBeenCreatedForTheSameVehicle($number)
     {
-        $vehicleId = $this->vehicleContext->createVehicle();
-
-        $this->personContext->createTester(["username" => "tester".$this->testSupportHelper->getDataGeneratorHelper()->generateRandomString(10)]);
-
         while ($number) {
-            $this->createPassedMotTest($this->personContext->getPersonUserId(), $this->personContext->getPersonToken(), $vehicleId);
+            $this->createPassedMotTest(
+                $this->sessionContext->getCurrentUserId(),
+                $this->sessionContext->getCurrentAccessToken(),
+                $this->vehicleContext->getCurrentVehicleId(),
+                $this->getUniqueOdometer()
+            );
             $this->motTestNumbers[]=$this->getMotTestNumber();
-            $this->behatWait();
             $number--;
         }
     }
@@ -927,14 +999,9 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function failedMotTestsHaveBeenCreatedForTheSameVehicle($number)
     {
-        $this->vehicleContext->createVehicle();
-        $this->personContext->createTester(["username" => "tester".$this->testSupportHelper->getDataGeneratorHelper()->generateRandomString(10)]);
-
         while ($number) {
-            $this->vehicleHasANormalTestTestStarted();
-            $this->vehicleHasMotTestFailed();
+            $this->vehicleHasMotTestFailed($this->vehicleContext->getCurrentVehicleId(), [], $this->getUniqueOdometer());
             $this->motTestNumbers[] = $this->getMotTestNumber();
-            $this->behatWait();
             $number--;
         }
     }
@@ -949,11 +1016,11 @@ class MotTestContext implements Context, SnippetAcceptingContext
         $this->certificateContext->removeJasperDocumentsForMotTests();
     }
 
-    public function createPassedMotTest($userId, $token, $vehicleId = null)
+    public function createPassedMotTest($userId, $token, $vehicleId = null, $odometerValue = null)
     {
         $this->startMotTest($userId, $token, [], $vehicleId);
         $this->brakeTestResult->addBrakeTestDecelerometerClass3To7($token, $this->getMotTestNumber());
-        $this->odometerReading->addMeterReading($token, $this->getMotTestNumber(), date('Gis'), 'km');
+        $this->odometerReading->addMeterReading($token, $this->getMotTestNumber(), is_null($odometerValue) ? date('Gis') : $odometerValue, 'km');
         $this->motTest->passed(
             $token,
             $this->getMotTestNumber()
@@ -1019,12 +1086,12 @@ class MotTestContext implements Context, SnippetAcceptingContext
     }
 
 
-    public function vehicleHasMotTestFailed()
+    public function vehicleHasMotTestFailed($vehicleId = null, $motTestParams = [], $odometerValue = 658)
     {
         $this->startMotTest($this->sessionContext->getCurrentUserId(),
-            $this->sessionContext->getCurrentAccessToken()
+            $this->sessionContext->getCurrentAccessToken(), $motTestParams, $vehicleId
         );
-        $this->odometerReading->addMeterReading($this->sessionContext->getCurrentAccessToken(), $this->motTest->getLastMotTestNumber(), 658, 'mi');
+        $this->odometerReading->addMeterReading($this->sessionContext->getCurrentAccessToken(), $this->motTest->getLastMotTestNumber(), $odometerValue, 'mi');
         $this->brakeTestResult->addBrakeTestDecelerometerClass3To7($this->sessionContext->getCurrentAccessToken(), $this->motTest->getLastMotTestNumber());
         $this->theTesterAddsAReasonForRejection();
         $this->theTesterFailsTheMotTest();
@@ -1527,5 +1594,11 @@ class MotTestContext implements Context, SnippetAcceptingContext
 
         $motTestId = $this->getMotTestIdFromNumber($this->getMotTestNumber());
         return $motTestId;
+    }
+
+    private function getUniqueOdometer()
+    {
+        $this->behatWait();
+        return date('Gis');
     }
 }

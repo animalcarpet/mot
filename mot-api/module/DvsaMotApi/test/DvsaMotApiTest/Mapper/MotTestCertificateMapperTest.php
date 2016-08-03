@@ -10,7 +10,9 @@ use DvsaCommon\Dto\Vehicle\MakeDto;
 use DvsaCommon\Dto\Vehicle\ModelDetailDto;
 use DvsaCommon\Dto\Vehicle\ModelDto;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
+use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
 use DvsaCommon\Enum\ColourCode;
+use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommonApi\Service\Mapper\OdometerReadingMapper;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Address;
@@ -53,7 +55,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
         $this->mapper->addDataSource('MotTestData', $data);
         $this->mapper->addDataSource('Additional', $additionalData);
 
-        $results = $this->mapper->mapDataForCertificate();
+        $results = $this->mapper->mapData();
 
         $this->assertEquals($expected, $results);
     }
@@ -73,7 +75,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
         $aTest[3]['Odometer'] = "-1 mi";     // set the new expectation for the check
         $this->mapper->addDataSource('Additional', $aTest[1]);
 
-        $results = $this->mapper->mapDataForCertificate();
+        $results = $this->mapper->mapData();
         $this->assertEquals($aTest[3], $results);
     }
 
@@ -99,7 +101,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
 
         $this->mapper->addDataSource('Additional', $aTest[1]);
 
-        $results = $this->mapper->mapDataForCertificate();
+        $results = $this->mapper->mapData();
         $this->assertEquals($aTest[3], $results);
     }
 
@@ -110,21 +112,6 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
      */
     public function mapDataForCertificateProvider()
     {
-        $vehicle = new VehicleDto();
-        $vehicle
-            ->setVin('BJS45646')
-            ->setRegistration('AB15 ADS')
-            ->setFirstUsedDate(new \DateTime('2012-01-01'))
-            ->setCountryOfRegistration(
-                (new CountryDto())->setName('UK')
-            )
-            ->setColour(
-                (new ColourDto())->setName('Black')
-            )
-            ->setColourSecondary(
-                (new ColourDto())->setName('Yellow')
-            );
-
         $VtsAddress1 = new Address();
         $VtsAddress1->setAddressLine1('ABC Street');
         $VtsAddress1->setAddressLine2('Some Place');
@@ -134,17 +121,15 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
 
         return [
             [
-                [   'make' => 'German',
+                [
+                    'primaryColour' => (new ColourDto())->setName('Blue'),
+                    'secondaryColour' => (new ColourDto())->setCode(ColourCode::NOT_STATED)->setName('No Other Colour'),
+                    'countryOfRegistration' => (new CountryDto())->setName('UK'),
+                    'registration' => 'AB15 ADS',
+                    'vin' => 'BJS45646',
+                    'make' => 'German',
                     'model' => 'Whip',
                     'motTestNumber'  => '134564_1',
-                    'vehicle' =>  $this->cloneVehicle($vehicle)
-                        ->setColour(
-                            (new ColourDto())->setName('Blue')
-                        )
-                        ->setColourSecondary(
-                            (new ColourDto())->setCode(ColourCode::NOT_STATED)->setName('No Other Colour')
-                        )
-                    ,
                     'vehicleTestingStation' => [
                         'siteNumber' => 'V1234',
                         'name' => 'Some Garage',
@@ -178,9 +163,8 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         'middleName' => '',
                         'familyName' => 'Tester',
                     ],
-                    'vehicleClass' => [
-                        'code' => 4
-                    ],
+                    'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
+                        ->setName(VehicleClassCode::CLASS_4),
                     'odometerReading' => $odometerReadingMapper->toDtoFromArray(
                         [
                             'value'      => 10000,
@@ -225,7 +209,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         '29 1 2014: 10000 mi' . PHP_EOL .
                         '13 12 2011: 8000 mi',
                     'ExpiryDate' => '1 January 2015 (FIFTEEN)',
-                    'TestClass' => '',
+                    'TestClass' => VehicleClassCode::CLASS_4,
                     'IssuedDate' => '1 Jan 2014',
                     'IssuersName' => 'B. Tester',
                     'TestStation' => 'V1234',
@@ -235,10 +219,14 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
             ],
             [
                 [
+                    'primaryColour' => (new ColourDto())->setName('Black'),
+                    'secondaryColour' => (new ColourDto())->setName('Yellow'),
+                    'countryOfRegistration' => (new CountryDto())->setName('UK'),
+                    'registration' => 'AB15 ADS',
+                    'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
                     'motTestNumber'         => '134564_2',
-                    'vehicle'               => $vehicle,
                     'vehicleTestingStation' => [
                         'siteNumber' => 'V1234',
                         'name' => 'Some Garage',
@@ -273,9 +261,8 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         'middleName' => '',
                         'familyName' => 'Tester',
                     ],
-                    'vehicleClass' => [
-                        'code' => 4
-                    ],
+                    'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
+                        ->setName(VehicleClassCode::CLASS_4),
                     'odometerReading' => $odometerReadingMapper->toDtoFromArray(
                         [
                             'value'      => 10000,
@@ -321,7 +308,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         '1 1 2014: 10000 mi' . PHP_EOL .
                         '13 12 2011: ' . AbstractMotTestMapper::TEXT_NO_ODOMETER,
                     'ExpiryDate' => '1 January 2015 (FIFTEEN)',
-                    'TestClass' => '',
+                    'TestClass' => VehicleClassCode::CLASS_4,
                     'IssuedDate' => '1 Jan 2014',
                     'IssuersName' => 'B. Tester',
                     'TestStation' => 'V1234',
@@ -331,10 +318,14 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
             ],
             [
                 [
+                    'primaryColour' => (new ColourDto())->setName('Black'),
+                    'secondaryColour' => (new ColourDto())->setName('Yellow'),
+                    'countryOfRegistration' => (new CountryDto())->setName('UK'),
+                    'registration' => 'AB15 ADS',
+                    'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
                     'motTestNumber'                => '134564_3',
-                    'vehicle'               => $vehicle,
                     'vehicleTestingStation' => [
                         'siteNumber' => 'V1234',
                         'name' => 'Some Garage',
@@ -365,9 +356,8 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         'middleName' => '',
                         'familyName' => 'Tester',
                     ],
-                    'vehicleClass' => [
-                        'code' => 4
-                    ],
+                    'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
+                        ->setName(VehicleClassCode::CLASS_4),
                     'odometerReading' => $odometerReadingMapper->toDtoFromArray(
                         [
                             'value'      => 10000,
@@ -413,7 +403,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         '1 1 2014: '. AbstractMotTestMapper::TEXT_NOT_READABLE . PHP_EOL .
                         '13 12 2011: 8000 mi',
                     'ExpiryDate' => '1 January 2015 (FIFTEEN)',
-                    'TestClass' => '',
+                    'TestClass' => VehicleClassCode::CLASS_4,
                     'IssuedDate' => '1 Jan 2014',
                     'IssuersName' => 'B. Tester',
                     'TestStation' => 'V1234',
@@ -423,10 +413,14 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
             ],
             [
                 [
+                    'primaryColour' => (new ColourDto())->setName('Black'),
+                    'secondaryColour' => (new ColourDto())->setName('Yellow'),
+                    'countryOfRegistration' => (new CountryDto())->setName('UK'),
+                    'registration' => 'AB15 ADS',
+                    'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
                     'motTestNumber'                => '134564_4',
-                    'vehicle'               => $vehicle,
                     'vehicleTestingStation' => [
                         'siteNumber' => 'V1234',
                         'name' => 'Some Garage',
@@ -460,9 +454,8 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         'middleName' => '',
                         'familyName' => 'Tester',
                     ],
-                    'vehicleClass' => [
-                        'code' => 4
-                    ],
+                    'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
+                        ->setName(VehicleClassCode::CLASS_4),
                     'odometerReading' => $odometerReadingMapper->toDtoFromArray(
                         [
                             'value'      => 10000,
@@ -507,7 +500,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         '1 1 2014: '. AbstractMotTestMapper::TEXT_NO_ODOMETER . PHP_EOL .
                         '13 12 2011: 8000 mi',
                     'ExpiryDate' => '1 January 2015 (FIFTEEN)',
-                    'TestClass' => '',
+                    'TestClass' => VehicleClassCode::CLASS_4,
                     'IssuedDate' => '1 Jan 2014',
                     'IssuersName' => 'B. Tester',
                     'TestStation' => 'V1234',
@@ -517,10 +510,14 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
             ],
             [
                 [
+                    'primaryColour' => (new ColourDto())->setName('Black'),
+                    'secondaryColour' => (new ColourDto())->setName('Yellow'),
+                    'countryOfRegistration' => (new CountryDto())->setName('UK'),
+                    'registration' => 'AB15 ADS',
+                    'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
                     'motTestNumber'         => '134564_5',
-                    'vehicle'               => $vehicle,
                     'vehicleTestingStation' => [
                         'siteNumber' => 'V1234',
                         'name' => 'Some Garage',
@@ -554,9 +551,8 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         'middleName' => '',
                         'familyName' => 'Tester',
                     ],
-                    'vehicleClass' => [
-                        'code' => 4
-                    ],
+                    'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
+                        ->setName(VehicleClassCode::CLASS_4),
                     'odometerReading' => $odometerReadingMapper->toDtoFromArray(
                         [
                             'value'      => 10000,
@@ -601,7 +597,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         '1 1 2014: '. AbstractMotTestMapper::TEXT_NO_ODOMETER . PHP_EOL .
                         '11 12 2013: 8000 mi',
                     'ExpiryDate' => '1 January 2099 (NINETY-NINE)',
-                    'TestClass' => '',
+                    'TestClass' => VehicleClassCode::CLASS_4,
                     'IssuedDate' => '1 Jan 2014',
                     'IssuersName' => 'B. Tester',
                     'TestStation' => 'V1234',
@@ -611,10 +607,14 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
             ],
             [
                 [
+                    'primaryColour' => (new ColourDto())->setName('Black'),
+                    'secondaryColour' => (new ColourDto())->setName('Yellow'),
+                    'countryOfRegistration' => (new CountryDto())->setName('UK'),
+                    'registration' => 'AB15 ADS',
+                    'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
                     'motTestNumber'                => '134564_6',
-                    'vehicle'               => $vehicle,
                     'vehicleTestingStation' => [
                         'siteNumber' => 'V1234',
                         'name' => 'Some Garage',
@@ -665,9 +665,8 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         'middleName' => '',
                         'familyName' => 'Tester',
                     ],
-                    'vehicleClass' => [
-                        'code' => 4
-                    ],
+                    'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
+                        ->setName(VehicleClassCode::CLASS_4),
                 ],
                 [
                     'TestStationAddress' => $VtsAddress1,
@@ -707,7 +706,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         '1 1 2014: '. AbstractMotTestMapper::TEXT_NOT_READABLE . PHP_EOL .
                         '11 12 2013: 8000 mi',
                     'ExpiryDate' => '1 January 2099 (NINETY-NINE)',
-                    'TestClass' => '',
+                    'TestClass' => VehicleClassCode::CLASS_4,
                     'IssuedDate' => '1 Jan 2014',
                     'IssuersName' => 'B. Tester',
                     'TestStation' => 'V1234',
@@ -717,17 +716,14 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
             ],
             [
                 [
+                    'primaryColour' => (new ColourDto())->setName('Orange'),
+                    'secondaryColour' => (new ColourDto())->setCode(ColourCode::NOT_STATED)->setName('No Other Colour'),
+                    'countryOfRegistration' => (new CountryDto())->setName('UK'),
+                    'registration' => 'AB15 ADS',
+                    'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
                     'motTestNumber'                => '134564_7',
-                    'vehicle'               =>  $this->cloneVehicle($vehicle)
-                        ->setColour(
-                            (new ColourDto())->setName('Orange')
-                        )
-                        ->setColourSecondary(
-                            (new ColourDto())->setCode(ColourCode::NOT_STATED)->setName('No Other Colour')
-                        )
-                    ,
                     'vehicleTestingStation' => [
                         'siteNumber' => 'V1234',
                         'name' => 'Some Garage',
@@ -757,9 +753,8 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         'middleName' => '',
                         'familyName' => 'Tester',
                     ],
-                    'vehicleClass' => [
-                        'code' => 4,
-                    ],
+                    'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
+                        ->setName(VehicleClassCode::CLASS_4),
                     'odometerReading' => $odometerReadingMapper->toDtoFromArray(
                         [
                             'value'      => 10000,
@@ -804,7 +799,7 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         '29 1 2014: 10000 mi' . PHP_EOL .
                         '13 12 2011: 8000 mi',
                     'ExpiryDate' => '1 January/Ionawr 2015' . PHP_EOL . '(FIFTEEN / UN DEG PUMP)',
-                    'TestClass' => '',
+                    'TestClass' => VehicleClassCode::CLASS_4,
                     'IssuedDate' => '1 Jan/Ion 2014',
                     'IssuersName' => 'B. Tester',
                     'TestStation' => 'V1234',
@@ -814,10 +809,14 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
             ],
             [
                 [
+                    'primaryColour' => (new ColourDto())->setName('Black'),
+                    'secondaryColour' => (new ColourDto())->setName('Yellow'),
+                    'countryOfRegistration' => (new CountryDto())->setName('UK'),
+                    'registration' => 'AB15 ADS',
+                    'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
                     'motTestNumber'                => '134564_8',
-                    'vehicle'               =>  $vehicle,
                     'vehicleTestingStation' => [
                         'siteNumber' => 'V1234',
                         'name' => 'Some Garage',
@@ -873,9 +872,8 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         'middleName' => '',
                         'familyName' => 'Tester',
                     ],
-                    'vehicleClass' => [
-                        'code' => 4
-                    ],
+                    'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
+                        ->setName(VehicleClassCode::CLASS_4),
                     'odometerReading' => $odometerReadingMapper->toDtoFromArray(
                         [
                             'value'      => 10000,
@@ -927,22 +925,14 @@ class MotTestCertificateMapperTest extends PHPUnit_Framework_TestCase
                         AbstractMotTestMapper::TEXT_NO_ODOMETER_CY . PHP_EOL .
                         '11 12 2013: 8000 mi',
                     'ExpiryDate'            => '1 January/Ionawr 2099' . PHP_EOL . '(NINETY-NINE / NAW DEG NAW)',
-                    'TestClass'             => '',
                     'IssuedDate'            => '1 Jan/Ion 2014',
                     'IssuersName'           => 'B. Tester',
                     'TestStation'           => 'V1234',
                     'AdditionalInformation' => 'To preserve the anniversary of the expiry date, the earliest you can'
                         . ' present your vehicle for test is 2 December/Rhagfyr 2098.',
+                    'TestClass' => VehicleClassCode::CLASS_4,
                 ],
             ],
         ];
-    }
-
-    /**
-     * @return VehicleDto
-     */
-    private function cloneVehicle($obj)
-    {
-        return clone ($obj);
     }
 }

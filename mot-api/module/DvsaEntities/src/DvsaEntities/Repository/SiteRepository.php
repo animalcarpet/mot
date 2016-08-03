@@ -540,4 +540,28 @@ class SiteRepository extends AbstractMutableRepository
 
         return $query->getResult(AbstractQuery::HYDRATE_SCALAR);
     }
+
+    /**
+     * @param int $aeId
+     * @param int $offset
+     * @param int $itemsPerPage
+     * @return Site[]
+     */
+    public function getSitesTestQualityForOrganisationId($aeId, $offset, $itemsPerPage)
+    {
+        $queryBuilder = $this->createQueryBuilder('site')
+            ->select('site, lastSiteAssessment, siteContacts')
+            ->leftJoin('site.lastSiteAssessment', 'lastSiteAssessment')
+            ->leftJoin('site.contacts', 'siteContacts')
+            ->leftJoin('siteContacts.contactDetail', 'contactDetail')
+            ->leftJoin('contactDetail.address', 'address')
+            ->where('site.organisation = :ORG_ID')
+            ->addOrderBy('lastSiteAssessment.siteAssessmentScore', 'DESC')
+            ->addOrderBy('site.name', 'ASC')
+            ->setMaxResults((int)$itemsPerPage)
+            ->setFirstResult((int)$offset)
+            ->setParameter('ORG_ID', (int)$aeId);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
 }

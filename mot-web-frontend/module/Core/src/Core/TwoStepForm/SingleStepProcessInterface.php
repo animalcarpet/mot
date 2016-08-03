@@ -82,15 +82,12 @@ interface SingleStepProcessInterface
     public function redirectToStartPage();
 
     /**
-     * @return AbstractRedirectActionResult $authorisationService
-     */
-    public function redirectToEditPage();
-
-    /**
      * Says if the users is authorised to reach the page
      *
      * @param MotAuthorisationServiceInterface $authorisationService
      * @return bool
      */
     public function isAuthorised(MotAuthorisationServiceInterface $authorisationService);
+
+    public function getEditPageLede();
 }

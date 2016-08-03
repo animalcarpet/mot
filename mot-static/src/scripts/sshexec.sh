@@ -100,10 +100,6 @@ function mot__xdebug_off() {
    sudo sed -i.bak "s/remote_enable=1/remote_enable=0/g" ${phpRootDir}/etc/php.d/xdebug.ini;
 }
 
-function mot__trace_web_logs() {
-    tail -F /var/log/httpd/*.log /var/log/dvsa/*.log
-}
-
 function mot__test_php_frontend() {
     cd ${workspace}/mot-web-frontend && vendor/bin/phpunit
 }
@@ -160,9 +156,7 @@ function mot__test_behat() {
 function mot__reset_database() {
     export dev_workspace="${workspace}/";
     pushd ${workspace}/mot-api/db 1>/dev/null && \
-    sudo ./reset_db_with_test_data.sh -f \
-    ${mysql_config[user]} ${mysql_config[password]} ${mysql_config[host]} \
-    ${mysql_config[database]} ${mysql_config[grantuser]} N && echo "DB Reset" \
+    ./reset_db_with_test_data.sh && echo "DB Reset" \
     popd 1>/dev/null
 }
 # Reset the database on the VM with the small data set, without *_hist tables
@@ -216,12 +210,16 @@ function mot__import_data() {
 
 # Trace the API logs
 function mot__trace_api_log() {
-    tail -F /var/log/httpd/mot-api_*.log /var/log/dvsa/mot-api.log
+    sudo su -c "tail -F /var/log/httpd/mot-api_*.log /var/log/dvsa/mot-api.log /var/log/dvsa/mot-vehicle-service.log"
 }
 
 # Trace the web logs
 function mot__trace_web_log() {
-    tail -F /var/log/httpd/dev.motdev.org.uk_*.log /var/log/dvsa/mot-webfrontend.log
+    sudo su -c "tail -F /var/log/httpd/dev.motdev.org.uk_*.log /var/log/dvsa/mot-webfrontend.log"
+}
+
+function mot__trace_web_logs() {
+    sudo su -c "tail -F /var/log/httpd/*.log /var/log/dvsa/*.log"
 }
 
 # Reinstall OpenAM. NOTE: New in mot-vagrant.

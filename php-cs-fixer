@@ -9,7 +9,7 @@ if (false === file_exists($fixer)) {
 The php-cs-fixer script is not available. To install it execute the following
 grunt task:
 
-    $ grunt build:composer
+    $ devkit composer:install
 
 
 EOT;

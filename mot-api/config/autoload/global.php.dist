@@ -67,4 +67,13 @@ return [
 
     //RfRs ids that should not be displayed
     'disabled_rfrs' => [],
+
+    // These urls will overwrite the default values shipped with the mot\api-client-php package, since need to be
+    // different in different environments
+    // @See https://gitlab.motdev.org.uk/mot/api-client-php/tree/develop/config
+    // @See https://gitlab.motdev.org.uk/webops/hieradata/blob/develop/code/hieradata/global.yaml#L694 & #L695
+    'api' => [
+        'vehicle_service_url' => 'http://vehicle-service:9095/vehicles/',
+        'authorisation_service_url' => 'http://openam.motdev.org.uk:8080/sso/',
+    ],
 ];

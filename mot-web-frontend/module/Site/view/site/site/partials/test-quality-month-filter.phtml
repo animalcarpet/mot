@@ -1,0 +1,40 @@
+<?php
+use Site\ViewModel\TestQuality\SiteTestQualityViewModel;
+
+/** @var $viewModel SiteTestQualityViewModel */
+
+?>
+
+<div class="filter responsive-toggle">
+    <h3 class="filter__heading">
+        <span class="hide-small">View month</span>
+        <a href="#" class="toggle-switch hide-large" data-action="showHideToggle" data-open-text="View month" data-target="filterToggle" data-closed-text="View month" data-toggle-type="responsive">
+            View month
+        </a>
+    </h3>
+    <div class="filter__content hide-small" id="filterToggle">
+        <?php
+        $thisMonth = $viewModel->getViewedMonthName();
+        foreach ($viewModel->getMonthsNames() as $year => $months): ?>
+            <h3 class="heading-small">
+                <?php echo $year; ?>
+            </h3>
+            <ul class="filter__list">
+            <?php foreach ($months as $key => list($month)): ?>
+                <li>
+                    <?php if ($thisMonth === $month) : ?>
+                        <strong>
+                            <?php echo $month; ?>
+                        </strong>
+                    <?php else : ?>
+                        <a href="<?php echo $this->url('vehicle-testing-station-test-quality',$viewModel->getParamsForLinkToMonth($key, $year), $viewModel->getQueryParams()); ?>"
+                           id="<?php echo $key . '/' . $year ?>">
+                            <?php echo $month; ?>
+                        </a>
+                    <?php endif; ?>
+                </li>
+            <?php endforeach ?>
+            </ul>
+        <?php endforeach ?>
+    </div>
+</div>

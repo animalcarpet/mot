@@ -2,6 +2,7 @@
 
 namespace Vehicle\Service;
 
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\UrlBuilder\VehicleUrlBuilder;
 use DvsaCommon\UrlBuilder\VehicleUrlBuilderWeb;
@@ -55,14 +56,21 @@ class VehicleSearchService
 
     public function getVehicleResults()
     {
-        $apiUrl           = VehicleUrlBuilder::search()->toString();
-        $this->apiResults = $this->restClient->getWithParams($apiUrl, $this->postData);
+        $vehicleService = $this->controller->getServiceLocator()->get(VehicleService::class);
+
+        if ($this->searchData['type'] == 'registration') {
+            $vehicleCollection = $vehicleService->internalSearch($this->searchData['search'], null);
+        } else {
+            $vehicleCollection =  $vehicleService->internalSearch(null, $this->searchData['search']);
+        }
+
+        $this->apiResults = $vehicleCollection;
     }
 
     public function checkVehicleResults()
     {
-        $data       = $this->apiResults['data'];
-        $totalCount = $data['totalResultCount'];
+        $data       = $this->apiResults;
+        $totalCount = $data->getCount();
 
         if ($totalCount == 0) {
             $this->controller->addErrorMessagesFromService(self::NO_RESULT_FOUND);
@@ -74,8 +82,8 @@ class VehicleSearchService
 
         return new ViewModel(
             [
-                'vehicles'         => $data['data'],
-                'resultCount'      => $data['resultCount'],
+                'vehicles'         => $data,
+                'resultCount'      => $totalCount,
                 'totalResultCount' => $totalCount,
                 'search'           => $this->postData['search'],
                 'type'             => $this->postData['type'],

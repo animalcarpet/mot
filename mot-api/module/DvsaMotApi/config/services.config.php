@@ -3,6 +3,7 @@
 use DvsaCommon\Configuration\MotConfig;
 use DvsaCommon\Configuration\MotConfigFactory;
 use DvsaCommonApi\Transaction\ServiceTransactionAwareInitializer;
+use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\TestItemCategoryRepository;
 use DvsaMotApi\Factory\AmazonS3ServiceFactory;
 use DvsaMotApi\Factory\AmazonSDKServiceFactory;
@@ -128,7 +129,7 @@ return [
         'MotTestCompareService'                              => MotTestCompareServiceFactory::class,
         'MotTestValidator'                                   => MotTestValidatorFactory::class,
         MotTestStatusChangeValidator::class                  => MotTestChangeValidatorFactory::class,
-        'MotTestRepository'                                  => MotTestRepositoryFactory::class,
+        MotTestRepository::class                             => MotTestRepositoryFactory::class,
         'MotTestTypeRepository'                              => MotTestTypeRepositoryFactory::class,
         RetestEligibilityValidator::class                    => RetestEligibilityValidatorFactory::class,
         'VehicleRepository'                                  => VehicleRepositoryFactory::class,

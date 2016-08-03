@@ -64,7 +64,8 @@ class GuzzleHttpClient implements HttpClient
             $request,
             $guzzleResponse->getStatusCode(),
             $guzzleResponse->getHeaders()->toArray(),
-            json_decode($guzzleResponse->getBody(true), true)
+            json_decode($guzzleResponse->getBody(true), true),
+            $guzzleResponse->getBody()
         );
     }
 }

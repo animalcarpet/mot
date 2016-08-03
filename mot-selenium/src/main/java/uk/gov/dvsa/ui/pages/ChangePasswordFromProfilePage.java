@@ -4,7 +4,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.profile.NewPersonProfilePage;
 import uk.gov.dvsa.ui.pages.profile.PersonProfilePage;
@@ -12,8 +12,8 @@ import uk.gov.dvsa.ui.pages.profile.ProfilePage;
 
 public class ChangePasswordFromProfilePage extends Page {
 
-    public static final String PATH = "/profile/change-password";
-    public static final String PAGE_TITLE = "Your account\n" + "Change your password";
+    public static final String PATH = "/your-profile/change-password";
+    public static final String PAGE_TITLE = "Your profile\n" + "Change your password";
 
     @FindBy(id = "oldPassword") private WebElement oldPassword;
     @FindBy(id = "password") private WebElement newPassword;
@@ -32,17 +32,17 @@ public class ChangePasswordFromProfilePage extends Page {
     }
 
     public ChangePasswordFromProfilePage enterOldPassword(String password) {
-        FormCompletionHelper.enterText(oldPassword, password);
+        FormDataHelper.enterText(oldPassword, password);
         return this;
     }
 
     public ChangePasswordFromProfilePage enterNewPassword(String password) {
-        FormCompletionHelper.enterText(newPassword, password);
+        FormDataHelper.enterText(newPassword, password);
         return this;
     }
 
     public ChangePasswordFromProfilePage confirmNewPassword(String password) {
-        FormCompletionHelper.enterText(passwordConfirm, password);
+        FormDataHelper.enterText(passwordConfirm, password);
         return this;
     }
 

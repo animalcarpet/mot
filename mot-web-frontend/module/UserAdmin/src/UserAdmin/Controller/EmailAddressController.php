@@ -125,7 +125,7 @@ class EmailAddressController extends AbstractDvsaMotTestController
 
             if (true === ($validated = $this->validate($params['email'], $params['emailConfirm']))) {
                 try {
-                    $validated = $this->callApi($personId, $params['email'], $params['emailConfirm']);
+                    $validated = $this->callApi($personId, $params['email']);
                     $this->flashMessenger()->addSuccessMessage(self::MSG_EMAIL_CHANGED_SUCCESS);
                 } catch (\Exception $e) {
                     $this->flashMessenger()->addErrorMessage(self::MSG_EMAIL_CHANGED_FAILURE);

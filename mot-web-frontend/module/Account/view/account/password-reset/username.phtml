@@ -35,6 +35,7 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $errorM
                 'errorMessage'  => $viewModel->getError(PasswordResetFormModel::FIELD_USERNAME),
                 'label'         => 'User ID',
                 'value'         => $viewModel->getUsername(),
+                'autoCompleteOff' => true
             ]
         );
         ?>

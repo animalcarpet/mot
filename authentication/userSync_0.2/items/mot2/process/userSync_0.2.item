@@ -187,7 +187,7 @@
     <elementParameter field="TECHNICAL" name="QUERYSTORE:REPOSITORY_QUERYSTORE_TYPE" value=""/>
     <elementParameter field="TECHNICAL" name="QUERYSTORE:QUERYSTORE_TYPE" value="BUILT_IN"/>
     <elementParameter field="GUESS_SCHEMA" name="GUESS_SCHEMA" value="&quot;&quot;"/>
-    <elementParameter field="MEMO_SQL" name="QUERY" value="&quot;SELECT &#xA;  `person`.`id`, &#xA;  `person`.`username`, &#xA;  `person`.`pin`, &#xA;  `person`.`user_reference`, &#xA;  `person`.`mot_one_user_id`, &#xA;  `person`.`title_id`, &#xA;  `person`.`first_name`, &#xA;  `person`.`middle_name`, &#xA;  `person`.`family_name`, &#xA;  `person`.`driving_licence_id`, &#xA;  `person`.`gender_id`, &#xA;  `person`.`date_of_birth`, &#xA;  `person`.`disability`, &#xA;  `person`.`demo_test_tester_status_id`, &#xA;  `person`.`otp_failed_attempts`, &#xA;  `person`.`is_account_claim_required`, &#xA;  `person`.`transition_status_id`, &#xA;  `person`.`mot1_userid`, &#xA;  `person`.`mot1_current_smartcard_id`, &#xA;  `person`.`2fa_token_id`, &#xA;  `person`.`2fa_token_sent_on`, &#xA;  `person`.`details_confirmed_on`, &#xA;  `person`.`first_training_test_done_on`, &#xA;  `person`.`first_live_test_done_on`, &#xA;  `person`.`mot1_details_updated_on`, &#xA;  `person`.`mot1_legacy_id`, &#xA;  `person`.`created_by`, &#xA;  `person`.`created_on`, &#xA;  `person`.`last_updated_by`, &#xA;  `person`.`last_updated_on`, &#xA;  `person`.`version`, &#xA;  `person`.`batch_number`&#xA;FROM `person`&quot;"/>
+    <elementParameter field="MEMO_SQL" name="QUERY" value="&quot;SELECT &#xA;  `person`.`id`, &#xA;  `person`.`username`, &#xA;  `person`.`pin`, &#xA;  `person`.`user_reference`, &#xA;  `person`.`mot_one_user_id`, &#xA;  `person`.`title_id`, &#xA;  `person`.`first_name`, &#xA;  `person`.`middle_name`, &#xA;  `person`.`family_name`, &#xA;  `person`.`driving_licence_id`, &#xA;  `person`.`gender_id`, &#xA;  `person`.`date_of_birth`, &#xA;  `person`.`disability`, &#xA;  `person`.`demo_test_tester_status_id`, &#xA;  `person`.`otp_failed_attempts`, &#xA;  `person`.`is_account_claim_required`, &#xA;  `person`.`transition_status_id`, &#xA;  `person`.`mot1_userid`, &#xA;  `person`.`mot1_current_smartcard_id`, &#xA;  `person`.`2fa_token_id`, &#xA;  `person`.`2fa_token_sent_on`, &#xA;  `person`.`details_confirmed_on`, &#xA;  `person`.`first_training_test_done_on`, &#xA;  `person`.`first_live_test_done_on`, &#xA;  `person`.`mot1_details_updated_on`, &#xA;  `person`.`created_by`, &#xA;  `person`.`created_on`, &#xA;  `person`.`last_updated_by`, &#xA;  `person`.`last_updated_on`, &#xA;  `person`.`version`, &#xA;FROM `person`&quot;"/>
     <elementParameter field="LABEL" name="NOTE" value="This option only applies when deploying and running in the Talend Runtime"/>
     <elementParameter field="CHECK" name="SPECIFY_DATASOURCE_ALIAS" value="false"/>
     <elementParameter field="TEXT" name="DATASOURCE_ALIAS" value="&quot;&quot;"/>
@@ -248,8 +248,6 @@
       <elementValue elementRef="TRIM" value="false"/>
       <elementValue elementRef="SCHEMA_COLUMN" value="mot1_details_updated_on"/>
       <elementValue elementRef="TRIM" value="false"/>
-      <elementValue elementRef="SCHEMA_COLUMN" value="mot1_legacy_id"/>
-      <elementValue elementRef="TRIM" value="false"/>
       <elementValue elementRef="SCHEMA_COLUMN" value="created_by"/>
       <elementValue elementRef="TRIM" value="false"/>
       <elementValue elementRef="SCHEMA_COLUMN" value="created_on"/>
@@ -259,8 +257,6 @@
       <elementValue elementRef="SCHEMA_COLUMN" value="last_updated_on"/>
       <elementValue elementRef="TRIM" value="false"/>
       <elementValue elementRef="SCHEMA_COLUMN" value="version"/>
-      <elementValue elementRef="TRIM" value="false"/>
-      <elementValue elementRef="SCHEMA_COLUMN" value="batch_number"/>
       <elementValue elementRef="TRIM" value="false"/>
     </elementParameter>
     <elementParameter field="TEXT" name="LABEL" value="__TABLE__"/>
@@ -294,13 +290,11 @@
       <column comment="Date first MOT2 training test was done" key="false" length="19" name="first_training_test_done_on" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" sourceType="DATETIME" type="id_Date" usefulColumn="true"/>
       <column comment="Date first live MOT2 test was done by user" key="false" length="19" name="first_live_test_done_on" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" sourceType="DATETIME" type="id_Date" usefulColumn="true"/>
       <column comment="Date of last MOT1 sync update for this record" key="false" length="19" name="mot1_details_updated_on" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" sourceType="DATETIME" type="id_Date" usefulColumn="true"/>
-      <column comment="Used to hold MOT1 associated primary key for migration purposes" key="false" length="80" name="mot1_legacy_id" nullable="true" pattern="" precision="0" sourceType="VARCHAR" type="id_String" usefulColumn="true"/>
       <column comment="" key="false" length="10" name="created_by" nullable="false" pattern="" precision="0" sourceType="INT UNSIGNED" type="id_Long" usefulColumn="true"/>
       <column comment="" defaultValue="'CURRENT_TIMESTAMP(6)'" key="false" length="19" name="created_on" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" sourceType="DATETIME" type="id_Date" usefulColumn="true"/>
       <column comment="" key="false" length="10" name="last_updated_by" nullable="true" pattern="" precision="0" sourceType="INT UNSIGNED" type="id_Long" usefulColumn="true"/>
       <column comment="" key="false" length="19" name="last_updated_on" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" sourceType="DATETIME" type="id_Date" usefulColumn="true"/>
       <column comment="" defaultValue="1" key="false" length="10" name="version" nullable="false" pattern="" precision="0" sourceType="INT UNSIGNED" type="id_Long" usefulColumn="true"/>
-      <column comment="ETL batch number: for use by ETL process only" defaultValue="0" key="false" length="10" name="batch_number" nullable="false" pattern="" precision="0" sourceType="INT UNSIGNED" type="id_Long" usefulColumn="true"/>
     </metadata>
   </node>
   <node componentName="tMap" componentVersion="2.1" offsetLabelX="0" offsetLabelY="0" posX="256" posY="96">
@@ -474,13 +468,11 @@
         <mapperTableEntries name="first_training_test_done_on" type="id_Date" nullable="true"/>
         <mapperTableEntries name="first_live_test_done_on" type="id_Date" nullable="true"/>
         <mapperTableEntries name="mot1_details_updated_on" type="id_Date" nullable="true"/>
-        <mapperTableEntries name="mot1_legacy_id" type="id_String" nullable="true"/>
         <mapperTableEntries name="created_by" type="id_Long"/>
         <mapperTableEntries name="created_on" type="id_Date"/>
         <mapperTableEntries name="last_updated_by" type="id_Long" nullable="true"/>
         <mapperTableEntries name="last_updated_on" type="id_Date" nullable="true"/>
         <mapperTableEntries name="version" type="id_Long"/>
-        <mapperTableEntries name="batch_number" type="id_Long"/>
       </inputTables>
     </nodeData>
   </node>

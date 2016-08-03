@@ -2,7 +2,8 @@
 
 namespace CensorApi\Service;
 
-use DvsaEntities\Repository\CensorPhraseRepository;
+use DvsaEntities\Entity\CensorBlacklist;
+use DvsaEntities\Repository\CensorBlacklistRepository;
 
 /**
  * Class CensorService
@@ -10,14 +11,17 @@ use DvsaEntities\Repository\CensorPhraseRepository;
  */
 class CensorService
 {
-    private $censorPhraseRepository;
+    /**
+     * @var CensorBlacklistRepository
+     */
+    private $censorBlacklistRepository;
 
     /**
-     * @param CensorPhraseRepository $censorPhraseRepository
+     * @param CensorBlacklistRepository $censorBlacklistRepository
      */
-    public function __construct(CensorPhraseRepository $censorPhraseRepository)
+    public function __construct(CensorBlacklistRepository $censorBlacklistRepository)
     {
-        $this->censorPhraseRepository = $censorPhraseRepository;
+        $this->censorBlacklistRepository = $censorBlacklistRepository;
     }
 
     /**
@@ -26,29 +30,36 @@ class CensorService
      */
     public function containsProfanity($text)
     {
-        $blacklist = $this->censorPhraseRepository->getBlacklist();
+        $blacklist = $this->censorBlacklistRepository->getBlacklist();
 
         return !empty($blacklist) ? $this->hasBadPhrases($text, $blacklist) : false;
     }
 
+    /**
+     * @param $text
+     * @param CensorBlacklist[] $badPhrases
+     * @return bool
+     */
     private function hasBadPhrases(&$text, array $badPhrases)
     {
         $string = $this->prepareText($text);
         $mutation = self::mutationBase();
 
-        $badPhrasesCount = count($badPhrases);
-        $foundPattern = false;
-        for ($i = 0; !$foundPattern && $i < $badPhrasesCount; ++$i) {
-            $badPhrase = $this->prepareText($badPhrases[$i]);
+        /** @var CensorBlacklist $badPhrase */
+        foreach($badPhrases as $censorBlacklist) {
+            $text = $censorBlacklist->getPhrase();
+            $badPhrase = $this->prepareText($text);
             $badPhrasePattern = '/\b' . str_ireplace(
                 array_keys($mutation),
                 array_values($mutation),
                 $badPhrase
             ) . '(?:es|s)?\b/si';
-            $foundPattern = (1 === preg_match($badPhrasePattern, $string));
+            if (1 === preg_match($badPhrasePattern, $string)) {
+                return true;
+            }
         }
 
-        return $foundPattern;
+        return false;
     }
 
     /**

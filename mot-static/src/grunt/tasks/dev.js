@@ -10,11 +10,12 @@ module.exports = function (grunt, config) {
         grunt.registerTask('dev:optimise', 'Switches the environment into optimised mode',
             [
                 'sshexec:reset_database',
+                'amazon:cache:clear:national-statistics',
                 'sshexec:xdebug_disable',
                 'sshexec:doctrine_optimised_develop_dist',
                 'sshexec:server_mod_prod',
                 'doctrine:proxy',
-               'apache:restart:all'
+                'apache:restart:all'
             ]
         );
         grunt.registerTask('dev:std', 'Switches the environment into standard development mode',
@@ -22,6 +23,7 @@ module.exports = function (grunt, config) {
                 'sshexec:fix_db_configs',
                 'apache:restart:all', // reset DB requires a clean class cache, hence reset happens twice
                 'sshexec:reset_database',
+                'amazon:cache:clear:national-statistics',
                 'sshexec:server_mod_dev',
                 'sshexec:doctrine_default_develop_dist',
                 'apache:restart:all'
@@ -92,6 +94,7 @@ module.exports = function (grunt, config) {
             'sshexec:fix_db_configs',
             'sshexec:mysql_proc_fix',
             'sshexec:reset_database',
+            'amazon:cache:clear:national-statistics',
             'sshexec:server_mod_dev',
             'sshexec:doctrine_default_develop_dist',
             'doctrine:proxy',
@@ -115,6 +118,9 @@ module.exports = function (grunt, config) {
             'sshexec:opendj_restart_dev',
             'sshexec:mysql_restart_dev',
             'sshexec:jasper_restart'
+        ]);
+        grunt.registerTask('amazon:cache:clear:national-statistics', 'Clears the Amazon S3 cache of national statistics for test quality information', [
+            'shell:national_statistics_amazon_cache_clear'
         ]);
     }
 };

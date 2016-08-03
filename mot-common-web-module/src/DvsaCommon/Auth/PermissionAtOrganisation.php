@@ -45,6 +45,7 @@ class PermissionAtOrganisation
     const AE_UPDATE_TYPE = 'AE-UPDATE-TYPE';
     const AE_UPDATE_STATUS = 'AE-UPDATE-STATUS';
     const AE_UPDATE_DVSA_AREA_OFFICE = 'AE-UPDATE-DVSA-AREA-OFFICE';
+    const AE_VIEW_TEST_QUALITY = 'AE-VIEW-TEST-QUALITY';
 
     public static function all()
     {
@@ -91,6 +92,7 @@ class PermissionAtOrganisation
             self::AE_UPDATE_TYPE,
             self::AE_UPDATE_STATUS,
             self::AE_UPDATE_DVSA_AREA_OFFICE,
+            self::AE_VIEW_TEST_QUALITY,
         ];
     }
 }

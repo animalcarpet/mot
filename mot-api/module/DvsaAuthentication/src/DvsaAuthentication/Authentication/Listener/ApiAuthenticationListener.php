@@ -11,6 +11,7 @@ use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\Response;
 use Zend\Log\LoggerInterface;
 use Zend\Mvc\MvcEvent;
+use Zend\Mvc\Router\Console\RouteMatch as ConsoleRouteMatch;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\View\Model\JsonModel;
 
@@ -84,7 +85,7 @@ class ApiAuthenticationListener
         // check we have a matching route before continuing
         $matches = $event->getRouteMatch();
 
-        if (!$matches instanceof RouteMatch) {
+        if ((!$matches instanceof RouteMatch) || ($matches instanceof ConsoleRouteMatch)) {
             return false;
         }
 

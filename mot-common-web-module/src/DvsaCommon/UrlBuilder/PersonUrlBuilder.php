@@ -29,26 +29,28 @@ class PersonUrlBuilder extends AbstractUrlBuilder
     const DEMO_TEST_REQUEST = '/demo-test-request';
     const MOT_TESTING_CERTIFICATE = '/mot-testing-certificate/:group';
     const MOT_TESTING_CERTIFICATE_VALIDATE = '/mot-testing-certificate/validate';
+    const MOT_TESTING_ANNUAL_ASSESSMENT_CERTIFICATES = '/mot-testing-annual-certificate/:group';
 
     protected $routesStructure
         = [
             self::PERSON        => [
                 self::BY_ID         => [
-                    self::AUTHORISED_EXAMINER            => '',
-                    self::EVENT                          => '',
-                    self::RBAC_ROLES                     => '',
-                    self::HELP_DESK_PROFILE              => '',
-                    self::HELP_DESK_PROFILE_UNRESTRICTED => '',
-                    self::MOT_TESTING                    => '',
-                    self::RESET_PIN                      => '',
-                    self::RESET_CLAIM_ACCOUNT            => '',
-                    self::MANAGE_INTERNAL_ROLES          => [
+                    self::AUTHORISED_EXAMINER                                   => '',
+                    self::EVENT                                                 => '',
+                    self::RBAC_ROLES                                            => '',
+                    self::HELP_DESK_PROFILE                                     => '',
+                    self::HELP_DESK_PROFILE_UNRESTRICTED                        => '',
+                    self::MOT_TESTING                                           => '',
+                    self::RESET_PIN                                             => '',
+                    self::RESET_CLAIM_ACCOUNT                                   => '',
+                    self::MANAGE_INTERNAL_ROLES                                 => [
                         self::BY_REMOVE_ROLE_ID => '',
                     ],
-                    self::PASSWORD                       => '',
-                    self::DEMO_TEST_REQUEST              => '',
-                    self::MOT_TESTING_CERTIFICATE        => '',
-                    self::MOT_TESTING_CERTIFICATE_VALIDATE => '',
+                    self::PASSWORD                                              => '',
+                    self::DEMO_TEST_REQUEST                                     => '',
+                    self::MOT_TESTING_CERTIFICATE                               => '',
+                    self::MOT_TESTING_CERTIFICATE_VALIDATE                      => '',
+                    self::MOT_TESTING_ANNUAL_ASSESSMENT_CERTIFICATES            => '',
                 ],
                 self::BY_IDENTIFIER => '',
             ],
@@ -242,5 +244,11 @@ class PersonUrlBuilder extends AbstractUrlBuilder
     public static function validateQualificationDetails($personId)
     {
         return self::byId($personId)->appendRoutesAndParams(self::MOT_TESTING_CERTIFICATE_VALIDATE);
+    }
+
+    public static function annualAssessmentCertificates($personId, $group)
+    {
+        return self::byId($personId)->appendRoutesAndParams(self::MOT_TESTING_ANNUAL_ASSESSMENT_CERTIFICATES)
+            ->routeParam('group', $group);
     }
 }

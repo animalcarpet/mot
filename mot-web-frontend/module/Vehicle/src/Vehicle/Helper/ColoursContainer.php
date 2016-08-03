@@ -3,6 +3,7 @@
 namespace Vehicle\Helper;
 
 use DvsaCommon\Enum\ColourCode;
+use DvsaCommon\Enum\ColourId;
 use DvsaCommon\Utility\ArrayUtils;
 
 class ColoursContainer
@@ -20,16 +21,19 @@ class ColoursContainer
      *
      * @param array $colours
      * @param bool  $prepareForZendForm creates list in an array format desirable by Zend_Form
+     * @param bool $useIds to indicate to use colour code or colour ids for both primary and secondary colours
      */
-    public function __construct(array $colours, $prepareForZendForm = false)
+    public function __construct(array $colours, $prepareForZendForm = false, $useIds = false)
     {
+        $notStatedKey = $useIds ? ColourId::NOT_STATED : ColourCode::NOT_STATED;
+
         asort($colours);
-        $colours = ArrayUtils::moveElementToTop($colours, ColourCode::NOT_STATED);
+        $colours = ArrayUtils::moveElementToTop($colours, $notStatedKey);
 
         $this->primaryColours = $this->secondaryColours = $colours;
 
-        $this->primaryColours[ColourCode::NOT_STATED] = self::NOT_STATED_TEXT;
-        $this->secondaryColours[ColourCode::NOT_STATED] = self::NO_OTHER_COLOUR_TEXT;
+        $this->primaryColours[$notStatedKey] = self::NOT_STATED_TEXT;
+        $this->secondaryColours[$notStatedKey] = self::NO_OTHER_COLOUR_TEXT;
 
         if ($prepareForZendForm) {
             $this->primaryColours = $this->toZendFormFormat($this->primaryColours);

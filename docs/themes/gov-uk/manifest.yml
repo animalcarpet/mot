@@ -1,0 +1,5 @@
+name: gov-uk
+parent: default
+
+static:
+    'css/gov-uk-theme.css': 'css/gov-uk-theme.css'

@@ -15,14 +15,11 @@ class VehicleV5C extends Entity
     use CommonIdentityTrait;
 
     /**
-     * @var Vehicle
+     * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="DvsaEntities\Entity\Vehicle", inversedBy="vehicleV5Cs")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="vehicle_id", referencedColumnName="id")
-     * })
+     * @ORM\Column(name="vehicle_id", type="integer", nullable=false)
      */
-    private $vehicle;
+    private $vehicleId;
 
     /**
      * @var string
@@ -46,14 +43,6 @@ class VehicleV5C extends Entity
     private $lastSeen;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="mot1_legacy_id", type="string", length=11, nullable=false)
-     */
-    private $mot1LegacyId;
-
-
-    /**
      * @return \DateTime
      */
     public function getFirstSeen()
@@ -63,7 +52,7 @@ class VehicleV5C extends Entity
 
     /**
      * @param \DateTime $firstSeen
-     * @return VehicleV5C $this
+     * @return $this
      */
     public function setFirstSeen($firstSeen)
     {
@@ -81,29 +70,11 @@ class VehicleV5C extends Entity
 
     /**
      * @param \DateTime $lastSeen
-     * @return VehicleV5C $this
+     * @return $this
      */
     public function setLastSeen($lastSeen)
     {
         $this->lastSeen = $lastSeen;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMot1LegacyId()
-    {
-        return $this->mot1LegacyId;
-    }
-
-    /**
-     * @param string $mot1LegacyId
-     * @return VehicleV5C $this
-     */
-    public function setMot1LegacyId($mot1LegacyId)
-    {
-        $this->mot1LegacyId = $mot1LegacyId;
         return $this;
     }
 
@@ -117,7 +88,7 @@ class VehicleV5C extends Entity
 
     /**
      * @param string $v5cRef
-     * @return VehicleV5C $this
+     * @return $this
      */
     public function setV5cRef($v5cRef)
     {
@@ -126,20 +97,20 @@ class VehicleV5C extends Entity
     }
 
     /**
-     * @return Vehicle
+     * @return int
      */
-    public function getVehicle()
+    public function getVehicleId()
     {
-        return $this->vehicle;
+        return $this->vehicleId;
     }
 
     /**
-     * @param Vehicle $vehicle
-     * @return VehicleV5C $this
+     * @param int $vehicleId
+     * @return $this
      */
-    public function setVehicle($vehicle)
+    public function setVehicleId($vehicleId)
     {
-        $this->vehicle = $vehicle;
+        $this->vehicleId = $vehicleId;
         return $this;
     }
 }

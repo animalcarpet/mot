@@ -1,0 +1,19 @@
+{% if contentBreadcrumbs %}
+    <div class="content-breadcrumb bold-small">
+        <nav role="navigation">
+            <ol class="group">
+                {% for name, url in contentBreadcrumbs %}
+                    {% if loop.last %}
+                        <li>
+                            {{ name }}
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{{ url }}">{{ name }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ol>
+        </nav>
+    </div>
+{% endif %}

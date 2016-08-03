@@ -66,4 +66,9 @@ class UpdateAeRegisteredPhoneProcess extends AbstractSingleStepAeProcess impleme
     {
         $this->organisationMapper->updateAeProperty($this->context->getAeId(), AuthorisedExaminerPatchModel::REGISTERED_PHONE, $formData[$this->propertyName]);
     }
+
+    public function getEditPageLede()
+    {
+        return null;
+    }
 }

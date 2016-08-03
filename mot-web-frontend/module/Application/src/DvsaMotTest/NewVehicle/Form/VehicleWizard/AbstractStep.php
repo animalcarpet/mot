@@ -16,7 +16,7 @@ abstract class AbstractStep
     protected $container;
 
     /** @var  Client */
-    protected  $client;
+    protected $client;
 
     /** @var  CatalogService */
     protected $catalogService;
@@ -53,16 +53,15 @@ abstract class AbstractStep
 
         $makes = $this->client->get(UrlBuilder::vehicleDictionary()->make()->toString());
         $catalogData = $this->catalogService->getData();
-        $colours = (new ColoursContainer($this->catalogService->getColours(), true));
+        $colours = (new ColoursContainer($this->catalogService->getColoursWithIds(), true, true));
 
-        $fuelTypes = array_map(
-            function ($fuelType) {
-                return [
-                    'id' => $fuelType['code'],
-                    'name' => $fuelType['name']
-                ];
-            }, $catalogData['fuelTypes']
-        );
+        $fuelTypes = [];
+        foreach ($this->catalogService->getFuelTypesWithId() as $id => $name) {
+            $fuelTypes[] = [
+                'id' => $id,
+                'name' => $name,
+            ];
+        }
 
         $vehicleData = [
             'make' => $makes['data'],

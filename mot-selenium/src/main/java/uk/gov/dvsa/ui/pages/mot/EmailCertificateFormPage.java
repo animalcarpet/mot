@@ -4,7 +4,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
 public class EmailCertificateFormPage extends Page {
@@ -28,9 +28,9 @@ public class EmailCertificateFormPage extends Page {
     }
 
     public EmailCertificateFormPage completeEmailDetailsWithPassValues(String firstName, String lastName, String emailAddress) {
-        FormCompletionHelper.enterText(firstNameTextField, firstName);
-        FormCompletionHelper.enterText(lastNameTextField, lastName);
-        FormCompletionHelper.enterText(emailAddressTextField, emailAddress);
+        FormDataHelper.enterText(firstNameTextField, firstName);
+        FormDataHelper.enterText(lastNameTextField, lastName);
+        FormDataHelper.enterText(emailAddressTextField, emailAddress);
         return this;
     }
 

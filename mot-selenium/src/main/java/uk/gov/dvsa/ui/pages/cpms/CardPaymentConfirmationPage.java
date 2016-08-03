@@ -9,6 +9,7 @@ import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.authorisedexaminer.FinanceAuthorisedExaminerViewPage;
 
 public class CardPaymentConfirmationPage extends Page {
+
     private static final String PAGE_TITLE = "Payment confirmation";
     
     @FindBy(id = "successMessage") private WebElement successfulMessage;
@@ -37,6 +38,7 @@ public class CardPaymentConfirmationPage extends Page {
         viewPaymentDetailsLink.click();
         return new TransactionDetailsPage(driver);
     }
+
     public FinanceAuthorisedExaminerViewPage clickBackToAuthorisedExaminerLink() {
         backToAeLink.click();
         return new FinanceAuthorisedExaminerViewPage(driver);

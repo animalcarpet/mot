@@ -3,10 +3,12 @@
 namespace DvsaCommon\DtoSerialization;
 
 use DvsaCommon\Date\Time;
+use DvsaCommon\Date\TimeSpan;
 use DvsaCommon\DtoSerialization\Convertion\DtoDateTimeConverter;
+use DvsaCommon\DtoSerialization\Convertion\DtoTimeSpanConverter;
 use DvsaCommon\Utility\ArrayUtils;
 
-class DtoConvertibleTypesRegistry implements  DtoConvertibleTypesRegistryInterface
+class DtoConvertibleTypesRegistry
 {
     private $converters;
 
@@ -18,6 +20,7 @@ class DtoConvertibleTypesRegistry implements  DtoConvertibleTypesRegistryInterfa
     private function registerConverters()
     {
         $this->register(\DateTime::class, new DtoDateTimeConverter());
+        $this->register(TimeSpan::class, new DtoTimeSpanConverter());
 
         $this->register(Time::class, new CallbackDtoConverter(
             function ($json) {

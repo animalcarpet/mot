@@ -1,8 +1,5 @@
 package uk.gov.dvsa.ui.pages.accountclaim;
 
-import com.dvsa.mot.selenium.framework.BasePage;
-import com.dvsa.mot.selenium.priv.frontend.user.UserDashboardPage;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;

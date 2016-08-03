@@ -22,17 +22,21 @@ use DvsaMotTest\View\ReplacementMakeViewModel;
         <div>
             <div class="row">
                 <div class="form-group col-sm-6">
-
                     <select name="make" id="input-make" class="form-control input-small">
+                        <?php $otherMake = true; ?>
                         <?php foreach ($makeList as $id => $makeRecord): ?>
-                            <option
-                                value="<?php echo $this->escapeHTML($makeRecord['code']); ?>"<?php if ($makeRecord['code'] == $make->getCode(
-                                )
-                            ): ?> selected<?php endif; ?>><?php echo $this->escapeHTML($makeRecord['name']); ?></option>
+                            <?php
+                                $makeSelected = $makeRecord['code'] == $make->getCode();
+                                if ($makeSelected) {
+                                    $otherMake = false;
+                                }
+                            ?>
+                            <option value="<?php echo $this->escapeHTML($makeRecord['code']); ?>"<?php if ($makeSelected): ?> selected<?php endif; ?>>
+                                <?php echo $this->escapeHTML($makeRecord['name']); ?>
+                            </option>
                         <?php endforeach; ?>
-                        <option value="other">Other</option>
+                        <option value="other"<?php if ($otherMake): ?> selected<?php endif; ?>>Other</option>
                     </select>
-
                 </div>
             </div>
         </div>

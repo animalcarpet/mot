@@ -4,6 +4,8 @@ namespace Account\Logic;
 
 use DvsaClient\ViewModel\AbstractFormModel;
 use Account\ViewModel\ChangePasswordFormModel;
+use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
+use DvsaCommon\Utility\ArrayUtils;
 
 /**
  * This class seeks to act as a mediator between OpenAM password policy and any other
@@ -59,6 +61,10 @@ class PasswordPolicy
     public function enforce()
     {
         if ($this->password) {
+            if (!$this->verifyPasswordQuality()) {
+                return false;
+            }
+
             if ($this->username == $this->password) {
                 $this->errorHandler->addError(
                     ChangePasswordFormModel::FIELD_PASS,
@@ -79,6 +85,45 @@ class PasswordPolicy
             );
             return false;
         }
+        return true;
+    }
+
+    private function verifyPasswordQuality()
+    {
+        $filter = new PasswordInputFilter();
+        $filter->init();
+
+        $filter->setData([
+            PasswordInputFilter::FIELD_PASSWORD => $this->password,
+            PasswordInputFilter::FIELD_PASSWORD_CONFIRM => $this->password2
+        ]);
+        if (!$filter->isValid()) {
+            $messages = $filter->getMessages();
+
+            // every field can have many errors, let's just select first error per field
+            $messages = ArrayUtils::mapWithKeys(
+                $messages,
+                function ($key, $value) { return $key; },
+                function ($key, $value) { return ArrayUtils::firstOrNull($value); }
+            );
+
+            if (array_key_exists(PasswordInputFilter::FIELD_PASSWORD, $messages)) {
+                $this->errorHandler->addError(
+                    ChangePasswordFormModel::FIELD_PASS,
+                    $messages[PasswordInputFilter::FIELD_PASSWORD]
+                );
+            }
+
+            if (array_key_exists(PasswordInputFilter::FIELD_PASSWORD_CONFIRM, $messages)) {
+                $this->errorHandler->addError(
+                    ChangePasswordFormModel::FIELD_PASS_CONFIRM,
+                    $messages[PasswordInputFilter::FIELD_PASSWORD_CONFIRM]
+                );
+            }
+
+            return false;
+        }
+
         return true;
     }
 }

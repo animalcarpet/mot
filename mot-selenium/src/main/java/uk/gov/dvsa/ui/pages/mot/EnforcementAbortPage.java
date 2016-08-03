@@ -3,7 +3,7 @@ package uk.gov.dvsa.ui.pages.mot;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
@@ -23,7 +23,7 @@ public class EnforcementAbortPage extends Page {
     }
 
     public EnforcementAbortPage enterReasonForAbort(String reason){
-        FormCompletionHelper.enterText(reasonForAbortText, reason);
+        FormDataHelper.enterText(reasonForAbortText, reason);
         return this;
     }
 

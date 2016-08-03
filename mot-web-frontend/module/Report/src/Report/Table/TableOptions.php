@@ -16,6 +16,10 @@ class TableOptions extends AbstractOptions
      */
     private $itemsPerPage = 10;
     /**
+     * @var string
+     */
+    private $tableId = 'dataTable';
+    /**
      * @var array
      */
     private $itemsPerPageOptions = [10, 25, 50];
@@ -117,6 +121,24 @@ class TableOptions extends AbstractOptions
     public function setItemsText($itemsText)
     {
         $this->itemsText = $itemsText;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTableId()
+    {
+        return $this->tableId;
+    }
+
+    /**
+     * @param string $tableId
+     * @return TableOptions
+     */
+    public function setTableId($tableId)
+    {
+        $this->tableId = $tableId;
         return $this;
     }
 

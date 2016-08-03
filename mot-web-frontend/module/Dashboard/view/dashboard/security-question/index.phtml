@@ -46,7 +46,8 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $errorM
                 'errorMessage'  => $numberOfAttemptMessage,
                 'label'         => $labelText,
                 'value'         => '',
-                'maxLength'     => ClaimValidator::MAX_ANSWER
+                'maxLength'     => ClaimValidator::MAX_ANSWER,
+                'autoCompleteOff' => true
             ]
         );
         ?>

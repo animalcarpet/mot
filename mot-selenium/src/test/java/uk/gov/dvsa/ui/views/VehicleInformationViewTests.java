@@ -4,6 +4,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
+import uk.gov.dvsa.domain.model.vehicle.DvlaVehicle;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationResultsPage;
@@ -26,7 +27,7 @@ public class VehicleInformationViewTests extends DslTest {
         vehicle = vehicleData.getNewVehicle(tester);
     }
 
-    @Test (groups = {"BVT", "Regression"})
+    @Test (groups = {"Regression"})
     public void viewVehicleInformationSuccessfully() throws IOException, URISyntaxException {
         User areaOffice1User = new User("areaOffice1User", "Password1");
 
@@ -36,7 +37,7 @@ public class VehicleInformationViewTests extends DslTest {
 
         //When I search for a vehicle
         VehicleInformationResultsPage vehicleInformationResultsPage = vehicleInformationSearchPage
-                .searchAndFindVehicleByRegistrationSuccessfully(vehicle.getRegistrationNumber());
+                .searchAndFindVehicleByRegistrationSuccessfully(vehicle.getDvsaRegistration());
 
         //Then i should be able to view that vehicles information
         vehicleInformationResultsPage
@@ -44,19 +45,7 @@ public class VehicleInformationViewTests extends DslTest {
                 .verifyVehicleRegistrationAndVin(vehicle);
     }
 
-    @Test(groups = {"BVT", "Regression"}, description = "BL-46")
-    public void vehicleWeightShownInStartTestConfirmationPage() throws IOException, URISyntaxException {
-        //Given I have a vehicle with registered weight
-        vehicle = vehicleData.getNewVehicle(tester, 1250);
-
-        //When I search for the vehicle to perform a test on it
-        motUI.normalTest.startTestConfirmationPage(tester, vehicle);
-
-        //Then I want to see the vehicle's weight
-        assertThat("Correct weight is Displayed", motUI.normalTest.getVehicleWeight(), is("1250 kg"));
-    }
-
-    @Test(groups = {"BVT", "Regression"}, description = "BL-46")
+    @Test(groups = {"Regression"}, description = "BL-46")
     public void displayUnknownForVehicleWithNoWeightInStartTestConfirmationPage() throws IOException, URISyntaxException {
 
         //Given I have a vehicle with no registered weight
@@ -68,7 +57,7 @@ public class VehicleInformationViewTests extends DslTest {
         assertThat("Correct weight is Displayed", motUI.normalTest.getVehicleWeight(), is("Unknown"));
     }
 
-    @Test(groups = {"BVT", "Regression"})
+    @Test(groups = {"Regression"})
     public void editVehicleClass() throws IOException, URISyntaxException {
 
         //Given I am on the StartTestConfirmation Page
@@ -81,17 +70,18 @@ public class VehicleInformationViewTests extends DslTest {
         assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression"})
+    @Test(groups = {"Regression"})
     public void vehicleSearchReturnsVehicleOnlyInDvlaTable() throws IOException, URISyntaxException {
+
         //Given I have a vehicle in the DVLA table only
         User tester = userData.createTester(siteData.createSite().getId());
-        Vehicle dvlaVehicle = vehicleData.getNewDvlaVehicle(tester);
+        DvlaVehicle dvlaVehicle = vehicleData.getNewDvlaVehicle(tester);
 
         //When I search for that Vehicle
         motUI.normalTest.startTestConfirmationPage(tester, dvlaVehicle);
 
         //Then I should find the vehicle
         assertThat(motUI.normalTest.getVin(), is(dvlaVehicle.getVin()));
-        assertThat(motUI.normalTest.getRegistration(), is(dvlaVehicle.getDvlaRegistration()));
+        assertThat(motUI.normalTest.getRegistration(), is(dvlaVehicle.getRegistration()));
     }
 }

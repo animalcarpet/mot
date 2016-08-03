@@ -88,11 +88,6 @@ $expiryDateRenderer = $sectionRenderer(
             <li>&nbsp;</li>
         </ul>
         <h1><?php echo $this->escapeHtml($title); ?></h1>
-
-        <div>
-            <a href="<?php echo $this->url('replacement-certificate-vehicle-search'); ?>"
-               class="btn btn-primary" id="cancelMotTest">Cancel edit</a>
-        </div>
     </div>
 </div>
 
@@ -129,6 +124,8 @@ if (!$isAdmin) {
                 <?php $reasonForReplacementRenderer($isAdmin); ?>
                 <input type="hidden" name="action" value="updateCertificate"/>
                 <input type="submit" id="updateCertificate" class="btn btn-primary" value="Review changes">
+                <a href="<?php echo $this->url('replacement-certificate-vehicle-search'); ?>"
+                   class="btn btn-primary" id="cancelMotTest">Cancel edit</a>
             </form>
         </div>
     </div>

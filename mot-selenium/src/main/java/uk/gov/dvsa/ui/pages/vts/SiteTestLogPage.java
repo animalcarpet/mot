@@ -6,7 +6,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.enums.DateRangeFilter;
 import uk.gov.dvsa.ui.pages.mot.TestLogPage;
 
@@ -21,6 +21,7 @@ public class SiteTestLogPage extends TestLogPage {
 
     @FindBy(id="navigation-link-")private WebElement returnToVtsLink;
     @FindBy(id="lastWeek(Mon-Sun)")private WebElement lastWeekLink;
+    @FindBy(xpath="//*[contains(text(),'Last week (Mon-Sun)')]")private WebElement lastWeekSelectedOption;
     @FindBy(id="today")private WebElement todayLink;
     @FindBy(id="lastMonth")private WebElement lastMonthLink;
 
@@ -50,13 +51,13 @@ public class SiteTestLogPage extends TestLogPage {
     }
 
     public void enterCustomDateRange(DateTime firstDate, DateTime secondDate){
-        FormCompletionHelper.enterText(dateFromDay, secondDate.dayOfMonth().getAsString());
-        FormCompletionHelper.enterText(dateFromMonth, secondDate.monthOfYear().getAsString());
-        FormCompletionHelper.enterText(dateFromYear, secondDate.year().getAsString());
+        FormDataHelper.enterText(dateFromDay, secondDate.dayOfMonth().getAsString());
+        FormDataHelper.enterText(dateFromMonth, secondDate.monthOfYear().getAsString());
+        FormDataHelper.enterText(dateFromYear, secondDate.year().getAsString());
 
-        FormCompletionHelper.enterText(dateToDay, firstDate.dayOfMonth().getAsString());
-        FormCompletionHelper.enterText(dateToMonth, firstDate.monthOfYear().getAsString());
-        FormCompletionHelper.enterText(dateToYear, firstDate.year().getAsString());
+        FormDataHelper.enterText(dateToDay, firstDate.dayOfMonth().getAsString());
+        FormDataHelper.enterText(dateToMonth, firstDate.monthOfYear().getAsString());
+        FormDataHelper.enterText(dateToYear, firstDate.year().getAsString());
 
         updateResultsButton.click();
     }
@@ -70,7 +71,7 @@ public class SiteTestLogPage extends TestLogPage {
         try {
             switch (filter) {
                 case LAST_WEEK:
-                    return lastWeekLink.isEnabled();
+                    return lastWeekSelectedOption.isEnabled();
 
                 case LAST_MONTH:
                     return lastMonthLink.getAttribute("href").isEmpty();

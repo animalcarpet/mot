@@ -3,6 +3,7 @@
 namespace DvsaMotApi\Factory\Service;
 
 use DvsaCommonApi\Authorisation\Assertion\ReadMotTestAssertion;
+use DvsaEntities\Repository\MotTestRepository;
 use DvsaMotApi\Service\OdometerReadingQueryService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -17,7 +18,7 @@ class OdometerReadingQueryServiceFactory implements FactoryInterface
             $serviceLocator->get('OdometerReadingRepository'),
             $serviceLocator->get('DvsaAuthorisationService'),
             $serviceLocator->get(ReadMotTestAssertion::class),
-            $serviceLocator->get('MotTestRepository'),
+            $serviceLocator->get(MotTestRepository::class),
             $serviceLocator->get('DvsaAuthenticationService')
         );
     }

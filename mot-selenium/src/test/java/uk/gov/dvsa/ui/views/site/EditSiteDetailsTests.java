@@ -37,7 +37,7 @@ public class EditSiteDetailsTests extends DslTest {
         areaOfficeUser = userData.createUserAsAreaOfficeOneUser("dv");
     }
 
-    @Test(groups = {"Regression", "VM-10407 , Regression"})
+    @Test(groups = {"Regression", "VM-10407"})
     public void changeTestFacilitiesTest() throws IOException, URISyntaxException {
         //Given I am logged in as AO1 & I navigate to the change testing facilities page
         ChangeTestingFacilitiesPage changeTestingFacilitiesPage =

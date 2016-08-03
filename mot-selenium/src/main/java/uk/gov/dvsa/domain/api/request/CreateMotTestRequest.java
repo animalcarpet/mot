@@ -15,7 +15,7 @@ public class CreateMotTestRequest {
 
     public CreateMotTestRequest(User requestor, Vehicle vehicle, int vtsId, MotTestData testData) {
         this.requestor = new Requestor(requestor);
-        this.vehicleId = vehicle.getVehicleId();
+        this.vehicleId = vehicle.getId();
         this.vtsId = vtsId;
         this.motTest = testData;
     }

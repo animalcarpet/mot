@@ -4,7 +4,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
@@ -30,7 +30,7 @@ public class MotTestSearchPage extends Page {
     }
 
     public MotTestSearchPage selectSearchCategory(String searchCategory) {
-        FormCompletionHelper.selectFromDropDownByValue(searchTypePrompt, searchCategory);
+        FormDataHelper.selectFromDropDownByValue(searchTypePrompt, searchCategory);
 
         return this;
     }

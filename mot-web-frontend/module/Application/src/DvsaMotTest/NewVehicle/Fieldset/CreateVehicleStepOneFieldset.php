@@ -81,7 +81,7 @@ class CreateVehicleStepOneFieldset extends Fieldset implements InputFilterProvid
                     'label' => 'Reason for not supplying a registration mark',
                     'value_options' => $this->getDropdownOptionsFromAttributes(
                         $options['vehicleData']['emptyVrmReasons'],
-                        'code',
+                        'id',
                         'name',
                         true
                     ),
@@ -115,7 +115,7 @@ class CreateVehicleStepOneFieldset extends Fieldset implements InputFilterProvid
                     'label' => 'Reason for not supplying a full VIN or chassis number',
                     'value_options' => $this->getDropdownOptionsFromAttributes(
                         $options['vehicleData']['emptyVinReasons'],
-                        'code',
+                        'id',
                         'name',
                         true
                     ),
@@ -125,7 +125,7 @@ class CreateVehicleStepOneFieldset extends Fieldset implements InputFilterProvid
 
         $makes = $this->getDropdownOptionsFromAttributes(
             $options['vehicleData']['make'],
-            'code',
+            'id',
             'name',
             true,
             true
@@ -258,7 +258,7 @@ class CreateVehicleStepOneFieldset extends Fieldset implements InputFilterProvid
                     'options' => [
                         'reasons' => array_map(
                             function ($x) {
-                                return $x['code'];
+                                return $x['id'];
                             }, $this->getEmptyVrmReasons()
                         )
                     ]
@@ -286,7 +286,7 @@ class CreateVehicleStepOneFieldset extends Fieldset implements InputFilterProvid
                     'options' => [
                         'reasons' => array_map(
                             function ($x) {
-                                return $x['code'];
+                                return $x['id'];
                             }, $this->getEmptyVinReasons()
                         )
                     ]

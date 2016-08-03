@@ -1,8 +1,0 @@
-!1 Welcome to [[FitNesse][FitNesse.FitNesse]]!
-!3 ''The fully integrated stand-alone acceptance testing framework and wiki.''
-
-DVSA MOT Acceptance Testing Root page 
- 
-|[[Acceptance Testing Suite][FrontPage.SuiteAcceptanceTests]]|''Start here to run tests''|
-
-!note Release ${FITNESSE_VERSION}

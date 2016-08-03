@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
@@ -29,14 +29,14 @@ public class CreateNewEventPage extends Page {
     }
 
     private CreateNewEventPage enterDateOfEvent(DateTime dateTime) {
-        FormCompletionHelper.enterText(day, dateTime.toString("dd"));
-        FormCompletionHelper.enterText(month, dateTime.toString("MM"));
-        FormCompletionHelper.enterText(year, dateTime.toString("YYYY"));
+        FormDataHelper.enterText(day, dateTime.toString("dd"));
+        FormDataHelper.enterText(month, dateTime.toString("MM"));
+        FormDataHelper.enterText(year, dateTime.toString("YYYY"));
         return this;
     }
 
     public CreateNewEventPageTwo submitNewEvent() {
-        FormCompletionHelper.selectFromDropDownByValue(eventType, "VT6");
+        FormDataHelper.selectFromDropDownByValue(eventType, "VT6");
         enterDateOfEvent(DateTime.now());
         continueButton.click();
         return new CreateNewEventPageTwo(driver);

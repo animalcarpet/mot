@@ -2,6 +2,7 @@
 
 namespace DvsaMotApiTest\Factory;
 
+use Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle as DvlaImportedVehicle;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Enum\VehicleClassId;
@@ -53,7 +54,8 @@ class VehicleObjectsFactory
         $id = VehicleClassId::CLASS_4,
         $code = VehicleClassCode::CLASS_4,
         $name = VehicleClassCode::CLASS_4
-    ) {
+    )
+    {
         return (new VehicleClass($code, $name))->setId($id);
     }
 
@@ -64,20 +66,22 @@ class VehicleObjectsFactory
      */
     public static function vehicle($id = 1)
     {
+        $modelDetail = new ModelDetail();
+        $modelDetail->setCylinderCapacity(123)
+            ->setFuelType(self::fuelType())
+            ->setModel(self::model())
+            ->setBodyType(self::bodyType())
+            ->setVehicleClass(self::vehicleClass())
+            ->setTransmissionType(self::transmissionType());
+
         return (new Vehicle())->setId($id)
             ->setColour(self::colour(1, "G", "Green"))
             ->setSecondaryColour(self::colour(2, "R", "Red"))
-            ->setCylinderCapacity(123)
+            ->setModelDetail($modelDetail)
             ->setManufactureDate(DateUtils::toDate("2004-04-23"))
             ->setFirstRegistrationDate(DateUtils::toDate("2007-08-09"))
             ->setFirstUsedDate(DateUtils::toDate("2000-12-12"))
             ->setCountryOfRegistration(self::countryOfRegistration())
-            ->setFuelType(self::fuelType())
-            ->setModel(self::model())
-            ->setBodyType(self::bodyType())
-            ->setModelDetail(self::modelDetail())
-            ->setVehicleClass(self::vehicleClass())
-            ->setTransmissionType(self::transmissionType())
             ->setYear(2000)
             ->setRegistration(self::EXAMPLE_VRM)
             ->setVin(self::EXAMPLE_VIN);
@@ -90,7 +94,9 @@ class VehicleObjectsFactory
      */
     public static function dvlaVehicle($id = 1)
     {
-        return (new DvlaVehicle())
+        $dvlaVehicle = new DvlaVehicle();
+
+        $dvlaVehicle
             ->setId($id)
             ->setPrimaryColour("G")
             ->setSecondaryColour("R")
@@ -105,12 +111,59 @@ class VehicleObjectsFactory
             ->setVin(self::EXAMPLE_VIN)
             ->setUnladenWeight(1000)
             ->setDesignedGrossWeight(1200)
-            ->setV5DocumentNumber(123456);
+            ->setV5DocumentNumber(123456)
+            ->setDvlaVehicleId(2);
+
+        return $dvlaVehicle;
+    }
+
+    /**
+     * this is new vehicle model as the result of Java vehicle-service
+     * @param int $id
+     *
+     * @return VehicleFromDvla
+     */
+    public static function dvlaImportedVehicle($id = 1)
+    {
+        $dvlaVehicleData = json_decode(
+            json_encode(
+                [
+                    'id' => 2,
+                    'amendedOn' => '2016-02-03',
+                    'registration' => 'DII4454',
+                    'vin' => '1M7GDM9AXKP042777',
+                    'emptyVrmReason' => null,
+                    'emptyVinReason' => null,
+                    'make' => 'PORSCHE',
+                    'model' => 'BOXSTER',
+                    'colour' => 'Red',
+                    'colourSecondary' => 'Not Stated',
+                    'fuelType' => 'Petrol',
+                    'vehicleClass' => '4',
+                    'bodyType' => '2 Door Saloon',
+                    'cylinderCapacity' => 1700,
+                    'transmissionType' => 'Automatic',
+                    'firstRegistrationDate' => '2001-03-02',
+                    'firstUsedDate' => '2001-03-02',
+                    'manufactureDate' => '2001-03-02',
+                    'isNewAtFirstReg' => false,
+                    'weight' => null
+                ]
+            )
+        );
+        $dvlaVehicle = new DvlaImportedVehicle($dvlaVehicleData);
+
+        return $dvlaVehicle;
     }
 
     public static function modelDetail($id = 1, $name = 'Standard', $code = 'STD')
     {
-        return (new ModelDetail())->setId($id)->setName($name)->setCode($code);
+        $model = new Model();
+        $model->setId($id)
+            ->setName($name)
+            ->setCode($code);
+
+        return (new ModelDetail())->setModel($model);
     }
 
     public static function transmissionType($id = 1, $name = "Manual", $code = "M")

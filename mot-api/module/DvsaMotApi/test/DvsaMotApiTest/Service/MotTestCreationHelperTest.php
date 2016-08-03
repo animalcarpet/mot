@@ -66,7 +66,8 @@ class MotTestCreationHelperTest extends AbstractServiceTestCase
             null,
             $mocks['mockMotTestValidator'],
             $motTestServiceTest->getMockWithDisabledConstructor(RetestEligibilityValidator::class),
-            $mocks['mockOtpService']
+            $mocks['mockOtpService'],
+            $mocks['mockNewVehicleService']
         );
     }
 

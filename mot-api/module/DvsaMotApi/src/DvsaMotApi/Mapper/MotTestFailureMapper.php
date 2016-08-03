@@ -56,6 +56,8 @@ class MotTestFailureMapper extends AbstractMotTestMapper
     {
         $this->mapGenericMotTestData();
 
+        $this->mapVehicleDetail();
+
         /** @var \DvsaCommon\Dto\Vehicle\VehicleDto $vehicle */
         $vehicle = ArrayUtils::tryGet($this->data, 'vehicle');
         $this->setValue('FirstUseDate', $this->formatDate($vehicle->getFirstUsedDate()));

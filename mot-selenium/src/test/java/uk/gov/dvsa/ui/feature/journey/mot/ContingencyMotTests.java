@@ -33,7 +33,7 @@ public class ContingencyMotTests extends DslTest {
         vehicle = vehicleData.getNewVehicle(tester);
     }
 
-    @Test(groups = {"BVT", "Regression", "VM-4825,Sprint05,VM-9444 Regression"})
+    @Test(testName = "OldRFRTest", groups = {"BVT", "VM-4825,Sprint05,VM-9444"})
     public void recordContingencyTestSuccessfully() throws IOException, URISyntaxException {
         //Given I am the Record Contingency Page
         motUI.contingency.testPage(tester);
@@ -45,7 +45,7 @@ public class ContingencyMotTests extends DslTest {
         assertThat(motUI.contingency.isTestSaveSuccessful(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "VM-4825,Sprint05,VM-9444 Regression"})
+    @Test(testName = "OldRFRTest", groups = {"BVT", "VM-4825,Sprint05,VM-9444"})
     public void conductReTestSuccessfully() throws IOException, URISyntaxException {
 
         //Given I have a vehicle with a failed MOT test

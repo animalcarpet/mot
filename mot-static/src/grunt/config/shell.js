@@ -8,8 +8,8 @@ module.exports = function(grunt, config) {
             command: "$scripts_workspace/developer/jasper.sh ../jasperreports/ jasper root password localhost motdbuser password mot 1"
         },
         composer: {
-            command: grunt.config.get('composerModules').dirs.map(function(dir) {
-                return 'cd ' + dir + ' && composer install && composer dump-autoload -o'
+            command: grunt.config.get('composerModules').dirs.map(function (dir) {
+                return 'printf "\n>> Updating: \'' + dir + '\'\n" && cd ' + dir + ' && composer install && composer dump-autoload -o '
             }).join('; ')
         },
         install_devtools: {
@@ -59,6 +59,11 @@ module.exports = function(grunt, config) {
                     console.log(snOutput);
 
                 }
+            }
+        },
+        national_statistics_amazon_cache_clear: {
+            command: function () {
+                return 'curl -s ' + grunt.config.get('url.testsupport') + '/testsupport/clear-statistics-amazon-cache';
             }
         }
     });

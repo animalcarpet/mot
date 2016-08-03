@@ -65,6 +65,8 @@ class MotTestAdvisoryNoticeMapper extends AbstractMotTestMapper
     {
         $this->mapGenericMotTestData();
 
+        $this->mapVehicleDetail();
+
         $this->mapFailures('FAIL');
 
         $testType = ArrayUtils::tryGet($this->data, 'testType');

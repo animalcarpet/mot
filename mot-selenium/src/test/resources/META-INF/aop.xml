@@ -1,0 +1,5 @@
+<aspectj>
+    <weaver>
+        <include within="uk.gov.dvsa..*"/>
+    </weaver>
+</aspectj>

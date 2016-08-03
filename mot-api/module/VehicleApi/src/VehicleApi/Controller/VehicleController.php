@@ -9,6 +9,7 @@ use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use VehicleApi\Service\VehicleSearchService;
 use VehicleApi\Service\VehicleService;
+use Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
 
 /**
  * Class VehicleController.
@@ -76,17 +77,16 @@ class VehicleController extends AbstractDvsaRestfulController
             $contingencyDto->setPerformedAt(($contingencyDatetime instanceof DateTime) ? $contingencyDatetime : null);
         }
 
-        $searchDvla = !$request->getQuery(self::EXCLUDE_DVLA_PARAMETER);
+        $falseList = [false, 0, 'false', '0'];
+        $excludeDvlaInQuery = $request->getQuery(self::EXCLUDE_DVLA_PARAMETER, false);
+
+        $excludeDvla = in_array($excludeDvlaInQuery, $falseList) ? false : true;
 
         $vehiclesData = $this
             ->vehicleSearchService
-            ->searchVehicleWithMotData($vin, $reg, $searchDvla, 10, $vtsId, $contingencyDto);
+            ->searchVehicleWithMotData($vin, $reg, $excludeDvla, $vtsId, $contingencyDto);
 
-        return ApiResponse::jsonOk(
-            [
-                'vehicles' => $vehiclesData,
-            ]
-        );
+        return ApiResponse::jsonOk(['vehicles' => $vehiclesData]);
     }
 
     /**

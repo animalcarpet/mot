@@ -2,10 +2,11 @@ package uk.gov.dvsa.ui.pages.mot;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
@@ -28,6 +29,8 @@ public class TestSummaryPage extends Page {
     @FindBy(id = "start_inspection_button") private WebElement startReinspectionButton;
     @FindBy(id = "motTestType") private WebElement testTypePrompt;
     @FindBy(id = "declarationStatement") private WebElement declarationElement;
+    private By siteIdTextBox = By.id("siteidentry");
+    private By expiryDate = By.id("expiryDate");
 
     public TestSummaryPage(MotAppDriver driver) {
         super(driver);
@@ -62,7 +65,7 @@ public class TestSummaryPage extends Page {
     }
 
     public TestSummaryPage selectTestType(String testType) {
-        FormCompletionHelper.selectFromDropDownByValue(testTypePrompt, testType);
+        FormDataHelper.selectFromDropDownByValue(testTypePrompt, testType);
 
         return this;
     }
@@ -84,9 +87,18 @@ public class TestSummaryPage extends Page {
             driver.findElement(By.id("declarationElement"));
             return true;
         }
-        catch (NoSuchElementException e){
+        catch (TimeoutException exception){
             return false;
         }
+    }
+
+    public TestSummaryPage enterSiteId(String siteId) {
+        FormDataHelper.enterText(driver.findElement(siteIdTextBox), siteId);
+        return this;
+    }
+
+    public boolean isExpiryDateDisplayed() {
+        return PageInteractionHelper.isElementDisplayed(driver.findElement(expiryDate));
     }
 }
 

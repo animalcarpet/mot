@@ -11,96 +11,231 @@ use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
 
 class MotTestDto extends AbstractDataTransferObject
 {
-    /** @var int */
+    /**
+     * @var int
+     */
     private $brakeTestCount;
-    /** @var array */
+
+    /**
+     * @var array
+     */
     private $brakeTestResult;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     private $complaintRef;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     private $completedDate;
-    /** @var CountryDto */
+
+    /**
+     * @var CountryDto
+     */
     private $countryOfRegistration;
-    /** @var int */
+
+    /**
+     * @var int
+     */
     private $document;
-    /** @var array */
+
+    /**
+     * @var array
+     */
     private $emergencyLog;
-    /** @var array */
+
+    /**
+     * @var array
+     */
     private $emergencyReasonComment;
-    /** @var array */
+
+    /**
+     * @var array
+     */
     private $emergencyReasonLookup;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     private $expiryDate;
-    /** @var FuelTypeDto */
+
+    /**
+     * @var FuelTypeDto
+     */
     private $fuelType;
-    /** @var array */
+
+    /**
+     * @var array
+     */
     private $fullPartialRetest;
-    /** @var bool */
+
+    /**
+     * @var bool
+     */
     private $hasRegistration;
-    /** @var int */
+
+    /**
+     * @var int
+     */
     private $id;
-    /** @var int */
+
+    /**
+     * @var int
+     */
     private $isPrivate;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     private $issuedDate;
-    /** @var array */
+
+    /**
+     * @var array
+     */
     private $itemsNotTestedComment;
-    /** @var  string */
+
+    /**
+     * @var string
+     */
     private $make;
-    /** @var  string */
+
+    /**
+     * @var string
+     */
     private $model;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     private $motTestNumber;
-    /** @var OdometerReadingDTO */
+
+    /**
+     * @var OdometerReadingDTO
+     */
     private $odometerReading;
-    /** @var int */
+
+    /**
+     * @var int
+     */
     private $onePersonReInspection;
-    /** @var int */
+
+    /**
+     * @var int
+     */
     private $onePersonTest;
-    /** @var array */
+
+    /**
+     * @var array
+     */
     private $partialReinspectionComment;
-    /** @var ColourDto */
+
+    /**
+     * @var ColourDto
+     */
     private $primaryColour;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     private $reasonForTerminationComment;
-    /** @var array */
+
+    /**
+     * @var array
+     */
     private $reasonsForRejection;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     private $registration;
-    /** @var int */
+
+    /**
+     * @var int
+     */
     private $emptyVrmReason;
-    /** @var ColourDto */
+
+    /**
+     * @var ColourDto
+     */
     private $secondaryColour;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     private $startedDate;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     private $status;
-    /** @var MotTestTypeDto */
+
+    /**
+     * @var MotTestTypeDto
+     */
     private $testType;
-    /** @var PersonDto */
+
+    /**
+     * @var PersonDto
+     */
     private $tester;
-    /** @var bool */
+
+    /**
+     * @var bool
+     */
     private $testerBrakePerformanceNotTested;
-    /** @var VehicleDto */
+
+    /**
+     * @var VehicleDto
+     */
     private $vehicle;
-    /** @var VehicleClassDto */
+
+    /**
+     * @var VehicleClassDto
+     */
     private $vehicleClass;
-    /** @var array */
+
+    /**
+     * @var array
+     */
     private $vehicleTestingStation;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     private $vin;
-    /** @var int */
+
+    /**
+     * @var int
+     */
     private $emptyVinReason;
-    /** @var array */
+
+    /**
+     * @var array
+     */
     private $pendingDetails;
-    /** @var ReasonForCancelDto */
+
+    /**
+     * @var ReasonForCancelDto
+     */
     private $reasonForCancel;
-    /** @var MotTestDto */
+
+    /**
+     * @var MotTestDto
+     */
     private $motTestOriginal;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     private $prsMotTestNumber;
-    /** @var  string */
+
+    /**
+     * @var string
+     */
     private $clientIp;
+
     /**
      * @return int
      */
@@ -117,6 +252,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setBrakeTestCount($brakeTestCount)
     {
         $this->brakeTestCount = $brakeTestCount;
+
         return $this;
     }
 
@@ -136,6 +272,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setBrakeTestResult($brakeTestResult)
     {
         $this->brakeTestResult = $brakeTestResult;
+
         return $this;
     }
 
@@ -155,6 +292,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setComplaintRef($complaintRef)
     {
         $this->complaintRef = $complaintRef;
+
         return $this;
     }
 
@@ -174,6 +312,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setCompletedDate($completedDate)
     {
         $this->completedDate = $completedDate;
+
         return $this;
     }
 
@@ -193,11 +332,12 @@ class MotTestDto extends AbstractDataTransferObject
     public function setCountryOfRegistration($countryOfRegistration)
     {
         $this->countryOfRegistration = $countryOfRegistration;
+
         return $this;
     }
 
     /**
-     * This method returns the ID of the jasper data snapshot row
+     * This method returns the ID of the jasper data snapshot row.
      *
      * @return int
      */
@@ -214,6 +354,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setDocument($document)
     {
         $this->document = $document;
+
         return $this;
     }
 
@@ -233,6 +374,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setEmergencyLog($emergencyLog)
     {
         $this->emergencyLog = $emergencyLog;
+
         return $this;
     }
 
@@ -252,6 +394,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setEmergencyReasonComment($emergencyReasonComment)
     {
         $this->emergencyReasonComment = $emergencyReasonComment;
+
         return $this;
     }
 
@@ -271,6 +414,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setEmergencyReasonLookup($emergencyReasonLookup)
     {
         $this->emergencyReasonLookup = $emergencyReasonLookup;
+
         return $this;
     }
 
@@ -290,6 +434,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setExpiryDate($expiryDate)
     {
         $this->expiryDate = $expiryDate;
+
         return $this;
     }
 
@@ -309,6 +454,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setFuelType($fuelType)
     {
         $this->fuelType = $fuelType;
+
         return $this;
     }
 
@@ -328,6 +474,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setFullPartialRetest($fullPartialRetest)
     {
         $this->fullPartialRetest = $fullPartialRetest;
+
         return $this;
     }
 
@@ -347,6 +494,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setHasRegistration($hasRegistration)
     {
         $this->hasRegistration = $hasRegistration;
+
         return $this;
     }
 
@@ -366,6 +514,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -385,6 +534,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setIsPrivate($isPrivate)
     {
         $this->isPrivate = $isPrivate;
+
         return $this;
     }
 
@@ -412,6 +562,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setIssuedDate($issuedDate)
     {
         $this->issuedDate = $issuedDate;
+
         return $this;
     }
 
@@ -431,6 +582,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setItemsNotTestedComment($itemsNotTestedComment)
     {
         $this->itemsNotTestedComment = $itemsNotTestedComment;
+
         return $this;
     }
 
@@ -442,6 +594,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setMake($make)
     {
         $this->make = $make;
+
         return $this;
     }
 
@@ -453,6 +606,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setModel($model)
     {
         $this->model = $model;
+
         return $this;
     }
 
@@ -472,6 +626,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setMotTestNumber($motTestNumber)
     {
         $this->motTestNumber = $motTestNumber;
+
         return $this;
     }
 
@@ -491,6 +646,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setOdometerReading($odometerReading)
     {
         $this->odometerReading = $odometerReading;
+
         return $this;
     }
 
@@ -510,6 +666,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setOnePersonReInspection($onePersonReInspection)
     {
         $this->onePersonReInspection = $onePersonReInspection;
+
         return $this;
     }
 
@@ -529,6 +686,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setOnePersonTest($onePersonTest)
     {
         $this->onePersonTest = $onePersonTest;
+
         return $this;
     }
 
@@ -548,6 +706,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setPartialReinspectionComment($partialReinspectionComment)
     {
         $this->partialReinspectionComment = $partialReinspectionComment;
+
         return $this;
     }
 
@@ -567,6 +726,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setPrimaryColour($primaryColour)
     {
         $this->primaryColour = $primaryColour;
+
         return $this;
     }
 
@@ -586,6 +746,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setReasonForTerminationComment($reasonForTerminationComment)
     {
         $this->reasonForTerminationComment = $reasonForTerminationComment;
+
         return $this;
     }
 
@@ -605,6 +766,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setReasonsForRejection($reasonsForRejection)
     {
         $this->reasonsForRejection = $reasonsForRejection;
+
         return $this;
     }
 
@@ -624,6 +786,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setRegistration($registration)
     {
         $this->registration = $registration;
+
         return $this;
     }
 
@@ -643,6 +806,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setSecondaryColour($secondaryColour)
     {
         $this->secondaryColour = $secondaryColour;
+
         return $this;
     }
 
@@ -662,6 +826,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setStartedDate($startedDate)
     {
         $this->startedDate = $startedDate;
+
         return $this;
     }
 
@@ -681,6 +846,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setStatus($status)
     {
         $this->status = $status;
+
         return $this;
     }
 
@@ -700,6 +866,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setTestType($testType)
     {
         $this->testType = $testType;
+
         return $this;
     }
 
@@ -719,6 +886,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setTester($tester)
     {
         $this->tester = $tester;
+
         return $this;
     }
 
@@ -738,6 +906,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setTesterBrakePerformanceNotTested($testerBrakePerformanceNotTested)
     {
         $this->testerBrakePerformanceNotTested = $testerBrakePerformanceNotTested;
+
         return $this;
     }
 
@@ -757,6 +926,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setVehicle($vehicle)
     {
         $this->vehicle = $vehicle;
+
         return $this;
     }
 
@@ -776,6 +946,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setVehicleClass($vehicleClass)
     {
         $this->vehicleClass = $vehicleClass;
+
         return $this;
     }
 
@@ -795,6 +966,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setVehicleTestingStation($vehicleTestingStation)
     {
         $this->vehicleTestingStation = $vehicleTestingStation;
+
         return $this;
     }
 
@@ -814,6 +986,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setVin($vin)
     {
         $this->vin = $vin;
+
         return $this;
     }
 
@@ -833,6 +1006,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setPendingDetails($pendingDetails)
     {
         $this->pendingDetails = $pendingDetails;
+
         return $this;
     }
 
@@ -852,6 +1026,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setReasonForCancel($reasonForCancel)
     {
         $this->reasonForCancel = $reasonForCancel;
+
         return $this;
     }
 
@@ -871,6 +1046,7 @@ class MotTestDto extends AbstractDataTransferObject
     public function setMotTestOriginal($motTestOriginal)
     {
         $this->motTestOriginal = $motTestOriginal;
+
         return $this;
     }
 
@@ -890,16 +1066,19 @@ class MotTestDto extends AbstractDataTransferObject
     public function setPrsMotTestNumber($prsMotTestNumber)
     {
         $this->prsMotTestNumber = $prsMotTestNumber;
+
         return $this;
     }
 
     /**
      * @param string $reasonCode
+     *
      * @return $this
      */
     public function setEmptyVrmReason($reasonCode)
     {
         $this->emptyVrmReason = $reasonCode;
+
         return $this;
     }
 
@@ -913,11 +1092,13 @@ class MotTestDto extends AbstractDataTransferObject
 
     /**
      * @param string $reasonCode
+     *
      * @return $this
      */
     public function setEmptyVinReason($reasonCode)
     {
         $this->emptyVinReason = $reasonCode;
+
         return $this;
     }
 
@@ -931,11 +1112,13 @@ class MotTestDto extends AbstractDataTransferObject
 
     /**
      * @param string $clientIp
+     *
      * @return $this
      */
     public function setClientIp($clientIp)
     {
         $this->clientIp = $clientIp;
+
         return $this;
     }
 

@@ -1,0 +1,197 @@
+slackSend "STARTED => Job: '${env.JOB_NAME}' - Build: ${env.BUILD_NUMBER} @ Node: ${env.NODE_NAME} (GoTo: <${env.BUILD_URL}|Build> | <${env.BUILD_URL}console|Console>)"
+//params
+mot_api = 'mot-api'
+mot_common_web_module = 'mot-common-web-module'
+mot_testsupport = 'mot-testsupport'
+mot_web_frontend = 'mot-web-frontend'
+mot_behat = 'mot-behat'
+//mysql_user = 'motdbuser'
+//mysql_password = 'fb14insecure1'
+mysql_user = 'fb14_admin'
+mysql_password = 'password'
+mysql_host = 'mysql'
+mysql_database = 'mot'
+mysql_grantuser = 'motdbuser'
+
+def check_out_repo(group, repo, gitbranch, creds){
+    checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: gitbranch]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: repo]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: creds, url: 'git@gitlab.motdev.org.uk:' + group + '/' + repo +'.git']]]
+}
+
+def push_rpm_2_yum_repo(fb,file_path) {
+    sh 'rsync -avzR --rsync-path="sudo rsync" --no-owner --no-group -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" --progress '+file_path+' deploy@management-1:/srv/yum/env-'+fb+'/ && if [ $(ls '+file_path+' | wc -l) -ne 0 ]; then rm '+file_path+';fi'
+    sh 'ssh deploy@management-1 "sudo createrepo /srv/yum/env-'+fb+'"'
+}
+
+def run_ansible(aws_access, aws_secret, fb, playbook, node) {
+    withEnv([   'ANSIBLE_HOST_KEY_CHECKING=no',
+        'ANSIBLE_FORCE_COLOR=true',
+        'ANSIBLE_HOSTS=ec2.py',
+        'EC2_INI_PATH=mot2-fb-ec2.ini',
+        'PYTHONUNBUFFERED=true',
+        'AWS_DEFAULT_REGION=eu-west-1',
+        'AWS_ACCESS_KEY_ID='+aws_access,
+        'AWS_SECRET_ACCESS_KEY='+aws_secret
+    ]) {
+        dir('ansible-mot2') {
+            sshagent(['5f11e345-97c1-49e4-a500-cd320a2620b7']) {
+                    sh 'ansible-playbook mot2-deployment/src_ansible/' +playbook+ ' -u deploy -i ec2.py -e "node=tag_fbnode_'+fb+'_' +node+ ' puppet_noop=no"'
+                    //sh 'ansible-playbook mot2-deployment/src_ansible/playbook_puppet.yml -u deploy -i ec2.py -e "node=tag_fbnode_'+FB+'_frontend puppet_noop=no"'
+            }
+        }
+    }
+}
+
+def run_phpunit(path) {
+    sh 'cd ' + path + ' && ./vendor/bin/phpunit -c test/phpunit_ci.xml '
+}
+
+def run_phpunit_independent(path) {
+    sh 'cd ' + path + ' && ./vendor/bin/phpunit --group independent'
+}
+
+def get_composer(){
+    sh 'curl -sS https://getcomposer.org/installer | php'
+}
+
+def composer_install(path){
+    sh 'php composer.phar install -d ' + path
+}
+
+def run_behat(){
+    sh '''
+    cd ..
+    WORKSPACE=`pwd`
+    export APPLICATION_CONFIG_PATH=$WORKSPACE/app/config
+    echo $APPLICATION_CONFIG_PATH
+    export TEST_APPLICATION_CONFIG_PATH=$WORKSPACE/app/config
+    echo $TEST_APPLICATION_CONFIG_PATH
+    cd mot/mot-behat
+    bin/behat --format=junit --out=build --format=pretty --out=std --tags="~@wip&&~@disabled&&~@quarantine"
+    '''
+}
+
+def copy_configs(path){
+    sh 'for x in ' + path + '/config/autoload/*.dist; do mv "$x" "${x%.*}" ; done'
+}
+
+def prepare_selenium(){
+    sh 'rm -rf selenium-screenshots'
+    sh 'mkdir selenium-screenshots'
+    sh 'mkdir selenium-screenshots/error'
+}
+
+def run_selenium(suite){
+    sh "/usr/bin/mvn  -B -f mot-selenium/pom.xml test -Dtest.screenshots.error.folder=selenium-screenshots/error -X -DtestngFile=" + suite
+}
+
+def reset_db() {
+    sh '''
+    WORKSPACE=`pwd`
+    cd $WORKSPACE/mot-api/db/dev/update/1130
+    for i in $(grep -il 'definer = ' *); do sed "s/DEFINER = 'root'@'127.0.0.1'//" $i > altered-$i; rm -rf $i; done
+    cd $WORKSPACE/mot-api/db
+    sed -i '/reset_users/d' reset_db_with_test_data.sh
+    sed -i "/cron-job/ s='',=123456,=g" $WORKSPACE/mot-api/db/dev/update/01953-0110/2015-05-26-VM-9601-cron-user[story].sql
+    '''
+    sh 'cd mot-api/db && ./reset_db_with_test_data.sh -f ' + mysql_user + ' ' + mysql_password + ' ' + mysql_host + ' ' + mysql_database + ' ' + mysql_grantuser + ' N && echo "DB Reset"'
+    // fixes
+    sh "mysql -h "+ mysql_host +" -u "+ mysql_user + " -p"+ mysql_password +" "+ mysql_database +" -e 'UPDATE notification_template SET id = 14 where id = 15'"
+}
+
+node('node-dev-14-fb') {
+  wrap([$class: 'TimestamperBuildWrapper']) {
+    stage 'Checking out repository and composer install'
+    deleteDir()
+    check_out_repo('mot', 'mot', "${MOT_BRANCH}", '2ed231bf-e6ca-4cad-b2f1-293f33a61755')
+    check_out_repo('mot', 'buildscripts', "${BUILDSCRIPTS_BRANCH}", '2ed231bf-e6ca-4cad-b2f1-293f33a61755')
+    check_out_repo('webops', 'hieradata', "${HIERADATA_BRANCH}", '2ed231bf-e6ca-4cad-b2f1-293f33a61755')
+    check_out_repo('webops', 'puppet-code', "${PUPPETCODE_BRANCH}", '2ed231bf-e6ca-4cad-b2f1-293f33a61755')
+    check_out_repo('webops', 'ansible-mot2', "${ANSIBLE_BRANCH}", '2ed231bf-e6ca-4cad-b2f1-293f33a61755')
+    dir('mot'){
+        get_composer()
+        composer_install(mot_api)
+        composer_install(mot_common_web_module)
+        composer_install(mot_testsupport)
+        composer_install(mot_web_frontend)
+        composer_install(mot_behat)
+    }
+
+    dir('mot'){
+        stage 'Run independent unit tests'
+        copy_configs(mot_web_frontend)
+        run_phpunit_independent(mot_web_frontend)
+    }
+    stage 'Build mot rpm'
+    sh "env WORKSPACE=`pwd` bash -x buildscripts/code/rpm_mot-api-jenkins2.sh ${FB}"
+    //sh 'rm -rf mot/rpm'
+    sh 'mv mot/rpm mot/rpm-api'
+    sh "env WORKSPACE=`pwd` bash -x buildscripts/code/rpm_mot-common-web-module-jenkins2.sh ${FB}"
+    //sh 'rm -rf mot/rpm'
+    sh 'mv mot/rpm mot/rpm-cwm'
+    sh 'env WORKSPACE=`pwd` bash -x buildscripts/code/rpm_mot-web-frontend-jenkins2.sh'
+    sh 'mv mot/rpm mot/rpm-frontend'
+    sh 'env WORKSPACE=`pwd` bash -x buildscripts/code/rpm_mot-testsupport-jenkins2.sh ${FB}'
+    sh 'mv mot/rpm mot/rpm-testsupport'
+
+    stage 'Build Puppet and Hiera'
+        dir('hieradata') {
+        sh "echo \"  :datadir:\" >> code/hiera.yaml"
+        sh "bash -x build ${FB}"
+    }
+
+    dir('puppet-code') {
+        sh "bash -x build ${FB}"
+    }
+
+    stage 'Send package to repo'
+    dir('mot'){
+        sshagent(['5f11e345-97c1-49e4-a500-cd320a2620b7']) {
+            push_rpm_2_yum_repo("${FB}",'mot-*.rpm')
+        }
+    }
+    dir('hieradata'){
+        sshagent(['5f11e345-97c1-49e4-a500-cd320a2620b7']) {
+            push_rpm_2_yum_repo("${FB}",'hieradata-*.noarch.rpm')
+        }
+    }
+    dir('puppet-code'){
+        sshagent(['5f11e345-97c1-49e4-a500-cd320a2620b7']) {
+            push_rpm_2_yum_repo("${FB}",'puppet-code-*.noarch.rpm')
+        }
+    }
+
+    stage 'Deploy'
+    run_ansible("${AWS_ACCESS_KEY_ID}", "${AWS_SECRET_ACCESS_KEY}", "${FB}", 'playbook_puppet.yml', 'consul')
+    run_ansible("${AWS_ACCESS_KEY_ID}", "${AWS_SECRET_ACCESS_KEY}", "${FB}", 'playbook_puppet.yml', 'api')
+    run_ansible("${AWS_ACCESS_KEY_ID}", "${AWS_SECRET_ACCESS_KEY}", "${FB}", 'playbook_puppet.yml', 'frontend')
+    run_ansible("${AWS_ACCESS_KEY_ID}", "${AWS_SECRET_ACCESS_KEY}", "${FB}", 'playbook_puppet.yml', 'testsupport')
+
+    dir('mot'){
+        stage 'Run unit tests'
+        copy_configs(mot_api)
+        copy_configs(mot_testsupport)
+        run_phpunit(mot_api)
+        run_phpunit(mot_common_web_module)
+        run_phpunit(mot_web_frontend)
+
+        stage 'Reset DB'
+        reset_db()
+
+        stage 'Run Behat'
+        // temporary hack
+        sh '''
+        sed -i "s/'localhost',/'mysql',/g" mot-testsupport/config/autoload/global.php
+        sed -i "s/'password',/'fb14insecure1',/g" mot-testsupport/config/autoload/global.php
+        sh '''
+        run_behat()
+    
+        stage 'Selenium BVT'
+        prepare_selenium()
+        run_selenium("bvt.xml")
+    
+        stage 'Selenium Regression'
+        run_selenium("regression.xml")
+    }
+  }
+}
+slackSend "FINISHED => Job: '${env.JOB_NAME}' - Build: ${env.BUILD_NUMBER} @ Node: ${env.NODE_NAME} (GoTo: <${env.BUILD_URL}|Build> | <${env.BUILD_URL}console|Console>)"

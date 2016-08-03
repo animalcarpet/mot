@@ -69,7 +69,7 @@ public class TestResultsEntryPage extends Page {
     }
 
     public TestResultsEntryPage completeTestDetailsWithFailValues() {
-        addOdometerReading(20000);
+        addOdometerReading(9999999);
         addDefaultBrakeTestValues("fail");
 
         return this;
@@ -106,7 +106,6 @@ public class TestResultsEntryPage extends Page {
 
     private TestResultsEntryPage addOdometerReading(int odometerReading) {
         editOdometerButton.click();
-        PageInteractionHelper.waitForElementToBeVisible(odometerSubmit, Configurator.defaultFastWebElementTimeout);
         odometerField.sendKeys(String.valueOf(odometerReading));
 
         setOdometerUnit(OdometerUnit.KILOMETRES.getValue());
@@ -169,9 +168,5 @@ public class TestResultsEntryPage extends Page {
         odometerSubmit.click();
 
         return this;
-    }
-
-    public String getOdometerReadingText() {
-        return odometerReading.getText();
     }
 }

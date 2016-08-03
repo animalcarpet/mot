@@ -7,6 +7,7 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\View;
 
+use Core\Routing\MotTestRouteList;
 use Core\ViewModel\Sidebar\GeneralSidebar;
 use Core\ViewModel\Sidebar\GeneralSidebarItemInterface;
 use Core\ViewModel\Sidebar\GeneralSidebarLink;
@@ -14,11 +15,13 @@ use Core\ViewModel\Sidebar\GeneralSidebarLinkList;
 use Core\ViewModel\Sidebar\GeneralSidebarStatusBox;
 use Core\ViewModel\Sidebar\GeneralSidebarStatusItem;
 use Core\ViewModel\Sidebar\SidebarBadge;
+use Dvsa\Mot\Frontend\PersonModule\Routes\PersonProfileRoutes;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuard;
 use DvsaCommon\Model\TesterAuthorisation;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
 use Event\Controller\EventController;
+use Zend\Mvc\Controller\Plugin\Url;
 
 /**
  * PersonProfile Sidebar.
@@ -54,31 +57,44 @@ class PersonProfileSidebar extends GeneralSidebar
      * @var string
      */
     private $currentUrl;
+    /**
+     * @var Url
+     */
+    private $urlPlugin;
+    /**
+     * @var PersonProfileRoutes
+     */
+    private $personProfileRoutes;
 
     /**
-     * @param int                 $personId
-     * @param PersonProfileGuard  $personProfileGuard
+     * @param int $personId
+     * @param PersonProfileGuard $personProfileGuard
      * @param TesterAuthorisation $testerAuthorisation
-     * @param bool                $newProfileEnabled
-     * @param string              $currentUrl
+     * @param bool $newProfileEnabled
+     * @param string $currentUrl
      */
     public function __construct(
         $personId,
         PersonProfileGuard $personProfileGuard,
         TesterAuthorisation $testerAuthorisation,
         $newProfileEnabled,
-        $currentUrl
+        $currentUrl,
+        PersonProfileRoutes $personProfileRoutes,
+        Url $urlPlugin
     ) {
         $this->personId = $personId;
         $this->personProfileGuard = $personProfileGuard;
         $this->testerAuthorisation = $testerAuthorisation;
         $this->newProfileEnabled = $newProfileEnabled;
         $this->currentUrl = $currentUrl;
+        $this->personProfileRoutes = $personProfileRoutes;
+        $this->urlPlugin = $urlPlugin;
 
         $this->setUpStatusBox();
         $this->setUpAccountSecurityBox();
         $this->setUpAccountManagementBox();
         $this->setUpRelatedLinksSection();
+        $this->setUpQualificationsAndAnnualAssessmentSection();
     }
 
     /**
@@ -156,7 +172,8 @@ class PersonProfileSidebar extends GeneralSidebar
 
         $accountSecurityBox = new GeneralSidebarLinkList('Account security');
         $accountSecurityBox->setId('account_security');
-        $accountSecurityBox->addLink(new GeneralSidebarLink('change-password', 'Change your password', $changePasswordUrl));
+        $accountSecurityBox->addLink(new GeneralSidebarLink('change-password', 'Change your password',
+            $changePasswordUrl));
         $accountSecurityBox->addLink(new GeneralSidebarLink('reset-pin', 'Reset your PIN', $resetPinUrl));
 
         $this->addItem($accountSecurityBox);
@@ -222,6 +239,44 @@ class PersonProfileSidebar extends GeneralSidebar
         $this->addItem($accountManagementBox);
     }
 
+    private function setUpQualificationsAndAnnualAssessmentSection()
+    {
+        $qualificationDetailsUrl = ($this->newProfileEnabled ?
+                $this->currentUrl :
+                self::OLD_USER_PROFILE_URL . $this->personId) . '/qualification-details';
+
+        $annualAssessmentCertificatesUrl = ($this->newProfileEnabled ?
+                $this->currentUrl :
+                self::OLD_USER_PROFILE_URL . $this->personId) . '/annual-assessment-certificates';
+
+        $relatedBox = new GeneralSidebarLinkList('Qualifications and annual assessment');
+        $relatedBox->setId('qualifications');
+
+        if ($this->personProfileGuard->canViewQualificationDetails()) {
+            $relatedBox->addLink(
+                new GeneralSidebarLink(
+                    'qualification-details',
+                    'Qualification details',
+                    $qualificationDetailsUrl
+                )
+            );
+        }
+
+        if ($this->personProfileGuard->canViewAnnualAssessmentCertificates()) {
+            $relatedBox->addLink(
+                new GeneralSidebarLink(
+                    'annual-assessment-certificates',
+                    'Annual assessment certificates',
+                    $annualAssessmentCertificatesUrl
+                )
+            );
+        }
+
+        if (!empty($relatedBox->getLinks())) {
+            $this->addItem($relatedBox);
+        }
+    }
+
     private function setUpRelatedLinksSection()
     {
         $changeQualificationStatusUrl = ($this->newProfileEnabled ?
@@ -231,16 +286,12 @@ class PersonProfileSidebar extends GeneralSidebar
         $changeGroupBQualificationUrl = $changeQualificationStatusUrl . 'B';
 
         $rolesAndAssociationsUrl = ($this->newProfileEnabled ?
-            $this->currentUrl :
-            self::OLD_USER_PROFILE_URL . $this->personId) . '/trade-roles';
+                $this->currentUrl :
+                self::OLD_USER_PROFILE_URL . $this->personId) . '/trade-roles';
 
         $internalRolesUrl = ($this->newProfileEnabled ?
-            $this->currentUrl :
-            self::OLD_USER_PROFILE_URL . $this->personId) . '/manage-internal-role';
-
-        $qualificationDetailsUrl = ($this->newProfileEnabled ?
                 $this->currentUrl :
-                self::OLD_USER_PROFILE_URL . $this->personId) . '/qualification-details';
+                self::OLD_USER_PROFILE_URL . $this->personId) . '/manage-internal-role';
 
         $relatedBox = new GeneralSidebarLinkList('Related');
         $relatedBox->setId('related');
@@ -293,12 +344,14 @@ class PersonProfileSidebar extends GeneralSidebar
             );
         }
 
-        if ($this->personProfileGuard->canViewQualificationDetails()) {
+        if ($this->personProfileGuard->canViewTestLogs()) {
             $relatedBox->addLink(
                 new GeneralSidebarLink(
-                    'qualification-details',
-                    'Qualification details',
-                    $qualificationDetailsUrl
+                    'test-logs',
+                    'Test logs',
+                    $this->urlPlugin->fromRoute($this->personProfileRoutes->getTestLogsRoute(),
+                        ['id' => $this->personId]
+                    )
                 )
             );
         }

@@ -92,7 +92,10 @@ class MotTestController extends AbstractDvsaRestfulController implements Transac
         /** @var MotTest $motTest */
         $motTest = $this->getMotTestService()->createMotTest($data);
 
-        return ApiResponse::jsonOk(["motTestNumber" => $motTest->getNumber()]);
+        return ApiResponse::jsonOk([
+            "motTestNumber" => $motTest->getNumber(),
+            "dvsaVehicleId" => $motTest->getVehicle()->getId()
+        ]);
     }
 
     /**

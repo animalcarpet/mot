@@ -4,6 +4,7 @@ namespace DvsaMotApi\Service;
 
 use Doctrine\ORM\EntityManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
+use Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle;
 use DvsaAuthentication\Service\OtpService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Dto\MotTesting\ContingencyTestDto;
@@ -23,6 +24,7 @@ use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaEntities\Repository\PersonRepository;
 use DvsaCommon\Constants\Network;
+use Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
 
 class CreateMotTestService implements TransactionAwareInterface
 {
@@ -64,14 +66,22 @@ class CreateMotTestService implements TransactionAwareInterface
     private $testerService;
     /** @var RetestEligibilityValidator */
     private $retestEligibilityValidator;
+
     /** @var OtpService */
     private $otpService;
+
     /** @var OrganisationService $organisationService */
     private $organisationService;
+
     /** @var VehicleApiVehicleService */
     private $vehicleService;
+
+    /** @var NewVehicleService */
+    private $newVehicleService;
+
     /** @var MotIdentityProviderInterface  */
     private $identityProvider;
+
     /** @var PersonRepository  */
     private $personRepository;
 
@@ -89,21 +99,23 @@ class CreateMotTestService implements TransactionAwareInterface
         OrganisationService $organisationService,
         VehicleApiVehicleService $vehicleService,
         MotIdentityProviderInterface $identityProvider,
+        NewVehicleService $newVehicleService,
         PersonRepository $personRepository,
         MotTestRepository $motTestRepository
     )
     {
-        $this->entityManager              = $entityManager;
-        $this->motTestValidator           = $motTestValidator;
-        $this->authService                = $authService;
-        $this->testerService              = $testerService;
+        $this->entityManager = $entityManager;
+        $this->motTestValidator = $motTestValidator;
+        $this->authService = $authService;
+        $this->testerService = $testerService;
         $this->retestEligibilityValidator = $retestEligibilityValidator;
-        $this->otpService                 = $otpService;
-        $this->organisationService        = $organisationService;
-        $this->vehicleService             = $vehicleService;
-        $this->identityProvider           = $identityProvider;
-        $this->motTestRepository          = $motTestRepository;
-        $this->personRepository           = $personRepository;
+        $this->otpService = $otpService;
+        $this->organisationService = $organisationService;
+        $this->vehicleService = $vehicleService;
+        $this->newVehicleService = $newVehicleService;
+        $this->identityProvider = $identityProvider;
+        $this->motTestRepository = $motTestRepository;
+        $this->personRepository = $personRepository;
     }
 
     /**
@@ -209,6 +221,38 @@ class CreateMotTestService implements TransactionAwareInterface
         ContingencyTestDto $contingencyDto = null
     )
     {
+        if ((int) $dvlaVehicleId > 0) {
+            $vehicleId = $this->vehicleService->getVehicleIdIfAlreadyImportedFromDvla($dvlaVehicleId);
+            if (!$vehicleId) {
+                $vehicle = $this->vehicleService->createVtrAndV5CFromDvlaVehicle($dvlaVehicleId, $vehicleClassCode);
+
+                if (!$vehicle instanceof DvlaVehicle) {
+                    throw new \RuntimeException(
+                        sprintf(
+                            'We have failed to import a dvla vehicle, attempted id: %s and vehicle class code: %s',
+                            $dvlaVehicleId,
+                            $vehicleClassCode
+                        )
+                    );
+                }
+
+                $vehicleId = $vehicle->getId();
+
+                $this->vehicleService->logDvlaVehicleImportChanges(
+                    $person,
+                    $vehicle,
+                    $vehicleClassCode,
+                    $primaryColourCode,
+                    $secondaryColourCode,
+                    $fuelTypeCode
+                );
+            }
+        }
+
+        if (!isset($vehicleId)) {
+            throw new \RuntimeException('At this point we should have a vehicle id');
+        }
+
         return $this->inTransaction(
             function () use (
                 $person,
@@ -236,23 +280,10 @@ class CreateMotTestService implements TransactionAwareInterface
                     $this->motTestRepository,
                     $this->motTestValidator,
                     $this->retestEligibilityValidator,
-                    $this->otpService
+                    $this->otpService,
+                    $this->newVehicleService
                 ));
 
-                if ((int) $dvlaVehicleId > 0) {
-                    $vehicle = $this->vehicleService->createVtrAndV5CFromDvlaVehicle($dvlaVehicleId, $vehicleClassCode);
-
-                    $vehicleId = $vehicle->getId();
-
-                    $this->vehicleService->logDvlaVehicleImportChanges(
-                        $person,
-                        $vehicle,
-                        $vehicleClassCode,
-                        $primaryColourCode,
-                        $secondaryColourCode,
-                        $fuelTypeCode
-                    );
-                }
 
                 return $motTestCreationHelper->createMotTest(
                     $person,

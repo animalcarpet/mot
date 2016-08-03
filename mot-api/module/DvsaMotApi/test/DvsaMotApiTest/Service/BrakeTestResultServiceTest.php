@@ -14,6 +14,7 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\BrakeTestResultClass12;
 use DvsaEntities\Entity\BrakeTestResultClass3AndAbove;
 use DvsaEntities\Entity\BrakeTestResultServiceBrakeData;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\MotTestStatus;
@@ -182,8 +183,11 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
     {
         $mocks = $this->getMocksForBrakeTestResultService();
 
+        $modelDetail = new ModelDetail();
+        $modelDetail->setVehicleClass(new VehicleClass(VehicleClassCode::CLASS_1));
+
         $motTest = $this->getTestMotTest();
-        $motTest->getVehicle()->setVehicleClass(new VehicleClass(VehicleClassCode::CLASS_1));
+        $motTest->getVehicle()->setModelDetail($modelDetail);
         $data = BrakeTestResultClass12Test::getTestBrakeTestResultData();
         $brakeTestResultPrototype = new BrakeTestResultClass12();
         $this->setupMockForSingleCall(
@@ -507,8 +511,11 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
 
     private function getTestMotTest($class = Vehicle::VEHICLE_CLASS_4)
     {
+        $modelDetail = new ModelDetail();
+        $modelDetail->setVehicleClass(new VehicleClass($class));
+
         $vehicle = new Vehicle();
-        $vehicle->setVehicleClass(new VehicleClass($class));
+        $vehicle->setModelDetail($modelDetail);
         $vehicle->setFirstUsedDate(new \DateTime('2000-01-01'));
         $motTest = new MotTest();
         $motTest->setVehicle($vehicle);

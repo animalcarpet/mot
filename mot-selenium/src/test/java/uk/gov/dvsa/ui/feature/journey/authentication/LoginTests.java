@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.is;
 
 public class LoginTests extends DslTest {
 
-    @Test(groups = {"BVT", "Regression"})
+    @Test(groups = {"BVT"})
     void userCanLogInSuccessfullyViaFrontend() throws IOException {
         //Given I am valid user
         User validUser = userData.createTester(siteData.createSite().getId());

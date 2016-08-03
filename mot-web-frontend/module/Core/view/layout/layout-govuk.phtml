@@ -67,17 +67,10 @@ use Core\ViewModel\Sidebar\SidebarInterface;
     <!--[if IE 7]><link href="/assets/stylesheets/dvsa-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
     <!--[if IE 8]><link href="/assets/stylesheets/dvsa-ie8.css" rel="stylesheet" type="text/css" /><![endif]-->
 
-    <?php $hashedUserId = $this->identity() ? hash('sha1', $this->identity()->getUserId() . '.'
-            . $this->identity()->getUsername()) : null; ?>
-    <?php if ($hashedUserId): ?>
-        <script>
-            dataLayer = [{
-                'userId': '<?php echo $hashedUserId; ?>'
-            }];
-        </script>
-    <?php endif; ?>
+    <script type="text/javascript"><?php echo $this->gtmDataLayer()->render(); ?></script>
 </head>
 <body class="">
+<?php if (getenv(APPLICATION_ENV) != 'development'): ?>
 <!-- Google Tag Manager -->
 <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-PS5VXQ"
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -87,6 +80,7 @@ use Core\ViewModel\Sidebar\SidebarInterface;
         '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-PS5VXQ');</script>
 <!-- End Google Tag Manager -->
+<?php endif; ?>
 <script type="text/javascript">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
     <div id="skiplink-container">
         <div>

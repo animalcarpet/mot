@@ -22,7 +22,7 @@ public class VehicleReInspectionWorkflow extends BaseWorkflow {
         this.driver = driver;
     }
 
-    public TestSummaryPage searchFotMotTest(User user, String searchCategory, String searchValue, String motTestId) throws IOException {
+    public TestSummaryPage searchForMotTest(User user, String searchCategory, String searchValue, String motTestId) throws IOException {
         injectOpenAmCookieAndNavigateToPath(user, MotTestSearchPage.PATH);
         PageLocator.getMotTestSearchPage(driver)
                 .selectSearchCategory(searchCategory)

@@ -137,5 +137,13 @@ services:
         parent: dvsa.rest
 
     dvsa.mot_testing_certificate:
-            class: Dvsa\Mot\Behat\Support\Api\MotTestingCertificate
-            parent: dvsa.api
+        class: Dvsa\Mot\Behat\Support\Api\MotTestingCertificate
+        parent: dvsa.api
+
+    dvsa.stats_tester_performance:
+        class: Dvsa\Mot\Behat\Support\Api\StatsTesterPerformance
+        parent: dvsa.api
+
+    dvsa.stats_component_fail_rate:
+        class: Dvsa\Mot\Behat\Support\Api\StatsComponentFailRate
+        parent: dvsa.api

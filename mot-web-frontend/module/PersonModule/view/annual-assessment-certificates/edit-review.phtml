@@ -1,0 +1,35 @@
+<?php
+use Dvsa\Mot\Frontend\PersonModule\ViewModel\AnnualAssessmentCertificates\AnnualAssessmentCertificatesAddEditReviewViewModel;
+
+/** @var AnnualAssessmentCertificatesAddEditReviewViewModel $viewModel */
+?>
+
+<?php
+echo $this->partial('errorMessages', array('getFromFlash' => true));
+?>
+
+<h3 class="summary-heading">Certificate details</h3>
+
+<?php
+echo $this->partial(
+    'partial/gds/gds-table/gds-key-value-table',
+    [
+        'table' => $viewModel->getTable(),
+    ]
+);
+?>
+
+<form novalidate="" autocomplete="off" method="POST" action="">
+    <?php echo $this->csrfToken(); ?>
+
+    <nav class="content-navigation">
+        <input type="submit" class="button" value="<?php echo $viewModel->getSubmitButtonText() ?>" id="confirm-button">
+        <ul class="content-navigation__secondary">
+            <li>
+                <a href="<?php echo $viewModel->getBackUrl() ?>">
+                    Back to change assessment certificate details
+                </a>
+            </li>
+        </ul>
+    </nav>
+</form>

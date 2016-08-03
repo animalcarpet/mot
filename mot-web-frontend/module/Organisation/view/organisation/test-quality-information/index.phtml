@@ -1,0 +1,23 @@
+<?php
+
+use Organisation\ViewModel\TestQualityInformation\TestQualityInformationViewModel;
+
+/**
+ * @var TestQualityInformationViewModel $viewModel
+ */
+?>
+
+<?php
+    echo $viewModel->getTable()->renderTable($this);
+    echo $viewModel->getTable()->renderFooter($this);
+?>
+
+<nav class="content-navigation">
+    <ul class="content-navigation__secondary">
+        <li>
+            <a id="return-link" href="<?php echo $viewModel->getReturnLink()?>">
+                Return to authorised examiner
+            </a>
+        </li>
+    </ul>
+</nav>

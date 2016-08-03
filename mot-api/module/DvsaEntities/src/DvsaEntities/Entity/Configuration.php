@@ -3,6 +3,7 @@
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
  * Configuration
@@ -11,9 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\ConfigurationRepository", readOnly=true)
  * @ORM\Cache(usage="READ_ONLY", region="staticdata")
  */
-class Configuration
+class Configuration extends Entity
 {
-
     const KEY_TEST_SLOT_PRICE = 'testSlotPrice';
     const KEY_TEST_SLOT_BATCH = 'testSlotBatch';
     const KEY_TEST_SLOT_MINIMUM_AMOUNT = 'testSlotMinAmount';

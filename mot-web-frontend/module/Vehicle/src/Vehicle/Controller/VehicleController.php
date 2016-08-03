@@ -3,7 +3,8 @@
 namespace Vehicle\Controller;
 
 use Core\Controller\AbstractAuthActionController;
-use DvsaClient\MapperFactory;
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
@@ -29,11 +30,7 @@ class VehicleController extends AbstractAuthActionController
     const ERR_MSG_INVALID_VEHICLE_ID = 'No Vehicle Id provided';
     const FORM_ERROR                 = 'Unable to find Vehicle';
     const NO_RESULT_FOUND            = 'Search term(s) not found...';
-
-    /**
-     * @var MapperFactory
-     */
-    protected $mapperFactory;
+    const COLOUR_NOT_STATED          = 'Not Stated';
 
     /**
      * @var \DvsaCommon\Obfuscate\ParamObfuscator
@@ -43,10 +40,9 @@ class VehicleController extends AbstractAuthActionController
     /**
      * @param \DvsaCommon\Obfuscate\ParamObfuscator $paramObfuscator
      */
-    public function __construct(ParamObfuscator $paramObfuscator, MapperFactory $mapperFactory)
+    public function __construct(ParamObfuscator $paramObfuscator)
     {
         $this->paramObfuscator = $paramObfuscator;
-        $this->mapperFactory = $mapperFactory;
     }
 
     /**
@@ -64,7 +60,7 @@ class VehicleController extends AbstractAuthActionController
         }
 
         $obfuscatedVehicleId = (string) $this->params('id');
-        $vehicleId = $this->paramObfuscator->deobfuscateEntry(
+        $vehicleId = (int) $this->paramObfuscator->deobfuscateEntry(
             ParamObfuscator::ENTRY_VEHICLE_ID, $obfuscatedVehicleId, false
         );
         if ((int) $vehicleId == 0) {
@@ -73,7 +69,9 @@ class VehicleController extends AbstractAuthActionController
 
         $vehicle = null;
         try {
-            $vehicle = $this->mapperFactory->Vehicle->getById($vehicleId);
+            /** @var VehicleService $vehicleService */
+            $vehicleService = $this->getServiceLocator()->get(VehicleService::class);
+            $vehicle = $vehicleService->getDvsaVehicleById($vehicleId);
         } catch (ValidationException $e) {
             $this->addErrorMessages(self::FORM_ERROR);
         }
@@ -84,6 +82,7 @@ class VehicleController extends AbstractAuthActionController
         return new ViewModel(
             [
                 'vehicle' => $vehicle,
+                'colourNames' => $this->getVehicleColourNames($vehicle),
                 'urls'    => [
                     'back'    => $this->getUrlToBack($searchData),
                     'history' => $this->getUrlToHistory($obfuscatedVehicleId, $searchData),
@@ -127,11 +126,11 @@ class VehicleController extends AbstractAuthActionController
         $searchData->set('backTo', VehicleController::BACK_TO_DETAIL);
 
         return VehicleUrlBuilderWeb::historyMotTests($obfuscatedVehicleId)->toString() . '?' .
-            htmlspecialchars(
-                http_build_query(
-                    $searchData->toArray()
-                )
-            );
+        htmlspecialchars(
+            http_build_query(
+                $searchData->toArray()
+            )
+        );
     }
 
     /**
@@ -201,5 +200,15 @@ class VehicleController extends AbstractAuthActionController
     public function addErrorMessagesFromService($errors)
     {
         $this->addErrorMessages($errors);
+    }
+
+    private function getVehicleColourNames(DvsaVehicle $vehicle)
+    {
+        $colourNames = (self::COLOUR_NOT_STATED == $vehicle->getColourSecondary()) ?
+            $vehicle->getColour() :
+            join(' and ', [$vehicle->getColour(), $vehicle->getColourSecondary()]);
+
+
+        return $colourNames;
     }
 }

@@ -99,4 +99,9 @@ class UpdateVtsClassesReviewProcess extends AbstractTwoStepVtsProcess implements
     {
         return $this->reviewPageButtonText;
     }
+
+    public function getEditPageLede()
+    {
+        return null;
+    }
 }

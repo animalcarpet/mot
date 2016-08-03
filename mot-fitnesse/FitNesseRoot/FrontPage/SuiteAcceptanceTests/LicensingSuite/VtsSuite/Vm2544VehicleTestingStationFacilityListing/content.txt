@@ -1,8 +1,0 @@
-!contents -R2 -g -p -f -h
-'''As the AEDM/site manager of an authorised AE I want to view the testing facilities at a site so that I know the site is authorised to test.'''
-
-!|Vm 2544 Vehicle Testing Station Facility Listing                                                                                                                                                                                                                                                                       |
-|Vehicle Testing Station Id|Expected Atl Count|Expected Optl Count|Expected Tptl Count|success?|are Atl Facilities Correct?|are Optl Facilities Correct?|are Tptl Facilities Correct?|
-|1                         |1                 |0                  |1                  |true    |true                       |true                        |true                        |
-|2                         |0                 |1                  |0                  |true    |true                       |true                        |true                        |
-|3                         |1                 |1                  |2                  |true    |true                       |true                        |true                        |

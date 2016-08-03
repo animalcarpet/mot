@@ -4,58 +4,70 @@ namespace DvsaCommon\Model;
 
 use DvsaCommon\Constants\Role;
 use DvsaCommon\Enum\RoleCode;
-use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
+use DvsaCommon\Utility\ArrayUtils;
 
 /**
  * Internal class for use in RBAC implementation only - should not be used by business code.
  */
 class PersonAuthorization
 {
-
     /**
-     * @var ListOfRolesAndPermissions $normalRoles
+     * @var ListOfRolesAndPermissions
      */
     private $normalRoles;
 
     /**
-     * An associative array siteID => ListOfRolesAndPermissions
+     * An associative array siteID => ListOfRolesAndPermissions.
      *
-     * @var  ListOfRolesAndPermissions[] $siteRoles
+     * @var ListOfRolesAndPermissions[]
      */
     private $siteRoles;
 
     /**
-     * An associative array organisationID => ListOfRolesAndPermissions
+     * An associative array organisationID => ListOfRolesAndPermissions.
      *
-     * @var  ListOfRolesAndPermissions[] $organisationRoles
+     * @var ListOfRolesAndPermissions[]
      */
     private $organisationRoles;
 
     /**
-     * Associative array of site ID => organisation ID for recursive lookups of permissions
+     * Associative array of site ID => organisation ID for recursive lookups of permissions.
      *
-     * @var array $siteOrganisationMap
+     * @var array
      */
     private $siteOrganisationMap;
 
-    public function __construct(
-        ListOfRolesAndPermissions $normalRoles,
-        $organisationRoles = [],
-        $siteRoles = [],
-        $siteOrganisationMap = []
-    ) {
+    /**
+     * PersonAuthorization constructor.
+     *
+     * @param ListOfRolesAndPermissions $normalRoles
+     * @param array                     $organisationRoles
+     * @param array                     $siteRoles
+     * @param array                     $siteOrganisationMap
+     */
+    public function __construct(ListOfRolesAndPermissions $normalRoles, $organisationRoles = [], $siteRoles = [],
+                                   $siteOrganisationMap = [])
+    {
         $this->normalRoles = $normalRoles;
         $this->organisationRoles = $organisationRoles;
         $this->siteRoles = $siteRoles;
         $this->siteOrganisationMap = $siteOrganisationMap;
     }
 
+    /**
+     * @return PersonAuthorization
+     */
     public static function emptyAuthorization()
     {
         return new PersonAuthorization(ListOfRolesAndPermissions::emptyList(), [], [], []);
     }
 
+    /**
+     * @param $siteId
+     *
+     * @return mixed|null
+     */
     public function getOrganisationIdForSite($siteId)
     {
         $map = ArrayUtils::tryGet($this->siteOrganisationMap, $siteId);
@@ -63,12 +75,15 @@ class PersonAuthorization
         return $map ? reset($map) : null;
     }
 
+    /**
+     * @return array
+     */
     public function asArray()
     {
         $siteArray = [];
 
         /**
-         * @var int $siteId
+         * @var int
          * @var ListOfRolesAndPermissions $siteListOfRoleAndPermissions
          */
         foreach ($this->siteRoles as $siteId => $siteListOfRoleAndPermissions) {
@@ -78,7 +93,7 @@ class PersonAuthorization
         $orgArray = [];
 
         /**
-         * @var int $orgId
+         * @var int
          * @var ListOfRolesAndPermissions $orgListOfRoleAndPermissions
          */
         foreach ($this->organisationRoles as $orgId => $orgListOfRoleAndPermissions) {
@@ -89,7 +104,7 @@ class PersonAuthorization
             'normal' => $this->normalRoles->asArray(),
             'sites' => $siteArray,
             'organisations' => $orgArray,
-            'siteOrganisationMap' => $this->siteOrganisationMap
+            'siteOrganisationMap' => $this->siteOrganisationMap,
         ];
     }
 
@@ -126,9 +141,10 @@ class PersonAuthorization
                 $placeId => new ListOfRolesAndPermissions(
                     ArrayUtils::get($placeListOfRolesAndPermissionsArray, 'roles'),
                     ArrayUtils::get($placeListOfRolesAndPermissionsArray, 'permissions')
-                )
+                ),
             ];
         }
+
         return $places;
     }
 
@@ -142,14 +158,14 @@ class PersonAuthorization
     {
         $allRoles = $this->normalRoles->asArray()['roles'];
 
-        foreach ($this->siteRoles as $siteRolesPermissions){
+        foreach ($this->siteRoles as $siteRolesPermissions) {
             $roles = $siteRolesPermissions->asArray()['roles'];
             foreach ($roles as $role) {
                 $allRoles[] = $role;
             }
         }
 
-        foreach ($this->organisationRoles as $organisationRolesPermissions){
+        foreach ($this->organisationRoles as $organisationRolesPermissions) {
             $roles = $organisationRolesPermissions->asArray()['roles'];
             foreach ($roles as $role) {
                 $allRoles[] = $role;
@@ -159,24 +175,35 @@ class PersonAuthorization
         return array_unique($allRoles);
     }
 
-    /** @return ListOfRolesAndPermissions */
+    /**
+     * @return ListOfRolesAndPermissions
+     */
     public function getRoles()
     {
         return $this->normalRoles;
     }
 
-    /** @return ListOfRolesAndPermissions */
+    /**
+     * @return ListOfRolesAndPermissions
+     */
     public function getRolesForSite($siteId)
     {
         return ArrayUtils::tryGet($this->siteRoles, $siteId, ListOfRolesAndPermissions::emptyList());
     }
 
-    /** @return ListOfRolesAndPermissions */
+    /**
+     * @return ListOfRolesAndPermissions
+     */
     public function getRolesForOrganisation($organisationId)
     {
         return ArrayUtils::tryGet($this->organisationRoles, $organisationId, ListOfRolesAndPermissions::emptyList());
     }
 
+    /**
+     * @param $permissionName
+     *
+     * @return bool
+     */
     public function isGranted($permissionName)
     {
         if ($this->getRoles()->includesPermission($permissionName)) {
@@ -192,14 +219,26 @@ class PersonAuthorization
                 return true;
             }
         }
+
         return false;
     }
 
+    /**
+     * @param $permissionName
+     *
+     * @return bool
+     */
     public function isGrantedAtSystem($permissionName)
     {
         return $this->getRoles()->includesPermission($permissionName);
     }
 
+    /**
+     * @param $permissionName
+     * @param $siteId
+     *
+     * @return bool
+     */
     public function isGrantedAtSite($permissionName, $siteId)
     {
         $isGrantedAtSite = $this->getRolesForSite($siteId)->includesPermission(
@@ -213,6 +252,12 @@ class PersonAuthorization
         return $isGrantedAtSite || $isGrantedAtOrganisation || $isGrantedGlobally;
     }
 
+    /**
+     * @param $permissionName
+     * @param $orgId
+     *
+     * @return bool
+     */
     public function isGrantedAtOrganisation($permissionName, $orgId)
     {
         $isGrantedAtOrganisation = $this->getRolesForOrganisation($orgId)->includesPermission(
@@ -228,9 +273,9 @@ class PersonAuthorization
                 }
             }
         }
+
         return $isGrantedAtOrganisation || $isGrantedGlobally || $isGrantedAtSiteForOrganisation;
     }
-
 
     /**
      * @return bool
@@ -281,10 +326,16 @@ class PersonAuthorization
                 return true;
             }
         }
+
         return false;
     }
 
-
+    /**
+     * @param $permissionName
+     * @param $siteId
+     *
+     * @return bool
+     */
     private function isGrantedForOrganisationAssociatedWithSite($permissionName, $siteId)
     {
         $organisationId = $this->getOrganisationIdForSite($siteId);
@@ -294,6 +345,7 @@ class PersonAuthorization
             $isGrantedAtOrganisation = $this->getRolesForOrganisation($organisationId)
                 ->includesPermission($permissionName);
         }
+
         return $isGrantedAtOrganisation;
     }
 }

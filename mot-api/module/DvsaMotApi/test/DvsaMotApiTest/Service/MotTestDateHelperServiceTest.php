@@ -9,6 +9,7 @@ use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\Date\TestDateTimeHolder;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
@@ -48,11 +49,11 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
     }
 
     /**
-     * @param int|null $status       MotTest status Passed or Pending Passed
-     * @param string   $issuedDate   MotTest issued date, if null take from MotTest
-     * @param int      $testType     MotTest type
-     * @param string   $expectResult Expected Date
-     * @param boolean  $emergency    Emergency test
+     * @param int|null $status MotTest status Passed or Pending Passed
+     * @param string $issuedDate MotTest issued date, if null take from MotTest
+     * @param int $testType MotTest type
+     * @param string $expectResult Expected Date
+     * @param boolean $emergency Emergency test
      *
      * @dataProvider dataProviderTestIssuedDate
      */
@@ -62,7 +63,8 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
         $testType,
         $expectResult,
         $emergency = false
-    ) {
+    )
+    {
         $issuedDate = $issuedDate ? DateUtils::toDate($issuedDate) : $issuedDate;
         $expectResult = $expectResult ? DateUtils::toDate($expectResult) : null;
 
@@ -94,9 +96,9 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
 
         return [
             [
-                'status'       => null,
-                'issuedDate'   => null,
-                'testType'     => MotTestTypeCode::NORMAL_TEST,
+                'status' => null,
+                'issuedDate' => null,
+                'testType' => MotTestTypeCode::NORMAL_TEST,
                 'expectResult' => self::CURRENT_DATE,
             ],
             [null, $issuedDate, MotTestTypeCode::NORMAL_TEST, $issuedDate],
@@ -134,7 +136,6 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
      * @param string $dateOfMotTest the date the test was performed for the test case
      * @param string $expiryDate the expected expiry of the MOT test
      * @param string $testPreservationDate the expectec preservation of the NEXT mot test
-
      * @dataProvider dpTestExpiryDate
      *
      * @SuppressWarnings(unused)
@@ -150,7 +151,8 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
         $dateOfMotTest,
         $expiryDate,
         $testPreservationDate
-    ) {
+    )
+    {
         /** @var DateTimeHolder $now */
         $now = $this->createDateTimeHolder($dateOfMotTest);
         $motTest = $this->getMockMotTest(MotTestTypeCode::NORMAL_TEST, self::TEST_STATUS_PASS);
@@ -160,9 +162,13 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
         // Prime the Vehicle entity from the CSV data
         $vehicleClassObj = new VehicleClass();
         $vehicleClassObj->setCode($vehicleClass);
+
+        $modelDetail = new ModelDetail();
+        $modelDetail->setVehicleClass($vehicleClassObj);
+
         $vehicle = new Vehicle();
         $vehicle->setId(999);
-        $vehicle->setVehicleClass($vehicleClassObj);
+        $vehicle->setModelDetail($modelDetail);
         $vehicle->setNewAtFirstReg('yes' === strtolower($newAtFirstReg));
         $vehicle->setFirstRegistrationDate(new \DateTime($dateRegistered));
         $vehicle->setManufactureDate(new \DateTime($dateManufactured));
@@ -198,13 +204,13 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
      * a function of the issued date of that test if the test date is outside of the preservation
      * date window.
      *
-     * @param $vehicleClass,
-     * @param $newAtFirstReg,
-     * @param $firstUseDate,
-     * @param $firstRegDate,
-     * @param $manuDate,
-     * @param $previousTestDate,
-     * @param $nowDate,
+     * @param $vehicleClass ,
+     * @param $newAtFirstReg ,
+     * @param $firstUseDate ,
+     * @param $firstRegDate ,
+     * @param $manuDate ,
+     * @param $previousTestDate ,
+     * @param $nowDate ,
      * @param $expectedExpiryDate
      *
      * @throws \Exception
@@ -222,16 +228,22 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
         $nowDate,
         $expectedExpiryDate,
         $testPreservationDate
-    ) {
+    )
+    {
         /** @var DateTimeHolder $now */
         $now = $this->createDateTimeHolder($nowDate);
 
         // Prime the Vehicle entity from the CSV data
         $vehicleClass = new VehicleClass();
         $vehicleClass->setCode($vehicleClassCode);
+
+        $modelDetail = new ModelDetail();
+        $modelDetail->setVehicleClass($vehicleClass);
+
         $vehicle = new Vehicle();
         $vehicle->setId(999);
-        $vehicle->setVehicleClass($vehicleClass);
+        $vehicle->setModelDetail($modelDetail);
+
         // ensure this date is used for the calculation!
         $vehicle->setNewAtFirstReg('yes' === strtolower($newAtFirstReg));
         $vehicle->setFirstRegistrationDate(new \DateTime($firstRegDate));
@@ -309,7 +321,8 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
     private function getMockMotTest(
         $testTypeCode = MotTestTypeCode::NORMAL_TEST,
         $status = self::TEST_STATUS_PASS
-    ) {
+    )
+    {
         $testType = (new \DvsaEntities\Entity\MotTestType())->setCode($testTypeCode);
         $motTest = MotTestObjectsFactory::activeMotTest()
             ->setId(1)

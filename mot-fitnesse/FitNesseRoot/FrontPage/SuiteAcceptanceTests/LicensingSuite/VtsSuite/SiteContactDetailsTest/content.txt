@@ -1,6 +1,0 @@
-Get site contact details
-
-!| Vm 2227 Site Contact Details                                                                                        |
-|Site id|success?|error messages?    |address Line 1?|address Line 2?|address Line 3?|town?  |postcode?|phone number?  |
-|1      |true    |                   |67 Main Road   |               |               |Bristol|BS8 2NT  |+768-45-4433630|
-|9999   |false   |Site 9999 not found|               |               |               |       |         |               |

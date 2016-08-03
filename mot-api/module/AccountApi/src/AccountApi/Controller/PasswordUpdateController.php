@@ -2,11 +2,14 @@
 
 namespace AccountApi\Controller;
 
+use AccountApi\Service\Exception\OpenAmChangePasswordException;
 use AccountApi\Service\TokenService;
 use Doctrine\ORM\EntityManager;
+use DvsaCommon\InputFilter\Account\ChangePasswordInputFilter;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Service\Exception\NotFoundException;
+use DvsaCommonApi\Service\Validator\ErrorSchema;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -43,11 +46,22 @@ class PasswordUpdateController extends AbstractDvsaRestfulController
             throw new NotFoundException('password');
         }
 
-        $response = $this->tokenService->updatePassword(
-            $userId,
-            $data['password']
-        );
-        $this->entityManager->flush();
-        return ApiResponse::jsonOk($response);
+        try {
+            $response = $this->tokenService->updatePassword(
+                $userId,
+                $data['password']
+            );
+
+            $this->entityManager->flush();
+            return ApiResponse::jsonOk($response);
+        } catch (OpenAmChangePasswordException $ex) {
+            ErrorSchema::throwError(ChangePasswordInputFilter::MSG_PASSWORD_HISTORY, 'newPassword');
+
+            // The return below will never be reached as the exception above will be thrown.
+            // Sadly PhpStorm cannot deduce that and keeps showing a warning
+            // that not all code paths have "return" statement.
+            // Thus I've put "return null" so it shuts up.
+            return null;
+        }
     }
 }

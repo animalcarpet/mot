@@ -56,7 +56,7 @@ class SlotsManualAdjustmentContext implements Context
     }
 
     /**
-     * @BeforeScenario
+     * @BeforeScenario @manual-adjustments
      */
     public function gatherContexts(BeforeScenarioScope $scope)
     {

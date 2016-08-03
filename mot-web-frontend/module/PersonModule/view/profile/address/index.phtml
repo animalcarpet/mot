@@ -27,6 +27,7 @@ echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => 
                 'value' => htmlspecialchars_decode($firstLine),
                 'type' => 'text',
                 'divModifier' => 'form-group-compound',
+                'autoCompleteOff' => true,
             ]);
         echo $this->partial(
             'partial/gds/form/control-text-group',
@@ -37,6 +38,7 @@ echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => 
                 'value' => htmlspecialchars_decode($secondLine),
                 'type' => 'text',
                 'divModifier' => 'form-group-compound',
+                'autoCompleteOff' => true,
             ]);
         echo $this->partial(
             'partial/gds/form/control-text-group',
@@ -46,6 +48,7 @@ echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => 
                 'errorMessage' => isset($errors['thirdLine']) ? $errors['thirdLine'] : null,
                 'value' => htmlspecialchars_decode($thirdLine),
                 'type' => 'text',
+                'autoCompleteOff' => true,
             ]);
         ?>
         <?php
@@ -57,7 +60,8 @@ echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => 
                 'errorMessage' => isset($errors['townOrCity']) ? $errors['townOrCity'] : null,
                 'label' => 'Town or city',
                 'value' => htmlspecialchars_decode($townOrCity),
-                'type' => 'text'
+                'type' => 'text',
+                'autoCompleteOff' => true,
             ]);
         ?>
         <?php
@@ -69,7 +73,8 @@ echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => 
                 'errorMessage' => isset($errors['country']) ? $errors['country'] : null,
                 'label' => 'Country (optional)',
                 'value' => htmlspecialchars_decode($country),
-                'type' => 'text'
+                'type' => 'text',
+                'autoCompleteOff' => true,
             ]);
         ?>
         <?php
@@ -81,7 +86,8 @@ echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => 
                 'errorMessage' => isset($errors['postcode']) ? $errors['postcode'] : null,
                 'label' => 'Postcode',
                 'value' => htmlspecialchars_decode($postcode),
-                'type' => 'text'
+                'type' => 'text',
+                'autoCompleteOff' => true,
             ]);
         ?>
     </fieldset>

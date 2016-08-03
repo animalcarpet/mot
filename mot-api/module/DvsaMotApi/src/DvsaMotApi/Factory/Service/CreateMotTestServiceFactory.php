@@ -13,6 +13,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use DvsaMotApi\Service\CreateMotTestService;
 use OrganisationApi\Service\OrganisationService;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
+use Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
 
 class CreateMotTestServiceFactory implements FactoryInterface
 {
@@ -31,6 +32,7 @@ class CreateMotTestServiceFactory implements FactoryInterface
             $serviceLocator->get(OrganisationService::class),
             $serviceLocator->get(VehicleService::class),
             $serviceLocator->get(MotIdentityProviderInterface::class),
+            $serviceLocator->get(NewVehicleService::class),
             $entityManager->getRepository(Person::class),
             $entityManager->getRepository(MotTest::class)
         );

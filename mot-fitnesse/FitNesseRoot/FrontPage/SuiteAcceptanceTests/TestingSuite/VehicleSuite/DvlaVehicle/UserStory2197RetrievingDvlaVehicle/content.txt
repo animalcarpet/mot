@@ -1,9 +1,0 @@
-!contents -R2 -g -p -f -h
-'''In order to be able to display vehicle details based on DVLA V5 data as a developer I should be able to retrieve it'''
-
-This test serves as a smoke test for an API method. Id column points to the dvla_vehicle table primary key.
-
-!| Vm 2197 Dvla vehicle retrieval                                                                                                              |
-|Id|Registration?|Vin?             |Cylinder Capacity?|Make?  |Model?|Primary Colour?|Secondary Colour?|Fuel Type?|Body Type?|First Used Date? |
-|1 |F50GGP       |WF0BXXGAJB1R41234|1870              |RENAULT|CLIO  |Beige          |Beige            |Petrol    |Hatchback |18 September 2001|
-|2 |G266ARX      |VF1BA0B0525341234|1596              |RENAULT|CLIO  |Beige          |Beige            |Petrol    |Hatchback |16 September 2001|

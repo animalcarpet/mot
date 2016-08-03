@@ -4,6 +4,9 @@ namespace Site\Factory\Controller;
 
 use Core\Catalog\EnumCatalog;
 use DvsaClient\MapperFactory;
+use DvsaCommon\Auth\Assertion\ViewVtsTestQualityAssertion;
+use Site\Action\SiteTestQualityAction;
+use Site\Action\UserTestQualityAction;
 use Site\Controller\SiteController;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -32,7 +35,10 @@ class SiteControllerFactory implements FactoryInterface
             $serviceLocator->get('MotIdentityProvider'),
             $serviceLocator->get('CatalogService'),
             new Container(SiteController::SESSION_CNTR_KEY),
-            $enumCatalog->businessRole()
+            $enumCatalog->businessRole(),
+            $serviceLocator->get(SiteTestQualityAction::class),
+            $serviceLocator->get(UserTestQualityAction::class),
+            $serviceLocator->get(ViewVtsTestQualityAssertion::class)
         );
     }
 }

@@ -3,7 +3,7 @@ package uk.gov.dvsa.ui.pages.authorisedexaminer.ChangeDetails;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.authorisedexaminer.ConfirmChangeDetails.ConfirmChangeAERegisteredOfficeAddressPage;
@@ -33,17 +33,17 @@ public class ChangeAERegisteredOfficeAddressPage extends Page {
     }
 
     public ChangeAERegisteredOfficeAddressPage changeFirstAddressLine(String street) {
-        FormCompletionHelper.enterText(contactDetailsAddressLine1, street);
+        FormDataHelper.enterText(contactDetailsAddressLine1, street);
         return this;
     }
 
     public ChangeAERegisteredOfficeAddressPage changeTown(String street) {
-        FormCompletionHelper.enterText(contactDetailsTown, street);
+        FormDataHelper.enterText(contactDetailsTown, street);
         return this;
     }
 
     public ChangeAERegisteredOfficeAddressPage changePostcode(String street) {
-        FormCompletionHelper.enterText(contactDetailsPostconde, street);
+        FormDataHelper.enterText(contactDetailsPostconde, street);
         return this;
     }
 }

@@ -29,7 +29,7 @@ public class ManualEventTests extends DslTest {
         aeId = ae.getId();
     }
 
-    @Test(groups = {"BVT", "Regression"}, description = "VM-11545")
+    @Test(groups = {"Regression"}, description = "VM-11545")
     public void recordManualEventSuccessfully() throws IOException, URISyntaxException {
 
         //Given I am on the Events History Page

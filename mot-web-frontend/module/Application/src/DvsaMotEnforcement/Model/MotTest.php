@@ -49,12 +49,6 @@ class MotTest
                 $motTest['display_status'] = $this->translateMotTestStatusForDisplay($status);
             }
 
-            // VM-1674: Change VRM to "N/A" if tested without a registration mark.
-            $hasReg = $motTest['hasRegistration'];
-            if (!$hasReg) {
-                $motTest['registration'] = 'N/A';
-            }
-
             $testDate = isset($motTest['testDate']) ? $motTest['testDate'] : null;
             $motTest['test_date'] = $testDate ?: "";
             $motTest['display_date'] = DateTimeDisplayFormat::textDateTimeShort($testDate);

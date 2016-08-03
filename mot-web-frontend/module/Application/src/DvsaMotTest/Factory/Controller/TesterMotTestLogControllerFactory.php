@@ -2,6 +2,7 @@
 
 namespace DvsaMotTest\Factory\Controller;
 
+use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaClient\MapperFactory;
 use DvsaMotTest\Controller\TesterMotTestLogController;
 use Zend\ServiceManager\FactoryInterface;
@@ -17,7 +18,8 @@ class TesterMotTestLogControllerFactory implements FactoryInterface
 
         return new TesterMotTestLogController(
             $serviceLocator->get('AuthorisationService'),
-            $serviceLocator->get(MapperFactory::class)
+            $serviceLocator->get(MapperFactory::class),
+            $serviceLocator->get(ContextProvider::class)
         );
     }
 }

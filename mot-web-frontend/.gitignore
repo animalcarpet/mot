@@ -11,7 +11,7 @@ vendor
 public/swagger-ui
 public/static
 public/assets
-#build
+/build
 logs
 coveragelogs
 data/log/*

@@ -6,6 +6,8 @@ import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
+import uk.gov.dvsa.ui.pages.mot.MotTestStartedPage;
+import uk.gov.dvsa.ui.pages.mot.StartTestConfirmationPage;
 
 public class CreateNewVehicleRecordConfirmPage extends Page {
     private static final String PAGE_TITLE = "Confirm new vehicle record";
@@ -90,5 +92,18 @@ public class CreateNewVehicleRecordConfirmPage extends Page {
 
     public String getDeclarationText() {
         return declarationElement.getText();
+    }
+
+    public CreateNewVehicleRecordConfirmPage setOneTimePassword(String pin)
+    {
+        oneTimePassword.clear();
+        oneTimePassword.sendKeys(pin);
+        return this;
+    }
+
+    public MotTestStartedPage startTest()
+    {
+        startMOTTest.submit();
+        return new MotTestStartedPage(driver);
     }
 }

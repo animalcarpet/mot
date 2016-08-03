@@ -4,7 +4,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
@@ -37,30 +37,30 @@ public class UserSearchPage extends Page {
     }
 
     public UserSearchPage searchForUserByUsername(String username){
-        FormCompletionHelper.enterText(usernameInputField, username);
+        FormDataHelper.enterText(usernameInputField, username);
         return this;
     }
 
     public UserSearchPage searchForUserByFirstName(String firstname) {
-        FormCompletionHelper.enterText(userFirstNameInputField, firstname);
+        FormDataHelper.enterText(userFirstNameInputField, firstname);
         return this;
     }
 
     public UserSearchPage searchForUserByUserEmail(String email){
-        FormCompletionHelper.enterText(emailInputField, email);
+        FormDataHelper.enterText(emailInputField, email);
         return this;
     }
 
     public UserSearchPage searchForUserByTown(String town) {
-        FormCompletionHelper.enterText(townInputField, town);
+        FormDataHelper.enterText(townInputField, town);
         return this;
     }
 
     public UserSearchPage searchForUserByDateOfBirth(String date) {
         String[] dateValues = date.split("-");
-        FormCompletionHelper.enterText(dayInputField, dateValues[0]);
-        FormCompletionHelper.enterText(monthInputField, dateValues[1]);
-        FormCompletionHelper.enterText(yearInputField, dateValues[2]);
+        FormDataHelper.enterText(dayInputField, dateValues[0]);
+        FormDataHelper.enterText(monthInputField, dateValues[1]);
+        FormDataHelper.enterText(yearInputField, dateValues[2]);
         return this;
     }
 

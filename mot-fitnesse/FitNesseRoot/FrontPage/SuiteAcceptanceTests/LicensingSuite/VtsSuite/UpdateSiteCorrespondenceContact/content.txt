@@ -1,9 +1,0 @@
-!contents -R2 -g -p -f -h
-!| GenerateTestDataForOtherFitnesseTests |
-| siteId? | siteMngrUsername? |
-| $siteId= | $userSiteMngr= |
-
-!| VM7285SetContactToSite |
-| siteMngUserName | id | type | addressLine1 | addressLine2 | addressLine3 | town | postcode | email | phoneNumber | error message? | isSaved? |
-| $userSiteMngr | $siteId | BUS | addressLine1 | addressLine2 | addressLine3 | town | postcode | hamoruqipo@yahoo.com | phoneNumber | OK | OK |
-| $userSiteMngr | $siteId | BUS | adress1 | address2 | | Bristol | BS1 | test@domain.com | 1234567 | OK | OK |

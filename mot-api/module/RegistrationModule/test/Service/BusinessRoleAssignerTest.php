@@ -7,6 +7,7 @@
 
 namespace Dvsa\Mot\Api\RegistrationModuleTest\Service;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Dvsa\Mot\Api\RegistrationModule\Service\BusinessRoleAssigner;
@@ -31,6 +32,11 @@ class BusinessRoleAssignerTest extends \PHPUnit_Framework_TestCase
     {
         /* @var EntityManager $entityManager */
         $mockEntityManager = XMock::of(EntityManager::class);
+
+        $mockConnection = XMock::of(Connection::class);
+        $mockEntityManager->expects($this->any())
+            ->method('getConnection')
+            ->willReturn($mockConnection);
 
         /** @var PersonSystemRoleRepository $mockPersonSystemRoleRepository */
         $mockPersonSystemRoleRepository =  XMock::of(PersonSystemRoleRepository::class);

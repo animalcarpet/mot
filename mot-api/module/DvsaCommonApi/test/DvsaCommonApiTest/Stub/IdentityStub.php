@@ -17,4 +17,9 @@ class IdentityStub extends Identity
     {
         return $this->username;
     }
+
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
+    }
 }

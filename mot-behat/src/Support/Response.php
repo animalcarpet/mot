@@ -5,6 +5,10 @@ namespace Dvsa\Mot\Behat\Support;
 class Response
 {
     /**
+     * @var string
+     */
+    private $rawBody;
+    /**
      * @var Request
      */
     private $request;
@@ -30,12 +34,13 @@ class Response
      * @param array      $headers
      * @param array|null $body
      */
-    public function __construct(Request $request, $statusCode = 200, array $headers = [], $body = null)
+    public function __construct(Request $request, $statusCode = 200, array $headers = [], $body = null, $rawBody = null)
     {
         $this->request = $request;
         $this->statusCode = $statusCode;
         $this->body = null !== $body ? new ResponseBody($body) : $body;
         $this->headers = $headers;
+        $this->rawBody = $rawBody;
     }
 
     /**
@@ -98,5 +103,23 @@ RESPONSE;
             array_keys($this->headers),
             $this->headers
         ));
+    }
+
+    /**
+     * @return string
+     */
+    public function getRawBody()
+    {
+        return $this->rawBody;
+    }
+
+    /**
+     * @param string $rawBody
+     * @return Response
+     */
+    public function setRawBody($rawBody)
+    {
+        $this->rawBody = $rawBody;
+        return $this;
     }
 }

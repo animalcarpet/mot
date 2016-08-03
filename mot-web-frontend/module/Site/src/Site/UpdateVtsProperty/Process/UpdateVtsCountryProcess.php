@@ -121,4 +121,9 @@ class UpdateVtsCountryProcess extends AbstractSingleStepVtsProcess implements Au
     {
         return $this->breadcrumbLabel;
     }
+
+    public function getEditPageLede()
+    {
+        return null;
+    }
 }

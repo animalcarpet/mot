@@ -77,4 +77,19 @@ abstract class AbstractAuthActionController extends AbstractDvsaActionController
     {
         return $this->serviceLocator->get("AuthorisationService");
     }
+
+    /**
+     * Sets the GDS layout.
+     *
+     * @param string $title
+     * @param string $subtitle
+     */
+    protected function enableGdsLayout($title, $subtitle)
+    {
+        $this->layout('layout/layout-govuk.phtml');
+        $this
+            ->layout()
+            ->setVariable('pageTitle', $title)
+            ->setVariable('pageSubTitle', $subtitle);
+    }
 }

@@ -14,7 +14,7 @@ use Zend\Cache\Storage\StorageInterface;
 class VehicleCatalogService
 {
 
-    const BASE_VEH_DICTIONARY_URL = 'vehicle-dictionary';
+    const URL_VEHICLE_DICTIONARY = 'vehicle-dictionary';
 
     /**
      * @var \DvsaCommon\HttpRestJson\Client
@@ -40,7 +40,7 @@ class VehicleCatalogService
         }
 
         $params = ['searchType' => 'make', 'searchTerm' => $query];
-        $responseFromApi = $this->restClient->getWithParams(self::BASE_VEH_DICTIONARY_URL, $params);
+        $responseFromApi = $this->restClient->getWithParams(self::URL_VEHICLE_DICTIONARY, $params);
 
         return $this->getResponse($responseFromApi);
     }
@@ -61,7 +61,7 @@ class VehicleCatalogService
         }
 
         $params = ['searchType' => 'model', 'searchTerm' => $query, 'make' => $make];
-        $responseFromApi = $this->restClient->getWithParams(self::BASE_VEH_DICTIONARY_URL, $params);
+        $responseFromApi = $this->restClient->getWithParams(self::URL_VEHICLE_DICTIONARY, $params);
 
         return $this->getResponse($responseFromApi);
     }

@@ -8,6 +8,7 @@ use DvsaCommon\Dto\Person\PersonContactDto;
 use DvsaCommon\Dto\Person\PersonHelpDeskProfileDto;
 use DvsaCommon\Dto\Person\SearchPersonResultDto;
 use DvsaCommon\Dto\Security\SecurityQuestionDto;
+use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\MessageUrlBuilder;
 use DvsaCommon\UrlBuilder\PersonUrlBuilder;
 use DvsaCommon\UrlBuilder\UserAdminUrlBuilder;
@@ -121,7 +122,7 @@ class UserAdminMapper extends DtoMapper
     public function updateEmail($personId, $email)
     {
         $url = UserAdminUrlBuilder::personContact($personId);
-        return $this->client->patch($url, ["emails" => [$email]]);
+        return $this->client->patch($url, ["email" => $email]);
     }
 
     /**

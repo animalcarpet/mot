@@ -32,4 +32,9 @@ class UpdateAeCorrespondenceEmailProcess extends UpdateAeRegisteredEmailProcess
     {
         $this->organisationMapper->updateAeProperty($this->context->getAeId(), AuthorisedExaminerPatchModel::CORRESPONDENCE_EMAIL, $formData[$this->propertyName]);
     }
+
+    public function getEditPageLede()
+    {
+        return null;
+    }
 }

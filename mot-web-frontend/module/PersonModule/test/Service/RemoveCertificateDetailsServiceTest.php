@@ -5,7 +5,7 @@ use Dvsa\Mot\Frontend\PersonModule\Service\RemoveCertificateDetailsService;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaClient\Mapper\QualificationDetailsMapper;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
-use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\QualificationDetailsBreadcrumbs;
+use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\CertificatesBreadcrumbs;
 use DvsaCommonTest\TestUtils\XMock;
 use Core\Action\ActionResult;
 use Core\Action\RedirectToRoute;
@@ -23,7 +23,7 @@ class RemoveCertificateDetailsServiceTest extends \PHPUnit_Framework_TestCase
     private $qualificationDetailsMapper;
     /** @var MotAuthorisationServiceInterface */
     private $authorisationService;
-    /** @var QualificationDetailsBreadcrumbs */
+    /** @var CertificatesBreadcrumbs */
     private $breadcrumbs;
     /** @var ApiPersonalDetails */
     private $apiPersonalDetails;

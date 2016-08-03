@@ -1,6 +1,0 @@
-Permissions check to ensure certain roles can disassociate the correct type of users within an ORGANISATION
-
-!| Vm 5039 Disassociate Organisation Position|
-|nominator |nominee      |success? |error?   |
-|AEDM      |AED          |TRUE     |         |
-|AED       |AEDM         |FALSE    |Forbidden|

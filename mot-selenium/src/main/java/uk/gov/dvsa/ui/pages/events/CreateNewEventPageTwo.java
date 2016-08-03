@@ -3,7 +3,7 @@ package uk.gov.dvsa.ui.pages.events;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
@@ -21,8 +21,8 @@ public class CreateNewEventPageTwo extends Page {
     }
 
     public NewEventSummaryPage submitEventOutcomeAndDescription( String note) {
-        FormCompletionHelper.selectFromDropDownByValue(eventOutcome, "NAPRJ");
-        FormCompletionHelper.enterText(notesSection, note);
+        FormDataHelper.selectFromDropDownByValue(eventOutcome, "NAPRJ");
+        FormDataHelper.enterText(notesSection, note);
         continueButton.click();
         return new NewEventSummaryPage(driver);
     }

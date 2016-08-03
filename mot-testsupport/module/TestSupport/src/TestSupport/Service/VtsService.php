@@ -46,7 +46,8 @@ class VtsService
         TestSupportRestClientHelper $restClientHelper,
         EntityManager $em,
         UrlBuilder $urlBuilder
-    ) {
+    )
+    {
         $this->restClientHelper = $restClientHelper;
         $this->em = $em;
         $this->urlBuilder = $urlBuilder;
@@ -65,6 +66,7 @@ class VtsService
             'postcode' => ArrayUtils::tryGet($data, 'postcode', 'BT2 4RR'),
             'email' => ArrayUtils::tryGet($data, 'email', $email),
             'phoneNumber' => ArrayUtils::tryGet($data, 'phoneNumber', $dataGenerator->phoneNumber()),
+            'startDate' =>  ArrayUtils::tryGet($data, 'startDate', $dataGenerator->startDate()),
             'classes' => [1, 2, 3, 4, 5, 7],
         ];
         $data = array_merge($data, $default);
@@ -134,7 +136,7 @@ class VtsService
     }
 
     /**
-     * @param int   $siteId
+     * @param int $siteId
      * @param array $data
      *
      * @throws \Exception
@@ -168,7 +170,7 @@ class VtsService
             $stmt->bindValue(2, $siteId);
             $stmt->bindValue(3, ArrayUtils::tryGet($data, 'siteName', $dataGenerator->siteName()));
             $stmt->bindValue(4, self::STATUS_APPROVED);
-            $stmt->bindValue(5, date('Y-m-d H:i:s', strtotime('-6 months')));
+            $stmt->bindValue(5, $data['startDate']);
             $stmt->bindValue(6, date('Y-m-d H:i:s', strtotime('+6 months')));
             $stmt->execute();
         }
@@ -185,15 +187,38 @@ class VtsService
             $isClosed = false;
 
             $openingTimes['weeklySchedule'][] = [
-                'weekday'   => $i,
-                'openTime'  => $openTime,
+                'weekday' => $i,
+                'openTime' => $openTime,
                 'closeTime' => $closeTime,
-                'isClosed'  => $isClosed
+                'isClosed' => $isClosed
             ];
         }
 
         $urlBuilder = $this->urlBuilder->vehicleTestingStation()->routeParam('id', $siteId)->siteOpeningHours();
 
         $this->restClientHelper->getJsonClient($data)->put($urlBuilder, $openingTimes);
+    }
+
+    public function changeAssociatedDate($aeId, $siteId, \DateTime $startDate, \DateTime $endDate = null)
+    {
+        $data = ["start_date" => $startDate->format("Y-m-d H:i:s")];
+        if ($endDate !== null) {
+            $data["end_date"] = $endDate->format("Y-m-d H:i:s");
+        }
+
+        $this->em->getConnection()->update(
+            'organisation_site_map',
+            $data,
+            ['organisation_id' => $aeId, 'site_id' => $siteId]
+        );
+    }
+
+    public function changeEndDateOfAssociation($aeId, $siteId, \DateTime $endDate)
+    {
+        $this->em->getConnection()->update(
+            'organisation_site_map',
+            ["end_date" => $endDate->format("Y-m-d H:i:s")],
+            ['organisation_id' => $aeId, 'site_id' => $siteId]
+        );
     }
 }

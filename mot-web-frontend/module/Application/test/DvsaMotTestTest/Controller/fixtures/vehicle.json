@@ -43,12 +43,14 @@
             "_class": "DvsaCommon\\Dto\\VehicleClassification\\VehicleClassDto"
         },
         "colour": {
-            "id": "L",
+            "id": "8",
+            "code": "L",
             "name": "Blue",
             "_class": "DvsaCommon\\Dto\\Common\\ColourDto"
         },
         "colourSecondary": {
-            "id": "W",
+            "id": "19",
+            "code": "W",
             "name": "White",
             "_class": "DvsaCommon\\Dto\\Common\\ColourDto"
         },

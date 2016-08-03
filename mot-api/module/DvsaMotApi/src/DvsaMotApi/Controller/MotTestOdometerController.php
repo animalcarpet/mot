@@ -92,7 +92,7 @@ class MotTestOdometerController extends AbstractDvsaRestfulController implements
     private function getMotTest($motTestNumber)
     {
         /** @var MotTestRepository $motTestRepository */
-        $motTestRepository = $this->getServiceLocator()->get('MotTestRepository');
+        $motTestRepository = $this->getServiceLocator()->get(MotTestRepository::class);
         return $motTestRepository->getMotTestByNumber($motTestNumber);
     }
 }

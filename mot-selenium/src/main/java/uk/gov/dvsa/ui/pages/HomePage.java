@@ -28,6 +28,7 @@ public class HomePage extends Page {
     @FindBy(className = "notification_link") private WebElement notificationMessage;
     @FindBy(id = "action-start-user-search") private WebElement userSearchLink;
     @FindBy(id = "action-start-survey-reports") private WebElement generateSurveyReportsLink;
+    @FindBy(xpath = "//script[contains(text(),'userId') and contains(text(), 'dataLayer')]") private WebElement googleTagManagerDataLayer;
 
     private static final By ROLE_NOMINATION_LIST = By.cssSelector(".notification_subject > a");
 
@@ -79,5 +80,9 @@ public class HomePage extends Page {
 
     public boolean isGenerateSurveyReportsLinkDisplayed() {
         return PageInteractionHelper.isElementDisplayed(generateSurveyReportsLink);
+    }
+
+    public boolean isGoogleTagManagerDataLayerRendered() {
+        return googleTagManagerDataLayer.isEnabled();
     }
 }

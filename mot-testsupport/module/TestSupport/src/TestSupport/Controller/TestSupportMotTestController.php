@@ -241,12 +241,15 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
         )';
         $values = [
             'motTestNumber' => $motTestNumber,
-            'rfrId' => ArrayUtils::get($rfr, 'id'),
+            'rfrId' => ArrayUtils::tryGet($rfr, 'id'),
             'type' => ArrayUtils::tryGet($rfr, 'type', ReasonForRejectionTypeName::FAIL),
             'comment' => ArrayUtils::tryGet($rfr, 'comment'),
             'dangerous' => ArrayUtils::tryGet($rfr, 'dangerous', 0),
             'generated' => ArrayUtils::tryGet($rfr, 'generated', 0),
         ];
+        if(empty($values['rfrId'])){
+            $values['rfrId'] = ArrayUtils::get($rfr, 'reasonId');
+        }
         $this->updateInDb($sql, $values);
     }
 

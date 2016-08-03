@@ -4,7 +4,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
@@ -29,7 +29,7 @@ public class SearchForAVtsPage extends Page {
     }
 
     public <T extends Page>T searchForVts(Class<T> clazz, String siteId) {
-        FormCompletionHelper.enterText(siteIdInputBox, siteId);
+        FormDataHelper.enterText(siteIdInputBox, siteId);
         searchButton.click();
         return MotPageFactory.newPage(driver, clazz);
     }

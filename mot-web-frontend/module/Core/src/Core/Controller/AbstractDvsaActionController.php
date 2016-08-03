@@ -5,9 +5,11 @@ namespace Core\Controller;
 use Application\Navigation\Breadcrumbs\BreadcrumbsBuilder;
 use Core\Action\AbstractActionResult;
 use Core\Action\ActionResult;
+use Core\Action\FileAction;
 use Core\Action\NotFoundActionResult;
 use Core\Action\RedirectToRoute;
 use Core\Action\RedirectToUrl;
+use Core\File\CsvFile;
 use Core\ViewModel\Sidebar\SidebarInterface;
 use Dvsa\Mot\Frontend\Plugin\AjaxResponsePlugin;
 use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
@@ -15,7 +17,11 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaFeature\Exception\FeatureNotAvailableException;
 use DvsaFeature\FeatureToggles;
 use Zend\Form\Annotation\AnnotationBuilder;
+use Zend\Http\Header\ContentDisposition;
+use Zend\Http\Header\ContentLength;
+use Zend\Http\Header\ContentType;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
@@ -210,6 +216,11 @@ abstract class AbstractDvsaActionController
         $this->layout()->setVariable('pageSubTitle', $subTitle);
     }
 
+    public function setPageTertiaryTitle($tertiaryTitle)
+    {
+        $this->layout()->setVariable('pageTertiaryTitle', $tertiaryTitle);
+    }
+
     public function setPageLede($lede)
     {
         $this->layout()->setVariable('pageLede', $lede);
@@ -222,6 +233,34 @@ abstract class AbstractDvsaActionController
 
     public function applyActionResult(AbstractActionResult $result)
     {
+        if ($result instanceof FileAction) {
+            $file = $result->getFile();
+
+            if ($file->getFileName() === null) {
+                throw new \InvalidArgumentException("Cannot create a file for download. The file has not been given a name.");
+            }
+
+            if ($file instanceof CsvFile) {
+                $content = $result->getFile()->getContent();
+
+                /** @var Response $response */
+                $response = $this->getResponse();
+
+                $response->setStatusCode(Response::STATUS_CODE_200);
+
+                $headers = $response->getHeaders();
+
+                $headers->addHeader(new ContentType('text/csv; charset=utf-8'));
+                $headers->addHeader(new ContentDisposition('attachment; filename="' . $file->getFileName() . '"'));
+                $headers->addHeader(new ContentLength(mb_strlen($content)));
+
+                $response->setContent($content);
+                return $response;
+            }
+
+            throw new \InvalidArgumentException("Unsupported file class '" . get_class($result->getFile()) . "'");
+        }
+
         if ($result->getSuccessMessages()) {
             foreach ($result->getSuccessMessages() as $message) {
                 $this->addSuccessMessage($message);
@@ -249,6 +288,10 @@ abstract class AbstractDvsaActionController
 
             if ($result->layout()->getPageSubTitle()) {
                 $this->setPageSubTitle($result->layout()->getPageSubTitle());
+            }
+
+            if ($result->layout()->getPageTertiaryTitle()) {
+                $this->setPageTertiaryTitle($result->layout()->getPageTertiaryTitle());
             }
 
             if ($result->layout()->getPageLede()) {

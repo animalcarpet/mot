@@ -69,4 +69,9 @@ class UpdateVtsPhoneProcess extends AbstractSingleStepVtsProcess implements Auto
     {
         return $this->formPageTitle;
     }
+
+    public function getEditPageLede()
+    {
+        return null;
+    }
 }

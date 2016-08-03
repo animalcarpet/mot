@@ -19,7 +19,6 @@ use Zend\View\Model\JsonModel;
  */
 class ErrorHandlingListener extends AbstractListenerAggregate
 {
-
     public function attach(EventManagerInterface $eventManager)
     {
         $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'handleError'], 0);

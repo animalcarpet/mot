@@ -62,4 +62,9 @@ class UpdateAeNameProcess extends AbstractSingleStepAeProcess implements AutoWir
     {
         return $this->formPageTitle;
     }
+
+    public function getEditPageLede()
+    {
+        return null;
+    }
 }

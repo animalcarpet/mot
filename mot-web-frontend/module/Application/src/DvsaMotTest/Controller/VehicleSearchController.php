@@ -4,6 +4,7 @@ namespace DvsaMotTest\Controller;
 
 use Application\Service\CatalogService;
 use Application\Service\ContingencySessionManager;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaMotTest\Service\OverdueSpecialNoticeAssertion;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -188,7 +189,9 @@ class VehicleSearchController extends AbstractDvsaMotTestController
 
         try {
             // Get vehicle data.
-            $vehicle = $this->mapperFactory->Vehicle->getById($vehicleId);
+            /** @var VehicleService $vehicleService */
+            $vehicleService = $this->getServiceLocator()->get(VehicleService::class);
+            $vehicle = $vehicleService->getDvsaVehicleById((int) $vehicleId);
 
             // Get history data.
             $apiUrl = VehicleUrlBuilder::testHistory($vehicleId);
@@ -334,7 +337,9 @@ class VehicleSearchController extends AbstractDvsaMotTestController
 
         try {
             // Get vehicle data.
-            $vehicle = $this->mapperFactory->Vehicle->getById($vehicleId);
+            /** @var VehicleService $vehicleService */
+            $vehicleService = $this->getServiceLocator()->get(VehicleService::class);
+            $vehicle = $vehicleService->getDvsaVehicleById((int) $vehicleId);
 
             // Get history data.
             $apiUrl = VehicleUrlBuilder::testHistory($vehicleId);

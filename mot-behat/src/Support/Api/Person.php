@@ -158,14 +158,10 @@ class Person extends MotApi
         );
     }
 
-    public function updateUserEmail($token, $user_id, $newEmail, $emailConfirmation = null)
+    public function updateUserEmail($token, $user_id, $newEmail)
     {
-        if (is_null($emailConfirmation)) {
-            $emailConfirmation = $newEmail;
-        }
-
         $body = [
-            'emails' => [$newEmail, $emailConfirmation],
+            'email' => $newEmail,
         ];
 
         return $this->sendRequest(

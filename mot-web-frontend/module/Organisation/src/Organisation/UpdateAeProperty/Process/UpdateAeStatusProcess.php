@@ -87,4 +87,9 @@ class UpdateAeStatusProcess extends AbstractSingleStepAeProcess implements AutoW
     {
         return $this->formPageTitle;
     }
+
+    public function getEditPageLede()
+    {
+        return null;
+    }
 }

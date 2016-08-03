@@ -63,4 +63,9 @@ class UpdateVtsStatusProcess extends AbstractSingleStepVtsProcess implements Aut
     {
         return $this->formPageTitle;
     }
+
+    public function getEditPageLede()
+    {
+        return null;
+    }
 }

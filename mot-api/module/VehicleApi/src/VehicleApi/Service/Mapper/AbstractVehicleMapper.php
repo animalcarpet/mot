@@ -48,9 +48,7 @@ abstract class AbstractVehicleMapper extends AbstractApiMapper
         $dto->setVehicleClass(new VehicleClassDto());
         $dto->setEngineNumber($vehicle->getEngineNumber());
         $dto->setCylinderCapacity($vehicle->getCylinderCapacity());
-        $dto->setSeatingCapacity($vehicle->getSeatingCapacity());
-
-        $dto->setIsNewAtFirstReg($vehicle->getNewAtFirstReg());
+        $dto->setIsNewAtFirstReg($vehicle->isNewAtFirstReg());
 
         //  --  transmision type   --
         $dto->setTransmissionType(new VehicleParamDto());

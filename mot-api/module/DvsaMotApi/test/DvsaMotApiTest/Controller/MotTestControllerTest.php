@@ -4,6 +4,7 @@ namespace DvsaMotApiTest\Controller;
 
 require 'MotTestControllerMockSupport.php';
 
+use DvsaCommon\Constants\SpecialNoticeAudience;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\MotTestTypeCode;
@@ -13,6 +14,7 @@ use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaCommonApiTest\Transaction\TestTransactionExecutor;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\Person;
+use DvsaEntities\Entity\Vehicle;
 use DvsaMotApi\Controller\MotTestController;
 use DvsaMotApi\Service\CertificateChangeService;
 use DvsaMotApiTest\Traits\MockTestTypeTrait;
@@ -48,10 +50,9 @@ class MotTestControllerTest extends AbstractMotApiControllerTestCase
 
     public function testCreateMotWithValidData()
     {
-        $person = new Person();
-        $person->setId(5);
-
-        $this->mockValidAuthorization([SiteBusinessRoleCode::TESTER, 'TESTER-CLASS-4'], null, $person);
+        $mockVehicleId = 123;
+        $motTest = $this->getMockMotTest($mockVehicleId);
+        $expectedData = ['data' => ['motTestNumber' => null, 'dvsaVehicleId' => $mockVehicleId]];
 
         $this->request->setMethod('post');
         $this->request->getPost()->set('vehicleTestingStationId', '1');
@@ -61,11 +62,6 @@ class MotTestControllerTest extends AbstractMotApiControllerTestCase
         $this->request->getPost()->set('fuelTypeId', 4);
         $this->request->getPost()->set('vehicleClassCode', VehicleClassCode::CLASS_5);
         $this->request->getPost()->set('hasRegistration', true);
-
-        $motTest = new MotTest();
-        $motTest->setTester($person);
-
-        $expectedData = ['data' => ['motTestNumber' => null]];
 
         $mockMotTestService = $this->getMockMotTestService();
         $mockMotTestService->expects($this->once())
@@ -516,15 +512,9 @@ class MotTestControllerTest extends AbstractMotApiControllerTestCase
 
     public function testCreateMotWithValidDataAndContingency()
     {
-        $person = new Person();
-        $person->setId(5);
-
-        $this->mockValidAuthorization([SiteBusinessRoleCode::TESTER, 'TESTER-CLASS-4'], null, $person);
-
-        $motTest = new MotTest();
-        $motTest->setTester($person);
-
-        $expectedData = ['data' => ['motTestNumber' => null]];
+        $mockVehicleId = 123;
+        $motTest = $this->getMockMotTest($mockVehicleId);
+        $expectedData = ['data' => ['motTestNumber' => null, 'dvsaVehicleId' => $mockVehicleId]];
 
         $mockMotTestService = $this->getMockMotTestService();
         $mockMotTestService->expects($this->once())
@@ -548,5 +538,23 @@ class MotTestControllerTest extends AbstractMotApiControllerTestCase
         $result = $this->getResultForAction('post');
 
         $this->assertResponseStatusAndResult(self::HTTP_OK_CODE, $expectedData, $result);
+    }
+
+    private function getMockMotTest($vehicleId, $persenId = 5, $authorisedVehicleClass = SpecialNoticeAudience::TESTER_CLASS_4)
+    {
+        $person = new Person();
+        $person->setId(5);
+
+        $mockVehicleId = 123;
+        $mockVehicle = new Vehicle();
+        $mockVehicle->setId($mockVehicleId);
+
+        $this->mockValidAuthorization([SiteBusinessRoleCode::TESTER, 'TESTER-CLASS-4'], null, $person);
+
+        $motTest = new MotTest();
+        $motTest->setTester($person)
+            ->setVehicle($mockVehicle);
+
+        return $motTest;
     }
 }

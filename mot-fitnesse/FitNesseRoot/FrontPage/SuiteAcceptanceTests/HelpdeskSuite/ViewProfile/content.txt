@@ -1,6 +1,0 @@
-As a Customer Service Centre Operative I should be able to view the profile details of another user 
-
-!|Help Desk View Profile                                                               |
-|Role                             |Username|Can View Other User Profile?|Error Message?|
-|Customer Service Centre Operative|csco    |true                        |              |
-|Tester                           |tester1 |false                       |Forbidden     |

@@ -6,6 +6,7 @@ use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaEntities\Entity\BrakeTestResultClass3AndAbove;
 use DvsaEntities\Entity\BrakeTestResultServiceBrakeData;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
 use DvsaEntitiesTest\Entity\BrakeTestTypeFactory;
@@ -34,8 +35,12 @@ class BrakeTestResultClass3AndAboveCalculatorTest extends \PHPUnit_Framework_Tes
         if ($testName === 'RxR, Test fail on both controls below 25 class 3, imbalance not counted') {
             $x = 1;
         }
+
+        $modelDetail = new ModelDetail();
+        $modelDetail->setVehicleClass(new VehicleClass($input['vehicleClass']));
+
         $vehicle = new Vehicle();
-        $vehicle->setVehicleClass(new VehicleClass($input['vehicleClass']));
+        $vehicle->setModelDetail($modelDetail);
         $vehicle->setFirstUsedDate(new \DateTime($input['vehicleFirstUsed']));
         $serviceBrake1Test = $input['serviceBrake1Test'];
         $serviceBrake2Test = $input['serviceBrake2Test'];

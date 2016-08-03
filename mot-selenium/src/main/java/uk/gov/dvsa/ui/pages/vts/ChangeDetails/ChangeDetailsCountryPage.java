@@ -3,7 +3,7 @@ package uk.gov.dvsa.ui.pages.vts.ChangeDetails;
 import org.openqa.selenium.By;
 import uk.gov.dvsa.domain.model.site.ContactDetailsCountry;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 
 public class ChangeDetailsCountryPage extends ChangeDetailsPage {
     public static final String PAGE_TITLE = "Change country";
@@ -14,7 +14,7 @@ public class ChangeDetailsCountryPage extends ChangeDetailsPage {
     }
 
     public ChangeDetailsCountryPage chooseOption(ContactDetailsCountry name) {
-        FormCompletionHelper.selectInputBox(driver.findElement(By.cssSelector(String.format("input[value=%s]", name.getSiteContactDetailsCountryCode()))));
+        FormDataHelper.selectInputBox(driver.findElement(By.cssSelector(String.format("input[value=%s]", name.getSiteContactDetailsCountryCode()))));
         return this;
     }
 }

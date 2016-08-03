@@ -3,7 +3,7 @@ package uk.gov.dvsa.ui.pages.accountclaim;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.HomePage;
 import uk.gov.dvsa.ui.pages.Page;
@@ -36,11 +36,11 @@ public class AccountClaimPage extends Page {
     }
 
     public AccountClaimPage enterEmailAndPassword(String email, String password) {
-        FormCompletionHelper.enterText(emailField, email);
-        FormCompletionHelper.enterText(confirmEmailField, email);
+        FormDataHelper.enterText(emailField, email);
+        FormDataHelper.enterText(confirmEmailField, email);
 
-        FormCompletionHelper.enterText(passwordField, password);
-        FormCompletionHelper.enterText(confirmPasswordField, password);
+        FormDataHelper.enterText(passwordField, password);
+        FormDataHelper.enterText(confirmPasswordField, password);
 
         return this;
     }
@@ -52,11 +52,11 @@ public class AccountClaimPage extends Page {
     }
 
     public AccountClaimPage setSecurityQuestionsAndAnswers(String answerOne, String answerTwo) {
-        FormCompletionHelper.selectFromDropDownByValue(questionOneDropdown, "2");
-        FormCompletionHelper.enterText(answerOneField, answerOne);
+        FormDataHelper.selectFromDropDownByValue(questionOneDropdown, "2");
+        FormDataHelper.enterText(answerOneField, answerOne);
 
-        FormCompletionHelper.selectFromDropDownByValue(questionTwoDropdown, "6");
-        FormCompletionHelper.enterText(answerTwoField, answerTwo);
+        FormDataHelper.selectFromDropDownByValue(questionTwoDropdown, "6");
+        FormDataHelper.enterText(answerTwoField, answerTwo);
 
         return this;
     }

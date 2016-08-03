@@ -2,6 +2,7 @@ package uk.gov.dvsa.ui.pages.mot;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.model.mot.ReasonForVehicleRefusal;
@@ -147,7 +148,7 @@ public class RefuseToTestPage extends Page {
             driver.findElement(By.id("declarationElement"));
             return true;
         }
-        catch (NoSuchElementException e){
+        catch (TimeoutException e){
             return false;
         }
     }

@@ -31,25 +31,6 @@ trait NotificationCreatorTrait
     }
 
     /**
-     * @param array $actionNames
-     *
-     * @return Notification
-     */
-    private function createNotificationWithTemplateAction(array $actionNames = null)
-    {
-        $notification = $this->createNotification();
-        if (is_array($actionNames)) {
-            foreach ($actionNames as $action) {
-                $this->addTemplateActionToNotification($notification, $action);
-            }
-        } else {
-            $this->addTemplateActionToNotification($notification, '');
-        }
-
-        return $notification;
-    }
-
-    /**
      * @param Notification $notification
      * @param string       $actionName
      *

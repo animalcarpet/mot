@@ -3,7 +3,7 @@ package uk.gov.dvsa.ui.pages.authorisedexaminer.ChangeDetails;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 
 public class ChangeAEDetailsNamePage extends ChangeAEDetailsPage {
     public static final String PATH = "/authorised-examiner/%s/name/change";
@@ -16,7 +16,7 @@ public class ChangeAEDetailsNamePage extends ChangeAEDetailsPage {
     }
 
     public ChangeAEDetailsNamePage inputName(String name) {
-        FormCompletionHelper.enterText(aEName, name);
+        FormDataHelper.enterText(aEName, name);
         return this;
     }
 }

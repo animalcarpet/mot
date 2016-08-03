@@ -31,7 +31,7 @@ public class DeclarationStatementViewTests extends DslTest {
         vehicle = vehicleData.getNewVehicle(tester);
     }
 
-    @Test (groups = {"BVT", "Regression"})
+    @Test (testName = "OldRFRTest", groups = {"BVT"})
     public void displayStatementAtTestSummaryPage() throws IOException, URISyntaxException {
 
         //Given I complete a normal test
@@ -43,7 +43,7 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(true));
     }
 
-    @Test (groups = {"BVT", "Regression"})
+    @Test (testName = "OldRFRTest", groups = {"BVT"})
     public void displayStatementAtReTestSummaryPage() throws IOException, URISyntaxException {
 
         //Given I have a vehicle with a failed MOT test
@@ -56,7 +56,7 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.retest.isDeclarationStatementDisplayed(), is(true));
     }
 
-    @Test (groups = {"BVT", "Regression"})
+    @Test (testName = "OldRFRTest", groups = {"BVT"})
     public void displayStatementAtChangeVehicleDetailsSummary() throws IOException, URISyntaxException {
 
         //Given I change the vehicle details
@@ -68,7 +68,7 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(true));
     }
 
-    @Test (groups = {"BVT", "Regression"})
+    @Test (testName = "OldRFRTest", groups = {"Regression"})
     public void statementShouldNotBeDisplayedForTrainingTest() throws IOException, URISyntaxException {
 
         //Given I am on the review Page of training test
@@ -78,7 +78,7 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(false));
     }
 
-    @Test (groups = {"BVT", "Regression"})
+    @Test (testName = "OldRFRTest", groups = {"BVT"})
     public void displayStatementWhenAbortingTest() throws IOException, URISyntaxException {
 
         //Given I have an in progress Mot Test
@@ -91,7 +91,7 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(true));
     }
 
-    @Test (groups = {"BVT", "Regression"})
+    @Test (groups = {"Regression"})
     public void statementShouldNotBeDisplayedOnTestRefusal() throws IOException, URISyntaxException {
 
         //Given I refuse to test a vehicle
@@ -101,7 +101,7 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(false));
     }
 
-    @Test
+    @Test (testName = "OldRFRTest", groups = {"Regression"})
     public void displayStatementAtContingencySummaryPage() throws IOException, URISyntaxException {
 
         //Given I start a contingency test
@@ -114,7 +114,7 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.contingency.isDeclarationStatementDisplayed(), is(true));
     }
 
-    @Test
+    @Test (groups = {"Regression"})
     public void displayStatementAtCreateNewVehicleRecord() throws IOException, URISyntaxException {
 
         //When I create a new vehicle record within a test
@@ -123,18 +123,4 @@ public class DeclarationStatementViewTests extends DslTest {
         //Then I should be presented with the declaration statement
         assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(true));
     }
-
-    @Test
-    public void replacementCertificateDeclarationStatement() throws IOException, URISyntaxException {
-
-        //Given I have completed an Mot Test
-        motUI.normalTest.conductTestPass(tester, vehicle);
-
-        //When I create a replacement test certificate
-        motUI.certificate.createReplacementCertificate(tester, vehicle);
-
-        //Then I should be presented with the declaration statement on the review page
-        assertThat(motUI.certificate.isDeclarationStatementDisplayed(), is(true));
-    }
 }
-

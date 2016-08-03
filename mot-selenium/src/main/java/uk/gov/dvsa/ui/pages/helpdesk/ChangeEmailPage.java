@@ -3,7 +3,7 @@ package uk.gov.dvsa.ui.pages.helpdesk;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
@@ -26,8 +26,8 @@ public class ChangeEmailPage extends Page{
     }
 
     public HelpDeskUserProfilePage updateEmailSuccessfully(String email) {
-        FormCompletionHelper.enterText(emailAddressInput, email);
-        FormCompletionHelper.enterText(confirmEmailInput, email);
+        FormDataHelper.enterText(emailAddressInput, email);
+        FormDataHelper.enterText(confirmEmailInput, email);
         submitEmailButton.click();
         return new HelpDeskUserProfilePage(driver);
     }

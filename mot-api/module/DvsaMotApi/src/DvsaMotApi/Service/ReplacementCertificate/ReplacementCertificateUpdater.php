@@ -11,6 +11,8 @@ use DvsaEntities\Entity\ReplacementCertificateDraft;
 use DvsaEntities\Entity\Vehicle;
 use DvsaMotApi\Service\MotTestSecurityService;
 use Zend\Authentication\AuthenticationService;
+use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 
 /**
  * Class ReplacementCertificateUpdater
@@ -27,19 +29,26 @@ class ReplacementCertificateUpdater
     /** @var AuthenticationService $motIdentityProvider */
     private $motIdentityProvider;
 
+    /** @var VehicleService */
+    private $vehicleService;
+
     /**
+     * ReplacementCertificateUpdater constructor.
      * @param MotTestSecurityService $motTestSecurityService
      * @param AuthorisationServiceInterface $authService
      * @param AuthenticationService $motIdentityProvider
+     * @param VehicleService $vehicleService
      */
     public function __construct(
         MotTestSecurityService $motTestSecurityService,
         AuthorisationServiceInterface $authService,
-        AuthenticationService $motIdentityProvider
+        AuthenticationService $motIdentityProvider,
+        VehicleService $vehicleService
     ) {
         $this->motTestSecurityService = $motTestSecurityService;
         $this->authService = $authService;
         $this->motIdentityProvider = $motIdentityProvider;
+        $this->vehicleService = $vehicleService;
     }
 
     /**
@@ -74,90 +83,51 @@ class ReplacementCertificateUpdater
             }
         }
 
+        $this->updateVehicleFromDraftUsingJavaService($draft, $motTest, $hasFullRights);
         $this->updateMotTestFromDraft($draft, $motTest, $hasFullRights);
+
         $prsTest = $motTest->getPrsMotTest();
         if($prsTest){
-            $updatedPrsMotTest = $this->updatePrsMotTestFromDraft($draft, $prsTest, $hasFullRights);
-            $motTest->setPrsMotTest($updatedPrsMotTest);
+            $motTest->setPrsMotTest(
+                $this->updateMotTestFromDraft(
+                    $draft,
+                    $prsTest,
+                    $hasFullRights,
+                    true
+                )
+            );
         }
 
         return $motTest;
     }
 
     /**
-     * @param ReplacementCertificateDraft $draft
-     * @param $motTest
-     * @param $hasFullRights
-     * @return MotTest
-     */
-    protected function updateMotTestFromDraft(ReplacementCertificateDraft $draft, MotTest $motTest, $hasFullRights)
-    {
-        $motTest->setExpiryDate($draft->getExpiryDate());
-
-        return $this->updateMotTestAndVehicle($draft, $motTest, $hasFullRights);
-    }
-
-    protected function updatePrsMotTestFromDraft(ReplacementCertificateDraft $draft, MotTest $motTest, $hasFullRights)
-    {
-        return $this->updateMotTestAndVehicle($draft, $motTest, $hasFullRights);
-    }
-
-    /**
+     * This method's been used to update both MOT-Test and PRS MOT-Test
+     *
      * @param ReplacementCertificateDraft $draft
      * @param MotTest $motTest
-     * @param $hasFullRights
+     * @param bool $hasFullRights
+     * @param bool $isPsrTest
      * @return MotTest
      */
-    protected function updateMotTestAndVehicle(ReplacementCertificateDraft $draft, MotTest $motTest, $hasFullRights)
-    {
-        $vehicle = $motTest->getVehicle();
-        $this->changeVehicleFromDraft($vehicle, $draft, $hasFullRights);
-        $this->changeMotTestCommonFields($draft, $motTest, $hasFullRights, $vehicle);
-
-        return $motTest;
-    }
-
-    /**
-     * @param Vehicle $vehicle
-     * @param ReplacementCertificateDraft $draft
-     * @param $hasFullRights
-     * @return Vehicle
-     */
-    private function changeVehicleFromDraft(Vehicle $vehicle, ReplacementCertificateDraft $draft, $hasFullRights)
-    {
-        $vehicle
-            ->setColour($draft->getPrimaryColour())
-            ->setSecondaryColour($draft->getSecondaryColour());
-
-        if ($hasFullRights) {
-            $vehicle->setVin($draft->getVin())
-                ->setRegistration($draft->getVrm())
-                ->setCountryOfRegistration($draft->getCountryOfRegistration())
-                ->setEmptyVinReason(null)
-                ->setEmptyVrmReason(null);
-
-            if (!$draft->getMakeName() && !$draft->getModelName()) {
-                $vehicle->setMake($draft->getMake())->setModel($draft->getModel());
-            }
-        }
-
-        return $vehicle;
-    }
-
-    /**
-     * @param ReplacementCertificateDraft $draft
-     * @param MotTest $motTest
-     * @param $hasFullRights
-     * @param $vehicle
-     * @return MotTest
-     */
-    protected function changeMotTestCommonFields(ReplacementCertificateDraft $draft, MotTest $motTest, $hasFullRights, Vehicle $vehicle)
+    protected function updateMotTestFromDraft(
+        ReplacementCertificateDraft $draft,
+        MotTest $motTest,
+        $hasFullRights,
+        $isPsrTest = false
+    )
     {
         $motTest->setOdometerReading($draft->getOdometerReading())
             ->setPrimaryColour($draft->getPrimaryColour())
             ->setSecondaryColour($draft->getSecondaryColour());
 
+        if (!$isPsrTest) {
+            $motTest->setExpiryDate($draft->getExpiryDate());
+        }
+
         if ($hasFullRights) {
+            $vehicle = $motTest->getVehicle();
+
             $motTest
                 ->setVehicleTestingStation($draft->getVehicleTestingStation())
                 ->setVin($draft->getVin())
@@ -182,5 +152,46 @@ class ReplacementCertificateUpdater
         }
 
         return $motTest;
+    }
+
+    /**
+     * @param ReplacementCertificateDraft $draft
+     * @param MotTest $motTest
+     * @param bool $hasFullRights
+     */
+    private function updateVehicleFromDraftUsingJavaService(ReplacementCertificateDraft $draft, MotTest $motTest, $hasFullRights)
+    {
+        $updateVehicleRequest = new UpdateDvsaVehicleRequest;
+
+        if ($draft->getPrimaryColour()) {
+            $updateVehicleRequest->setColourId($draft->getPrimaryColour()->getId());
+        }
+
+        if ($draft->getSecondaryColour()) {
+            $updateVehicleRequest->setSecondaryColourId($draft->getSecondaryColour()->getId());
+        }
+
+        if ($hasFullRights) {
+            $updateVehicleRequest->setVin($draft->getVin());
+            $updateVehicleRequest->setRegistration($draft->getVrm());
+
+            if ($draft->getCountryOfRegistration()) {
+                $updateVehicleRequest->setCountryOfRegistrationId($draft->getCountryOfRegistration()->getId());
+            }
+
+            if ($draft->getMakeName()) {
+                $updateVehicleRequest->setMakeOther($draft->getMakeName());
+            } else if ($draft->getMake()) {
+                $updateVehicleRequest->setMakeId($draft->getMake()->getId());
+            }
+
+            if ($draft->getModelName()) {
+                $updateVehicleRequest->setModelOther($draft->getModelName());
+            } else if ($draft->getModel()) {
+                $updateVehicleRequest->setModelId($draft->getModel()->getId());
+            }
+        }
+
+        $this->vehicleService->updateDvsaVehicle($motTest->getVehicle()->getId(), $updateVehicleRequest);
     }
 }

@@ -9,33 +9,37 @@ use DvsaMotTest\Model\VehicleClass;
 $colours = ArrayUtils::tryGet($this->staticData, 'colours', []);
 $fuelTypes = ArrayUtils::tryGet($this->staticData, 'fuelTypes', []);
 
-/** @var \DvsaCommon\Dto\Vehicle\VehicleDto $vehicle */
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle|\Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle $vehicle */
 $vehicle = $this->vehicle;
 
 
 $vrm = $vehicle->getRegistration();
 $vin = $vehicle->getVin();
-
-if (empty($vehicle->getMakeAndModel())) {
-    $makeAndModel = $vehicle->getMakeInFull();
-} else {
-    $makeAndModel = $vehicle->getMakeAndModel();
-}
+$makeAndModel = implode(
+    ', ',
+    array_filter(
+        [
+            $vehicle->getMake(),
+            $vehicle->getModel(),
+        ]
+    )
+);
 
 // The DL DT partial will only show an alternative string on a null value, not emtpy
 if (empty($makeAndModel)) {
     $makeAndModel = null;
 }
 
-if ((is_null($vrm) || empty($vrm)) && $vehicle->getEmptyVrmReason()) {
-    $vrm = $staticData['emptyVrmReasons'][$vehicle->getEmptyVrmReason()];
+if ($vehicle instanceof \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle) {
+    if ((is_null($vrm) || empty($vrm)) && $vehicle->getEmptyVrmReason()) {
+        $vrm = $staticData['emptyVrmReasons'][$vehicle->getEmptyVrmReason()];
+    }
+    if ((is_null($vin) || empty($vin)) && $vehicle->getEmptyVinReason()) {
+        $vin = $staticData['emptyVinReasons'][$vehicle->getEmptyVinReason()];
+    }
 }
 
-if ((is_null($vin) || empty($vin)) && $vehicle->getEmptyVinReason()) {
-    $vin = $staticData['emptyVinReasons'][$vehicle->getEmptyVinReason()];
-}
-
-$transmissionType = $vehicle->getTransmissionType()->getName();
+$transmissionType = $vehicle->getTransmissionType();
 
 $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
 ?>
@@ -87,7 +91,7 @@ $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
                     'dldtdd', [
                         'dlCssClass' => 'dl-standard',
                         'items'      => [
-                            ['Body type', $vehicle->getBodyType()->getName(), 'id' => 'vehicleBodyType'],
+                            ['Body type', $vehicle->getBodyType(), 'id' => 'vehicleBodyType'],
                             [
                                 'Date of first use',
                                 DateTimeDisplayFormat::textDate($vehicle->getFirstUsedDate()) ?: null,
@@ -113,16 +117,16 @@ $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
                                     'selectElement',
                                     [
                                         'id'       => 'vehicle-class-select',
-                                        'name'     => 'vehicleClass',
+                                        'name'     => 'vehicleClassId',
                                         'options'  => $vehicleClasses,
-                                        'value'    => $vehicle->getClassCode(),
+                                        'value'    => $vehicle->getVehicleClass(),
                                         'required' => true,
                                     ]
                                 );
                             } else {
-                                echo $vehicle->getVehicleClass()->getName();
+                                echo $vehicle->getVehicleClass();
                                 ?>
-                                    <input type="hidden" name="vehicleClass" value="<?php echo $vehicle->getClassCode(); ?>" />
+                                    <input type="hidden" name="vehicleClassId" value="<?php echo $vehicle->getVehicleClass(); ?>" />
                                 <?php
                             }
                             ?>
@@ -138,18 +142,18 @@ $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
                             <?php
                             if (!$this->doNotShowDropDowns) {
                                 echo $this->partial(
-                                    'selectElement',
+                                    'selectElementSelectedByDisplayedValue',
                                     [
                                         'id'      => 'fuel-type-select',
-                                        'name'    => 'fuelType',
+                                        'name'    => 'fuelTypeId',
                                         'options' => $fuelTypes,
-                                        'value'   => $vehicle->getFuelType()->getCode(),
+                                        'value'   => $vehicle->getFuelType(),
                                     ]
                                 );
                             } else {
-                                echo $vehicle->getFuelType()->getName();
+                                echo $vehicle->getFuelType();
                                 ?>
-                                    <input type="hidden" name="fuelType" value="<?php echo $vehicle->getFuelType()->getCode(); ?>" />
+                                    <input type="hidden" name="fuelTypeId" value="<?php echo $vehicle->getFuelType(); ?>" />
                                 <?php
                             }
                             ?>
@@ -167,18 +171,18 @@ $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
                             <?php
                             if (!$this->doNotShowDropDowns) {
                                 echo $this->partial(
-                                    'selectElement',
+                                    'selectElementSelectedByDisplayedValue',
                                     [
                                         'id'      => 'primary-colour',
-                                        'name'    => 'primaryColour',
+                                        'name'    => 'colourId',
                                         'options' => $colours->getPrimaryColours(),
-                                        'value'   => $vehicle->getColour()->getCode()
+                                        'value'   => $vehicle->getColour()
                                     ]
                                 );
                             } else {
-                                echo $vehicle->getColour()->getName();
+                                echo $vehicle->getColour();
                                 ?>
-                                    <input type="hidden" name="primaryColour" value="<?php echo $vehicle->getColour()->getCode(); ?>" />
+                                    <input type="hidden" name="colourId" value="<?php echo $vehicle->getColour(); ?>" />
                                 <?php
                             }
                             ?>
@@ -192,32 +196,21 @@ $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
                     <dd>
                         <div class="form-group">
                             <?php
-                            $colourSec = $vehicle->getColourSecondary();
-
-                            if ($colourSec instanceof ColourDto) {
-                                $secondaryColourCode = $colourSec->getCode();
-                            } else {
-                                $secondaryColourCode = ColourCode::NOT_STATED;
-                            }
-
+                            $secondaryColourCode = $vehicle->getColourSecondary();
                             if (!$this->doNotShowDropDowns) {
                                 echo $this->partial(
-                                    'selectElement',
+                                    'selectElementSelectedByDisplayedValue',
                                     [
                                         'id'      => 'secondary-colour',
-                                        'name'    => 'secondaryColour',
+                                        'name'    => 'secondaryColourId',
                                         'options' => $colours->getSecondaryColours(),
                                         'value'   => $secondaryColourCode
                                     ]
                                 );
                             } else {
-                                echo (
-                                    $colourSec instanceof ColourDto
-                                    ? $colourSec->getName()
-                                    : $colours->getSecondaryColours()[ColourCode::NOT_STATED]
-                                );
+                                echo $secondaryColourCode;
                                 ?>
-                                    <input type="hidden" name="secondaryColour" value="<?php echo $secondaryColourCode; ?>" />
+                                    <input type="hidden" name="secondaryColourId" value="<?php echo $secondaryColourCode; ?>" />
                                 <?php
                             }
                             ?>

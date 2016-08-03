@@ -4,7 +4,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
@@ -30,12 +30,12 @@ public class ChangeNamePage extends Page {
     }
 
     public ChangeNamePage fillFirstName(String value) {
-        FormCompletionHelper.enterText(firstNameInput, value);
+        FormDataHelper.enterText(firstNameInput, value);
         return this;
     }
 
     public ChangeNamePage fillLastName(String value) {
-        FormCompletionHelper.enterText(lastNameInput, value);
+        FormDataHelper.enterText(lastNameInput, value);
         return this;
     }
 

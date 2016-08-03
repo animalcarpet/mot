@@ -24,7 +24,6 @@ class VehicleDataController extends BaseTestSupportRestfulController
         $v5cRef = ArrayUtils::get($data, 'v5cRef');
         $firstSeen = ArrayUtils::get($data, 'firstSeen');
         $lastSeen = ArrayUtils::get($data, 'lastSeen');
-        $mot1LegacyId = ArrayUtils::get($data, 'mot1LegacyId');
 
         /** @var EntityManager $entityManager */
         $entityManager = $this->getServiceLocator()->get(EntityManager::class);
@@ -32,21 +31,20 @@ class VehicleDataController extends BaseTestSupportRestfulController
         $connection = $entityManager->getConnection();
 
         $connection->transactional(
-            function () use ($vehicleId, $v5cRef, $firstSeen, $lastSeen, $mot1LegacyId, $connection) {
+            function () use ($vehicleId, $v5cRef, $firstSeen, $lastSeen, $connection) {
                 $connection->executeUpdate(
                     'UPDATE vehicle_v5c SET last_seen = now() WHERE vehicle_id = :vehicleId',
                     ['vehicleId' => $vehicleId]
                 );
                 $date = date("Y-m-d h:i:s.u");
                 $connection->executeUpdate(
-                    'INSERT INTO vehicle_v5c(vehicle_id, v5c_ref, first_seen, last_seen, mot1_legacy_id, created_by)
-                    VALUE(:vehicleId, :v5cRef, :firstSeen, :lastSeen, :mot1LegacyId, :createdBy)',
+                    'INSERT INTO vehicle_v5c(vehicle_id, v5c_ref, first_seen, last_seen, created_by)
+                    VALUE(:vehicleId, :v5cRef, :firstSeen, :lastSeen, :createdBy)',
                     [
                         'vehicleId'    => $vehicleId,
                         'v5cRef'       => $v5cRef,
                         'firstSeen'    => $firstSeen === null ? $date : $firstSeen,
                         'lastSeen'     => $lastSeen,
-                        'mot1LegacyId' => $mot1LegacyId,
                         'createdBy'    => 1
                     ]
                 );

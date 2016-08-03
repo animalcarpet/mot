@@ -1,8 +1,8 @@
 package uk.gov.dvsa.ui.pages.mot.modal;
 
-import com.dvsa.mot.selenium.framework.Configurator;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import uk.gov.dvsa.framework.config.Configurator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;

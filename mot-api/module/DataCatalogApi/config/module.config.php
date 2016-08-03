@@ -64,6 +64,17 @@ return [
                                         ]
                                     ]
                                 ]
+                            ],
+                            'modelByMakeId' => [
+                                'type' => 'Segment',
+                                'options' => [
+                                    'route' => '/models',
+                                    'defaults' => [
+                                        'controller' => 'DataCatalogApi\Controller\Model',
+                                        'action' => 'getModelsByMakeId'
+                                    ],
+                                ],
+                                'may_terminate' => true,
                             ]
                         ],
                     ],

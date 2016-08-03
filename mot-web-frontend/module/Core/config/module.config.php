@@ -7,6 +7,7 @@ return [
         'template_map'        => [
             'googleAnalyticsSnippet' => __DIR__ . '/../view/partial/fragments/google-analytics.phtml',
             'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
+            'contentBreadcrumb' => __DIR__ . '/../view/partial/fragments/content-breadcrumb.twig',
         ],
         'template_path_stack' => [
             __DIR__ . '/../view',

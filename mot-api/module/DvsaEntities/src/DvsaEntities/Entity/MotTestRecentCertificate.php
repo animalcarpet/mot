@@ -190,7 +190,7 @@ class MotTestRecentCertificate
     /**
      * @var DataTime
      *
-     * @ORM\Column(name="last_modified_on", type="datetime", nullable=true)
+     * @ORM\Column(name="last_updated_on", type="datetime", nullable=true)
      */
     protected $lastUpdatedOn;
 

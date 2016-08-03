@@ -11,9 +11,11 @@ use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Dto\Account\MessageDto;
 use DvsaCommon\HttpRestJson\Exception\NotFoundException;
+use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\UrlBuilder\AccountUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
+use DvsaCommon\Utility\ArrayUtils;
 use UserAdmin\Service\UserAdminSessionManager;
 use Zend\Http\Request;
 use Zend\Http\Response;
@@ -29,11 +31,11 @@ class PasswordResetController extends AbstractAuthActionController
     const CFG_PASSWORD_RESET_EXPIRE_TIME = 'expireTime';
 
     const PAGE_TITLE = 'Forgotten password';
-    const PAGE_SUBTITLE = 'MOT Testing Service';
+    const PAGE_SUBTITLE = 'MOT testing service';
     const PAGE_TITLE_CONFIRMATION = 'Success!';
     const PAGE_TITLE_FAILURE = 'Forgotten security question(s)';
     const PAGE_TITLE_EMAIL_NOT_FOUND = 'Email address not found';
-    const PAGE_TITLE_PASSWORD_RESET = 'Password reset';
+    const PAGE_TITLE_PASSWORD_RESET = 'Reset your password';
 
     const STEP_1 = 'Step 1 of 3';
     const STEP_2 = 'Step 2 of 3';
@@ -52,7 +54,7 @@ class PasswordResetController extends AbstractAuthActionController
     const TEXT_LINK_EXPIRED = 'The password reset link has expired.';
     const TEXT_LINK_BEEN_USED = 'The password reset link has already been used.';
     const TEXT_YOU_HAVE_ARRIVED_HERE = 'You have arrived here after entering/following a link to reset your password';
-    const TEXT_YOU_MUST_CHANGE_PWORD = 'You have arrived here because you need to change your password';
+    const TEXT_YOU_MUST_CHANGE_PWORD = 'Your password has expired. Change it now.';
 
     /** @var PasswordResetService */
     protected $passwordResetService;
@@ -296,8 +298,9 @@ class PasswordResetController extends AbstractAuthActionController
                         );
 
                         return $this->redirect()->toUrl(PersonUrlBuilderWeb::home());
-                    } catch (\Exception $e) {
-                        $this->view->addError(ChangePasswordFormModel::FIELD_PASS, self::ERR_PASSWORD_NOT_VALID);
+                    } catch (ValidationException $e) {
+                        $passwordError = ArrayUtils::first($e->getErrors())['message'];
+                        $this->view->addError(ChangePasswordFormModel::FIELD_PASS, $passwordError);
                     }
                 }
             }
@@ -333,8 +336,9 @@ class PasswordResetController extends AbstractAuthActionController
                         $this->getServiceLocator()->get('ZendAuthenticationService')->clearIdentity();
 
                         return $this->redirect()->toUrl(PersonUrlBuilderWeb::home());
-                    } catch (\Exception $e) {
-                        $this->view->addError(ChangePasswordFormModel::FIELD_PASS, self::ERR_PASSWORD_NOT_VALID);
+                    } catch (ValidationException $e) {
+                        $passwordError = ArrayUtils::first($e->getErrors())['message'];
+                        $this->view->addError(ChangePasswordFormModel::FIELD_PASS, $passwordError);
                     }
                 }
             }

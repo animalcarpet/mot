@@ -17,6 +17,7 @@ Feature: MOT Logs
     When I download that site's test logs for today
     Then I will see the correct MOT Test Log Data
 
+  @quarantine
   Scenario:
     Given I am logged in as a Tester
     And I perform test on the VTS when it's linked to some AE first time

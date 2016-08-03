@@ -1,6 +1,5 @@
 package uk.gov.dvsa.framework.config;
 
-import com.dvsa.mot.selenium.framework.Browser;
 import org.openqa.selenium.Platform;
 
 import java.io.FileInputStream;
@@ -142,6 +141,11 @@ public abstract class Configurator {
 
     public static String testSupportUrl() {
         return getProp("test.testSupportUrl");
+    }
+
+    public static String vehicleServiceUrl()
+    {
+        return getProp("test.vehicleServiceUrl");
     }
 
     public String getChromeDriverPath() {

@@ -11,7 +11,7 @@ class DtoCachedReflector implements DtoReflectorInterface
     /** @var DtoClassReflection */
     private $cachedReflections = [];
 
-    public function __construct(DtoConvertibleTypesRegistryInterface $convertiblesRegister)
+    public function __construct(DtoConvertibleTypesRegistry $convertiblesRegister)
     {
         $this->reflector = new DtoReflector($convertiblesRegister);
     }

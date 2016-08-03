@@ -1,9 +1,0 @@
-Update a site's default brake test option
-
-|Default Brake Tests                                                                                                                                |
-|siteId|defaultBrakeTestClass1And2|defaultServiceBrakeTestClass3AndAbove|defaultParkingBrakeTestClass3AndAbove|success?|valuesWereChangedInDatabase?|
-|11    |floor                     |plate                                |gradient                             |true    |true                        |
-|11    |                          |decelerometer                        |roller                               |true    |true                        |
-|11    |decelerometer             |                                     |                                     |true    |true                        |
-|11    |Invalid Test Type         |roller                               |roller                               |false   |false                       |
-|999   |roller                    |roller                               |roller                               |false   |false                       |

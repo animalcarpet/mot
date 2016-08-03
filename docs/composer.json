@@ -1,0 +1,7 @@
+{
+  "name": "dvsa/mot-docs",
+  "description": "Documentation generated from MOT source code",
+  "require": {
+    "sami/sami": "^3.3"
+  }
+}

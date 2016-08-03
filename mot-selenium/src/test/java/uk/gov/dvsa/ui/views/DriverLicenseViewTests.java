@@ -14,12 +14,13 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringContains.containsString;
 
 public class DriverLicenseViewTests extends DslTest {
+
     private static final String DRIVING_LICENCE_CHANGE_SUCCESS = "Driving licence has been changed successfully.";
     private static final String DRIVING_LICENCE_WRONG_NI_FORMAT = "Driving licence - must be a valid Northern Ireland driving licence";
     private static final String DRIVING_LICENCE_WRONG_GB_FORMAT = "Driving licence - must be a valid Great Britain driving licence";
     private static final String DRIVING_LICENCE_EMPTY = "you must enter a driving licence number";
 
-    @Test(groups = {"BVT", "Regression"},
+    @Test(groups = {"Regression"},
             description = "Test that a validation error message is displayed to DVSA user when submitting wrong information",
             dataProvider = "invalidLicenceInputTestCases")
     public void dvsaUserSeesValidationErrorWithInvalidInput(String number, String country, String expectedMessage)
@@ -35,7 +36,7 @@ public class DriverLicenseViewTests extends DslTest {
         assertThat(validationMessage, containsString(expectedMessage));
     }
 
-    @Test(groups = {"BVT", "Regression"},
+    @Test(groups = {"Regression"},
             description = "Test that validates the authorised DVSA user can see driver licence Number for Trade Users",
             dataProvider = "dvsaUserProvider")
     public void dvsaUserCanViewTradeUserLicenseDetails(User dvsaUser) throws IOException, URISyntaxException{
@@ -46,7 +47,7 @@ public class DriverLicenseViewTests extends DslTest {
         assertThat(motUI.profile.page().drivingLicenceIsDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression"},
+    @Test(groups = {"Regression"},
             description = "DVSA user can't see driver licence section on it's own profile page",
             dataProvider = "dvsaUserProvider")
     public void dvsaUsersCannotViewTheirPersonalLicenseDetails(User dvsaUser) throws IOException, URISyntaxException{
@@ -57,7 +58,7 @@ public class DriverLicenseViewTests extends DslTest {
         assertThat( motUI.profile.page().isDrivingLicenceInformationIsDisplayed(), is(false));
     }
 
-    @Test(groups = {"BVT", "Regression"},
+    @Test(groups = {"Regression"},
             description = "Authorised DVSA user can't see driver licence section on other DVSA user")
     public void dvsaUserCantSeeDriverLicenceForOtherDvsaUser() throws IOException, URISyntaxException {
         // Given that I'm on a DVSA user profile as authorised DVSA user
@@ -67,7 +68,7 @@ public class DriverLicenseViewTests extends DslTest {
         assertThat(motUI.profile.page().isDrivingLicenceInformationIsDisplayed(), is(false));
     }
 
-    @Test(groups = {"BVT", "Regression"},
+    @Test(groups = {"Regression"},
             description = "Test that DVSA user can edit non-DVSA user driving licence successfully",
             dataProvider = "validLicenceInputTestCases")
     public void dvsaUserCanChangeTradeUserLicenseDetails(String number, String country) throws IOException, URISyntaxException {
@@ -85,7 +86,7 @@ public class DriverLicenseViewTests extends DslTest {
         assertThat(motUI.profile.page().getMessageSuccess(), containsString(DRIVING_LICENCE_CHANGE_SUCCESS));
     }
 
-    @Test(groups = {"BVT", "Regression"},
+    @Test(groups = {"Regression"},
             expectedExceptions = PageInstanceNotFoundException.class,
             description = "Test that URL cannot be modified by DVSA user to change DVSA user driving licence")
     public void dvsaUserCannotModifyUrlToChangeOtherDvsaUserDrivingLicence() throws IOException {
@@ -95,7 +96,7 @@ public class DriverLicenseViewTests extends DslTest {
         // Then the application will display an error page
     }
 
-    @Test(testName = "NewProfile", groups = {"BVT", "Regression"},
+    @Test(testName = "NewProfile", groups = {"Regression"},
             description = "Test that DVSA user can remove non-DVSA user driving licence")
     public void dvsaUserCanRemoveTradeUserDrivingLicence() throws IOException, URISyntaxException {
         //setup
@@ -122,8 +123,8 @@ public class DriverLicenseViewTests extends DslTest {
     @DataProvider
     private Object[][] validLicenceInputTestCases() {
         return new Object[][] {
-                {"AAAAA807217BM9PC", "GB"},
-                {"12345678", "NI"},
+//                {"AAAAA807217BM9PC", "GB"},
+//                {"12345678", "NI"},
                 {"123-456-789", "NU"}
         };
     }

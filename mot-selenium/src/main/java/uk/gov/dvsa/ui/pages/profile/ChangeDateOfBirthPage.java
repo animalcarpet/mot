@@ -4,7 +4,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
@@ -30,17 +30,17 @@ public class ChangeDateOfBirthPage extends Page {
     }
 
     public ChangeDateOfBirthPage fillDay(String value) {
-        FormCompletionHelper.enterText(dayInput, value);
+        FormDataHelper.enterText(dayInput, value);
         return this;
     }
 
     public ChangeDateOfBirthPage fillMonth(String value) {
-        FormCompletionHelper.enterText(monthInput, value);
+        FormDataHelper.enterText(monthInput, value);
         return this;
     }
 
     public ChangeDateOfBirthPage fillYear(String value) {
-        FormCompletionHelper.enterText(yearInput, value);
+        FormDataHelper.enterText(yearInput, value);
         return this;
     }
 

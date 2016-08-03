@@ -69,7 +69,7 @@ class VehicleCatalogServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testFindModelByName()
     {
-        $this->vcs->findModelByName("name", "make");
+        $this->vcs->findModelByNameAndCodeId("name", "make");
     }
 
     public function testModelsByMake()

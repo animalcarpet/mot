@@ -5,6 +5,10 @@
  * @link http://gitlab.clb.npm/mot/mot
  */
 
+use Dvsa\Mot\Frontend\PersonModule\Controller\AddAnnualAssessmentCertificatesController;
+use Dvsa\Mot\Frontend\PersonModule\Controller\RemoveAnnualAssessmentCertificatesController;
+use Dvsa\Mot\Frontend\PersonModule\Controller\ViewAnnualAssessmentCertificatesController;
+use Dvsa\Mot\Frontend\PersonModule\Controller\EditAnnualAssessmentCertificatesController;
 use Dvsa\Mot\Frontend\PersonModule\Controller\QualificationDetailsController;
 use Dashboard\Factory\Controller\SecurityQuestionControllerFactory;
 use Dvsa\Mot\Frontend\PersonModule\Controller\ChangeNameController;
@@ -12,6 +16,8 @@ use Dvsa\Mot\Frontend\PersonModule\Controller\ChangeAddressController;
 use Dvsa\Mot\Frontend\PersonModule\Controller\ChangeTelephoneController;
 use Dvsa\Mot\Frontend\PersonModule\Controller\PersonProfileController;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
+use DvsaMotTest\Controller\TesterMotTestLogController;
+use UserAdmin\Controller\EmailAddressController;
 use UserAdmin\Factory\Controller\EmailAddressControllerFactory;
 use UserAdmin\Factory\Controller\DrivingLicenceControllerFactory;
 use Dashboard\Controller\UserTradeRolesController;
@@ -76,7 +82,7 @@ return [
                         'options' => [
                             'route' => '/email/change',
                             'defaults' => [
-                                'controller' => EmailAddressControllerFactory::class,
+                                'controller' => EmailAddressController::class,
                                 'action' => 'index',
                             ],
                         ],
@@ -133,6 +139,87 @@ return [
                             'defaults'    => [
                                 'controller' => UserTradeRolesController::class,
                                 'action' => 'index',
+                            ],
+                        ],
+                    ],
+                    'annual-assessment-certificates' => [
+                        'type'          => 'segment',
+                        'options'       => [
+                            'route'       => '/annual-assessment-certificates',
+                            'defaults'    => [
+                                'controller' => ViewAnnualAssessmentCertificatesController::class,
+                                'action' => 'view',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'add' => [
+                                'type'    => 'segment',
+                                'options' => [
+                                    'route'       => '/:group/add',
+                                    'constraints' => [
+                                        'group' => 'A|B',
+                                    ],
+                                    'defaults'    => [
+                                        'controller' => AddAnnualAssessmentCertificatesController::class,
+                                        'action'     => 'add',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                                'child_routes' => [
+                                    'review' => [
+                                        'type' => 'segment',
+                                        'options' => [
+                                            'route' => '/review/:formUuid',
+                                            'defaults' => [
+                                                'controller' => AddAnnualAssessmentCertificatesController::class,
+                                                'action' => 'addReview',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'edit' => [
+                                'type'    => 'segment',
+                                'options' => [
+                                    'route'       => '/:group/:certificateId/edit',
+                                    'constraints' => [
+                                        'group' => 'A|B',
+                                        'certificateId' => '[0-9]+'
+                                    ],
+                                    'defaults'    => [
+                                        'controller' => EditAnnualAssessmentCertificatesController::class,
+                                        'action'     => 'edit',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                                'child_routes' => [
+                                    'review' => [
+                                        'type' => 'segment',
+                                        'options' => [
+                                            'route' => '/review/:formUuid',
+                                            'defaults' => [
+                                                'controller' => EditAnnualAssessmentCertificatesController::class,
+                                                'action' => 'editReview',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'remove' => [
+                                'type'    => 'segment',
+                                'options' => [
+                                    'route'       => '/:group/remove/:certificateId',
+                                    'constraints' => [
+                                        'group' => 'A|B',
+                                        'certificateId' => '[0-9]+',
+                                    ],
+                                    'defaults'    => [
+                                        'controller' => RemoveAnnualAssessmentCertificatesController::class,
+                                        'action'     => 'remove',
+                                    ],
+                                ],
+                                'may_terminate' => true,
                             ],
                         ],
                     ],
@@ -336,6 +423,29 @@ return [
                             ],
                         ],
                     ],
+                    'tester-mot-test-log' => [
+                        'type'    => 'segment',
+                        'options' => [
+                            'route'    => '/mot-test-log',
+                            'defaults' => [
+                                'controller' => TesterMotTestLogController::class,
+                                'action'     => 'index',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'download'    => [
+                                'type'    => 'segment',
+                                'options' => [
+                                    'route'       => '/csv',
+                                    'defaults'    => [
+                                        'controller' => TesterMotTestLogController::class,
+                                        'action'     => 'downloadCsv',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
             ContextProvider::USER_SEARCH_PARENT_ROUTE => [
@@ -389,7 +499,7 @@ return [
                         'options' => [
                             'route' => '/email/change',
                             'defaults' => [
-                                'controller' => EmailAddressControllerFactory::class,
+                                'controller' => EmailAddressController::class,
                                 'action' => 'index'
                             ],
                         ],
@@ -435,6 +545,87 @@ return [
                             'defaults'    => [
                                 'controller' => UserTradeRolesController::class,
                                 'action' => 'index',
+                            ],
+                        ],
+                    ],
+                    'annual-assessment-certificates' => [
+                        'type'          => 'segment',
+                        'options'       => [
+                            'route'       => '/annual-assessment-certificates',
+                            'defaults'    => [
+                                'controller' => ViewAnnualAssessmentCertificatesController::class,
+                                'action' => 'view',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'add' => [
+                                'type'    => 'segment',
+                                'options' => [
+                                    'route'       => '/:group/add',
+                                    'constraints' => [
+                                        'group' => 'A|B',
+                                    ],
+                                    'defaults'    => [
+                                        'controller' => AddAnnualAssessmentCertificatesController::class,
+                                        'action'     => 'add',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                                'child_routes' => [
+                                    'review' => [
+                                        'type' => 'segment',
+                                        'options' => [
+                                            'route' => '/review/:formUuid',
+                                            'defaults' => [
+                                                'controller' => AddAnnualAssessmentCertificatesController::class,
+                                                'action' => 'addReview',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'edit' => [
+                                'type'    => 'segment',
+                                'options' => [
+                                    'route'       => '/:group/:certificateId/edit',
+                                    'constraints' => [
+                                        'group' => 'A|B',
+                                        'certificateId' => '[0-9]+'
+                                    ],
+                                    'defaults'    => [
+                                        'controller' => EditAnnualAssessmentCertificatesController::class,
+                                        'action'     => 'edit',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                                'child_routes' => [
+                                    'review' => [
+                                        'type' => 'segment',
+                                        'options' => [
+                                            'route' => '/review/:formUuid',
+                                            'defaults' => [
+                                                'controller' => EditAnnualAssessmentCertificatesController::class,
+                                                'action' => 'editReview',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'remove' => [
+                                'type'    => 'segment',
+                                'options' => [
+                                    'route'       => '/:group/remove/:certificateId',
+                                    'constraints' => [
+                                        'group' => 'A|B',
+                                        'certificateId' => '[0-9]+',
+                                    ],
+                                    'defaults'    => [
+                                        'controller' => RemoveAnnualAssessmentCertificatesController::class,
+                                        'action'     => 'remove',
+                                    ],
+                                ],
+                                'may_terminate' => true,
                             ],
                         ],
                     ],
@@ -808,7 +999,7 @@ return [
                         'options' => [
                             'route' => '/email/change',
                             'defaults' => [
-                                'controller' => EmailAddressControllerFactory::class,
+                                'controller' => EmailAddressController::class,
                                 'action' => 'index'
                             ],
                         ],
@@ -854,6 +1045,87 @@ return [
                             'defaults'    => [
                                 'controller' => UserTradeRolesController::class,
                                 'action' => 'index',
+                            ],
+                        ],
+                    ],
+                    'annual-assessment-certificates' => [
+                        'type'          => 'segment',
+                        'options'       => [
+                            'route'       => '/annual-assessment-certificates',
+                            'defaults'    => [
+                                'controller' => ViewAnnualAssessmentCertificatesController::class,
+                                'action' => 'view',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'add' => [
+                                'type'    => 'segment',
+                                'options' => [
+                                    'route'       => '/:group/add',
+                                    'constraints' => [
+                                        'group' => 'A|B',
+                                    ],
+                                    'defaults'    => [
+                                        'controller' => AddAnnualAssessmentCertificatesController::class,
+                                        'action'     => 'add',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                                'child_routes' => [
+                                    'review' => [
+                                        'type' => 'segment',
+                                        'options' => [
+                                            'route' => '/review/:formUuid',
+                                            'defaults' => [
+                                                'controller' => AddAnnualAssessmentCertificatesController::class,
+                                                'action' => 'addReview',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'edit' => [
+                                'type'    => 'segment',
+                                'options' => [
+                                    'route'       => '/:group/:certificateId/edit',
+                                    'constraints' => [
+                                        'group' => 'A|B',
+                                        'certificateId' => '[0-9]+',
+                                    ],
+                                    'defaults'    => [
+                                        'controller' => EditAnnualAssessmentCertificatesController::class,
+                                        'action'     => 'edit',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                                'child_routes' => [
+                                    'review' => [
+                                        'type' => 'segment',
+                                        'options' => [
+                                            'route' => '/review/:formUuid',
+                                            'defaults' => [
+                                                'controller' => EditAnnualAssessmentCertificatesController::class,
+                                                'action' => 'editReview',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'remove' => [
+                                'type'    => 'segment',
+                                'options' => [
+                                    'route'       => '/:group/remove/:certificateId',
+                                    'constraints' => [
+                                        'group' => 'A|B',
+                                        'certificateId' => '[0-9]+',
+                                    ],
+                                    'defaults'    => [
+                                        'controller' => RemoveAnnualAssessmentCertificatesController::class,
+                                        'action'     => 'remove',
+                                    ],
+                                ],
+                                'may_terminate' => true,
                             ],
                         ],
                     ],
@@ -1119,7 +1391,7 @@ return [
                         'options' => [
                             'route' => '/email/change',
                             'defaults' => [
-                                'controller' => EmailAddressControllerFactory::class,
+                                'controller' => EmailAddressController::class,
                                 'action' => 'index'
                             ],
                         ],
@@ -1165,6 +1437,87 @@ return [
                             'defaults'    => [
                                 'controller' => UserTradeRolesController::class,
                                 'action' => 'index',
+                            ],
+                        ],
+                    ],
+                    'annual-assessment-certificates' => [
+                        'type'          => 'segment',
+                        'options'       => [
+                            'route'       => '/annual-assessment-certificates',
+                            'defaults'    => [
+                                'controller' => ViewAnnualAssessmentCertificatesController::class,
+                                'action' => 'view',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'add' => [
+                                'type'    => 'segment',
+                                'options' => [
+                                    'route'       => '/:group/add',
+                                    'constraints' => [
+                                        'group' => 'A|B',
+                                    ],
+                                    'defaults'    => [
+                                        'controller' => AddAnnualAssessmentCertificatesController::class,
+                                        'action'     => 'add',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                                'child_routes' => [
+                                    'review' => [
+                                        'type' => 'segment',
+                                        'options' => [
+                                            'route' => '/review/:formUuid',
+                                            'defaults' => [
+                                                'controller' => AddAnnualAssessmentCertificatesController::class,
+                                                'action' => 'addReview',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'edit' => [
+                                'type'    => 'segment',
+                                'options' => [
+                                    'route'       => '/:group/:certificateId/edit',
+                                    'constraints' => [
+                                        'group' => 'A|B',
+                                        'certificateId' => '[0-9]+'
+                                    ],
+                                    'defaults'    => [
+                                        'controller' => EditAnnualAssessmentCertificatesController::class,
+                                        'action'     => 'edit',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                                'child_routes' => [
+                                    'review' => [
+                                        'type' => 'segment',
+                                        'options' => [
+                                            'route' => '/review/:formUuid',
+                                            'defaults' => [
+                                                'controller' => AddAnnualAssessmentCertificatesController::class,
+                                                'action' => 'editReview',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'remove' => [
+                                'type'    => 'segment',
+                                'options' => [
+                                    'route'       => '/:group/remove/:certificateId',
+                                    'constraints' => [
+                                        'group' => 'A|B',
+                                        'certificateId' => '[0-9]+',
+                                    ],
+                                    'defaults'    => [
+                                        'controller' => RemoveAnnualAssessmentCertificatesController::class,
+                                        'action'     => 'remove',
+                                    ],
+                                ],
+                                'may_terminate' => true,
                             ],
                         ],
                     ],

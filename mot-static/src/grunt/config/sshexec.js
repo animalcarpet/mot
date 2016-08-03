@@ -27,15 +27,20 @@ module.exports = function (grunt, config) {
             host: '<%= dev_config.host %>',
             username: '<%= dev_config.username %>',
             privateKey: '<%= dev_config.privateKey %>',
-            port: '<%= dev_config.port %>',
+            port: '<%= dev_config.port %>'
         };
 
         var dev2_ssh_options = {
             host: '<%= dev2_config.host %>',
             username: '<%= dev2_config.username %>',
             privateKey: '<%= dev2_config.privateKey %>',
-            port: '<%= dev2_config.port %>',
+            port: '<%= dev2_config.port %>'
         };
+
+        var php_extension_enable = 'sudo sed -i.bak "s/^.*zend_ext/zend_ext/g" <%= vagrant_config.phpRootDir %>/etc/php.d/';
+        var php_extension_disable = 'sudo sed -i.bak "s/.*zend_ext/;zend_ext/g" <%= vagrant_config.phpRootDir %>/etc/php.d/';
+        var opcache_ini_file = 'opcache.ini';
+        var xdebug_ini_file = 'xdebug.ini';
 
         grunt.config('sshexec', {
             options: {
@@ -152,13 +157,13 @@ module.exports = function (grunt, config) {
             reset_database: {
                 options: dev_ssh_options,
                 command: function () {
-                    return 'export dev_workspace="<%= vagrant_config.workspace %>"; cd <%= vagrant_config.workspace %>/mot-api/db && sudo ./reset_db_with_test_data.sh -f <%= mysql_config.user %> <%= mysql_config.password %> <%= mysql_config.host %> <%= mysql_config.database %> <%= mysql_config.grantuser %> N && echo "DB Reset"';
+                    return 'export dev_workspace="<%= vagrant_config.workspace %>"; cd <%= vagrant_config.workspace %>/mot-api/db && sudo ./reset_db_with_test_data.sh <%= mysql_config.user %> <%= mysql_config.password %> <%= mysql_config.host %> <%= mysql_config.grantuser %> N && echo "DB Reset"';
                 }
             },
             reset_database_no_hist: {
                 options: dev_ssh_options,
                 command: function () {
-                    return 'export dev_workspace="<%= vagrant_config.workspace %>"; cd <%= vagrant_config.workspace %>/mot-api/db && sudo ./reset_db_with_test_data.sh -f <%= mysql_config.user %> <%= mysql_config.password %> <%= mysql_config.host %> <%= mysql_config.database %> <%= mysql_config.grantuser %> N N && echo "DB Reset without *_hist tables"';
+                    return 'export dev_workspace="<%= vagrant_config.workspace %>"; cd <%= vagrant_config.workspace %>/mot-api/db && sudo ./reset_db_with_test_data.sh <%= mysql_config.user %> <%= mysql_config.password %> <%= mysql_config.host %> <%= mysql_config.grantuser %> N N && echo "DB Reset without *_hist tables"';
                 }
             },
             dump_database: {
@@ -170,7 +175,7 @@ module.exports = function (grunt, config) {
             reset_database_full: {
                 options: dev_ssh_options,
                 command: function () {
-                    return 'export dev_workspace="<%= vagrant_config.workspace %>"; cd <%= vagrant_config.workspace %>/mot-api/db && sudo ./reset_db_with_test_data.sh -f <%= mysql_config.user %> <%= mysql_config.password %> <%= mysql_config.host %> <%= mysql_config.database %> <%= mysql_config.grantuser %> Y && echo "DB Full Reset"';
+                    return 'export dev_workspace="<%= vagrant_config.workspace %>"; cd <%= vagrant_config.workspace %>/mot-api/db && sudo ./reset_db_with_test_data.sh <%= mysql_config.user %> <%= mysql_config.password %> <%= mysql_config.host %> <%= mysql_config.grantuser %> Y && echo "DB Full Reset"';
                 }
             },
             mysql_proc_fix: {
@@ -272,21 +277,37 @@ module.exports = function (grunt, config) {
                 options: dev_ssh_options,
                 command: 'sudo sed -i.bak "s/^general-log = 0/general-log = 1/g" <%= vagrant_config.mysqlConfigDir %>/etc/my.cnf'
             },
+            opcache_unload_dev: {
+                options: dev_ssh_options,
+                command: php_extension_disable + opcache_ini_file
+            },
+            opcache_unload_dev2: {
+                options: dev2_ssh_options,
+                command: php_extension_disable + opcache_ini_file
+            },
+            opcache_load_dev: {
+                options: dev_ssh_options,
+                command: php_extension_enable + opcache_ini_file
+            },
+            opcache_load_dev2: {
+                options: dev2_ssh_options,
+                command: php_extension_enable + opcache_ini_file
+            },
             xdebug_disable_dev: {
                 options: dev_ssh_options,
-                command: 'sudo sed -i.bak "s/^.*zend_ext/;zend_ext/g" <%= vagrant_config.phpRootDir %>/etc/php.d/xdebug.ini'
+                command: php_extension_disable + xdebug_ini_file
             },
             xdebug_disable_dev2: {
                 options: dev2_ssh_options,
-                command: 'sudo sed -i.bak "s/^.*zend_ext/;zend_ext/g" <%= vagrant_config.phpRootDir %>/etc/php.d/xdebug.ini'
+                command: php_extension_disable + xdebug_ini_file
             },
             xdebug_enable_dev: {
                 options: dev_ssh_options,
-                command: 'sudo sed -i.bak "s/.*zend_ext/zend_ext/g" <%= vagrant_config.phpRootDir %>/etc/php.d/xdebug.ini'
+                command: php_extension_enable + xdebug_ini_file
             },
             xdebug_enable_dev2: {
                 options: dev2_ssh_options,
-                command: 'sudo sed -i.bak "s/.*zend_ext/zend_ext/g" <%= vagrant_config.phpRootDir %>/etc/php.d/xdebug.ini'
+                command: php_extension_enable + xdebug_ini_file
             },
             xdebug_on_dev: {
                 options: dev_ssh_options,
@@ -442,21 +463,6 @@ module.exports = function (grunt, config) {
             },
             doctrine_optimised_develop_dist: {
                 command: 'cp <%= vagrant_config.workspace %>/mot-api/config/autoload/optimised.development.php.dist.opt <%= vagrant_config.workspace %>/mot-api/config/autoload/optimised.development.php'
-            },
-            fitnesse_suite: {
-                command: 'cd <%= vagrant_config.workspace %>/mot-fitnesse;./run_ci.sh "FrontPage.SuiteAcceptanceTests?suite" text'
-            },
-            fitnesse_enforcement: {
-                command: 'cd <%= vagrant_config.workspace %>/mot-fitnesse;./run_ci.sh "FrontPage.SuiteAcceptanceTests.EnforcementSuite?suite" text'
-            },
-            fitnesse_licensing: {
-                command: 'cd <%= vagrant_config.workspace %>/mot-fitnesse;./run_ci.sh "FrontPage.SuiteAcceptanceTests.LicensingSuite?suite" text'
-            },
-            fitnesse_testing: {
-                command: 'cd <%= vagrant_config.workspace %>/mot-fitnesse;./run_ci.sh "FrontPage.SuiteAcceptanceTests.TestingSuite?suite" text'
-            },
-            fitnesse_event: {
-                command: 'cd <%= vagrant_config.workspace %>/mot-fitnesse;./run_ci.sh "FrontPage.SuiteAcceptanceTests.EventSuite?suite" text'
             },
             jasper_tomcat_restart: {
                 options: {

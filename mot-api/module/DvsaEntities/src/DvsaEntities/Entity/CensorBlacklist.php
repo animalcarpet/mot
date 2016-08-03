@@ -9,7 +9,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
  * CensorBlacklist
  *
  * @ORM\Table(name="censor_blacklist", uniqueConstraints={@ORM\UniqueConstraint(name="phrase", columns={"phrase"})})
- * @ORM\Entity(readOnly=true)
+ * @ORM\Entity(repositoryClass="\DvsaEntities\Repository\CensorBlacklistRepository", readOnly=true)
  * @ORM\Cache(usage="READ_ONLY", region="staticdata")
  */
 class CensorBlacklist

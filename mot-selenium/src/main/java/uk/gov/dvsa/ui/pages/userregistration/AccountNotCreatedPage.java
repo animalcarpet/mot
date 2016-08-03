@@ -1,6 +1,5 @@
 package uk.gov.dvsa.ui.pages.userregistration;
 
-import com.dvsa.mot.selenium.priv.frontend.login.pages.LoginPage;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;

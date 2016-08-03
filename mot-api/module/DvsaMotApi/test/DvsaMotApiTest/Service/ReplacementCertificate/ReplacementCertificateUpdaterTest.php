@@ -2,13 +2,12 @@
 
 namespace DvsaMotApiTest\Service\ReplacementCertificate;
 
-use DateTime;
-use DvsaAuthorisation\Service\AuthorisationServiceInterface;
-use DvsaCommon\Auth\MotIdentity;
-use DvsaCommon\Auth\MotIdentityProviderInterface;
-use DvsaCommon\Auth\PermissionInSystem;
 use Api\Check\CheckMessage;
 use Api\Check\CheckResult;
+use DateTime;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
+use DvsaCommon\Auth\MotIdentity;
+use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaCommonTest\TestUtils\XMock;
@@ -29,12 +28,14 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
     private $authorizationService;
     private $motTestSecurityService;
     private $motIdentityService;
+    private $mockVehicleService ;
 
     public function setUp()
     {
         $this->authorizationService = XMock::of('\DvsaAuthorisation\Service\AuthorisationServiceInterface', ['isGranted']);
         $this->motIdentityService = XMock::of('Zend\Authentication\AuthenticationService', ['getIdentity']);
         $this->motTestSecurityService = XMock::of(MotTestSecurityService::class);
+        $this->mockVehicleService = XMock::of(VehicleService::class);
     }
 
     public function testCreateGivenDraftShouldUpdateCertificate()
@@ -47,8 +48,10 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
         $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft()
             ->setReplacementReason("Reason");
 
+//        when
         $motTest = $this->createSut()->update($draft);
 
+        // then
         $this->assertEquals($draft->getPrimaryColour()->getId(), $motTest->getPrimaryColour()->getId());
         $this->assertEquals($draft->getSecondaryColour()->getId(), $motTest->getSecondaryColour()->getId());
         $this->assertEquals($draft->getExpiryDate(), $motTest->getExpiryDate());
@@ -74,8 +77,9 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
         );
 
-        $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft()
-            ->setReplacementReason("Reason")
+        $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft();
+
+        $draft->setReplacementReason("Reason")
             ->setVin(rand(0,999999999999))
             ->setVrm(rand(0, 999999));
         $draft->getOdometerReading()->setValue(rand(0,999999));
@@ -95,10 +99,6 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
             $this->assertEquals($draft->getSecondaryColour(), $motTest->getSecondaryColour());
             $this->assertEquals($draft->getModel(), $motTest->getModel());
             $this->assertEquals($draft->getMake(), $motTest->getMake());
-            $this->assertEquals($draft->getMake(), $motTest->getVehicle()->getMake());
-            $this->assertEquals($draft->getModel(), $motTest->getVehicle()->getModel());
-            $this->assertEquals($draft->getVin(), $motTest->getVehicle()->getVin());
-            $this->assertEquals($draft->getVrm(), $motTest->getVehicle()->getRegistration());
         };
 
         $checkIfTestIsUpdatedFromDraft($draft, $motTest);
@@ -209,7 +209,8 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
         return new ReplacementCertificateUpdater(
             $this->motTestSecurityService,
             $this->authorizationService,
-            $this->motIdentityService
+            $this->motIdentityService,
+            $this->mockVehicleService
         );
     }
 

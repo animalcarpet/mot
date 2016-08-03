@@ -2,21 +2,24 @@
 
 namespace DvsaCommon\HttpRestJson;
 use DvsaCommon\DtoSerialization\DtoReflectiveDeserializer;
+use DvsaCommon\DtoSerialization\DtoReflectiveSerializer;
 
 class AbstractApiResource
 {
-    private $httpClient;
-    private $deserializer;
+    protected $httpClient;
+    protected $deserializer;
+    protected $serializer;
 
-    public function __construct(Client $httpClient, DtoReflectiveDeserializer $deserializer)
+    public function __construct(Client $httpClient, DtoReflectiveDeserializer $deserializer, DtoReflectiveSerializer $serializer)
     {
         $this->httpClient = $httpClient;
         $this->deserializer = $deserializer;
+        $this->serializer = $serializer;
     }
 
-    protected function getSingle($returnedDtoClass, $url)
+    protected function getSingle($returnedDtoClass, $url, $params = [])
     {
-        $data = $this->httpClient->get($url)['data'];
+        $data = $this->httpClient->getWithParamsReturnDto($url, $params)['data'];
 
         return $this->deserializer->deserialize($data, $returnedDtoClass);
     }

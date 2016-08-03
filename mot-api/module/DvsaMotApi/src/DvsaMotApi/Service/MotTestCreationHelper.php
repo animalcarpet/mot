@@ -3,6 +3,8 @@
 namespace DvsaMotApi\Service;
 
 use Doctrine\ORM\EntityManager;
+use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleUnderTestRequest;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaAuthentication\Service\OtpService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -46,18 +48,27 @@ class MotTestCreationHelper
 
     /** @var EntityManager */
     private $entityManager;
+
     /** @var AuthorisationServiceInterface */
     private $authService;
+
     /** @var TesterService */
     private $testerService;
+
     /** @var MotTestRepository */
     private $motTestRepository;
+
     /** @var MotTestValidator */
     private $motTestValidator;
+
     /** @var RetestEligibilityValidator */
     private $retestEligibilityValidator;
+
     /** @var OtpService */
     private $otpService;
+
+    /** @var VehicleService */
+    private $vehicleService;
 
     public function __construct(
         EntityManager $entityManager,
@@ -66,15 +77,17 @@ class MotTestCreationHelper
         $motTestRepository,
         MotTestValidator $motTestValidator,
         RetestEligibilityValidator $retestEligibilityValidator,
-        OtpService $otpService
+        OtpService $otpService,
+        VehicleService $vehicleService
     ) {
-        $this->entityManager              = $entityManager;
-        $this->authService                = $authService;
-        $this->testerService              = $testerService;
-        $this->motTestRepository          = $motTestRepository;
-        $this->motTestValidator           = $motTestValidator;
+        $this->entityManager = $entityManager;
+        $this->authService = $authService;
+        $this->testerService = $testerService;
+        $this->motTestRepository = $motTestRepository;
+        $this->motTestValidator = $motTestValidator;
         $this->retestEligibilityValidator = $retestEligibilityValidator;
-        $this->otpService                 = $otpService;
+        $this->otpService = $otpService;
+        $this->vehicleService = $vehicleService;
     }
 
     /**
@@ -131,6 +144,7 @@ class MotTestCreationHelper
 
         /** @var \DvsaEntities\Repository\MotTestTypeRepository $motTestTypeRepository */
         $motTestTypeRepository = $this->entityManager->getRepository(MotTestType::class);
+
         /** @var \DvsaEntities\Entity\MotTestType $motTestType */
         $motTestType = $motTestTypeRepository->findOneByCode($motTestTypeCode);
 
@@ -185,7 +199,11 @@ class MotTestCreationHelper
 
         $primaryColour   = $primaryColourCode ? $this->getColourByCode($primaryColourCode) : null;
         $secondaryColour = $secondaryColourCode ? $this->getColourByCode($secondaryColourCode) : null;
+
+        /** @var FuelType $fuelType */
         $fuelType        = $this->entityManager->getRepository(FuelType::class)->findOneByCode($fuelTypeCode);
+
+        /** @var VehicleClass $vehicleClass */
         $vehicleClass    = $this->entityManager->getRepository(VehicleClass::class)->findOneByCode($vehicleClassCode);
 
         /** @var MotTestStatusRepository $motTestStatusRepository */
@@ -210,7 +228,8 @@ class MotTestCreationHelper
             ->setMotTestType($motTestType)
             ->setEmptyVinReason($vehicle->getEmptyVinReason())
             ->setEmptyVrmReason($vehicle->getEmptyVrmReason())
-            ->setClientIp($clientIp);
+            ->setClientIp($clientIp)
+            ->setModelDetail($vehicle->getModelDetail());
 
         if ($vehicle->getModel()) {
             $motTest->setModel($vehicle->getModel());
@@ -272,10 +291,19 @@ class MotTestCreationHelper
             }
 
             // update vehicle with specified field values
-            $vehicle->setColour($primaryColour);
-            $vehicle->setSecondaryColour($secondaryColour);
-            $vehicle->setVehicleClass($vehicleClass);
-            $vehicle->setFuelType($fuelType);
+            $updateDvsaVehicleUnderTestRequest = new UpdateDvsaVehicleUnderTestRequest();
+            $updateDvsaVehicleUnderTestRequest->setColourId($primaryColour->getId())
+                ->setSecondaryColourId($secondaryColour->getId())
+                ->setFuelTypeId($fuelType->getId())
+                ->setVehicleClassId($vehicleClass->getId())
+//              ->setCylinderCapacity($data['CylinderCapacity'])   @todo: API and UI need to consider CC according to the certain fuel type
+                ->setOneTimePassword($oneTimePassword);
+
+            $this->vehicleService->updateDvsaVehicleUnderTest(
+                $vehicle->getId(),
+                $updateDvsaVehicleUnderTestRequest
+            );
+
         }
 
         $this->entityManager->persist($motTest);

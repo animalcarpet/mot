@@ -58,7 +58,7 @@ class PersonTradeRoleSorterService
         $sortedRoles = [];
         foreach ($tradeRoles as $tradeRole) {
             if ($this->catalog->businessRole()->getByCode($tradeRole->getRoleCode())->getType() == BusinessRole::SITE_TYPE) {
-                $sortedRoles[$tradeRole->getAeId()][BusinessRole::SITE_TYPE][] = $tradeRole;
+                $sortedRoles[$tradeRole->getWorkplaceId()][BusinessRole::SITE_TYPE][] = $tradeRole;
             } else {
                 $sortedRoles[$tradeRole->getAeId()][BusinessRole::ORGANISATION_TYPE][] = $tradeRole;
             }

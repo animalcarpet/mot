@@ -1,0 +1,39 @@
+h1 {
+    font-weight: 300;
+}
+h2 {
+    background-color: #2B8CC4;
+    color: #FFFFFF;
+    font-weight: 300;
+}
+a {
+    color: #005EA5;
+}
+
+#api-tree {
+    background: linear-gradient(to bottom, #FFFFFF, #FFFFFF 50%, #F8F8F8 50%, #F8F8F8 50%);
+    background-size: 100% 56px;
+    background-attachment: local;
+}
+
+#api-tree li.active > .hd {
+    background-color: #2B8CC4;
+}
+
+#site-nav.navbar-default {
+    background-color: #000000;
+    border-bottom: 6px solid #005EA5;
+}
+
+#site-nav.navbar-default .navbar-brand, #site-nav.navbar-default .navbar-nav > li > a {
+    color: #FFFFFF;
+}
+.navbar-default {
+    border: none;
+}
+.navbar-brand, .navbar-nav>li>a {
+    text-shadow: none;
+}
+.label-default {
+    background-color: #2E358B;
+}

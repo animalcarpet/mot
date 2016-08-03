@@ -3,7 +3,6 @@ package uk.gov.dvsa.ui.pages.events;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import uk.gov.dvsa.framework.config.Configurator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
@@ -19,7 +18,6 @@ public class EventsHistoryPage extends Page {
     @FindBy(partialLinkText = "Record an event") private WebElement recordNewEventLink;
     @FindBy(name = "submit") private WebElement applyButton;
 
-    private By eventsTable = By.id("listLogs");
     private String eventNames = "#listLogs a[href*='%s']";
 
     public EventsHistoryPage(MotAppDriver driver) {
@@ -32,14 +30,9 @@ public class EventsHistoryPage extends Page {
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
     }
 
-    public final boolean isEventHistoryTableDisplayed() {
-        return PageInteractionHelper.isElementDisplayed(eventsTable);
-    }
-
-    public final String getEventNames(String aeId) {
+    public final String getEventName(String aeId) {
         By selector = By.cssSelector(String.format(eventNames, aeId));
-        PageInteractionHelper.waitForPageToLoad();
-
+        PageInteractionHelper.refreshPage();
         return driver.findElement(selector).getText();
     }
 

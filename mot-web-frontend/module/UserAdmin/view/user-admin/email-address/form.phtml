@@ -47,6 +47,7 @@ $isEmail = empty(trim($presenter->displayEmail())) ? false : true;
                 'errorMessage'  => ArrayUtils::tryGet($errorMessages, 'email'),
                 'label'         => 'Email address',
                 'value'         => $emailValue,
+                'autoCompleteOff' => true,
             ]
         );
 
@@ -58,6 +59,7 @@ $isEmail = empty(trim($presenter->displayEmail())) ? false : true;
                 'errorMessage'  => ArrayUtils::tryGet($errorMessages, 'emailConfirm'),
                 'label'         => 'Confirm email address',
                 'value'         => $emailConfirmValue,
+                'autoCompleteOff' => true,
             ]
         );
         ?>

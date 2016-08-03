@@ -6,6 +6,7 @@ use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 
 class PersonProfileRoutes implements AutoWireableInterface
 {
+    const TEST_LOGS = '/tester-mot-test-log';
     private $contextProvider;
 
     public function __construct(ContextProvider $contextProvider)
@@ -30,5 +31,10 @@ class PersonProfileRoutes implements AutoWireableInterface
                 return ContextProvider::VTS_PARENT_ROUTE;
                 break;
         }
+    }
+
+    public function getTestLogsRoute()
+    {
+        return $this->getRoute().self::TEST_LOGS;
     }
 }

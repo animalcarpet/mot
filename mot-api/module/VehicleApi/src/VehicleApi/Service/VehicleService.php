@@ -4,6 +4,11 @@ namespace VehicleApi\Service;
 
 use DataCatalogApi\Service\VehicleCatalogService;
 use Doctrine\ORM\EntityRepository;
+use Dvsa\Mot\ApiClient\Request\CreateDvlaVehicleRequest;
+use Dvsa\Mot\ApiClient\Request\CreateDvsaVehicleRequest;
+use Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle as VehicleFromDvla;
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
 use DvsaAuthentication\Service\OtpService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
@@ -17,8 +22,10 @@ use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaEntities\Entity\DvlaVehicle;
 use DvsaEntities\Entity\DvlaVehicleImportChangeLog;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Vehicle;
+use DvsaEntities\Entity\VehicleClass;
 use DvsaEntities\Entity\VehicleV5C;
 use DvsaEntities\Repository\DvlaVehicleImportChangesRepository;
 use DvsaEntities\Repository\DvlaVehicleRepository;
@@ -39,6 +46,8 @@ class VehicleService
     const DEFAULT_COUNTRY_OF_REGISTRATION = 'GB';
     const DEFAULT_MAKE_MODEL_NAME = 'Unknown';
     const DEFAULT_BODY_TYPE_CODE = '0';
+    const KEY_WIGHT = 'weight';
+    const KEY_WIGHT_SOURCE_ID = 'weightSurce';
 
     /** @var  AuthorisationServiceInterface */
     private $authService;
@@ -67,10 +76,16 @@ class VehicleService
 
     private $transaction;
 
+    /**
+     * @var NewVehicleService
+     */
+    private $newVehicleService;
+
     public function __construct(
         AuthorisationServiceInterface $authService,
         VehicleRepository $repository,
         VehicleV5CRepository $vehicleV5CRepository,
+
         DvlaVehicleRepository $dvlaVehicleRepository,
         DvlaVehicleImportChangesRepository $dvlaVehicleImportChangesRepository,
         EntityRepository $dvlaMakeModelMapRepository,
@@ -81,14 +96,15 @@ class VehicleService
         MotTestServiceProvider $motTestServiceProvider,
         MotIdentityProviderInterface $identityProvider,
         PersonRepository $personRepository,
-        Transaction $transaction
-    ) {
+        Transaction $transaction,
+        NewVehicleService $newVehicleService
+    )
+    {
         $this->authService = $authService;
         $this->vehicleRepository = $repository;
         $this->vehicleV5CRepository = $vehicleV5CRepository;
         $this->dvlaVehicleRepository = $dvlaVehicleRepository;
-        $this->dvlaVehicleImportChangesRepository =
-            $dvlaVehicleImportChangesRepository;
+        $this->dvlaVehicleImportChangesRepository = $dvlaVehicleImportChangesRepository;
         $this->dvlaMakeModelMapRepository = $dvlaMakeModelMapRepository;
         $this->vehicleCatalog = $vehicleCatalog;
         $this->validator = $validator;
@@ -98,11 +114,13 @@ class VehicleService
         $this->identityProvider = $identityProvider;
         $this->personRepository = $personRepository;
         $this->transaction = $transaction;
+        $this->newVehicleService = $newVehicleService;
     }
 
     public function create($data)
     {
         $this->authService->assertGranted(PermissionInSystem::VEHICLE_CREATE);
+
         $this->validator->validate($data);
 
         if (!$this->authService->isGranted(PermissionInSystem::MOT_TEST_WITHOUT_OTP)) {
@@ -112,22 +130,22 @@ class VehicleService
 
         $vehicle = $this->mapVehicle($data);
 
+        $dvsaVehicleCreatedUsingJavaService = $this->createDvsaVehicleUsingJavaService($vehicle, $token);
+
         $this->transaction->begin();
 
         try {
-            $this->vehicleRepository->save($vehicle);
-
-            $motTest = $this->startMotTest($data, $vehicle->getId());
+            $motTest = $this->startMotTest($data, $dvsaVehicleCreatedUsingJavaService->getId());
 
             $this->transaction->commit();
             $dto = new VehicleCreatedDto();
             $dto->setStartedMotTestNumber($motTest->getNumber());
 
             if (isset($data['returnOriginalId'])) {
-                $dto->setVehicleId($vehicle->getId());
+                $dto->setVehicleId($dvsaVehicleCreatedUsingJavaService->getId());
             } else {
                 $dto->setVehicleId(
-                    $this->paramObfuscator->obfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, $vehicle->getId())
+                    $this->paramObfuscator->obfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, $dvsaVehicleCreatedUsingJavaService->getId())
                 );
             }
 
@@ -210,8 +228,7 @@ class VehicleService
     /**
      * @param $dvlaVehicleId
      * @param $vehicleClassCode
-     *
-     * @return Vehicle
+     * @return VehicleFromDvla
      */
     public function createVtrAndV5CFromDvlaVehicle($dvlaVehicleId, $vehicleClassCode)
     {
@@ -220,112 +237,31 @@ class VehicleService
 
         $dvlaVehicle = $this->dvlaVehicleRepository->get($dvlaVehicleId);
 
-        $fuelType = $this->vehicleCatalog->findFuelTypeByPropulsionCode($dvlaVehicle->getFuelType());
+        $vehicleCreatedUsingNewService = $this->createVehicleFromDvlaVehicleUsingJavaService(
+            $dvlaVehicle,
+            $vehicleClassCode
+        );
 
-        $makeCode = $dvlaVehicle->getMakeCode();
-        $modelCode = $dvlaVehicle->getModelCode();
-        $makeName = null;
-        $modelName = null;
-        $map = null;
-        $make = null;
-        $model = null;
+        $dvlaVehicle->setVehicleId($vehicleCreatedUsingNewService->getId());
 
-        // Logic
-        // When DVLA populate the MakeInFull value, the dvla make code always maps to UNKNOWN,
-        // and the model code maps to UNKNOWN also
-        if (!$dvlaVehicle->getMakeInFull()) {
-            if (!is_null($makeCode) || !is_null($modelCode)) {
-                $map = $this->vehicleCatalog->getMakeModelMapByDvlaCode($makeCode, $modelCode);
-
-                $make = $map ? $map->getMake() : null;
-                $model = $map ? $map->getModel() : null;
-
-                if ($map) {
-                    $makeName  = (!$map->getMake())  ? null : $map->getMake()->getName();
-                    $modelName = (!$map->getModel()) ? null : $map->getModel()->getName();
-                }
-
-                if (is_null($makeName)) {
-                    $makeName = $this->vehicleCatalog->getMakeNameByDvlaCode($makeCode);
-                    if (!$makeName) {
-                        $makeName = self::DEFAULT_MAKE_MODEL_NAME;
-                    }
-               }
-
-               if (is_null($modelName)) {
-                   $modelName = $this->vehicleCatalog->getModelNameByDvlaCode($makeCode, $modelCode);
-               }
-
-               if (empty($modelName)) {
-                    $modelName = null;
-               }
-            } else {
-                $makeName = self::DEFAULT_MAKE_MODEL_NAME;
-            }
-        } else {
-            $makeName = $dvlaVehicle->getMakeInFull();
-        }
-
-        $bodyType = $this->vehicleCatalog->findBodyTypeByCode($dvlaVehicle->getBodyType());
-
-        if (is_null($bodyType)) {
-            $bodyType = $this->vehicleCatalog->findBodyTypeByCode(self::DEFAULT_BODY_TYPE_CODE);
-        }
-
-        $vehicle = (new Vehicle())
-            ->setVin($dvlaVehicle->getVin())
-            ->setRegistration($dvlaVehicle->getRegistration())
-            ->setManufactureDate($dvlaVehicle->getManufactureDate())
-            ->setFirstRegistrationDate($dvlaVehicle->getFirstRegistrationDate())
-            ->setFirstUsedDate($dvlaVehicle->getFirstUsedDate())
-            ->setColour($this->vehicleCatalog->getColourByCode($dvlaVehicle->getPrimaryColour()))
-            ->setBodyType($bodyType)
-            ->setCylinderCapacity($dvlaVehicle->getCylinderCapacity())
-            ->setVehicleClass($this->vehicleCatalog->getVehicleClassByCode($vehicleClassCode))
-            ->setMake($make)
-            ->setModel($model)
-            ->setCountryOfRegistration(
-                $this->vehicleCatalog->getCountryOfRegistrationByCode(self::DEFAULT_COUNTRY_OF_REGISTRATION)
-            )
-            ->setFuelType($fuelType)
-            ->setDvlaVehicleId($dvlaVehicle->getDvlaVehicleId());
-
-        if (is_null($make)) {
-            $vehicle->setFreeTextMakeName($makeName);
-        }
-
-        if (is_null($model)) {
-            $vehicle->setFreeTextModelName($modelName);
-        }
-
-        $this->importWeight($dvlaVehicle, $vehicle);
-
-        if ($dvlaVehicle->getSecondaryColour()) {
-            $vehicle->setSecondaryColour(
-                $this->vehicleCatalog->getColourByCode($dvlaVehicle->getSecondaryColour())
-            );
-        }
-
-        $this->vehicleRepository->save($vehicle);
-        $dvlaVehicle->setVehicle($vehicle);
         $this->dvlaVehicleRepository->save($dvlaVehicle);
 
         $v5cDocumentNumber = $dvlaVehicle->getV5DocumentNumber();
         if (null !== $v5cDocumentNumber) {
             // VM-7220: Create corresponding V5C record.
             $vehicleV5C = (new VehicleV5C())
-                ->setVehicle($vehicle)
+                ->setVehicleId($vehicleCreatedUsingNewService->getId())
                 ->setV5cRef($dvlaVehicle->getV5DocumentNumber())
                 ->setFirstSeen(new \DateTime());
             $this->vehicleV5CRepository->save($vehicleV5C);
         }
 
-        return $vehicle;
+        return $vehicleCreatedUsingNewService;
     }
 
     /**
      * @param Person $person
-     * @param Vehicle $vehicle
+     * @param VehicleFromDvla $vehicle
      * @param int $vehicleClassCode
      * @param int $primaryColourCode
      * @param int $secondaryColourCode
@@ -333,17 +269,18 @@ class VehicleService
      */
     public function logDvlaVehicleImportChanges(
         Person $person,
-        Vehicle $vehicle,
+        VehicleFromDvla $vehicle,
         $vehicleClassCode,
         $primaryColourCode,
         $secondaryColourCode,
         $fuelTypeCode
-    ) {
+    )
+    {
         $vehicleClass = $this->vehicleCatalog->getVehicleClassByCode($vehicleClassCode);
 
         $importChanges = (new DvlaVehicleImportChangeLog())
             ->setTester($person)
-            ->setVehicle($vehicle)
+            ->setVehicleId($vehicle->getId())
             ->setVehicleClass($vehicleClass)
             ->setColour($primaryColourCode)
             ->setSecondaryColour($secondaryColourCode)
@@ -351,54 +288,6 @@ class VehicleService
             ->setImported(new \DateTime());
 
         $this->dvlaVehicleImportChangesRepository->save($importChanges);
-    }
-
-    /**
-     * @param DvlaVehicle $dvlaVehicle
-     * @param Vehicle $vehicle
-     */
-    private function importWeight(DvlaVehicle $dvlaVehicle, Vehicle $vehicle)
-    {
-
-        if (empty($vehicle->getVehicleClass()) || empty($vehicle->getVehicleClass()->getCode()))
-        {
-             // logic can only be applied with a vehicle class.
-             return;
-        }
-
-        if ($vehicle->getVehicleClass()->getCode() === Vehicle::VEHICLE_CLASS_1 ||
-            $vehicle->getVehicleClass()->getCode() === Vehicle::VEHICLE_CLASS_2)
-        {
-            // No weight expected to be carried forward for these vehicle classes. 
-            return;
-        }
-
-        if ($vehicle->getVehicleClass()->getCode() === Vehicle::VEHICLE_CLASS_3 ||
-            $vehicle->getVehicleClass()->getCode() === Vehicle::VEHICLE_CLASS_4)
-        {
-            $massInServiceWeight = $dvlaVehicle->getMassInServiceWeight();
-            if (!empty($massInServiceWeight)) {
-                $vehicle->setWeight($massInServiceWeight);
-                $vehicle->setWeightSource($this->vehicleCatalog->getWeightSourceByCode(WeightSourceCode::MISW));
-
-                return;
-            }
- 
-            // weight not set for class 3 or 4 vehicles if mass in service weight is empty.
-            return;
-        }
-
-        if ($vehicle->getVehicleClass()->getCode() === Vehicle::VEHICLE_CLASS_5 ||
-            $vehicle->getVehicleClass()->getCode() === Vehicle::VEHICLE_CLASS_7)
-        {
-            $grossWeight = $dvlaVehicle->getDesignedGrossWeight();
-            if (!empty($grossWeight)) {
-                $vehicle->setWeight($grossWeight);
-                $vehicle->setWeightSource($this->vehicleCatalog->getWeightSourceByCode(WeightSourceCode::DGW));
-    
-                return;
-            }
-        }
     }
 
     /**
@@ -410,38 +299,35 @@ class VehicleService
     {
         $vehDic = $this->vehicleCatalog;
         $model = $vehDic->findModel($data['make'], $data['model']);
-        $make = $vehDic->getMakeByCode($data['make']);
 
         if (!ctype_digit($data['cylinderCapacity'])) {
             $data['cylinderCapacity'] = null;
         }
 
+
+        $modelDetail = new ModelDetail();
+        $modelDetail
+            ->setCylinderCapacity($data['cylinderCapacity'])
+            ->setFuelType($vehDic->getFuelType($data['fuelTypeId']))
+            ->setModel($model)
+            ->setTransmissionType($vehDic->getTransmissionType($data['transmissionType']))
+            ->setVehicleClass($vehDic->getVehicleClassByCode($data['testClass']));
+
+        if (!empty($data['bodyType'])) {
+            $modelDetail->setBodyType($vehDic->findBodyTypeByCode($data['bodyType']));
+        }
+
         $vehicle = (new Vehicle())
             ->setVin($data['vin'])
             ->setRegistration($data['registrationNumber'])
-            ->setCylinderCapacity($data['cylinderCapacity'])
             ->setColour($vehDic->getColourByCode($data['colour']))
             // next two fields MUST be set as they are not captured, this has
             // been done after P.O. (Simon Smith) consultation / discussion.
             ->setFirstUsedDate(DateUtils::toDate($data['dateOfFirstUse']))
             ->setManufactureDate(DateUtils::toDate($data['dateOfFirstUse']))
             ->setFirstRegistrationDate(DateUtils::toDate($data['dateOfFirstUse']))
-            ->setFuelType($vehDic->getFuelTypeByCode($data['fuelType']))
             ->setCountryOfRegistration($vehDic->getCountryOfRegistration($data['countryOfRegistration'], true))
-            ->setTransmissionType($vehDic->getTransmissionType($data['transmissionType']))
-            ->setVehicleClass($vehDic->getVehicleClassByCode($data['testClass']));
-
-        if (is_null($make)) {
-            $vehicle->setFreeTextMakeName($data['makeOther']);
-            $vehicle->setFreeTextModelName($data['modelOther']);
-        } else {
-            $vehicle->setMake($make);
-            if ($model) {
-                $vehicle->setModel($model);
-            } else {
-                $vehicle->setFreeTextModelName($data['modelOther']);
-            }
-        }
+            ->setModelDetail($modelDetail);
 
         if (!empty($data['manufactureDate'])) {
             $vehicle->setManufactureDate(DateUtils::toDate($data['manufactureDate']));
@@ -450,12 +336,6 @@ class VehicleService
             $vehicle->setFirstRegistrationDate(DateUtils::toDate($data['firstRegistrationDate']));
         }
 
-        if (!empty($data['modelType'])) {
-            $vehicle->setModelDetail($vehDic->getModelDetail($data['modelType'], true));
-        }
-        if (!empty($data['bodyType'])) {
-            $vehicle->setBodyType($vehDic->findBodyTypeByCode($data['bodyType']));
-        }
         if (!empty($data['secondaryColour'])) {
             $vehicle->setSecondaryColour($vehDic->getColourByCode($data['secondaryColour'], true));
         }
@@ -468,5 +348,161 @@ class VehicleService
         }
 
         return $vehicle;
+    }
+
+    /**
+     * @param DvlaVehicle $dvlaVehicle
+     * @param $vehicleClassCode
+     *
+     * @return VehicleFromDvla
+     */
+    private function createVehicleFromDvlaVehicleUsingJavaService(
+        DvlaVehicle $dvlaVehicle,
+        $vehicleClassCode
+    ) {
+        $vehicleClass = $this->vehicleCatalog->getVehicleClassByCode($vehicleClassCode);
+
+        $fuelType = $this->vehicleCatalog->findFuelTypeByPropulsionCode($dvlaVehicle->getFuelType());
+        $fuelTypeId = $fuelType ? $fuelType->getId() : null;
+
+        $bodyType = $this->vehicleCatalog->findBodyTypeByCode($dvlaVehicle->getBodyType());
+        if (is_null($bodyType)) {
+            $bodyType = $this->vehicleCatalog->findBodyTypeByCode(self::DEFAULT_BODY_TYPE_CODE);
+        }
+
+        $colourId = $this->vehicleCatalog->getColourByCode($dvlaVehicle->getPrimaryColour())->getId();
+
+        $secondaryColourId = $dvlaVehicle->getSecondaryColour() ?
+                $this->vehicleCatalog->getColourByCode($dvlaVehicle->getSecondaryColour())->getId() :
+                null;
+
+        $countryOfRegistrationId = $this->vehicleCatalog->getCountryOfRegistrationByCode(
+            self::DEFAULT_COUNTRY_OF_REGISTRATION
+        )->getId();
+
+        $dvlaVehicleRequest = new CreateDvlaVehicleRequest();
+        $dvlaVehicleRequest->setRegistration($dvlaVehicle->getRegistration())
+            ->setId($dvlaVehicle->getId())
+            ->setDvlaVehicleId($dvlaVehicle->getDvlaVehicleId())
+            ->setV5cReference($dvlaVehicle->getV5DocumentNumber())
+            ->setDvlaMakeCode($dvlaVehicle->getMakeCode())
+            ->setDvlaModelCode($dvlaVehicle->getModelCode())
+            ->setMakeInFull($dvlaVehicle->getMakeInFull())
+            ->setBodyTypeId($bodyType->getId())
+            ->setFuelTypeId($fuelTypeId)
+            ->setCylinderCapacity($dvlaVehicle->getCylinderCapacity())
+            ->setVehicleClassId($vehicleClass->getId())
+            ->setColourId($colourId)
+            ->setSecondaryColourId($secondaryColourId)
+            ->setCountryOfRegistrationId($countryOfRegistrationId)
+            ->setFirstUsedDate($dvlaVehicle->getFirstUsedDate())
+            ->setFirstRegistrationDate($dvlaVehicle->getFirstRegistrationDate())
+            ->setIsNewAtFirstReg((bool)$dvlaVehicle->isVehicleNewAtFirstRegistration());
+
+        if (!is_null($dvlaVehicle->getVin())) {
+            $dvlaVehicleRequest->setVin($dvlaVehicle->getVin());
+        }
+
+        if (!is_null($dvlaVehicle->getManufactureDate())) {
+            $dvlaVehicleRequest->setDateOfManufacture($dvlaVehicle->getManufactureDate());
+        }
+
+        $weightAndSource = $this->tryToGetWiethAndItsSource($dvlaVehicle, $vehicleClass);
+
+        if (is_array($weightAndSource)) {
+            $dvlaVehicleRequest->setWeight($weightAndSource[self::KEY_WIGHT]);
+            $dvlaVehicleRequest->setWeightSourceId($weightAndSource[self::KEY_WIGHT_SOURCE_ID]);
+        }
+
+        $dvlaVehicle = $this->newVehicleService->createDvlaVehicle($dvlaVehicleRequest);
+
+        return $dvlaVehicle;
+    }
+
+    /**
+     * @param DvsaVehicle $dvsaVehicle
+     * @param string $oneTimePassword
+     *
+     * @return VehicleFromDvsa
+     */
+    private function createDvsaVehicleUsingJavaService(
+        Vehicle $dvsaVehicle,
+        $oneTimePassword
+    ) {
+        $fuelTypeId = $dvsaVehicle->getModelDetail()->getFuelType() ? $dvsaVehicle->getModelDetail()->getFuelType()->getId() : null;
+
+        $dvsaVehicleRequest = new CreateDvsaVehicleRequest();
+        $dvsaVehicleRequest
+            ->setOneTimePassword($oneTimePassword)
+            ->setRegistration($dvsaVehicle->getRegistration())
+            ->setVin($dvsaVehicle->getVin())
+            ->setMakeId($dvsaVehicle->getModelDetail()->getModel()->getMake()->getId())
+            ->setModelId($dvsaVehicle->getModelDetail()->getModel()->getId())
+            ->setFuelTypeId($fuelTypeId)
+            ->setVehicleClassId($dvsaVehicle->getModelDetail()->getVehicleClass()->getId())
+            ->setTransmissionTypeId($dvsaVehicle->getModelDetail()->getTransmissionType()->getId())
+            ->setColourId($dvsaVehicle->getColour()->getId())
+            ->setSecondaryColourId($dvsaVehicle->getSecondaryColour()->getId())
+            ->setCountryOfRegistrationId($dvsaVehicle->getCountryOfRegistration()->getId())
+            ->setFirstUsedDate($dvsaVehicle->getFirstUsedDate());
+
+        if($dvsaVehicle->getCylinderCapacity() != null) {
+            $dvsaVehicleRequest->setCylinderCapacity($dvsaVehicle->getCylinderCapacity());
+        } 
+
+        $dvsaVehicle = $this->newVehicleService->createDvsaVehicle($dvsaVehicleRequest);
+
+        return $dvsaVehicle;
+    }
+
+
+    /**
+     * @param DvlaVehicle $dvlaVehicle
+     * @param VehicleClass $vehicleClass
+     * @return array|bool
+     */
+    private function tryToGetWiethAndItsSource(DvlaVehicle $dvlaVehicle, VehicleClass $vehicleClass)
+    {
+        $weightAndSource = false;
+
+        if ($vehicleClass->getCode() === Vehicle::VEHICLE_CLASS_1 ||
+            $vehicleClass->getCode() === Vehicle::VEHICLE_CLASS_2
+        ) {
+            // No weight expected to be carried forward for these vehicle classes.
+            return $weightAndSource;
+        }
+
+        $massInServiceWeight = $dvlaVehicle->getMassInServiceWeight();
+
+        if (!empty($massInServiceWeight)) {
+            if ($vehicleClass->getCode() === Vehicle::VEHICLE_CLASS_3 ||
+                $vehicleClass->getCode() === Vehicle::VEHICLE_CLASS_4
+            ) {
+                $weightAndSource = [
+                    self::KEY_WIGHT => $massInServiceWeight,
+                    self::KEY_WIGHT_SOURCE_ID => $this->vehicleCatalog->getWeightSourceByCode(WeightSourceCode::MISW)
+                        ->getId(),
+                ];
+            } elseif ($vehicleClass->getCode() === Vehicle::VEHICLE_CLASS_5 ||
+                $vehicleClass->getCode() === Vehicle::VEHICLE_CLASS_7
+            ) {
+                $weightAndSource = [
+                    self::KEY_WIGHT => $massInServiceWeight,
+                    self::KEY_WIGHT_SOURCE_ID => $this->vehicleCatalog->getWeightSourceByCode(WeightSourceCode::DGW)
+                        ->getId(),
+                ];
+            }
+        }
+
+        return $weightAndSource;
+    }
+
+    /**
+     * @param $dvlaVehicleId
+     * @return int|null
+     */
+    public function getVehicleIdIfAlreadyImportedFromDvla($dvlaVehicleId)
+    {
+        return $this->dvlaVehicleRepository->findMatchingDvsaVehicleIdForDvlaVehicle($dvlaVehicleId);
     }
 }

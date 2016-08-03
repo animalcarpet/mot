@@ -66,6 +66,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue(null));
 
         $this->returnsMake(VehicleObjectsFactory::make($replacementChange->getMake()));
+        $this->returnsMakeByCode(VehicleObjectsFactory::make($replacementChange->getMake()));
         $this->returnsModel(VehicleObjectsFactory::model($replacementChange->getModel()));
         $this->returnsVts(MotTestObjectsFactory::vts(999, $replacementChange->getVtsSiteNumber()));
         $this->returnsColours(
@@ -866,6 +867,12 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
 
         //then
         $this->assertEquals(1, $updatedDraft->getIsVinVrmExpiryChanged());
+    }
+
+    private function returnsMakeByCode(Make $make)
+    {
+        $this->vehDict->expects($this->any())->method('findMakeByCode')
+            ->will($this->returnValue($make));
     }
 
     private function returnsMake(Make $make)

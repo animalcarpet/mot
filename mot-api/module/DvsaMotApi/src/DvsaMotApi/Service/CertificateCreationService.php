@@ -161,13 +161,11 @@ class CertificateCreationService
     {
         $certificateMapper = new Mapper\MotTestCertificateMapper($this->dataCatalogService);
         $documentName = 'MOT-Pass-Certificate';
-        $method = 'mapDataForCertificate';
 
         return $this->createCertificate(
             $id,
             $data,
             $certificateMapper,
-            $method,
             $documentName,
             $userId
         );
@@ -184,13 +182,11 @@ class CertificateCreationService
     {
         $certificateMapper = new Mapper\MotTestFailureMapper($this->dataCatalogService);
         $documentName = 'MOT-Fail-Certificate';
-        $method = 'mapData';
 
         return $this->createCertificate(
             $id,
             $data,
             $certificateMapper,
-            $method,
             $documentName,
             $userId
         );
@@ -207,33 +203,28 @@ class CertificateCreationService
     {
         $certificateMapper = new Mapper\MotTestAdvisoryNoticeMapper($this->dataCatalogService);
         $documentName = 'MOT-Advisory-Notice';
-        $method = 'mapData';
 
         return $this->createCertificate(
             $id,
             $data,
             $certificateMapper,
-            $method,
             $documentName,
             $userId
         );
     }
 
     /**
-     * @param string                $motTestNumber
-     * @param MotTestDto            $motTestDto
+     * @param $motTestNumber
+     * @param MotTestDto $data
      * @param AbstractMotTestMapper $certificateMapper
-     * @param string                $method
-     * @param string                $documentName
-     * @param int                   $userId
-     *
+     * @param $documentName
+     * @param $userId
      * @return MotTestDto
      */
     private function createCertificate(
         $motTestNumber,
         MotTestDto $data,
         AbstractMotTestMapper $certificateMapper,
-        $method,
         $documentName,
         $userId
     ) {
@@ -254,7 +245,7 @@ class CertificateCreationService
             );
         }
 
-        $snapShotData = $certificateMapper->$method();
+        $snapShotData = $certificateMapper->mapData();
 
         $data->setDocument($this->documentService->createSnapshot($documentName, $snapShotData, $userId));
 

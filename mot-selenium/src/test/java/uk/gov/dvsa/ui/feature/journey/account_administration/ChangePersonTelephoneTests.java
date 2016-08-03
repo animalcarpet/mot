@@ -43,7 +43,7 @@ public class ChangePersonTelephoneTests extends DslTest {
         csco = userData.createCustomerServiceOfficer(false);
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-931"},
+    @Test(groups = {"Regression", "BL-931"},
             testName = "NewProfile",
             description = "Test that Trade users can edit their telephone from their profile page")
     public void tradeUserCanEditHisTelephone() throws Exception{
@@ -57,7 +57,7 @@ public class ChangePersonTelephoneTests extends DslTest {
         assertThat(profilePage.isSuccessMessageDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-931"},
+    @Test(groups = {"Regression", "BL-931"},
             testName = "NewProfile",
             description = "Test that Trade user can cancel their telephone update from change telephone page")
     public void tradeUserCanCancelHisTelephoneChange() throws IOException {
@@ -71,7 +71,7 @@ public class ChangePersonTelephoneTests extends DslTest {
         assertThat(motUI.profile.page().isPageLoaded(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-931"},
+    @Test(groups = {"Regression", "BL-931"},
             testName = "NewProfile",
             description = "Test that DVSA user can cancel amending a users telephone number change",
             dataProvider = "dvsaUserChangeTelephoneProvider")
@@ -86,7 +86,7 @@ public class ChangePersonTelephoneTests extends DslTest {
         assertThat(motUI.profile.page().isPageLoaded(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-931"},
+    @Test(groups = {"Regression", "BL-931"},
             testName = "NewProfile",
             description = "Test that Authorised user can change telephone number on person profile",
             dataProvider = "dvsaUserChangeTelephoneProvider")
@@ -101,7 +101,7 @@ public class ChangePersonTelephoneTests extends DslTest {
         assertThat(motUI.profile.page().isSuccessMessageDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-931"},
+    @Test(groups = {"Regression", "BL-931"},
             testName = "NewProfile",
             description = "Test that Trade user cannot enter more than 24 Chars in the Telephone number")
     public void tradeUserShouldProvideValidTelephoneNumber() throws IOException {
@@ -115,7 +115,7 @@ public class ChangePersonTelephoneTests extends DslTest {
         assertThat(motUI.profile.changeTelephone().isValidationMessageOnChangeTelephonePageDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-931"},
+    @Test(groups = {"Regression", "BL-931"},
             testName = "NewProfile",
             description = "Test that Authorised user should provide an appropriate sized telephone number in order to update user information")
     public void dvsaUserShouldNotProvideInvalidSizedTelephoneNumber() throws IOException {

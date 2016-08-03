@@ -9,7 +9,8 @@ use DvsaCommon\Dto\Common\ColourDto;
 use DvsaCommon\Dto\Common\OdometerReadingDTO;
 use DvsaCommon\Dto\Common\ReasonForCancelDto;
 use DvsaCommon\Dto\Common\ReasonForRefusalDto;
-use DvsaCommon\Dto\Vehicle\VehicleDto;
+use DvsaCommon\Dto\Vehicle\CountryDto;
+use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
 use DvsaCommon\Enum\ColourCode;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Utility\AddressUtils;
@@ -24,6 +25,9 @@ use DvsaEntities\Entity\Person;
  */
 abstract class AbstractMotTestMapper extends AbstractMapper
 {
+    const GETTER_METHOD_VIN = 'getReasonsForEmptyVin';
+    const GETTER_METHOD_VRM = 'getReasonsForEmptyVRM';
+
     const REP_VAR_FAILURES = 'FailureInformation';
     const REP_VAR_ADVISORIES = 'AdvisoryInformation';
     const REP_VAR_TEST_STATION = 'TestStation';
@@ -36,7 +40,7 @@ abstract class AbstractMotTestMapper extends AbstractMapper
     const MOT_TEST_ABANDONED = 'ABANDONED';
 
     /** String for an unreadable odometer entry */
-    const TEXT_NOT_READABLE = 'Not readable';
+    const TEXT_NOT_READABLE = 'Unreadable';
     const TEXT_NOT_READABLE_CY = 'Dim yn ddarllenadwy';
 
     /** String for when no odometer was present */
@@ -82,70 +86,103 @@ abstract class AbstractMotTestMapper extends AbstractMapper
         return null;
     }
 
-    private function mapVin(VehicleDto $vehicleDto)
-    {
-        if (is_null($vehicleDto->getVin())) {
-            $reasonData = ArrayUtils::firstOrNull(
-                $this->dataCatalogService->getReasonsForEmptyVin(),
-                function ($el) use ($vehicleDto) {
-                    return $el['code'] === $vehicleDto->getEmptyVinReason();
-                }
-            );
-            return $reasonData['name'];
-        }
-        return $vehicleDto->getVin();
-    }
-
-    private function mapVrm(VehicleDto $vehicleDto)
-    {
-        if (is_null($vehicleDto->getRegistration())) {
-            $reasonData = ArrayUtils::firstOrNull(
-                $this->dataCatalogService->getReasonsForEmptyVRM(),
-                function ($el) use ($vehicleDto) {
-                    return $el['code'] === $vehicleDto->getEmptyVrmReason();
-                }
-            );
-            return $reasonData['name'];
-        }
-        return $vehicleDto->getRegistration();
-    }
-
     /**
      * Map generic data
      */
     protected function mapGenericMotTestData()
     {
-        $data = $this->getData();
+        $this->setValue('TestNumber', ArrayUtils::tryGet($this->getData(), 'motTestNumber'));
 
-        $this->setValue('TestNumber', ArrayUtils::tryGet($data, 'motTestNumber'));
-
-        /** @var VehicleDto $vehicle */
-        $vehicle = ArrayUtils::tryGet($data, 'vehicle');
-        if ($vehicle instanceof VehicleDto) {
-            // VRM and VIM MUST be uppercase always.
-
-            $this->setValue('VRM', strtoupper($this->mapVrm($vehicle)));
-            $this->setValue('VIN', strtoupper($this->mapVin($vehicle)));
-
-            $this->setValue('Make', $data['make']);
-            $this->setValue('Model', $data['model']);
-            $this->setValue(
-                'CountryOfRegistration',
-                $vehicle->getCountryOfRegistration()->getName(),
-                'CountryRegistration'
-            );
-            $this->setValue('TestClass', $vehicle->getVehicleClass()->getCode());
-        }
-
-        $this->mapColour($data);
         $this->mapAddress();
-
         $this->mapOdometer();
 
-        $this->setValue('IssuedDate', $this->formatDate($data['issuedDate'], 'j M Y'));
-        $this->setValue('TestStation', $data['vehicleTestingStation']['siteNumber']);
+        $this->setValue('IssuedDate', $this->formatDate($this->getData()['issuedDate'], 'j M Y'));
+        $this->setValue('TestStation', $this->getData()['vehicleTestingStation']['siteNumber']);
+        $this->setValue('IssuersName', Person::getShortName($this->getData()['tester']));
+    }
 
-        $this->setValue('IssuersName', Person::getShortName($this->data['tester']));
+    protected function mapVehicleDetail()
+    {
+        /** @var CountryDto $draftCountryOfRegistration */
+        $draftCountryOfRegistration = $this->getData()['countryOfRegistration'];
+        /** @var VehicleClassDto $draftVehicleClass */
+        $draftVehicleClass = $this->getData()['vehicleClass'];
+        $draftVin = ArrayUtils::tryGet($this->getData(), 'vin');
+        $draftVrm = ArrayUtils::tryGet($this->getData(), 'registration');
+        $draftReasonForEmptyVin = ArrayUtils::tryGet($this->getData(), 'emptyVinReason');
+        $draftReasonForEmptyVrm = ArrayUtils::tryGet($this->getData(), 'emptyVrmReason');
+        $draftMake = $this->getData()['make'];
+        $draftModel = $this->getData()['model'];
+
+        $this->setValue('VRM', strtoupper($this->mapVrm($draftVrm, $draftReasonForEmptyVrm)));
+        $this->setValue('VIN', strtoupper($this->mapVin($draftVin, $draftReasonForEmptyVin)));
+        $this->setValue('Make', $draftMake);
+        $this->setValue('Model', $draftModel);
+        $this->setValue('CountryOfRegistration', $draftCountryOfRegistration->getName(), 'CountryRegistration');
+        $this->setValue('TestClass', $draftVehicleClass->getCode());
+
+        $this->mapColour();
+    }
+
+    /**
+     * @param null|string $draftVin
+     * @param null|string $draftReasonForEmptyVin
+     * @return string
+     */
+    private function mapVin($draftVin = null, $draftReasonForEmptyVin = null)
+    {
+        if (is_null($draftVin)) {
+            return $this->getEmptyVinReasonName($draftReasonForEmptyVin);
+        }
+        return $draftVin;
+    }
+
+    /**
+     * @param null|string $draftVrm
+     * @param null|string  $draftReasonForEmptyVrm
+     * @return string
+     */
+    private function mapVrm($draftVrm = null, $draftReasonForEmptyVrm = null)
+    {
+        if (is_null($draftVrm)) {
+            return $this->getEmptyVrmReasonName($draftReasonForEmptyVrm);
+        }
+        return $draftVrm;
+    }
+
+    /**
+     * @param string $draftReasonForEmptyVin
+     * @return string
+     */
+    private function getEmptyVinReasonName($draftReasonForEmptyVin)
+    {
+        return $this->getEmptyVinOrVrmReasonNameByCode($draftReasonForEmptyVin, self::GETTER_METHOD_VIN);
+    }
+
+    /**
+     * @param string $draftReasonForEmptyVrm
+     * @return string
+     */
+    private function getEmptyVrmReasonName($draftReasonForEmptyVrm)
+    {
+        return $this->getEmptyVinOrVrmReasonNameByCode($draftReasonForEmptyVrm, self::GETTER_METHOD_VRM);
+    }
+
+    /**
+     * @param string $draftReasonForEmptyVinOrVrmCode
+     * @param string $VinOrVrm
+     * @return string
+     */
+    private function getEmptyVinOrVrmReasonNameByCode($draftReasonForEmptyVinOrVrmCode, $VinOrVrm)
+    {
+        $reasonData = ArrayUtils::firstOrNull(
+            $this->dataCatalogService->$VinOrVrm(),
+            function ($reason) use ($draftReasonForEmptyVinOrVrmCode) {
+                return $reason['code'] === $draftReasonForEmptyVinOrVrmCode;
+            }
+        );
+        return $reasonData['name'];
+
     }
 
     protected function mapAdvisories()
@@ -170,25 +207,21 @@ abstract class AbstractMotTestMapper extends AbstractMapper
         );
     }
 
-    protected function mapColour()
+    private function mapColour()
     {
-        /** @var VehicleDto $vehicle */
-        $vehicle = ArrayUtils::tryGet($this->data, 'vehicle');
+        $primaryColour =  ArrayUtils::tryGet($this->getData(), 'primaryColour');
+        $secondaryColour =  ArrayUtils::tryGet($this->getData(), 'secondaryColour');
 
-        if (empty($vehicle) || !($vehicle instanceof VehicleDto)) {
-            return;
-        }
+        $colours = [$primaryColour->getName()];
 
-        $colour = $vehicle->getColour()->getName();
-
-        $colourSec = $vehicle->getColourSecondary();
-
-        // If the user has not selected "No Other Colour" then we need to concat the 2nd colour
-        if ($colourSec instanceof ColourDto
-            && $colourSec->getCode() != ColourCode::NOT_STATED && !is_null($colourSec->getName())
+        if (
+            $secondaryColour instanceof ColourDto &&
+            ColourCode::NOT_STATED != $secondaryColour->getCode()
         ) {
-            $colour .= ' and ' . $colourSec->getName();
+            $colours[] = $secondaryColour->getName();
         }
+
+        $colour = implode(' and ', $colours);
 
         $this->setValue('Colour', $colour);
     }

@@ -1,8 +1,0 @@
-!define VehicleClass1 (1)
-!define VehicleClass2 (2)
-!define VehicleClass3 (3)
-!define VehicleClass4 (4)
-!define VehicleClass5 (5)
-!define VehicleClass7 (7)
-!define VehicleClassUnknown (UNKN)
-

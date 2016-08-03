@@ -7,9 +7,6 @@ use Dvsa\Mot\Frontend\MotTestModule\Service\SurveyService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-/**
- * Class SurveyPageControllerFactory.
- */
 class SurveyPageControllerFactory implements FactoryInterface
 {
     /**

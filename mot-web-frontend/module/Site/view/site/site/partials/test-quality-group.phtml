@@ -1,0 +1,144 @@
+<?php
+
+use Core\Routing\VtsRouteList;
+use Site\ViewModel\TestQuality\GroupStatisticsTable;
+
+/** @var GroupStatisticsTable $group */
+/** @var array $queryParams */
+
+?>
+
+<h3 class="key-value-list__header">
+    Group <?php echo $group->getGroupCode() ?>
+    <span class="key-value-list__meta">
+        <?php echo $group->getGroupDescription() ?>
+    </span>
+</h3>
+
+<table class="<?php echo $group->hasTests() ? 'table-reference' : 'table-reference--isempty' ?>"
+       id="tqi-table-<?php echo $group->getGroupCode() ?>">
+    <thead>
+    <tr class="table-reference__head">
+        <th></th>
+        <th class="numeric">Tests done</th>
+        <th class="numeric">Average vehicle age <span class='table-reference__meta'>(years)</span></th>
+        <th class="numeric">Average test time <span class='table-reference__meta'>(minutes)</span></th>
+        <th class="numeric">Tests failed</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="table-reference__row--primary">
+        <td>
+            Site statistics
+        </td>
+
+        <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
+            'notAvailableText'  => $group->getNotAvailableText(),
+            'value'             => $group->getTestCount(),
+        ]); ?>
+
+        <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
+            'notAvailableText'  => $group->getNotAvailableText(),
+            'value'             => $group->getAverageVehicleAge(),
+        ]); ?>
+
+        <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
+            'notAvailableText'  => $group->getNotAvailableText(),
+            'value'             => $group->getAverageTestDuration(),
+        ]); ?>
+
+        <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
+            'notAvailableText'  => $group->getNotAvailableText(),
+            'value'             => $group->getFailurePercentage(),
+        ]); ?>
+
+    </tr>
+    <?php if ($group->hasTests()): ?>
+        <?php foreach ($group->getTesterRows() as $testerRow): ?>
+            <tr>
+                <td>
+                    <a href="<?php echo $this->url(VtsRouteList::VTS_USER_TEST_QUALITY,
+                        $testerRow->getUserStatisticsLinkParams(), $queryParams); ?>">
+                        <?php echo $testerRow->getName() ?>
+                    </a>
+                </td>
+
+                <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
+                    'notAvailableText'  => $group->getNotAvailableText(),
+                    'value'             => $testerRow->getTestCount(),
+                ]); ?>
+
+                <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
+                    'notAvailableText'  => $group->getNotAvailableText(),
+                    'value'             => $testerRow->getAverageVehicleAge(),
+                ]); ?>
+
+                <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
+                    'notAvailableText'  => $group->getNotAvailableText(),
+                    'value'             => $testerRow->getAverageTestDuration(),
+                ]); ?>
+
+                <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
+                    'notAvailableText'  => $group->getNotAvailableText(),
+                    'value'             => $testerRow->getFailurePercentage(),
+                ]); ?>
+            </tr>
+        <?php endforeach; ?>
+
+    <?php else: ?>
+        <tr>
+            <td colspan="5">
+                No Group <?php echo $group->getGroupCode() ?> tests done
+            </td>
+        </tr>
+    <?php endif ?>
+    <?php if ($group->isNationalDataAvailable()): ?>
+    <tr class="table-reference__row--secondary">
+        <td>
+            <?php echo $group->getNationalStatistic()->getName() ?>
+        </td>
+
+        <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
+            'notAvailableText'  => $group->getNotAvailableText(),
+            'value'             => $group->getNationalStatistic()->getTestCount(),
+        ]); ?>
+
+        <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
+            'notAvailableText'  => $group->getNotAvailableText(),
+            'value'             => $group->getNationalStatistic()->getAverageVehicleAge(),
+        ]); ?>
+
+        <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
+            'notAvailableText'  => $group->getNotAvailableText(),
+            'value'             => $group->getNationalStatistic()->getAverageTestDuration(),
+        ]); ?>
+
+        <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
+            'notAvailableText'  => $group->getNotAvailableText(),
+            'value'             => $group->getNationalStatistic()->getFailurePercentage(),
+        ]); ?>
+    </tr>
+    <?php else: ?>
+        <tr class="table-reference__row--secondary">
+            <td colspan="5">
+                National average not available
+            </td>
+        </tr>
+    <?php endif; ?>
+    </tbody>
+</table>
+
+<?php if ($group->hasTests()): ?>
+    <div class="result__actions">
+        Download Group <?php echo $group->getGroupCode(); ?> report as a
+        <a href="<?php echo $this->url(VtsRouteList::VTS_TEST_QUALITY_CSV,
+            [
+                'id' => $group->getSiteId(),
+                'group' => $group->getGroupCode(),
+                'month' => $group->getMonth(),
+                'year' => $group->getYear(),
+            ]) ?>" rel="external">
+            CSV (Spreadsheet)
+        </a> file (<?php echo $group->getCsvFileSize() ?>).
+    </div>
+<?php endif; ?>

@@ -1,0 +1,81 @@
+<header class="content-header">
+    <ul class="content-header__tertiary-list">
+        <li id="vehicleMakeModel" class="content-header__list-item--primary">{{ vehicleMakeAndModel|escape }}</li>
+        <li id="vehicleRegistration" class="content-header__list-item">{{ vehicle.registration|escape }}</li>
+        <li id="firstUsedDate" class="content-header__list-item">First used {{ vehicleFirstUsedDate|escape }}</li>
+    </ul>
+</header>
+
+<div class="defect-summary">
+    <div class="defect-summary__total">
+        <h2 class="defect-summary__total-heading">Defects</h2>
+        <ul>
+            <li><span class="badge--alert">{{ observedDefects.numberOfFailures }}</span> Failures</li>
+            <li><span class="badge--info">{{ observedDefects.numberOfPrs }}</span> PRS</li>
+            <li><span class="badge--warn">{{ observedDefects.numberOfAdvisories }}</span> Advisories</li>
+        </ul>
+        {# "Show/Hide defects button only appears when there are defects to be shown. #}
+        {% if observedDefects.hasFailuresPrsOrAdvisories %}
+        <span class="defect-summary__toggle">
+            <a href="#" data-action="showHideToggle" data-open-text="Hide defects" data-target="rfrList" id="toggleRFRList" class="toggle-switch">Show defects</a>
+        </span>
+        {% endif %}
+    </div>
+    <div id="rfrList" class="js-hidden">
+        {% include '/defects/observed-defects.twig' with {'observedDefects': observedDefects} %}
+    </div>
+</div>
+
+<br>
+
+<div class="issue-lists" id="listContainer">
+    <div class="browse--{{ browseColumns }}">
+        {% for column in defectCategories.columns %}
+            {% if loop.first %}
+                <div class="browse__cats">
+                    <h3 class="browse__title hide-small">Categories</h3>
+                    <ul class="browse__list">
+                        {% for componentCategory in column.componentCategories %}
+                            <li>
+                                <a href="{{ url('mot-test-defects/categories/category', {'motTestNumber' : motTest.motTestNumber, 'categoryId' : componentCategory.getCategoryId}) }}"
+                                   class="{% if componentCategory.categoryId in defectCategories.categoryPathIds %} browse__slctd {% endif %}">{{ componentCategory.getName }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <div class="browse__cats--sub">
+                    <h3 class="browse__title hide-small">{{ column.columnTitle }}</h3>
+                    <ul class="browse__list">
+                        {% for componentCategory in column.componentCategories %}
+                            <li>
+                                <a href="{{ url('mot-test-defects/categories/category', {'motTestNumber' : motTest.motTestNumber, 'categoryId' : componentCategory.getCategoryId}) }}"
+                                   class="{% if componentCategory.categoryId in defectCategories.categoryPathIds %} browse__slctd {% endif %}">{{ componentCategory.getName }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<br>
+
+<div class="panel-indent">
+    <p><a href="#">Add a manual advisory</a> - only do this if you have searched for a defect and can't find a match.</p>
+</div>
+
+<nav class="content-navigation">
+    <a href="{{ url('mot-test', {'motTestNumber' : motTest.motTestNumber}) }}" class="button">Finish and return to MOT test results</a>
+</nav>
+
+<!-- {{ inlineScript().appendFile("/assets/javascripts/dvsa.js") }} -->
+
+{# JavaScript for the "Show/Hide defects button. #}
+{{ inlineScript().captureStart() }}
+$(document).ready(function() {
+var showerHider = new DVSA.Modules.DVSAShowHideToggle.showerHider({});
+showerHider.init();
+});
+{{ inlineScript().captureEnd() }}

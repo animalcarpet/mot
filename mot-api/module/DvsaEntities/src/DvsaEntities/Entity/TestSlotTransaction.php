@@ -103,7 +103,7 @@ class TestSlotTransaction extends Entity
     /**
      * @var TestSlotTransactionAmendment[]
      *
-     * @ORM\OneToMany(targetEntity="SlotPurchaseApi\Entity\SlotTransactionAmendment", mappedBy="testSlotTransaction")
+     * @ORM\OneToMany(targetEntity="TestSlotTransactionAmendment", mappedBy="testSlotTransaction")
      */
     private $transactionAmendments;
 

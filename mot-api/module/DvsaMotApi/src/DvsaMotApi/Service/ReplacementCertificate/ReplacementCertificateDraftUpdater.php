@@ -328,12 +328,10 @@ class ReplacementCertificateDraftUpdater implements TransactionAwareInterface
             $draft->setMakeName(null);
             $draft->setModel(null);
         }
+
         if ($updates->isModelSet() && !$updates->isCustomModelSet()) {
-            $draft->setModel(
-                $this->vehicleCatalog->getModel(
-                    $updates->getMake(), $updates->getModel()
-                )
-            );
+            $make = $this->vehicleCatalog->findMakeByCode($updates->getMake());
+            $draft->setModel($this->vehicleCatalog->getModel($make->getId(), $updates->getModel()));
         }
     }
 

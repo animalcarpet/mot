@@ -30,6 +30,10 @@ public class MotClient {
         return postRequest(request, path, token);
     }
 
+    public Response postWithoutToken(String request, String path) {
+        return postRequestWithoutToken(request, path);
+    }
+
     public Response createUser(String request, String path, String token) {
         return postRequest(request, path, token);
     }

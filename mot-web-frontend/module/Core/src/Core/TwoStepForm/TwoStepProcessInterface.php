@@ -52,6 +52,11 @@ interface TwoStepProcessInterface extends SingleStepProcessInterface
     public function redirectToReviewPage($formUuid);
 
     /**
+     * @return AbstractRedirectActionResult $authorisationService
+     */
+    public function redirectToEditPage();
+
+    /**
      * A two step form data needs to be saved in session to allow switching between form screens.
      * Data will be stored in the session under the key this method provides.
      *

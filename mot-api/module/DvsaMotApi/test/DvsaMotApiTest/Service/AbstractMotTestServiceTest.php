@@ -18,6 +18,7 @@ use DvsaEntities\Entity\CountryOfRegistration;
 use DvsaEntities\Entity\FuelType;
 use DvsaEntities\Entity\Make;
 use DvsaEntities\Entity\Model;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\Person;
@@ -40,7 +41,7 @@ use OrganisationApi\Service\OrganisationService;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use VehicleApi\Service\VehicleService;
 use Zend\Authentication\AuthenticationService;
-
+use Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
 /**
  * Base for unit tests for classes inherited from AbstractMotTestService
  */
@@ -53,36 +54,54 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
 
     /** @var EntityManager|MockObj  */
     protected $mockEntityManager;
+
     /** @var MotTestValidator|MockObj  */
     protected $mockMotTestValidator;
+
     /** @var  TesterService|MockObj */
     protected $mockTesterService;
+
     /** @var  \DvsaAuthorisation\Service\AuthorisationServiceInterface|MockObj */
     protected $mockAuthService;
+
     /** @var  MotTestRepository|MockObj */
     protected $mockMotTestRepository;
+
     /** @var  MotTestMapper|MockObj */
     protected $mockMotTestMapper;
+
     /** @var  RetestEligibilityValidator|MockObj */
     protected $mockRetestEligibilityValidator;
+
     /** @var  ConfigurationRepository|MockObj */
     protected $mockConfigurationRepository;
+
     /** @var  ReadMotTestAssertion|MockObj */
     protected $mockReadMotTestAssertion;
+
     /** @var  OtpService|MockObj */
     protected $mockOtpService;
+
     /** @var  OrganisationService|MockObj */
     protected $mockOrganisationService;
+
     /** @var  VehicleService|MockObj */
     protected $mockVehicleService;
+
     /** @var  CertificateCreationService|MockObj */
     protected $mockCertificateCreationService;
+
     /** @var  MotTestTypeRepository|MockObj */
     protected $mockMotTestTypeRepository;
+
     /** @var  TestDateTimeHolder */
     protected $dateTimeHolder;
+
     /** @var CreateMotTestService  */
     protected $mockCreateMotTestService;
+
+    /** @var NewVehicleService */
+    protected $mockNewVehicleService;
 
     public function setUp()
     {
@@ -100,7 +119,8 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
             $this->mockOrganisationService,
             $this->mockVehicleService,
             $this->mockMotTestTypeRepository,
-            $this->mockCreateMotTestService
+            $this->mockCreateMotTestService,
+            $this->mockNewVehicleService
         );
 
         parent::setUp();
@@ -111,11 +131,13 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
         $make = new Make();
         $model = new Model();
         $model->setMake($make);
+        $modelDetail = new ModelDetail();
+        $modelDetail->setModel($model)
+            ->setVehicleClass(new VehicleClass(VehicleClassCode::CLASS_4))
+            ->getFuelType(new FuelType());
         $vehicle = new Vehicle();
-        $vehicle->setModel($model);
-        $vehicle->setVehicleClass(new VehicleClass(VehicleClassCode::CLASS_4));
+        $vehicle->setModelDetail($modelDetail);
         $vehicle->setColour(new Colour());
-        $vehicle->setFuelType(new FuelType());
         $vehicle->setCountryOfRegistration((new CountryOfRegistration()));
         $type = (new MotTestType())->setCode(MotTestTypeCode::NORMAL_TEST);
         $motTest = new MotTest();
@@ -189,23 +211,25 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
         $this->mockReadMotTestAssertion = XMock::of(ReadMotTestAssertion::Class);
         $this->mockCreateMotTestService = XMock::of(CreateMotTestService::class);
 
+        $this->mockNewVehicleService = XMock::of(NewVehicleService::class);
         return [
-            'mockMotTestRepository'        => $this->mockMotTestRepository,
-            'mockMotTestValidator'         => $this->mockMotTestValidator,
-            'mockTesterService'            => $this->mockTesterService,
-            'mockEntityManager'            => $this->mockEntityManager,
+            'mockMotTestRepository' => $this->mockMotTestRepository,
+            'mockMotTestValidator' => $this->mockMotTestValidator,
+            'mockTesterService' => $this->mockTesterService,
+            'mockEntityManager' => $this->mockEntityManager,
             'mockRetestEligibilityService' => $this->mockRetestEligibilityValidator,
-            'mockConfigurationRepository'  => $this->mockConfigurationRepository,
-            'mockMotTestMapper'            => $this->mockMotTestMapper,
-            'mockAuthService'              => $this->mockAuthService,
-            'mockOtpService'               => $this->mockOtpService,
-            'mockOrganisationService'      => $this->mockOrganisationService,
-            'mockVehicleService'           => $this->mockVehicleService,
-            self::MOCK_DATETIME_HOLDER     => $this->dateTimeHolder,
-            'mockIdentity'                 => $motIdentity,
-            'mockMotTestTypeRepository'    => $this->mockMotTestTypeRepository,
-            'mockReadMotTestAssertion'     => $this->mockReadMotTestAssertion,
-            'mockCreateMotTestService'     => $this->mockCreateMotTestService
+            'mockConfigurationRepository' => $this->mockConfigurationRepository,
+            'mockMotTestMapper' => $this->mockMotTestMapper,
+            'mockAuthService' => $this->mockAuthService,
+            'mockOtpService' => $this->mockOtpService,
+            'mockOrganisationService' => $this->mockOrganisationService,
+            'mockVehicleService' => $this->mockVehicleService,
+            self::MOCK_DATETIME_HOLDER => $this->dateTimeHolder,
+            'mockIdentity' => $motIdentity,
+            'mockMotTestTypeRepository' => $this->mockMotTestTypeRepository,
+            'mockReadMotTestAssertion' => $this->mockReadMotTestAssertion,
+            'mockCreateMotTestService' => $this->mockCreateMotTestService,
+            'mockNewVehicleService' => $this->mockNewVehicleService
         ];
     }
 

@@ -4,8 +4,8 @@ namespace Dvsa\Mot\Frontend\Test;
 
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\VehicleTestingStation;
-use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Auth\PermissionAtSite;
+use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\Role;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommon\Model\ListOfRolesAndPermissions;
@@ -20,25 +20,22 @@ class StubIdentityAdapter implements AdapterInterface
     private $vts;
     private $loggedIn;
 
-    /** @var PersonAuthorization $personAuthorization */
+    /**
+     * @var PersonAuthorization
+     */
     private $personAuthorization;
 
     /**
-     * Ctor: Allows alternative credentials to be supplied
+     * Ctor: Allows alternative credentials to be supplied.
      *
-     * @param string  $username            String contains the login name
-     * @param int     $userid              contains the internal database user id
-     * @param         $personAuthorization authorization of person
-     * @param boolean $atVts               whether to be logged in at a VTS
-     * @param         $loggedIn            whether the authentication call should succeed or not
+     * @param string              $username            String contains the login name
+     * @param int                 $userid              contains the internal database user id
+     * @param PersonAuthorization $personAuthorization authorization of person
+     * @param bool                $atVts               whether to be logged in at a VTS
+     * @param bool                $loggedIn            Whether the authentication call should succeed or not
      */
-    private function __construct(
-        $username,
-        $userid,
-        PersonAuthorization $personAuthorization,
-        $atVts,
-        $loggedIn
-    ) {
+    private function __construct($username, $userid, PersonAuthorization $personAuthorization, $atVts, $loggedIn)
+    {
         $this->username = $username;
         $this->userId = $userid;
         $this->loggedIn = $loggedIn;
@@ -77,6 +74,7 @@ class StubIdentityAdapter implements AdapterInterface
                 ->setCurrentVts($this->vts)
                 ->setPersonAuthorization($this->personAuthorization)
                 ->setAccessToken(1111.2222);
+
             return new Result(Result::SUCCESS, $identity);
         } else {
             return new Result(Result::FAILURE_UNCATEGORIZED, null);
@@ -94,6 +92,7 @@ class StubIdentityAdapter implements AdapterInterface
             ->setName('Some Garage')
             ->setAddress('1 Some Street, Some Town, Some City, SC12 3AB')
             ->setSlots(100);
+
         return $vts;
     }
 
@@ -113,6 +112,9 @@ class StubIdentityAdapter implements AdapterInterface
         );
     }
 
+    /**
+     * @return StubIdentityAdapter
+     */
     public static function asVehicleExaminerAtSite()
     {
         return new StubIdentityAdapter(
@@ -124,48 +126,78 @@ class StubIdentityAdapter implements AdapterInterface
         );
     }
 
+    /**
+     * @return StubIdentityAdapter
+     */
     public static function asTesterWithoutVtsChosen()
     {
         return new StubIdentityAdapter('tester1', 1, self::authorizationForTester(), false, true);
     }
 
+    /**
+     * @return StubIdentityAdapter
+     */
     public static function asEnforcement()
     {
         return new StubIdentityAdapter('ft-enf-tester', 2100, PersonAuthorization::emptyAuthorization(), true, true);
     }
 
+    /**
+     * @param int    $userId
+     * @param string $userName
+     *
+     * @return StubIdentityAdapter
+     */
     public static function asTester($userId = 1, $userName = 'tester1')
     {
         return new StubIdentityAdapter($userName, $userId, self::authorizationForTester(), true, true);
     }
 
+    /**
+     * @return StubIdentityAdapter
+     */
     public static function asApplicant()
     {
         return new StubIdentityAdapter('applicant-user', 9, PersonAuthorization::emptyAuthorization(), true, true);
     }
 
+    /**
+     * @return StubIdentityAdapter
+     */
     public static function asAedm()
     {
         return new StubIdentityAdapter('aedm-user', 5, PersonAuthorization::emptyAuthorization(), true, true);
     }
 
+    /**
+     * @return StubIdentityAdapter
+     */
     public static function asAnonymous()
     {
         return new StubIdentityAdapter('none', -1, PersonAuthorization::emptyAuthorization(), false, false);
     }
 
+    /**
+     * @param int    $userId
+     * @param string $userName
+     *
+     * @return StubIdentityAdapter
+     */
     public static function asSchemauser($userId = 28, $userName = 'schemeuser')
     {
         return new StubIdentityAdapter($userName, $userId, self::authorizationForSchemauser(), true, true);
     }
 
+    /**
+     * @return PersonAuthorization
+     */
     private static function authorizationForTester()
     {
         return new PersonAuthorization(
             new ListOfRolesAndPermissions(
                 [
                     SiteBusinessRoleCode::TESTER,
-                    Role::USER
+                    Role::USER,
                 ],
                 [
                     PermissionInSystem::MOT_TEST_PERFORM,
@@ -183,7 +215,7 @@ class StubIdentityAdapter implements AdapterInterface
             [
                 1 => new ListOfRolesAndPermissions(
                     [
-                        SiteBusinessRoleCode::TESTER
+                        SiteBusinessRoleCode::TESTER,
                     ],
                     [
                         PermissionAtSite::VEHICLE_TESTING_STATION_READ,
@@ -204,21 +236,24 @@ class StubIdentityAdapter implements AdapterInterface
                         PermissionInSystem::CERTIFICATE_REPLACEMENT,
                         PermissionInSystem::VEHICLE_CREATE,
                         PermissionInSystem::SLOTS_VIEW,
-                        PermissionAtSite::MOT_TEST_ABORT_AT_SITE
+                        PermissionAtSite::MOT_TEST_ABORT_AT_SITE,
                     ]
-                )
+                ),
             ],
             []
         );
     }
 
+    /**
+     * @return PersonAuthorization
+     */
     private static function authorizationForSchemauser()
     {
         return new PersonAuthorization(
             new ListOfRolesAndPermissions(
                 [
                     Role::DVSA_SCHEME_USER,
-                    Role::USER
+                    Role::USER,
                 ],
                 [
                     PermissionInSystem::VIEW_OTHER_USER_PROFILE,

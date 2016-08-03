@@ -37,7 +37,7 @@ public class VehicleInformationPage extends Page {
 
     public void verifyVehicleRegistrationAndVin(Vehicle vehicle) {
         assertThat("The registration is as expected", getRegistrationNumber(),
-                is(vehicle.getRegistrationNumber()));
+                is(vehicle.getDvsaRegistration()));
         assertThat("The Vin is as expected", getVinNumber(),
                 is(vehicle.getVin()));
     }

@@ -1,15 +1,17 @@
 <?php
 return [
     'DvsaApplicationLogger', // needs to load first to register as exception handler
+    'Dvsa\Mot\Frontend\GoogleAnalyticsModule',
     'Core',
     'DvsaCommon',
     'Application',
     'Csrf',
     'DvsaFeature',
     'Dvsa\Mot\Frontend\AuthenticationModule',
-    'Dvsa\Mot\Frontend\RegistrationModule',
     'Dvsa\Mot\Frontend\MotTestModule',
     'Dvsa\Mot\Frontend\PersonModule',
+    'Dvsa\Mot\Frontend\RegistrationModule',
+    'Dvsa\Mot\Frontend\ServiceModule',
     'Dashboard',
     'UserAdmin',
     'DvsaClient',
@@ -31,4 +33,5 @@ return [
     'Dvsa\OpenAM',
     'DoctrineModule',
     'DvsaDoctrineModule',
+    'ZfcTwig',
 ];

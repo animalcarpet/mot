@@ -8,6 +8,7 @@
 namespace VehicleApi\Factory\Service;
 
 use Doctrine\ORM\EntityManager;
+use Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
 use DvsaAuthentication\Service\OtpService;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Database\Transaction;
@@ -29,11 +30,15 @@ use DvsaEntities\Entity\DvlaMakeModelMap;
  */
 class VehicleServiceFactory implements FactoryInterface
 {
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return VehicleService
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $em = $serviceLocator->get(EntityManager::class);
 
-        return new VehicleService(
+        $vehicleService = new VehicleService(
             $serviceLocator->get('DvsaAuthorisationService'),
             $em->getRepository(Vehicle::class),
             $em->getRepository(VehicleV5C::class),
@@ -47,7 +52,10 @@ class VehicleServiceFactory implements FactoryInterface
             new MotTestServiceProvider($serviceLocator),
             $serviceLocator->get(MotIdentityProviderInterface::class),
             $em->getRepository(Person::class),
-            new Transaction($em)
+            new Transaction($em),
+            $serviceLocator->get(NewVehicleService::class)
         );
+
+        return $vehicleService;
     }
 }

@@ -40,7 +40,7 @@ public class SiteTestLogsView extends DslTest {
     public void permittedUserCanViewTestLogs(User user) throws IOException, URISyntaxException {
 
         //Given I performed 1 MOT  test Last week
-        motApi.createTest(tester, testSite.getId(), vehicleData.getNewVehicle(user), TestOutcome.PASSED, 123456, DateTime.now().minusWeeks(1));
+        motApi.createTest(tester, testSite.getId(), vehicleData.getNewVehicle(tester), TestOutcome.PASSED, 123456, DateTime.now().minusWeeks(1));
 
         //When I go to the Site Log page as <permitted user>
         motUI.testLog.siteLogPage(user, testSite.getId());
@@ -53,7 +53,7 @@ public class SiteTestLogsView extends DslTest {
         motUI.testLog.home();
     }
 
-    @Test(groups = {"BVT", "Regression"}, expectedExceptions = PageInstanceNotFoundException.class)
+    @Test(groups = {"Regression"}, expectedExceptions = PageInstanceNotFoundException.class)
     public void nonPermittedUserCannotViewTestLogs() throws IOException, URISyntaxException {
 
         //Given I am a tester
@@ -68,7 +68,7 @@ public class SiteTestLogsView extends DslTest {
 
     }
     
-    @Test(groups = {"BVT", "Regression"})
+    @Test(groups = {"Regression"})
     public void permittedUserCanViewCustomDateRange() throws IOException, URISyntaxException {
 
         //Given I performed 2 Mot tests within 30 days

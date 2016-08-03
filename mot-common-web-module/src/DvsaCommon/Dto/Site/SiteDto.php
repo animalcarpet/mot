@@ -59,6 +59,27 @@ class SiteDto extends AbstractDataTransferObject
 
     /** @var string  */
     private $statusChangedOn;
+
+    /** @var \DateTime */
+    private $siteCreatedOn;
+
+    /**
+     * @return \DateTime
+     */
+    public function getSiteCreatedOn()
+    {
+        return $this->siteCreatedOn;
+    }
+
+    /**
+     * @param mixed $siteCreatedOn
+     * @return $this
+     */
+    public function setSiteCreatedOn($siteCreatedOn)
+    {
+        $this->siteCreatedOn = $siteCreatedOn;
+        return $this;
+    }
     
     public function getSiteNumber()
     {

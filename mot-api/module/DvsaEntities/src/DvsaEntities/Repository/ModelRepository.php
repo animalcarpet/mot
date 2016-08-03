@@ -34,16 +34,16 @@ class ModelRepository extends AbstractMutableRepository
     }
 
     /**
-     * @param string $makeCode
+     * @param string $makeId
      * @param string $modelCode
      * @return Model
      * @throws NotFoundException
      */
-    public function getByCode($makeCode, $modelCode)
+    public function getByCode($makeId, $modelCode)
     {
-        $result = $this->findOneBy(['makeCode' => $makeCode, 'code' => $modelCode]);
+        $result = $this->findOneBy(['makeId' => $makeId, 'code' => $modelCode]);
         if (is_null($result)) {
-            throw new NotFoundException("Model", $makeCode . '/' . $modelCode);
+            throw new NotFoundException("Model", $makeId . '/' . $modelCode);
         }
         return $result;
     }
@@ -84,18 +84,41 @@ class ModelRepository extends AbstractMutableRepository
     }
 
     /**
+     * @param string $makeId
+     *
+     * @return Model[]
+     * @throws \DvsaCommonApi\Service\Exception\NotFoundException
+     */
+    public function getByMakeId($makeId)
+    {
+        $result = $this->findBy(
+            [
+                'makeId' => $makeId,
+                'isVerified' => 1,
+            ],
+            ['name' => 'ASC']
+        );
+
+        if (empty($result)) {
+            throw new NotFoundException("Model (by make id)", $makeId);
+        }
+        return $result;
+    }
+
+    /**
      * @param $name
-     * @param $makeCode
+     * @param $makeId
      *
      * @return array
      */
-    public function findByNameForMake($name, $makeCode)
+    public function findByNameForMake($name, $makeId)
     {
         $qb = $this->createQueryBuilder("m");
         $qb
-            ->where($qb->expr()->eq("m.makeCode", ":makeCode"))
+            ->where($qb->expr()->eq("m.makeId", ":makeId"))
             ->andWhere($qb->expr()->like("m.name", ":name"))
-            ->setParameter(":makeCode", $makeCode)
+            ->andWhere($qb->expr()->eq('m.isVerified', 1))
+            ->setParameter(":makeId", $makeId)
             ->setParameter(":name", '%' . $name . '%')
         ;
 

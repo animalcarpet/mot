@@ -8,6 +8,7 @@ use DvsaEntities\Entity\Person;
 
 /**
  * Find entity by id/criteria or throw NotFoundException
+ * @deprecated use PersonRepository
  */
 trait EntityFinderTrait
 {

@@ -2,6 +2,9 @@
 
 namespace DvsaMotTest\Controller;
 
+use Core\Service\MotFrontendAuthorisationServiceInterface;
+use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
+use DvsaClient\MapperFactory;
 use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommon\Dto\Organisation\MotTestLogSummaryDto;
 use DvsaCommon\Dto\Search\MotTestSearchParamsDto;
@@ -20,6 +23,17 @@ use Zend\Http\PhpEnvironment\Response;
  */
 class TesterMotTestLogController extends MotTestLogController
 {
+    private $contextProvider;
+
+    public function __construct(
+        MotFrontendAuthorisationServiceInterface $authService,
+        MapperFactory $mapperFactory,
+        ContextProvider $contextProvider
+    ) {
+        parent::__construct($authService, $mapperFactory);
+        $this->contextProvider = $contextProvider;
+    }
+
     public function indexAction()
     {
         $testerId = $this->getIdentity()->getUserId();
@@ -42,7 +56,7 @@ class TesterMotTestLogController extends MotTestLogController
 
             $apiResult = $this->getTesterLogDataBySearchCriteria($testerId, $searchParams);
 
-            $totalRecordsCount = (int) $apiResult->getTotalResultCount();
+            $totalRecordsCount = (int)$apiResult->getTotalResultCount();
             if ($totalRecordsCount === 0) {
                 $this->addErrorMessages(self::ERR_NO_DATA);
             }
@@ -61,10 +75,8 @@ class TesterMotTestLogController extends MotTestLogController
         //  logic block: prepare view
         $this->layout('layout/layout-govuk.phtml');
 
-        $breadcrumbs = [
-            'Performance dashboard' => PersonUrlBuilderWeb::of()->stats(),
-            'Tester Test logs' => '',
-        ];
+        $viewModel->setReturnLink($this->getPreviousPageLink());
+        $breadcrumbs = $this->buildBreadcrumbs();
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
 
         $this->layout()->setVariable('pageTitle', $this->getIdentity()->getDisplayName());
@@ -165,5 +177,27 @@ class TesterMotTestLogController extends MotTestLogController
         }
 
         return null;
+    }
+
+    private function getPreviousPageLink()
+    {
+        switch ($this->contextProvider->getContext()) {
+            case ContextProvider::YOUR_PROFILE_CONTEXT:
+                return ['Your profile' => $this->url()->fromRoute(ContextProvider::YOUR_PROFILE_PARENT_ROUTE)];
+            case ContextProvider::NO_CONTEXT:
+                return ['Performance dashboard' => PersonUrlBuilderWeb::of()->stats()];
+        }
+
+        throw new \UnexpectedValueException();
+    }
+
+    private function buildBreadcrumbs()
+    {
+        $breadcrumbs = [
+            $this->getPreviousPageLink(),
+            ['Tester Test logs' => '',]
+        ];
+
+        return $breadcrumbs;
     }
 }

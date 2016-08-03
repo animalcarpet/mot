@@ -3,6 +3,7 @@
 namespace DvsaMotApiTest\Factory\Service;
 
 use Doctrine\ORM\EntityManager;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotApi\Factory\Service\ReplacementCertificateUpdaterFactory;
@@ -26,11 +27,13 @@ class ReplacementCertificateUpdatersFactoryTest extends AbstractServiceTestCase
         $motTestSecurityService = XMock::of(MotTestSecurityService::class);
         $authorisationService = XMock::of(AuthorisationServiceInterface::class);
         $authenticationService = XMock::of(AuthenticationService::class);
+        $mockVehicleService = XMock::of(VehicleService::class);
 
         $this->serviceLocator = new ServiceManager();
         $this->serviceLocator->setService('DvsaAuthorisationService', $authorisationService);
         $this->serviceLocator->setService('MotTestSecurityService', $motTestSecurityService);
         $this->serviceLocator->setService('DvsaAuthenticationService', $authenticationService);
+        $this->serviceLocator->setService(VehicleService::class, $mockVehicleService);
     }
 
     public function testReplacementCertificateServiceFactory()

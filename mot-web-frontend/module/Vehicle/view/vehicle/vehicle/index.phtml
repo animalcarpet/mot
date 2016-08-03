@@ -44,9 +44,9 @@ echo $this->partial('errorMessages', array('getFromFlash' => true, 'isShowHidden
                     'dldtdd', [
                         'dlCssClass' => 'vertical',
                         'items'      => [
-                            ['Make', $vehicle->getMakeName(), 'id' => 'make'],
-                            ['Model', $vehicle->getModelName(), 'id' => 'model'],
-                            ['Body Type', $vehicle->getBodyType()->getName(), 'id' => 'bodyType'],
+                            ['Make', $vehicle->getMake(), 'id' => 'make'],
+                            ['Model', $vehicle->getModel(), 'id' => 'model'],
+                            ['Body Type', $vehicle->getBodyType(), 'id' => 'bodyType'],
                         ],
                     ]
                 );
@@ -60,10 +60,10 @@ echo $this->partial('errorMessages', array('getFromFlash' => true, 'isShowHidden
                     'dldtdd', [
                         'dlCssClass' => 'vertical',
                         'items'      => [
-                            ['Fuel type', $vehicle->getFuelType()->getName(), 'id' => 'fuel'],
-                            ['Transmission type', $vehicle->getTransmissionType()->getName(), 'id' => 'transmission'],
+                            ['Fuel type', $vehicle->getFuelType(), 'id' => 'fuel'],
+                            ['Transmission type', $vehicle->getTransmissionType(), 'id' => 'transmission'],
                             ['Cylinder capacity', $vehicle->getCylinderCapacity(), 'id' => 'cylinder'],
-                            ['Colour', $vehicle->getColoursNames(), 'id' => 'color'],
+                            ['Colour', $colourNames, 'id' => 'color'],
                         ],
                     ]
                 );
@@ -88,7 +88,7 @@ echo $this->partial('errorMessages', array('getFromFlash' => true, 'isShowHidden
                             ],
                             [
                                 'Declared new',
-                                $vehicle->isNewAtFirstReg() ? 'Yes' : 'No',
+                                $vehicle->getIsNewAtFirstReg() ? 'Yes' : 'No',
                                 'id' => 'declaredNew',
                             ],
                             [
@@ -135,23 +135,7 @@ echo $this->partial('errorMessages', array('getFromFlash' => true, 'isShowHidden
             </div>
 
             <div class="col-sm-4">
-                <?php
-                //  --  col 3   --
-                echo $this->partial(
-                    'dldtdd', [
-                        'dlCssClass' => 'vertical',
-                        'items'      => [
-                            ['No. of seats', $vehicle->getSeatingCapacity(), 'id' => 'noSeats'],
-                            ['No. of seat belts', $vehicle->getNoOfSeatBelts(), 'id' => 'noSeatBelts'],
-                            [
-                                'Seat belt last checked',
-                                DateTimeDisplayFormat::textDate($vehicle->getSeatBeltsLastChecked()) ?: null,
-                                'id' => 'dateOfSeatBelt',
-                            ],
-                        ],
-                    ]
-                );
-                ?>
+
             </div>
         </div>
     </div>

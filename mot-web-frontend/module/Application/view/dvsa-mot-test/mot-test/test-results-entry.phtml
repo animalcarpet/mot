@@ -1,0 +1,74 @@
+<?php
+
+/**
+ * @var \DvsaCommon\Dto\Common\MotTestDto $motTest
+ */
+$vehicle = $motTest->getVehicle();
+
+$submissionStatus = isset($motTest->getPendingDetails()['currentSubmissionStatus']) ? $motTest->getPendingDetails()['currentSubmissionStatus'] : null;
+
+$this->layout()->setVariable('pageTitle', 'MOT Test results');
+
+?>
+
+<header class="content-header">
+    <ul class="content-header__tertiary-list">
+        <li id="vehicleMakeModel" class="content-header__list-item--primary"><?php echo ucwords(strtolower($vehicle->getMakeAndModel())) ?></li>
+        <li id="vehicleRegistration" class="content-header__list-item"><?php echo $vehicle->getRegistration() ?></li>
+        <li id="firstUsedDate" class="content-header__list-item"><?php echo 'First used ' . DateTime::createFromFormat('Y-m-d', $vehicle->getFirstUsedDate())->format('j M Y'); ?></li>
+    </ul>
+</header>
+
+<div class="action-panel">
+    <div class="clear-float">
+        <div class="action-panel__container">
+            <h3 class="action-panel__heading">Odometer</h3>
+        </div>
+        <div class="action-panel__container">
+            <h3 class="action-panel__value"></h3>
+        </div>
+        <div class="action-panel__container--last">
+            <a href="#" id="addOdometerReadingButton" class="button">
+                Add reading
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<div class="action-panel">
+    <div class="clear-float">
+        <div class="action-panel__container">
+            <h3 class="action-panel__heading">Defects</h3>
+            <h4 class="action-panel__sub-heading">Failures, PRS and Advisories</h4>
+        </div>
+        <div class="action-panel__container--last">
+            <a href="#" id="addDefectButton" class="button">Add a defect</a>
+            <span class="action-panel__secondary-action">or <a href="#" id="searchForDefect">Search for a defect</a></span>
+        </div>
+    </div>
+</div>
+
+<div class="action-panel">
+    <div class="clear-float">
+        <div class="action-panel__container">
+            <h3 class="action-panel__heading">Brake test</h3>
+            <h4 class="action-panel__sub-heading"></h4>
+        </div>
+        <div class="action-panel__container--last">
+            <a href="#" id="addBrakeTestButton" class="button">Add brake test</a>
+        </div>
+    </div>
+</div>
+<nav class="content-navigation">
+
+    <form action="<?php echo $this->url('mot-test/test-summary', ['motTestNumber' => $motTest->getMotTestNumber()]) ?>" method="get">
+        <input id="reviewTest" type="submit" class="button" value="Review test" <?php if ($submissionStatus == "INCOMPLETE") : ?>disabled<?php endif; ?>>
+    </form>
+    <ul class="content-navigation__secondary">
+        <li>
+            <a href="<?php echo $this->url('mot-test/cancel', ['motTestNumber' => $motTest->getMotTestNumber()]) ?>" id="cancelTest">Cancel test</a>
+        </li>
+    </ul>
+
+</nav>

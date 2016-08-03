@@ -21,15 +21,18 @@ public class CpmsAdjustmentTests extends DslTest {
                 .goToPageAsAuthorisedExaminer(user, FinanceAuthorisedExaminerViewPage.class, path, aeId)
                 .clickBuySlotsLinkAsFinanceUser()
                 .selectCardPaymentTypeAndSubmit()
-                .enterSlotsRequired(slots)
+                .enterSlotsRequired(100)
                 .clickCalculateCostButton()
                 .clickContinueToPay()
                 .enterCardDetails()
-                .clickPayNowButton();
+                .clickContinueButton()
+                .enterCardHolderName()
+                .clickContinueButton()
+                .clickMakePaymentButtonAsFinance();
         return cardPaymentConfirmationPage;
     }
 
-    @Test(groups = {"CPMS"}, description = "SPMS-255 Finance user refunds slots", dataProvider = "createFinanceUserAndAe")
+    @Test(groups = {"Regression"}, description = "SPMS-255 Finance user refunds slots", dataProvider = "createFinanceUserAndAe")
     public void userRefundsSlots(User financeUser, AeDetails aeDetails) throws IOException, URISyntaxException {
 
         //Given I am on Slot refund page as a Finance user with a valid payment
@@ -49,7 +52,7 @@ public class CpmsAdjustmentTests extends DslTest {
                 slotRefundConfirmationPage.isRefundSuccessMessageDisplayed(), is(true));
     }
 
-    @Test(enabled = false, groups = {"CPMS"}, description = "SPMS-42 Finance User processes Payment reversal", dataProvider = "createFinanceUserAndAe")
+    @Test(enabled = false, groups = {"Regression"}, description = "SPMS-42 Finance User processes Payment reversal", dataProvider = "createFinanceUserAndAe")
     public void userReversesAPayment(User financeUser, AeDetails aeDetails) throws IOException, URISyntaxException {
 
         //Given I am on Reverse payment page of a valid payment
@@ -68,7 +71,7 @@ public class CpmsAdjustmentTests extends DslTest {
 
     }
 
-    @Test(groups = {"CPMS", "BL-1611", "Regression"}, description = "Verify that financeuser can perform a positive manual adjustment",
+    @Test(groups = {"BL-1611", "Regression"}, description = "Verify that financeuser can perform a positive manual adjustment",
           dataProvider = "createFinanceUserAndAe")
     public void userPerformsAPositiveManualAdjustment(User financeUser, AeDetails aeDetails) throws IOException, URISyntaxException {
 
@@ -92,7 +95,7 @@ public class CpmsAdjustmentTests extends DslTest {
         assertThat(numberOfSlotsBeforeAdjustment + 100 == numberOfSlotsAfterAdjustment, is(true));
     }
 
-    @Test(groups = {"CPMS", "BL-1611", "Regression"}, description = "Verify that financeuser can perform a negative manual adjustment",
+    @Test(groups = {"BL-1611", "Regression"}, description = "Verify that financeuser can perform a negative manual adjustment",
             dataProvider = "createFinanceUserAndAe")
     public void userPerformsANegativeAdjustment(User financeUser, AeDetails aeDetails) throws IOException, URISyntaxException {
 
@@ -116,7 +119,7 @@ public class CpmsAdjustmentTests extends DslTest {
         assertThat(numberOfSlotsBeforeAdjustment - 100 == numberOfSlotsAfterAdjustment, is(true));
     }
 
-    @Test(groups = {"CPMS", "BL-1611", "Regression"}, description = "Verify that financeuser must add a comment for a manual adjustment",
+    @Test(groups = {"BL-1611", "Regression"}, description = "Verify that financeuser must add a comment for a manual adjustment",
             dataProvider = "createFinanceUserAndAe")
     public void userMustEnterACommentForAManualAdjustment(User financeUser, AeDetails aeDetails) throws IOException, URISyntaxException {
 
@@ -135,7 +138,7 @@ public class CpmsAdjustmentTests extends DslTest {
         assertThat(slotAdjustmentPage.isErrorMessageDisplayed(), is(true));
     }
 
-    @Test(groups = {"CPMS", "BL-1611", "Regression"},
+    @Test(groups = {"BL-1611", "Regression"},
             description = "Financeuser is able to see positive manual adjustment amount on transaction history screen",
             dataProvider = "createFinanceUserAndAe")
     public void positiveAdjustmentAmountIsShownOnPurchaseHistoryScreen(User financeUser, AeDetails aeDetails) throws IOException, URISyntaxException {
@@ -156,7 +159,7 @@ public class CpmsAdjustmentTests extends DslTest {
         assertThat("420".equals(transactionHistoryPage.getAdjustmentQuantity()), is(true));
     }
 
-    @Test(groups = {"CPMS", "BL-1611", "Regression"},
+    @Test(groups = {"BL-1611", "Regression"},
             description = "Financeuser is able to see negative manual adjustment amount on transaction history screen",
             dataProvider = "createFinanceUserAndAe")
     public void negativeAdjustmentAmountIsShownOnPurchaseHistoryScreen(User financeUser, AeDetails aeDetails) throws IOException, URISyntaxException {

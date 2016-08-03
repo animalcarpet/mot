@@ -7,9 +7,9 @@ use Core\Controller\AbstractAuthActionController;
 use Core\TwoStepForm\EditStepAction;
 use Core\TwoStepForm\ReviewStepAction;
 use Dvsa\Mot\Frontend\PersonModule\Action\QualificationDetailsAction;
-use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\QualificationDetailsBreadcrumbs;
+use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\CertificatesBreadcrumbs;
 use Dvsa\Mot\Frontend\PersonModule\Model\QualificationDetailsAddProcess;
-use Dvsa\Mot\Frontend\PersonModule\Model\QualificationDetailsContext;
+use Dvsa\Mot\Frontend\PersonModule\Model\FormContext;
 use Dvsa\Mot\Frontend\PersonModule\Model\QualificationDetailsAbstractProcess;
 use Dvsa\Mot\Frontend\PersonModule\Model\QualificationDetailsEditProcess;
 use Dvsa\Mot\Frontend\PersonModule\Service\RemoveCertificateDetailsService;
@@ -42,7 +42,7 @@ class QualificationDetailsController extends AbstractAuthActionController implem
         QualificationDetailsAddProcess $qualificationDetailsAddProcess,
         QualificationDetailsEditProcess $qualificationDetailsEditProcess,
         RemoveCertificateDetailsService $removeCertificateDetailsService,
-        QualificationDetailsBreadcrumbs $breadcrumbs,
+        CertificatesBreadcrumbs $breadcrumbs,
         ContextProvider $contextProvider
     )
     {
@@ -69,8 +69,9 @@ class QualificationDetailsController extends AbstractAuthActionController implem
         QualificationDetailsAbstractProcess $process, $action, $template)
     {
         $isPost = $this->getRequest()->isPost();
-        $context = new QualificationDetailsContext(
+        $context = new FormContext(
             $this->getPersonId(),
+            $this->getIdentity()->getUserId(),
             $this->params()->fromRoute('group'),
             $this
         );
@@ -129,14 +130,17 @@ class QualificationDetailsController extends AbstractAuthActionController implem
         $personId = $this->getPersonId();
         $group = $this->params()->fromRoute('group');
 
-        $breadcrumbs = $this->breadcrumbs->getBreadcrumbs($personId, $this, "Remove certificate");
+        $breadcrumbs = $this->breadcrumbs->getBreadcrumbsForQualificationDetails(
+            $personId,
+            $this,
+            "Remove certificate");
 
         $this->removeCertificateDetailsService->setBreadcrumbs($breadcrumbs);
 
         $result = $this->removeCertificateDetailsService->process(
             $personId,
             $group,
-            $this->breadcrumbs->getRoute(),
+            $this->breadcrumbs->getRouteForData(CertificatesBreadcrumbs::ROUTE_QUALIFICATION_DETAILS),
             $this->getRequest()->isPost()
         );
 

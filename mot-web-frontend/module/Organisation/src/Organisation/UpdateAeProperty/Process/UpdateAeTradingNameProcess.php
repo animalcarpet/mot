@@ -62,4 +62,9 @@ class UpdateAeTradingNameProcess extends AbstractSingleStepAeProcess implements 
     {
         return $this->formPageTitle;
     }
+
+    public function getEditPageLede()
+    {
+        return null;
+    }
 }

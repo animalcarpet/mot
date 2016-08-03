@@ -148,4 +148,9 @@ class UpdateVtsPropertyProcess implements SingleStepProcessInterface, AutoWireab
     {
         return $authorisationService->isGrantedAtSite($this->getPermission(), $this->context->getVtsId());
     }
+
+    public function getEditPageLede()
+    {
+        return null;
+    }
 }

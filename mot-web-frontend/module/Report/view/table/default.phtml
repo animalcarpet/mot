@@ -15,7 +15,7 @@ if (empty($data)) {
 }
 ?>
 
-<table class="result-table" id="dataTable">
+<table class="result-table" id="<?php echo $table->getTableOptions()->getTableId() ?>">
     <thead>
         <tr>
             <?php
@@ -25,7 +25,7 @@ if (empty($data)) {
                 $escSortCssClass = $col->getSortCssClass();
                 $escThCssClass = $col->getThClass();;
                 ?>
-                <th scope="col" class="tabular <?php echo $escThCssClass; ?>">
+                <th scope="col" class="<?php echo $escThCssClass; ?>">
                     <?php if (!empty($col->getSortBy())): ?>
                         <a href="<?php echo $col->getUrl($this); ?>" class="<?php echo $escSortCssClass; ?>">
                             <?php echo $escTitle; ?>
@@ -40,13 +40,13 @@ if (empty($data)) {
 
     <tbody>
         <?php foreach ($table->getData() as $row):
-            $escTdCssClass =$col->getTdClass();
             ?>
             <tr>
                 <?php foreach ($columns as $col):
+                    $escTdCssClass =$col->getTdClass();
                     $escBody = $col->renderCellContent($row, $this);
                     ?>
-                    <td class="tabular <?php echo $escTdCssClass; ?>">
+                    <td class="<?php echo $escTdCssClass; ?>">
                         <?php echo $escBody ?>
                     </td>
                 <?php endforeach; ?>

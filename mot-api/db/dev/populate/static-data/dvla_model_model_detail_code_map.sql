@@ -1,8 +1,5 @@
-LOCK TABLES `dvla_model_model_detail_code_map` WRITE;
-/*!40000 ALTER TABLE `dvla_model_model_detail_code_map` DISABLE KEYS */;
-
-INSERT INTO `dvla_model_model_detail_code_map` (`id`, `dvla_make_code`, `dvla_model_code`, `make_id`, `model_id`, `model_detail_id`, `vsi_code`, `mot1_legacy_id`, `created_by`, `created_on`, `last_updated_by`, `last_updated_on`, `version`, `batch_number` ) VALUES
-('1','188A9','01D93','100176','106782',NULL,NULL,NULL,'1','2015-04-15 18:38:25.420392',NULL,NULL,'1','1');
-
-/*!40000 ALTER TABLE `dvla_model_model_detail_code_map` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `dvla_model_model_detail_code_map` VALUES 
+(1,'188A9','01D93',100176,106782,NULL,1,'2015-04-15 18:38:25.420392',1,'2015-04-15 18:38:25.420392',1),
+(2,'18801','01516',100015,104257,NULL,2,'2016-06-08 15:35:00.584725',2,'2016-06-08 15:35:00.584725',1),
+(3,'1884Z','0119E',100084,105513,NULL,2,'2016-06-08 15:35:00.584725',2,'2016-06-08 15:35:00.584725',1),
+(4,'1889A','01163',100176,106782,NULL,2,'2016-06-08 15:35:00.584725',2,'2016-06-08 15:35:00.584725',1);

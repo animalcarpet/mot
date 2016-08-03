@@ -1,8 +1,0 @@
-!| GenerateTestDataForOtherFitnesseTests|
-|siteId?        |testerUsername?        |
-|$siteId1=      |$testerUsername1=      |
-
-
-!|MotTestOptionsRetrieve|$testerUsername1|$siteId1                                    |
-|started date ?         |vehicle make ?  |vehicle model ?|vehicle registration number?|
-|=~/.+/                 |BMW             |ALPINA         |=~/FIT.+/                   |

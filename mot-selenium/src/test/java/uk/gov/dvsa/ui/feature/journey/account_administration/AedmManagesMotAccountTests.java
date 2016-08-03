@@ -23,7 +23,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 
 public class AedmManagesMotAccountTests extends DslTest {
 
-    @Test(groups = {"BVT", "Regression"},
+    @Test(groups = {"Regression"},
             description = "VM-10253 - Journey 2 - AEDM Manages Mot Account", dataProvider = "createAeAedmSiteAndTester")
     public void viewConnectedAEWithAttachedVtsAndTester(
             User user, AeDetails aeDetails, Site testSite, User tester) throws Exception {
@@ -42,7 +42,7 @@ public class AedmManagesMotAccountTests extends DslTest {
         assertThat(vehicleTestingStationPage.getTesterName(tester.getId()), equalTo(tester.getNamesAndSurname()));
     }
 
-    @Test(groups = {"BVT", "Regression"},
+    @Test(groups = {"Regression"},
             description = "VM-10255 - Journey 2 - AEDM View AE Test logs", dataProvider = "createAeAedmSiteAndTester")
     public void viewAETestLogs(User aedm, AeDetails aeDetails, Site site, User tester) throws IOException, URISyntaxException {
 
@@ -58,7 +58,7 @@ public class AedmManagesMotAccountTests extends DslTest {
         assertThat(authorisedExaminerPageTestLogPage.getTodayCount(), equalTo("1"));
     }
 
-    @Test(groups = {"BVT", "Regression"},
+    @Test(groups = {"Regression"},
             description = "VM-10255 - Journey 2 - AEDM View AE Slot Usage", dataProvider = "createAeAedmSiteAndTester")
     public void viewSlotReport(User aedm, AeDetails aeDetails, Site site, User tester) throws IOException, URISyntaxException {
 
@@ -73,7 +73,7 @@ public class AedmManagesMotAccountTests extends DslTest {
         assertThat(aeSlotsUsagePage.getSlotUsageCountMessage(), containsString("1 slot used today"));
     }
 
-    @Test(groups = {"BVT", "Regression"},
+    @Test(groups = {"Regression"},
             description = "VM-10257 - Journey 2 - AEDM Remove Tester from VTS", dataProvider = "createAedmTester")
     public void removeTesterFromVTS(User user, User tester) throws Exception {
 

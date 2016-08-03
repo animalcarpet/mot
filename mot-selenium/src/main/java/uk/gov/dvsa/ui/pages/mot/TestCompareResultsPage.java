@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
@@ -64,25 +64,25 @@ public class TestCompareResultsPage extends Page {
     }
 
     public TestCompareResultsPage selectServiceScore(String scoreValue) {
-        FormCompletionHelper.selectFromDropDownByValue(serviceScore(), scoreValue);
+        FormDataHelper.selectFromDropDownByValue(serviceScore(), scoreValue);
 
         return this;
     }
 
     public TestCompareResultsPage selectServiceCategory(String categoryValue) {
-        FormCompletionHelper.selectFromDropDownByValue(serviceCategory(), categoryValue);
+        FormDataHelper.selectFromDropDownByValue(serviceCategory(), categoryValue);
 
         return this;
     }
 
     public TestCompareResultsPage selectParkingScore(String scoreValue) {
-        FormCompletionHelper.selectFromDropDownByValue(parkingScore(), scoreValue);
+        FormDataHelper.selectFromDropDownByValue(parkingScore(), scoreValue);
 
         return this;
     }
 
     public TestCompareResultsPage selectParkingCategory(String categoryValue) {
-        FormCompletionHelper.selectFromDropDownByValue(parkingCategory(), categoryValue);
+        FormDataHelper.selectFromDropDownByValue(parkingCategory(), categoryValue);
 
         return this;
     }

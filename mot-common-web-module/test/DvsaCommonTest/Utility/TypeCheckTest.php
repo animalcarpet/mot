@@ -2,6 +2,8 @@
 
 namespace DvsaCommonTest\Utility;
 
+use DvsaCommon\Enum\VehicleClassCode;
+use DvsaCommon\Guid\Guid;
 use DvsaCommon\Utility\TypeCheck;
 
 class TypeCheckTest extends \PHPUnit_Framework_TestCase
@@ -93,7 +95,7 @@ class TypeCheckTest extends \PHPUnit_Framework_TestCase
      */
     public function testArrayOfScalarValuesFailsForObject()
     {
-        TypeCheck::assertCollectionOfScalarValues(['string', new \DateTime()]);
+        TypeCheck::assertCollectionOfScalarValues(['string', new Guid()]);
     }
 
     /**
@@ -103,5 +105,16 @@ class TypeCheckTest extends \PHPUnit_Framework_TestCase
     {
         TypeCheck::assertCollectionOfScalarValues(['string', ['nested-array']]);
     }
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testAssertEnumThrowsExceptionForUnexistingEnumValue()
+    {
+        TypeCheck::assertEnum('8', VehicleClassCode::class);
+    }
 
+    public function testAssertEnumPassesForCorrectEnumValue()
+    {
+        TypeCheck::assertEnum('7', VehicleClassCode::class);
+    }
 }

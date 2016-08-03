@@ -10,19 +10,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
 /**
  * Vehicle.
  *
- * @ORM\Table(
- *  name="vehicle",
- *  indexes={
- *      @ORM\Index(name="vehicle_vin_and_registration", columns={"vin", "registration"}),
- *      @ORM\Index(name="vehicle_registration", columns={"registration"}),
- *      @ORM\Index(name="fk_vehicle_vehicle_class_id", columns={"vehicle_class_id"}),
- *      @ORM\Index(name="fk_vehicle_model_detail_id", columns={"model_detail_id"}),
- *      @ORM\Index(name="fk_vehicle_country_of_registration_id", columns={"country_of_registration_id"}),
- *      @ORM\Index(name="fk_vehicle_transmission_type_id", columns={"transmission_type_id"}),
- *      @ORM\Index(name="fk_vehicle_created_by", columns={"created_by"}),
- *      @ORM\Index(name="fk_vehicle_last_updated_by", columns={"last_updated_by"})
- *  }
- * )
+ * @ORM\Table(name="vehicle")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\VehicleRepository")
  */
 class Vehicle extends Entity implements VehicleInterface
@@ -48,16 +36,16 @@ class Vehicle extends Entity implements VehicleInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="vin", type="string", length=30, nullable=true)
+     * @ORM\Column(name="registration_collapsed", type="string", length=20, nullable=true)
      */
-    private $vin;
+    private $registrationCollapsed;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="registration_collapsed", type="string", length=20, nullable=true)
+     * @ORM\Column(name="vin", type="string", length=30, nullable=true)
      */
-    private $registrationCollapsed;
+    private $vin;
 
     /**
      * @var string
@@ -67,35 +55,17 @@ class Vehicle extends Entity implements VehicleInterface
     private $vinCollapsed;
 
     /**
+     * @var ModelDetail
+     *
+     * @ORM\ManyToOne(targetEntity="ModelDetail", fetch="EAGER")
+     * @ORM\JoinColumn(name="model_detail_id", referencedColumnName="id", nullable=true)
+     */
+    private $modelDetail;
+
+    /**
      * @var integer
      *
-     * @ORM\Column(name="empty_vrm_reason_id", type="integer", nullable=true)
-     */
-
-    /**
-     * @var EmptyVrmReason
-     *
-     * @ORM\ManyToOne(targetEntity="EmptyVrmReason")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="empty_vrm_reason_id", referencedColumnName="id")
-     * })
-     */
-    private $emptyVrmReason;
-
-    /**
-     * @var EmptyVinReason
-     *
-     * @ORM\ManyToOne(targetEntity="EmptyVinReason")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="empty_vin_reason_id", referencedColumnName="id")
-     * })
-     */
-    private $emptyVinReason;
-
-    /**
-     * @var \integer
-     *
-     * @ORM\Column(name="year", type="integer", length=4, nullable=true)
+     * @ORM\Column(name="year", type="smallint", length=4, nullable=true)
      */
     private $year;
 
@@ -121,65 +91,6 @@ class Vehicle extends Entity implements VehicleInterface
     private $firstUsedDate;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="cylinder_capacity", type="integer", nullable=true)
-     */
-    private $cylinderCapacity;
-
-    /**
-     * @var Model
-     *
-     * @ORM\ManyToOne(targetEntity="Model")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="model_id", referencedColumnName="id"),
-     * })
-     */
-    private $model;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="model_name", type="string", nullable=true)
-     */
-    private $modelName;
-
-    /**
-     * @var Make
-     *
-     * @ORM\ManyToOne(targetEntity="Make")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="make_id", referencedColumnName="id"),
-     * })
-     */
-    private $make;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="make_name", type="string", nullable=true)
-     */
-    private $makeName;
-
-    /**
-     * @var ModelDetail
-     *
-     * @ORM\ManyToOne(targetEntity="ModelDetail", fetch="EAGER")
-     * @ORM\JoinColumn(name="model_detail_id", referencedColumnName="id", nullable=true)
-     */
-    private $modelDetail;
-
-    /**
-     * @var VehicleClass
-     *
-     * @ORM\ManyToOne(targetEntity="VehicleClass")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="vehicle_class_id", referencedColumnName="id")
-     * })
-     */
-    private $vehicleClass;
-
-    /**
      * @var Colour
      *
      * @ORM\ManyToOne(targetEntity="Colour")
@@ -198,44 +109,6 @@ class Vehicle extends Entity implements VehicleInterface
      * })
      */
     private $secondaryColour;
-
-    /**
-     * @var FuelType
-     *
-     * @ORM\ManyToOne(targetEntity="FuelType")
-     * @ORM\JoinColumn(name="fuel_type_id", referencedColumnName="id")
-     */
-    private $fuelType;
-
-    /**
-     * @var BodyType
-     *
-     * @ORM\ManyToOne(targetEntity="BodyType")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="body_type_id", referencedColumnName="id")
-     * })
-     */
-    private $bodyType;
-
-    /**
-     * @var CountryOfRegistration
-     *
-     * @ORM\ManyToOne(targetEntity="CountryOfRegistration")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="country_of_registration_id", referencedColumnName="id")
-     * })
-     */
-    private $countryOfRegistration;
-
-    /**
-     * @var TransmissionType
-     *
-     * @ORM\ManyToOne(targetEntity="TransmissionType")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="transmission_type_id", referencedColumnName="id")
-     * })
-     */
-    private $transmissionType;
 
     /**
      * VSI weight for brake tests.
@@ -257,51 +130,35 @@ class Vehicle extends Entity implements VehicleInterface
     private $weightSource;
 
     /**
-     * @var string
+     * @var CountryOfRegistration
      *
-     * @ORM\Column(name="chassis_number", type="string", nullable=true)
+     * @ORM\ManyToOne(targetEntity="CountryOfRegistration")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="country_of_registration_id", referencedColumnName="id")
+     * })
      */
-    private $chassisNumber;
+    private $countryOfRegistration;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="engine_number", type="string", nullable=true)
+     * @ORM\Column(name="engine_number", type="string", length=30, nullable=true)
      */
     private $engineNumber;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="seating_capacity", type="integer", nullable=true)
+     * @ORM\Column(name="chassis_number", type="string", length=30, nullable=true)
      */
-    private $seatingCapacity;
+    private $chassisNumber;
 
     /**
-     * @var integer
+     * @var boolean
      *
-     * @ORM\Column(name="no_of_seat_belts", type="integer", nullable=true)
-     */
-    private $noOfSeatBelts = 0;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="seat_belts_last_checked", type="date", nullable=true)
-     */
-    private $seatBeltsLastChecked;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="is_new_at_first_reg", type="smallint", nullable=true)
+     * @ORM\Column(name="is_new_at_first_reg", type="boolean", nullable=false)
      */
     private $newAtFirstReg = 0;
-
-    /**
-     * @ORM\OneToMany(targetEntity="DvsaEntities\Entity\VehicleV5C", mappedBy="vehicle")
-     */
-    private $vehicleV5Cs;
 
     /**
      * Unique DVLA reference.
@@ -312,284 +169,33 @@ class Vehicle extends Entity implements VehicleInterface
      */
     private $dvlaVehicleId;
 
-    public function __construct()
-    {
-        $this->vehicleV5Cs = new ArrayCollection();
-    }
-
     /**
-     * @param Colour $colour
+     * @var boolean
      *
-     * @return $this
+     * @ORM\Column(name="is_damaged", type="boolean", nullable=false)
      */
-    public function setColour(Colour $colour)
-    {
-        $this->colour = $colour;
-
-        return $this;
-    }
+    private $isDamaged = 0;
 
     /**
-     * @return \DvsaEntities\Entity\Colour
-     */
-    public function getColour()
-    {
-        return $this->colour;
-    }
-
-    /**
-     * @param CountryOfRegistration $countryOfRegistration
+     * @var boolean
      *
-     * @return $this
+     * @ORM\Column(name="is_destroyed", type="boolean", nullable=false)
      */
-    public function setCountryOfRegistration(CountryOfRegistration $countryOfRegistration)
-    {
-        $this->countryOfRegistration = $countryOfRegistration;
-
-        return $this;
-    }
+    private $isDestroyed = 0;
 
     /**
-     * @return \DvsaEntities\Entity\CountryOfRegistration
-     */
-    public function getCountryOfRegistration()
-    {
-        return $this->countryOfRegistration;
-    }
-
-    /**
-     * @param int $cylinderCapacity
+     * @var boolean
      *
-     * @return $this
+     * @ORM\Column(name="is_incognito", type="boolean", nullable=false)
      */
-    public function setCylinderCapacity($cylinderCapacity)
-    {
-        $this->cylinderCapacity = $cylinderCapacity;
-
-        return $this;
-    }
+    private $isIncognito = 0;
 
     /**
-     * @return int
-     */
-    public function getCylinderCapacity()
-    {
-        return $this->cylinderCapacity;
-    }
-
-    /**
-     * @param \DateTime $date
+     * @var EmptyReasonMap
      *
-     * @return Vehicle
+     * @ORM\OneToOne(targetEntity="EmptyReasonMap", mappedBy="vehicleId")
      */
-    public function setManufactureDate($date)
-    {
-        $this->manufactureDate = $date;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getManufactureDate()
-    {
-        return $this->manufactureDate;
-    }
-
-    /**
-     * @param \DateTime $date
-     *
-     * @return Vehicle
-     */
-    public function setFirstRegistrationDate($date)
-    {
-        $this->firstRegistrationDate = $date;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getFirstRegistrationDate()
-    {
-        return $this->firstRegistrationDate;
-    }
-
-    /**
-     * @param \DateTime $firstUsedDate
-     *
-     * @return Vehicle
-     */
-    public function setFirstUsedDate(\DateTime $firstUsedDate)
-    {
-        $this->firstUsedDate = $firstUsedDate;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getFirstUsedDate()
-    {
-        return $this->firstUsedDate;
-    }
-
-    /**
-     * @param FuelType $fuelType
-     *
-     * @return $this
-     */
-    public function setFuelType(FuelType $fuelType = null)
-    {
-        $this->fuelType = $fuelType;
-
-        return $this;
-    }
-
-    /**
-     * @return FuelType
-     */
-    public function getFuelType()
-    {
-        return $this->fuelType;
-    }
-
-    /**
-     * @param BodyType $bodyType
-     *
-     * @return $this
-     */
-    public function setBodyType(BodyType $bodyType = null)
-    {
-        $this->bodyType = $bodyType;
-
-        return $this;
-    }
-
-    /**
-     * @return \DvsaEntities\Entity\BodyType
-     */
-    public function getBodyType()
-    {
-        return $this->bodyType;
-    }
-
-    /**
-     * @param $makeName string
-     */
-    public function setMakeName($makeName)
-    {
-        $this->makeName = $makeName;
-        return $this;
-    }
-
-    public function getMakeName()
-    {
-        return $this->getMake() ? $this->getMake()->getName() : $this->makeName;
-    }
-
-    public function setFreeTextMakeName($makeName)
-    {
-        $this->makeName = $makeName;
-        return $this;
-    }
-
-    public function getFreeTextMakeName()
-    {
-        return $this->makeName;
-    }
-
-    /**
-     * @param Model $model
-     *
-     * @return $this
-     */
-    public function setModel(Model $model = null)
-    {
-        $this->model = $model;
-
-        return $this;
-    }
-
-    /**
-     * NOTE: If the model name is the only property required use getModelName() as it provides a safer approach.
-     *
-     * @return Model|null
-     */
-    public function getModel()
-    {
-        return $this->model;
-    }
-
-    public function getModelName()
-    {
-        return $this->getModel() ? $this->getModel()->getName() : $this->modelName;
-    }
-
-    /**
-     * @param Make $make
-     *
-     * @return $this
-     */
-    public function setMake(Make $make = null)
-    {
-        $this->make = $make;
-
-        return $this;
-    }
-
-    /**
-     * When retrieving the Make via the Vehicle class fallback to the model table if a Make ref is not found. Ideally
-     * we should either be using Vehicle.getMake() or Model.getMake() but not both.
-     *
-     * @return Make|null
-     */
-    public function getMake()
-    {
-        return $this->make ?: ($this->getModel() ? $this->getModel()->getMake() : null);
-    }
-
-    public function setFreeTextModelName($modelName)
-    {
-        $this->modelName = $modelName;
-
-        return $this;
-    }
-
-    /**
-     * @param ModelDetail $modelDetail
-     *
-     * @return $this
-     */
-    public function setModelDetail(ModelDetail $modelDetail = null)
-    {
-        $this->modelDetail = $modelDetail;
-
-        return $this;
-    }
-
-    /**
-     * @return \DvsaEntities\Entity\ModelDetail
-     */
-    public function getModelDetail()
-    {
-        return $this->modelDetail;
-    }
-
-    /**
-     * @param string $registration
-     *
-     * @return $this
-     */
-    public function setRegistration($registration)
-    {
-        $this->registration = $registration;
-
-        return $this;
-    }
+    private $emptyReasons;
 
     /**
      * @return string
@@ -600,74 +206,30 @@ class Vehicle extends Entity implements VehicleInterface
     }
 
     /**
-     * @param Colour $secondaryColour
-     *
-     * @return $this
-     */
-    public function setSecondaryColour(Colour $secondaryColour = null)
-    {
-        $this->secondaryColour = $secondaryColour;
-
-        return $this;
-    }
-
-    /**
-     * @return \DvsaEntities\Entity\Colour
-     */
-    public function getSecondaryColour()
-    {
-        return $this->secondaryColour;
-    }
-
-    /**
-     * @param TransmissionType $transmissionType
-     *
-     * @return $this
-     */
-    public function setTransmissionType(TransmissionType $transmissionType)
-    {
-        $this->transmissionType = $transmissionType;
-
-        return $this;
-    }
-
-    /**
-     * @return \DvsaEntities\Entity\TransmissionType
-     */
-    public function getTransmissionType()
-    {
-        return $this->transmissionType;
-    }
-
-    /**
-     * @param \DvsaEntities\Entity\VehicleClass $vehicleClass
-     *
+     * @param string $registration
      * @return Vehicle
      */
-    public function setVehicleClass(VehicleClass $vehicleClass)
+    public function setRegistration($registration)
     {
-        $this->vehicleClass = $vehicleClass;
-
+        $this->registration = $registration;
         return $this;
     }
 
     /**
-     * @return \DvsaEntities\Entity\VehicleClass
+     * @return string
      */
-    public function getVehicleClass()
+    public function getRegistrationCollapsed()
     {
-        return $this->vehicleClass;
+        return $this->registrationCollapsed;
     }
 
     /**
-     * @param string $vin
-     *
-     * @return $this
+     * @param string $registrationCollapsed
+     * @return Vehicle
      */
-    public function setVin($vin)
+    public function setRegistrationCollapsed($registrationCollapsed)
     {
-        $this->vin = $vin;
-
+        $this->registrationCollapsed = $registrationCollapsed;
         return $this;
     }
 
@@ -680,19 +242,53 @@ class Vehicle extends Entity implements VehicleInterface
     }
 
     /**
-     * @param int $year
-     *
-     * @return $this
+     * @param string $vin
+     * @return Vehicle
      */
-    public function setYear($year)
+    public function setVin($vin)
     {
-        $this->year = $year;
-
+        $this->vin = $vin;
         return $this;
     }
 
     /**
-     * @return \integer
+     * @return string
+     */
+    public function getVinCollapsed()
+    {
+        return $this->vinCollapsed;
+    }
+
+    /**
+     * @param string $vinCollapsed
+     * @return Vehicle
+     */
+    public function setVinCollapsed($vinCollapsed)
+    {
+        $this->vinCollapsed = $vinCollapsed;
+        return $this;
+    }
+
+    /**
+     * @return ModelDetail
+     */
+    public function getModelDetail()
+    {
+        return $this->modelDetail;
+    }
+
+    /**
+     * @param ModelDetail $modelDetail
+     * @return Vehicle
+     */
+    public function setModelDetail($modelDetail)
+    {
+        $this->modelDetail = $modelDetail;
+        return $this;
+    }
+
+    /**
+     * @return int
      */
     public function getYear()
     {
@@ -700,19 +296,107 @@ class Vehicle extends Entity implements VehicleInterface
     }
 
     /**
-     * @param integer $weight weight in kilos
-     *
+     * @param int $year
      * @return Vehicle
      */
-    public function setWeight($weight)
+    public function setYear($year)
     {
-        $this->weight = $weight;
-
+        $this->year = $year;
         return $this;
     }
 
     /**
-     * @return integer weight in kilos
+     * @return \DateTime
+     */
+    public function getManufactureDate()
+    {
+        return $this->manufactureDate;
+    }
+
+    /**
+     * @param \DateTime $manufactureDate
+     * @return Vehicle
+     */
+    public function setManufactureDate($manufactureDate)
+    {
+        $this->manufactureDate = $manufactureDate;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getFirstRegistrationDate()
+    {
+        return $this->firstRegistrationDate;
+    }
+
+    /**
+     * @param \DateTime $firstRegistrationDate
+     * @return Vehicle
+     */
+    public function setFirstRegistrationDate($firstRegistrationDate)
+    {
+        $this->firstRegistrationDate = $firstRegistrationDate;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getFirstUsedDate()
+    {
+        return $this->firstUsedDate;
+    }
+
+    /**
+     * @param \DateTime $firstUsedDate
+     * @return Vehicle
+     */
+    public function setFirstUsedDate($firstUsedDate)
+    {
+        $this->firstUsedDate = $firstUsedDate;
+        return $this;
+    }
+
+    /**
+     * @return Colour
+     */
+    public function getColour()
+    {
+        return $this->colour;
+    }
+
+    /**
+     * @param Colour $colour
+     * @return Vehicle
+     */
+    public function setColour($colour)
+    {
+        $this->colour = $colour;
+        return $this;
+    }
+
+    /**
+     * @return Colour
+     */
+    public function getSecondaryColour()
+    {
+        return $this->secondaryColour;
+    }
+
+    /**
+     * @param Colour $secondaryColour
+     * @return Vehicle
+     */
+    public function setSecondaryColour($secondaryColour)
+    {
+        $this->secondaryColour = $secondaryColour;
+        return $this;
+    }
+
+    /**
+     * @return int
      */
     public function getWeight()
     {
@@ -720,14 +404,12 @@ class Vehicle extends Entity implements VehicleInterface
     }
 
     /**
-     * @param WeightSource $weightSource
-     *
+     * @param int $weight
      * @return Vehicle
      */
-    public function setWeightSource($weightSource)
+    public function setWeight($weight)
     {
-        $this->weightSource = $weightSource;
-
+        $this->weight = $weight;
         return $this;
     }
 
@@ -740,34 +422,30 @@ class Vehicle extends Entity implements VehicleInterface
     }
 
     /**
-     * @param string $chassisNumber
-     *
+     * @param WeightSource $weightSource
      * @return Vehicle
      */
-    public function setChassisNumber($chassisNumber)
+    public function setWeightSource($weightSource)
     {
-        $this->chassisNumber = $chassisNumber;
-
+        $this->weightSource = $weightSource;
         return $this;
     }
 
     /**
-     * @return string
+     * @return CountryOfRegistration
      */
-    public function getChassisNumber()
+    public function getCountryOfRegistration()
     {
-        return $this->chassisNumber;
+        return $this->countryOfRegistration;
     }
 
     /**
-     * @param string $engineNumber
-     *
+     * @param CountryOfRegistration $countryOfRegistration
      * @return Vehicle
      */
-    public function setEngineNumber($engineNumber)
+    public function setCountryOfRegistration($countryOfRegistration)
     {
-        $this->engineNumber = $engineNumber;
-
+        $this->countryOfRegistration = $countryOfRegistration;
         return $this;
     }
 
@@ -780,102 +458,48 @@ class Vehicle extends Entity implements VehicleInterface
     }
 
     /**
-     * @param integer $seatingCapacity
-     *
+     * @param string $engineNumber
      * @return Vehicle
      */
-    public function setSeatingCapacity($seatingCapacity)
+    public function setEngineNumber($engineNumber)
     {
-        $this->seatingCapacity = $seatingCapacity;
-
+        $this->engineNumber = $engineNumber;
         return $this;
     }
 
     /**
-     * @return integer
+     * @return string
      */
-    public function getSeatingCapacity()
+    public function getChassisNumber()
     {
-        return $this->seatingCapacity;
+        return $this->chassisNumber;
     }
 
     /**
-     * @param integer $noOfSeatBelts
-     *
+     * @param string $chassisNumber
      * @return Vehicle
      */
-    public function setNoOfSeatBelts($noOfSeatBelts)
+    public function setChassisNumber($chassisNumber)
     {
-        $this->noOfSeatBelts = $noOfSeatBelts;
-
+        $this->chassisNumber = $chassisNumber;
         return $this;
     }
 
     /**
-     * @return integer
+     * @return boolean
      */
-    public function getNoOfSeatBelts()
+    public function isNewAtFirstReg()
     {
-        return $this->noOfSeatBelts;
+        return (bool)$this->newAtFirstReg;
     }
 
     /**
-     * @param \DateTime $date
-     *
+     * @param boolean $newAtFirstReg
      * @return Vehicle
      */
-    public function setSeatBeltsLastChecked($date)
+    public function setNewAtFirstReg($newAtFirstReg)
     {
-        $this->seatBeltsLastChecked = $date;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getSeatBeltsLastChecked()
-    {
-        return $this->seatBeltsLastChecked;
-    }
-
-    /**
-     * @param integer $value
-     *
-     * @return Vehicle
-     */
-    public function setNewAtFirstReg($value)
-    {
-        $this->newAtFirstReg = $value;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getNewAtFirstReg()
-    {
-        return $this->newAtFirstReg;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isVehicleNewAtFirstRegistration()
-    {
-        return (bool) $this->newAtFirstReg;
-    }
-
-    /**
-     * @param int $dvlaVehicleId
-     *
-     * @return $this
-     */
-    public function setDvlaVehicleId($dvlaVehicleId)
-    {
-        $this->dvlaVehicleId = $dvlaVehicleId;
-
+        $this->newAtFirstReg = $newAtFirstReg;
         return $this;
     }
 
@@ -888,48 +512,167 @@ class Vehicle extends Entity implements VehicleInterface
     }
 
     /**
-     * @param EmptyVrmReason $reason
-     * @return $this
+     * @param int $dvlaVehicleId
+     * @return Vehicle
      */
-    public function setEmptyVrmReason($reason)
+    public function setDvlaVehicleId($dvlaVehicleId)
     {
-        $this->emptyVrmReason = $reason;
+        $this->dvlaVehicleId = $dvlaVehicleId;
         return $this;
     }
 
     /**
-     * @return EmptyVrmReason
+     * @return boolean
      */
-    public function getEmptyVrmReason()
+    public function isDamaged()
     {
-        return $this->emptyVrmReason;
+        return $this->isDamaged;
     }
 
     /**
-     * @param EmptyVinReason $reason
-     * @return $this
+     * @param boolean $isDamaged
+     * @return Vehicle
      */
-    public function setEmptyVinReason($reason)
+    public function setDamaged($isDamaged)
     {
-        $this->emptyVinReason = $reason;
+        $this->isDamaged = $isDamaged;
         return $this;
     }
 
     /**
-     * @return EmptyVinReason
+     * @return boolean
      */
-    public function getEmptyVinReason()
+    public function isDestroyed()
     {
-        return $this->emptyVinReason;
+        return $this->isDestroyed;
     }
 
     /**
-     * Indicate based on instantiation the nature of this vehicles origins.
-     *
+     * @param boolean $isDestroyed
+     * @return Vehicle
+     */
+    public function setDestroyed($isDestroyed)
+    {
+        $this->isDestroyed = $isDestroyed;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isIncognito()
+    {
+        return $this->isIncognito;
+    }
+
+    /**
+     * @param boolean $isIncognito
+     * @return Vehicle
+     */
+    public function setIncognito($isIncognito)
+    {
+        $this->isIncognito = $isIncognito;
+        return $this;
+    }
+
+    /**
+     * @return Make|null
+     */
+    public function getMake()
+    {
+        return $this->getModelDetail()->getModel()->getMake();
+    }
+
+    /**
+     * @return Model|null
+     */
+    public function getModel()
+    {
+        return $this->getModelDetail()->getModel();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVehicleNewAtFirstRegistration()
+    {
+        return $this->isNewAtFirstReg();
+    }
+
+    /**     
      * @return bool
      */
     public function isDvla()
     {
         return false;
+    }
+
+    /**
+     * @return EmptyReasonMap
+     */
+    public function getEmptyReasons()
+    {
+        return $this->emptyReasons;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMakeName()
+    {
+        if ($this->getModelDetail()->getModel() instanceof Model &&
+            $this->getModelDetail()->getModel()->getMake() instanceof Make
+        ) {
+            return $this->getModelDetail()->getModel()->getMake()->getName();
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getModelName()
+    {
+        if ($this->getModelDetail()->getModel() instanceof Model) {
+            return $this->getModelDetail()->getModel()->getName();
+        }
+    }
+
+    public function getCylinderCapacity()
+    {
+        return $this->getModelDetail()->getCylinderCapacity();
+    }
+
+    public function getEmptyVrmReason()
+    {
+        if ($this->getEmptyReasons() instanceof EmptyReasonMap) {
+            return $this->getEmptyReasons()->getEmptyVrmReason();
+        }
+    }
+
+    public function getEmptyVinReason()
+    {
+        if ($this->getEmptyReasons() instanceof EmptyReasonMap) {
+            return $this->getEmptyReasons()->getEmptyVinReason();
+        }
+    }
+
+    public function getTransmissionType()
+    {
+        return $this->getModelDetail()->getTransmissionType();
+    }
+
+    public function getVehicleClass()
+    {
+        return $this->getModelDetail()->getVehicleClass();
+    }
+
+    public function getBodyType()
+    {
+        return $this->getModelDetail()->getBodyType();
+    }
+
+    public function getFuelType()
+    {
+        return $this->getModelDetail()->getFuelType();
     }
 }

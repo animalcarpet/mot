@@ -4,10 +4,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
-import uk.gov.dvsa.ui.pages.mot.TestCompletePage;
 
 public class ReTestSummaryPage extends Page {
 
@@ -62,7 +61,7 @@ public class ReTestSummaryPage extends Page {
     }
 
     public ReTestSummaryPage selectTestType(String testType) {
-        FormCompletionHelper.selectFromDropDownByValue(testTypePrompt, testType);
+        FormDataHelper.selectFromDropDownByValue(testTypePrompt, testType);
 
         return this;
     }

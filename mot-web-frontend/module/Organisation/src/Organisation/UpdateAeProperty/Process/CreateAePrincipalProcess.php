@@ -153,4 +153,9 @@ class CreateAePrincipalProcess extends AbstractTwoStepAeProcess implements AutoW
 
         return $this->aepName;
     }
+
+    public function getEditPageLede()
+    {
+        return null;
+    }
 }

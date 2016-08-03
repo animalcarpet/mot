@@ -3,7 +3,7 @@ package uk.gov.dvsa.ui.pages.userregistration;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
@@ -28,8 +28,8 @@ public class SecurityQuestionOnePage extends Page {
     }
 
     public SecurityQuestionTwoPage selectQuestionAndEnterAnswerExpectingSecurityQuestionTwoPage(String securityQ1selected, String answer){
-        FormCompletionHelper.selectFromDropDownByValue(securityQDropDown, securityQ1selected);
-        FormCompletionHelper.enterText(securityQAnswer, answer);
+        FormDataHelper.selectFromDropDownByValue(securityQDropDown, securityQ1selected);
+        FormDataHelper.enterText(securityQAnswer, answer);
         continueToNextPage.click();
         return new SecurityQuestionTwoPage(driver);
     }
@@ -41,8 +41,8 @@ public class SecurityQuestionOnePage extends Page {
 
     public SecurityQuestionOnePage chooseQuestionAndAnswer()
     {
-        FormCompletionHelper.selectFromDropDownByValue(securityQDropDown, "1");
-        FormCompletionHelper.enterText(securityQAnswer, "Answer");
+        FormDataHelper.selectFromDropDownByValue(securityQDropDown, "1");
+        FormDataHelper.enterText(securityQAnswer, "Answer");
         return this;
     }
 }

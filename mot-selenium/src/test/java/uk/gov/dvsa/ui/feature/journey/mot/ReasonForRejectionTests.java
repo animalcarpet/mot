@@ -13,7 +13,7 @@ public class ReasonForRejectionTests extends DslTest {
 
     private static final String PROFANITY_MESSAGE = "Profanity has been detected in the description of RFR";
 
-    @Test(groups = {"Regression", "VM-1581", "VM-1578", "VM-1579", "short-vehicle", "VM-1741"})
+    @Test(testName = "OldRFRTest", groups = {"Regression", "VM-1581", "VM-1578", "VM-1579", "short-vehicle", "VM-1741"})
     public void rejectWithProfanityAddedToDescription() throws IOException, URISyntaxException {
         //Given I start an mot test
         motUI.normalTest.startTest();

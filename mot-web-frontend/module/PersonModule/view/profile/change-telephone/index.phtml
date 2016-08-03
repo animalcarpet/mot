@@ -21,7 +21,8 @@ echo $this->partial(
                 'errorMessage' => isset($errors['personTelephone']) ? $errors['personTelephone'] : null,
                 'label'        => 'Telephone number',
                 'value'        => $phoneNumber,
-                'type'         => 'text'
+                'type'         => 'text',
+                'autoCompleteOff' => true,
             ]);
         ?>
     </fieldset>

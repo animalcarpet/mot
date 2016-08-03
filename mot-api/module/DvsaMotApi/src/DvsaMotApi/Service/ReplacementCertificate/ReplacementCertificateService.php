@@ -66,11 +66,6 @@ class ReplacementCertificateService implements TransactionAwareInterface
     private $certificateReplacementRepository;
 
     /**
-     * @var CertificateTypeRepository $certificateTypeRepository
-     */
-    private $certificateTypeRepository;
-
-    /**
      * @var MotTestRepository $motTestRepository
      */
     private $motTestRepository;

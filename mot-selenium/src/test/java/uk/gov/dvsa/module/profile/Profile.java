@@ -27,6 +27,7 @@ public class Profile {
     private ChangeAddress changeAddress;
     private ChangeQualificationDetails changeQualificationDetails;
     private ChangeTelephone changeTelephone;
+    private AnnualAssessmentCertificates annualAssessmentCertificates;
 
     public Profile(final PageNavigator pageNavigator) {
         this.pageNavigator = pageNavigator;
@@ -180,5 +181,13 @@ public class Profile {
             return this.changeTelephone = new ChangeTelephone(pageNavigator, page());
         }
         return changeTelephone;
+    }
+
+    public AnnualAssessmentCertificates annualAssessmentCertificates() {
+        if(annualAssessmentCertificates == null) {
+            return this.annualAssessmentCertificates = new AnnualAssessmentCertificates(page());
+        }
+
+        return annualAssessmentCertificates;
     }
 }

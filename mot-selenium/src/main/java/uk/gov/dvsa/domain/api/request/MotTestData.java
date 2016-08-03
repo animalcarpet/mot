@@ -1,6 +1,5 @@
 package uk.gov.dvsa.domain.api.request;
 
-import com.dvsa.mot.selenium.datasource.ReasonForRejection;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.joda.time.DateTime;
@@ -8,6 +7,7 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
 import uk.gov.dvsa.domain.model.mot.TestOutcome;
+import uk.gov.dvsa.helper.ReasonForRejection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +28,13 @@ import java.util.List;
             this(outcome, mileage, issuedDate, issuedDate,
                     issuedDate.plusMinutes((1)),
                     issuedDate.plus(Period.years(1).minusDays(1)));
+        }
+
+
+        public MotTestData(TestOutcome outcome, int mileage, DateTime issuedDate,
+                           DateTime startDate, DateTime completedDate, DateTime expiryDate, List<ReasonForRejection> rfrList) {
+            this(outcome, mileage, issuedDate, startDate, completedDate, expiryDate);
+            rfrs = rfrList;
         }
 
         public MotTestData(TestOutcome outcome, int mileage, DateTime issuedDate,

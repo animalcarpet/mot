@@ -135,4 +135,9 @@ class UpdateAeRegisteredAddressProcess extends AbstractTwoStepAeProcess implemen
             AddressPropertyForm::FIELD_ADDRESS_LINE_3 => $address->getAddressLine3(),
         ];
     }
+
+    public function getEditPageLede()
+    {
+        return null;
+    }
 }

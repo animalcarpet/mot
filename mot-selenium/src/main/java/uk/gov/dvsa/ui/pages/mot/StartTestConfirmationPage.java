@@ -5,10 +5,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
+import uk.gov.dvsa.domain.model.vehicle.Colour;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
@@ -51,15 +52,16 @@ public class StartTestConfirmationPage extends Page {
         return MotPageFactory.newPage(driver, clazz);
     }
 
-    public TestResultsEntryPage clickStartMotTestWhenConductingContingencyTest() {
+    public <T extends Page> T clickStartMotTestWhenConductingContingencyTest(Class<T> clazz) {
         confirmButton.click();
-
-        return new TestResultsEntryPage(driver);
+        return MotPageFactory.newPage(driver, clazz);
     }
 
     public VehicleDetailsChangedPage changeVehicleDetailAndSubmit(Vehicle vehicle) {
         Select s = new Select(this.primaryColor);
-        s.selectByValue(vehicle.getSecondaryColour());
+        s.selectByValue(
+                Colour.findByName(vehicle.getColourSecondary()).getId().toString()
+        );
         confirmButton.click();
         return new VehicleDetailsChangedPage(driver);
     }
@@ -74,7 +76,7 @@ public class StartTestConfirmationPage extends Page {
     }
 
     public StartTestConfirmationPage selectClass(String classNumber){
-        FormCompletionHelper.selectFromDropDownByVisibleText(classDropdown, classNumber);
+        FormDataHelper.selectFromDropDownByVisibleText(classDropdown, classNumber);
         return this;
     }
 

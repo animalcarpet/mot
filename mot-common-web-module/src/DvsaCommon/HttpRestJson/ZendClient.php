@@ -58,13 +58,14 @@ class ZendClient implements Client
 
     /**
      * @param \Zend\Http\Client $httpClient
-     * @param                   $apiUrl
-     * @param null              $token
-     * @param \Zend\Log\Logger  $logger
-     * @param null              $requestUuid
+     * @param $apiUrl
+     * @param null $token
+     * @param \Zend\Log\Logger $logger
+     * @param null $requestUuid
+     * @param int $apiTimeout
      */
     public function __construct(HttpClient $httpClient, $apiUrl, $token = null, Logger $logger = null,
-                                $requestUuid = null)
+                                $requestUuid = null, $apiTimeout = self::DEFAULT_API_TIMEOUT)
     {
         $this->httpClient  = $httpClient;
         $this->apiUrl      = $apiUrl;
@@ -72,7 +73,7 @@ class ZendClient implements Client
         $this->token       = $token;
         $this->requestUuid = $requestUuid;
 
-        $this->setApiTimeout();
+        $this->setApiTimeout($apiTimeout);
     }
 
     /**

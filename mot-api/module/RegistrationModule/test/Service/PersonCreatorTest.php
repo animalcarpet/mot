@@ -7,6 +7,7 @@
 
 namespace Dvsa\Mot\Api\RegistrationModuleTest\Service;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Mot\Api\RegistrationModule\Service\PersonCreator;
 use Dvsa\Mot\Api\RegistrationModule\Service\PersonSecurityAnswerRecorder;
@@ -63,6 +64,11 @@ class PersonCreatorTest extends \PHPUnit_Framework_TestCase
                     return false;
                 }
             );
+
+        $mockConnection = XMock::of(Connection::class);
+        $mockEntityManager->expects($this->any())
+            ->method('getConnection')
+            ->willReturn($mockConnection);
 
         /** @var PersonSecurityAnswerRecorder $mockPersonSecurityAnswerRecorder */
         $mockPersonSecurityAnswerRecorder = XMock::of(PersonSecurityAnswerRecorder::class);

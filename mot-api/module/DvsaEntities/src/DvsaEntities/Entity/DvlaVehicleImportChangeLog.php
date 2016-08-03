@@ -55,7 +55,7 @@ class DvlaVehicleImportChangeLog extends Entity
     }
 
     /**
-     * @param \DvsaEntities\Entity\Colour $secondaryColour
+     * @param string $secondaryColour
      *
      * @return $this
      */
@@ -67,7 +67,7 @@ class DvlaVehicleImportChangeLog extends Entity
     }
 
     /**
-     * @return \DvsaEntities\Entity\Colour
+     * @return string
      */
     public function getSecondaryColour()
     {
@@ -145,33 +145,30 @@ class DvlaVehicleImportChangeLog extends Entity
     private $tester;
 
     /**
-     * @var \DvsaEntities\Entity\Vehicle
+     * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="DvsaEntities\Entity\Vehicle")
-     * @ORM\JoinColumns({
-     *  @ORM\JoinColumn(name="vehicle_id", referencedColumnName="id")
-     * })
+     * @ORM\Column(name="vehicle_id", type="integer", nullable=false)
      */
-    private $vehicle;
+    private $vehicleId;
 
     /**
-     * @param \DvsaEntities\Entity\Vehicle $vehicle
+     * @param int $vehicleId
      *
      * @return $this
      */
-    public function setVehicle($vehicle)
+    public function setVehicleId($vehicleId)
     {
-        $this->vehicle = $vehicle;
+        $this->vehicleId = $vehicleId;
 
         return $this;
     }
 
     /**
-     * @return \DvsaEntities\Entity\Vehicle
+     * @return int
      */
-    public function getVehicle()
+    public function getVehicleId()
     {
-        return $this->vehicle;
+        return $this->vehicleId;
     }
 
     /**

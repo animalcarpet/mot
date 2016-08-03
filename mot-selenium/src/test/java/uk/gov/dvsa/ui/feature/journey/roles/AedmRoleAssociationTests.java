@@ -29,7 +29,7 @@ public class AedmRoleAssociationTests extends DslTest {
         vtsNumber = String.valueOf(testSite.getId());
     }
 
-    @Test (groups = { "BVT", "Regression"}, description = "VM-9857 Journey 4 - AEDM Associates Tester or other Role")
+    @Test (groups = {"BVT"}, description = "VM-9857 Journey 4 - AEDM Associates Tester or other Role")
     public void aedmAssociatesRoleToTesterAndTesterAccepts() throws IOException{
 
         //Given I'm on VTS Choose A Role page
@@ -53,7 +53,7 @@ public class AedmRoleAssociationTests extends DslTest {
         assertThat(notificationPage.isNotificationStatusAccepted(), is(true));
     }
 
-    @Test (groups = { "BVT", "Regression" }, description = "VM-9857 Journey 4 - AEDM Associates Tester or other Role")
+    @Test (groups = {"BVT"}, description = "VM-9857 Journey 4 - AEDM Associates Tester or other Role")
     public void aedmAssociatesRoleToTesterAndTesterRejects() throws IOException{
 
         //Given I'm on VTS Choose A Role page

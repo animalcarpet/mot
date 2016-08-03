@@ -21,7 +21,7 @@ public class CpmsFinancialReportsTests extends DslTest {
         financeUser = userData.createAFinanceUser("Finance", false);
     }
     
-    @Test (groups = {"CPMS"}, description = "SPMS-272 User requests Slot Balance report")
+    @Test (groups = {"Regression"}, description = "SPMS-272 User requests Slot Balance report")
     public void userGeneratesReportSuccessfully() throws Exception {
         
         //Given I am logged as a Finance user and I am on Generate report page

@@ -54,7 +54,7 @@ class ReplacementCertificateServiceFactoryTest extends AbstractServiceTestCase
         $this->serviceLocator->setService('ReplacementCertificateDraftUpdater', $replacementCertificateDraftUpdater);
         $this->serviceLocator->setService('ReplacementCertificateUpdater', $replacementCertificateUpdater);
         $this->serviceLocator->setService('CertificateReplacementRepository', $certificateReplacementRepository);
-        $this->serviceLocator->setService('MotTestRepository', $motTestRepository);
+        $this->serviceLocator->setService(MotTestRepository::class, $motTestRepository);
         $this->serviceLocator->setService(OtpService::class, $otpService);
         $this->serviceLocator->setService(CertificateCreationService::class, $certificateCreationService);
     }

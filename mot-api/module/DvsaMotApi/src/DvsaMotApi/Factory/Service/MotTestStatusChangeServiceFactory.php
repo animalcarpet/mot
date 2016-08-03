@@ -7,6 +7,7 @@ use DvsaAuthentication\Service\OtpService;
 use DvsaEntities\Entity\EnforcementFullPartialRetest;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaEntities\Entity\MotTestReasonForCancel;
+use DvsaEntities\Repository\MotTestRepository;
 use DvsaMotApi\Service\MotTestDateHelperService;
 use DvsaMotApi\Service\MotTestStatusChangeService;
 use DvsaMotApi\Service\TestingOutsideOpeningHoursNotificationService;
@@ -38,7 +39,7 @@ class MotTestStatusChangeServiceFactory implements FactoryInterface
             $serviceLocator->get(OtpService::class),
             $serviceLocator->get(OrganisationService::class),
             $serviceLocator->get('MotTestMapper'),
-            $serviceLocator->get('MotTestRepository'),
+            $serviceLocator->get(MotTestRepository::class),
             $entityManager->getRepository(MotTestReasonForCancel::class),
             $entityManager->getRepository(EnforcementFullPartialRetest::class),
             $serviceLocator->get(TestingOutsideOpeningHoursNotificationService::class),

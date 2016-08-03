@@ -5,20 +5,22 @@ namespace DvsaMotTest\NewVehicle\Controller;
 use Application\Service\ContingencySessionManager;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\HttpRestJson\Exception\OtpApplicationException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommon\Model\FuelTypeAndCylinderCapacity;
-use DvsaCommon\UrlBuilder\MotTestUrlBuilderWeb;
+use DvsaMotTest\NewVehicle\Form\CreateVehicleStepThreeForm;
 use DvsaMotTest\NewVehicle\Form\VehicleWizard\CreateVehicleFormWizard;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use DvsaMotTest\NewVehicle\Form\VehicleWizard\SummaryStep;
 use DvsaMotTest\NewVehicle\Form\VehicleWizard\VehicleIdentificationStep;
 use DvsaMotTest\NewVehicle\Form\VehicleWizard\VehicleSpecificationStep;
+use GuzzleHttp\Exception\ClientException;
 use Zend\Form\Element;
 use Zend\Form\Element\DateSelect;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
 use Zend\Session\Container;
+use Zend\Validator\NotEmpty;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -27,6 +29,12 @@ use Zend\View\Model\ViewModel;
 class CreateVehicleController extends AbstractDvsaMotTestController
 {
     const ROUTE = 'vehicle-step';
+
+    const STEP_ACTION_NAME_ONE = 'add-step-one';
+    const STEP_ACTION_NAME_TWO = 'add-step-two';
+    const STEP_ACTION_NAME_CONFIRM = 'confirm';
+
+    const FIELD_NAME_VRM = 'reg';
 
     /** @var MotAuthorisationServiceInterface */
     private $authorisationService;
@@ -63,11 +71,11 @@ class CreateVehicleController extends AbstractDvsaMotTestController
         return $this->redirect()->toRoute(
             self::ROUTE,
             [
-                'action' => 'add-step-one'
+                'action' => self::STEP_ACTION_NAME_ONE
             ],
             [
                 'query' => [
-                    'reg' => $this->request->getQuery('reg')
+                    self::FIELD_NAME_VRM => $this->request->getQuery(self::FIELD_NAME_VRM)
                 ]
             ]
         );
@@ -88,15 +96,13 @@ class CreateVehicleController extends AbstractDvsaMotTestController
             $form->setData($this->request->getPost());
             if ($form->isValid()) {
                 $step->saveForm($form);
-
-                return $this->redirect()->toRoute(self::ROUTE, ['action' => 'add-step-two']);
+                $this->redirectToStepTwoAction();
             }
-
         } else {
-            if ($this->params()->fromQuery('reg')) {
+            if ($this->params()->fromQuery(self::FIELD_NAME_VRM)) {
                 $form->populateValues($form->setData([
                     'vehicleForm' =>
-                        ['registrationNumber' => $this->params()->fromQuery('reg')]
+                        ['registrationNumber' => $this->params()->fromQuery(self::FIELD_NAME_VRM)]
                 ]));
             }
             $form->populateValues($step->getData());
@@ -108,30 +114,27 @@ class CreateVehicleController extends AbstractDvsaMotTestController
 
     public function addStepTwoAction()
     {
-        if (!$this->wizard->isStepValid(VehicleIdentificationStep::getName())) {
-            return $this->redirect()->toRoute(self::ROUTE);
-        }
+        $this->redirectToSuitableStepsIfRequired(self::STEP_ACTION_NAME_TWO);
 
         $step = $this->wizard->getStep(VehicleSpecificationStep::getName());
         $form = $step->createForm();
 
-        if ($this->request->isPost() && $this->request->getPost('back')) {
-            $form->setData($this->request->getPost());
-            $step->saveForm($form);
-
-            return $this->redirect()->toRoute(self::ROUTE, ['action' => 'add-step-one']);
-        } elseif ($this->request->isPost()) {
-            $form->setData($this->request->getPost());
-            if ($form->isValid()) {
+        if ($this->request->isPost()) {
+            if ($this->IsSubmittedBackButton()) {
+                $form->setData($this->request->getPost());
                 $step->saveForm($form);
-
-                return $this->redirect()->toRoute(self::ROUTE, ['action' => 'confirm']);
+                $this->redirectToStepOneAction();
+            } else {
+                $form->setData($this->request->getPost());
+                if ($form->isValid()) {
+                    $step->saveForm($form);
+                    return $this->redirectToConfirmAction();
+                }
             }
-        } else {
-            $form->populateValues($step->getData());
         }
 
-        $cylinderCapacityRequired = FuelTypeAndCylinderCapacity::getAllFuelTypesWithCompulsoryCylinderCapacity(true);
+        $form->populateValues($step->getData());
+        $cylinderCapacityRequired = FuelTypeAndCylinderCapacity::getAllFuelTypeIdsWithCompulsoryCylinderCapacityAsString();
 
         return (new ViewModel(
             [
@@ -143,68 +146,147 @@ class CreateVehicleController extends AbstractDvsaMotTestController
 
     public function confirmAction()
     {
-        if (!$this->wizard->isStepValid(VehicleIdentificationStep::getName())) {
-            return $this->redirect()->toRoute(self::ROUTE, ['action' => 'add-step-one']);
-        } elseif (!$this->wizard->isStepValid(VehicleSpecificationStep::getName())) {
-            return $this->redirect()->toRoute(self::ROUTE, ['action' => 'add-step-two']);
-        }
+        $this->redirectToSuitableStepsIfRequired(self::STEP_ACTION_NAME_CONFIRM);
+
+        $step = $this->wizard->getStep(SummaryStep::getName());
 
         $otpErrorData = [];
         $otpErrorMessage = null;
         $otpShortMessage = null;
-        $step = $this->wizard->getStep(SummaryStep::getName());
 
-        if ($this->request->isPost() && $this->request->getPost('back')) {
-            return $this->redirect()->toRoute(self::ROUTE, ['action' => 'add-step-two']);
-        } elseif ($this->request->isPost()) {
-            try {
+        if ($this->request->isPost()) {
+
+            if ($this->IsSubmittedBackButton()) {
+
+                $this->redirectToStepTwoAction();
+
+            } else {
+
                 $form = $step->createForm();
                 $form->setData($this->request->getPost());
-                $result = $step->saveForm($form);
-                $motTestNumber = $result['data']['startedMotTestNumber'];
 
-                $this->wizard->clear();
+                $canCreateVehicleWithoutOtp = $this->authorisationService->isGranted(PermissionInSystem::MOT_TEST_WITHOUT_OTP);
 
-                if($this->contingencySessionManager->isMotContingency()) {
-                    return $this->redirect()->toRoute("mot-test", ["motTestNumber" => $motTestNumber]);
+                if ($canCreateVehicleWithoutOtp || $form->isValid()) {
+                    try {
+                        $result = $step->saveForm($form);
+                        $isMotContingency = $result['isMotContingency'];
+                        $motTestNumber = $result['startedMotTestNumber'];
+                        $this->wizard->clear();
+                        if ($isMotContingency) {
+                            return $this->redirect()->toRoute("mot-test", ["motTestNumber" => $motTestNumber]);
+                        } else {
+                            return $this->redirect()->toRoute("mot-test/options", ["motTestNumber" => $motTestNumber]);
+                        }
+                    } catch (ValidationException $ve) {
+                        $this->flashMessenger()->addMessage($ve->getDisplayMessages());
+                    } catch (ClientException $ce) {
+                        if ($ce->getCode() === Response::STATUS_CODE_403) {
+                            $this->addErrorMessage(CreateVehicleStepThreeForm::VALIDATION_MESSAGE_INCORRECT_OTP);
+                            $otpErrorMessage = CreateVehicleStepThreeForm::VALIDATION_MESSAGE_INCORRECT_OTP;
+                        } else {
+                            throw $ce;
+                        }
+                    }
                 } else {
-                    return $this->redirect()->toRoute("mot-test/options", ["motTestNumber" => $motTestNumber]);
+                    $formMessages= $form->getInputFilter()->getMessages();
+                    $emptyOtpValidationMessage =
+                        $formMessages[CreateVehicleStepThreeForm::FIELD_NAME_OTP][NotEmpty::IS_EMPTY];
+
+                    $this->flashMessenger()->addMessage(
+                        $emptyOtpValidationMessage
+                    );
+
+                    $otpErrorMessage = $emptyOtpValidationMessage;
+                    $this->addErrorMessage($emptyOtpValidationMessage);
                 }
 
-            } catch (OtpApplicationException $e) {
-                $errorData = $e->getErrorData();
-
-                if (isset($errorData['message'])) {
-                    $message = $errorData['message'];
-                    $this->addErrorMessages($message);
-                    $otpErrorMessage = $message;
-                }
-
-                if (isset($errorData['shortMessage'])) {
-                    $otpShortMessage = $errorData['shortMessage'];
-                }
-            } catch (ValidationException $ve) {
-                $this->flashMessenger()->addMessage($ve->getDisplayMessages());
             }
         }
 
         $stepData = $step->getData();
-        $canCreateVehicleWithoutOtp = $this->authorisationService->isGranted(PermissionInSystem::MOT_TEST_WITHOUT_OTP);
 
-        return (new ViewModel(
-            [
-                'sectionOneData' => $stepData['sectionOneData'],
-                'sectionTwoData' => $stepData['sectionTwoData'],
-                'otpErrorData' => $otpErrorData,
-                'canTestWithoutOtp' => $canCreateVehicleWithoutOtp,
-                'otpErrorMessage' => $otpErrorMessage,
-                'otpErrorShortMessage' => $otpShortMessage,
-            ]
-        ))->setTemplate('dvsa-mot-test/create-vehicle/confirm');
+        return (new ViewModel([
+            'sectionOneData' => $stepData['sectionOneData'],
+            'sectionTwoData' => $stepData['sectionTwoData'],
+            'otpErrorData' => $otpErrorData,
+            'canTestWithoutOtp' => $canCreateVehicleWithoutOtp,
+            'otpErrorMessage' => $otpErrorMessage,
+            'otpErrorShortMessage' => $otpShortMessage,
+        ]))->setTemplate('dvsa-mot-test/create-vehicle/confirm');
     }
 
     public function completeAction()
     {
         return (new ViewModel([]))->setTemplate('dvsa-mot-test/create-vehicle/complete');
+    }
+
+    /**
+     * This will handle undesirable attempts to get to an step without satisfying its previous step(s)
+     *
+     * @param string $fromStep the requested step
+     */
+    private function redirectToSuitableStepsIfRequired($fromStep)
+    {
+        $isStepOneValid = $this->wizard->isStepValid(VehicleIdentificationStep::getName());
+        $isStepTwoValid = $this->wizard->isStepValid(VehicleSpecificationStep::getName());
+
+        switch ($fromStep) {
+            case self::STEP_ACTION_NAME_TWO :
+                if (!$isStepOneValid) {
+                    $this->redirectToStepOneAction();
+                }
+                break;
+            case self::STEP_ACTION_NAME_CONFIRM :
+                if (!$isStepOneValid) {
+                    $this->redirectToStepOneAction();
+
+                } elseif (!$isStepTwoValid) {
+                    $this->redirectToStepTwoAction();
+                }
+                break;
+        }
+    }
+
+    /**
+     * Redirect to the given action in this controller
+     * @param $actionName
+     * @return \Zend\Http\Response
+     */
+    private function redirectToAction($actionName)
+    {
+        return $this->redirect()->toRoute(self::ROUTE, ['action' => $actionName]);
+    }
+
+    /**
+     * @return \Zend\Http\Response
+     */
+    private function redirectToStepOneAction()
+    {
+        return $this->redirectToAction(self::STEP_ACTION_NAME_ONE);
+    }
+
+    /**
+     * @return \Zend\Http\Response
+     */
+    private function redirectToStepTwoAction()
+    {
+        return $this->redirectToAction(self::STEP_ACTION_NAME_TWO);
+    }
+
+    /**
+     * @return \Zend\Http\Response
+     */
+    private function redirectToConfirmAction()
+    {
+        return $this->redirectToAction(self::STEP_ACTION_NAME_CONFIRM);
+    }
+
+    /**
+     * @return bool
+     */
+    private function IsSubmittedBackButton()
+    {
+        return $this->request->isPost() && $this->request->getPost('back');
     }
 }

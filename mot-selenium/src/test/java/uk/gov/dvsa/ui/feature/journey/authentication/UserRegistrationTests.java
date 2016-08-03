@@ -18,7 +18,7 @@ public class UserRegistrationTests extends DslTest {
     private final String email = ContactDetailsHelper.getEmail();
     private final String telephone = ContactDetailsHelper.getPhoneNumber();
 
-    @Test(groups = {"BVT", "Regression"}, description = "VM-11472")
+    @Test(groups = {"BVT"}, description = "VM-11472")
     public void createUserAccountSuccessfully() throws IOException {
 
         //Given I am on the Create Account Page
@@ -31,7 +31,7 @@ public class UserRegistrationTests extends DslTest {
         assertThat(motUI.register.isAccountCreated(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression"}, description = "VM-11472")
+    @Test(groups = {"BVT"}, description = "VM-11472")
     public void checkForDuplicateEmail() throws IOException {
 
         //Given I am on the Create Account Page
@@ -50,7 +50,7 @@ public class UserRegistrationTests extends DslTest {
         assertThat(motUI.register.isEmailDuplicated(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression"}, description = "VM-11472")
+    @Test(groups = {"BVT"}, description = "VM-11472")
     public void checkCreateAccountLinkExists() throws IOException {
 
         //Given I am on the Home Page

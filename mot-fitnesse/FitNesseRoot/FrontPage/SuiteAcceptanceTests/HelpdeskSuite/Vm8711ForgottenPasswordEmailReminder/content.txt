@@ -1,9 +1,0 @@
-!| GenerateTestDataForOtherFitnesseTests|
-| Contact Email              |testerUserId?      |
-| sean.charles@valtech.co.uk |                   |
-|                            | $testerUserId=    |
-
-|!Vm 8711 Forgotten Password Email Reminder|
-| User ID       | Reminder Sent? | Error message ? |
-| 0             | false          | Person not found |
-| $testerUserId | true           | no-error        |

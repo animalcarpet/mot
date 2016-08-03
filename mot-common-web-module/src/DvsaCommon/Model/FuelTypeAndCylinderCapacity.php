@@ -2,7 +2,7 @@
 
 namespace DvsaCommon\Model;
 
-use DvsaCommon\Enum\FuelTypeCode;
+use DvsaCommon\Enum\FuelTypeId;
 
 class FuelTypeAndCylinderCapacity 
 {
@@ -10,33 +10,41 @@ class FuelTypeAndCylinderCapacity
      * Return a list of fuel types which Cylinder Capacity is irrelevant to them
      * @return array
      */
-    public static function getAllFuelTypesWithOptionalCylinderCapacity()
+    public static function getAllFuelTypeIdsWithOptionalCylinderCapacity()
     {
         return [
-            FuelTypeCode::ELECTRIC,
-            FuelTypeCode::FUEL_CELLS,
-            FuelTypeCode::STEAM,
+            FuelTypeId::ELECTRIC,
+            FuelTypeId::FUEL_CELLS,
+            FuelTypeId::STEAM,
         ];
     }
 
     /**
-     * Return a list of fuel types which Cylinder Capacity is required for them
+     * Return array of fuel type ids which Cylinder Capacity is required for them
      *
-     * @param bool $commaSeparated to return array (by default) or comma separated string if set to true
      * @return array
      */
-    public static function getAllFuelTypesWithCompulsoryCylinderCapacity($commaSeparated = false)
+    public static function getAllFuelTypeIdsWithCompulsoryCylinderCapacity()
     {
-        $fuelTypes = array_diff(
-            FuelTypeCode::getAll(),
-            self::getAllFuelTypesWithOptionalCylinderCapacity()
+        return array_diff(
+            FuelTypeId::getAll(),
+            self::getAllFuelTypeIdsWithOptionalCylinderCapacity()
         );
+    }
 
-        if ($commaSeparated) {
-            $fuelTypes = implode(',',$fuelTypes);
-        }
-
-        return $fuelTypes;
+    /**
+     * Return the list of fuel type ids which Cylinder Capacity is required for them in a string format
+     * (Comma separated by default)
+     *
+     * @param string $delimiter
+     * @return string
+     */
+    public static function getAllFuelTypeIdsWithCompulsoryCylinderCapacityAsString($delimiter = ',')
+    {
+        return implode(
+            $delimiter,
+            self::getAllFuelTypeIdsWithCompulsoryCylinderCapacity()
+        );
     }
 
     /**
@@ -47,7 +55,7 @@ class FuelTypeAndCylinderCapacity
      */
     public static function isCylinderCapacityOptionalForFuelType($fuelType)
     {
-        return in_array($fuelType, self::getAllFuelTypesWithOptionalCylinderCapacity(), true);
+        return in_array($fuelType, self::getAllFuelTypeIdsWithOptionalCylinderCapacity(), true);
     }
 
     /**

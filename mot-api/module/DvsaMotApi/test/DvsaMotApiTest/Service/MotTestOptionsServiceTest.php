@@ -6,6 +6,9 @@ use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommonTest\TestUtils\Auth\GrantAllAuthorisationServiceStub;
 use DvsaCommonTest\TestUtils\TestCasePermissionTrait;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaEntities\Entity\Make;
+use DvsaEntities\Entity\Model;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\Vehicle;
@@ -96,18 +99,28 @@ class MotTestOptionsServiceTest extends AbstractMotTestServiceTest
 
     private function getMockMotTestEntity()
     {
+        $make = new Make();
+        $make->setName('Ford');
+
+        $model = new Model();
+        $model->setName('Focus');
+        $model->setMake($make);
+
+        $modelDetail = new ModelDetail();
+        $modelDetail->setModel($model);
+
+        $vehicle = new Vehicle();
+        $vehicle->setId(1)
+            ->setModelDetail($modelDetail)
+            ->setRegistration('8008S');
+
         $motTestEntity = new MotTest();
 
         $motTestEntity->setId(100013)
-                      ->setStartedDate($this->motTestStartedDate)
-                      ->setVehicle(
-                          (new Vehicle())->setId(1)
-                                        ->setMakeName('Ford')
-                                        ->setFreeTextModelName('Focus')
-                                        ->setRegistration('8008S')
-                      )
-                      ->setMotTestType((new MotTestType())->setId(1)->setCode('TEST')->setIsDemo(false))
-                      ->setTester($this->tester);
+            ->setStartedDate($this->motTestStartedDate)
+            ->setVehicle($vehicle)
+            ->setMotTestType((new MotTestType())->setId(1)->setCode('TEST')->setIsDemo(false))
+            ->setTester($this->tester);
 
         return $motTestEntity;
     }
@@ -123,8 +136,8 @@ class MotTestOptionsServiceTest extends AbstractMotTestServiceTest
     private function setMotTestRepositoryResult($method, $result)
     {
         $this->motTestRepository->expects($this->any())
-                                ->method($method)
-                                ->willReturn($result);
+            ->method($method)
+            ->willReturn($result);
     }
 
     private function createAssertion()

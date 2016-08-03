@@ -21,16 +21,19 @@ class DvlaVehicleDataController extends BaseTestSupportRestfulController
     {
         $data = get_object_vars(json_decode($this->getRequest()->getContent()));
 
+        $returnVehicleDetail = (isset($data['returnVehicleDetail']) &&
+            (bool) $data['returnVehicleDetail'] == true);
+
         /** @var DvlaVehicleService $vehicleService */
         $vehicleService = $this->getServiceLocator()->get(DvlaVehicleService::class);
 
         try {
-            $vehicleId = $vehicleService->save($data);
+            $response = $vehicleService->save($data, $returnVehicleDetail);
         } catch (\Exception $e) {
             return TestDataResponseHelper::jsonError($e->getMessage());
         }
 
-        return TestDataResponseHelper::jsonOk($vehicleId);
+        return TestDataResponseHelper::jsonOk($response);
     }
 
 }

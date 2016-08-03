@@ -16,6 +16,7 @@ return [
             'checkboxBox'                         => __DIR__ . '/../view/partials/form/checkbox-box.phtml',
             'radioElement'                        => __DIR__ . '/../view/partials/form/radio-element.phtml',
             'selectElement'                       => __DIR__ . '/../view/partials/form/select-element.phtml',
+            'selectElementSelectedByDisplayedValue' => __DIR__ . '/../view/partials/form/select-element-selected-by-displayed-value.phtml',
             'selectEnumType2Element'              => __DIR__ . '/../view/partials/form/select-enum-type-2-element.phtml',
             'selectElementExtended'               => __DIR__ . '/../view/partials/form/select-element-extended.phtml',
             'submitElement'                       => __DIR__ . '/../view/partials/form/submit-element.phtml',

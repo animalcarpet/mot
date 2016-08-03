@@ -8,6 +8,7 @@ Feature: Special Notices
     When I send a new Special Notice broadcast
     Then I will see the broadcast was successful
 
+  @quarantine
   @special-notice
   Scenario Outline: Scheme User user creates new internal Special Notice
     Given I am logged in as a Scheme User
@@ -31,6 +32,7 @@ Feature: Special Notices
       | VTS, TESTER-CLASS-2       | tomorrow        | now             |
       | VTS, TESTER-CLASS-2       | tomorrow        | tomorrow        |
 
+  @quarantine
   @special-notice
   Scenario: Tester user attempts to create new Special Notice but does not have authorisation
     Given I am not logged in

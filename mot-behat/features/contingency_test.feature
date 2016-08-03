@@ -81,7 +81,8 @@ Feature: Contingency Test
     When the Tester Passes the Mot Test
     Then the MOT Test Status is "PASSED"
     And the Contingency Test is Logged
-
+  
+  @quarantine
   Scenario Outline: Tester Completes a Contingency expecting a specific response
     Given I am logged in as a Tester
     When I record a Contingency Test with <date> at <time>

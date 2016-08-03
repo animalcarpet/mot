@@ -1,7 +1,7 @@
 <?php
 namespace DvsaMotTest\Controller;
 
-use DvsaClient\MapperFactory;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Auth\Assertion\RefuseToTestAssertion;
 use DvsaCommon\Dto\Common\ReasonForRefusalDto;
 use DvsaCommon\Enum\MotTestTypeCode;
@@ -163,13 +163,13 @@ class RefuseToTestController extends AbstractDvsaMotTestController
      */
     private function getVehicle($vehicleId, $vehicleSource)
     {
-        /** @var MapperFactory $mapperFactory */
-        $mapperFactory = $this->getServiceLocator()->get(MapperFactory::class);
+        /** @var VehicleService $vehicleService */
+        $vehicleService = $this->getServiceLocator()->get(VehicleService::class);
 
         if ($vehicleSource === VehicleSearchSource::DVLA) {
-            return $mapperFactory->Vehicle->getDvlaById($vehicleId);
+            return $vehicleService->getDvlaVehicleById($vehicleId);
         } else {
-            return $mapperFactory->Vehicle->getById($vehicleId);
+            return $vehicleService->getDvsaVehicleById($vehicleId);
         }
     }
 
@@ -222,7 +222,7 @@ class RefuseToTestController extends AbstractDvsaMotTestController
                     $obfuscatedVehicleId, $noReg, $source, $testTypeCode
                 ),
                 'isDisplayRegistration' => $noReg ? false : true,
-                'vehicle'               => $this->getVehicle($vehicleId, $source),
+                'vehicle'               => $this->getVehicle((int) $vehicleId, $source),
                 'formAction'            => $this->createFormAction($source, $noReg),
             ]
         );

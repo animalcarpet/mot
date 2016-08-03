@@ -9,7 +9,6 @@ use DvsaAuthorisation\Service\AuthorisationService;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaEntities\DataConversion\FuzzySearchConverter;
 use DvsaEntities\Repository\DvlaVehicleImportChangesRepository;
 use DvsaEntities\Repository\DvlaVehicleRepository;
 use DvsaEntities\Repository\MotTestRepository;
@@ -19,6 +18,7 @@ use VehicleApi\Factory\Service\VehicleSearchServiceFactory;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use DvsaMotApi\Service\TesterService;
 use DvsaMotApi\Service\Validator\RetestEligibility\RetestEligibilityValidator;
+use Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
 
 class VehicleSearchServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,6 +39,7 @@ class VehicleSearchServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $this->mockMethod($mockServiceLocator, 'get', $this->at(3), XMock::of(VehicleCatalogService::class));
         $this->mockMethod($mockServiceLocator, 'get', $this->at(4), XMock::of(ParamObfuscator::class));
         $this->mockMethod($mockServiceLocator, 'get', $this->at(5), XMock::of(RetestEligibilityValidator::class));
+        $this->mockMethod($mockServiceLocator, 'get', $this->at(6), XMock::of(NewVehicleService::class));
 
         $this->assertInstanceOf(
             VehicleSearchService::class,

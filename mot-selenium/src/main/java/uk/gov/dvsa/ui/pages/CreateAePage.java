@@ -105,57 +105,57 @@ public class CreateAePage extends Page {
     }
 
     public CreateAePage editBusinessName(String aeBusinessName) {
-        FormCompletionHelper.enterText(businessName, aeBusinessName);
+        FormDataHelper.enterText(businessName, aeBusinessName);
         return this;
     }
 
     public CreateAePage editTradingName(String aeTradingName) {
-        FormCompletionHelper.enterText(tradingAs, aeTradingName);
+        FormDataHelper.enterText(tradingAs, aeTradingName);
         return this;
     }
 
     public CreateAePage selectBusinessType(String aeBusinessType) {
-        FormCompletionHelper.selectFromDropDownByVisibleText(companyType, aeBusinessType);
+        FormDataHelper.selectFromDropDownByVisibleText(companyType, aeBusinessType);
         return this;
     }
 
     public CreateAePage editCompanyNumber(String aeCompanyNumber) {
-        FormCompletionHelper.enterText(registeredCompanyNumber, aeCompanyNumber);
+        FormDataHelper.enterText(registeredCompanyNumber, aeCompanyNumber);
         return this;
     }
 
     public CreateAePage editBusinessAddressLine1(String addressLine1) {
-        FormCompletionHelper.enterText(regAddressLine1, addressLine1);
+        FormDataHelper.enterText(regAddressLine1, addressLine1);
         return this;
     }
 
     public CreateAePage editBusinessAddressLine2(String addressLine2) {
-        FormCompletionHelper.enterText(regAddressLine2, addressLine2);
+        FormDataHelper.enterText(regAddressLine2, addressLine2);
         return this;
     }
 
     public CreateAePage editBusinessAddressLine3(String addressLine3) {
-        FormCompletionHelper.enterText(regAddressLine3, addressLine3);
+        FormDataHelper.enterText(regAddressLine3, addressLine3);
         return this;
     }
 
     public CreateAePage editBusinessCity(String regCity) {
-        FormCompletionHelper.enterText(regAddressTown, regCity);
+        FormDataHelper.enterText(regAddressTown, regCity);
         return this;
     }
 
     public CreateAePage editBusinessPostCode(String regPostCode) {
-        FormCompletionHelper.enterText(regAddressPostCode, regPostCode);
+        FormDataHelper.enterText(regAddressPostCode, regPostCode);
         return this;
     }
 
     public CreateAePage editBusinessPhoneNumber(String phoneNumber) {
-        FormCompletionHelper.enterText(regPhoneNumber, phoneNumber);
+        FormDataHelper.enterText(regPhoneNumber, phoneNumber);
         return this;
     }
 
     public CreateAePage editBusinessEmail(String email) {
-        FormCompletionHelper.enterText(regEmail, email);
+        FormDataHelper.enterText(regEmail, email);
         return this;
     }
 
@@ -164,7 +164,7 @@ public class CreateAePage extends Page {
     }
 
     public CreateAePage editBusinessEmailConfirmation(String email) {
-        FormCompletionHelper.enterText(regEmailConfirmation, email);
+        FormDataHelper.enterText(regEmailConfirmation, email);
         return this;
     }
 
@@ -177,52 +177,52 @@ public class CreateAePage extends Page {
     }
 
     public CreateAePage selectBusinessEmailNotProvidedOption() {
-        FormCompletionHelper.selectInputBox(regEmailSupply);
+        FormDataHelper.selectInputBox(regEmailSupply);
         return this;
     }
 
     public CreateAePage selectBusinessDetailsSameAsCorrespondenceDetails(boolean value) {
         if(value){
-            FormCompletionHelper.selectInputBox(isCorrDetailsSame1);
+            FormDataHelper.selectInputBox(isCorrDetailsSame1);
             return this;
         }
 
-        FormCompletionHelper.selectInputBox(isCorrDetailsSame0);
+        FormDataHelper.selectInputBox(isCorrDetailsSame0);
         return this;
     }
 
     public CreateAePage editCorrespondenceAddressLine1(String addressLine1) {
-        FormCompletionHelper.enterText(corrAddressLine1, addressLine1);
+        FormDataHelper.enterText(corrAddressLine1, addressLine1);
         return this;
     }
 
     public CreateAePage editCorrespondenceAddressLine2(String addressLine2) {
-        FormCompletionHelper.enterText(corrAddressLine2, addressLine2);
+        FormDataHelper.enterText(corrAddressLine2, addressLine2);
         return this;
     }
 
     public CreateAePage editCorrespondenceAddressLine3(String addressLine3) {
-        FormCompletionHelper.enterText(corrAddressLine3, addressLine3);
+        FormDataHelper.enterText(corrAddressLine3, addressLine3);
         return this;
     }
 
     public CreateAePage editCorrAddressTown(String city) {
-        FormCompletionHelper.enterText(corrAddressTown, city);
+        FormDataHelper.enterText(corrAddressTown, city);
         return this;
     }
 
     public CreateAePage editCorrespondenceAddressPostCode(String postCode) {
-        FormCompletionHelper.enterText(corrAddressPostCode, postCode);
+        FormDataHelper.enterText(corrAddressPostCode, postCode);
         return this;
     }
 
     public CreateAePage editCorrespondencePhoneNumber(String phoneNumber) {
-        FormCompletionHelper.enterText(corrPhoneNumber, phoneNumber);
+        FormDataHelper.enterText(corrPhoneNumber, phoneNumber);
         return this;
     }
 
     public CreateAePage editCorrespondenceEmail(String email) {
-        FormCompletionHelper.enterText(corrEmail, email);
+        FormDataHelper.enterText(corrEmail, email);
         return this;
     }
 
@@ -231,7 +231,7 @@ public class CreateAePage extends Page {
     }
 
     public CreateAePage editCorrespondenceEmailConfirmation(String email) {
-        FormCompletionHelper.enterText(corrEmailConfirmation, email);
+        FormDataHelper.enterText(corrEmailConfirmation, email);
         return this;
     }
 
@@ -244,7 +244,7 @@ public class CreateAePage extends Page {
     }
 
     public CreateAePage selectCorrespondenceEmailNotProvided() {
-        FormCompletionHelper.selectInputBox(corrEmailSupply);
+        FormDataHelper.selectInputBox(corrEmailSupply);
         return this;
     }
 
@@ -287,7 +287,7 @@ public class CreateAePage extends Page {
     }
 
     public CreateAePage selectAreaOffice(String areaOfficeValue){
-        FormCompletionHelper.selectFromDropDownByValue(DVSAareaOffice, areaOfficeValue);
+        FormDataHelper.selectFromDropDownByValue(DVSAareaOffice, areaOfficeValue);
         return this;
     }
 

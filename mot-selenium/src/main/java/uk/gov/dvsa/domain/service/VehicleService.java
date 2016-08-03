@@ -1,8 +1,8 @@
 package uk.gov.dvsa.domain.service;
 
 import com.jayway.restassured.response.Response;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.joda.time.DateTime;
+
+import uk.gov.dvsa.domain.api.client.MotClient;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.vehicle.*;
 import uk.gov.dvsa.framework.config.webdriver.WebDriverConfigurator;
@@ -12,111 +12,116 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class VehicleService extends Service {
-    private static final String CREATE_DVSA_VEHICLE_PATH = "/testsupport/vehicle/create";
+    private static final String CREATE_DVSA_VEHICLE_PATH = "/vehicles/";
     private static final String CREATE_DVLA_VEHICLE_PATH = "/testsupport/dvla-vehicle/create";
-    private static final String oneTimePassword = "123456";
+
     private AuthService authService = new AuthService();
 
     protected VehicleService() {
-        super(WebDriverConfigurator.testSupportUrl());
+        super(WebDriverConfigurator.vehicleServiceUrl());
     }
 
-    @Deprecated
-    protected Vehicle createVehicle(User user) throws IOException {
-        Map<String, String> vehicleDataMap = prepareDvsaPayload(VehicleClass.four, null);
-        return createVehicle(vehicleDataMap, user, CREATE_DVSA_VEHICLE_PATH);
+    protected DvlaVehicle createDvlaVehicle(
+            User user,
+            String registration,
+            String vin,
+            String make_code,
+            String model_code
+    ) throws IOException {
+
+        Map<String, String> dvlaVehicleDataMap = new HashMap<>();
+        dvlaVehicleDataMap.put("registration", registration);
+        dvlaVehicleDataMap.put("vin", vin);
+        dvlaVehicleDataMap.put("make_code", make_code);
+        dvlaVehicleDataMap.put("model_code", model_code);
+        dvlaVehicleDataMap.put("returnVehicleDetail", "true");
+
+        String vehicleRequest = jsonHandler.convertToString(dvlaVehicleDataMap);
+
+        MotClient motClient = new MotClient(WebDriverConfigurator.testSupportUrl());
+        Response response = motClient.createVehicle(
+                vehicleRequest, CREATE_DVLA_VEHICLE_PATH, authService.createSessionTokenForUser(user));
+
+        return ServiceResponse.hydrateResponse(response, "data", DvlaVehicle.class);
     }
 
-    protected Vehicle createVehicle() throws IOException {
-        Map<String, String> vehicleDataMap = prepareDvsaPayload(VehicleClass.four, null);
-        return createVehicle(vehicleDataMap, null, CREATE_DVSA_VEHICLE_PATH);
-    }
-
-    @Deprecated
-    protected Vehicle createVehicle(Integer vehicleWeight, User user) throws IOException {
-        Map<String, String> vehicleDataMap = prepareDvsaPayload(VehicleClass.four, vehicleWeight);
-        return createVehicle(vehicleDataMap, user, CREATE_DVSA_VEHICLE_PATH);
-    }
-
-    protected Vehicle createVehicle(Integer vehicleWeight) throws IOException {
-        Map<String, String> vehicleDataMap = prepareDvsaPayload(VehicleClass.four, vehicleWeight);
-        return createVehicle(vehicleDataMap, null, CREATE_DVSA_VEHICLE_PATH);
-    }
-
-    @Deprecated
-    protected Vehicle createDvlaVehicle(User user) throws IOException {
-        Map<String, String> vehicleDataMap = prepareDvlaPayload();
-        return createVehicle(vehicleDataMap, user, CREATE_DVLA_VEHICLE_PATH);
-    }
-
-    protected Vehicle createDvlaVehicle() throws IOException {
-        Map<String, String> vehicleDataMap = prepareDvlaPayload();
-        return createVehicle(vehicleDataMap, null, CREATE_DVLA_VEHICLE_PATH);
-    }
-
-    protected Vehicle createVehicle(Map<String, String> vehicleDataMap, User user, String path) throws IOException {
+    protected Vehicle createVehicle(
+            User user,
+            String oneTimePasswordPin,
+            String colourId,
+            String countryOfRegistrationId,
+            String cylinderCapacity,
+            String firstUsedDate,
+            String fuelTypeId,
+            String makeId,
+            String modelId,
+            String registration,
+            String secondaryColourId,
+            String vin,
+            String vehicleClassId,
+            String transmissionTypeId
+    ) throws IOException {
+        Map<String, Map<String, String>> vehicleDataMap = prepareDvsaVehiclePayloadMap(
+                oneTimePasswordPin,
+                colourId,
+                countryOfRegistrationId,
+                cylinderCapacity,
+                firstUsedDate,
+                fuelTypeId,
+                makeId,
+                modelId,
+                registration,
+                secondaryColourId,
+                vin,
+                vehicleClassId,
+                transmissionTypeId
+        );
 
         String vehicleRequest = jsonHandler.convertToString(vehicleDataMap);
 
-        Response response = postRequest(user, vehicleRequest, path);
+        Response response = motClient.createVehicle(
+                vehicleRequest, CREATE_DVSA_VEHICLE_PATH, authService.createSessionTokenForUser(user));
 
-        return new Vehicle(vehicleDataMap, ServiceResponse.createResponse(response, String.class));
+        return ServiceResponse.hydrateResponse(response, "", Vehicle.class);
     }
 
-    private Map<String, String> prepareDvsaPayload(VehicleClass vehicleClass, Integer vehicleWeight) {
+    private Map<String, Map<String, String>> prepareDvsaVehiclePayloadMap(
+            String oneTimePasswordPin,
+            String colourId,
+            String countryOfRegistrationId,
+            String cylinderCapacity,
+            String firstUsedDate,
+            String fuelTypeId,
+            String makeId,
+            String modelId,
+            String registration,
+            String secondaryColourId,
+            String vin,
+            String vehicleClassId,
+            String transmissionTypeId
+    ) throws IOException {
+
         Map<String, String> vehicleDataMap = new HashMap<>();
-        VehicleDetails vehicleDetails = VehicleDetails.MercedesBenz_300D;
+        vehicleDataMap.put("colourId", colourId);
+        vehicleDataMap.put("countryOfRegistrationId", countryOfRegistrationId);
+        vehicleDataMap.put("cylinderCapacity", cylinderCapacity);
+        vehicleDataMap.put("firstUsedDate", firstUsedDate);
+        vehicleDataMap.put("fuelTypeId", fuelTypeId);
+        vehicleDataMap.put("makeId", makeId);
+        vehicleDataMap.put("modelId", modelId);
+        vehicleDataMap.put("registration", registration);
+        vehicleDataMap.put("secondaryColourId", secondaryColourId);
+        vehicleDataMap.put("vin", vin);
+        vehicleDataMap.put("vehicleClassId", vehicleClassId);
+        vehicleDataMap.put("transmissionTypeId", transmissionTypeId);
 
-        vehicleDataMap.put("registrationNumber", generateCarRegistration());
-        vehicleDataMap.put("vin", getRandomVin());
-        vehicleDataMap.put("make", vehicleDetails.getId());
-        vehicleDataMap.put("makeOther", "");
-        vehicleDataMap.put("makeName", vehicleDetails.getMake());
-        vehicleDataMap.put("model", vehicleDetails.getModelId());
-        vehicleDataMap.put("modelName", vehicleDetails.getMakeId());
-        vehicleDataMap.put("modelOther", "");
-        vehicleDataMap.put("colour", Colour.Black.getId());
-        vehicleDataMap.put("secondaryColour", Colour.Yellow.getId());
-        vehicleDataMap.put("dateOfFirstUse", getDateMinusYears(5));
-        vehicleDataMap.put("dateOfManufacture", getDateMinusYears(5));
-        vehicleDataMap.put("firstRegistrationDate",getDateMinusYears(5));
-        vehicleDataMap.put("newAtFirstReg", Integer.toString(0));
-        vehicleDataMap.put("fuelType", FuelTypes.Petrol.getId());
-        vehicleDataMap.put("testClass", vehicleClass.getId());
-        vehicleDataMap.put("countryOfRegistration",
-                CountryOfRegistration.Great_Britain.getRegistrationCode());
-        vehicleDataMap.put("cylinderCapacity", Integer.toString(1700));
-        vehicleDataMap.put("transmissionType", TransmissionType.Manual.getCode());
-        vehicleDataMap.put("bodyType", BodyType.Hatchback.getCode());
-        vehicleDataMap.put("oneTimePassword", oneTimePassword);
-        vehicleDataMap.put("returnOriginalId", String.valueOf(true));
-        vehicleDataMap.put("weight", null == vehicleWeight ? null : Integer.toString(vehicleWeight));
+        Map<String, String> oneTimePasswordPinMap = new HashMap<>();
+        oneTimePasswordPinMap.put("pin", oneTimePasswordPin);
 
-        return vehicleDataMap;
-    }
+        Map<String, Map<String, String>> payloadMap = new HashMap<>();
+        payloadMap.put("vehicle", vehicleDataMap);
+        payloadMap.put("oneTimePassword", oneTimePasswordPinMap);
 
-    private Map<String, String> prepareDvlaPayload() {
-        Map<String, String> vehicleDataMap = new HashMap<>();
-
-        vehicleDataMap.put("registration", generateCarRegistration());
-        vehicleDataMap.put("vin", getRandomVin());
-
-        return vehicleDataMap;
-    }
-
-    private Response postRequest(User user, String vehicleRequest, String path) throws IOException {
-        return motClient.createVehicle(vehicleRequest, path, user != null ? authService.createSessionTokenForUser(user) : "");
-    }
-
-    private String generateCarRegistration() {
-      return RandomStringUtils.randomAlphanumeric(7).toUpperCase();
-    }
-
-    private String getRandomVin(){
-        return new DefaultVehicleDataRandomizer().nextVin();
-    }
-
-    private String getDateMinusYears(int years){
-        return DateTime.now().minusYears(years).toString("YYYY-MM-dd");
+        return payloadMap;
     }
 }

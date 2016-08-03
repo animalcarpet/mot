@@ -88,7 +88,7 @@ class VehicleCatalogService
      */
     public function getMakes()
     {
-        return $this->makeRepository()->findBy([], ['name' => 'ASC']);
+        return $this->makeRepository()->findBy(['isVerified' => 1], ['name' => 'ASC']);
     }
 
     /**
@@ -103,13 +103,13 @@ class VehicleCatalogService
 
     /**
      * @param string $name
-     * @param string $makeCode
+     * @param string $makeId
      *
      * @return array
      */
-    public function findModelByName($name, $makeCode)
+    public function findModelByNameAndCodeId($name, $makeId)
     {
-        return $this->modelRepository()->findByNameForMake($name, $makeCode);
+        return $this->modelRepository()->findByNameForMake($name, $makeId);
     }
 
     /**
@@ -123,16 +123,26 @@ class VehicleCatalogService
     }
 
     /**
-     * @param string $makeCode
+     * @param string $makeId
+     *
+     * @return \DvsaEntities\Entity\Model[]
+     */
+    public function getModelsByMakeId($makeId)
+    {
+        return $this->modelRepository()->getByMakeId($makeId);
+    }
+
+    /**
+     * @param string $makeId
      * @param string $modelCode
      *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      *
      * @return Model
      */
-    public function getModel($makeCode, $modelCode)
+    public function getModel($makeId, $modelCode)
     {
-        return $this->modelRepository()->getByCode($makeCode, $modelCode);
+        return $this->modelRepository()->getByCode($makeId, $modelCode);
     }
 
     /**

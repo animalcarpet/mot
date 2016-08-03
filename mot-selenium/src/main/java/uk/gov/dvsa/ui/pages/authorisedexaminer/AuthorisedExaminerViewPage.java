@@ -37,6 +37,7 @@ public abstract class AuthorisedExaminerViewPage extends Page {
     @FindBy(id = "add-aep") private WebElement createAEPLink;
     @FindBy(id = "slot-count") private WebElement numberOfSlots;
     @FindBy(id = "transaction-history") private WebElement transactionHistory;
+    @FindBy(id = "test-quality-information") private WebElement testQualityInformationLink;
     private static final String removeSiteFromAeLinkLocator = "#vehicle-testing-station-%s td a";
 
     private WebElement getRemoveSiteFromAeLink(String vtsId) {
@@ -158,5 +159,16 @@ public abstract class AuthorisedExaminerViewPage extends Page {
     public TransactionHistoryPage clickTransactionHistoryLink() {
         transactionHistory.click();
         return MotPageFactory.newPage(driver, TransactionHistoryPage.class);
+    }
+
+    public AETestQualityInformationPage clickTestQualityInformationLink()
+    {
+        testQualityInformationLink.click();
+        return MotPageFactory.newPage(driver, AETestQualityInformationPage.class);
+    }
+
+    public boolean isTestQualityInformationLinkDisplayed()
+    {
+        return PageInteractionHelper.isElementDisplayed(testQualityInformationLink);
     }
 }

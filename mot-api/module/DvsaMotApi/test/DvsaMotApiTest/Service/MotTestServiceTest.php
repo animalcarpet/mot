@@ -4,10 +4,8 @@ namespace DvsaMotApiTest\Service;
 
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtSite;
-use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Constants\Role;
-use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Common\MotTestTypeDto;
 use DvsaCommon\Enum\MotTestStatusName;
@@ -18,7 +16,6 @@ use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Service\Exception\BadRequestException;
-use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaCommonApi\Service\Mapper\OdometerReadingMapper;
 use DvsaCommonTest\TestUtils\MockHandler;
 use DvsaCommonTest\TestUtils\TestCasePermissionTrait;
@@ -31,6 +28,7 @@ use DvsaEntities\Entity\ContactDetail;
 use DvsaEntities\Entity\FuelType;
 use DvsaEntities\Entity\Make;
 use DvsaEntities\Entity\Model;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\MotTestStatus;
@@ -508,7 +506,8 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $rfrIds = [],
         $motTestType = MotTestTypeCode::NORMAL_TEST,
         $originalMotTest = null
-    ) {
+    )
+    {
         $tester = $this->getTestTester($roleText);
 
         $motTest = new MotTest();
@@ -772,11 +771,11 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
     protected function getMotTestArray()
     {
         $motTestData = [
-            'tester'                => '',
-            'vehicle'               => '',
+            'tester' => '',
+            'vehicle' => '',
             'vehicleTestingStation' => '',
-            'reasonsForRejection'   => '',
-            'pendingDetails'        => [
+            'reasonsForRejection' => '',
+            'pendingDetails' => [
                 'currentSubmissionStatus' => ''
             ],
         ];
@@ -786,18 +785,23 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
 
     protected function getMotTestEntity($id)
     {
+        $make = new Make();
+        $make->setId(1)
+            ->setCode('test');
+
+        $model = new Model();
+        $model->setCode('Vectra')
+            ->setMake($make);
+
+        $modelDetail = new ModelDetail();
+        $modelDetail->setModel($model)
+            ->setVehicleClass(new VehicleClass(VehicleClassCode::CLASS_4));
+
         $tester = new Person();
         $tester->setUsername('testUsername');
         $testType = (new MotTestType())->setCode(MotTestTypeCode::NORMAL_TEST);
         $vehicle = new Vehicle();
-        $vehicle->setVehicleClass(new VehicleClass(VehicleClassCode::CLASS_4));
-        $vehicle->setModel(
-            (new Model())->setCode('Vectra')
-                ->setMake(
-                    (new Make())->setId(1)
-                                ->setCode('test')
-                )
-        );
+        $vehicle->setModelDetail($modelDetail);
         $site = new Site();
         $contactDetail = (new ContactDetail())
             ->setAddress(
@@ -844,16 +848,6 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $this->assertArrayHasKey('reasonsForRejection', $motTestData);
     }
 
-    private function mockConstructorRepositoryCall($mocks)
-    {
-        // Get the MotTestRepository in the constructor
-        $this->mockEntityManager
-            ->expects($this->any())
-            ->method('getRepository')
-            ->with(MotTest::class)
-            ->willReturn($this->mockMotTestRepository);
-    }
-
     private function mockVehicleLookup($vehicle, $vehicleKey, $vehicleValue)
     {
         $mockVehicleRepository = $this->getMockRepository();
@@ -871,16 +865,16 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
      */
     public function testGetAdditionalSnapshotDataWithoutTestStation()
     {
-        $mocks              = $this->getMocksForMotTestService();
+        $mocks = $this->getMocksForMotTestService();
         $vehicleTestStation = null;
-        $vehicleId          = 1;
-        $vehicle            = (new Vehicle())->setId($vehicleId);
+        $vehicleId = 1;
+        $vehicle = (new Vehicle())->setId($vehicleId);
 
         $readings = [
             [
                 'issuedDate' => '2014-01-01',
-                'value'      => '10000',
-                'unit'       => 'mi',
+                'value' => '10000',
+                'unit' => 'mi',
                 'resultType' => 'OK'
             ]
         ];
@@ -916,18 +910,18 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $readings = [
             [
                 'issuedDate' => '2014-01-01',
-                'value'      => '10000',
-                'unit'       => 'mi',
+                'value' => '10000',
+                'unit' => 'mi',
                 'resultType' => 'OK'
             ]
         ];
         $expected = [
             'TestStationAddress' => null,
-            'OdometerReadings'   => (new OdometerReadingMapper())->manyToDtoFromArray($readings),
+            'OdometerReadings' => (new OdometerReadingMapper())->manyToDtoFromArray($readings),
         ];
 
         $vehicleId = 1;
-        $motTest   = self::getTestMotTestEntity();
+        $motTest = self::getTestMotTestEntity();
         $motTest->getVehicle()->setId($vehicleId);
         $motTestStatus = new MotTestStatus();
         $motTestStatus->setName("PASSED");
@@ -956,7 +950,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         ];
 
         $vehicleId = 1;
-        $motTest   = self::getTestMotTestEntity();
+        $motTest = self::getTestMotTestEntity();
         $motTest->getVehicle()->setId($vehicleId);
         $motTestStatus = new MotTestStatus();
         $motTestStatus->setName("ABORTED");
@@ -985,7 +979,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         ];
 
         $vehicleId = 1;
-        $motTest   = self::getTestMotTestEntity();
+        $motTest = self::getTestMotTestEntity();
         $motTest->getVehicle()->setId($vehicleId);
         $motTestStatus = new MotTestStatus();
         $motTestStatus->setName("ABANDONED");
@@ -1092,7 +1086,8 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         PHPUnit_Framework_MockObject_MockObject $mockTestRepository,
         $expectedResult,
         $motTestNumber = self::MOT_TEST_NUMBER
-    ) {
+    )
+    {
         $mockTestRepository->expects($this->any())
             ->method('getMotTestByNumber')
             ->with($motTestNumber)
@@ -1127,7 +1122,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $this->assertEquals($isMotTestOwner, $service->canPrintCertificateForMotTest($motTestDto));
     }
 
-   
+
     public function dataProviderTestPrintCertCheckIfUserHasPermissionAtSite()
     {
         return [
@@ -1177,9 +1172,9 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
 
         return [
             [
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockMotTestRepository',
+                        'class' => 'mockMotTestRepository',
                         'method' => 'findInProgressTestForVehicle',
                         'params' => [self::VEHICLE_ID],
                         'result' => null,
@@ -1190,15 +1185,15 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
                 ],
             ],
             [
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockMotTestRepository',
+                        'class' => 'mockMotTestRepository',
                         'method' => 'findInProgressTestForVehicle',
                         'params' => [self::VEHICLE_ID],
                         'result' => $motTest,
                     ],
                     [
-                        'class'  => 'mockReadMotTestAssertion',
+                        'class' => 'mockReadMotTestAssertion',
                         'method' => 'assertGranted',
                         'params' => [$motTest],
                         'result' => null,
@@ -1209,15 +1204,15 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
                 ],
             ],
             [
-                'mocks'  => [
+                'mocks' => [
                     [
-                        'class'  => 'mockMotTestRepository',
+                        'class' => 'mockMotTestRepository',
                         'method' => 'findInProgressTestForVehicle',
                         'params' => [self::VEHICLE_ID],
                         'result' => $motTest,
                     ],
                     [
-                        'class'  => 'mockReadMotTestAssertion',
+                        'class' => 'mockReadMotTestAssertion',
                         'method' => 'assertGranted',
                         'params' => [$motTest],
                         'result' => new UnauthorisedException('unit error message'),
@@ -1225,7 +1220,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
                 ],
                 'expect' => [
                     'exception' => [
-                        'class'   => UnauthorisedException::class,
+                        'class' => UnauthorisedException::class,
                         'message' => 'unit error message',
                     ],
                 ],
@@ -1243,7 +1238,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
 
     private function mockEntityManager(array $repositories = [])
     {
-        $callback = function ($entityName) use($repositories) {
+        $callback = function ($entityName) use ($repositories) {
             if (isset($repositories[$entityName])) {
                 return $repositories[$entityName];
             }

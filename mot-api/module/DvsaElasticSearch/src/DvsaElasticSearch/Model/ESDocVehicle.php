@@ -30,17 +30,17 @@ class ESDocVehicle extends ESDocType
             null;
 
         return [
-            'id'                            => $entity->getId(),
-            'vin'                           => $entity->getVin(),
-            'registration'                  => $entity->getRegistration(),
-            'make'                          => $entity->getMakeName(),
-            'model'                         => $entity->getModelName(),
-            'displayDate'                   => $updatedDate,
-            'updatedDate_display'           =>
+            'id' => $entity->getId(),
+            'vin' => $entity->getVin(),
+            'registration' => $entity->getRegistration(),
+            'make' => $entity->getModel()->getMake()->getName(),
+            'model' => $entity->getModelName(),
+            'displayDate' => $updatedDate,
+            'updatedDate_display' =>
                 $entity->getLastUpdatedOn() !== null ?
                     $entity->getLastUpdatedOn()->format('d M Y') :
                     null,
-            'updatedDate_timestamp'         =>
+            'updatedDate_timestamp' =>
                 $entity->getLastUpdatedOn() !== null ?
                     strtotime($entity->getLastUpdatedOn()->format('d M Y h:i')) :
                     null,

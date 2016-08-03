@@ -8,9 +8,11 @@ use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\PermissionAtOrganisation;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Auth\PermissionAtSite;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\Organisation\OrganisationPositionDto;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Dto\Person\PersonDto;
+use DvsaFeature\FeatureToggles;
 
 class AuthorisedExaminerViewAuthorisation
 {
@@ -24,20 +26,25 @@ class AuthorisedExaminerViewAuthorisation
     private $removePositionAssertion;
     /** @var OrganisationPositionDto[] */
     private $positions;
+    /** @var FeatureToggles */
+    private $featureToggles;
 
     /**
      * @param MotAuthorisationServiceInterface $authorisationService
      * @param MotIdentityProviderInterface $identityProvider
      * @param int $authorisedExaminerId
+     * @param FeatureToggles $featureToggles
      */
     public function __construct(
         MotAuthorisationServiceInterface $authorisationService,
         MotIdentityProviderInterface $identityProvider,
-        $authorisedExaminerId
+        $authorisedExaminerId,
+        FeatureToggles $featureToggles
     ) {
         $this->authorisationService = $authorisationService;
         $this->authorisedExaminerId = $authorisedExaminerId;
         $this->identityProvider = $identityProvider;
+        $this->featureToggles = $featureToggles;
 
         $this->removePositionAssertion = new RemovePositionAtAeAssertion($authorisationService, $identityProvider);
     }
@@ -235,6 +242,13 @@ class AuthorisedExaminerViewAuthorisation
     public function canViewEventHistory()
     {
         return $this->authorisationService->isGranted(PermissionInSystem::LIST_EVENT_HISTORY);
+    }
+
+    public function canViewAETestQualityInformation()
+    {
+        return
+            $this->authorisationService->isGrantedAtOrganisation(PermissionAtOrganisation::AE_VIEW_TEST_QUALITY, $this->authorisedExaminerId)
+            && $this->featureToggles->isEnabled(FeatureToggle::TEST_QUALITY_INFORMATION);
     }
 
     public function canSetupDirectDebit()

@@ -38,7 +38,7 @@ class MotTestOdometerControllerTest extends AbstractMotApiControllerTestCase
         $this->request->getHeaders()->addHeader(ContentType::fromString("content-type: application/json"));
         $this->routeMatch->setParam('motTestNumber', $motTestNumber);
         $readingCapture = ArgCapture::create();
-        $motTestRepository = $this->getMockServiceManagerClass('MotTestRepository', MotTestRepository::class);
+        $motTestRepository = $this->getMockServiceManagerClass(MotTestRepository::class, MotTestRepository::class);
         /** @var  OdometerReadingUpdatingService $updateService */
         $updateService = $this->getMockServiceManagerClass(
             'OdometerReadingUpdatingService',

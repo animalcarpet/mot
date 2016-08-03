@@ -43,7 +43,7 @@ class CreateVehicleStepTwoFieldset extends Fieldset implements InputFilterProvid
                     'label' => 'Model',
                     'value_options' => $this->getDropdownOptionsFromAttributes(
                         $options['vehicleData']['model'],
-                        'code',
+                        'id',
                         'name',
                         true,
                         true
@@ -234,7 +234,7 @@ class CreateVehicleStepTwoFieldset extends Fieldset implements InputFilterProvid
             ],
         ];
 
-        if (in_array($this->get('fuelType')->getValue(), FuelTypeAndCylinderCapacity::getAllFuelTypesWithCompulsoryCylinderCapacity())) {
+        if (in_array($this->get('fuelType')->getValue(), FuelTypeAndCylinderCapacity::getAllFuelTypeIdsWithCompulsoryCylinderCapacity())) {
             $spec[] = [
                 'name' => 'cylinderCapacity',
                 'required' => true,

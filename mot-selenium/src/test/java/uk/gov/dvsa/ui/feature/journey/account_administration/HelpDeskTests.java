@@ -31,7 +31,7 @@ public class HelpDeskTests extends DslTest {
         tester = userData.createTester(testSite.getId());
     }
 
-    @Test (groups = {"BVT", "Regression"})
+    @Test (groups = {"Regression"})
     public void successfullyUpdateAUsersEmailAddress() throws IOException {
         User csco = userData.createCustomerServiceOfficer(false);
         User bob = userData.createAedm(false);

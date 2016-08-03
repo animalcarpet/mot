@@ -2,18 +2,19 @@
 
 namespace DvsaCommon\DtoSerialization;
 
+use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Utility\ArrayUtils;
 
-class DtoReflectiveSerializer
+class DtoReflectiveSerializer implements AutoWireableInterface
 {
     private $reflector;
 
     private $convertiblesRegister;
 
-    public function __construct(DtoConvertibleTypesRegistryInterface $convertiblesRegister, DtoReflectorInterface $reflector)
+    public function __construct()
     {
-        $this->reflector = $reflector;
-        $this->convertiblesRegister = $convertiblesRegister;
+        $this->convertiblesRegister = new DtoConvertibleTypesRegistry();
+        $this->reflector = new DtoCachedReflector($this->convertiblesRegister);
     }
 
     public function  serialize($dto)

@@ -4,11 +4,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.profile.NewPersonProfilePage;
 import uk.gov.dvsa.ui.pages.profile.NewUserProfilePage;
-import uk.gov.dvsa.ui.pages.profile.PersonProfilePage;
 
 public class ChangeEmailDetailsPage extends Page {
 
@@ -31,12 +30,12 @@ public class ChangeEmailDetailsPage extends Page {
     }
 
     public ChangeEmailDetailsPage fillEmail(String value) {
-        FormCompletionHelper.enterText(email, value);
+        FormDataHelper.enterText(email, value);
         return this;
     }
 
     public ChangeEmailDetailsPage fillEmailConfirmation(String value) {
-        FormCompletionHelper.enterText(emailConfirm, value);
+        FormDataHelper.enterText(emailConfirm, value);
         return this;
     }
 

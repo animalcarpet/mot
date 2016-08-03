@@ -91,6 +91,26 @@ class ArrayUtils
     }
 
     /**
+     * Finds the first element in the collection that matches the predicate.
+     * If none is found than exception is thrown
+     *
+     * @param array|Object $haystack
+     * @param callable $predicate
+     *
+     * @return $needle
+     */
+    public static function first($haystack, callable $predicate = null)
+    {
+        $element = self::firstOrNull($haystack, $predicate);
+
+        if ($element === null) {
+            throw new \OutOfRangeException("Tried to extract first element from empty collection.");
+        }
+
+        return $element;
+    }
+
+    /**
      * Finds the last element in the collection that matches the predicate.
      * If none is found that null is returned.
      *
@@ -163,7 +183,7 @@ class ArrayUtils
     /**
      * Provides same functionality as ArrayUtils::map(), but allows also to select keys.
      *
-     * @param $collection             A sequence of values to invoke a transform function on.
+     * @param array $collection       A sequence of values to invoke a transform function on.
      * @param callable $keySelector   A transform function to apply to each element.
      * @param callable $valueSelector A transform function to apply to each element.
      * @return array
@@ -403,5 +423,15 @@ class ArrayUtils
     public static function joinNonEmpty($glue, $pieces)
     {
         return join($glue, array_filter($pieces));
+    }
+
+    public static function aggregate($elements, $startingValue, $aggregateFunction)
+    {
+        $total = $startingValue;
+        foreach ($elements as $element) {
+            $total = $aggregateFunction($element, $total);
+        }
+
+        return $total;
     }
 }

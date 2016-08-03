@@ -17,7 +17,7 @@ return array(
                     'port'     => '3306',
                     'user'     => 'motdbuser',
                     'password' => 'password',
-                    'dbname'   => 'mot',
+                    'dbname'   => 'mot2',
                     'charset'  => 'utf8'
                 ),
             ),
@@ -40,5 +40,22 @@ return array(
     ],
     'logger' => [
         'output' => '/var/log/dvsa/mot-testsupport.log',
+    ],
+    'aws' => [
+        'statisticsAmazonStorage' => [
+            'region' => 'eu-west-1',
+            'bucket' => 'statistics-cache-fb',
+            'accessKeyId' => 'AKIAIVA4YM4YMJD3NWKQ',
+            'secretKey' => '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',
+            'root_folder' => 'vagrant',
+        ],
+    ],
+    // These urls will overwrite the default values shipped with the mot\api-client-php package, since need to be
+    // different in different environments
+    // @See https://gitlab.motdev.org.uk/mot/api-client-php/tree/develop/config
+    // @See https://gitlab.motdev.org.uk/webops/hieradata/blob/develop/code/hieradata/global.yaml#L694 & #L695
+    'api' => [
+        'vehicle_service_url' => 'http://warden:8080/vehicles/',
+        'authorisation_service_url' => 'http://openam.motdev.org.uk:8080/sso/',
     ],
 );

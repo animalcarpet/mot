@@ -1,7 +1,0 @@
-!contents -R2 -g -p -f -h
-
-List of equipment
-
-!|list of equipment                                                                                                                                       |
-|is equipment name length less or equal 50?|is equipment code length less or equal 5?|is make length less or equal 100?|is model length less or equal 100?|
-|Yes                                       |Yes                                      |Yes                              |Yes                               |

@@ -17,7 +17,7 @@ use DvsaEntities\Entity\OdometerReading;
 class OutputFormatDataTablesMotTest extends OutputFormat
 {
     /** String for an unreadable odometer entry */
-    const TEXT_NOT_READABLE = 'Not readable';
+    const TEXT_NOT_READABLE = 'Unreadable';
     /** String for when no odometer was present */
     const TEXT_NO_ODOMETER = 'No odometer';
     /** String for when no reading was recorded, e.g. an aborted or abandoned test */

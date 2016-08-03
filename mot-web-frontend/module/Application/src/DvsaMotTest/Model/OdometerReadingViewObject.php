@@ -13,6 +13,8 @@ use DvsaCommon\Dto\Common\OdometerReadingDTO;
 class OdometerReadingViewObject
 {
     const IS_NOT_RECORDED = "Not recorded";
+    const IS_NOT_READABLE = "Unreadable";
+    const IS_NOT_PRESENT = "Missing";
     const MILES = 'mi';
     const KILOMETERS = 'km';
 
@@ -28,6 +30,7 @@ class OdometerReadingViewObject
     public function setModifiable($modifiable)
     {
         $this->modifiable = $modifiable;
+
         return $this;
     }
 
@@ -43,7 +46,8 @@ class OdometerReadingViewObject
      */
     public function setOdometerReadingValuesMap($valuesMap)
     {
-        $this->readingValuesMap = $valuesMap ? : [];
+        $this->readingValuesMap = $valuesMap ?: [];
+
         return $this;
     }
 
@@ -55,6 +59,7 @@ class OdometerReadingViewObject
     public function setNotices($notices)
     {
         $this->notices = $notices;
+
         return $this;
     }
 
@@ -92,6 +97,15 @@ class OdometerReadingViewObject
         }
     }
 
+    public function getUnitName()
+    {
+        if ($this->getUnit() == 'mi') {
+            return 'miles';
+        } else {
+            return $this->getUnit();
+        }
+    }
+
     public function isInMiles()
     {
         return $this->getUnit() === self::MILES;
@@ -119,6 +133,21 @@ class OdometerReadingViewObject
         return self::IS_NOT_RECORDED === $this->getDisplayValue();
     }
 
+    private function isNotReadable()
+    {
+        return self::IS_NOT_READABLE === $this->getDisplayValue();
+    }
+
+    private function isNotPresent()
+    {
+        return self::IS_NOT_PRESENT === $this->getDisplayValue();
+    }
+
+    public function hasNumericValue()
+    {
+        return !($this->isNotPresent() || $this->isNotReadable() || $this->isNotRecorded());
+    }
+
     public function getDisplayValue()
     {
         if ($this->readingValuesMap != null) {
@@ -140,14 +169,14 @@ class OdometerReadingViewObject
 
             switch ($type) {
                 case OdometerReadingResultType::NOT_READABLE:
-                    return "Not readable";
+                    return self::IS_NOT_READABLE;
                 case OdometerReadingResultType::NO_ODOMETER:
-                    return "Vehicle does not have an odometer";
+                    return self::IS_NOT_PRESENT;
                 default:
                     return "$value $unit";
             }
         } else {
-            return "Not recorded";
+            return self::IS_NOT_RECORDED;
         }
     }
 }

@@ -126,6 +126,64 @@ return [
                     ],
                 ],
             ],
+            'vehicle-testing-station-test-quality' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/vehicle-testing-station/:id/test-quality[/:month][/:year]',
+                    'constraints' => [
+                        'id' => '[0-9]+',
+                        'month' => '[0-9]+',
+                        'year' => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => SiteController::class,
+                        'action' => 'testQuality',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'user-test-quality' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/user/:userId/group/:group',
+                            'constraints' => [
+                                'id' => '[0-9]+',
+                                'group' => 'A|B',
+                            ],
+                            'defaults' => [
+                                'controller' => SiteController::class,
+                                'action' => 'userTestQuality',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'csv' => [
+                                'type' => 'segment',
+                                'options' => [
+                                    'route' => '/csv',
+                                    'defaults' => [
+                                        'controller' => SiteController::class,
+                                        'action' => 'userTestQualityCsv',
+                                    ],
+                                ],
+                            ]
+                        ],
+                    ],
+                    'csv' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/csv/group/:group',
+                            'constraints' => [
+                                'group' => 'A|B',
+                            ],
+                            'defaults' => [
+                                'controller' => SiteController::class,
+                                'action' => 'testQualityCsv',
+                            ],
+                        ],
+                    ]
+                ],
+            ],
             'vehicle-testing-station-search'             => [
                 'type'    => 'segment',
                 'options' => [
