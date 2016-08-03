@@ -4,6 +4,7 @@ use DvsaEntities\Factory\Repository\AuthForAeStatusRepositoryFactory;
 use DvsaEntities\Factory\Repository\MotTestingCertificateRepositoryFactory;
 use DvsaEntities\Factory\Repository\AuthorisationForTestingMotRepositoryFactory;
 use DvsaEntities\Factory\Repository\AuthorisationForTestingMotStatusRepositoryFactory;
+use DvsaEntities\Factory\Repository\QualificationAnnualCertificateRepositoryFactory;
 use DvsaEntities\Factory\Repository\VehicleClassRepositoryFactory;
 use DvsaEntities\Factory\Repository\VehicleClassGroupRepositoryFactory;
 use DvsaEntities\Factory\Repository\PersonRepositoryFactory;
@@ -19,6 +20,7 @@ use DvsaEntities\Repository\CompanyTypeRepository;
 use DvsaEntities\Repository\OrganisationContactTypeRepository;
 use DvsaEntities\Repository\OrganisationRepository;
 use DvsaEntities\Repository\PhoneContactTypeRepository;
+use DvsaEntities\Repository\QualificationAnnualCertificateRepository;
 use DvsaEntities\Repository\RbacRepository;
 use DvsaEntities\Repository\SiteRepository;
 use DvsaEntities\Repository\QualificationAwardRepository;
@@ -49,6 +51,7 @@ return [
             PersonRepository::class => PersonRepositoryFactory::class,
             SiteRepository::class => SiteRepositoryFactory::class,
             EventPersonMapRepository::class => EventPersonMapRepositoryFactory::class,
+            QualificationAnnualCertificateRepository::class => QualificationAnnualCertificateRepositoryFactory::class,
         ],
     ],
     'doctrine'        => [

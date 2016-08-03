@@ -6,6 +6,7 @@ use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Enum\PhoneContactTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaEntities\Entity\BrakeTestType;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\Phone;
 use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Date\DateUtils;
@@ -88,16 +89,18 @@ class MotTestMapperTest extends AbstractServiceTestCase
         $model = new Model();
         $model->setMake($make);
 
+        $modelDetail = new ModelDetail();
+        $modelDetail->setModel($model)
+            ->setVehicleClass(new VehicleClass($vehicleClass))
+            ->setFuelType(new FuelType())
+            ->setBodyType(new BodyType());
+
         $vehicle = new Vehicle();
         $vehicle
-            ->setVehicleClass(new VehicleClass($vehicleClass))
+            ->setModelDetail($modelDetail)
             ->setColour(new Colour())
-            ->setFuelType(new FuelType())
-            ->setBodyType(new BodyType())
-            ->setNoOfSeatBelts(99)
             ->setNewAtFirstReg(true)
-            ->setCountryOfRegistration((new CountryOfRegistration()))
-            ->setModel($model);
+            ->setCountryOfRegistration((new CountryOfRegistration()));
 
         $address = new Address();
         $address->setAddressLine1('Johns Garage');
@@ -162,8 +165,7 @@ class MotTestMapperTest extends AbstractServiceTestCase
             )
             ->setBodyType(new VehicleParamDto())
             ->setTransmissionType(new VehicleParamDto())
-            ->setNoOfSeatBelts($vehicle->getNoOfSeatBelts())
-            ->setIsNewAtFirstReg($vehicle->getNewAtFirstReg());
+            ->setIsNewAtFirstReg($vehicle->isNewAtFirstReg());
 
         //  --  other   --
         $expectedData = (new MotTestDto())
@@ -489,13 +491,16 @@ class MotTestMapperTest extends AbstractServiceTestCase
         $vehicleClass = new VehicleClass();
         $vehicleClass->setCode(VehicleClassCode::CLASS_3);
 
-        $cor = (new CountryOfRegistration())->setName('COR');
+        $modelDetail = new ModelDetail();
+        $modelDetail->setVehicleClass($vehicleClass);
+
+
+
+        $countryOfRegistration = (new CountryOfRegistration())->setName('COR');
 
         $vehicle = new Vehicle();
-        $vehicle
-            ->setVehicleClass($vehicleClass)
-            ->setCountryOfRegistration($cor)
-        ;
+        $vehicle->setCountryOfRegistration($countryOfRegistration);
+        $vehicle->setModelDetail($modelDetail);
 
         $motTest = new MotTest();
         $motTest
@@ -505,7 +510,7 @@ class MotTestMapperTest extends AbstractServiceTestCase
             ->setVehicleClass($vehicleClass)
             ->setMake((new Make())->setName('MAKE'))
             ->setModel((new Model())->setName('MODEL'))
-            ->setCountryOfRegistration($cor)
+            ->setCountryOfRegistration($countryOfRegistration)
             ->setPrsMotTest((new MotTest())->setNumber(2))
             ;
 

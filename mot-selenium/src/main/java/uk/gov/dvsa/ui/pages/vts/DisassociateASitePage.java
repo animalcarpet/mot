@@ -3,7 +3,7 @@ package uk.gov.dvsa.ui.pages.vts;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.AreaOfficerAuthorisedExaminerViewPage;
 import uk.gov.dvsa.ui.pages.Page;
@@ -31,7 +31,7 @@ public class DisassociateASitePage extends Page {
     }
 
     public DisassociateASitePage selectStatus(String statusValue) {
-        FormCompletionHelper.selectFromDropDownByValue(statusDropDown, statusValue);
+        FormDataHelper.selectFromDropDownByValue(statusDropDown, statusValue);
         return this;
     }
 

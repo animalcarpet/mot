@@ -84,6 +84,7 @@ class UrlBuilder extends AbstractUrlBuilder
     const VEHICLE_DICTIONARY = 'vehicle-dictionary';
     const MAKE = '/make[/:id]';
     const MODEL = '/model[/:id]';
+    const MODELS = '/models';
     const MODEL_DETAILS = '/model-details';
     const CONTINGENCY = 'emergency-log';
     const CLAIM_ACCOUNT = 'account/claim/:userId';
@@ -183,6 +184,7 @@ class UrlBuilder extends AbstractUrlBuilder
                     self::MODEL => [
                         self::MODEL_DETAILS => ''
                     ],
+                    self::MODELS => '',
                 ],
             ],
             self::CLAIM_ACCOUNT => '',
@@ -616,6 +618,14 @@ class UrlBuilder extends AbstractUrlBuilder
             return $this->appendRoutesAndParams(self::MODEL);
         }
         return $this->appendRoutesAndParams(self::MODEL)->routeParam('id', $id);
+    }
+
+    public function models($id = null)
+    {
+        if (null === $id) {
+            return $this->appendRoutesAndParams(self::MODELS);
+        }
+        return $this->appendRoutesAndParams(self::MODELS)->routeParam('id', $id);
     }
 
     public function modelDetails()

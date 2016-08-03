@@ -1,12 +1,12 @@
 package uk.gov.dvsa.ui.feature.journey.account_administration;
 
-import com.dvsa.mot.selenium.framework.RandomDataGenerator;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import uk.gov.dvsa.domain.model.AeDetails;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
+import uk.gov.dvsa.helper.RandomDataGenerator;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.profile.ProfilePage;
 
@@ -44,7 +44,7 @@ public class ChangePersonEmailTests extends DslTest {
         csco = userData.createCustomerServiceOfficer(false);
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-270"},
+    @Test(groups = {"Regression", "BL-270"},
             testName = "NewProfile",
             description = "Test that Trade user can edit their email from their profile page")
     public void tradeUserCanEditTheirEmailAddress() throws Exception {
@@ -59,7 +59,7 @@ public class ChangePersonEmailTests extends DslTest {
         assertThat(profilePage.isSuccessMessageDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-270"},
+    @Test(groups = {"Regression", "BL-270"},
             testName = "NewProfile",
             description = "Test that Trade user can cancel their email from change email page")
     public void tradeUserCanCancelTheirEmailChange() throws IOException {
@@ -73,7 +73,7 @@ public class ChangePersonEmailTests extends DslTest {
         assertThat(page.isPageLoaded(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-270"},
+    @Test(groups = {"Regression", "BL-270"},
             testName = "NewProfile",
             description = "Test that DVSA user can cancel amending a users email change",
             dataProvider = "dvsaUserChangeEmailProvider")
@@ -88,7 +88,7 @@ public class ChangePersonEmailTests extends DslTest {
         assertThat(motUI.profile.page().isPageLoaded(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-270"},
+    @Test(groups = {"Regression", "BL-270"},
             testName = "NewProfile",
             description = "Test that Authorised user can change email on person profile",
             dataProvider = "dvsaUserChangeEmailProvider")
@@ -104,7 +104,7 @@ public class ChangePersonEmailTests extends DslTest {
         assertThat(motUI.profile.page().isSuccessMessageDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-270"},
+    @Test(groups = {"Regression", "BL-270"},
             testName = "NewProfile",
             dataProvider = "emailValidationTestCaseValues",
             description = "Test that Authorised user should provide a valid email in order to update user information")

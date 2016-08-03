@@ -4,6 +4,7 @@ return [
     'DoctrineModule',
     'DoctrineORMModule',
     'Dvsa\Mot\Api\RegistrationModule',
+    'Dvsa\Mot\Api\ServiceModule',
     'DvsaDoctrineModule',
     'DvsaAuthentication',
     'DvsaAuthorisation',
@@ -36,4 +37,5 @@ return [
     'Dvsa\OpenAM',
     'PersonApi',
     'AuditApi',
+    'Dvsa\Mot\Api\StatisticsApi',
 ];

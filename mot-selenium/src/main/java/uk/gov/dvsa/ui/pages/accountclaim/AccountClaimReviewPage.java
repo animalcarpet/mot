@@ -1,12 +1,10 @@
 package uk.gov.dvsa.ui.pages.accountclaim;
 
-import com.dvsa.mot.selenium.priv.frontend.openam.OpenAMClaimAccountSecurityQuestionsPage;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
-import uk.gov.dvsa.ui.pages.accountclaim.AccountClaimConfirmationPage;
 
 public class AccountClaimReviewPage extends Page {
 
@@ -26,14 +24,8 @@ public class AccountClaimReviewPage extends Page {
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
     }
 
-    public OpenAMClaimAccountSecurityQuestionsPage clickBackButton() {
-        goBackLink.click();
-        return new OpenAMClaimAccountSecurityQuestionsPage(driver);
-    }
-
     public AccountClaimConfirmationPage clickClaimYourAccountButton() {
         claimYourAccountButton.click();
         return new AccountClaimConfirmationPage(driver);
     }
-
 }

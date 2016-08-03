@@ -40,11 +40,11 @@ class ColumnOptions extends AbstractOptions
     /**
      * @var string
      */
-    private $thClass;
+    private $thClass = 'tabular';
     /**
      * @var string
      */
-    private $tdClass;
+    private $tdClass = 'tabular';
     /**
      * @var ColumnOptions[]
      */
@@ -53,6 +53,30 @@ class ColumnOptions extends AbstractOptions
      * @var  Table
      */
     private $table;
+    /**
+     * @var bool
+     */
+    private $escapeHtml = true;
+
+    /**
+     * @return boolean
+     */
+    public function isEscapeHtml()
+    {
+        return $this->escapeHtml;
+    }
+
+    /**
+     * @param boolean $escapeHtml
+     *
+     * @return $this
+     */
+    public function setEscapeHtml($escapeHtml)
+    {
+        $this->escapeHtml = $escapeHtml;
+
+        return $this;
+    }
 
     /**
      * @return string
@@ -328,6 +352,6 @@ class ColumnOptions extends AbstractOptions
             }
         }
 
-        return $view->escapeHtml($row[$this->getField()]);
+        return ($this->isEscapeHtml()) ? $view->escapeHtml($row[$this->getField()]) : $row[$this->getField()];
     }
 }

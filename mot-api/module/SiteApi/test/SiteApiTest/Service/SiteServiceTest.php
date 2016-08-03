@@ -375,23 +375,6 @@ class SiteServiceTest extends AbstractServiceTestCase
         return $dto;
     }
 
-    private function getSitePostData()
-    {
-        return [
-            'name'                       => 'fantastic name',
-            'addressLine1'               => 'los santos',
-            'town'                       => 'andreas',
-            'postcode'                   => 'abs-123',
-            'email'                      => 'www@www.pl',
-            'phoneNumber'                => '123456789',
-            'correspondenceAddressLine1' => 'los santos',
-            'correspondenceTown'         => 'andreas',
-            'correspondencePostcode'     => 'abs-123',
-            'correspondenceEmail'        => 'www@www.pl',
-            'correspondencePhoneNumber'  => '123456789',
-        ];
-    }
-
     /**
      * @return ContactDetailsService
      */

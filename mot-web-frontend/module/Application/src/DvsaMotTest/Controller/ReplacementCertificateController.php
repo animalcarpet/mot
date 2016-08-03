@@ -3,6 +3,7 @@ namespace DvsaMotTest\Controller;
 
 use Application\Helper\PrgHelper;
 use Application\Service\CatalogService;
+use DvsaMotTest\Form\VrmUpdateForm;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Dto\Common\ColourDto;
@@ -47,6 +48,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
 
     const MAKE_MODEL_OTHER_VALUE = 'other';
     const MODEL_VALUE_EMPTY = 'Model not found';
+    const ACTION_UPDATE_VRM = 'updateVrm';
 
     /** @var VehicleCatalogService */
     private $vehicleCatalogService;
@@ -335,6 +337,17 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
                 }
             }
 
+            if ($action === self::ACTION_UPDATE_VRM) {
+                $vrmForm = new VrmUpdateForm();
+                $vrmForm->setData($result);
+
+                if (!$vrmForm->isValid()) {
+                    $this->addErrorMessages($vrmForm->getMessages(VrmUpdateForm::FIELD_VRM));
+
+                    return $this->redirect()->toUrl(UrlBuilderWeb::replacementCertificate($id, $motTestNumber));
+                }
+            }
+
             try {
 
                 if (self::ACTION_UPDATE_ODOMETER === $action) {
@@ -345,13 +358,14 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
 
                     if (!$odometerForm->isValid()) {
                         $this->addErrorMessages(MotTestController::ODOMETER_FORM_ERROR_MESSAGE);
+
                         return $this->redirect()->toUrl(UrlBuilderWeb::replacementCertificate($id, $motTestNumber));
                     }
 
                     if ($odometerReadingParams['resultType'] !== OdometerReadingResultType::OK) {
                         unset($result['odometerReading']['odometer'], $result['odometerReading']['unit']);
                     } else {
-                        $result['odometerReading']['value'] = (int) $result['odometerReading']['odometer'];
+                        $result['odometerReading']['value'] = (int)$result['odometerReading']['odometer'];
                         unset($result['odometerReading']['odometer']);
                     }
                 }
@@ -399,8 +413,8 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
                 return ['vtsSiteNumber' => $post['vts']];
             case 'updateVin':
                 return ['vin' => $post['vin']];
-            case 'updateVrm':
-                return ['vrm' => $post['vrm']];
+            case self::ACTION_UPDATE_VRM:
+                return ['vrm' => mb_strtoupper(preg_replace('/\s+/', '', $post['vrm']))];
             case 'updateColours':
                 return [
                     'primaryColour' => $post['primaryColour'],
@@ -434,13 +448,13 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
                 }
 
                 if ($value === null) {
-                    $value = (int) 0;
+                    $value = (int)0;
                 }
 
                 return [
                     'odometerReading' => [
-                        'odometer'   => $value,
-                        'unit'       => $unit,
+                        'odometer' => $value,
+                        'unit' => $unit,
                         'resultType' => $resultType
                     ]
                 ];
@@ -457,7 +471,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
                 $day = str_pad($day, 2, '0', STR_PAD_LEFT);
 
                 return [
-                    'expiryDate' => $year .'-' . $month . '-' . $day
+                    'expiryDate' => $year . '-' . $month . '-' . $day
                 ];
             default:
                 throw new \InvalidArgumentException("$updateAction action is invalid");
@@ -474,13 +488,13 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
     {
         $apiPath = UrlBuilder::replacementCertificateDraft($id, $motTestNumber);
 
-        return ArrayUtils::tryGet($this->getRestClient()->get((string) $apiPath), 'data');
+        return ArrayUtils::tryGet($this->getRestClient()->get((string)$apiPath), 'data');
     }
 
     /**
      * @param string $id
      * @param string $motTestNumber
-     * @param bool   $makeCode
+     * @param bool $makeCode
      *
      * @return ViewModel
      */
@@ -501,14 +515,13 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
     }
 
     /**
-     * @param $model string
+     * @param string $makeCode
      * @return array
      */
-    private function getStaticData($model)
+    private function getStaticData($makeCode)
     {
         /** @var CatalogService $catalogService */
         $catalogService = $this->getCatalogService();
-
         $colourMap = $catalogService->getColours();
         asort($colourMap);
 
@@ -516,7 +529,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
             'colours' => new ColoursContainer($catalogService->getColours()),
             'countryOfRegistrationList' => $catalogService->getCountriesOfRegistration(),
             'makeList' => $this->vehicleCatalogService->findMake(),
-            'modelList' => $this->vehicleCatalogService->findModel(false, $model)
+            'modelList' => $this->vehicleCatalogService->findModel(false, $makeCode)
         ];
     }
 
@@ -615,6 +628,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
         foreach ($makeList as $make) {
             if ($makeCode === $make['code']) {
                 $modelView = new ReplacementMakeViewModel($make);
+
                 return $modelView;
             }
         }

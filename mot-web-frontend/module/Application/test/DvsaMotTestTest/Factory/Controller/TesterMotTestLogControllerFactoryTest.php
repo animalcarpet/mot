@@ -3,6 +3,7 @@
 namespace DvsaMotTestTest\Factory\Controller;
 
 use Core\Service\MotFrontendAuthorisationServiceInterface;
+use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaClient\MapperFactory;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTest\Controller\TesterMotTestLogController;
@@ -21,6 +22,9 @@ class TesterMotTestLogControllerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $mapperFactory = XMock::of(MapperFactory::class);
         $serviceManager->setService(MapperFactory::class, $mapperFactory);
+
+        $contextProvider = XMock::of(ContextProvider::class);
+        $serviceManager->setService(ContextProvider::class, $contextProvider);
 
         $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
         $plugins->expects($this->any())

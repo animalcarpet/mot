@@ -39,3 +39,6 @@ test-output/
 /target
 
 **/my.properties
+
+# Allure reporting, result folder
+allure-results/

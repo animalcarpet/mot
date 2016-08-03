@@ -10,8 +10,6 @@ namespace Dvsa\Mot\Api\RegistrationModule\Service;
 /**
  * Utility to convert provided step names by the WEB tier to respective inputFilter name and vice versa.
  *
- * @TODO (ABN) might be better to live in a Utility folder
- *
  * Class ValidatorKeyConverter
  */
 class ValidatorKeyConverter

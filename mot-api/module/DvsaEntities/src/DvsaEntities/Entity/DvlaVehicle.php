@@ -107,14 +107,11 @@ class DvlaVehicle implements VehicleInterface
     private $bodyType;
 
     /**
-     * @var Vehicle
+     * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="DvsaEntities\Entity\Vehicle", fetch="LAZY")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="vehicle_id", referencedColumnName="id")
-     * })
+     * @ORM\Column(name="vehicle_id", type="integer", nullable=true)
      */
-    private $vehicle;
+    private $vehicleId;
 
     /**
      * @var integer
@@ -380,6 +377,7 @@ class DvlaVehicle implements VehicleInterface
     {
         return $this->makeInFull;
     }
+
     /**
      * @return string|null
      */
@@ -529,23 +527,23 @@ class DvlaVehicle implements VehicleInterface
     }
 
     /**
-     * @param Vehicle $vehicle
+     * @param int $vehicleId
      *
      * @return DvlaVehicle
      */
-    public function setVehicle($vehicle)
+    public function setVehicleId($vehicleId)
     {
-        $this->vehicle = $vehicle;
+        $this->vehicleId = $vehicleId;
 
         return $this;
     }
 
     /**
-     * @return Vehicle
+     * @return int
      */
-    public function getVehicle()
+    public function getVehicleId()
     {
-        return $this->vehicle;
+        return $this->vehicleId;
     }
 
     /**
@@ -688,15 +686,15 @@ class DvlaVehicle implements VehicleInterface
      */
     public function setNewAtFirstReg($value)
     {
-        $this->newAtFirstReg = $value;
+        $this->newAtFirstReg = (boolean)$value;
 
         return $this;
     }
 
     /**
-     * @return int
+     * @return boolean
      */
-    public function getNewAtFirstReg()
+    public function isNewAtFirstReg()
     {
         return $this->newAtFirstReg;
     }
@@ -706,7 +704,16 @@ class DvlaVehicle implements VehicleInterface
      */
     public function isVehicleNewAtFirstRegistration()
     {
-        return (bool) $this->newAtFirstReg;
+        return $this->isNewAtFirstReg();
+    }
+
+    /**
+     * @return $this
+     */
+    public function setDvlaVehicleId($dvlaVehicleId)
+    {
+        $this->dvlaVehicleId = $dvlaVehicleId;
+        return $this;
     }
 
     /**

@@ -7,6 +7,8 @@ use Dvsa\Mot\Behat\Support\Api\BrakeTestResult;
 use Dvsa\Mot\Behat\Support\Response;
 use Dvsa\Mot\Behat\Support\Api\Vehicle;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
+use Dvsa\Mot\Behat\Datasource\Authentication;
+
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class VehicleContext implements Context
@@ -213,14 +215,14 @@ class VehicleContext implements Context
     }
 
     /**
-     * @When /^I create a Vehicle of Class (.*) and Fuel Type (.*)$/
+     * @When /^I create a Vehicle of Class (.*) and Fuel Type (.*) and cylinder capacity (.*)$/
      *
      * @param $class
      * @param $fuelType
      */
-    public function iCreateAVehicleOfClassAndFuelType($class, $fuelType)
+    public function iCreateAVehicleOfClassAndFuelType($class, $fuelType, $cylinderCapacity)
     {
-        $this->createVehicleFromApi(['fuelType' => $fuelType, 'testClass' => $class]);
+        $this->createVehicleFromApi(['fuelType' => $fuelType, 'testClass' => $class, 'cylinderCapacity' => $cylinderCapacity]);
     }
 
     /**
@@ -318,6 +320,7 @@ class VehicleContext implements Context
      */
     public function createVehicle(array $vehicleDetails = [])
     {
+        $vehicleDetails["oneTimePassword"] = Authentication::ONE_TIME_PASSWORD;
         $vehicleService = $this->testSupportHelper->getVehicleService();
         $this->vehicleId = $vehicleService->createWithDefaults($vehicleDetails);
         return $this->getCurrentVehicleId();

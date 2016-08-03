@@ -1,19 +1,12 @@
 package uk.gov.dvsa.ui.pages.specialnotices;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
-
-import java.util.List;
 
 public class SpecialNoticeCreationPage extends Page{
 
@@ -51,29 +44,29 @@ public class SpecialNoticeCreationPage extends Page{
     }
 
     private SpecialNoticeCreationPage enterInternalPublishDate(DateTime dateTime) {
-        FormCompletionHelper.enterText(internalDateDayInput, dateTime.toString("dd"));
-        FormCompletionHelper.enterText(internalDateMonthInput, dateTime.toString("MM"));
-        FormCompletionHelper.enterText(internalDateYearInput, dateTime.toString("YYYY"));
+        FormDataHelper.enterText(internalDateDayInput, dateTime.toString("dd"));
+        FormDataHelper.enterText(internalDateMonthInput, dateTime.toString("MM"));
+        FormDataHelper.enterText(internalDateYearInput, dateTime.toString("YYYY"));
         return this;
     }
     
     private SpecialNoticeCreationPage enterExternalPublishDate(DateTime dateTime) {
-        FormCompletionHelper.enterText(externalDateDayInput, dateTime.toString("dd"));
-        FormCompletionHelper.enterText(externalDateMonthInput, dateTime.toString("MM"));
-        FormCompletionHelper.enterText(externalDateYearInput, dateTime.toString("YYYY"));
+        FormDataHelper.enterText(externalDateDayInput, dateTime.toString("dd"));
+        FormDataHelper.enterText(externalDateMonthInput, dateTime.toString("MM"));
+        FormDataHelper.enterText(externalDateYearInput, dateTime.toString("YYYY"));
         return this;
     }
 
     public SpecialNoticePreviewPage createSpecialNoticeSuccessfully(String specialNoticeTitle) {
-        FormCompletionHelper.enterText(subjectTitleInput, specialNoticeTitle);
+        FormDataHelper.enterText(subjectTitleInput, specialNoticeTitle);
         enterExternalPublishDate(DateTime.now());
         enterInternalPublishDate(DateTime.now());
-        FormCompletionHelper.enterText(acknowledgementPeriodInput, "12");
-        FormCompletionHelper.selectInputBox(vehicleClass1CheckBox);
-        FormCompletionHelper.selectInputBox(vehicleClass4CheckBox);
-        FormCompletionHelper.selectInputBox(dvsaRolesCheckBox);
-        FormCompletionHelper.selectInputBox(vtsRolesCheckbox);
-        FormCompletionHelper.enterText(noticeTextInput, "#Testing the Future \n *Mark down*");
+        FormDataHelper.enterText(acknowledgementPeriodInput, "12");
+        FormDataHelper.selectInputBox(vehicleClass1CheckBox);
+        FormDataHelper.selectInputBox(vehicleClass4CheckBox);
+        FormDataHelper.selectInputBox(dvsaRolesCheckBox);
+        FormDataHelper.selectInputBox(vtsRolesCheckbox);
+        FormDataHelper.enterText(noticeTextInput, "#Testing the Future \n *Mark down*");
         previewSpecialNoticeButton.click();
         return new SpecialNoticePreviewPage(driver);
     }

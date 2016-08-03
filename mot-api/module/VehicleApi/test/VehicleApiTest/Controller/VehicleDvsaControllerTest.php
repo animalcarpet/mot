@@ -8,6 +8,7 @@ use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
 use DvsaMotApiTest\Controller\AbstractMotApiControllerTestCase;
@@ -51,7 +52,7 @@ class VehicleDvsaControllerTest extends AbstractMotApiControllerTestCase
         $serviceReturn,
         $expectResult
     ) {
-        $this->mockValidAuthorization([SiteBusinessRoleCode::TESTER]);
+        $this->mockValidAuthorization();
 
         //  --  mock    --
         $mockVehicleService = $this->getMockVehicleService();
@@ -95,12 +96,13 @@ class VehicleDvsaControllerTest extends AbstractMotApiControllerTestCase
     {
         $hydrator = new DtoHydrator();
 
+        $modelDetail = new ModelDetail();
+        $modelDetail->setVehicleClass((new VehicleClass())->setCode('A'));
+
         $vehicleEntity = new Vehicle();
         $vehicleEntity
             ->setId(self::$VEHICLE_ID)
-            ->setVehicleClass(
-                (new VehicleClass())->setCode('A')
-            );
+            ->setModelDetail($modelDetail);
 
         $vehicleDto = (new VehicleDto())
             ->setId(self::$VEHICLE_ID)

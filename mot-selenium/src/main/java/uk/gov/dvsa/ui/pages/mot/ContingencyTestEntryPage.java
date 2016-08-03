@@ -11,8 +11,8 @@ import uk.gov.dvsa.ui.pages.VehicleSearchPage;
 
 import java.util.List;
 
-import static uk.gov.dvsa.helper.FormCompletionHelper.enterText;
-import static uk.gov.dvsa.helper.FormCompletionHelper.selectFromDropDownByVisibleText;
+import static uk.gov.dvsa.helper.FormDataHelper.enterText;
+import static uk.gov.dvsa.helper.FormDataHelper.selectFromDropDownByVisibleText;
 
 public class ContingencyTestEntryPage extends Page {
 

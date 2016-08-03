@@ -14,6 +14,7 @@ use VehicleApi\Service\VehicleSearchService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use DvsaCommon\Obfuscate\ParamObfuscator;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 
 /**
  * Create instance of service VehicleSearchService
@@ -37,7 +38,8 @@ class VehicleSearchServiceFactory implements FactoryInterface
             $serviceLocator->get(ParamObfuscator::class),
             $serviceLocator->get(RetestEligibilityValidator::class),
             new FuzzySearchConverter(),
-            new SpaceStripConverter()
+            new SpaceStripConverter(),
+            $serviceLocator->get(VehicleService::class)
         );
     }
 }

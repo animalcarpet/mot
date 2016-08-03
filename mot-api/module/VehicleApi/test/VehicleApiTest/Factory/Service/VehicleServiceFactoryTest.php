@@ -6,6 +6,7 @@ use DataCatalogApi\Service\VehicleCatalogService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\UnitOfWork;
+use Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
 use DvsaAuthorisation\Service\AuthorisationService;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Obfuscate\ParamObfuscator;
@@ -49,6 +50,7 @@ class VehicleServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $this->mockMethod($mockServiceLocator, 'get', $this->at(3), XMock::of(OtpService::class));
         $this->mockMethod($mockServiceLocator, 'get', $this->at(4), XMock::of(ParamObfuscator::class));
         $this->mockMethod($mockServiceLocator, 'get', $this->at(5), XMock::of(MotIdentityProviderInterface::class));
+        $this->mockMethod($mockServiceLocator, 'get', $this->at(6), XMock::of(NewVehicleService::class));
 
         $this->assertInstanceOf(
             VehicleService::class,

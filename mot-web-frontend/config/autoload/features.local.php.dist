@@ -38,5 +38,9 @@ return [
          * Value synchronized in API/WFE
          */
         'infinity.contingency' => true,
+
+        'test_quality_information' => true,
+
+        'test_result_entry_improvements' => true,
     ]
 ];

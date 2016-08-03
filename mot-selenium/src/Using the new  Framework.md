@@ -152,7 +152,7 @@ This package is for tests around complete feature Journey (i.e. end to end scena
 
 
 
-##7. Running Test
+##6. Running Test
 * 6.1 using maven  
 To run the whole the default test suite specified in the pom file.
 
@@ -165,12 +165,29 @@ To run the whole the default test suite specified in the pom file.
 
 To run a single test class  
     	
-    	mvn -Dtest=ClaimUserAccount test
+    	mvn clean -Dtest=ClaimUserAccount test
 
 * 6.2 screenshot folder
 
 		/Users/Shared/selenium/screenshots/error
+		
 
+##7. Reporting 
+* We use the ([Allure Reporting framwork](http://allure.qatools.ru/))
+
+* Example usage ([TestNg Example](https://github.com/allure-examples/allure-testng-example))
+
+* Wiki ([Allure Wiki](https://github.com/allure-framework/allure-core/wiki))
+
+* There is a Jenkins plugin, which automatically compiles report, an icon will appear next to the build number, simply click and view.
+
+* To view in Chrome, type this line into terminal                                              	
+   	```open /Applications/Google\ Chrome.app --args --allow-file-access-from-files```
+   	
+* To run on your local and view the results in allure, run:
+```mvn clean test site``` , then go to **$WORSPACE/mot-selenium/target/site/allure-maven-plugin/index.html**
+
+* Use **uk.gov.dvsa.ui.views.EventHistoryViewTests** as reference for common allure report annotations.
 
 ##8. Best Practices
 * Removed all unused import statements.

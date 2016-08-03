@@ -1,8 +1,0 @@
-Get list of a site's vehicle test classes
-
-!| Vm 2545 Vehicle Test Classes                                                                                                                                          |
-|Site id|success?|error messages?   |Site name?             |vehicle Test Classes?                                                                                       |
-|1      |true    |                  |Popular Garages        |[${VehicleClass1}, ${VehicleClass2}, ${VehicleClass3}, ${VehicleClass4}, ${VehicleClass5}, ${VehicleClass7}]|
-|2      |true    |                  |Johns Garage           |[${VehicleClass4}]                                                                                          |
-|11     |true    |                  |Johns Motorcycle Garage|[${VehicleClass1}]                                                                                          |
-|999    |false   |Site 999 not found|                       |                                                                                                            |

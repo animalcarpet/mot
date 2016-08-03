@@ -18,7 +18,7 @@ if ($this->authorisationHelper()->hasRole(Role::USER)):
             ? $this->url('newProfile',
                 [], []
             )
-            : PersonUrlBuilderWeb::profile(); ?>" id="user-profile">Your Profile</a>
+            : PersonUrlBuilderWeb::profile(); ?>" id="user-profile">Your profile</a>
     </li>
     <li>
         <a href="<?php echo $this->url(LogoutController::ROUTE_LOGOUT); ?>" id="logout">

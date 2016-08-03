@@ -25,13 +25,20 @@ use DvsaMotTest\View\ReplacementModelViewModel;
                     <input type="hidden" name="make" value="<?php echo $make->getCode(); ?>"/>
                     <select name="model" id="input-model" class="form-control input-small">
                         <option value="">Select a model</option>
+                        <?php $otherModel = true; ?>
                         <?php foreach ($modelList as $id => $modelRecord): ?>
+                            <?php
+                                $modelSelected = $modelRecord['id'] == $model->getId();
+                                if ($modelSelected) {
+                                    $otherModel = false;
+                                }
+                            ?>
                             <option
-                                value="<?php echo $this->escapeHTML($modelRecord['code']); ?>"<?php if ($modelRecord['code'] == $model->getCode(
-                                )
-                            ): ?> selected<?php endif; ?>><?php echo $this->escapeHTML($modelRecord['name']); ?></option>
+                                value="<?php echo $this->escapeHTML($modelRecord['code']); ?>"<?php if ($modelSelected): ?> selected<?php endif; ?>>
+                                <?php echo $this->escapeHTML($modelRecord['name']); ?>
+                            </option>
                         <?php endforeach; ?>
-                        <option value="other">Other</option>
+                        <option value="other"<?php if ($otherModel): ?> selected<?php endif; ?>>Other</option>
                     </select>
                 </div>
             </div>

@@ -50,7 +50,12 @@ $cssClass = join(
             'tabIndex'      => $tabIndex,
             'autofocus'     => $this->autofocus,
             'pattern'       => $this->pattern,
-            'patternErrorMsg' => $this->patternErrorMsg
+            'patternErrorMsg' => $this->patternErrorMsg,
+            'autoCompleteOff' => $this->autoCompleteOff
         ]
     ); ?>
+
+    <?php if (!empty($info)): ?>
+        <?php echo $this->escapeHtml($info); ?>
+    <?php endif; ?>
 </div>

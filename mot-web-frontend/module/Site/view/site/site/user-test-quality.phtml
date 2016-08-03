@@ -1,0 +1,40 @@
+<?php
+echo $this->partial('site/site/partials/test-quality-group-brakedown', [
+    'group' => $this->viewModel->getTable()
+]);
+use Core\Routing\VtsRouteList;
+use Site\ViewModel\TestQuality\UserTestQualityViewModel;
+
+/** @var UserTestQualityViewModel $vm */
+$vm = $this->viewModel;
+?>
+
+<div class="result__actions">
+    Download <?php echo $vm->getTable()->getGroupName(); ?> report as a
+    <a href="<?php echo $this->url(VtsRouteList::VTS_USER_TEST_QUALITY_CSV,
+        [
+            'userId' => $vm->getUserId(),
+            'id' => $vm->getSiteId(),
+            'group' => $vm->getTable()->getGroupCode(),
+            'month' => $vm->getMonth(),
+            'year' => $vm->getYear(),
+            'user'
+        ]) ?>" rel="external">
+        CSV (Spreadsheet)
+    </a> file (<?php echo $vm->getCsvFileSize() ?>).
+</div>
+
+
+<nav class="content-navigation">
+    <ul class="content-navigation__secondary">
+        <li>
+            <a id="return-link" href="<?php echo $this->url(VtsRouteList::VTS_TEST_QUALITY, [
+                'id' => $vm->getSiteId(),
+                'month' => $vm->getMonth(),
+                'year' => $vm->getYear(),
+            ],$vm->getQueryParamsForReturnLink()) ?>">
+                Return to test quality information
+            </a>
+        </li>
+    </ul>
+</nav>

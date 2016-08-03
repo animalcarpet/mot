@@ -24,11 +24,17 @@ class TypeCheck
         return false;
     }
 
-
     public static function assertIsPositiveInteger($number)
     {
         if (!self::isPositiveInteger($number)) {
-            throw new \InvalidArgumentException("Positive integer expected" );
+            throw new \InvalidArgumentException("Positive integer expected");
+        }
+    }
+
+    public static function assertInteger($number)
+    {
+        if (!self::isPositiveInteger($number)) {
+            throw new \InvalidArgumentException("Integer expected");
         }
     }
 
@@ -43,7 +49,17 @@ class TypeCheck
     public static function assertInstance($object, $class)
     {
         if (false === ($object instanceof $class)) {
-            throw new \RuntimeException('Expected ' . $class . ' object. ' . get_class($object) . ' given.');
+            if ($object === null) {
+                $given = 'Null';
+            } elseif (is_object($object)) {
+                $given = get_class($object);
+            } elseif (is_callable($object)) {
+                $given = 'Callable';
+            } else {
+                $given = 'Scalar value';
+            }
+
+            throw new \RuntimeException('Expected ' . $class . ' object. ' . $given . ' given.');
         }
     }
 
@@ -122,6 +138,13 @@ class TypeCheck
             }) === false;
     }
 
+    public static function assertEnum($value, $enumClass)
+    {
+        if(!$enumClass::exists($value)) {
+            throw new \InvalidArgumentException("$value is not an enum");
+        }
+    }
+
     public static function assertCollectionOfScalarValues($collection)
     {
         foreach ($collection as $element) {
@@ -136,7 +159,7 @@ class TypeCheck
             }
 
             if (is_array($element)) {
-                throw new \InvalidArgumentException("Expected collection of scalar values. Got array." );
+                throw new \InvalidArgumentException("Expected collection of scalar values. Got array.");
             }
         }
     }

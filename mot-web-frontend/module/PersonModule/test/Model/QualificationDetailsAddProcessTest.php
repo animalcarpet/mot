@@ -1,11 +1,11 @@
 <?php
 use Application\Data\ApiPersonalDetails;
 use Core\TwoStepForm\FormContextInterface;
-use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\QualificationDetailsBreadcrumbs;
+use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\CertificatesBreadcrumbs;
 use Dvsa\Mot\Frontend\PersonModule\Controller\QualificationDetailsController;
 use Dvsa\Mot\Frontend\PersonModule\Form\QualificationDetailsForm;
 use Dvsa\Mot\Frontend\PersonModule\Model\QualificationDetailsAddProcess;
-use Dvsa\Mot\Frontend\PersonModule\Model\QualificationDetailsContext;
+use Dvsa\Mot\Frontend\PersonModule\Model\FormContext;
 use Dvsa\Mot\Frontend\PersonModule\Routes\QualificationDetailsRoutes;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuard;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuardBuilder;
@@ -25,7 +25,7 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
     private $qualificationDetailsMapperMock;
     /** @var  SiteMapper */
     private $siteMapperMock;
-    /** @var  QualificationDetailsBreadcrumbs */
+    /** @var  CertificatesBreadcrumbs */
     private $qualificationDetailsBreadcrumbsMock;
     /** @var  ApiPersonalDetails */
     private $personalDetailsServiceMock;
@@ -58,7 +58,7 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
     {
         $this->qualificationDetailsMapperMock = XMock::of(QualificationDetailsMapper::class);
         $this->siteMapperMock = Xmock::of(SiteMapper::class);
-        $this->qualificationDetailsBreadcrumbsMock = Xmock::of(QualificationDetailsBreadcrumbs::class);
+        $this->qualificationDetailsBreadcrumbsMock = Xmock::of(CertificatesBreadcrumbs::class);
         $this->personalDetailsServiceMock = $this->buildPersonalDetailsServiceMock();
 
         $this->personProfileGuardMock = Xmock::of(PersonProfileGuard::class);
@@ -85,7 +85,7 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
 
         $this->controllerMock = Xmock::of(QualificationDetailsController::class);
 
-        $context = (new QualificationDetailsContext(1, 'A', $this->controllerMock));
+        $context = (new FormContext(1, 1, 'A', $this->controllerMock));
 
         $this->sut->setContext($context);
     }

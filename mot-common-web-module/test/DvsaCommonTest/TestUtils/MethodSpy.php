@@ -17,6 +17,8 @@ class MethodSpy
 
     private $invocationMocker;
 
+    private $method;
+
     /**
      * @param \PHPUnit_Framework_MockObject_MockObject $mock
      * @param string $method
@@ -24,6 +26,8 @@ class MethodSpy
     public function  __construct($mock, $method)
     {
         $this->invoker = new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount();
+
+        $this->method = $method;
 
         $this->invocationMocker = $mock->expects($this->invoker)->method($method);
     }
@@ -50,11 +54,15 @@ class MethodSpy
 
     public function paramsForInvocation($index)
     {
+        if ($this->invocationCount() == 0) {
+            throw new MethodNotInvokedException($this->method);
+        }
+
         return $this->getInvocations()[$index]->parameters;
     }
 
     public function paramsForLastInvocation()
     {
-        return $this->paramsForInvocation($this->invocationCount()-1);
+        return $this->paramsForInvocation($this->invocationCount() - 1);
     }
 }

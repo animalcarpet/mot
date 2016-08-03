@@ -19,7 +19,7 @@ public class SiteStatusViewTest extends DslTest {
         areaOffice2User = userData.createUserAsAreaOfficeTwo("AE2");
     }
 
-    @Test(groups = {"BVT", "Regression"}, description = "Verifies that Authorised user can update vts status")
+    @Test(groups = {"BVT"}, description = "Verifies that Authorised user can update vts status")
     public void updateVtsStatusSuccessfully() throws IOException, URISyntaxException {
         //Given I am on the VTS Details Page as Area Officer 2
         motUI.site.gotoPage(areaOffice2User, "1");

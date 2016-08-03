@@ -4,7 +4,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
@@ -27,7 +27,7 @@ public class SiteSearchPage extends Page{
     }
 
     public SiteSearchPage searchForSiteBySiteId(String siteId) {
-        FormCompletionHelper.enterText(siteIdInputField, String.valueOf(siteId));
+        FormDataHelper.enterText(siteIdInputField, String.valueOf(siteId));
         return this;
     }
 

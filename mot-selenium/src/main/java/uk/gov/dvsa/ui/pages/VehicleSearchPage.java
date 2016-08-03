@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.mot.StartTestConfirmationPage;
 import uk.gov.dvsa.ui.pages.mot.retest.ConfirmVehicleRetestPage;
@@ -66,11 +66,13 @@ public class VehicleSearchPage extends Page {
     }
 
     public VehicleSearchPage searchVehicle(Vehicle vehicle){
-        String regNumber =
-                vehicle.getRegistrationNumber() == null ? vehicle.getDvlaRegistration() : vehicle.getRegistrationNumber();
+        String regNumber = vehicle.getDvsaRegistration() == null ?
+                vehicle.getDvlaRegistration() :
+                vehicle.getDvsaRegistration();
 
-        FormCompletionHelper.enterText(registrationField, regNumber);
-        FormCompletionHelper.enterText(vinField, vehicle.getVin());
+        FormDataHelper.enterText(registrationField, regNumber);
+        FormDataHelper.enterText(vinField, vehicle.getVin());
+
         searchButton.click();
 
         return this;

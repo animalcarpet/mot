@@ -122,6 +122,7 @@ final class EditStepAction implements AutoWireableInterface
 
         $actionResult->layout()->setPageTitle($process->getEditStepPageTitle());
         $actionResult->layout()->setPageSubTitle($process->getPageSubTitle());
+        $actionResult->layout()->setPageLede($process->getEditPageLede());
 
         $actionResult->layout()->setTemplate('layout/layout-govuk.phtml');
 

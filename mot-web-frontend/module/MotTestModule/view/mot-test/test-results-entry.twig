@@ -1,0 +1,95 @@
+<header class="content-header">
+    <ul class="content-header__tertiary-list">
+        <li id="vehicleMakeModel" class="content-header__list-item--primary">{{ vehicleMakeAndModel|escape }}</li>
+        <li id="vehicleRegistration" class="content-header__list-item">{{ vehicle.registration|escape }}</li>
+        <li id="firstUsedDate" class="content-header__list-item">First used {{ vehicleFirstUsedDate|escape }}</li>
+    </ul>
+</header>
+
+{% if flashMessenger().hasSuccessMessages() %}
+    {% for message in flashMessenger().getSuccessMessages() %}
+        <div class="message--success" id="validation-message--success">
+            <p>{{ message }}</p>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="action-panel">
+    <div class="clear-float">
+        <div class="action-panel__container">
+            <h3 class="action-panel__heading">Odometer</h3>
+        </div>
+        <div id="odometerReading" class="action-panel__container">
+            <h3 class="action-panel__value">
+                {% if odometerReading.hasNumericValue %}
+                    {{ odometerReading.getDisplayValue|escape|number_format }} {{ odometerReading.getUnitName }}
+                {% else %}
+                    {{ odometerReading.getDisplayValue }}
+                {% endif %}
+            </h3>
+        </div>
+        <div class="action-panel__container--last">
+            <a href="{{ url('odometer', {tID : motTest.motTestNumber}) }}" id="addOdometerReadingButton" class="button">
+                {% if odometerReading.isNotRecorded %} Add reading {% else %} Edit reading {% endif %}
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="action-panel">
+    <div class="clear-float">
+        <div class="action-panel__container">
+            <h3 class="action-panel__heading">Defects</h3>
+            <h4 class="action-panel__sub-heading">Failures, PRS and Advisories</h4>
+        </div>
+        <div class="action-panel__container--last">
+            <a href="{{ url('mot-test-defects/categories', {motTestNumber : motTest.motTestNumber}) }}" id="addDefectButton" class="button">Add a defect</a>
+            <span class="action-panel__secondary-action">or <a href="#" id="searchForDefect">Search for a defect</a></span>
+        </div>
+    </div>
+</div>
+<div class="defect-summary">
+    <div id="rfrList" class="">
+        {% include '/defects/observed-defects.twig' with {'observedDefects': observedDefects} %}
+    </div>
+</div>
+<div class="action-panel">
+    <div class="clear-float">
+        <div class="action-panel__container">
+            <h3 class="action-panel__heading">Brake test</h3>
+            <h4 class="action-panel__sub-heading"></h4>
+        </div>
+        {% if motTestResults.isBrakeTestRecorded %}
+        <div class="action-panel__container">
+            <h3 class="action-panel__value">{{ motTestResults.brakeTestOutcome }}</h3>
+        </div>
+        {% endif %}
+        <div class="action-panel__container--last">
+        {% if motTestResults.isBrakeTestRecorded %}
+            <a href="{{ url('mot-test/brake-test-configuration', {'motTestNumber': motTest.motTestNumber}) }}"
+               id="addBrakeTestButton" class="button">Edit brake test</a>
+            <span class="action-panel__secondary-action">or
+                <a href="{{ url('mot-test/brake-test-summary', {'motTestNumber': motTest.motTestNumber}) }}">
+                    view brake test results</a>
+            </span>
+        {% else %}
+            <a href="{{ url('mot-test/brake-test-configuration', {'motTestNumber': motTest.motTestNumber}) }}"
+               id="addBrakeTestButton" class="button">Add brake test</a>
+        {% endif %}
+        </div>
+    </div>
+</div>
+<nav class="content-navigation">
+    <form action="{% if shouldDisableSubmitButton %}
+                    #
+                  {% else %}
+                    {{ url('mot-test/test-summary', {'motTestNumber' : motTest.motTestNumber}) }}
+                  {% endif %}" method="get">
+        <input id="reviewTest" type="submit" class="button" value="Review test" {% if shouldDisableSubmitButton %} disabled {% endif %}>
+    </form>
+    {% if not isDemo %}<ul class="content-navigation__secondary">
+        <li>
+            <a href="{{ url('mot-test/cancel', {'motTestNumber' : motTest.motTestNumber}) }}" id="cancelTest">Cancel test</a>
+        </li>
+    </ul>{% endif %}
+</nav>

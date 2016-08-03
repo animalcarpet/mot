@@ -23,6 +23,19 @@ class ModelController extends AbstractDvsaRestfulController
         return ApiResponse::jsonOk($modelsData);
     }
 
+    public function getModelsByMakeIdAction()
+    {
+        $make = $this->params()->fromRoute("id");
+        $models = $this->getVehicleCatalog()->getModelsByMakeId($make);
+        $modelsData = array_map(
+            function (Model $model) {
+                return ['id' => $model->getId(), 'code' => $model->getCode(), 'name' => $model->getName()];
+            },
+            $models
+        );
+        return ApiResponse::jsonOk($modelsData);
+    }
+
     /** @return VehicleCatalogService */
     private function getVehicleCatalog()
     {

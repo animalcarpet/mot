@@ -39,6 +39,13 @@ class Make extends Entity
     private $name;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_verified", type="boolean")
+     */
+    private $isVerified;
+
+    /**
      * @param string $code
      *
      * @return Make
@@ -75,5 +82,13 @@ class Make extends Entity
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isVerified()
+    {
+        return $this->isVerified;
     }
 }

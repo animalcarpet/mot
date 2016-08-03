@@ -7,6 +7,7 @@ use DvsaCommonApi\Service\Exception\ServiceException;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaEntities\Entity\BrakeTestResultClass3AndAbove;
 use DvsaEntities\Entity\BrakeTestResultServiceBrakeData;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
 use DvsaEntitiesTest\Entity\BrakeTestResultClass12Test;
@@ -628,8 +629,11 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
     {
         $vehicle = new Vehicle();
 
+        $modelDetail = new ModelDetail();
+        $modelDetail->setVehicleClass(new VehicleClass($vehicleClass));
+
         return $vehicle
-            ->setVehicleClass(new VehicleClass($vehicleClass))
+            ->setModelDetail($modelDetail)
             ->setFirstUsedDate(new \DateTime($firstUsed));
     }
 }

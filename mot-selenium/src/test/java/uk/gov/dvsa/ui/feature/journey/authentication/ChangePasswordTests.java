@@ -24,7 +24,7 @@ public class ChangePasswordTests extends DslTest {
         tester = userData.createTester(1);
     }
 
-    @Test(groups = {"BVT, regression"}, description = "VM-7668, Tester is changing password")
+    @Test(groups = {"BVT"}, description = "VM-7668, Tester is changing password")
     public void testerChangesPassword() throws Exception {
 
         //Given I am logged as a tester and I am on my profile page
@@ -46,18 +46,21 @@ public class ChangePasswordTests extends DslTest {
         Assert.assertTrue(personProfilePage.getMessageSuccess().toString().equals(messageSuccess));
     }
 
-    @Test(groups = {"BVT, regression"}, description = "VM-7668, Tester cancels password change")
+    @Test(groups = {"BVT"}, description = "VM-7668, Tester cancels password change")
     public void testerCancelsPasswordChange() throws Exception {
 
-        //Given I am logged in as a tester and I am on the password change page
+        //Given I am logged as a tester and I am on my profile page
+        PersonProfilePage personProfilePage = pageNavigator.navigateToPage(tester, PersonProfilePage.PATH, PersonProfilePage.class);
+
+        //And I click change password link
         ChangePasswordFromProfilePage changePasswordFromProfilePage =
-                pageNavigator.navigateToPage(tester, ChangePasswordFromProfilePage.PATH, ChangePasswordFromProfilePage.class);
+                personProfilePage.clickChangePasswordLink();
 
         //Then I click cancel link and I am back to the profile page
         changePasswordFromProfilePage.clickCancelLink();
     }
 
-    @Test(groups = {"BVT, regression"}, description = "VM-7668, Tester changes password for the same one")
+    @Test(groups = {"BVT"}, description = "VM-7668, Tester changes password for the same one")
     public void testerChangesPasswordForSameOne() throws Exception {
 
         //Given I am logged in as a tester and I am on the password change page
@@ -77,7 +80,7 @@ public class ChangePasswordTests extends DslTest {
                 .equals(String.format(errorMessageBase + error)));
     }
 
-    @Test(groups = {"BVT, regression"},
+    @Test(groups = {"BVT"},
             description = "VM-7668, Tester tries to put new password but does not match with confirm password")
     public void newPasswordAndOldPasswordDoesNotMatch() throws Exception {
 
@@ -98,7 +101,7 @@ public class ChangePasswordTests extends DslTest {
                 .equals(String.format(errorMessageBase + error)));
     }
 
-    @Test(groups = {"BVT, regression"},
+    @Test(groups = {"BVT"},
             description = "VM-7668, Tester tries change password that is not according to password policy")
     public void testerTriesToChangePasswordThatValidatesPolicy() throws Exception {
 
@@ -118,7 +121,7 @@ public class ChangePasswordTests extends DslTest {
         Assert.assertTrue(changePasswordFromProfilePage.getErrorMessage().contains(error1));
     }
 
-    @Test(groups = {"BVT, regression"}, description = "VM-7668, Tester types invalid old password")
+    @Test(groups = {"BVT"}, description = "VM-7668, Tester types invalid old password")
     public void testerPutsInvalidOldPassword() throws Exception {
 
         //Given I am logged in as a tester and I am on the password change page
@@ -131,13 +134,13 @@ public class ChangePasswordTests extends DslTest {
         changePasswordFromProfilePage.clickSubmitButton(ChangePasswordFromProfilePage.class);
 
         //Then The error message is displayed
-        String error = "Current password - you must enter your current password";
+        String error = "Current password - enter your current password";
         assertThat(changePasswordFromProfilePage.isErrorMessageWindowDisplayed(), is(true));
         Assert.assertTrue(changePasswordFromProfilePage.getErrorMessage()
                 .equals(String.format(errorMessageBase + error)));
     }
 
-    @Test(groups = {"BVT, regression"}, description = "VM-7668, Tester leaves empty fields and click submit")
+    @Test(groups = {"BVT"}, description = "VM-7668, Tester leaves empty fields and click submit")
     public void testerLeavesEmptyFields() throws Exception {
 
         //Given I am logged in as a tester and I am on the password change page
@@ -150,10 +153,10 @@ public class ChangePasswordTests extends DslTest {
         //Then The error message is displayed
         assertThat(changePasswordFromProfilePage.isErrorMessageWindowDisplayed(), is(true));
         Assert.assertTrue(changePasswordFromProfilePage.getErrorMessage()
-                .contains("New password - you must enter a password"));
+                .contains("New password - enter a password"));
         Assert.assertTrue(changePasswordFromProfilePage.getErrorMessage()
-                .contains("Re-type your new password - you must re-type your password"));
+                .contains("Re-type your new password - re-type your password"));
         Assert.assertTrue(changePasswordFromProfilePage.getErrorMessage()
-                .contains("Current password - you must enter your current password"));
+                .contains("Current password - enter your current password"));
     }
 }

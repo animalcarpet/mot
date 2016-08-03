@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.model.vehicle.VehicleClass;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.vts.ConfirmChangeDetails.ConfirmChangeDetailsClassesPage;
@@ -37,7 +37,7 @@ public class ChangeDetailsClassesPage extends Page {
     }
 
     public ChangeDetailsClassesPage chooseOption(VehicleClass className) {
-        FormCompletionHelper.selectInputBox(driver.findElement(By.cssSelector(String.format("input[value='%s']", className.getId()))));
+        FormDataHelper.selectInputBox(driver.findElement(By.cssSelector(String.format("input[value='%s']", className.getId()))));
         return this;
     }
 

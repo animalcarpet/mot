@@ -1,6 +1,12 @@
 <?php
 
-$path = getenv('APPLICATION_CONFIG_PATH') ?: dirname(__DIR__) . '/config/autoload';
+$env = getenv('TEST_APPLICATION_CONFIG_PATH');
+
+if (!$env) {
+    $env = getenv('APPLICATION_CONFIG_PATH');
+}
+
+$path = $env ?: dirname(__DIR__) . '/config/autoload';
 
 return [
     // This should be an array of module namespaces used in the application.

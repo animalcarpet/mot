@@ -41,15 +41,8 @@ $mastheadPresenter = new MastheadPresenter;
 
     echo $this->headScript();
     ?>
-    <?php $hashedUserId = $this->identity() ? hash('sha1', $this->identity()->getUserId() . '.'
-            . $this->identity()->getUsername()) : null; ?>
-    <?php if ($hashedUserId): ?>
-    <script>
-      dataLayer = [{
-        'userId': '<?php echo $hashedUserId; ?>'
-      }];
-    </script>
-    <?php endif; ?>
+
+    <script type="text/javascript"><?php echo $this->gtmDataLayer()->render(); ?></script>
 </head>
 <body>
 <!-- Google Tag Manager -->
@@ -99,7 +92,7 @@ $mastheadPresenter = new MastheadPresenter;
                         echo $this->isFeatureEnabled('new_person_profile')
                             ? $this->url('newProfile', [],[]) :
                             PersonUrlBuilderWeb::profile();
-                        ?>" id="user-profile">Your Profile</a>
+                        ?>" id="user-profile">Your profile</a>
                     </li>
                     <li>
                         <a href="<?php echo $this->url(LogoutController::ROUTE_LOGOUT); ?>" id="logout">

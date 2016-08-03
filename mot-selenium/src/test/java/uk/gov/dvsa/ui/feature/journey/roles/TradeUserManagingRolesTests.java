@@ -36,7 +36,7 @@ public class TradeUserManagingRolesTests extends DslTest {
         areaOffice1User = userData.createAreaOfficeOne("AreaOfficer");
     }
 
-    @Test(testName = "NewProfile", groups = {"BVT", "Regression", "VM-12321"},
+    @Test(testName = "NewProfile", groups = {"BVT", "VM-12321"},
             description = "Verifies that trade user cant check roles via roles and associations link " +
                     "of other trade user")
     public void tradeUserCantViewAeAssociationOfOtherTradeUser() throws IOException, URISyntaxException {
@@ -49,7 +49,7 @@ public class TradeUserManagingRolesTests extends DslTest {
     }
 
 
-    @Test(groups = {"BVT", "Regression", "BL-94"},
+    @Test(groups = {"BVT", "BL-94"},
             description = "Verifies that trade user can navigate back from Remove role page to " +
                     "Roles and Associations page via link")
     public void tradeUserCanNavigateFromDeleteRolePageViaLink() throws IOException, URISyntaxException {
@@ -65,7 +65,7 @@ public class TradeUserManagingRolesTests extends DslTest {
         assertThat(motUI.manageRoles.isRolesTableContainsValidTesterData(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-94"},
+    @Test(groups = {"BVT", "BL-94"},
             description = "Verifies that trade user can't remove his own role if he has test in progress")
     public void tradeUserCantRemoveOwnTradeRoleWithTestInProgress() throws IOException, URISyntaxException {
         vehicleReinspectionWorkflow().startMotTestAsATester(tester, testVehicle);
@@ -81,7 +81,7 @@ public class TradeUserManagingRolesTests extends DslTest {
         assertThat(motUI.manageRoles.isErrorMessageDisplayedOnRolesAndAssociationsPage(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-94"},
+    @Test(groups = {"BVT", "BL-94"},
             description = "Verifies that trade user can remove his own role")
     public void tradeUserCanRemoveOwnTradeRole() throws IOException, URISyntaxException {
 
@@ -96,7 +96,7 @@ public class TradeUserManagingRolesTests extends DslTest {
         assertThat(motUI.manageRoles.isSuccessMessageDisplayedOnRolesAndAssociationsPage(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-94"},
+    @Test(groups = {"BVT", "BL-94"},
             description = "Verifies that when trade user removes his own role it's not assigned to vts")
     public void tradeUserRoleIsNotAssignedToVtsAfterDeletion() throws IOException, URISyntaxException {
         tradeUserCanRemoveOwnTradeRole();

@@ -17,7 +17,9 @@ use DvsaEntities\Entity\Role;
 class PersonTradeRoleSorterServiceTest extends \PHPUnit_Framework_TestCase
 {
     protected static $siteRoles = [
-        SiteBusinessRoleCode::SITE_MANAGER, SiteBusinessRoleCode::SITE_ADMIN, SiteBusinessRoleCode::TESTER,
+        SiteBusinessRoleCode::SITE_MANAGER,
+        SiteBusinessRoleCode::SITE_ADMIN,
+        SiteBusinessRoleCode::TESTER,
     ];
 
     /**
@@ -30,7 +32,7 @@ class PersonTradeRoleSorterServiceTest extends \PHPUnit_Framework_TestCase
         $sorterService = $this->getServiceWithMocks();
         $sortedRoles = $sorterService->sortTradeRoles($tradeRoles);
 
-        if(empty($tradeRoles)){
+        if (empty($tradeRoles)) {
             $this->assertEquals(true, is_array($sortedRoles));
             $this->assertEmpty($sortedRoles);
             return;
@@ -53,8 +55,8 @@ class PersonTradeRoleSorterServiceTest extends \PHPUnit_Framework_TestCase
     {
         $AE4 = 'AE44444';
         $AE2 = 'AE22222';
-        $AE3 = 'AE33333';
-        $AE1 = 'AE1111';
+        $SITE1 = 'AE33333';
+        $SITE2 = 'AE1111';
 
         return [
             [
@@ -66,12 +68,12 @@ class PersonTradeRoleSorterServiceTest extends \PHPUnit_Framework_TestCase
                 // only one role
                 'tradeRoles' => [
                     $this->createPersonTradeRoleDTO([
-                        'aeId' => $AE4,
+                        'workplaceId' => $SITE1,
                         'roleCode' => SiteBusinessRoleCode::SITE_MANAGER,
                     ]),
                 ],
                 'expectedOrgRolesOrder' => [
-                    $AE4 => [
+                    $SITE1 => [
                         BusinessRole::SITE_TYPE => [
                             SiteBusinessRoleCode::SITE_MANAGER,
                         ],
@@ -90,11 +92,11 @@ class PersonTradeRoleSorterServiceTest extends \PHPUnit_Framework_TestCase
                         'roleCode' => OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
                     ]),
                     $this->createPersonTradeRoleDTO([
-                        'aeId' => $AE3,
+                        'workplaceId' => $SITE1,
                         'roleCode' => SiteBusinessRoleCode::TESTER,
                     ]),
                     $this->createPersonTradeRoleDTO([
-                        'aeId' => $AE3,
+                        'workplaceId' => $SITE1,
                         'roleCode' => SiteBusinessRoleCode::SITE_MANAGER,
                     ]),
                 ],
@@ -105,7 +107,7 @@ class PersonTradeRoleSorterServiceTest extends \PHPUnit_Framework_TestCase
                             OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DELEGATE,
                         ],
                     ],
-                    $AE3 => [
+                    $SITE1 => [
                         BusinessRole::SITE_TYPE => [
                             SiteBusinessRoleCode::SITE_MANAGER,
                             SiteBusinessRoleCode::TESTER,
@@ -117,37 +119,39 @@ class PersonTradeRoleSorterServiceTest extends \PHPUnit_Framework_TestCase
                 // all of the possible roles
                 'tradeRoles' => [
                     $this->createPersonTradeRoleDTO([
-                        'aeId' => $AE1,
+                        'aeId' => $AE4,
                         'roleCode' => OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DELEGATE,
                     ]),
                     $this->createPersonTradeRoleDTO([
-                        'aeId' => $AE1,
+                        'aeId' => $AE4,
                         'roleCode' => OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_PRINCIPAL,
                     ]),
                     $this->createPersonTradeRoleDTO([
-                        'aeId' => $AE1,
+                        'aeId' => $AE4,
                         'roleCode' => OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
                     ]),
                     $this->createPersonTradeRoleDTO([
-                        'aeId' => $AE1,
+                        'workplaceId' => $SITE2,
                         'roleCode' => SiteBusinessRoleCode::SITE_ADMIN,
                     ]),
                     $this->createPersonTradeRoleDTO([
-                        'aeId' => $AE1,
+                        'workplaceId' => $SITE2,
                         'roleCode' => SiteBusinessRoleCode::TESTER,
                     ]),
                     $this->createPersonTradeRoleDTO([
-                        'aeId' => $AE1,
+                        'workplaceId' => $SITE2,
                         'roleCode' => SiteBusinessRoleCode::SITE_MANAGER,
                     ]),
                 ],
                 'expectedOrgRolesOrder' => [
-                    $AE1 => [
+                    $AE4 => [
                         BusinessRole::ORGANISATION_TYPE => [
                             OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
                             OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DELEGATE,
                             OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_PRINCIPAL,
                         ],
+                    ],
+                    $SITE2 => [
                         BusinessRole::SITE_TYPE => [
                             SiteBusinessRoleCode::SITE_MANAGER,
                             SiteBusinessRoleCode::SITE_ADMIN,
@@ -163,7 +167,7 @@ class PersonTradeRoleSorterServiceTest extends \PHPUnit_Framework_TestCase
     {
         $enumCatalog = XMock::of(EnumCatalog::class);
         $businessCatalog = XMock::of(BusinessRoleCatalog::class);
-        $businessCatalog->expects($this->any())->method('getByCode')->willReturnCallback(function($role){
+        $businessCatalog->expects($this->any())->method('getByCode')->willReturnCallback(function ($role) {
             return new BusinessRole(
                 $role,
                 $role,
@@ -177,8 +181,13 @@ class PersonTradeRoleSorterServiceTest extends \PHPUnit_Framework_TestCase
 
     protected function createPersonTradeRoleDTO($data)
     {
-        return (new PersonTradeRoleDto())
-            ->setAeId($data['aeId'])
-            ->setRoleCode($data['roleCode']);
+        $roleDto = (new PersonTradeRoleDto())->setRoleCode($data['roleCode']);
+        if (isset($data['aeId'])) {
+            $roleDto->setAeId($data['aeId']);
+        }
+        if (isset($data['workplaceId'])) {
+            $roleDto->setWorkplaceId($data['workplaceId']);
+        }
+        return $roleDto;
     }
 }

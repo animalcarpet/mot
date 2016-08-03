@@ -19,6 +19,10 @@ public class Site {
         this.name = name;
     }
 
+    public String getIdAsString() {
+        return String.valueOf(id);
+    }
+
     public int getId() {
         return id;
     }

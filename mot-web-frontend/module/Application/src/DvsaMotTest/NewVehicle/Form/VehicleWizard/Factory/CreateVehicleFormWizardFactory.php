@@ -2,6 +2,7 @@
 namespace DvsaMotTest\NewVehicle\Form\VehicleWizard\Factory;
 
 use Application\Service\ContingencySessionManager;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\HttpRestJson\Client;
 use DvsaMotTest\NewVehicle\Container\NewVehicleContainer;
 use DvsaMotTest\NewVehicle\Form\VehicleWizard\CreateVehicleFormWizard;
@@ -25,6 +26,7 @@ class CreateVehicleFormWizardFactory implements FactoryInterface
         $catalogService = $sl->get('CatalogService');
         $authorisedClassesService = $sl->get(AuthorisedClassesService::class);
         $identityProvider = $sl->get('MotIdentityProvider');
+        $vehicleService = $sl->get(VehicleService::class);
         $contingencySessionManager = $sl->get(ContingencySessionManager::class);
 
         $wizard = new CreateVehicleFormWizard();
@@ -50,6 +52,7 @@ class CreateVehicleFormWizardFactory implements FactoryInterface
             $client,
             $catalogService,
             $identityProvider,
+            $vehicleService,
             $contingencySessionManager
         );
         $step3->setPrevStep($step2);

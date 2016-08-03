@@ -110,4 +110,19 @@ class OrganisationRepository extends AbstractMutableRepository
     {
         $this->getEntityManager()->persist($entity);
     }
+
+    /**
+     * @param int $aeId
+     * @return int
+     */
+    public function getOrganisationSiteCount($aeId)
+    {
+        $query = $this->createQueryBuilder('organisation')
+            ->select('count(sites.id)')
+            ->join('organisation.sites', 'sites')
+            ->where('organisation.id = :ORG_ID')
+            ->setParameter('ORG_ID', (int)$aeId);
+
+        return (int) $query->getQuery()->getSingleScalarResult();
+    }
 }

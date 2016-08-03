@@ -1,0 +1,15 @@
+<?php
+
+/** @var mixed $value */
+/** @var string $notAvailableText */
+?>
+
+<td class="numeric">
+    <?php if ($value === $notAvailableText) : ?>
+        <span class="font-xsmall">
+                        <?php echo $notAvailableText; ?>
+                    </span>
+    <?php else :
+        echo $value;
+    endif ?>
+</td>

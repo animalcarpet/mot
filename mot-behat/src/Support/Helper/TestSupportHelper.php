@@ -25,6 +25,7 @@ use TestSupport\Service\PasswordResetService;
 use TestSupport\Service\SchemeManagerService;
 use TestSupport\Service\SchemeUserService;
 use TestSupport\Service\SiteUserDataService;
+use TestSupport\Service\StatisticsAmazonCacheService;
 use TestSupport\Service\TesterService;
 use TestSupport\Service\UserService;
 use TestSupport\Service\VehicleExaminerService;
@@ -341,11 +342,18 @@ class TestSupportHelper
     }
 
     /**
+     * @return \TestSupport\Service\StatisticsAmazonCacheService
+     */
+    public function getStatisticsAmazonCacheService()
+    {
+        return $this->getServiceManager()->get(StatisticsAmazonCacheService::class);
+    }
+
+    /**
      * @return \TestSupport\Service\GdsSurveyService
      */
     public function getGdsSurveyService()
     {
         return $this->getServiceManager()->get(GdsSurveyService::class);
     }
-
 }

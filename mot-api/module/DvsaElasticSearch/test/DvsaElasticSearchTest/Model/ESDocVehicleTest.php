@@ -3,6 +3,7 @@
 namespace DvsaElasticSearchTest\Model;
 
 use DvsaElasticSearch\Model\ESDocVehicle;
+use DvsaEntities\Entity\ModelDetail;
 use \PHPUnit_Framework_TestCase;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\Make;
@@ -89,13 +90,13 @@ class ESDocVehicleTest extends \PHPUnit_Framework_TestCase
     protected function getVehicleData()
     {
         return [
-            'id'                    => 1,
-            'vin'                   => 'hdh7htref0gr5greh',
-            'registration'          => 'FNZ 6JZ',
-            'make'                  => 'Porshe',
-            'model'                 => '911 Turbo',
-            'displayDate'           => DateUtils::toIsoString($this->date),
-            'updatedDate_display'   => $this->date->format('d M Y'),
+            'id' => 1,
+            'vin' => 'hdh7htref0gr5greh',
+            'registration' => 'FNZ 6JZ',
+            'make' => 'Porshe',
+            'model' => '911 Turbo',
+            'displayDate' => DateUtils::toIsoString($this->date),
+            'updatedDate_display' => $this->date->format('d M Y'),
             'updatedDate_timestamp' => strtotime($this->date->format('d M Y h:i')),
         ];
     }
@@ -109,12 +110,15 @@ class ESDocVehicleTest extends \PHPUnit_Framework_TestCase
         $model->setName('911 Turbo');
         $model->setMake($make);
 
+        $modelDetail = new ModelDetail();
+        $modelDetail->setModel($model);
+
+
         $vehicle = new Vehicle();
         $vehicle
             ->setId(1)
             ->setRegistration('FNZ 6JZ')
-            ->setModel($model)
-            ->setMake($make)
+            ->setModelDetail($modelDetail)
             ->setVin('hdh7htref0gr5greh')
             ->setRegistration('FNZ 6JZ')
             ->setLastUpdatedOn($this->date);

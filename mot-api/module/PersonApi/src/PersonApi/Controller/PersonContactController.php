@@ -24,16 +24,9 @@ class PersonContactController extends AbstractDvsaRestfulController
         $this->personContactService = $service;
     }
 
-    public function get($personId)
-    {
-        $details = $this->personContactService->getForPersonId($personId);
-
-        return ApiResponse::jsonOk($details);
-    }
-
     public function patch($id, $data)
     {
-        $details = $this->personContactService->updateEmailForPersonId($id, $data);
+        $details = $this->personContactService->updateEmailForPerson($id, $data);
         return ApiResponse::jsonOk($details);
     }
 }

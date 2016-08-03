@@ -13,41 +13,53 @@ use DvsaCommonApi\Listener\ClaimAccountListener;
 use DvsaCommonApi\Service\EntityHelperService;
 use DvsaMotApi\Factory\Assertion\ApiPerformMotTestAssertionFactory;
 use DvsaMotApi\Factory\Assertion\ApiReadMotTestAssertionFactory;
+use Zend\Console\Request as ConsoleRequest;
 use Zend\EventManager\EventInterface;
-use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
+use Zend\Mvc\MvcEvent;
+use Zend\ServiceManager\ServiceManager;
+
 
 /**
- * Class Module.
+ * DvsaCommonApi Module.
  */
-class Module implements AutoloaderProviderInterface,
-    ConfigProviderInterface,
-    ServiceProviderInterface,
-    BootstrapListenerInterface
+class Module implements ConfigProviderInterface, ServiceProviderInterface, BootstrapListenerInterface
 {
+    /**
+     * @param EventInterface|MvcEvent $e
+     *
+     * @return array|void
+     */
     public function onBootstrap(EventInterface $e)
     {
-        $t  = $e->getTarget();
-        $sm = $t->getServiceManager();
+        if ($e->getRequest() instanceof ConsoleRequest) {
+            return;
+        }
+
+        $target = $e->getTarget();
+        /** @var ServiceManager $sm */
+        $sm = $target->getServiceManager();
         //TODO: Eager logger initialization fixes ClassLoader function nesting error (currently capped to 100)
         $sm->get('Application\Logger');
-        $t->getEventManager()->attach($sm->get('ErrorHandlingListener'));
-        $t->getEventManager()->attach($sm->get('UnauthorizedStrategy'));
-        $t->getEventManager()->attach($sm->get('JsonContentTypeFilter'));
-        $t->getEventManager()->attach($sm->get(ClaimAccountListener::class));
+        $target->getEventManager()->attach($sm->get('ErrorHandlingListener'));
+        $target->getEventManager()->attach($sm->get('UnauthorizedStrategy'));
+        $target->getEventManager()->attach($sm->get('JsonContentTypeFilter'));
+        $target->getEventManager()->attach($sm->get(ClaimAccountListener::class));
     }
 
-    public function getAutoloaderConfig()
-    {
-    }
-
+    /**
+     * @return array
+     */
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
     }
 
+    /**
+     * @return array
+     */
     public function getServiceConfig()
     {
         return [

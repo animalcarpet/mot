@@ -10,6 +10,7 @@ use DvsaEntities\Entity\DvlaModel;
 use DvsaEntities\Entity\DvlaVehicle;
 use DvsaEntities\Entity\Make;
 use DvsaEntities\Entity\Model;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\OdometerReading;
@@ -62,8 +63,8 @@ class OpenInterfaceMotTestServiceTest extends AbstractServiceTestCase
             ->method('findLatestMotTestForVrm')
             ->will($this->returnValue(null));
         $this->mockRepository->expects($this->once())
-           ->method('findVehicleByVrm')
-           ->will($this->returnValue($this->getMockDvlaVehicle()));
+            ->method('findVehicleByVrm')
+            ->will($this->returnValue($this->getMockDvlaVehicle()));
         $this->mockRepository->expects($this->at(1))
             ->method('findLatestMotTestForVrm')
             ->will($this->returnValue($this->prepareMotTest()));
@@ -139,11 +140,20 @@ class OpenInterfaceMotTestServiceTest extends AbstractServiceTestCase
 
     private function getMockVehicle()
     {
+        $make = new Make();
+        $make->setName("FORD");
+
+        $model = new Model();
+        $model->setName("MONDEO")
+            ->setMake($make);
+
+        $modelDetail = new ModelDetail();
+        $modelDetail->setModel($model);
+
         return (new Vehicle)
             ->setId(1)
             ->setRegistration("GGG455")
-            ->setMake((new Make())->setName("FORD"))
-            ->setModel((new Model())->setName("MONDEO"))
+            ->setModelDetail($modelDetail)
             ->setColour((new Colour())->setCode("P")->setName("Black"))
             ->setSecondaryColour((new Colour())->setCode("W")->setName("Not Stated"));
     }
@@ -160,6 +170,7 @@ class OpenInterfaceMotTestServiceTest extends AbstractServiceTestCase
             ->setMakeCode('FORD')
             ->setModelCode('MONDEO');
     }
+
     private function getMockPre1960Vehicle()
     {
         $vehicle = $this->getMockDvlaVehicle();

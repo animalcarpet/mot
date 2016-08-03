@@ -1,9 +1,0 @@
-!contents -R2 -g -p -f -h
-!| GenerateTestDataForOtherFitnesseTests |
-| cscoUsername? | testerUserId? |
-| $cscoUsername= | $testerUserId= |
-
-!| Helpdesk_Vm9332GenerateClaimAccountResetEmail | $cscoUsername |
-| testerUserId | account Reset? |
-| invalidUser | false |
-| $testerUserId | true |

@@ -89,7 +89,7 @@ class UpdateAeBusinessTypeProcess extends AbstractSingleStepAeProcess implements
             return $this->organisationMapper->updateAeProperty($this->context->getAeId(), AuthorisedExaminerPatchModel::TYPE,
                 $formData[$this->propertyName]);
         } else {
-            return $this->organisationMapper->updateAePropertiesWithArray($aeId, [
+            return $this->organisationMapper->updateAePropertiesWithArray($this->context->getAeId(), [
                 AuthorisedExaminerPatchModel::TYPE           => $formData[$this->propertyName],
                 AuthorisedExaminerPatchModel::COMPANY_NUMBER => $companyNumber,
             ]);
@@ -104,5 +104,10 @@ class UpdateAeBusinessTypeProcess extends AbstractSingleStepAeProcess implements
     public function getEditStepPageTitle()
     {
         return $this->formPageTitle;
+    }
+
+    public function getEditPageLede()
+    {
+        return null;
     }
 }

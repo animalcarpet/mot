@@ -1,10 +1,10 @@
 package uk.gov.dvsa.ui.views;
 
-import com.dvsa.mot.selenium.datasource.enums.CompanyType;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.gov.dvsa.domain.model.*;
+import uk.gov.dvsa.helper.CompanyType;
 import uk.gov.dvsa.helper.ContactDetailsHelper;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.AreaOfficerAuthorisedExaminerViewPage;
@@ -253,7 +253,7 @@ public class AEChangeDetailsTests extends DslTest {
 
         //Then my changes are displayed on the AE
         //And notification is displayed
-        Assert.assertTrue(finalAreaOfficerAuthorisedExaminerViewPage.getBusinessTypeWithCompanyNumber().equals(CompanyType.PublicBody.getName()));
+        Assert.assertTrue(finalAreaOfficerAuthorisedExaminerViewPage.getBusinessTypeWithCompanyNumber().equals(CompanyType.PublicBody.getValue()));
         Assert.assertTrue(finalAreaOfficerAuthorisedExaminerViewPage.getValidationMessage().equals("Business type has been successfully changed."));
     }
 

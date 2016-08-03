@@ -371,7 +371,6 @@ class MysteryShopperInputFilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @TODO (ABN) this also can be extended to cover fetching messages from other validators as well, i.e. Date
      * @param string $messageKey
      * @return string
      */

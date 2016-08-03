@@ -14,8 +14,17 @@ class OverdueSpecialNoticeAssertion
      */
     private $overdueSpecialNotices;
 
+    /**
+     * @var array
+     */
     private $authorisationsForTestingMot;
 
+    /**
+     * OverdueSpecialNoticeAssertion constructor.
+     *
+     * @param array $overdueSpecialNotices
+     * @param array $authorisationsForTestingMot
+     */
     public function __construct(array $overdueSpecialNotices, array $authorisationsForTestingMot)
     {
         $this->overdueSpecialNotices = $overdueSpecialNotices;
@@ -30,7 +39,7 @@ class OverdueSpecialNoticeAssertion
         $result = false;
         foreach ($this->authorisationsForTestingMot as $authorisation) {
             $isQualified = ($authorisation["statusCode"] === AuthorisationForTestingMotStatusCode::QUALIFIED);
-            $hasOverdueSpecialNotice = ((int)$this->overdueSpecialNotices[$authorisation["vehicleClassCode"]] > 0)? true :false;
+            $hasOverdueSpecialNotice = ((int) $this->overdueSpecialNotices[$authorisation["vehicleClassCode"]] > 0) ? true : false;
             if ($isQualified && !$hasOverdueSpecialNotice) {
                 $result = true;
                 break;
@@ -40,6 +49,9 @@ class OverdueSpecialNoticeAssertion
         return $result;
     }
 
+    /**
+     * @throws UnauthorisedException
+     */
     public function assertPerformTest()
     {
         if (!$this->canPerformTest()) {

@@ -1,6 +1,0 @@
-Get user profile details
-
-!| Vm 2113 User Profile Details                                                                                                                                                                                                                          |
-|user id|success?|errorMessages?       |title?|first name?|middle name?|surname?      |date of birth?|driving licence number?|driving licence region?|address line 1?|address line 2?|address line 3?|town?    |postcode?|email address? |phone number?  |
-|105    |true    |                     |Mr    |Bob        |            |Arctor Tester1|1981-04-24    |GARDN605109C99LY60     |GB                     |1 Straw Hut    |5 Uncanny St   |               |Liverpool|L1 1PQ   |dummy@email.com|+768-45-4433630|
-|9999   |false   |Person 9999 not found|      |           |            |              |              |                       |                       |               |               |               |         |         |               |               |

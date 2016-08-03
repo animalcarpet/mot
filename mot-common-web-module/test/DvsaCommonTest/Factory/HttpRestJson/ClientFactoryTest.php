@@ -2,8 +2,10 @@
 
 namespace DvsaCommonTest\Factory\Validator;
 
+use ApplicationTest\Crypt\Hash\MotConfigTest;
 use Doctrine\Common\Cache\Cache;
 use DvsaApplicationLogger\TokenService\TokenServiceInterface;
+use DvsaCommon\Configuration\MotConfig;
 use DvsaCommon\Factory\HttpRestJson\ClientFactory;
 use DvsaCommon\HttpRestJson\CachingClient;
 use DvsaCommon\HttpRestJson\ZendClient;
@@ -29,6 +31,7 @@ class ClientFactoryTest extends \PHPUnit_Framework_TestCase
     public function testItCreatesTheZendClientByDefault()
     {
         $this->services['config'] = ['apiUrl' => 'localhost'];
+        $this->services[MotConfig::class] = new MotConfig([]);
         $serviceLocator = $this->getServiceLocator($this->services);
 
         $factory = new ClientFactory();
@@ -46,6 +49,7 @@ class ClientFactoryTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         ];
+        $this->services[MotConfig::class] = new MotConfig([]);
         $this->services[Cache::class] = $this->getMock(Cache::class);;
 
         $serviceLocator = $this->getServiceLocator($this->services);

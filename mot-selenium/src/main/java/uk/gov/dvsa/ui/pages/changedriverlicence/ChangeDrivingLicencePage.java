@@ -4,7 +4,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.profile.PersonProfilePage;
@@ -56,7 +56,7 @@ public class ChangeDrivingLicencePage extends Page {
     }
 
     public ChangeDrivingLicencePage enterDriverLicenceNumber(String number) {
-        FormCompletionHelper.enterText(drivingLicenceNumberInput, number);
+        FormDataHelper.enterText(drivingLicenceNumberInput, number);
         return this;
     }
 

@@ -1,16 +1,15 @@
 package uk.gov.dvsa.module;
 
-import org.openqa.selenium.NoSuchElementException;
 import uk.gov.dvsa.data.SiteData;
 import uk.gov.dvsa.data.UserData;
 import uk.gov.dvsa.data.VehicleData;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.CancelTestReason;
 import uk.gov.dvsa.domain.model.mot.ReasonForVehicleRefusal;
+import uk.gov.dvsa.domain.model.vehicle.DvlaVehicle;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.AssertionHelper;
 import uk.gov.dvsa.ui.pages.VehicleSearchPage;
 import uk.gov.dvsa.ui.pages.mot.*;
 import uk.gov.dvsa.ui.pages.mot.modal.ManualAdvisoryModalPage;
@@ -33,7 +32,6 @@ public class NormalTest {
     private TestResultsEntryPage testResultsEntryPage;
     private StartTestConfirmationPage confirmationPage;
     private EnforcementTestSummaryPage enforcementSummaryPage;
-    private String expectedText;
     private boolean declarationSuccessful = false;
 
     private static final String DECLARATION_STATEMENT = "I confirm that this MOT transaction has been conducted in accordance with " +
@@ -106,6 +104,10 @@ public class NormalTest {
         confirmationPage = pageNavigator.goToStartTestConfirmationPage(user, vehicle);
     }
 
+    public void startTestConfirmationPage(User user, DvlaVehicle dvlaVehicle) throws IOException, URISyntaxException {
+        confirmationPage = pageNavigator.goToStartTestConfirmationPage(user, dvlaVehicle);
+    }
+
     public void changeClass(String classNumber) {
         VehicleDetailsChangedPage changedPage = confirmationPage.selectClass(classNumber)
                 .clickStartMotTest(VehicleDetailsChangedPage.class);
@@ -133,7 +135,7 @@ public class NormalTest {
         declarationSuccessful = refuseToTestPage.isDeclarationElementPresentInDom();
     }
 
-    public void createNewVehicleRecord(User tester, Vehicle vehicle) throws IOException, URISyntaxException {
+    public CreateNewVehicleRecordConfirmPage createNewVehicleRecord(User tester, Vehicle vehicle) throws IOException, URISyntaxException {
 
         CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage = pageNavigator.gotoCreateNewVehicleRecordIdentificationPage(tester);
         createNewVehicleRecordIdentificationPage.enterDetails(vehicle);
@@ -147,6 +149,8 @@ public class NormalTest {
             assertThat(createNewVehicleRecordConfirmPage.getDeclarationText(), equalToIgnoringCase(DECLARATION_STATEMENT));
             declarationSuccessful = true;
         }
+
+        return createNewVehicleRecordConfirmPage;
     }
 
     public void viewTestAs(User user, String motTestId) throws IOException, URISyntaxException {
@@ -162,10 +166,6 @@ public class NormalTest {
 
     public String getTestStatus() {
         return testStatus;
-    }
-
-    public boolean isTextPresent(String actual) throws NoSuchElementException {
-        return AssertionHelper.compareText(expectedText, actual);
     }
 
     public String addManualAdvisoryWithProfaneDescription(String description) {
@@ -184,4 +184,122 @@ public class NormalTest {
     public String getRegistration() {
         return new StartTestConfirmationPage(driver).getRegistration();
     }
+
+    public boolean createNewDvsaVehicle(User tester, Vehicle vehicle) throws IOException, URISyntaxException {
+
+        CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage =
+            gotoCreateNewVehicleRecordIdentificationPage(tester);
+
+        createNewVehicleRecordIdentificationPage.enterDetails(vehicle);
+        CreateNewVehicleRecordSpecificationPage createNewVehicleRecordSpecificationPage =
+            createNewVehicleRecordIdentificationPage.submit();
+
+        createNewVehicleRecordSpecificationPage.enterVehicleDetails(vehicle);
+        CreateNewVehicleRecordConfirmPage createNewVehicleRecordConfirmPage =
+                createNewVehicleRecordSpecificationPage.submit();
+
+        MotTestStartedPage motTestStartedPage = createNewVehicleRecordConfirmPage.setOneTimePassword("123456").startTest();
+
+        if( motTestStartedPage.getModel().toLowerCase().contains(vehicle.getModel().toLowerCase())
+                && motTestStartedPage.getVrm().toLowerCase().contains(vehicle.getDvsaRegistration().toLowerCase()) ) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public CreateNewVehicleRecordIdentificationPage gotoCreateNewVehicleRecordIdentificationPage(
+            User tester) throws IOException, URISyntaxException {
+
+        CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage =
+                pageNavigator.gotoCreateNewVehicleRecordIdentificationPage(tester);
+
+        return createNewVehicleRecordIdentificationPage;
+    }
+
+    public CreateNewVehicleRecordSpecificationPage submitValidPageOneDetails(
+        CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage) {
+
+        Vehicle vehicle = Vehicle.getAcceptableVehicle();
+
+        createNewVehicleRecordIdentificationPage.enterDetails(vehicle);
+        return createNewVehicleRecordIdentificationPage.submit();
+    }
+
+    public boolean submitInvalidPageOneDate(String date, String errorMsg,
+             CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage) {
+
+        Vehicle vehicle = Vehicle.getAcceptableVehicle();
+
+        vehicle.setFirstUsedDate(date);
+        createNewVehicleRecordIdentificationPage.enterDetails(vehicle);
+        createNewVehicleRecordIdentificationPage.submit();
+
+        return createNewVehicleRecordIdentificationPage.isErrorMessageDisplayed(errorMsg);
+    }
+
+    public boolean submitInvalidPageOneDetails(String property, String errorMsg,
+             CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage) {
+
+        Vehicle vehicle = resetVehicleProperty(property, Vehicle.getAcceptableVehicle());
+
+        createNewVehicleRecordIdentificationPage.enterDetails(vehicle);
+        createNewVehicleRecordIdentificationPage.submit();
+
+        return createNewVehicleRecordIdentificationPage.isErrorMessageDisplayed(errorMsg);
+    }
+
+    public boolean submitInvalidPageTwoDetails(
+        String property, String errorMsg,
+            CreateNewVehicleRecordSpecificationPage createNewVehicleRecordSpecificationPage) {
+
+        Vehicle vehicle = resetVehicleProperty(property, Vehicle.getAcceptableVehicle());
+
+        createNewVehicleRecordSpecificationPage.enterVehicleDetails(vehicle);
+        createNewVehicleRecordSpecificationPage.submitInvalidFormDetails();
+
+        return createNewVehicleRecordSpecificationPage.isErrorMessageDisplayed(errorMsg);
+    }
+
+    private Vehicle resetVehicleProperty(String property, Vehicle vehicle) {
+
+        switch(property) {
+            case "Country":
+                vehicle.setCountryOfRegistration("");
+                break;
+            case "Registration":
+                vehicle.setRegistration("");
+                break;
+            case "Vin":
+                vehicle.setVin("");
+                break;
+            case "Make":
+                vehicle.setMake("");
+                break;
+            case "Date":
+                vehicle.setFirstUsedDate("");
+                break;
+            case "Transmission":
+                vehicle.setTransmissionType("");
+                break;
+            case "Fuel":
+                vehicle.setFuelType("");
+                break;
+            case "Model":
+                vehicle.setModel("");
+                break;
+            case "Class":
+                vehicle.setVehicleClass("");
+                break;
+            case "Cylinder":
+                vehicle.setCylinderCapacity("");
+                break;
+            case "Primary":
+                vehicle.setColour("");
+                break;
+        }
+
+        return vehicle;
+    }
+
 }

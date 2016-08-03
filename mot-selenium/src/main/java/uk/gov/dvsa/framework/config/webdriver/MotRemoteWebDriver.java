@@ -5,6 +5,8 @@ import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.UnreachableBrowserException;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 import java.util.Set;
@@ -147,6 +149,7 @@ public class MotRemoteWebDriver extends MotAppDriver {
 
     @Override
     public WebElement findElement(By by) {
+        new WebDriverWait(remoteWebDriver, 10).until(ExpectedConditions.presenceOfElementLocated(by));
         return remoteWebDriver.findElement(by);
     }
 

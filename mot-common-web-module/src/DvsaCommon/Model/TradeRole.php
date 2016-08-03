@@ -11,7 +11,7 @@ class TradeRole
         return [
             RoleCode::TESTER,
             RoleCode::SITE_ADMIN,
-            RoleCode::SCHEME_MANAGER,
+            RoleCode::SITE_MANAGER,
             RoleCode::AUTHORISED_EXAMINER_DELEGATE,
             RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
         ];

@@ -201,6 +201,16 @@ class CatalogService
         return $colours;
     }
 
+    public function getColoursWithIds()
+    {
+        $colours = [];
+        foreach ($this->getData()['colours'] as $colour) {
+            $colours[$colour['id']] = $colour['name'];
+        }
+
+        return $colours;
+    }
+
     public function getCountriesOfRegistration()
     {
         $countries = [];
@@ -240,6 +250,16 @@ class CatalogService
         $types = [];
         foreach ($this->getData()['fuelTypes'] as $type) {
             $types[$type['code']] = $type['name'];
+        }
+
+        return $types;
+    }
+
+    public function getFuelTypesWithId()
+    {
+        $types = [];
+        foreach ($this->getData()['fuelTypes'] as $type) {
+            $types[$type['id']] = $type['name'];
         }
 
         return $types;

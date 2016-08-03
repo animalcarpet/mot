@@ -80,7 +80,15 @@ class MotTestRefusalController extends AbstractDvsaRestfulController implements 
             ->setIssuedDate(DateUtils::nowAsUserDateTime())
 			->setMake($vehicle->getMakeName())
             ->setModel($vehicle->getModelName())
-            ->setVehicleTestingStation($vts);
+            ->setVehicleTestingStation($vts)
+            ->setPrimaryColour($vehicle->getColour())
+            ->setSecondaryColour($vehicle->getColourSecondary())
+            ->setCountryOfRegistration($vehicle->getCountryOfRegistration())
+            ->setVehicleClass($vehicle->getVehicleClass())
+            ->setVin($vehicle->getVin())
+            ->setRegistration($vehicle->getRegistration())
+            ->setMake($vehicle->getMakeName())
+            ->setModel($vehicle->getModelName());
 
         //  -- Create the snapshot  --
         /** @var CertificateCreationService $certificateCreationService */

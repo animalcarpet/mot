@@ -1,5 +1,0 @@
-Create a new site
-
-!| Create Site |
-| name | addressLine1 | addressLine2 | addressLine3 | town | postcode | email | phoneNumber | classes | error message? |
-| YarcoWheels | Funny Road | 3rd Floor | Behind Corner | Mordor | 11-200 | www@www.pl | 098123432 | 1,2,5 | =~/^$/ |

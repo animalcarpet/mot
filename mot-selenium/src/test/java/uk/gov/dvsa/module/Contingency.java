@@ -2,8 +2,10 @@ package uk.gov.dvsa.module;
 
 import org.joda.time.DateTime;
 import uk.gov.dvsa.domain.model.User;
+import uk.gov.dvsa.domain.model.mot.OdometerUnit;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
+import uk.gov.dvsa.helper.ConfigHelper;
 import uk.gov.dvsa.ui.pages.VehicleSearchPage;
 import uk.gov.dvsa.ui.pages.mot.*;
 import uk.gov.dvsa.ui.pages.mot.retest.ConfirmVehicleRetestPage;
@@ -23,6 +25,7 @@ public class Contingency {
     private ContingencyTestEntryPage contingencyPage;
     private boolean successful = false;
     private boolean declarationStatement = false;
+    private TestSummaryPage testSummaryPage;
 
     private static final String DECLARATION_STATEMENT = "I confirm that this MOT transaction has been conducted in accordance with " +
             "the conditions of authorisation which includes compliance with the MOT testing guide, the requirements for " +
@@ -44,12 +47,20 @@ public class Contingency {
         StartTestConfirmationPage startTestConfirmationPage =
                 vehicleSearchPage.searchVehicle(vehicle).selectVehicleForTest();
 
-        TestResultsEntryPage testResultsEntryPage =
-                startTestConfirmationPage.clickStartMotTestWhenConductingContingencyTest();
+        if (ConfigHelper.isTestResultEntryImprovementsEnabled()) {
+            TestResultsEntryNewPage testResultsEntryPage =
+                    startTestConfirmationPage.clickStartMotTestWhenConductingContingencyTest(TestResultsEntryNewPage.class);
 
-        testResultsEntryPage.completeTestDetailsWithPassValues();
+            testResultsEntryPage = testResultsEntryPage.clickAddReadingButton().addOdometerReading(99999, OdometerUnit.MILES, true);
+            testSummaryPage = testResultsEntryPage.completeBrakeTestWithPassValues().clickReviewButton();
+        } else {
+            TestResultsEntryPage testResultsEntryPage =
+                    startTestConfirmationPage.clickStartMotTestWhenConductingContingencyTest(TestResultsEntryPage.class);
 
-        TestSummaryPage testSummaryPage = testResultsEntryPage.clickReviewTestButton();
+            testResultsEntryPage.completeTestDetailsWithPassValues();
+
+            testSummaryPage = testResultsEntryPage.clickReviewTestButton();
+        }
 
         if (testSummaryPage.isDeclarationTextDisplayed()) {
             assertThat(testSummaryPage.getDeclarationText(), equalToIgnoringCase(DECLARATION_STATEMENT));
@@ -67,7 +78,7 @@ public class Contingency {
                 vehicleSearchPage.searchVehicle(vehicle).selectVehicleForRetest();
 
         ReTestResultsEntryPage resultsEntryPage = retestPage.startContigencyRetest();
-                resultsEntryPage.completeTestDetailsWithPassValues();
+        resultsEntryPage.completeTestDetailsWithPassValues();
 
         ReTestSummaryPage summaryPage = resultsEntryPage.clickReviewTestButton();
 

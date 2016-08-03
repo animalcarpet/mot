@@ -7,6 +7,7 @@
 
 namespace Dvsa\Mot\Api\RegistrationModule\Service;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use DvsaCommon\InputFilter\Registration\AddressInputFilter;
@@ -56,6 +57,11 @@ class ContactDetailsCreatorTest extends \PHPUnit_Framework_TestCase
             ->method('getRepository')
             ->with($this->equalTo(PhoneContactType::class))
             ->willReturn($phoneContactTypeRepository);
+
+        $mockConnection = XMock::of(Connection::class);
+        $mockEntityManager->expects($this->any())
+            ->method('getConnection')
+            ->willReturn($mockConnection);
 
         $this->subject = new ContactDetailsCreator(
             $mockEntityManager,

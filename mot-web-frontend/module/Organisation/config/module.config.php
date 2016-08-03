@@ -1,6 +1,7 @@
 <?php
 
 use DvsaCommon\Validator\UsernameValidator;
+use Organisation\Controller\TestQualityInformationController;
 use Organisation\Controller\AuthorisedExaminerPrincipalController;
 use Organisation\Controller\MotTestLogController;
 use Organisation\Controller\RoleController;
@@ -65,6 +66,16 @@ return [
                                         'action'     => 'confirmation',
                                     ],
                                 ],
+                            ],
+                        ],
+                    ],
+                    'test-quality-information' => [
+                        'type'    => 'segment',
+                        'options' => [
+                            'route'       => '/test-quality-information',
+                            'defaults'    => [
+                                'controller' => TestQualityInformationController::class,
+                                'action'     => 'index',
                             ],
                         ],
                     ],

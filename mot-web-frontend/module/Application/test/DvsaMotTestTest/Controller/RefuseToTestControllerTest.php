@@ -3,8 +3,9 @@
 namespace DvsaMotTestTest\Controller;
 
 use Core\Service\MotFrontendAuthorisationServiceInterface;
-use DvsaClient\Mapper\VehicleMapper;
+use Dvsa\Mot\Frontend\AuthenticationModule\Model\VehicleTestingStation;
 use DvsaClient\MapperFactory;
+use DvsaClient\Mapper\VehicleMapper;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Obfuscate\EncryptionKey;
 use DvsaCommon\Obfuscate\ParamEncoder;
@@ -12,9 +13,12 @@ use DvsaCommon\Obfuscate\ParamEncrypter;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonTest\Bootstrap;
-use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaCommonTest\TestUtils\XMock;
+use Exception;
+use PHPUnit_Framework_MockObject_MockObject;
 use DvsaMotTest\Controller\RefuseToTestController;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
+use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
@@ -26,6 +30,11 @@ class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
     {
         $serviceManager = Bootstrap::getServiceManager();
         $serviceManager->setAllowOverride(true);
+
+        $serviceManager->setService(
+            VehicleService::class,
+            new VehicleService('to be token')
+        );
 
         $this->setServiceManager($serviceManager);
 
@@ -52,6 +61,7 @@ class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
 
     public function testRefuseToTestReasonActionWithPostAndRestException()
     {
+        $this->markTestSkipped('BL-1164 is parked to investigate lifint vehicle\'s entity relationship. talk to Ali');
         $this->mockAuthServiceAsserts();
         $this->getRestClientMockThrowingException('post', 'Some Error');
 
@@ -135,6 +145,12 @@ class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
         $this->assertResponseStatus(self::HTTP_OK_CODE, $response);
     }
 
+    /**
+     * @param array $params
+     * @param bool  $asDto
+     *
+     * @return array|mixed
+     */
     protected function getTestVehicleResult(array $params = [], $asDto = false)
     {
         $motTest = $this->jsonFixture('vehicle', __DIR__);
@@ -148,6 +164,9 @@ class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
         return ['data' => $result];
     }
 
+    /**
+     * @return array
+     */
     protected function getRetestEligibilityResult()
     {
         return [
@@ -157,6 +176,9 @@ class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
         ];
     }
 
+    /**
+     * @return array
+     */
     protected function getCertificateExpiryResult()
     {
         return [
@@ -169,16 +191,27 @@ class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
         ];
     }
 
+    /**
+     * @param int $motTestNumber
+     *
+     * @return array
+     */
     protected function getSuccessfulMotTestPostResult($motTestNumber = 1)
     {
         return ['data' => ['motTestNumber' => $motTestNumber]];
     }
 
+    /**
+     * @return VehicleTestingStation
+     */
     protected function getVtsData()
     {
         return StubIdentityAdapter::createStubVts();
     }
 
+    /**
+     * @return PHPUnit_Framework_MockObject_MockObject
+     */
     private function getMapperFactoryMock()
     {
         $factoryMapper           = XMock::of(MapperFactory::class);
@@ -195,6 +228,9 @@ class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
         return $factoryMapper;
     }
 
+    /**
+     * @throws Exception
+     */
     private function mockAuthServiceAsserts()
     {
         $authService = XMock::of(MotFrontendAuthorisationServiceInterface::class);

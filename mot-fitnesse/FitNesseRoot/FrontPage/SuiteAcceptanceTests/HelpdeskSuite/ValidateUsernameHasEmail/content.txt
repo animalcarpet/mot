@@ -1,9 +1,0 @@
-!contents -R2 -g -p -f -h
-!| GenerateTestDataForOtherFitnesseTests |
-| testerUsername? |
-| $username= |
-
-!| Helpdesk_Vm8717ValidateUsernameAndEmail |
-| username | user valid? |
-| invalidUser | false |
-| $username | true |

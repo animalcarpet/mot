@@ -66,4 +66,9 @@ class UpdateAeRegisteredEmailProcess extends AbstractSingleStepAeProcess impleme
     {
         $this->organisationMapper->updateAeProperty($this->context->getAeId(), AuthorisedExaminerPatchModel::REGISTERED_EMAIL, $formData[$this->propertyName]);
     }
+
+    public function getEditPageLede()
+    {
+        return null;
+    }
 }

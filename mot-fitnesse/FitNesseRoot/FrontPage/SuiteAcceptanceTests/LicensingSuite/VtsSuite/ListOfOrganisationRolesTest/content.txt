@@ -1,6 +1,0 @@
-Get list of roles which can be assigned at organisation (Authorised Examiner) level
-
-!| Vm 2223 List Organisation Roles                                                             |
-|Description                                  |Username |success?|AEDM listed?|AED listed?|
-|AEDM can only assign AED role                |aedm     |true    |false       |true       |
-|DVSA admin can assign both AEDM and AED roles|areaoffice2user|true    |true        |true       |

@@ -29,7 +29,7 @@ $motTestVehicleClass = new VehicleClass($motTest->getVehicleClass());
                         'label' => 'Registration number',
                         'value' => $hasRegistration
                             ? strtoupper($motTest->getRegistration())
-                            : 'Not Displayed',
+                            : 'N/A',
                         'id'    => 'registrationNumber',
                     ],
                     ['VIN/Chassis number', strtoupper($motTest->getVin()), 'id' => 'vinChassisNumber'],

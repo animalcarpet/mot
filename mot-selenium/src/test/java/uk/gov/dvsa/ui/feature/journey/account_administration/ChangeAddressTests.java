@@ -38,7 +38,7 @@ public class ChangeAddressTests extends DslTest {
         csco = userData.createCustomerServiceOfficer(false);
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-929"},
+    @Test(groups = {"Regression", "BL-929"},
             testName = "NewProfile",
             description = "Test that Authorised user can change address on other person profile",
             dataProvider = "dvsaUserChangeAddressProvider")
@@ -53,7 +53,7 @@ public class ChangeAddressTests extends DslTest {
         assertThat(motUI.profile.page().isSuccessMessageDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-929"},
+    @Test(groups = {"Regression", "BL-929"},
             testName = "NewProfile",
             description = "Test that user can change address on own person profile",
             dataProvider = "userChangeOwnAddressProvider")
@@ -68,7 +68,7 @@ public class ChangeAddressTests extends DslTest {
         assertThat(motUI.profile.page().isSuccessMessageDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-929"},
+    @Test(groups = {"Regression", "BL-929"},
             testName = "NewProfile",
             description = "Test that authorised user can navigate through change address journey on other person profile")
     public void dvsaUserCanNavigateThroughChangeAddressJourneyOnOtherPersonProfile() throws IOException {
@@ -85,7 +85,7 @@ public class ChangeAddressTests extends DslTest {
         assertThat(motUI.profile.page().isPageLoaded(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-929"},
+    @Test(groups = {"Regression", "BL-929"},
             testName = "NewProfile",
             description = "Test that user can navigate through change address journey on own person profile")
     public void userCanNavigateThroughChangeAddressJourneyOnOwnPersonProfile() throws IOException {
@@ -102,7 +102,7 @@ public class ChangeAddressTests extends DslTest {
         assertThat(motUI.profile.page().isPageLoaded(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-929"},
+    @Test(groups = {"Regression", "BL-929"},
             testName = "NewProfile",
             description = "Test that user should provide correct address during change address journey on own person profile")
     public void userShouldProvideCorrectAddress() throws IOException {
@@ -116,7 +116,7 @@ public class ChangeAddressTests extends DslTest {
         assertThat(motUI.profile.changeAddress().isValidationMessageOnChangeAddressPageDisplayed("FIRST_LINE_INVALID"), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-929"},
+    @Test(groups = {"Regression", "BL-929"},
             testName = "NewProfile",
             description = "Test that user should provide correct town during change address journey on own person profile")
     public void userShouldProvideCorrectTown() throws IOException {
@@ -130,7 +130,7 @@ public class ChangeAddressTests extends DslTest {
         assertThat(motUI.profile.changeAddress().isValidationMessageOnChangeAddressPageDisplayed("TOWN_INVALID"), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-929"},
+    @Test(groups = {"Regression", "BL-929"},
             testName = "NewProfile",
             description = "Test that user should provide correct postcode during change address journey on own person profile")
     public void userShouldProvideCorrectPostcode() throws IOException {
@@ -144,7 +144,7 @@ public class ChangeAddressTests extends DslTest {
         assertThat(motUI.profile.changeAddress().isValidationMessageOnChangeAddressPageDisplayed("POSTCODE_INVALID"), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-929"},
+    @Test(groups = {"Regression", "BL-929"},
             testName = "NewProfile",
             description = "Test that user should provide correct values during change address journey on own person profile")
     public void userShouldProvideCorrectValues() throws IOException {

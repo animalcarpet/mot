@@ -1,2 +1,0 @@
-SET @createdBy = (SELECT `id` FROM `person` WHERE `user_reference` = 'Static Data' OR `username` = 'static data');
-INSERT INTO organisation_site_map (organisation_id, site_id, trading_name, status_id, status_changed_on, created_by) SELECT organisation_id, id, name, 2, NOW(), @createdBy FROM site WHERE organisation_id IS NOT NULL;

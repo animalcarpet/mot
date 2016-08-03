@@ -1,13 +1,17 @@
 package uk.gov.dvsa.ui.pages.vehicleinformation;
 
-import com.dvsa.mot.selenium.framework.util.RadioList;
+
+import uk.gov.dvsa.domain.model.vehicle.Make;
+import uk.gov.dvsa.domain.model.vehicle.TransmissionType;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
+import uk.gov.dvsa.helper.RadioList;
 import uk.gov.dvsa.ui.pages.Page;
 
 public class CreateNewVehicleRecordIdentificationPage extends Page {
@@ -29,10 +33,18 @@ public class CreateNewVehicleRecordIdentificationPage extends Page {
     @FindBy(id = "emptyVrmReason") private WebElement emptyVrmReason;
     @FindBy(id = "emptyVinReason") private WebElement emptyVinReason;
     @FindBy(name = "vehicleForm[transmissionType]") private WebElement transmissionType;
+    @FindBy(id = "validation-summary-id") private WebElement errorBox;
 
     public CreateNewVehicleRecordIdentificationPage(MotAppDriver driver) {
         super(driver);
         selfVerify();
+    }
+
+    public boolean isErrorMessageDisplayed(String errMsg){
+        if(! errorBox.isDisplayed()){
+            return false;
+        }
+        return errorBox.getText().toString().toLowerCase().contains(errMsg.toLowerCase());
     }
 
     @Override
@@ -41,12 +53,14 @@ public class CreateNewVehicleRecordIdentificationPage extends Page {
     }
 
     public void selectCountryOfRegistration(Vehicle vehicle) {
-        Select selectCountryOfRegistration = new Select(registrationCountry);
-        selectCountryOfRegistration.selectByIndex(1);
+        if(! vehicle.getCountryOfRegistration().equals("")) {
+            Select selectCountryOfRegistration = new Select(registrationCountry);
+            selectCountryOfRegistration.selectByIndex(1);
+        }
     }
 
     public void setRegistrationNumber(Vehicle vehicle) {
-        registrationNumber.sendKeys(vehicle.getRegistrationNumber());
+        registrationNumber.sendKeys(vehicle.getDvsaRegistration());
     }
 
     public void setVin(Vehicle vehicle) {
@@ -54,24 +68,27 @@ public class CreateNewVehicleRecordIdentificationPage extends Page {
     }
 
     public void selectMakeOfVehicle(Vehicle vehicle) {
-        Select selectMake = new Select(make);
-        selectMake.selectByValue(vehicle.getMake());
+        if(! vehicle.getMake().equals("")) {
+            FormDataHelper.selectFromDropDownByValue(
+                    make,
+                    Make.findByName(vehicle.getMake()).getId().toString()
+            );
+        }
     }
 
     public void setDate(Vehicle vehicle) {
-        String dateSplit[] = vehicle.getDateOfFirstUse().split("-");
-        this.year.sendKeys(dateSplit[0]);
-        this.month.sendKeys(dateSplit[1]);
-        this.day.sendKeys(dateSplit[2]);
+        if(! vehicle.getFirstUsedDate().equals("")) {
+            String dateSplit[] = vehicle.getFirstUsedDate().split("-");
+            this.year.sendKeys(dateSplit[0]);
+            this.month.sendKeys(dateSplit[1]);
+            this.day.sendKeys(dateSplit[2]);
+        }
     }
 
     public void selectTransmissionType(Vehicle vehicle) {
-        RadioList radioList = new RadioList(driver.findElements(By.name("vehicleForm[transmissionType]")));
-        if (vehicle.getTransmissionType() == "a") {
-            radioList.findByValue("1").click();
-        }
-        else if (vehicle.getTransmissionType() == "m") {
-            radioList.findByValue("2").click();
+        if(! vehicle.getTransmissionType().equals("")) {
+            RadioList radioList = new RadioList(driver.findElements(By.name("vehicleForm[transmissionType]")));
+            radioList.findByValue(TransmissionType.valueOf(vehicle.getTransmissionType()).getId()).click();
         }
     }
 
@@ -81,8 +98,8 @@ public class CreateNewVehicleRecordIdentificationPage extends Page {
         setRegistrationNumber(vehicle);
         vin.clear();
         setVin(vehicle);
-        setDate(vehicle);
         selectMakeOfVehicle(vehicle);
+        setDate(vehicle);
         selectTransmissionType(vehicle);
     }
 

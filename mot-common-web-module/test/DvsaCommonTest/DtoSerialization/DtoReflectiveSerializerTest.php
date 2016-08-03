@@ -18,9 +18,7 @@ class DtoReflectiveSerializerTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $dtoConvertibleTypesRegistry = new DtoConvertibleTypesRegistry();
-        $dtoReflector = new DtoReflector($dtoConvertibleTypesRegistry);
-        $this->serializer = new DtoReflectiveSerializer($dtoConvertibleTypesRegistry, $dtoReflector);
+        $this->serializer = new DtoReflectiveSerializer();
     }
 
     public function testSerializerOmitsGettersWithoutRespondingSetters()

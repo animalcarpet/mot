@@ -39,7 +39,7 @@ public class ChangeDOBTests extends DslTest {
         siteManager = userData.createSiteManager(testSite.getId(), false);
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-927"},
+    @Test(groups = {"Regression", "BL-927"},
             testName = "NewProfile",
             description = "Test that Authorised user can change date of birth on other person profile",
             dataProvider = "dvsaUserChangeDOBProvider")
@@ -54,7 +54,7 @@ public class ChangeDOBTests extends DslTest {
         assertThat(motUI.profile.page().isSuccessMessageDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-927"},
+    @Test(groups = {"Regression", "BL-927"},
             testName = "NewProfile",
             description = "Test that user cant change date of birth on own person profile",
             dataProvider = "userCantSeeChangeDOBLinkProvider")
@@ -67,7 +67,7 @@ public class ChangeDOBTests extends DslTest {
         assertThat(motUI.profile.page().isChangeDOBLinkIsDisplayed(), is(false));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-927"},
+    @Test(groups = {"Regression", "BL-927"},
             testName = "NewProfile",
             description = "Test that user should provide a valid day in order to change date of birth",
             dataProvider = "invalidDateData")
@@ -83,7 +83,7 @@ public class ChangeDOBTests extends DslTest {
         assertThat(validationMessage, containsString(DOB_ERROR_MESSAGE));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-59"},
+    @Test(groups = {"Regression", "BL-59"},
             testName = "NewProfile",
             description = "Test that Authorised user can navigate to Change date of birth page and backward")
     public void dvsaUserCanNavigateToAndBackwardDOBPage() throws IOException {

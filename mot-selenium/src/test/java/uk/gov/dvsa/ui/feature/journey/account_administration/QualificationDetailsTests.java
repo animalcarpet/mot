@@ -26,12 +26,11 @@ public class QualificationDetailsTests extends DslTest {
         newUser = userData.createUserWithoutRole();
         areaOffice1User = userData.createAreaOfficeOne("AreaOffice1");
         qualificationDetailsData.createQualificationCertificateForGroupA(
-            newUser, "1234123412341234", "2016-04-01", testSite.getSiteNumber()
-        );
+            newUser, "1234123412341234", "2016-04-01", testSite.getSiteNumber());
 
     }
 
-    @Test(groups = {"BVT", "Regression"},
+    @Test(groups = {"BVT"},
         testName = "Edit qualification details",
         description = "test that new newUser can edit his qualification details"
     )
@@ -50,7 +49,7 @@ public class QualificationDetailsTests extends DslTest {
         Assert.assertTrue(motUI.profile.qualificationDetails().verifyDetailsChangedForGroupA(certificateNumber, "3 April 2016"));
     }
 
-    @Test(groups = {"BVT", "Regression"},
+    @Test(groups = {"BVT"},
         testName = "Edit qualification details",
         description = "test that new newUser can edit his qualification details"
     )
@@ -69,7 +68,7 @@ public class QualificationDetailsTests extends DslTest {
         Assert.assertTrue(motUI.profile.qualificationDetails().verifyDetailsChangedForGroupA(certificateNumber, "4 April 2016"));
     }
 
-    @Test(groups = {"BVT", "Regression"},
+    @Test(groups = {"BVT"},
         testName = "Permitted user can view demo test requests"
     )
     public void permittedUserCanViewDemoTestRequests() throws IOException {
@@ -77,8 +76,7 @@ public class QualificationDetailsTests extends DslTest {
         User userB = userData.createUserWithoutRole();
         String certificateNumberB = RandomDataGenerator.generateRandomNumber(15, 12);
         qualificationDetailsData.createQualificationCertificateForGroupB(
-            userB, certificateNumberB, "2016-04-05", testSite.getSiteNumber()
-        );
+            userB, certificateNumberB, "2016-04-05", testSite.getSiteNumber());
         motUI.profile.dvsaViewUserProfile(areaOffice1User, userB);
         motUI.profile.qualificationDetails().goToQualificationDetailsPage();
         int certificateAmount = motUI.profile.qualificationDetails().countUserCertificates();
@@ -90,23 +88,21 @@ public class QualificationDetailsTests extends DslTest {
         Assert.assertTrue(motUI.demoTestRequests.certificatesDisplayAmountCorrectForUser(userB, certificateAmount));
     }
 
-    @Test(groups = {"BVT", "Regression"},
+    @Test(groups = {"BVT"},
             testName = "Remove qualification details",
             description = "test that dvsa user can remove qualification details"
     )
     public void dvsaUserCanRemoveQualificationDetailsOfAnotherUser() throws IOException {
         // Given a certificate for group B is added for user
         qualificationDetailsData.createQualificationCertificateForGroupB(
-                newUser, "9994123412341234", "2016-04-01", testSite.getSiteNumber()
-        );
+                newUser, "9994123412341234", "2016-04-01", testSite.getSiteNumber());
 
         // When I visit user's page
         motUI.profile.dvsaViewUserProfile(areaOffice1User, newUser);
 
         // And I remove certificate
         String certificateNumber = RandomDataGenerator.generateRandomNumber(15, 12);
-        motUI.profile.qualificationDetails()
-                .removeQualificationDetailsForGroupB(certificateNumber);
+        motUI.profile.qualificationDetails().removeQualificationDetailsForGroupB(certificateNumber);
 
         // Then the details should be saved
         Assert.assertTrue(motUI.profile.qualificationDetails().verifyDetailsAfterRemovedGroupBCertificate());

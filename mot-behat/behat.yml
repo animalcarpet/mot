@@ -41,6 +41,8 @@ default:
                 - SlotsManualAdjustmentContext
                 - SlotsReportContext
                 - SlotsRefreshPaymentsContext
+                - StatsTesterPerformanceContext
+                - StatsComponentFailRateContext
                 - SpecialNoticeContext
                 - SurveyContext
                 - TempPasswordChangeContext
@@ -48,7 +50,7 @@ default:
                 - VtsContext
                 - VtsManagementContext
             filters:
-                tags: "~@functional"
+                tags: "~@functional&&~@quarantine"
         functional:
             contexts:
                 - RestContext

@@ -412,4 +412,17 @@ class ArrayUtilsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('key2', $keys[1]);
         $this->assertEquals('key3', $keys[2]);
     }
+
+    public function test_aggregate()
+    {
+        $arrayWeWantToSum = [10, 12, 13];
+        $expectedSum = 35;
+
+        $actual = ArrayUtils::aggregate($arrayWeWantToSum, 0, function ($current, $total) {
+            return $current + $total;
+        });
+
+        $this->assertEquals($expectedSum, $actual);
+
+    }
 }

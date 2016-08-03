@@ -8,4 +8,5 @@ class AeRouteList
     const AE_EDIT_PROPERTY = 'authorised-examiner-edit-property';
     const AE_EDIT_PROPERTY_REVIEW = 'authorised-examiner-edit-property-review';
     const AE_ADD_PRINCIPAL = "authorised-examiner/create-principal";
+    const AE_TEST_QUALITY = "authorised-examiner/test-quality-information";
 }

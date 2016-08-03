@@ -63,9 +63,9 @@ class MotChecklistPdfPresenter implements AutoWireableInterface
     public function getDataFields()
     {
         $startDate = new DateTime($this->motTest->getStartedDate());
-        $firstUseDate = $this->motTest->getVehicle()->getFirstRegistrationDate();
+        $firstUseDate = $this->motTest->getVehicle()->getFirstUsedDate();
         if(!is_null($firstUseDate)){
-            $firstUseDate = new DateTime($this->motTest->getVehicle()->getFirstRegistrationDate());
+            $firstUseDate = new DateTime($this->motTest->getVehicle()->getFirstUsedDate());
         }
         $vehicle = $this->motTest->getVehicle();
         $site = $this->motTest->getVehicleTestingStation();
@@ -79,7 +79,7 @@ class MotChecklistPdfPresenter implements AutoWireableInterface
             new MotChecklistPdfField($vehicle->getVin(), $this->secondColumnX, $this->secondLineY, static::FONT_SIZE_9),
             new MotChecklistPdfField(mb_substr($vehicle->getMakeName(), 0, static::NORMAL_BOX_LENGTH), $this->thirdColumnX, $this->secondLineY, static::FONT_SIZE_9),
             new MotChecklistPdfField(mb_substr($vehicle->getModelName(), 0, static::NORMAL_BOX_LENGTH), $this->fourthColumnX, $this->secondLineY, static::FONT_SIZE_9),
-            new MotChecklistPdfField(!is_null($firstUseDate) ? $firstUseDate->format('d M Y') : '', $this->thirdColumnX, $this->thirdLineY, static::FONT_SIZE_9),
+            new MotChecklistPdfField(!is_null($firstUseDate) ? DateTimeDisplayFormat::dateShort($firstUseDate) : '', $this->thirdColumnX, $this->thirdLineY, static::FONT_SIZE_9),
             new MotChecklistPdfField($vehicle->getCylinderCapacity(), $this->firstColumnX, $this->thirdLineY, static::FONT_SIZE_9),
         ];
 

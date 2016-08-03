@@ -1,9 +1,0 @@
-'''In order to use MOT 2, as a user I want to see my dashboard'''
-
-!|Get Dashboard For Supported Roles                |
-|roleCode                         |dashboardType?  |
-|USER                             |user            |
-|VEHICLE-EXAMINER                 |vehicle-examiner|
-|DVSA-AREA-OFFICE-1               |admin           |
-|CUSTOMER-SERVICE-CENTRE-OPERATIVE|user            |
-|DVLA-OPERATIVE                   |user            |

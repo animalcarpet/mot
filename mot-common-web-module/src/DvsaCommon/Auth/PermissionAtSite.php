@@ -39,6 +39,7 @@ class PermissionAtSite
     const VTS_TEST_LOGS = 'VTS-TEST-LOGS';
     const VTS_VIEW_CONTACT_DETAILS_COUNTRY = 'VTS-VIEW-CONTACT-DETAILS-COUNTRY';
     const VIEW_QUA_DET_OF_THE_SAME_SITE_USER = 'VIEW-QUA-DET-OF-THE-SAME-SITE-USER';
+    const VTS_VIEW_TEST_QUALITY = 'VTS-VIEW-TEST-QUALITY';
 
     public static function all()
     {
@@ -76,6 +77,7 @@ class PermissionAtSite
             self::VTS_TEST_LOGS,
             self::VTS_VIEW_CONTACT_DETAILS_COUNTRY,
             self::VIEW_QUA_DET_OF_THE_SAME_SITE_USER,
+            self::VTS_VIEW_TEST_QUALITY,
         ];
     }
 }

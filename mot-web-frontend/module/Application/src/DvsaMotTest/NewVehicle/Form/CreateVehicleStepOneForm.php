@@ -39,8 +39,19 @@ class CreateVehicleStepOneForm extends Form
                     ]
                 ]
             );
-
+        
         $this->getTransmissionType()->setAttribute("class", "");
+    }
+
+    public function setData($data)
+    {
+        $vehicleForm = $data['vehicleForm'];
+        if (!empty($vehicleForm)) {
+            $vehicleForm['registrationNumber'] = mb_strtoupper(preg_replace('/\s+/', '',$vehicleForm['registrationNumber']));
+            $data['vehicleForm'] = $vehicleForm;
+        }
+
+        return parent::setData($data);
     }
 
     public function getFromFieldset($fieldName)

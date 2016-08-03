@@ -28,7 +28,8 @@ Feature: Password
 
   @password-reset
   Scenario Outline: Validate password reset token
-    Given that I have a password reset token of type <tokenType>
+    Given I am registered as a new user
+    And that I have a password reset token of type <tokenType>
     When I validate the token
     Then the token should be <result>
     Examples:
@@ -38,7 +39,8 @@ Feature: Password
 
   @password-reset
   Scenario Outline: Change password through the token link
-    Given that I have a password reset token of type <tokenType>
+    Given I am registered as a new user
+    And that I have a password reset token of type <tokenType>
     And I attempt to change my password to <newPassword>
     Then the result should be <result> with <errorMessage>
     Examples:
@@ -51,6 +53,7 @@ Feature: Password
 
   @password-reset
   Scenario Outline: Sending emails to users who have forgotten their password
+    Given I am registered as a new user
     When I attempt to reset my password with <userId>
     Then the message should be <message>
     Examples:

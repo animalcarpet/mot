@@ -43,8 +43,7 @@ class PersonContactRepository extends AbstractMutableRepository
             ->where('pc.person = :personId')
             ->andWhere('pct.code = :typeCode')
             ->setParameter("personId", $personId)
-            ->setParameter('typeCode', $typeCode)
-            ->setMaxResults(1);
+            ->setParameter('typeCode', $typeCode);
 
         /** @var SiteContact $result */
         $result = $queryBuilder->getQuery()->getSingleResult();

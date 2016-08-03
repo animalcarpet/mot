@@ -7,7 +7,7 @@ use Core\Action\ActionResult;
 use Core\Controller\AbstractAuthActionController;
 use Dvsa\Mot\Frontend\PersonModule\Action\QualificationDetailsAction;
 use Dashboard\Model\PersonalDetails;
-use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\QualificationDetailsBreadcrumbs;
+use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\CertificatesBreadcrumbs;
 use Dvsa\Mot\Frontend\PersonModule\ViewModel\QualificationDetailsViewModel;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuard;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuardBuilder;
@@ -89,9 +89,9 @@ class QualificationDetailsActionTest extends AbstractAuthActionController
             ->disableOriginalConstructor()
             ->getMock();
 
-        /** @var QualificationDetailsBreadcrumbs $qualificationDetailsBreadcrumbs */
+        /** @var CertificatesBreadcrumbs $qualificationDetailsBreadcrumbs */
         $qualificationDetailsBreadcrumbs = $this
-            ->getMockBuilder(QualificationDetailsBreadcrumbs::class)
+            ->getMockBuilder(CertificatesBreadcrumbs::class)
             ->disableOriginalConstructor()
             ->getMock();
 

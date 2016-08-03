@@ -2,12 +2,10 @@
 
 namespace IntegrationApi\DvlaVehicle\Service;
 
-use DvsaCommon\Enum\MotTestStatusName;
-use DvsaEntities\Entity\Vehicle;
-use DvsaEntities\Repository\MotTestRepository;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommonApi\Transaction\TransactionAwareInterface;
 use DvsaCommonApi\Transaction\TransactionAwareTrait;
-use DvsaEntities\Repository\VehicleRepository;
+use DvsaEntities\Repository\MotTestRepository;
 use DvsaMotApi\Dto\ReplacementCertificateDraftChangeDTO;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateService;
 
@@ -26,27 +24,28 @@ class DvlaVehicleUpdatedService implements TransactionAwareInterface
     private $motTestRepository;
 
     /**
-     * @var VehicleRepository
-     */
-    private $vehicleRepository;
-
-    /**
      * @var ReplacementCertificateService
      */
     private $replacementCertificateService;
 
     /**
+     * @var VehicleService
+     */
+    private $vehicleService;
+
+    /**
      * @param MotTestRepository $motTestRepository
      * @param ReplacementCertificateService $replacementCertificateService
+     * @param VehicleService $vehicleService
      */
     public function __construct(
         MotTestRepository $motTestRepository,
-        VehicleRepository $vehicleRepository,
-        ReplacementCertificateService $replacementCertificateService
+        ReplacementCertificateService $replacementCertificateService,
+        VehicleService $vehicleService
     ) {
         $this->motTestRepository = $motTestRepository;
         $this->replacementCertificateService = $replacementCertificateService;
-        $this->vehicleRepository = $vehicleRepository;
+        $this->vehicleService = $vehicleService;
     }
 
     /**
@@ -58,8 +57,8 @@ class DvlaVehicleUpdatedService implements TransactionAwareInterface
     public function createReplacementCertificate($vehicleId, $userId)
     {
         $latestMotTestNumber = $this->motTestRepository->getLatestMotTestIdByVehicleId($vehicleId);
-        /** @var Vehicle $vehicle */
-        $vehicle = $this->vehicleRepository->find($vehicleId);
+
+        $vehicle = $this->vehicleService->getDvsaVehicleById($vehicleId);
         $changeDto = new ReplacementCertificateDraftChangeDTO();
         $changeDto->setVrm($vehicle->getRegistration());
         $changeDto->setVin($vehicle->getVin());

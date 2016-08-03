@@ -4,7 +4,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.model.PersonDetails;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
@@ -36,42 +36,42 @@ public class CreateAepPage extends Page {
     }
 
     public CreateAepPage changeFirstName(String value) {
-        FormCompletionHelper.enterText(firstName, value);
+        FormDataHelper.enterText(firstName, value);
         return this;
     }
 
     public CreateAepPage changeLastName(String value) {
-        FormCompletionHelper.enterText(lastName, value);
+        FormDataHelper.enterText(lastName, value);
         return this;
     }
 
     public CreateAepPage changeDateOfBirthDay(String value) {
-        FormCompletionHelper.enterText(dateOfBirthDay, value);
+        FormDataHelper.enterText(dateOfBirthDay, value);
         return this;
     }
 
     public CreateAepPage changeDateOfBirthMonth(String value) {
-        FormCompletionHelper.enterText(dateOfBirthMonth, value);
+        FormDataHelper.enterText(dateOfBirthMonth, value);
         return this;
     }
 
     public CreateAepPage changeDateOfBirthYear(String value) {
-        FormCompletionHelper.enterText(dateOfBirthYear, value);
+        FormDataHelper.enterText(dateOfBirthYear, value);
         return this;
     }
 
     public CreateAepPage changeAddressLine1(String value) {
-        FormCompletionHelper.enterText(addressLine1, value);
+        FormDataHelper.enterText(addressLine1, value);
         return this;
     }
 
     public CreateAepPage changeTown(String value) {
-        FormCompletionHelper.enterText(town, value);
+        FormDataHelper.enterText(town, value);
         return this;
     }
 
     public CreateAepPage changePostcode(String value) {
-        FormCompletionHelper.enterText(postcode, value);
+        FormDataHelper.enterText(postcode, value);
         return this;
     }
 

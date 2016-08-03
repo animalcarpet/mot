@@ -2376,11 +2376,11 @@ public class userSync implements TalendJob {
 			return this.mot1_details_updated_on;
 		}
 
-		public String mot1_legacy_id;
-
-		public String getMot1_legacy_id() {
-			return this.mot1_legacy_id;
-		}
+//		public String mot1_legacy_id;
+//
+//		public String getMot1_legacy_id() {
+//			return this.mot1_legacy_id;
+//		}
 
 		public long created_by;
 
@@ -2412,11 +2412,11 @@ public class userSync implements TalendJob {
 			return this.version;
 		}
 
-		public long batch_number;
-
-		public long getBatch_number() {
-			return this.batch_number;
-		}
+//		public long batch_number;
+//
+//		public long getBatch_number() {
+//			return this.batch_number;
+//		}
 
 		private String readString(ObjectInputStream dis) throws IOException {
 			String strReturn = null;
@@ -2564,7 +2564,7 @@ public class userSync implements TalendJob {
 
 					this.mot1_details_updated_on = readDate(dis);
 
-					this.mot1_legacy_id = readString(dis);
+				//	this.mot1_legacy_id = readString(dis);
 
 					this.created_by = dis.readLong();
 
@@ -2581,7 +2581,7 @@ public class userSync implements TalendJob {
 
 					this.version = dis.readLong();
 
-					this.batch_number = dis.readLong();
+				//	this.batch_number = dis.readLong();
 
 				} catch (IOException e) {
 					throw new RuntimeException(e);
@@ -2707,7 +2707,7 @@ public class userSync implements TalendJob {
 
 				// String
 
-				writeString(this.mot1_legacy_id, dos);
+			//	writeString(this.mot1_legacy_id, dos);
 
 				// long
 
@@ -2736,7 +2736,7 @@ public class userSync implements TalendJob {
 
 				// long
 
-				dos.writeLong(this.batch_number);
+		//		dos.writeLong(this.batch_number);
 
 			} catch (IOException e) {
 				throw new RuntimeException(e);
@@ -2783,13 +2783,13 @@ public class userSync implements TalendJob {
 					+ String.valueOf(first_live_test_done_on));
 			sb.append(",mot1_details_updated_on="
 					+ String.valueOf(mot1_details_updated_on));
-			sb.append(",mot1_legacy_id=" + mot1_legacy_id);
+		//	sb.append(",mot1_legacy_id=" + mot1_legacy_id);
 			sb.append(",created_by=" + String.valueOf(created_by));
 			sb.append(",created_on=" + String.valueOf(created_on));
 			sb.append(",last_updated_by=" + String.valueOf(last_updated_by));
 			sb.append(",last_updated_on=" + String.valueOf(last_updated_on));
 			sb.append(",version=" + String.valueOf(version));
-			sb.append(",batch_number=" + String.valueOf(batch_number));
+		//	sb.append(",batch_number=" + String.valueOf(batch_number));
 			sb.append("]");
 
 			return sb.toString();
@@ -3070,7 +3070,7 @@ public class userSync implements TalendJob {
 				java.sql.Statement stmt_tMysqlInput_1 = conn_tMysqlInput_1
 						.createStatement();
 
-				String dbquery_tMysqlInput_1 = "SELECT \n  `person`.`id`, \n  `person`.`username`, \n  `person`.`pin`, \n  `person`.`user_reference`, \n  `person`.`mot_one_user_id`, \n  `person`.`title_id`, \n  `person`.`first_name`, \n  `person`.`middle_name`, \n  `person`.`family_name`, \n  `person`.`driving_licence_id`, \n  `person`.`gender_id`, \n  `person`.`date_of_birth`, \n  `person`.`disability`, \n  `person`.`demo_test_tester_status_id`, \n  `person`.`otp_failed_attempts`, \n  `person`.`is_account_claim_required`, \n  `person`.`transition_status_id`, \n  `person`.`mot1_userid`, \n  `person`.`mot1_current_smartcard_id`, \n  `person`.`2fa_token_id`, \n  `person`.`2fa_token_sent_on`, \n  `person`.`details_confirmed_on`, \n  `person`.`first_training_test_done_on`, \n  `person`.`first_live_test_done_on`, \n  `person`.`mot1_details_updated_on`, \n  `person`.`mot1_legacy_id`, \n  `person`.`created_by`, \n  `person`.`created_on`, \n  `person`.`last_updated_by`, \n  `person`.`last_updated_on`, \n  `person`.`version`, \n  `person`.`batch_number`\nFROM `person`";
+				String dbquery_tMysqlInput_1 = "SELECT \n  `person`.`id`, \n  `person`.`username`, \n  `person`.`pin`, \n  `person`.`user_reference`, \n  `person`.`mot_one_user_id`, \n  `person`.`title_id`, \n  `person`.`first_name`, \n  `person`.`middle_name`, \n  `person`.`family_name`, \n  `person`.`driving_licence_id`, \n  `person`.`gender_id`, \n  `person`.`date_of_birth`, \n  `person`.`disability`, \n  `person`.`demo_test_tester_status_id`, \n  `person`.`otp_failed_attempts`, \n  `person`.`is_account_claim_required`, \n  `person`.`transition_status_id`, \n  `person`.`mot1_userid`, \n  `person`.`mot1_current_smartcard_id`, \n  `person`.`2fa_token_id`, \n  `person`.`2fa_token_sent_on`, \n  `person`.`details_confirmed_on`, \n  `person`.`first_training_test_done_on`, \n  `person`.`first_live_test_done_on`, \n  `person`.`mot1_details_updated_on`, \n  `person`.`created_by`, \n  `person`.`created_on`, \n  `person`.`last_updated_by`, \n  `person`.`last_updated_on`, \n  `person`.`version`\nFROM `person`";
 
 				globalMap.put("tMysqlInput_1_QUERY", dbquery_tMysqlInput_1);
 				java.sql.ResultSet rs_tMysqlInput_1 = null;
@@ -3457,25 +3457,25 @@ public class userSync implements TalendJob {
 							}
 						}
 
+//						if (colQtyInRs_tMysqlInput_1 < 26) {
+//					//		row1.mot1_legacy_id = null;
+//						} else {
+//
+//							tmpContent_tMysqlInput_1 = rs_tMysqlInput_1
+//									.getString(26);
+//							if (tmpContent_tMysqlInput_1 != null) {
+//						//		row1.mot1_legacy_id = tmpContent_tMysqlInput_1;
+//							} else {
+//						//		row1.mot1_legacy_id = null;
+//							}
+//						}
+
 						if (colQtyInRs_tMysqlInput_1 < 26) {
-							row1.mot1_legacy_id = null;
-						} else {
-
-							tmpContent_tMysqlInput_1 = rs_tMysqlInput_1
-									.getString(26);
-							if (tmpContent_tMysqlInput_1 != null) {
-								row1.mot1_legacy_id = tmpContent_tMysqlInput_1;
-							} else {
-								row1.mot1_legacy_id = null;
-							}
-						}
-
-						if (colQtyInRs_tMysqlInput_1 < 27) {
 							row1.created_by = 0;
 						} else {
 
-							if (rs_tMysqlInput_1.getObject(27) != null) {
-								row1.created_by = rs_tMysqlInput_1.getLong(27);
+							if (rs_tMysqlInput_1.getObject(26) != null) {
+								row1.created_by = rs_tMysqlInput_1.getLong(26);
 							} else {
 
 								throw new RuntimeException(
@@ -3483,19 +3483,19 @@ public class userSync implements TalendJob {
 							}
 						}
 
-						if (colQtyInRs_tMysqlInput_1 < 28) {
+						if (colQtyInRs_tMysqlInput_1 < 27) {
 							row1.created_on = null;
 						} else {
 
-							if (rs_tMysqlInput_1.getString(28) != null) {
+							if (rs_tMysqlInput_1.getString(27) != null) {
 								String dateString_tMysqlInput_1 = rs_tMysqlInput_1
-										.getString(28);
+										.getString(27);
 								if (!("0000-00-00")
 										.equals(dateString_tMysqlInput_1)
 										&& !("0000-00-00 00:00:00")
 												.equals(dateString_tMysqlInput_1)) {
 									row1.created_on = rs_tMysqlInput_1
-											.getTimestamp(28);
+											.getTimestamp(27);
 								} else {
 									row1.created_on = (java.util.Date) year0_tMysqlInput_1
 											.clone();
@@ -3505,31 +3505,31 @@ public class userSync implements TalendJob {
 							}
 						}
 
-						if (colQtyInRs_tMysqlInput_1 < 29) {
+						if (colQtyInRs_tMysqlInput_1 < 28) {
 							row1.last_updated_by = null;
 						} else {
 
-							if (rs_tMysqlInput_1.getObject(29) != null) {
+							if (rs_tMysqlInput_1.getObject(28) != null) {
 								row1.last_updated_by = rs_tMysqlInput_1
-										.getLong(29);
+										.getLong(28);
 							} else {
 								row1.last_updated_by = null;
 							}
 						}
 
-						if (colQtyInRs_tMysqlInput_1 < 30) {
+						if (colQtyInRs_tMysqlInput_1 < 29) {
 							row1.last_updated_on = null;
 						} else {
 
-							if (rs_tMysqlInput_1.getString(30) != null) {
+							if (rs_tMysqlInput_1.getString(29) != null) {
 								String dateString_tMysqlInput_1 = rs_tMysqlInput_1
-										.getString(30);
+										.getString(29);
 								if (!("0000-00-00")
 										.equals(dateString_tMysqlInput_1)
 										&& !("0000-00-00 00:00:00")
 												.equals(dateString_tMysqlInput_1)) {
 									row1.last_updated_on = rs_tMysqlInput_1
-											.getTimestamp(30);
+											.getTimestamp(29);
 								} else {
 									row1.last_updated_on = (java.util.Date) year0_tMysqlInput_1
 											.clone();
@@ -3539,12 +3539,12 @@ public class userSync implements TalendJob {
 							}
 						}
 
-						if (colQtyInRs_tMysqlInput_1 < 31) {
+						if (colQtyInRs_tMysqlInput_1 < 30) {
 							row1.version = 0;
 						} else {
 
-							if (rs_tMysqlInput_1.getObject(31) != null) {
-								row1.version = rs_tMysqlInput_1.getLong(31);
+							if (rs_tMysqlInput_1.getObject(30) != null) {
+								row1.version = rs_tMysqlInput_1.getLong(30);
 							} else {
 
 								throw new RuntimeException(
@@ -3552,19 +3552,19 @@ public class userSync implements TalendJob {
 							}
 						}
 
-						if (colQtyInRs_tMysqlInput_1 < 32) {
-							row1.batch_number = 0;
-						} else {
-
-							if (rs_tMysqlInput_1.getObject(32) != null) {
-								row1.batch_number = rs_tMysqlInput_1
-										.getLong(32);
-							} else {
-
-								throw new RuntimeException(
-										"Null value in non-Nullable column");
-							}
-						}
+//						if (colQtyInRs_tMysqlInput_1 < 32) {
+//					//		row1.batch_number = 0;
+//						} else {
+//
+//							if (rs_tMysqlInput_1.getObject(32) != null) {
+//					//			row1.batch_number = rs_tMysqlInput_1
+//										.getLong(32);
+//							} else {
+//
+//								throw new RuntimeException(
+//										"Null value in non-Nullable column");
+//							}
+//						}
 
 						/**
 						 * [tMysqlInput_1 begin ] stop

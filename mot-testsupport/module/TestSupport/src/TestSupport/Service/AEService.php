@@ -158,4 +158,13 @@ class AEService
         return $result['slots_balance'];
     }
 
+    public function getLinkId($aeId, $siteId)
+    {
+        $result = $this->em->getConnection()->executeQuery(
+            "SELECT id FROM organisation_site_map WHERE organisation_id = :organisation_id AND site_id = :site_id AND end_date IS NULL",
+            ['organisation_id' =>$aeId, 'site_id' => $siteId]
+        )->fetch();
+
+        return $result['id'];
+    }
 }

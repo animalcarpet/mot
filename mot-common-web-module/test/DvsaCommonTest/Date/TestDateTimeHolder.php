@@ -13,7 +13,9 @@ use DvsaCommon\Date\DateTimeHolder;
  */
 class TestDateTimeHolder extends DateTimeHolder
 {
-
+    /**
+     * @var \DateTime
+     */
     private $currentDateTime;
 
     /**
@@ -31,16 +33,16 @@ class TestDateTimeHolder extends DateTimeHolder
      */
     public function setCurrent(\DateTime $currentDateTime)
     {
-        $this->currentDateTime = $currentDateTime;
+        $this->currentDateTime = clone $currentDateTime;
     }
 
     public function getCurrent($withMilliseconds = false)
     {
-        return $this->currentDateTime;
+        return clone $this->currentDateTime;
     }
 
     public function getCurrentDate()
     {
-        return $this->currentDateTime;
+        return clone $this->currentDateTime;
     }
 }

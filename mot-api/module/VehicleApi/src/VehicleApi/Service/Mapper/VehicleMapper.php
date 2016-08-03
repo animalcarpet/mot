@@ -44,9 +44,6 @@ class VehicleMapper extends AbstractVehicleMapper
         $dto->setYear($vehicle->getYear());
         $dto->setChassisNumber($vehicle->getChassisNumber());
 
-        $dto->setNoOfSeatBelts($vehicle->getNoOfSeatBelts());
-        $dto->setSeatBeltsLastChecked(DateTimeApiFormat::date($vehicle->getSeatBeltsLastChecked()));
-
         $dto->setWeight($vehicle->getWeight());
 
         $dto->setAmendedOn(DateTimeApiFormat::date($vehicle->getLastAmendedOn()));
@@ -58,7 +55,6 @@ class VehicleMapper extends AbstractVehicleMapper
 
         $dto->setMakeName($vehicle->getMakeName());
         $dto->setModelName($vehicle->getModelName());
-        $dto->setFreeTextMakeName($vehicle->getFreeTextMakeName());
 
         //  --  transmision type   --
         $transmissionTypeDto = new VehicleParamDto();

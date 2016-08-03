@@ -36,6 +36,7 @@ use TestSupport\Service\SchemeManagerService;
 use TestSupport\Service\SchemeUserService;
 use TestSupport\Service\SiteUserDataService;
 use TestSupport\Service\SlotTransactionService;
+use TestSupport\Service\StatisticsAmazonCacheService;
 use TestSupport\Service\TesterAuthorisationStatusService;
 use TestSupport\Service\TesterService;
 use TestSupport\Service\UserService;
@@ -82,7 +83,18 @@ return [
             },
         VehicleService::class                  =>
             function (ServiceLocatorInterface $sm) {
-                return new VehicleService($sm->get(EntityManager::class));
+                $entityManager = $sm->get(EntityManager::class);
+                $tokenManager = $sm->get(TestSupportAccessTokenManager::class);
+                $config = $sm->get('config');
+                $vehicleServiceUrl = isset($config['api']) && isset($config['api']['vehicle_service_url']) ?
+                    $config['api']['vehicle_service_url'] :
+                    null;
+
+                return new VehicleService(
+                    $entityManager,
+                    $tokenManager,
+                    $vehicleServiceUrl
+                );
             },
         DvlaVehicleService::class                  =>
             function (ServiceLocatorInterface $sm) {
@@ -139,6 +151,7 @@ return [
         AedmService::class                 => \TestSupport\Factory\AedmServiceFactory::class,
         DocumentService::class             => \TestSupport\Factory\DocumentServiceFactory::class,
         GVTSTesterService::class           => \TestSupport\Factory\GVTSTesterServiceFactory::class,
+        StatisticsAmazonCacheService::class  => \TestSupport\Factory\StatisticsAmazonCacheFactory::class,
         GdsSurveyService::class            => GdsSurveyServiceFactory::class,
     ]
 ];

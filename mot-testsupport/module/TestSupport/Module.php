@@ -31,6 +31,10 @@ class Module implements ConfigProviderInterface, ServiceProviderInterface
             }
         );
 
+        /** @var EntityManager $em */
+        $em = $sm->get(EntityManager::class);
+        $em->getConnection()->exec("SET @app_user_id = (SELECT `id` FROM `person` WHERE `user_reference` = 'Static Data' OR `username` = 'static data')");
+
         $application->getEventManager()->attach($sm->get(JsonErrorHandlingListener::class));
     }
 

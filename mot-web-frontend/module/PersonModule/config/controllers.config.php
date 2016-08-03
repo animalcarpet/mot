@@ -15,8 +15,10 @@ use Dvsa\Mot\Frontend\PersonModule\Factory\Controller\ChangeTelephoneControllerF
 use Dvsa\Mot\Frontend\PersonModule\Factory\Controller\PersonProfileControllerFactory;
 use Dashboard\Controller\UserTradeRolesController;
 use Dashboard\Factory\Controller\UserTradeRolesControllerFactory;
+use UserAdmin\Controller\EmailAddressController;
 use UserAdmin\Factory\Controller\ChangeQualificationStatusControllerFactory;
 use UserAdmin\Controller\ChangeQualificationStatusController;
+use UserAdmin\Factory\Controller\EmailAddressControllerFactory;
 use UserAdmin\Factory\Controller\UserProfileControllerFactory;
 use UserAdmin\Controller\UserProfileController;
 use Dvsa\Mot\Frontend\PersonModule\Controller\ChangeDateOfBirthController;
@@ -33,6 +35,7 @@ return [
         ChangeQualificationStatusController::class => ChangeQualificationStatusControllerFactory::class,
         ChangeNameController::class => ChangeNameControllerFactory::class,
         ChangeDateOfBirthController::class => ChangeDateOfBirthControllerFactory::class,
-        ChangeTelephoneController::class => ChangeTelephoneControllerFactory::class
+        ChangeTelephoneController::class => ChangeTelephoneControllerFactory::class,
+        EmailAddressController::class => EmailAddressControllerFactory::class,
     ],
 ];

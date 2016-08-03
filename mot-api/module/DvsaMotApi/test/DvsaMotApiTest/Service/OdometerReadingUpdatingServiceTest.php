@@ -133,20 +133,4 @@ class OdometerReadingUpdatingServiceTest extends \PHPUnit_Framework_TestCase
             )
         );
     }
-
-    /**
-     * Expects saving behaviour for OdometerReading and returns a capture of persisted
-     * reading for further assertions
-     *
-     * @return \DvsaCommonTest\TestUtils\ArgCapture
-     */
-    private function updatedReadingPromise()
-    {
-        $updatedReadingCapture = ArgCapture::create();
-        $this->odometerReadingRepositoryMockBuilder->setExpectation(
-            OverridableExpectationBuilder::create()->method('persist')
-                ->with($updatedReadingCapture())
-        );
-        return $updatedReadingCapture;
-    }
 }

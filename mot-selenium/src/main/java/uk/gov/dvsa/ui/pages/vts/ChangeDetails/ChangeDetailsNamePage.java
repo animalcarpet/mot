@@ -3,7 +3,7 @@ package uk.gov.dvsa.ui.pages.vts.ChangeDetails;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 
 public class ChangeDetailsNamePage extends ChangeDetailsPage {
     public static final String PATH = "/vehicle-testing-station/%s/name/change";
@@ -16,7 +16,7 @@ public class ChangeDetailsNamePage extends ChangeDetailsPage {
     }
 
     public ChangeDetailsNamePage inputSiteDetailsName(String name) {
-        FormCompletionHelper.enterText(siteName, name);
+        FormDataHelper.enterText(siteName, name);
         return this;
     }
 }

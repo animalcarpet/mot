@@ -35,10 +35,10 @@ class PasswordController extends AbstractAuthActionController
     public function changePasswordAction()
     {
         $this->layout('layout/layout-govuk.phtml');
-        $this->layout()->setVariable('pageSubTitle', "Your account");
+        $this->layout()->setVariable('pageSubTitle', "Your profile");
         $this->layout()->setVariable('pageTitle', "Change your password");
         $breadcrumbs = [
-            'Your account'         => $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ? '/your-profile' : '/profile',
+            'Your profile'         => $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ? '/your-profile' : '/profile',
             'Change your password' => '',
         ];
 
@@ -110,9 +110,8 @@ class PasswordController extends AbstractAuthActionController
     public function confirmationAction()
     {
         $this->layout('layout/layout-govuk.phtml');
-        $this->layout()->setVariable('pageSubTitle', "MOT Testing Service");
-        $this->layout()->setVariable('pageTitle', "Password change");
-        $this->layout()->setVariable('pageLede', "Your password has been changed successfully");
+        $this->layout()->setVariable('pageSubTitle', "MOT testing service");
+        $this->layout()->setVariable('pageTitle', "Your password has been changed");
 
         return [];
     }

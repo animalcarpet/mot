@@ -183,6 +183,8 @@ class TokenService extends AbstractService
             ->setExpiryDate((new \DateTime())->setTimestamp($tokenData['expiry']))
             ->setToken($tokenData['token']);
 
+        $this->setUserIdIfConnectionEstabished($this->entityManager);
+
         $this->entityManager->persist($message);
         $this->entityManager->flush();
 
@@ -352,6 +354,7 @@ class TokenService extends AbstractService
     {
         $message = $this->messageRepository->getHydratedMessageByToken($token);
         $message->setIsAcknowledged(true);
+        $this->setUserIdIfConnectionEstabished($this->entityManager);
         $this->entityManager->persist($message);
         $this->entityManager->flush($message);
     }
@@ -434,6 +437,15 @@ class TokenService extends AbstractService
         $person->setPasswordChangeRequired(false);
         $this->personRepository->save($person);
     }
+
+    private function setUserIdIfConnectionEstabished(EntityManager $entityManager) {
+        $connection = $entityManager->getConnection();
+
+        if($connection !== null) {
+            $connection->exec("SET @app_user_id = (SELECT `id` FROM `person` WHERE `user_reference` = 'Static Data' OR `username` = 'static data')");
+        }
+    }
+
 
     /**
      * Performs assertion based on whether the user has authenticated and whether they are authenticated

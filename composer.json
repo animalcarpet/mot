@@ -1,5 +1,5 @@
 {
     "require-dev": {
-        "fabpot/php-cs-fixer": "~1.5"
+        "friendsofphp/php-cs-fixer": "~1.5"
     }
 }

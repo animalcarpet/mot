@@ -3,6 +3,7 @@
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode as Table;
+use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Datasource\Authentication;
 use Dvsa\Mot\Behat\Datasource\Random;
 use Dvsa\Mot\Behat\Support\Api\AuthorisedExaminer;
@@ -174,6 +175,8 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     private $notification;
 
+    private $users = [];
+
     /**
      * @param TestSupportHelper $testSupportHelper
      * @param CustomerService $customerService
@@ -294,9 +297,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
         $this->newEmailAddress = Random::getRandomEmail();
 
         $this->updateUserEmailResponse = $this->person->updateUserEmail(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->sessionContext->getCurrentUserId(),
-            $this->newEmailAddress
+            $this->sessionContext->getCurrentAccessToken(), $this->sessionContext->getCurrentUserId(), $this->newEmailAddress
         );
     }
 
@@ -311,9 +312,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
         $this->personLoginData = $userService->create([]);
 
         $this->updateUserEmailResponse = $this->person->updateUserEmail(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->getPersonUserId(),
-            $this->newEmailAddress
+            $this->sessionContext->getCurrentAccessToken(), $this->getPersonUserId(), $this->newEmailAddress
         );
     }
 
@@ -360,24 +359,6 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
     }
 
     /**
-     * @When /^I update my profile with a mismatching email address$/
-     */
-    public function iUpdateMyProfileWithAMismatchingEmailAddress()
-    {
-        $this->newEmailAddress = Random::getRandomEmail();
-
-        //Get a random email address that doesn't match the first
-        $emailMismatch = Random::getRandomEmail();
-
-        $this->updateUserEmailResponse = $this->person->updateUserEmail(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->sessionContext->getCurrentUserId(),
-            $this->newEmailAddress,
-            $emailMismatch
-        );
-    }
-
-    /**
      * @Given /^I should receive an email mismatch message in the response$/
      */
     public function iShouldReceiveAnEmailMismatchMessageInTheResponse()
@@ -394,9 +375,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
     public function iUpdateMyEmailAddressToAnInvalidAddress($email)
     {
         $this->updateUserEmailResponse = $this->person->updateUserEmail(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->sessionContext->getCurrentUserId(),
-            $email
+            $this->sessionContext->getCurrentAccessToken(), $this->sessionContext->getCurrentUserId(), $email
         );
     }
 
@@ -1042,6 +1021,19 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
         return $this->personLoginData;
     }
 
+    public function createSiteAdmin($siteId)
+    {
+        $siteManagerService = $this->testSupportHelper->getSiteUserDataService();
+
+        $data = [
+            "siteIds" => [ $siteId ],
+            "requestor" => ["username" => "", "password" => ""]
+        ];
+
+        $user = $siteManagerService->create($data, "SITE-ADMIN");
+        return $this->session->startSession($user->data['username'], $user->data['password']);
+    }
+
     private function nominateToSiteRole($role)
     {
         $siteId = $this->vtsContext->getSite()["id"];
@@ -1665,4 +1657,60 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
         $this->testSupportHelper->getTesterService()->insertTesterQualificationStatus($personId, $group, $code);
     }
 
+    /**
+     * @Given There is a tester :testerName associated with site :siteName
+     */
+    public function thereIsATesterAssociatedWithSite($testerName, $siteName)
+    {
+        $site = $this->vtsContext->getSite($siteName);
+        $tester = $this->createTester(["siteIds" => [$site["id"]]])->data;
+
+        $authenticatedUser = $this->session->startSession($tester["username"], $tester["password"]);
+        $this->addUser($testerName, $authenticatedUser);
+
+        return $authenticatedUser;
+    }
+
+    /**
+     * @Given There is a tester :testerName associated with sites:
+     */
+    public function thereIsATesterAssociatedWithSites($testerName, Table $table)
+    {
+        $sites = [];
+        $rows = $table->getColumnsHash();
+        foreach ($rows  as $row) {
+            $sites[] = $this->vtsContext->getSite($row["site"])["id"];
+        }
+
+        $tester = $this->createTester(["siteIds" => $sites])->data;
+        $authenticatedUser = $this->session->startSession($tester["username"], $tester["password"]);
+
+        $this->addUser($testerName, $authenticatedUser);
+
+        return $authenticatedUser;
+    }
+
+    public function addUser($key, AuthenticatedUser $user, $overwrite = true)
+    {
+        if (array_key_exists($user->getUsername(), $this->users) && $overwrite === false) {
+            throw new \InvalidArgumentException(sprintf("User with username '%s' already exist.", $user->getUsername()));
+        }
+
+        $this->users[$key] = $user;
+
+        return $this;
+    }
+
+    /**
+     * @param string $key
+     * @return AuthenticatedUser
+     */
+    public function getUser($key)
+    {
+        if (array_key_exists($key, $this->users)) {
+            return $this->users[$key];
+        }
+
+        throw new \InvalidArgumentException(sprintf("User '%s' does not exist.", $key));
+    }
 }

@@ -1,13 +1,12 @@
 <?php
 
 use DvsaCommon\Date\DateTimeDisplayFormat;
-use Organisation\Controller\MotTestLogController;
+use DvsaMotTest\ViewModel\TesterMotTestLog\TesterMotTestLogViewModel;
 use Organisation\ViewModel\MotTestLog\MotTestLogFormViewModel;
-use Organisation\ViewModel\MotTestLog\MotTestLogViewModel;
 use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
 
 /**
- * @var MotTestLogViewModel                                        $viewModel
+ * @var TesterMotTestLogViewModel                                  $viewModel
  * @var \DvsaCommon\Dto\Organisation\MotTestLogSummaryDto          $logSummary
  * @var \Organisation\ViewModel\MotTestLog\MotTestLogFormViewModel $formModel
  * @var \DvsaClient\ViewModel\DateViewModel                        $dateFrom
@@ -27,6 +26,10 @@ $dateLinks = $viewModel->getFilterBuilder()->getTimePeriodNavigation($this);
 $formModel = $viewModel->getFormModel();
 $dateFrom = $formModel->getDateFrom();
 $dateTo = $formModel->getDateTo();
+$returnLink = $viewModel->getReturnLink();
+$returnAnchor = key($returnLink);
+$returnUrl = $returnLink[$returnAnchor];
+
 
 $numberFormatter = (new NumberFormatter('en_GB', NumberFormatter::DECIMAL));
 
@@ -186,7 +189,7 @@ if ($dateLinks->findOneBy('active', true)) {
         'partial/gds/form/control-navigation-secondary',
         [
             'navigation' => [
-                'Return to Performance Dashboard' => PersonUrlBuilderWeb::of()->stats()
+                'Return to ' . $returnAnchor => $returnUrl,
             ]
         ]
     ); ?>

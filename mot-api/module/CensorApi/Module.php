@@ -28,7 +28,6 @@ class Module implements AutoloaderProviderInterface,
         return [
             'factories' => [
                 'CensorService'          => \CensorApi\Factory\Service\CensorServiceFactory::class,
-                'CensorPhraseRepository' => \CensorApi\Factory\Service\CensorPhraseRepositoryFactory::class,
             ]
         ];
     }

@@ -38,7 +38,7 @@ public class ChangePersonNameTests extends DslTest {
         csco = userData.createCustomerServiceOfficer(false);
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-59"},
+    @Test(groups = {"BVT", "BL-59"},
             testName = "NewProfile",
             description = "Test that Authorised user can see change name link on person profile",
             dataProvider = "dvsaUserProvider")
@@ -50,7 +50,7 @@ public class ChangePersonNameTests extends DslTest {
         assertThat(motUI.profile.page().isChangeNameLinkDisplayed(), is(isLinkVisible));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-59"},
+    @Test(groups = {"BVT", "BL-59"},
             testName = "NewProfile",
             description = "Test that Authorised user can change name on person profile",
             dataProvider = "dvsaUserChangeNameProvider")
@@ -65,7 +65,7 @@ public class ChangePersonNameTests extends DslTest {
         assertThat(motUI.profile.page().isSuccessMessageDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-59"},
+    @Test(groups = {"Regression", "BL-59"},
             testName = "NewProfile",
             description = "Test that Authorised user should provide a first name in order to update user information")
     public void dvsaUserShouldProvideFirstName() throws IOException {
@@ -80,7 +80,7 @@ public class ChangePersonNameTests extends DslTest {
         assertThat(motUI.profile.changeName().isValidationMessageOnChangeNamePageDisplayed("FIRST_NAME"), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-59"},
+    @Test(groups = {"Regression", "BL-59"},
             testName = "NewProfile",
             description = "Test that Authorised user should provide a last name in order to update user information")
     public void dvsaUserShouldProvideLastName() throws IOException {
@@ -95,7 +95,7 @@ public class ChangePersonNameTests extends DslTest {
         assertThat(motUI.profile.changeName().isValidationMessageOnChangeNamePageDisplayed("LAST_NAME"), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-59"},
+    @Test(groups = {"Regression", "BL-59"},
             testName = "NewProfile",
             description = "Test that Authorised user can navigate to Change name page and backward")
     public void dvsaUserCanNavigateToAndBackwardChangeNamePage() throws IOException {
@@ -109,7 +109,7 @@ public class ChangePersonNameTests extends DslTest {
         assertThat(motUI.profile.page().isPageLoaded(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-59"},
+    @Test(groups = {"Regression", "BL-59"},
             testName = "NewProfile",
             description = "Test that Authorised user can not see change name link on it's own profile",
             dataProvider = "dvsaUserFroOwnProfileProvider")
@@ -121,7 +121,7 @@ public class ChangePersonNameTests extends DslTest {
         assertThat(motUI.profile.page().isChangeNameLinkDisplayed(), is(false));
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-59"},
+    @Test(groups = {"Regression", "BL-59"},
             testName = "NewProfile",
             description = "Test that Trade user can't see change name link on person profile",
             dataProvider = "tradeUserProvider")

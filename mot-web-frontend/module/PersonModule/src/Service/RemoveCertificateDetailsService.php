@@ -6,7 +6,7 @@ use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaClient\Mapper\QualificationDetailsMapper;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
-use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\QualificationDetailsBreadcrumbs;
+use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\CertificatesBreadcrumbs;
 use Core\ViewModel\Gds\Table\GdsTable;
 use Core\Action\ActionResult;
 use Zend\View\Model\ViewModel;

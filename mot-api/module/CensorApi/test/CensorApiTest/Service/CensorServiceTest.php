@@ -4,7 +4,8 @@ namespace CensorApiTest\Service;
 
 use CensorApi\Service\CensorService;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaEntities\Repository\CensorPhraseRepository;
+use DvsaEntities\Entity\CensorBlacklist;
+use DvsaEntities\Repository\CensorBlacklistRepository;
 
 /**
  * Class CensorServiceTest
@@ -18,9 +19,9 @@ class CensorServiceTest extends \PHPUnit_Framework_TestCase
     private $censorService;
 
     /**
-     * @var CensorPhraseRepository
+     * @var CensorBlacklistRepository
      */
-    private $censorPhraseRepositoryMock;
+    private $censorBlacklistRepositoryMock;
 
     public static function data()
     {
@@ -40,14 +41,18 @@ class CensorServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testContainsProfanity($assumption)
     {
-        $this->defineBadWords(['dirtyword']);
+        $this->defineBadWords(
+            [
+                (new CensorBlacklist())->setPhrase('dirtyword')
+            ]
+        );
         $res = $this->censorService->containsProfanity($assumption['text']);
         $this->assertEquals($res, $assumption['result']);
     }
 
     private function defineBadWords(array $badWords)
     {
-        $this->censorPhraseRepositoryMock->expects($this->any())
+        $this->censorBlacklistRepositoryMock->expects($this->any())
             ->method('getBlacklist')
             ->with()
             ->will($this->returnValue($badWords));
@@ -55,8 +60,8 @@ class CensorServiceTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->censorPhraseRepositoryMock = XMock::of(CensorPhraseRepository::class);
-        $this->censorService = new CensorService($this->censorPhraseRepositoryMock);
+        $this->censorBlacklistRepositoryMock = XMock::of(CensorBlacklistRepository::class);
+        $this->censorService = new CensorService($this->censorBlacklistRepositoryMock);
         parent::setUp();
     }
 }

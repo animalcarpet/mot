@@ -37,7 +37,7 @@ class MotAuthorisationPermissionCheckTest extends \PHPUnit_Framework_TestCase
     private $siteOrganisationMap;
 
     /**
-     * Return a mock of the Zend AuthenticationService
+     * Return a mock of the Zend AuthorisationService
      *
      * @param $identity
      *

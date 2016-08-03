@@ -19,7 +19,8 @@ class SubRow implements FormatterInterface
     {
         return $view->partial(
             'table/formatter/sub-row', [
-                'value' => $data[$column->getField()],
+                'value'  => $data[$column->getField()],
+                'escape' => $column->isEscapeHtml(),
             ]
         );
     }

@@ -9,7 +9,7 @@ use DvsaMotTest\ViewModel\StartTestConfirmationViewModel;
 $title = 'Vehicle details changed';
 $header = 'Vehicle Details Changed';
 
-/** @var \DvsaCommon\Dto\Vehicle\AbstractVehicleDto $vehicleDetails */
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\Vehicle $vehicleDetails */
 $vehicleDetails = $this->vehicleDetails;
 
 $this->headTitle($title);
@@ -27,14 +27,14 @@ echo $this->partial('errorMessages', ['getFromFlash' => true]);
 <form action="<?php echo $viewModel->getConfirmActionUrl() ?>" method="POST">
 
     <?php echo $this->csrfToken() ?>
-    <input type="hidden" name="primaryColour"
-           value="<?php echo $this->escapeHtmlAttr($vehicleDetails->getColour()->getCode()); ?>" />
-    <input type="hidden" name="secondaryColour"
-           value="<?php echo $this->escapeHtmlAttr($vehicleDetails->getColourSecondary()->getCode()); ?>" />
-    <input type="hidden" name="vehicleClass"
-           value="<?php echo $this->escapeHtmlAttr($vehicleDetails->getClassCode()); ?>" />
-    <input type="hidden" name="fuelType"
-           value="<?php echo $this->escapeHtmlAttr($vehicleDetails->getFuelType()->getCode()); ?>" />
+    <input type="hidden" name="colourId"
+           value="<?php echo $this->escapeHtmlAttr($colourId); ?>" />
+    <input type="hidden" name="secondaryColourId"
+           value="<?php echo $this->escapeHtmlAttr($secondaryColourId); ?>" />
+    <input type="hidden" name="vehicleClassId"
+           value="<?php echo $this->escapeHtmlAttr($vehicleClassId); ?>" />
+    <input type="hidden" name="fuelTypeId"
+           value="<?php echo $this->escapeHtmlAttr($fuelTypeId); ?>" />
     <input type="hidden" name="motTestType"
            value="<?php echo $this->escapeHtmlAttr($viewModel->getMethod()); ?>" />
 

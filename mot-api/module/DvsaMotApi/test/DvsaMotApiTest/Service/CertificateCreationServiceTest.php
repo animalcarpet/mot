@@ -3,12 +3,15 @@
 namespace DvsaMotApiTest\Service;
 
 use DataCatalogApi\Service\DataCatalogService;
+use DvsaCommon\Dto\Common\ColourDto;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Common\MotTestTypeDto;
 use DvsaCommon\Dto\Person\PersonDto;
+use DvsaCommon\Dto\Vehicle\CountryDto;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
 use DvsaCommon\Enum\MotTestTypeCode;
+use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaDocument\Service\Document\DocumentService;
@@ -74,7 +77,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
                 (new PersonDto())
                     ->setDisplayName('Testy McTest')
             )
-            ->setVehicleClass((new VehicleClassDto())->setCode(4))
+            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4))
             ->setTestType((new MotTestTypeDto())->setCode($testTypeCode))
             ->setVehicleTestingStation(
                 [
@@ -82,7 +85,10 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
                     'siteNumber' => 'asdfasda',
                     'primaryTelephone' => '011712013243',
                 ]
-            );
+            )
+            ->setPrimaryColour((new ColourDto())->setName('Primary'))
+            ->setSecondaryColour((new ColourDto())->setName('Secondary'))
+            ->setCountryOfRegistration((new CountryDto())->setName('UK'));
 
         $additionalData = [
             'TestStationAddress'    => []
@@ -131,7 +137,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
                     ->setFirstName('Testy')
                     ->setFamilyName('McTest')
             )
-            ->setVehicleClass((new VehicleClassDto())->setCode(4))
+            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4))
             ->setStatus('PASSED')
             ->setVehicleTestingStation(
                 [
@@ -139,7 +145,10 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
                     'siteNumber' => 'asdfasda',
                     'primaryTelephone' => '011712013243',
                 ]
-            );
+            )
+            ->setPrimaryColour((new ColourDto())->setName('Primary'))
+            ->setSecondaryColour((new ColourDto())->setName('Secondary'))
+            ->setCountryOfRegistration((new CountryDto())->setName('UK'));
 
         $additionalData = [
             'TestStationAddress'    => []
@@ -188,7 +197,11 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
                     'siteNumber' => 'asdfasda',
                     'primaryTelephone' => '011712013243',
                 ]
-            );
+            )
+            ->setPrimaryColour((new ColourDto())->setName('Primary'))
+            ->setSecondaryColour((new ColourDto())->setName('Secondary'))
+            ->setCountryOfRegistration((new CountryDto())->setName('UK'))
+            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4));
 
         $additionalData = [
             'TestStationAddress'    => []
@@ -249,7 +262,11 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
                     'primaryTelephone' => '011712013243',
                 ]
             )
-            ->setPrsMotTestNumber($prsTestId);
+            ->setPrsMotTestNumber($prsTestId)
+            ->setPrimaryColour((new ColourDto())->setName('Primary'))
+            ->setSecondaryColour((new ColourDto())->setName('Secondary'))
+            ->setCountryOfRegistration((new CountryDto())->setName('UK'))
+            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4));
 
         $expectedPrsTestData = (new MotTestDto())
             ->setId($prsTestId)
@@ -273,7 +290,11 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
                     'siteNumber' => 'asdfasda',
                     'primaryTelephone' => '011712013243',
                 ]
-            );
+            )
+            ->setPrimaryColour((new ColourDto())->setName('Primary'))
+            ->setSecondaryColour((new ColourDto())->setName('Secondary'))
+            ->setCountryOfRegistration((new CountryDto())->setName('UK'))
+            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4));
 
         $this->mockMotService->expects($this->once())
             ->method('getMotTestData')
@@ -329,7 +350,11 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
                     ->setFirstName('Testy')
                     ->setFamilyName('McTest')
             )
-            ->setStatus('ABANDONED');
+            ->setStatus('ABANDONED')
+            ->setPrimaryColour((new ColourDto())->setName('Primary'))
+            ->setSecondaryColour((new ColourDto())->setName('Secondary'))
+            ->setCountryOfRegistration((new CountryDto())->setName('UK'))
+            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4));
 
         $additionalData = [
             'vehicleTestingStation' => [
@@ -379,7 +404,11 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
                     ->setFirstName('Testy')
                     ->setFamilyName('McTest')
             )
-            ->setStatus('ABORTED');
+            ->setStatus('ABORTED')
+            ->setPrimaryColour((new ColourDto())->setName('Primary'))
+            ->setSecondaryColour((new ColourDto())->setName('Secondary'))
+            ->setCountryOfRegistration((new CountryDto())->setName('UK'))
+            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4));
 
         $additionalData = [
             'vehicleTestingStation' => [
@@ -449,7 +478,11 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
                     'primaryTelephone' => '011712013243',
                 ]
             )
-            ->setStatus('PASSED');
+            ->setStatus('PASSED')
+            ->setPrimaryColour((new ColourDto())->setName('Primary'))
+            ->setSecondaryColour((new ColourDto())->setName('Secondary'))
+            ->setCountryOfRegistration((new CountryDto())->setName('UK'))
+            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4));
 
         $additionalData = [
             'TestStationAddress'    => []

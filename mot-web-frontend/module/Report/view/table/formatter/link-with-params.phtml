@@ -1,0 +1,15 @@
+<?php
+/**
+ * @var string $root
+ * @var string $params
+ * @var string $queryParams
+ * @var string $value
+ * @var string $id
+ */
+
+/** backward compatibility :/ */
+$id = $id? $id : $value;
+?>
+<a href="<?php echo $this->url($root, $params, $queryParams); ?>" id="<?php echo $id; ?>">
+    <?php echo $this->escapeHtml($value); ?>
+</a>

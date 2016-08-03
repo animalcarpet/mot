@@ -31,7 +31,7 @@ public class ClaimUserAccountTests extends DslTest {
         };
     }
 
-    @Test(groups = {"BVT", "Regression"}, description = "VM-10319 - Tester, CSCO, AEDM can Claim Account and Set Password",
+    @Test(groups = {"BVT"}, description = "VM-10319 - Tester, CSCO, AEDM can Claim Account and Set Password",
     dataProvider = "createTester")
     public void claimAsUser(User user) throws Exception {
 

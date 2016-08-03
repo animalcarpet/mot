@@ -1,0 +1,48 @@
+<?php
+use Dvsa\Mot\Frontend\PersonModule\Form\AnnualAssessmentCertificatesForm;
+use Dvsa\Mot\Frontend\PersonModule\ViewModel\AnnualAssessmentCertificates\AnnualAssessmentCertificatesAddEditViewModel;
+
+/** @var AnnualAssessmentCertificatesAddEditViewModel $viewModel */
+/** @var AnnualAssessmentCertificatesForm $form */
+$form = $viewModel->getForm();
+?>
+<?php echo $this->partial('zendFormErrorMessages', ['form' => $form]); ?>
+<?php echo $this->partial('errorMessages', array('getFromFlash' => true)); ?>
+<form action="" method="POST" autocomplete="off" novalidate="">
+
+    <?php echo $this->csrfToken() ?>
+
+    <fieldset>
+        <h3 class="form-title heading-medium">Certificate details</h3>
+        <?php echo $this->partial('partial/gds/form/control', [
+            'element' => $form->get(AnnualAssessmentCertificatesForm::FIELD_CERT_NUMBER)
+        ]);
+        ?>
+
+        <?php echo $this->partial('partial/gds/form/control-dob-group', [
+            'groupLabel' => 'Date awarded',
+            'dayElement' => $form->get(AnnualAssessmentCertificatesForm::FIELD_DATE_DAY),
+            'monthElement' => $form->get(AnnualAssessmentCertificatesForm::FIELD_DATE_MONTH),
+            'yearElement' => $form->get(AnnualAssessmentCertificatesForm::FIELD_DATE_YEAR),
+        ]);
+        ?>
+
+        <?php echo $this->partial('partial/gds/form/control', [
+            'element' => $form->get(AnnualAssessmentCertificatesForm::FIELD_SCORE),
+            'info'    => '%',
+        ]);
+        ?>
+    </fieldset>
+
+    <nav class="content-navigation">
+        <input type="submit" class="button" value="<?php echo $viewModel->getSubmitButtonText() ?>" id="submit-button"/>
+        <ul class="content-navigation__secondary">
+            <li>
+                <a href="<?php echo $viewModel->getBackUrl() ?>">
+                    Cancel and return to annual assessment certificates
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+</form>

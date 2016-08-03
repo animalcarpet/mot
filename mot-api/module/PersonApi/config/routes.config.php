@@ -3,6 +3,7 @@
 use PersonApi\Controller\AuthorisedExaminerController;
 use PersonApi\Controller\DashboardController;
 use PersonApi\Controller\DemoTestRequestsController;
+use PersonApi\Controller\MotTestingAnnualCertificateController;
 use PersonApi\Controller\MotTestingAuthorisationController;
 use PersonApi\Controller\PasswordExpiryController;
 use PersonApi\Controller\PasswordController;
@@ -339,6 +340,20 @@ return [
                         'defaults' => [
                             'controller' => MotTestingCertificateValidateController::class,
                         ],
+                    ],
+                    'may_terminate' => true,
+                ],
+                'mot-testing-annual-certificate' => [
+                    'type' => 'segment',
+                    'options' => [
+                        'route' => '/mot-testing-annual-certificate/:group[/:certificateId]',
+                        'defaults' => [
+                            'controller' => MotTestingAnnualCertificateController::class,
+                        ],
+                        'constraints' => [
+                            'group' => 'A|B',
+                            'certificateId' => '[0-9]+'
+                        ]
                     ],
                     'may_terminate' => true,
                 ],

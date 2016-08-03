@@ -34,16 +34,16 @@ public class ConductMotTests extends DslTest {
         vehicle = vehicleData.getNewVehicle(tester);
     }
 
-    @Test(groups = {"BVT", "Regression"})
+    @Test(testName = "OldRFRTest", groups = {"BVT"})
     public void passTestSuccessfullyWithNoRFR() throws IOException, URISyntaxException {
 
         //Given I am on the Test Results Entry Page
         TestResultsEntryPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester,vehicle);
 
-        //When I complete all Brake test Values with passing data
+        //When I complete all test details with passing data
         testResultsEntryPage.completeTestDetailsWithPassValues();
 
-        //Then I should see a fail on the test result page
+        //Then I should see a pass on the test result page
         assertThat(testResultsEntryPage.isPassNoticeDisplayed(), is(true));
 
         //Then I should be able to complete the Test Successfully
@@ -54,7 +54,7 @@ public class ConductMotTests extends DslTest {
         assertThat(testCompletePage.verifyBackToHomeLinkDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression"} )
+    @Test(testName = "OldRFRTest", groups = {"BVT"} )
     public void startAndAbandonTest() throws URISyntaxException, IOException {
 
         //Given I start a test and I am on the Test Results Page
@@ -68,7 +68,7 @@ public class ConductMotTests extends DslTest {
         assertThat(testAbandonedPage.isVT30messageDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression"} )
+    @Test(testName = "OldRFRTest", groups = {"BVT"} )
     public void startAndAbortTestAsTester() throws URISyntaxException, IOException {
 
         //Given I start a test and I am on the Test Results Page
@@ -81,7 +81,7 @@ public class ConductMotTests extends DslTest {
         assertThat(testAbortedPage.isVT30messageDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression"} )
+    @Test(testName = "OldRFRTest", groups = {"BVT"} )
     public void startAndAbortTestAsVE() throws URISyntaxException, IOException {
         User vehicleExaminer = userData.createVehicleExaminer("Default-VE", false);
 
@@ -97,7 +97,7 @@ public class ConductMotTests extends DslTest {
         assertThat(motUI.normalTest.getTestStatus(), equalToIgnoringCase("Aborted by VE"));
     }
 
-    @Test(groups = {"BVT", "Regression"})
+    @Test(testName = "OldRFRTest", groups = {"BVT"})
     public void conductRetestSuccessfully() throws IOException, URISyntaxException {
 
         //Given I have a vehicle with a failed MOT test
@@ -112,13 +112,13 @@ public class ConductMotTests extends DslTest {
         motUI.retest.verifyRetestIsSuccessful();
     }
 
-    @Test(groups = {"BVT", "Regression"})
+    @Test(groups = {"BVT"})
     public void printInspectionSheetSuccessfully() throws IOException {
         TestOptionsPage page = vehicleReinspectionWorkflow().startMotTestAsATester(tester, vehicle);
         page.clickPrintInspectionSheet();
     }
 
-    @Test (groups = {"BVT", "Regression"})
+    @Test (testName = "OldRFRTest", groups = {"Regression"})
     public void printDocumentButtonShouldNotBeDisplayedForDemoTest() throws IOException, URISyntaxException {
 
         // GIVEN I conducted a demo test as a new user

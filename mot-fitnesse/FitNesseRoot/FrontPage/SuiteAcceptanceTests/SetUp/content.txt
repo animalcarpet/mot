@@ -1,8 +1,0 @@
-!|SetUp|
-|init? |
-|      |
-
-!include .FrontPage.SuiteAcceptanceTests.SetUp.TesterAuthorisationStatus
-!include .FrontPage.SuiteAcceptanceTests.SetUp.VehicleClassCodes
-
-

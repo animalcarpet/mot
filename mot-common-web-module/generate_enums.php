@@ -78,12 +78,14 @@ $inputArray = [
     enum('OrganisationSiteStatusName', 'organisation_site_status', 'name', 'name'),
 
     // Enums which has values that are database IDs, ideally usages of these would be replaced with the 'code' column.
+    enum('ColourId', 'colour_lookup', 'name', 'id'),
     enum('CountryOfRegistrationId', 'country_of_registration_lookup', 'name', 'id'),
     enum('EnfDecisionId', 'enforcement_decision_lookup', 'decision', 'id'),
     enum('EnfDecisionOutcomeId', 'enforcement_decision_outcome_lookup', 'outcome', 'id'),
     enum('EnfDecisionReinspectionOutcomeId', 'enforcement_decision_reinspection_outcome_lookup', 'decision', 'id'),
     enum('EnfRetestModeId', 'enforcement_full_partial_retest_lookup', 'description', 'id'),
     enum('EnfSiteVisitOutcomeId', 'enforcement_visit_outcome_lookup', 'description', 'id'),
+    enum('FuelTypeId', 'fuel_type', 'name', 'id'),
     enum('OrganisationBusinessRoleId', 'organisation_business_role', 'name', 'id'),
     enum('OrganisationBusinessRoleName', 'organisation_business_role', 'name', 'description'),
     enum('ReasonForCancelId', 'mot_test_reason_for_cancel_lookup', 'code', 'id'),

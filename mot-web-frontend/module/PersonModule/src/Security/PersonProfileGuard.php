@@ -346,6 +346,11 @@ class PersonProfileGuard
         return !$this->targetPersonHasAnyRoleOf(self::$dvsaRoles);
     }
 
+    public function canViewAnnualAssessmentCertificates()
+    {
+        return !$this->targetPersonHasAnyRoleOf(self::$dvsaRoles);
+    }
+
     /**
      * @return bool
      */
@@ -561,5 +566,10 @@ class PersonProfileGuard
         }
 
         return $status;
+    }
+
+    public function canViewTestLogs()
+    {
+        return $this->isViewingOwnProfile() && $this->authorisationService->isGranted(PermissionInSystem::TESTER_VIEW_TEST_LOGS);
     }
 }

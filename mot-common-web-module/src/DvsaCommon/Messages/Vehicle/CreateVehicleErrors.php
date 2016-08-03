@@ -26,7 +26,7 @@ class CreateVehicleErrors
     const BOTH_REG_AND_VIN_EMPTY  = ' you must enter a registration mark or a VIN';
 
     const REG_EMPTY = 'you must enter a registration mark or choose a reason for not supplying one';
-    const REG_INVALID = 'must be a valid registration mark';
+    const REG_INVALID = 'must only contain letters and numbers';
     const REG_TOO_LONG = 'must be %d characters or less for vehicles not registered in the UK';
     const REG_TOO_LONG_FOR_UK = 'must be %d characters or less for vehicles registered in the UK';
     const REG_TOO_LONG_NO_COUNTRY = 'must be %d characters or less';

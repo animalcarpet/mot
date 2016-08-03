@@ -4,6 +4,7 @@ namespace DvsaClient\Mapper;
 
 use DvsaClient\Entity\Person;
 use DvsaCommon\Dto\Person\PersonDto;
+use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\UrlBuilder\PersonUrlBuilder;
 use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaCommon\Utility\DtoHydrator;
@@ -13,7 +14,7 @@ use DvsaCommon\Utility\DtoHydrator;
  *
  * @package DvsaClient\Mapper
  */
-class PersonMapper extends AutoMapper
+class PersonMapper extends AutoMapper implements AutoWireableInterface
 {
 
     protected $entityClass = Person::class;

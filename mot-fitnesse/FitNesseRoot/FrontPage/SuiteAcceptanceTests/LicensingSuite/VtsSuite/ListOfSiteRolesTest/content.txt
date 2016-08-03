@@ -1,5 +1,0 @@
-Get list of roles which can be assigned at VTS level
-
-!| Vm 2552 List Site Roles                  |
-|success?|Roles returned?                   |
-|true    |[TESTER, SITE-MANAGER, SITE-ADMIN]|

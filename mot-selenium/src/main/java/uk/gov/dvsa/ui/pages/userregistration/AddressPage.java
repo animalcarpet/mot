@@ -4,7 +4,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.ContactDetailsHelper;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
@@ -42,22 +42,22 @@ public class AddressPage extends Page {
 
     public SecurityQuestionOnePage enterAddressAndSubmitExpectingFirstSecurityQuestionPage(String addressLine1, String addressLine2, String addressLine3, String town,
                                                      String postCode) {
-        FormCompletionHelper.enterText(homeAddressLineOne, addressLine1);
-        FormCompletionHelper.enterText(homeAddressLineTwo, addressLine2);
-        FormCompletionHelper.enterText(homeAddressLineThree, addressLine3);
-        FormCompletionHelper.enterText(townCity, town);
-        FormCompletionHelper.enterText(postcode, postCode);
+        FormDataHelper.enterText(homeAddressLineOne, addressLine1);
+        FormDataHelper.enterText(homeAddressLineTwo, addressLine2);
+        FormDataHelper.enterText(homeAddressLineThree, addressLine3);
+        FormDataHelper.enterText(townCity, town);
+        FormDataHelper.enterText(postcode, postCode);
         continueToNextPage.click();
         return new SecurityQuestionOnePage(driver);
     }
 
     public AddressPage enterAddress()
     {
-        FormCompletionHelper.enterText(homeAddressLineOne, ContactDetailsHelper.getAddressLine1());
-        FormCompletionHelper.enterText(homeAddressLineTwo, ContactDetailsHelper.getAddressLine2());
-        FormCompletionHelper.enterText(homeAddressLineThree, ContactDetailsHelper.getAddressLine3());
-        FormCompletionHelper.enterText(townCity, ContactDetailsHelper.getCity());
-        FormCompletionHelper.enterText(postcode, ContactDetailsHelper.getPostCode());
+        FormDataHelper.enterText(homeAddressLineOne, ContactDetailsHelper.getAddressLine1());
+        FormDataHelper.enterText(homeAddressLineTwo, ContactDetailsHelper.getAddressLine2());
+        FormDataHelper.enterText(homeAddressLineThree, ContactDetailsHelper.getAddressLine3());
+        FormDataHelper.enterText(townCity, ContactDetailsHelper.getCity());
+        FormDataHelper.enterText(postcode, ContactDetailsHelper.getPostCode());
 
         return this;
     }

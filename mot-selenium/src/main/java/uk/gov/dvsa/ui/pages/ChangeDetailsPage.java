@@ -3,7 +3,7 @@ package uk.gov.dvsa.ui.pages;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.profile.PersonProfilePage;
 
@@ -27,14 +27,14 @@ public class ChangeDetailsPage extends Page {
     }
 
     public ChangeDetailsPage editPostCode(String postcode) {
-        FormCompletionHelper.enterText(postCodeField, postcode);
+        FormDataHelper.enterText(postCodeField, postcode);
 
         return this;
     }
 
     public ChangeDetailsPage editEmailAndConfirmEmail(String email, String confirmEmail) {
-        FormCompletionHelper.enterText(emailField, email);
-        FormCompletionHelper.enterText(emailConfirmationField, confirmEmail);
+        FormDataHelper.enterText(emailField, email);
+        FormDataHelper.enterText(emailConfirmationField, confirmEmail);
 
         return this;
     }

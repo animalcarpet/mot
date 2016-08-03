@@ -1,6 +1,7 @@
 <?php
 namespace Organisation\ViewModel\Sidebar;
 
+use Core\Routing\AeRouteList;
 use Core\ViewModel\Sidebar\GeneralSidebar;
 use Core\ViewModel\Sidebar\GeneralSidebarLink;
 use Core\ViewModel\Sidebar\GeneralSidebarLinkList;
@@ -220,6 +221,15 @@ class AeOverviewSidebar extends GeneralSidebar
                         'id' => $this->organisation->getId(),
                         'type' => EventController::TYPE_AE,
                     ])
+                )
+            );
+        }
+
+        if ($this->authorisationForView->canViewAETestQualityInformation()) {
+            $this->getRelatedLinks()->addLink(
+                new GeneralSidebarLink("test-quality-information",
+                    "Test quality information",
+                    $this->url->fromRoute(AERouteList::AE_TEST_QUALITY, ['id' => $this->organisation->getId()])
                 )
             );
         }

@@ -468,10 +468,8 @@ class MotTestingCertificateServiceTest extends AbstractServiceTestCase
 
     private function createDeserializer()
     {
-        $registry = new DtoConvertibleTypesRegistry();
-
         if ($this->deserializer === null) {
-            $this->deserializer = new DtoReflectiveDeserializer(new DtoConvertibleTypesRegistry(), new DtoReflector($registry));
+            $this->deserializer = new DtoReflectiveDeserializer();
         }
 
         return $this->deserializer;

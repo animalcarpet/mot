@@ -31,8 +31,9 @@ public class TestCompletePage extends Page {
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE, PAGE_TITLE_REINSPECTION);
     }
 
-    public void clickCompareResultsButton() {
+    public DifferenceBetweenTestPage clickCompareResultsButton() {
         compareResultsButton.click();
+        return new DifferenceBetweenTestPage(driver);
     }
 
     public boolean verifyBackToHomeLinkDisplayed(){

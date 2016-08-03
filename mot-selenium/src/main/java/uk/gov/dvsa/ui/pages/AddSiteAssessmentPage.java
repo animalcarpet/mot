@@ -3,7 +3,7 @@ package uk.gov.dvsa.ui.pages;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.vts.VehicleTestingStationPage;
 
@@ -49,7 +49,7 @@ public class AddSiteAssessmentPage extends Page {
     }
 
     public AddSiteAssessmentPage addSiteAssessmentScore(String score) {
-        FormCompletionHelper.enterText(siteAssessmentScore, score);
+        FormDataHelper.enterText(siteAssessmentScore, score);
         return this;
     }
 
@@ -58,34 +58,34 @@ public class AddSiteAssessmentPage extends Page {
     }
 
     public AddSiteAssessmentPage enterAeFullName(String name) {
-        FormCompletionHelper.enterText(aeFullName, name);
+        FormDataHelper.enterText(aeFullName, name);
         return this;
     }
 
     public AddSiteAssessmentPage enterDvsaId(String id) {
-        FormCompletionHelper.enterText(dvsaId, id);
+        FormDataHelper.enterText(dvsaId, id);
         return this;
     }
 
     public AddSiteAssessmentPage enterAeRole(String role) {
-        FormCompletionHelper.enterText(aeRole, role);
+        FormDataHelper.enterText(aeRole, role);
         return this;
     }
 
     public AddSiteAssessmentPage enterAeId(String id) {
-        FormCompletionHelper.enterText(aeId, id);
+        FormDataHelper.enterText(aeId, id);
         return this;
     }
 
     public AddSiteAssessmentPage enterTesterId(String id) {
-        FormCompletionHelper.enterText(testerId, id);
+        FormDataHelper.enterText(testerId, id);
         return this;
     }
 
     public AddSiteAssessmentPage enterDate(String day, String month, String year) {
-        FormCompletionHelper.enterText(dateDay, day);
-        FormCompletionHelper.enterText(dateMonth, month);
-        FormCompletionHelper.enterText(dateYear, year);
+        FormDataHelper.enterText(dateDay, day);
+        FormDataHelper.enterText(dateMonth, month);
+        FormDataHelper.enterText(dateYear, year);
         return this;
     }
 

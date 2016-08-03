@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityRepository;
 use DvsaAuthorisation\Service\AuthorisationService;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Enum\PersonContactTypeCode;
+use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Service\AbstractService;
 use DvsaCommonApi\Service\Exception\DataValidationException;
 use DvsaEntities\Entity\Email;
@@ -62,7 +63,8 @@ class PersonContactService extends AbstractService
         AuthorisationService $authorisationService,
         EntityManager $em,
         PersonDetailsChangeNotificationHelper $notificationHelper
-    ) {
+    )
+    {
         parent::__construct($em);
 
         $this->personContactRepository = $repository;
@@ -76,35 +78,21 @@ class PersonContactService extends AbstractService
     }
 
     /**
-     * @param $personId
-     *
-     * @return \DvsaCommon\Dto\Person\PersonContactDto
-     * @throws \DvsaCommonApi\Service\Exception\NotFoundException
-     */
-    public function getForPersonId($personId)
-    {
-        $contact = $this->personContactRepository->getHydratedByTypeCode($personId, PersonContactTypeCode::PERSONAL);
-        $dto = $this->personContactMapper->toDto($contact);
-
-        return $dto;
-    }
-
-    /**
-     * @param int   $personId
+     * @param int $personId
      * @param array $data
      *
      * @return \DvsaCommon\Dto\Person\PersonContactDto
      * @throws DataValidationException
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
-    public function updateEmailForPersonId($personId, $data)
+    public function updateEmailForPerson($personId, $data)
     {
         if ($this->authenticationService->getIdentity()->getUserId() != $personId) {
             $this->authorisationService->assertGranted(PermissionInSystem::PROFILE_EDIT_OTHERS_EMAIL_ADDRESS);
         }
 
-        if (!isset($data['emails'][0])
-            || !$this->personalDetailsValidator->validateEmail($data['emails'][0])
+        if (!isset($data['email'])
+            || !$this->personalDetailsValidator->validateEmail($data['email'])
         ) {
             $exception = new DataValidationException();
             $exception->addError('Email Address not Valid', 1);
@@ -114,18 +102,26 @@ class PersonContactService extends AbstractService
         $contact = $this->personContactRepository->getHydratedByTypeCode($personId, PersonContactTypeCode::PERSONAL);
         $contactDetails = $contact->getDetails();
         $emails = $contactDetails->getEmails();
-        if ($emails->isEmpty()) {
+
+        /** @var Email[] $primaryEmails */
+        $primaryEmails = ArrayUtils::filter($emails, function (Email $email) {
+            return $email->getIsPrimary();
+        });
+
+        if (!$primaryEmails) {
             $email = new Email();
-            $email->setEmail($data['emails'][0]);
+            $email->setEmail($data['email']);
             $email->setContact($contactDetails);
-            $email->setIsPrimary(1);
-            $emails->add($email);
-            $this->personContactRepository->persist($email);
+            $email->setIsPrimary(true);
+            $this->entityManager->persist($email);
         } else {
-            foreach ($emails as $emailIter => $email) {
-                $email->setEmail($data['emails'][$emailIter]);
-                $this->personContactRepository->persist($email);
+            /** @var Email $primaryEmail */
+            if (count($primaryEmails) > 1) {
+                $this->markExcessivePrimaryEmailsAsNotPrimary($primaryEmails);
             }
+            $primaryEmail = ArrayUtils::first($primaryEmails);
+            $primaryEmail->setEmail($data['email']);
+            $this->entityManager->persist($primaryEmail);
         }
         $this->em->flush();
 
@@ -136,5 +132,21 @@ class PersonContactService extends AbstractService
 
         $dto = $this->personContactMapper->toDto($contact);
         return $dto;
+    }
+
+    /**
+     * @param Email[] $emails
+     */
+    private function markExcessivePrimaryEmailsAsNotPrimary(array $emails)
+    {
+        $firstEmail = ArrayUtils::first($emails);
+        /** @var Email[] $excessiveEmails */
+        $excessiveEmails = ArrayUtils::filter($emails, function (Email $email) use ($firstEmail) {
+            return $email !== $firstEmail;
+        });
+
+        foreach ($excessiveEmails as $excessiveEmail) {
+            $excessiveEmail->setIsPrimary(false);
+        }
     }
 }

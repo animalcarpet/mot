@@ -11,7 +11,7 @@ class DtoReflector implements DtoReflectorInterface
 {
     private $convertiblesRegister;
 
-    public function __construct(DtoConvertibleTypesRegistryInterface $convertiblesRegister)
+    public function __construct(DtoConvertibleTypesRegistry $convertiblesRegister)
     {
         $this->convertiblesRegister = $convertiblesRegister;
     }

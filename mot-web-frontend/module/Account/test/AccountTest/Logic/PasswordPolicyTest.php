@@ -4,6 +4,7 @@ namespace AccountTest\Logic;
 
 use Account\Logic\PasswordPolicy;
 use Account\ViewModel\ChangePasswordFormModel;
+use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
 use DvsaCommonTest\TestUtils\XMock;
 
 class PasswordPolicyTest extends \PHPUnit_Framework_TestCase
@@ -20,9 +21,9 @@ class PasswordPolicyTest extends \PHPUnit_Framework_TestCase
     {
         $policy = new PasswordPolicy(
             $this->formModel,
-            "theusername",
-            "theusername",
-            "idontmatterforthistest"
+            "theUsername1",
+            "theUsername1",
+            "theUsername1"
         );
 
         $this->formModel->expects($this->once())
@@ -59,15 +60,15 @@ class PasswordPolicyTest extends \PHPUnit_Framework_TestCase
         $policy = new PasswordPolicy(
             $this->formModel,
             "theusername",
-            "password-a",
-            "password-A-oops!"
+            "password-A1",
+            "password-A2"
         );
 
         $this->formModel->expects($this->once())
             ->method('addError')
             ->with(
                 ChangePasswordFormModel::FIELD_PASS_CONFIRM,
-                PasswordPolicy::ERR_NOT_SAME
+                PasswordInputFilter::MSG_PASSWORD_CONFIRM_DIFFER
             );
 
         $this->assertFalse($policy->enforce());

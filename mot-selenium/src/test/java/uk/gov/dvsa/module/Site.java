@@ -19,6 +19,7 @@ public class Site {
     private VehicleTestingStationPage vehicleTestingStationPage;
     private AddSiteAssessmentPage assessmentPage;
     private EventsHistoryPage eventsHistoryPage;
+    private SiteTestQualityPage siteTestQualityPage;
     private String colourBadgeType;
 
     public Site(PageNavigator pageNavigator) {
@@ -80,6 +81,10 @@ public class Site {
         setColorBadgeType(aInfo);
 
         vehicleTestingStationPage = assessmentPage.clickContinueButton().clickSubmitButton();
+    }
+
+    public SiteTestQualityPage gotoTestQuality(User user, uk.gov.dvsa.domain.model.Site site) throws IOException, URISyntaxException {
+        return pageNavigator.gotoSiteTestQualityPage(user, site);
     }
 
     private void setColorBadgeType(AssessmentInfo aInfo) {

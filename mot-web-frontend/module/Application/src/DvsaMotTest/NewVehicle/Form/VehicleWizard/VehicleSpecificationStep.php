@@ -143,7 +143,7 @@ class VehicleSpecificationStep extends AbstractStep implements WizardStep
         $makeCode = $stepOneData['vehicleForm']['make'];
         $isMakeOther = $makeCode == CreateVehicleStepOneFieldset::LABEL_OTHER_KEY;
         $models = $isMakeOther ? [[]] :
-            $this->client->get(UrlBuilder::vehicleDictionary()->make($makeCode)->model()->toString());
+            $this->client->get(UrlBuilder::vehicleDictionary()->make($makeCode)->models()->toString());
 
         return isset($models['data']) ? $models['data'] : [];
     }

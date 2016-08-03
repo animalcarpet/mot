@@ -43,6 +43,8 @@ return [
             Controller\DocumentController::class            =>  Controller\DocumentController::class,
             Controller\PersonRoleController::class            =>  Controller\PersonRoleController::class,
             Controller\QualificationDetailsController::class => Controller\QualificationDetailsController::class,
+            Controller\StatisticsAmazonCacheController::class => Controller\StatisticsAmazonCacheController::class,
+            Controller\AnnualAssessmentCertificateController::class => Controller\AnnualAssessmentCertificateController::class,
         ],
     ],
     'router'       => [
@@ -364,12 +366,31 @@ return [
                             ],
                         ],
                     ],
+                    'clearStatisticsAmazonCache' => [
+                        'type'         => 'Segment',
+                        'options'      => [
+                            'route' => '/clear-statistics-amazon-cache',
+                            'defaults' => [
+                                'controller' => Controller\StatisticsAmazonCacheController::class,
+                                'action' => 'removeAll'
+                            ],
+                        ],
+                    ],
                     'qualificationDetailsSub' => [
                         'type'         => 'Segment',
                         'options'      => [
                             'route' => '/qualification-details',
                             'defaults' => [
                                 'controller' => Controller\QualificationDetailsController::class,
+                            ],
+                        ],
+                    ],
+                    'annualExamSub' => [
+                        'type'         => 'Segment',
+                        'options'      => [
+                            'route' => '/annual-assessment-certificate',
+                            'defaults' => [
+                                'controller' => Controller\AnnualAssessmentCertificateController::class,
                             ],
                         ],
                     ],
@@ -400,7 +421,7 @@ return [
                             ],
                         ],
                     ],
-                    'testerAuthorisationStatus'          => [
+                    'testerAuthorisationStatus' => [
                         'type'    => 'Segment',
                         'options' => [
                             'route'    => '/tester-authorisation-status',

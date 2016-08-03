@@ -112,14 +112,6 @@ class PasswordExpiryNotificationServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return FeatureToggles
-     */
-    private function createFeatureTogglesWithNewPersonProfileDisabled()
-    {
-        return $this->createFeatureToggles([FeatureToggle::NEW_PERSON_PROFILE => false]);
-    }
-
-    /**
      * @param array $featureToggles
      *
      * @return FeatureToggles

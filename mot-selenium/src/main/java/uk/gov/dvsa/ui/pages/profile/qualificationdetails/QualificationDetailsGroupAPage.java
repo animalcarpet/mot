@@ -3,7 +3,7 @@ package uk.gov.dvsa.ui.pages.profile.qualificationdetails;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
@@ -29,18 +29,18 @@ public class QualificationDetailsGroupAPage extends Page {
     }
 
     public QualificationDetailsGroupAPage fillDate(String day, String month, String year) {
-        FormCompletionHelper.enterText(dateDay, day);
-        FormCompletionHelper.enterText(dateMonth, month);
-        FormCompletionHelper.enterText(dateYear, year);
+        FormDataHelper.enterText(dateDay, day);
+        FormDataHelper.enterText(dateMonth, month);
+        FormDataHelper.enterText(dateYear, year);
         return this;
     }
 
     public QualificationDetailsGroupAPage fillCertificateNumber(String number) {
-        FormCompletionHelper.enterText(certificateNumber, number);
+        FormDataHelper.enterText(certificateNumber, number);
         return this;
     }
     public QualificationDetailsGroupAPage fillVtsId(String id) {
-        FormCompletionHelper.enterText(vtsId, id);
+        FormDataHelper.enterText(vtsId, id);
         return this;
     }
 

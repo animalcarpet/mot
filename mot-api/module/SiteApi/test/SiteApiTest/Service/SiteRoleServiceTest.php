@@ -15,7 +15,6 @@ use DvsaEntities\Repository\SiteBusinessRoleMapRepository;
  */
 class SiteRoleServiceTest extends AbstractServiceTestCase
 {
-    private $siteId = 1;
     private $personId = 1;
     private $siteBusinessRoleService;
 

@@ -1,0 +1,93 @@
+<header class="content-header">
+    <ul class="content-header__tertiary-list">
+        <li id="vehicleMakeModel" class="content-header__list-item--primary">{{ vehicleMakeAndModel|escape }}</li>
+        <li id="vehicleRegistration" class="content-header__list-item">{{ vehicle.registration|escape }}</li>
+        <li id="firstUsedDate" class="content-header__list-item">First used {{ vehicleFirstUsedDate|escape }}</li>
+    </ul>
+</header>
+
+<div class="defect-summary">
+    <div class="defect-summary__total">
+        <h2 class="defect-summary__total-heading">Defects</h2>
+        <ul>
+            <li><span class="badge--alert">{{ observedDefects.numberOfFailures }}</span> Failures</li>
+            <li><span class="badge--info">{{ observedDefects.numberOfPrs }}</span> PRS</li>
+            <li><span class="badge--warn">{{ observedDefects.numberOfAdvisories }}</span> Advisories</li>
+        </ul>
+        {# "Show/Hide defects button only appears when there are defects to be shown. #}
+        {% if observedDefects.hasFailuresPrsOrAdvisories %}
+            <span class="defect-summary__toggle">
+            <a href="#" data-action="showHideToggle" data-open-text="Hide defects" data-target="rfrList" id="toggleRFRList" class="toggle-switch">Show defects</a>
+        </span>
+        {% endif %}
+    </div>
+    <div id="rfrList" class="js-hidden">
+        {% include '/defects/observed-defects.twig' with {'observedDefects': observedDefects} %}
+    </div>
+</div>
+
+
+{% include 'contentBreadcrumb' %}
+
+<br>
+
+<ol id="defects-list" class="defect-results">
+    {% for defect in defects %}
+        <li class="defect">
+            <div>
+                <strong class="defect__title">{{ defect.description }}</strong>
+                <p class="defect__meta">{{ defect.defectBreadcrumb }}</p>
+                <p class="defect__meta">{{ defect.advisoryText }}</p>
+                {% if defect.inspectionManualReference != '' %}
+                    <p class="defect__reference"><a href="{{ url('user-home') ~ defect.inspectionManualReferenceUrl }}" target="_blank">{{ defect.inspectionManualReference }}</a> (opens in a new window)</p>
+                {% endif %}
+            </div>
+
+            <h4 class="visuallyhidden">Defect severity</h4>
+            <ul class="defect__add">
+                {% if defect.isAdvisory %}
+                    <li>
+                        <a href="#" class="button--warn">
+                            Advisory
+                        </a>
+                    </li>
+                {% endif %}
+                {% if defect.isPrs %}
+                    <li>
+                        <a href="#" class="button--info">PRS</a>
+                    </li>
+                    <li>
+                        <a href="#" class="button--alert">
+                            Failure
+                        </a>
+                    </li>
+                {% endif %}
+                {% if defect.isFailure %}
+                    <li>
+                        <a href="#" class="button--alert">Failure</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </li>
+    {% endfor %}
+</ol>
+
+<nav class="content-navigation">
+    <a href="{{ url('mot-test', {'motTestNumber' : motTest.motTestNumber}) }}" class="button">Finish and return to MOT test results</a>
+
+    <ul class="content-navigation__secondary">
+        <li>
+            <a href="{{ url('mot-test-defects/categories', {'motTestNumber' : motTest.motTestNumber}) }}">Return to defect categories</a>
+        </li>
+    </ul>
+</nav>
+
+<!-- {{ inlineScript().appendFile("/assets/javascripts/dvsa.js") }} -->
+
+{# JavaScript for the "Show/Hide defects button. #}
+{{ inlineScript().captureStart() }}
+$(document).ready(function() {
+var showerHider = new DVSA.Modules.DVSAShowHideToggle.showerHider({});
+showerHider.init();
+});
+{{ inlineScript().captureEnd() }}

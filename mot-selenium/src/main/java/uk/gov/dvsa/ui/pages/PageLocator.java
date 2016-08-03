@@ -5,10 +5,7 @@ import uk.gov.dvsa.ui.pages.authorisedexaminer.AedmAuthorisedExaminerViewPage;
 import uk.gov.dvsa.ui.pages.authorisedexaminer.AuthorisedExaminerViewPage;
 import uk.gov.dvsa.ui.pages.braketest.BrakeTestConfigurationPage;
 import uk.gov.dvsa.ui.pages.mot.*;
-import uk.gov.dvsa.ui.pages.vts.VehicleTestingStationPage;
-import uk.gov.dvsa.ui.pages.vts.ChooseARolePage;
-import uk.gov.dvsa.ui.pages.vts.SearchForAUserPage;
-import uk.gov.dvsa.ui.pages.vts.SummaryAndConfirmationPage;
+import uk.gov.dvsa.ui.pages.vts.*;
 
 public abstract class PageLocator {
 
@@ -56,8 +53,8 @@ public abstract class PageLocator {
         return new TestResultsEntryPage(driver);
     }
 
-    public static TestResultsEntryReinspectionPage getTestResultsEntryReinspectionPage(MotAppDriver driver) {
-        return new TestResultsEntryReinspectionPage(driver);
+    public static TestResultsEntryReInspectionPage getTestResultsEntryReinspectionPage(MotAppDriver driver) {
+        return new TestResultsEntryReInspectionPage(driver);
     }
 
     public static TestCompareResultsPage getTestCompareResultsPage(MotAppDriver driver) {
@@ -74,6 +71,10 @@ public abstract class PageLocator {
 
     public static NotificationPage getNotificationPage(MotAppDriver driver) {
         return new NotificationPage(driver);
+    }
+
+    public static SiteTestQualityPage getSiteTestQualityPage(MotAppDriver driver) {
+        return new SiteTestQualityPage(driver);
     }
 
     public static ContingencyTestEntryPage getContingencyTestEntryPage(MotAppDriver driver) {

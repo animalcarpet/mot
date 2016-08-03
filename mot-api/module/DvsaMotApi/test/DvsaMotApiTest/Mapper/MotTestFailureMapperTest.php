@@ -12,7 +12,9 @@ use DvsaCommon\Dto\Vehicle\MakeDto;
 use DvsaCommon\Dto\Vehicle\ModelDetailDto;
 use DvsaCommon\Dto\Vehicle\ModelDto;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
+use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
 use DvsaCommon\Enum\ColourCode;
+use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommonApi\Service\Mapper\OdometerReadingMapper;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Address;
@@ -77,21 +79,6 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
      */
     public function dataProviderTestMapDataForFailure()
     {
-        $vehicle = new VehicleDto();
-        $vehicle
-            ->setVin('BJS45646')
-            ->setRegistration('AB15 ADS')
-            ->setFirstUsedDate(new \DateTime('2012-01-01'))
-            ->setCountryOfRegistration(
-                (new CountryDto())->setName('UK')
-            )
-            ->setColour(
-                (new ColourDto())->setName('Black')
-            )
-            ->setColourSecondary(
-                (new ColourDto())->setName('Yellow')
-            );
-
         $reasonForCancel = new ReasonForCancelDto();
         $reasonForCancel
             ->setReason('Some Reason')
@@ -110,10 +97,15 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
         return [
             [
                 [
+                    'primaryColour' => (new ColourDto())->setName('Black'),
+                    'secondaryColour' => (new ColourDto())->setName('Yellow'),
+                    'countryOfRegistration' => (new CountryDto())->setName('UK'),
+                    'registration' => 'AB15 ADS',
+                    'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
                     'motTestNumber'               => '123456_5',
-                    'vehicle'                     => $vehicle,
+                    'vehicle' => (new VehicleDto())->setFirstUsedDate(new \DateTime('2012-01-01')),
                     'vehicleTestingStation'       => [
                         'siteNumber' => 'V1234',
                         'name'       => 'Some Garage',
@@ -159,9 +151,8 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                         'middleName' => '',
                         'familyName' => 'Tester',
                     ],
-                    'vehicleClass'                => [
-                        'code' => 4
-                    ],
+                    'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
+                        ->setName(VehicleClassCode::CLASS_4),
                     'odometerReading'             =>
                         (new OdometerReadingMapper())->toDtoFromArray(
                             [
@@ -207,7 +198,7 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
 002 Failed Pos1 pos2 pos3 (Some 2 comment) [1.1.2]',
                     'AdvisoryInformation'    => '003 Pos1 pos2 (Some 1 comment)',
                     'Odometer'               => '10000 mi',
-                    'TestClass'              => '',
+                    'TestClass' => VehicleClassCode::CLASS_4,
                     'IssuedDate'             => '1 Jan 2014',
                     'IssuersName'            => 'B. Tester',
                     'TestStation'            => 'V1234',
@@ -218,10 +209,15 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
             ],
             [
                 [
+                    'primaryColour' => (new ColourDto())->setName('Black'),
+                    'secondaryColour' => (new ColourDto())->setName('Yellow'),
+                    'countryOfRegistration' => (new CountryDto())->setName('UK'),
+                    'registration' => 'AB15 ADS',
+                    'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
                     'motTestNumber'               => '123456_6',
-                    'vehicle'                     => $vehicle,
+                    'vehicle' => (new VehicleDto())->setFirstUsedDate(new \DateTime('2012-01-01')),
                     'vehicleTestingStation'       => [
                         'siteNumber' => 'V1234',
                         'name'       => 'Some Garage',
@@ -261,9 +257,8 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                         'middleName' => '',
                         'familyName' => 'Tester',
                     ],
-                    'vehicleClass'                => [
-                        'code' => 4,
-                    ],
+                    'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
+                        ->setName(VehicleClassCode::CLASS_4),
                     'odometerReading'             =>
                         (new OdometerReadingMapper())->toDtoFromArray(
                             [
@@ -310,7 +305,7 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                         '002 Failed (Some 3 comment) [1.1.13]',
                     'AdvisoryInformation'    => '003 (Some comment)',
                     'Odometer'               => '10000 mi',
-                    'TestClass'              => '',
+                    'TestClass' => VehicleClassCode::CLASS_4,
                     'IssuedDate'             => '1 Jan 2014',
                     'IssuersName'            => 'B. Tester',
                     'TestStation'            => 'V1234',
@@ -321,10 +316,15 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
             ],
             [
                 [
+                    'primaryColour' => (new ColourDto())->setName('Black'),
+                    'secondaryColour' => (new ColourDto())->setName('Yellow'),
+                    'countryOfRegistration' => (new CountryDto())->setName('UK'),
+                    'registration' => 'AB15 ADS',
+                    'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
                     'motTestNumber'               => '123456_7',
-                    'vehicle'                     => $vehicle,
+                    'vehicle' => (new VehicleDto())->setFirstUsedDate(new \DateTime('2012-01-01')),
                     'vehicleTestingStation'       => [
                         'siteNumber' => 'V1234',
                         'name'       => 'Some Garage',
@@ -366,9 +366,8 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                         'middleName' => '',
                         'familyName' => 'Tester',
                     ],
-                    'vehicleClass'                => [
-                        'code' => 4,
-                    ],
+                    'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
+                        ->setName(VehicleClassCode::CLASS_4),
                     'odometerReading'             =>
                         (new OdometerReadingMapper())->toDtoFromArray(
                             [
@@ -413,7 +412,7 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                         '002 Failed Pos1 pos2 pos3 (Some comment) [1.1.1]',
                     'AdvisoryInformation'    => '003 Pos1 pos2 pos3 (Some comment)',
                     'Odometer'               => AbstractMotTestMapper::TEXT_NOT_READABLE,
-                    'TestClass'              => '',
+                    'TestClass' => VehicleClassCode::CLASS_4,
                     'IssuedDate'             => '1 Jan 2014',
                     'IssuersName'            => 'B. Tester',
                     'TestStation'            => 'V1234',
@@ -424,10 +423,15 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
             ],
             [
                 [
+                    'primaryColour' => (new ColourDto())->setName('Black'),
+                    'secondaryColour' => (new ColourDto())->setName('Yellow'),
+                    'countryOfRegistration' => (new CountryDto())->setName('UK'),
+                    'registration' => 'AB15 ADS',
+                    'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
                     'motTestNumber'               => '123456_8',
-                    'vehicle'                     => $vehicle,
+                    'vehicle' => (new VehicleDto())->setFirstUsedDate(new \DateTime('2012-01-01')),
                     'vehicleTestingStation'       => [
                         'siteNumber' => 'V1234',
                         'name'       => 'Some Garage',
@@ -472,9 +476,8 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                         'middleName' => '',
                         'familyName' => 'Tester',
                     ],
-                    'vehicleClass'                => [
-                        'code' => 4,
-                    ],
+                    'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
+                        ->setName(VehicleClassCode::CLASS_4),
                     'odometerReading'             =>
                         (new OdometerReadingMapper())->toDtoFromArray(
                             [
@@ -522,7 +525,7 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                         '002 Failed Pos1 pos2 pos3 (Some 2 comment) [1.1.1]',
                     'AdvisoryInformation'    => '003 Pos1 pos2 pos3',
                     'Odometer'               => '8888 mi',
-                    'TestClass'              => '',
+                    'TestClass' => VehicleClassCode::CLASS_4,
                     'IssuedDate'             => '1 Jan 2014',
                     'IssuersName'            => 'B. Tester',
                     'TestStation'            => 'V1234',
@@ -533,6 +536,11 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
             ],
             [
                 [
+                    'primaryColour' => (new ColourDto())->setName('Black'),
+                    'secondaryColour' => (new ColourDto())->setName('Yellow'),
+                    'countryOfRegistration' => (new CountryDto())->setName('UK'),
+                    'registration' => 'AB15 ADS',
+                    'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
                     'motTestNumber'               => '123456_9',
@@ -540,8 +548,7 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                     'vin'                         => 'BJS45646',
                     'make'                        => 'German',
                     'model'                       => 'Whip',
-                    'countryOfRegistration'       => 'UK',
-                    'vehicle'                     =>  $vehicle,
+                    'vehicle' => (new VehicleDto())->setFirstUsedDate(new \DateTime('2012-01-01')),
                     'vehicleTestingStation'       => [
                         'siteNumber' => 'V1234',
                         'name'       => 'Some Garage',
@@ -592,9 +599,8 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                         'middleName' => '',
                         'familyName' => 'Tester',
                     ],
-                    'vehicleClass'                => [
-                        'code' => 4,
-                    ],
+                    'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
+                        ->setName(VehicleClassCode::CLASS_4),
                     'odometerReading'             =>
                         (new OdometerReadingMapper())->toDtoFromArray(
                             ['resultType' => OdometerReadingResultType::NO_ODOMETER]
@@ -637,7 +643,7 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                     'AdvisoryInformation'    => '003 pos2 pos1 (Some comment) * DANGEROUS *',
                     'Odometer'               => AbstractMotTestMapper::TEXT_NO_ODOMETER . '/' .
                         AbstractMotTestMapper::TEXT_NO_ODOMETER_CY,
-                    'TestClass'              => '',
+                    'TestClass' => VehicleClassCode::CLASS_4,
                     'IssuedDate'             => '1 Jan/Ion 2014',
                     'IssuersName'            => 'B. Tester',
                     'TestStation'            => 'V1234',
@@ -648,17 +654,15 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
             ],
             [
                 [
+                    'primaryColour' => (new ColourDto())->setName('Blue'),
+                    'secondaryColour' => (new ColourDto())->setCode(ColourCode::NOT_STATED)->setName('No Other Colour'),
+                    'countryOfRegistration' => (new CountryDto())->setName('UK'),
+                    'registration' => 'AB15 ADS',
+                    'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
                     'motTestNumber'               => '123456_10',
-                    'vehicle'                     =>  $this->cloneVehicle($vehicle)
-                        ->setColour(
-                            (new ColourDto())->setName('Blue')
-                        )
-                        ->setColourSecondary(
-                            (new ColourDto())->setCode(ColourCode::NOT_STATED)->setName('No Other Colour')
-                        )
-                    ,
+                    'vehicle' => (new VehicleDto())->setFirstUsedDate(new \DateTime('2012-01-01')),
                     'vehicleTestingStation'       => [
                         'siteNumber' => 'V1234',
                         'name'       => 'Some Garage',
@@ -725,9 +729,8 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                         'middleName' => '',
                         'familyName' => 'Tester',
                     ],
-                    'vehicleClass'                => [
-                        'code' => 4,
-                    ],
+                    'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
+                        ->setName(VehicleClassCode::CLASS_4),
                     'odometerReading'             => null,
                 ],
                 [
@@ -759,7 +762,7 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                         '005 Pos1 pos2 pos3 (Some blah blah)',
                     'Odometer'               => AbstractMotTestMapper::TEXT_NOT_RECORDED . '/' .
                         AbstractMotTestMapper::TEXT_NOT_RECORDED_CY,
-                    'TestClass'              => '',
+                    'TestClass' => VehicleClassCode::CLASS_4,
                     'IssuedDate'             => '1 Jan/Ion 2014',
                     'IssuersName'            => 'B. Tester',
                     'TestStation'            => 'V1234',
@@ -770,17 +773,15 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
             ],
             [
                 [
+                    'primaryColour' => (new ColourDto())->setName('Blue'),
+                    'secondaryColour' => (new ColourDto())->setCode(ColourCode::NOT_STATED)->setName('No Other Colour'),
+                    'countryOfRegistration' => (new CountryDto())->setName('UK'),
+                    'registration' => 'AB15 ADS',
+                    'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
                     'motTestNumber'               => '123456_11',
-                    'vehicle'                     =>  $this->cloneVehicle($vehicle)
-                        ->setColour(
-                            (new ColourDto())->setName('Blue')
-                        )
-                        ->setColourSecondary(
-                            (new ColourDto())->setCode(ColourCode::NOT_STATED)->setName('No Other Colour')
-                        )
-                    ,
+                    'vehicle' => (new VehicleDto())->setFirstUsedDate(new \DateTime('2012-01-01')),
                     'vehicleTestingStation'       => [
                         'siteNumber' => 'V1234',
                         'name'       => 'Some Garage',
@@ -888,9 +889,8 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                         'middleName' => '',
                         'familyName' => 'Tester',
                     ],
-                    'vehicleClass'                => [
-                        'code' => 4,
-                    ],
+                    'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
+                        ->setName(VehicleClassCode::CLASS_4),
                     'odometerReading'             =>
                         (new OdometerReadingMapper())->toDtoFromArray(
                             [
@@ -938,7 +938,7 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                         '006 Failed Pos1 pos2 pos3 (Some comment) [1.1.1]'  . PHP_EOL .
                         '007 Pos1 pos2 pos3 (Some blah blah)',
                     'Odometer'               => AbstractMotTestMapper::TEXT_NO_ODOMETER,
-                    'TestClass'              => '',
+                    'TestClass' => VehicleClassCode::CLASS_4,
                     'IssuedDate'             => '1 Jan 2014',
                     'IssuersName'            => 'B. Tester',
                     'TestStation'            => 'V1234',
@@ -949,17 +949,15 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
             ],
             [
                 [
+                    'primaryColour' => (new ColourDto())->setName('Blue'),
+                    'secondaryColour' => (new ColourDto())->setCode(ColourCode::NOT_STATED)->setName('No Other Colour'),
+                    'countryOfRegistration' => (new CountryDto())->setName('UK'),
+                    'registration' => 'AB15 ADS',
+                    'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
                     'motTestNumber'               => '123456_12',
-                    'vehicle'                     =>  $this->cloneVehicle($vehicle)
-                        ->setColour(
-                            (new ColourDto())->setName('Blue')
-                        )
-                        ->setColourSecondary(
-                            (new ColourDto())->setCode(ColourCode::NOT_STATED)->setName('No Other Colour')
-                        )
-                    ,
+                    'vehicle' => (new VehicleDto())->setFirstUsedDate(new \DateTime('2012-01-01')),
                     'vehicleTestingStation'       => [
                         'siteNumber' => 'V1234',
                         'name'       => 'Some Garage',
@@ -1067,9 +1065,8 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                         'middleName' => '',
                         'familyName' => 'Tester',
                     ],
-                    'vehicleClass'                => [
-                        'code' => 4,
-                    ],
+                    'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
+                        ->setName(VehicleClassCode::CLASS_4),
                     'odometerReading'             =>
                         (new OdometerReadingMapper())->toDtoFromArray(
                             [
@@ -1127,7 +1124,7 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                         '007 Pos1 pos2 pos3 (Some blah blah)',
                     'Odometer'               => AbstractMotTestMapper::TEXT_NOT_READABLE . '/' .
                         AbstractMotTestMapper::TEXT_NOT_READABLE_CY,
-                    'TestClass'              => '',
+                    'TestClass' => VehicleClassCode::CLASS_4,
                     'IssuedDate'             => '1 Jan/Ion 2014',
                     'IssuersName'            => 'B. Tester',
                     'TestStation'            => 'V1234',
@@ -1138,17 +1135,15 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
             ],
             [
                 [
+                    'primaryColour' => (new ColourDto())->setName('Blue'),
+                    'secondaryColour' => (new ColourDto())->setCode(ColourCode::NOT_STATED)->setName('No Other Colour'),
+                    'countryOfRegistration' => (new CountryDto())->setName('UK'),
+                    'registration' => 'AB15 ADS',
+                    'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
                     'motTestNumber'               => '123456_13',
-                    'vehicle'                     =>  $this->cloneVehicle($vehicle)
-                        ->setColour(
-                            (new ColourDto())->setName('Blue')
-                        )
-                        ->setColourSecondary(
-                            (new ColourDto())->setCode(ColourCode::NOT_STATED)->setName('No Other Colour')
-                        )
-                    ,
+                    'vehicle' => (new VehicleDto())->setFirstUsedDate(new \DateTime('2012-01-01')),
                     'vehicleTestingStation'       => [
                         'siteNumber' => 'V123542',
                         'name'       => 'Welsh Garage',
@@ -1256,9 +1251,8 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                         'middleName' => '',
                         'familyName' => 'Tester',
                     ],
-                    'vehicleClass'                => [
-                        'code' => 4,
-                    ],
+                    'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
+                        ->setName(VehicleClassCode::CLASS_4),
                     'odometerReading'             =>
                         (new OdometerReadingMapper())->toDtoFromArray(
                             [
@@ -1294,7 +1288,7 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                     'Make'                   => 'German',
                     'Model'                  => 'Whip',
                     'CountryOfRegistration'  => 'UK',
-                    'TestClass'              => '',
+                    'TestClass' => VehicleClassCode::CLASS_4,
                     'Colour'                 => 'Blue',
                     'TestStation'            => 'V123542',
                     'InspectionAuthority'    => "Welsh Garage\nABC Street\nSome Place\nTown\t\t011712013243\n",
@@ -1320,17 +1314,15 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
             ],
             [
                 [
+                    'primaryColour' => (new ColourDto())->setName('Blue'),
+                    'secondaryColour' => (new ColourDto())->setCode(ColourCode::NOT_STATED)->setName('No Other Colour'),
+                    'countryOfRegistration' => (new CountryDto())->setName('UK'),
+                    'registration' => 'AB15 ADS',
+                    'vin' => 'BJS45646',
                     'make' => 'German',
                     'model' => 'Whip',
                     'motTestNumber'               => '123456_14',
-                    'vehicle'                     =>  $this->cloneVehicle($vehicle)
-                        ->setColour(
-                            (new ColourDto())->setName('Blue')
-                        )
-                        ->setColourSecondary(
-                            (new ColourDto())->setCode(ColourCode::NOT_STATED)->setName('No Other Colour')
-                        )
-                    ,
+                    'vehicle' => (new VehicleDto())->setFirstUsedDate(new \DateTime('2012-01-01')),
                     'vehicleTestingStation'       => [
                         'siteNumber' => 'V123542',
                         'name'       => 'Welsh Garage',
@@ -1438,9 +1430,8 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                         'middleName' => '',
                         'familyName' => 'Tester',
                     ],
-                    'vehicleClass'                => [
-                        'code' => 4,
-                    ],
+                    'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
+                        ->setName(VehicleClassCode::CLASS_4),
                     'odometerReading'             =>
                         (new OdometerReadingMapper())->toDtoFromArray(
                             [
@@ -1476,7 +1467,7 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                     'Make'                   => 'German',
                     'Model'                  => 'Whip',
                     'CountryOfRegistration'  => 'UK',
-                    'TestClass'              => '',
+                    'TestClass' => VehicleClassCode::CLASS_4,
                     'Colour'                 => 'Blue',
                     'TestStation'            => 'V123542',
                     'InspectionAuthority'    => "Welsh Garage\nABC Street\nSome Place\nTown\t\t011712013243\n",
@@ -1518,13 +1509,5 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                 ],
             ],
         ];
-    }
-
-    /**
-     * @return VehicleDto
-     */
-    private function cloneVehicle($obj)
-    {
-        return clone ($obj);
     }
 }

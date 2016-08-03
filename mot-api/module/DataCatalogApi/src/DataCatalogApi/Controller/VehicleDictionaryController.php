@@ -35,13 +35,16 @@ class VehicleDictionaryController extends AbstractDvsaRestfulController
                 $makes
             );
         } elseif ($searchType === 'model') {
-            $makeId = $this->params()->fromQuery("make");
-            $makeModels = $this->getVehicleCatalogService()->findModelByName($searchTerm, $makeId);
-            $result = array_map(
-                function (Model $model) {
-                    return ['id' => $model->getId(), 'name' => $model->getName(), 'code' => $model->getCode()];
-                }, $makeModels
-            );
+            $makeCode = $this->params()->fromQuery("make");
+            if ($makeCode) {
+                $make = $this->getVehicleCatalogService()->findMakeByCode($makeCode);
+                $makeModels = $this->getVehicleCatalogService()->findModelByNameAndCodeId($searchTerm, $make->getId());
+                $result = array_map(
+                    function (Model $model) {
+                        return ['id' => $model->getId(), 'name' => $model->getName(), 'code' => $model->getCode()];
+                    }, $makeModels
+                );
+            }
         }
 
         return ApiResponse::jsonOk($result);

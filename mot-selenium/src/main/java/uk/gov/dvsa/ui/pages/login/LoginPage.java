@@ -17,6 +17,7 @@ public class LoginPage extends Page {
     @FindBy(xpath = "//*[contains(@id,'_tid1')]") private WebElement userIdInput;
     @FindBy(xpath = "//*[contains(@id,'_tid2')]") private WebElement userPasswordInput;
     @FindBy(name = "Login.Submit") private WebElement submitButton;
+    @FindBy(xpath = "(//script[contains(text(),'dataLayer')])[1]") private WebElement googleTagManagerDataLayer;
 
     public LoginPage(MotAppDriver driver) {
         super(driver);
@@ -38,5 +39,9 @@ public class LoginPage extends Page {
         userPasswordInput.sendKeys(password);
         submitButton.click();
         return MotPageFactory.newPage(driver, clazz);
+    }
+
+    public boolean isGoogleTagManagerDataLayerRendered() {
+        return googleTagManagerDataLayer.isEnabled();
     }
 }

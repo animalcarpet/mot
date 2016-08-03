@@ -1,0 +1,149 @@
+parameters:
+    base_url: '{{key "profile::frontend::api_url"}}'
+
+services:
+    dvsa.api:
+        abstract: true
+        arguments:
+            - @dvsa.http_client
+
+    dvsa.security_pin:
+        class: Dvsa\Mot\Behat\Support\Api\SecurityPin
+        parent: dvsa.api
+
+    dvsa.account_claim:
+        class: Dvsa\Mot\Behat\Support\Api\AccountClaim
+        parent: dvsa.api
+
+    dvsa.account_registration:
+        class: Dvsa\Mot\Behat\Support\Api\AccountRegistration
+        parent: dvsa.api
+
+    dvsa.temp_password_change:
+        class: Dvsa\Mot\Behat\Support\Api\TempPasswordChange
+        parent: dvsa.api
+
+    dvsa.authorised_examiner:
+        class: Dvsa\Mot\Behat\Support\Api\AuthorisedExaminer
+        parent: dvsa.api
+
+    dvsa.brake_test_result:
+        class: Dvsa\Mot\Behat\Support\Api\BrakeTestResult
+        parent: dvsa.api
+
+    dvsa.certificate:
+        class: Dvsa\Mot\Behat\Support\Api\Certificate
+        parent: dvsa.api
+
+    dvsa.contingency_test:
+        class: Dvsa\Mot\Behat\Support\Api\ContingencyTest
+        parent: dvsa.api
+
+    dvsa.customer_service:
+        class: Dvsa\Mot\Behat\Support\Api\CustomerService
+        parent: dvsa.api
+
+    dvsa.demo_test:
+        class: Dvsa\Mot\Behat\Support\Api\DemoTest
+        parent: dvsa.api
+
+    dvsa.mot_test:
+        class: Dvsa\Mot\Behat\Support\Api\MotTest
+        arguments:
+            - @dvsa.http_client
+            - @dvsa.person
+
+    dvsa.event:
+        class: Dvsa\Mot\Behat\Support\Api\Event
+        arguments:
+            - @dvsa.http_client
+            - @dvsa.person
+
+    dvsa.notification:
+        class: Dvsa\Mot\Behat\Support\Api\Notification
+        arguments:
+            - @dvsa.http_client
+
+    dvsa.odometer_reading:
+        class: Dvsa\Mot\Behat\Support\Api\OdometerReading
+        parent: dvsa.api
+
+    dvsa.person:
+        class: Dvsa\Mot\Behat\Support\Api\Person
+        parent: dvsa.api
+
+    dvsa.replacement_certificate:
+        class: Dvsa\Mot\Behat\Support\Api\ReplacementCertificate
+        parent: dvsa.api
+
+    dvsa.tester:
+        class: Dvsa\Mot\Behat\Support\Api\Tester
+        parent: dvsa.api
+
+    dvsa.reason_for_rejection:
+        class: Dvsa\Mot\Behat\Support\Api\ReasonForRejection
+        parent: dvsa.api
+
+    dvsa.rest:
+        class: Dvsa\Mot\Behat\Support\Api\Rest
+        parent: dvsa.api
+
+    dvsa.session:
+        class: Dvsa\Mot\Behat\Support\Api\Session
+        parent: dvsa.api
+
+    dvsa.special_notice:
+        class: Dvsa\Mot\Behat\Support\Api\SpecialNotice
+        parent: dvsa.api
+
+    dvsa.vehicle:
+        class: Dvsa\Mot\Behat\Support\Api\Vehicle
+        parent: dvsa.api
+
+    dvsa.vts:
+        class: Dvsa\Mot\Behat\Support\Api\Vts
+        parent: dvsa.api
+
+    dvsa.survey:
+        class: Dvsa\Mot\Behat\Support\Api\Survey
+        parent: dvsa.api
+
+    dvsa.http_client:
+        class: Dvsa\Mot\Behat\Support\HttpClient\TraceableHttpClient
+        arguments:
+            - @dvsa.http_client.guzzle
+
+    dvsa.http_client.guzzle:
+        class: Dvsa\Mot\Behat\Support\HttpClient\GuzzleHttpClient
+        arguments:
+            - @dvsa.guzzle
+
+    dvsa.guzzle:
+        class: Guzzle\Service\Client
+        public: false
+        arguments:
+            - %base_url%
+
+    dvsa.slot_purchase:
+        class: Dvsa\Mot\Behat\Support\Api\SlotPurchase
+        parent: dvsa.rest
+
+    dvsa.direct_debit:
+        class: Dvsa\Mot\Behat\Support\Api\DirectDebit
+        parent: dvsa.rest
+
+    dvsa.slot_report:
+        class: Dvsa\Mot\Behat\Support\Api\SlotReport
+        parent: dvsa.rest
+
+    dvsa.mot_testing_certificate:
+        class: Dvsa\Mot\Behat\Support\Api\MotTestingCertificate
+        parent: dvsa.api
+
+    dvsa.stats_tester_performance:
+        class: Dvsa\Mot\Behat\Support\Api\StatsTesterPerformance
+        parent: dvsa.api
+
+    dvsa.stats_component_fail_rate:
+        class: Dvsa\Mot\Behat\Support\Api\StatsComponentFailRate
+        parent: dvsa.api

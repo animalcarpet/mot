@@ -212,7 +212,7 @@ abstract class AbstractVehicleDto extends AbstractDataTransferObject
     }
 
     /**
-     * @param \DateTime $firstUsedDate
+     * @param string $firstUsedDate
      *
      * @return $this
      */
@@ -224,7 +224,7 @@ abstract class AbstractVehicleDto extends AbstractDataTransferObject
     }
 
     /**
-     * @return \DateTime
+     * @return string
      */
     public function getFirstUsedDate()
     {
@@ -482,7 +482,7 @@ abstract class AbstractVehicleDto extends AbstractDataTransferObject
 
 
     /**
-     * @param int $value
+     * @param boolean $value
      *
      * @return VehicleDto
      */

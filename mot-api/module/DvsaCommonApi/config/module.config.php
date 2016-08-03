@@ -1,18 +1,15 @@
 <?php
 
-use DvsaCommon\DtoSerialization\DtoReflectiveSerializer;
-use DvsaCommon\DtoSerialization\DtoReflectiveDeserializer;
-use DvsaCommonApi\Factory\DtoReflectiveSerializerFactory;
-use DvsaCommonApi\Factory\DtoReflectiveDeserializerFactory;
+use DvsaCommon\Date\DateTimeHolderInterface;
+use DvsaCommonApi\Factory\DateTimeHolderFactory;
 
 return [
     'service_manager' => [
         'abstract_factories' => [
             \DvsaCommonApi\Service\Hydrator\HydratorFactory::class,
         ],
-        'factories' => [
-                DtoReflectiveSerializer::class => DtoReflectiveSerializerFactory::class,
-                DtoReflectiveDeserializer::class => DtoReflectiveDeserializerFactory::class
+        'factories'          => [
+            DateTimeHolderInterface::class   => DateTimeHolderFactory::class,
         ],
     ],
     'view_manager'    => [

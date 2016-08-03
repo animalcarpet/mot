@@ -1,0 +1,92 @@
+<?php
+
+use Dvsa\Mot\Frontend\PersonModule\ViewModel\AnnualAssessmentCertificates\AnnualAssessmentCertificatesViewModel;
+
+/**
+ * @var AnnualAssessmentCertificatesViewModel $viewModel
+ */
+
+?>
+<?php echo $this->partial('infoMessages', ['getFromFlash' => true]); ?>
+<?php
+$successMessages = $this->layout()->flashMessenger->getSuccessMessages();
+echo $this->partial('partial/gds/general/system-message', ['messages' => $successMessages, 'type' => 'success']);
+?>
+<?php echo $this->partial('errorMessages', array('getFromFlash' => true)); ?>
+
+<div>
+    <div class="text">
+        <p class="lede">
+            You must complete an assessment each year (from 1 April to 31 March of the following year) and record it here to keep your tester status.
+        </p>
+    </div>
+
+    <h3 class="summary-heading">
+        Record your assessment result
+    </h3>
+
+    <div>
+        <h3 class="summary-heading">
+            Group A
+        <span class="summary-heading__action">
+            Class 1 and 2
+        </span>
+        </h3>
+
+        <?php if ($viewModel->getAnnualAssessmentCertificatesGroupAViewModel()->isTableEmpty()): ?>
+            <p>No annual assessment certificate recorded.</p>
+        <?php endif;
+
+            if ($viewModel->isAddLinkVisible()): ?>
+            <a id="add-group-A" href="<?php echo $viewModel->getAddGroupALink()?>">
+                Add your Group A assessment certificate
+            </a>
+        <?php endif;
+
+        if (!$viewModel->getAnnualAssessmentCertificatesGroupAViewModel()->isTableEmpty()):
+            echo $viewModel->getAnnualAssessmentCertificatesGroupAViewModel()->getTable()->renderTable($this);
+            ?>
+        <?php endif; ?>
+
+            <h3 class="summary-heading">
+                Group B
+        <span class="summary-heading__action">
+            Class 3, 4, 5 and 7
+        </span>
+            </h3>
+
+        <?php if ($viewModel->getAnnualAssessmentCertificatesGroupBViewModel()->isTableEmpty()): ?>
+            <p>No annual assessment certificate recorded.</p>
+        <?php endif;
+
+        if ($viewModel->isAddLinkVisible()): ?>
+            <a id="add-group-B" href="<?php echo $viewModel->getAddGroupBLink()?>">
+                Add your Group B assessment certificate
+            </a>
+        <?php endif;
+
+        if (!$viewModel->getAnnualAssessmentCertificatesGroupBViewModel()->isTableEmpty()):
+            echo $viewModel->getAnnualAssessmentCertificatesGroupBViewModel()->getTable()->renderTable($this);
+        ?>
+        <?php endif; ?>
+
+        <div class="message--important">
+            <h3 class="message__heading">
+                Keep your assessment certificates
+            </h3>
+
+            <p>
+                Keep it with your MOT annual training record - you will be asked to show this to the DVSA.
+            </p>
+        </div>
+
+        <nav class="content-navigation">
+            <ul class="content-navigation__secondary">
+                <li>
+                    <a href="<?php echo $viewModel->getReturnLink() ?>">
+                        <?php echo $viewModel->getReturnLinkText() ?>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>

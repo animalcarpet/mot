@@ -16,6 +16,7 @@ use DvsaCommon\HttpRestJson\Exception\NotFoundException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaCommon\UrlBuilder\UrlBuilderWeb;
+use DvsaCommonTest\TestUtils\MethodSpy;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTest\Controller\ReplacementCertificateController;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
@@ -62,7 +63,7 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
             ["updateVts", ['vtsSiteNumber' => 'SITE_NUMBER']],
             ["updateCertificate", ['reasonForReplacement' => 'REASON']],
             ['updateVin', ['vin' => "THE_VIN"]],
-            ['updateVrm', ['vrm' => 'THE_VRM']],
+            ['updateVrm', ['vrm' => 'THEVRM']],
             ['updateColours', ['primaryColour' => 3, 'secondaryColour' => 4]],
             ['updateModel', ['make' => 5, 'model' => 6]],
             ['updateMake', ['make' => 5]],
@@ -296,7 +297,45 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
             )
         );
 
-        $this->assertRedirectLocation($response, UrlBuilderWeb::replacementCertificate(self::EXAMPLE_DRAFT_ID, self::EXAMPLE_MOT_TEST_NUMBER));
+        $this->assertRedirectLocation($response,
+            UrlBuilderWeb::replacementCertificate(self::EXAMPLE_DRAFT_ID, self::EXAMPLE_MOT_TEST_NUMBER));
+    }
+
+    /**
+     * @dataProvider dataProviderTestVrmIsFixedOnUpdatingCertificate
+     */
+    public function testVrmIsFixedOnUpdatingCertificate($inputVrm, $expectedVrm)
+    {
+        $restClient = $this->getRestClientMockForServiceManager();
+        $spy = new MethodSpy($restClient, 'put');
+
+        $this->givenPostAction(
+            "replacementCertificate",
+            array_merge(
+                ['action' => ReplacementCertificateController::ACTION_UPDATE_VRM],
+                [
+                    'vrm' => $inputVrm
+                ]
+            )
+        );
+
+        if ($expectedVrm != null) {
+            /** @var \PHPUnit_Framework_MockObject_Invocation_Object $call */
+            $call = $spy->getInvocations()[0];
+            $this->assertEquals($expectedVrm, $call->parameters[1]['vrm']);
+        } else {
+            $call = $spy->getInvocations();
+            $this->assertEmpty($call);
+        }
+    }
+
+    public function dataProviderTestVrmIsFixedOnUpdatingCertificate()
+    {
+        return [
+            ['123 fta', '123FTA'],
+            ['-*[]123 fta<>\-', null],
+            ["123\tabc", "123ABC"],
+        ];
     }
 
     /**
@@ -396,7 +435,7 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
             'vts' => 'SITE_NUMBER',
             'reasonForReplacement' => 'REASON',
             'vin' => "THE_VIN",
-            'vrm' => "THE_VRM",
+            'vrm' => "THEVRM",
             'primaryColour' => 3,
             'secondaryColour' => 4,
             'make' => 5,
@@ -477,8 +516,10 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
      *
      * @return string
      */
-    private function pathReplacementCertificateDraft($id = self::EXAMPLE_DRAFT_ID, $motTestNumber = self::EXAMPLE_MOT_TEST_NUMBER)
-    {
+    private function pathReplacementCertificateDraft(
+        $id = self::EXAMPLE_DRAFT_ID,
+        $motTestNumber = self::EXAMPLE_MOT_TEST_NUMBER
+    ) {
         return UrlBuilder::replacementCertificateDraft($id, $motTestNumber)->toString();
     }
 
@@ -505,7 +546,8 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
      */
     private function pathReplacementDiff()
     {
-        return UrlBuilder::replacementCertificateDraftDiff(self::EXAMPLE_DRAFT_ID, self::EXAMPLE_MOT_TEST_NUMBER)->toString();
+        return UrlBuilder::replacementCertificateDraftDiff(self::EXAMPLE_DRAFT_ID,
+            self::EXAMPLE_MOT_TEST_NUMBER)->toString();
     }
 
     private function givenPostAction($action, $postParams = [])

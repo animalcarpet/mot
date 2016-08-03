@@ -2,6 +2,7 @@ package uk.gov.dvsa.ui.views;
 
 import org.joda.time.DateTime;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.gov.dvsa.domain.model.AeDetails;
@@ -63,19 +64,19 @@ public class VehicleSearchPageViewTests extends DslTest {
         verifyNewVehicleInfoAndLinkDisplayed(vehicleSearchPage, true);
     }
 
-    @Test(groups = {"BVT", "Regression"}, description = "VM-9368")
+    @Test(groups = {"BVT"}, description = "VM-9368")
     public void validRegAndVinReturnsCorrectVehicle() throws IOException, URISyntaxException {
 
         //Given I'm on vehicle search page
         VehicleSearchPage vehicleSearchPage = pageNavigator.navigateToPage(tester, VehicleSearchPage.PATH, VehicleSearchPage.class);
 
         //When I search for a vehicle with correct VIN and registration number
-        vehicleSearchPage.searchVehicle(vehicle.getRegistrationNumber(), vehicle.getVin());
+        vehicleSearchPage.searchVehicle(vehicle.getDvsaRegistration(), vehicle.getVin());
 
         //Then the vehicle record is found
         assertThat(vehicleSearchPage.isResultVehicleDisplayed(), is(true));
         assertThat(vehicleSearchPage.getMainMessageText(), containsString("with registration " +
-                vehicle.getRegistrationNumber() + " and a VIN matching " + vehicle.getVin() + "."));
+                vehicle.getDvsaRegistration() + " and a VIN matching " + vehicle.getVin() + "."));
     }
 
     private void verifyNewVehicleInfoAndLinkDisplayed(VehicleSearchPage page, boolean value) {
@@ -97,7 +98,7 @@ public class VehicleSearchPageViewTests extends DslTest {
         motUI.retest.isTextPresent("For retest");
     }
 
-    @Test(groups = {"Regression", "VM-1854"}, expectedExceptions = NoSuchElementException.class)
+    @Test(groups = {"Regression", "VM-1854"}, expectedExceptions = TimeoutException.class)
     public void forRetestIsNotDisplayedForVehicleAfter10DayGracePeriod() throws IOException, URISyntaxException {
 
         //Given a vehicle with more than 10days failed mot test

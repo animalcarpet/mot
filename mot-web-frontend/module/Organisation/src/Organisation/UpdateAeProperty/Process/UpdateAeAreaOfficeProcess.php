@@ -62,4 +62,9 @@ class UpdateAeAreaOfficeProcess extends AbstractSingleStepAeProcess implements A
     {
         return $this->formPageTitle;
     }
+
+    public function getEditPageLede()
+    {
+        return null;
+    }
 }

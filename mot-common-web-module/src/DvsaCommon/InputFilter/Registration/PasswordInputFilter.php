@@ -22,13 +22,13 @@ class PasswordInputFilter extends InputFilter
 {
     /** Create a password */
     const FIELD_PASSWORD = 'password';
-    const MSG_PASSWORD_EMPTY = 'you must enter a password';
+    const MSG_PASSWORD_EMPTY = 'enter a password';
     const MSG_PASSWORD_MATCH_USERNAME = 'password must not match your username';
     const MSG_PASSWORD_HISTORY = 'password was found in the password history';
 
     /** Re-type your password */
     const FIELD_PASSWORD_CONFIRM = 'passwordConfirm';
-    const MSG_PASSWORD_CONFIRM_EMPTY = 'you must re-type your password';
+    const MSG_PASSWORD_CONFIRM_EMPTY = 're-type your password';
     const MSG_PASSWORD_CONFIRM_DIFFER = 'the passwords you have entered don\'t match';
 
     private $username = '';

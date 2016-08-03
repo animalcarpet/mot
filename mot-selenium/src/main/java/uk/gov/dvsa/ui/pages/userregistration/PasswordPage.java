@@ -3,7 +3,7 @@ package uk.gov.dvsa.ui.pages.userregistration;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
@@ -28,8 +28,8 @@ public class PasswordPage extends Page {
     }
 
     public SummaryPage enterPasswordAndRetypeExpectingSummaryPage(String password, String passwordTwo){
-        FormCompletionHelper.enterText(createPassword, password);
-        FormCompletionHelper.enterText(retypePassword, passwordTwo);
+        FormDataHelper.enterText(createPassword, password);
+        FormDataHelper.enterText(retypePassword, passwordTwo);
         continueToNextPage.click();
         return new SummaryPage(driver);
     }
@@ -41,8 +41,8 @@ public class PasswordPage extends Page {
 
     public PasswordPage enterPassword()
     {
-        FormCompletionHelper.enterText(createPassword, "1Password2");
-        FormCompletionHelper.enterText(retypePassword, "1Password2");
+        FormDataHelper.enterText(createPassword, "1Password2");
+        FormDataHelper.enterText(retypePassword, "1Password2");
         return this;
 
     }

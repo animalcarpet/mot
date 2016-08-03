@@ -65,4 +65,9 @@ class UpdateVtsEmailProcess extends AbstractSingleStepVtsProcess implements Auto
     {
         $this->siteMapper->updateVtsContactProperty($this->context->getVtsId(), VehicleTestingStation::PATCH_PROPERTY_EMAIL, $formData[$this->propertyName]);
     }
+
+    public function getEditPageLede()
+    {
+        return null;
+    }
 }

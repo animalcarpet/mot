@@ -67,7 +67,7 @@ class OdometerReadingViewObjectTest extends PHPUnit_Framework_TestCase
 
         $odometerReadingViewObject = new OdometerReadingViewObject();
         $odometerReadingViewObject->setOdometerReadingValuesMap($readingValueMap);
-        $this->assertEquals('Not readable', $odometerReadingViewObject->getDisplayValue());
+        $this->assertEquals('Unreadable', $odometerReadingViewObject->getDisplayValue());
     }
 
     public function testDisplayValues_givenNoOdometer_shouldReturnNoOdometer()
@@ -75,7 +75,7 @@ class OdometerReadingViewObjectTest extends PHPUnit_Framework_TestCase
         $readingValueMap = $this->getReadingValueMapData(null, null, 'NO_METER');
         $odometerReadingViewObject = new OdometerReadingViewObject();
         $odometerReadingViewObject->setOdometerReadingValuesMap($readingValueMap);
-        $this->assertEquals('Vehicle does not have an odometer', $odometerReadingViewObject->getDisplayValue());
+        $this->assertEquals('Missing', $odometerReadingViewObject->getDisplayValue());
     }
 
     private function getReadingValueMapData($value = null, $unit = null, $resultType = null)

@@ -12,6 +12,11 @@ use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 class SessionContext implements Context
 {
     /**
+     * @var TestSupportHelper
+     */
+    public $testSupportHelper;
+
+    /**
      * @var AccountClaim
      */
     private $accountClaim;
@@ -84,6 +89,15 @@ class SessionContext implements Context
         $this->personContext = $scope->getEnvironment()->getContext(PersonContext::class);
     }
 
+    /**
+     * @Given I am registered as a new user
+     */
+    public function iAmRegisteredAsANewUser()
+    {
+        $user = $this->session->createNewUser($this->testSupportHelper);
+        $this->currentUser = new AuthenticatedUser($user->data['username'], $user->data['password'], null);
+    }
+    
     /**
      * @Given I am logged in as a new User
      */
@@ -489,12 +503,15 @@ class SessionContext implements Context
      */
     public function iAmLoggedInAsATesterToNewSite()
     {
-        $this->iamLoggedInAsATester();
+        $this->logInTesterToNewSiteAssignedToAe();
+    }
 
-        $aeId = $this->authorisedExaminerContext->createAE()["id"];
-        $this->vtsContext->createSite();
-        $siteId = $this->vtsContext->getSite()["id"];
-        $siteNumber = $this->vtsContext->getSite()["siteNumber"];
+    public function logInTesterToNewSiteAssignedToAe($siteName = 'default', $aeName = 'default')
+    {
+        $aeId = $this->authorisedExaminerContext->createAE(1001, $aeName)["id"];
+        $this->vtsContext->createSite($siteName);
+        $siteId = $this->vtsContext->getSite($siteName)["id"];
+        $siteNumber = $this->vtsContext->getSite($siteName)["siteNumber"];
 
         $areaOffice1Service = $this->testSupportHelper->getAreaOffice1Service();
         $ao = $areaOffice1Service->create([]);
@@ -514,8 +531,13 @@ class SessionContext implements Context
             'siteIds'                => [$siteId],
         ]);
 
+        $this->personContext->createSiteAdmin($siteId);
+
         $this->currentUser = $this->session->startSession($tester->data['username'], $tester->data['password']);
+
+        return $this->currentUser;
     }
+
     /**
      * @Given /^I am logged in as user with (.*)$/
      */

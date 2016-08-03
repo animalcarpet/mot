@@ -51,7 +51,7 @@ class VtsContext implements Context
     private $sessionContext;
 
     /** @var array */
-    private $createdVts;
+    private $createdVts = [];
 
     private $resultContext;
 
@@ -105,7 +105,7 @@ class VtsContext implements Context
 
     public function createSite($name = "default")
     {
-        if ($this->createdVts[$name] === null) {
+        if (!array_key_exists($name, $this->createdVts)) {
             $areaOffice1Service = $this->testSupportHelper->getAreaOffice1Service();
             $ao = $areaOffice1Service->create([]);
             $aoSession = $this->session->startSession(
@@ -115,7 +115,7 @@ class VtsContext implements Context
 
             $params = [
                 'accessToken' => $aoSession->getAccessToken(),
-                'name' => self::SITE_NAME,
+                'name' => $name == "default" ? self::SITE_NAME : $name,
                 'town' => self::SITE_TOWN,
                 'postcode' => self::SITE_POSTCODE,
             ];
@@ -125,10 +125,70 @@ class VtsContext implements Context
             if (! is_object($responseBody)) {
                 throw new Exception("createSite: responseBody is not an object: failed to create Vts");
             }
+
             $this->createdVts[$name] = $responseBody->toArray()['data'];
         }
 
         return $this->createdVts[$name];
+    }
+
+    public function createSiteAssociatedWithAe($siteName = "default", $aeName = "default")
+    {
+        if ($this->getSite($siteName)) {
+            return $this->getSite($siteName);
+        }
+
+        $site = $this->createSite($siteName);
+
+        $areaOffice1Service = $this->testSupportHelper->getAreaOffice1Service();
+        $ao = $areaOffice1Service->create([]);
+        $aoSession = $this->session->startSession(
+            $ao->data["username"],
+            $ao->data["password"]
+        );
+
+        $aeId = $this->authorisedExaminerContext->createAE(1001, $aeName)["id"];
+
+        $this->authorisedExaminer->linkAuthorisedExaminerWithSite(
+            $aoSession->getAccessToken(),
+            $aeId,
+            $site["siteNumber"]
+        );
+
+        return $site;
+    }
+
+    /**
+     * @Given there is a site :siteName associated with Authorised Examiner :aeName
+     */
+    public function thereIsASiteAssociatedWithAuthorisedExaminer($siteName, $aeName)
+    {
+        $this->createSiteAssociatedWithAe($siteName, $aeName);
+    }
+
+    /**
+     * @Given there is a site associated with Authorised Examiner with following data:
+     */
+    public function thereIsASiteAssociatedWithAuthorisedExaminerWithFollowingData(TableNode $table)
+    {
+        $rows = $table->getColumnsHash();
+
+        foreach ($rows as $row) {
+            $defaults = [ "start_date" => "now", "end_date" => null ];
+            $data = array_replace($defaults, $row);
+
+            $site = $this->createSiteAssociatedWithAe($data["site_name"], $data["ae_name"]);
+
+            $startDate = new \DateTime($data["start_date"]);
+            $endDate = null;
+            if ($data["end_date"] !== null) {
+                $endDate = new \DateTime($data["end_date"]);
+            }
+
+            $aeId = $this->authorisedExaminerContext->getAe($data["ae_name"])["id"];
+            $siteId = $site["id"];
+            $this->testSupportHelper->getVtsService()->changeAssociatedDate($aeId, $siteId, $startDate, $endDate);
+        }
     }
 
     /**
@@ -370,13 +430,17 @@ class VtsContext implements Context
      */
     public function getSite($name = "default")
     {
-        return $this->createdVts[$name];
+        if (array_key_exists($name, $this->createdVts)) {
+            return $this->createdVts[$name];
+        }
+
+        return null;
     }
 
     /**
-     * @When I attempt to add risk assessment to site with data:
+     * @Given /^I attempt to add risk assessment to site "([^"]*)" on ae "([^"]*)" with data:$/
      */
-    public function iAttemptToAddRiskAssessmentToSiteWithData(TableNode $table)
+    public function iAttemptToAddRiskAssessmentToSiteOnAeWithData($siteName = "default", $aeName = "default", TableNode $table)
     {
         $hash = $table->getColumnsHash();
 
@@ -384,17 +448,23 @@ class VtsContext implements Context
             throw new \InvalidArgumentException(sprintf('Expected a single record but got: %d', count($hash)));
         }
 
-        $this->riskAssessmentData = $this->prepareRiskAssessmentData($hash[0]);
-        $response = $this->vehicleTestingStation->addRiskAssessment($this->sessionContext->getCurrentAccessToken(), $this->getSite()['id'], $this->riskAssessmentData);
+        $this->riskAssessmentData = $this->prepareRiskAssessmentData($siteName, $aeName, $hash[0]);
+        $response = $this->vehicleTestingStation->addRiskAssessment($this->sessionContext->getCurrentAccessToken(), $this->getSite($siteName)['id'], $this->riskAssessmentData);
 
         PHPUnit::assertEquals(200, $response->getStatusCode());
     }
 
-    private function prepareRiskAssessmentData(array $data)
+    private function prepareRiskAssessmentData($siteName, $aeName, array $data)
     {
-        $this->createSite();
-        $siteId = $this->getSite()['id'];
-        $siteNumber = $this->getSite()["siteNumber"];
+        $site = $this->getSite($siteName);
+
+        if(empty($site)) {
+            $siteName = "default";
+            $site = $this->createSite($siteName);
+        }
+
+        $siteId = $site['id'];
+        $siteNumber = $site["siteNumber"];
         $dataGeneratorHelper = $this->testSupportHelper->getDataGeneratorHelper();
         $suffixLength = 10;
 
@@ -403,8 +473,14 @@ class VtsContext implements Context
             $username = $data["aeRepresentativesUserId"] . $dataGeneratorHelper->generateRandomString($suffixLength);
             $aedmData = ["username" => $username];
         }
-        $this->personContext->createAEDM($aedmData);
-        $aedmUsername = $this->personContext->getPersonUsername();
+
+        $aedm = $this->authorisedExaminerContext->getAe($aeName)["aedm"];
+        if(empty($aedm)) {
+            $this->personContext->createAEDM($aedmData);
+            $aedmUsername = $this->personContext->getPersonUsername();
+        } else {
+            $aedmUsername = $aedm["username"];
+        }
 
         $areaOffice1Service = $this->testSupportHelper->getAreaOffice1Service();
         $ao1user = $areaOffice1Service->create([]);
@@ -479,7 +555,7 @@ class VtsContext implements Context
             throw new \InvalidArgumentException(sprintf('Expected a single record but got: %d', count($hash)));
         }
 
-        $this->riskAssessmentData = $this->prepareRiskAssessmentData($hash[0]);
+        $this->riskAssessmentData = $this->prepareRiskAssessmentData("default", "default", $hash[0]);
         $response = $this->vehicleTestingStation->addRiskAssessment($this->sessionContext->getCurrentAccessToken(), $this->getSite()['id'], $this->riskAssessmentData);
 
         PHPUnit::assertEquals(400, $response->getStatusCode());
@@ -537,5 +613,44 @@ class VtsContext implements Context
         )->getBody()["data"];
 
         return $this->createdVts[$name]["testLogs"];
+    }
+
+    /**
+     * @When /^I attempt to add risk assessment to site with data:$/
+     */
+    public function iAttemptToAddRiskAssessmentToSiteWithData(TableNode $table)
+    {
+        $this->iAttemptToAddRiskAssessmentToSiteOnAeWithData("default", "default", $table);
+    }
+
+    /**
+     * @Given /^I add risk assessment with score "([^"]*)" to site "([^"]*)" on "([^"]*)"$/
+     */
+    public function iAddRiskAssessmentWithScoreToSiteOn($score, $siteName, $aeName)
+    {
+        $hash = ["siteAssessmentScore" => $score] + $this->getRiskAssessmentDefaults();
+
+        $this->riskAssessmentData = $this->prepareRiskAssessmentData($siteName, $aeName, $hash);
+
+        $response = $this->vehicleTestingStation->addRiskAssessment(
+            $this->sessionContext->getCurrentAccessToken(),
+            $this->getSite($siteName)['id'],
+            $this->riskAssessmentData
+        );
+
+        PHPUnit::assertEquals(200, $response->getStatusCode());
+    }
+
+    private function getRiskAssessmentDefaults()
+    {
+        return [
+            "siteAssessmentScore" => 200,
+            "aeRepresentativesFullName" => "John Kowalsky",
+            "aeRepresentativesRole" => "Boss",
+            "aeRepresentativesUserId" => "",
+            "testerUserId" => "tester",
+            "dvsaExaminersUserId" => "dvsaExaminer",
+            "dateOfAssessment" => "2015-09-01",
+        ];
     }
 }

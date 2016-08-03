@@ -2,6 +2,7 @@
 
 namespace DvsaMotApiTest\Service;
 
+use DvsaEntities\Entity\ModelDetail;
 use PHPUnit_Framework_ExpectationFailedException;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
@@ -15,11 +16,16 @@ use DvsaEntities\Entity\MotTest;
 class MotTestDateTest extends AbstractServiceTestCase
 {
     /** @var  MotTest */
-    protected $motCurrent;
+    private $motCurrent;
+
     /** @var  MotTest */
-    protected $motPrevious;
+    private $motPrevious;
+
     /** @var  Vehicle */
-    protected $vehicle;
+    private $vehicle;
+
+    /** @var ModelDetail */
+    private $modelDetail;
 
     public function setUp()
     {
@@ -35,8 +41,11 @@ class MotTestDateTest extends AbstractServiceTestCase
         $vehicleClass = new VehicleClass();
         $vehicleClass->setCode('4');
 
+        $this->modelDetail = new ModelDetail();
+        $this->modelDetail->setVehicleClass($vehicleClass);
+
         $this->vehicle = new Vehicle();
-        $this->vehicle->setVehicleClass($vehicleClass);
+        $this->vehicle->setModelDetail($this->modelDetail);
         $this->vehicle->setNewAtFirstReg(true);
         $this->vehicle->setFirstRegistrationDate(new \DateTime('1995-01-01'));
 
@@ -96,7 +105,7 @@ class MotTestDateTest extends AbstractServiceTestCase
         $vehicleClass = new VehicleClass();
         $vehicleClass->setCode('5');
 
-        $this->vehicle->setVehicleClass($vehicleClass);
+        $this->modelDetail->setVehicleClass($vehicleClass);
         $e = $motDate->getExpiryDate();
         $this->assertEquals('2001-10-09', $e->format('Y-m-d'));
     }
@@ -117,7 +126,7 @@ class MotTestDateTest extends AbstractServiceTestCase
         $vehicleClass = new VehicleClass();
         $vehicleClass->setCode('5');
 
-        $this->vehicle->setVehicleClass($vehicleClass);
+        $this->modelDetail->setVehicleClass($vehicleClass);
         $e = $motDate->getExpiryDate();
 
         $this->assertEquals('2001-10-09', $e->format('Y-m-d'));
@@ -139,7 +148,7 @@ class MotTestDateTest extends AbstractServiceTestCase
         $vehicleClass = new VehicleClass();
         $vehicleClass->setCode('5');
 
-        $this->vehicle->setVehicleClass($vehicleClass);
+        $this->modelDetail->setVehicleClass($vehicleClass);
         $e = $motDate->getExpiryDate();
 
         $this->assertEquals('1996-12-31', $e->format('Y-m-d'));
@@ -179,7 +188,7 @@ class MotTestDateTest extends AbstractServiceTestCase
             ->method('getCode')
             ->willReturn(null);
 
-        $this->vehicle->setVehicleClass($mockVehicleClass);
+        $this->modelDetail->setVehicleClass($mockVehicleClass);
 
         $motDate->getExpiryDate();
     }
@@ -275,10 +284,13 @@ class MotTestDateTest extends AbstractServiceTestCase
         $vehicleClass = new VehicleClass();
         $vehicleClass->setCode(3);
 
+        $modelDetail = new ModelDetail();
+        $modelDetail->setVehicleClass($vehicleClass);
+
         $registrationDate = new \DateTime('1953-01-01');
 
         $vehicle->setFirstRegistrationDate($registrationDate);
-        $vehicle->setVehicleClass($vehicleClass);
+        $vehicle->setModelDetail($modelDetail);
 
         $expiryDate = MotTestDate::getNotionalExpiryDateForVehicle($vehicle);
 

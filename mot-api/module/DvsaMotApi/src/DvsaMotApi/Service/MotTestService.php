@@ -176,20 +176,6 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
     }
 
     /**
-     * This function is allowing us to test if the started Date of the MOT is before the issued Date.
-     *
-     * @param \DateTime $startDate
-     * @param \DateTime $motIssueDate
-     *
-     * @return bool
-     */
-    private function isIssueDateBeforeStartDate($startDate, $motIssueDate)
-    {
-        return ($startDate !== null && $motIssueDate !== null)
-            && (DateUtils::compareDates($motIssueDate, $startDate) === -1);
-    }
-
-    /**
      * Get the additional snapshot data for a certificate.
      *
      * @param int $motTestNumber

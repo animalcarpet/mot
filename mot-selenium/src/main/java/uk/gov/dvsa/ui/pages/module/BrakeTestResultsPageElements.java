@@ -1,6 +1,7 @@
 package uk.gov.dvsa.ui.pages.module;
 
-import com.dvsa.mot.selenium.datasource.BrakeTestConstants.FieldType;
+
+import uk.gov.dvsa.helper.enums.BrakeTestConstants.FieldType;
 
 public enum BrakeTestResultsPageElements {
     // BREAK CONTROLS
@@ -85,7 +86,7 @@ public enum BrakeTestResultsPageElements {
     private final FieldType fieldType;
 
 
-    private BrakeTestResultsPageElements(String id, FieldType fieldType) {
+    BrakeTestResultsPageElements(String id, FieldType fieldType) {
         this.id = id;
         this.fieldType = fieldType;
     }

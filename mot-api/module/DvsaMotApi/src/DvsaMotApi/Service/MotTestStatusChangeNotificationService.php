@@ -2,6 +2,7 @@
 
 namespace DvsaMotApi\Service;
 
+use DvsaEntities\Repository\MotTestRepository;
 use NotificationApi\Dto\Notification;
 use NotificationApi\Service\NotificationService;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -63,7 +64,7 @@ class MotTestStatusChangeNotificationService implements ServiceLocatorAwareInter
 
     public function captureMotTestBeforeUpdateStateById($motTestId)
     {
-        $motTest = $this->getServiceLocator()->get('MotTestRepository')->getMotTestByNumber($motTestId);
+        $motTest = $this->getServiceLocator()->get(MotTestRepository::class)->getMotTestByNumber($motTestId);
 
         if ($motTest instanceof \DvsaEntities\Entity\MotTest) {
             $this->motTestBeforeUpdateState = clone $motTest;
@@ -72,7 +73,7 @@ class MotTestStatusChangeNotificationService implements ServiceLocatorAwareInter
 
     public function captureMotTestAfterUpdateStateByMotTestNumber($motTestNumber)
     {
-        $this->motTestAfterUpdateState = $this->getServiceLocator()->get('MotTestRepository')
+        $this->motTestAfterUpdateState = $this->getServiceLocator()->get(MotTestRepository::class)
             ->getMotTestByNumber($motTestNumber);
     }
 

@@ -28,9 +28,9 @@ class Model extends Entity
     /**
      * @var string
      *
-     * @ORM\Column(name="make_code", type="string", length=5, nullable=false)
+     * @ORM\Column(name="make_id", type="integer", length=5, nullable=false)
      */
-    private $makeCode;
+    private $makeId;
 
     /**
      * @var string
@@ -45,6 +45,13 @@ class Model extends Entity
      * @ORM\Column(name="name", type="string", length=45, nullable=false)
      */
     private $name;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_verified", type="boolean")
+     */
+    private $isVerified;
 
     public function __construct()
     {
@@ -89,14 +96,6 @@ class Model extends Entity
     }
 
     /**
-     * @return string
-     */
-    public function getMakeCode()
-    {
-        return $this->makeCode;
-    }
-
-    /**
      * @param string $name
      *
      * @return $this
@@ -113,5 +112,13 @@ class Model extends Entity
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isVerified()
+    {
+        return $this->isVerified;
     }
 }

@@ -1,1 +1,0 @@
-UPDATE `auth_for_testing_mot` SET `status_id` = 11 WHERE `person_id` = 101;

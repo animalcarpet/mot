@@ -182,15 +182,6 @@ class MotTestSecurityServiceTest extends AbstractServiceTestCase
         $this->service->setDateTimeHolder(new TestDateTimeHolder(DateUtils::toDate($date)));
     }
 
-    private static function createMotTestForCanModifyOdometerTest($status, $issuedDate, $motTestNumber = null)
-    {
-        $motTest = (new MotTest())->setStatus($status)->setIssuedDate(DateUtils::toDate($issuedDate));
-        if (!is_null($motTestNumber)) {
-            $motTest->setNumber($motTestNumber);
-        }
-        return $motTest;
-    }
-
     public function testCanModifyOdometerForTest_givenActiveStatus_shouldAllowToUpdate()
     {
         // given

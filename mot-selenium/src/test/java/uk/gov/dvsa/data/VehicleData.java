@@ -1,7 +1,17 @@
 package uk.gov.dvsa.data;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.joda.time.DateTime;
+
 import uk.gov.dvsa.domain.model.User;
+import uk.gov.dvsa.domain.model.vehicle.Colour;
+import uk.gov.dvsa.domain.model.vehicle.CountryOfRegistration;
+import uk.gov.dvsa.domain.model.vehicle.DefaultVehicleDataRandomizer;
+import uk.gov.dvsa.domain.model.vehicle.DvlaVehicle;
+import uk.gov.dvsa.domain.model.vehicle.FuelTypes;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
+import uk.gov.dvsa.domain.model.vehicle.VehicleClass;
+import uk.gov.dvsa.domain.model.vehicle.VehicleDetails;
 import uk.gov.dvsa.domain.service.VehicleService;
 
 import java.io.IOException;
@@ -10,30 +20,60 @@ public class VehicleData extends VehicleService {
 
     public VehicleData() {}
 
-    @Deprecated
-    public Vehicle getNewVehicle(User tester) throws IOException {
-        return createVehicle(tester);
+    private static final String DEFAULT_PIN = "123456";
+    private static final String DEFAULT_TRANSMISSION_TYPE_ID = "1";
+    private static final String DEFAULT_CC = "888";
+
+    protected Vehicle createVehicle(User user) throws IOException {
+        return createVehicle(user, VehicleClass.four);
     }
 
-    public Vehicle getNewVehicle() throws IOException {
-        return createVehicle();
+    protected Vehicle createVehicle(User user, VehicleClass vehicleClass) throws IOException {
+        return createVehicle(
+                user,
+                DEFAULT_PIN,
+                Colour.Blue.getId().toString(),
+                CountryOfRegistration.Great_Britain.getRegistrationId(),
+                DEFAULT_CC,
+                getDateMinusYears(5),
+                Integer.toString(FuelTypes.Petrol.getId()),
+                Integer.toString(VehicleDetails.MERCEDES_300_D.getMakeId()),
+                Integer.toString(VehicleDetails.MERCEDES_300_D.getModelId()),
+                generateCarRegistration(),
+                Colour.Grey.getId().toString(),
+                getRandomVin(),
+                vehicleClass.getId(),
+                DEFAULT_TRANSMISSION_TYPE_ID
+        );
     }
 
-    @Deprecated
-    public Vehicle getNewDvlaVehicle(User tester) throws IOException {
-        return createDvlaVehicle(tester);
+    public Vehicle getNewVehicle(User user) throws IOException {
+        return createVehicle(user);
     }
 
-    public Vehicle getNewDvlaVehicle() throws IOException {
-        return createDvlaVehicle();
+    public Vehicle getNewVehicle(User user, VehicleClass vehicleClass) throws IOException {
+        return createVehicle(user, vehicleClass);
     }
 
-    @Deprecated
-    public Vehicle getNewVehicle(User tester, Integer vehicleWeight) throws IOException {
-        return createVehicle(vehicleWeight, tester);
+    public DvlaVehicle getNewDvlaVehicle(User user) throws IOException {
+        return createDvlaVehicle(
+                user,
+                generateCarRegistration(),
+                getRandomVin(),
+                "1889A",
+                "01163"
+        );
     }
 
-    public Vehicle getNewVehicle(Integer vehicleWeight) throws IOException {
-        return createVehicle(vehicleWeight);
+    private String generateCarRegistration() {
+        return RandomStringUtils.randomAlphanumeric(7).toUpperCase();
+    }
+
+    private String getRandomVin() {
+        return new DefaultVehicleDataRandomizer().nextVin();
+    }
+
+    private String getDateMinusYears(int years) {
+        return DateTime.now().minusYears(years).toString("YYYY-MM-dd");
     }
 }

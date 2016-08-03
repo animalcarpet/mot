@@ -48,7 +48,7 @@ public class SiteRagStatusTests extends DslTest {
                 {new AssessmentInfo("790.5", "Red", assessmentActors)}};
     }
 
-    @Test(groups = {"BVT", "Regression"}, description = "VM-11544")
+    @Test(groups = {"Regression"}, description = "VM-11544")
     void checkStatusAsTester() throws IOException{
 
         //Given I am on BobBangers VTS page as a Tester in BobBangers
@@ -58,7 +58,7 @@ public class SiteRagStatusTests extends DslTest {
         assertThat(motUI.site.isRiskScoreDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression"}, description = "VM-11544, Journey 1", dataProvider = "assessmentValues")
+    @Test(groups = {"Regression"}, description = "VM-11544, Journey 1", dataProvider = "assessmentValues")
     void addSiteAssessmentScore(AssessmentInfo aInfo) throws IOException, URISyntaxException {
 
         //Given I am on the Enter Site Assessment Page as VE
@@ -74,7 +74,7 @@ public class SiteRagStatusTests extends DslTest {
         assertThat("Correct colour value is set", motUI.site.getAssessmentColour(), equalTo(aInfo.getColor()));
     }
 
-    @Test(groups = {"BVT", "Regression"}, description = "VM-11544, Journey 1")
+    @Test(groups = {"Regression"}, description = "VM-11544, Journey 1")
     void verifyEventsCreated() throws IOException, URISyntaxException {
 
         //Given I have an assessment added to a VTS

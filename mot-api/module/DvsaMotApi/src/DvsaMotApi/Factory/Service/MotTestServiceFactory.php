@@ -3,6 +3,7 @@
 namespace DvsaMotApi\Factory\Service;
 
 use Doctrine\ORM\EntityManager;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommonApi\Authorisation\Assertion\ReadMotTestAssertion;
 use DvsaMotApi\Service\MotTestService;
 use Zend\ServiceManager\FactoryInterface;

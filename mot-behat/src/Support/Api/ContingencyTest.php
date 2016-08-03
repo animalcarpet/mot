@@ -18,11 +18,10 @@ class ContingencyTest extends MotApi
      *
      * @return array
      */
-    public function getContingencyCodeID($token, $contingencyCode, $reasonCode, \DateTime $dateTime = null)
+    public function getContingencyCodeID($token, $contingencyCode, $reasonCode, \DateTime $dateTime = null, $siteId = 1)
     {
         //use generic password if $password is "default"
         $contingencyCode = strcasecmp($contingencyCode, 'DEFAULT') == 0 ? Authentication::CONTINGENCY_CODE_DEFAULT : $contingencyCode;
-        $siteId = '1';
         $otherReasonText = 'some reason text';
 
         if (is_null($dateTime)) {
@@ -30,7 +29,7 @@ class ContingencyTest extends MotApi
         }
 
         $body = json_encode([
-            'siteId'            => $siteId,
+            'siteId'            => (string) $siteId,
             'contingencyCode'   => $contingencyCode,
             'performedAtYear'   => $dateTime->format('Y'),
             'performedAtMonth'  => $dateTime->format('m'),
@@ -51,13 +50,13 @@ class ContingencyTest extends MotApi
         ));
     }
 
-    public function startContingencyTest($token, $contingencyId, $vehicleId, $vehicleClass)
+    public function startContingencyTest($token, $contingencyId, $vehicleId, $vehicleClass, $siteId = 1)
     {
         $today =  DateUtils::today();
 
         $body = json_encode([
             'vehicleId'               => $vehicleId,
-            'vehicleTestingStationId' => 1,
+            'vehicleTestingStationId' => $siteId,
             'primaryColour'           => 'C',
             'secondaryColour'         => 'C',
             'fuelTypeId'              => 'PE',
@@ -69,7 +68,7 @@ class ContingencyTest extends MotApi
                     'contingencyCode'   => Authentication::CONTINGENCY_CODE_DEFAULT,
                     'reasonCode'        => 'SO',
                     'otherReasonText'   => '',
-                    'siteId'            => '1',
+                    'siteId'            => $siteId,
                     'testType'          => 'normal',
                     'performedAtYear'   => $today->format('Y'),
                     'performedAtMonth'  => $today->format('m'),

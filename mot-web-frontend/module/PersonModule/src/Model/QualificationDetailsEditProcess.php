@@ -18,10 +18,10 @@ class QualificationDetailsEditProcess extends QualificationDetailsAbstractProces
      */
     public function getPrePopulatedData()
     {
-        if($this->context->getPersonId() && $this->context->getGroup()) {
+        if($this->context->getTargetPersonId() && $this->context->getGroup()) {
             try {
                 $qualificationDetails = $this->qualificationDetailsMapper->getQualificationDetails(
-                    $this->context->getPersonId(), $this->context->getGroup()
+                    $this->context->getTargetPersonId(), $this->context->getGroup()
                 );
 
                 return QualificationDetailsMapper::mapDtoToFormData($qualificationDetails);
@@ -39,7 +39,7 @@ class QualificationDetailsEditProcess extends QualificationDetailsAbstractProces
     {
         $route = $this->qualificationDetailsRoutes->getEditRoute();
         $params = $this->context->getController()->params()->fromRoute() + [
-                self::ROUTE_PARAM_ID => $this->context->getPersonId(),
+                self::ROUTE_PARAM_ID => $this->context->getTargetPersonId(),
                 self::ROUTE_PARAM_GROUP => $this->context->getGroup(),
             ];
         return new RedirectToRoute($route, $params);
@@ -53,7 +53,7 @@ class QualificationDetailsEditProcess extends QualificationDetailsAbstractProces
     {
         $route = $this->qualificationDetailsRoutes->getEditReviewRoute();
         $params = $this->context->getController()->params()->fromRoute() + [
-                self::ROUTE_PARAM_ID => $this->context->getPersonId(),
+                self::ROUTE_PARAM_ID => $this->context->getTargetPersonId(),
                 self::ROUTE_PARAM_GROUP => $this->context->getGroup(),
                 self::ROUTE_PARAM_FORM_UUID => $formUuid,
             ];
@@ -64,7 +64,7 @@ class QualificationDetailsEditProcess extends QualificationDetailsAbstractProces
     {
         $route = $this->qualificationDetailsRoutes->getEditRoute();
         $params = $this->context->getController()->params()->fromRoute() + [
-                self::ROUTE_PARAM_ID => $this->context->getPersonId(),
+                self::ROUTE_PARAM_ID => $this->context->getTargetPersonId(),
                 self::ROUTE_PARAM_GROUP => $this->context->getGroup(),
             ];
         return $this->context->getController()->url()->fromRoute($route, $params).'?formUuid='.$formUuid;
@@ -89,7 +89,7 @@ class QualificationDetailsEditProcess extends QualificationDetailsAbstractProces
     {
         $dto = QualificationDetailsMapper::mapFormDataToDto($formData, $this->context->getGroup());
 
-        return $this->qualificationDetailsMapper->updateQualificationDetails($this->context->getPersonId(),
+        return $this->qualificationDetailsMapper->updateQualificationDetails($this->context->getTargetPersonId(),
             $this->context->getGroup(), $dto);
     }
 
@@ -102,7 +102,7 @@ class QualificationDetailsEditProcess extends QualificationDetailsAbstractProces
     public function isAuthorised(
         MotAuthorisationServiceInterface $authorisationService)
     {
-        $personId = $this->context->getPersonId();
+        $personId = $this->context->getTargetPersonId();
 
         $personalDetailsData = $this->personalDetailsService->getPersonalDetailsData($personId);
         $personalDetails = new PersonalDetails($personalDetailsData);
@@ -122,5 +122,10 @@ class QualificationDetailsEditProcess extends QualificationDetailsAbstractProces
     public function getBackLinkText()
     {
         return 'Back to change a certificate';
+    }
+
+    public function getEditPageLede()
+    {
+        return null;
     }
 }

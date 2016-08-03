@@ -32,6 +32,7 @@ public class MotUI {
     public final HelpDesk helpDesk;
     public final EventHistory eventHistory;
     public final DemoTestRequests demoTestRequests;
+    public final ReInspection reInspection;
 
     public MotUI(MotAppDriver driver) {
         pageNavigator.setDriver(driver);
@@ -49,6 +50,7 @@ public class MotUI {
         helpDesk = new HelpDesk(pageNavigator);
         eventHistory = new EventHistory();
         demoTestRequests = new DemoTestRequests(pageNavigator);
+        reInspection = new ReInspection(pageNavigator);
     }
 
     public void login(final User user) throws IOException {

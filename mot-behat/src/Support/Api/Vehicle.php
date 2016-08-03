@@ -15,6 +15,23 @@ class Vehicle extends MotApi
     const PATH_SEARCH_WITH_DVLA = 'vehicle/list?reg={vehicle_reg}&vinType=noVin&excludeDvla=0';
     const PATH_SEARCH_WITH_VIN_AND_DVLA = 'vehicle/list?reg={vehicle_reg}&vinType=fullVin&vin={vin}&excludeDvla=0';
 
+    private $fuelTypeMap = [
+        'PE' => 1,
+        'DI' => 2,
+        'EL' => 3,
+        'ST' => 4,
+        'LP' => 5,
+        'CN' => 6,
+        'LN' => 7,
+        'FC' => 8,
+        'OT' => 9,
+        'GA' => 10,
+        'GB' => 11,
+        'HY' => 12,
+        'GD' => 13,
+        'ED' => 14,
+    ];
+
     private $makeMap = [
         'BMW' => '18807',
         'Suzuk' => '18807',
@@ -60,8 +77,8 @@ class Vehicle extends MotApi
                 'dateOfRegistration' => '1980/01/01',
                 'dateOfManufacture' => '1980/01/01',
                 'newAtFirstReg' => 0,
-                'oneTimePassword' => Authentication::ONE_TIME_PASSWORD,
                 'vtsId' => 1,
+                'oneTimePassword' => Authentication::ONE_TIME_PASSWORD
             ],
             $vehicleMerge
         );
@@ -69,6 +86,7 @@ class Vehicle extends MotApi
         $body = $vehicleMergeData;
         $body['make'] = $this->mapMakeToCode($body['make']);
         $body['model'] = $this->mapModelToCode($body['model']);
+        $body['fuelTypeId'] = $this->mapFuelTypeToId($body['fuelType']);
 
         return $this->sendRequest($token, MotApi::METHOD_POST, self::PATH, $body);
     }
@@ -187,5 +205,14 @@ class Vehicle extends MotApi
         }
 
         return $this->modelMap[$model];
+    }
+
+    private function mapFuelTypeToId($fuelTypeCode)
+    {
+        if (!isset($this->fuelTypeMap[$fuelTypeCode])) {
+            throw new \InvalidArgumentException(sprintf('Could not map "%s" to a fuelType id', $fuelTypeCode));
+        }
+
+        return $this->fuelTypeMap[$fuelTypeCode];
     }
 }

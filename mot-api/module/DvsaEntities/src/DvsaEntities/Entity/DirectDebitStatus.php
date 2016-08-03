@@ -13,7 +13,7 @@ use DvsaEntities\EntityTrait\EnumType1EntityTrait;
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\DirectDebitStatusRepository", readOnly=true)
  * @ORM\Cache(usage="READ_ONLY", region="staticdata")
  */
-class DirectDebitStatus
+class DirectDebitStatus extends Entity
 {
     use CommonIdentityTrait;
 

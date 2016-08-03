@@ -1,12 +1,12 @@
 package uk.gov.dvsa.ui.pages.mot.modal;
 
-import com.dvsa.mot.selenium.framework.Configurator;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.model.mot.Advisory;
+import uk.gov.dvsa.framework.config.Configurator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.mot.TestItemSelector;
@@ -55,10 +55,10 @@ public class PrsLocationModalPage extends Page {
     }
 
     public TestItemSelector addPrs() {
-        FormCompletionHelper.selectFromDropDownByValue(lateral, String.valueOf(Advisory.Lateral.nearside));
-        FormCompletionHelper.selectFromDropDownByValue(longitudinal, String.valueOf(Advisory.Longitudinal.front));
-        FormCompletionHelper.selectFromDropDownByValue(vertical, String.valueOf(Advisory.Vertical.outer));
-        FormCompletionHelper.enterText(description, "Horn Destroyed");
+        FormDataHelper.selectFromDropDownByValue(lateral, String.valueOf(Advisory.Lateral.nearside));
+        FormDataHelper.selectFromDropDownByValue(longitudinal, String.valueOf(Advisory.Longitudinal.front));
+        FormDataHelper.selectFromDropDownByValue(vertical, String.valueOf(Advisory.Vertical.outer));
+        FormDataHelper.enterText(description, "Horn Destroyed");
 
         addButton.click();
         PageInteractionHelper.refreshPage();

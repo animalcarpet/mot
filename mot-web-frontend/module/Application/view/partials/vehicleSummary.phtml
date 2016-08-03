@@ -1,19 +1,26 @@
 <?php
 use DvsaCommon\Date\DateTimeDisplayFormat;
-use DvsaCommon\Date\DateUtils;
-use DvsaCommon\Utility\ArrayUtils;
+use DvsaCommon\Dto\Vehicle\VehicleDto;
 
 /** @var  \DvsaCommon\Dto\Vehicle\VehicleDto $vehicle */
 $vehicle = $this->vehicle;
 
 $registration = $vehicle->getRegistration();
 $vin = $vehicle->getVin();
-$makeAndModel = $vehicle->getMakeAndModel();
-$transmissionType = $vehicle->getTransmissionType()->getName();
-$fuelType = $vehicle->getFuelType()->getName();
-$bodyType = $vehicle->getBodyType()->getName();
 $cylinderCapacity = $vehicle->getCylinderCapacity();
 $firstUsedDate = $vehicle->getFirstUsedDate();
+
+if ($vehicle instanceof VehicleDto) {
+    $makeAndModel = $vehicle->getMakeName() . ' ' . $vehicle->getModelName();
+    $transmissionType = $vehicle->getTransmissionType()->getName();
+    $fuelType = $vehicle->getFuelType()->getName();
+    $bodyType = $vehicle->getBodyType()->getName();
+} else {
+    $makeAndModel = $vehicle->getMake() . ' ' . $vehicle->getModel();
+    $transmissionType = $vehicle->getTransmissionType();
+    $fuelType = $vehicle->getFuelType();
+    $bodyType = $vehicle->getBodyType();
+}
 
 ?>
 

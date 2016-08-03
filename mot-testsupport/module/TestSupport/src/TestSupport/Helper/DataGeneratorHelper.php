@@ -55,6 +55,11 @@ class DataGeneratorHelper
         return $this->differentiator . '@example.com';
     }
 
+    public function startDate()
+    {
+        return date('Y-m-d H:i:s', strtotime('-6 months'));
+    }
+
     public function organisationName()
     {
         return 'Test Organisation ' . $this->differentiator;

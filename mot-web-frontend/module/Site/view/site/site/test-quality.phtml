@@ -1,0 +1,47 @@
+<?php
+
+/** @var $viewModel SiteTestQualityViewModel */
+use Core\Routing\VtsRouteList;
+use DvsaCommon\Enum\VehicleClassGroupCode;
+use Site\ViewModel\TestQuality\SiteTestQualityViewModel;
+
+$returnLink = $viewModel->getReturnLink();
+?>
+
+<div class='layout-filter-data'>
+
+    <div class="layout-filter__controls">
+        <?php
+        echo $this->partial('site/site/partials/test-quality-month-filter');
+        ?>
+    </div>
+
+    <div class="layout-filter__content">
+
+        <?php
+        if ($viewModel->canGroupSectionBeViewed(VehicleClassGroupCode::BIKES)) {
+            echo $this->partial('site/site/partials/test-quality-group', [
+                'group'       => $viewModel->getA(),
+                'queryParams' => $viewModel->getQueryParams()
+            ]);
+        }
+
+        if ($viewModel->canGroupSectionBeViewed(VehicleClassGroupCode::CARS_ETC)) {
+            echo $this->partial('site/site/partials/test-quality-group', [
+                'group' => $viewModel->getB(),
+                'queryParams' => $viewModel->getQueryParams()
+            ]);
+        }
+        ?>
+    </div>
+</div>
+
+<nav class="content-navigation">
+    <ul class="content-navigation__secondary">
+        <li>
+            <a id="return-link" href="<?php echo $this->url($returnLink->getRoot(), $returnLink->getParams(), $returnLink->getQueryParams()) ?>">
+                <?php echo $returnLink->getValue(); ?>
+            </a>
+        </li>
+    </ul>
+</nav>

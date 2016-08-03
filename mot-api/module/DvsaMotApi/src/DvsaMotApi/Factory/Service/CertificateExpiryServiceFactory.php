@@ -2,6 +2,7 @@
 
 namespace DvsaMotApi\Factory\Service;
 
+use DvsaEntities\Repository\MotTestRepository;
 use DvsaMotApi\Service\CertificateExpiryService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -21,7 +22,7 @@ class CertificateExpiryServiceFactory implements FactoryInterface
     {
         return new CertificateExpiryService(
             new DateTimeHolder(),
-            $serviceLocator->get('MotTestRepository'),
+            $serviceLocator->get(MotTestRepository::class),
             $serviceLocator->get('VehicleRepository'),
             $serviceLocator->get('ConfigurationRepository'),
             $serviceLocator->get('DvsaAuthorisationService')

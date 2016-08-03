@@ -3,6 +3,7 @@
 namespace DvsaCommon\Dto\Contact;
 
 use DvsaCommon\Dto\AbstractDataTransferObject;
+use DvsaCommon\DtoSerialization\ReflectiveDtoInterface;
 use DvsaCommon\Utility\AddressUtils;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Utility\TypeCheck;
@@ -10,7 +11,7 @@ use DvsaCommon\Utility\TypeCheck;
 /**
  * Dto for address data
  */
-class AddressDto extends AbstractDataTransferObject
+class AddressDto extends AbstractDataTransferObject implements ReflectiveDtoInterface
 {
     /** @var string */
     private $addressLine1;
@@ -63,7 +64,7 @@ class AddressDto extends AbstractDataTransferObject
     }
 
     /**
-     * @param $addressLine1
+     * @param string $addressLine1
      *
      * @return $this
      */
@@ -83,6 +84,7 @@ class AddressDto extends AbstractDataTransferObject
     }
 
     /**
+     * @param string $addressLine2
      * @return $this
      */
     public function setAddressLine2($addressLine2)
@@ -101,6 +103,7 @@ class AddressDto extends AbstractDataTransferObject
     }
 
     /**
+     * @param string $addressLine3
      * @return $this
      */
     public function setAddressLine3($addressLine3)
@@ -127,6 +130,7 @@ class AddressDto extends AbstractDataTransferObject
     }
 
     /**
+     * @param string $addressLine4
      * @return $this
      */
     public function setAddressLine4($addressLine4)
@@ -137,6 +141,7 @@ class AddressDto extends AbstractDataTransferObject
     }
 
     /**
+     * @param string $postcode
      * @return $this
      */
     public function setPostcode($postcode)
@@ -155,6 +160,7 @@ class AddressDto extends AbstractDataTransferObject
     }
 
     /**
+     * @param string $town
      * @return $this
      */
     public function setTown($town)
@@ -181,6 +187,7 @@ class AddressDto extends AbstractDataTransferObject
     }
 
     /**
+     * @param string $country
      * @return $this
      */
     public function setCountry($country)

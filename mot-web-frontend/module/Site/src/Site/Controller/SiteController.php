@@ -8,6 +8,7 @@ use Core\Controller\AbstractAuthActionController;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\Assertion\UpdateVtsAssertion;
+use DvsaCommon\Auth\Assertion\ViewVtsTestQualityAssertion;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\PermissionAtOrganisation;
 use DvsaCommon\Auth\PermissionAtSite;
@@ -23,6 +24,8 @@ use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommon\UrlBuilder\AuthorisedExaminerUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\VehicleTestingStationUrlBuilderWeb;
+use Site\Action\SiteTestQualityAction;
+use Site\Action\UserTestQualityAction;
 use Site\Authorization\VtsOverviewPagePermissions;
 use Site\Form\VtsCreateForm;
 use Site\Form\VtsSiteAssessmentForm;
@@ -88,22 +91,22 @@ class SiteController extends AbstractAuthActionController
 
     private $businessRoleCatalog;
 
-    /**
-     * @param MotFrontendAuthorisationServiceInterface $auth
-     * @param MapperFactory                            $mapper
-     * @param MotIdentityProviderInterface             $identity
-     * @param CatalogService                           $catalog
-     * @param Container                                $session
-     * @param BusinessRoleCatalog                      $businessRoleCatalog
-     *
-     */
+    private $siteTestQualityAction;
+
+    private $viewVtsTestQualityAssertion;
+
+    private $userTestQualityAction;
+
     public function __construct(
         MotFrontendAuthorisationServiceInterface $auth,
         MapperFactory $mapper,
         MotIdentityProviderInterface $identity,
         CatalogService $catalog,
         Container $session,
-        BusinessRoleCatalog $businessRoleCatalog
+        BusinessRoleCatalog $businessRoleCatalog,
+        SiteTestQualityAction $siteTestQualityAction,
+        UserTestQualityAction $userTestQualityAction,
+        ViewVtsTestQualityAssertion $viewVtsTestQualityAssertion
     ) {
         $this->auth = $auth;
         $this->mapper = $mapper;
@@ -111,6 +114,9 @@ class SiteController extends AbstractAuthActionController
         $this->catalog = $catalog;
         $this->session = $session;
         $this->businessRoleCatalog = $businessRoleCatalog;
+        $this->siteTestQualityAction = $siteTestQualityAction;
+        $this->userTestQualityAction = $userTestQualityAction;
+        $this->viewVtsTestQualityAssertion = $viewVtsTestQualityAssertion;
     }
 
     /**
@@ -220,7 +226,8 @@ class SiteController extends AbstractAuthActionController
             $siteStatusCode,
             $hasBeenAssessed,
             $ragClassifier,
-            $activeTestsCount
+            $activeTestsCount,
+            $this->viewVtsTestQualityAssertion
         );
 
         $this->setSidebar($sidebar);
@@ -774,6 +781,78 @@ class SiteController extends AbstractAuthActionController
         return
             $this->auth->isGranted(PermissionInSystem::AUTHORISED_EXAMINER_READ_FULL) ||
             $this->auth->isGrantedAtOrganisation(PermissionAtOrganisation::AUTHORISED_EXAMINER_READ, $orgId);
-        ;
+    }
+
+    public function testQualityAction()
+    {
+        $this->assertFeatureEnabled(FeatureToggle::TEST_QUALITY_INFORMATION);
+
+        $id = $this->params('id');
+        $month = $this->params('month');
+        $year = $this->params('year');
+        $isReturnToAETQI = (bool)$this->params()->fromQuery('returnToAETQI');
+
+        return $this->applyActionResult(
+            $this->siteTestQualityAction->execute($id, $month, $year, $isReturnToAETQI, $this->buildBreadcrumbs($id))
+        );
+    }
+
+    public function userTestQualityAction()
+    {
+        $this->assertFeatureEnabled(FeatureToggle::TEST_QUALITY_INFORMATION);
+
+        $vtsId = $this->params('id');
+        $userId = $this->params('userId');
+        $group = $this->params('group');
+        $month = $this->params('month');
+        $year = $this->params('year');
+        $isReturnToAETQI = (bool)$this->params()->fromQuery('returnToAETQI');
+
+        $breadcrumbs = $this->buildBreadcrumbs($vtsId);
+
+        return $this->applyActionResult(
+            $this->userTestQualityAction->execute($vtsId, $userId, $month, $year, $group, $breadcrumbs, $isReturnToAETQI, $this->url())
+        );
+    }
+
+    private function buildBreadcrumbs($vtsId)
+    {
+        $vtsDto = $this->mapper->Site->getById($vtsId);
+        $breadcrumbs = [
+            $vtsDto->getName() => $this->url()->fromRoute('vehicle-testing-station', ['id' => $vtsId]),
+        ];
+
+        $breadcrumbs = $this->prependBreadcrumbsWithAeLink($vtsDto, $breadcrumbs);
+
+        return $breadcrumbs;
+    }
+
+    public function testQualityCsvAction()
+    {
+        $this->assertFeatureEnabled(FeatureToggle::TEST_QUALITY_INFORMATION);
+
+        $id = $this->params('id');
+        $group = $this->params('group');
+        $month = $this->params('month');
+        $year = $this->params('year');
+
+        $csv = $this->siteTestQualityAction->getCsv($id, $month, $year, $group);
+
+        return $this->applyActionResult($csv);
+    }
+
+    public function userTestQualityCsvAction()
+    {
+        $this->assertFeatureEnabled(FeatureToggle::TEST_QUALITY_INFORMATION);
+
+        $siteId = $this->params('id');
+        $userId = $this->params('userId');
+        $group = $this->params('group');
+        $month = $this->params('month');
+        $year = $this->params('year');
+
+        $csv = $this->userTestQualityAction->getCsv($siteId, $userId, $month, $year, $group);
+
+        return $this->applyActionResult($csv);
     }
 }

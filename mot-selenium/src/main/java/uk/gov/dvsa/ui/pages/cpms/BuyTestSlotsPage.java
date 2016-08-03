@@ -33,14 +33,12 @@ public class BuyTestSlotsPage extends Page {
         calculateCostButton.click();
         return new OrderSummaryPage(driver);
     }
-    
-    public BuyTestSlotsPage clickCalculateCostButtonWithExcessSlots() {
-        calculateCostButton.click();
-        return new BuyTestSlotsPage(driver);
-    }
-    
-    public boolean isExceedsMaximumSlotBalanceMessageDisplayed() {
-        return exceedsMaximumBalanceErrorMessage.isDisplayed();
+
+    public boolean isSlotsRequiredVisible() {
+        return slotsRequired.isDisplayed();
     }
 
+    public boolean isCalculateCostButtonVisible() {
+        return calculateCostButton.isDisplayed();
+    }
 }

@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.model.site.Type;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 
 public class ChangeDetailsTypePage extends ChangeDetailsPage {
     public static final String PATH = "/vehicle-testing-station/%s/type/change";
@@ -18,7 +18,7 @@ public class ChangeDetailsTypePage extends ChangeDetailsPage {
     }
 
     public ChangeDetailsTypePage chooseOption(Type type) {
-        FormCompletionHelper.selectInputBox(driver.findElement(By.cssSelector(String.format("input[value=%s]",type.getSiteTypeCode()))));
+        FormDataHelper.selectInputBox(driver.findElement(By.cssSelector(String.format("input[value=%s]",type.getSiteTypeCode()))));
         return this;
     }
 }

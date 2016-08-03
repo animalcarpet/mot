@@ -2,24 +2,29 @@
 namespace CoreTest\Controller;
 
 use Application\Service\LoggedInUserManager;
+use CoreTest\Service\StubCatalogService;
 use Core\Controller\AbstractDvsaActionController;
 use Core\Service\LazyMotFrontendAuthorisationService;
 use Core\Service\MotFrontendIdentityProvider;
-use CoreTest\Service\StubCatalogService;
-use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
-use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
-use Dvsa\OpenAM\OpenAMClient;
-use Dvsa\OpenAM\OpenAMClientInterface;
+use DvsaCommonTest\Bootstrap;
+use DvsaCommonTest\TestUtils\TestCaseTrait;
+use DvsaCommonTest\TestUtils\XMock;
 use DvsaCommon\Auth\MotIdentityProvider;
 use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 use DvsaCommon\HttpRestJson\Exception\NotFoundException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommon\Model\ListOfRolesAndPermissions;
 use DvsaCommon\Model\PersonAuthorization;
-use DvsaCommonTest\Bootstrap;
-use DvsaCommonTest\TestUtils\TestCaseTrait;
-use DvsaCommonTest\TestUtils\XMock;
 use DvsaFeature\FeatureToggles;
+use Dvsa\Mot\ApiClient\HttpClient\Factory;
+use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
+use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
+use Dvsa\OpenAM\OpenAMClient;
+use Dvsa\OpenAM\OpenAMClientInterface;
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\Psr7\Response as GuzzleHttpResponse;
+use PHPUnit_Framework_TestCase;
 use Zend\Authentication\AuthenticationService;
 use Zend\Authentication\Result;
 use Zend\Authentication\Storage\NonPersistent;
@@ -37,11 +42,12 @@ use Zend\Stdlib\Parameters;
  *
  * use CoreTest\Controller\AbstractFrontendControllerTestCase;
  */
-abstract class AbstractFrontendControllerTestCase extends \PHPUnit_Framework_TestCase
+abstract class AbstractFrontendControllerTestCase extends PHPUnit_Framework_TestCase
 {
     use TestCaseTrait;
 
     const NAME_DEFAULT_API_SERVICE = HttpRestJsonClient::class;
+    const CURRENT_VTS_ID = 1;
 
     const HTTP_OK_CODE = 200;
     const HTTP_REDIRECT_CODE = 302;
@@ -132,10 +138,12 @@ abstract class AbstractFrontendControllerTestCase extends \PHPUnit_Framework_Tes
     public function withFeatureToggles(array $featureToggles = [])
     {
         $serviceManager = $this->getServiceManager();
+        $config = $serviceManager->get('Config');
 
         $map = [];
         foreach ($featureToggles as $name => $value) {
             $map[] = [(string) $name, (bool) $value];
+            $config['feature_toggle'][$name] = $value;
         }
 
         $featureToggles = $this
@@ -147,6 +155,7 @@ abstract class AbstractFrontendControllerTestCase extends \PHPUnit_Framework_Tes
             ->will($this->returnValueMap($map));
 
         $serviceManager->setService('Feature\FeatureToggles', $featureToggles);
+        $serviceManager->setService('Config', $config);
 
         return $this;
     }
@@ -211,12 +220,12 @@ abstract class AbstractFrontendControllerTestCase extends \PHPUnit_Framework_Tes
     protected function mockOpenAMClient()
     {
         $mockOpenAMClient = $this->getMockBuilder(OpenAMClient::class)
-        ->disableOriginalConstructor()
-        ->setMethods(['validateCredentials'])
-        ->getMock();
+            ->disableOriginalConstructor()
+            ->setMethods(['validateCredentials'])
+            ->getMock();
         $mockOpenAMClient->expects($this->any())
-        ->method('validateCredentials')
-        ->will($this->returnValue(true));
+            ->method('validateCredentials')
+            ->will($this->returnValue(true));
         $this->getServiceManager()->setService(OpenAMClientInterface::class, $mockOpenAMClient);
 
         return $mockOpenAMClient;
@@ -255,16 +264,16 @@ abstract class AbstractFrontendControllerTestCase extends \PHPUnit_Framework_Tes
         return $this->controller;
     }
 
-    const CURRENT_VTS_ID = 1;
-
+    /**
+     * @param StubIdentityAdapter $identityAdapter
+     *
+     * @throws \Exception
+     */
     protected function setupAuthenticationServiceForIdentity(StubIdentityAdapter $identityAdapter)
     {
         $serviceManager = $this->getServiceManager();
 
-        $authServiceMock = new AuthenticationService(
-            new NonPersistent(),
-            $identityAdapter
-        );
+        $authServiceMock = new AuthenticationService(new NonPersistent(), $identityAdapter);
 
         $serviceManager->setAllowOverride(true);
         $serviceManager->setService('ZendAuthenticationService', $authServiceMock);
@@ -361,6 +370,30 @@ abstract class AbstractFrontendControllerTestCase extends \PHPUnit_Framework_Tes
     public function setRestClientServiceName($restClientServiceName)
     {
         $this->restClientServiceName = $restClientServiceName;
+    }
+
+    /**
+     * @param array $payload to mimic the response's body
+     * @param int $status to mimic the response's status, default to success (200)
+     * @param array $headers
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    public function getMockHttpClientFactory($payload = [], $status = 200, $headers = [])
+    {
+        $response = new GuzzleHttpResponse(
+            $status,
+            $headers,
+            json_encode($payload)
+        );
+
+        $httpClient = new Client([
+            'handler' => new MockHandler([$response]),
+        ]);
+
+        $mockHttpClientFactory = $this->getMock(Factory::class, ['getHttpClient']);
+        $mockHttpClientFactory->method('getHttpClient')->willReturn($httpClient);
+
+        return $mockHttpClientFactory;
     }
 
     public function getRestClientMockForServiceManager()
@@ -475,7 +508,7 @@ abstract class AbstractFrontendControllerTestCase extends \PHPUnit_Framework_Tes
 
     /**
      * @param string $action
-     * @param array  $params
+     * @param array $params
      *
      * @return \Zend\Http\Response
      */
@@ -496,7 +529,7 @@ abstract class AbstractFrontendControllerTestCase extends \PHPUnit_Framework_Tes
     /**
      * Check response status code.
      *
-     * @param int      $expectStatusCode
+     * @param int $expectStatusCode
      * @param Response $response
      */
     protected function assertResponseStatus($expectStatusCode, $response = null)
@@ -510,7 +543,7 @@ abstract class AbstractFrontendControllerTestCase extends \PHPUnit_Framework_Tes
 
     /**
      * @param Response $response
-     * @param string   $expectedLocation
+     * @param string $expectedLocation
      */
     protected function assertRedirectLocation2($expectedLocation, $response = null)
     {
@@ -524,7 +557,7 @@ abstract class AbstractFrontendControllerTestCase extends \PHPUnit_Framework_Tes
 
     /**
      * @param Response $response
-     * @param string   $expectedLocation
+     * @param string $expectedLocation
      */
     protected function assertRedirectLocation($response, $expectedLocation)
     {
@@ -561,9 +594,9 @@ abstract class AbstractFrontendControllerTestCase extends \PHPUnit_Framework_Tes
     /**
      * @param string $method
      * @param string $action
-     * @param array  $routeParams
-     * @param array  $queryParams
-     * @param array  $postParams
+     * @param array $routeParams
+     * @param array $queryParams
+     * @param array $postParams
      *
      * @return \Zend\View\Model\ViewModel
      */

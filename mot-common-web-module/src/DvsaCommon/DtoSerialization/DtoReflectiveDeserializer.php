@@ -2,19 +2,19 @@
 
 namespace DvsaCommon\DtoSerialization;
 
+use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Utility\ArrayUtils;
 
-class DtoReflectiveDeserializer
+class DtoReflectiveDeserializer implements AutoWireableInterface
 {
     private $reflector;
 
     private $convertiblesRegister;
 
-    public function __construct(DtoConvertibleTypesRegistry $convertiblesRegister, DtoReflectorInterface $reflector)
+    public function __construct()
     {
-        $this->reflector = $reflector;
-
-        $this->convertiblesRegister = $convertiblesRegister;
+        $this->convertiblesRegister = new DtoConvertibleTypesRegistry();
+        $this->reflector = new DtoCachedReflector($this->convertiblesRegister);
     }
 
     /**
@@ -77,7 +77,7 @@ class DtoReflectiveDeserializer
 
             $value = $data[$property->getName()];
 
-            if ($value != null) {
+            if ($value !== null) {
                 $setter = $property->getSetAccessor();
 
                 if ($property->isDto()) {

@@ -2,6 +2,7 @@ package uk.gov.dvsa.domain.service;
 
 import com.google.common.base.Optional;
 import com.jayway.restassured.response.Response;
+import org.joda.time.DateTime;
 import uk.gov.dvsa.domain.api.request.CreateSiteRequest;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
@@ -19,6 +20,13 @@ public class SiteService extends Service {
 
     protected Site createSite(Optional<Integer> aeId, String siteName) throws IOException {
         String request = jsonHandler.convertToString(new CreateSiteRequest(aeId, areaOfficer, siteName));
+
+        Response response = motClient.createSite(request, CREATE_PATH);
+        return ServiceResponse.createResponse(response, Site.class);
+    }
+
+    protected Site createSiteWithStartSiteOrgLinkDate(Optional<Integer> aeId, String siteName, DateTime startDate) throws IOException {
+        String request = jsonHandler.convertToString(new CreateSiteRequest(aeId, areaOfficer, siteName, startDate));
 
         Response response = motClient.createSite(request, CREATE_PATH);
         return ServiceResponse.createResponse(response, Site.class);

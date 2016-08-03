@@ -3,6 +3,7 @@
 namespace DvsaMotApi\Factory\Service\Validator;
 
 use DvsaCommon\Obfuscate\ParamObfuscator;
+use DvsaEntities\Repository\MotTestRepository;
 use DvsaMotApi\Service\Validator\RetestEligibility\RetestEligibilityValidator;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -14,7 +15,7 @@ class RetestEligibilityValidatorFactory implements FactoryInterface
     {
         return new RetestEligibilityValidator(
             $serviceLocator->get('NonWorkingDaysHelper'),
-            $serviceLocator->get('MotTestRepository')
+            $serviceLocator->get(MotTestRepository::class)
         );
     }
 }

@@ -30,7 +30,7 @@ public class SpecialNoticeTests extends DslTest {
         specialNoticeTitle = "Changes to Mot Testing";
     }
 
-    @Test (groups = {"BVT", "Regression"})
+    @Test (groups = {"BVT"})
     public void createAndBroadcastSpecialNotice() throws Exception{
 
         //Given that I am logged as a Scheme user and I am on the create special notices page

@@ -5,6 +5,7 @@
 .php_cs.cache
 /coverage
 /node_modules
+/mot-selenium/allure-results
 /.sass-cache
 /vendor
 Gemfile.lock
@@ -57,10 +58,17 @@ mot-devtools
 infrastructure
 Jenkins_Scripts
 
- Ignore the behat cache files
+# Ignore the behat cache files
 mot-behat/bin/classmap_generator.php
 mot-behat/bin/pluginmap_generator.php
 mot-behat/bin/templatemap_generator.php
 
 coverage
 *dist.bak
+
+# Selenium
+/mot-selenium/allure-results
+
+# Ignore Java services
+vehicle-service
+authorisation-service

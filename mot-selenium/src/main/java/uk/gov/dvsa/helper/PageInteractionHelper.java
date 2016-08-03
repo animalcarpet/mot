@@ -9,7 +9,6 @@ import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.exception.PageInstanceNotFoundException;
 
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -56,7 +55,7 @@ public class PageInteractionHelper {
      * required step is done
      */
     protected static void turnOffImplicitWaits() {
-        driver.manage().timeouts().implicitlyWait(500, TimeUnit.MILLISECONDS);
+        driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
     }
 
     /**
@@ -173,7 +172,7 @@ public class PageInteractionHelper {
                 .until(ExpectedConditions.elementToBeClickable(element)) != null;
     }
 
-    protected void waitForTextToBePresentInElement(WebElement element, String text, int timeout) {
+    public static void waitForTextToBePresentInElement(WebElement element, String text, int timeout) {
         new WebDriverWait(driver, timeout)
                 .until(ExpectedConditions.textToBePresentInElement(element, text));
 
@@ -262,11 +261,7 @@ public class PageInteractionHelper {
         }
     }
 
-    protected void takePageScreenshot(String screenShotPath) {
-        String screenPhotoName =
-                (this.getClass().getName().replace("com.dvsa.mot.selenium.", "")) + "_" +
-                        Configurator.screenshotDateFormat.format(new Date()) + ".png";
-
-        Utilities.takeScreenShot(driver, screenPhotoName, screenShotPath);
+    public static MotAppDriver getDriver(){
+        return driver;
     }
 }

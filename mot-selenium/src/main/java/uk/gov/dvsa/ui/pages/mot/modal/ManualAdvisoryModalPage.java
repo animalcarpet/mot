@@ -1,11 +1,12 @@
 package uk.gov.dvsa.ui.pages.mot.modal;
 
-import com.dvsa.mot.selenium.framework.Configurator;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.model.mot.Advisory;
+import uk.gov.dvsa.framework.config.Configurator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.mot.TestItemSelector;
@@ -28,7 +29,7 @@ public class ManualAdvisoryModalPage extends Page {
 
     @FindBy(id = "rfr-cancel-0") protected WebElement cancelButton;
 
-    @FindBy(className = "validation-summary") protected WebElement errorMessages;
+    private By errorMessages = By.className("validation-summary");
 
     @FindBy(id = "info-message") protected WebElement infoMessage;
 
@@ -58,15 +59,15 @@ public class ManualAdvisoryModalPage extends Page {
     }
 
     private void enterAdvisory(String description) {
-        FormCompletionHelper.selectFromDropDownByValue(lateral, String.valueOf(Advisory.Lateral.nearside));
-        FormCompletionHelper.selectFromDropDownByValue(longitudinal, String.valueOf(Advisory.Longitudinal.rear));
-        FormCompletionHelper.selectFromDropDownByValue(vertical, String.valueOf(Advisory.Vertical.lower));
+        FormDataHelper.selectFromDropDownByValue(lateral, String.valueOf(Advisory.Lateral.nearside));
+        FormDataHelper.selectFromDropDownByValue(longitudinal, String.valueOf(Advisory.Longitudinal.rear));
+        FormDataHelper.selectFromDropDownByValue(vertical, String.valueOf(Advisory.Vertical.lower));
 
-        FormCompletionHelper.enterText(this.description, description);
-        FormCompletionHelper.selectInputBox(dangerousFailure);
+        FormDataHelper.enterText(this.description, description);
+        FormDataHelper.selectInputBox(dangerousFailure);
     }
 
     public String getValidationMessage() {
-        return errorMessages.getText();
+        return driver.findElement(errorMessages).getText();
     }
 }

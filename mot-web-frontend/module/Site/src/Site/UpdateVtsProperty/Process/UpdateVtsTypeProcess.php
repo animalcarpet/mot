@@ -73,4 +73,9 @@ class UpdateVtsTypeProcess extends AbstractSingleStepVtsProcess implements AutoW
     {
         return $this->formPageTitle;
     }
+
+    public function getEditPageLede()
+    {
+        return null;
+    }
 }

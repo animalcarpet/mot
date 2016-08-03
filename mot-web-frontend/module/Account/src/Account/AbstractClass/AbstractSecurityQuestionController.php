@@ -12,7 +12,7 @@ use Application\Helper\PrgHelper;
 use DvsaCommon\HttpRestJson\Exception\NotFoundException;
 use DvsaCommon\UrlBuilder\AccountUrlBuilderWeb;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
-use MotFitnesse\Util\UrlBuilder;
+use DvsaCommon\UrlBuilder\UrlBuilder;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\View\Model\ViewModel;

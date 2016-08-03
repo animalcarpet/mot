@@ -1,22 +1,28 @@
 <?php
 namespace DvsaMotTest\NewVehicle\Form\VehicleWizard;
 
+use Dvsa\Mot\ApiClient\Request\CreateDvsaVehicleRequest;
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
+use DvsaCommon\Enum\ColourCode;
+use DvsaCommon\Enum\FuelTypeCode;
+use DvsaCommon\Enum\MotTestTypeCode;
+use DvsaCommon\HttpRestJson\Exception\OtpApplicationException;
+use DvsaCommon\Model\FuelTypeAndCylinderCapacity;
+use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
+use DvsaCommon\Utility\DtoHydrator;
 use DvsaMotTest\NewVehicle\Fieldset\CreateVehicleStepOneFieldset;
 use DvsaMotTest\NewVehicle\Fieldset\CreateVehicleStepTwoFieldset;
-use DvsaMotTest\Model\Vehicle;
 use DvsaMotTest\NewVehicle\Form\CreateVehicleStepThreeForm;
 use Zend\Form\Form;
 use Zend\Form\Element;
 use Zend\Form\Element\DateSelect;
 use DvsaCommon\Date\DateTimeDisplayFormat;
-use DvsaCommon\UrlBuilder\VehicleUrlBuilder;
 use DvsaMotTest\NewVehicle\Container\NewVehicleContainer;
 use DvsaCommon\HttpRestJson\Client;
 use Application\Service\CatalogService;
 use Core\Service\MotFrontendIdentityProviderInterface;
-use Core\Service\RemoteAddress;
 use Application\Service\ContingencySessionManager;
-use DvsaCommon\Utility\DtoHydrator;
 
 class SummaryStep extends AbstractStep implements WizardStep
 {
@@ -24,6 +30,11 @@ class SummaryStep extends AbstractStep implements WizardStep
      * @var MotFrontendIdentityProviderInterface
      */
     private $identityProvider;
+
+    /**
+     * @var VehicleService
+     */
+    private  $vehicleService;
 
     /**
      * @var ContingencySessionManager
@@ -35,11 +46,13 @@ class SummaryStep extends AbstractStep implements WizardStep
         Client $client,
         CatalogService $catalogService,
         MotFrontendIdentityProviderInterface $identityProvider,
+        VehicleService $vehicleService,
         ContingencySessionManager $contingencySessionManager
     ) {
         parent::__construct($container, $client, $catalogService);
 
         $this->identityProvider = $identityProvider;
+        $this->vehicleService = $vehicleService;
         $this->contingencySessionManager = $contingencySessionManager;
     }
 
@@ -59,31 +72,29 @@ class SummaryStep extends AbstractStep implements WizardStep
         return new CreateVehicleStepThreeForm();
     }
 
+
     /**
      * @param Form $form
      * @return array
+     * @throws OtpApplicationException
      */
     public function saveForm(Form $form)
     {
-        $formData = $this->getFormData($form);
-        $stepsData = $this->getDataFromAllSteps();
+        $oneTimePassword = $form->get('oneTimePassword')->getValue();
 
-        $data = $stepsData + $formData ;
-        $data['vtsId'] = $this->identityProvider->getIdentity()->getCurrentVts()->getVtsId();
-        $data['clientIp'] = RemoteAddress::getIp();
+        $vehicle = $this->vehicleService->createDvsaVehicle(
+            $this->prepareCreateVehicleRequest($oneTimePassword)
+        );
 
-        $contingencySessionManager = $this->contingencySessionManager;
+        $motTest = $this->createMotTestForVehicle($vehicle, $oneTimePassword);
 
-        if ($contingencySessionManager->isMotContingency()) {
-            $contingencySession = $contingencySessionManager->getContingencySession();
+        $startedMotTestNumber = $motTest['data']['motTestNumber'];
 
-            $data['contingencyId'] = $contingencySession['contingencyId'];
-            $data['contingencyDto'] = DtoHydrator::dtoToJson($contingencySession['dto']);
-        }
-
-        $apiUrl = VehicleUrlBuilder::vehicle();
-
-        return $this->client->postJson($apiUrl, $data);
+        return [
+            'isMotContingency' => $this->contingencySessionManager->isMotContingency(),
+            'vehicle' => $vehicle,
+            'startedMotTestNumber' => $startedMotTestNumber,
+        ];
     }
 
     public function clearData()
@@ -127,16 +138,17 @@ class SummaryStep extends AbstractStep implements WizardStep
         $form = $this->getVehicleIdentificationStep()->createForm();
         $form->populateValues($stepOneData);
 
-        $elems = $form->getFieldsets()['vehicleForm'];
-        $fCor = $elems->get('countryOfRegistration');
-        $fVrm = $elems->get('registrationNumber');
-        $fEmptyVrmReason = $elems->get('emptyVrmReason');
-        $fVin = $elems->get('VIN');
-        $fEmptyVinReason = $elems->get('emptyVinReason');
-        $fMake = $elems->get('make');
-        $fMakeOther = $elems->get('makeOther');
-        $fDateOfFirstUse = $elems->get('dateOfFirstUse');
-        $fTransmissionType = $elems->get('transmissionType');
+        /** @var CreateVehicleStepOneFieldset $elements */
+        $elements = $form->getFieldsets()['vehicleForm'];
+        $fCor = $elements->get('countryOfRegistration');
+        $fVrm = $elements->get('registrationNumber');
+        $fEmptyVrmReason = $elements->get('emptyVrmReason');
+        $fVin = $elements->get('VIN');
+        $fEmptyVinReason = $elements->get('emptyVinReason');
+        $fMake = $elements->get('make');
+        $fMakeOther = $elements->get('makeOther');
+        $fDateOfFirstUse = $elements->get('dateOfFirstUse');
+        $fTransmissionType = $elements->get('transmissionType');
 
         $buildItem = self::confirmationItemBuilder();
         $data = [];
@@ -253,13 +265,13 @@ class SummaryStep extends AbstractStep implements WizardStep
     }
 
     /**
-     * @return array
+     * @param $oneTimePassword
+     * @return CreateDvsaVehicleRequest
      */
-    private function getDataFromAllSteps()
+    private function prepareCreateVehicleRequest($oneTimePassword)
     {
         $stepOneData = $this->getVehicleIdentificationStepData();
         $stepTwoData = $this->getVehicleSpecificationStepData();
-        $vehicle = new Vehicle();
 
         //Amending variable keys to pass through the Vehicle Model
         $stepTwoData['vehicleForm']['testClass'] = $stepTwoData['vehicleForm']['vehicleClass'];
@@ -271,15 +283,55 @@ class SummaryStep extends AbstractStep implements WizardStep
             $stepOneData['vehicleForm'][$k] = $v;
         }
 
-        //Merging all 3 forms together and populating the form as a whole
-        $vehicle->populate(
-            array_merge(
-                $stepOneData['vehicleForm'],
-                $stepTwoData['vehicleForm']
-            )
+        //Merging forms data
+        $stepsData = array_merge(
+            $stepOneData['vehicleForm'],
+            $stepTwoData['vehicleForm']
         );
 
-        return $vehicle->toArray();
+        $OTHER_MAKE_OR_MODEL_ID = -1;
+        $makeId = $stepsData['make'] === CreateVehicleStepOneFieldset::LABEL_OTHER_KEY ? $OTHER_MAKE_OR_MODEL_ID : $stepsData['make'];
+        $modelId = $stepsData['model'] === CreateVehicleStepTwoFieldset::LABEL_OTHER_KEY ? $OTHER_MAKE_OR_MODEL_ID : $stepsData['model'];
+
+        $createVehicleRequest = new CreateDvsaVehicleRequest();
+        $createVehicleRequest
+            ->setOneTimePassword($oneTimePassword)
+            ->setColourId($stepsData['colour'])
+            ->setCountryOfRegistrationId($stepsData['countryOfRegistration'])
+            ->setFirstUsedDate(new \DateTime(vsprintf('%04d-%02d-%02d',array_reverse($stepsData['dateOfFirstUse']))))
+            ->setFuelTypeId($stepsData['fuelType'])
+            ->setMakeId($makeId)
+            ->setModelId($modelId)
+            ->setRegistration($stepsData['registrationNumber'])
+            ->setSecondaryColourId($stepsData['secondaryColour'])
+            ->setVehicleClassId($stepsData['testClass'])
+            ->setTransmissionTypeId($stepsData['transmissionType'])
+            ->setVin($stepsData['VIN']);
+
+        if (in_array(
+            $stepsData['fuelType'],
+            FuelTypeAndCylinderCapacity::getAllFuelTypeIdsWithCompulsoryCylinderCapacity())
+        ) {
+            $createVehicleRequest->setCylinderCapacity($stepsData['cylinderCapacity']);
+        }
+
+        if (isset($stepsData['makeOther'])) {
+            $createVehicleRequest->setMakeOther($stepsData['makeOther']);
+        }
+
+        if (isset($stepsData['modelOther'])) {
+            $createVehicleRequest->setModelOther($stepsData['modelOther']);
+        }
+
+        if (isset($stepsData['emptyVinReason'])) {
+            $createVehicleRequest->setEmptyVinReasonId($stepsData['emptyVinReason']);
+        }
+
+        if (isset($stepsData['emptyVrmReason'])) {
+            $createVehicleRequest->setEmptyVrmReasonId($stepsData['emptyVrmReason']);
+        }
+
+        return $createVehicleRequest;
     }
 
     /**
@@ -312,5 +364,97 @@ class SummaryStep extends AbstractStep implements WizardStep
     private function getVehicleSpecificationStep()
     {
         return $this->getPrevStep();
+    }
+
+    /**
+     * @param DvsaVehicle $vehicle
+     * @param $oneTimePassword
+     * @return mixed|string
+     */
+    private function createMotTestForVehicle(DvsaVehicle $vehicle, $oneTimePassword)
+    {
+        $apiUrl = MotTestUrlBuilder::motTest();
+
+        $newTestData = $this->prepareNewTestData($vehicle, $oneTimePassword);
+
+        return $this->client->post($apiUrl, $newTestData);
+    }
+
+    /**
+     * @param DvsaVehicle $vehicle
+     * @param $oneTimePassword
+     * @return array
+     */
+    private function prepareNewTestData(DvsaVehicle $vehicle, $oneTimePassword)
+    {
+        $vehicleTestingStationId = $this->identityProvider->getIdentity()->getCurrentVts()->getVtsId();
+        $hasRegistration = is_null($vehicle->getEmptyVrmReason());
+
+        $primaryColour = $this->evalColourCodeEnumsBasedOnTheColourName($vehicle->getColour());
+        $secondaryColour = $this->evalColourCodeEnumsBasedOnTheColourName($vehicle->getColourSecondary());
+        $fuelTypeId = $this->evalFuelTypeCodeEnumsBasedOnTheFuelName($vehicle->getFuelType());
+
+        $data = [
+            'vehicleId' => $vehicle->getId(),
+            'primaryColour' => $primaryColour,
+            'secondaryColour' => $secondaryColour,
+            'fuelTypeId' => $fuelTypeId,
+            'vehicleClassCode' => $vehicle->getVehicleClass(),
+            'vehicleTestingStationId' => $vehicleTestingStationId,
+            'hasRegistration' => $hasRegistration,
+            'oneTimePassword' => $oneTimePassword,
+            'motTestType' => MotTestTypeCode::NORMAL_TEST,
+        ];
+
+        if ($this->contingencySessionManager->isMotContingency()) {
+            $contingencySession = $this->contingencySessionManager->getContingencySession();
+            $data += [
+                'contingencyId'     => $contingencySession['contingencyId'],
+                'contingencyDto'    => DtoHydrator::dtoToJson($contingencySession['dto']),
+            ];
+        }
+
+        return $data;
+    }
+
+    /**
+     * @TODO (ABN) Once the new API accepts MOT-TEST creation calls all this mess will be gone!
+     *             and hopefully the rest of the useless single dimension enums, or make them smarter
+     *
+     * @param string $enumPath
+     * @param string $enumName
+     * @return string
+     */
+    private function evalEnumByName($enumPath, $enumName)
+    {
+        $enumNameSpecialCharsRemoved = str_replace(['(', ')', ',', ':', '\'', '.', '?'], '', $enumName);
+        $enumNameWithUnderscores = str_replace([' ', ' - ', '-', '/'], '_', $enumNameSpecialCharsRemoved);
+
+        return constant(
+            $enumPath . '::' .
+            strtoupper($enumNameWithUnderscores)
+        );
+    }
+
+    /**
+     * @TODO (ABN) Same as evalEnumByName()!!
+     *
+     * @param string $colorName
+     * @return string enum name from ColourCode
+     */
+    private function evalColourCodeEnumsBasedOnTheColourName($colorName)
+    {
+        return $this->evalEnumByName(ColourCode::class, $colorName);
+    }
+
+    /**
+     * @TODO (ABN) Same as evalEnumByName()!!
+     *
+     * @param string $FuelTypeName
+     * @return string enum name from ColourCode
+     */
+    private function evalFuelTypeCodeEnumsBasedOnTheFuelName($FuelTypeName)
+    {
+        return $this->evalEnumByName(FuelTypeCode::class, $FuelTypeName);
     }
 }

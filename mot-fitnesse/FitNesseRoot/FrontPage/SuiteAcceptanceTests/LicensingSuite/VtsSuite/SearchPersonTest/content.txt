@@ -1,6 +1,0 @@
-Get person details
-
-!| Vm 2297 Search Person                                                                                               |
-|person id|success?|errorMessages?                 |gender?|title?|first name?|middle name?|family name?|date of birth?|
-|101      |true    |                               |Male   |Mr    |Philip     |            |Fry         |1981-04-24    |
-|9999     |false   |Person 9999 not found not found|       |      |           |            |            |              |

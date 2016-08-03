@@ -36,7 +36,7 @@ class QualificationDetailsAddProcess extends QualificationDetailsAbstractProcess
     {
         $route = $this->qualificationDetailsRoutes->getAddRoute();
         $params = $this->context->getController()->params()->fromRoute() + [
-            self::ROUTE_PARAM_ID => $this->context->getPersonId(),
+            self::ROUTE_PARAM_ID => $this->context->getTargetPersonId(),
             self::ROUTE_PARAM_GROUP => $this->context->getGroup(),
         ];
         return new RedirectToRoute($route, $params);
@@ -50,7 +50,7 @@ class QualificationDetailsAddProcess extends QualificationDetailsAbstractProcess
     {
         $route = $this->qualificationDetailsRoutes->getAddReviewRoute();
         $params = $this->context->getController()->params()->fromRoute() + [
-            self::ROUTE_PARAM_ID => $this->context->getPersonId(),
+            self::ROUTE_PARAM_ID => $this->context->getTargetPersonId(),
             self::ROUTE_PARAM_GROUP => $this->context->getGroup(),
             self::ROUTE_PARAM_FORM_UUID => $formUuid,
         ];
@@ -61,7 +61,7 @@ class QualificationDetailsAddProcess extends QualificationDetailsAbstractProcess
     {
         $route = $this->qualificationDetailsRoutes->getAddRoute();
         $params = $this->context->getController()->params()->fromRoute() + [
-            self::ROUTE_PARAM_ID => $this->context->getPersonId(),
+            self::ROUTE_PARAM_ID => $this->context->getTargetPersonId(),
             self::ROUTE_PARAM_GROUP => $this->context->getGroup(),
         ];
 
@@ -85,15 +85,15 @@ class QualificationDetailsAddProcess extends QualificationDetailsAbstractProcess
     {
         try {
             $this->qualificationDetailsMapper->getQualificationDetails(
-                $this->context->getPersonId(), $this->context->getGroup());
+                $this->context->getTargetPersonId(), $this->context->getGroup());
 
-            $this->qualificationDetailsMapper->removeQualificationDetails($this->context->getPersonId(),
+            $this->qualificationDetailsMapper->removeQualificationDetails($this->context->getTargetPersonId(),
                 $this->context->getGroup());
         } catch( NotFoundException $e) {
 
         }
 
-        return $this->qualificationDetailsMapper->createQualificationDetails($this->context->getPersonId(),
+        return $this->qualificationDetailsMapper->createQualificationDetails($this->context->getTargetPersonId(),
             $this->context->getGroup(), $this->mapFormToDto($formData));
     }
 
@@ -105,7 +105,7 @@ class QualificationDetailsAddProcess extends QualificationDetailsAbstractProcess
      */
     public function isAuthorised(MotAuthorisationServiceInterface $authorisationService)
     {
-        $personId = $this->context->getPersonId();
+        $personId = $this->context->getTargetPersonId();
 
         $personalDetailsData = $this->personalDetailsService->getPersonalDetailsData($personId);
         $personalDetails = new PersonalDetails($personalDetailsData);
@@ -126,5 +126,10 @@ class QualificationDetailsAddProcess extends QualificationDetailsAbstractProcess
     public function getBackLinkText()
     {
         return 'Back to add a certificate';
+    }
+
+    public function getEditPageLede()
+    {
+        return null;
     }
 }

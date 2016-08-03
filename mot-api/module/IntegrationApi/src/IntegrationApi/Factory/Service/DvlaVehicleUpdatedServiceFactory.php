@@ -3,8 +3,8 @@
 namespace IntegrationApi\Factory\Service;
 
 use Doctrine\ORM\EntityManager;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaEntities\Entity\MotTest;
-use DvsaEntities\Entity\Vehicle;
 use IntegrationApi\DvlaVehicle\Service\DvlaVehicleUpdatedService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -18,8 +18,8 @@ class DvlaVehicleUpdatedServiceFactory implements FactoryInterface
 
         return new DvlaVehicleUpdatedService(
             $em->getRepository(MotTest::class),
-            $em->getRepository(Vehicle::class),
-            $serviceLocator->get("ReplacementCertificateService")
+            $serviceLocator->get("ReplacementCertificateService"),
+            $serviceLocator->get(VehicleService::class)
         );
     }
 }

@@ -4,7 +4,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.model.site.Status;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 
 public class ChangeDetailsStatusPage extends ChangeDetailsPage {
     public static final String PATH = "/vehicle-testing-station/%s/status/change";
@@ -17,7 +17,7 @@ public class ChangeDetailsStatusPage extends ChangeDetailsPage {
     }
 
     public ChangeDetailsStatusPage changeSiteStatus(Status newStatus) {
-        FormCompletionHelper.selectFromDropDownByVisibleText(statusSelect, newStatus.getText());
+        FormDataHelper.selectFromDropDownByVisibleText(statusSelect, newStatus.getText());
         return this;
     }
 }

@@ -11,6 +11,7 @@ $path = getenv('APPLICATION_CONFIG_PATH') ? : 'config/autoload';
 
 if ($env === 'development') {
     $mods[] = 'ZendDeveloperTools';
+    $mods[] = 'Noiselabs\ZfDebugModule';
 }
 
 $appname = rtrim(file_get_contents('config/appname.txt'));

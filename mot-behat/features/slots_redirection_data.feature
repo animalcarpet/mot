@@ -3,6 +3,7 @@ Feature: Obtain payment gateway redirection data
   I want to obtain the payment gateway redirection parameters
   So that I can buy slots by credit / debit card
 
+  @quarantine
   @slots
   @card
   Scenario Outline: Finance User initiates a request to make a card payment

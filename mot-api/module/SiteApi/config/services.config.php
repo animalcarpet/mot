@@ -8,6 +8,7 @@ use DvsaEntities\Entity\BrakeTestType;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\SiteBusinessRoleMap;
 use DvsaEntities\Entity\SiteTestingDailySchedule;
+use DvsaEntities\Repository\MotTestRepository;
 use DvsaEventApi\Service\EventService;
 use DvsaMotApi\Service\Validator\BrakeTestConfigurationValidator;
 use NotificationApi\Service\NotificationService;
@@ -79,7 +80,7 @@ return [
                     $entityManager,
                     $sm->get(NotificationService::class),
                     $sm->get(MotIdentityProviderInterface::class),
-                    $sm->get('MotTestRepository'),
+                    $sm->get(MotTestRepository::class),
                     $sm->get(UserOrganisationNotificationService::class)
                 );
             },

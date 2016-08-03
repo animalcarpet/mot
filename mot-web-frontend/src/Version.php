@@ -2,7 +2,7 @@
 /**
  * This file is part of the DVSA MOT Frontend project.
  *
- * @link http://gitlab.clb.npm/mot/mot
+ * @link https://gitlab.motdev.org.uk/mot/mot
  */
 
 namespace Dvsa\Mot\Frontend;
@@ -12,5 +12,5 @@ namespace Dvsa\Mot\Frontend;
  */
 class Version
 {
-    const VERSION = '1.32.0';
+    const VERSION = '2.3.0-DEV';
 }

@@ -11,6 +11,7 @@ use DvsaClient\Mapper\EquipmentMapper;
 use DvsaClient\Mapper\MotTestInProgressMapper;
 use DvsaClient\Mapper\SiteMapper;
 use DvsaClient\MapperFactory;
+use DvsaCommon\Auth\Assertion\ViewVtsTestQualityAssertion;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Configuration\MotConfig;
 use DvsaCommon\Constants\FacilityTypeCode;
@@ -30,6 +31,8 @@ use DvsaCommon\UrlBuilder\VehicleTestingStationUrlBuilderWeb;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
+use Site\Action\SiteTestQualityAction;
+use Site\Action\UserTestQualityAction;
 use Site\Controller\SiteController;
 use Site\Form\VtsCreateForm;
 use Site\Form\VtsUpdateTestingFacilitiesForm;
@@ -66,6 +69,12 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
      * @var Container
      */
     private $mockSession;
+    /** @var  SiteTestQualityAction */
+    private $mockSiteTestQualityAction;
+    /** @var  ViewVtsTestQualityAssertion */
+    private $mockViewVtsTestQualityAssertion;
+    /** @var  UserTestQualityAction */
+    private $mockUserTestQualityAction;
 
     protected function setUp()
     {
@@ -79,13 +88,17 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
         $this->catalog = XMock::of(CatalogService::class);
         $this->identityInterface = XMock::of(MotFrontendIdentityInterface::class);
         $this->mockSession = XMock::of(Container::class);
+        $this->mockSiteTestQualityAction = XMock::of(SiteTestQualityAction::class);
+        $this->mockViewVtsTestQualityAssertion = XMock::of(ViewVtsTestQualityAssertion::class);
+        $this->mockUserTestQualityAction = XMock::of(UserTestQualityAction::class);
 
         /** @var BusinessRoleCatalog|\PHPUnit_Framework_MockObject_MockObject $businessRoleCatalog */
         $businessRoleCatalog = XMock::of(BusinessRoleCatalog::class);
 
         $this->setController(
             new SiteController(
-                $this->auth, $this->mapper, $this->identity, $this->catalog, $this->mockSession, $businessRoleCatalog
+                $this->auth, $this->mapper, $this->identity, $this->catalog, $this->mockSession, $businessRoleCatalog,
+                $this->mockSiteTestQualityAction, $this->mockUserTestQualityAction, $this->mockViewVtsTestQualityAssertion
             )
         );
 

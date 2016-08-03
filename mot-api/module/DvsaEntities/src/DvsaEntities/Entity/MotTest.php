@@ -455,6 +455,13 @@ class MotTest extends Entity
 
 
     /**
+     * @var \DvsaEntities\Entity\ModelDetail
+     *
+     * @ORM\ManyToOne(targetEntity="DvsaEntities\Entity\ModelDetail")
+     * @ORM\JoinColumn(name="model_detail_id", referencedColumnName="id")
+     */
+    private $modelDetail;
+    /**
      * Constructor
      */
     public function __construct()
@@ -480,6 +487,8 @@ class MotTest extends Entity
     public function setClientIp($clientIp)
     {
         $this->clientIp = $clientIp;
+
+        return $this;
     }
 
     /**
@@ -1589,5 +1598,23 @@ class MotTest extends Entity
     public function getEmptyVinReason()
     {
         return $this->emptyVinReason;
+    }
+
+    /**
+     * @return ModelDetail
+     */
+    public function getModelDetail()
+    {
+        return $this->modelDetail;
+    }
+
+    /**
+     * @param ModelDetail $modelDetail
+     * @return MotTest
+     */
+    public function setModelDetail($modelDetail)
+    {
+        $this->modelDetail = $modelDetail;
+        return $this;
     }
 }

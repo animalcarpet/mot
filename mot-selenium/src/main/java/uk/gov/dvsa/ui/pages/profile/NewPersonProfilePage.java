@@ -8,6 +8,7 @@ import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.ChangeEmailDetailsPage;
 import uk.gov.dvsa.ui.pages.ChangeTelephoneDetailsPage;
 import uk.gov.dvsa.ui.pages.dvsa.RolesAndAssociationsPage;
+import uk.gov.dvsa.ui.pages.profile.annualassessmentcertificates.AnnualAssessmentCertificatesIndexPage;
 import uk.gov.dvsa.ui.pages.profile.qualificationdetails.QualificationDetailsPage;
 
 public class NewPersonProfilePage extends ProfilePage {
@@ -31,6 +32,7 @@ public class NewPersonProfilePage extends ProfilePage {
     @FindBy(css = "#telephone-number") private WebElement userTelephone;
     @FindBy(css = "#telephone-number a") private WebElement userTelephoneLink;
     @FindBy(css = "#validation-message--success") private WebElement successMessage;
+    @FindBy(id = "annual-assessment-certificates") WebElement annualAssessmentCertificates;
 
     private static String DVSA_ROLES = "dvsa_roles";
     private static String QUALIFICATION_STATUS = "qualification_status";
@@ -146,5 +148,10 @@ public class NewPersonProfilePage extends ProfilePage {
     public QualificationDetailsPage clickQualificationDetailsLink(){
         qualificationDetails.click();
         return new QualificationDetailsPage(driver);
+    }
+
+    public AnnualAssessmentCertificatesIndexPage clickAnnualAssessmentCertificatesLink() {
+        annualAssessmentCertificates.click();
+        return new AnnualAssessmentCertificatesIndexPage(driver);
     }
 }

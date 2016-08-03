@@ -43,6 +43,8 @@ class TesterMotTestLogViewModel
      * @var  FilterBuilder
      */
     private $filterBuilder;
+    /** @var  string */
+    private $returnLink;
 
     public function __construct(
         MotTestLogSummaryDto $logData
@@ -274,5 +276,15 @@ class TesterMotTestLogViewModel
     public function getFilterBuilder()
     {
         return $this->filterBuilder;
+    }
+
+    public function setReturnLink($returnLink)
+    {
+        $this->returnLink = $returnLink;
+    }
+
+    public function getReturnLink()
+    {
+        return $this->returnLink;
     }
 }

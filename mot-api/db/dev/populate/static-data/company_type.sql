@@ -1,12 +1,6 @@
-LOCK TABLES `company_type` WRITE;
-/*!40000 ALTER TABLE `company_type` DISABLE KEYS */;
-
-INSERT INTO `company_type` (`id`, `name`, `code`, `mot1_legacy_id`, `created_by`, `created_on`, `last_updated_by`, `last_updated_on`, `version`, `batch_number` ) VALUES
-('5','Public Authority','PA','B','1','2015-02-17 10:23:34.022817',NULL,NULL,'1','1'),
-('4','Limited Liability Partnership','LLP',NULL,'1','2015-02-17 10:23:34.021770',NULL,NULL,'1','1'),
-('3','Sole Trader','ST','S','1','2015-02-17 10:23:34.020657',NULL,NULL,'1','1'),
-('2','Partnership','P','P','1','2015-02-17 10:23:34.016529',NULL,NULL,'1','1'),
-('1','Registered Company','RC','C','1','2015-02-17 10:23:34.014050',NULL,NULL,'1','1');
-
-/*!40000 ALTER TABLE `company_type` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `company_type` VALUES 
+(1,'Company','RC',1,'2015-02-17 10:23:34.014050',2,'2016-06-08 15:34:29.383514',2),
+(2,'Partnership','P',1,'2015-02-17 10:23:34.016529',1,'2015-02-17 10:23:34.016529',1),
+(3,'Sole Trader','ST',1,'2015-02-17 10:23:34.020657',1,'2015-02-17 10:23:34.020657',1),
+(4,'Limited Liability Partnership','LLP',1,'2015-02-17 10:23:34.021770',1,'2015-02-17 10:23:34.021770',1),
+(5,'Public Body','PA',1,'2015-02-17 10:23:34.022817',2,'2016-06-08 15:34:29.386116',2);

@@ -71,6 +71,12 @@ class EventTypeCode
     const ROLE_STATUS_CHANGE = 'RSC';
     const REMOVAL_OF_GROUP_A_CERTIFICATE = 'RGAC';
     const REMOVAL_OF_GROUP_B_CERTIFICATE = 'RGBC';
+    const GROUP_A_TESTER_ANNUAL_EXAM = 'GATAE';
+    const GROUP_B_TESTER_ANNUAL_EXAM = 'GBTAE';
+    const CHANGE_GROUP_A_TESTER_ANNUAL_EXAM = 'CGAAE';
+    const CHANGE_GROUP_B_TESTER_ANNUAL_EXAM = 'CGBAE';
+    const REMOVE_GROUP_A_TESTER_ANNUAL_EXAM = 'RGAAE';
+    const REMOVE_GROUP_B_TESTER_ANNUAL_EXAM = 'RGBAE';
 
     /**
      * @return array of values for the type EventTypeCode
@@ -138,7 +144,13 @@ class EventTypeCode
             self::LINK_STATUS_CHANGE,
             self::ROLE_STATUS_CHANGE,
             self::REMOVAL_OF_GROUP_A_CERTIFICATE,
-            self::REMOVAL_OF_GROUP_B_CERTIFICATE
+            self::REMOVAL_OF_GROUP_B_CERTIFICATE,
+            self::GROUP_A_TESTER_ANNUAL_EXAM,
+            self::GROUP_B_TESTER_ANNUAL_EXAM,
+            self::CHANGE_GROUP_A_TESTER_ANNUAL_EXAM,
+            self::CHANGE_GROUP_B_TESTER_ANNUAL_EXAM,
+            self::REMOVE_GROUP_A_TESTER_ANNUAL_EXAM,
+            self::REMOVE_GROUP_B_TESTER_ANNUAL_EXAM,
         ];
     }
 

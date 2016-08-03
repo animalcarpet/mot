@@ -206,32 +206,25 @@ class CertificateContext implements Context
      */
     public function documentHasOnlyOdometerReadingsFromPassedTests($number)
     {
-        $odometerHistoryNotShown = [];
-        $passedTestsReadings = [];
+        $testsNotShown = [];
+        $passedTests = [];
         foreach($this->motTestContext->getMotTests() as $motTest) {
             if($motTest['status'] != MotTestStatusName::PASSED){
-                $odometerHistoryNotShown[] = $motTest['odometerReading']['value'];
+                $testsNotShown[] = $motTest;
             } else {
-                $passedTestsReadings[] = $motTest['odometerReading']['value'];
+                $passedTests[] = $motTest;
             }
         }
 
-        // remove 4 latest MOT tests
-        $passedTestsReadings = array_slice($passedTestsReadings, $number);
+        // remove 4 newest passed MOT tests, to get old tests
+        $passedTestsReadingsNotShown = array_slice($passedTests, $number);
+        $testsNotShown += $passedTestsReadingsNotShown;
+        // get 4 newest mot tests
+        $passedTestsReadingsShown = array_slice($passedTests, 0, $number);
 
-        foreach ($passedTestsReadings as $passedTestReadingThatShouldntBeShown) {
-            $odometerHistoryNotShown[] = $passedTestReadingThatShouldntBeShown;
-        }
-
-        foreach($this->motTestContext->getMotTests() as $motTest) {
-            $documentContent = json_decode($motTest['document']['document_content'], true);
-            if(isset($documentContent['OdometerHistory'])){
-                $documentOdometerHistory = $documentContent['OdometerHistory'];
-                foreach ($odometerHistoryNotShown as $odometerReading) {
-                    PHPUnit::assertFalse(strpos($documentOdometerHistory, $odometerReading));
-                }
-            }
-        }
+        $latestMotTest = $passedTests[0];
+        $this->validateOdometerHistoryIsCreatedFromPassedTests($passedTestsReadingsShown, $latestMotTest);
+        $this->validateOdometerHistoryDoesNotContainFailedAndOldTests($testsNotShown, $latestMotTest);
     }
 
     private function validateOdometerHistory($fullOdometerHistory, $documentOdometerHistory, $startedDate)
@@ -285,5 +278,41 @@ class CertificateContext implements Context
             $motTests[]=$motTest;
         }
         $this->motTestContext->setMotTests($motTests);
+    }
+
+    private function getMotTestsPerformedBeforeTest($motTestCollection, $motTest)
+    {
+        $testsInThePast = [];
+        foreach ($motTestCollection as $test) {
+            if($motTest['completedDate'] > $test['completedDate']){
+                $testsInThePast[] = $test;
+            }
+        }
+
+        return $testsInThePast;
+    }
+    
+    private function validateOdometerHistoryIsCreatedFromPassedTests($testsShown, $motTestToCheck)
+    {
+        $motTestsPerformedBefore = $this->getMotTestsPerformedBeforeTest($testsShown, $motTestToCheck);
+        foreach ($motTestsPerformedBefore as $testThatShoudBeInHistory) {
+            $odometerHistory = json_decode($motTestToCheck['document']['document_content'], true)['OdometerHistory'];
+            PHPUnit::assertGreaterThan(
+                0,
+                strpos($odometerHistory, (string)$testThatShoudBeInHistory['odometerReading']['value']),
+                'one of the odometer readings from passed MOT tests is not in certificate'
+            );
+        }
+    }
+
+    private function validateOdometerHistoryDoesNotContainFailedAndOldTests($testsNotShown, $motTestToCheck)
+    {
+        $odometerHistory = json_decode($motTestToCheck['document']['document_content'], true)['OdometerHistory'];
+        foreach ($testsNotShown as $odometer) {
+            PHPUnit::assertFalse(
+                strpos($odometerHistory, (string)$odometer['odometerReading']['value']),
+                'one of the odometer readings is from failed or too old test'
+            );
+        }
     }
 }

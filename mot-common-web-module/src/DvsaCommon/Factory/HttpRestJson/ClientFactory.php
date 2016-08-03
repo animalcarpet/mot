@@ -3,6 +3,7 @@
 namespace DvsaCommon\Factory\HttpRestJson;
 
 use Doctrine\Common\Cache\Cache as DoctrineCache;
+use DvsaCommon\Configuration\MotConfig;
 use DvsaCommon\HttpRestJson\CachingClient;
 use DvsaCommon\HttpRestJson\CachingClient\Cache;
 use DvsaCommon\HttpRestJson\CachingClient\CacheContextFactory\MotTestCacheContextFactory;
@@ -27,6 +28,8 @@ class ClientFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('config');
+        /** @var MotConfig $motConfig */
+        $motConfig = $serviceLocator->get(MotConfig::class);
 
         $logger = isset($config['logApiCalls']) ? $serviceLocator->get('Logger') : null;
 
@@ -35,7 +38,8 @@ class ClientFactory implements FactoryInterface
             $this->getApiUrl($config),
             $serviceLocator->get('tokenService')->getToken(),
             $logger,
-            $this->getRequestUuid($config)
+            $this->getRequestUuid($config),
+            $motConfig->withDefault(ZendClient::DEFAULT_API_TIMEOUT)->get('apiTimeout')
         );
 
         if ($this->isCacheEnabled($config)) {

@@ -4,7 +4,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.FormCompletionHelper;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
@@ -31,17 +31,17 @@ public class ChangeAddressPage extends Page {
     }
 
     public ChangeAddressPage fillFirstLine(String value) {
-        FormCompletionHelper.enterText(firstLineInput, value);
+        FormDataHelper.enterText(firstLineInput, value);
         return this;
     }
 
     public ChangeAddressPage fillTown(String value) {
-        FormCompletionHelper.enterText(townInput, value);
+        FormDataHelper.enterText(townInput, value);
         return this;
     }
 
     public ChangeAddressPage fillPostcode(String value) {
-        FormCompletionHelper.enterText(postcodeInput, value);
+        FormDataHelper.enterText(postcodeInput, value);
         return this;
     }
 

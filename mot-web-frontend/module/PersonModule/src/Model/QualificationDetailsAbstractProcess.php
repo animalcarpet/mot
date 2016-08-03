@@ -15,7 +15,7 @@ use Core\Action\RedirectToRoute;
 use Core\TwoStepForm\FormContextInterface;
 use Core\TwoStepForm\TwoStepProcessInterface;
 use Core\ViewModel\Gds\Table\GdsTable;
-use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\QualificationDetailsBreadcrumbs;
+use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\CertificatesBreadcrumbs;
 use Dvsa\Mot\Frontend\PersonModule\Form\QualificationDetailsForm;
 use Dvsa\Mot\Frontend\PersonModule\InputFilter\QualificationDetailsInputFilter;
 use Dvsa\Mot\Frontend\PersonModule\Routes\QualificationDetailsRoutes;
@@ -36,7 +36,7 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
 {
     protected $qualificationDetailsMapper;
     protected $siteMapper;
-    protected $qualificationDetailsBreadcrumbs;
+    protected $certificatesBreadcrumbs;
     protected $personalDetailsService;
     protected $personProfileGuardBuilder;
     protected $contextProvider;
@@ -49,7 +49,7 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
     public function __construct(
         QualificationDetailsMapper $qualificationDetailsMapper,
         SiteMapper $siteMapper,
-        QualificationDetailsBreadcrumbs $qualificationDetailsBreadcrumbs,
+        CertificatesBreadcrumbs $certificatesBreadcrumbs,
         ApiPersonalDetails $personalDetailsService,
         PersonProfileGuardBuilder $personProfileGuardBuilder,
         ContextProvider $contextProvider,
@@ -58,21 +58,21 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
     {
         $this->qualificationDetailsMapper = $qualificationDetailsMapper;
         $this->siteMapper = $siteMapper;
-        $this->qualificationDetailsBreadcrumbs = $qualificationDetailsBreadcrumbs;
+        $this->certificatesBreadcrumbs = $certificatesBreadcrumbs;
         $this->personalDetailsService = $personalDetailsService;
         $this->personProfileGuardBuilder = $personProfileGuardBuilder;
         $this->contextProvider = $contextProvider;
         $this->qualificationDetailsRoutes = $qualificationDetailsRoutes;
     }
 
-    /** @var QualificationDetailsContext */
+    /** @var FormContext */
     protected $context;
     
     abstract protected function getBackLinkText();
 
     public function setContext(FormContextInterface $context)
     {
-        TypeCheck::assertInstance($context, QualificationDetailsContext::class);
+        TypeCheck::assertInstance($context, FormContext::class);
         $this->context = $context;
     }
 
@@ -90,8 +90,8 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
      */
     public function getBreadcrumbs(MotAuthorisationServiceInterface $authorisationService)
     {
-        return $this->qualificationDetailsBreadcrumbs->getBreadcrumbs(
-            $this->context->getPersonId(),
+        return $this->certificatesBreadcrumbs->getBreadcrumbsForQualificationDetails(
+            $this->context->getTargetPersonId(),
             $this->context->getController(),
             $this->getBreadcrumbCurrentStepName()
         );
@@ -112,7 +112,7 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
         return new QualificationDetailsForm(
             new QualificationDetailsInputFilter(
                 $this->qualificationDetailsMapper,
-                $this->context->getPersonId(),
+                $this->context->getTargetPersonId(),
                 $this->context->getGroup()
             )
         );
@@ -169,7 +169,7 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
     {
         $route = $this->qualificationDetailsRoutes->getRoute();
         $params = $this->context->getController()->params()->fromRoute() + [
-            self::ROUTE_PARAM_ID => $this->context->getPersonId(),
+            self::ROUTE_PARAM_ID => $this->context->getTargetPersonId(),
             self::ROUTE_PARAM_GROUP => $this->context->getGroup(),
         ];
         return new RedirectToRoute($route, $params);
@@ -179,7 +179,7 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
     {
         $route = $this->qualificationDetailsRoutes->getRoute();
         $params = $this->context->getController()->params()->fromRoute() + [
-            self::ROUTE_PARAM_ID => $this->context->getPersonId(),
+            self::ROUTE_PARAM_ID => $this->context->getTargetPersonId(),
             self::ROUTE_PARAM_GROUP => $this->context->getGroup(),
         ];
         return $this->context->getController()->url()->fromRoute($route, $params);
@@ -268,7 +268,7 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
      */
     public function getSessionStoreKey()
     {
-        return 'tester-qualification-details-'.$this->context->getPersonId().'-'.$this->context->getGroup();
+        return 'tester-qualification-details-'.$this->context->getTargetPersonId().'-'.$this->context->getGroup();
     }
 
     protected function mapFormToDto(array $formData)

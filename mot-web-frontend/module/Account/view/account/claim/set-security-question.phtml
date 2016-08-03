@@ -52,7 +52,7 @@ $helpdeskName = (isset($this->helpdeskCfg['name']) ? $this->helpdeskCfg['name'] 
                             <?php echo $this->partial('partial/forms/errorMessageInline.phtml',['messages' => $messages['answer_a']]) ?>
                         <?php endif ?>
                     </label>
-                    <input type="text" class="form-control form-control-sm" name="answer_a" id="answer_a" value="<?php if (isset($answer_a)) echo $this->escapeHtmlAttr($answer_a) ; ?>" autocomplete="off">
+                    <input type="text" class="form-control form-control-sm" autocomplete="off" name="answer_a" id="answer_a" value="<?php if (isset($answer_a)) echo $this->escapeHtmlAttr($answer_a) ; ?>" autocomplete="off">
                 </div>
             </fieldset>
             <fieldset>
@@ -81,7 +81,7 @@ $helpdeskName = (isset($this->helpdeskCfg['name']) ? $this->helpdeskCfg['name'] 
                             <?php echo $this->partial('partial/forms/errorMessageInline.phtml',['messages' => $messages['answer_b']]) ?>
                         <?php endif ?>
                     </label>
-                    <input type="text" class="form-control form-control-sm" name="answer_b" id="answer_b" value="<?php if (isset($answer_b)) echo $this->escapeHtmlAttr($answer_b) ; ?>" >
+                    <input type="text" class="form-control form-control-sm" autocomplete="off" name="answer_b" id="answer_b" value="<?php if (isset($answer_b)) echo $this->escapeHtmlAttr($answer_b) ; ?>" >
                 </div>
             </fieldset>
 

@@ -129,21 +129,6 @@ class ContingencyTestController extends AbstractDvsaMotTestController
     }
 
     /**
-     * Sets the GDS layout.
-     *
-     * @param string $title
-     * @param string $subtitle
-     */
-    private function enableGdsLayout($title, $subtitle)
-    {
-        $this->layout('layout/layout-govuk.phtml');
-        $this
-            ->layout()
-            ->setVariable('pageTitle', $title)
-            ->setVariable('pageSubTitle', $subtitle);
-    }
-
-    /**
      * @param $template
      * @param array $variables
      *

@@ -1,0 +1,58 @@
+<?php
+$id = isset($id) ? $id : '';
+$name = isset($name) ? $name : $id;
+$value = (isset($value) && $value !== false) ? $value : '';
+$options = (isset($options) && is_array($options)) ? $options : [];
+$metaData = (isset($metaData) && is_array($metaData)) ? $metaData : [];
+$error = !empty($formErrors[$id]) ? $formErrors[$id] : null;
+if (!empty($required) && !isset($options[$value])) {
+    $options = [$value => 'Choose >>'] + $options;
+    $disabledOption = $value;
+} else {
+    $disabledOption = null;
+}
+
+if (isset($cssOnly)) {
+    $cssClass = $cssOnly;
+} else {
+    $cssClass = implode(
+        ' ', [
+            'form-control input-small',
+            (!empty($cssClass) ? $cssClass : ''),
+            (!empty($inputErrorClass) ? $inputErrorClass : ''),
+            ($error ? 'inputError' : ''),
+        ]
+    );
+}
+
+$t = [
+    '<SELECT',
+    ' id="', $this->escapeHtml($id), '"',
+    ' name="', $this->escapeHtml($name), '"',
+    ($cssClass ? ' class="' . $this->escapeHtml($cssClass) . '"' : ''),
+    (!empty($disabled) ? ' disabled="disabled"' : ''),
+    (!empty($required) ? ' required' : ''),
+    (!empty($readonly) ? ' readonly' : ''),
+    '>'
+];
+
+
+foreach ($options as $key => $optionValue) {
+    array_push(
+        $t,
+        '<OPTION',
+        ' id="' . $this->escapeHtml($id . '_' . $key) . '"',
+        ' value="' . $this->escapeHTML($key) . '"',
+        (strval($optionValue) === strval($value) ? ' selected' : ''),
+        ($key === $disabledOption ? ' disabled' : ''),
+        '>',
+        $this->escapeHtml($optionValue),
+        '</OPTION>'
+    );
+}
+
+$t[] = '</SELECT>';
+
+echo implode('', $t) .
+    $this->partial('fieldErrorMessage', ['error' => $error]);
+

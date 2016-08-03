@@ -20,6 +20,9 @@ class DefaultConfigExtractor
         $this->configExtractor = new ConfigExtractor($config);
     }
 
+    /**
+     * @return mixed
+     */
     public function get()
     {
         $keys = func_get_args();

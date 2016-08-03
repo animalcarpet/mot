@@ -4,13 +4,15 @@ import com.jayway.restassured.response.Response;
 import org.joda.time.DateTime;
 import uk.gov.dvsa.domain.api.request.CreateMotTestRequest;
 import uk.gov.dvsa.domain.api.request.MotTestData;
+import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.MotTest;
 import uk.gov.dvsa.domain.model.mot.TestOutcome;
-import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.framework.config.webdriver.WebDriverConfigurator;
+import uk.gov.dvsa.helper.ReasonForRejection;
 
 import java.io.IOException;
+import java.util.List;
 
 
 public class MotTestService extends Service {
@@ -26,6 +28,15 @@ public class MotTestService extends Service {
                                  int mileage, DateTime issuedDate) throws IOException {
 
         MotTestData testData = new MotTestData(outcome, mileage, issuedDate);
+        return createMotTest(requestor, vehicle, siteId, testData);
+    }
+
+
+    protected MotTest createMotTestWithRfr(User requestor, int siteId,
+                                 Vehicle vehicle, TestOutcome outcome,
+                                 int mileage, DateTime issuedDate, List<ReasonForRejection> rfrs) throws IOException {
+
+        MotTestData testData = new MotTestData(outcome, mileage, issuedDate, issuedDate, issuedDate, issuedDate, rfrs);
         return createMotTest(requestor, vehicle, siteId, testData);
     }
 

@@ -84,7 +84,7 @@ if ($this->authorisationHelper()->hasRole(\DvsaCommon\Constants\Role::USER)) {
                         echo $this->isFeatureEnabled('new_person_profile')
                             ? $this->url('newProfile', [], []) :
                             PersonUrlBuilderWeb::profile()
-                    ?>" id="user-profile">Your Profile</a></li>
+                    ?>" id="user-profile">Your profile</a></li>
                     <li><a href="<?php echo $this->url(LogoutController::ROUTE_LOGOUT); ?>" id="logout">Sign out</a></li>
                 </ul>
             </nav>

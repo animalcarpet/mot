@@ -77,12 +77,13 @@ class Request
     {
         $headers = $this->getHeadersAsString();
         $uri = strpos($this->uri, '/') === 0 ? $this->uri : '/'.$this->uri;
+        $body = $this->prettifyBody();
 
         return <<<MESSAGE
 $this->method $uri
 $headers
 
-$this->body
+$body
 MESSAGE;
     }
 
@@ -98,5 +99,14 @@ MESSAGE;
             array_keys($this->headers),
             $this->headers
         ));
+    }
+
+    private function prettifyBody()
+    {
+        if(!is_null($this->body) && !is_null(json_decode($this->body))){
+            return json_encode(json_decode($this->body), JSON_PRETTY_PRINT);
+        } else {
+            return $this->body;
+        }
     }
 }

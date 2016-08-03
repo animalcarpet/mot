@@ -32,7 +32,6 @@ class RegisterUserService
     const STEP_SECURITY_QUESTION_ONE = 'stepSecurityQuestionFirst';
     const STEP_SECURITY_QUESTION_TWO = 'stepSecurityQuestionSecond';
 
-    // TODO: (ABN) duplicating Dvsa\Mot\Api\RegistrationModule\Service\RegistrationController::KEY_EMAIL
     const KEY_EMAIL = 'email';
 
     /**

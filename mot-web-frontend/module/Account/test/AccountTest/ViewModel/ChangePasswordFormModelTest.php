@@ -3,6 +3,7 @@
 namespace AccountTest\ViewModel;
 
 use Account\ViewModel\ChangePasswordFormModel;
+use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
 
 class ChangePasswordFormModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -53,15 +54,15 @@ class ChangePasswordFormModelTest extends \PHPUnit_Framework_TestCase
                 'username' => 'tester1',
                 'expect'   => [
                     'field' => ChangePasswordFormModel::FIELD_PASS_CONFIRM,
-                    'msg'   => ChangePasswordFormModel::ERR_NOT_SAME,
+                    'msg'   => PasswordInputFilter::MSG_PASSWORD_CONFIRM_DIFFER,
                 ],
             ],
 
             //  --  confirmation username is not password
             [
-                'pass'     => 'tester1',
-                'passConf' => '',
-                'username' => 'tester1',
+                'pass'     => 'Tester11',
+                'passConf' => 'Tester11',
+                'username' => 'Tester11',
                 'expect'   => [
                     'field' => ChangePasswordFormModel::FIELD_PASS,
                     'msg'   => ChangePasswordFormModel::ERR_NOT_USERNAME,

@@ -113,7 +113,6 @@ class VehicleSearchService
         }
 
         $result = $this->restClient->getWithParams($apiUrl, $params);
-
         $vehicles = $this->obfuscateIdAndAddSourceToVehicleArray($result['data']['vehicles']);
 
         for ($i = 0, $vCount = count($vehicles); $i < $vCount; ++$i) {
@@ -316,21 +315,10 @@ class VehicleSearchService
      */
     public function obfuscateIdAndAddSourceToVehicleArray(array $vehicleArray)
     {
-        array_walk(
-            $vehicleArray,
-            function (&$item) {
-                $item['source'] = (
-                $item['isDvla'] === true
-                    ? VehicleSearchSource::DVLA
-                    : VehicleSearchSource::VTR
-                );
-
-                $item['id'] = $this->paramObfuscator->obfuscateEntry(
-                    ParamObfuscator::ENTRY_VEHICLE_ID,
-                    $item['id']
-                );
-            }
-        );
+        foreach ($vehicleArray as &$item) {
+            $item['source'] = ($item['isDvla'] === true ? VehicleSearchSource::DVLA : VehicleSearchSource::VTR);
+            $item['id'] = $this->paramObfuscator->obfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, $item['id']);
+        }
 
         return $vehicleArray;
     }

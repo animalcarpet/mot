@@ -1,8 +1,6 @@
 package uk.gov.dvsa.module;
 
-import org.joda.time.DateTime;
 import uk.gov.dvsa.domain.model.AeDetails;
-import uk.gov.dvsa.ui.pages.events.EventType;
 import uk.gov.dvsa.ui.pages.events.EventsHistoryPage;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -19,10 +17,9 @@ public final class EventHistory {
 
     public void containsEvent(String eventName) {
         if (historyPage != null) {
-            assertThat(historyPage.getEventNames(aeDetails.getIdAsString()), containsString(eventName));
+            assertThat(historyPage.getEventName(aeDetails.getIdAsString()), containsString(eventName));
         } else {
             throw new IllegalStateException("Event History Page is not loaded");
         }
-
     }
 }

@@ -1,6 +1,7 @@
 <?php
 $config = [
     'modules' => [
+        'Dvsa\Mot\Frontend\GoogleAnalyticsModule',
         'Account',
         'Application',
         'Core',

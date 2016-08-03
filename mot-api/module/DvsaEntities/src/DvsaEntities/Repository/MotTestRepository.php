@@ -17,7 +17,6 @@ use DvsaCommon\Enum\MotTestStatusCode;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\OrganisationSiteStatusCode;
-use DvsaCommonApi\Model\SearchParam;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonApi\Service\Exception\ServiceException;
 use DvsaEntities\DqlBuilder\NativeQueryBuilder;
@@ -27,7 +26,6 @@ use DvsaEntities\Entity\Model;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestSurveyResult;
 use DvsaEntities\Entity\MotTestType;
-use DvsaEntities\Entity\OrganisationSiteMap;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\Vehicle;
@@ -40,6 +38,27 @@ use DvsaEntities\Entity\Vehicle;
 class MotTestRepository extends AbstractMutableRepository
 {
     protected $query;
+
+    public static $testLogTestTypes = [
+        'TT_NORMAL' => MotTestTypeCode::NORMAL_TEST,
+        'TT_PARTIAL_RETEST_LEFT' => MotTestTypeCode::PARTIAL_RETEST_LEFT_VTS,
+        'TT_PARTIAL_RETEST_REPAIRED' => MotTestTypeCode::PARTIAL_RETEST_REPAIRED_AT_VTS,
+        'TT_RETEST' => MotTestTypeCode::RE_TEST,
+    ];
+
+    public static $testLogTestStatuses = [
+        'TS_ABANDONED' => MotTestStatusName::ABANDONED,
+        'TS_ABORTED' => MotTestStatusName::ABORTED,
+        'TS_ABORTED_VE' => MotTestStatusName::ABORTED_VE,
+        'TS_FAILED' => MotTestStatusName::FAILED,
+        'TS_PASSED' => MotTestStatusName::PASSED,
+        'TS_REFUSED' => MotTestStatusName::REFUSED,
+    ];
+
+    public static $testLogOrganisationSiteStatuses = [
+        'OSS_APPLIED' => OrganisationSiteStatusCode::APPLIED,
+        'OSS_UNKNOWN' => OrganisationSiteStatusCode::UNKNOWN,
+    ];
 
     /**
      * Test types used commonly in queries.
@@ -386,7 +405,6 @@ class MotTestRepository extends AbstractMutableRepository
             ->innerJoin("t.tester", "p")
             ->innerJoin("t.vehicle", "v")
             ->innerJoin("t.vehicleTestingStation", "vts")
-            ->innerJoin("v.vehicleClass", "vc")
             ->innerJoin("t.motTestType", "tt")
             ->innerJoin("t.status", "ts")
             ->leftJoin("t.odometerReading", "o")
@@ -554,18 +572,20 @@ class MotTestRepository extends AbstractMutableRepository
         $status = MotTestStatusName::PASSED,
         $issuedDate = false
     ) {
+        $testTypeCodes = \DvsaCommon\Domain\MotTestType::getExpiryDateDefiningTypes();
+
         $qb = $this
             ->createQueryBuilder("t")
             ->innerJoin("t.motTestType", "tt")
             ->innerJoin("t.status", "ts")
             ->where("t.vehicle = :vehicleId")
             ->andWhere("t.completedDate IS NOT NULL")
-            ->andWhere("tt.code NOT IN (:codes)")
+            ->andWhere("tt.code IN (:codes)")
             ->andWhere("ts.name = :status")
             ->orderBy("t.completedDate", "DESC")
             ->setParameter('vehicleId', $vehicleId)
             ->setParameter('status', $status)
-            ->setParameter('codes', ['DR', 'DT'])
+            ->setParameter('codes', $testTypeCodes)
             ->setMaxResults(1);
 
         if ($issuedDate) {
@@ -775,18 +795,38 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function findMotTestByMotTestIdAndV5c($motTestId, $v5c)
     {
-        $qb = $this
-            ->createQueryBuilder("mt")
-            ->innerJoin("mt.vehicle", 'v')
-            ->innerJoin("v.vehicleV5Cs", 'vv5c')
-            ->andwhere('vv5c.lastSeen is null')
-            ->andWhere('mt.id = :motTestId')
-            ->andWhere('vv5c.v5cRef = :v5c')
-            ->setMaxResults(1)
-            ->setParameter('motTestId', $motTestId)
-            ->setParameter('v5c', str_replace(' ', '', $v5c));
+        $em = $this->getEntityManager();
 
-        return $qb->getQuery()->getOneOrNullResult();
+        $sql = '
+            SELECT
+                t.id
+            FROM
+                mot_test AS t
+            INNER JOIN
+                vehicle AS v ON v.id = t.vehicle_id
+            INNER JOIN
+                vehicle_v5c AS v5c ON v5c.vehicle_id = v.id
+            WHERE
+                t.id = :motTestId
+            AND
+                v5c.v5c_ref = :v5c
+            AND
+                v5c.last_seen IS NULL
+            LIMIT 1
+                ';
+
+        $statement = $em->getConnection()->prepare($sql);
+
+        $statement->execute([
+            'motTestId' => $motTestId,
+            'v5c' => str_replace(' ', '', $v5c)
+        ]);
+
+        $result = $statement->fetch();
+
+        if (is_array($result) && isset($result['id'])) {
+            return $this->find($result['id']);
+        }
     }
 
     /**
@@ -851,117 +891,23 @@ class MotTestRepository extends AbstractMutableRepository
      * @param $whereString
      * @param $whereParam
      * @param $whereValue
+     * @param bool $getTestLogsForAe
      * @return mixed
      */
-    private function getCountOfMotTests($whereString, $whereParam, $whereValue)
+    private function getCountOfMotTests($whereString, $whereParam, $whereValue, $getTestLogsForAe = false)
     {
-        $testTypes = [
-            'TT_NORMAL'                  => MotTestTypeCode::NORMAL_TEST,
-            'TT_PARTIAL_RETEST_LEFT'     => MotTestTypeCode::PARTIAL_RETEST_LEFT_VTS,
-            'TT_PARTIAL_RETEST_REPAIRED' => MotTestTypeCode::PARTIAL_RETEST_REPAIRED_AT_VTS,
-            'TT_RETEST'                  => MotTestTypeCode::RE_TEST,
-        ];
+        $sql = $this->getMotTestCountQuery($whereString, $getTestLogsForAe);
 
-        $statuses = [
-            'TS_ABANDONED'  => MotTestStatusName::ABANDONED,
-            'TS_ABORTED'    => MotTestStatusName::ABORTED,
-            'TS_ABORTED_VE' => MotTestStatusName::ABORTED_VE,
-            'TS_FAILED'     => MotTestStatusName::FAILED,
-            'TS_PASSED'     => MotTestStatusName::PASSED,
-            'TS_REFUSED'    => MotTestStatusName::REFUSED,
-        ];
-
-        $sql = '
-            SELECT
-                COUNT(t.id) AS `year`,
-                SUM(
-                    CASE WHEN coalesce(t.completed_date, t.started_date) BETWEEN
-                             LAST_DAY(CURRENT_DATE() - INTERVAL 2 MONTH) + INTERVAL 1 DAY
-                             AND LAST_DAY(CURRENT_DATE()) - INTERVAL 1 MONTH + INTERVAL 1 DAY
-                             AND (
-                                coalesce(t.completed_date, t.started_date) <= osm.end_date OR osm.end_date IS NULL
-                             )
-                             AND coalesce(t.completed_date, t.started_date) >= osm.start_date
-					THEN 1
-                    ELSE 0
-                    END
-                ) AS `month`,
-                SUM(
-					CASE WHEN coalesce(t.completed_date, t.started_date) BETWEEN
-							CURRENT_DATE() - INTERVAL WEEKDAY(CURRENT_DATE()) + 7 DAY
-							AND CURRENT_DATE() - INTERVAL WEEKDAY(CURRENT_DATE()) DAY
-                             AND (
-                                coalesce(t.completed_date, t.started_date) <= osm.end_date OR osm.end_date IS NULL
-                             )
-                             AND coalesce(t.completed_date, t.started_date) >= osm.start_date
-					THEN 1
-                    ELSE 0
-                    END
-                ) AS `week`,
-                SUM(
-                    CASE WHEN coalesce(t.completed_date, t.started_date) >= CURRENT_DATE()
-                             AND (
-                                coalesce(t.completed_date, t.started_date) <= osm.end_date OR osm.end_date IS NULL
-                             )
-                             AND coalesce(t.completed_date, t.started_date) >= osm.start_date
-                    THEN 1
-                    ELSE 0
-                    END
-                ) AS `today`
-
-            FROM
-                site AS s
-
-                INNER JOIN organisation_site_map AS osm ON
-                    osm.site_id = s.id
-
-                INNER JOIN organisation_site_status AS oss ON
-                    oss.id = osm.status_id
-
-                INNER JOIN mot_test AS t ON
-                    t.site_id = s.id
-
-                INNER JOIN mot_test_type AS tt ON
-                    tt.id = t.mot_test_type_id
-
-                INNER JOIN mot_test_status AS ts ON
-                    ts.id = t.status_id
-
-            WHERE
-                '.$whereString.'
-                AND (
-                    (
-                      t.completed_date IS NULL
-                      AND t.started_date >= (CURRENT_DATE() - INTERVAL 1 YEAR + INTERVAL 1 DAY)
-                    )
-                    OR (
-                        t.completed_date IS NOT NULL
-                        AND t.completed_date >= (CURRENT_DATE() - INTERVAL 1 YEAR + INTERVAL 1 DAY)
-                    )
-                )
-                 AND (
-                    coalesce(t.completed_date, t.started_date) <= osm.end_date OR osm.end_date IS NULL
-                 )
-                 AND coalesce(t.completed_date, t.started_date) >= osm.start_date
-                ';
-
-        //  --  add test type where clause --
-        $whereParams = [];
-        foreach ($testTypes as $key => $val) {
-            $whereParams[] = ':' . $key;
+        if(!$getTestLogsForAe){
+            $sql = $this->addMotTestSpecificConstraints($sql);
         }
-        $sql .= ' AND tt.code IN (' . implode(', ', $whereParams) . ')';
-
-        //  --  add test type where clause --
-        $whereParams = [];
-        foreach ($statuses as $key => $val) {
-            $whereParams[] = ':' . $key;
-        }
-        $sql .= ' AND ts.name IN (' . implode(', ', $whereParams) . ')';
-
 
         //fiter out organisation_site_statuses
-        $sql .= ' AND oss.code NOT IN (:ORGANISATION_SITE_STATUS_CODES)';
+        $whereParams = [];
+        foreach (static::$testLogOrganisationSiteStatuses as $key => $val) {
+            $whereParams[] = ':' . $key;
+        }
+        $sql .= ' AND oss.code NOT IN (' . implode(', ', $whereParams) . ')';
 
         //  ----  prepare statement and bind params   ----
         $em = $this->getEntityManager();
@@ -969,21 +915,14 @@ class MotTestRepository extends AbstractMutableRepository
 
         $sql->bindValue($whereParam, $whereValue);
 
-        //  --  bind test types --
-        foreach ($testTypes as $key => $val) {
-            $sql->bindValue($key, $val);
+        if(!$getTestLogsForAe){
+            $this->bindMotTestSpecificConstraints($sql);
         }
 
         //  --  bind statuses --
-        foreach ($statuses as $key => $val) {
+        foreach (static::$testLogOrganisationSiteStatuses as $key => $val) {
             $sql->bindValue($key, $val);
         }
-
-        //bind organisation_site_status codes
-        $sql->bindValue('ORGANISATION_SITE_STATUS_CODES', implode(', ', [
-            OrganisationSiteStatusCode::APPLIED,
-            OrganisationSiteStatusCode::UNKNOWN
-        ]));
 
         $sql->execute();
 
@@ -1000,8 +939,12 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function getCountOfMotTestsSummary($organisationId)
     {
-        return $this->getCountOfMotTests('osm.organisation_id = :ORGANISATION_ID', 'ORGANISATION_ID',
-            $organisationId);
+        return $this->getCountOfMotTests(
+            'osm.organisation_id = :ORGANISATION_ID',
+            'ORGANISATION_ID',
+            $organisationId,
+            true
+        );
     }
 
     /**
@@ -1080,22 +1023,30 @@ class MotTestRepository extends AbstractMutableRepository
             $qb->andwhere('mt.vehicle_id = :VEHICLE_ID')
                 ->setParameter('VEHICLE_ID', $searchParam->getVehicleId());
         }
-            
+
         if($searchParam->getOrganisationId()) {
             $qb->andWhere('osm.organisation_id = :OSM_ORGANISATION_ID')
                 ->setParameter('OSM_ORGANISATION_ID', $searchParam->getOrganisationId());
         }
-        
+
         if($searchParam->getSiteId()) {
             $qb->andWhere('osm.site_id = :OSM_SITE_ID')
                 ->setParameter('OSM_SITE_ID', $searchParam->getSiteId());
         }
 
-        $qb->andWhere('oss.code NOT IN (:ORGANISATION_SITE_STATUS_ID)')
-                ->setParameter('ORGANISATION_SITE_STATUS_ID', implode(',', [
-                    OrganisationSiteStatusCode::APPLIED,
-                    OrganisationSiteStatusCode::UNKNOWN
-            ]));
+        $organisationSiteStatuses = [
+            OrganisationSiteStatusCode::APPLIED,
+            OrganisationSiteStatusCode::UNKNOWN
+        ];
+
+        $query = [];
+        foreach ($organisationSiteStatuses as $key => $item) {
+            $query[] = ':ORGANISATION_SITE_STATUS' . $key;
+
+            $qb->setParameter('ORGANISATION_SITE_STATUS' . $key, $item);
+        }
+
+        $qb->andwhere('oss.code NOT IN (' . implode(',', $query) . ')');
 
         $statuses = $searchParam->getStatus();
         if (!empty($statuses)) {
@@ -1425,5 +1376,113 @@ class MotTestRepository extends AbstractMutableRepository
     private function getMotTestHistoryTestTypes()
     {
         return \DvsaCommon\Domain\MotTestType::getMotTestHistoryTypes();
+    }
+
+    /**
+     * @param string $whereString
+     * @param bool $isQueryForAe
+     * @return string
+     */
+    private function getMotTestCountQuery($whereString, $isQueryForAe)
+    {
+        $joins = '';
+        if(!$isQueryForAe){
+            $joins = '
+                INNER JOIN mot_test_type AS tt ON
+                    tt.id = t.mot_test_type_id
+
+                INNER JOIN mot_test_status AS ts ON
+                    ts.id = t.status_id
+            ';
+        }
+        return "
+        SELECT COUNT(t.id) AS `year`,
+            SUM(CASE 
+               WHEN coalesce(t.completed_date, t.started_date) BETWEEN LAST_DAY(CURRENT_DATE() - INTERVAL 2 MONTH) + INTERVAL 1 DAY
+                   AND LAST_DAY(CURRENT_DATE()) - INTERVAL 1 MONTH + INTERVAL 1 DAY
+                   AND (osm.end_date IS NULL OR coalesce(t.completed_date, t.started_date) <= osm.end_date)
+                   AND coalesce(t.completed_date, t.started_date) >= osm.start_date
+               THEN
+                   1
+               ELSE
+                   0
+               END) AS `month`,
+            SUM(CASE 
+                WHEN coalesce(t.completed_date, t.started_date) BETWEEN CURRENT_DATE() - INTERVAL WEEKDAY(CURRENT_DATE()) + 7 DAY
+                     AND CURRENT_DATE() - INTERVAL WEEKDAY(CURRENT_DATE()) DAY
+                     AND (osm.end_date IS NULL OR coalesce(t.completed_date, t.started_date) <= osm.end_date)
+                     AND coalesce(t.completed_date, t.started_date) >= osm.start_date
+                THEN
+                    1
+                ELSE
+                    0
+                END ) AS `week`,
+            SUM(
+            CASE
+            WHEN coalesce(t.completed_date, t.started_date) >= CURRENT_DATE()
+                 AND (osm.end_date IS NULL OR coalesce(t.completed_date, t.started_date) <= osm.end_date)
+                 AND coalesce(t.completed_date, t.started_date) >= osm.start_date
+            THEN 
+                1
+            ELSE
+                0
+            END ) AS `today`
+         FROM site AS s
+            INNER JOIN organisation_site_map AS osm     ON osm.site_id = s.id
+            INNER JOIN organisation_site_status AS oss  ON oss.id = osm.status_id
+            INNER JOIN mot_test AS t                    ON t.site_id = s.id
+            {$joins}
+            WHERE 
+                {$whereString}
+                AND 
+                  (
+                    (t.completed_date IS NULL AND t.started_date >= (CURRENT_DATE() - INTERVAL 1 YEAR + INTERVAL 1 DAY)) 
+                    OR (t.completed_date IS NOT NULL AND t.completed_date >= (CURRENT_DATE() - INTERVAL 1 YEAR + INTERVAL 1 DAY))
+                  )
+                AND (coalesce(t.completed_date, t.started_date) <= osm.end_date OR osm.end_date IS NULL)
+                AND coalesce(t.completed_date, t.started_date) >= osm.start_date
+        ";
+    }
+
+    /**
+     * @param string $sql
+     * @return string
+     */
+    private function addMotTestSpecificConstraints($sql)
+    {
+        //  --  add test type where clause --
+        $whereParams = [];
+        foreach (static::$testLogTestTypes as $key => $val) {
+            $whereParams[] = ':' . $key;
+        }
+        $sql .= ' AND tt.code IN (' . implode(', ', $whereParams) . ')';
+
+        //  --  add test status where clause --
+        $whereParams = [];
+        foreach (static::$testLogTestStatuses as $key => $val) {
+            $whereParams[] = ':' . $key;
+        }
+        $sql .= ' AND ts.name IN (' . implode(', ', $whereParams) . ')';
+
+        return $sql;
+    }
+
+    /**
+     * @param \Doctrine\DBAL\Driver\Statement $sql
+     * @return \Doctrine\DBAL\Driver\Statement
+     */
+    private function bindMotTestSpecificConstraints($sql)
+    {
+        //  --  bind test types --
+        foreach (static::$testLogTestTypes as $key => $val) {
+            $sql->bindValue($key, $val);
+        }
+
+        //  --  bind statuses --
+        foreach (static::$testLogTestStatuses as $key => $val) {
+            $sql->bindValue($key, $val);
+        }
+
+        return $sql;
     }
 }

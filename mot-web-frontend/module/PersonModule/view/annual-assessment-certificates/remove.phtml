@@ -1,0 +1,33 @@
+<?php
+use Dvsa\Mot\Frontend\PersonModule\src\ViewModel\AnnualAssessmentCertificates\AnnualAssessmentCertificatesRemoveViewModel;
+
+echo $this->partial('errorMessages', array('getFromFlash' => true));
+/** @var AnnualAssessmentCertificatesRemoveViewModel $viewModel */
+$viewModel = $this->viewModel;
+?>
+
+<h3 class="summary-heading">Certificate details</h3>
+
+<?php
+echo $this->partial(
+    'partial/gds/gds-table/gds-key-value-table',
+    [
+        'table' => $viewModel->getTable(),
+    ]
+);
+?>
+
+<form novalidate="" autocomplete="off" method="POST" action="">
+    <?php echo $this->csrfToken(); ?>
+
+    <nav class="content-navigation">
+        <input type="submit" class="button-warning" value="<?php echo $viewModel->getSubmitButtonText() ?>" id="confirm-button">
+        <ul class="content-navigation__secondary">
+            <li>
+                <a href="<?php echo $this->url($viewModel->getBackRoute(), $viewModel->getBackRouteParams()) ?>">
+                    Cancel and return to annual assessment certificates
+                </a>
+            </li>
+        </ul>
+    </nav>
+</form>

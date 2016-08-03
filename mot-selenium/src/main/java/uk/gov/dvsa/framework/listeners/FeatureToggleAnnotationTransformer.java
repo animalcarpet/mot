@@ -21,5 +21,16 @@ public class FeatureToggleAnnotationTransformer implements IAnnotationTransforme
         if (iTestAnnotation.getTestName().equals("Survey")) {
             iTestAnnotation.setEnabled(ConfigHelper.isSurveyPageEnabled());
         }
+
+        if (iTestAnnotation.getTestName().equals("TestResultEntryImprovements")) {
+            iTestAnnotation.setEnabled(ConfigHelper.isTestResultEntryImprovementsEnabled());
+        }
+
+        if (iTestAnnotation.getTestName().equals("OldRFRTest")) {
+            iTestAnnotation.setEnabled(!ConfigHelper.isTestResultEntryImprovementsEnabled());
+        }
+        if (iTestAnnotation.getTestName().equals("TestQualityInformation")) {
+            iTestAnnotation.setEnabled(ConfigHelper.isTestQualityInformationEnabled());
+        }
     }
 }

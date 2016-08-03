@@ -9,6 +9,7 @@ use Core\ViewModel\Sidebar\GeneralSidebarLinkList;
 use Core\ViewModel\Sidebar\GeneralSidebarStatusBox;
 use Core\ViewModel\Sidebar\GeneralSidebarStatusItem;
 use Core\ViewModel\Sidebar\SidebarBadge;
+use DvsaCommon\Auth\Assertion\ViewVtsTestQualityAssertion;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\FeatureToggle;
@@ -29,6 +30,8 @@ class VtsOverviewSidebar extends GeneralSidebar
 
     private $siteStatusCatalog;
 
+    private $viewVtsTestQualityAssertion;
+
     public function __construct(
         MotFrontendAuthorisationServiceInterface $authorisationService,
         FeatureToggles $featureToggles,
@@ -37,7 +40,8 @@ class VtsOverviewSidebar extends GeneralSidebar
         $siteStatusCode,
         $hasBeenAssessed,
         RiskAssessmentScoreRagClassifier $ragClassifier,
-        $activeMotTestCount
+        $activeMotTestCount,
+        ViewVtsTestQualityAssertion $viewVtsTestQualityAssertion
     )
     {
         $this->authorisationService = $authorisationService;
@@ -45,6 +49,7 @@ class VtsOverviewSidebar extends GeneralSidebar
         $this->vtsId = $vtsId;
         $this->hasBeenAssessed = $hasBeenAssessed;
         $this->siteStatusCatalog = $siteStatusCatalog;
+        $this->viewVtsTestQualityAssertion = $viewVtsTestQualityAssertion;
 
         $this->addStatusBox($siteStatusCode, $activeMotTestCount, $ragClassifier);
         $this->resolveLinks();
@@ -142,6 +147,10 @@ class VtsOverviewSidebar extends GeneralSidebar
             $relatedLinks->addLink($this->createSiteAssessmentLink());
         }
 
+        if($this->canAccessTestQualityInformation()) {
+            $relatedLinks->addLink($this->createTestQualityInformationLink());
+        }
+
         if (!$relatedLinks->isEmpty()) {
             $this->addItem($relatedLinks);
         }
@@ -201,5 +210,20 @@ class VtsOverviewSidebar extends GeneralSidebar
                 return SidebarBadge::normal();
         }
 
+    }
+
+    private function canAccessTestQualityInformation()
+    {
+        if ($this->featureToggles->isDisabled(FeatureToggle::TEST_QUALITY_INFORMATION)) {
+            return false;
+        }
+
+        return $this->viewVtsTestQualityAssertion->isGranted($this->vtsId);
+    }
+
+    private function createTestQualityInformationLink()
+    {
+        $tqiLink = '/vehicle-testing-station/' . $this->vtsId . '/test-quality';
+        return new GeneralSidebarLink('site-test-quality', 'Test quality information', $tqiLink);
     }
 }

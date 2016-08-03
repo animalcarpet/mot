@@ -46,11 +46,6 @@ class MysteryShopperVehicleService
     private $incognitoVehicleRepository;
 
     /**
-     * @var IncognitoVehicle
-     */
-    private $incognitoVehicle;
-
-    /**
      * @var VehicleRepository
      */
     private $vehicleRepository;
@@ -196,9 +191,6 @@ class MysteryShopperVehicleService
             return false;
         }
 
-        /**
-         * @TODO (ABN) do we really have to?
-         */
         $campaign->setPerson($this->getPerson());
 
         if (array_key_exists(MysteryShopperInputFilter::FIELD_START_DATE, $data)) {

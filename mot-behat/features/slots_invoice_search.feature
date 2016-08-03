@@ -3,6 +3,7 @@ Feature: Search for payment by Invoice reference
   I want to search for a payment with an invoice reference
   So that I can see the slot transaction details associated with the payment
 
+  @quarantine
   @slots
   Scenario: Finance User search for payment with a valid invoice reference
     Given I am logged in as a Finance User

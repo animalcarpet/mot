@@ -15,6 +15,7 @@ use Dashboard\Authorisation\ViewTradeRolesAssertion;
 use Dashboard\Controller\UserHomeController;
 use Dashboard\Data\ApiDashboardResource;
 use Dashboard\Model\PersonalDetails;
+use Dvsa\Mot\Frontend\PersonModule\Routes\PersonProfileRoutes;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuard;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuardBuilder;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
@@ -80,23 +81,24 @@ class PersonProfileController extends AbstractAuthActionController
     /**
      * PersonProfileController constructor.
      *
-     * @param ApiPersonalDetails        $personalDetailsService
-     * @param ApiDashboardResource      $dashboardResourceService
-     * @param CatalogService            $catalogService
-     * @param UserAdminSessionManager   $userAdminSessionManager
-     * @param ViewTradeRolesAssertion   $canViewTradeRolesAssertion
+     * @param ApiPersonalDetails $personalDetailsService
+     * @param ApiDashboardResource $dashboardResourceService
+     * @param CatalogService $catalogService
+     * @param UserAdminSessionManager $userAdminSessionManager
+     * @param ViewTradeRolesAssertion $canViewTradeRolesAssertion
      * @param PersonProfileGuardBuilder $personProfileGuardBuilder
-     * @param MapperFactory             $mapperFactory
-     * @param ContextProvider           $contextProvider
+     * @param MapperFactory $mapperFactory
+     * @param ContextProvider $contextProvider
      */
-    public function __construct(ApiPersonalDetails $personalDetailsService,
-                                ApiDashboardResource $dashboardResourceService,
-                                CatalogService $catalogService,
-                                UserAdminSessionManager $userAdminSessionManager,
-                                ViewTradeRolesAssertion $canViewTradeRolesAssertion,
-                                PersonProfileGuardBuilder $personProfileGuardBuilder,
-                                MapperFactory $mapperFactory,
-                                ContextProvider $contextProvider
+    public function __construct(
+        ApiPersonalDetails $personalDetailsService,
+        ApiDashboardResource $dashboardResourceService,
+        CatalogService $catalogService,
+        UserAdminSessionManager $userAdminSessionManager,
+        ViewTradeRolesAssertion $canViewTradeRolesAssertion,
+        PersonProfileGuardBuilder $personProfileGuardBuilder,
+        MapperFactory $mapperFactory,
+        ContextProvider $contextProvider
 
     ) {
         $this->personalDetailsService = $personalDetailsService;
@@ -138,14 +140,14 @@ class PersonProfileController extends AbstractAuthActionController
         $routeParams = $this->getRouteParams($personDetails, $routeName);
 
         return $this->createViewModel('profile/index.phtml', [
-            'personalDetails'           => $personDetails,
-            'systemRoles'               => $this->getSystemRoles($personDetails),
-            'personProfileGuard'        => $personProfileGuard,
-            'userHomeRoute'             => UserHomeController::ROUTE,
-            'routeName'                 => $routeName,
-            'routeParams'               => $routeParams,
-            'context'                   => $context,
-            'userSearchResultUrl'       => $this->getUserSearchResultUrl(),
+            'personalDetails' => $personDetails,
+            'systemRoles' => $this->getSystemRoles($personDetails),
+            'personProfileGuard' => $personProfileGuard,
+            'userHomeRoute' => UserHomeController::ROUTE,
+            'routeName' => $routeName,
+            'routeParams' => $routeParams,
+            'context' => $context,
+            'userSearchResultUrl' => $this->getUserSearchResultUrl(),
 
         ]);
     }
@@ -172,8 +174,8 @@ class PersonProfileController extends AbstractAuthActionController
 
         $returnData = [
             'fullName' => $personalDetails->getFullName(),
-            'config'   => $this->getConfig(),
-            'userId'   => $userId,
+            'config' => $this->getConfig(),
+            'userId' => $userId,
         ];
 
         if ($this->getRequest()->isPost()) {
@@ -205,7 +207,7 @@ class PersonProfileController extends AbstractAuthActionController
 
     /**
      * @param string $template
-     * @param array  $variables
+     * @param array $variables
      *
      * @return ViewModel
      */
@@ -240,10 +242,10 @@ class PersonProfileController extends AbstractAuthActionController
         $isViewingOwnProfile = ($identity->getUserId() == $personId);
 
         return [
-            'personalDetails'      => $personalDetails,
-            'motAuthorisations'    => $authorisations,
-            'isViewingOwnProfile'  => $isViewingOwnProfile,
-            'systemRoles'          => $this->getSystemRoles($personalDetails),
+            'personalDetails' => $personalDetails,
+            'motAuthorisations' => $authorisations,
+            'isViewingOwnProfile' => $isViewingOwnProfile,
+            'systemRoles' => $this->getSystemRoles($personalDetails),
         ];
     }
 
@@ -255,7 +257,7 @@ class PersonProfileController extends AbstractAuthActionController
         $context = $this->contextProvider->getContext();
 
         return $context === ContextProvider::YOUR_PROFILE_CONTEXT ?
-            $this->getIdentity()->getUserId() : (int) $this->params()->fromRoute('id', null);
+            $this->getIdentity()->getUserId() : (int)$this->params()->fromRoute('id', null);
     }
 
     /**
@@ -360,17 +362,17 @@ class PersonProfileController extends AbstractAuthActionController
     private function createRoleData($role, $nicename, $roletype, $id = "", $name = "", $address = "")
     {
         return [
-            'id'       => $id,
-            'role'     => $role,
+            'id' => $id,
+            'role' => $role,
             'nicename' => $nicename,
-            'name'     => $name,
-            'address'  => $address,
+            'name' => $name,
+            'address' => $address,
             'roletype' => $roletype,
         ];
     }
 
     /**
-     * @param int                $targetPersonId
+     * @param int $targetPersonId
      * @param PersonProfileGuard $personProfileGuard
      *
      * @return \Dvsa\Mot\Frontend\PersonModule\View\PersonProfileSidebar
@@ -385,7 +387,8 @@ class PersonProfileController extends AbstractAuthActionController
         $currentUrl = $this->url()->fromRoute($routeName, $this->getRouteParams($personalDetails, $routeName));
 
         return new PersonProfileSidebar($targetPersonId, $personProfileGuard, $testerAuthorisation, $newProfileEnabled,
-            $currentUrl);
+            $currentUrl, new PersonProfileRoutes($this->contextProvider), $this->url()
+        );
     }
 
     /**
@@ -404,7 +407,7 @@ class PersonProfileController extends AbstractAuthActionController
      * Return the appropriate parameters for use in view based on the current url.
      *
      * @param PersonalDetails $personDetails
-     * @param string          $route
+     * @param string $route
      *
      * @return array
      */
@@ -433,6 +436,7 @@ class PersonProfileController extends AbstractAuthActionController
      */
     private function getUserSearchResultUrl()
     {
-        return $this->url()->fromRoute('user_admin/user-search-results', [], [ 'query' => $this->getRequest()->getQuery()->toArray()]);
+        return $this->url()->fromRoute('user_admin/user-search-results', [],
+            ['query' => $this->getRequest()->getQuery()->toArray()]);
     }
 }

@@ -64,9 +64,11 @@ class MotTestCertificateMapper extends AbstractMotTestMapper
      *
      * @return array
      */
-    public function mapDataForCertificate()
+    public function mapData()
     {
         $this->mapGenericMotTestData();
+
+        $this->mapVehicleDetail();
 
         $this->mapOdometers();
         $this->mapAdvisories();
