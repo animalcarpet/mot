@@ -1,0 +1,100 @@
+services:
+
+    dvsa.data.authorised_examiner:
+        class: Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData
+        arguments:
+            - @dvsa.data.user
+            - @dvsa.authorised_examiner
+            - @dvsa.test_support_helper
+
+    dvsa.data.contingency:
+        class: Dvsa\Mot\Behat\Support\Data\ContingencyData
+        arguments:
+            - @dvsa.data.user
+            - @dvsa.data.site
+            - @dvsa.contingency_test
+    dvsa.data.generator.mot_test_generator:
+        class: Dvsa\Mot\Behat\Support\Data\Generator\MotTestGenerator
+        arguments:
+            - @dvsa.data.mot_test
+
+    dvsa.data.mot_test:
+        class: Dvsa\Mot\Behat\Support\Data\MotTestData
+        arguments:
+            - @dvsa.data.user
+            - @dvsa.data.contingency
+            - @dvsa.data.contingency_mot_test
+            - @dvsa.data.demo_mot_test
+            - @dvsa.data.normal_mot_test
+            - @dvsa.contingency_test
+            - @dvsa.mot_test
+            - @dvsa.demo_test
+            - @dvsa.brake_test_result
+            - @dvsa.odometer_reading
+            - @dvsa.reason_for_rejection
+            - @dvsa.test_support_helper
+
+    dvsa.data.normal_mot_test:
+        class: Dvsa\Mot\Behat\Support\Data\NormalMotTestData
+        parent: dvsa.data.abstract_mot_test
+
+    dvsa.data.demo_mot_test:
+        class: Dvsa\Mot\Behat\Support\Data\DemoMotTestData
+        arguments:
+            - @dvsa.demo_test
+            - @dvsa.data.user
+            - @dvsa.mot_test
+            - @dvsa.brake_test_result
+            - @dvsa.odometer_reading
+            - @dvsa.reason_for_rejection
+
+    dvsa.data.contingency_mot_test:
+        class: Dvsa\Mot\Behat\Support\Data\ContingencyMotTestData
+        arguments:
+            - @dvsa.data.contingency
+            - @dvsa.contingency_test
+            - @dvsa.data.user
+            - @dvsa.mot_test
+            - @dvsa.brake_test_result
+            - @dvsa.odometer_reading
+            - @dvsa.reason_for_rejection
+
+
+    dvsa.data.abstract_mot_test:
+        class: Dvsa\Mot\Behat\Support\Data\AbstractMotTestData
+        arguments:
+            - @dvsa.data.user
+            - @dvsa.mot_test
+            - @dvsa.brake_test_result
+            - @dvsa.odometer_reading
+            - @dvsa.reason_for_rejection
+
+    dvsa.data.site:
+        class: Dvsa\Mot\Behat\Support\Data\SiteData
+        arguments:
+            - @dvsa.data.authorised_examiner
+            - @dvsa.vts
+            - @dvsa.data.user
+            - @dvsa.test_support_helper
+
+    dvsa.data.statistics.tester_performance_calculator:
+        class: Dvsa\Mot\Behat\Support\Data\Statistics\TesterPerformanceCalculator
+        arguments:
+            - @dvsa.data.user
+            - @dvsa.data.site
+
+    dvsa.data.user:
+        class: Dvsa\Mot\Behat\Support\Data\UserData
+        arguments:
+            - @dvsa.session
+            - @dvsa.test_support_helper
+            - @dvsa.http_client.reflective
+
+    dvsa.data.vehicle:
+        class: Dvsa\Mot\Behat\Support\Data\VehicleData
+        arguments:
+            - @dvsa.data.user
+            - @dvsa.data.site
+            - @dvsa.vehicle
+            - @dvsa.test_support_helper
+

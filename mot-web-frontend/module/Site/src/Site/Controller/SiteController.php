@@ -793,7 +793,7 @@ class SiteController extends AbstractAuthActionController
         $isReturnToAETQI = (bool)$this->params()->fromQuery('returnToAETQI');
 
         return $this->applyActionResult(
-            $this->siteTestQualityAction->execute($id, $month, $year, $isReturnToAETQI, $this->buildBreadcrumbs($id))
+            $this->siteTestQualityAction->execute($id, $month, $year, $isReturnToAETQI, $this->buildBreadcrumbs($id), $this->url(), $this->params()->fromRoute(), $this->params()->fromQuery())
         );
     }
 

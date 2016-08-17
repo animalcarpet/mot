@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+        colors                      = "true"
+        convertErrorsToExceptions   = "true"
+        convertNoticesToExceptions  = "true"
+        convertWarningsToExceptions = "true"
+        processIsolation            = "false"
+        stopOnFailure               = "false"
+        syntaxCheck                 = "false"
+        bootstrap                   = "test/init.php">
+    <testsuites>
+        <testsuite name="WebApi">
+            <directory>module/*/test/*</directory>
+            <directory>test/*</directory>
+        </testsuite>
+    </testsuites>
+    <logging>
+        <log type="junit" target="build/tests-junit.xml" logIncompleteSkipped="true" />
+        <log type="coverage-clover" target="build/tests-clover.xml"/>
+    </logging>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true" >
+            <directory suffix=".php">module/Organisation/src/*</directory>
+        </whitelist>
+        <blacklist>
+            <directory suffix=".php">vendor/*</directory>
+            <directory suffix=".php">module/*/test</directory>
+        </blacklist>
+    </filter>
+</phpunit>

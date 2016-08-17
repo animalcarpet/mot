@@ -11,8 +11,10 @@ $returnLink = $viewModel->getReturnLink();
 <div class='layout-filter-data'>
 
     <div class="layout-filter__controls">
-        <?php
-        echo $this->partial('site/site/partials/test-quality-month-filter');
+
+        <?php echo $this->partial('partial/month-filter/month-filter', [
+            'monthFilter' => $viewModel->getMonthFilter(),
+        ]);
         ?>
     </div>
 

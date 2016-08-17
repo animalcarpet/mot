@@ -1,9 +1,13 @@
 <?php
 
-use DvsaMotApi\Controller\CertificatePrintingController;
+use DvsaCommon\Validator\UsernameValidator;
+use DvsaEntities\Entity\Person;
 use DvsaMotApi\Controller\ContingencyTestController;
+use DvsaMotApi\Controller\DemoTestAssessmentController;
 use DvsaMotApi\Controller\IdentityDataController;
 use DvsaMotApi\Controller\MotCertificateEmailController;
+use DvsaMotApi\Controller\MotCertificatePdfController;
+use DvsaMotApi\Controller\MotCertificatesController;
 use DvsaMotApi\Controller\MotTestController;
 use DvsaMotApi\Controller\MotTestOptionsController;
 use DvsaMotApi\Controller\MotTestSearchController;
@@ -13,24 +17,8 @@ use DvsaMotApi\Controller\ReasonForRejectionController;
 use DvsaMotApi\Controller\ReplacementCertificateDraftController;
 use DvsaMotApi\Controller\RetestController;
 use DvsaMotApi\Controller\SurveyController;
-use DvsaMotApi\Controller\TestItemCategoryNameController;
 use DvsaMotApi\Controller\TesterMotTestLogController;
-use DvsaMotApi\Controller\MotCertificatesController;
-
-use DvsaMotApi\Factory\Controller\MotCertificateEmailControllerFactory;
-use DvsaMotApi\Factory\Controller\MotTestStatusControllerFactory;
-use DvsaMotApi\Factory\Controller\TesterControllerFactory;
-use DvsaMotApi\Factory\Controller\UserControllerFactory;
-use DvsaMotApi\Factory\Controller\TesterMotTestLogControllerFactory;
-use DvsaEntities\Entity\Person;
-use DvsaCommon\Validator\UsernameValidator;
-use DvsaMotApi\Controller\DemoTestAssessmentController;
-use DvsaMotApi\Factory\Controller\DemoTestAssessmentControllerFactory;
-use DvsaMotApi\Factory\Controller\ReplacementCertificateDraftControllerFactory;
-use DvsaMotApi\Factory\Controller\MotCertificatesControllerFactory;
-use DvsaMotApi\Factory\CertificatePdfServiceFactory;
-use DvsaMotApi\Controller\MotCertificatePdfController;
-use DvsaMotApi\Factory\Controller\MotCertificatePdfControllerFactory;
+use DvsaMotApi\Controller\TestItemCategoryNameController;
 
 return [
     'controllers' => include 'controllers.config.php',
@@ -55,11 +43,11 @@ return [
                 'options' => [
                     'route'       => '/certificate-print/:id[/:dupmode]',
                     'constraints' => [
-                        'dupmode' => 'dup'
+                        'dupmode' => 'dup',
                     ],
                     'defaults'    => [
                         'controller' => \DvsaMotApi\Controller\CertificatePrintingController::class,
-                        'action'     => 'print'
+                        'action'     => 'print',
                     ],
                 ],
             ],
@@ -69,7 +57,7 @@ return [
                     'route'       => '/pdf-certificate-print',
                     'defaults'    => [
                         'controller' => \DvsaMotApi\Controller\CertificatePrintingController::class,
-                        'action'     => 'getAmazonPdf'
+                        'action'     => 'getAmazonPdf',
                     ],
                 ],
             ],
@@ -82,7 +70,7 @@ return [
                     ],
                     'defaults'    => [
                         'controller' => \DvsaMotApi\Controller\CertificatePrintingController::class,
-                        'action'     => 'printByDocId'
+                        'action'     => 'printByDocId',
                     ],
                 ],
             ],
@@ -91,11 +79,11 @@ return [
                 'options' => [
                     'route'       => '/contingency-print/:name',
                     'constraints' => [
-                        'name' => '(CT20|CT30|CT32)'
+                        'name' => '(CT20|CT30|CT32)',
                     ],
                     'defaults'    => [
                         'controller' => \DvsaMotApi\Controller\CertificatePrintingController::class,
-                        'action'     => 'printContingency'
+                        'action'     => 'printContingency',
                     ],
                 ],
             ],
@@ -176,7 +164,7 @@ return [
                 'options'       => [
                     'route'       => '/mot-test-refusal',
                     'defaults'    => [
-                        'controller' => 'DvsaMotApi\Controller\MotTestRefusal'
+                        'controller' => 'DvsaMotApi\Controller\MotTestRefusal',
                     ],
                 ],
             ],
@@ -220,7 +208,7 @@ return [
                             'route'    => '/minimal',
                             'defaults' => [
                                 'controller' => MotTestController::class,
-                                'action'     => 'getMinimalMot'
+                                'action'     => 'getMinimalMot',
                             ],
                         ],
                     ],
@@ -230,7 +218,7 @@ return [
                             'route'    => '/find-mot-test-number',
                             'defaults' => [
                                 'controller' => MotTestController::class,
-                                'action'     => 'findMotTestNumber'
+                                'action'     => 'findMotTestNumber',
                             ],
                         ],
                     ],
@@ -301,11 +289,11 @@ return [
                                 'options' => [
                                     'route'    => '/validate-configuration',
                                     'defaults' => [
-                                        'controller' => 'DvsaMotApi\Controller\MotTestBrakeTestConfigurationValidation'
-                                    ]
-                                ]
-                            ]
-                        ]
+                                        'controller' => 'DvsaMotApi\Controller\MotTestBrakeTestConfigurationValidation',
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
                     'odometer'                => [
                         'type'          => 'Segment',
@@ -323,7 +311,7 @@ return [
                                     'route'    => '/notices',
                                     'defaults' => [
                                         'controller' => 'DvsaMotApi\Controller\MotTestOdometer',
-                                        'action'     => 'getNotices'
+                                        'action'     => 'getNotices',
                                     ],
                                 ],
                             ],
@@ -333,11 +321,11 @@ return [
                                     'route'    => '/modify-check',
                                     'defaults' => [
                                         'controller' => 'DvsaMotApi\Controller\MotTestOdometer',
-                                        'action'     => 'canModifyOdometer'
+                                        'action'     => 'canModifyOdometer',
                                     ],
                                 ],
                             ],
-                        ]
+                        ],
                     ],
                     'status'                  => [
                         'type'    => 'Segment',
@@ -362,11 +350,11 @@ return [
                         'options' => [
                             'route'    => '/certificate-details[/:variation]',
                             'constraints' => [
-                                'variation' => '[^/]+'
+                                'variation' => '[^/]+',
                             ],
                             'defaults' => [
                                 'controller' => MotTestController::class,
-                                'action'     => 'getCertificateDetails'
+                                'action'     => 'getCertificateDetails',
                             ],
                         ],
                     ],
@@ -398,9 +386,9 @@ return [
                                     'route'    => '/apply',
                                     'defaults' => [
                                         'controller' => ReplacementCertificateDraftController::class,
-                                        'action'     => 'apply'
+                                        'action'     => 'apply',
                                     ],
-                                ]
+                                ],
                             ],
                             'replacement-certificate-draft-diff'  => [
                                 'type'    => 'Segment',
@@ -408,11 +396,11 @@ return [
                                     'route'    => '/diff',
                                     'defaults' => [
                                         'controller' => ReplacementCertificateDraftController::class,
-                                        'action'     => 'diff'
+                                        'action'     => 'diff',
                                     ],
-                                ]
+                                ],
                             ],
-                        ]
+                        ],
 
                     ],
                 ],
@@ -425,8 +413,8 @@ return [
                         'id' => '[0-9]+',
                     ],
                     'defaults' => [
-                        'controller' => MotCertificatesController::class
-                    ]
+                        'controller' => MotCertificatesController::class,
+                    ],
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
@@ -456,7 +444,7 @@ return [
                     'route'    => '/mot-retest-validate/:motTestNumber',
                     'defaults' => [
                         'controller' => MotTestController::class,
-                        'action'     => 'validateMOTRetest'
+                        'action'     => 'validateMOTRetest',
                     ],
                 ],
             ],
@@ -466,7 +454,7 @@ return [
                     'route'    => '/mot-test/compare',
                     'defaults' => [
                         'controller' => 'DvsaMotApi\Controller\MotTestCompare',
-                        'action'     => 'compareMotTest'
+                        'action'     => 'compareMotTest',
                     ],
                 ],
             ],
@@ -477,7 +465,7 @@ return [
                     'route'       => '/mot-test-certificate',
                     'defaults'    => [
                         'controller' => MotTestController::class,
-                        'action'     => 'getMotTestByNumber'
+                        'action'     => 'getMotTestByNumber',
                     ],
                 ],
             ],
@@ -528,9 +516,9 @@ return [
                             'route' => '/in-progress-test-id',
                             'defaults' => [
                                 'controller' => 'DvsaMotApi\Controller\Tester',
-                                'action' => 'getInProgressTestId'
-                            ]
-                        ]
+                                'action' => 'getInProgressTestId',
+                            ],
+                        ],
                     ],
                     'vehicle-testing-stations' => [
                         'type' => 'Segment',
@@ -538,9 +526,9 @@ return [
                             'route' => '/vehicle-testing-stations',
                             'defaults' => [
                                 'controller' => 'DvsaMotApi\Controller\Tester',
-                                'action'     => 'getVehicleTestingStations'
-                            ]
-                        ]
+                                'action'     => 'getVehicleTestingStations',
+                            ],
+                        ],
                     ],
                     'vts-slot-balance' => [
                         'type' => 'Segment',
@@ -548,9 +536,9 @@ return [
                             'route' => '/vts-slot-balance',
                             'defaults' => [
                                 'controller' => 'DvsaMotApi\Controller\Tester',
-                                'action'     => 'getVtsWithSlotBalance'
-                            ]
-                        ]
+                                'action'     => 'getVtsWithSlotBalance',
+                            ],
+                        ],
                     ],
                     'tester-mot-test-log' => [
                         'type' => 'Segment',
@@ -558,9 +546,9 @@ return [
                             'route' => '/mot-test-log',
                             'defaults' => [
                                 'controller' => TesterMotTestLogController::class,
-                                'action'     => 'logData'
-                            ]
-                        ]
+                                'action'     => 'logData',
+                            ],
+                        ],
                     ],
                     'tester-mot-test-log-summary' => [
                         'type' => 'Segment',
@@ -568,9 +556,9 @@ return [
                             'route' => '/mot-test-log/summary',
                             'defaults' => [
                                 'controller' => TesterMotTestLogController::class,
-                                'action'     => 'summary'
-                            ]
-                        ]
+                                'action'     => 'summary',
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -640,16 +628,39 @@ return [
                             ],
                         ],
                     ],
-                    'shouldDisplay' => [
+                    'should-display' => [
                         'type' => 'segment',
                         'options' => [
-                            'route' => '/shouldDisplay',
+                            'route' => '/should-display',
                             'defaults' => [
                                 'controller' => SurveyController::class,
-                                'action' => 'shouldDisplaySurvey'
-                            ]
-                        ]
-                    ]
+                                'action' => 'shouldDisplaySurvey',
+                            ],
+                        ],
+                    ],
+                    'token' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/token',
+                            'defaults' => [
+                                'controller' => SurveyController::class,
+                                'action' => 'createSessionToken',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'validate' => [
+                                'type' => 'segment',
+                                'options' => [
+                                    'route' => '/validate',
+                                    'defaults' => [
+                                        'controller' => SurveyController::class,
+                                        'action' => 'validateToken',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],//end of 'routes =>'
@@ -657,7 +668,7 @@ return [
     'service_manager' => [
         'aliases' => [
             'translator' => 'MvcTranslator',
-        ]
+        ],
     ],
     'translator'      => [
         'locale'                    => 'en_US',

@@ -4,7 +4,7 @@ namespace Core\Factory;
 
 use Core\Service\SessionService;
 use DvsaClient\MapperFactory;
-use Session\Container;
+use Zend\Session\Container;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -17,7 +17,7 @@ class SessionServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $sessionContainer =  new Container(SessionService::UNIQUE_KEY);
+        $sessionContainer = new Container(SessionService::UNIQUE_KEY);
 
         return new SessionService(
             $sessionContainer,

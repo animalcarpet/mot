@@ -16,14 +16,13 @@ import uk.gov.dvsa.ui.pages.vts.UserTestQualityPage;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 public class UserTestQualityViewTest extends DslTest {
+    private static final int MILEAGE = 14000;
     private User tester;
     private Site site;
     private AeDetails ae;
@@ -41,12 +40,11 @@ public class UserTestQualityViewTest extends DslTest {
         siteData.clearAllCachedStatistics();
 
         //Given there are tests created for site in previous month
-        DateTime date = new DateTime(this.getFirstDayOfPreviousMonth());
         List<ReasonForRejection> rfrList = new ArrayList<>();
         rfrList.add(ReasonForRejection.WARNING_LAMP_MISSING);
 
         motApi.createTestWithRfr(tester, site.getId(),
-            vehicleData.getNewVehicle(tester, VehicleClass.one), TestOutcome.FAILED, 14000, date, rfrList);
+            vehicleData.getNewVehicle(tester, VehicleClass.one), TestOutcome.FAILED, MILEAGE, getFirstDayOfPreviousMonth(), rfrList);
 
         //When I go to site Test Quality page
         SiteTestQualityPage siteTestQualityPage = motUI.site.gotoTestQuality(tester, site);
@@ -66,12 +64,11 @@ public class UserTestQualityViewTest extends DslTest {
         siteData.clearAllCachedStatistics();
 
         //Given there are tests created for site in previous month
-        DateTime date = new DateTime(this.getFirstDayOfPreviousMonth());
         List<ReasonForRejection> rfrList = new ArrayList<>();
         rfrList.add(ReasonForRejection.HORN_CONTROL_MISSING);
 
         motApi.createTestWithRfr(tester, site.getId(),
-            vehicleData.getNewVehicle(tester, VehicleClass.four), TestOutcome.FAILED, 14000, date, rfrList);
+            vehicleData.getNewVehicle(tester, VehicleClass.four), TestOutcome.FAILED, MILEAGE, getFirstDayOfPreviousMonth(), rfrList);
 
         //When I go to site Test Quality page
         SiteTestQualityPage siteTestQualityPage = motUI.site.gotoTestQuality(tester, site);
@@ -85,11 +82,7 @@ public class UserTestQualityViewTest extends DslTest {
         assertThat("Correct average is displayed", userTestQualityPage.testerAverageEquals("Lamps, Reflectors and Electrical Equipment", 100), is(true));
     }
 
-    private Date getFirstDayOfPreviousMonth(){
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH, -1);
-        calendar.set(Calendar.DATE, 1);
-
-        return calendar.getTime();
+    private DateTime getFirstDayOfPreviousMonth() {
+        return DateTime.now().dayOfMonth().withMinimumValue().minusMonths(1);
     }
 }

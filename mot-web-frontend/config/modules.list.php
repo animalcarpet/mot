@@ -12,6 +12,7 @@ return [
     'Dvsa\Mot\Frontend\PersonModule',
     'Dvsa\Mot\Frontend\RegistrationModule',
     'Dvsa\Mot\Frontend\ServiceModule',
+    'Dvsa\Mot\Frontend\TestQualityInformation',
     'Dashboard',
     'UserAdmin',
     'DvsaClient',

@@ -1,5 +1,6 @@
 package uk.gov.dvsa.ui.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.navigation.MotPageFactory;
@@ -20,7 +21,7 @@ public class ChangePasswordFromProfilePage extends Page {
     @FindBy(id = "passwordConfirm") private WebElement passwordConfirm;
     @FindBy(id = "submitPass") private WebElement submitButton;
     @FindBy(id = "cancelLink") private WebElement cancelLink;
-    @FindBy(id = "validation-summary-id") private WebElement errorMassagesWindow;
+    private By errorMassagesWindowSelector = By.id("validation-summary-id");
 
     public ChangePasswordFromProfilePage(MotAppDriver driver) {
         super(driver);
@@ -57,10 +58,10 @@ public class ChangePasswordFromProfilePage extends Page {
     }
 
     public boolean isErrorMessageWindowDisplayed() {
-        return errorMassagesWindow.isDisplayed();
+        return isElementVisible(errorMassagesWindowSelector);
     }
 
     public String getErrorMessage() {
-        return errorMassagesWindow.getText();
+        return getElementText(errorMassagesWindowSelector);
     }
 }

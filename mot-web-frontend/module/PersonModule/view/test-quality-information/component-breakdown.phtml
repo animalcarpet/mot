@@ -1,0 +1,17 @@
+<?php
+use Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityComponentBreakdownViewModel;
+
+/** @var $viewModel TestQualityComponentBreakdownViewModel */
+echo $this->partial('test-quality-information/partials/component-breakdown-table', [
+    'group' => $viewModel->getTable()
+]);
+?>
+<nav class="content-navigation">
+    <ul class="content-navigation__secondary">
+        <li>
+            <a id="return-link" href="<?php echo $viewModel->getReturnUrl() ?>">
+                <?php echo $viewModel->getReturnLinkText() ?>
+            </a>
+        </li>
+    </ul>
+</nav>

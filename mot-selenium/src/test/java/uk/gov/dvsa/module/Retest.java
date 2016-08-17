@@ -6,6 +6,7 @@ import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.helper.AssertionHelper;
 import uk.gov.dvsa.ui.pages.VehicleSearchPage;
+import uk.gov.dvsa.ui.pages.VehicleSearchResultsPage;
 import uk.gov.dvsa.ui.pages.mot.retest.ReTestCompletePage;
 import uk.gov.dvsa.ui.pages.mot.retest.ReTestResultsEntryPage;
 import uk.gov.dvsa.ui.pages.mot.retest.ReTestSummaryPage;
@@ -52,8 +53,8 @@ public class Retest {
 
 
     public void searchForVehicle(User user, Vehicle vehicle) throws IOException, URISyntaxException {
-        VehicleSearchPage searchPage = pageNavigator.navigateToPage(user,VehicleSearchPage.PATH, VehicleSearchPage.class).searchVehicle(vehicle);
-        expectedText = searchPage.getTestStatus();
+        VehicleSearchResultsPage searchPage = pageNavigator.navigateToPage(user,VehicleSearchPage.PATH, VehicleSearchPage.class).searchVehicle(vehicle);
+        expectedText = searchPage.getVehicleRetestStatus();
     }
 
     public boolean isTextPresent(String actual) throws NoSuchElementException {

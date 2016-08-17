@@ -11,8 +11,8 @@ class DefectTest extends \PHPUnit_Framework_TestCase
         $defect = new Defect(
             10,
             20,
-            'asd',
             'Description',
+            'asd',
             'Advisory text',
             'Inspection manual reference',
             true,

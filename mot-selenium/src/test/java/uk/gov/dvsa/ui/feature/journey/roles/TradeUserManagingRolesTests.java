@@ -1,6 +1,6 @@
 package uk.gov.dvsa.ui.feature.journey.roles;
 
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import uk.gov.dvsa.domain.model.AeDetails;
 import uk.gov.dvsa.domain.model.Site;
@@ -19,27 +19,11 @@ import static org.hamcrest.Matchers.is;
 
 public class TradeUserManagingRolesTests extends DslTest {
 
-    private User siteManager;
-    private AeDetails aeDetails;
-    private Site site;
-    private User tester;
-    private Vehicle testVehicle;
-    private User areaOffice1User;
-
-    @BeforeMethod(alwaysRun = true)
-    private void setup() throws IOException {
-        aeDetails = aeData.createAeWithDefaultValues();
-        site = siteData.createNewSite(aeDetails.getId(), "Test_Site");
-        tester = userData.createTester(site.getId());
-        siteManager = userData.createSiteManager(site.getId(), false);
-        testVehicle = vehicleData.getNewVehicle(tester);
-        areaOffice1User = userData.createAreaOfficeOne("AreaOfficer");
-    }
-
-    @Test(testName = "NewProfile", groups = {"BVT", "VM-12321"},
+    @Test(dataProvider = "dvsaTesterAndSiteManager",
+            testName = "NewProfile", groups = {"BVT", "VM-12321"},
             description = "Verifies that trade user cant check roles via roles and associations link " +
                     "of other trade user")
-    public void tradeUserCantViewAeAssociationOfOtherTradeUser() throws IOException, URISyntaxException {
+    public void tradeUserCantViewAeAssociationOfOtherTradeUser(User tester, User siteManager) throws IOException, URISyntaxException {
 
         //Given I'm on the profile page of a user as a Trade user
         motUI.profile.tradeViewUserProfile(siteManager, tester);
@@ -49,13 +33,14 @@ public class TradeUserManagingRolesTests extends DslTest {
     }
 
 
-    @Test(groups = {"BVT", "BL-94"},
+    @Test(dataProvider = "dvsaTester",
+            groups = {"BVT", "BL-94"},
             description = "Verifies that trade user can navigate back from Remove role page to " +
                     "Roles and Associations page via link")
-    public void tradeUserCanNavigateFromDeleteRolePageViaLink() throws IOException, URISyntaxException {
+    public void tradeUserCanNavigateFromDeleteRolePageViaLink(User tester) throws IOException, URISyntaxException {
 
         //Given I'm logged in as Trade user and I am on Remove role page
-        motUI.profile.viewYourProfile(userData.createTester(site.getId()));
+        motUI.profile.viewYourProfile(tester);
         RemoveRolePage removeRolePage = motUI.profile.page().clickRolesAndAssociationsLink().removeRole();
 
         //When I click on Cancel and return to roles and associations link
@@ -65,9 +50,10 @@ public class TradeUserManagingRolesTests extends DslTest {
         assertThat(motUI.manageRoles.isRolesTableContainsValidTesterData(), is(true));
     }
 
-    @Test(groups = {"BVT", "BL-94"},
+    @Test(dataProvider = "dvsaTesterAndVehicle",
+            groups = {"BVT", "BL-94"},
             description = "Verifies that trade user can't remove his own role if he has test in progress")
-    public void tradeUserCantRemoveOwnTradeRoleWithTestInProgress() throws IOException, URISyntaxException {
+    public void tradeUserCantRemoveOwnTradeRoleWithTestInProgress(User tester, Vehicle testVehicle) throws IOException, URISyntaxException {
         vehicleReinspectionWorkflow().startMotTestAsATester(tester, testVehicle);
 
         //Given I'm logged in as Trade user with test in progress and I am on Remove role page
@@ -81,9 +67,10 @@ public class TradeUserManagingRolesTests extends DslTest {
         assertThat(motUI.manageRoles.isErrorMessageDisplayedOnRolesAndAssociationsPage(), is(true));
     }
 
-    @Test(groups = {"BVT", "BL-94"},
+    @Test(dataProvider = "dvsaTester",
+            groups = {"BVT", "BL-94"},
             description = "Verifies that trade user can remove his own role")
-    public void tradeUserCanRemoveOwnTradeRole() throws IOException, URISyntaxException {
+    public void tradeUserCanRemoveOwnTradeRole(User tester) throws IOException, URISyntaxException {
 
         //Given I am logged in as Trade user and I am on Remove role page
         motUI.profile.viewYourProfile(tester);
@@ -96,10 +83,11 @@ public class TradeUserManagingRolesTests extends DslTest {
         assertThat(motUI.manageRoles.isSuccessMessageDisplayedOnRolesAndAssociationsPage(), is(true));
     }
 
-    @Test(groups = {"BVT", "BL-94"},
+    @Test(dataProvider = "dvsaTesterAndSiteAndAreaOfficer",
+            groups = {"BVT", "BL-94"},
             description = "Verifies that when trade user removes his own role it's not assigned to vts")
-    public void tradeUserRoleIsNotAssignedToVtsAfterDeletion() throws IOException, URISyntaxException {
-        tradeUserCanRemoveOwnTradeRole();
+    public void tradeUserRoleIsNotAssignedToVtsAfterDeletion(User tester, Site site, User areaOffice1User) throws IOException, URISyntaxException {
+        tradeUserCanRemoveOwnTradeRole(tester);
 
         //Given I am logged in as an authorised DVSA user and I am on the Site search page
         motUI.site.vtsSearchPage(areaOffice1User);
@@ -109,5 +97,44 @@ public class TradeUserManagingRolesTests extends DslTest {
 
         //Then removed role should not be present
         assertThat(motUI.manageRoles.isUserAssignedToVts(tester), is(false));
+    }
+
+    @DataProvider(name = "dvsaTester")
+    private Object[][] dvsaTester() throws IOException {
+        AeDetails aeDetails = aeData.createAeWithDefaultValues();
+        Site site = siteData.createNewSite(aeDetails.getId(), "Test_Site");
+        User tester = userData.createTester(site.getId());
+
+        return new Object[][]{{tester}};
+    }
+
+    @DataProvider(name = "dvsaTesterAndVehicle")
+    private Object[][] dvsaTesterAndVehicle() throws IOException {
+        AeDetails aeDetails = aeData.createAeWithDefaultValues();
+        Site site = siteData.createNewSite(aeDetails.getId(), "Test_Site");
+        User tester = userData.createTester(site.getId());
+        Vehicle testVehicle = vehicleData.getNewVehicle(tester);
+
+        return new Object[][]{{tester, testVehicle}};
+    }
+
+    @DataProvider(name = "dvsaTesterAndSiteAndAreaOfficer")
+    private Object[][] dvsaTesterAndSiteAndAreaOfficer() throws IOException {
+        AeDetails aeDetails = aeData.createAeWithDefaultValues();
+        Site site = siteData.createNewSite(aeDetails.getId(), "Test_Site");
+        User tester = userData.createTester(site.getId());
+        User areaOffice1User = userData.createAreaOfficeOne("AreaOfficer");
+
+        return new Object[][]{{tester, site, areaOffice1User}};
+    }
+
+    @DataProvider(name = "dvsaTesterAndSiteManager")
+    private Object[][] dvsaTesterAndSitemanager() throws IOException {
+        AeDetails aeDetails = aeData.createAeWithDefaultValues();
+        Site site = siteData.createNewSite(aeDetails.getId(), "Test_Site");
+        User tester = userData.createTester(site.getId());
+        User siteManager = userData.createSiteManager(site.getId(), false);
+
+        return new Object[][]{{tester, siteManager}};
     }
 }

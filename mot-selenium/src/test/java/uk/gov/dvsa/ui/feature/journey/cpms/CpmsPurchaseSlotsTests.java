@@ -23,7 +23,7 @@ public class CpmsPurchaseSlotsTests extends DslTest {
     private User aedm;
     private User financeUser;
 
-    @Test (groups = {"Regression"}, description = "SPMS-37 Purchase slots by card successfully", dataProvider = "createAedmAndAe")
+    @Test (enabled = false, groups = {"Regression"}, description = "SPMS-37 Purchase slots by card successfully", dataProvider = "createAedmAndAe")
     public void purchaseSlotsByCardSuccessfully(User aedm, AeDetails aeDetails, User financeUser) throws IOException, URISyntaxException {
         
       //Given I am on Buy test slots page as an Aedm
@@ -44,7 +44,7 @@ public class CpmsPurchaseSlotsTests extends DslTest {
               cardPaymentConfirmationPage.getPaymentStatusMessage(), containsString("Payment has been successful"));   
     }
     
-    @Test (groups = {"Regression"}, description = "SPMS-264 Finance user processes Card payment", dataProvider = "createFinanceUserAndAe")
+    @Test (enabled = false, groups = {"Regression"}, description = "SPMS-264 Finance user processes Card payment", dataProvider = "createFinanceUserAndAe")
     public void financeUserProcessesCardPayment(User financeUser, AeDetails aeDetails) throws IOException, URISyntaxException {
         
       //Given I am on Choose payment type page as a Finance user
@@ -65,7 +65,7 @@ public class CpmsPurchaseSlotsTests extends DslTest {
               cardPaymentConfirmationPage.getPaymentStatusMessage(), containsString("Payment has been successful"));
     }
 
-    @Test(groups = {"Regression", "SPMS-77"}, dataProvider = "createAedmAndAe")
+    @Test(enabled = false, groups = {"Regression", "SPMS-77"}, dataProvider = "createAedmAndAe")
     public void financeUserSearchForPaymentByInvoiceReference(User aedm, AeDetails aeDetails, User financeUser) throws IOException, URISyntaxException {
 
         //Given I bought slots with card as an Aedm
@@ -83,7 +83,7 @@ public class CpmsPurchaseSlotsTests extends DslTest {
         verifyTransactionDetails(referenceSearchPage.chooseInvoiceReference().searchForReference(invoiceReference).chooseReference(invoiceReference));
     }
 
-    @Test(groups = {"Regression", "SPMS-199"}, dataProvider = "createAedmAndAe")
+    @Test(enabled = false, groups = {"Regression", "SPMS-199"}, dataProvider = "createAedmAndAe")
     public void financeUserSearchForPaymentByPaymentReference(User aedm, AeDetails aeDetails, User financeUser) throws IOException, URISyntaxException {
 
         //Given I bought slots with card as an Aedm
@@ -101,7 +101,7 @@ public class CpmsPurchaseSlotsTests extends DslTest {
         verifyTransactionDetails(referenceSearchPage.choosePaymentReference().searchForReference(paymentReference).chooseReference(paymentReference));
     }
 
-    @Test(groups = {"Regression", "SPMS-47"}, dataProvider = "createAedmAndAe")
+    @Test(enabled = false, groups = {"Regression", "SPMS-47"}, dataProvider = "createAedmAndAe")
     public void paymentInvoiceDetailsVerificationTest(User aedm, AeDetails aeDetails, User financeUser) throws IOException, URISyntaxException {
 
         //Given I am on Buy test slots page as an Aedm
@@ -123,7 +123,7 @@ public class CpmsPurchaseSlotsTests extends DslTest {
                 Matchers.is("Order details"));
     }
 
-    @Test(groups = {"Regression", "SPMS-88"}, dataProvider = "createAedmAndAe")
+    @Test(enabled = false, groups = {"Regression", "SPMS-88"}, dataProvider = "createAedmAndAe")
     public void purchaseSlotsUserCancelsPaymentTest(User aedm, AeDetails aeDetails, User financeUser) throws IOException, URISyntaxException {
 
         //Given I am on Buy test slots page as an Aedm
@@ -139,7 +139,7 @@ public class CpmsPurchaseSlotsTests extends DslTest {
         assertThat("Verifying CalculateCost button present", buyTestSlotsPage.isCalculateCostButtonVisible(), is(true));
     }
 
-    @Test(groups = {"Regression", "SPMS-47"}, priority = 1)
+    @Test(enabled = false, groups = {"Regression", "SPMS-47"}, priority = 1)
     public void generalTransactionHistoryElementsTest() throws IOException, URISyntaxException {
 
         //Given I bought slots with card as an Aedm
@@ -161,7 +161,7 @@ public class CpmsPurchaseSlotsTests extends DslTest {
                 transactionHistoryPage.isDownloadFileOptionsDisplayed(), is(true));
     }
 
-    @Test(groups = {"Regression", "SPMS-47"}, priority = 2)
+    @Test(enabled = false, groups = {"Regression", "SPMS-47"}, priority = 2)
     public void todayTransactionHistoryVerificationTest() throws IOException, URISyntaxException {
 
         //Given I'm on Transaction history page as an Aedm
@@ -181,7 +181,7 @@ public class CpmsPurchaseSlotsTests extends DslTest {
                 transactionHistoryPage.isDownloadFileOptionsDisplayed(), is(true));
     }
 
-    @Test(groups = {"Regression", "SPMS-47"}, priority = 3)
+    @Test(enabled = false, groups = {"Regression", "SPMS-47"}, priority = 3)
     public void last7DaysTransactionHistoryVerificationTest() throws IOException, URISyntaxException {
 
         //Given I'm on Transaction history page as an Aedm
@@ -201,7 +201,7 @@ public class CpmsPurchaseSlotsTests extends DslTest {
                 transactionHistoryPage.isDownloadFileOptionsDisplayed(), is(true));
     }
 
-    @Test(groups = {"Regression", "SPMS-47"}, priority = 4)
+    @Test(enabled = false, groups = {"Regression", "SPMS-47"}, priority = 4)
     public void last30DaysTransactionHistoryVerificationTest() throws IOException, URISyntaxException {
 
         //Given I'm on Transaction history page as an Aedm

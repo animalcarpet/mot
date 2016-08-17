@@ -44,7 +44,7 @@ abstract class AbstractLightWebControllerTest extends \PHPUnit_Framework_TestCas
 
     protected function setUp()
     {
-        $this->authorisationMock = new AuthorisationServiceMock();;
+        $this->authorisationMock = new AuthorisationServiceMock();
         $this->setUpPluginMocks();
     }
 

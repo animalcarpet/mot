@@ -7,16 +7,23 @@
 
 namespace Dvsa\Mot\Frontend\AuthenticationModule\Factory\Controller;
 
+use Core\Service\MotEventManager;
+use Core\Service\SessionService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Controller\LogoutController;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\WebLogoutService;
+use DvsaClient\MapperFactory;
+use Zend\EventManager\EventManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Session\Container;
 
 /**
  * Factory for LogoutController instances.
  */
 class LogoutControllerFactory implements FactoryInterface
 {
+    const TOKEN_SESSION_NAME = 'tokenSession';
+
     /**
      * @param ServiceLocatorInterface $serviceLocator
      *
@@ -30,6 +37,20 @@ class LogoutControllerFactory implements FactoryInterface
         /** @var WebLogoutService $logoutService */
         $logoutService = $serviceLocator->get(WebLogoutService::class);
 
-        return new LogoutController($logoutService);
+
+        /**
+         * @var MapperFactory $mapper
+         */
+        $mapper = $serviceLocator->get(MapperFactory::class);
+
+        /** @var SessionService $sessionService */
+        $sessionService = new SessionService(
+            (new Container(SessionService::UNIQUE_KEY)), $mapper
+        );
+
+        /** @var EventManager $eventManager */
+        $eventManager = $serviceLocator->get(MotEventManager::class);
+
+        return new LogoutController($eventManager, $sessionService, $logoutService);
     }
 }

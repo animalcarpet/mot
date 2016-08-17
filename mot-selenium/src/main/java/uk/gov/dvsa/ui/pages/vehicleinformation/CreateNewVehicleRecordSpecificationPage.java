@@ -1,6 +1,9 @@
 package uk.gov.dvsa.ui.pages.vehicleinformation;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.model.vehicle.Colour;
 import uk.gov.dvsa.domain.model.vehicle.FuelTypes;
@@ -40,10 +43,10 @@ public class CreateNewVehicleRecordSpecificationPage extends Page {
 
 
     public boolean isErrorMessageDisplayed(String errMsg){
-        if(! errorBox.isDisplayed()){
-            return false;
+        if(errorBox.isDisplayed()){
+            return errorBox.getText().toString().toLowerCase().contains(errMsg.toLowerCase());
         }
-        return errorBox.getText().toString().toLowerCase().contains(errMsg.toLowerCase());
+        return false;
     }
 
     public void enterVehicleDetails(Vehicle vehicle) {
@@ -91,11 +94,12 @@ public class CreateNewVehicleRecordSpecificationPage extends Page {
     }
 
     public void submitInvalidFormDetails() {
-        submitButton.click();
+        submitButton.sendKeys(Keys.RETURN);
     }
 
     public CreateNewVehicleRecordConfirmPage submit() {
-        submitButton.click();
+        submitButton.sendKeys(Keys.RETURN);
         return new CreateNewVehicleRecordConfirmPage(driver);
     }
 }
+

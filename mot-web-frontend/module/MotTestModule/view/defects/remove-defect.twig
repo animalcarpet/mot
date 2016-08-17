@@ -1,28 +1,48 @@
-<div class="message--important">
-    <p>Hi! You have hit a page with just boilerplate code. Please implement me as defined in <a href="https://jira.i-env.net/browse/{{ storyId  }}">{{ storyId }}</a>.</p>
-</div>
+<div class="column-full">
+    <header class="content-header">
+        <h1>
+            <span class="content-header__type"></span>
+        </h1>
+    </header>
 
-<table class="key-value-list">
-    <tbody>
-    <tr>
-        <th class="key-value-list__key">MOT Test Number</th>
-        <td class="key-value-list__value">{{ motTestNumber }}</td>
-    </tr>
-    <tr>
-        <th class="key-value-list__key">Component Category ID</th>
-        <td class="key-value-list__value">{{ categoryId }}</td>
-    </tr>
-    <tr>
-        <th class="key-value-list__key">Defect ID</th>
-        <td class="key-value-list__value">{{ defectId }}</td>
-    </tr>
-    <tr>
-        <th class="key-value-list__key">Defect Item ID</th>
-        <td class="key-value-list__value">{{ defectItemId }}</td>
-    </tr>
-    <tr>
-        <th class="key-value-list__key">Defect Type</th>
-        <td class="key-value-list__value">{{ type }}</td>
-    </tr>
-    </tbody>
-</table>
+    <p class="lede">Are you sure you want to remove this defect?</p>
+
+    <h3 class="visuallyhidden">Defect</h3>
+
+    <table class="key-value-list">
+        <tbody>
+        <tr>
+            <th class="key-value-list__key">{{ observedDefect.defectType[:1]|upper ~ observedDefect.defectType[1:] }}</th>
+            <td class="key-value-list__value">
+                <span class="key-value-list__meta">{{ observedDefect.breadcrumb }}</span>
+                {{ observedDefect.name }}
+                {% if observedDefect.dangerous %}
+                    <div class="defect__is-dangerous">Dangerous</div>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th class="key-value-list__key">Location</th>
+            <td class="key-value-list__value">
+                {{ observedDefect.locationString|default('n/a') }}
+            </td>
+        </tr>
+        <tr>
+            <th class="key-value-list__key">Additional information</th>
+            <td class="key-value-list__value">{{ observedDefect.userComment|default('None recorded') }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <form method="post">
+        {{ csrfToken('removeDefect') }}
+        <nav class="content-navigation">
+            <button type="submit" class="button-warning">Remove {{ observedDefect.defectType }}</button>
+            <ul class="content-navigation__secondary">
+                <li>
+                    <a href="{{ defectJourneyUrl().goBack() }}" class="back-to-open-list">Cancel and return to {{ context }}</a>
+                </li>
+            </ul>
+        </nav>
+    </form>
+</div>

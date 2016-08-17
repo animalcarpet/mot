@@ -2,18 +2,23 @@
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Gherkin\Node\TableNode;
+use Dvsa\Mot\Behat\Support\Api\AuthorisedExaminer;
+use Dvsa\Mot\Behat\Support\Api\Notification;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\Vts;
-use Dvsa\Mot\Behat\Support\Api\Notification;
-use Dvsa\Mot\Behat\Support\Api\AuthorisedExaminer;
-use DvsaCommon\Dto\Site\VehicleTestingStationDto;
-use DvsaCommon\Model\VehicleTestingStation;
-use PHPUnit_Framework_Assert as PHPUnit;
-use DvsaCommon\Dto\Site\SiteListDto;
-use DvsaCommon\Utility\DtoHydrator;
+use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
+use Dvsa\Mot\Behat\Support\Data\SiteData;
+use Dvsa\Mot\Behat\Support\Data\UserData;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
+use DvsaCommon\Dto\Site\SiteListDto;
+use DvsaCommon\Dto\Site\VehicleTestingStationDto;
+use DvsaCommon\Dto\Site\SiteDto;
+use DvsaCommon\Dto\Organisation\OrganisationDto;
 use DvsaCommon\Enum\VehicleClassId;
-use Behat\Gherkin\Node\TableNode;
+use DvsaCommon\Model\VehicleTestingStation;
+use DvsaCommon\Utility\DtoHydrator;
+use PHPUnit_Framework_Assert as PHPUnit;
 
 class VtsContext implements Context
 {
@@ -66,6 +71,10 @@ class VtsContext implements Context
 
     private $riskAssessmentData = [];
 
+    private $siteData;
+
+    private $userData;
+
     /**
      * @param Vts $vehicleTestingStation
      */
@@ -74,7 +83,9 @@ class VtsContext implements Context
         TestSupportHelper $testSupportHelper,
         Session $session,
         Notification $notification,
-        AuthorisedExaminer $authorisedExaminer
+        AuthorisedExaminer $authorisedExaminer,
+        SiteData $siteData,
+        UserData $userData
     )
     {
         $this->vehicleTestingStation = $vehicleTestingStation;
@@ -82,6 +93,8 @@ class VtsContext implements Context
         $this->session = $session;
         $this->notification = $notification;
         $this->authorisedExaminer = $authorisedExaminer;
+        $this->siteData = $siteData;
+        $this->userData = $userData;
     }
 
     /**
@@ -100,7 +113,7 @@ class VtsContext implements Context
      */
     public function createSiteBeforeScenario()
     {
-        return $this->createSite();
+        return $this->createSiteAssociatedWithAe();
     }
 
     public function createSite($name = "default")
@@ -122,7 +135,7 @@ class VtsContext implements Context
 
             $response = $this->vehicleTestingStation->create($aoSession->getAccessToken(), $params);
             $responseBody = $response->getBody();
-            if (! is_object($responseBody)) {
+            if (!is_object($responseBody)) {
                 throw new Exception("createSite: responseBody is not an object: failed to create Vts");
             }
 
@@ -171,23 +184,19 @@ class VtsContext implements Context
      */
     public function thereIsASiteAssociatedWithAuthorisedExaminerWithFollowingData(TableNode $table)
     {
+        $defaults = [
+            "name" => SiteData::DEFAULT_NAME,
+            "aeName" => AuthorisedExaminerData::DEFAULT_NAME,
+            "startDate" => null,
+            "endDate" => null
+        ];
+
         $rows = $table->getColumnsHash();
-
         foreach ($rows as $row) {
-            $defaults = [ "start_date" => "now", "end_date" => null ];
+            $row["name"] = $row["siteName"];
+            unset($row["siteName"]);
             $data = array_replace($defaults, $row);
-
-            $site = $this->createSiteAssociatedWithAe($data["site_name"], $data["ae_name"]);
-
-            $startDate = new \DateTime($data["start_date"]);
-            $endDate = null;
-            if ($data["end_date"] !== null) {
-                $endDate = new \DateTime($data["end_date"]);
-            }
-
-            $aeId = $this->authorisedExaminerContext->getAe($data["ae_name"])["id"];
-            $siteId = $site["id"];
-            $this->testSupportHelper->getVtsService()->changeAssociatedDate($aeId, $siteId, $startDate, $endDate);
+            $this->siteData->create($data);
         }
     }
 
@@ -468,19 +477,9 @@ class VtsContext implements Context
         $dataGeneratorHelper = $this->testSupportHelper->getDataGeneratorHelper();
         $suffixLength = 10;
 
-        $aedmData = [];
-        if (!empty($data["aeRepresentativesUserId"])) {
-            $username = $data["aeRepresentativesUserId"] . $dataGeneratorHelper->generateRandomString($suffixLength);
-            $aedmData = ["username" => $username];
-        }
-
-        $aedm = $this->authorisedExaminerContext->getAe($aeName)["aedm"];
-        if(empty($aedm)) {
-            $this->personContext->createAEDM($aedmData);
-            $aedmUsername = $this->personContext->getPersonUsername();
-        } else {
-            $aedmUsername = $aedm["username"];
-        }
+        $ae = $this->authorisedExaminerContext->getAe($aeName);
+        $aedm = $this->userData->getAedmByAeId($ae["id"]);
+        $aedmUsername = $aedm->getUsername();
 
         $areaOffice1Service = $this->testSupportHelper->getAreaOffice1Service();
         $ao1user = $areaOffice1Service->create([]);
@@ -501,7 +500,7 @@ class VtsContext implements Context
 
         if (!empty($data["testerUserId"])) {
             $username = $data["testerUserId"] . $dataGeneratorHelper->generateRandomString($suffixLength);
-            $this->personContext->createTester(["siteIds" => [$siteId] , "username" => $username]);
+            $this->personContext->createTester(["siteIds" => [$siteId], "username" => $username]);
             $data["testerUserId"] = $this->personContext->getPersonUsername();
         }
 
@@ -574,7 +573,7 @@ class VtsContext implements Context
     /**
      * @When class :vtsClass is removed from site
      */
-    public function classIsRemovedFromSite($vtsClass, $name="default")
+    public function classIsRemovedFromSite($vtsClass, $name = "default")
     {
         $areaOffice1Service = $this->testSupportHelper->getAreaOffice1Service();
         $ao = $areaOffice1Service->create([]);
@@ -585,7 +584,7 @@ class VtsContext implements Context
 
         $classes = VehicleClassId::getAll();
 
-        if(($key = array_search($vtsClass, $classes)) !== false) {
+        if (($key = array_search($vtsClass, $classes)) !== false) {
             unset($classes[$key]);
         }
 
@@ -624,17 +623,17 @@ class VtsContext implements Context
     }
 
     /**
-     * @Given /^I add risk assessment with score "([^"]*)" to site "([^"]*)" on "([^"]*)"$/
+     * @When I add risk assessment with score :score to site :site on :ae
      */
-    public function iAddRiskAssessmentWithScoreToSiteOn($score, $siteName, $aeName)
+    public function iAddRiskAssessmentWithScoreToSiteOn($score, SiteDto $site, OrganisationDto $ae)
     {
         $hash = ["siteAssessmentScore" => $score] + $this->getRiskAssessmentDefaults();
 
-        $this->riskAssessmentData = $this->prepareRiskAssessmentData($siteName, $aeName, $hash);
+        $this->riskAssessmentData = $this->prepareRiskAssessmentData($site->getName(), $ae->getName(), $hash);
 
         $response = $this->vehicleTestingStation->addRiskAssessment(
             $this->sessionContext->getCurrentAccessToken(),
-            $this->getSite($siteName)['id'],
+            $site->getId(),
             $this->riskAssessmentData
         );
 

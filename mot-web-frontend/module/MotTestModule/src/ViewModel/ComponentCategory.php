@@ -73,8 +73,8 @@ class ComponentCategory
         $this->rootCategoryId = $rootCategoryId;
         $this->parentCategoryId = $parentCategoryId;
         $this->categoryId = $categoryId;
-        $this->name = $name;
-        $this->description = $description;
+        $this->name = DefectSentenceCaseConverter::convert($name);
+        $this->description = DefectSentenceCaseConverter::convert($description);
         $this->descriptions = $descriptions;
         $this->vehicleClasses = $vehicleClasses;
         $this->defects = $defects;

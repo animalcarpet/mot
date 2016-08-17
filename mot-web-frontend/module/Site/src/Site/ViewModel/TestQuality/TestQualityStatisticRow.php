@@ -39,6 +39,11 @@ class TestQualityStatisticRow
         return $this;
     }
 
+    public function hasTests()
+    {
+        return $this->testCount > 0;
+    }
+
     public function getTestCount()
     {
         return $this->testCount;

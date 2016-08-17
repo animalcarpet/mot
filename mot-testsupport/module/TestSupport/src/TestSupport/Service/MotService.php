@@ -91,7 +91,7 @@ class MotService
         $this->entityManager->getConnection()->prepare('DELETE FROM replacement_certificate_draft')->execute();
         $this->entityManager->getConnection()->prepare('DELETE FROM mot_test_event')->execute();
         $this->entityManager->getConnection()->prepare('DELETE FROM mot_test_recent_certificate')->execute();
-        $this->entityManager->getConnection()->prepare('DELETE FROM mot_test_survey_result')->execute();
+        $this->entityManager->getConnection()->prepare('DELETE FROM mot_test_survey')->execute();
         $this->entityManager->getConnection()->prepare('DELETE FROM mot_test')->execute();
     }
 }

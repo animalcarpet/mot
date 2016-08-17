@@ -177,8 +177,8 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
 
         return $this->createViewModel('defects/defects-for-category.twig', [
             'motTest' => $motTest,
-            'motTestNumber' => $motTestNumber,
             'categoryId' => $categoryId,
+            'categoryName' => $category->getComponentCategory()->getName(),
             'vehicle' => $motTest->getVehicle(),
             'vehicleMakeAndModel' => ucwords(strtolower($motTest->getVehicle()->getMakeAndModel())),
             'vehicleFirstUsedDate' => $vehicleFirstUsedDate,

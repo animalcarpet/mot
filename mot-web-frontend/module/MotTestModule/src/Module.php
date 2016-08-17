@@ -7,12 +7,17 @@
 
 namespace Dvsa\Mot\Frontend\MotTestModule;
 
+use Dvsa\Mot\Frontend\MotTestModule\Factory\View\DefectsJourneyUrlGeneratorViewHelperFactory;
+use Dvsa\Mot\Frontend\MotTestModule\Listener\SatisfactionSurveyListener;
 use DvsaCommon\Constants\FeatureToggle;
+use DvsaFeature\FeatureToggles;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ControllerProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\ModuleManager\ModuleEvent;
 use Zend\ModuleManager\ModuleManager;
+use Zend\Mvc\MvcEvent;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * The MotTest Module.
@@ -24,7 +29,7 @@ class Module implements ConfigProviderInterface, ControllerProviderInterface, Se
     const DEFECT_CATEGORIES_ROUTE = 'mot-test-defects/categories';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function init(ModuleManager $moduleManager)
     {
@@ -40,7 +45,7 @@ class Module implements ConfigProviderInterface, ControllerProviderInterface, Se
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function onMergeConfig(ModuleEvent $e)
     {
@@ -71,6 +76,14 @@ class Module implements ConfigProviderInterface, ControllerProviderInterface, Se
     }
 
     /**
+     * @param \Zend\Mvc\MvcEvent $event
+     */
+    public function onBootstrap(MvcEvent $event)
+    {
+        $this->registerSatisfactionSurveyListener($event->getApplication()->getServiceManager());
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getConfig()
@@ -97,5 +110,33 @@ class Module implements ConfigProviderInterface, ControllerProviderInterface, Se
     public function getServiceConfig()
     {
         return include __DIR__ . '/../config/services.config.php';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getViewHelperConfig()
+    {
+        return [
+            'factories' => [
+                'defectJourneyUrl' => DefectsJourneyUrlGeneratorViewHelperFactory::class,
+            ],
+        ];
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceManager
+     */
+    private function registerSatisfactionSurveyListener(ServiceLocatorInterface $serviceManager)
+    {
+        /** @var FeatureToggles $featureToggles */
+        $featureToggles = $serviceManager->get('Feature\FeatureToggles');
+        if (true !== $featureToggles->isEnabled(FeatureToggle::SURVEY_PAGE)) {
+            return;
+        }
+
+        /** @var SatisfactionSurveyListener $satisfactionSurveyListener */
+        $satisfactionSurveyListener = $serviceManager->get(SatisfactionSurveyListener::class);
+        $satisfactionSurveyListener->attach();
     }
 }

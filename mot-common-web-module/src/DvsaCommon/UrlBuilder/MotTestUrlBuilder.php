@@ -21,6 +21,8 @@ class MotTestUrlBuilder extends AbstractUrlBuilder
 
     const MOT_VALIDATE_RETEST = 'mot-retest-validate[/:motTestNumber]';
     const SEARCH = 'mot-test-search';
+
+    // Get a single reason for rejection from the database, as a DefectDto, using its id.
     const REASONS_FOR_REJECTION = '/reasons-for-rejection[/:motTestRfrId]';
 
     const ODOMETER_READING = '/odometer-reading';

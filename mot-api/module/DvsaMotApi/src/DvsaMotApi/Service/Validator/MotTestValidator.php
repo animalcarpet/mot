@@ -6,6 +6,7 @@ use CensorApi\Service\CensorService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Auth\PermissionAtSite;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Constants\ReasonForRejection;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Messages\InvalidTestStatus;
@@ -17,6 +18,7 @@ use DvsaCommonApi\Service\Validator\AbstractValidator;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\VehicleClass;
+use DvsaFeature\FeatureToggles;
 use UserApi\SpecialNotice\Service\SpecialNoticeService;
 use Zend\Authentication\AuthenticationService;
 
@@ -53,17 +55,22 @@ class MotTestValidator extends AbstractValidator
     /** @var SpecialNoticeService */
     private $specialNoticeService;
 
+    /** @var FeatureToggles $featureToggles */
+    private $featureToggles;
+
     public function __construct(
         CensorService $censorService,
         AuthorisationServiceInterface $authorizationService,
         AuthenticationService $motIdentityProvider,
-        SpecialNoticeService $specialNoticeService
+        SpecialNoticeService $specialNoticeService,
+        FeatureToggles $featureToggles
     ) {
         $this->censorService = $censorService;
         parent::__construct();
         $this->authorizationService = $authorizationService;
         $this->motIdentityProvider = $motIdentityProvider;
         $this->specialNoticeService = $specialNoticeService;
+        $this->featureToggles = $featureToggles;
     }
 
     public function validateNewMotTest(MotTest $motTest)
@@ -117,19 +124,41 @@ class MotTestValidator extends AbstractValidator
         if ($this->censorService->containsProfanity($rfr->getCustomDescription())
             || $this->censorService->containsProfanity($rfr->getComment())
         ) {
-            throw new BadRequestException(
-                'Profanity has been detected in the description of RFR',
-                BadRequestException::ERROR_CODE_INVALID_DATA
-            );
+            if ($this->featureToggles->isEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)) {
+                throw new BadRequestException(
+                    'Additional information – must not include any swearwords',
+                    BadRequestException::ERROR_CODE_INVALID_DATA,
+                    'Must not include any swearwords'
+                );
+            }
+            else {
+                throw new BadRequestException(
+                    'Profanity has been detected in the description of RFR',
+                    BadRequestException::ERROR_CODE_INVALID_DATA
+                );
+            }
         }
 
-        if ((strlen($rfr->getCustomDescription()) > ReasonForRejection::MAX_DESCRIPTION_LENGTH)
-            || (strlen($rfr->getComment()) > ReasonForRejection::MAX_DESCRIPTION_LENGTH)
-        ) {
-            throw new BadRequestException(
-                'Maximum length of description is ' . ReasonForRejection::MAX_DESCRIPTION_LENGTH . ' characters',
-                BadRequestException::ERROR_CODE_INVALID_DATA
-            );
+        if ($this->featureToggles->isEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)) {
+            if ((strlen($rfr->getCustomDescription()) > ReasonForRejection::MAX_USER_COMMENT_LENGTH)
+                || (strlen($rfr->getComment()) > ReasonForRejection::MAX_USER_COMMENT_LENGTH)
+            ) {
+                throw new BadRequestException(
+                    'Additional information – must be 250 characters or shorter',
+                    BadRequestException::ERROR_CODE_INVALID_DATA,
+                    'Must be 250 characters or shorter'
+                );
+            }
+        }
+        else {
+            if ((strlen($rfr->getCustomDescription()) > ReasonForRejection::MAX_DESCRIPTION_LENGTH)
+                || (strlen($rfr->getComment()) > ReasonForRejection::MAX_DESCRIPTION_LENGTH)
+            ) {
+                throw new BadRequestException(
+                    'Maximum length of description is ' . ReasonForRejection::MAX_DESCRIPTION_LENGTH . ' characters',
+                    BadRequestException::ERROR_CODE_INVALID_DATA
+                );
+            }
         }
 
         if ($rfr->getOnOriginalTest()) {

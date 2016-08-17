@@ -30,7 +30,7 @@ use Zend\Http\Client\Adapter\AdapterInterface;
 /**
  * Handles all REST calls to the API and translates any errors received into exceptions.
  */
-class ZendClient implements Client
+class  ZendClient implements Client
 {
     use EventManagerAwareTrait;
 

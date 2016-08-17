@@ -33,21 +33,25 @@ use Site\ViewModel\TestQuality\GroupStatisticsTable;
         </td>
 
         <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
+            'hasTests'          => $group->hasTests(),
             'notAvailableText'  => $group->getNotAvailableText(),
             'value'             => $group->getTestCount(),
         ]); ?>
 
         <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
+            'hasTests'          => $group->hasTests(),
             'notAvailableText'  => $group->getNotAvailableText(),
             'value'             => $group->getAverageVehicleAge(),
         ]); ?>
 
         <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
+            'hasTests'          => $group->hasTests(),
             'notAvailableText'  => $group->getNotAvailableText(),
             'value'             => $group->getAverageTestDuration(),
         ]); ?>
 
         <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
+            'hasTests'          => $group->hasTests(),
             'notAvailableText'  => $group->getNotAvailableText(),
             'value'             => $group->getFailurePercentage(),
         ]); ?>
@@ -64,21 +68,25 @@ use Site\ViewModel\TestQuality\GroupStatisticsTable;
                 </td>
 
                 <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
+                    'hasTests'          => $testerRow->hasTests(),
                     'notAvailableText'  => $group->getNotAvailableText(),
                     'value'             => $testerRow->getTestCount(),
                 ]); ?>
 
                 <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
+                    'hasTests'          => $testerRow->hasTests(),
                     'notAvailableText'  => $group->getNotAvailableText(),
                     'value'             => $testerRow->getAverageVehicleAge(),
                 ]); ?>
 
                 <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
+                    'hasTests'          => $testerRow->hasTests(),
                     'notAvailableText'  => $group->getNotAvailableText(),
                     'value'             => $testerRow->getAverageTestDuration(),
                 ]); ?>
 
                 <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
+                    'hasTests'          => $testerRow->hasTests(),
                     'notAvailableText'  => $group->getNotAvailableText(),
                     'value'             => $testerRow->getFailurePercentage(),
                 ]); ?>
@@ -98,25 +106,21 @@ use Site\ViewModel\TestQuality\GroupStatisticsTable;
             <?php echo $group->getNationalStatistic()->getName() ?>
         </td>
 
-        <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
-            'notAvailableText'  => $group->getNotAvailableText(),
-            'value'             => $group->getNationalStatistic()->getTestCount(),
-        ]); ?>
+        <td class="numeric">
+            <?php echo $group->getNationalStatistic()->getTestCount(); ?>
+        </td>
 
-        <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
-            'notAvailableText'  => $group->getNotAvailableText(),
-            'value'             => $group->getNationalStatistic()->getAverageVehicleAge(),
-        ]); ?>
+        <td class="numeric">
+            <?php echo $group->getNationalStatistic()->getAverageVehicleAge(); ?>
+        </td>
 
-        <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
-            'notAvailableText'  => $group->getNotAvailableText(),
-            'value'             => $group->getNationalStatistic()->getAverageTestDuration(),
-        ]); ?>
+        <td class="numeric">
+            <?php echo $group->getNationalStatistic()->getAverageTestDuration(); ?>
+        </td>
 
-        <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
-            'notAvailableText'  => $group->getNotAvailableText(),
-            'value'             => $group->getNationalStatistic()->getFailurePercentage(),
-        ]); ?>
+        <td class="numeric">
+            <?php echo $group->getNationalStatistic()->getFailurePercentage(); ?>
+        </td>
     </tr>
     <?php else: ?>
         <tr class="table-reference__row--secondary">

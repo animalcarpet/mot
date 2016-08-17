@@ -45,6 +45,7 @@ return [
             Controller\QualificationDetailsController::class => Controller\QualificationDetailsController::class,
             Controller\StatisticsAmazonCacheController::class => Controller\StatisticsAmazonCacheController::class,
             Controller\AnnualAssessmentCertificateController::class => Controller\AnnualAssessmentCertificateController::class,
+            Controller\OneHundredMotTestsController::class => Controller\OneHundredMotTestsController::class,
         ],
     ],
     'router'       => [
@@ -163,6 +164,15 @@ return [
                             ],
                             'defaults'    => [
                                 'controller' => Controller\TestSupportMotTestController::class
+                            ],
+                        ],
+                    ],
+                    'oneHundredMotTestsSub'         => [
+                        'type'    => 'Segment',
+                        'options' => [
+                            'route'       => '/onehundredmottests',
+                            'defaults'    => [
+                                'controller' => Controller\OneHundredMotTestsController::class
                             ],
                         ],
                     ],

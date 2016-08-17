@@ -10,6 +10,7 @@ default:
             imports:
                 - config/api.yml
                 - config/arguments.yml
+                - config/data.yml
                 - config/test_support.yml
     suites:
         default:
@@ -41,6 +42,7 @@ default:
                 - SlotsManualAdjustmentContext
                 - SlotsReportContext
                 - SlotsRefreshPaymentsContext
+                - StatsAeTesterPerformanceContext
                 - StatsTesterPerformanceContext
                 - StatsComponentFailRateContext
                 - SpecialNoticeContext

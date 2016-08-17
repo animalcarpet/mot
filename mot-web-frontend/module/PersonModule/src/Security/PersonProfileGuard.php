@@ -12,16 +12,15 @@ use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaCommon\Auth\Assertion\CreateMotTestingCertificateAssertion;
 use DvsaCommon\Auth\Assertion\UpdateMotTestingCertificateAssertion;
 use DvsaCommon\Auth\Assertion\RemoveMotTestingCertificateAssertion;
+use DvsaCommon\Auth\Assertion\ViewTesterTestQualityAssertion;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommon\Model\TesterAuthorisation;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
-use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\Enum\RoleCode;
 use DvsaCommon\Model\OrganisationBusinessRoleCode;
-use DvsaCommon\Model\TesterGroupAuthorisationStatus;
 use InvalidArgumentException;
 use PersonApi\Dto\PersonDetails;
 
@@ -571,5 +570,13 @@ class PersonProfileGuard
     public function canViewTestLogs()
     {
         return $this->isViewingOwnProfile() && $this->authorisationService->isGranted(PermissionInSystem::TESTER_VIEW_TEST_LOGS);
+    }
+
+    public function canViewTestQuality()
+    {
+        $assertion = (new ViewTesterTestQualityAssertion($this->authorisationService, $this->identityProvider))
+            ->isGranted($this->targetPersonDetails->getId(), $this->testerAuthorisation);
+
+        return $assertion;
     }
 }

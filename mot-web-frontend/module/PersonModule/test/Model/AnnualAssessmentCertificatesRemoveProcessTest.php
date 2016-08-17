@@ -7,7 +7,7 @@ use Dvsa\Mot\Frontend\PersonModule\Controller\RemoveAnnualAssessmentCertificates
 use Dvsa\Mot\Frontend\PersonModule\Model\AnnualAssessmentCertificatesFormContext;
 use Dvsa\Mot\Frontend\PersonModule\Routes\AnnualAssessmentCertificatesRoutes;
 use Dvsa\Mot\Frontend\PersonModule\Security\AnnualAssessmentCertificatesPermissions;
-use Dvsa\Mot\Frontend\PersonModule\src\Model\AnnualAssessmentCertificatesRemoveProcess;
+use Dvsa\Mot\Frontend\PersonModule\Model\AnnualAssessmentCertificatesRemoveProcess;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaCommon\ApiClient\Person\MotTestingAnnualCertificate\Dto\MotTestingAnnualCertificateDto;
 use DvsaCommon\ApiClient\Person\MotTestingAnnualCertificate\MotTestingAnnualCertificateApiResource;

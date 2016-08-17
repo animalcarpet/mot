@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaCommon\Dto\MotTesting;
 
 use DvsaCommon\Dto\AbstractDataTransferObject;

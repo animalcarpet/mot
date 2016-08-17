@@ -15,6 +15,9 @@ class DefectCollectionTest extends \PHPUnit_Framework_TestCase
     {
         $testCollection = DefectCollection::fromDataFromApi($rawData);
 
+        $defectBreadcrumbParts = explode(">", $rawData['reasonsForRejection'][1]['testItemSelectorName']);
+        $defectCategoryName = end($defectBreadcrumbParts);
+
         $this->assertEquals(
             $rawData['reasonsForRejection'][1]['rfrId'],
             $testCollection->getDefects()[0]->getDefectId()
@@ -26,12 +29,12 @@ class DefectCollectionTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            $rawData['reasonsForRejection'][1]['description'],
+            $defectCategoryName . ' ' . $rawData['reasonsForRejection'][1]['description'],
             $testCollection->getDefects()[0]->getDescription()
         );
 
         $this->assertEquals(
-            $rawData['reasonsForRejection'][1]['advisoryText'],
+            $defectCategoryName . ' ' . $rawData['reasonsForRejection'][1]['advisoryText'],
             $testCollection->getDefects()[0]->getAdvisoryText()
         );
 
@@ -60,15 +63,15 @@ class DefectCollectionTest extends \PHPUnit_Framework_TestCase
             [
                 [
                     'testItemSelector' => [
-                        'name' => 'ParentCategoryName',
+                      'name' => 'Hello',
                     ],
                     'reasonsForRejection' => [
                         1 => [
                             'rfrId' => 1,
                             'testItemSelectorId' => 2,
-                            'testItemSelectorName' => 'sad',
-                            'description' => 'description',
-                            'advisoryText' => 'asde',
+                            'testItemSelectorName' => 'Hello',
+                            'description' => 'Description',
+                            'advisoryText' => 'Asde',
                             'inspectionManualReference' => '2.1.23',
                             'isAdvisory' => true,
                             'isPrsFail' => false,
@@ -76,7 +79,7 @@ class DefectCollectionTest extends \PHPUnit_Framework_TestCase
                         ],
                     ],
                 ],
-            ],
+                ],
         ];
     }
 }

@@ -16,6 +16,7 @@ use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\ReasonForRejection;
 use DvsaMotApi\Service\Validator\MotTestValidator;
+use Zend\Db\TableGateway\Exception\RuntimeException;
 
 /**
  * Class MotTestReasonForRejectionService
@@ -50,6 +51,28 @@ class MotTestReasonForRejectionService extends AbstractService
         $this->motTestValidator = $motTestValidator;
         $this->testItemSelectorService = $motTestItemSelectorService;
         $this->performMotTestAssertion = $performMotTestAssertion;
+    }
+
+    /**
+     * @param int $motTestRfrId
+     *
+     * @throws NotFoundException If the ReasonForRejection entity is not found in the database.
+     *
+     * @return ReasonForRejection
+     */
+    public function getDefect($motTestRfrId)
+    {
+        /** @var ReasonForRejection $reasonForRejection */
+        $reasonForRejection = $this
+            ->entityManager
+            ->getRepository(ReasonForRejection::class)
+            ->find($motTestRfrId);
+
+        if (!$reasonForRejection) {
+            throw new NotFoundException("Reason for rejection", $motTestRfrId);
+        }
+
+        return $reasonForRejection;
     }
 
     public function addReasonForRejection(MotTest $motTest, $data)
@@ -148,7 +171,7 @@ class MotTestReasonForRejectionService extends AbstractService
 
         // this will be removed in future, when db schema is updated...
         if ($rfrId !== null) {
-            /** @var \DvsaEntities\Entity\ReasonForRejection $reasonForRejection */
+            /** @var ReasonForRejection $reasonForRejection */
             $reasonForRejection = $this->entityManager->find(ReasonForRejection::class, ['rfrId' => $rfrId]);
 
             if (!$reasonForRejection) {

@@ -2,13 +2,15 @@
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Gherkin\Node\TableNode;
 use Dvsa\Mot\Behat\Support\Api\AuthorisedExaminer;
 use Dvsa\Mot\Behat\Support\Api\Session;
+use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use Dvsa\Mot\Behat\Support\Response;
+use DvsaCommon\Dto\Organisation\OrganisationDto;
+use DvsaCommon\Dto\Site\SiteDto;
 use PHPUnit_Framework_Assert as PHPUnit;
-use Behat\Gherkin\Node\TableNode;
-use DvsaCommon\Utility\ArrayUtils;
 
 class AuthorisedExaminerContext implements Context
 {
@@ -65,6 +67,8 @@ class AuthorisedExaminerContext implements Context
      */
     private $createdAuthorisedExaminers = [];
 
+    private $authorisedExaminerData;
+
     /**
      * @param AuthorisedExaminer $authorisedExaminer
      * @param TestSupportHelper $testSupportHelper
@@ -73,11 +77,14 @@ class AuthorisedExaminerContext implements Context
     public function __construct(
         AuthorisedExaminer $authorisedExaminer,
         TestSupportHelper $testSupportHelper,
-        Session $session
-    ) {
+        Session $session,
+        AuthorisedExaminerData $authorisedExaminerData
+    )
+    {
         $this->authorisedExaminer = $authorisedExaminer;
         $this->testSupportHelper = $testSupportHelper;
         $this->session = $session;
+        $this->authorisedExaminerData = $authorisedExaminerData;
     }
 
     /**
@@ -219,38 +226,32 @@ class AuthorisedExaminerContext implements Context
      */
     public function createAE($slots = 1001, $name = "default")
     {
-        if (!empty($this->createdAuthorisedExaminers[$name])) {
-            return $this->createdAuthorisedExaminers[$name];
-        }
+        $ae = $this->authorisedExaminerData->create($slots, $name);
 
-        $data = [
-            "slots" => $slots,
-            "requestor" => [
-                "username" => "areaoffice1user",
-                "password" => "Password1"
-            ]
+        $data =  [
+            "id" => $ae->getId(),
+            "aeRef" => $ae->getAuthorisedExaminerAuthorisation()->getAuthorisedExaminerRef(),
+            "aeName" => $ae->getName(),
         ];
 
-        $response = $this->testSupportHelper->getAeService()->create($data);
+        $this->createdAuthorisedExaminers[$name] = $data;
 
-        $this->createdAuthorisedExaminers[$name] = [
-            "id" => $response->data["id"],
-            "aeRef" => $response->data["aeRef"],
-            "aeName" => $response->data["aeName"],
-        ];
-
-        return $this->createdAuthorisedExaminers[$name];
+        return $data;
     }
 
-    /**
-     * @Given there is an Authorised Examiner :name:
-     */
-    public function thereIsAnAuthorisedExaminer($name)
+    public function createAEwithoutAedm($slots = 1001, $name = "default")
     {
-        $ae = $this->createAE(1001, $name);
-        $aedmId = $this->personContext->createAedm([], $ae["id"]);
+        $ae = $this->authorisedExaminerData->createWithoutAedm($slots, $name);
 
-        $this->createdAuthorisedExaminers[$name]["aedmId"] = $aedmId;
+        $data =  [
+            "id" => $ae->getId(),
+            "aeRef" => $ae->getAuthorisedExaminerAuthorisation()->getAuthorisedExaminerRef(),
+            "aeName" => $ae->getName(),
+        ];
+
+        $this->createdAuthorisedExaminers[$name] = $data;
+
+        return $data;
     }
 
     /**
@@ -260,12 +261,9 @@ class AuthorisedExaminerContext implements Context
     {
         $rows = $table->getColumnsHash();
         foreach ($rows as $row) {
-            $defaults = [ "slots" => 1001 ];
+            $defaults = ["slots" => 1001];
             $data = array_replace($defaults, $row);
-            $ae = $this->createAE($data["slots"], $data["name"]);
-
-            $aedm = $this->personContext->createAedm([], $ae["id"])->getVariables()["data"];
-            $this->createdAuthorisedExaminers[$data["name"]]["aedm"] = $aedm;
+            $this->createAE($data["slots"], $data["name"]);
         }
     }
 
@@ -300,8 +298,17 @@ class AuthorisedExaminerContext implements Context
      */
     public function getAe($name = "default")
     {
-        if(array_key_exists($name, $this->createdAuthorisedExaminers)) {
+        if (array_key_exists($name, $this->createdAuthorisedExaminers)) {
             return $this->createdAuthorisedExaminers[$name];
+        }
+
+        $ae = $this->authorisedExaminerData->tryGet($name);
+        if ($ae !== null) {
+            return [
+                "id" => $ae->getId(),
+                "aeRef" => $ae->getAuthorisedExaminerAuthorisation()->getAuthorisedExaminerRef(),
+                "aeName" => $ae->getName(),
+            ];
         }
 
         return null;
@@ -395,16 +402,12 @@ class AuthorisedExaminerContext implements Context
     }
 
     /**
-     * @When site :siteName is unlinked from AE :aeName on :endDate
+     * @When site :site is unlinked from AE :ae on :endDate
      */
-    public function siteIsUnlinkedFromAeFrom($siteName, $aeName, $endDate)
+    public function siteIsUnlinkedFromAeFrom(SiteDto $site, OrganisationDto $ae, \DateTime $endDate)
     {
-        $this->siteIsUnlinkedFromAe($siteName, $aeName);
-
-        $site = $this->vtsContext->getSite($siteName);
-        $ae = $this->getAe($aeName);
-
-        $this->testSupportHelper->getVtsService()->changeEndDateOfAssociation($ae["id"], $site{"id"}, new \DateTime($endDate));
+        $this->authorisedExaminerData->unlinkAuthorisedExaminerWithSite($ae, $site);
+        $this->testSupportHelper->getVtsService()->changeEndDateOfAssociation($ae->getId(), $site->getId(), $endDate);
     }
 
     /**
@@ -432,14 +435,11 @@ class AuthorisedExaminerContext implements Context
     }
 
     /**
-     * @When site :siteName is linked to AE :aeName on :startDate
+     * @When site :site is linked to AE :ae on :startDate
      */
-    public function siteIsLinkedToAeFrom($siteName, $aeName, $startDate)
+    public function siteIsLinkedToAeFrom(SiteDto $site, OrganisationDto $ae, \DateTime $startDate)
     {
-        $this->siteIsLinkedToAe($siteName, $aeName);
-
-        $site = $this->vtsContext->getSite($siteName);
-        $ae = $this->getAe($aeName);
-        $this->testSupportHelper->getVtsService()->changeAssociatedDate($ae["id"], $site{"id"}, new \DateTime($startDate));
+        $this->authorisedExaminerData->linkAuthorisedExaminerWithSite($ae, $site);
+        $this->testSupportHelper->getVtsService()->changeAssociatedDate($ae->getId(), $site->getId(), $startDate);
     }
 }

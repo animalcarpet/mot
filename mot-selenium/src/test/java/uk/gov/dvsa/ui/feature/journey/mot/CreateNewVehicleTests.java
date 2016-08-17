@@ -23,11 +23,9 @@ public class CreateNewVehicleTests extends DslTest {
         description = "Tester can start new test when creating a vehicle")
     public void canCreateNewValidVehicle() throws IOException, URISyntaxException{
 
-        Vehicle vehicle = Vehicle.getAcceptableVehicle();
-
         // Given that a tester creates a new DVSA vehicle
         Boolean result = motUI.normalTest.createNewDvsaVehicle(
-                userData.createTester(siteData.createSite().getId(), false), vehicle);
+                userData.createTester(siteData.createSite().getId(), false), Vehicle.generateValidDetails());
 
         // Then a test is started for the newly created vehicle
         assertThat("Test has started", result, is(true));
@@ -35,8 +33,37 @@ public class CreateNewVehicleTests extends DslTest {
     }
 
     @Test(groups = {"BVT"},
-        testName = "canCreateNewValidVehicle",
-        description = "Tester can start new test when creating a vehicle",
+            testName = "canCreateNewValidVehicleWithoutVin",
+            description = "Tester can start new test when creating a vehicle")
+    public void canCreateNewValidVehicleWithoutVin() throws IOException, URISyntaxException{
+        // Given that a tester creates a new DVSA vehicle without a VIN
+        Boolean result = motUI.normalTest.createNewDvsaVehicle(
+                userData.createTester(siteData.createSite().getId(), false),
+                Vehicle.generateValidDetails().setVin("").setEmptyVinReason("Missing"));
+
+        // Then a test is started for the newly created vehicle
+        assertThat("Test has started", result, is(true));
+
+    }
+
+    @Test(groups = {"BVT"},
+            testName = "canCreateNewValidVehicleWithoutVrm",
+            description = "Tester can start new test when creating a vehicle")
+    public void canCreateNewValidVehicleWithoutVrm() throws IOException, URISyntaxException{
+
+        // Given that a tester creates a new DVSA vehicle without a VRM
+        Boolean result = motUI.normalTest.createNewDvsaVehicle(
+                userData.createTester(siteData.createSite().getId(), false),
+            Vehicle.generateValidDetails().setRegistration("").setEmptyVrmReason("Missing"));
+
+        // Then a test is started for the newly created vehicle
+        assertThat("Test has started", result, is(true));
+
+    }
+
+    @Test(groups = {"BVT"},
+        testName = "cannotCreateVehicleWithoutValidAddStepOneParameters",
+        description = "Tester cannot start new test when creating a vehicle with invalid details",
         dataProvider = "missingAddStepOneVehicleData")
     public void cannotCreateVehicleWithoutValidAddStepOneParameters(String property, String errorMsg)
             throws IOException, URISyntaxException {
@@ -56,9 +83,10 @@ public class CreateNewVehicleTests extends DslTest {
     }
 
 
-    @Test(groups = {"BVT"},
-        testName = "canCreateNewValidVehicle",
-        description = "Tester can start new test when creating a vehicle",
+    @Test(
+        groups = {"BVT"},
+        testName = "cannotCreateVehicleWithoutValidAddStepTwoParameters",
+        description = "Tester cannot start new test when creating a vehicle with invalid details",
         dataProvider = "missingAddStepTwoVehicleData")
     public void cannotCreateVehicleWithoutValidAddStepTwoParameters(String property, String errorMsg)
             throws IOException, URISyntaxException {
@@ -97,6 +125,46 @@ public class CreateNewVehicleTests extends DslTest {
 
         // Then a suitable error message is displayed and they stay on the page
         assertThat("Error message (" + errorMsg + ") validated", result, is(true));
+    }
+
+    @Test(groups = {"BVT"},
+            testName = "cannotCreateNewVehicleWithVinAndVinReason",
+            description = "Tester cannot start new test when supplying VIN and missing VIN reason")
+    public void cannotCreateNewVehicleWithVinAndVinReason() throws Exception {
+
+        // Given that a tester is on the page vehicle-step/add-step-one
+        CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage =
+                motUI.normalTest.gotoCreateNewVehicleRecordIdentificationPage(
+                        userData.createTester(siteData.createSite().getId(), false));
+
+        // And they submit the form with a VIN and missing VIN reason
+        String errorMsg = "remove the VIN";
+        boolean result = motUI.normalTest.submitPageOneDetailsWithInappropriateReason(
+                "Missing", "vin", errorMsg, createNewVehicleRecordIdentificationPage);
+
+        // Then a suitable error message is displayed and they stay on the page
+        assertThat("Error message (" + errorMsg + ") validated", result, is(true));
+
+    }
+
+    @Test(groups = {"BVT"},
+            testName = "cannotCreateNewVehicleWithVrmAndVrmReason",
+            description = "Tester cannot start new test when supplying VRM and missing VRM reason")
+    public void cannotCreateNewVehicleWithVrmAndVrmReason() throws Exception {
+
+        // Given that a tester is on the page vehicle-step/add-step-one
+        CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage =
+                motUI.normalTest.gotoCreateNewVehicleRecordIdentificationPage(
+                        userData.createTester(siteData.createSite().getId(), false));
+
+        // And they submit the form with a VRM and missing VRM reason
+        String errorMsg = "remove the registration mark";
+        boolean result = motUI.normalTest.submitPageOneDetailsWithInappropriateReason(
+                "Missing", "vrm", errorMsg, createNewVehicleRecordIdentificationPage);
+
+        // Then a suitable error message is displayed and they stay on the page
+        assertThat("Error message (" + errorMsg + ") validated", result, is(true));
+
     }
 
     @DataProvider

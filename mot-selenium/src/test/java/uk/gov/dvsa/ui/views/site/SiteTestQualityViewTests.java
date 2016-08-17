@@ -13,13 +13,12 @@ import uk.gov.dvsa.ui.pages.vts.SiteTestQualityPage;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Calendar;
-import java.util.Date;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 public class SiteTestQualityViewTests extends DslTest {
+    private static final int MILEAGE = 14000;
     private User tester;
     private Site site;
     private AeDetails ae;
@@ -40,9 +39,9 @@ public class SiteTestQualityViewTests extends DslTest {
         //Given there are tests created for site in previous month
         DateTime date = new DateTime(this.getFirstDayOfMonth(1));
         motApi.createTest(tester, site.getId(),
-            vehicleData.getNewVehicle(tester, VehicleClass.one), TestOutcome.PASSED, 14000, date);
+            vehicleData.getNewVehicle(tester, VehicleClass.one), TestOutcome.PASSED, MILEAGE, date);
         motApi.createTest(tester, site.getId(),
-            vehicleData.getNewVehicle(tester, VehicleClass.four), TestOutcome.PASSED, 14000, date);
+            vehicleData.getNewVehicle(tester, VehicleClass.four), TestOutcome.PASSED, MILEAGE, date);
 
         //When I go to site Test Quality page
         SiteTestQualityPage siteTestQualityPage = motUI.site.gotoTestQuality(tester, site);
@@ -66,9 +65,9 @@ public class SiteTestQualityViewTests extends DslTest {
         //Given there are tests created for site in 12 months ago
         DateTime date = new DateTime(this.getFirstDayOfMonth(12));
         motApi.createTest(tester, site.getId(),
-            vehicleData.getNewVehicle(tester, VehicleClass.one), TestOutcome.FAILED, 14000, date);
+            vehicleData.getNewVehicle(tester, VehicleClass.one), TestOutcome.FAILED, MILEAGE, date);
         motApi.createTest(tester, site.getId(),
-            vehicleData.getNewVehicle(tester, VehicleClass.four), TestOutcome.FAILED, 14000, date);
+            vehicleData.getNewVehicle(tester, VehicleClass.four), TestOutcome.FAILED, MILEAGE, date);
 
         //When I go to site Test Quality page
         SiteTestQualityPage siteTestQualityPage = motUI.site.gotoTestQuality(tester, site)
@@ -88,11 +87,7 @@ public class SiteTestQualityViewTests extends DslTest {
         assertThat("Return link is displayed", siteTestQualityPage.isReturnLinkDisplayed(), is(true));
     }
 
-    private Date getFirstDayOfMonth(int monthsAgo) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH, (-1 * monthsAgo));
-        calendar.set(Calendar.DATE, 1);
-
-        return calendar.getTime();
+    private DateTime getFirstDayOfMonth(int monthsAgo) {
+        return DateTime.now().dayOfMonth().withMinimumValue().minusMonths(monthsAgo);
     }
 }

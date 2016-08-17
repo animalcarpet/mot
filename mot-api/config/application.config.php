@@ -1,6 +1,6 @@
 <?php
 
-$env = getenv('APPLICATION_ENV') ? : 'development';
+$env = getenv('APPLICATION_ENV') ? : 'production';
 $mods = require_once('modules.list.php');
 
 # The ability to load config files from a system controlled location (puppet)

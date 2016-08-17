@@ -24,6 +24,13 @@ class ReasonForRejectionController extends AbstractDvsaRestfulController
 
     const SEARCH_REQUIRED_MESSAGE = "search query string parameter is required";
 
+    /**
+     * Search for defects during an MOT test using the "search" parameter.
+     *
+     * @param mixed $motTestNumber
+     *
+     * @return JsonModel
+     */
     public function get($motTestNumber)
     {
         $searchString = (string)$this->getRequest()->getQuery(self::QUERY_PARAM_SEARCH);

@@ -5,7 +5,9 @@ use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\National\Controller\NationalBat
 use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\National\Controller\NationalComponentStatisticsController;
 use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\National\Controller\NationalStatisticsController;
 use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Site\Controller\SiteStatisticsController;
+use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Tester\Controller\TesterAtSiteComponentStatisticsController;
 use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Tester\Controller\TesterComponentStatisticsController;
+use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Tester\Controller\TesterAggregatedStatisticsController;
 
 return [
     'router' => [
@@ -62,12 +64,27 @@ return [
                     ],
                 ],
             ],
-            'component-fail-rate'              => [
+            'tester-at-site-component-fail-rate'              => [
                 'type'    => 'Segment',
                 'options' => [
                     'route'       => '/statistic/component-fail-rate/site/:siteId/tester/:testerId/group/:group/:year/:month',
                     'constraints' => [
                         'siteId'   => '[0-9]+',
+                        'testerId' => '[0-9]+',
+                        'group'    => 'A|B',
+                        'year'     => '[0-9]+',
+                        'month'    => '[0-9]+',
+                    ],
+                    'defaults'    => [
+                        'controller' => TesterAtSiteComponentStatisticsController::class,
+                    ]
+                ]
+            ],
+            'tester-component-fail-rate'              => [
+                'type'    => 'Segment',
+                'options' => [
+                    'route'       => '/statistic/component-fail-rate/tester/:testerId/group/:group/:year/:month',
+                    'constraints' => [
                         'testerId' => '[0-9]+',
                         'group'    => 'A|B',
                         'year'     => '[0-9]+',
@@ -91,6 +108,20 @@ return [
                         'controller' => NationalComponentStatisticsController::class,
                     ]
                 ]
+            ],
+            'tester-aggregated-statistics'           => [
+                'type'    => 'Segment',
+                'options' => [
+                    'route'       => '/statistic/tester-performance/tester/:id/:year/:month',
+                    'constraints' => [
+                        'id'    => '[0-9]+',
+                        'year'  => '[0-9]+',
+                        'month' => '[0-9]+',
+                    ],
+                    'defaults'    => [
+                        'controller' => TesterAggregatedStatisticsController::class,
+                    ],
+                ],
             ],
         ],
     ],

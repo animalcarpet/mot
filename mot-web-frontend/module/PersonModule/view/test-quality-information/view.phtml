@@ -1,0 +1,44 @@
+<?php
+
+/** @var $viewModel TestQualityInformationViewModel */
+
+use Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityInformation\TestQualityInformationViewModel;
+?>
+
+<div class='layout-filter-data'>
+
+    <div class="layout-filter__controls">
+
+        <?php echo $this->partial('partial/month-filter/month-filter', [
+                'monthFilter' => $viewModel->getMonthFilter(),
+            ]);
+        ?>
+    </div>
+
+    <div class="layout-filter__content">
+
+        <?php
+        if ($viewModel->isAVisible()) {
+            echo $this->partial('partials/test-quality-group', [
+                'group'       => $viewModel->getA()
+            ]);
+        }
+
+        if ($viewModel->isBVisible()) {
+            echo $this->partial('partials/test-quality-group', [
+                'group' => $viewModel->getB()
+            ]);
+        }
+        ?>
+    </div>
+</div>
+
+<nav class="content-navigation">
+    <ul class="content-navigation__secondary">
+        <li>
+            <a id="return-link" href="<?php echo $viewModel->getReturnLink()?>">
+                <?php echo $viewModel->getReturnLinkText(); ?>
+            </a>
+        </li>
+    </ul>
+</nav>

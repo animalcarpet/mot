@@ -2,6 +2,7 @@ package uk.gov.dvsa.domain.api.client;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
+import org.json.JSONObject;
 
 import static com.jayway.restassured.RestAssured.with;
 
@@ -28,6 +29,10 @@ public class MotClient {
 
     public Response post(String request, String path, String token) {
         return postRequest(request, path, token);
+    }
+
+    public Response post(JSONObject request, String path, String token) {
+        return postRequest(request.toString(), path, token);
     }
 
     public Response postWithoutToken(String request, String path) {

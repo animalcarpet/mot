@@ -12,7 +12,6 @@ public class DefectCategoriesPage extends Page {
     private static final String PAGE_TITLE = "Defect categories";
 
     @FindBy(id = "listContainer") private WebElement listContainer;
-    @FindBy(css = "#defects-list .defect") private WebElement defects;
 
     public DefectCategoriesPage(MotAppDriver driver) {
         super(driver);
@@ -24,13 +23,11 @@ public class DefectCategoriesPage extends Page {
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
     }
 
-    public void navigateToDefectCategory(String... defectCategories) {
+    public DefectsPage navigateToDefectCategory(String... defectCategories) {
         for (String value : defectCategories) {
             listContainer.findElement(By.linkText(value)).click();
         }
-    }
 
-    public boolean defectsAreDisplayed() {
-        return defects.isDisplayed();
+        return new DefectsPage(driver);
     }
 }

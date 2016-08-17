@@ -17,6 +17,7 @@ use Core\ViewModel\Sidebar\GeneralSidebarStatusItem;
 use Core\ViewModel\Sidebar\SidebarBadge;
 use Dvsa\Mot\Frontend\PersonModule\Routes\PersonProfileRoutes;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuard;
+use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Model\TesterAuthorisation;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
@@ -293,6 +294,15 @@ class PersonProfileSidebar extends GeneralSidebar
                 $this->currentUrl :
                 self::OLD_USER_PROFILE_URL . $this->personId) . '/manage-internal-role';
 
+        $testQualityInformationUrl = ($this->newProfileEnabled ?
+                $this->currentUrl :
+                self::OLD_USER_PROFILE_URL . $this->personId) .
+                sprintf(
+                    '/test-quality-information/%s',
+                    DateUtils::subtractCalendarMonths(
+                        DateUtils::toUserTz(DateUtils::firstOfThisMonth()), 1)
+                        ->format("m/Y"));
+
         $relatedBox = new GeneralSidebarLinkList('Related');
         $relatedBox->setId('related');
 
@@ -352,6 +362,16 @@ class PersonProfileSidebar extends GeneralSidebar
                     $this->urlPlugin->fromRoute($this->personProfileRoutes->getTestLogsRoute(),
                         ['id' => $this->personId]
                     )
+                )
+            );
+        }
+
+        if ($this->personProfileGuard->canViewTestQuality()) {
+            $relatedBox->addLink(
+                new GeneralSidebarLink(
+                    'test-quality-information',
+                    'Test quality information',
+                    $testQualityInformationUrl
                 )
             );
         }

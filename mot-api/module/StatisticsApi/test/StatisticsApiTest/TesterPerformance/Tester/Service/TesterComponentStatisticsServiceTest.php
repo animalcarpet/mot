@@ -3,16 +3,23 @@ namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\Tester\Service;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\QueryResult\ComponentFailRateResult;
 use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Site\QueryResult\TesterPerformanceResult;
+use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Tester\Mapper\ComponentBreakdownDtoMapper;
 use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Tester\Repository\TesterComponentStatisticsRepository;
 use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Tester\Repository\TesterStatisticsRepository;
 use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Tester\Service\TesterComponentStatisticsService;
-use DvsaCommon\Auth\PermissionAtSite;
+use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentBreakdownDto;
+use DvsaCommon\Auth\Assertion\ViewTesterTestQualityAssertion;
+use DvsaCommon\Auth\MotIdentityProviderInterface;
+use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Enum\VehicleClassGroupCode;
+use DvsaCommon\Model\TesterAuthorisation;
+use DvsaCommonApiTest\Stub\IdentityStub;
 use DvsaCommonTest\Date\TestDateTimeHolder;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\MethodSpy;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Person;
+use PersonApi\Service\Mapper\TesterGroupAuthorisationMapper;
 use PersonApi\Service\PersonalDetailsService;
 
 class TesterComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
@@ -25,28 +32,40 @@ class TesterComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
     private $authorisationService;
     /** @var  PersonalDetailsService | \PHPUnit_Framework_MockObject_MockObject */
     private $personalDetailsService;
+    /** @var  ViewTesterTestQualityAssertion | \PHPUnit_Framework_MockObject_MockObject */
+    private $assertion;
+    /** @var  TesterGroupAuthorisationMapper | \PHPUnit_Framework_MockObject_MockObject */
+    private $testerGroupAuthorisationMapper;
     /** @var  TesterComponentStatisticsService */
     private $sut;
-
-    private $siteId = 1;
 
     public function setUp()
     {
         $this->componentStatisticsRepositoryMock = XMock::of(TesterComponentStatisticsRepository::class);
         $this->testerStatisticsRepositoryMock = XMock::of(TesterStatisticsRepository::class);
         $this->authorisationService = new AuthorisationServiceMock();
-        $this->authorisationService = $this->authorisationService->grantedAtSite(PermissionAtSite::VTS_VIEW_TEST_QUALITY, $this->siteId);
+        $this->authorisationService->granted(PermissionInSystem::TESTER_VIEW_TEST_QUALITY);
         $this->personalDetailsService = XMock::of(PersonalDetailsService::class);
         $this->personalDetailsService
             ->expects($this->any())
             ->method('findPerson')
             ->willReturn(new Person());
 
+        $this->assertion = XMock::of(ViewTesterTestQualityAssertion::class);
+        $this->testerGroupAuthorisationMapper = XMock::of(TesterGroupAuthorisationMapper::class);
+        $this
+            ->testerGroupAuthorisationMapper
+            ->method("getAuthorisation")
+            ->willReturn(new TesterAuthorisation());
+
         $this->sut = new TesterComponentStatisticsService($this->componentStatisticsRepositoryMock,
             $this->testerStatisticsRepositoryMock,
             $this->getDateTimeHolder(),
             $this->authorisationService,
-            $this->personalDetailsService
+            $this->personalDetailsService,
+            $this->assertion,
+            $this->testerGroupAuthorisationMapper,
+            new ComponentBreakdownDtoMapper()
         );
     }
 
@@ -59,7 +78,7 @@ class TesterComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
         $year = (int)$date->format("Y");
         $month = (int)$date->format("m");
 
-        $this->sut->get(1, 1, "x", $year, $month);
+        $this->sut->get(1, "x", $year, $month);
     }
 
     /**
@@ -87,7 +106,7 @@ class TesterComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->willReturn($this->getTesterPerformanceResult($failedCount, $totalCount, $totalTime, $averageVehicleAge));
 
-        $result = $this->sut->get(1, 1, VehicleClassGroupCode::BIKES, $year, $month);
+        $result = $this->sut->get(1, VehicleClassGroupCode::BIKES, $year, $month);
 
         $this->assertEquals($expectedAverageTime, $result->getGroupPerformance()->getAverageTime()->getTotalSeconds());
         $this->assertEquals($expectedPercentageFailed, $result->getGroupPerformance()->getPercentageFailed());
@@ -128,7 +147,7 @@ class TesterComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->willReturn($this->getTesterPerformanceResult(10, 10, 0, 123));
 
-        $result = $this->sut->get(1, 1, VehicleClassGroupCode::BIKES, $year, $month);
+        $result = $this->sut->get(1, VehicleClassGroupCode::BIKES, $year, $month);
 
         $this->assertEquals($expectedPercentage, $result->getComponents()[0]->getPercentageFailed());
 
@@ -185,7 +204,7 @@ class TesterComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
             ->willReturn(new TesterPerformanceResult());
         $testerStatisticsRepositorySpy = new MethodSpy($this->testerStatisticsRepositoryMock, 'get');
 
-        $this->sut->get(1, 1, VehicleClassGroupCode::BIKES, $year, $month);
+        $this->sut->get(1, VehicleClassGroupCode::BIKES, $year, $month);
 
         $this->assertRepositoryParameters($componentRepositorySpy->getInvocations()[0]->parameters, $year, $month);
         $this->assertRepositoryParameters($testerStatisticsRepositorySpy->getInvocations()[0]->parameters, $year, $month);
@@ -207,32 +226,17 @@ class TesterComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
         $year = (int)$date->format("Y");
         $month = (int)$date->format("m");
 
-        $this->sut->get(1, 1, VehicleClassGroupCode::BIKES, $year, $month);
+        $this->sut->get(1, VehicleClassGroupCode::BIKES, $year, $month);
 
         $this->assertRepositoryParameters($componentRepositorySpy->getInvocations()[0]->parameters, $year, $month);
         $this->assertRepositoryParameters($testerStatisticsRepositorySpy->getInvocations()[0]->parameters, $year, $month);
     }
 
-    /**
-     * @expectedException \DvsaCommon\Exception\UnauthorisedException
-     */
-    public function testGetThrowsExceptionIfUserHasIncorrectPermission()
-    {
-        // GIVEN I do not have any permissions
-        $this->authorisationService->clearAll();
-
-        $date = $this->getDateTimeHolder()->getCurrentDate();
-        $year = (int)$date->format("Y");
-        $month = (int)$date->format("m");
-
-        $this->sut->get(1, 1, VehicleClassGroupCode::BIKES, $year, $month);
-    }
-
     public function assertRepositoryParameters($parameters, $expectedYear, $expectedMonth)
     {
-        $repositoryYear = $parameters[3];
-        $repositoryMonth = $parameters[4];
-        $repositoryGroup = $parameters[2];
+        $repositoryYear = $parameters[2];
+        $repositoryMonth = $parameters[3];
+        $repositoryGroup = $parameters[1];
 
         $this->assertEquals($expectedYear, $repositoryYear);
         $this->assertEquals($expectedMonth, $repositoryMonth);

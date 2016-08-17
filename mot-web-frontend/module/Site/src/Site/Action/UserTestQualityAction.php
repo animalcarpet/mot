@@ -60,7 +60,7 @@ class UserTestQualityAction implements AutoWireableInterface
             return new NotFoundActionResult();
         }
 
-        $userBreakdown = $this->componentFailRateApiResource->getForDate($siteId, $userId, $groupCode, $month, $year);
+        $userBreakdown = $this->componentFailRateApiResource->getForTesterAtSite($siteId, $userId, $groupCode, $month, $year);
         $nationalBreakdown = $this->nationalComponentStatisticApiResource->getForDate($groupCode, $month, $year);
         $nationalGroupPerformance = $this->getNationalGroupPerformance($groupCode, $month, $year);
         $this->site = $this->siteMapper->getById($siteId);
@@ -96,7 +96,7 @@ class UserTestQualityAction implements AutoWireableInterface
     {
         $this->assertion->assertGranted($siteId);
 
-        $userBreakdown = $this->componentFailRateApiResource->getForDate($siteId, $userId, $groupCode, $month, $year);
+        $userBreakdown = $this->componentFailRateApiResource->getForTesterAtSite($siteId, $userId, $groupCode, $month, $year);
         $nationalBreakdown = $this->nationalComponentStatisticApiResource->getForDate($groupCode, $month, $year);
         $nationalGroupPerformance = $this->getNationalGroupPerformance($groupCode, $month, $year);
         $site = $this->siteMapper->getById($siteId);

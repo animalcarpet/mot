@@ -12,24 +12,24 @@ class TesterComponentStatisticsController extends AbstractDvsaRestfulController 
 
     private $service;
 
-    function __construct(TesterComponentStatisticsService $componentStatisticsService)
+    function __construct(TesterComponentStatisticsService $service)
     {
-        $this->service = $componentStatisticsService;
+        $this->service = $service;
+        $this->setIdentifierName("testerId");
     }
 
-    public function getList()
+    public function get($testerId)
     {
         if (!$this->isFeatureEnabled(FeatureToggle::TEST_QUALITY_INFORMATION)) {
             return ApiResponse::jsonOk();
         }
 
-        $siteId = $this->params()->fromRoute('siteId');
-        $testerId = $this->params()->fromRoute('testerId');
+        $testerId = (int) $testerId;
         $group = $this->params()->fromRoute('group');
         $year = (int)$this->params()->fromRoute("year");
         $month = (int)$this->params()->fromRoute("month");
 
-        $componentStatisticsDto = $this->service->get($siteId, $testerId, $group, $year, $month);
+        $componentStatisticsDto = $this->service->get($testerId, $group, $year, $month);
 
         return $this->returnDto($componentStatisticsDto);
     }

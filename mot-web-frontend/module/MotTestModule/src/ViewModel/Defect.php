@@ -7,6 +7,8 @@
 
 namespace Dvsa\Mot\Frontend\MotTestModule\ViewModel;
 
+use DvsaCommon\Dto\MotTesting\DefectDto;
+
 class Defect
 {
     /**
@@ -22,12 +24,12 @@ class Defect
     /**
      * @var string
      */
-    private $defectBreadcrumb;
+    private $description;
 
     /**
      * @var string
      */
-    private $description;
+    private $defectBreadcrumb;
 
     /**
      * @var string
@@ -62,21 +64,21 @@ class Defect
     /**
      * Defect constructor.
      *
-     * @param $defectId
-     * @param $parentCategoryId
-     * @param $defectBreadcrumb
-     * @param $description
-     * @param $advisoryText
-     * @param $inspectionManualReference
-     * @param $isAdvisory
-     * @param $isPrs
-     * @param $isFailure
+     * @param int    $defectId
+     * @param int    $parentCategoryId
+     * @param string $description
+     * @param string $defectBreadcrumb
+     * @param string $advisoryText
+     * @param string $inspectionManualReference
+     * @param bool   $isAdvisory
+     * @param bool   $isPrs
+     * @param bool   $isFailure
      */
     public function __construct(
         $defectId,
         $parentCategoryId,
-        $defectBreadcrumb,
         $description,
+        $defectBreadcrumb,
         $advisoryText,
         $inspectionManualReference,
         $isAdvisory,
@@ -85,13 +87,43 @@ class Defect
     ) {
         $this->defectId = $defectId;
         $this->parentCategoryId = $parentCategoryId;
-        $this->defectBreadcrumb = $defectBreadcrumb;
         $this->description = $description;
+        $this->defectBreadcrumb = $defectBreadcrumb;
         $this->advisoryText = $advisoryText;
         $this->inspectionManualReference = $inspectionManualReference;
         $this->advisory = $isAdvisory;
         $this->prs = $isPrs;
         $this->failure = $isFailure;
+    }
+
+    /**
+     * @param DefectDto $data
+     *
+     * @return Defect
+     */
+    public static function fromApi(DefectDto $data)
+    {
+        $defectId = $data->getId();
+        $parentCategoryId = $data->getParentCategoryId();
+        $description = $data->getDescription();
+        $defectBreadcrumb = DefectSentenceCaseConverter::convert($data->getDefectBreadcrumb());
+        $advisoryText = $data->getAdvisoryText();
+        $inspectionManualReference = $data->getInspectionManualReference();
+        $isAdvisory = $data->isAdvisory();
+        $isPrs = $data->isPrs();
+        $isFailure = $data->isFailure();
+
+        return new self(
+            $defectId,
+            $parentCategoryId,
+            $description,
+            $defectBreadcrumb,
+            $advisoryText,
+            $inspectionManualReference,
+            $isAdvisory,
+            $isPrs,
+            $isFailure
+        );
     }
 
     /**
@@ -113,17 +145,25 @@ class Defect
     /**
      * @return string
      */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return string
+     */
     public function getDefectBreadcrumb()
     {
         return $this->defectBreadcrumb;
     }
 
     /**
-     * @return string
+     * @param string $defectBreadcrumb
      */
-    public function getDescription()
+    public function setDefectBreadcrumb($defectBreadcrumb)
     {
-        return $this->description;
+        $this->defectBreadcrumb = $defectBreadcrumb;
     }
 
     /**

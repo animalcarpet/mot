@@ -181,18 +181,26 @@ class MotTest extends AbstractMotTest
         );
     }
 
-    public function submitSurveyResponse($token, $motTestId, $satisfactionRating)
+    /**
+     * @param string $authToken
+     * @param int    $satisfactionRating
+     * @param string $surveyToken
+     * @return \Dvsa\Mot\Behat\Support\Response
+     */
+    public function submitSurveyResponse($authToken, $satisfactionRating, $surveyToken)
     {
         $body = json_encode(
-            ['mot_test_number' => $motTestId, 'satisfaction_rating' => $satisfactionRating]
+            ['satisfaction_rating' => $satisfactionRating, 'token' => $surveyToken]
         );
 
-        return $this->client->request(new Request(
-            MotApi::METHOD_POST,
-            self::PATH_SURVEY,
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '. $token],
-            $body
-        ));
+        return $this->client->request(
+            new Request(
+                MotApi::METHOD_POST,
+                self::PATH_SURVEY,
+                ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '. $authToken],
+                $body
+            )
+        );
     }
 
     /**

@@ -1,5 +1,6 @@
 package uk.gov.dvsa.ui.pages.profile;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.navigation.MotPageFactory;
@@ -11,8 +12,8 @@ import uk.gov.dvsa.ui.pages.changedriverlicence.ChangeDrivingLicencePage;
 import uk.gov.dvsa.ui.pages.dvsa.ManageRolesPage;
 import uk.gov.dvsa.ui.pages.dvsa.RolesAndAssociationsPage;
 import uk.gov.dvsa.ui.pages.dvsa.UserSearchResultsPage;
-import uk.gov.dvsa.ui.pages.profile.qualificationdetails.QualificationDetailsGroupAPage;
 import uk.gov.dvsa.ui.pages.profile.qualificationdetails.QualificationDetailsPage;
+import uk.gov.dvsa.ui.pages.profile.testqualityinformation.AggregatedTestQualityPage;
 
 public class NewUserProfilePage extends ProfilePage {
     private static final String PAGE_TITLE = "User profile";
@@ -20,7 +21,6 @@ public class NewUserProfilePage extends ProfilePage {
 
     @FindBy(id = "manage-roles") private WebElement selectManageRolesLink;
     @FindBy(css = "#display-name a") private WebElement changeNameLink;
-    @FindBy(id = "validation-message--success") private WebElement messageSuccess;
     @FindBy(id = "roles-and-associations") private WebElement roleAndAssociationLink;
     @FindBy(id = "drivingLicence") private WebElement drivingLicence;
     @FindBy(id = "account_management") private WebElement accountManagement;
@@ -31,6 +31,7 @@ public class NewUserProfilePage extends ProfilePage {
     @FindBy(id = "personal_details") private WebElement personalDetailsTable;
     @FindBy(id = "dateOfBirth") private WebElement dateOfBirth;
     @FindBy(id = "qualification-details") private WebElement qualificationDetails;
+    @FindBy(id = "test-quality-information") private WebElement testQualityInformationLink;
     @FindBy(css = "#drivingLicence a") protected WebElement changeDrivingLicenceLink;
     @FindBy(css = "#email-address a") protected WebElement changeEmailLink;
     @FindBy(css = "#telephone-number a") protected WebElement changeTelephoneLink;
@@ -40,6 +41,7 @@ public class NewUserProfilePage extends ProfilePage {
     @FindBy(css = "#drivingLicence span") protected WebElement personDrivingLicenceRegion;
     @FindBy(xpath = "(//*[@class='content-navigation__secondary']//a)[1]") protected WebElement cancelAndReturnToSearchResults;
     @FindBy(css = "#full-address a") private WebElement changeAddressLink;
+    private By messageSuccessSelector = By.id("validation-message--success");
 
     public NewUserProfilePage(MotAppDriver driver) {
         super(driver);
@@ -79,12 +81,12 @@ public class NewUserProfilePage extends ProfilePage {
 
     @Override
     public String getMessageSuccess(){
-        return messageSuccess.getText();
+        return getElementText(messageSuccessSelector);
     }
 
     @Override
     public boolean isSuccessMessageDisplayed() {
-        return messageSuccess.isDisplayed();
+        return isElementVisible(messageSuccessSelector);
     }
 
     public boolean isQualificationStatusSectionIsDisplayed() {
@@ -184,5 +186,10 @@ public class NewUserProfilePage extends ProfilePage {
     public QualificationDetailsPage clickQualificationDetailsLink(){
         qualificationDetails.click();
         return MotPageFactory.newPage(driver, QualificationDetailsPage.class);
+    }
+
+    public AggregatedTestQualityPage clickTestQualityInformationLink() {
+        testQualityInformationLink.click();
+        return new AggregatedTestQualityPage(driver);
     }
 }

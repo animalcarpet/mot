@@ -6,9 +6,10 @@ import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.domain.service.CookieService;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.ui.pages.AssessmentDetailsConfirmationPage;
-import uk.gov.dvsa.ui.pages.events.EventsHistoryPage;
 import uk.gov.dvsa.ui.pages.PageLocator;
 import uk.gov.dvsa.ui.pages.VehicleSearchPage;
+import uk.gov.dvsa.ui.pages.VehicleSearchResultsPage;
+import uk.gov.dvsa.ui.pages.events.EventsHistoryPage;
 import uk.gov.dvsa.ui.pages.mot.*;
 import uk.gov.dvsa.ui.pages.vts.VehicleTestingStationPage;
 
@@ -75,11 +76,8 @@ public class VehicleReInspectionWorkflow extends BaseWorkflow {
     public TestOptionsPage startMotTestAsATester(User user, Vehicle vehicle) throws IOException {
         injectOpenAmCookieAndNavigateToPath(user, VehicleSearchPage.PATH);
 
-        VehicleSearchPage vehicleSearchPage = PageLocator.getVehicleSearchPage(driver).searchVehicle(vehicle);
-        StartTestConfirmationPage testConfirmationPage = vehicleSearchPage.selectVehicleForTest();
-        testConfirmationPage.clickStartMotTest();
-
-        return new TestOptionsPage(driver);
+        return PageLocator.getVehicleSearchPage(driver).searchVehicle(vehicle).selectVehicle(
+                StartTestConfirmationPage.class).clickStartMotTest();
     }
 
     public TestShortSummaryPage abortActiveTestOnVtsPage(String regNum) {

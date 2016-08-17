@@ -10,6 +10,7 @@ import uk.gov.dvsa.ui.pages.ChangeTelephoneDetailsPage;
 import uk.gov.dvsa.ui.pages.dvsa.RolesAndAssociationsPage;
 import uk.gov.dvsa.ui.pages.profile.annualassessmentcertificates.AnnualAssessmentCertificatesIndexPage;
 import uk.gov.dvsa.ui.pages.profile.qualificationdetails.QualificationDetailsPage;
+import uk.gov.dvsa.ui.pages.profile.testqualityinformation.AggregatedTestQualityPage;
 
 public class NewPersonProfilePage extends ProfilePage {
 
@@ -33,6 +34,7 @@ public class NewPersonProfilePage extends ProfilePage {
     @FindBy(css = "#telephone-number a") private WebElement userTelephoneLink;
     @FindBy(css = "#validation-message--success") private WebElement successMessage;
     @FindBy(id = "annual-assessment-certificates") WebElement annualAssessmentCertificates;
+    @FindBy(id = "test-quality-information") private WebElement testQualityInformationLink;
 
     private static String DVSA_ROLES = "dvsa_roles";
     private static String QUALIFICATION_STATUS = "qualification_status";
@@ -153,5 +155,10 @@ public class NewPersonProfilePage extends ProfilePage {
     public AnnualAssessmentCertificatesIndexPage clickAnnualAssessmentCertificatesLink() {
         annualAssessmentCertificates.click();
         return new AnnualAssessmentCertificatesIndexPage(driver);
+    }
+
+    public AggregatedTestQualityPage clickTestQualityInformationLink() {
+        testQualityInformationLink.click();
+        return new AggregatedTestQualityPage(driver);
     }
 }

@@ -302,11 +302,9 @@ class SummaryStep extends AbstractStep implements WizardStep
             ->setFuelTypeId($stepsData['fuelType'])
             ->setMakeId($makeId)
             ->setModelId($modelId)
-            ->setRegistration($stepsData['registrationNumber'])
             ->setSecondaryColourId($stepsData['secondaryColour'])
             ->setVehicleClassId($stepsData['testClass'])
-            ->setTransmissionTypeId($stepsData['transmissionType'])
-            ->setVin($stepsData['VIN']);
+            ->setTransmissionTypeId($stepsData['transmissionType']);
 
         if (in_array(
             $stepsData['fuelType'],
@@ -325,10 +323,14 @@ class SummaryStep extends AbstractStep implements WizardStep
 
         if (isset($stepsData['emptyVinReason'])) {
             $createVehicleRequest->setEmptyVinReasonId($stepsData['emptyVinReason']);
+        } else {
+            $createVehicleRequest->setVin($stepsData['VIN']);
         }
 
         if (isset($stepsData['emptyVrmReason'])) {
             $createVehicleRequest->setEmptyVrmReasonId($stepsData['emptyVrmReason']);
+        } else {
+            $createVehicleRequest->setRegistration($stepsData['registrationNumber']);
         }
 
         return $createVehicleRequest;
