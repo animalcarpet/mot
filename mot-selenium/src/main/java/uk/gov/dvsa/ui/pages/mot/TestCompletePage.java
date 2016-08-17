@@ -16,6 +16,7 @@ public class TestCompletePage extends Page {
     @FindBy (css = "p a[href*='/mot-test-certificates']") private WebElement certificateLink;
     @FindBy (id = "reprint-certificate") private WebElement printDocumentButton;
     @FindBy (className = "container") private WebElement testSummaryMessage;
+    @FindBy (id = "logout") private WebElement signOutLink;
 
     private static final String PAGE_TITLE = "MOT test complete";
     private static final String PAGE_TITLE_REINSPECTION = "MOT reinspection complete";
@@ -42,6 +43,11 @@ public class TestCompletePage extends Page {
 
     public GiveFeedbackPage clickBackHomeLink() {
         backToHomeLink.click();
+        return MotPageFactory.newPage(driver, GiveFeedbackPage.class);
+    }
+
+    public GiveFeedbackPage clickSignOutLink() {
+        signOutLink.click();
         return MotPageFactory.newPage(driver, GiveFeedbackPage.class);
     }
 

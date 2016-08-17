@@ -10,6 +10,7 @@ import uk.gov.dvsa.ui.pages.dvsa.RolesAndAssociationsPage;
 import uk.gov.dvsa.ui.pages.dvsa.UserSearchResultsPage;
 import uk.gov.dvsa.ui.pages.profile.annualassessmentcertificates.AnnualAssessmentCertificatesIndexPage;
 import uk.gov.dvsa.ui.pages.profile.qualificationdetails.QualificationDetailsPage;
+import uk.gov.dvsa.ui.pages.profile.testqualityinformation.AggregatedTestQualityPage;
 
 public abstract class ProfilePage extends Page {
 
@@ -130,6 +131,10 @@ public abstract class ProfilePage extends Page {
     }
 
     public AnnualAssessmentCertificatesIndexPage clickAnnualAssessmentCertificatesLink() {
+        throw new UnsupportedOperationException("Operation not supported for: " + this.toString());
+    }
+
+    public AggregatedTestQualityPage clickTestQualityInformationLink() {
         throw new UnsupportedOperationException("Operation not supported for: " + this.toString());
     }
 }

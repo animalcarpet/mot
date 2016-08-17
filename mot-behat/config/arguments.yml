@@ -29,10 +29,26 @@ parameters:
           Dvsa\Mot\Behat\Support\Api\Vts: dvsa.vts
           Dvsa\Mot\Behat\Support\History: dvsa.http_client
           Dvsa\Mot\Behat\Support\Helper\TestSupportHelper: dvsa.test_support_helper
+          Dvsa\Mot\Behat\Support\Helper\ApiResourceHelper: dvsa.api_resource_helper
           Dvsa\Mot\Behat\Utility\ArrayAccess: dvsa.array_access
           Dvsa\Mot\Behat\Support\Api\MotTestingCertificate: dvsa.mot_testing_certificate
           Dvsa\Mot\Behat\Support\Api\StatsTesterPerformance: dvsa.stats_tester_performance
           Dvsa\Mot\Behat\Support\Api\StatsComponentFailRate: dvsa.stats_component_fail_rate
+
+          Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData: dvsa.data.authorised_examiner
+          Dvsa\Mot\Behat\Support\Data\ContingencyData: dvsa.data.contingency
+          Dvsa\Mot\Behat\Support\Data\Generator\MotTestGenerator: dvsa.data.generator.mot_test_generator
+          Dvsa\Mot\Behat\Support\Data\MotTestData: dvsa.data.mot_test
+          Dvsa\Mot\Behat\Support\Data\NormalMotTestData: dvsa.data.normal_mot_test
+          Dvsa\Mot\Behat\Support\Data\DemoMotTestData: dvsa.data.demo_mot_test
+          Dvsa\Mot\Behat\Support\Data\ContingencyMotTestData: dvsa.data.contingency_mot_test
+          Dvsa\Mot\Behat\Support\Data\AbstractMotTestData: dvsa.data.abstract_mot_test
+          Dvsa\Mot\Behat\Support\Data\SiteData: dvsa.data.site
+          Dvsa\Mot\Behat\Support\Data\Statistics\TesterPerformanceCalculator: dvsa.data.statistics.tester_performance_calculator
+          Dvsa\Mot\Behat\Support\Data\UserData: dvsa.data.user
+          Dvsa\Mot\Behat\Support\Data\VehicleData: dvsa.data.vehicle
+
+
 
 services:
     dvsa.argument_resolver:

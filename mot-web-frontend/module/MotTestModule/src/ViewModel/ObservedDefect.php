@@ -59,6 +59,45 @@ class ObservedDefect
     private $name;
 
     /**
+     * This is the ID of the Defect. This is what's used as a foreign key in
+     * the various database tables to get all the Defect's information.
+     *
+     * This is NOT the ID of this specific ObservedDefect.
+     *
+     * @var int
+     *
+     * @see Defect The collection of information to which this property refers.
+     * @see ObservedDefect::$id The unique ID of this exact ObservedDefect.
+     */
+    private $defectId;
+
+    /**
+     * The ID of this ObservedDefect in the database. This is because it's
+     * possible to add two defects that are identical, so to differentiate
+     * between them we need to use the primary key from the database, i.e.,
+     * the row ID.
+     *
+     * @var int
+     */
+    private $id;
+
+    /**
+     * The breadcrumb string that is displayed in some places (Remove Defect
+     * screen for example).
+     *
+     * E.g. 'Drivers View of the Road > Mirrors'.
+     *
+     * By default this is an empty string, as building it requires information
+     * coming from a different API endpoint.
+     *
+     * @var string
+     *
+     * @uses DefectDto::$defectBreadcrumb Where the data for this property is
+     *                                    fetched from.
+     */
+    private $breadcrumb = '';
+
+    /**
      * ObservedDefect constructor.
      *
      * @param string $defectType
@@ -68,6 +107,8 @@ class ObservedDefect
      * @param string $userComment
      * @param bool   $dangerous
      * @param string $name
+     * @param int    $id
+     * @param int    $defectId
      */
     public function __construct(
         $defectType,
@@ -76,7 +117,9 @@ class ObservedDefect
         $verticalLocation,
         $userComment,
         $dangerous,
-        $name
+        $name,
+        $id,
+        $defectId
     ) {
         $this->defectType = $defectType;
         $this->lateralLocation = $lateralLocation;
@@ -85,6 +128,8 @@ class ObservedDefect
         $this->userComment = $userComment;
         $this->dangerous = $dangerous;
         $this->name = $name;
+        $this->id = $id;
+        $this->defectId = $defectId;
     }
 
     /**
@@ -153,5 +198,63 @@ class ObservedDefect
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDefectId()
+    {
+        return $this->defectId;
+    }
+
+    /**
+     * The location displayed on the remove defect screen.
+     * e.g, 'Nearside, front, lower'.
+     *
+     * If no location has been recorded for this ObservedDefect, return 'n/a'.
+     *
+     * @return string
+     */
+    public function getLocationString()
+    {
+        if (!$this->hasLocation()) {
+            return 'n/a';
+        }
+
+        return ucfirst(
+            implode(
+                ', ',
+                array_filter([$this->lateralLocation, $this->longitudinalLocation, $this->verticalLocation])
+            )
+        );
+    }
+
+    /**
+     * @return string
+     */
+    public function getBreadcrumb()
+    {
+        return $this->breadcrumb;
+    }
+
+    /**
+     * Unfortunately, we have no way of knowing what the breadcrumb is on
+     * construction. This is due to the breadcrumb information coming from
+     * a different API endpoint.
+     *
+     * @param string $breadcrumb
+     */
+    public function setBreadcrumb($breadcrumb)
+    {
+        $this->breadcrumb = $breadcrumb;
     }
 }

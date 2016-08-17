@@ -41,7 +41,7 @@ class CreateMotTestService implements TransactionAwareInterface
     const FIELD_COLOURS = 'colours';
     const FIELD_COLOURS_PRIMARY = 'primaryColour';
     const FIELD_COLOURS_SECONDARY = 'secondaryColour';
-    const FIELD_FUEL_TYPE_ID = 'fuelTypeId';
+    const FIELD_FUEL_TYPE_CODE = 'fuelTypeId';
     const FIELD_VEHICLE_CLASS_CODE = "vehicleClassCode";
     const FIELD_REASON_DIFFERENT_TESTER_CODE = 'differentTesterReasonCode';
     const FIELD_SITEID = 'siteid';
@@ -135,7 +135,7 @@ class CreateMotTestService implements TransactionAwareInterface
         $vehicleTestingStationId = (int)$data[self::FIELD_VTS_ID];
         $primaryColour           = $data[self::FIELD_COLOURS_PRIMARY];
         $secondaryColour         = ArrayUtils::tryGet($data, self::FIELD_COLOURS_SECONDARY);
-        $fuelTypeCode            = ArrayUtils::tryGet($data, self::FIELD_FUEL_TYPE_ID);
+        $fuelTypeCode            = ArrayUtils::tryGet($data, self::FIELD_FUEL_TYPE_CODE);
         $vehicleClassCode        = ArrayUtils::tryGet($data, self::FIELD_VEHICLE_CLASS_CODE);
         $hasRegistration         = ArrayUtils::tryGet($data, self::FIELD_HAS_REGISTRATION, false);
         $motTestNumberOriginal   = ArrayUtils::tryGet($data, self::FIELD_MOT_TEST_NUMBER_ORIGINAL);

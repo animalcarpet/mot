@@ -63,12 +63,8 @@ public class ManageRoles {
         return vtsAddress && role;
     }
 
-    public boolean isRolesAndAssociationsLinkDisplayedOnProfileOfPage() {
-        return new NewUserProfilePage(pageNavigator.getDriver()).isRolesAndAssociationsLinkDisplayed();
-    }
-
     public boolean isErrorMessageDisplayedOnRolesAndAssociationsPage() {
-        return new RolesAndAssociationsPage(pageNavigator.getDriver()).getFailureMessage().equals(ERROR_MESSAGE_ON_REMOVE_ROLE_PAGE);
+        return getRolesAndAssociationsPage().getFailureMessage().equals(ERROR_MESSAGE_ON_REMOVE_ROLE_PAGE);
     }
 
     public boolean isSuccessMessageDisplayedOnRolesAndAssociationsPage() {

@@ -20,7 +20,7 @@ use Zend\View\Model\ViewModel;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 
-abstract class AnnualAssessmentCertificatesActionTest extends AbstractAuthActionController
+abstract class AnnualAssessmentCertificatesActionTest extends \PHPUnit_Framework_TestCase
 {
     /** @var AnnualAssessmentCertificatesAction $annualAssessmentCertificatesAction */
     private $annualAssessmentCertificatesAction;

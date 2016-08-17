@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ba678668f7a5d1f95b77ce4b9bd7ac0c",
-    "content-hash": "53cbf0e4b5fd63ec3c66821da3753707",
+    "hash": "a9bf4b6d7e154792a85fda072f213657",
+    "content-hash": "5b2d5f2b5af0cd7e00dedc08520ad88a",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -2294,11 +2294,11 @@
         },
         {
             "name": "slot-purchase/backend-api",
-            "version": "v4.0.0",
+            "version": "v4.0.1",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/slot-purchase-backend-api.git",
-                "reference": "22e74841addadda20ee7a68c4f90a0dfbc451285"
+                "reference": "ff2320a4af76733c4a92cfa04273ed3c75180f6a"
             },
             "require": {
                 "cpms/client": "^1.25.0",
@@ -2340,6 +2340,7 @@
             },
             "autoload-dev": {
                 "psr-4": {
+                    "Dvsa\\Mot\\AuditApi\\": "mot-src/mot-api/module/AuditApi/src",
                     "SlotPurchaseApiTest\\": "module/SlotPurchaseApi/test"
                 }
             },
@@ -2368,7 +2369,7 @@
                 "proprietary"
             ],
             "description": "API for slot purchasing and related features",
-            "time": "2016-07-06 16:23:49"
+            "time": "2016-08-04 08:25:21"
         },
         {
             "name": "soflomo/purifier",
@@ -2701,12 +2702,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/ZendPdf.git",
-                "reference": "041f90c339cff63a3c4d03a28ef1ea5188059793"
+                "reference": "ebdb5723df7a33af5b4247999188db03b241f4d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/ZendPdf/zipball/041f90c339cff63a3c4d03a28ef1ea5188059793",
-                "reference": "041f90c339cff63a3c4d03a28ef1ea5188059793",
+                "url": "https://api.github.com/repos/zendframework/ZendPdf/zipball/ebdb5723df7a33af5b4247999188db03b241f4d0",
+                "reference": "ebdb5723df7a33af5b4247999188db03b241f4d0",
                 "shasum": ""
             },
             "require": {

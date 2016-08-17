@@ -124,6 +124,11 @@ services:
         arguments:
             - %base_url%
 
+    dvsa.http_client.reflective:
+        class: Dvsa\Mot\Behat\Support\HttpClient\ReflectiveClient
+        arguments:
+            - %base_url%
+
     dvsa.slot_purchase:
         class: Dvsa\Mot\Behat\Support\Api\SlotPurchase
         parent: dvsa.rest

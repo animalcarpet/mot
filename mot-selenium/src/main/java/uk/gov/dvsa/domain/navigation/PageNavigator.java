@@ -3,6 +3,7 @@ package uk.gov.dvsa.domain.navigation;
 import org.openqa.selenium.Cookie;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
+import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.domain.model.vehicle.DvlaVehicle;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.domain.service.CookieService;
@@ -61,28 +62,21 @@ public class PageNavigator {
     public StartTestConfirmationPage goToStartTestConfirmationPage(User user, Vehicle vehicle) throws URISyntaxException, IOException {
         injectOpenAmCookieAndNavigateToPath(user, VehicleSearchPage.PATH);
 
-        VehicleSearchPage vehicleSearchPage = PageLocator.getVehicleSearchPage(driver).searchVehicle(vehicle);
-        return vehicleSearchPage.selectVehicleForTest();
+        return PageLocator.getVehicleSearchPage(driver).searchVehicle(vehicle).selectVehicle(StartTestConfirmationPage.class);
     }
 
     public StartTestConfirmationPage goToStartTestConfirmationPage(User user, DvlaVehicle dvlaVehicle) throws URISyntaxException, IOException {
         injectOpenAmCookieAndNavigateToPath(user, VehicleSearchPage.PATH);
 
-        VehicleSearchPage vehicleSearchPage = PageLocator.getVehicleSearchPage(driver).searchVehicle(
-                dvlaVehicle.getRegistration(),
-                dvlaVehicle.getVin()
-        );
-        return vehicleSearchPage.selectVehicleForTest();
+        return ((VehicleSearchResultsPage) PageLocator.getVehicleSearchPage(driver).searchVehicle(
+                dvlaVehicle.getRegistration(), dvlaVehicle.getVin(), true)).selectVehicle(StartTestConfirmationPage.class);
     }
 
     public TestResultsEntryPage gotoTestResultsEntryPage(User user, Vehicle vehicle) throws URISyntaxException, IOException {
         injectOpenAmCookieAndNavigateToPath(user, VehicleSearchPage.PATH);
 
-        VehicleSearchPage vehicleSearchPage = PageLocator.getVehicleSearchPage(driver).searchVehicle(vehicle);
-        StartTestConfirmationPage testConfirmationPage = vehicleSearchPage.selectVehicleForTest();
-        TestOptionsPage testOptionsPage = testConfirmationPage.clickStartMotTest();
-
-        navigateToPath(testOptionsPage.getMotTestPath());
+        navigateToPath(PageLocator.getVehicleSearchPage(driver).searchVehicle(vehicle).selectVehicle(
+                StartTestConfirmationPage.class).clickStartMotTest().getMotTestPath());
 
         return new TestResultsEntryPage(driver);
     }
@@ -90,28 +84,33 @@ public class PageNavigator {
     public TestResultsEntryNewPage gotoTestResultsEntryNewPage(User user, Vehicle vehicle) throws URISyntaxException, IOException {
         injectOpenAmCookieAndNavigateToPath(user, VehicleSearchPage.PATH);
 
-        VehicleSearchPage vehicleSearchPage = PageLocator.getVehicleSearchPage(driver).searchVehicle(vehicle);
-        StartTestConfirmationPage testConfirmationPage = vehicleSearchPage.selectVehicleForTest();
-        TestOptionsPage testOptionsPage = testConfirmationPage.clickStartMotTest();
+        navigateToPath(PageLocator.getVehicleSearchPage(driver).searchVehicle(vehicle).selectVehicle(
+                StartTestConfirmationPage.class).clickStartMotTest().getMotTestPath());
 
-        navigateToPath(testOptionsPage.getMotTestPath());
         return new TestResultsEntryNewPage(driver);
+    }
+
+    public DefectsPage gotoDefectsPageWithDefect(User user, Vehicle vehicle, Defect defect) throws URISyntaxException, IOException {
+        return gotoTestResultsEntryNewPage(user, vehicle).clickAddDefectButton().navigateToDefectCategory(
+                defect.getCategoryPath()).navigateToAddDefectPage(defect).clickAddDefectButton();
+    }
+
+    public TestResultsEntryNewPage gotoTestResultsPageWithDefect(User user, Vehicle vehicle, Defect defect) throws URISyntaxException, IOException {
+        return gotoTestResultsEntryNewPage(user, vehicle).clickAddDefectButton().navigateToDefectCategory(
+                defect.getCategoryPath()).navigateToAddDefectPage(defect).clickAddDefectButton().clickFinishAndReturnButton();
     }
 
     public ReTestResultsEntryPage gotoReTestResultsEntryPage(User user, Vehicle vehicle) throws URISyntaxException, IOException {
         injectOpenAmCookieAndNavigateToPath(user, VehicleSearchPage.PATH);
 
-        ConfirmVehicleRetestPage vehicleRetestPage = searchForVehicleForRetest(vehicle);
-        navigateToPath(vehicleRetestPage.startRetest().getMotTestPath());
+        navigateToPath(searchForVehicleForRetest(vehicle).startRetest().getMotTestPath());
 
         return new ReTestResultsEntryPage(driver);
     }
 
     private ConfirmVehicleRetestPage searchForVehicleForRetest(Vehicle vehicle) throws URISyntaxException {
-        VehicleSearchPage vehicleSearchPage = PageLocator.getVehicleSearchPage(driver).searchVehicle(vehicle);
-        vehicleSearchPage.selectVehicleForRetest();
-
-        return new ConfirmVehicleRetestPage(driver);
+        return PageLocator.getVehicleSearchPage(driver).searchVehicle(vehicle).selectVehicle(
+                ConfirmVehicleRetestPage.class);
     }
 
     public ContingencyTestEntryPage gotoContingencyTestEntryPage(User user) throws URISyntaxException, IOException {
@@ -145,11 +144,8 @@ public class PageNavigator {
     public TestResultsEntryPage gotoTrainingTestResultsEntryPage(User user, Vehicle vehicle) throws IOException, URISyntaxException {
         injectOpenAmCookieAndNavigateToPath(user, VehicleSearchPage.TRAINING_TEST_PATH);
 
-        VehicleSearchPage vehicleSearchPage = new VehicleSearchPage(driver).searchVehicle(vehicle);
-        StartTestConfirmationPage testConfirmationPage = vehicleSearchPage.selectVehicleForTest();
-        TestOptionsPage testOptionsPage = testConfirmationPage.clickStartMotTest();
-
-        navigateToPath(testOptionsPage.getMotTestPath());
+        navigateToPath(new VehicleSearchPage(driver).searchVehicle(vehicle).selectVehicle(
+                StartTestConfirmationPage.class).clickStartMotTest().getMotTestPath());
 
         return new TestResultsEntryPage(driver);
     }
@@ -157,11 +153,8 @@ public class PageNavigator {
     public TestResultsEntryNewPage gotoTrainingTestResultsEntryNewPage(User user, Vehicle vehicle) throws IOException, URISyntaxException {
         injectOpenAmCookieAndNavigateToPath(user, VehicleSearchPage.TRAINING_TEST_PATH);
 
-        VehicleSearchPage vehicleSearchPage = new VehicleSearchPage(driver).searchVehicle(vehicle);
-        StartTestConfirmationPage testConfirmationPage = vehicleSearchPage.selectVehicleForTest();
-        TestOptionsPage testOptionsPage = testConfirmationPage.clickStartMotTest();
-
-        navigateToPath(testOptionsPage.getMotTestPath());
+        navigateToPath(new VehicleSearchPage(driver).searchVehicle(vehicle).selectVehicle(
+                StartTestConfirmationPage.class).clickStartMotTest().getMotTestPath());
 
         return new TestResultsEntryNewPage(driver);
     }
@@ -195,25 +188,22 @@ public class PageNavigator {
     public CreateNewVehicleRecordIdentificationPage gotoCreateNewVehicleRecordIdentificationPage(User user) throws IOException {
         injectOpenAmCookieAndNavigateToPath(user, VehicleSearchPage.PATH);
 
-        VehicleSearchPage vehicleSearchPage = PageLocator.getVehicleSearchPage(driver);
-        vehicleSearchPage.searchVehicle();
-        return vehicleSearchPage.createNewVehicle();
+        return PageLocator.getVehicleSearchPage(driver).searchVehicle("", "", false).createNewVehicle();
     }
 
     public DuplicateReplacementCertificateTestHistoryPage gotoDuplicateReplacementCertificateTestHistoryPage(User user, Vehicle vehicle) throws IOException {
         injectOpenAmCookieAndNavigateToPath(user, String.format("/replacement-certificate-vehicle-search?registration=%s&vin=%s",
                 vehicle.getDvsaRegistration(), vehicle.getVin()));
 
-        new VehicleSearchPage(driver).searchVehicle(vehicle).selectVehicle();
+        new VehicleSearchPage(driver).searchVehicle(vehicle).selectVehicle(StartTestConfirmationPage.class);
         return new DuplicateReplacementCertificateTestHistoryPage(driver);
     }
 
     public RefuseToTestPage gotoRefuseToTestPage(User user, Vehicle vehicle) throws IOException {
         injectOpenAmCookieAndNavigateToPath(user, VehicleSearchPage.PATH);
-        VehicleSearchPage vehicleSearchPage = PageLocator.getVehicleSearchPage(driver).searchVehicle(vehicle);
 
-        StartTestConfirmationPage testConfirmationPage = vehicleSearchPage.selectVehicleForTest();
-        return testConfirmationPage.refuseToTestVehicle();
+        return PageLocator.getVehicleSearchPage(driver).searchVehicle(vehicle).selectVehicle(
+                StartTestConfirmationPage.class).refuseToTestVehicle();
     }
 
     public SiteTestQualityPage gotoSiteTestQualityPage(User user, Site site) throws IOException {

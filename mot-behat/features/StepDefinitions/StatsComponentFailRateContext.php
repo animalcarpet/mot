@@ -2,204 +2,146 @@
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Gherkin\Node\TableNode;
-use Dvsa\Mot\Behat\Support\Api\Session;
-use Dvsa\Mot\Behat\Support\Api\StatsComponentFailRate;
+use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
+use Dvsa\Mot\Behat\Support\Data\Generator\MotTestGenerator;
+use Dvsa\Mot\Behat\Support\Data\MotTestData;
+use Dvsa\Mot\Behat\Support\Data\UserData;
+use Dvsa\Mot\Behat\Support\Data\VehicleData;
+use Dvsa\Mot\Behat\Support\Helper\ApiResourceHelper;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
+use DvsaCommon\ApiClient\Statistics\ComponentFailRate\ComponentFailRateApiResource;
+use DvsaCommon\ApiClient\Statistics\ComponentFailRate\NationalComponentStatisticApiResource;
+use DvsaCommon\Dto\Site\SiteDto;
+use DvsaCommon\Enum\VehicleClassCode;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class StatsComponentFailRateContext implements Context
 {
-    /** @var TestSupportHelper  */
+    /** @var TestSupportHelper */
     private $testSupportHelper;
 
-    /** @var Session */
-    private $session;
+    private $userData;
 
-    /** @var StatsComponentFailRate  */
-    private $statsComponentFailRate;
+    private $motTestData;
 
-    /** @var VtsContext */
-    private $vtsContext;
+    private $vehicleData;
 
-    /** @var PersonContext */
-    private $personContext;
+    private $apiResourceHelper;
 
-    /**
-     * @param TestSupportHelper $testSupportHelper
-     */
     public function __construct(
         TestSupportHelper $testSupportHelper,
-        Session $session,
-        StatsComponentFailRate $statsComponentFailRate
-    ) {
-        $this->testSupportHelper = $testSupportHelper;
-        $this->session = $session;
-        $this->statsComponentFailRate = $statsComponentFailRate;
-    }
-
-    /**
-     * @BeforeScenario
-     */
-    public function gatherContexts(BeforeScenarioScope $scope)
+        UserData $userData,
+        MotTestData $motTestData,
+        VehicleData $vehicleData,
+        ApiResourceHelper $apiResourceHelper
+    )
     {
-        $this->vtsContext = $scope->getEnvironment()->getContext(VtsContext::class);
-        $this->personContext = $scope->getEnvironment()->getContext(PersonContext::class);
+        $this->testSupportHelper = $testSupportHelper;
+        $this->userData = $userData;
+        $this->motTestData = $motTestData;
+        $this->vehicleData = $vehicleData;
+        $this->apiResourceHelper = $apiResourceHelper;
     }
 
     /** @BeforeScenario @test-quality-information */
     public function clearAmazonCache(BeforeScenarioScope $scope)
     {
         $this->testSupportHelper->getStatisticsAmazonCacheService()->removeAll();
-        $this->testSupportHelper->getMotService()->removeAllTests();
     }
 
     /**
-     * @Then being log in as a :userName I can view component fail rate statistics for tester :testerName and group :group and site :siteName with no data
+     * @Given there are tests with reason for rejection performed at site :site by :tester
      */
-    public function beingLogInAsAICanViewComponentFailRateStatisticsForTesterAndGroupAndSiteWithNoData($userName, $testerName, $group, $siteName)
+    public function thereAreTestsWithReasonForRejectionPerformedAtSiteBy(SiteDto $site, AuthenticatedUser $tester)
     {
-        $user = $this->personContext->getUser($userName);
-        $tester = $this->personContext->getUser($testerName);
-        $site = $this->vtsContext->getSite($siteName);
+        $motTestGenerator = new MotTestGenerator($this->motTestData);
 
-        $date = (new \DateTime())->sub(new \DateInterval("P1M"));
+        $dateOfManufacture = new \DateTime("first day of 2 years ago");
+        $vehicle = $this->vehicleData->create(["testClass" => VehicleClassCode::CLASS_1, "dateOfManufacture" => $dateOfManufacture->format("Y-m-d")]);
+        $motTestGenerator
+            ->setDuration(60)
+            ->setStartedDate("first day of previous month");
+        $motTestGenerator->generatePassedMotTests($tester, $site, $vehicle);
 
-        $response = $this->statsComponentFailRate->getTesterComponentFailRate(
-            $user->getAccessToken(),
-            $site["id"],
-            $tester->getUserId(),
-            $group,
-            $date->format("Y"),
-            $date->format("m")
-        );
+        $dateOfManufacture = new \DateTime("first day of 4 years ago");
+        $vehicle = $this->vehicleData->create(["testClass" => VehicleClassCode::CLASS_2, "dateOfManufacture" => $dateOfManufacture->format("Y-m-d")]);
+        $motTestGenerator
+            ->setDuration(50)
+            ->setStartedDate("first day of previous month")
+            ->setRfrId(511);
+        $motTestGenerator->generateFailedMotTests($tester, $site, $vehicle);
 
-        $stats = $response->getBody()->toArray()["data"];
-        PHPUnit::assertGreaterThan(0, $stats["components"]);
-        foreach ($stats["components"] as $component) {
-            PHPUnit::assertEquals(0, $component["percentageFailed"]);
-        }
+        $dateOfManufacture = new \DateTime("first day of 14 years ago");
+        $vehicle = $this->vehicleData->create(["testClass" => VehicleClassCode::CLASS_4, "dateOfManufacture" => $dateOfManufacture->format("Y-m-d")]);
+        $motTestGenerator
+            ->setDuration(40)
+            ->setStartedDate("first day of previous month")
+            ->setRfrId(8455);
+        $motTestGenerator->generateFailedMotTests($tester, $site, $vehicle);
     }
 
     /**
-     * @Then being log in as a :userName I can view component group performance statistics for tester :testerName and group :group and site :siteName with data:
+     * @Then I should be able to see component fail rate statistics performed :months months ago at site :site for tester :tester and group :group
      */
-    public function beingLogInAsAICanViewComponentGroupPerformanceStatisticsForTesterAndGroupAndSiteWithData($userName, $testerName, $group, $siteName, TableNode $table)
+    public function iShouldBeAbleToSeeComponentFailRateStatisticsPerformedMonthsAgoAtSiteForTesterAndGroup($months, SiteDto $site, AuthenticatedUser $tester, $group)
     {
-        $user = $this->personContext->getUser($userName);
-        $tester = $this->personContext->getUser($testerName);
-        $site = $this->vtsContext->getSite($siteName);
+        $interval = sprintf("P%sM", $months);
+        $date = (new \DateTime())->sub(new \DateInterval($interval));
 
-        $date = (new \DateTime())->sub(new \DateInterval("P1M"));
+        /** @var ComponentFailRateApiResource $apiResource */
+        $apiResource = $this->apiResourceHelper->create(ComponentFailRateApiResource::class);
+        $componentBreakdown = $apiResource->getForTesterAtSite($site->getId(), $tester->getUserId(), $group, $date->format("m"), $date->format("Y"));
 
-        $response = $this->statsComponentFailRate->getTesterComponentFailRate(
-            $user->getAccessToken(),
-            $site["id"],
-            $tester->getUserId(),
-            $group,
-            $date->format("Y"),
-            $date->format("m")
-        );
-
-        $stats = $response->getBody()->toArray()["data"];
-        $groupPerformance = $stats["groupPerformance"];
-
-        $rows = $table->getColumnsHash();
-        $expectedData = $rows[0];
-
-        PHPUnit::assertEquals($expectedData["total"], $groupPerformance["total"]);
-        PHPUnit::assertEquals($expectedData["averageTime"], $groupPerformance["averageTime"]);
-        PHPUnit::assertEquals($expectedData["percentageFailed"], $groupPerformance["percentageFailed"]);
-        PHPUnit::assertEquals($expectedData["averageVehicleAgeInMonths"], $groupPerformance["averageVehicleAgeInMonths"]);
-
-        $isAverageVehicleAgeAvailable = $expectedData["isAverageVehicleAgeAvailable"] === "true";
-
-        PHPUnit::assertEquals($isAverageVehicleAgeAvailable, $groupPerformance["isAverageVehicleAgeAvailable"]);
+        PHPUnit::assertEquals($tester->getUsername(), $componentBreakdown->getUserName());
     }
 
     /**
-     * @Then being log in as a :userName I can view component fail rate statistics for tester :testerName and group :group and site :siteName with data:
+     * @Then there is no component fail rate statistics performed :months months ago at site :site for tester :tester and group :group
      */
-    public function beingLogInAsAICanViewComponentFailRateStatisticsForTesterAndGroupAndSiteWithData($userName, $testerName, $group, $siteName, TableNode $table)
+    public function thereIsNoComponentFailRateStatisticsPerformedMonthsAgoAtSiteForTesterAndGroup($months, SiteDto $site, AuthenticatedUser $tester, $group)
     {
-        $user = $this->personContext->getUser($userName);
-        $tester = $this->personContext->getUser($testerName);
-        $site = $this->vtsContext->getSite($siteName);
+        $interval = sprintf("P%dM", $months);
+        $date = (new \DateTime())->sub(new \DateInterval($interval));
 
-        $date = (new \DateTime())->sub(new \DateInterval("P1M"));
+        /** @var ComponentFailRateApiResource $apiResource */
+        $apiResource = $this->apiResourceHelper->create(ComponentFailRateApiResource::class);
+        $componentBreakdown = $apiResource->getForTesterAtSite($site->getId(), $tester->getUserId(), $group, $date->format("m"), $date->format("Y"));
 
-        $response = $this->statsComponentFailRate->getTesterComponentFailRate(
-            $user->getAccessToken(),
-            $site["id"],
-            $tester->getUserId(),
-            $group,
-            $date->format("Y"),
-            $date->format("m")
-        );
+        PHPUnit::assertEquals($tester->getUsername(), $componentBreakdown->getUserName());
 
-        $stats = $response->getBody()->toArray()["data"];
-        $components = $stats["components"];
-
-        PHPUnit::assertGreaterThan(0, $components);
-
-        $expectedComponents= $table->getColumnsHash();
-        foreach ($expectedComponents as $expectedComponent) {
-            $this->assertComponent($expectedComponent, $components);
+        foreach ($componentBreakdown->getComponents() as $component) {
+            PHPUnit::assertEquals(0, $component->getPercentageFailed());
         }
-    }
 
-    private function assertComponent(array $expectedComponent, array $components)
-    {
-        foreach ($components as $component) {
-            if ($component["name"] === $expectedComponent["componentName"]) {
-                PHPUnit::assertEquals($expectedComponent["percentageFailed"], $component["percentageFailed"]);
-            } else {
-                PHPUnit::assertEquals(0, $component["percentageFailed"]);
-            }
-        }
+        PHPUnit::assertEquals(0, $componentBreakdown->getGroupPerformance()->getTotal());
+
+        $averageTime = $componentBreakdown->getGroupPerformance()->getAverageTime();
+
+        PHPUnit::assertEquals(0, $averageTime->getHours());
+        PHPUnit::assertEquals(0, $averageTime->getDays());
+        PHPUnit::assertEquals(0, $averageTime->getMinutes());
+        PHPUnit::assertEquals(0, $averageTime->getSeconds());
+        PHPUnit::assertEquals(0, $componentBreakdown->getGroupPerformance()->getAverageVehicleAgeInMonths());
+        PHPUnit::assertFalse($componentBreakdown->getGroupPerformance()->getIsAverageVehicleAgeAvailable());
     }
 
     /**
-     * @Then being log in as a :userName I can view national fail rate statistics for group :group with no data
+     * @Then I should be able to see national fail rate statistics performed :months months ago for group :group
      */
-    public function beingLogInAsAICanViewNationalFailRateStatisticsForGroupWithNoData($userName, $group)
+    public function iShouldBeAbleToSeeNationalFailRateStatisticsPerformedMonthsAgoForTesterAndGroup($months, $group)
     {
-        $user = $this->personContext->getUser($userName);
+        $interval = sprintf("P%sM", $months);
+        $date = (new \DateTime())->sub(new \DateInterval($interval));
 
-        $date = (new \DateTime())->sub(new \DateInterval("P1M"));
-        $response = $this
-            ->statsComponentFailRate
-            ->getNationalComponentFailRate($user->getAccessToken(), $group, $date->format("Y"), $date->format("m"));
+        $month = (int)$date->format("m");
+        $year = (int)$date->format("Y");
 
-        $stats = $response->getBody()->toArray()["data"];
-        PHPUnit::assertGreaterThan(0, $stats["components"]);
+        /** @var NationalComponentStatisticApiResource $apiResource */
+        $apiResource = $this->apiResourceHelper->create(NationalComponentStatisticApiResource::class);
+        $nationalComponentStatistics = $apiResource->getForDate($group, $month, $year);
 
-        foreach ($stats["components"] as $component) {
-            PHPUnit::assertEquals(0, $component["percentageFailed"]);
-        }
+        PHPUnit::assertEquals($group, $nationalComponentStatistics->getGroup());
+        PHPUnit::assertEquals($month, $nationalComponentStatistics->getMonth());
+        PHPUnit::assertEquals($year, $nationalComponentStatistics->getYear());
     }
-
-    /**
-     * @Then being log in as a :userName I can view national fail rate statistics for group :group with data:
-     */
-    public function beingLogInAsAICanViewNationalFailRateStatisticsForSiteWithData($userName, $group, TableNode $table)
-    {
-        $user = $this->personContext->getUser($userName);
-
-        $date = (new \DateTime())->sub(new \DateInterval("P1M"));
-
-        $response = $this->statsComponentFailRate->getNationalComponentFailRate($user->getAccessToken(), $group, $date->format("Y"), $date->format("m"));
-
-        $stats = $response->getBody()->toArray()["data"];
-        $components = $stats["components"];
-
-        $expectedComponents = $table->getColumnsHash();
-
-        PHPUnit::assertGreaterThan(0, $components);
-
-        foreach ($expectedComponents as $expectedComponent) {
-            $this->assertComponent($expectedComponent, $components);
-        }
-    }
-
 }

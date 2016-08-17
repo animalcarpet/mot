@@ -2,6 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\MotTestModule\Service;
 
+use DvsaCommon\Dto\AbstractDataTransferObject;
 use DvsaCommon\HttpRestJson\Client;
 
 /**
@@ -11,6 +12,7 @@ class SurveyService
 {
     const API_URL = 'survey';
     const REPORT_ENDPOINT = '/reports';
+    const TOKEN_VALIDATION_ENDPOINT = '/token/validate';
 
     /**
      * @var Client
@@ -29,24 +31,38 @@ class SurveyService
     }
 
     /**
-     * @param $data
+     * @param $surveyData
      *
      * @return mixed|string
      */
-    public function submitSurveyResult($data)
+    public function submitSurveyResult($surveyData)
     {
-        $result = $this->restClient->post(self::API_URL, $data);
+        $result = $this->restClient->post(self::API_URL, $surveyData);
 
         return $result;
     }
 
     /**
-     * @return array
+     * @return AbstractDataTransferObject
      */
     public function getSurveyReports()
     {
         $result = $this->restClient->get(self::API_URL.self::REPORT_ENDPOINT);
 
         return $result;
+    }
+
+    /**
+     * @param string $token
+     * @return string
+     */
+    public function isTokenValid($token)
+    {
+        $result = $this->restClient->post(
+            self::API_URL.self::TOKEN_VALIDATION_ENDPOINT,
+            ['token' => $token]
+        );
+
+        return $result['data'];
     }
 }

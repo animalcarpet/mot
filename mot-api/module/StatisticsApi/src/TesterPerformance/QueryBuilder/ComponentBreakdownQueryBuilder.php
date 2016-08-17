@@ -50,6 +50,7 @@ class ComponentBreakdownQueryBuilder
                  AND lt.code = :languageTypeCode
                  AND emergency_log_id IS NULL
                  AND class_group.code = :groupCode
+                 AND rfr_map.type NOT IN (:skippedRfrTypes)
                  {$this->getWhere()}
                GROUP BY testItemCategoryId
              ) x
@@ -71,6 +72,6 @@ class ComponentBreakdownQueryBuilder
                        GROUP BY id
                      ) category_names ON testItemCategoryId = category_names.id
         GROUP BY category_names.id
-        ORDER BY category_names.name;";
+        ORDER BY category_names.name";
     }
 }

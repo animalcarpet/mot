@@ -11,7 +11,7 @@ use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 
 class TesterStatisticsRepository extends AbstractStatisticsRepository implements AutoWireableInterface
 {
-    public function get($siteId, $testerId, $groupCode, $year, $month)
+    public function get($testerId, $groupCode, $year, $month)
     {
         $rsm = $this->getResultSetMapping()
             ->addScalarResult('totalTime', 'totalTime')
@@ -27,7 +27,6 @@ class TesterStatisticsRepository extends AbstractStatisticsRepository implements
             ->setParameter('normalTestCode', MotTestTypeCode::NORMAL_TEST)
             ->setParameter('startDate', $this->startDate)
             ->setParameter('endData', $this->endDate)
-            ->setParameter('siteId', $siteId)
             ->setParameter('testerId', $testerId)
             ->setParameter('groupCode', $groupCode)
             ->setParameter('irrelevantAssociationCodes',
@@ -75,7 +74,6 @@ class TesterStatisticsRepository extends AbstractStatisticsRepository implements
                   AND (`status`.`code` = :failedStatusCode OR (`status`.`code` = :passStatusCode AND `test`.`prs_mot_test_id` IS NULL))
                   AND `type`.`code` = :normalTestCode
                   AND `emergency_log_id` IS NULL
-                  AND `vts`.`id` = :siteId
                   AND `person`.`id` = :testerId
                   AND `class_group`.`code` = :groupCode
                   AND EXISTS

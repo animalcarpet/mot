@@ -54,16 +54,22 @@ class DefectCollection extends ArrayCollection
         $defects = [];
 
         foreach ($defectsFromApi as $defectFromApi) {
+            $defectBreadcrumbParts = explode('>', $defectFromApi['testItemSelectorName']);
+            $defectCategoryName = end($defectBreadcrumbParts);
+
             $defect = new Defect(
                 $defectFromApi['rfrId'],
                 $defectFromApi['testItemSelectorId'],
-                self::isDefectInEmissionsNotTestedCategory($componentCategoriesFromApi['testItemSelector']['name']) ?
-                    $defectFromApi['testItemSelectorName'] : '',
-                $defectFromApi['description'],
-                !self::isDefectInNonComponentAdvisoriesCategory($componentCategoriesFromApi['testItemSelector']['name']) ?
-                    $defectFromApi['advisoryText'] : '',
-                !self::isDefectInNonComponentAdvisoriesCategory($componentCategoriesFromApi['testItemSelector']['name']) ?
-                    $defectFromApi['inspectionManualReference'] : '',
+                $defectCategoryName.' '.$defectFromApi['description'],
+                '',
+                !self::isDefectInNonComponentAdvisoriesCategory(
+                    $componentCategoriesFromApi['testItemSelector']['name']
+                ) ? $defectCategoryName.' '.$defectFromApi['advisoryText']
+                  : '',
+                !self::isDefectInNonComponentAdvisoriesCategory(
+                    $componentCategoriesFromApi['testItemSelector']['name']
+                ) ? $defectFromApi['inspectionManualReference']
+                  : '',
                 $defectFromApi['isAdvisory'],
                 $defectFromApi['isPrsFail'],
                 !$defectFromApi['isPrsFail'] && !$defectFromApi['isAdvisory']
@@ -81,16 +87,6 @@ class DefectCollection extends ArrayCollection
     public function getDefects()
     {
         return $this->getValues();
-    }
-
-    /**
-     * @param $categoryOfDefect
-     *
-     * @return bool
-     */
-    public static function isDefectInEmissionsNotTestedCategory($categoryOfDefect)
-    {
-        return $categoryOfDefect == self::EMISSIONS_NOT_TESTED_CATEGORY_NAME ? true : false;
     }
 
     /**

@@ -4,6 +4,7 @@ package uk.gov.dvsa.ui.pages.vehicleinformation;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.mot.MotTestStartedPage;
@@ -96,8 +97,7 @@ public class CreateNewVehicleRecordConfirmPage extends Page {
 
     public CreateNewVehicleRecordConfirmPage setOneTimePassword(String pin)
     {
-        oneTimePassword.clear();
-        oneTimePassword.sendKeys(pin);
+        FormDataHelper.enterText(oneTimePassword, pin);
         return this;
     }
 

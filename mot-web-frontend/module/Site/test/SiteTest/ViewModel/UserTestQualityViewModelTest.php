@@ -10,8 +10,8 @@ use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\MotTestingPerformanceD
 use DvsaCommon\Date\TimeSpan;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\VehicleClassGroupCode;
-use Site\ViewModel\TestQuality\ComponentStatisticsRow;
-use Site\ViewModel\TestQuality\ComponentStatisticsTable;
+use Dvsa\Mot\Frontend\TestQualityInformation\ViewModel\ComponentStatisticsRow;
+use Dvsa\Mot\Frontend\TestQualityInformation\ViewModel\ComponentStatisticsTable;
 use Site\ViewModel\TestQuality\UserTestQualityViewModel;
 
 class UserTestQualityViewModelTest extends \PHPUnit_Framework_TestCase

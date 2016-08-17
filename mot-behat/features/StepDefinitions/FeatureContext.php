@@ -1,16 +1,23 @@
 <?php
 
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Behat\Tester\Exception\PendingException;
+use Dvsa\Mot\Behat\Support\Data\Collection\SharedDataCollection;
+use Dvsa\Mot\Behat\Support\Data\Transformer\AeNameToOrganisationDtoTransformer;
+use Dvsa\Mot\Behat\Support\Data\Transformer\SiteNameToSiteDtoTransformer;
+use Dvsa\Mot\Behat\Support\Data\Transformer\TypeConversion;
+use Dvsa\Mot\Behat\Support\Data\Transformer\UsernameToAuthenticatedUserTransformer;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\History;
+use Dvsa\Mot\Behat\Support\Scope\BeforeBehatScenarioScope;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class FeatureContext implements Context
 {
+    use AeNameToOrganisationDtoTransformer, SiteNameToSiteDtoTransformer, TypeConversion, UsernameToAuthenticatedUserTransformer;
+
     /**
      * @var History
      */
@@ -55,6 +62,22 @@ class FeatureContext implements Context
     public function cleanupContexts(BeforeScenarioScope $scope)
     {
         (new ContextCleanup())->cleanup($scope->getEnvironment()->getContexts());
+    }
+
+    /**
+     * @BeforeScenario
+     */
+    public function setUp(BeforeScenarioScope $scope)
+    {
+        BeforeBehatScenarioScope::set($scope);
+    }
+
+    /**
+     * @AfterScenario
+     */
+    public function cleanupSharedData(AfterScenarioScope $scope)
+    {
+        SharedDataCollection::clear();
     }
 
     /**

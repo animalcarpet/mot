@@ -20,7 +20,7 @@ public class MotPageFactory {
             constructor.setAccessible(true);
             return constructor.newInstance(driver);
         } catch (Exception e) {
-            throw new PageInstanceNotFoundException(e.getCause().toString());
+            throw new PageInstanceNotFoundException(e.getCause().toString(), e);
         }
     }
 

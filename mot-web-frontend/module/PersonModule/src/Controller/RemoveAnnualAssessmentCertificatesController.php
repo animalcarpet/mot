@@ -7,7 +7,7 @@ use Core\Controller\AbstractAuthActionController;
 use Core\TwoStepForm\EditStepAction;
 use Core\TwoStepForm\ReviewStepAction;
 use Dvsa\Mot\Frontend\PersonModule\Model\AnnualAssessmentCertificatesFormContext;
-use Dvsa\Mot\Frontend\PersonModule\src\Model\AnnualAssessmentCertificatesRemoveProcess;
+use Dvsa\Mot\Frontend\PersonModule\Model\AnnualAssessmentCertificatesRemoveProcess;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 

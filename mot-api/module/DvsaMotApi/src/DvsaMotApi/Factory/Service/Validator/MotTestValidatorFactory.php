@@ -16,7 +16,8 @@ class MotTestValidatorFactory implements FactoryInterface
             $serviceLocator->get('CensorService'),
             $serviceLocator->get('DvsaAuthorisationService'),
             $serviceLocator->get('DvsaAuthenticationService'),
-            $serviceLocator->get(SpecialNoticeService::class)
+            $serviceLocator->get(SpecialNoticeService::class),
+            $serviceLocator->get('Feature\FeatureToggles')
         );
     }
 }

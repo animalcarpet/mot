@@ -6,6 +6,14 @@
     </ul>
 </header>
 
+{% if flashMessenger().hasSuccessMessages() %}
+    {% for message in flashMessenger().getSuccessMessages() %}
+        <div class="message--success" id="validation-message--success">
+            <p>{{ message|raw }}</p>
+        </div>
+    {% endfor %}
+{% endif %}
+
 <div class="defect-summary">
     <div class="defect-summary__total">
         <h2 class="defect-summary__total-heading">Defects</h2>
@@ -36,10 +44,13 @@
         <li class="defect">
             <div>
                 <strong class="defect__title">{{ defect.description }}</strong>
-                <p class="defect__meta">{{ defect.defectBreadcrumb }}</p>
-                <p class="defect__meta">{{ defect.advisoryText }}</p>
+                {# Only show advisory text if the defect is an advisory. #}
+                {% if defect.isAdvisory %}
+                    <p class="defect__meta">{{ defect.advisoryText }}</p>
+                {% endif %}
+                {# Only show inspection manual reference if the defect has an inspection manual reference. #}
                 {% if defect.inspectionManualReference != '' %}
-                    <p class="defect__reference"><a href="{{ url('user-home') ~ defect.inspectionManualReferenceUrl }}" target="_blank">{{ defect.inspectionManualReference }}</a> (opens in a new window)</p>
+                    <p class="defect__reference"><a href="{{ url('user-home') ~ defect.inspectionManualReferenceUrl }}" target="_blank" rel="external">{{ defect.inspectionManualReference }} </a></p>
                 {% endif %}
             </div>
 
@@ -47,24 +58,36 @@
             <ul class="defect__add">
                 {% if defect.isAdvisory %}
                     <li>
-                        <a href="#" class="button--warn">
+                        <a href="{{ url('mot-test-defects/categories/category/add-defect',
+                                        {'motTestNumber' : motTest.motTestNumber, 'categoryId' : categoryId,
+                                            'defectId' : defect.defectId, 'type' : 'advisory'}) }}" class="button--warn">
                             Advisory
                         </a>
                     </li>
                 {% endif %}
                 {% if defect.isPrs %}
                     <li>
-                        <a href="#" class="button--info">PRS</a>
+                        <a href="{{ url('mot-test-defects/categories/category/add-defect',
+                                        {'motTestNumber' : motTest.motTestNumber, 'categoryId' : categoryId,
+                                            'defectId' : defect.defectId, 'type' : 'prs'}) }}" class="button--info">
+                            PRS
+                        </a>
                     </li>
                     <li>
-                        <a href="#" class="button--alert">
+                        <a href="{{ url('mot-test-defects/categories/category/add-defect',
+                        {'motTestNumber' : motTest.motTestNumber, 'categoryId' : categoryId,
+                            'defectId' : defect.defectId, 'type' : 'failure'}) }}" class="button--alert">
                             Failure
                         </a>
                     </li>
                 {% endif %}
                 {% if defect.isFailure %}
                     <li>
-                        <a href="#" class="button--alert">Failure</a>
+                        <a href="{{ url('mot-test-defects/categories/category/add-defect',
+                                        {'motTestNumber' : motTest.motTestNumber, 'categoryId' : categoryId,
+                                            'defectId' : defect.defectId, 'type' : 'failure'}) }}" class="button--alert">
+                            Failure
+                        </a>
                     </li>
                 {% endif %}
             </ul>

@@ -11,4 +11,6 @@ public interface MotWebDriver extends
         WebDriver, JavascriptExecutor, FindsById, FindsByClassName,
         FindsByLinkText, FindsByName, FindsByCssSelector, FindsByTagName,
         FindsByXPath, HasInputDevices, HasCapabilities, TakesScreenshot {
+    String getPageSource();
+    void takeScreenShot(String filename, String destinationPath);
 }

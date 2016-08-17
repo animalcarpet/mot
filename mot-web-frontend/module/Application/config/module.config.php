@@ -30,6 +30,7 @@ use DvsaMotTest\Factory\Service\MotChecklistPdfServiceFactory;
 use DvsaMotTest\Form\Validator\SpecialNoticePublishDateValidator;
 use DvsaMotTest\NewVehicle\Controller\CreateVehicleController;
 use DvsaMotTest\Service\MotChecklistPdfService;
+use Zend\EventManager\EventManager;
 
 return [
     'controllers' => require __DIR__ . '/controllers.config.php',

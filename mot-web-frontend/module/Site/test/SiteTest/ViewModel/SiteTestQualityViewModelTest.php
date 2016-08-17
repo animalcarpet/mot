@@ -10,7 +10,9 @@ use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\SitePerformanceDto;
 use DvsaCommon\Date\TimeSpan;
 use DvsaCommon\Dto\Organisation\OrganisationDto;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
+use DvsaCommonTest\TestUtils\XMock;
 use Site\ViewModel\TestQuality\SiteTestQualityViewModel;
+use Site\ViewModel\TestQuality\TestQualityMonthFilter;
 
 class SiteTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,9 +27,21 @@ class SiteTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
     /** @var  SiteTestQualityViewModel */
     private $siteTestQualityViewModel;
 
+    /** @var TestQualityMonthFilter $testQualityInformationMonthFilter  */
+    private $testQualityInformationMonthFilter;
+
     public function setUp()
     {
         $date = new DateTime();
+
+        $this->testQualityInformationMonthFilter = XMock::of(TestQualityMonthFilter::class);
+        $this->testQualityInformationMonthFilter->method('setStartMonth')
+            ->willReturn($this->testQualityInformationMonthFilter);
+        $this->testQualityInformationMonthFilter->method('setNumberOfMonthsBack')
+            ->willReturn($this->testQualityInformationMonthFilter);
+        $this->testQualityInformationMonthFilter->method('setViewedMonth')
+            ->willReturn($this->testQualityInformationMonthFilter);
+
         $this->siteTestQualityViewModel = new SiteTestQualityViewModel(
             self::buildSitePerformanceDto(),
             self::buildNationalStatisticsPerformanceDto(),
@@ -35,7 +49,8 @@ class SiteTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
             $date,
             self::CSV_FILE_SIZE_GROUP_A,
             self::CSV_FILE_SIZE_GROUP_B,
-            self::IS_RETURN_TO_AE_TQI
+            self::IS_RETURN_TO_AE_TQI,
+            $this->testQualityInformationMonthFilter
         );
     }
 
@@ -153,7 +168,8 @@ class SiteTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
             $date,
             self::CSV_FILE_SIZE_GROUP_A,
             self::CSV_FILE_SIZE_GROUP_B,
-            self::IS_RETURN_TO_AE_TQI
+            self::IS_RETURN_TO_AE_TQI,
+            $this->testQualityInformationMonthFilter
         );
 
         $this->assertFalse($this->siteTestQualityViewModel->getA()->hasTests());
@@ -182,7 +198,8 @@ class SiteTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
             $date,
             self::CSV_FILE_SIZE_GROUP_A,
             self::CSV_FILE_SIZE_GROUP_B,
-            true
+            true,
+            $this->testQualityInformationMonthFilter
         );
 
         $this->assertEquals($this->siteTestQualityViewModel->getReturnLink()->getValue(), SiteTestQualityViewModel::RETURN_TO_AE_TQI);
@@ -198,7 +215,8 @@ class SiteTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
             $date,
             self::CSV_FILE_SIZE_GROUP_A,
             self::CSV_FILE_SIZE_GROUP_B,
-            false
+            false,
+            $this->testQualityInformationMonthFilter
         );
 
         $this->assertEquals($this->siteTestQualityViewModel->getReturnLink()->getValue(), SiteTestQualityViewModel::RETURN_TO_VTS);

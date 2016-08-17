@@ -22,6 +22,7 @@ use DvsaCommonTest\TestUtils\XMock;
 use PHPUnit_Framework_TestCase;
 use Site\Action\SiteTestQualityAction;
 use Site\ViewModel\TestQuality\SiteTestQualityViewModel;
+use Zend\Mvc\Controller\Plugin\Url;
 
 class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
 {
@@ -61,6 +62,8 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
     /** @var SitePerformanceDto */
     private $sitePerformanceDto;
 
+    private $url;
+
     protected function setUp()
     {
         $this->sitePerformanceDto = $this->buildSitePerformanceDto();
@@ -93,6 +96,14 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
             $this->siteMapper,
             new ViewVtsTestQualityAssertion($this->authorisationService)
         );
+
+        $url = XMock::of(Url::class);
+        $url
+            ->expects($this->any())
+            ->method("__invoke")
+            ->willReturn('http://link');
+
+        $this->url = $url;
     }
 
     /**
@@ -104,7 +115,7 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
         $this->authorisationService->clearAll();
 
         // WHEN I try to view it
-        $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTH, self::YEAR, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs);
+        $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTH, self::YEAR, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs, $this->url, [], []);
         // THEN I get an exception
     }
 
@@ -123,7 +134,7 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
 
     public function testValuesArePopulatedToLayoutResult()
     {
-        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTH, self::YEAR, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs);
+        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTH, self::YEAR, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs, $this->url, [], []);
 
         /** @var SiteTestQualityViewModel $vm */
         $vm = $result->getViewModel();
@@ -161,7 +172,7 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
         $this->setUpTotalTestsDoneInSite(0, 0);
 
         // WHEN I view the statistics
-        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTH, self::YEAR, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs);
+        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTH, self::YEAR, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs, $this->url, [], []);
 
         /** @var SiteTestQualityViewModel $viewModel */
         $viewModel = $result->getViewModel();
@@ -187,7 +198,7 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
         $this->setUpTotalTestsDoneInSite($groupATests, $groupBTests);
 
         // WHEN I view the statistics
-        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTH, self::YEAR, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs);
+        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTH, self::YEAR, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs, $this->url, [], []);
 
         /** @var SiteTestQualityViewModel $viewModel */
         $viewModel = $result->getViewModel();
@@ -214,7 +225,7 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
         $this->setUpTotalTestsDoneInSite(0, 0);
 
         // WHEN I view the statistics
-        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTH, self::YEAR, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs);
+        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTH, self::YEAR, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs, $this->url, [], []);
 
         /** @var SiteTestQualityViewModel $viewModel */
         $viewModel = $result->getViewModel();
@@ -232,7 +243,7 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
         $this->setUpTotalTestsDoneInSite(0, 0);
 
         // WHEN I view the statistics
-        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTH, self::YEAR, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs);
+        $result = $this->siteTestQualityAction->execute(self::SITE_ID, self::MONTH, self::YEAR, self::IS_RETURN_TO_AE_TQI, $this->breadcrumbs, $this->url, [], []);
 
         /** @var SiteTestQualityViewModel $viewModel */
         $viewModel = $result->getViewModel();

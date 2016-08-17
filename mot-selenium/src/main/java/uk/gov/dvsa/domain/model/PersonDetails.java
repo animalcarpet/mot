@@ -4,7 +4,6 @@ import uk.gov.dvsa.helper.RandomDataGenerator;
 
 public class PersonDetails {
     private String firstName;
-    private String middleName;
     private String lastName;
     private int dateOfBirthDay;
     private int dateOfBirthMonth;
@@ -13,11 +12,10 @@ public class PersonDetails {
 
     public PersonDetails() {
         this.firstName = RandomDataGenerator.generateRandomString();
-        this.middleName = RandomDataGenerator.generateRandomString();
         this.lastName = RandomDataGenerator.generateRandomString();
-        this.dateOfBirthDay = RandomDataGenerator.generateRandomInteger(1,30);
-        this.dateOfBirthMonth = RandomDataGenerator.generateRandomInteger(1,12);
-        this.dateOfBirthYear = RandomDataGenerator.generateRandomInteger(1950,2000);
+        this.dateOfBirthDay = RandomDataGenerator.generateRandomInteger(1, 28);
+        this.dateOfBirthMonth = RandomDataGenerator.generateRandomInteger(1, 12);
+        this.dateOfBirthYear = RandomDataGenerator.generateRandomInteger(1950, 2000);
         this.address = new Address();
     }
 

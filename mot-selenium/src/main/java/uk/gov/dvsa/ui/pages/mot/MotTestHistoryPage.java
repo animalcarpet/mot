@@ -13,8 +13,8 @@ public class MotTestHistoryPage extends Page {
     private static final String PAGE_TITLE = "MOT Test History";
     private static final String TEST_SUMMARY_VIEW_LINK = "mot-%s";
 
-    private WebElement testSummaryViewLinkElement(String testId) {
-        return driver.findElement(By.id(String.format(TEST_SUMMARY_VIEW_LINK, testId)));
+    private void clickSummaryViewLinkElement(String testId) {
+        clickElement(By.id(String.format(TEST_SUMMARY_VIEW_LINK, testId)));
     }
 
     private MotAppDriver driver;
@@ -32,11 +32,11 @@ public class MotTestHistoryPage extends Page {
     }
 
     public void selectMotTestFromTableById(String testId){
-        testSummaryViewLinkElement(testId).click();
+        clickSummaryViewLinkElement(testId);
     }
 
     public <T extends Page> T selectMotTestFromTableById(String testId, Class<T> clazz){
-        testSummaryViewLinkElement(testId).click();
+        selectMotTestFromTableById(testId);
 
         return MotPageFactory.newPage(driver, clazz);
     }

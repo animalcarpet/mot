@@ -5,6 +5,7 @@ namespace TestSupport;
 use Doctrine\ORM\EntityManager;
 use TestSupport\Service\JsonErrorHandlingListener;
 use Zend\EventManager\EventInterface;
+use Zend\Http\Request as HttpRequest;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
@@ -16,6 +17,9 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class Module implements ConfigProviderInterface, ServiceProviderInterface
 {
+    /**
+     * @param MvcEvent $e
+     */
     public function onBootstrap(MvcEvent $e)
     {
         $application   = $e->getApplication();
@@ -34,6 +38,10 @@ class Module implements ConfigProviderInterface, ServiceProviderInterface
         /** @var EntityManager $em */
         $em = $sm->get(EntityManager::class);
         $em->getConnection()->exec("SET @app_user_id = (SELECT `id` FROM `person` WHERE `user_reference` = 'Static Data' OR `username` = 'static data')");
+
+        if (!($e instanceof MvcEvent) || !($e->getRequest() instanceof HttpRequest)) {
+            return;
+        }
 
         $application->getEventManager()->attach($sm->get(JsonErrorHandlingListener::class));
     }

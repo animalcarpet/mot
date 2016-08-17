@@ -56,15 +56,15 @@ class ReplacementCertificateContext implements Context
     }
 
     /**
-     * @When I update expiry date :date on replacement certificate for the vehicle
+     * @When I update expiry date :modify on replacement certificate for the vehicle
      */
-    public function iUpdateExpiryDateOnReplacementCertificateForTheVehicleWithRegAndVin($date)
+    public function iUpdateExpiryDateOnReplacementCertificateForTheVehicleWithRegAndVin($modify)
     {
         $motTestNumber = $this->motTestContext->getMotTestNumber();
         $draft = $this->createDraft($motTestNumber);
 
         $expiryDate = new \DateTime($draft["expiryDate"]);
-        $expiryDate->modify($date);
+        $expiryDate->modify($modify);
         $params =  ["expiryDate" => $expiryDate->format("Y-m-d")];
         $this->updateDraft($motTestNumber, $draft["id"], $params);
     }
@@ -126,9 +126,9 @@ class ReplacementCertificateContext implements Context
     }
 
     /**
-     * @Then expiry date on replacement certificate draft for the vehicle should be changed to :date
+     * @Then expiry date on replacement certificate draft for the vehicle should be changed to :modify
      */
-    public function expiryDateOnReplacementCertificateDraftForTheVehicleShouldBeChangedTo($date)
+    public function expiryDateOnReplacementCertificateDraftForTheVehicleShouldBeChangedTo($modify)
     {
         $updatedDraft = $this->replacementCertificate->getDraft(
             $this->motTestContext->getMotTestNumber(),
@@ -137,7 +137,7 @@ class ReplacementCertificateContext implements Context
             ->getBody()
             ->toArray()["data"];
 
-        $expiryDate = (new \DateTime($this->draftData["expiryDate"]))->modify($date)->format("Y-m-d");
+        $expiryDate = (new \DateTime($this->draftData["expiryDate"]))->modify($modify)->format("Y-m-d");
 
         PHPUnit::assertEquals($expiryDate, $updatedDraft["expiryDate"]);
     }

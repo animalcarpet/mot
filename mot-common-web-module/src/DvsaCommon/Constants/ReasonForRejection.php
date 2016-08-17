@@ -16,6 +16,7 @@ interface ReasonForRejection
     const CLASS_3457_HEADLAMP_AIM_NOT_TESTED_RFR_ID = 10153;
 
     const MAX_DESCRIPTION_LENGTH = 255;
+    const MAX_USER_COMMENT_LENGTH = 250;
 
     const AUDIENCE_TESTER_CODE = 't';
     const AUDIENCE_VEHICLE_EXAMINER_CODE = 'v';

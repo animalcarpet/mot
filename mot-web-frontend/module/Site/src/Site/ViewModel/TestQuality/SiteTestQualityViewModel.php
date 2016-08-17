@@ -7,6 +7,7 @@ use DateTime;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\NationalPerformanceReportDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\SitePerformanceDto;
 use DvsaCommon\Date\DateUtils;
+use DvsaCommon\Date\Month;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommon\Model\VehicleClassGroup;
@@ -40,6 +41,9 @@ class SiteTestQualityViewModel
     /** @var  bool */
     private $isReturnLinkToAETQI;
 
+    /** @var  TestQualityMonthFilter $monthFilter */
+    private $monthFilter;
+
     public function __construct(
         SitePerformanceDto $sitePerformanceDto,
         NationalPerformanceReportDto $nationalPerformanceStatisticsDto,
@@ -47,7 +51,8 @@ class SiteTestQualityViewModel
         DateTime $viewedDate,
         $csvFileSizeGroupA,
         $csvFileSizeGroupB,
-        $isReturnLinkToAETQI
+        $isReturnLinkToAETQI,
+        TestQualityMonthFilter $monthFilter
     ) {
         $this->a = new GroupStatisticsTable(
             $sitePerformanceDto->getA(),
@@ -101,6 +106,15 @@ class SiteTestQualityViewModel
         }
 
         $this->isReturnLinkToAETQI = $isReturnLinkToAETQI;
+
+        $oneMonthAgo = DateUtils::subtractCalendarMonths(DateUtils::toUserTz(new \DateTime()), 1);
+        $startMonth = new Month($oneMonthAgo->format('Y'), $oneMonthAgo->format('m'));
+        $viewedMonth = new Month($this->viewedDate->format('Y'), $this->viewedDate->format('m'));
+
+        $this->monthFilter = $monthFilter
+            ->setNumberOfMonthsBack(self::POSSIBLE_MONTHS_COUNT)
+            ->setStartMonth($startMonth)
+            ->setViewedMonth($viewedMonth);
     }
 
     public function canGroupSectionBeViewed($group)
@@ -130,35 +144,6 @@ class SiteTestQualityViewModel
         return $this->site->getId();
     }
 
-    public function getMonthsNames()
-    {
-        $now = DateUtils::toUserTz(new \DateTime());
-        $list = [];
-
-        for ($i = 1; $i <= self::POSSIBLE_MONTHS_COUNT; $i++) {
-            $date = DateUtils::subtractCalendarMonths($now, $i);
-            $list[$date->format("Y")][$date->format("m")] = [$date->format("F")];
-        }
-
-        return $list;
-    }
-
-    public function getViewedMonthName()
-    {
-        return $this->viewedDate->format("F");
-    }
-
-    public function getParamsForLinkToMonth($month, $year)
-    {
-        $params = [
-            'id' => $this->getSiteId(),
-            'month' => $month,
-            'year' => $year,
-        ];
-
-        return $params;
-    }
-
     public function getQueryParams()
     {
         if ($this->isReturnLinkToAETQI) {
@@ -176,5 +161,10 @@ class SiteTestQualityViewModel
     public function getReturnLink()
     {
         return $this->returnLink;
+    }
+
+    public function getMonthFilter()
+    {
+        return $this->monthFilter;
     }
 }

@@ -1,25 +1,48 @@
-slackSend "STARTED => Job: '${env.JOB_NAME}' - Build: ${env.BUILD_NUMBER} @ Node: ${env.NODE_NAME} (GoTo: <${env.BUILD_URL}|Build> | <${env.BUILD_URL}console|Console>)"
-//params
+/*
+HEAR ME, HEAR ME !!
+What you see below is a groovy code doing stuff :) What it does is:
+> check out required git repos
+> build mot rpms
+> build puppet/hiera rpms
+> update yum repo with generated rpms
+> deploy rpms on a range of nodes (consul, api, frontend, testsupport)
+> run behat/selenium tests
+There's a lot of hacks and temporary workarounds that are required now but will disappear after 'refactoring stage'.
+This code is being developed/extended permanently so don't consider it as something finished or referential atm.
+There's still a lot of work to do also from the side of plugin developers in order to get it clean and pro.
+When we finish it => this comment will be removed ;) Enjoy!
+*/
+// SLAVE
+String NODE = "${FB}"
+// SLACK NOTIFICATION
+slackSend "STARTED => Job: '${env.JOB_NAME}' - Build: ${env.BUILD_NUMBER} @ Node: "+NODE+" (GoTo: <${env.BUILD_URL}|Build> | <${env.BUILD_URL}console|Console>)"
+// FIXED VARIABLES
 mot_api = 'mot-api'
 mot_common_web_module = 'mot-common-web-module'
 mot_testsupport = 'mot-testsupport'
 mot_web_frontend = 'mot-web-frontend'
 mot_behat = 'mot-behat'
-//mysql_user = 'motdbuser'
-//mysql_password = 'fb14insecure1'
 mysql_user = 'fb14_admin'
 mysql_password = 'password'
 mysql_host = 'mysql'
-mysql_database = 'mot'
+mysql_database = 'mot2'
 mysql_grantuser = 'motdbuser'
-
+// DEFINITIONS
 def check_out_repo(group, repo, gitbranch, creds){
-    checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: gitbranch]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: repo]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: creds, url: 'git@gitlab.motdev.org.uk:' + group + '/' + repo +'.git']]]
+    checkout poll: false, scm: [$class: 'GitSCM', branches: [[name: gitbranch]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: repo]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: creds, url: 'git@gitlab.motdev.org.uk:' + group + '/' + repo +'.git']]]
 }
 
 def push_rpm_2_yum_repo(fb,file_path) {
-    sh 'rsync -avzR --rsync-path="sudo rsync" --no-owner --no-group -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" --progress '+file_path+' deploy@management-1:/srv/yum/env-'+fb+'/ && if [ $(ls '+file_path+' | wc -l) -ne 0 ]; then rm '+file_path+';fi'
-    sh 'ssh deploy@management-1 "sudo createrepo /srv/yum/env-'+fb+'"'
+    sshagent(['ba60fadb-4090-4b7c-b809-c0c4a44c923f']) {
+        sh 'rsync -avzR --rsync-path="sudo rsync" --no-owner --no-group -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" --progress '+file_path+' deploy@management-1:/srv/yum/env-'+fb+'/ && if [ $(ls '+file_path+' | wc -l) -ne 0 ]; then rm '+file_path+';fi'
+    }
+}
+
+def clean_repo(fb) {
+    sshagent(['ba60fadb-4090-4b7c-b809-c0c4a44c923f']) {
+        // sudo rm -f `repomanage -k 5 -o /srv/yum/env-'+fb+'`;
+        sh 'ssh deploy@management-1 "sudo createrepo /srv/yum/env-'+fb+'"'
+    }
 }
 
 def run_ansible(aws_access, aws_secret, fb, playbook, node) {
@@ -33,9 +56,8 @@ def run_ansible(aws_access, aws_secret, fb, playbook, node) {
         'AWS_SECRET_ACCESS_KEY='+aws_secret
     ]) {
         dir('ansible-mot2') {
-            sshagent(['5f11e345-97c1-49e4-a500-cd320a2620b7']) {
-                    sh 'ansible-playbook mot2-deployment/src_ansible/' +playbook+ ' -u deploy -i ec2.py -e "node=tag_fbnode_'+fb+'_' +node+ ' puppet_noop=no"'
-                    //sh 'ansible-playbook mot2-deployment/src_ansible/playbook_puppet.yml -u deploy -i ec2.py -e "node=tag_fbnode_'+FB+'_frontend puppet_noop=no"'
+            sshagent(['ba60fadb-4090-4b7c-b809-c0c4a44c923f']) {
+                sh 'ansible-playbook mot2-deployment/src_ansible/' +playbook+ ' -u deploy -i ec2.py -e "node=tag_fbnode_'+fb+'_' +node+ ' puppet_noop=no"'
             }
         }
     }
@@ -54,19 +76,22 @@ def get_composer(){
 }
 
 def composer_install(path){
-    sh 'php composer.phar install -d ' + path
+    sshagent(['313a82d3-f2e7-4787-837e-7517f3ce84eb']) {
+        sh 'php composer.phar install -d ' + path
+    }
 }
 
-def run_behat(){
+def run_behat(tags){
     sh '''
     cd ..
     WORKSPACE=`pwd`
+    sed -i 's/mot-api/mot-api:8080/g' $WORKSPACE/mot/mot-behat/config/api.yml
     export APPLICATION_CONFIG_PATH=$WORKSPACE/app/config
     echo $APPLICATION_CONFIG_PATH
     export TEST_APPLICATION_CONFIG_PATH=$WORKSPACE/app/config
     echo $TEST_APPLICATION_CONFIG_PATH
     cd mot/mot-behat
-    bin/behat --format=junit --out=build --format=pretty --out=std --tags="~@wip&&~@disabled&&~@quarantine"
+    bin/behat --format=junit --out=build --format=pretty --colors --out=std --tags="'''+tags+'''"
     '''
 }
 
@@ -74,39 +99,85 @@ def copy_configs(path){
     sh 'for x in ' + path + '/config/autoload/*.dist; do mv "$x" "${x%.*}" ; done'
 }
 
-def prepare_selenium(){
-    sh 'rm -rf selenium-screenshots'
-    sh 'mkdir selenium-screenshots'
-    sh 'mkdir selenium-screenshots/error'
+def prepare_selenium(hub){
+    sh """
+    mkdir -p selenium-screenshots/error
+    cp ~/selenium.properties ${env.WORKSPACE}/selenium.properties
+    cp mot-selenium/src/main/resources/selenium/driver/grid/firefoxNoVersionLinux.properties ${env.WORKSPACE}/firefoxNoVersionLinux.properties
+    if [ """+hub+""" != 'no' ]; then sed -i "s|test.gridUrl=.*|test.gridUrl="""+hub+"""|g" ${env.WORKSPACE}/selenium.properties; else sed -i 's/selenium/no/g' ${env.WORKSPACE}/firefoxNoVersionLinux.properties; if [ `ps aux | grep xinit | grep -v grep | wc -l` -eq 0 ]; then sudo nohup xinit < /dev/null > /dev/null 2>&1 & fi fi
+    """
 }
 
-def run_selenium(suite){
-    sh "/usr/bin/mvn  -B -f mot-selenium/pom.xml test -Dtest.screenshots.error.folder=selenium-screenshots/error -X -DtestngFile=" + suite
+def run_selenium(hub,suite){
+    sh """
+    if [ """+hub+""" == 'no' ]; then export DISPLAY=:0.0; fi
+    export SELENIUM_DRIVER_PROPERTIES=${env.WORKSPACE}/firefoxNoVersionLinux.properties
+    export SELENIUM_ENV_PROPERTIES=${env.WORKSPACE}/selenium.properties
+    /usr/bin/mvn -B -f mot-selenium/pom.xml test -Dtest.screenshots.error.folder=selenium-screenshots/error -X -DtestngFile=""" + suite
 }
 
-def reset_db() {
-    sh '''
-    WORKSPACE=`pwd`
-    cd $WORKSPACE/mot-api/db/dev/update/1130
-    for i in $(grep -il 'definer = ' *); do sed "s/DEFINER = 'root'@'127.0.0.1'//" $i > altered-$i; rm -rf $i; done
-    cd $WORKSPACE/mot-api/db
-    sed -i '/reset_users/d' reset_db_with_test_data.sh
-    sed -i "/cron-job/ s='',=123456,=g" $WORKSPACE/mot-api/db/dev/update/01953-0110/2015-05-26-VM-9601-cron-user[story].sql
-    '''
-    sh 'cd mot-api/db && ./reset_db_with_test_data.sh -f ' + mysql_user + ' ' + mysql_password + ' ' + mysql_host + ' ' + mysql_database + ' ' + mysql_grantuser + ' N && echo "DB Reset"'
-    // fixes
-    sh "mysql -h "+ mysql_host +" -u "+ mysql_user + " -p"+ mysql_password +" "+ mysql_database +" -e 'UPDATE notification_template SET id = 14 where id = 15'"
+def run_sonar(component, sonar_login, sonar_password, qgate_bugs_warn, qgate_bugs_err, qgate_smells_warn, qgate_smells_err){
+    dir('mot/'+component+'/module')
+    {
+      withEnv([
+      'SONAR_LOGIN='+sonar_login,
+      'SONAR_PASSWORD='+sonar_password
+    ]) {
+          sh '''
+          export PATH=/usr/java/jdk1.8.0_60/bin/:$PATH
+          sec_gate_id=`GET http://localhost:9000/api/qualitygates/list | awk -F: '{print $3}' | awk -F, '{print $1}'`
+          curl -s -u $SONAR_LOGIN:$SONAR_PASSWORD -X POST "http://localhost:9000/api/qualitygates/destroy?id=$sec_gate_id"
+          curl -s -u $SONAR_LOGIN:$SONAR_PASSWORD -X POST "http://localhost:9000/api/qualitygates/create?name=MOT"
+          sec_gate_id=`GET http://localhost:9000/api/qualitygates/list | awk -F: '{print $3}' | awk -F, '{print $1}'`
+          curl -s -u $SONAR_LOGIN:$SONAR_PASSWORD -X POST "http://localhost:9000/api/qualitygates/set_as_default?id=$sec_gate_id"
+          curl -s -u $SONAR_LOGIN:$SONAR_PASSWORD -X POST "http://localhost:9000/api/qualitygates/create_condition?gateId=$sec_gate_id&metric=code_smells&op=GT&warning=''' +qgate_smells_warn+ '''&error=''' +qgate_smells_err+ '''"
+          curl -s -u $SONAR_LOGIN:$SONAR_PASSWORD -X POST "http://localhost:9000/api/qualitygates/create_condition?gateId=$sec_gate_id&metric=bugs&op=GT&warning=''' +qgate_bugs_warn+ '''&error=''' +qgate_bugs_err+ '''"
+          for item in $( ls )
+          do
+              cp $WORKSPACE/mot/mot-sonar/phpunit.xml $item/phpunit.xml
+              cp $WORKSPACE/mot/mot-sonar/sonar-project.properties $item/sonar-project.properties
+              sed -i -e "s/moduleName/$item/g" $item/sonar-project.properties
+              sed -i -e "s/component/''' +component+ '''/g" $item/sonar-project.properties
+              cd $item
+              if [[ `ls -la | grep test | wc -l` -lt 1 ]]; then
+  	            sed -i -e '/sonar.tests=test/d' sonar-project.properties
+              fi
+              /opt/sonarqube/sonar-runner-2.4/bin/sonar-runner -e
+              rm -rf $item/phpunit.xml
+              rm -rf $item/sonar-project.properties
+              cd ..
+          done
+          '''
+        }
+    }
 }
 
-node('node-dev-14-fb') {
-  wrap([$class: 'TimestamperBuildWrapper']) {
-    stage 'Checking out repository and composer install'
+def check_sonar(component){
+    dir('mot/'+component+'/module') {
+        sh '''
+        set +x
+        for item in $( ls )
+        do
+            if [ `curl -s http://localhost:9000/api/qualitygates/project_status?projectKey=''' +component+ '''_$item 2>&1 | grep '"status":"ERROR"' | wc -l` -gt 0 ]; then  echo "Module $item in ''' +component+ ''' is failing static code analysis. For details please check http://localhost:9000/"; exit 1; fi;
+        done
+        '''
+    }
+}
+// PARTY
+node(NODE) {
+wrap([$class: 'TimestamperBuildWrapper']) {
+wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
+    stage 'Checkout GIT repos'
+    sh 'set +x; echo -e "\033[34mCheckout GIT repos\033[0m"'
+    env.WORKSPACE = pwd()
     deleteDir()
-    check_out_repo('mot', 'mot', "${MOT_BRANCH}", '2ed231bf-e6ca-4cad-b2f1-293f33a61755')
-    check_out_repo('mot', 'buildscripts', "${BUILDSCRIPTS_BRANCH}", '2ed231bf-e6ca-4cad-b2f1-293f33a61755')
-    check_out_repo('webops', 'hieradata', "${HIERADATA_BRANCH}", '2ed231bf-e6ca-4cad-b2f1-293f33a61755')
-    check_out_repo('webops', 'puppet-code', "${PUPPETCODE_BRANCH}", '2ed231bf-e6ca-4cad-b2f1-293f33a61755')
-    check_out_repo('webops', 'ansible-mot2', "${ANSIBLE_BRANCH}", '2ed231bf-e6ca-4cad-b2f1-293f33a61755')
+    parallel(
+        'mot': { check_out_repo('mot', 'mot', "${MOT_BRANCH}", '313a82d3-f2e7-4787-837e-7517f3ce84eb') },
+        'buildscripts': { check_out_repo('mot', 'buildscripts', "${BUILDSCRIPTS_BRANCH}", '313a82d3-f2e7-4787-837e-7517f3ce84eb') },
+        'hieradata': { check_out_repo('webops', 'hieradata', "${HIERADATA_BRANCH}", '313a82d3-f2e7-4787-837e-7517f3ce84eb') },
+        'puppet-code': { check_out_repo('webops', 'puppet-code', "${PUPPETCODE_BRANCH}", '313a82d3-f2e7-4787-837e-7517f3ce84eb') },
+        'ansible-mot2': { check_out_repo('webops', 'ansible-mot2', "${ANSIBLE_BRANCH}", '313a82d3-f2e7-4787-837e-7517f3ce84eb') }
+    )
     dir('mot'){
         get_composer()
         composer_install(mot_api)
@@ -115,83 +186,98 @@ node('node-dev-14-fb') {
         composer_install(mot_web_frontend)
         composer_install(mot_behat)
     }
-
     dir('mot'){
-        stage 'Run independent unit tests'
+        stage 'Independent unit tests'
+        sh 'set +x; echo -e "\033[34mIndependent unit tests\033[0m"'
         copy_configs(mot_web_frontend)
         run_phpunit_independent(mot_web_frontend)
     }
-    stage 'Build mot rpm'
+    stage 'Static Code Analysis'
+    parallel(
+      'api': { run_sonar("mot-api", "${SONAR_LOGIN}", "${SONAR_PASSWORD}", 5, 10, 500, 1000) },
+      'frontend': { run_sonar("mot-web-frontend",  "${SONAR_LOGIN}", "${SONAR_PASSWORD}", 5, 10, 500, 1000) }
+    )
+    parallel(
+      'api-check': { check_sonar("mot-api") },
+      'frontend-check': { check_sonar("mot-web-frontend") }
+    )
+    stage 'Build MOT RPMs'
+    sh 'echo -e "\033[34mBuild MOT RPMs\033[0m"'
     sh "env WORKSPACE=`pwd` bash -x buildscripts/code/rpm_mot-api-jenkins2.sh ${FB}"
-    //sh 'rm -rf mot/rpm'
     sh 'mv mot/rpm mot/rpm-api'
     sh "env WORKSPACE=`pwd` bash -x buildscripts/code/rpm_mot-common-web-module-jenkins2.sh ${FB}"
-    //sh 'rm -rf mot/rpm'
     sh 'mv mot/rpm mot/rpm-cwm'
     sh 'env WORKSPACE=`pwd` bash -x buildscripts/code/rpm_mot-web-frontend-jenkins2.sh'
     sh 'mv mot/rpm mot/rpm-frontend'
-    sh 'env WORKSPACE=`pwd` bash -x buildscripts/code/rpm_mot-testsupport-jenkins2.sh ${FB}'
+    sh "env WORKSPACE=`pwd` bash -x buildscripts/code/rpm_mot-testsupport-jenkins2.sh ${FB}"
     sh 'mv mot/rpm mot/rpm-testsupport'
 
-    stage 'Build Puppet and Hiera'
+    stage 'Build Puppet/Hiera RPMs'
+    sh 'set +x; echo -e "\033[34mBuild Puppet/Hiera RPMs\033[0m"'
+    withEnv(['PATH=$PATH:~/.rbenv/shims']) {
         dir('hieradata') {
-        sh "echo \"  :datadir:\" >> code/hiera.yaml"
-        sh "bash -x build ${FB}"
+            sh "echo \"  :datadir:\" >> code/hiera.yaml"
+            sh """
+            ~/.rbenv/bin/rbenv global 2.1.2
+            gem install --no-ri --no-rdoc bundler rake puppet-lint puppet hiera
+            bash -x build ${FB}
+            """
+        }
+        dir('puppet-code') {
+            sh """
+            ~/.rbenv/bin/rbenv global 2.1.2
+            bash -x build ${FB}
+            """
+        }
     }
 
-    dir('puppet-code') {
-        sh "bash -x build ${FB}"
+    stage 'Upload RPMs to YUM repo'
+    sh 'set +x; echo -e "\033[34mUpload RPMs to YUM repo\033[0m"'
+    sh '''
+        mkdir RPMS
+        mv mot/*.rpm RPMS/
+        mv hieradata/*.rpm RPMS/
+        mv puppet-code/*.rpm RPMS/
+    '''
+    dir('RPMS'){
+        push_rpm_2_yum_repo("${FB}",'*.rpm')
     }
-
-    stage 'Send package to repo'
-    dir('mot'){
-        sshagent(['5f11e345-97c1-49e4-a500-cd320a2620b7']) {
-            push_rpm_2_yum_repo("${FB}",'mot-*.rpm')
-        }
-    }
-    dir('hieradata'){
-        sshagent(['5f11e345-97c1-49e4-a500-cd320a2620b7']) {
-            push_rpm_2_yum_repo("${FB}",'hieradata-*.noarch.rpm')
-        }
-    }
-    dir('puppet-code'){
-        sshagent(['5f11e345-97c1-49e4-a500-cd320a2620b7']) {
-            push_rpm_2_yum_repo("${FB}",'puppet-code-*.noarch.rpm')
-        }
-    }
+    clean_repo("${FB}")
 
     stage 'Deploy'
+    sh 'set +x; echo -e "\033[34mDeploy\033[0m"'
     run_ansible("${AWS_ACCESS_KEY_ID}", "${AWS_SECRET_ACCESS_KEY}", "${FB}", 'playbook_puppet.yml', 'consul')
-    run_ansible("${AWS_ACCESS_KEY_ID}", "${AWS_SECRET_ACCESS_KEY}", "${FB}", 'playbook_puppet.yml', 'api')
-    run_ansible("${AWS_ACCESS_KEY_ID}", "${AWS_SECRET_ACCESS_KEY}", "${FB}", 'playbook_puppet.yml', 'frontend')
-    run_ansible("${AWS_ACCESS_KEY_ID}", "${AWS_SECRET_ACCESS_KEY}", "${FB}", 'playbook_puppet.yml', 'testsupport')
-
+    parallel(
+        'api': { run_ansible("${AWS_ACCESS_KEY_ID}", "${AWS_SECRET_ACCESS_KEY}", "${FB}", 'playbook_puppet.yml', 'api') },
+        'frontend': { run_ansible("${AWS_ACCESS_KEY_ID}", "${AWS_SECRET_ACCESS_KEY}", "${FB}", 'playbook_puppet.yml', 'frontend') },
+        'testsupport': { run_ansible("${AWS_ACCESS_KEY_ID}", "${AWS_SECRET_ACCESS_KEY}", "${FB}", 'playbook_puppet.yml', 'testsupport') }
+    )
     dir('mot'){
-        stage 'Run unit tests'
+        stage 'Unit tests'
+        sh 'set +x; echo -e "\033[34mUnit tests\033[0m"'
         copy_configs(mot_api)
         copy_configs(mot_testsupport)
         run_phpunit(mot_api)
         run_phpunit(mot_common_web_module)
         run_phpunit(mot_web_frontend)
 
-        stage 'Reset DB'
-        reset_db()
-
-        stage 'Run Behat'
-        // temporary hack
+        stage 'Behat tests'
+        sh 'set +x; echo -e "\033[34mBehat tests\033[0m"'
         sh '''
         sed -i "s/'localhost',/'mysql',/g" mot-testsupport/config/autoload/global.php
         sed -i "s/'password',/'fb14insecure1',/g" mot-testsupport/config/autoload/global.php
         sh '''
-        run_behat()
-    
-        stage 'Selenium BVT'
-        prepare_selenium()
-        run_selenium("bvt.xml")
-    
-        stage 'Selenium Regression'
-        run_selenium("regression.xml")
+        run_behat("${BEHAT_TAGS}")
+
+        stage 'Selenium BVT tests'
+        sh 'set +x; echo -e "\033[34mSelenium BVT tests\033[0m"'
+        prepare_selenium("${SELENIUM_HUB}")
+        run_selenium("${SELENIUM_HUB}","bvt.xml")
+
+        stage 'Selenium Regression tests'
+        sh 'set +x; echo -e "\033[34mSelenium Regression tests\033[0m"'
+        run_selenium("${SELENIUM_HUB}","regression.xml")
     }
-  }
+  }} //wrappers
 }
-slackSend "FINISHED => Job: '${env.JOB_NAME}' - Build: ${env.BUILD_NUMBER} @ Node: ${env.NODE_NAME} (GoTo: <${env.BUILD_URL}|Build> | <${env.BUILD_URL}console|Console>)"
+slackSend "FINISHED => Job: '${env.JOB_NAME}' - Build: ${env.BUILD_NUMBER} @ Node: "+NODE+" (GoTo: <${env.BUILD_URL}|Build> | <${env.BUILD_URL}console|Console>)"

@@ -26,7 +26,8 @@ class ClaimAccountListener
     private $whiteList = [
         'login',
         'logout',
-        'forgotten-password/update-password'
+        'forgotten-password/update-password',
+        'survey'
     ];
 
     private $claimAccountRoutes = [
@@ -35,7 +36,7 @@ class ClaimAccountListener
         'account/claim/setSecurityQuestion',
         'account/claim/displayPin',
         'account/claim/review',
-        'account/claim/reset',
+        'account/claim/reset'
     ];
 
     public function __construct(MotIdentityProviderInterface $identityProvider)

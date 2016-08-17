@@ -55,6 +55,11 @@ class Month
         return new \DateTime(sprintf('%s-%s-1 00:00:00', $this->year, $this->month));
     }
 
+    public function getFullMonthName()
+    {
+        return (new \DateTime(sprintf('%s-%s-1 00:00:00', $this->year, $this->month)))->format('F');
+    }
+
     public function getStartDateAsString()
     {
         return $this->getStartDate()->format(DateUtils::FORMAT_ISO_WITH_TIME);

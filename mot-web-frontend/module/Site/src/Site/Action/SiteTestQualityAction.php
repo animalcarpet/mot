@@ -18,6 +18,8 @@ use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use Site\Mapper\SiteTestQualityCsvMapper;
 use Site\ViewModel\TestQuality\SiteTestQualityViewModel;
+use Site\ViewModel\TestQuality\TestQualityMonthFilter;
+use Zend\Mvc\Controller\Plugin\Url;
 
 class SiteTestQualityAction implements AutoWireableInterface
 {
@@ -46,7 +48,7 @@ class SiteTestQualityAction implements AutoWireableInterface
         $this->assertion = $assertion;
     }
 
-    public function execute($siteId, $month, $year, $isReturnToAETQI, array $breadcrumbs)
+    public function execute($siteId, $month, $year, $isReturnToAETQI, array $breadcrumbs, Url $url, $params, $queryParams)
     {
         $this->assertion->assertGranted($siteId);
 
@@ -81,7 +83,8 @@ class SiteTestQualityAction implements AutoWireableInterface
                 $this->viewedDate,
                 $csvFileSizeGroupA,
                 $csvFileSizeGroupB,
-                $isReturnToAETQI
+                $isReturnToAETQI,
+                $this->getMonthFilter($url, $params, $queryParams)
             ),
             $breadcrumbs
         );
@@ -179,5 +182,10 @@ class SiteTestQualityAction implements AutoWireableInterface
         );
 
         return $csvMapper;
+    }
+
+    private function getMonthFilter(Url $url, $params, $queryParams)
+    {
+        return new TestQualityMonthFilter($params, $queryParams, $url);
     }
 }

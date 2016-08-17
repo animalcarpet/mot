@@ -252,6 +252,11 @@ class SpecialNoticesControllerTest extends AbstractDvsaMotTestTestCase
         $this->assertInstanceOf('Zend\View\Helper\HelperInterface', $htmlPurifier);
     }
 
+    /**
+     * expects wkhtmltopdf to be in /usr/bin
+     * @throws \Exception
+     * @group integration
+     */
     public function testPrintSpecialNoticeWithPdfExtensionGeneratesPdf()
     {
         $id     = 1;

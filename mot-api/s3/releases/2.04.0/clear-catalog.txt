@@ -1,0 +1,10 @@
+# Paste below S3 catalogs and files you would like to remove from S3 storage during this release.
+# Each line should be a bucket and folder separated with a pipe char: |
+#
+# As each environment can have a different bucket for the same functionality,
+# the 'bucket' parameter should be a hiera property.
+#
+# All catalogs need to contain full path, along with root folder.
+
+environment::statistics_amazon_storage_bucket|root/tester-quality-information/component-fail-rate/national/group-A
+environment::statistics_amazon_storage_bucket|root/tester-quality-information/component-fail-rate/national/group-B

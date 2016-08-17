@@ -8,7 +8,8 @@ use PHPUnit_Framework_Assert as PHPUnit;
 use Dvsa\Mot\Behat\Support\Api\SpecialNotice;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
-use Dvsa\Mot\Behat\Datasource\Authentication;
+use Dvsa\Mot\Behat\Support\Data\SiteData;
+use Dvsa\Mot\Behat\Support\Data\UserData;
 
 class SpecialNoticeContext implements Context
 {
@@ -67,18 +68,25 @@ class SpecialNoticeContext implements Context
      */
     private $areaOffice1user;
 
+    private $siteData;
+    private $userData;
+
     /**
      * @param SpecialNotice $specialNotice
      */
     public function __construct(
         SpecialNotice $specialNotice,
         TestSupportHelper $testSupportHelper,
-        Session $session
+        Session $session,
+        SiteData $siteData,
+        UserData $userData
     )
     {
         $this->specialNotice = $specialNotice;
         $this->testSupportHelper = $testSupportHelper;
         $this->session = $session;
+        $this->siteData = $siteData;
+        $this->userData = $userData;
     }
 
     /**
@@ -147,11 +155,9 @@ class SpecialNoticeContext implements Context
      */
     public function siteWithDvsaAndVtsUsersRolesExists()
     {
-        $this->vtsContext->createSite();
-        $siteId = $this->vtsContext->getSite()["id"];
-
-        $this->tester = $this->personContext->createTester(["siteIds" => [$siteId]]);
-        $this->aedm = $this->personContext->createAedm([]);
+        $site = $this->siteData->create();
+        $this->tester = $this->personContext->createTester(["siteIds" => [$site->getId()]]);
+        $this->aedm = $this->userData->getAedmByAeId($site->getOrganisation()->getId());
         $this->areaOffice1user = $this->testSupportHelper->getAreaOffice1Service()->create([]);
     }
 
@@ -225,7 +231,7 @@ class SpecialNoticeContext implements Context
         $testerSession = $this->session->startSession($this->tester->data["username"], $this->tester->data["password"]);
         $testerResponse = $this->specialNotice->getSpecialNotices($testerSession->getAccessToken(), $testerSession->getUserId());
 
-        $vtsUserSession = $this->session->startSession($this->aedm->data["username"], $this->aedm->data["password"]);
+        $vtsUserSession = $this->aedm;
         $vtsUserResponse = $this->specialNotice->getSpecialNotices($vtsUserSession->getAccessToken(), $vtsUserSession->getUserId());
 
         PHPUnit_Framework_Assert::assertEquals(200, $testerResponse->getStatusCode());

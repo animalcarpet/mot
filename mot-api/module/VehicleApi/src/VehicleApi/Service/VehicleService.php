@@ -135,6 +135,7 @@ class VehicleService
         $this->transaction->begin();
 
         try {
+            $data["fuelType"] = $this->vehicleCatalog->getFuelType($data['fuelTypeId'])->getCode();
             $motTest = $this->startMotTest($data, $dvsaVehicleCreatedUsingJavaService->getId());
 
             $this->transaction->commit();
@@ -171,7 +172,7 @@ class VehicleService
         $motTestData[CreateMotTestService::FIELD_COLOURS_SECONDARY] = ArrayUtils::tryGet($data, 'secondaryColour');
         $motTestData[CreateMotTestService::FIELD_VEHICLE_CLASS_CODE] = ArrayUtils::tryGet($data, 'testClass');
         $motTestData[CreateMotTestService::FIELD_MOT_TEST_TYPE] = MotTestTypeCode::NORMAL_TEST;
-        $motTestData[CreateMotTestService::FIELD_FUEL_TYPE_ID] = ArrayUtils::tryGet($data, 'fuelType');
+        $motTestData[CreateMotTestService::FIELD_FUEL_TYPE_CODE] = ArrayUtils::tryGet($data, 'fuelType');
         $motTestData[CreateMotTestService::FIELD_ONE_TIME_PASSWORD] = ArrayUtils::tryGet($data, 'oneTimePassword');
         $motTestData[CreateMotTestService::FIELD_CLIENT_IP] = ArrayUtils::tryGet($data, 'clientIp');
 

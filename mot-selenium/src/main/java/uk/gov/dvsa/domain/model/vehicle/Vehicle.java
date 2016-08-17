@@ -293,7 +293,7 @@ public class Vehicle {
         return vehicle;
     }
 
-    public static Vehicle getAcceptableVehicle() {
+    public static Vehicle generateValidDetails() {
 
         String randomRegistrationNumber = RandomStringUtils.randomAlphabetic(7);
         return getVehicle(
@@ -311,6 +311,20 @@ public class Vehicle {
                 Colour.Black.getName(),
                 TransmissionType.Manual.getName(),
                 RandomStringUtils.randomAlphabetic(17),
+                VehicleClass.four.getId(),
+                "888"
+        );
+    }
+
+    public static Vehicle generateEmptyAndInvalidDetails() {
+        return getVehicle(
+                " ", " ", " ",
+                " ", " ", " ",
+                "Fake name", "Fake make", "", "Fake model",
+                "",
+                Colour.Black.getName(),
+                "FakeFuel",
+                " ",
                 VehicleClass.four.getId(),
                 "888"
         );

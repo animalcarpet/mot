@@ -50,6 +50,7 @@ class UrlBuilder extends AbstractUrlBuilder
     const MOT_TEST_OPTIONS = '/options';
     const TEST_ITEM_SELECTOR_LIST = '/test-item-selector';
     const TEST_ITEM_SELECTOR = '/test-item-selector/:tisId';
+    // Search for reasons for rejection using the "search" parameter.
     const REASON_FOR_REJECTION = '/reason-for-rejection';
     const TEST_ITEM_CATEGORY_NAME = 'mot-test/:motTestNumber/test-item-category-name';
     const ODOMETER = '/odometer';
@@ -141,7 +142,7 @@ class UrlBuilder extends AbstractUrlBuilder
             self::MOT_TEST                               => [
                 self::TEST_ITEM_SELECTOR_LIST       => '',
                 self::TEST_ITEM_SELECTOR            => '',
-                self::REASON_FOR_REJECTION        => '',
+                self::REASON_FOR_REJECTION          => '',
                 self::MOT_TEST_SHORT_SUMMARY        => '',
                 self::MOT_TEST_BRAKE_TEST_RESULT    => [
                     self::MOT_TEST_BRAKE_TEST_VALIDATE_CONFIGURATION => ''

@@ -19,6 +19,8 @@ use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Enum\VehicleClassGroupCode;
+use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
+use Dvsa\Mot\Behat\Support\Data\SiteData;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingContext
@@ -177,6 +179,10 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
 
     private $users = [];
 
+    private $authorisedExaminerData;
+
+    private $siteData;
+
     /**
      * @param TestSupportHelper $testSupportHelper
      * @param CustomerService $customerService
@@ -195,7 +201,9 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
         Tester $tester,
         Vts $vts,
         AuthorisedExaminer $authorisedExaminer,
-        Notification $notification
+        Notification $notification,
+        AuthorisedExaminerData $authorisedExaminerData,
+        SiteData $siteData
     ) {
         $this->testSupportHelper = $testSupportHelper;
         $this->customerService = $customerService;
@@ -205,6 +213,8 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
         $this->vts = $vts;
         $this->authorisedExaminer = $authorisedExaminer;
         $this->notification = $notification;
+        $this->authorisedExaminerData = $authorisedExaminerData;
+        $this->siteData = $siteData;
     }
 
     /**
@@ -1044,9 +1054,9 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
 
     private function nominateToOrganisationRole($role)
     {
-        $siteId = $this->authorisedExaminerContext->getAe()["id"];
+        $aeId = $this->authorisedExaminerData->get()->getId();
         $token = $this->sessionContext->getCurrentAccessToken();
-        $response = $this->authorisedExaminer->nominate($this->getPersonUserId(), $role, $siteId, $token);
+        $response = $this->authorisedExaminer->nominate($this->getPersonUserId(), $role, $aeId, $token);
         PHPUnit::assertEquals(200, $response->getStatusCode());
     }
 
@@ -1105,7 +1115,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
             $this->getPersonUserId()
         );
 
-        $aeId = $this->authorisedExaminerContext->getAe()["id"];
+        $aeId = $this->authorisedExaminerData->get()->getId();
         $roles = $detailsResponse->getBody()['data']['roles']->toArray();
 
         $orgRoles = $roles["organisations"][$aeId]["roles"];
@@ -1176,9 +1186,9 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function iNominateUserToAuthorisedExaminerDesignatedManagerRoleToNewOrganisation()
     {
-        $this->authorisedExaminerContext->createAE();
-
-        $params = ["siteIds" => [1]];
+        $this->authorisedExaminerContext->createAEwithoutAedm();
+        $site = $this->siteData->create(["aeName" => AuthorisedExaminerData::DEFAULT_NAME]);
+        $params = ["siteIds" => [$site->getId()]];
         $this->createTester($params);
         $this->nominateToOrganisationRole("Authorised examiner designated manager");
     }
@@ -1655,20 +1665,6 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
         $code = ArrayUtils::tryGet($allowedStatuses, $status);
 
         $this->testSupportHelper->getTesterService()->insertTesterQualificationStatus($personId, $group, $code);
-    }
-
-    /**
-     * @Given There is a tester :testerName associated with site :siteName
-     */
-    public function thereIsATesterAssociatedWithSite($testerName, $siteName)
-    {
-        $site = $this->vtsContext->getSite($siteName);
-        $tester = $this->createTester(["siteIds" => [$site["id"]]])->data;
-
-        $authenticatedUser = $this->session->startSession($tester["username"], $tester["password"]);
-        $this->addUser($testerName, $authenticatedUser);
-
-        return $authenticatedUser;
     }
 
     /**

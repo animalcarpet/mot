@@ -4,6 +4,7 @@ namespace Dvsa\Mot\Api\StatisticsApi\TesterPerformance\National\Repository;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\National\QueryResult\NationalStatisticsResult;
 use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Repository\AbstractStatisticsRepository;
+use DvsaCommon\Model\ReasonForRejection;
 use DvsaCommon\Enum\MotTestStatusCode;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\VehicleClassGroupCode;
@@ -32,6 +33,7 @@ class NationalStatisticsRepository extends AbstractStatisticsRepository implemen
             ->setParameter('startDate', $this->startDate)
             ->setParameter('endDate', $this->endDate)
             ->setParameter('groupACode', VehicleClassGroupCode::BIKES)
+            ->setParameter('skippedRfrTypes', ReasonForRejection::getTestQualityInformationSkippedRfrTypes())
             ->setParameter('groupBCode', VehicleClassGroupCode::CARS_ETC);
 
         $dbResult = $query->getScalarResult()[0];

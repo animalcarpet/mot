@@ -17,6 +17,10 @@ import uk.gov.dvsa.helper.Utilities;
 import uk.gov.dvsa.module.userprofile.AnnualAssessmentCertificates;
 import uk.gov.dvsa.shared.MotApi;
 import uk.gov.dvsa.shared.MotUI;
+import uk.gov.dvsa.helper.Utilities.Logger;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Listeners(TestListener.class)
 public abstract class DslTest {
@@ -30,6 +34,8 @@ public abstract class DslTest {
     protected VehicleData vehicleData = new VehicleData();
     protected MotApi motApi = new MotApi();
     protected MotUI motUI;
+    protected static SimpleDateFormat screenshotDateFormat =
+            new SimpleDateFormat("yyyyMMdd-HHmmss");
 
     private static final ThreadLocal<WebDriverConfigurator> webDriverConfigurator =
             new ThreadLocal<>();
@@ -47,10 +53,10 @@ public abstract class DslTest {
     }
 
     /**
-    * This is an allure report annotation
-    * When used, the report will printout the content of String value
+     * This is an allure report annotation
+     * When used, the report will printout the content of String value
      * See uk.gov.dvsa.ui.views.EventHistoryViewTests for usage
-    * */
+     * */
     @Step("{0}")
     protected void step(String value){}
 
@@ -77,8 +83,17 @@ public abstract class DslTest {
             }
         } else {
             WebDriverConfigurator cachedDriver = webDriverConfigurator.get();
+
+            // Take screenshot on test failure
+            if (cachedDriver != null && result.getStatus() == ITestResult.FAILURE && cachedDriver.isErrorScreenshotEnabled()) {
+                driver.takeScreenShot(result.getTestClass().getName().replace("uk.gov.dvsa.ui", "")
+                                + "." + result.getName() + "_" + screenshotDateFormat.format(new Date())
+                                + ".png", cachedDriver.getErrorScreenshotPath() + "/" + cachedDriver.getBuildNumber());
+                Logger.LogInfo("Page Source: \n" + driver.getPageSource());
+            }
+
             if (null != cachedDriver) {
-                Utilities.Logger.LogError("Tearing down webdriver because of test failure");
+                Logger.LogError("Tearing down webdriver because of test failure");
                 cachedDriver.destroy();
                 webDriverConfigurator.set(null);
             }

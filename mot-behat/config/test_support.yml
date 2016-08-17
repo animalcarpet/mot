@@ -7,6 +7,11 @@ services:
     dvsa.mot_test_type_helper:
         class: Dvsa\Mot\Behat\Support\Helper\MotTestTypeHelper
 
+    dvsa.api_resource_helper:
+        class: Dvsa\Mot\Behat\Support\Helper\ApiResourceHelper
+        arguments:
+            - @dvsa.http_client.reflective
+
     dvsa.test_support_service_manager:
         class: Zend\ServiceManager\ServiceManager
         public: false

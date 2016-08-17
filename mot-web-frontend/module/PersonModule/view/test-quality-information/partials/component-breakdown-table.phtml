@@ -1,0 +1,70 @@
+<?php
+/** @todo this can be generic view, also to be used for tester at site view */
+/** @var \Dvsa\Mot\Frontend\TestQualityInformation\ViewModel\ComponentStatisticsTable $group */
+?>
+
+<h3 class="key-value-list__header"><?php echo $group->getGroupName() ?>
+    <span class="key-value-list__meta"><?php echo $group->getGroupDescription() ?></span>
+</h3>
+
+<table class="table-reference" id="tqiTableB">
+    <thead>
+        <tr class="table-reference__head">
+            <th ></th>
+            <th class="numeric">Tests done</th>
+            <th class="numeric">Average vehicle age</th>
+            <th class="numeric">Average test time</th>
+            <th class="numeric">Tests failed</th>
+        </tr>
+    </thead>
+    <tbody>
+       <tr class="table-reference__row--primary">
+           <td>
+                Tester statistics
+            </td>
+            <td class="numeric" id="tester-test-count">
+                <?php echo $group->getTestCount() ?>
+            </td>
+            <td class="numeric">
+                <?php echo $group->getAverageVehicleAge() ?>
+            </td>
+            <td class="numeric" id="tester-average-duration" >
+                <?php echo $group->getAverageTestDuration() ?> minutes
+            </td>
+            <td class="numeric" id="tester-failure-percentage" >
+                <?php echo $group->getFailurePercentage() ?>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<h3 class="heading-medium">Failures by category</h3>
+
+<table id="tqi-component-average">
+    <thead>
+        <tr>
+            <th class="">Category</th>
+            <th class="numeric">Tester</th>
+            <th class="numeric secondary-data">National</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($group->getComponentRows() as $componentRow): ?>
+            <tr>
+                <td class="tqi-category-name">
+                    <?php echo $componentRow->getCategoryName(); ?>
+                </td>
+                <td class="numeric tqi-tester-value">
+                    <strong><?php echo $componentRow->getTesterAverage(); ?>%</strong>
+                </td>
+                <td class="numeric secondary-data tqi-national-value">
+                    <?php if ($group->isNationalAverageAvailable()): ?>
+                        <?php echo $componentRow->getNationalAverage(); ?>%
+                    <?php else : ?>
+                        Currently unavailable
+                    <?php endif ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>

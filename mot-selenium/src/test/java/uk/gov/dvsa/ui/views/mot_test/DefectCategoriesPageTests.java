@@ -7,10 +7,14 @@ import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.mot.DefectCategoriesPage;
+import uk.gov.dvsa.ui.pages.mot.DefectsPage;
 import uk.gov.dvsa.ui.pages.mot.TestResultsEntryNewPage;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 
 public class DefectCategoriesPageTests extends DslTest {
     private User tester;
@@ -45,10 +49,10 @@ public class DefectCategoriesPageTests extends DslTest {
         DefectCategoriesPage defectCategoriesPage = testResultsEntryPage.clickAddDefectButton();
 
         // Then I should able to browse through the category tree
-        defectCategoriesPage.navigateToDefectCategory("Brakes", "Brake performance", "Decelerometer", "Brake operation");
+        DefectsPage defectsPage = defectCategoriesPage.navigateToDefectCategory("Brakes", "Brake performance", "Decelerometer", "Brake operation");
 
         // Then I should see a list of defects of that category
-        defectCategoriesPage.defectsAreDisplayed();
+        defectsPage.defectsAreDisplayed();
     }
 
     @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1931"})
@@ -60,6 +64,6 @@ public class DefectCategoriesPageTests extends DslTest {
         DefectCategoriesPage defectCategoriesPage = testResultsEntryPage.clickAddDefectButton();
 
         // Then I should able to browse through the category tree and see "Item not tested" entries
-        defectCategoriesPage.navigateToDefectCategory("Items Not Tested");
+        defectCategoriesPage.navigateToDefectCategory("Items not tested", "Brake performance");
     }
 }

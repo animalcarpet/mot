@@ -7,13 +7,11 @@ import uk.gov.dvsa.ui.pages.VehicleSearchPage;
 import uk.gov.dvsa.ui.pages.mot.MotTestHistoryPage;
 import uk.gov.dvsa.ui.pages.mot.MotTestSearchPage;
 import uk.gov.dvsa.ui.pages.mot.EnforcementTestSummaryPage;
+import uk.gov.dvsa.ui.pages.mot.StartTestConfirmationPage;
 import uk.gov.dvsa.ui.pages.mot.certificates.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalToIgnoringCase;
 
 public class Certificate {
 
@@ -24,35 +22,12 @@ public class Certificate {
     ReplacementCertificateReviewPage reviewPage;
     CertificateEditUpdatePage editSuccessfulPage;
     private boolean isPrintButtonDisplayed;
-    private boolean declarationSuccessful = false;
-
-    private static final String DECLARATION_STATEMENT = "I confirm that this MOT transaction has been conducted in accordance with " +
-            "the conditions of authorisation which includes compliance with the MOT testing guide, the requirements for " +
-            "authorisation, the appropriate MOT Inspection Manual and any other instructions issued by DVSA.";
 
     public Certificate(PageNavigator pageNavigator) { this.pageNavigator = pageNavigator; }
 
-    public boolean isDeclarationStatementDisplayed() {
-        return declarationSuccessful;
-    }
-
-    public void createReplacementCertificate(User tester, Vehicle vehicle) throws IOException, URISyntaxException {
-        DuplicateReplacementCertificateTestHistoryPage duplicateReplacementCertificateTestHistoryPage = pageNavigator.gotoDuplicateReplacementCertificateTestHistoryPage(tester, vehicle);
-        ReplacementCertificateUpdatePage replacementCertificateUpdatePage = duplicateReplacementCertificateTestHistoryPage.clickFirstEditButton();
-        replacementCertificateUpdatePage.submitNoOdometerOption();
-
-        ReplacementCertificateReviewPage replacementCertificateReviewPage =
-                replacementCertificateUpdatePage.reviewChangesButton(ReplacementCertificateReviewPage.class);
-
-        if (replacementCertificateReviewPage.isDeclarationTextDisplayed()) {
-            assertThat(replacementCertificateReviewPage.getDeclarationText(), equalToIgnoringCase(DECLARATION_STATEMENT));
-            declarationSuccessful = true;
-        }
-    }
-
     public void printReplacementPage(User user, Vehicle vehicle, String motTestNumber) throws IOException, URISyntaxException {
-        pageNavigator.navigateToPage(user, VehicleSearchPage.REPLACEMENT_PATH, VehicleSearchPage.class).searchVehicle(vehicle).selectVehicle();
-        certificateTestHistoryPage = new DuplicateReplacementCertificateTestHistoryPage(pageNavigator.getDriver());
+        certificateTestHistoryPage = pageNavigator.navigateToPage(user, VehicleSearchPage.REPLACEMENT_PATH, VehicleSearchPage.class)
+                .searchVehicle(vehicle).selectVehicle(DuplicateReplacementCertificateTestHistoryPage.class);;
 
         certificatePage = certificateTestHistoryPage.viewTest(motTestNumber, MotTestCertificatePage.class);
 
@@ -60,9 +35,8 @@ public class Certificate {
     }
 
     private void updateCertificatePage(User user, Vehicle vehicle, String motTestNumber) throws IOException, URISyntaxException {
-        pageNavigator.navigateToPage(user, VehicleSearchPage.REPLACEMENT_PATH, VehicleSearchPage.class)
-                .searchVehicle(vehicle).selectVehicle();
-        certificateTestHistoryPage = new DuplicateReplacementCertificateTestHistoryPage(pageNavigator.getDriver());
+        certificateTestHistoryPage = pageNavigator.navigateToPage(user, VehicleSearchPage.REPLACEMENT_PATH, VehicleSearchPage.class)
+                .searchVehicle(vehicle).selectVehicle(DuplicateReplacementCertificateTestHistoryPage.class);
 
         updatePage = certificateTestHistoryPage.editTest(motTestNumber, ReplacementCertificateUpdatePage.class);
     }

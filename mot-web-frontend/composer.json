@@ -12,8 +12,8 @@
         "dvsa/mot-google-analytics": "^0.1",
         "maglnet/magl-markdown": "1.3.0",
         "soflomo/purifier": "0.1.1",
-        "slot-purchase/web-frontend": "v3.8.1",
-        "dvsa/web-frontend-assets": "0.8.3",
+        "slot-purchase/web-frontend": "^3.8.2",
+        "dvsa/web-frontend-assets": "0.8.4",
         "dvsa/dvsa-application-logger": "~1.3.0",
         "dvsa/dvsa-doctrine-module": "~1.1",
         "zendframework/zendpdf": "2.0.2",
@@ -54,7 +54,9 @@
             "Dvsa\\Mot\\Frontend\\PersonModule\\": "module/PersonModule/src",
             "Dvsa\\Mot\\Frontend\\PersonModuleTest\\": "module/PersonModule/test",
             "Dvsa\\Mot\\FrontendTest\\": "test/src",
-            "Dvsa\\Mot\\Frontend\\ServiceModule\\": "module/ServiceModule/src"
+            "Dvsa\\Mot\\Frontend\\ServiceModule\\": "module/ServiceModule/src",
+            "Dvsa\\Mot\\Frontend\\TestQualityInformation\\": "module/TestQualityInformation/src",
+            "Dvsa\\Mot\\Frontend\\TestQualityInformationTest\\": "module/TestQualityInformation/test"
         },
         "classmap" : [
             "../mot-common-web-module/Module.php"

@@ -22,11 +22,17 @@ public class FormDataHelper {
     }
 
     public static void enterText(WebElement webElement, String value) {
+        webElement.click();
         webElement.clear();
         webElement.sendKeys(value);
     }
 
     public static String getSelectedTextFromDropdown(WebElement elementLocator) {
         return new Select(elementLocator).getFirstSelectedOption().getText();
+    }
+
+    public static void enterInputRadioButtonOrCheckbox (WebElement webElement, boolean checked) {
+        if (checked != webElement.isSelected())
+            webElement.click();
     }
 }

@@ -2,7 +2,7 @@
 /**
  * This file is part of the DVSA MOT Common project.
  *
- * @link http://gitlab.clb.npm/mot/mot
+ * @link https://gitlab.motdev.org.uk/mot/mot
  */
 
 namespace DvsaCommon\Dto\MotTesting;

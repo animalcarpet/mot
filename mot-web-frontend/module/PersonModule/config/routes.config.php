@@ -6,6 +6,7 @@
  */
 
 use Dvsa\Mot\Frontend\PersonModule\Controller\AddAnnualAssessmentCertificatesController;
+use Dvsa\Mot\Frontend\PersonModule\Controller\TestQualityInformationController;
 use Dvsa\Mot\Frontend\PersonModule\Controller\RemoveAnnualAssessmentCertificatesController;
 use Dvsa\Mot\Frontend\PersonModule\Controller\ViewAnnualAssessmentCertificatesController;
 use Dvsa\Mot\Frontend\PersonModule\Controller\EditAnnualAssessmentCertificatesController;
@@ -329,6 +330,36 @@ return [
                                 'action' => 'removeVtsRole'
                             ]
                         ]
+                    ],
+                    'test-quality-information' => [
+                        'type' => 'segment',
+                        'may_terminate' => true,
+                        'options' => [
+                            'route' => '/test-quality-information/:month/:year',
+                            'constraints' => [
+                                'month' => '[0-9]+',
+                                'year' => '[0-9]+',
+                            ],
+                            'defaults' => [
+                                'controller' => TestQualityInformationController::class,
+                                'action' => 'testQualityInformation',
+                            ],
+                        ],
+                        'child_routes' => [
+                            'component-breakdown' => [
+                                'type' => 'segment',
+                                'options' => [
+                                    'route' => '/components/:group',
+                                    'constraints' => [
+                                        'group' => 'A|B',
+                                    ],
+                                    'defaults' => [
+                                        'controller' => TestQualityInformationController::class,
+                                        'action' => 'componentBreakdown',
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
                     'change-password'              => [
                         'type'          => 'segment',
@@ -776,6 +807,36 @@ return [
                                 'may_terminate' => true,
                             ],
                         ]
+                    ],
+                    'test-quality-information' => [
+                        'type' => 'segment',
+                        'may_terminate' => true,
+                        'options' => [
+                            'route' => '/test-quality-information/:month/:year',
+                            'constraints' => [
+                                'month' => '[0-9]+',
+                                'year' => '[0-9]+',
+                            ],
+                            'defaults' => [
+                                'controller' => TestQualityInformationController::class,
+                                'action' => 'testQualityInformation',
+                            ],
+                        ],
+                        'child_routes' => [
+                            'component-breakdown' => [
+                                'type' => 'segment',
+                                'options' => [
+                                    'route' => '/components/:group',
+                                    'constraints' => [
+                                        'group' => 'A|B',
+                                    ],
+                                    'defaults' => [
+                                        'controller' => TestQualityInformationController::class,
+                                        'action' => 'componentBreakdown',
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
                     'change-password'              => [
                         'type'          => 'segment',
@@ -1236,6 +1297,36 @@ return [
                             ]
                         ]
                     ],
+                    'test-quality-information' => [
+                        'type' => 'segment',
+                        'may_terminate' => true,
+                        'options' => [
+                            'route' => '/test-quality-information/:month/:year',
+                            'constraints' => [
+                                'month' => '[0-9]+',
+                                'year' => '[0-9]+',
+                            ],
+                            'defaults' => [
+                                'controller' => TestQualityInformationController::class,
+                                'action' => 'testQualityInformation',
+                            ],
+                        ],
+                        'child_routes' => [
+                            'component-breakdown' => [
+                                'type' => 'segment',
+                                'options' => [
+                                    'route' => '/components/:group',
+                                    'constraints' => [
+                                        'group' => 'A|B',
+                                    ],
+                                    'defaults' => [
+                                        'controller' => TestQualityInformationController::class,
+                                        'action' => 'componentBreakdown',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                     'change-password'              => [
                         'type'          => 'segment',
                         'options'       => [
@@ -1613,6 +1704,36 @@ return [
                                 'action' => 'removeVtsRole'
                             ]
                         ]
+                    ],
+                    'test-quality-information' => [
+                        'may_terminate' => true,
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/test-quality-information/:month/:year',
+                            'constraints' => [
+                                'month' => '[0-9]+',
+                                'year' => '[0-9]+',
+                            ],
+                            'defaults' => [
+                                'controller' => TestQualityInformationController::class,
+                                'action' => 'testQualityInformation',
+                            ],
+                        ],
+                        'child_routes' => [
+                            'component-breakdown' => [
+                                'type' => 'segment',
+                                'options' => [
+                                    'route' => '/components/:group',
+                                    'constraints' => [
+                                        'group' => 'A|B',
+                                    ],
+                                    'defaults' => [
+                                        'controller' => TestQualityInformationController::class,
+                                        'action' => 'componentBreakdown',
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
                     'change-password'              => [
                         'type'          => 'segment',

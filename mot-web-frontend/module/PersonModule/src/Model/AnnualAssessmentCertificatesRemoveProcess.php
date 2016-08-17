@@ -1,5 +1,5 @@
 <?php
-namespace Dvsa\Mot\Frontend\PersonModule\src\Model;
+namespace Dvsa\Mot\Frontend\PersonModule\Model;
 
 use Core\Action\AbstractRedirectActionResult;
 use Core\Action\RedirectToRoute;

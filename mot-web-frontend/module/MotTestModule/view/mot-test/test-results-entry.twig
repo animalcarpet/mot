@@ -9,7 +9,7 @@
 {% if flashMessenger().hasSuccessMessages() %}
     {% for message in flashMessenger().getSuccessMessages() %}
         <div class="message--success" id="validation-message--success">
-            <p>{{ message }}</p>
+            <p>{{ message|raw }}</p>
         </div>
     {% endfor %}
 {% endif %}
@@ -50,7 +50,7 @@
 </div>
 <div class="defect-summary">
     <div id="rfrList" class="">
-        {% include '/defects/observed-defects.twig' with {'observedDefects': observedDefects} %}
+        {% include '/defects/observed-defects.twig' with {'observedDefects': observedDefects, 'motTest': motTest} %}
     </div>
 </div>
 <div class="action-panel">

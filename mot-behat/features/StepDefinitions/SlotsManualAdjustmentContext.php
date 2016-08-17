@@ -7,6 +7,7 @@ use Dvsa\Mot\Behat\Support\Response;
 use PHPUnit_Framework_Assert as PHPUnit;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use TestSupport\Service\AEService;
+use DvsaCommon\Dto\Organisation\OrganisationDto;
 
 class SlotsManualAdjustmentContext implements Context
 {

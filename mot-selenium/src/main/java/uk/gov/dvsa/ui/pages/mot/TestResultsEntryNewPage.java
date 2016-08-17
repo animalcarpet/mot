@@ -3,7 +3,7 @@ package uk.gov.dvsa.ui.pages.mot;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.model.mot.CancelTestReason;
-import uk.gov.dvsa.domain.navigation.MotPageFactory;
+import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
@@ -28,6 +28,9 @@ public class TestResultsEntryNewPage extends Page {
     @FindBy(id = "reviewTest") private WebElement reviewTest;
     @FindBy(id = "cancelTest") private WebElement cancelTest;
     @FindBy(id = "validation-message--success") private WebElement validationMessageSuccess;
+    @FindBy(css = "#rfrList") private WebElement reasonsForRejectionList;
+    @FindBy(xpath = ".//*[@id='rfrList']//*[@class='defect__title']") private WebElement reasonForRejectionTitle;
+    @FindBy(xpath = "//*[@id='rfrList']//a[contains(., 'Remove')]") private WebElement removeDefectLink;
 
     public TestResultsEntryNewPage(MotAppDriver driver) {
         super(driver);
@@ -133,5 +136,20 @@ public class TestResultsEntryNewPage extends Page {
 
     public boolean isOdometerReadingUpdateSuccessMessageDisplayed(){
         return validationMessageSuccess.getText().equals("The odometer reading has been updated");
+    }
+
+    public RemoveDefectPage navigateToRemoveDefectPage(Defect defect) {
+        removeDefectLink.click();
+
+        return new RemoveDefectPage(driver, defect.getAddOrRemovalType());
+    }
+
+    public boolean isDefectRemovedSuccessMessageDisplayed(Defect defect) {
+        return validationMessageSuccess.getText().equals(
+                String.format("This %s has been removed:\n%s", defect.getAddOrRemovalType(), defect.getAddOrRemoveName()));
+    }
+
+    public boolean isDefectInReasonsForRejection(Defect defect) {
+        return reasonForRejectionTitle.isDisplayed() && reasonForRejectionTitle.getText().contains(defect.getDefectName());
     }
 }

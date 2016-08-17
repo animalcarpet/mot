@@ -83,7 +83,9 @@ class WebAuthenticationListener
             '@^/forgotten-password(?!/update$)(.*)@',
             '@^/account/register@',
             '@^/account/register/(.*)@',
-            '@^/your-profile/(.*)/change-password@'
+            '@^/your-profile/(.*)/change-password@',
+            '@^/survey/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}@', // survey/<uuid>
+            '@^/survey/[[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/thanks@', // survey/<uuid>/thanks
         ];
     }
 }

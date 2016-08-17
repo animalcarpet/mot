@@ -45,7 +45,7 @@ public class Contingency {
         VehicleSearchPage vehicleSearchPage = contingencyPage.fillContingencyTestFormAndConfirm(code, datetime);
 
         StartTestConfirmationPage startTestConfirmationPage =
-                vehicleSearchPage.searchVehicle(vehicle).selectVehicleForTest();
+                vehicleSearchPage.searchVehicle(vehicle).selectVehicle(StartTestConfirmationPage.class);
 
         if (ConfigHelper.isTestResultEntryImprovementsEnabled()) {
             TestResultsEntryNewPage testResultsEntryPage =
@@ -75,7 +75,7 @@ public class Contingency {
         VehicleSearchPage vehicleSearchPage = contingencyPage.fillContingencyTestFormAndConfirm(code, datetime);
 
         ConfirmVehicleRetestPage retestPage =
-                vehicleSearchPage.searchVehicle(vehicle).selectVehicleForRetest();
+                vehicleSearchPage.searchVehicle(vehicle).selectVehicle(ConfirmVehicleRetestPage.class);
 
         ReTestResultsEntryPage resultsEntryPage = retestPage.startContigencyRetest();
         resultsEntryPage.completeTestDetailsWithPassValues();

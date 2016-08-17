@@ -87,7 +87,7 @@ public class NormalTest {
 
     public void changeVehicleDetails(User tester, Vehicle vehicle) throws IOException, URISyntaxException {
         VehicleSearchPage vehicleSearchPage = pageNavigator.navigateToPage(tester, VehicleSearchPage.PATH, VehicleSearchPage.class);
-        StartTestConfirmationPage startTestConfirmationPage = vehicleSearchPage.searchVehicle(vehicle).selectVehicleForTest();
+        StartTestConfirmationPage startTestConfirmationPage = vehicleSearchPage.searchVehicle(vehicle).selectVehicle(StartTestConfirmationPage.class);
         VehicleDetailsChangedPage vehicleDetailsChangedPage = startTestConfirmationPage.changeVehicleDetailAndSubmit(vehicle);
 
         setDeclarationStatementStatus(vehicleDetailsChangedPage);
@@ -220,7 +220,7 @@ public class NormalTest {
     public CreateNewVehicleRecordSpecificationPage submitValidPageOneDetails(
         CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage) {
 
-        Vehicle vehicle = Vehicle.getAcceptableVehicle();
+        Vehicle vehicle = Vehicle.generateValidDetails();
 
         createNewVehicleRecordIdentificationPage.enterDetails(vehicle);
         return createNewVehicleRecordIdentificationPage.submit();
@@ -229,7 +229,7 @@ public class NormalTest {
     public boolean submitInvalidPageOneDate(String date, String errorMsg,
              CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage) {
 
-        Vehicle vehicle = Vehicle.getAcceptableVehicle();
+        Vehicle vehicle = Vehicle.generateValidDetails();
 
         vehicle.setFirstUsedDate(date);
         createNewVehicleRecordIdentificationPage.enterDetails(vehicle);
@@ -241,7 +241,7 @@ public class NormalTest {
     public boolean submitInvalidPageOneDetails(String property, String errorMsg,
              CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage) {
 
-        Vehicle vehicle = resetVehicleProperty(property, Vehicle.getAcceptableVehicle());
+        Vehicle vehicle = resetVehicleProperty(property, Vehicle.generateValidDetails());
 
         createNewVehicleRecordIdentificationPage.enterDetails(vehicle);
         createNewVehicleRecordIdentificationPage.submit();
@@ -253,12 +253,31 @@ public class NormalTest {
         String property, String errorMsg,
             CreateNewVehicleRecordSpecificationPage createNewVehicleRecordSpecificationPage) {
 
-        Vehicle vehicle = resetVehicleProperty(property, Vehicle.getAcceptableVehicle());
+        Vehicle vehicle = resetVehicleProperty(property, Vehicle.generateValidDetails());
 
         createNewVehicleRecordSpecificationPage.enterVehicleDetails(vehicle);
         createNewVehicleRecordSpecificationPage.submitInvalidFormDetails();
 
         return createNewVehicleRecordSpecificationPage.isErrorMessageDisplayed(errorMsg);
+    }
+
+    public Boolean submitPageOneDetailsWithInappropriateReason (
+            String reason, String prop, String errorMsg,
+            CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage) throws Exception {
+
+        Vehicle vehicle = Vehicle.generateValidDetails();
+
+        if (prop == "vin") {
+            vehicle.setEmptyVinReason(reason);
+        } else if (prop == "vrm") {
+            vehicle.setEmptyVrmReason(reason);
+        } else {
+            throw new Exception("Unrecognised property. vin or vrm expected");
+        }
+
+        createNewVehicleRecordIdentificationPage.enterDetails(vehicle);
+        createNewVehicleRecordIdentificationPage.submitInvalidFormDetails();
+        return createNewVehicleRecordIdentificationPage.isErrorMessageDisplayed(errorMsg);
     }
 
     private Vehicle resetVehicleProperty(String property, Vehicle vehicle) {

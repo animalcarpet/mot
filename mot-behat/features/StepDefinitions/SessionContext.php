@@ -8,6 +8,9 @@ use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Support\Api\AuthorisedExaminer;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
+use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
+use Dvsa\Mot\Behat\Support\Data\UserData;
+use Dvsa\Mot\Behat\Support\Data\SiteData;
 
 class SessionContext implements Context
 {
@@ -59,6 +62,9 @@ class SessionContext implements Context
     /** @var PersonContext */
     private $personContext;
 
+    private $userData;
+    private $siteData;
+
     /**
      * @param AccountClaim $accountClaim
      * @param Session $session
@@ -69,12 +75,16 @@ class SessionContext implements Context
         AccountClaim $accountClaim,
         Session $session,
         TestSupportHelper $testSupportHelper,
-        AuthorisedExaminer $authorisedExaminer
+        AuthorisedExaminer $authorisedExaminer,
+        UserData $userData,
+        SiteData $siteData
     ) {
         $this->accountClaim      = $accountClaim;
         $this->session           = $session;
         $this->testSupportHelper = $testSupportHelper;
         $this->authorisedExaminer = $authorisedExaminer;
+        $this->userData = $userData;
+        $this->siteData = $siteData;
     }
 
     /**
@@ -492,10 +502,8 @@ class SessionContext implements Context
      */
     public function iAmLoggedInAsAnAedmToNewOrganisation()
     {
-        $this->personContext->createAEDM();
-        $this->currentUser = $this->session->startSession($this->personContext->getPersonUsername(),
-            $this->personContext->getPersonPassword()
-        );
+        $ae = $this->authorisedExaminerContext->createAE();
+        $this->currentUser = $this->userData->getAedmByAeId($ae["id"]);
     }
 
     /**

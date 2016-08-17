@@ -3,6 +3,8 @@
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use DvsaCommon\Enum\LanguageTypeCode;
+use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
@@ -13,6 +15,8 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
  */
 class ReasonForRejectionDescription extends Entity
 {
+    const MANUAL_ADVISORY = "Manual Advisory";
+
     use CommonIdentityTrait;
 
     /**
@@ -129,5 +133,47 @@ class ReasonForRejectionDescription extends Entity
     public function getReasonForRejection()
     {
         return $this->reasonForRejection;
+    }
+
+    /**
+     * @return string
+     *
+     * @throws NotFoundException
+     */
+    public function getEnglishOfReasonForRejectionDescription()
+    {
+        $rfr = $this->getReasonForRejection();
+        if (is_null($rfr)) {
+            return self::MANUAL_ADVISORY;
+        }
+        foreach ($rfr->getDescriptions() as $description) {
+            if ($description->getLanguage()->getCode() === LanguageTypeCode::ENGLISH) {
+                return $description->getName();
+            }
+            else {
+                throw new NotFoundException("Reason for rejection description");
+            }
+        }
+    }
+
+    /**
+     * @return string
+     *
+     * @throws NotFoundException
+     */
+    public function getEnglishOfReasonForRejectionAdvisoryText()
+    {
+        $rfr = $this->getReasonForRejection();
+        if (is_null($rfr)) {
+            return self::MANUAL_ADVISORY;
+        }
+        foreach ($rfr->getDescriptions() as $description) {
+            if ($description->getLanguage()->getCode() === LanguageTypeCode::ENGLISH) {
+                return $description->getAdvisoryText();
+            }
+            else {
+                throw new NotFoundException("Reason for rejection advisory text");
+            }
+        }
     }
 }

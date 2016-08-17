@@ -69,7 +69,7 @@ class UserTestQualityActionTest extends PHPUnit_Framework_TestCase
     {
         $this->componentFailRateApiResource = XMock::of(ComponentFailRateApiResource::class);
         $this->componentFailRateApiResource->expects($this->any())
-            ->method('getForDate')
+            ->method('getForTesterAtSite')
             ->willReturn(UserTestQualityViewModelTest::buildUserPerformanceDto());
 
         $this->nationalComponentStatisticApiResource = XMock::of(NationalComponentStatisticApiResource::class);
@@ -131,7 +131,7 @@ class UserTestQualityActionTest extends PHPUnit_Framework_TestCase
     private function setUpServiceWithEmptyApiResponse()
     {
         $this->componentFailRateApiResource = XMock::of(ComponentFailRateApiResource::class);
-        $this->componentFailRateApiResource->method('getForDate')
+        $this->componentFailRateApiResource->method('getForTesterAtSite')
             ->willReturn(UserTestQualityViewModelTest::buildEmptyGroupPerformance());
 
         $this->userTestQualityAction = new UserTestQualityAction(

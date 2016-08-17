@@ -85,7 +85,10 @@ class ComponentCategoryCollection
                 );
                 array_push($currentColumn, $currentCategory);
             }
-            $newColumn = new ComponentCategoryColumn($currentColumn, $name);
+            $newColumn = new ComponentCategoryColumn(
+                $currentColumn,
+                DefectSentenceCaseConverter::convert($name)
+            );
             array_push($columns, $newColumn);
         }
 

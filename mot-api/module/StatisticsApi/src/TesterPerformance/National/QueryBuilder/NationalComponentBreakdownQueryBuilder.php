@@ -8,6 +8,5 @@ class NationalComponentBreakdownQueryBuilder extends ComponentBreakdownQueryBuil
     protected function getUseIndex()
     {
         return 'USE INDEX (`mot_test_completed_date_idx`)';
-
     }
 }

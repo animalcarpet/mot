@@ -15,6 +15,7 @@ use Dvsa\Mot\Frontend\MotTestModule\Controller\RemoveDefectController;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\SearchDefectsController;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\SurveyPageController;
 use Dvsa\Mot\Frontend\MotTestModule\Module;
+use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyContextProvider;
 use DvsaCommon\Constants\MotTestNumberConstraint;
 
 return [
@@ -54,7 +55,7 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
-                    'edit-defect' => [
+                    DefectsJourneyContextProvider::EDIT_DEFECT_ROUTE => [
                         'type' => 'segment',
                         'options' => [
                             'route' => '/:defectItemId/edit',
@@ -67,7 +68,7 @@ return [
                             ],
                         ],
                     ],
-                    'remove-defect' => [
+                    DefectsJourneyContextProvider::REMOVE_DEFECT_ROUTE => [
                         'type' => 'segment',
                         'options' => [
                             'route' => '/:defectItemId/remove',
@@ -80,7 +81,7 @@ return [
                             ],
                         ],
                     ],
-                    'categories' => [
+                    DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE => [
                         'type' => 'literal',
                         'options' => [
                             'route' => '/categories',
@@ -91,7 +92,44 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes' => [
-                            'category' => [
+                            DefectsJourneyContextProvider::ADD_MANUAL_ADVISORY_ROUTE => [
+                                'type' => 'literal',
+                                'priority' => 1000,
+                                'options' => [
+                                    'route' => '/add/0/advisory',
+                                    'defaults' => [
+                                        'controller' => AddManualAdvisoryController::class,
+                                        'action'     => 'add',
+                                    ],
+                                ],
+                            ],
+                            DefectsJourneyContextProvider::EDIT_DEFECT_ROUTE => [
+                                'type' => 'segment',
+                                'options' => [
+                                    'route' => '/:defectItemId/edit',
+                                    'constraints' => [
+                                        'defectItemId' => '[0-9]+',
+                                    ],
+                                    'defaults' => [
+                                        'controller' => EditDefectController::class,
+                                        'action'     => 'edit',
+                                    ],
+                                ],
+                            ],
+                            DefectsJourneyContextProvider::REMOVE_DEFECT_ROUTE => [
+                                'type' => 'segment',
+                                'options' => [
+                                    'route' => '/:defectItemId/remove',
+                                    'constraints' => [
+                                        'defectItemId' => '[0-9]+',
+                                    ],
+                                    'defaults' => [
+                                        'controller' => RemoveDefectController::class,
+                                        'action'     => 'remove',
+                                    ],
+                                ],
+                            ],
+                            DefectsJourneyContextProvider::CATEGORY_ROUTE => [
                                 'type' => 'segment',
                                 'options' => [
                                     'route' => '/:categoryId',
@@ -105,7 +143,7 @@ return [
                                 ],
                                 'may_terminate' => true,
                                 'child_routes' => [
-                                    'add-manual-advisory' => [
+                                    DefectsJourneyContextProvider::ADD_MANUAL_ADVISORY_ROUTE => [
                                         'type' => 'literal',
                                         'priority' => 1000,
                                         'options' => [
@@ -116,7 +154,7 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'add-defect' => [
+                                    DefectsJourneyContextProvider::ADD_DEFECT_ROUTE => [
                                         'type' => 'segment',
                                         'options' => [
                                             'route' => '/add/:defectId/:type',
@@ -130,7 +168,7 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'edit-defect' => [
+                                    DefectsJourneyContextProvider::EDIT_DEFECT_ROUTE => [
                                         'type' => 'segment',
                                         'options' => [
                                             'route' => '/:defectItemId/edit',
@@ -143,7 +181,7 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'remove-defect' => [
+                                    DefectsJourneyContextProvider::REMOVE_DEFECT_ROUTE => [
                                         'type' => 'segment',
                                         'options' => [
                                             'route' => '/:defectItemId/remove',
@@ -160,7 +198,7 @@ return [
                             ],
                         ],
                     ],
-                    'search' => [
+                    DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE => [
                         'type' => 'literal',
                         'options' => [
                             'route' => '/search',
@@ -171,7 +209,7 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes' => [
-                            'add-manual-advisory' => [
+                            DefectsJourneyContextProvider::ADD_MANUAL_ADVISORY_ROUTE => [
                                 'type' => 'literal',
                                 'priority' => 1000,
                                 'options' => [
@@ -182,7 +220,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'add-defect' => [
+                            DefectsJourneyContextProvider::ADD_DEFECT_ROUTE => [
                                 'type' => 'segment',
                                 'options' => [
                                     'route' => '/add/:defectId/:type',
@@ -196,7 +234,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'edit-defect' => [
+                            DefectsJourneyContextProvider::EDIT_DEFECT_ROUTE => [
                                 'type' => 'segment',
                                 'options' => [
                                     'route' => '/:defectItemId/edit',
@@ -209,7 +247,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'remove-defect' => [
+                            DefectsJourneyContextProvider::REMOVE_DEFECT_ROUTE => [
                                 'type' => 'segment',
                                 'options' => [
                                     'route' => '/:defectItemId/remove',
@@ -229,7 +267,7 @@ return [
             'survey' => [
                 'type' => 'segment',
                 'options' => [
-                    'route' => '/survey',
+                    'route' => '/survey/[:token]',
                     'defaults' => [
                         'controller' => SurveyPageController::class,
                         'action'     => 'index',
@@ -247,26 +285,26 @@ return [
                             ],
                         ],
                     ],
-                    'reports'                           => [
-                        'type'    => 'segment',
+                ],
+            ],
+            'survey-reports' => [
+                'type'    => 'segment',
+                'options' => [
+                    'route'    => '/survey/reports',
+                    'defaults' => [
+                        'controller' => SurveyPageController::class,
+                        'action'     => 'reports',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'downloadCsv' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/reports',
+                            'route' => '/download/:month',
                             'defaults' => [
                                 'controller' => SurveyPageController::class,
-                                'action'     => 'reports',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                        'child_routes' => [
-                            'downloadCsv' => [
-                                'type' => 'segment',
-                                'options' => [
-                                    'route' => '/download/:month',
-                                    'defaults' => [
-                                        'controller' => SurveyPageController::class,
-                                        'action' => 'downloadReportCsv',
-                                    ],
-                                ],
+                                'action' => 'downloadReportCsv',
                             ],
                         ],
                     ],

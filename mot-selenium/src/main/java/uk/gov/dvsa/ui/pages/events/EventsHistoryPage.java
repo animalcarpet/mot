@@ -33,7 +33,8 @@ public class EventsHistoryPage extends Page {
     public final String getEventName(String aeId) {
         By selector = By.cssSelector(String.format(eventNames, aeId));
         PageInteractionHelper.refreshPage();
-        return driver.findElement(selector).getText();
+
+        return getElementText(selector);
     }
 
     public EventsHistoryPage fillSearchInput(String searchString) {

@@ -5,11 +5,11 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\QueryResult\ComponentFailRateResult;
+use DvsaCommon\Model\ReasonForRejection;
 use DvsaCommon\Enum\LanguageTypeCode;
 use DvsaCommon\Enum\MotTestStatusCode;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\OrganisationSiteStatusCode;
-use DvsaCommon\Enum\ReasonForRejectionTypeName;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 
 class ComponentStatisticsRepository extends AbstractStatisticsRepository implements AutoWireableInterface
@@ -70,7 +70,7 @@ class ComponentStatisticsRepository extends AbstractStatisticsRepository impleme
                 OrganisationSiteStatusCode::UNKNOWN
             ]
         );
-        $query->setParameter('skippedRfrTypes', ReasonForRejectionTypeName::ADVISORY);
+        $query->setParameter('skippedRfrTypes', ReasonForRejection::getTestQualityInformationSkippedRfrTypes());
     }
 
     protected function getResultSetMapping()

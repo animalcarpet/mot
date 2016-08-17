@@ -26,10 +26,13 @@ use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
 use DvsaEntitiesTest\Entity\SiteTest;
+use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Service\Validator\MotTestValidator;
 use DvsaMotApiTest\Factory\MotTestObjectsFactory;
 use PHPUnit_Framework_TestCase;
 use UserApi\SpecialNotice\Service\SpecialNoticeService;
+use Zend\Authentication\AuthenticationService;
+use Zend\Authentication\AuthenticationServiceInterface;
 
 /**
  * Class MotTestValidatorTest
@@ -38,16 +41,23 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
 {
     /** @var MotTestValidator $motTestValidator */
     private $motTestValidator;
+
+    /**
+     * @var CensorService $censorServiceMock
+     */
     private $censorServiceMock;
 
-    /** @var  AuthorisationServiceInterface $motAuthorizationService */
+    /** @var AuthorisationServiceInterface $motAuthorizationService */
     private $motAuthorizationService;
 
-    /** @var  MotIdentityProviderInterface $motIdentityProvider */
+    /** @var AuthenticationService $motIdentityProvider */
     private $motIdentityProvider;
 
-    /** @var  SpecialNoticeService */
+    /** @var SpecialNoticeService $specialNoticeService */
     private $specialNoticeService;
+
+    /** @var FeatureToggles $featureToggles */
+    private $featureToggles;
 
     const PROFANITY_DETECTED = true;
     const PROFANITY_NOT_DETECTED = false;
@@ -66,11 +76,14 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
 
         $this->specialNoticeService = XMock::of(SpecialNoticeService::class);
 
+        $this->featureToggles = XMock::of(FeatureToggles::class);
+
         $this->motTestValidator = new MotTestValidator(
             $this->censorServiceMock,
             $this->motAuthorizationService,
             $this->motIdentityProvider,
-            $this->specialNoticeService
+            $this->specialNoticeService,
+            $this->featureToggles
         );
         parent::setUp();
     }

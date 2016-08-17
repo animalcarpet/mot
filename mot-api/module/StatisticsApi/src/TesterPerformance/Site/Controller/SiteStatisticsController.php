@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Site\Controller;
 
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Site\Service\SiteStatisticsService;
+use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Site\Service\TesterStatisticsService;
 use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
@@ -12,7 +12,7 @@ class SiteStatisticsController extends AbstractDvsaRestfulController implements 
 {
     private $siteStatisticsService;
 
-    function __construct(SiteStatisticsService $siteStatisticsService)
+    function __construct(TesterStatisticsService $siteStatisticsService)
     {
         $this->siteStatisticsService = $siteStatisticsService;
     }
@@ -26,7 +26,7 @@ class SiteStatisticsController extends AbstractDvsaRestfulController implements 
         $year = (int)$this->params()->fromRoute("year");
         $month = (int)$this->params()->fromRoute("month");
 
-        $dto = $this->siteStatisticsService->get($siteId, $year, $month);
+        $dto = $this->siteStatisticsService->getForSite($siteId, $year, $month);
 
         return $this->returnDto($dto);
     }
