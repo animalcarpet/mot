@@ -2,12 +2,13 @@
 
 namespace DvsaMotApi\Factory\Controller;
 
+use Doctrine\ORM\EntityManager;
 use DvsaMotApi\Controller\SurveyController;
 use DvsaMotApi\Service\SurveyService;
 use Zend\Di\ServiceLocator;
-use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * Class SurveyControllerFactory.
@@ -15,17 +16,19 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class SurveyControllerFactory implements FactoryInterface
 {
     /**
-     * @param ServiceLocatorInterface|ControllerManager $serviceLocator
+     * @param ServiceLocatorInterface $serviceLocator
      *
      * @return SurveyController
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var ServiceLocator $serviceLocator */
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
+        $serviceLocator = $serviceLocator->getServiceLocator();
 
-        $surveyService = $mainServiceLocator->get(SurveyService::class);
+        $surveyService = $serviceLocator->get(SurveyService::class);
 
-        return new SurveyController($surveyService);
+        return new SurveyController(
+            $surveyService
+        );
     }
 }

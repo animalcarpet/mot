@@ -1,34 +1,22 @@
 <?php
-/**
- * This file is part of the DVSA MOT API project.
- *
- * @link https://gitlab.motdev.org.uk/mot/mot
- */
 
 namespace DvsaMotApi\Service;
 
-use DateTime;
+use Aws\S3\S3Client;
 use Doctrine\ORM\EntityManager;
 use DvsaCommon\Enum\MotTestTypeCode;
-use DvsaCommonApi\Service\Exception\BadRequestException;
+use DvsaCommonApi\Service\AbstractService;
 use DvsaCommonApi\Service\Exception\NotFoundException;
-use DvsaEntities\Entity\MotTest;
-use DvsaEntities\Entity\MotTestSurvey;
-use DvsaEntities\Entity\Survey;
-use DvsaEntities\Repository\Doctrine\DoctrineMotTestSurveyRepository;
+use DvsaEntities\Entity\MotTestSurveyResult;
+use \DvsaEntities\Entity\MotTest;
 use DvsaEntities\Repository\MotTestRepository;
-use DvsaEntities\Repository\MotTestSurveyRepository;
-use DvsaEntities\Repository\SurveyRepository;
-use DvsaMotApi\Domain\Survey\SurveyConfiguration;
-use DvsaMotApi\Service\S3\FileStorageInterface;
-use DvsaMotApi\Service\S3\S3CsvStore;
-use InvalidArgumentException;
+use DvsaEntities\Repository\MotTestSurveyResultRepository;
 use Zend\Authentication\AuthenticationService;
 
 /**
  * Class SurveyService.
  */
-class SurveyService
+class SurveyService extends AbstractService
 {
     /**
      * @var AuthenticationService
@@ -36,12 +24,17 @@ class SurveyService
     private $authenticationService;
 
     /**
-     * @var FileStorageInterface
+     * @var S3Client
      */
-    private $surveyStore;
+    private $s3Client;
 
     /**
-     * @var SurveyConfiguration
+     * @var string
+     */
+    private $bucket;
+
+    /**
+     * @var array
      */
     private $surveyConfig;
 
@@ -57,98 +50,76 @@ class SurveyService
         'total',
     ];
 
-    private $validSurveyValues = [1, 2, 3, 4, 5];
-
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    private $valid_survey_values = [1, 2, 3, 4, 5];
 
     /**
      * SurveyService constructor.
      *
      * @param EntityManager         $entityManager
      * @param AuthenticationService $authService
-     * @param S3CsvStore            $surveyStore
-     * @param SurveyConfiguration   $surveyConfig
+     * @param S3Client              $s3Client
+     * @param string                $bucket
+     * @param array                 $surveyConfig
      */
-    public function __construct(EntityManager $entityManager, AuthenticationService $authService,
-                                S3CsvStore $surveyStore, SurveyConfiguration $surveyConfig)
-    {
-        $this->entityManager = $entityManager;
+    public function __construct(
+        EntityManager $entityManager,
+        AuthenticationService $authService,
+        S3Client $s3Client,
+        $bucket,
+        array $surveyConfig
+    ) {
+        parent::__construct($entityManager);
         $this->authenticationService = $authService;
-        $this->surveyStore = $surveyStore;
+        $this->s3Client = $s3Client;
+        $this->bucket = $bucket;
         $this->surveyConfig = $surveyConfig;
     }
 
     /**
      * @param array $data
      *
-     * $data contains 'token' and 'satisfaction_rating' keys
-     *
-     * @throws BadRequestException
-     * @throws NotFoundException
-     *
      * @return array
      */
     public function createSurveyResult(array $data)
     {
-        if (!array_key_exists('token', $data)) {
-            throw new BadRequestException('Survey token not provided', BadRequestException::ERROR_CODE_INVALID_SURVEY_TOKEN);
-        }
+        $surveyResult = new MotTestSurveyResult();
 
-        if (!array_key_exists('satisfaction_rating', $data)) {
-            throw new BadRequestException('Satisfaction rating not provided', BadRequestException::ERROR_CODE_INVALID_SURVEY_TOKEN);
-        }
+        /** @var MotTestRepository $motTestRepository */
+        $motTestRepository = $this->entityManager->getRepository(MotTest::class);
+        
+        /** @var MotTest $motTest */
+        $motTest = $motTestRepository->findByNumber($data['mot_test_number'])[0];
 
-        // validate token
-        if (!$this->sessionTokenIsValid($data['token'])) {
-            throw new BadRequestException('Survey token is not valid', BadRequestException::ERROR_CODE_INVALID_SURVEY_TOKEN);
-        }
+        $currentUserId = $this->authenticationService->getIdentity()->getUserId();
 
-        /** @var DoctrineMotTestSurveyRepository $motTestSurveyRepository */
-        $motTestSurveyRepository = $this->entityManager->getRepository(MotTestSurvey::class);
+        if ($motTest !== null && $motTest->getTester()->getId() === $currentUserId) {
 
-        /** @var MotTestSurvey $motTestSurvey */
-        $motTestSurvey = $motTestSurveyRepository->findByToken($data['token']);
-
-        if ($motTestSurvey === null) {
-            throw new NotFoundException(MotTestSurvey::class);
-        }
-        $motTest = $motTestSurvey->getMotTest();
-
-        if ($motTest !== null) {
-            $rating = $data['satisfaction_rating'];
-            if ($this->isValidRating($rating)) {
-                $surveyResult = new Survey($data['satisfaction_rating']);
-                $motTestSurvey->setSurvey($surveyResult);
-
-                $this->entityManager->persist($surveyResult);
-                $this->entityManager->persist($motTestSurvey);
-                $this->entityManager->flush();
-
-                return ['satisfaction_rating' => $rating];
+            $surveyResult->setMotTest($motTest);
+            if (in_array($data['satisfaction_rating'], $this->valid_survey_values)) {
+                $surveyResult->setSurveyResult($data['satisfaction_rating']);
             }
-            throw new InvalidArgumentException('Invalid survey result provided');
+            $this->entityManager->persist($surveyResult);
+            $this->entityManager->flush();
+
+            return ['satisfaction_rating' => $surveyResult->getSurveyResult()];
         }
         throw new NotFoundException(MotTest::class);
     }
 
     /**
-     * @param $motTestTypeCode
-     * @param $testerId
-     *
+     * @param \StdClass $motTestDetails
      * @return bool
      */
-    public function shouldDisplaySurvey($motTestTypeCode, $testerId)
+    public function shouldDisplaySurvey($motTestDetails)
     {
+        $motTestTypeCode = $motTestDetails->testType->code;
+
         if ($motTestTypeCode !== MotTestTypeCode::NORMAL_TEST) {
             return false;
         } else {
-            $displaySurvey = !$this->surveyHasBeenDoneBefore() || (
+            $displaySurvey = !$this->surveyHasBeenDoneBefore() ||
                 $this->nextSurveyShouldBeDisplayed() &&
-                !$this->userHasCompletedSurveyInExclusionPeriod($testerId)
-            );
+                !$this->userHasCompletedSurveyInExclusionPeriod($motTestDetails->tester->id);
 
             return $displaySurvey;
         }
@@ -159,23 +130,21 @@ class SurveyService
      */
     private function surveyHasBeenDoneBefore()
     {
-        $queryBuilder = $this
-            ->entityManager
-            ->createQueryBuilder()
-            ->select('COUNT(sr)')
-            ->from(MotTestSurvey::class, 'sr');
+        $queryBuilder = $this->entityManager->createQueryBuilder();
 
-        $motTestSurveysCount = (int) $queryBuilder->getQuery()->getSingleScalarResult();
+        $queryBuilder->select('COUNT(sr)')
+            ->from(MotTestSurveyResult::class, 'sr');
 
-        return $motTestSurveysCount > 0;
+        return $queryBuilder->getQuery()->getSingleScalarResult() > 0;
     }
 
     /**
+     * @param int $completedTestId
      * @return bool
      */
     private function nextSurveyShouldBeDisplayed()
     {
-        $testsBetweenSurvey = $this->surveyConfig->getNumberOfTestsBetweenSurveys();
+        $testsBetweenSurvey = $this->surveyConfig['numberOfTestsBetweenSurveys'];
 
         /** @var MotTestRepository $motTestRepository */
         $motTestRepository = $this->entityManager->getRepository(MotTest::class);
@@ -190,23 +159,24 @@ class SurveyService
     }
 
     /**
-     * Return whether the user has completed a survey in the last $time.
+     * Return whether the user has completed a survey in the last $time
      *
-     * @param int $testerId
-     *
+     * @param string $testerId
      * @return bool
      */
     private function userHasCompletedSurveyInExclusionPeriod($testerId)
     {
-        $timeBetweenSurveys = $this->surveyConfig->getTimeBeforeSurveyRedisplayed();
+        $timeBetweenSurveys = $this->surveyConfig['timeBeforeSurveyRedisplayed'];
 
-        /** @var MotTestSurveyRepository $motTestSurveyRepository */
-        $motTestSurveyRepository = $this->entityManager->getRepository(MotTestSurvey::class);
+        /** @var MotTestSurveyResultRepository $motTestSurveyRepository */
+        $motTestSurveyRepository = $this->entityManager->getRepository(MotTestSurveyResult::class);
 
         try {
             $lastSurveyDate = $motTestSurveyRepository->getLastUserSurveyDate($testerId);
-            $latestSurvey = new DateTime($lastSurveyDate);
-            $beginningOfWindow = new DateTime(date('Y-m-d', strtotime('-' . $timeBetweenSurveys)));
+            $latestSurvey = new \DateTime($lastSurveyDate);
+            $beginningOfWindow = new \DateTime(
+                date('Y-m-d', strtotime('-' . $timeBetweenSurveys))
+            );
 
             return $latestSurvey >= $beginningOfWindow;
         } catch (NotFoundException $e) {
@@ -221,10 +191,9 @@ class SurveyService
      */
     public function getSurveyResultSatisfactionRatingsCount($rating)
     {
-        /** @var SurveyRepository $surveyRepository */
-        $surveyRepository = $this->entityManager->getRepository(Survey::class);
+        $surveyRepository = $this->entityManager->getRepository(MotTestSurveyResult::class);
 
-        return $surveyRepository->findByRating($rating);
+        return $surveyRepository->findBySurveyResult($rating);
     }
 
     /**
@@ -234,7 +203,13 @@ class SurveyService
      */
     public function generateSurveyReports($surveyData)
     {
-        $timeStamp = new DateTime();
+        $csvHandle = fopen('php://memory', 'r+');
+
+        if (!empty(self::$CSV_COLUMNS)) {
+            fputcsv($csvHandle, self::$CSV_COLUMNS);
+        }
+
+        $timeStamp = new \DateTime();
         $row['timestamp'] = $timeStamp->format('Y-m-d-H-i-s');
         $row['period'] = 'month';
         $row['slug'] = 'https://mot-testing.i-env.net/';
@@ -245,7 +220,19 @@ class SurveyService
         $row['rating_5'] = $surveyData['rating_5'];
         $row['total'] = $surveyData['total'];
 
-        $result = $this->surveyStore->putFile(self::$CSV_COLUMNS, $row, $timeStamp->format('Y-m'));
+        fputcsv($csvHandle, $row);
+        rewind($csvHandle);
+
+        $result = $this->s3Client->putObject(
+            [
+                'Bucket' => $this->bucket,
+                'Key' => $timeStamp->format('Y-m'),
+                'Body' => stream_get_contents($csvHandle),
+                'ContentType' => 'text/csv',
+            ]
+        );
+
+        fclose($csvHandle);
 
         return $result;
     }
@@ -255,66 +242,26 @@ class SurveyService
      */
     public function getSurveyReports()
     {
-        $files = $this->surveyStore->getAllFiles();
+        $objects = $this->s3Client->getIterator(
+            'ListObjects', [
+                'Bucket' => $this->bucket,
+            ]
+        );
 
-        $reportAggregate = [];
-        $reportData = [];
+        $results = [];
 
-        foreach ($files as $file) {
-            $reportData['month'] = $this->surveyStore->stripRootFolderFromKey($file['Key']);
-            $reportData['size'] = $file['Size'];
-            $reportData['csv'] = (string) $this->surveyStore->getFile($file['Key']);
-            array_push($reportAggregate, $reportData);
+        foreach ($objects as $object) {
+            $result['month'] = $object['Key'];
+            $result['size'] = $object['Size'];
+            $result['csv'] = (string) $this->s3Client->getObject(
+                [
+                    'Bucket' => $this->bucket,
+                    'Key' => $object['Key'],
+                ]
+            )['Body'];
+            $results[] = $result;
         }
 
-        return $reportAggregate;
-    }
-
-    /**
-     * @param int $motTestNumber
-     *
-     * @return string
-     */
-    public function createSessionToken($motTestNumber)
-    {
-        $motTestRepository = $this->entityManager->getRepository(MotTest::class);
-        $motTest = $motTestRepository->findOneByNumber($motTestNumber);
-
-        $motTestSurvey = new MotTestSurvey($motTest);
-
-        $this->entityManager->persist($motTestSurvey);
-        $this->entityManager->flush();
-
-        return $motTestSurvey->getToken();
-    }
-
-    /**
-     * @param string $token
-     * 
-     * @return bool
-     */
-    public function sessionTokenIsValid($token)
-    {
-        $motTestSurveyRepository = $this->entityManager->getRepository(MotTestSurvey::class);
-
-        /** @var MotTestSurvey $motTestSurvey */
-        $motTestSurvey = $motTestSurveyRepository->findOneBy(['token' => $token]);
-
-        // If there is no corresponding MotTestSurvey or it already has an associated Survey, token is invalid.
-        if (null === $motTestSurvey || $motTestSurvey->getSurvey() !== null) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param int|null $rating
-     *
-     * @return bool
-     */
-    private function isValidRating($rating)
-    {
-        return $rating === null || in_array($rating, $this->validSurveyValues);
+        return $results;
     }
 }

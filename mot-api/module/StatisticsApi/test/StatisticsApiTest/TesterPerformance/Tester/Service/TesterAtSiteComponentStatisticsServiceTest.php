@@ -1,12 +1,12 @@
 <?php
 namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\Tester\Service;
 
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\QueryResult\ComponentFailRateResult;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Site\QueryResult\TesterPerformanceResult;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Tester\Mapper\ComponentBreakdownDtoMapper;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Tester\Repository\TesterAtSiteComponentStatisticsRepository;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Tester\Repository\TesterAtSiteStatisticsRepository;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Tester\Service\TesterAtSiteComponentStatisticsService;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Mapper\ComponentBreakdownDtoMapper;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\QueryResult\ComponentFailRateResult;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterAtSite\Repository\TesterAtSiteComponentStatisticsRepository;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterAtSite\Service\TesterAtSiteComponentStatisticsService;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterPerformanceResult;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Repository\TesterAtSiteStatisticsRepository;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommonTest\Date\TestDateTimeHolder;
@@ -20,7 +20,7 @@ class TesterAtSiteComponentStatisticsServiceTest extends \PHPUnit_Framework_Test
 {
     /** @var  TesterAtSiteComponentStatisticsRepository | \PHPUnit_Framework_MockObject_MockObject */
     private $componentStatisticsRepositoryMock;
-    /** @var  TesterAtSiteStatisticsRepository | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var  \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Repository\TesterAtSiteStatisticsRepository | \PHPUnit_Framework_MockObject_MockObject */
     private $testerStatisticsRepositoryMock;
     /** @var  AuthorisationServiceMock | \PHPUnit_Framework_MockObject_MockObject */
     private $authorisationService;

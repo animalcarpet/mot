@@ -52,7 +52,7 @@ public class Contingency {
                     startTestConfirmationPage.clickStartMotTestWhenConductingContingencyTest(TestResultsEntryNewPage.class);
 
             testResultsEntryPage = testResultsEntryPage.clickAddReadingButton().addOdometerReading(99999, OdometerUnit.MILES, true);
-            testSummaryPage = testResultsEntryPage.completeBrakeTestWithPassValues().clickReviewButton();
+            testSummaryPage = testResultsEntryPage.completeBrakeTestWithPassValues().clickReviewTestButton();
         } else {
             TestResultsEntryPage testResultsEntryPage =
                     startTestConfirmationPage.clickStartMotTestWhenConductingContingencyTest(TestResultsEntryPage.class);

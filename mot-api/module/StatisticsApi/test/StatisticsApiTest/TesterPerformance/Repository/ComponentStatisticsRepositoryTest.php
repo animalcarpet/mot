@@ -3,17 +3,16 @@ namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\Repository;
 
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\QueryResult\ComponentFailRateResult;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Repository\ComponentStatisticsRepository;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\QueryResult\ComponentFailRateResult;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\Repository\ComponentStatisticsRepository;
 use DvsaCommonTest\TestUtils\XMock;
-use PHPUnit_Framework_TestCase;
 
 class ComponentStatisticsRepositoryTest extends \PHPUnit_Framework_TestCase
 {
 
     /** @var  EntityManager */
     private $entityManagerMock;
-    /** @var  ComponentStatisticsRepository */
+    /** @var  \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Repository\\Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\Repository\ComponentStatisticsRepository */
     private $sut;
 
     public function setUp()
@@ -21,7 +20,7 @@ class ComponentStatisticsRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->markTestSkipped();
         $this->entityManagerMock = $this->getEntityManagerMock();
 
-        $this->sut = new ComponentStatisticsRepository($this->entityManagerMock);
+        $this->sut = new \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\Repository\ComponentStatisticsRepository($this->entityManagerMock);
     }
 
     public function testGetResultMapsResults()

@@ -4,12 +4,15 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Support\Data\Generator\MotTestGenerator;
+use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupA;
+use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupB;
 use Dvsa\Mot\Behat\Support\Data\MotTestData;
 use Dvsa\Mot\Behat\Support\Data\UserData;
 use Dvsa\Mot\Behat\Support\Data\VehicleData;
 use Dvsa\Mot\Behat\Support\Helper\ApiResourceHelper;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\ComponentFailRateApiResource;
+use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentBreakdownDto;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\NationalComponentStatisticApiResource;
 use DvsaCommon\Dto\Site\SiteDto;
 use DvsaCommon\Enum\VehicleClassCode;
@@ -17,6 +20,7 @@ use PHPUnit_Framework_Assert as PHPUnit;
 
 class StatsComponentFailRateContext implements Context
 {
+
     /** @var TestSupportHelper */
     private $testSupportHelper;
 
@@ -27,6 +31,11 @@ class StatsComponentFailRateContext implements Context
     private $vehicleData;
 
     private $apiResourceHelper;
+
+    private $statistics = [
+        'tester' => [],
+        'national' => [],
+    ];
 
     public function __construct(
         TestSupportHelper $testSupportHelper,
@@ -56,28 +65,42 @@ class StatsComponentFailRateContext implements Context
     {
         $motTestGenerator = new MotTestGenerator($this->motTestData);
 
+        $testStartedDate = "first day of previous month";
         $dateOfManufacture = new \DateTime("first day of 2 years ago");
-        $vehicle = $this->vehicleData->create(["testClass" => VehicleClassCode::CLASS_1, "dateOfManufacture" => $dateOfManufacture->format("Y-m-d")]);
+        $motorcycleClass1 = $this->vehicleData->create(["testClass" => VehicleClassCode::CLASS_1, "dateOfManufacture" => $dateOfManufacture->format("Y-m-d")]);
+
         $motTestGenerator
             ->setDuration(60)
-            ->setStartedDate("first day of previous month");
-        $motTestGenerator->generatePassedMotTests($tester, $site, $vehicle);
+            ->setStartedDate($testStartedDate);
+        $motTestGenerator->generatePassedMotTests($tester, $site, $motorcycleClass1);
 
         $dateOfManufacture = new \DateTime("first day of 4 years ago");
-        $vehicle = $this->vehicleData->create(["testClass" => VehicleClassCode::CLASS_2, "dateOfManufacture" => $dateOfManufacture->format("Y-m-d")]);
+        $motorcycleClass2 = $this->vehicleData->create(["testClass" => VehicleClassCode::CLASS_2, "dateOfManufacture" => $dateOfManufacture->format("Y-m-d")]);
         $motTestGenerator
             ->setDuration(50)
-            ->setStartedDate("first day of previous month")
-            ->setRfrId(511);
-        $motTestGenerator->generateFailedMotTests($tester, $site, $vehicle);
+            ->setStartedDate("{$testStartedDate}")
+            ->setRfrId(ReasonForRejectionGroupA::RFR_BRAKES_PERFORMANCE_GRADIENT);
+        $motTestGenerator->generateFailedMotTests($tester, $site, $motorcycleClass2);
+
+        $motTestGenerator
+            ->setDuration(50)
+            ->setStartedDate($testStartedDate)
+            ->setRfrId(ReasonForRejectionGroupA::RFR_SIDECAR_SHOCK_ABSORBER_LEAKING);
+        $motTestGenerator->generateFailedMotTestsWithAdvisories($tester, $site, $motorcycleClass2);
 
         $dateOfManufacture = new \DateTime("first day of 14 years ago");
-        $vehicle = $this->vehicleData->create(["testClass" => VehicleClassCode::CLASS_4, "dateOfManufacture" => $dateOfManufacture->format("Y-m-d")]);
+        $vehicleClass4 = $this->vehicleData->create(["testClass" => VehicleClassCode::CLASS_4, "dateOfManufacture" => $dateOfManufacture->format("Y-m-d")]);
         $motTestGenerator
             ->setDuration(40)
-            ->setStartedDate("first day of previous month")
-            ->setRfrId(8455);
-        $motTestGenerator->generateFailedMotTests($tester, $site, $vehicle);
+            ->setStartedDate($testStartedDate)
+            ->setRfrId(ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION);
+        $motTestGenerator->generateFailedMotTests($tester, $site, $vehicleClass4);
+
+        $motTestGenerator
+            ->setDuration(30)
+            ->setStartedDate($testStartedDate)
+            ->setRfrId(ReasonForRejectionGroupB::RFR_ROAD_WHEELS_CONDITION);
+        $motTestGenerator->generateFailedMotTestsWithAdvisories($tester, $site, $vehicleClass4);
     }
 
     /**
@@ -93,6 +116,7 @@ class StatsComponentFailRateContext implements Context
         $componentBreakdown = $apiResource->getForTesterAtSite($site->getId(), $tester->getUserId(), $group, $date->format("m"), $date->format("Y"));
 
         PHPUnit::assertEquals($tester->getUsername(), $componentBreakdown->getUserName());
+        $this->statistics['tester'][$group][] = $componentBreakdown;
     }
 
     /**
@@ -143,5 +167,33 @@ class StatsComponentFailRateContext implements Context
         PHPUnit::assertEquals($group, $nationalComponentStatistics->getGroup());
         PHPUnit::assertEquals($month, $nationalComponentStatistics->getMonth());
         PHPUnit::assertEquals($year, $nationalComponentStatistics->getYear());
+
+        $this->statistics['national'][$group][] = $nationalComponentStatistics;
+    }
+
+    /**
+     * @Given /^none of the statistics should include advisory RFRs$/
+     */
+    public function noneOfTheStatisticsShouldIncludeAdvisoryRFRs()
+    {
+        $this->assertComponentBreakdownDoesNotIncludeRfrsFromCategory($this->statistics['tester']['A'], ReasonForRejectionGroupA::CATEGORY_NAME_SIDECAR);
+        $this->assertComponentBreakdownDoesNotIncludeRfrsFromCategory($this->statistics['national']['A'], ReasonForRejectionGroupA::CATEGORY_NAME_SIDECAR);
+        $this->assertComponentBreakdownDoesNotIncludeRfrsFromCategory($this->statistics['tester']['B'], ReasonForRejectionGroupB::CATEGORY_NAME_ROAD_WHEELS);
+        $this->assertComponentBreakdownDoesNotIncludeRfrsFromCategory($this->statistics['national']['B'], ReasonForRejectionGroupB::CATEGORY_NAME_ROAD_WHEELS);
+    }
+
+    /**
+     * @param ComponentBreakdownDto[] $statistics
+     * @param string $categoryThatShouldBeEmpty
+     */
+    private function assertComponentBreakdownDoesNotIncludeRfrsFromCategory($statistics, $categoryThatShouldBeEmpty)
+    {
+        foreach ($statistics as $componentStatistics) {
+            foreach ($componentStatistics->getComponents() as $category) {
+                if($category->getName() == $categoryThatShouldBeEmpty){
+                    PHPUnit::assertSame(0, $category->getPercentageFailed());
+                }
+            }
+        }
     }
 }

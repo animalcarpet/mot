@@ -6,6 +6,7 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
+import uk.gov.dvsa.helper.ConfigHelper;
 import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
@@ -29,6 +30,7 @@ public class TestSummaryPage extends Page {
     @FindBy(id = "start_inspection_button") private WebElement startReinspectionButton;
     @FindBy(id = "motTestType") private WebElement testTypePrompt;
     @FindBy(id = "declarationStatement") private WebElement declarationElement;
+    @FindBy(id = "cancel_test_result") private WebElement backToResultsEntryLink;
     private By siteIdTextBox = By.id("siteidentry");
     private By expiryDate = By.id("expiryDate");
 
@@ -99,6 +101,14 @@ public class TestSummaryPage extends Page {
 
     public boolean isExpiryDateDisplayed() {
         return PageInteractionHelper.isElementDisplayed(driver.findElement(expiryDate));
+    }
+
+    public TestResultsEntryPageInterface clickBackToResultsEntryLink() {
+        backToResultsEntryLink.click();
+        if(ConfigHelper.isTestResultEntryImprovementsEnabled()) {
+            return new TestResultsEntryNewPage(driver);
+        }
+        return new TestResultsEntryPage(driver);
     }
 }
 

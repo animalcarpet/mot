@@ -2,16 +2,16 @@
 
 namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\QueryBuilder;
 
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\QueryBuilder\ComponentBreakdownQueryBuilder;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\QueryBuilder\ComponentBreakdownQueryBuilder;
 
 class ComponentBreakdownQueryBuilderTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  ComponentBreakdownQueryBuilder */
+    /** @var  \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\QueryBuilder\ComponentBreakdownQueryBuilder */
     private $sut;
 
     public function setUp()
     {
-        $this->sut = new ComponentBreakdownQueryBuilder();
+        $this->sut = new \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\QueryBuilder\ComponentBreakdownQueryBuilder();
     }
 
     public function testSqlIsReturned()

@@ -2,16 +2,19 @@ package uk.gov.dvsa.ui.pages.mot;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.Select;
 import uk.gov.dvsa.domain.model.mot.CancelTestReason;
 import uk.gov.dvsa.domain.model.mot.Defect;
+import uk.gov.dvsa.domain.model.mot.OdometerUnit;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.PageLocator;
 import uk.gov.dvsa.ui.pages.braketest.BrakeTestConfigurationPage;
 import uk.gov.dvsa.ui.pages.braketest.BrakeTestResultsPage;
 
-public class TestResultsEntryNewPage extends Page {
+public class TestResultsEntryNewPage extends Page implements TestResultsEntryPageInterface {
 
     public static final String PATH = "/mot-test";
 
@@ -21,7 +24,7 @@ public class TestResultsEntryNewPage extends Page {
     @FindBy(id = "vehicleRegistration") private WebElement vehicleRegistration;
     @FindBy(id = "firstUsedDate") private WebElement firstUsedDate;
     @FindBy(id = "odometerReading") private WebElement odometerReading;
-    @FindBy(id = "addOdometerReadingButton") private WebElement addOdometerReading;
+    @FindBy(id = "odometer") private WebElement odometerField;
     @FindBy(id = "addDefectButton") private WebElement addDefect;
     @FindBy(id = "searchForDefect") private WebElement searchForDefect;
     @FindBy(id = "addBrakeTestButton") private WebElement addBrakeTest;
@@ -31,6 +34,10 @@ public class TestResultsEntryNewPage extends Page {
     @FindBy(css = "#rfrList") private WebElement reasonsForRejectionList;
     @FindBy(xpath = ".//*[@id='rfrList']//*[@class='defect__title']") private WebElement reasonForRejectionTitle;
     @FindBy(xpath = "//*[@id='rfrList']//a[contains(., 'Remove')]") private WebElement removeDefectLink;
+    @FindBy(id = "reviewTest") private WebElement reviewTestButton;
+    @FindBy(id = "addOdometerReadingButton") private WebElement addOdometerReading;
+    @FindBy(id = "odometer_submit") private WebElement odometerSubmit;
+    @FindBy(id = "unit") private WebElement odometerUnit;
 
     public TestResultsEntryNewPage(MotAppDriver driver) {
         super(driver);
@@ -71,7 +78,7 @@ public class TestResultsEntryNewPage extends Page {
         return new OdometerReadingPage(driver);
     }
 
-    public TestSummaryPage clickReviewButton() {
+    public TestSummaryPage clickReviewTestButton() {
         reviewTest.click();
         return new TestSummaryPage(driver);
     }
@@ -151,5 +158,29 @@ public class TestResultsEntryNewPage extends Page {
 
     public boolean isDefectInReasonsForRejection(Defect defect) {
         return reasonForRejectionTitle.isDisplayed() && reasonForRejectionTitle.getText().contains(defect.getDefectName());
+    }
+
+    public Boolean isClickReviewTestButtonPresent(){
+        return reviewTestButton.isDisplayed();
+    }
+
+    private TestResultsEntryNewPage addOdometerReading(int odometerReading) {
+        addOdometerReading.click();
+        FormDataHelper.enterText(odometerField, String.valueOf(odometerReading));
+        setOdometerUnit(OdometerUnit.KILOMETRES);
+        odometerSubmit.click();
+
+        return this;
+    }
+
+    private void setOdometerUnit(OdometerUnit unit) {
+        new Select(odometerUnit).selectByValue(unit.getValue());
+    }
+
+    public TestResultsEntryPageInterface completeTestDetailsWithPassValues() {
+        addOdometerReading(1001);
+        completeBrakeTestWithPassValues();
+
+        return this;
     }
 }

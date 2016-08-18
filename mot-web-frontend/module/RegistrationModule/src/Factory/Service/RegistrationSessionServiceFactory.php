@@ -4,7 +4,7 @@ namespace Dvsa\Mot\Frontend\RegistrationModule\Factory\Service;
 
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationSessionService;
 use DvsaClient\MapperFactory;
-use Zend\Session\Container;
+use Session\Container;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

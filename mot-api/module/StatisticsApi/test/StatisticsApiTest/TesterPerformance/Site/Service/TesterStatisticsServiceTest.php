@@ -2,13 +2,15 @@
 
 namespace Dvsa\Mot\Api\StatisticsApiTest\Site\Service;
 
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Site\QueryResult\TesterPerformanceResult;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Site\Repository\TesterStatisticsRepository;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Site\Service\TesterStatisticsService;
+use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\SiteGroupPerformanceDto;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterPerformanceResult;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Repository\TesterStatisticsRepository;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Service\TesterStatisticsService;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\SitePerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\TesterPerformanceDto;
 use DvsaCommon\Auth\Assertion\ViewTesterTestQualityAssertion;
 use DvsaCommon\Auth\PermissionAtSite;
+use DvsaCommon\Date\TimeSpan;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommon\Model\TesterAuthorisation;
 use DvsaCommonTest\Date\TestDateTimeHolder;
@@ -54,7 +56,7 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
             ->willReturn(new TesterAuthorisation());
 
 
-        $this->service = new TesterStatisticsService(
+        $this->service = new \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Service\TesterStatisticsService(
             $this->repository,
             $this->authorisationService,
             $this->viewTesterTestQualityAssertion,
@@ -86,9 +88,7 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
             ->method("assertGranted")
             ->willThrowException(new \DvsaCommon\Exception\UnauthorisedException(""));
 
-        // WHEN todo Jareq I query for statistics
         $this->service->getForTester($this->testerId, $this->getYear(), $this->getPrevMonth());
-        // THEN an exception is thrown
     }
 
     /**
@@ -96,9 +96,7 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetForSiteThrowsExceptionForInvalidParameters()
     {
-        // WHEN todo Jareq I query for statistics
         $this->service->getForSite($this->siteId, $this->getYear() + 12, $this->getPrevMonth());
-        // THEN an exception is thrown
     }
 
     /**
@@ -106,13 +104,11 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetForTesterThrowsExceptionForInvalidParameters()
     {
-        // todo Jareq WHEN I query for statistics
         $this->service->getForTester($this->testerId, $this->getYear() + 2, $this->getPrevMonth());
-        // THEN an exception is thrown
     }
 
     /**
-     * @param array $results
+     * @param TesterPerformanceResult[] $results
      * @dataProvider dataProviderDbResults
      */
     public function testGetForSiteReturnsDto(array $results)
@@ -124,10 +120,49 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
 
         $dto = $this->service->getForSite($this->siteId, $this->getYear(), $this->getPrevMonth());
         $this->assertInstanceOf(SitePerformanceDto::class, $dto);
+
+        if (empty($results)) {
+            $this->assertEmptySiteStatistics($dto->getA());
+            $this->assertEmptySiteStatistics($dto->getB());
+
+            $this->assertEmpty($dto->getB()->getStatistics());
+        } else {
+            /** @var TesterPerformanceResult $testerPerformanceResult */
+            $testerPerformanceResult = $results[0];
+
+            $siteGroupPerformanceDto = $dto->getA();
+            $this->assertEquals($testerPerformanceResult->getTotalCount(), $siteGroupPerformanceDto->getTotal()->getTotal());
+            $this->assertEquals(new TimeSpan(0, 0, 0, 6), $siteGroupPerformanceDto->getTotal()->getAverageTime());
+            $this->assertEquals(($testerPerformanceResult->getFailedCount() / $testerPerformanceResult->getTotalCount()) * 100, $siteGroupPerformanceDto->getTotal()->getPercentageFailed());
+            $this->assertEquals($testerPerformanceResult->getAverageVehicleAgeInMonths(), $siteGroupPerformanceDto->getTotal()->getAverageVehicleAgeInMonths());
+            $this->assertTrue($siteGroupPerformanceDto->getTotal()->getIsAverageVehicleAgeAvailable());
+
+            $statistics = $siteGroupPerformanceDto->getStatistics()[0];
+
+            $this->assertEquals($testerPerformanceResult->getUsername(), $statistics->getUsername());
+            $this->assertEquals($testerPerformanceResult->getPersonId(), $statistics->getPersonId());
+            $this->assertEquals($testerPerformanceResult->getTotalCount(), $statistics->getTotal());
+            $this->assertEquals(($testerPerformanceResult->getFailedCount() / $testerPerformanceResult->getTotalCount()) * 100, $statistics->getPercentageFailed());
+            $this->assertEquals($testerPerformanceResult->getAverageVehicleAgeInMonths(), $statistics->getAverageVehicleAgeInMonths());
+            $this->assertEquals($testerPerformanceResult->getIsAverageVehicleAgeAvailable(), $statistics->getIsAverageVehicleAgeAvailable());
+
+            $this->assertEmptySiteStatistics($dto->getB());
+        }
+    }
+
+    private function assertEmptySiteStatistics(SiteGroupPerformanceDto $siteGroupPerformanceDto)
+    {
+        $this->assertEquals(0, $siteGroupPerformanceDto->getTotal()->getTotal());
+        $this->assertEquals(new TimeSpan(0, 0, 0, 0), $siteGroupPerformanceDto->getTotal()->getAverageTime());
+        $this->assertEquals(0, $siteGroupPerformanceDto->getTotal()->getPercentageFailed());
+        $this->assertEquals(0, $siteGroupPerformanceDto->getTotal()->getAverageVehicleAgeInMonths());
+        $this->assertFalse($siteGroupPerformanceDto->getTotal()->getIsAverageVehicleAgeAvailable());
+
+        $this->assertEmpty($siteGroupPerformanceDto->getStatistics());
     }
 
     /**
-     * @param array $results
+     * @param TesterPerformanceResult[] $results
      * @dataProvider dataProviderDbResults
      */
     public function testGetForTesterReturnsDto(array $results)
@@ -138,16 +173,32 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
             ->willReturn($results);
 
         $dto = $this->service->getForTester($this->siteId, $this->getYear(), $this->getPrevMonth());
-
-        // todo Jareq check if the details of the dto are there
         $this->assertInstanceOf(TesterPerformanceDto::class, $dto);
+
+        if (empty($results)) {
+            $this->assertNull($dto->getGroupAPerformance());
+            $this->assertNull($dto->getGroupBPerformance());
+        } else {
+            $testerPerformanceResult = array_shift($results);
+
+            $this->assertEquals($testerPerformanceResult->getUsername(), $dto->getGroupAPerformance()->getUsername());
+            $this->assertEquals($testerPerformanceResult->getPersonId(), $dto->getGroupAPerformance()->getPersonId());
+            $this->assertEquals($testerPerformanceResult->getTotalCount(), $dto->getGroupAPerformance()->getTotal());
+            $this->assertEquals(new TimeSpan(0, 0, 0, 6), $dto->getGroupAPerformance()->getAverageTime());
+            $this->assertEquals(($testerPerformanceResult->getFailedCount() / $testerPerformanceResult->getTotalCount()) * 100, $dto->getGroupAPerformance()->getPercentageFailed());
+            $this->assertEquals($testerPerformanceResult->getAverageVehicleAgeInMonths(), $dto->getGroupAPerformance()->getAverageVehicleAgeInMonths());
+            $this->assertEquals($testerPerformanceResult->getIsAverageVehicleAgeAvailable(), $dto->getGroupAPerformance()->getIsAverageVehicleAgeAvailable());
+
+            $this->assertNull($dto->getGroupBPerformance());
+        }
     }
 
     public function dataProviderDbResults()
     {
         $results[] = (new TesterPerformanceResult())
             ->setUsername("tester")
-            ->setTotalCount(0)
+            ->setPersonId(198)
+            ->setTotalCount(10)
             ->setVehicleClassGroup(VehicleClassGroupCode::BIKES)
             ->setFailedCount(10)
             ->setAverageVehicleAgeInMonths(15)

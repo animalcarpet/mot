@@ -14,6 +14,8 @@ use Dvsa\Mot\Behat\Support\Api\ReasonForRejection;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\Vehicle;
 use Dvsa\Mot\Behat\Support\Api\SlotReport;
+use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupA;
+use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupB;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use Dvsa\Mot\Behat\Support\Response;
 use DvsaCommon\Enum\MotTestTypeCode;
@@ -121,6 +123,11 @@ class MotTestContext implements Context, SnippetAcceptingContext
     private $motTestNumbers;
 
     /**
+     * @var MotTestTypeCode
+     */
+    private $MotTestTypeCode;
+
+    /**
      * @var History
      */
     private $history;
@@ -144,6 +151,21 @@ class MotTestContext implements Context, SnippetAcceptingContext
      * @var MotTestLogContext
      */
     private $motTestLogContext;
+
+    /**
+     * @var int $satisfactionRating
+     */
+    private $satisfactionRating;
+
+    /**
+     * @var array
+     */
+    private $satisfactionRatings;
+
+    /**
+     * @var Response $satisfactionRating
+     */
+    private $satisfactionRatingResponse;
 
     /**
      * @var SlotReport
@@ -294,7 +316,9 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function theTesterAddsAReasonForRejection()
     {
-        $rfrId = $this->vehicleContext->getCurrentVehicleClass() < 3 ? 356 : 8455;
+        $rfrId = $this->vehicleContext->getCurrentVehicleClass() < 3
+            ? ReasonForRejectionGroupA::RFR_BRAKE_HANDLEBAR_LEVER
+            : ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION;
         $response = $this->reasonForRejection->addFailure($this->sessionContext->getCurrentAccessToken(), $this->getMotTestNumber(), $rfrId);
         PHPUnit::assertSame(200, $response->getStatusCode());
     }
@@ -482,12 +506,16 @@ class MotTestContext implements Context, SnippetAcceptingContext
                 );
                 break;
             case 'failed':
-                $rfrId = ($this->vehicleContext->getCurrentVehicleClass() < 3) ? 356 : 8455;
+                $rfrId = ($this->vehicleContext->getCurrentVehicleClass() < 3)
+                    ? ReasonForRejectionGroupA::RFR_BRAKE_HANDLEBAR_LEVER
+                    : ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION;
                 $this->reasonForRejection->addFailure($this->sessionContext->getCurrentAccessToken(), $this->getMotTestNumber(), $rfrId);
                 $this->statusData = $this->motTest->failed($this->sessionContext->getCurrentAccessToken(), $this->getMotTestNumber());
                 break;
             case 'prs':
-                $rfrId = ($this->vehicleContext->getCurrentVehicleClass() < 3) ? 356 : 8455;
+                $rfrId = ($this->vehicleContext->getCurrentVehicleClass() < 3)
+                    ? ReasonForRejectionGroupA::RFR_BRAKE_HANDLEBAR_LEVER
+                    : ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION;
                 $this->reasonForRejection->addPrs($this->sessionContext->getCurrentAccessToken(), $this->getMotTestNumber(), $rfrId);
                 $this->statusData = $this->motTest->passed($this->sessionContext->getCurrentAccessToken(), $this->getMotTestNumber());
                 break;
@@ -639,7 +667,9 @@ class MotTestContext implements Context, SnippetAcceptingContext
         $this->odometerReading->addMeterReading($token, $lastMotTestNumber, 658, 'mi');
 
         if ($rfrId === null) {
-            $rfrId = ($vehicleClass < 3) ? 356 : 8455;
+            $rfrId = ($vehicleClass < 3)
+                ? ReasonForRejectionGroupA::RFR_BRAKE_HANDLEBAR_LEVER
+                : ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION;
         }
 
         if ($vehicleClass < 3) {
@@ -672,23 +702,6 @@ class MotTestContext implements Context, SnippetAcceptingContext
         }
 
         return $mot;
-    }
-
-    /**
-     * @Given I have passed an MOT test
-     */
-    public function iHavePassedAnMotTest()
-    {
-        $this->iStartMotTest();
-        $this->odometerReadingContext->theTesterAddsAnOdometerReadingOfMiles();
-        $this->brakeTestResultContext->theTesterAddsAClass3to7PlateBrakeTest();
-        $this->theTesterPassesTheMotTest();
-    }
-
-    public function anMotHasBeenPassed()
-    {
-        $this->sessionContext->iAmLoggedInAsATester();
-        $this->iHavePassedAnMotTest();
     }
 
     /**
@@ -1480,6 +1493,100 @@ class MotTestContext implements Context, SnippetAcceptingContext
         $this->aeContext->iLinkVtsToAe($ae["id"], $vts["siteNumber"]);
     }
 
+    /**
+     * @Given /^I submit a survey response of (.*)$/
+     */
+    public function iSubmitASurveyResponse($satisfactionRating, $useCurrentTester = false)
+    {
+        $this->satisfactionRating = $satisfactionRating;
+
+        $this->createNormalMotTestPass($useCurrentTester);
+
+        $this->satisfactionRatingResponse = $this->motTest->submitSurveyResponse(
+            $this->sessionContext->getCurrentAccessToken(),
+            $this->getMotTestNumber(),
+            $satisfactionRating
+        );
+    }
+
+    /**
+     * @Given /^There exist survey responses of (.*) (.*) (.*) (.*) (.*)$/
+     *
+     * @param $rating1
+     * @param $rating2
+     * @param $rating3
+     * @param $rating4
+     * @param $rating5
+     */
+    public function thereExistSurveyResponsesOf($rating1, $rating2, $rating3, $rating4, $rating5)
+    {
+        $this->satisfactionRatings['rating1'] = $rating1;
+        $this->satisfactionRatings['rating2'] = $rating2;
+        $this->satisfactionRatings['rating3'] = $rating3;
+        $this->satisfactionRatings['rating4'] = $rating4;
+        $this->satisfactionRatings['rating5'] = $rating5;
+
+        $this->iSubmitASurveyResponse($rating1);
+        $this->iSubmitASurveyResponse($rating2);
+        $this->iSubmitASurveyResponse($rating3);
+        $this->iSubmitASurveyResponse($rating4);
+        $this->iSubmitASurveyResponse($rating5);
+    }
+
+    /**
+     * @Given /^I want to generate a survey report$/
+     */
+    public function iWantToGenerateASurveyReport()
+    {
+        $this->motTest->generateSurveyReports(
+            $this->sessionContext->getCurrentAccessToken()
+        );
+    }
+
+    /**
+     * @Then /^I can download the report$/
+     */
+    public function iCanDownloadTheReport()
+    {
+        $reportResponse = $this->motTest->getSurveyReports(
+            $this->sessionContext->getCurrentAccessToken()
+        );
+
+        PHPUnit::assertNotNull($reportResponse->getBody()['data']);
+    }
+
+
+    /**
+     * @Then /^The survey response is saved$/
+     */
+    public function theSurveyResponseIsSaved()
+    {
+        PHPUnit::assertSame(200, $this->satisfactionRatingResponse->getStatusCode());
+        if (is_int((int)$this->satisfactionRating)) {
+            PHPUnit::assertTrue(
+                $this->satisfactionRating ==
+                $this->satisfactionRatingResponse->getBody()['data']['satisfaction_rating']
+            );
+        } else {
+            PHPUnit::assertNull($this->satisfactionRatingResponse->getBody()['data']['satisfaction_rating']);
+        }
+    }
+
+    /**
+     * Retrieve details of most recent MOT test and format them for endpoint to determine if survey should be displayed
+     * @return \StdClass
+     */
+    public function getMotTestDetailsForSurveyCheck()
+    {
+        $motTestDetails = new \StdClass();
+        $motTestDetails->testType = new \StdClass();
+        $motTestDetails->testType->code = $this->statusData->getBody()['data']['testType']['code'];
+        $motTestDetails->tester = new \StdClass();
+        $motTestDetails->tester->id = $this->statusData->getBody()['data']['tester']['id'];
+
+        return $motTestDetails;
+    }
+    
     public function getMotTestIdFromNumber($motTestNumber)
     {
         return $this->motTest->getMotData(
@@ -1497,30 +1604,6 @@ class MotTestContext implements Context, SnippetAcceptingContext
 
         $motTestId = $this->getMotTestIdFromNumber($this->getMotTestNumber());
         return $motTestId;
-    }
-
-    /**
-     * @return Response
-     */
-    public function getMotStatusData()
-    {
-        return $this->statusData;
-    }
-
-    /**
-     * @return bool
-     */
-    public function motTestHasBeenPerformed()
-    {
-        return Response::class === gettype($this->statusData);
-    }
-
-    /**
-     * @return string
-     */
-    public function getTesterId()
-    {
-        return $this->statusData->getBody()['data']['tester']['id'];
     }
 
     private function getUniqueOdometer()

@@ -26,7 +26,6 @@ use TestSupport\Service\SchemeManagerService;
 use TestSupport\Service\SchemeUserService;
 use TestSupport\Service\SiteUserDataService;
 use TestSupport\Service\StatisticsAmazonCacheService;
-use TestSupport\Service\SurveyAmazonCacheService;
 use TestSupport\Service\TesterService;
 use TestSupport\Service\UserService;
 use TestSupport\Service\VehicleExaminerService;
@@ -356,13 +355,5 @@ class TestSupportHelper
     public function getGdsSurveyService()
     {
         return $this->getServiceManager()->get(GdsSurveyService::class);
-    }
-
-    /**
-     * @return \TestSupport\Service\SurveyAmazonCacheService
-     */
-    public function getSurveyAmazonCacheService()
-    {
-        return $this->getServiceManager()->get(SurveyAmazonCacheService::class);
     }
 }

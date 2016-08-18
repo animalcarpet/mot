@@ -1,3 +1,0 @@
-#!/usr/bin/env sh
-
-APPLICATION_ENV="development" php public/index.php "$@"

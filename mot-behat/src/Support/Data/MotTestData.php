@@ -29,6 +29,9 @@ class MotTestData extends AbstractMotTestData
     private $testSupportHelper;
     protected $motCollection;
 
+    const TEST_WITH_PRS = "prs";
+    const TEST_WITH_ADVISORY = 'advisory';
+
     public function __construct(
         UserData $userData,
         ContingencyData $contingencyData,
@@ -90,8 +93,10 @@ class MotTestData extends AbstractMotTestData
                 return $this->passMotTest($mot);
             case MotTestStatusCode::FAILED:
                 return $this->failMotTest($mot, $rfrId);
-            case "prs":
+            case self::TEST_WITH_PRS:
                 return $this->failMotTestWithPrs($mot, $rfrId);
+            case self::TEST_WITH_ADVISORY:
+                return $this->failMotTestWithAdvisory($mot, $rfrId);
             case MotTestStatusCode::ABANDONED:
                 return $this->abandonMotTest($mot);
             case MotTestStatusCode::ABORTED:

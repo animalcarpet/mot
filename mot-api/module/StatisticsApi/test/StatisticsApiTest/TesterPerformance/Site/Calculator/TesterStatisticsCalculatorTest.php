@@ -1,8 +1,8 @@
 <?php
 namespace Dvsa\Mot\Api\StatisticsApiTest\Site\Calculator;
 
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Site\Calculator\TesterStatisticsCalculator;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Site\QueryResult\TesterPerformanceResult;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Calculator\TesterStatisticsCalculator;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterPerformanceResult;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\EmployeePerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\SitePerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\TesterPerformanceDto;
@@ -12,7 +12,7 @@ use DvsaCommon\Utility\ArrayUtils;
 
 class TesterStatisticsCalculatorTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var TesterStatisticsCalculator */
+    /** @var \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Calculator\TesterStatisticsCalculator */
     private $calculator;
 
     /** @var TesterPerformanceResult[] */
@@ -28,7 +28,7 @@ class TesterStatisticsCalculatorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->calculator = new TesterStatisticsCalculator();
+        $this->calculator = new \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Calculator\TesterStatisticsCalculator();
     }
 
     public function testCalculateTotalTestCountForSite()

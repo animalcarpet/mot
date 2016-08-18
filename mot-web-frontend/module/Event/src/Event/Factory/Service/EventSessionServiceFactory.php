@@ -1,15 +1,15 @@
 <?php
-
 /**
  * This file is part of the DVSA MOT Frontend project.
  *
  * @link http://gitlab.clb.npm/mot/mot
  */
+
 namespace Event\Factory\Service;
 
 use DvsaClient\MapperFactory;
 use Event\Service\EventSessionService;
-use Zend\Session\Container;
+use Session\Container;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -25,7 +25,7 @@ class EventSessionServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $sessionContainer = new Container(EventSessionService::UNIQUE_KEY);
+        $sessionContainer =  new Container(EventSessionService::UNIQUE_KEY);
 
         return new EventSessionService(
             $sessionContainer,

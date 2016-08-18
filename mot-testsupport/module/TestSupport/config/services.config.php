@@ -48,8 +48,6 @@ use TestSupport\Service\VtsService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use TestSupport\Service\GdsSurveyService;
 use TestSupport\Factory\GdsSurveyServiceFactory;
-use TestSupport\Service\OneHundredMotTestsService;
-use TestSupport\Factory\TestSupportOneHundredMotTestsServiceFactory;
 
 return [
     'factories' => [
@@ -155,6 +153,5 @@ return [
         GVTSTesterService::class           => \TestSupport\Factory\GVTSTesterServiceFactory::class,
         StatisticsAmazonCacheService::class  => \TestSupport\Factory\StatisticsAmazonCacheFactory::class,
         GdsSurveyService::class            => GdsSurveyServiceFactory::class,
-        OneHundredMotTestsService::class            => TestSupportOneHundredMotTestsServiceFactory::class,
     ]
 ];

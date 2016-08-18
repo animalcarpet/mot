@@ -1,19 +1,15 @@
 <?php
 namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\Tester\Service;
 
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\QueryResult\ComponentFailRateResult;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Site\QueryResult\TesterPerformanceResult;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Tester\Mapper\ComponentBreakdownDtoMapper;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Tester\Repository\TesterComponentStatisticsRepository;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Tester\Repository\TesterStatisticsRepository;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Tester\Service\TesterComponentStatisticsService;
-use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentBreakdownDto;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Mapper\ComponentBreakdownDtoMapper;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\QueryResult\ComponentFailRateResult;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Tester\Repository\TesterComponentStatisticsRepository;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Tester\Repository\TesterStatisticsRepository;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterPerformanceResult;
 use DvsaCommon\Auth\Assertion\ViewTesterTestQualityAssertion;
-use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommon\Model\TesterAuthorisation;
-use DvsaCommonApiTest\Stub\IdentityStub;
 use DvsaCommonTest\Date\TestDateTimeHolder;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\MethodSpy;
@@ -36,7 +32,7 @@ class TesterComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
     private $assertion;
     /** @var  TesterGroupAuthorisationMapper | \PHPUnit_Framework_MockObject_MockObject */
     private $testerGroupAuthorisationMapper;
-    /** @var  TesterComponentStatisticsService */
+    /** @var  \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Tester\Service\TesterComponentStatisticsService */
     private $sut;
 
     public function setUp()
@@ -58,7 +54,7 @@ class TesterComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
             ->method("getAuthorisation")
             ->willReturn(new TesterAuthorisation());
 
-        $this->sut = new TesterComponentStatisticsService($this->componentStatisticsRepositoryMock,
+        $this->sut = new \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Tester\Service\TesterComponentStatisticsService($this->componentStatisticsRepositoryMock,
             $this->testerStatisticsRepositoryMock,
             $this->getDateTimeHolder(),
             $this->authorisationService,

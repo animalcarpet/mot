@@ -3,7 +3,6 @@
 namespace Dvsa\Mot\Frontend\MotTestModuleTest\Controller;
 
 use Application\Service\LoggedInUserManager;
-use Core\Service\MotEventManager;
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\SurveyPageController;
 use Dvsa\Mot\Frontend\MotTestModule\Service\SurveyService;
@@ -12,31 +11,15 @@ use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
-use Zend\EventManager\EventManager;
-use Zend\Session\Container;
 
-/**
- * Class SurveyPageControllerTest
- * @package Dvsa\Mot\Frontend\MotTestModuleTest\Controller
- */
 class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
 {
     private $loggedInUserManagerMock;
 
     /**
-     * @var SurveyService|\PHPUnit_Framework_MockObject_MockObject
+     * @var SurveyService
      */
     private $surveyService;
-
-    /**
-     * @var MotEventManager|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private $eventManager;
-
-    /**
-     * @var Container|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private $sessionManager;
 
     protected function setUp()
     {
@@ -46,21 +29,8 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
         $this->setServiceManager($this->serviceManager);
 
         $this->surveyService = $this->createSurveyService();
-        $this->eventManager = $this->getMockBuilder(MotEventManager::class)
-            ->disableOriginalConstructor()
-            ->setMethods([])
-            ->getMock();
 
-        $this->sessionManager = $this->getMockBuilder(Container::class)
-            ->disableOriginalConstructor()
-            ->setMethods([])
-            ->getMock();
-
-        $this->setController(
-            new SurveyPageController(
-                $this->surveyService
-            )
-        );
+        $this->setController(new SurveyPageController($this->surveyService));
         $this->getController()->setServiceLocator($this->serviceManager);
 
         $this->loggedInUserManagerMock = XMock::of(
@@ -105,20 +75,15 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
      * @dataProvider testRedirectToThanksPageDataProvider
      * @group survey_page_controller_tests
      *
-     * @param string $token
-     * @param int    $satisfactionRating
-     * @param bool   $featureToggleValue
-     * @param bool   $shouldRedirect
+     * @param referer
+     * @param $satisfactionRating
+     * @param $featureToggleValue
+     * @param $shouldRedirect
      */
-    public function testRedirectToThanksPage($token, $satisfactionRating, $featureToggleValue, $shouldRedirect)
+    public function testRedirectToThanksPage($referer, $satisfactionRating, $featureToggleValue, $shouldRedirect)
     {
-        $this->setParams(['token' => $token]);
-        $this->setPostAndPostParams(
-            [
-                SurveyPageController::SATISFACTION_RATING => $satisfactionRating,
-                SurveyPageController::TOKEN_KEY => $token
-            ]
-        );
+        $_SERVER['HTTP_REFERER'] = $referer;
+        $this->setPostAndPostParams(['satisfaction_rating:'.$satisfactionRating.'']);
 
         $this->withFeatureToggles([FeatureToggle::SURVEY_PAGE => $featureToggleValue]);
 
@@ -140,9 +105,10 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
     {
         return [
             ['survey', 1, true, true],
-            [null, 2, true, false],
-            ['testToken', 20, true, true],
-            ['testToken', 3, false, false]
+            ['asdasd', 2, false, false],
+            ['test-result', 3, true, true],
+            ['test-result', 4, false, false],
+            ['asdsad', 5, true, false],
         ];
     }
 
