@@ -2,13 +2,11 @@
 
 namespace Dvsa\Mot\Api\StatisticsApiTest;
 
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\National\QueryResult\NationalStatisticsResult;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\National\Repository\NationalStatisticsRepository;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\National\Service\NationalStatisticsService;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\National\Storage\NationalTesterPerformanceStatisticsStorage;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\National\Storage\S3KeyGenerator;
-use DvsaCommon\ApiClient\Statistics\Common\ReportStatusDto;
-use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\NationalComponentStatisticsDto;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Storage\S3KeyGenerator;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\QueryResult\NationalStatisticsResult;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Repository\NationalStatisticsRepository;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Service\NationalStatisticsService;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Storage\NationalTesterPerformanceStatisticsStorage;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\MotTestingPerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\NationalPerformanceReportDto;
 use DvsaCommon\Date\TimeSpan;
@@ -20,7 +18,7 @@ use DvsaCommonTest\TestUtils\XMock;
 
 class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var NationalStatisticsService */
+    /** @var \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Service\NationalStatisticsService */
     private $service;
 
     /** @var MethodSpy */
@@ -29,7 +27,7 @@ class NationalTesterStatisticsTest extends \PHPUnit_Framework_TestCase
     /** @var NationalStatisticsRepository | \PHPUnit_Framework_MockObject_MockObject */
     private $repository;
 
-    /** @var NationalStatisticsResult */
+    /** @var \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\QueryResult\NationalStatisticsResult */
     private $dbResult;
 
     private $nationalStorage;

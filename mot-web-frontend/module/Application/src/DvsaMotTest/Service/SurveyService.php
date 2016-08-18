@@ -2,93 +2,35 @@
 
 namespace DvsaMotTest\Service;
 
-use Core\Service\SessionService;
+use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\HttpRestJson\Client;
-use Zend\EventManager\EventManagerAwareInterface;
-use Zend\EventManager\EventManagerInterface;
+use DvsaCommon\Utility\DtoHydrator;
 
-class SurveyService implements EventManagerAwareInterface
+class SurveyService
 {
-    const SURVEY_API_ENDPOINT = 'survey/should-display';
-    const TOKEN_API_ENDPOINT = 'survey/token';
-    const TOKEN_VALIDATION_API_ENDPOINT = 'survey/token/validate';
-    const MOT_SURVEY_TOKEN = 'mot_survey_token';
+    const SURVEY_API_ENDPOINT = 'survey/shouldDisplay';
 
     /** @var Client $client */
     private $client;
 
-    /**
-     * @var EventManagerInterface
-     */
-    private $eventManager;
-
-    /**
-     * @var SessionService
-     */
-    private $sessionService;
-
-    /**
-     * @param Client         $restClient
-     * @param SessionService $sessionService
-     */
-    public function __construct(Client $restClient, SessionService $sessionService)
+    public function __construct(Client $restClient)
     {
         $this->client = $restClient;
-        $this->sessionService = $sessionService;
     }
 
     /**
-     * @param $motTestTypeCode
-     * @param $testerId
-     *
+     * @param MotTestDto $motTestDetails
+     * @param bool       $surveyIsEnabled
      * @return bool
      */
-    public function surveyShouldDisplay($motTestTypeCode, $testerId)
+    public function surveyShouldDisplay($motTestDetails)
     {
         $data = [
-            'motTestTypeCode' => $motTestTypeCode,
-            'testerId' => $testerId,
+            'motTestDetails' => DtoHydrator::dtoToJson($motTestDetails)
         ];
 
         $result = $this->client->post(self::SURVEY_API_ENDPOINT, $data);
 
         return $result['data'];
-    }
-
-    /**
-     * Generate a unique token to be used for authenticating a tester's
-     * satisfaction survey after they've logged out of the application.
-     *
-     * @param int $motTestNumber
-     */
-    public function generateToken($motTestNumber)
-    {
-        $data = [
-            'motTestNumber' => $motTestNumber,
-        ];
-
-        // store token in db
-        $result = $this->client->post(self::TOKEN_API_ENDPOINT, $data);
-
-        // store token in session
-        if (null !== $result['data'] && [] !== $result['data']) {
-            $this->sessionService->save('mot_survey_token', $result['data']);
-        }
-    }
-
-    /**
-     * @return EventManagerInterface
-     */
-    public function getEventManager()
-    {
-        return $this->eventManager;
-    }
-
-    /**
-     * @param EventManagerInterface $eventManager
-     */
-    public function setEventManager(EventManagerInterface $eventManager)
-    {
-        $this->eventManager = $eventManager;
     }
 }

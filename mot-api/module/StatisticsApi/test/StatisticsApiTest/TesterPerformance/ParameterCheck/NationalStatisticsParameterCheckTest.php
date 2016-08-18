@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\ParameterCheck;
 
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\ParameterCheck\StatisticsParameterCheck;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\ParameterCheck\StatisticsParameterCheck;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommonTest\TestUtils\XMock;
 

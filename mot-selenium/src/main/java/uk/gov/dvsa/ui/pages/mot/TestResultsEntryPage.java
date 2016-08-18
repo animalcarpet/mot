@@ -13,7 +13,7 @@ import uk.gov.dvsa.ui.pages.PageLocator;
 import uk.gov.dvsa.ui.pages.braketest.BrakeTestConfigurationPage;
 import uk.gov.dvsa.ui.pages.braketest.BrakeTestResultsPage;
 
-public class TestResultsEntryPage extends Page {
+public class TestResultsEntryPage extends Page implements TestResultsEntryPageInterface {
     private static final String PAGE_TITLE = "MOT test results entry";
     private static final String PAGE_TITLE_TRAINING = "Training test\n" + "MOT test started";
 
@@ -61,7 +61,7 @@ public class TestResultsEntryPage extends Page {
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE, PAGE_TITLE_TRAINING);
     }
 
-    public TestResultsEntryPage completeTestDetailsWithPassValues() {
+    public TestResultsEntryPageInterface completeTestDetailsWithPassValues() {
         addOdometerReading(10000);
         addDefaultBrakeTestValues("pass");
 
@@ -168,5 +168,9 @@ public class TestResultsEntryPage extends Page {
         odometerSubmit.click();
 
         return this;
+    }
+
+    public Boolean isClickReviewTestButtonPresent(){
+        return reviewTestButton.isDisplayed();
     }
 }

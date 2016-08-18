@@ -2,7 +2,9 @@
 
 namespace Dvsa\Mot\Behat\Support\Api;
 
+use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupB;
 use Dvsa\Mot\Behat\Support\Request;
+use DvsaCommon\Enum\ReasonForRejectionTypeName;
 
 class ReasonForRejection extends MotApi
 {
@@ -10,64 +12,54 @@ class ReasonForRejection extends MotApi
     const REASON_PATH = 'mot-test/{mot_test_id}/reason-for-rejection';
     const TEST_ITEM_SELECTOR_PATH = 'mot-test/{mot_test_id}/test-item-selector/{tisId}';
 
-    public function addFailure($token, $mot_test_number, $rdrId = 8455)
-    {
-        $body = json_encode([
-            'rfrId' => $rdrId,
-            'type' => 'FAIL',
-            'locationLateral' => 'nearside',
-            'locationLongitudinal' => 'front',
-            'locationVertical' => 'upper',
-            'comment' => 'Description',
-            'failureDangerous' => false,
-        ]);
+    protected $defaultRfrDetails = [
+        'locationLateral' => 'nearside',
+        'locationLongitudinal' => 'front',
+        'locationVertical' => 'upper',
+        'comment' => 'Description',
+        'failureDangerous' => false,
+    ];
 
-        return $this->client->request(new Request(
-            'POST',
-            str_replace('{mot_test_id}', $mot_test_number, self::REASONS_PATH),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer ' . $token],
-            $body
-        ));
-    }
-    public function editRFR($token, $mot_test_number, $rdrId = 8455)
+    public function addAdvisory($accessToken, $motTestNumber, $rfrId)
     {
-        $body = json_encode([
-            'id' => $rdrId,
-            'locationLateral' => 'nearside',
-            'locationLongitudinal' => 'front',
-            'locationVertical' => 'upper',
-            'comment' => 'Description',
-            'failureDangerous' => false,
-        ]);
-
-        return $this->client->request(new Request(
-            'POST',
-            str_replace('{mot_test_id}', $mot_test_number, self::REASONS_PATH),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer ' . $token],
-            $body
-        ));
+        return $this->addRfr($accessToken, $motTestNumber, $rfrId, ReasonForRejectionTypeName::ADVISORY);
     }
 
-    public function addPrs($token, $mot_test_number, $rdrId = 8455)
+    public function addFailure($token, $mot_test_number, $rfrId = ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION)
     {
-        $body = json_encode([
-            'rfrId' => $rdrId,
-            'type' => 'PRS',
-            'locationLateral' => 'nearside',
-            'locationLongitudinal' => 'front',
-            'locationVertical' => 'upper',
-            'comment' => 'Description',
-            'failureDangerous' => false,
-        ]);
-
-        return $this->client->request(new Request(
-            'POST',
-            str_replace('{mot_test_id}', $mot_test_number, self::REASONS_PATH),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer ' . $token],
-            $body
-        ));
+        return $this->addRfr($token, $mot_test_number, $rfrId, ReasonForRejectionTypeName::FAIL);
     }
 
+    public function addPrs($token, $mot_test_number, $rfrId = ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION)
+    {
+        return $this->addRfr($token, $mot_test_number, $rfrId, ReasonForRejectionTypeName::PRS);
+    }
+
+    public function addRfr($accessToken, $motTestNumber, $rdrId, $rfrType)
+    {
+        $body = array_merge(
+            [
+                'rfrId' => $rdrId,
+                'type' => $rfrType,
+            ],
+            $this->defaultRfrDetails
+        );
+
+        return $this->postRfrToApi($accessToken, $motTestNumber, $body);
+    }
+
+
+    public function editRFR($accessToken, $motTestNumber, $rdrId = ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION)
+    {
+        $body = array_merge(
+            [
+                'id' => $rdrId,
+            ],
+            $this->defaultRfrDetails
+        );
+
+        return $this->postRfrToApi($accessToken, $motTestNumber, $body);
+    }
 
     /**
      * @param $token
@@ -86,11 +78,15 @@ class ReasonForRejection extends MotApi
             $path .= "&end=" . $end;
         }
 
-        return $this->sendRequest(
+        $response = $this->sendRequest(
             $token,
             MotApi::METHOD_GET,
             $path
         );
+
+        \PHPUnit_Framework_Assert::assertEquals($response->getStatusCode(), 200);
+
+        return $response;
     }
 
     /**
@@ -108,5 +104,25 @@ class ReasonForRejection extends MotApi
             MotApi::METHOD_GET,
             $path
         );
+    }
+
+    /**
+     * @param string $accessToken
+     * @param int $motTestNumber
+     * @param array $body
+     * @return \Dvsa\Mot\Behat\Support\Response
+     */
+    private function postRfrToApi($accessToken, $motTestNumber, $body)
+    {
+        $response = $this->sendRequest(
+            $accessToken,
+            self::METHOD_POST,
+            str_replace('{mot_test_id}', $motTestNumber, self::REASONS_PATH),
+            $body
+        );
+
+        \PHPUnit_Framework_Assert::assertEquals($response->getStatusCode(), 200);
+
+        return $response;
     }
 }

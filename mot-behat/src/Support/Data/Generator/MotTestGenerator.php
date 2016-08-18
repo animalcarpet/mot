@@ -90,9 +90,14 @@ class MotTestGenerator
         return $this->generate($tester, $site, $vehicle, MotTestStatusCode::PASSED);
     }
 
+    public function generateFailedMotTestsWithAdvisories(AuthenticatedUser $tester, SiteDto $site, VehicleDto $vehicle)
+    {
+        return $this->generate($tester, $site, $vehicle, MotTestData::TEST_WITH_ADVISORY);
+    }
+
     public function generatePassedMotTestsWithPrs(AuthenticatedUser $tester, SiteDto $site, VehicleDto $vehicle)
     {
-        return $this->generate($tester, $site, $vehicle, "prs");
+        return $this->generate($tester, $site, $vehicle, MotTestData::TEST_WITH_PRS);
     }
 
     public function generateFailedMotTests(AuthenticatedUser $tester, SiteDto $site, VehicleDto $vehicle)

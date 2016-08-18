@@ -7,11 +7,10 @@ import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.HomePage;
 import uk.gov.dvsa.ui.pages.Page;
-import uk.gov.dvsa.ui.pages.login.LoginPage;
 
 public class SurveyThankYouPage extends Page {
 
-    @FindBy(id = "back-to-home-link") private WebElement signin;
+    @FindBy(id = "back-to-home-link") private WebElement backToHomeLink;
 
     private static final String PAGE_TITLE = "Thank you for your feedback";
 
@@ -25,8 +24,8 @@ public class SurveyThankYouPage extends Page {
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
     }
 
-    public LoginPage clickSignIn() {
-        signin.click();
-        return MotPageFactory.newPage(driver, LoginPage.class);
+    public HomePage clickBackHomeLink() {
+        backToHomeLink.click();
+        return MotPageFactory.newPage(driver, HomePage.class);
     }
 }

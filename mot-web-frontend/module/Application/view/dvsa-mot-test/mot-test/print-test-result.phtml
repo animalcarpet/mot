@@ -113,7 +113,8 @@ echo $this->partial('errorMessages', ['getFromFlash' => true]);
 
         <div class="col-lg-8">
             <a id="back-to-home-link" href="<?php
-            echo PersonUrlBuilderWeb::home();
+            echo $this->shouldDisplaySurvey ?
+                $this->url('survey') : PersonUrlBuilderWeb::home();
             ?>" class="btn btn-link">Back to user home</a>
             <?php if ($this->isMotContingency): ?>
                 <a id="quit" href="<?php echo $this->url('contingency'); ?>"

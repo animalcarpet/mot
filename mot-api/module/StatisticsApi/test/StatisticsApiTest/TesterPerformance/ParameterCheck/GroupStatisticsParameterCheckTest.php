@@ -1,18 +1,18 @@
 <?php
 namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\ParameterCheck;
 
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\ParameterCheck\GroupStatisticsParameterCheck;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\ParameterCheck\GroupStatisticsParameterCheck;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommonTest\Date\TestDateTimeHolder;
 
 class GroupStatisticsParameterCheckTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var GroupStatisticsParameterCheck */
+    /** @var \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\ParameterCheck\GroupStatisticsParameterCheck */
     private $sut;
 
     protected function setUp()
     {
-        $this->sut = new GroupStatisticsParameterCheck($this->getDateTimeHolder());
+        $this->sut = new \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\ParameterCheck\GroupStatisticsParameterCheck($this->getDateTimeHolder());
     }
 
     /**

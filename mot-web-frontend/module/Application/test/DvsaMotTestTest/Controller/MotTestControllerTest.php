@@ -1,14 +1,13 @@
 <?php
-
 namespace DvsaMotTestTest\Controller;
 
 use Application\Helper\PrgHelper;
-use Core\Service\MotEventManager;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaCommon\Auth\MotIdentityProvider;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Dto\Common\MotTestDto;
@@ -24,29 +23,30 @@ use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\UrlBuilder;
+use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTest\Controller\MotTestController;
 use DvsaMotTest\Service\SurveyService;
-use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Mvc\Controller\Plugin\Forward;
 use Zend\Session\Container;
-use DvsaCommon\Constants\FeatureToggle;
+use Zend\View\Model\ViewModel;
 
 /**
  * Class MotTestControllerTest.
  */
 class MotTestControllerTest extends AbstractDvsaMotTestTestCase
 {
-    /* @var MotFrontendAuthorisationServiceInterface|MockObj $authServiceMock */
+    /**
+     * @var MotFrontendAuthorisationServiceInterface
+     */
     private $authServiceMock;
 
-    /** @var SurveyService|MockObj $surveyServiceMock */
+    /**
+     * @var SurveyService
+     */
     private $surveyServiceMock;
-
-    /** @var MotEventManager|MockObj $eventManagerMock*/
-    private $motEventManagerMock;
 
     protected function setUp()
     {
@@ -55,15 +55,8 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
             ->disableOriginalConstructor()
             ->setMethods([])
             ->getMock();
-        $this->motEventManagerMock = $this->getMockBuilder(MotEventManager::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['trigger'])
-            ->getMock();
 
-        $this->controller = new MotTestController(
-            $this->authServiceMock,
-            $this->motEventManagerMock
-        );
+        $this->controller = new MotTestController($this->authServiceMock, $this->surveyServiceMock);
 
         $serviceManager = Bootstrap::getServiceManager();
         $this->controller->setServiceLocator($serviceManager);
@@ -83,7 +76,8 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
             ->getMock();
         $forwardPlugin
             ->expects($this->once())
-            ->method('dispatch');
+            ->method('dispatch')
+            ->will($this->returnValue(new ViewModel()));
 
         $this->getController()->getPluginManager()->setService('forward', $forwardPlugin);
 
@@ -127,8 +121,8 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
         $odometerResultType = OdometerReadingResultType::OK;
 
         $expectedRestPostData = [
-            'value' => $odometerValue,
-            'unit' => $odometerUnit,
+            'value'      => $odometerValue,
+            'unit'       => $odometerUnit,
             'resultType' => $odometerResultType,
         ];
 
@@ -139,8 +133,8 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
 
         //  --  request & check    --
         $postParams = [
-            'odometer' => $odometerValue,
-            'unit' => $odometerUnit,
+            'odometer'   => $odometerValue,
+            'unit'       => $odometerUnit,
             'resultType' => $odometerResultType,
         ];
 
@@ -149,7 +143,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
         $this->assertRedirectLocation2(MotTestUrlBuilderWeb::motTest($motTestNumber));
     }
 
-    public function testUpdateOdometerDisplaysErrorMessageAndRedirectsWithInvalidData()
+    public function testMotTestUpdateOdometer_givenPostWithInvalidData_shouldFlashErrorAndRedirect()
     {
         $motTestNumber = 1;
         $odometerValue = '';
@@ -160,8 +154,8 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
 
         //  --  request & check    --
         $postParams = [
-            'odometer' => $odometerValue,
-            'unit' => $odometerUnit,
+            'odometer'   => $odometerValue,
+            'unit'       => $odometerUnit,
             'resultType' => $odometerResultType,
         ];
 
@@ -189,7 +183,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
         //  --  request & check    --
         $postParams = [
             'odometer' => $odometerValue,
-            'unit' => $odometerUnit,
+            'unit'     => $odometerUnit,
             'resultType' => $odometerResultType,
         ];
 
@@ -204,7 +198,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
 
         $postParams = [
             'odometer' => 'ABCD',
-            'unit' => 'km',
+            'unit'     => 'km',
             'resultType' => OdometerReadingResultType::OK,
         ];
         $this->getResultForAction2('post', 'updateOdometer', null, null, $postParams);
@@ -218,7 +212,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
 
         $postParams = [
             'odometer' => '12.44',
-            'unit' => 'km',
+            'unit'     => 'km',
             'resultType' => OdometerReadingResultType::OK,
         ];
         $this->getResultForAction2('post', 'updateOdometer', null, null, $postParams);
@@ -232,7 +226,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
 
         $postParams = [
             'odometer' => '1234567',
-            'unit' => 'km',
+            'unit'     => 'km',
             'resultType' => OdometerReadingResultType::OK,
         ];
         $this->getResultForAction2('post', 'updateOdometer', null, null, $postParams);
@@ -246,7 +240,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
 
         $postParams = [
             'odometer' => '12,44',
-            'unit' => 'km',
+            'unit'     => 'km',
             'resultType' => OdometerReadingResultType::OK,
         ];
         $this->getResultForAction2('post', 'updateOdometer', null, null, $postParams);
@@ -260,7 +254,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
 
         $postParams = [
             'odometer' => '  ',
-            'unit' => 'km',
+            'unit'     => 'km',
             'resultType' => OdometerReadingResultType::OK,
         ];
         $this->getResultForAction2('post', 'updateOdometer', null, null, $postParams);
@@ -457,7 +451,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
         $reasonForCancel = 1;
 
         $expectedRestPostData = [
-            'status' => $status,
+            'status'          => $status,
             'reasonForCancel' => $reasonForCancel,
             'clientIp' => '0.0.0.0',
         ];
@@ -474,7 +468,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
 
         //  --  request & check    --
         $postParams = [
-            'status' => $status,
+            'status'          => $status,
             'reasonForCancel' => $reasonForCancel,
         ];
 
@@ -491,7 +485,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
         $oneTimePassword = '123456';
 
         $expectedRestPostData = [
-            'status' => $status,
+            'status'          => $status,
             'reasonForCancel' => $reasonForCancel,
             'oneTimePassword' => $oneTimePassword,
             'clientIp' => '0.0.0.0',
@@ -509,7 +503,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
 
         //  --  request & check    --
         $postParams = [
-            'status' => $status,
+            'status'          => $status,
             'reasonForCancel' => $reasonForCancel,
             'oneTimePassword' => $oneTimePassword,
         ];
@@ -527,9 +521,9 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
         $oneTimePassword = '123456';
 
         $expectedRestPostData = [
-            'status' => $status,
+            'status'            => $status,
             'reasonForCancelId' => $reasonForCancel,
-            'oneTimePassword' => $oneTimePassword,
+            'oneTimePassword'   => $oneTimePassword,
             'clientIp' => '0.0.0.0',
         ];
 
@@ -548,9 +542,9 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
 
         //  --  request & check --
         $postParams = [
-            'status' => $status,
+            'status'            => $status,
             'reasonForCancelId' => $reasonForCancel,
-            'oneTimePassword' => $oneTimePassword,
+            'oneTimePassword'   => $oneTimePassword,
         ];
 
         $this->getResultForAction2('post', 'cancelMotTest', ['motTestNumber' => $motTestNumber], null, $postParams);
@@ -617,6 +611,24 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
         $this->assertResponseStatus(self::HTTP_OK_CODE);
         $this->assertEquals($motTestData, $result->motDetails);
     }
+
+//    public function testDisplayTestSummaryWithRestClientThrowingException() TODO - JK
+//    {
+//        $motTestNumber = 1;
+//        $errorMessage = "Test error message from REST";
+//
+//        $this->routeMatch->setParam('action', 'displayTestSummary');
+//        $this->routeMatch->setParam('motTestNumber', $motTestNumber);
+//
+//        $this->getRestClientMockThrowingException('get', $errorMessage);
+//
+//        $this->getFlashMessengerMockForAddManyErrorMessage($errorMessage);
+//
+//        $this->controller->dispatch($this->request);
+//
+//        $response = $this->controller->getResponse();
+//        $this->assertEquals(200, $response->getStatusCode());
+//    }
 
     /**
      * Post from summary page, mot test already finished (not active status), redirect to finish page by motTestNumber.
@@ -688,7 +700,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
         //  --  request & check --
         $routeParams = [
             'motTestNumber' => $motTestNumber,
-            'rfr-id' => $rfrId,
+            'rfr-id'        => $rfrId,
         ];
 
         $this->getResultForAction2('delete', 'deleteReasonForRejection', $routeParams);
@@ -703,9 +715,6 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
 
         $this->setupAuthorizationService();
         $this->getRestClientMockWithGetMotTest(['data' => $motTestData]);
-
-        $this->motEventManagerMock->expects($this->once())
-            ->method('trigger');
 
         $result = $this->getResultForAction('testResult', ['motTestNumber' => $motTestNr]);
 
@@ -723,7 +732,6 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
 
     private function getTestMotTestDataDto($motTestNumber = 1, $status = MotTestStatusName::PASSED)
     {
-
         /** @var MotIdentityProvider $mockIdentityProvider */
         $mockIdentityProvider = $this->getServiceManager()->get('MotIdentityProvider');
 
@@ -774,7 +782,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
                 "odometerReading" => [
                     'value'      => 1234,
                     'unit'       => OdometerUnit::KILOMETERS,
-                    'resultType' => OdometerReadingResultType::OK
+                    'resultType' => OdometerReadingResultType::OK,
                 ],
                 'vehicle'         => [
                     'id'           => 1,
@@ -787,7 +795,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
                         ],
                         'model' => [
                             'name' => 'S80 GTX',
-                        ]
+                        ],
                     ],
                     'fuel_type'    => [
                         'id' => 'X',
@@ -822,18 +830,26 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
         );
     }
 
-    public static function testIpExtractionFromHeaderDataProvider()
+    private function motTestToDto($motTestData)
+    {
+        $result = $motTestData['data'];
+        $result['vehicle'] = DtoHydrator::jsonToDto($result['vehicle']);
+
+        return $result;
+    }
+
+    public static function TestIpExtractionFromHeaderDataProvider()
     {
         return [
-            ['1.1.1.1', '1.1.1.1'],
-            ['1.1.1.1, 2.2.2.2, 3.3.3.3', '1.1.1.1'],
-            ['', '0.0.0.0'],
-            [',', '0.0.0.0'],
+            ["1.1.1.1", "1.1.1.1"],
+            ["1.1.1.1, 2.2.2.2, 3.3.3.3", "1.1.1.1"],
+            ["", "0.0.0.0"],
+            [",", "0.0.0.0"],
         ];
     }
 
     /**
-     * @dataProvider testIpExtractionFromHeaderDataProvider
+     * @dataProvider TestIpExtractionFromHeaderDataProvider
      */
     public function testCorrectlyObtainFirstIpFromHeader($testHeader, $expectedIp)
     {
@@ -841,9 +857,9 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
             [PermissionInSystem::MOT_TEST_CONFIRM, PermissionAtSite::MOT_TEST_CONFIRM_AT_SITE]
         );
 
-        $this->request->getHeaders()->addHeaders(
-            ['X-Forwarded-For' => $testHeader]
-        );
+        $this->request->getHeaders()->addHeaders([
+            'X-Forwarded-For' => $testHeader,
+        ]);
 
         $motTestNr = (int) rand(1, 1000);
         $motTestData = $this->getTestMotTestDataDto($motTestNr);

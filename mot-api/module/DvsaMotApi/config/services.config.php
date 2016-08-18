@@ -7,7 +7,6 @@ use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\TestItemCategoryRepository;
 use DvsaMotApi\Factory\AmazonS3ServiceFactory;
 use DvsaMotApi\Factory\AmazonSDKServiceFactory;
-use DvsaMotApi\Factory\S3CsvStoreFactory;
 use DvsaMotApi\Factory\AwsCredentialsProviderFactory;
 use DvsaMotApi\Factory\CertificateReplacementRepositoryFactory;
 use DvsaMotApi\Factory\CertificateStorageServiceFactory;
@@ -64,7 +63,7 @@ use DvsaMotApi\Factory\Service\Validator\ReplacementCertificateDraftChangeValida
 use DvsaMotApi\Factory\Service\Validator\RetestEligibilityValidatorFactory;
 use DvsaMotApi\Factory\Service\VehicleHistoryServiceFactory;
 use DvsaMotApi\Factory\Service\VehicleServiceFactory;
-use DvsaMotApi\Factory\Service\SurveyServiceFactory;
+use DvsaMotApi\Factory\SurveyServiceFactory;
 use DvsaMotApi\Factory\TestItemCategoryRepositoryFactory;
 use DvsaMotApi\Factory\VehicleRepositoryFactory;
 use DvsaMotApi\Helper\RoleEventHelper;
@@ -86,7 +85,6 @@ use DvsaMotApi\Service\MotTestOptionsService;
 use DvsaMotApi\Service\MotTestReasonForRejectionService;
 use DvsaMotApi\Service\MotTestRecentCertificateService;
 use DvsaMotApi\Service\MotTestStatusChangeNotificationService;
-use DvsaMotApi\Service\S3\S3CsvStore;
 use DvsaMotApi\Service\SurveyService;
 use DvsaMotApi\Service\TesterMotTestLogService;
 use DvsaMotApi\Service\TestingOutsideOpeningHoursNotificationService;
@@ -169,6 +167,5 @@ return [
         AmazonS3Service::class                              => AmazonS3ServiceFactory::class,
         AmazonSDKService::class                             => AmazonSDKServiceFactory::class,
         AwsCredentialsProviderService::class                => AwsCredentialsProviderFactory::class,
-        S3CsvStore::class                                   => S3CsvStoreFactory::class,
     ],
 ];

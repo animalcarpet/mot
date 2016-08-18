@@ -12,7 +12,7 @@ class NormalMotTestData extends AbstractMotTestData
     {
         $mot = $this
             ->motTest
-            ->startMotTest(
+            ->startMOTTest(
                 $tester->getAccessToken(),
                 $vehicle->getId(),
                 $vehicle->getVehicleClass()->getCode(),

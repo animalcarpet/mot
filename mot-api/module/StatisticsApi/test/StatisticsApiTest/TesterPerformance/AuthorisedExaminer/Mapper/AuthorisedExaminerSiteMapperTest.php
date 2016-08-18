@@ -4,7 +4,7 @@
 namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\AuthorisedExaminer\Mapper;
 
 
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\AuthorisedExaminer\Mapper\AuthorisedExaminerSiteMapper;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\AuthorisedExaminer\Mapper\AuthorisedExaminerSiteMapper;
 use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\SiteDto;
 use DvsaCommon\Enum\SiteContactTypeCode;
 use DvsaEntities\Entity\Address;

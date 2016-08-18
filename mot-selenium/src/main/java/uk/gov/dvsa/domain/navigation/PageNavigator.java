@@ -9,6 +9,7 @@ import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.domain.service.CookieService;
 import uk.gov.dvsa.framework.config.Configurator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
+import uk.gov.dvsa.helper.ConfigHelper;
 import uk.gov.dvsa.ui.pages.*;
 import uk.gov.dvsa.ui.pages.dvsa.ManageRolesPage;
 import uk.gov.dvsa.ui.pages.dvsa.UserSearchPage;
@@ -228,5 +229,19 @@ public class PageNavigator {
         driver.manage().deleteAllCookies();
         driver.loadBaseUrl();
         driver.manage().addCookie(getCookieForUser(user));
+    }
+
+    public TestSummaryPage getTestSummaryPage(User tester, Vehicle vehicle) throws URISyntaxException, IOException {
+        TestResultsEntryPageInterface testResultsEntryPage = getTestResultsEntryPage(tester, vehicle);
+        TestSummaryPage testSummaryPage = testResultsEntryPage.completeTestDetailsWithPassValues().clickReviewTestButton();
+
+        return testSummaryPage;
+    }
+
+    private TestResultsEntryPageInterface getTestResultsEntryPage(User tester, Vehicle vehicle) throws URISyntaxException, IOException {
+        if (ConfigHelper.isTestResultEntryImprovementsEnabled()) {
+            return gotoTestResultsEntryNewPage(tester, vehicle);
+        }
+        return gotoTestResultsEntryPage(tester, vehicle);
     }
 }

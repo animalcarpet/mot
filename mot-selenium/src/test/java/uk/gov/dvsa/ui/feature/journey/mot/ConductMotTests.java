@@ -9,6 +9,8 @@ import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.CancelTestReason;
 import uk.gov.dvsa.domain.model.mot.TestOutcome;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
+import uk.gov.dvsa.domain.navigation.PageNavigator;
+import uk.gov.dvsa.helper.ConfigHelper;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.mot.*;
 
@@ -33,6 +35,7 @@ public class ConductMotTests extends DslTest {
         tester = userData.createTester(site.getId());
         vehicle = vehicleData.getNewVehicle(tester);
     }
+
 
     @Test(testName = "OldRFRTest", groups = {"BVT"})
     public void passTestSuccessfullyWithNoRFR() throws IOException, URISyntaxException {
@@ -130,4 +133,29 @@ public class ConductMotTests extends DslTest {
         //THEN I should not be presented with
         assertThat(testCompletePage.isPrintDocumentButtonDisplayed(), is(false));
     }
+
+    @Test(testName = "OldRFRTest", groups = {"BVT", "BL-1935"}, description = "Verifies that user is able to see test results entry (old) page")
+    public void motTestSummaryPageWithTestResultEntryImprovementsToggleOff() throws IOException, URISyntaxException {
+        // GIVEN I complete an mot test using testResultsEntryPage and see the test summary page
+        TestSummaryPage testSummaryPage = pageNavigator.getTestSummaryPage(tester, vehicle);
+
+        // WHEN I click the back to results entry link
+        TestResultsEntryPageInterface testResultsEntryOldPage = testSummaryPage.clickBackToResultsEntryLink();
+
+        //THEN I should be returned to testResultsEntryPage containing a review test button
+        assertThat(testResultsEntryOldPage.isClickReviewTestButtonPresent(), is(true));
+    }
+
+    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1935"}, description = "Verifies that user is able to see test results entry new page")
+    public void motTestSummaryPageWithTestResultEntryImprovementsToggleOn() throws IOException, URISyntaxException {
+        // GIVEN I complete an mot test using testResultsEntryNewPage and see the test summary page
+        TestSummaryPage testSummaryPage = pageNavigator.getTestSummaryPage(tester, vehicle);
+
+        // WHEN I click the back to results entry link
+        TestResultsEntryPageInterface testResultsEntryNewPage = testSummaryPage.clickBackToResultsEntryLink();
+
+        //THEN I should be returned to testResultsEntryNewPage containing a review test button
+        assertThat(testResultsEntryNewPage.isClickReviewTestButtonPresent(), is(true));
+    }
+
 }

@@ -14,7 +14,6 @@ class BadRequestException extends ServiceException
     const ERROR_CODE_REPEATED_ADDITION = 80;
     const ERROR_CODE_INVALID_ENTITY_STATE = 100;
     const ERROR_CODE_BUSINESS_FAILURE = 120;
-    const ERROR_CODE_INVALID_SURVEY_TOKEN = 140;
 
     /**
      * @param string $message

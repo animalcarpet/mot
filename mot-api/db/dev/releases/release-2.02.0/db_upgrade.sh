@@ -12,7 +12,6 @@ readonly MYSQL_ADMIN_PASSWORD=password
 upgrade_files+=('2016-06-28-BL-2711-add-test-log-permission-STORY.sql');
 upgrade_files+=('2016-06-24-BL-2159-change-mot-cost-centre-STORY.sql');
 upgrade_files+=('2016-06-27-BL-1587-organisation-test-quality-permission-STORY.sql');
-upgrade_files+=('2016-06-16-BL-2048-confirm-trigger-point-for-gds-satisfaction-survey-presentation-STORY.sql');
 
 # Necessary for first deployment.
 $(mysql -h ${MYSQL_HOST} -u ${MYSQL_USER} -p${MYSQL_ADMIN_PASSWORD} ${MYSQL_DB_NAME} -e "CREATE TABLE IF NOT EXISTS db_upgrade (

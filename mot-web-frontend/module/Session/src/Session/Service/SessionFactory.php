@@ -4,10 +4,12 @@ namespace Session\Service;
 
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\AbstractFactoryInterface;
-use Zend\Session\Container;
+// Use custom container for now to work around zf2 bug
+//use Zend\Session\Container;
+use Session\Container;
 
 /**
- * Class SessionFactory.
+ * Class SessionFactory
  */
 class SessionFactory implements AbstractFactoryInterface
 {
@@ -21,14 +23,12 @@ class SessionFactory implements AbstractFactoryInterface
                 }
             }
         }
-
         return false;
     }
 
     public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
         $manager = $serviceLocator->get('Zend\Session\SessionManager');
-
         return new Container($requestedName, $manager);
     }
 }

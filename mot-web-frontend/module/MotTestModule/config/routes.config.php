@@ -267,7 +267,7 @@ return [
             'survey' => [
                 'type' => 'segment',
                 'options' => [
-                    'route' => '/survey/[:token]',
+                    'route' => '/survey',
                     'defaults' => [
                         'controller' => SurveyPageController::class,
                         'action'     => 'index',
@@ -285,26 +285,26 @@ return [
                             ],
                         ],
                     ],
-                ],
-            ],
-            'survey-reports' => [
-                'type'    => 'segment',
-                'options' => [
-                    'route'    => '/survey/reports',
-                    'defaults' => [
-                        'controller' => SurveyPageController::class,
-                        'action'     => 'reports',
-                    ],
-                ],
-                'may_terminate' => true,
-                'child_routes' => [
-                    'downloadCsv' => [
-                        'type' => 'segment',
+                    'reports'                           => [
+                        'type'    => 'segment',
                         'options' => [
-                            'route' => '/download/:month',
+                            'route'    => '/reports',
                             'defaults' => [
                                 'controller' => SurveyPageController::class,
-                                'action' => 'downloadReportCsv',
+                                'action'     => 'reports',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'downloadCsv' => [
+                                'type' => 'segment',
+                                'options' => [
+                                    'route' => '/download/:month',
+                                    'defaults' => [
+                                        'controller' => SurveyPageController::class,
+                                        'action' => 'downloadReportCsv',
+                                    ],
+                                ],
                             ],
                         ],
                     ],

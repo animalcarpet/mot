@@ -2,10 +2,10 @@
 
 namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\National\Service;
 
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\National\Repository\NationalComponentStatisticsRepository;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\National\Service\NationalComponentStatisticsService;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\National\Storage\NationalComponentFailRateStorage;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\QueryResult\ComponentFailRateResult;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\QueryResult\ComponentFailRateResult;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterNational\Repository\NationalComponentStatisticsRepository;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterNational\Service\NationalComponentStatisticsService;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterNational\Storage\NationalComponentFailRateStorage;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentDto;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\NationalComponentStatisticsDto;
 use DvsaCommon\Enum\VehicleClassGroupCode;

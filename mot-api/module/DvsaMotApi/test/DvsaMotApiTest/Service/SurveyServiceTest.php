@@ -1,24 +1,18 @@
 <?php
-/**
- * This file is part of the DVSA MOT API project.
- *
- * @link https://gitlab.motdev.org.uk/mot/mot
- */
 
 namespace DvsaMotApiTest\Service;
 
+use Aws\S3\S3Client;
 use Doctrine\ORM\EntityManager;
+use DvsaCommon\Dto\Common\MotTestDto;
+use DvsaCommon\Dto\Common\MotTestTypeDto;
+use DvsaCommon\Dto\Person\PersonDto;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\MotTest;
-use DvsaEntities\Entity\MotTestSurvey;
-use DvsaEntities\Entity\Survey;
-use DvsaEntities\Repository\Doctrine\DoctrineMotTestSurveyRepository;
+use DvsaEntities\Entity\MotTestSurveyResult;
 use DvsaEntities\Repository\MotTestRepository;
-use DvsaEntities\Repository\MotTestSurveyRepository;
-use DvsaMotApi\Domain\Survey\SurveyConfiguration;
-use DvsaMotApi\Service\S3\FileStorageInterface;
-use DvsaMotApi\Service\S3\S3CsvStore;
+use DvsaEntities\Repository\MotTestSurveyResultRepository;
 use DvsaMotApi\Service\SurveyService;
 use Zend\Authentication\AuthenticationService;
 
@@ -29,15 +23,26 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
      */
     private $entityManagerMock;
 
-    /** @var FileStorageInterface|\PHPUnit_Framework_MockObject_MockObject $fileStorageMock */
-    private $fileStorageMock;
+    /**
+     * @var S3Client|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $s3ClientMock;
 
     private $surveyResults;
+
+    /** @var \StdClass */
+    private $motTestDetails;
+
+    /** @var \StdClass */
+    private $testType;
+
+    /** @var \StdClass */
+    private $motTester;
 
     /** @var MotTestRepository|\PHPUnit_Framework_MockObject_MockObject */
     private $motRepositoryMock;
 
-    /** @var MotTestSurveyRepository|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var MotTestSurveyResultRepository|\PHPUnit_Framework_MockObject_MockObject */
     private $motTestSurveyRepositoryMock;
 
     /** @var AuthenticationService|\PHPUnit_Framework_MockObject_MockObject */
@@ -46,15 +51,6 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
     /** @var MotTest|\PHPUnit_Framework_MockObject_MockObject */
     private $motTestMock;
 
-    /** @var MotTestSurvey|\PHPUnit_Framework_MockObject_MockObject */
-    private $motTestSurveyMock;
-
-    /** @var Survey|\PHPUnit_Framework_MockObject_MockObject */
-    private $surveyMock;
-
-    /**
-     * @var SurveyConfiguration
-     */
     private $surveyConfig;
 
     public function setUp()
@@ -66,29 +62,35 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
                     'createQueryBuilder', 'getQuery', 'getSingleScalarResult',
                     'getResult', 'persist', 'flush', 'select', 'from', 'where',
                     'andWhere', 'orWhere', 'orderBy', 'getRepository',
-                    'setParameter',
+                    'setParameter'
                 ]
             )
             ->getMock();
 
-        $this->fileStorageMock = $this->getMockBuilder(S3CsvStore::class)
+        $this->s3ClientMock = $this->getMockBuilder(S3Client::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getFile', 'getAllFiles', 'putFile'])
+            ->setMethods(['putObject'])
             ->getMock();
 
-        $this->surveyConfig = new SurveyConfiguration([
+        $this->motTestDetails = new \StdClass();
+
+        $this->surveyConfig = [
             'numberOfTestsBetweenSurveys' => 1,
-            'timeBeforeSurveyRedisplayed' => '1 second',
-        ]);
+            'timeBeforeSurveyRedisplayed' => '1 second'
+        ];
+
+        $this->testType = new \StdClass();
+
+        $this->motTester = new \StdClass();
 
         $this->motRepositoryMock = $this->getMockBuilder(MotTestRepository::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getNormalMotTestCountSinceLastSurvey'])
+            ->setMethods(['getNormalMotTestCountSinceLastSurvey', 'findByNumber'])
             ->getMock();
 
-        $this->motTestSurveyRepositoryMock = $this->getMockBuilder(DoctrineMotTestSurveyRepository::class)
+        $this->motTestSurveyRepositoryMock = $this->getMockBuilder(MotTestSurveyResult::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getLastUserSurveyDate', 'findByToken', 'findOneBy'])
+            ->setMethods(['getLastUserSurveyDate'])
             ->getMock();
 
         $this->authenticationServiceMock = $this->getMockBuilder(AuthenticationService::class)
@@ -99,16 +101,6 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
         $this->motTestMock = $this->getMockBuilder(MotTest::class)
             ->disableOriginalConstructor()
             ->setMethods(['getTester', 'getId'])
-            ->getMock();
-
-        $this->motTestSurveyMock = $this->getMockBuilder(MotTestSurvey::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getSurvey', 'getMotTest'])
-            ->getMock();
-
-        $this->surveyMock = $this->getMockBuilder(Survey::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getRating'])
             ->getMock();
     }
 
@@ -134,49 +126,35 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateSurveyResult($satisfactionRating)
     {
-        $validSurveyValues = [null, 1, 2, 3, 4, 5];
+        $currentUserId = 100;
+
+        $this->authenticationServiceMock->expects($this->any())
+            ->method('getIdentity')
+            ->will($this->returnSelf());
+
+        $this->authenticationServiceMock->expects($this->any())
+            ->method('getUserId')
+            ->willReturn($currentUserId);
+
+        $this->motTestMock->expects($this->any())
+            ->method('getTester')
+            ->will($this->returnSelf());
+
+        $this->motTestMock->expects($this->any())
+            ->method('getId')
+            ->willReturn($currentUserId);
+
+        $this->motRepositoryMock->expects($this->any())
+            ->method('findByNumber')
+            ->willReturn([$this->motTestMock]);
 
         $this->entityManagerMock->expects($this->any())
             ->method('getRepository')
-            ->will(
-                $this->returnValueMap(
-                    [
-                        [MotTest::class, $this->motRepositoryMock],
-                        [MotTestSurvey::class, $this->motTestSurveyRepositoryMock],
-                    ]
-                )
-            );
-
-        $this->motTestSurveyRepositoryMock->expects($this->once())
-           ->method('findByToken')
-           ->willReturn($this->motTestSurveyMock);
-
-        $this->motTestSurveyRepositoryMock->expects($this->once())
-            ->method('findOneBy')
-            ->willReturn($this->motTestSurveyMock);
-
-        $this->motTestSurveyMock->expects($this->once())
-            ->method('getMotTest')
-            ->willReturn($this->motTestMock);
-
-        $this->motTestSurveyMock->expects($this->any())
-            ->method('getSurvey')
-            ->willReturn(null);
-
-        $this->surveyMock->expects($this->any())
-            ->method('getRating')
-            ->willReturn($satisfactionRating);
+            ->willReturn($this->motRepositoryMock);
 
         $service = $this->createSurveyService();
 
-        if (!in_array($satisfactionRating, $validSurveyValues)) {
-            $this->setExpectedException('InvalidArgumentException');
-        }
-
-        $surveyResult = $service->createSurveyResult([
-            'token' => 'testToken',
-            'satisfaction_rating' => $satisfactionRating,
-        ]);
+        $surveyResult = $service->createSurveyResult(['mot_test_number' => 5,'satisfaction_rating' => $satisfactionRating]);
 
         $this->assertEquals($satisfactionRating, $surveyResult['satisfaction_rating']);
     }
@@ -187,6 +165,14 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testGeneratingSurveyReports()
     {
+        $service = $this->withSurveyResults()->createSurveyService();
+
+        $csvHandle = fopen('php://memory', 'w');
+
+        if (!empty(SurveyService::$CSV_COLUMNS)) {
+            fputcsv($csvHandle, SurveyService::$CSV_COLUMNS);
+        }
+
         $timeStamp = new \DateTime();
         $row['timestamp'] = $timeStamp->format('Y-m-d-H-i-s');
         $row['period'] = 'month';
@@ -198,44 +184,30 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
         $row['rating_5'] = 5;
         $row['total'] = 15;
 
-        $this->fileStorageMock->expects($this->once())
-            ->method('putFile')
-            ->with(SurveyService::$CSV_COLUMNS, $row, $timeStamp->format('Y-m'));
+        fputcsv($csvHandle, $row);
+        rewind($csvHandle);
 
-        $service = $this->withSurveyResults()->createSurveyService();
+        foreach (([SurveyService::$CSV_COLUMNS]) as $line) {
+            fputcsv($csvHandle, $line);
+        }
+
+        rewind($csvHandle);
+        $expectedContent = stream_get_contents($csvHandle);
+        fclose($csvHandle);
+
+        $this->s3ClientMock
+            ->expects($this->atLeastOnce())
+            ->method('putObject')
+            ->with(
+                [
+                    'Bucket' => '',
+                    'Key' => $timeStamp->format('Y-m'),
+                    'Body' => $expectedContent,
+                    'ContentType' => 'text/csv',
+                ]
+            );
 
         $service->generateSurveyReports($this->surveyResults);
-    }
-
-    public function testGetSurveyReports()
-    {
-        $key = '2016-04';
-        $size = '100kb';
-        $csvData = 'csvData';
-
-        $mockAwsResult = [
-            ['Key' => $key, 'Size' => $size],
-        ];
-        $fileMock = $csvData;
-
-        $this
-            ->fileStorageMock
-            ->expects($this->once())
-            ->method('getAllFiles')
-            ->will($this->returnValue($mockAwsResult));
-
-        $this
-            ->fileStorageMock
-            ->expects($this->once())
-            ->method('getFile')
-            ->willReturn($fileMock);
-
-        $service = $this->withSurveyResults()->createSurveyService();
-        $result = $service->getSurveyReports();
-
-        $this->assertEquals($key, $result[0]['month']);
-        $this->assertEquals($size, $result[0]['size']);
-        $this->assertEquals($csvData, $result[0]['csv']);
     }
 
     /**
@@ -254,9 +226,13 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
             ->method('getNormalMotTestCountSinceLastSurvey')
             ->willReturn(0);
 
+        $this->testType->code = MotTestTypeCode::NORMAL_TEST;
+
+        $this->motTestDetails->testType = $this->testType;
+
         $service = $this->createSurveyService();
 
-        $result = $service->shouldDisplaySurvey(MotTestTypeCode::NORMAL_TEST, 1);
+        $result = $service->shouldDisplaySurvey($this->motTestDetails, true);
 
         $this->assertTrue($result);
     }
@@ -266,9 +242,13 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testShouldDisplaySurveyWithReTest()
     {
+        $this->testType->code = MotTestTypeCode::RE_TEST;
+
+        $this->motTestDetails->testType = $this->testType;
+
         $service = $this->createSurveyService();
 
-        $result = $service->shouldDisplaySurvey(MotTestTypeCode::RE_TEST, 1);
+        $result = $service->shouldDisplaySurvey($this->motTestDetails, true);
 
         $this->assertFalse($result);
     }
@@ -290,7 +270,7 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
 
         $valueMap = [
             [MotTest::class, $this->motRepositoryMock],
-            [MotTestSurvey::class, $this->motTestSurveyRepositoryMock],
+            [MotTestSurveyResult::class, $this->motTestSurveyRepositoryMock]
         ];
 
         // repository mocked method
@@ -299,9 +279,20 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
             ->method('getRepository')
             ->will($this->returnValueMap($valueMap));
 
+        // MOT test type mocked method
+        $this->testType->code = MotTestTypeCode::NORMAL_TEST;
+
+        // MOT test details mocked methods
+        $this->motTestDetails->testType = $this->testType;
+
+        $this->motTestDetails->tester = $this->motTester;
+
+        // MOT tester mock method
+        $this->motTester->id = 1;
+
         $service = $this->createSurveyService();
 
-        $result = $service->shouldDisplaySurvey(MotTestTypeCode::NORMAL_TEST, 1);
+        $result = $service->shouldDisplaySurvey($this->motTestDetails, true);
 
         $this->assertTrue($result);
     }
@@ -324,7 +315,7 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
         // repository mocked method
         $valueMap = [
             [MotTest::class, $this->motRepositoryMock],
-            [MotTestSurvey::class, $this->motTestSurveyRepositoryMock],
+            [MotTestSurveyResult::class, $this->motTestSurveyRepositoryMock]
         ];
 
         // repository mocked method
@@ -333,9 +324,20 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
             ->method('getRepository')
             ->will($this->returnValueMap($valueMap));
 
+        // MOT test type mocked method
+        $this->testType->code = MotTestTypeCode::NORMAL_TEST;
+
+        // MOT test details mocked methods
+        $this->motTestDetails->testType = $this->testType;
+
+        $this->motTestDetails->tester = $this->motTester;
+
+        // MOT tester mock method
+        $this->motTester->id = 1;
+
         $service = $this->createSurveyService();
 
-        $result = $service->shouldDisplaySurvey(MotTestTypeCode::NORMAL_TEST, 1);
+        $result = $service->shouldDisplaySurvey($this->motTestDetails, true);
 
         $this->assertFalse($result);
     }
@@ -353,12 +355,12 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->motTestSurveyRepositoryMock->expects($this->atLeastOnce())
             ->method('getLastUserSurveyDate')
-            ->willThrowException(new NotFoundException(MotTestSurvey::class));
+            ->willThrowException(new NotFoundException(MotTestSurveyResult::class));
 
         // repository mocked method
         $valueMap = [
             [MotTest::class, $this->motRepositoryMock],
-            [MotTestSurvey::class, $this->motTestSurveyRepositoryMock],
+            [MotTestSurveyResult::class, $this->motTestSurveyRepositoryMock]
         ];
 
         // repository mocked method
@@ -367,70 +369,23 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
             ->method('getRepository')
             ->will($this->returnValueMap($valueMap));
 
+        // MOT test type mocked method
+        $this->testType->code = MotTestTypeCode::NORMAL_TEST;
+
+        // MOT test details mocked methods
+        $this->motTestDetails->testType = $this->testType;
+
+        $this->motTestDetails->tester = $this->motTester;
+
+        // MOT tester mock method
+        $this->motTester->id = 1;
+
+
         $service = $this->createSurveyService();
 
-        $result = $service->shouldDisplaySurvey(MotTestTypeCode::NORMAL_TEST, 1);
+        $result = $service->shouldDisplaySurvey($this->motTestDetails, true);
 
         $this->assertTrue($result);
-    }
-
-    /**
-     * @param $tokenExistsInDb
-     * @param $tokenUsed
-     * @param $shouldValidate
-     *
-     * @dataProvider sessionTokenIsValidProvider
-     */
-    public function testSessionTokenIsValid($tokenExistsInDb, $tokenUsed, $shouldValidate)
-    {
-        $this->entityManagerMock->expects($this->any())
-            ->method('getRepository')
-            ->will(
-                $this->returnValueMap(
-                    [
-                        [MotTest::class, $this->motRepositoryMock],
-                        [MotTestSurvey::class, $this->motTestSurveyRepositoryMock],
-                    ]
-                )
-            );
-
-        if ($tokenUsed) {
-            $this->motTestSurveyMock->expects($this->any())
-                ->method('getSurvey')
-                ->willReturn($this->surveyMock);
-        } else {
-            $this->motTestSurveyMock->expects($this->any())
-                ->method('getSurvey')
-                ->willReturn(null);
-        }
-
-        if ($tokenExistsInDb) {
-            $this->motTestSurveyRepositoryMock->expects($this->once())
-                ->method('findOneBy')
-                ->willReturn($this->motTestSurveyMock);
-        } else {
-            $this->motTestSurveyRepositoryMock->expects($this->once())
-                ->method('findOneBy')
-                ->willReturn(null);
-        }
-
-        $surveyService = $this->createSurveyService();
-
-        $result = $surveyService->sessionTokenIsValid('someToken');
-
-        $this->assertEquals($result, $shouldValidate);
-    }
-
-    /**
-     * @return array
-     */
-    public function sessionTokenIsValidProvider()
-    {
-        return [
-            [true, false, true],
-            [true, true, false],
-            [false, false, false],
-        ];
     }
 
     /**
@@ -458,13 +413,14 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
         return new SurveyService(
             $this->entityManagerMock,
             $this->authenticationServiceMock,
-            $this->fileStorageMock,
+            $this->s3ClientMock,
+            '',
             $this->surveyConfig
         );
     }
 
     /**
-     * @param int $numberOfCompletedTests
+     * @param int   $numberOfCompletedTests
      */
     private function setupQueryBuilderMockMethods($numberOfCompletedTests)
     {

@@ -246,7 +246,10 @@ wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
 
     stage 'Deploy'
     sh 'set +x; echo -e "\033[34mDeploy\033[0m"'
-    run_ansible("${AWS_ACCESS_KEY_ID}", "${AWS_SECRET_ACCESS_KEY}", "${FB}", 'playbook_puppet.yml', 'consul')
+    parallel(
+        'consul': { run_ansible("${AWS_ACCESS_KEY_ID}", "${AWS_SECRET_ACCESS_KEY}", "${FB}", 'playbook_puppet.yml', 'consul') },
+        'openam': { run_ansible("${AWS_ACCESS_KEY_ID}", "${AWS_SECRET_ACCESS_KEY}", "${FB}", 'playbook_puppet.yml', 'openam') }
+    )    
     parallel(
         'api': { run_ansible("${AWS_ACCESS_KEY_ID}", "${AWS_SECRET_ACCESS_KEY}", "${FB}", 'playbook_puppet.yml', 'api') },
         'frontend': { run_ansible("${AWS_ACCESS_KEY_ID}", "${AWS_SECRET_ACCESS_KEY}", "${FB}", 'playbook_puppet.yml', 'frontend') },

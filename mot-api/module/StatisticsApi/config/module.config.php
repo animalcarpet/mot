@@ -1,13 +1,13 @@
 <?php
 
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\AuthorisedExaminer\Controller\AuthorisedExaminerStatisticsController;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\National\Controller\NationalBatchStatisticsController;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\National\Controller\NationalComponentStatisticsController;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\National\Controller\NationalStatisticsController;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Site\Controller\SiteStatisticsController;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Tester\Controller\TesterAtSiteComponentStatisticsController;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Tester\Controller\TesterComponentStatisticsController;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\Tester\Controller\TesterAggregatedStatisticsController;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Batch\Controller\NationalBatchStatisticsController;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Tester\Controller\TesterComponentStatisticsController;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterAtSite\Controller\TesterAtSiteComponentStatisticsController;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterNational\Controller\NationalComponentStatisticsController;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\AuthorisedExaminer\Controller\AuthorisedExaminerStatisticsController;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Tester\Controller\TesterAggregatedStatisticsController;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Controller\SiteStatisticsController;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Controller\NationalStatisticsController;
 
 return [
     'router' => [

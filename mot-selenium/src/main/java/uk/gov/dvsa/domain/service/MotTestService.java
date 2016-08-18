@@ -2,7 +2,6 @@ package uk.gov.dvsa.domain.service;
 
 import com.jayway.restassured.response.Response;
 import org.joda.time.DateTime;
-import org.json.JSONObject;
 import uk.gov.dvsa.domain.api.request.CreateMotTestRequest;
 import uk.gov.dvsa.domain.api.request.MotTestData;
 import uk.gov.dvsa.domain.model.User;
@@ -18,7 +17,6 @@ import java.util.List;
 
 public class MotTestService extends Service {
     private static final String CREATE_MOT_TEST_PATH = "/testsupport/mottest";
-    private static final String CREATE_100_MOT_TESTS_PATH = "/testsupport/onehundredmottests";
     private AuthService authService = new AuthService();
 
     protected MotTestService() {
@@ -50,19 +48,5 @@ public class MotTestService extends Service {
         Response response = motClient.post(request, CREATE_MOT_TEST_PATH, token);
 
         return ServiceResponse.createResponse(response, MotTest.class);
-    }
-
-    protected void createOneHundredMotTests(User user) throws IOException {
-        JSONObject requestJSON = createHTTPRequestJSON(user);
-        String token = authService.createSessionTokenForUser(user);
-        Response response = motClient.post(requestJSON, CREATE_100_MOT_TESTS_PATH, token);
-
-        ServiceResponse.checkResponseSanity(response);
-    }
-
-    private JSONObject createHTTPRequestJSON(User user) {
-        JSONObject requestJSON = new JSONObject();
-        requestJSON.put("userId", user.getId());
-        return requestJSON;
     }
 }

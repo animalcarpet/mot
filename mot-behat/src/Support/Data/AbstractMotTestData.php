@@ -7,6 +7,8 @@ use Dvsa\Mot\Behat\Support\Api\OdometerReading;
 use Dvsa\Mot\Behat\Support\Api\ReasonForRejection;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Support\Data\Collection\DataCollection;
+use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupA;
+use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupB;
 use Dvsa\Mot\Behat\Support\Response;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Common\MotTestTypeDto;
@@ -57,6 +59,22 @@ abstract class AbstractMotTestData
         return $mot;
     }
 
+    public function passMotTestWithAdvisory(MotTestDto $mot, $rfrId)
+    {
+        $tester = $this->getTester($mot);
+        $this->reasonForRejection->addAdvisory($tester->getAccessToken(), $mot->getMotTestNumber(), $rfrId);
+        $this->passMotTest($mot);
+        return $mot;
+    }
+
+    public function failMotTestWithAdvisory(MotTestDto $mot, $rfrId)
+    {
+        $tester = $this->getTester($mot);
+        $this->reasonForRejection->addAdvisory($tester->getAccessToken(), $mot->getMotTestNumber(), $rfrId);
+        $this->failMotTest($mot);
+        return $mot;
+    }
+
     public function failMotTest(MotTestDto $mot, $rfrId = null)
     {
         $tester = $this->getTester($mot);
@@ -65,7 +83,9 @@ abstract class AbstractMotTestData
         $this->addMeterReading($mot);
 
         if ($rfrId === null) {
-            $rfrId = ($mot->getVehicleClass()->getCode() < 3) ? 356 : 8455;
+            $rfrId = ($mot->getVehicleClass()->getCode() < 3)
+                ? ReasonForRejectionGroupA::RFR_BRAKE_HANDLEBAR_LEVER
+                : ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION;
         }
 
         $this->reasonForRejection->addFailure($tester->getAccessToken(), $mot->getMotTestNumber(), $rfrId);
@@ -86,7 +106,9 @@ abstract class AbstractMotTestData
         $this->addMeterReading($mot);
 
         if ($rfrId === null) {
-            $rfrId = ($mot->getVehicleClass()->getCode() < VehicleClassCode::CLASS_3) ? 356 : 8455;
+            $rfrId = ($mot->getVehicleClass()->getCode() < VehicleClassCode::CLASS_3)
+                ? ReasonForRejectionGroupA::RFR_BRAKE_HANDLEBAR_LEVER
+                : ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION;
         }
 
         $this->reasonForRejection->addPrs($tester->getAccessToken(), $mot->getMotTestNumber(), $rfrId);

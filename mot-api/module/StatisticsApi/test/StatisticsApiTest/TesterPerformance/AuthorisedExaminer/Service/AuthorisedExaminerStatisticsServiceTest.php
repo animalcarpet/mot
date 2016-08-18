@@ -2,9 +2,8 @@
 
 namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\AuthorisedExaminer\Service;
 
-use Doctrine\ORM\EntityManager;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\AuthorisedExaminer\Mapper\AuthorisedExaminerSiteMapper;
-use Dvsa\Mot\Api\StatisticsApi\TesterPerformance\AuthorisedExaminer\Service\AuthorisedExaminerStatisticsService;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\AuthorisedExaminer\Mapper\AuthorisedExaminerSiteMapper;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\AuthorisedExaminer\Service\AuthorisedExaminerStatisticsService;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtOrganisation;
 use DvsaCommon\Enum\SiteContactTypeCode;
@@ -22,7 +21,7 @@ use DvsaEntities\Repository\SiteRepository;
 class AuthorisedExaminerStatisticsServiceTest extends \PHPUnit_Framework_TestCase
 {
     const AE_ID = 1;
-    /** @var \PHPUnit_Framework_MockObject_MockObject | AuthorisedExaminerStatisticsService */
+    /** @var \PHPUnit_Framework_MockObject_MockObject | \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\AuthorisedExaminer\Service\AuthorisedExaminerStatisticsService */
     protected $authorisedExaminerStatisticService;
     /** @var \PHPUnit_Framework_MockObject_MockObject | SiteRepository */
     private $siteRepository;
@@ -41,7 +40,7 @@ class AuthorisedExaminerStatisticsServiceTest extends \PHPUnit_Framework_TestCas
         $this->organisationRepository = XMock::of(OrganisationRepository::class);
         $this->authorisedExaminerSiteMapper = XMock::of(AuthorisedExaminerSiteMapper::class);
         $this->siteRepository = XMock::of(SiteRepository::class);
-        $this->authorisedExaminerStatisticService = new AuthorisedExaminerStatisticsService(
+        $this->authorisedExaminerStatisticService = new \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\AuthorisedExaminer\Service\AuthorisedExaminerStatisticsService(
             $this->siteRepository, $this->organisationRepository, $this->authorisationService, $this->authorisedExaminerSiteMapper
         );
     }

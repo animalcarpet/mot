@@ -8,7 +8,6 @@ import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.HomePage;
 import uk.gov.dvsa.ui.pages.Page;
-import uk.gov.dvsa.ui.pages.login.LoginPage;
 
 public class GiveFeedbackPage extends Page {
 
@@ -27,23 +26,21 @@ public class GiveFeedbackPage extends Page {
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
     }
 
-    public LoginPage clickCancelAndReturn() {
+    public HomePage clickCancelAndReturnHome() {
         cancelAndReturnHomeLink.click();
-        return MotPageFactory.newPage(driver, LoginPage.class);
+        return MotPageFactory.newPage(driver, HomePage.class);
     }
 
-    public SurveyThankYouPage submitCompletedFeedback() {
+    public <T extends Page> T submitFeedback(boolean isEmpty, Class<T> clazz) {
+        if (isEmpty) {
+            return clickSendFeedback(clazz);
+        }
         verySatisfiedOption.click();
-        return submitSurvey();
+        return clickSendFeedback(clazz);
     }
 
-    public SurveyThankYouPage submitEmptyFeedback() {
-        return submitSurvey();
-    }
-
-    private SurveyThankYouPage submitSurvey() {
+    public <T extends Page> T clickSendFeedback(Class<T> clazz) {
         sendFeedback.click();
-        return MotPageFactory.newPage(driver, SurveyThankYouPage.class);
+        return MotPageFactory.newPage(driver, clazz);
     }
-
 }
