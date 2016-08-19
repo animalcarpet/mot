@@ -10,6 +10,7 @@ import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.mot.DefectsPage;
+import uk.gov.dvsa.ui.pages.mot.RemoveDefectPage;
 import uk.gov.dvsa.ui.pages.mot.TestResultsEntryNewPage;
 
 import java.io.IOException;
@@ -28,6 +29,23 @@ public class RemoveDefectsPageTests extends DslTest {
         Site site = siteData.createSite();
         tester = userData.createTester(site.getId());
         vehicle = vehicleData.getNewVehicle(tester);
+    }
+
+    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-2405"}, dataProvider = "getData",
+            description = "Checks that the Remove a defect page has the correct breadcrumb and button text")
+    public void testRemoveDefectPageElements(Defect defect) throws IOException, URISyntaxException {
+
+        // Given I am on the defects screen with a defect as a tester
+        DefectsPage defectsPage = pageNavigator.gotoDefectsPageWithDefect(tester, vehicle, defect);
+
+        // When I navigate to remove a defect page
+        RemoveDefectPage removeDefectPage = defectsPage.navigateToRemoveDefectPage(defect);
+
+        // Then the breadcrumb is correctly displayed
+        assertThat(removeDefectPage.checkBreadcrumbExists(), is(true));
+
+        // And the remove button is correctly displayed
+        assertThat(removeDefectPage.checkRemoveButtonExists(), is(true));
     }
 
     @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-2405"}, expectedExceptions = TimeoutException.class,

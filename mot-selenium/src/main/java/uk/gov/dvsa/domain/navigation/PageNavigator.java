@@ -96,6 +96,14 @@ public class PageNavigator {
                 defect.getCategoryPath()).navigateToAddDefectPage(defect).clickAddDefectButton();
     }
 
+    public DefectCategoriesPage gotoDefectCategoriesPageWithDefect(User user, Vehicle vehicle, Defect defect) throws URISyntaxException, IOException {
+        return gotoTestResultsEntryNewPage(user, vehicle).clickAddDefectButton()
+                .navigateToDefectCategory(defect.getCategoryPath())
+                .navigateToAddDefectPage(defect)
+                .clickAddDefectButton()
+                .clickReturnToDefectCategoriesLink();
+    }
+
     public TestResultsEntryNewPage gotoTestResultsPageWithDefect(User user, Vehicle vehicle, Defect defect) throws URISyntaxException, IOException {
         return gotoTestResultsEntryNewPage(user, vehicle).clickAddDefectButton().navigateToDefectCategory(
                 defect.getCategoryPath()).navigateToAddDefectPage(defect).clickAddDefectButton().clickFinishAndReturnButton();

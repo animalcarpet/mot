@@ -29,13 +29,6 @@ public class RemoveDefectPage extends Page {
 
     @Override
     protected boolean selfVerify() {
-        //Check breadcrumb
-        assertThat(globalBreadcrumb.getText().contains(BREADCRUMB_TEXT + defectType), Is.is(true));
-
-        //Check remove button
-        assertThat(removeDefectButton.getText().contains(PAGE_TITLE + defectType), Is.is(true));
-
-        //Check page title
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE + defectType);
     }
 
@@ -47,5 +40,13 @@ public class RemoveDefectPage extends Page {
     public <T extends Page> T removeDefectAndReturnToPage(Class<T> returnPage) {
         removeDefectButton.click();
         return MotPageFactory.newPage(driver, returnPage);
+    }
+
+    public boolean checkBreadcrumbExists() {
+        return globalBreadcrumb.getText().contains(BREADCRUMB_TEXT + defectType);
+    }
+
+    public boolean checkRemoveButtonExists() {
+        return removeDefectButton.getText().contains(PAGE_TITLE + defectType);
     }
 }
