@@ -42,6 +42,8 @@ module.exports = function (grunt, config) {
         var opcache_ini_file = 'opcache.ini';
         var xdebug_ini_file = 'xdebug.ini';
 
+        var trace_file_command = 'sudo tail -n 40 -f /var/log';
+
         grunt.config('sshexec', {
             options: {
                 host: dev2_ssh_options.host,
@@ -339,15 +341,45 @@ module.exports = function (grunt, config) {
             },
             trace_api_log: {
                 options: dev2_ssh_options,
-                command: 'sudo  tail -f /var/log/dvsa/mot-api.log'
+                command: trace_file_command + '/dvsa/mot-api.log'
             },
             trace_web_log: {
                 options: dev_ssh_options,
-                command: 'sudo tail -f /var/log/dvsa/mot-webfrontend.log'
+                command: trace_file_command + '/dvsa/mot-webfrontend.log'
             },
             trace_mysql_log: {
                 options: dev_ssh_options,
-                command: 'sudo tail -f /var/log/mysql/general.log'
+                command: trace_file_command + '/mysql/general.log'
+            },
+            trace_api_access_log: {
+                options: dev2_ssh_options,
+                command: trace_file_command + '/httpd/mot-api_access.log'
+            },
+            trace_frontend_access_log: {
+                options: dev_ssh_options,
+                command: trace_file_command + '/httpd/dev.motdev.org.uk_ssl_access_ssl.log'
+            },
+            trace_api_system_log: {
+                options: dev2_ssh_options,
+                command: trace_file_command + '/messages'
+            },
+            trace_frontend_system_log: {
+                options: dev_ssh_options,
+                command: trace_file_command + '/messages'
+            },
+            trace_testsupport_access_log: {
+                options: dev_ssh_options,
+                command: trace_file_command + '/httpd/mot-testsupport_access.log'
+            },
+            trace_testsupport_error_log: {
+                options: dev_ssh_options,
+                command: trace_file_command + '/httpd/mot-testsupport_error.log'
+            },
+            trace_jasper_access_log: {
+                options: dev_ssh_options,
+                command: function(){
+                    return trace_file_command + '/tomcat/localhost_access_log.' + new Date().toISOString().substr(0, 10) + '.txt'
+                }
             },
             password_policy_show: {
                 command: 'cd /etc/openam/opends/bin/ && sudo ./dsconfig  get-password-policy-prop  \
