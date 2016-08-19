@@ -359,6 +359,14 @@ module.exports = function (grunt, config) {
                 options: dev_ssh_options,
                 command: trace_file_command + '/httpd/dev.motdev.org.uk_ssl_access_ssl.log'
             },
+            trace_api_error_log: {
+                options: dev2_ssh_options,
+                command: trace_file_command + '/httpd/mot-api_error.log'
+            },
+            trace_frontend_error_log: {
+                options: dev_ssh_options,
+                command: trace_file_command + '/httpd/dev.motdev.org.uk_ssl_error_ssl.log'
+            },
             trace_api_system_log: {
                 options: dev2_ssh_options,
                 command: trace_file_command + '/messages'
