@@ -280,7 +280,6 @@ wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
         stage 'Selenium Regression tests'
         sh 'set +x; echo -e "\033[34mSelenium Regression tests\033[0m"'
         run_selenium("${SELENIUM_HUB}","regression.xml")
-        step([$class: 'ArtifactArchiver', artifacts: 'selenium-screenshots/'])
     }
   }} //wrappers
 }
