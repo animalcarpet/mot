@@ -14,7 +14,7 @@ import uk.gov.dvsa.ui.pages.PageLocator;
 import uk.gov.dvsa.ui.pages.braketest.BrakeTestConfigurationPage;
 import uk.gov.dvsa.ui.pages.braketest.BrakeTestResultsPage;
 
-public class TestResultsEntryNewPage extends Page implements TestResultsEntryPageInterface {
+public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage implements TestResultsEntryPageInterface {
 
     public static final String PATH = "/mot-test";
 
@@ -30,10 +30,6 @@ public class TestResultsEntryNewPage extends Page implements TestResultsEntryPag
     @FindBy(id = "addBrakeTestButton") private WebElement addBrakeTest;
     @FindBy(id = "reviewTest") private WebElement reviewTest;
     @FindBy(id = "cancelTest") private WebElement cancelTest;
-    @FindBy(id = "validation-message--success") private WebElement validationMessageSuccess;
-    @FindBy(css = "#rfrList") private WebElement reasonsForRejectionList;
-    @FindBy(xpath = ".//*[@id='rfrList']//*[@class='defect__title']") private WebElement reasonForRejectionTitle;
-    @FindBy(xpath = "//*[@id='rfrList']//a[contains(., 'Remove')]") private WebElement removeDefectLink;
     @FindBy(id = "reviewTest") private WebElement reviewTestButton;
     @FindBy(id = "addOdometerReadingButton") private WebElement addOdometerReading;
     @FindBy(id = "odometer_submit") private WebElement odometerSubmit;
@@ -142,22 +138,7 @@ public class TestResultsEntryNewPage extends Page implements TestResultsEntryPag
     }
 
     public boolean isOdometerReadingUpdateSuccessMessageDisplayed(){
-        return validationMessageSuccess.getText().equals("The odometer reading has been updated");
-    }
-
-    public RemoveDefectPage navigateToRemoveDefectPage(Defect defect) {
-        removeDefectLink.click();
-
-        return new RemoveDefectPage(driver, defect.getAddOrRemovalType());
-    }
-
-    public boolean isDefectRemovedSuccessMessageDisplayed(Defect defect) {
-        return validationMessageSuccess.getText().equals(
-                String.format("This %s has been removed:\n%s", defect.getAddOrRemovalType(), defect.getAddOrRemoveName()));
-    }
-
-    public boolean isDefectInReasonsForRejection(Defect defect) {
-        return reasonForRejectionTitle.isDisplayed() && reasonForRejectionTitle.getText().contains(defect.getDefectName());
+        return validationMessage.getText().equals("The odometer reading has been updated");
     }
 
     public Boolean isClickReviewTestButtonPresent(){

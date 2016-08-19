@@ -7,7 +7,7 @@ import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
-public class DefectCategoriesPage extends Page {
+public class DefectCategoriesPage extends AbstractDefectsBasketPage {
 
     private static final String PAGE_TITLE = "Defect categories";
 
