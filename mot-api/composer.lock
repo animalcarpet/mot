@@ -1850,7 +1850,7 @@
                 "type": "tar",
                 "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-6.0.0-5b423f.tar",
                 "reference": "ebfc1e96a40448b001530bb3e31fcaff969058bc",
-                "shasum": "28983842f4b6eb075da19e1d0a98479316622385"
+                "shasum": "e9843adea2841f677f2c3dd68c6b2fcb307b8298"
             },
             "require": {
                 "guzzlehttp/guzzle": "~6.1",
