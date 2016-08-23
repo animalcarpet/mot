@@ -16,7 +16,7 @@
     "slot-purchase/backend-api": "^4.0.1",
     "danielstjules/stringy": "~2.0",
     "aws/aws-sdk-php": "^3.9",
-    "mot/api-client-php": "dev-master",
+    "mot/api-client-php": "~6.0.0",
     "noiselabs/zf-debug-utils": "^0.3"
   },
   "autoload" : {

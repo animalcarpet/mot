@@ -27,8 +27,18 @@ public class Vehicle {
     private String registrationDvla;
     private String transmissionType;
     private String vehicleClass;
+    private String version;
     private String vin;
     private String weight;
+
+    public String getVersion() {
+        return version;
+    }
+
+    public Vehicle setVersion(String version) {
+        this.version = version;
+        return this;
+    }
 
     public String getAmendedOn() {
         return amendedOn;

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ea5990cc78fc990d5d03b134aef58096",
-    "content-hash": "f6ae5862b0b4d6171de86414fdece7b7",
+    "hash": "22c96c9cbbcfce958b70d61869daccea",
+    "content-hash": "3f552d0e5e6760234526c4e8e2c861b3",
     "packages": [
         {
             "name": "cpms/client",
@@ -581,12 +581,6 @@
                     "homepage": "http://www.spiffyjr.me/"
                 },
                 {
-                    "name": "Marco Pivetta",
-                    "email": "ocramius@gmail.com",
-                    "homepage": "http://ocramius.github.com/",
-                    "role": "Developer"
-                },
-                {
                     "name": "Evan Coury",
                     "email": "me@evancoury.com",
                     "homepage": "http://blog.evan.pro/"
@@ -594,6 +588,11 @@
                 {
                     "name": "Guilherme Blanco",
                     "email": "guilhermeblanco@hotmail.com"
+                },
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com",
+                    "homepage": "http://marco-pivetta.com/"
                 }
             ],
             "description": "Zend Framework 2 Module that provides Doctrine ORM functionality",
@@ -1658,11 +1657,17 @@
         },
         {
             "name": "mot/api-client-php",
-            "version": "dev-master",
+            "version": "6.0.0",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/api-client-php.git",
-                "reference": "db2a9f4a03137a6137e8d97d159e85372ffe0c59"
+                "reference": "ebfc1e96a40448b001530bb3e31fcaff969058bc"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-6.0.0-5b423f.tar",
+                "reference": "ebfc1e96a40448b001530bb3e31fcaff969058bc",
+                "shasum": "28983842f4b6eb075da19e1d0a98479316622385"
             },
             "require": {
                 "guzzlehttp/guzzle": "~6.1",
@@ -1719,7 +1724,7 @@
                     "email": "a.bahman@kainos.com"
                 }
             ],
-            "time": "2016-06-10 06:58:22"
+            "time": "2016-08-19 10:04:59"
         },
         {
             "name": "noiselabs/zf-debug-utils",
@@ -2400,7 +2405,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/zendframework/ZendPdf/zipball/ebdb5723df7a33af5b4247999188db03b241f4d0",
-                "reference": "041f90c339cff63a3c4d03a28ef1ea5188059793",
+                "reference": "ebdb5723df7a33af5b4247999188db03b241f4d0",
                 "shasum": ""
             },
             "require": {
@@ -2428,10 +2433,6 @@
                 "pdf",
                 "zf2"
             ],
-            "support": {
-                "source": "https://github.com/zendframework/ZendPdf/tree/release-2.0.2",
-                "issues": "https://github.com/zendframework/ZendPdf/issues"
-            },
             "time": "2012-11-16 11:16:01"
         },
         {
@@ -3489,7 +3490,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/ZendDeveloperTools/zipball/4d8a2e4a56b9620fb986657e0e701e1e65bfc7a5",
+                "url": "https://api.github.com/repos/zendframework/ZendDeveloperTools/zipball/b2509f8e62b018fc9d70ad126431d01ba0de6eed",
                 "reference": "55432ef26445ce522cb2b146a0f0ea110d499f81",
                 "shasum": ""
             },
@@ -3675,7 +3676,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "dvsa/dvsa-document-module": 20,
-        "mot/api-client-php": 20,
         "zendframework/zftool": 20,
         "zendframework/zend-developer-tools": 20
     },
