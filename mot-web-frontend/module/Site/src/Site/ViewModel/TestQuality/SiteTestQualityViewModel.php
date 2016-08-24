@@ -100,7 +100,7 @@ class SiteTestQualityViewModel
 
         if ($isReturnLinkToAETQI)
         {
-            $this->returnLink = new UrlPresenterData(self::RETURN_TO_AE_TQI, AERouteList::AE_TEST_QUALITY, ['id' => $this->site->getOrganisation()->getId()]);
+            $this->returnLink = new UrlPresenterData(self::RETURN_TO_AE_TQI, AeRouteList::AE_TEST_QUALITY, ['id' => $this->site->getOrganisation()->getId()]);
         } else {
             $this->returnLink = new UrlPresenterData(self::RETURN_TO_VTS, VtsRouteList::VTS, ['id' => $this->getSiteId()]);
         }

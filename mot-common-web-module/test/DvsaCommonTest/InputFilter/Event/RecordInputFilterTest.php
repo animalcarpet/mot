@@ -3,7 +3,7 @@
 namespace ApplicationTest\InputFilter\Event;
 
 use DvsaCommon\Enum\EventTypeCode;
-use DvsaCommon\Factory\inputFilter\Event\RecordInputFilterFactory;
+use DvsaCommon\Factory\InputFilter\Event\RecordInputFilterFactory;
 use DvsaCommon\InputFilter\Event\RecordInputFilter;
 use DvsaCommonTest\Bootstrap;
 

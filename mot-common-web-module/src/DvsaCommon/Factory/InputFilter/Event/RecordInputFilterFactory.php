@@ -6,7 +6,7 @@
  * Time: 11:39
  */
 
-namespace DvsaCommon\Factory\inputFilter\Event;
+namespace DvsaCommon\Factory\InputFilter\Event;
 
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\FactoryInterface;
