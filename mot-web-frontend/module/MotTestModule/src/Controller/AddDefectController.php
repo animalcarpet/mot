@@ -9,15 +9,16 @@ namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 
 use Dashboard\Controller\UserHomeController;
 use Dvsa\Mot\Frontend\MotTestModule\Exception\DefectTypeNotFoundException;
+use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyContextProvider;
+use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Defect;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
-use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
-use Zend\Authentication\AuthenticationService;
+use Zend\Http\Response;
 use Zend\View\Model\ViewModel;
 
 class AddDefectController extends AbstractDvsaMotTestController
@@ -30,12 +31,39 @@ class AddDefectController extends AbstractDvsaMotTestController
     const DEFECT_TYPE_PRS = 'prs';
     const DEFECT_TYPE_FAILURE = 'failure';
 
+    const CONTENT_HEADER_TYPE__SEARCH_RESULTS = 'Search for a defect';
+    const CONTENT_HEADER_TYPE__BROWSE_DEFECTS = 'Add a defect';
+
+    /**
+     * @var DefectsJourneyUrlGenerator
+     */
+    private $defectsJourneyUrlGenerator;
+
+    /**
+     * @var DefectsJourneyContextProvider
+     */
+    private $defectsJourneyContextProvider;
+
+    /**
+     * AddDefectController constructor.
+     *
+     * @param DefectsJourneyUrlGenerator    $defectsJourneyUrlGenerator
+     * @param DefectsJourneyContextProvider $defectsJourneyContextProvider
+     */
+    public function __construct(
+        DefectsJourneyUrlGenerator $defectsJourneyUrlGenerator,
+        DefectsJourneyContextProvider $defectsJourneyContextProvider
+    ) {
+        $this->defectsJourneyUrlGenerator = $defectsJourneyUrlGenerator;
+        $this->defectsJourneyContextProvider = $defectsJourneyContextProvider;
+    }
+
     /**
      * Handles the screen for adding a defect.
      *
      * See https://mot-rfr-production.herokuapp.com/rfr/defect?l1=0&l2=0&l3=undefined&l4=undefined&rfrIndex=0&type=Advisory
      *
-     * @return ViewModel
+     * @return ViewModel | Response
      */
     public function addAction()
     {
@@ -44,7 +72,6 @@ class AddDefectController extends AbstractDvsaMotTestController
         }
 
         $motTestNumber = $this->params()->fromRoute('motTestNumber');
-        $categoryId = $this->params()->fromRoute('categoryId');
         $defectId = $this->params()->fromRoute('defectId');
         $type = $this->params()->fromRoute('type');
 
@@ -60,8 +87,13 @@ class AddDefectController extends AbstractDvsaMotTestController
             $title = $this->createTitle($type);
             $defect = $this->getDefect($motTestNumber, $defectId);
 
-            // If the defect is added as an advisory, then display the defect's advisory text on the Add Defect page.
-            // Else, if the defect isn't added as an advisory, then display the defect's description on the Add Defect page.
+            /*
+             * If the defect is added as an advisory, then display the defect's
+             * advisory text on the Add Defect page.
+             *
+             * Else, if the defect isn't added as an advisory, then display the
+             * defect's description on the Add Defect page.
+             */
             $type === self::DEFECT_TYPE_ADVISORY ?
                 $defectDetail = $defect->getAdvisoryText() : $defectDetail = $defect->getDescription();
 
@@ -77,7 +109,6 @@ class AddDefectController extends AbstractDvsaMotTestController
             $request = $this->getRequest();
 
             if ($request->isPost()) {
-
                 $apiPath = MotTestUrlBuilder::motTestRfr($motTest->getMotTestNumber());
 
                 $locationLateral = $request->getPost('locationLateral');
@@ -104,59 +135,85 @@ class AddDefectController extends AbstractDvsaMotTestController
                         $type,
                         $defectDetail
                     ));
-                    return $this->redirect()->toUrl($this->getCategoryUrl($motTestNumber, $categoryId));
+
+                    return $this->redirect()->toUrl($this->defectsJourneyUrlGenerator->goBack());
                 }
             }
-
-        } catch (DefectTypeNotFoundException $e){
+        } catch (DefectTypeNotFoundException $e) {
             return $this->notFoundAction();
         } catch (RestApplicationException $e) {
             $errorMessages = $e->getErrors()[0];
         }
 
-        $breadcrumbs = $this->getBreadcrumbs($isDemoTest, $isReinspection, $categoryId, $title);
+        $breadcrumbs = $this->getBreadcrumbs($isDemoTest, $isReinspection, $title);
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
-        $backUrl = $this->getCategoryUrl($motTestNumber, $categoryId);
+
+        $backUrl = $this->defectsJourneyUrlGenerator->goBack();
 
         return $this->createViewModel('defects/add-defect.twig', [
             'motTestNumber' => $motTestNumber,
-            'categoryId' => $categoryId,
             'defectId' => $defectId,
             'type' => $type,
             'breadcrumbs' => $breadcrumbs,
-            'backUrl' => $backUrl,
             'errorMessages' => $errorMessages,
+            'backUrl' => $backUrl,
+            'context' => $this->defectsJourneyContextProvider->getContextForBackUrlText(),
         ]);
     }
 
     /**
-     * Get the breadcrumbs given the context of the url.
-     *
-     * @param bool $isDemo
-     * @param bool $isReinspection
-     *
-     * @param int $categoryId
+     * @param bool   $isDemo
+     * @param bool   $isReinspection
      * @param string $title
      *
      * @return array
      */
-    private function getBreadcrumbs($isDemo, $isReinspection, $categoryId, $title)
+    private function getBreadcrumbs($isDemo, $isReinspection, $title)
     {
-        $breadcrumbs = [];
-
         $motTestNumber = $this->params()->fromRoute('motTestNumber');
         $motTestResultsUrl = $this->url()->fromRoute('mot-test', ['motTestNumber' => $motTestNumber]);
-        $motAddDefectUrl = $this->getCategoryUrl($motTestNumber, $categoryId);
 
-        if ($isDemo) {
-            $breadcrumbs += [self::CONTENT_HEADER_TYPE__TRAINING_TEST => $motTestResultsUrl];
-        } elseif ($isReinspection) {
-            $breadcrumbs += [self::CONTENT_HEADER_TYPE__MOT_TEST_REINSPECTION => $motTestResultsUrl];
-        } else {
-            $breadcrumbs += [self::CONTENT_HEADER_TYPE__MOT_TEST_RESULTS => $motTestResultsUrl];
+        $context = $this->defectsJourneyContextProvider->getContext();
+        $breadcrumbs = [];
+        {
+            if ($isDemo) {
+                // Demo test
+                $breadcrumbs += [
+                    self::CONTENT_HEADER_TYPE__TRAINING_TEST => $motTestResultsUrl,
+                ];
+            } elseif ($isReinspection) {
+                // Reinspection
+                $breadcrumbs += [
+                    self::CONTENT_HEADER_TYPE__MOT_TEST_REINSPECTION => $motTestResultsUrl,
+                ];
+            } else {
+                // Normal test
+                $breadcrumbs += [
+                    self::CONTENT_HEADER_TYPE__MOT_TEST_RESULTS => $motTestResultsUrl,
+                ];
+            }
         }
-        $breadcrumbs += [ 'Add a defect' => $motAddDefectUrl];
-        $breadcrumbs += [ $title => ''];
+
+        switch ($context) {
+            case DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT: {
+                $breadcrumbs += [
+                    self::CONTENT_HEADER_TYPE__BROWSE_DEFECTS => $this->defectsJourneyUrlGenerator->goBack(),
+                ];
+                break;
+            }
+            case DefectsJourneyContextProvider::BROWSE_CATEGORIES_ROOT_CONTEXT: {
+                $breadcrumbs += [
+                    self::CONTENT_HEADER_TYPE__BROWSE_DEFECTS => $this->defectsJourneyUrlGenerator->goBack(),
+                ];
+                break;
+            }
+            case DefectsJourneyContextProvider::SEARCH_CONTEXT === $context: {
+                $breadcrumbs += [
+                    self::CONTENT_HEADER_TYPE__SEARCH_RESULTS => $this->defectsJourneyUrlGenerator->goBack(),
+                ];
+            }
+        }
+        $breadcrumbs += [$title => ''];
 
         return $breadcrumbs;
     }
@@ -225,26 +282,15 @@ class AddDefectController extends AbstractDvsaMotTestController
      */
     private function transformDefectTypeForApiPost($type)
     {
-        // Defect type 'failure' is displayed in the view, which needs transformed to 'FAIL' for posting to the API.
-        if('failure' == strtolower($type)){
+        /*
+         * Defect type 'failure' is displayed in the view, which needs
+         * transformed to 'FAIL' for posting to the API.
+         */
+        if ('failure' == strtolower($type)) {
             return 'FAIL';
         }
 
         return strtoupper($type);
-    }
-
-    /**
-     * @param int $motTestNumber
-     * @param int $categoryId
-     *
-     * @return string
-     */
-    private function getCategoryUrl($motTestNumber, $categoryId)
-    {
-        return $this->url()->fromRoute(
-            'mot-test-defects/categories/category',
-            ['motTestNumber' => $motTestNumber, 'categoryId' => $categoryId]
-        );
     }
 
     /**

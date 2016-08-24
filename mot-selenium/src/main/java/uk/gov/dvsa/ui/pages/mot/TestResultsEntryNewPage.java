@@ -164,4 +164,9 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
 
         return this;
     }
+
+    public SearchForADefectPage clickSearchForADefectButton() {
+        searchForDefect.click();
+        return new SearchForADefectPage(driver);
+    }
 }

@@ -44,7 +44,7 @@
         </div>
         <div class="action-panel__container--last">
             <a href="{{ url('mot-test-defects/categories', {motTestNumber : motTest.motTestNumber}) }}" id="addDefectButton" class="button">Add a defect</a>
-            <span class="action-panel__secondary-action">or <a href="#" id="searchForDefect">Search for a defect</a></span>
+            <span class="action-panel__secondary-action">or <a href="{{ url('mot-test-defects/search', {motTestNumber : motTest.motTestNumber}) }}" id="searchForDefect">Search for a defect</a></span>
         </div>
     </div>
 </div>

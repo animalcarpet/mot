@@ -5,7 +5,7 @@
  * @link https://gitlab.motdev.org.uk/mot/mot
  */
 
-namespace DvsaMotTestTest\Controller;
+namespace Dvsa\Mot\Frontend\MotTestModuleTest\Controller;
 
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\RemoveDefectController;

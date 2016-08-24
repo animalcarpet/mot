@@ -1,16 +1,126 @@
-<div class="message--important">
-    <p>Hi! You have hit a page with just boilerplate code. Please implement me as defined in <a href="https://jira.i-env.net/browse/{{ storyId  }}">{{ storyId }}</a>.</p>
+<header class="content-header">
+    <ul class="content-header__tertiary-list">
+        <li id="vehicleMakeModel" class="content-header__list-item--primary">{{ vehicleMakeAndModel|escape }}</li>
+        <li id="vehicleRegistration" class="content-header__list-item">{{ vehicle.registration|escape }}</li>
+        <li id="firstUsedDate" class="content-header__list-item">First used {{ vehicleFirstUsedDate|escape }}</li>
+    </ul>
+</header>
+
+{% if flashMessenger().hasSuccessMessages() %}
+    {% for message in flashMessenger().getSuccessMessages() %}
+        <div class="message--success" id="validation-message--success">
+            <p>{{ message|raw }}</p>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="defect-summary">
+    <div class="defect-summary__total">
+        <h2 class="defect-summary__total-heading">Defects</h2>
+        <ul>
+            <li><span class="badge--alert">{{ observedDefects.numberOfFailures }}</span> Failures</li>
+            <li><span class="badge--info">{{ observedDefects.numberOfPrs }}</span> PRS</li>
+            <li><span class="badge--warn">{{ observedDefects.numberOfAdvisories }}</span> Advisories</li>
+        </ul>
+        {# "Show/Hide defects button only appears when there are defects to be shown. #}
+        {% if observedDefects.hasFailuresPrsOrAdvisories %}
+            <span class="defect-summary__toggle">
+            <a href="#" data-action="showHideToggle" data-open-text="Hide defects" data-target="rfrList" id="toggleRFRList" class="toggle-switch">Show defects</a>
+        </span>
+        {% endif %}
+    </div>
+    <div id="rfrList" class="js-hidden">
+        {% include '/defects/observed-defects.twig' with {'observedDefects': observedDefects} %}
+    </div>
 </div>
 
-<table class="key-value-list">
-    <tbody>
-    <tr>
-        <th class="key-value-list__key">MOT Test Number</th>
-        <td class="key-value-list__value">{{ motTestNumber }}</td>
-    </tr>
-    <tr>
-        <th class="key-value-list__key">Component Category ID</th>
-        <td class="key-value-list__value">{{ categoryId }}</td>
-    </tr>
-    </tbody>
-</table>
+<form role="search" method="get" action="{{ url('mot-test-defects/search', {'motTestNumber' : motTestNumber}) }}">
+    <fieldset class="search-bar">
+        <label class="search-bar__label visuallyhidden" for="search-main">Search the MOT testing service</label>
+        <div class="search-bar__control-group">
+            <input class="search-bar__search-input" type="search" title="Search" id="search-main" name="q" value="{{ searchTerm }}">
+            <input type="hidden" name="p" value="{{ page }}">
+            <input class="search-bar__search-submit" type="submit" value="Search">
+        </div>
+        <span class="search-bar__secondary-action">or view <a href="{{ url('mot-test-defects/categories', {'motTestNumber' : motTestNumber}) }}">defect categories</a></span>
+    </fieldset>
+    {% if searchTerm != '' %}
+        <p class="search-bar__results">
+            Your search for <strong>"{{ searchTerm }}"</strong> returned <strong>{{ numberOfResults }}</strong> defect{% if numberOfResults != 1 %}s{% endif %}.
+        </p>
+        {% if numberOfResults == 0 %}
+            Try again with a different search term.
+        {% endif %}
+    {% endif %}
+
+</form>
+
+{% if hasResults %}
+    <ol id="defects-list" class="defect-results">
+        {% for defect in defects %}
+            <li class="defect">
+                <div>
+                    <strong class="defect__title">{{ defect.description }}</strong>
+                    {# Only show advisory text if the defect is an advisory. #}
+                    {% if defect.isAdvisory %}
+                        <p class="defect__meta">{{ defect.advisoryText }}</p>
+                    {% endif %}
+                    {# Only show inspection manual reference if the defect has an inspection manual reference. #}
+                    {% if defect.inspectionManualReference != '' %}
+                        <p class="defect__reference"><a href="{{ url('user-home') ~ defect.inspectionManualReferenceUrl }}" target="_blank" rel="external">{{ defect.inspectionManualReference }} </a></p>
+                    {% endif %}
+                </div>
+
+                <h4 class="visuallyhidden">Defect severity</h4>
+                <ul class="defect__add">
+                    {% if defect.isAdvisory %}
+                        <li>
+                            <a href="{{ defectJourneyUrl().toAddDefect(defect.defectId, 'advisory') }}" class="button--warn">
+                                Advisory
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if defect.isPrs %}
+                        <li>
+                            <a href="{{ defectJourneyUrl().toAddDefect(defect.defectId, 'prs') }}" class="button--info">
+                                PRS
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ defectJourneyUrl().toAddDefect(defect.defectId, 'failure') }}" class="button--alert">
+                                Failure
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if defect.isFailure %}
+                        <li>
+                            <a href="{{ defectJourneyUrl().toAddDefect(defect.defectId, 'failure') }}" class="button--alert">
+                                Failure
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ol>
+{% endif %}
+
+<div class="panel-indent">
+    <p><a href="#">Add a manual advisory</a> - only do this if you have searched for a defect and can't find a match.</p>
+</div>
+
+<nav class="content-navigation">
+    <a href="{{ url('mot-test', {'motTestNumber' : motTestNumber}) }}" class="button">Finish and return to MOT test results</a>
+    <ul class="content-navigation__secondary">
+    </ul>
+</nav>
+
+<!-- {{ inlineScript().appendFile("/assets/javascripts/dvsa.js") }} -->
+
+{# JavaScript for the "Show/Hide defects button. #}
+{{ inlineScript().captureStart() }}
+$(document).ready(function() {
+var showerHider = new DVSA.Modules.DVSAShowHideToggle.showerHider({});
+showerHider.init();
+});
+{{ inlineScript().captureEnd() }}
