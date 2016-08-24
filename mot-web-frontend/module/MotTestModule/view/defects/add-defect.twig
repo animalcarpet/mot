@@ -7,16 +7,8 @@
     </div>
 {% endif %}
 
-<form name="itemDetailsForm"
-      action="{{
-        url('mot-test-defects/categories/category/add-defect',
-                {'motTestNumber': motTestNumber,
-                    'categoryId': categoryId,
-                    'defectId': defectId,
-                    'type': type
-                }
-        )
-      }}" id="itemDetails" method="post">
+<form name="itemDetailsForm" method="post"
+      action="{{ defectJourneyUrl().toAddDefect(defectId, type) }}">
     {{ csrfToken() }}
     <fieldset>
         <h3 class="heading-medium">Location</h3>
@@ -71,7 +63,7 @@
 
         <ul class="content-navigation__secondary">
             <li>
-                <a href="{{ backUrl }}" class="back-to-open-list">Cancel and return to defects</a>
+                <a href="{{ backUrl }}" class="back-to-open-list">Cancel and return to {{ context }}</a>
             </li>
         </ul>
     </nav>

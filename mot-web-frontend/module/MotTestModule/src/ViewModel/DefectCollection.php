@@ -30,7 +30,7 @@ class DefectCollection extends ArrayCollection
      * Non-component advisories do not have inspection manual references
      * or advisory texts.
      */
-    const NON_COMPONENT_ADVISORIES_CATEGORY_NAME = 'Non-component advisories';
+    const NON_COMPONENT_ADVISORIES_ID = 10000;
 
     /**
      * DefectCollection constructor.
@@ -63,7 +63,7 @@ class DefectCollection extends ArrayCollection
                 $defectCategoryName.' '.$defectFromApi['description'],
                 '',
                 !self::isDefectInNonComponentAdvisoriesCategory(
-                    $componentCategoriesFromApi['testItemSelector']['name']
+                    $defectFromApi['testItemSelectorId']
                 ) ? $defectCategoryName.' '.$defectFromApi['advisoryText']
                   : '',
                 !self::isDefectInNonComponentAdvisoriesCategory(
@@ -82,6 +82,43 @@ class DefectCollection extends ArrayCollection
     }
 
     /**
+     * @param array $searchResults
+     *
+     * @return DefectCollection
+     */
+    public static function fromSearchResults(array $searchResults)
+    {
+        $defects = [];
+
+        foreach ($searchResults['data']['reasonsForRejection'] as $searchResult) {
+            $defectBreadcrumbParts = explode('>', $searchResult['testItemSelectorName']);
+            $defectCategoryName = end($defectBreadcrumbParts);
+
+            $defect = new Defect(
+                $searchResult['rfrId'],
+                $searchResult['testItemSelectorId'],
+                $searchResult['description'],
+                $searchResult['testItemSelectorName'],
+                !self::isDefectInNonComponentAdvisoriesCategory(
+                    $searchResult['testItemSelectorId']
+                ) ? $defectCategoryName.' '.$searchResult['advisoryText']
+                    : '',
+                !self::isDefectInNonComponentAdvisoriesCategory(
+                    $searchResult['testItemSelector']
+                ) ? $searchResult['inspectionManualReference']
+                    : '',
+                $searchResult['isAdvisory'],
+                $searchResult['isPrsFail'],
+                !$searchResult['isPrsFail'] && !$searchResult['isAdvisory']
+            );
+
+            array_push($defects, $defect);
+        }
+
+        return new self($defects);
+    }
+
+    /**
      * @return Defect[]
      */
     public function getDefects()
@@ -90,12 +127,12 @@ class DefectCollection extends ArrayCollection
     }
 
     /**
-     * @param $categoryOfDefect
+     * @param $testItemSelectorId
      *
      * @return bool
      */
-    public static function isDefectInNonComponentAdvisoriesCategory($categoryOfDefect)
+    public static function isDefectInNonComponentAdvisoriesCategory($testItemSelectorId)
     {
-        return $categoryOfDefect == self::NON_COMPONENT_ADVISORIES_CATEGORY_NAME ? true : false;
+        return $testItemSelectorId === self::NON_COMPONENT_ADVISORIES_ID;
     }
 }

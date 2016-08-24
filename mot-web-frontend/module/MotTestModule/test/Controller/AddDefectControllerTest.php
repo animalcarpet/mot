@@ -1,10 +1,12 @@
 <?php
 
-namespace DvsaMotTestTest\Controller;
+namespace Dvsa\Mot\Frontend\MotTestModuleTest\Controller;
 
 use Application\Service\LoggedInUserManager;
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\AddDefectController;
+use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyContextProvider;
+use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Dto\Common\MotTestDto;
@@ -23,7 +25,20 @@ use Zend\View\Model\ViewModel;
  */
 class AddDefectControllerTest extends AbstractFrontendControllerTestCase
 {
+    /**
+     * @var LoggedInUserManager
+     */
     private $loggedInUserManagerMock;
+
+    /**
+     * @var DefectsJourneyUrlGenerator
+     */
+    private $defectsJourneyUrlGeneratorMock;
+
+    /**
+     * @var DefectsJourneyContextProvider
+     */
+    private $defectsJourneyContextProviderMock;
 
     protected function setUp()
     {
@@ -32,7 +47,19 @@ class AddDefectControllerTest extends AbstractFrontendControllerTestCase
         $this->serviceManager->setAllowOverride(true);
         $this->setServiceManager($this->serviceManager);
 
-        $this->setController(new AddDefectController());
+        $this->defectsJourneyUrlGeneratorMock = $this
+            ->getMockBuilder(DefectsJourneyUrlGenerator::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->defectsJourneyContextProviderMock = $this
+            ->getMockBuilder(DefectsJourneyContextProvider::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->setController(
+            new AddDefectController($this->defectsJourneyUrlGeneratorMock, $this->defectsJourneyContextProviderMock)
+        );
         $this->getController()->setServiceLocator($this->serviceManager);
 
         $this->loggedInUserManagerMock = XMock::of(

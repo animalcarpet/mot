@@ -109,6 +109,10 @@ public class PageNavigator {
                 defect.getCategoryPath()).navigateToAddDefectPage(defect).clickAddDefectButton().clickFinishAndReturnButton();
     }
 
+    public SearchForADefectPage gotoSearchForADefectPage(User user, Vehicle vehicle) throws URISyntaxException, IOException {
+        return gotoTestResultsEntryNewPage(user, vehicle).clickSearchForADefectButton();
+    }
+
     public ReTestResultsEntryPage gotoReTestResultsEntryPage(User user, Vehicle vehicle) throws URISyntaxException, IOException {
         injectOpenAmCookieAndNavigateToPath(user, VehicleSearchPage.PATH);
 
