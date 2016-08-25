@@ -73,11 +73,24 @@ echo $this->partial('infoMessages', ['getFromFlash' => true]);
                     <textarea rows="5" cols="50" id="cancelComment" name="cancelComment"><?php echo $this->escapeHtml($cancelComment); ?></textarea>
                     <div class="row">
                         <div class="col-sm-8">
+
+                            <?php
+                            if ($this->canTestWithoutOtp()) {
+                                echo $this->partial(
+                                    '2faDeclaration',
+                                    [
+                                        'declarationMessage' => 'By cancelling this test you confirm that you ' .
+                                            'have carried the MOT test to the point of the cancellation in line ' .
+                                            'with DVSA conditions for MOT testing.'
+                                    ]
+                                );
+                            }
+                            ?>
                             <?php
                             echo $this->partial(
                                 'otpInput',
                                 [
-                                    'canTestWithoutOpt' => false,
+                                    'canTestWithoutOpt' => $this->canTestWithoutOtp(),
                                     'errorMessage' => $this->otpErrorMessage,
                                     'shortErrorMessage' => $this->otpErrorShortMessage
                                 ]

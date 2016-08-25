@@ -42,6 +42,20 @@ class SitePositionMapper extends Mapper implements BusinessPositionMapperInterfa
 
     /**
      * @param int $siteId
+     * @param int $nomineeId
+     * @param string $roleCode
+     * @return array
+     */
+    public function update($siteId, $nomineeId, $roleCode)
+    {
+        $url = SiteUrlBuilder::site($siteId)->position()->toString();
+        $data = ['nomineeId' => $nomineeId, 'roleCode' => $roleCode];
+
+        return $this->client->put($url, $data);
+    }
+
+    /**
+     * @param int $siteId
      * @param int $positionId
      */
     public function deletePosition($siteId, $positionId)

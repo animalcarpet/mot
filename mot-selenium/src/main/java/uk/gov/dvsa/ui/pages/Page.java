@@ -18,6 +18,9 @@ public abstract class Page {
     @FindBy(tagName = "h1") private WebElement title;
     protected MotAppDriver driver;
 
+    @FindBy(className = "header-user__name") protected WebElement headerUserName;
+    @FindBy(className = "header-user__menu") protected WebElement headerMenu;
+
     public Page(final MotAppDriver driver) {
         this.driver = driver;
         DvsaElementLocatorFactory factory = new DvsaElementLocatorFactory(driver);

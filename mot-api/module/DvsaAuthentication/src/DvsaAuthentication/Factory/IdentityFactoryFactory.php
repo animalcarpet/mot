@@ -8,6 +8,7 @@ use DvsaAuthentication\IdentityFactory\CacheableIdentityFactory;
 use DvsaAuthentication\IdentityFactory\DoctrineIdentityFactory;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Repository\PersonRepository;
+use DvsaFeature\FeatureToggles;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -24,8 +25,9 @@ class IdentityFactoryFactory implements FactoryInterface
     {
         $entityManager = $serviceLocator->get(EntityManager::class);
         $personRepository = $entityManager->getRepository(Person::class);
+        $featureToggles = $serviceLocator->get('Feature\FeatureToggles');
 
-        $identityFactory = new DoctrineIdentityFactory($personRepository);
+        $identityFactory = new DoctrineIdentityFactory($personRepository, $featureToggles);
 
         $config = $serviceLocator->get('config');
 

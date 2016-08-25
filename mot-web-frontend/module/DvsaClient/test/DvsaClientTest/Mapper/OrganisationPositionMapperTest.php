@@ -57,6 +57,27 @@ class OrganisationPositionMapperTest extends AbstractMapperTest
         $this->assertEquals($expect, $actual);
     }
 
+    public function testUpdatePosition()
+    {
+        $nomineeId = 999;
+        $roleId    = 888;
+
+        $expect = 'expectResult';
+
+        $this->setupClientMockPut(
+            OrganisationUrlBuilder::position(self::ORG_ID),
+            [
+                'nomineeId' => $nomineeId,
+                'roleId'    => $roleId
+            ],
+            ['data' => $expect]
+        );
+
+        $actual = $this->mapper->updatePosition(self::ORG_ID, $nomineeId, $roleId);
+
+        $this->assertEquals($expect, $actual);
+    }
+
     public function testDelete()
     {
         $this->setupClientMockDelete(

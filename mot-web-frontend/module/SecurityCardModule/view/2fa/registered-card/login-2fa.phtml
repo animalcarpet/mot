@@ -1,0 +1,47 @@
+<?php
+use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Controller\RegisteredCardController;
+/** @var \Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Form\SecurityCardValidationForm $form */
+?>
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <p class="lede">You are using the card with serial number <strong> <?php echo $this->escapeHtml($this->serialNumber); ?></strong>. Press the button on the security card to display the PIN.</p>
+        <p class="lede visuallyhidden interim-pin">You are using a temporary PIN.</p>
+        <details role="group" class="new-cardenter">
+            <summary role="button" aria-controls="details-content-0" aria-expanded="false" tabindex="0">
+                <span class="summary">Where to find the security card PIN</span>
+            </summary>
+            <div class="panel panel-indent" id="details-content-0" aria-hidden="true" style="display: none;">
+                <p><strong>PIN:</strong> generate a new PIN by pressing the button on the front of the card.</p>
+                <img src="/assets/images/register-new-card-pin.png" width="516" height="135">
+            </div>
+        </details>
+        <br>
+
+        <?php echo $this->partial('zendFormErrorMessages', ['form' => $form]); ?>
+        <form id="Login" name="Login" method="post" action="<?php echo $this->url(RegisteredCardController::ROUTE); ?>" >
+            <?php echo $this->csrfToken(); ?>
+            <fieldset>
+                <?php
+                echo $this->partial(
+                    'partial/gds/form/control',
+                    [
+                        'element' => $form->getPinField()
+
+                    ]
+                );
+                ?>
+            </fieldset>
+
+            <a href="<?php echo $this->url('lost-or-forgotten-card') ?>">Lost, forgotten or damaged security card?</a>
+
+            <nav class="content-navigation">
+                <input type= "submit" class="button" name="Login.Submit" value="Sign in">
+                <ul class="content-navigation__secondary">
+                    <li>
+                        <a href="<?php echo $this->url('logout'); ?>">Cancel and return to sign in</a>
+                    </li>
+                </ul>
+            </nav>
+        </form>
+    </div>
+</div>

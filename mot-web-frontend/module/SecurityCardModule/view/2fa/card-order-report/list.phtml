@@ -1,0 +1,43 @@
+<?php
+$this->layout('layout/layout-govuk.phtml');
+$this->layout()->setVariables(['pageTitle' => "List of ordered security cards from the last 7 days"]);
+
+$rows = $viewModel['rows'];
+?>
+
+
+<table class="table-default" id="security-card-order-report-list">
+    <thead>
+    <tr class="">
+        <th>Date</th>
+        <th class="numeric">Number of cards requested</th>
+        <th class="numeric ">Order list</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <?php use DvsaCommon\Date\DateTimeDisplayFormat;
+
+    foreach ($rows as $idx => $row) : ?>
+        <tr id="order-list-row-<?php echo $idx; ?>">
+            <td class=""><?php echo DateTimeDisplayFormat::textDateShort($row['date']) ?></td>
+            <td class="numeric"><?php echo $row['count'] ?></td>
+            <td class="numeric">
+                <a href="<?php echo $this->url('security-card-order-report-list/download-csv',
+                    ['date' => $row['date']]); ?>">download (CSV)
+                </a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+<nav class="content-navigation">
+    <ul class="content-navigation__secondary">
+        <li>
+            <a href="<?php echo $this->url('user-home'); ?>">Cancel</a>
+        </li>
+    </ul>
+
+</nav>
+

@@ -7,19 +7,23 @@
 
 namespace Dvsa\Mot\Frontend\PersonModuleTest\Security;
 
+use Core\Service\MotFrontendAuthorisationServiceInterface;
 use Dashboard\Model\PersonalDetails;
 use Dashboard\Service\TradeRolesAssociationsService;
+use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuard;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
+use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Model\TesterAuthorisation;
 use DvsaCommon\Model\TesterGroupAuthorisationStatus;
-use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\Enum\RoleCode;
 use DvsaCommon\Model\OrganisationBusinessRoleCode;
+use DvsaCommonTest\TestUtils\XMock;
+use DvsaFeature\FeatureToggles;
 use InvalidArgumentException;
 
 class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
@@ -28,7 +32,7 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
     const TARGET_PERSON_ID = 2;
 
     /**
-     * @var MotAuthorisationServiceInterface
+     * @var MotFrontendAuthorisationServiceInterface
      */
     private $authorisationService;
 
@@ -36,6 +40,11 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
      * @var MotIdentityProviderInterface
      */
     private $identityProvider;
+
+    /**
+     * @var MotIdentityInterface
+     */
+    private $identity;
 
     /**
      * @var TesterAuthorisation
@@ -62,10 +71,13 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
      */
     private $context;
 
+    /** @var  TwoFaFeatureToggle */
+    private $twoFaFeatureToggle;
+
     public function setUp()
     {
         $this->authorisationService = $this
-            ->getMockBuilder(MotAuthorisationServiceInterface::class)
+            ->getMockBuilder(MotFrontendAuthorisationServiceInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -94,6 +106,9 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->context = ContextProvider::NO_CONTEXT;
+
+        $this->twoFaFeatureToggle = XMock::of(TwoFaFeatureToggle::class);
+        $this->twoFaFeatureToggle->expects($this->any())->method('isEnabled')->willReturn(true);
     }
 
     public function testIsViewingOwnProfileWhenInTheYourProfileContext()
@@ -250,9 +265,9 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
      * @dataProvider viewDrivingLicenceProvider
      *
      * @param string $context
-     * @param array  $loggedInPerson
-     * @param array  $targetPerson
-     * @param bool   $result
+     * @param array $loggedInPerson
+     * @param array $targetPerson
+     * @param bool $result
      */
     public function testViewDrivingLicence($context, array $loggedInPerson, array $targetPerson, $result)
     {
@@ -312,9 +327,9 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
      * @dataProvider changeEmailAddressProvider
      *
      * @param string $context
-     * @param array  $loggedInPerson
-     * @param array  $targetPerson
-     * @param bool   $result
+     * @param array $loggedInPerson
+     * @param array $targetPerson
+     * @param bool $result
      */
     public function testChangeEmailAddress($context, array $loggedInPerson, array $targetPerson, $result)
     {
@@ -364,8 +379,8 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
      * @dataProvider changeTelephoneNumberProvider
      *
      * @param string $context
-     * @param array  $loggedInPerson
-     * @param array  $targetPerson
+     * @param array $loggedInPerson
+     * @param array $targetPerson
      * @param $result
      */
     public function testChangeTelephoneNumber($context, array $loggedInPerson, array $targetPerson, $result)
@@ -453,9 +468,9 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
      * @dataProvider changeDrivingLicenceProvider
      *
      * @param string $context
-     * @param array  $loggedInPerson
-     * @param array  $targetPerson
-     * @param bool   $result
+     * @param array $loggedInPerson
+     * @param array $targetPerson
+     * @param bool $result
      */
     public function testChangeDrivingLicence($context, array $loggedInPerson, array $targetPerson, $result)
     {
@@ -819,10 +834,10 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider canViewTradeRolesProvider
      *
-     * @param array  $loggedInPerson
-     * @param array  $targetPerson
+     * @param array $loggedInPerson
+     * @param array $targetPerson
      * @param string $context
-     * @param bool   $result
+     * @param bool $result
      */
     public function testCanViewTradeRoles(array $loggedInPerson, array $targetPerson, $context, $result)
     {
@@ -1013,32 +1028,62 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 [self::LOGGED_IN_PERSON_ID, [PermissionInSystem::ALTER_TESTER_AUTHORISATION_STATUS]],
-                [self::TARGET_PERSON_ID, [RoleCode::CUSTOMER_SERVICE_OPERATIVE], AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED, null],
+                [
+                    self::TARGET_PERSON_ID,
+                    [RoleCode::CUSTOMER_SERVICE_OPERATIVE],
+                    AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED,
+                    null
+                ],
                 false,
             ],
             [
                 [self::LOGGED_IN_PERSON_ID, [PermissionInSystem::ALTER_TESTER_AUTHORISATION_STATUS]],
-                [self::TARGET_PERSON_ID, [RoleCode::CUSTOMER_SERVICE_OPERATIVE], null, AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED],
+                [
+                    self::TARGET_PERSON_ID,
+                    [RoleCode::CUSTOMER_SERVICE_OPERATIVE],
+                    null,
+                    AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED
+                ],
                 false,
             ],
             [
                 [self::LOGGED_IN_PERSON_ID, [PermissionInSystem::ALTER_TESTER_AUTHORISATION_STATUS]],
-                [self::TARGET_PERSON_ID, [RoleCode::CUSTOMER_SERVICE_OPERATIVE], AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED, AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED],
+                [
+                    self::TARGET_PERSON_ID,
+                    [RoleCode::CUSTOMER_SERVICE_OPERATIVE],
+                    AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED,
+                    AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED
+                ],
                 false,
             ],
             [
                 [self::LOGGED_IN_PERSON_ID, [PermissionInSystem::ALTER_TESTER_AUTHORISATION_STATUS]],
-                [self::TARGET_PERSON_ID, [RoleCode::CUSTOMER_SERVICE_OPERATIVE], AuthorisationForTestingMotStatusCode::QUALIFIED, null],
+                [
+                    self::TARGET_PERSON_ID,
+                    [RoleCode::CUSTOMER_SERVICE_OPERATIVE],
+                    AuthorisationForTestingMotStatusCode::QUALIFIED,
+                    null
+                ],
                 false,
             ],
             [
                 [self::LOGGED_IN_PERSON_ID, [PermissionInSystem::ALTER_TESTER_AUTHORISATION_STATUS]],
-                [self::TARGET_PERSON_ID, [RoleCode::CUSTOMER_SERVICE_OPERATIVE], null, AuthorisationForTestingMotStatusCode::QUALIFIED],
+                [
+                    self::TARGET_PERSON_ID,
+                    [RoleCode::CUSTOMER_SERVICE_OPERATIVE],
+                    null,
+                    AuthorisationForTestingMotStatusCode::QUALIFIED
+                ],
                 false,
             ],
             [
                 [self::LOGGED_IN_PERSON_ID, [PermissionInSystem::ALTER_TESTER_AUTHORISATION_STATUS]],
-                [self::TARGET_PERSON_ID, [RoleCode::CUSTOMER_SERVICE_OPERATIVE], AuthorisationForTestingMotStatusCode::QUALIFIED, AuthorisationForTestingMotStatusCode::QUALIFIED],
+                [
+                    self::TARGET_PERSON_ID,
+                    [RoleCode::CUSTOMER_SERVICE_OPERATIVE],
+                    AuthorisationForTestingMotStatusCode::QUALIFIED,
+                    AuthorisationForTestingMotStatusCode::QUALIFIED
+                ],
                 true,
             ],
         ];
@@ -1084,17 +1129,19 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
             ->createPersonProfileGuard();
         $this->assertFalse($guard->canViewAccountSecurity());
 
-        $invalidContexts = [ContextProvider::AE_CONTEXT,
+        $invalidContexts = [
+            ContextProvider::AE_CONTEXT,
             ContextProvider::NO_CONTEXT,
             ContextProvider::USER_SEARCH_CONTEXT,
-            ContextProvider::VTS_CONTEXT,];
+            ContextProvider::VTS_CONTEXT,
+        ];
 
         foreach ($invalidContexts as $context) {
             $guard = $this
                 ->withEmptyPermissions()
                 ->withTargetPerson(self::LOGGED_IN_PERSON_ID)
                 ->withContext($context)
-            ->createPersonProfileGuard();
+                ->createPersonProfileGuard();
             $this->assertFalse($guard->canViewAccountSecurity());
         }
     }
@@ -1126,10 +1173,12 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
 
     public function testCanViewAccountManagement()
     {
-        $validContexts = [ContextProvider::AE_CONTEXT,
+        $validContexts = [
+            ContextProvider::AE_CONTEXT,
             ContextProvider::NO_CONTEXT,
             ContextProvider::USER_SEARCH_CONTEXT,
-            ContextProvider::VTS_CONTEXT,];
+            ContextProvider::VTS_CONTEXT,
+        ];
 
         foreach ($validContexts as $context) {
             $guard = $this
@@ -1151,7 +1200,7 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
      * @dataProvider contextProvider
      *
      * @param string $contextName
-     * @param bool   $shouldThrowException
+     * @param bool $shouldThrowException
      */
     public function testInvalidContextsWillThrowException($contextName, $shouldThrowException)
     {
@@ -1215,8 +1264,16 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
     public function shouldShowTesterQualificationStatusBoxProvider()
     {
         return [
-            [AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED, AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED, false],
-            [AuthorisationForTestingMotStatusCode::QUALIFIED, AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED, true],
+            [
+                AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED,
+                AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED,
+                false
+            ],
+            [
+                AuthorisationForTestingMotStatusCode::QUALIFIED,
+                AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED,
+                true
+            ],
         ];
     }
 
@@ -1225,7 +1282,7 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
      *
      * @param AuthorisationForTestingMotStatusCode $groupAStatus
      * @param AuthorisationForTestingMotStatusCode $groupBStatus
-     * @param bool                                 $shouldDisplay
+     * @param bool $shouldDisplay
      */
     public function testShouldShowTesterQualificationStatusBox($groupAStatus, $groupBStatus, $shouldDisplay)
     {
@@ -1281,6 +1338,90 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($canChange, $guard->canChangeAddress());
     }
 
+    public function testExpectedToRegisterForTwoFactorAuthIfUserHasPermissionButHasNotRegisteredYet()
+    {
+        $this->identity = $this->getMock(Identity::class);
+        $this->identity
+            ->method('isSecondFactorRequired')
+            ->willReturn(false);
+
+        $guard = $this
+            ->withPermissions(PermissionInSystem::AUTHENTICATE_WITH_2FA)
+            ->withDvsaRole(false)
+            ->createPersonProfileGuard();
+
+        $this->assertTrue($guard->isExpectedToRegisterForTwoFactorAuth());
+    }
+
+    public function testNotExpectedToRegisterForTwoFactorAuthIfUserHasPermissionAndHasRegistered()
+    {
+        $guard = $this
+            ->withPermissions(PermissionInSystem::AUTHENTICATE_WITH_2FA)
+            ->withDvsaRole(false)
+            ->withSecondFactorRequiredForIdentity()
+            ->createPersonProfileGuard();
+
+        $this->assertFalse($guard->isExpectedToRegisterForTwoFactorAuth());
+    }
+
+    public function testNotExpectedToRegisterForTwoFactorAuthIfUserHasNoPermission()
+    {
+        $guard = $this
+            ->withDvsaRole(false)
+            ->createPersonProfileGuard();
+
+        $this->assertFalse($guard->isExpectedToRegisterForTwoFactorAuth());
+    }
+
+    public function testNotExpectedToRegisterForTwoFactorAuthIfUserIsDvsa()
+    {
+        $guard = $this
+            ->withPermissions(PermissionInSystem::AUTHENTICATE_WITH_2FA)
+            ->withDvsaRole(true)
+            ->createPersonProfileGuard();
+
+        $this->assertFalse($guard->isExpectedToRegisterForTwoFactorAuth());
+    }
+
+    public function testUserWithAppropriatePermissionCanViewOtherUsersSecurityCard()
+    {
+        $guard = $this
+            ->withPermissions(PermissionInSystem::CAN_VIEW_OTHER_2FA_SECURITY_CARD)
+            ->createPersonProfileGuard();
+
+        $this->assertTrue($guard->canViewSecurityCard());
+    }
+
+    public function testUserWithoutAppropriatePermissionCannotViewOtherUsersSecurityCard()
+    {
+        $guard = $this
+            ->withEmptyPermissions()
+            ->createPersonProfileGuard();
+
+        $this->assertFalse($guard->canViewSecurityCard());
+    }
+
+    public function testTradeUserWithActivated2faCanViewOwnSecurityCard()
+    {
+        $guard = $this
+            ->withSecondFactorRequiredForIdentity()
+            ->withContext(ContextProvider::YOUR_PROFILE_CONTEXT)
+            ->createPersonProfileGuard();
+
+        $this->assertTrue($guard->canViewSecurityCard());
+    }
+
+    public function testTradeUserWithActivated2faWith2faDisabledCannotViewOwnSecurityCard()
+    {
+        $this->with2faDisabled();
+        $guard = $this
+            ->withSecondFactorRequiredForIdentity()
+            ->withContext(ContextProvider::YOUR_PROFILE_CONTEXT)
+            ->createPersonProfileGuard();
+
+        $this->assertFalse($guard->canViewSecurityCard());
+    }
+
     /**
      * @return $this
      */
@@ -1301,7 +1442,7 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
      */
     private function withPermissions($permissionsToEnable)
     {
-        $permissionsToEnable = (array) $permissionsToEnable;
+        $permissionsToEnable = (array)$permissionsToEnable;
 
         if (empty($permissionsToEnable)) {
             return $this;
@@ -1317,6 +1458,13 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
             }));
 
         return $this;
+    }
+
+    private function with2faDisabled()
+    {
+
+        $this->twoFaFeatureToggle = XMock::of(TwoFaFeatureToggle::class);
+        $this->twoFaFeatureToggle->expects($this->any())->method('isEnabled')->willReturn(false);
     }
 
     /**
@@ -1338,7 +1486,7 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param array|string $activeRoles
+     * @param array $activeRoles
      *
      * @return $this
      */
@@ -1357,6 +1505,19 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
             ->authorisationService
             ->method('getRolesAsArray')
             ->willReturn($activeRoles);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    private function withDvsaRole($isDvsa)
+    {
+        $this
+            ->authorisationService
+            ->method('isDvsa')
+            ->willReturn($isDvsa);
 
         return $this;
     }
@@ -1411,7 +1572,7 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param int   $targetPersonId
+     * @param int $targetPersonId
      * @param array $roles
      *
      * @return $this
@@ -1432,22 +1593,42 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @return $this
+     */
+    private function withSecondFactorRequiredForIdentity()
+    {
+        if ($this->identity === null) {
+            $this->identity = $this->getMock(Identity::class);
+        }
+
+        $this->identity
+            ->method('isSecondFactorRequired')
+            ->willReturn(true);
+
+        return $this;
+    }
+
+    /**
      * @param int $loggedInPersonId
      *
      * @return PersonProfileGuard
      */
     private function createPersonProfileGuard($loggedInPersonId = self::LOGGED_IN_PERSON_ID)
     {
-        /** @var MotIdentityInterface $motIdentity */
-        $motIdentity = $this->getMock(MotIdentityInterface::class);
-        $motIdentity
-            ->method('getUserId')
-            ->willReturn($loggedInPersonId);
+        if ($this->identity === null) {
+            /** @var MotIdentityInterface $motIdentity */
+            $motIdentity = $this->getMock(MotIdentityInterface::class);
+            $motIdentity
+                ->method('getUserId')
+                ->willReturn($loggedInPersonId);
+            $this->identity = $motIdentity;
+        }
 
         $this
             ->identityProvider
             ->method('getIdentity')
-            ->willReturn($motIdentity);
+            ->willReturn($this->identity);
+
 
         return new PersonProfileGuard(
             $this->authorisationService,
@@ -1455,7 +1636,8 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
             $this->personalDetails,
             $this->testerAuthorisation,
             $this->tradeRolesAndAssociations,
-            $this->context);
+            $this->context,
+            $this->twoFaFeatureToggle);
     }
 
     /**
@@ -1468,8 +1650,21 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
     private function getLoggedInPersonForDataProvider($role)
     {
         $role = strtoupper($role);
-        $availableRoles = ['AED', 'AEDM','AO1', 'AO2', 'CSCO', 'CSM', 'NO-ROLES', 'SITE-A', 'SITE-M', 'SM', 'SU',
-            'TESTER', 'VE', ];
+        $availableRoles = [
+            'AED',
+            'AEDM',
+            'AO1',
+            'AO2',
+            'CSCO',
+            'CSM',
+            'NO-ROLES',
+            'SITE-A',
+            'SITE-M',
+            'SM',
+            'SU',
+            'TESTER',
+            'VE',
+        ];
         if (!in_array($role, $availableRoles)) {
             throw new InvalidArgumentException(sprintf('Unknown role "%s"', $role));
         }
@@ -1510,8 +1705,21 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
     private function getTargetPersonForDataProvider($role)
     {
         $role = strtoupper($role);
-        $availableRoles = ['AED', 'AEDM','AO1', 'AO2', 'CSCO', 'CSM', 'NO-ROLES', 'SITE-A', 'SITE-M', 'SM', 'SU',
-            'TESTER', 'VE', ];
+        $availableRoles = [
+            'AED',
+            'AEDM',
+            'AO1',
+            'AO2',
+            'CSCO',
+            'CSM',
+            'NO-ROLES',
+            'SITE-A',
+            'SITE-M',
+            'SM',
+            'SU',
+            'TESTER',
+            'VE',
+        ];
         if (!in_array($role, $availableRoles)) {
             throw new InvalidArgumentException(sprintf('Unknown role "%s"', $role));
         }

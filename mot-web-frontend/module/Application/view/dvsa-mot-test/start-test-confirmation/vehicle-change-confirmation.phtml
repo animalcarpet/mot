@@ -37,6 +37,7 @@ echo $this->partial('errorMessages', ['getFromFlash' => true]);
            value="<?php echo $this->escapeHtmlAttr($fuelTypeId); ?>" />
     <input type="hidden" name="motTestType"
            value="<?php echo $this->escapeHtmlAttr($viewModel->getMethod()); ?>" />
+    <input type="hidden" name="changeConfirmed" value="1" />
 
     <div class="row">
         <div class="col-sm-8">
@@ -44,11 +45,21 @@ echo $this->partial('errorMessages', ['getFromFlash' => true]);
                 echo $this->partial(
                     'otpInput',
                     [
-                        'canTestWithoutOpt' => false,
+                        'canTestWithoutOpt' => $this->canTestWithoutOtp(),
                         'errorMessage' => $this->otpErrorMessage,
                         'shortErrorMessage' => $this->otpErrorShortMessage
                     ]
                 );
+                if ($this->canTestWithoutOtp())
+                {
+                    echo $this->partial(
+                        '2faDeclaration',
+                        [
+                            'declarationMessage' => 'By saving this vehicle record you confirm that the changes you have made are in line with DVSA conditions for MOT testing.'
+                        ]
+                    );
+                }
+
             ?>
             <nav class="module-content-navigation">
                 <input type="submit" class="button" value="Confirm changes" id="confirm_vehicle_changes">

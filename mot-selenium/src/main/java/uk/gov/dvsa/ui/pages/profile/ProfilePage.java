@@ -11,6 +11,8 @@ import uk.gov.dvsa.ui.pages.dvsa.UserSearchResultsPage;
 import uk.gov.dvsa.ui.pages.profile.annualassessmentcertificates.AnnualAssessmentCertificatesIndexPage;
 import uk.gov.dvsa.ui.pages.profile.qualificationdetails.QualificationDetailsPage;
 import uk.gov.dvsa.ui.pages.profile.testqualityinformation.AggregatedTestQualityPage;
+import uk.gov.dvsa.ui.pages.profile.testqualityinformation.AggregatedTestQualityPage;
+import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardPage;
 
 public abstract class ProfilePage extends Page {
 
@@ -114,6 +116,18 @@ public abstract class ProfilePage extends Page {
         throw new UnsupportedOperationException("Operation not supported for: " + this.toString() );
     }
 
+    public boolean isResetPinLinkDisplayed() {
+        throw new UnsupportedOperationException("Operation not supported for: " + this.toString() );
+    }
+
+    public boolean isRegisterSecurityCardLinkDisplayed() {
+        throw new UnsupportedOperationException("Operation not supported for: " + this.toString());
+    }
+
+    public boolean isSecurityCardPanelDisplayed() {
+        throw new UnsupportedOperationException("Operation not supported for: " + this.toString());
+    }
+
     public boolean isPageLoaded() {
         throw new UnsupportedOperationException("Operation not supported for: " + this.toString());
     }
@@ -130,11 +144,23 @@ public abstract class ProfilePage extends Page {
         throw new UnsupportedOperationException("Operation not supported for: " + this.toString());
     }
 
+    public RegisterCardPage clickRegisterSecurityCardLink() {
+        throw new UnsupportedOperationException("Operation not supported for: " + this.toString());
+    }
+
+    public boolean isOrderSecurityCardDisplayed() {
+        throw new UnsupportedOperationException("Operation not supported for: " + this.toString() );
+    }
+
     public AnnualAssessmentCertificatesIndexPage clickAnnualAssessmentCertificatesLink() {
         throw new UnsupportedOperationException("Operation not supported for: " + this.toString());
     }
 
     public AggregatedTestQualityPage clickTestQualityInformationLink() {
+        throw new UnsupportedOperationException("Operation not supported for: " + this.toString());
+    }
+
+    public void clickOrderCardLink(){
         throw new UnsupportedOperationException("Operation not supported for: " + this.toString());
     }
 }

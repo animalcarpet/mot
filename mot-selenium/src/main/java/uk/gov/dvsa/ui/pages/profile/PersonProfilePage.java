@@ -21,6 +21,7 @@ public class PersonProfilePage extends ProfilePage {
     @FindBy(id = "validation-message--success") private WebElement messageSuccess;
     @FindBy(id="roles-and-associations-link") private WebElement rolesAndAssociationsLink;
     @FindBy(id = "account_security") private WebElement accountSecurity;
+    @FindBy(id = "security-card-order") private WebElement orderSecurityCardLink;
 
 
     public PersonProfilePage(MotAppDriver driver) {
@@ -60,6 +61,9 @@ public class PersonProfilePage extends ProfilePage {
     public boolean isChangeNameLinkDisplayed() {
         return PageInteractionHelper.isElementDisplayed(changeNameLink);
     }
+
+    @Override
+    public boolean isOrderSecurityCardDisplayed() { return qualificationStatus.isDisplayed(); }
 
     public ChangePasswordFromProfilePage clickChangePasswordLink() {
         changePasswordLink.click();

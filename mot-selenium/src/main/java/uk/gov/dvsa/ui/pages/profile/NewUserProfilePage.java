@@ -41,6 +41,10 @@ public class NewUserProfilePage extends ProfilePage {
     @FindBy(css = "#drivingLicence span") protected WebElement personDrivingLicenceRegion;
     @FindBy(xpath = "(//*[@class='content-navigation__secondary']//a)[1]") protected WebElement cancelAndReturnToSearchResults;
     @FindBy(css = "#full-address a") private WebElement changeAddressLink;
+    @FindBy(id = "security-card-order") private WebElement orderSecurityCardLink;
+    @FindBy(id = "management-order-card") private WebElement cscoOrderSecurityCardLink;
+
+    private By securityCardPanel = By.id("security-card");
     private By messageSuccessSelector = By.id("validation-message--success");
 
     public NewUserProfilePage(MotAppDriver driver) {
@@ -91,6 +95,11 @@ public class NewUserProfilePage extends ProfilePage {
 
     public boolean isQualificationStatusSectionIsDisplayed() {
         return PageInteractionHelper.isElementDisplayed(qualificationStatus);
+    }
+
+    @Override
+    public boolean isOrderSecurityCardDisplayed() {
+        return PageInteractionHelper.isElementDisplayed(orderSecurityCardLink);
     }
 
     public ChangeDrivingLicencePage clickChangeDrivingLicenceLink() {
@@ -145,6 +154,11 @@ public class NewUserProfilePage extends ProfilePage {
         return PageInteractionHelper.isElementDisplayed(changeNameLink);
     }
 
+    @Override
+    public boolean isSecurityCardPanelDisplayed() {
+        return PageInteractionHelper.isElementDisplayed(securityCardPanel);
+    }
+
     public ChangeNamePage clickChangeNameLink() {
         changeNameLink.click();
         return new ChangeNamePage(driver);
@@ -191,5 +205,11 @@ public class NewUserProfilePage extends ProfilePage {
     public AggregatedTestQualityPage clickTestQualityInformationLink() {
         testQualityInformationLink.click();
         return new AggregatedTestQualityPage(driver);
+    }
+
+    public void clickOrderCardLink(){
+        if(PageInteractionHelper.isElementDisplayed(cscoOrderSecurityCardLink)) {
+            cscoOrderSecurityCardLink.click();
+        }
     }
 }

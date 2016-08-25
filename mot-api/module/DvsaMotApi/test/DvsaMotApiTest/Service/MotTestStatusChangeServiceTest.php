@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
+use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Date\Time;
@@ -114,6 +115,9 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
     /** @var callable */
     private $getRepositoryCallback;
 
+    /** @var  MotIdentityInterface $motIdentity */
+    private $motIdentity;
+
     /** @var  MotIdentityProviderInterface $motIdentityProvider */
     private $motIdentityProvider;
 
@@ -140,12 +144,11 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
         $this->outsideOpeningHoursNotifier = XMock::of(TestingOutsideOpeningHoursNotificationService::class);
         $this->mockMotTestStatusService = XMock::of(MotTestStatusService::class);
 
+        $this->motIdentity = XMock::of(\DvsaAuthentication\Identity::class);
         $this->motIdentityProvider = XMock::of(MotIdentityProviderInterface::class);
         $this->performMotTestAssertion = XMock::of(ApiPerformMotTestAssertion::class);
 
-        /** @var  MotIdentityInterface $motIdentity */
-        $motIdentity = XMock::of(MotIdentityInterface::class);
-        $motIdentity->expects($this->any())
+        $this->motIdentity->expects($this->any())
             ->method('getUserId')
             ->willReturnCallback(
                 function () {
@@ -155,7 +158,7 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
 
         $this->motIdentityProvider->expects($this->any())
             ->method('getIdentity')
-            ->willReturn($motIdentity);
+            ->willReturn($this->motIdentity);
 
         $this->motTestTypeRepository = XMock::of(MotTestTypeRepository::class);
         $this->motTestTypeRepository->expects($this->any())
@@ -822,6 +825,61 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
     public function testUpdateStatusGivenFailRequestByAnotherUserShouldThrowError()
     {
         $this->helperGivenConfirmRequestByAnotherUserShouldThrowError(MotTestStatusName::FAILED);
+    }
+
+    /**
+     * @return array
+     */
+    public function dataProviderTestUpdateStatusAuthorisesPinIfNecessary()
+    {
+        $otpAuthNotExpectedIfTesterHasTwoFactorAuth = [false, true, false];
+        $otpAuthExpectedIfTesterDoesNotHaveTwoFactorAuth = [false, false, true];
+
+        $otpAuthNotExpectedIfNoOtpPermissionAndTesterHasTwoFactorAuth = [true, true, false];
+        $otpAuthNotExpectedIfNoOtpPermissionAndTesterDoesNotHaveTwoFactorAuth = [true, false, false];
+
+        return [
+            $otpAuthNotExpectedIfTesterHasTwoFactorAuth,
+            $otpAuthExpectedIfTesterDoesNotHaveTwoFactorAuth,
+            $otpAuthNotExpectedIfNoOtpPermissionAndTesterHasTwoFactorAuth,
+            $otpAuthNotExpectedIfNoOtpPermissionAndTesterDoesNotHaveTwoFactorAuth
+        ];
+    }
+
+    /**
+     * @param bool $isMotTestWithoutOtpPermissionGranted
+     * @param bool $isSecondFactorRequiredForIdentity
+     * @param bool $isAuthorisationExpected
+     *
+     * @dataProvider dataProviderTestUpdateStatusAuthorisesPinIfNecessary
+     */
+    public function testUpdateStatusAuthorisesPinIfNecessary(
+        $isMotTestWithoutOtpPermissionGranted,
+        $isSecondFactorRequiredForIdentity,
+        $isAuthorisationExpected
+    ) {
+        //  --  mock MotTest    --
+        $motTestId = 1;
+        $updateData = [
+            motTestStatusChangeService::FIELD_STATUS => MotTestStatusName::PASSED
+        ];
+        $motTestType = (new MotTestType())->setCode(MotTestTypeCode::NORMAL_TEST);
+        $motTest = MotTestObjectsFactory::activeMotTest()->setId(1)->setMotTestType($motTestType);
+
+        $this->motTestResolvesTo($motTest);
+
+        $this->authService->expects($this->any())
+            ->method('isGranted')
+            ->with($this->equalTo(PermissionInSystem::MOT_TEST_WITHOUT_OTP))
+            ->willReturn($isMotTestWithoutOtpPermissionGranted);
+        $this->motIdentity->expects($this->any())
+            ->method('isSecondFactorRequired')
+            ->willReturn($isSecondFactorRequiredForIdentity);
+
+        $this->otpAuthExpected($isAuthorisationExpected);
+
+        $this->createService()
+            ->updateStatus($motTestId, $updateData, 'whatever');
     }
 
     /**

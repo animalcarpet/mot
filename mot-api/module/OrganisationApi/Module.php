@@ -8,7 +8,7 @@ use DvsaCommonApi\Service\AddressService;
 use DvsaCommonApi\Service\ContactDetailsService;
 use OrganisationApi\Model\NominationVerifier;
 use OrganisationApi\Model\Operation\DirectNominationOperation;
-use OrganisationApi\Model\Operation\NominateByRequestOperation;
+use OrganisationApi\Model\Operation\ConditionalNominationOperation;
 use OrganisationApi\Model\RoleAvailability;
 use OrganisationApi\Service\AuthorisedExaminerPrincipalService;
 use OrganisationApi\Service\AuthorisedExaminerService;
@@ -16,8 +16,8 @@ use OrganisationApi\Service\AuthorisedExaminerSlotService;
 use OrganisationApi\Service\AuthorisedExaminerStatusService;
 use OrganisationApi\Service\Mapper\PersonContactMapper;
 use OrganisationApi\Service\MotTestLogService;
-use OrganisationApi\Service\NominateRoleService;
-use OrganisationApi\Service\OrganisationNominationService;
+use OrganisationApi\Service\NominateRoleServiceBuilder;
+use OrganisationApi\Service\OrganisationNominationNotificationService;
 use OrganisationApi\Service\OrganisationPositionService;
 use OrganisationApi\Service\OrganisationRoleService;
 use OrganisationApi\Service\OrganisationService;
@@ -62,10 +62,10 @@ class Module
                 OrganisationSlotUsageService::class       => ServiceX\OrganisationSlotUsageServiceFactory::class,
                 OrganisationRoleService::class            => ServiceX\OrganisationRoleServiceFactory::class,
                 RoleAvailability::class                   => ModelX\RoleAvailabilityFactory::class,
-                NominateRoleService::class                => ServiceX\NominateRoleServiceFactory::class,
-                NominateByRequestOperation::class         => ServiceX\NominateByRequestOperationFactory::class,
+                NominateRoleServiceBuilder::class         => ServiceX\NominateRoleServiceBuilderFactory::class,
+                ConditionalNominationOperation::class         => ServiceX\NominateByRequestOperationFactory::class,
                 DirectNominationOperation::class          => ServiceX\DirectNominationOperationFactory::class,
-                OrganisationNominationService::class      => ServiceX\OrganisationNominationServiceFactory::class,
+                OrganisationNominationNotificationService::class      => ServiceX\OrganisationNominationServiceFactory::class,
                 NominationVerifier::class                 => ServiceX\NominateVerifierFactory::class,
                 SiteService::class                        => ServiceX\SiteServiceFactory::class,
                 MotTestLogService::class                  => ServiceX\MotTestLogServiceFactory::class,

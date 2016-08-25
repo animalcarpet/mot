@@ -4,6 +4,8 @@ namespace DvsaCommon\Auth;
 
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\Model\PersonAuthorization;
+use DvsaCommon\Model\TradeRole;
+use DvsaCommon\Model\TwoFaTesterApplicantRole;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
@@ -161,5 +163,20 @@ abstract class AbstractMotAuthorisationService
         }
 
         return $results;
+    }
+
+    /**
+     * Returns true if the current user is a trade user
+     * @return bool
+     */
+    public function isTradeUser() {
+
+        $roles = $this->getPersonAuthorization()->getAllRoles();
+        return TradeRole::containsTradeRole($roles);
+    }
+
+    public function isNewTester() {
+        $roles = $roles = $this->getPersonAuthorization()->getAllRoles();
+        return TwoFaTesterApplicantRole::containsTwoFaTesterApplicantRole($roles);
     }
 }

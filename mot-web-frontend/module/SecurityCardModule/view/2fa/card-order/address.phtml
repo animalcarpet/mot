@@ -1,0 +1,81 @@
+<?php
+use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Form\SecurityCardAddressForm;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\ViewModel\CardOrderAddressViewModel;
+$this->layout('layout/layout-govuk.phtml');
+/** @var CardOrderAddressViewModel $viewModel */
+/** @var SecurityCardAddressForm $form */
+$form = $viewModel->getForm();
+?>
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <?php if($form->getAddressRadios()->getMessages()) : ?>
+            <div id="validationBox">
+                <div id="validationErrors" class="validation-summary">
+                    <ol>Select an existing address or enter a new one</ol>
+                </div>
+            </div>
+        <?php endif; ?>
+        <form method="post" action="<?php echo $this->url('security-card-order/address', ['userId' => $viewModel->getUserId()])?>">
+            <?php echo $this->csrfToken(); ?>
+            <p class="lede">Your security card will be sent to this address.</p>
+            <div class="form-group <?php echo ($form->getAddressRadios()->getMessages()) ? "has-error" : "" ?>">
+
+                <?php
+                echo $this->partial(
+                    'partial/gds/form/control-radio-meta-group', [
+                        'options' => $form->getAddressRadios()->getValueOptions(),
+                        'splitLastOption' => true,
+                        'checked' => $form->getAddressRadios()->getValue()
+                    ]
+                );
+                ?>
+
+                <div id="customAddressContainer"  class="panel-indent  inline" aria-hidden="<?php echo  ($form->getAddressRadios()->getValue() !== SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE) ? "true" : "false" ?>" style="display:  <?php echo ($form->getAddressRadios()->getValue() === SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE) ? 'block' : 'none'; ?>">
+                    <?php if($form->isCustomAddressChosen()) : ?>
+                        <?php echo $this->partial('zendFormErrorMessages', ['form' => $form]); ?>
+                    <?php endif; ?>
+
+                    <fieldset>
+                        <?php
+                        echo $this->partial(
+                            'partial/gds/form/control', [
+                                'element' => $form->getAddressLine1(),
+                            ]
+                        );
+                        echo $this->partial(
+                            'partial/gds/form/control', [
+                                'element' => $form->getAddressLine2(),
+                            ]
+                        );
+                        echo $this->partial(
+                            'partial/gds/form/control', [
+                                'element' => $form->getAddressLine3(),
+                            ]
+                        );
+                        echo $this->partial(
+                            'partial/gds/form/control', [
+                                'element' => $form->getTown(),
+                            ]
+                        );
+                        echo $this->partial(
+                            'partial/gds/form/control', [
+                                'element' => $form->getPostcode(),
+                            ]
+                        );
+                        ?>
+                        <p>This address will only be used for the delivery of your security card. It will not be saved.</p>
+                    </fieldset>
+                </div>
+            </div>
+
+            <nav class="content-navigation">
+                <input type= "submit" id="submit" class="button" name="Login.Submit" value="Continue">
+                <ul class="content-navigation__secondary">
+                    <li>
+                        <a href="<?php echo $this->url('security-card-order/new', ['userId' => $viewModel->getUserId()])?>">Back</a>
+                    </li>
+                </ul>
+            </nav>
+        </form>
+    </div>
+</div>

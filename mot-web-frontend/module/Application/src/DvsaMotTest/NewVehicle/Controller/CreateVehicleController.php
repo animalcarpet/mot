@@ -2,6 +2,7 @@
 
 namespace DvsaMotTest\NewVehicle\Controller;
 
+use Application\Service\CanTestWithoutOtpService;
 use Application\Service\ContingencySessionManager;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -41,21 +42,29 @@ class CreateVehicleController extends AbstractDvsaMotTestController
 
     /** @var  CreateVehicleFormWizard */
     private $wizard;
+
     /**
      * @var ContingencySessionManager
      */
     private $contingencySessionManager;
 
+    /**
+     * @var CanTestWithoutOtpService
+     */
+    private $canTestWithoutOtpService;
+
     public function __construct(
         CreateVehicleFormWizard $wizard,
         MotAuthorisationServiceInterface $authorisationService,
         Request $request,
-        ContingencySessionManager $contingencySessionManager
+        ContingencySessionManager $contingencySessionManager,
+        CanTestWithoutOtpService $canTestWithoutOtpService
     ) {
         $this->authorisationService = $authorisationService;
         $this->request = $request;
         $this->wizard = $wizard;
         $this->contingencySessionManager = $contingencySessionManager;
+        $this->canTestWithoutOtpService = $canTestWithoutOtpService;
     }
 
     public function onDispatch(MvcEvent $e)
@@ -165,7 +174,7 @@ class CreateVehicleController extends AbstractDvsaMotTestController
                 $form = $step->createForm();
                 $form->setData($this->request->getPost());
 
-                $canCreateVehicleWithoutOtp = $this->authorisationService->isGranted(PermissionInSystem::MOT_TEST_WITHOUT_OTP);
+                $canCreateVehicleWithoutOtp = $this->canTestWithoutOtpService->canTestWithoutOtp();
 
                 if ($canCreateVehicleWithoutOtp || $form->isValid()) {
                     try {
@@ -205,6 +214,7 @@ class CreateVehicleController extends AbstractDvsaMotTestController
         }
 
         $stepData = $step->getData();
+        $canCreateVehicleWithoutOtp = $this->canTestWithoutOtpService->canTestWithoutOtp();
 
         return (new ViewModel([
             'sectionOneData' => $stepData['sectionOneData'],

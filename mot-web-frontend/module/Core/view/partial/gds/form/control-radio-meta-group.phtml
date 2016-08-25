@@ -1,0 +1,15 @@
+<div class="form-group">
+    <fieldset>
+        <?php $lastOption = count($options) - 1; ?>
+        <?php foreach ($options as $key => $option): ?>
+            <?php $option['checked'] = $this->checked ?>
+            <?php if ($key == $lastOption && isset($splitLastOption) && $splitLastOption): ?>
+                <p class="form-block">or</p>
+            <?php endif; ?>
+            <?php echo $this->partial(
+                'partial/gds/form/control-radio-meta',
+                $option
+            ); ?>
+        <?php endforeach; ?>
+    </fieldset>
+</div>

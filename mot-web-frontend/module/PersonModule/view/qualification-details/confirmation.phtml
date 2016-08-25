@@ -1,0 +1,20 @@
+<header class="transaction-header" id="qualification-details-confirmation-header">
+    <h1 class="transaction-header__title"> Your Group <?php echo $this->escapeHtml(strtoupper($this->viewModel->groupName)) ?> certificate has been successfully added </h1>
+</header>
+<div class="text">
+    <h3 class="heading-medium">What happens next?</h3>
+    <p>A Vehicle Examiner will contact you to book a demo test.</p>
+    <?php if($this->viewModel->canOrderCard === true) : ?>
+        <p>Now <a href="<?php echo $this->url('security-card-order/new')?>">order your security card</a> - you will need this to securely sign in to the service.</p>
+    <?php endif; ?>
+    <div class="message" id="order-card-section">
+        <p>You will only be able to do MOT tests once you’ve passed your demo test and have an active security card.</p>
+    </div>
+</div>
+<nav class="content-navigation">
+    <ul class="content-navigation__secondary">
+        <li>
+            <a id="return-to-qualification-details" href="<?php echo $this->url($this->viewModel->startPageRoute) ?>">Return to qualification details</a>
+        </li>
+    </ul>
+</nav>

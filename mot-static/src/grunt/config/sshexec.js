@@ -104,6 +104,12 @@ module.exports = function (grunt, config) {
                     return 'sudo service <%= service_config.httpdServiceName %> restart';
                 }
             },
+            authr_restart: {
+                options: dev2_ssh_options,
+                command: function () {
+                    return 'sudo service <%= service_config.authrServiceName %> restart';
+                }
+            },
             papply_dev: {
                 options: dev_ssh_options,
                 command: [
@@ -314,6 +320,36 @@ module.exports = function (grunt, config) {
             xdebug_on_dev: {
                 options: dev_ssh_options,
                 command: 'sudo sed -i.bak "s/remote_autostart=0/remote_autostart=1/g" <%= vagrant_config.phpRootDir %>/etc/php.d/xdebug.ini;sudo sed -i.bak "s/remote_enable=0/remote_enable=1/g" <%= vagrant_config.phpRootDir %>/etc/php.d/xdebug.ini; '
+            },
+            ft2fa_off_dev: {
+                options: dev_ssh_options,
+                command: 'sudo chmod 777 /etc/dvsa/mot-web-frontend/global.php; sudo sed -i.bak "s|.*2fa.enabled.*true|\'2fa.enabled\' => false|g" /etc/dvsa/mot-web-frontend/global.php'
+            },
+            ft2fa_on_dev: {
+                options: dev_ssh_options,
+                command: 'sudo chmod 777 /etc/dvsa/mot-web-frontend/global.php; sudo sed -i.bak "s|.*2fa.enabled.*false|\'2fa.enabled\' => true|g" /etc/dvsa/mot-web-frontend/global.php'
+            },
+            ft2fa_off_dev2: {
+                options: dev2_ssh_options,
+                command: [
+                    'sudo chmod 777 /etc/dvsa/mot-api/global.php; sudo sed -i.bak "s|.*2fa.enabled.*true|\'2fa.enabled\' => false|g" /etc/dvsa/mot-api/global.php',
+                    'sudo sed -i.bak "s|twoFactorEnabled.*true|twoFactorEnabled: false|g" /etc/dvsa/authorisation-service/config.yml'
+                    ]
+            },
+            ft2fa_on_dev2: {
+                options: dev2_ssh_options,
+                command: [
+                    'sudo chmod 777 /etc/dvsa/mot-api/global.php; sudo sed -i.bak "s|.*2fa.enabled.*false|\'2fa.enabled\' => true|g" /etc/dvsa/mot-api/global.php',
+                    'sudo sed -i.bak "s|twoFactorEnabled.*false|twoFactorEnabled: true|g" /etc/dvsa/authorisation-service/config.yml'
+                ]
+            },
+            ft2fahardstop_off_dev: {
+                options: dev_ssh_options,
+                command: 'sudo chmod 777 /etc/dvsa/mot-web-frontend/global.php; sudo sed -i.bak "s|.*2fa.hardstop.enabled.*true|\'2fa.hardstop.enabled\' => false|g" /etc/dvsa/mot-web-frontend/global.php'
+            },
+            ft2fahardstop_on_dev: {
+                options: dev_ssh_options,
+                command: 'sudo chmod 777 /etc/dvsa/mot-web-frontend/global.php; sudo sed -i.bak "s|.*2fa.hardstop.enabled.*false|\'2fa.hardstop.enabled\' => true|g" /etc/dvsa/mot-web-frontend/global.php'
             },
             xdebug_on_dev2: {
                 options: dev2_ssh_options,

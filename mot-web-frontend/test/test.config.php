@@ -12,6 +12,7 @@ $config = [
         'Dvsa\Mot\Frontend\MotTestModule',
         'Dvsa\Mot\Frontend\PersonModule',
         'Dvsa\Mot\Frontend\RegistrationModule',
+        'Dvsa\Mot\Frontend\SecurityCardModule',
         'DvsaCommon',
         'DvsaClient',
         'Event',

@@ -8,8 +8,9 @@ $help = $this->help;
 
 $tabIndex  = $this->tabIndex;
 
-$inputModifier  = isset($this->inputModifier) ? $this->inputModifier : '';
+$inputModifier  = isset($inputModifier) ? $inputModifier : '';
 $divModifier    = isset($this->divModifier) ? $this->divModifier : '';
+$autoCompleteOff = isset($this->autoCompleteOff) ? $this->autoCompleteOff : false;
 
 $cssClass = join(
     ' ', array_filter(

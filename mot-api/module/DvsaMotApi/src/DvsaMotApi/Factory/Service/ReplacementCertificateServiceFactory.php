@@ -4,6 +4,7 @@ namespace DvsaMotApi\Factory\Service;
 
 use Doctrine\ORM\EntityManager;
 use DvsaAuthentication\Service\OtpService;
+use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaMotApi\Service\CertificateCreationService;
 use Zend\ServiceManager\FactoryInterface;
@@ -17,6 +18,7 @@ class ReplacementCertificateServiceFactory implements FactoryInterface
     {
         return new ReplacementCertificateService(
             $serviceLocator->get(EntityManager::class),
+            $serviceLocator->get(MotIdentityProviderInterface::class),
             $serviceLocator->get('ReplacementCertificateDraftRepository'),
             $serviceLocator->get('ReplacementCertificateDraftCreator'),
             $serviceLocator->get('ReplacementCertificateDraftUpdater'),

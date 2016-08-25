@@ -100,4 +100,8 @@ public class ReplacementCertificateReviewPage extends Page {
         confirmAndPrint.click();
         return MotPageFactory.newPage(driver, clazz);
     }
+
+    public boolean isPinBoxDisplayed() {
+        return PageInteractionHelper.isElementDisplayed(oneTimePassword);
+    }
 }

@@ -2,11 +2,15 @@
 
 namespace SiteApi\Service;
 
+use DvsaAuthentication\Service\TwoFactorStatusService;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\SiteBusinessRoleMap;
+use DvsaFeature\FeatureToggles;
 use NotificationApi\Dto\Notification;
+use NotificationApi\Service\Helper\TwoFactorNotificationTemplateHelper;
 use NotificationApi\Service\NotificationService;
 
 /**
@@ -18,9 +22,20 @@ class SiteNominationService
     /** @var NotificationService $notificationService */
     private $notificationService;
 
-    public function __construct(NotificationService $notificationService)
-    {
+    /** @var TwoFactorStatusService $twoFactorStatusService */
+    private $twoFactorStatusService;
+
+    /** @var FeatureToggles */
+    private $featureToggles;
+
+    public function __construct(
+        NotificationService $notificationService,
+        TwoFactorStatusService $twoFactorStatusService,
+        FeatureToggles $featureToggles
+    ) {
         $this->notificationService = $notificationService;
+        $this->twoFactorStatusService = $twoFactorStatusService;
+        $this->featureToggles = $featureToggles;
     }
 
     /**
@@ -32,10 +47,14 @@ class SiteNominationService
     public function sendNomination(Person $nominator, SiteBusinessRoleMap $nomination)
     {
         $role = $nomination->getSiteBusinessRole()->getName();
+        $nominee = $nomination->getPerson();
+
+        $templateHelper = $this->getTwoFactorNotificationTemplateHelper($nominee);
+        $template = $templateHelper->getTemplate(Notification::TEMPLATE_SITE_NOMINATION);
 
         $data = (new Notification())
             ->setRecipient($nomination->getPerson()->getId())
-            ->setTemplate(Notification::TEMPLATE_SITE_NOMINATION)
+            ->setTemplate($template)
             ->addField('siteOrOrganisationId', $nomination->getSite()->getSiteNumber())
             ->addField('siteName', $nomination->getSite()->getName())
             ->addField('positionName', $role)
@@ -43,7 +62,7 @@ class SiteNominationService
             ->addField('nominatorId', $nominator->getId())
             ->addField('nominationId', $nomination->getId())
             ->addField('role', $this->getFacadeRoleName($role))
-            ->addField('username', $nomination->getPerson()->getUsername())
+            ->addField('username', $nominee->getUsername())
             ->toArray();
 
         return $this->notificationService->add($data);
@@ -64,5 +83,16 @@ class SiteNominationService
             );
         }
         return $facadeRoles[$role];
+    }
+
+    private function getTwoFactorNotificationTemplateHelper(Person $nominee)
+    {
+        $nomineeTwoFactorStatus = $this->twoFactorStatusService->getStatusForPerson($nominee);
+        $isTwoFactorToggleEnabled = $this->featureToggles->isEnabled(FeatureToggle::TWO_FA);
+
+        return TwoFactorNotificationTemplateHelper::forPendingDirectNomination(
+            $nomineeTwoFactorStatus,
+            $isTwoFactorToggleEnabled
+        );
     }
 }

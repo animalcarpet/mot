@@ -16,13 +16,11 @@ class SiteRoleController extends AbstractDvsaRestfulController
 
     public function getList()
     {
-        $siteId = $this->params()->fromRoute('siteId');
         $personId = $this->params()->fromRoute('personId');
 
         $service = $this->getSiteRoleService();
 
         $allRoles = $service->getListForPerson($personId);
-        //$allRoles['associated'] = $service->getAssociatedRoles($siteId, $personId);
 
         return ApiResponse::jsonOk($allRoles);
     }

@@ -16,8 +16,21 @@ class PersonSystemRoleMapRepository extends AbstractMutableRepository
      */
     public function getActiveUserRoles($personId)
     {
-        $qb =
-            $this->createQueryBuilder("srbm")
+        return $this->getUserRoles($personId, BusinessRoleStatusCode::ACTIVE);
+    }
+
+    /**
+     * @param $personId
+     * @return PersonSystemRoleMap[]
+     */
+    public function getPendingUserRoles($personId)
+    {
+        return $this->getUserRoles($personId, BusinessRoleStatusCode::PENDING);
+    }
+
+    private function getUserRoles($personId, $businessRoleStatusCode)
+    {
+        $qb = $this->createQueryBuilder("srbm")
             ->innerJoin("srbm.person", "p")
             ->innerJoin("srbm.businessRoleStatus", "st")
             ->innerJoin("srbm.personSystemRole", "sr")
@@ -25,7 +38,7 @@ class PersonSystemRoleMapRepository extends AbstractMutableRepository
             ->where("p.id = :personId")
             ->andWhere("st.code in (:statusCode)")
             ->setParameter("personId", $personId)
-            ->setParameter("statusCode", BusinessRoleStatusCode::ACTIVE);
+            ->setParameter("statusCode", $businessRoleStatusCode);
 
         $roles = $qb->getQuery()->getResult();
 

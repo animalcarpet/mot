@@ -13,10 +13,20 @@ public class LoginPage extends Page {
     private static final String PAGE_TITLE = "MOT testing service";
     public static final String PATH = "/";
 
-    @FindBy(partialLinkText = "create an account") private WebElement createAnAccountLink;
-    @FindBy(xpath = "//*[contains(@id,'_tid1')]") private WebElement userIdInput;
-    @FindBy(xpath = "//*[contains(@id,'_tid2')]") private WebElement userPasswordInput;
-    @FindBy(name = "Login.Submit") private WebElement submitButton;
+    @FindBy(id = "create-an-account")
+    private WebElement createAnAccountLink;
+    @FindBy(id = "forgotten-or-change-password")
+    private WebElement forgottenOrChangePasswordLink;
+    @FindBy(id = "do-not-have-account-section")
+    private WebElement doNotHaveAccountSection;
+    @FindBy(xpath = "//*[contains(@id,'_tid1')]")
+    private WebElement userIdInput;
+    @FindBy(xpath = "//*[contains(@id,'_tid2')]")
+    private WebElement userPasswordInput;
+    @FindBy(name = "Login.Submit")
+    private WebElement submitButton;
+    @FindBy(id = "validationErrors")
+    private WebElement validationSummary;
     @FindBy(xpath = "(//script[contains(text(),'dataLayer')])[1]") private WebElement googleTagManagerDataLayer;
 
     public LoginPage(MotAppDriver driver) {
@@ -34,7 +44,11 @@ public class LoginPage extends Page {
         return new CreateAnAccountPage(driver);
     }
 
-    public <T extends Page>T login(String userName, String password, Class<T> clazz) {
+    public void expandDoNotHaveAccountSection() {
+        doNotHaveAccountSection.click();
+    }
+
+    public <T extends Page> T login(String userName, String password, Class<T> clazz) {
         userIdInput.sendKeys(userName);
         userPasswordInput.sendKeys(password);
         submitButton.click();
@@ -44,4 +58,10 @@ public class LoginPage extends Page {
     public boolean isGoogleTagManagerDataLayerRendered() {
         return googleTagManagerDataLayer.isEnabled();
     }
+
+    public boolean isSignInButtonPresent() {
+        return submitButton.isDisplayed();
+    }
+
+    public boolean isValidationSummaryDisplayed() { return validationSummary.isDisplayed(); }
 }

@@ -3,7 +3,7 @@
 namespace OrganisationApi\Factory\Service;
 
 use NotificationApi\Service\NotificationService;
-use OrganisationApi\Service\OrganisationNominationService;
+use OrganisationApi\Service\OrganisationNominationNotificationService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -16,7 +16,7 @@ class OrganisationNominationServiceFactory implements FactoryInterface
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new OrganisationNominationService(
+        return new OrganisationNominationNotificationService(
             $serviceLocator->get(NotificationService::class)
         );
     }

@@ -126,9 +126,17 @@ class UpdateVtsAddressProcess extends AbstractTwoStepVtsProcess implements AutoW
     {
         return $this->reviewPageButtonText;
     }
-
+    
     public function getEditPageLede()
     {
         return null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function populateConfirmationPageVariables()
+    {
+        // TODO: Implement populateConfirmationPageVariables() method.
     }
 }

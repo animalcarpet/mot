@@ -1709,4 +1709,39 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
 
         throw new \InvalidArgumentException(sprintf("User '%s' does not exist.", $key));
     }
+
+    /**
+     * @Then the nominated user has a pending organisation role :role
+     */
+    public function theNominatedUserHasAPendingOrganisationRole($role)
+    {
+        $response = $this->person->getPendingRoles(
+            $this->sessionContext->getCurrentAccessToken(),
+            $this->getPersonUserId()
+        );
+
+        $aeId = $this->authorisedExaminerContext->getAe()["id"];
+        $roles = $response->getBody()['data']->toArray();
+
+        $orgRoles = $roles["organisations"][$aeId]["roles"];
+
+        PHPUnit::assertTrue(in_array($role, $orgRoles), "Organisation role '$role' should be pending");
+    }
+
+    /**
+     * @Then the nominated user has a pending site role :role
+     */
+    public function theNominatedUserHasAPendingSiteRole($role)
+    {
+        $response = $this->person->getPendingRoles(
+            $this->sessionContext->getCurrentAccessToken(),
+            $this->getPersonUserId()
+        );
+
+        $siteId = $this->vtsContext->getSite()["id"];
+        $roles = $response->getBody()['data']->toArray();
+        $siteRoles = $roles["sites"][$siteId]["roles"];
+
+        PHPUnit::assertTrue(in_array($role, $siteRoles), "Site role '$role' should be pending");
+    }
 }

@@ -16,15 +16,20 @@ use Dashboard\Controller\UserHomeController;
 use Dashboard\Data\ApiDashboardResource;
 use Dashboard\Model\PersonalDetails;
 use Dvsa\Mot\Frontend\PersonModule\Routes\PersonProfileRoutes;
+use Application\Service\CanTestWithoutOtpService;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuard;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuardBuilder;
+use Dvsa\Mot\Frontend\SecurityCardModule\Security\SecurityCardGuard;
+use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use Dvsa\Mot\Frontend\PersonModule\View\PersonProfileSidebar;
+use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use DvsaCommon\UrlBuilder\PersonUrlBuilder;
 use Exception;
+use Dvsa\Mot\ApiClient\Resource\Item\SecurityCard;
 use UserAdmin\Service\UserAdminSessionManager;
 use Zend\View\Model\ViewModel;
 
@@ -79,8 +84,21 @@ class PersonProfileController extends AbstractAuthActionController
     private $contextProvider;
 
     /**
-     * PersonProfileController constructor.
-     *
+     * @var CanTestWithoutOtpService
+     */
+    private $canTestWithoutOtpService;
+
+    /**
+     * @var SecurityCardService
+     */
+    private $securityCardService;
+
+    /**
+     * @var SecurityCardGuard
+     */
+    private $securityCardGuard;
+
+    /**
      * @param ApiPersonalDetails $personalDetailsService
      * @param ApiDashboardResource $dashboardResourceService
      * @param CatalogService $catalogService
@@ -89,17 +107,23 @@ class PersonProfileController extends AbstractAuthActionController
      * @param PersonProfileGuardBuilder $personProfileGuardBuilder
      * @param MapperFactory $mapperFactory
      * @param ContextProvider $contextProvider
+     * @param CanTestWithoutOtpService $canTestWithoutOtpService
+     * @param SecurityCardService $securityCardService
+     * @param SecurityCardGuard $securityCardGuard
+     * @param TwoFaFeatureToggle $twoFaFeatureToggle
      */
-    public function __construct(
-        ApiPersonalDetails $personalDetailsService,
-        ApiDashboardResource $dashboardResourceService,
-        CatalogService $catalogService,
-        UserAdminSessionManager $userAdminSessionManager,
-        ViewTradeRolesAssertion $canViewTradeRolesAssertion,
-        PersonProfileGuardBuilder $personProfileGuardBuilder,
-        MapperFactory $mapperFactory,
-        ContextProvider $contextProvider
-
+    public function __construct(ApiPersonalDetails $personalDetailsService,
+                                ApiDashboardResource $dashboardResourceService,
+                                CatalogService $catalogService,
+                                UserAdminSessionManager $userAdminSessionManager,
+                                ViewTradeRolesAssertion $canViewTradeRolesAssertion,
+                                PersonProfileGuardBuilder $personProfileGuardBuilder,
+                                MapperFactory $mapperFactory,
+                                ContextProvider $contextProvider,
+                                CanTestWithoutOtpService $canTestWithoutOtpService,
+                                SecurityCardService $securityCardService,
+                                SecurityCardGuard $securityCardGuard,
+                                TwoFaFeatureToggle $twoFaFeatureToggle
     ) {
         $this->personalDetailsService = $personalDetailsService;
         $this->dashboardResourceService = $dashboardResourceService;
@@ -109,6 +133,10 @@ class PersonProfileController extends AbstractAuthActionController
         $this->personProfileGuardBuilder = $personProfileGuardBuilder;
         $this->mapperFactory = $mapperFactory;
         $this->contextProvider = $contextProvider;
+        $this->canTestWithoutOtpService = $canTestWithoutOtpService;
+        $this->securityCardService = $securityCardService;
+        $this->securityCardGuard = $securityCardGuard;
+        $this->twoFaFeatureToggle = $twoFaFeatureToggle;
     }
 
     /**
@@ -133,6 +161,11 @@ class PersonProfileController extends AbstractAuthActionController
         $profileSidebar = $this->createProfileSidebar($personId, $personProfileGuard);
         $this->setSidebar($profileSidebar);
 
+        $securityCard = null;
+        if ($personProfileGuard->canViewSecurityCard() && $this->hasActiveSecurityCard($personDetails->getUsername())) {
+            $securityCard = $this->securityCardService->getSecurityCardForUser($personDetails->getUsername());
+        }
+
         $breadcrumbs = $this->generateBreadcrumbsFromRequest($context, $personDetails);
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
 
@@ -148,6 +181,7 @@ class PersonProfileController extends AbstractAuthActionController
             'routeParams' => $routeParams,
             'context' => $context,
             'userSearchResultUrl' => $this->getUserSearchResultUrl(),
+            'securityCard'              => $securityCard
 
         ]);
     }
@@ -158,6 +192,10 @@ class PersonProfileController extends AbstractAuthActionController
     public function securitySettingsAction()
     {
         $userId = $this->getIdentity()->getUserId();
+
+        if($this->getIdentity()->isSecondFactorRequired()) {
+            return $this->notFoundAction();
+        }
 
         if ($this->userAdminSessionManager->isUserAuthenticated($userId) !== true) {
             $url = $this->url()->fromRoute(ContextProvider::YOUR_PROFILE_PARENT_ROUTE . '/security-questions', [
@@ -380,14 +418,28 @@ class PersonProfileController extends AbstractAuthActionController
     private function createProfileSidebar($targetPersonId, PersonProfileGuard $personProfileGuard)
     {
         $routeName = $this->getRouteName();
-        $personalDetails = $this->getAuthenticatedData()['personalDetails'];
 
+        /** @var PersonalDetails $personalDetails */
+        $personalDetails = $this->getAuthenticatedData()['personalDetails'];
         $testerAuthorisation = $this->personProfileGuardBuilder->getTesterAuthorisation($targetPersonId);
         $newProfileEnabled = $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE);
+        $twoFactorAuthEnabled = $this->twoFaFeatureToggle->isEnabled();
         $currentUrl = $this->url()->fromRoute($routeName, $this->getRouteParams($personalDetails, $routeName));
+        $canOrderSecurityCard =
+            $this->securityCardGuard->isEligibleForNewTwoFaCardAfterMtessSubmission($this->getIdentity(), $testerAuthorisation) ||
+            $this->securityCardGuard->isEligibleForReplacementTwoFaCard($this->getIdentity());
 
-        return new PersonProfileSidebar($targetPersonId, $personProfileGuard, $testerAuthorisation, $newProfileEnabled,
-            $currentUrl, new PersonProfileRoutes($this->contextProvider), $this->url()
+        return new PersonProfileSidebar(
+            $targetPersonId,
+            $personProfileGuard,
+            $testerAuthorisation,
+            $newProfileEnabled,
+            $currentUrl,
+            new PersonProfileRoutes($this->contextProvider), 
+            $this->url(),
+            $this->canTestWithoutOtpService->canTestWithoutOtp(),
+            $twoFactorAuthEnabled,
+            $canOrderSecurityCard
         );
     }
 
@@ -438,5 +490,12 @@ class PersonProfileController extends AbstractAuthActionController
     {
         return $this->url()->fromRoute('user_admin/user-search-results', [],
             ['query' => $this->getRequest()->getQuery()->toArray()]);
+    }
+
+    private function hasActiveSecurityCard($username)
+    {
+        $securityCard = $this->securityCardService->getSecurityCardForUser($username);
+
+        return $securityCard instanceof SecurityCard && $securityCard->isActive();
     }
 }

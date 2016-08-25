@@ -48,6 +48,18 @@ class NominateOperation
         return $nomination;
     }
 
+    /**
+     * @param Person $nominator
+     * @param SiteBusinessRoleMap $nomination
+     * @return SiteBusinessRoleMap
+     */
+    public function sendUpdatedNominationNotification(Person $nominator, SiteBusinessRoleMap $nomination)
+    {
+        $this->siteNominationService->sendNomination($nominator, $nomination);
+
+        return $nomination;
+    }
+
     public function verifyNomination(SiteBusinessRoleMap $nomination)
     {
         $unmetRestrictions = $this->nominationVerifier->verify($nomination);

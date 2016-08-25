@@ -10,16 +10,15 @@ use DvsaAuthentication\Factory\IdentityFactoryFactory;
 use DvsaAuthentication\Factory\OtpServiceFactory;
 use DvsaAuthentication\Identity\Factory\IdentityByTokenResolverFactory;
 use DvsaAuthentication\Identity\IdentityByTokenResolver;
-use DvsaAuthentication\Identity\OpenAM\Factory\IdentityAttributesMapperFactory;
-use DvsaAuthentication\Identity\OpenAM\IdentityAttributesMapper;
 use DvsaAuthentication\Identity\OpenAM\OpenAMIdentityByTokenResolver;
-use DvsaAuthentication\Login\Authenticator;
 use DvsaAuthentication\Login\Factory\AuthenticatorFactory;
 use DvsaAuthentication\Login\Factory\LoginServiceFactory;
 use DvsaAuthentication\Login\LoginService;
 use DvsaAuthentication\Login\UsernamePasswordAuthenticator;
 use DvsaAuthentication\Service\OtpService;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
+use DvsaAuthentication\Service\TwoFactorStatusService;
+use DvsaAuthentication\Factory\Service\TwoFactorStatusServiceFactory;
 
 return [
     'service_manager' => [
@@ -37,7 +36,8 @@ return [
             LoginService::class                     => LoginServiceFactory::class,
             IdentityByTokenResolver::class          => IdentityByTokenResolverFactory::class,
             OpenAMIdentityByTokenResolver::class    => IdentityByTokenResolverFactory::class,
-            IdentityAttributesMapper::class         => IdentityAttributesMapperFactory::class
+            IdentityAttributesMapper::class         => IdentityAttributesMapperFactory::class,
+            TwoFactorStatusService::class           => TwoFactorStatusServiceFactory::class
         ],
     ]
 ];

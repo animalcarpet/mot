@@ -1,0 +1,16 @@
+<fieldset>
+    <label class="block-label"
+        <?php echo (isset($ariaContainer)) ? ' data-target="'.$this->escapeHtmlAttr($ariaContainer).'"' : '' ?>
+           for="<?php echo $this->escapeHtmlAttr($id); ?>">
+        <input type="radio"
+               value="<?php echo $this->escapeHtmlAttr($value); ?>"
+               name="<?php echo $this->escapeHtmlAttr($name); ?>"
+               id="<?php echo $this->escapeHtmlAttr($id); ?>"
+               <?php echo (isset($ariaContainer)) ? ' aria-controls="'.$this->escapeHtmlAttr($ariaContainer).'"' : '' ?>
+            <?php echo ($this->checked === strval($value)) ? ' checked="checked"' : '' ?>/>
+        <strong><?php echo $this->escapeHtmlAttr($title); ?></strong>
+        <?php if(isset($meta)) : ?>
+            <span class="block-label__meta"><?php echo $this->escapeHtmlAttr($meta); ?></span>
+        <?php endif; ?>
+    </label>
+</fieldset>

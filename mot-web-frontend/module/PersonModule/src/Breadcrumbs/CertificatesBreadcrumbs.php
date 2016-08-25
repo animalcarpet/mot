@@ -22,8 +22,16 @@ class CertificatesBreadcrumbs extends PersonProfileBreadcrumbs
         return parent::getRoute();
     }
 
-    public function getBreadcrumbsForAnnualAssessmentCertificate($personId, AbstractActionController $controller, $currentStep = null)
+    public function getQualificationDetailsRoute()
     {
+        return $this->getRoute() . self::ROUTE_QUALIFICATION_DETAILS;
+    }
+
+    public function getBreadcrumbsForAnnualAssessmentCertificate(
+        $personId,
+        AbstractActionController $controller,
+        $currentStep = null
+    ) {
         $breadcrumbs = $this->getBreadcrumbs($personId, $controller, null);
 
         return $this->getBreadcrumbsForData(
@@ -35,8 +43,11 @@ class CertificatesBreadcrumbs extends PersonProfileBreadcrumbs
         );
     }
 
-    public function getBreadcrumbsForQualificationDetails($personId, AbstractActionController $controller, $currentStep = null)
-    {
+    public function getBreadcrumbsForQualificationDetails(
+        $personId,
+        AbstractActionController $controller,
+        $currentStep = null
+    ) {
         $breadcrumbs = $this->getBreadcrumbs($personId, $controller, null);
 
         return $this->getBreadcrumbsForData(
@@ -54,10 +65,16 @@ class CertificatesBreadcrumbs extends PersonProfileBreadcrumbs
         return $route . $breadcrumbRouteName;
     }
 
-    private function getBreadcrumbsForData($breadcrumbs, $breadcrumbName, $breadcrumbRouteName, AbstractActionController $controller, $currentStep)
-    {
+    private function getBreadcrumbsForData(
+        $breadcrumbs,
+        $breadcrumbName,
+        $breadcrumbRouteName,
+        AbstractActionController $controller,
+        $currentStep
+    ) {
         $breadcrumbs += [
-            $breadcrumbName => $controller->url()->fromRoute($this->getRouteForData($breadcrumbRouteName), $controller->params()->fromRoute()),
+            $breadcrumbName => $controller->url()->fromRoute($this->getRouteForData($breadcrumbRouteName),
+                $controller->params()->fromRoute()),
         ];
 
         if (!empty($currentStep)) {

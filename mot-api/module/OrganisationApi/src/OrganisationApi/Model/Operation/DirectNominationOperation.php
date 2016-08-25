@@ -3,19 +3,20 @@
 namespace OrganisationApi\Model\Operation;
 
 use Doctrine\ORM\EntityManager;
+use DvsaCommon\Constants\EventDescription;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Enum\BusinessRoleStatusCode;
+use DvsaCommon\Enum\EventTypeCode;
+use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaEntities\Entity\BusinessRoleStatus;
+use DvsaEntities\Entity\EventPersonMap;
 use DvsaEntities\Entity\Notification;
 use DvsaEntities\Entity\OrganisationBusinessRoleMap;
 use DvsaEntities\Entity\Person;
 use DvsaEventApi\Service\EventService;
-use OrganisationApi\Model\NominationVerifier;
-use OrganisationApi\Service\OrganisationNominationService;
-use DvsaCommon\Enum\EventTypeCode;
-use DvsaCommon\Constants\EventDescription;
-use DvsaEntities\Entity\EventPersonMap;
 use NotificationApi\Service\Helper\OrganisationNominationEventHelper;
+use OrganisationApi\Model\NominationVerifier;
+use OrganisationApi\Service\OrganisationNominationNotificationService;
 
 /**
  * Class DirectNominationOperation
@@ -39,13 +40,13 @@ class DirectNominationOperation implements NominateOperationInterface
     public function __construct(
         EntityManager $entityManager,
         NominationVerifier $nominationVerifier,
-        OrganisationNominationService $organisationNominationService,
+        OrganisationNominationNotificationService $organisationNominationService,
         EventService $eventService,
         DateTimeHolder $dateTimeHolder,
         OrganisationNominationEventHelper $organisationNominationEventHelper
     ) {
-        $this->entityManager                 = $entityManager;
-        $this->nominationVerifier            = $nominationVerifier;
+        $this->entityManager = $entityManager;
+        $this->nominationVerifier = $nominationVerifier;
         $this->organisationNominationService = $organisationNominationService;
         $this->eventService = $eventService;
         $this->dateTimeHolder = $dateTimeHolder;
@@ -62,6 +63,20 @@ class DirectNominationOperation implements NominateOperationInterface
     {
         $this->nominationVerifier->verify($nomination);
 
+        return $this->assignRole($nominator, $nomination);
+    }
+
+    public function updateNomination(Person $nominator, OrganisationBusinessRoleMap $nomination)
+    {
+        if ($nomination->getBusinessRoleStatus()->getCode() != BusinessRoleStatusCode::PENDING) {
+            throw BadRequestException::create('Can only update a pending role nomination');
+        }
+
+        return $this->assignRole($nominator, $nomination);
+    }
+
+    private function assignRole(Person $nominator, OrganisationBusinessRoleMap $nomination)
+    {
         /** @var BusinessRoleStatus $businessRoleStatus */
         $businessRoleStatus = $this->entityManager->getRepository(BusinessRoleStatus::class)->findOneBy(
             [
@@ -76,7 +91,7 @@ class DirectNominationOperation implements NominateOperationInterface
         $this->entityManager->persist($event);
         $this->entityManager->flush();
 
-        $notificationId = $this->organisationNominationService->sendNotification($nominator, $nomination);
+        $notificationId = $this->organisationNominationService->sendDirectNominationNotification($nominator, $nomination);
 
         $notification = $this->entityManager->find(Notification::class, $notificationId);
 

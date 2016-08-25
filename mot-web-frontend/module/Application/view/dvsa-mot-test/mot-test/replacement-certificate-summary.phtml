@@ -4,7 +4,6 @@
  * @var integer    $draftId
  * @var boolean    $isOriginalTester
  * @var boolean    $isAdmin
- * @var boolean    $canTestWithoutOpt
  * @var array      $differentTesterReasons
  */
 
@@ -16,7 +15,6 @@ $draftId = $this->draftId;
 $isOriginalTester = (boolean)$this->isOriginalTester;
 $isAdmin = (boolean)$this->isAdmin;
 $differentTesterReasons = $this->differentTesterReasons ?: [];
-$canTestWithoutOpt = (boolean)$this->canTestWithoutOpt;
 
 $title = 'Replacement certificate review';
 $this->headTitle($title);
@@ -87,12 +85,23 @@ if ($motTest instanceof MotTestDto) :
                 echo $this->partial(
                     'otpInput',
                     [
-                        'canTestWithoutOpt' => $canTestWithoutOpt,
+                        'canTestWithoutOpt' => $this->canTestWithoutOtp(),
                         'errorMessage' => $this->otpErrorMessage,
                         'shortErrorMessage' => $this->otpErrorShortMessage
                     ]
                 );
+
+                if ($this->canTestWithoutOtp())
+                {
+                    echo $this->partial(
+                        '2faDeclaration',
+                        [
+                            'declarationMessage' => 'By saving this replacement certificate you confirm that the changes you have made are in line with DVSA conditions for MOT testing.'
+                        ]
+                    );
+                }
                 ?>
+
                 <nav class="module-content-navigation">
                     <input type="submit" class="button" value="Finish changes and print certificate"
                            id="confirm_and_print">

@@ -18,6 +18,8 @@ class ClaimAccountReminder extends Reminder
     /** @var string Contains recipient email address */
     protected $emailAddress;
 
+    private $is2faActive;
+
     /**
      * Constructs the logic controller. Here we trigger validation
      * of the request (in the parent) and then do what is required to cause an email
@@ -28,13 +30,15 @@ class ClaimAccountReminder extends Reminder
      * @param MailerService $mailerService
      * @param MailerDto $dto
      * @param string $emailAddress to send the reminder to
+     * @param bool $is2faActive
      */
     public function __construct(
         Array $mailerConfig,
         Array $helpdeskConfig,
         MailerService $mailerService,
         MailerDto $dto,
-        $emailAddress
+        $emailAddress,
+        $is2faActive
     ) {
         parent::__construct(
             $mailerConfig,
@@ -45,6 +49,7 @@ class ClaimAccountReminder extends Reminder
             MailerValidator::TYPE_RECLAIM_ACCOUNT
         );
         $this->emailAddress = $emailAddress;
+        $this->is2faActive = $is2faActive;
     }
 
     /**
@@ -63,12 +68,23 @@ class ClaimAccountReminder extends Reminder
             'reset-subject'
         );
 
-        $message = $this->renderTemplate(
-            $this->dto,
-            'claim-account',
-            'reset',
-            $data
-        );
+        if ($this->is2faActive) {
+            //2fa
+            $message = $this->renderTemplate(
+                $this->dto,
+                '2fa-claim-account',
+                'reset',
+                $data
+            );
+        } else {
+            //non 2fa
+            $message = $this->renderTemplate(
+                $this->dto,
+                'claim-account',
+                'reset',
+                $data
+            );
+        }
 
         return $this->mailService->send(
             $this->emailAddress,

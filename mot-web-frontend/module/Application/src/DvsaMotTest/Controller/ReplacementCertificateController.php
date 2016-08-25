@@ -209,7 +209,6 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
                 'differentTesterReasons' => $differentTesterReasons,
                 'draftId' => $id,
                 'isAdmin' => $this->hasAdminRights(),
-                'canTestWithoutOpt' => $this->canTestWithoutOtp(),
                 'otpErrorData' => $otpErrorData,
                 'prgHelper' => $prgHelper,
             ]
@@ -650,13 +649,5 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
     private function hasTesterRights()
     {
         return $this->getAuthorizationService()->isGranted(PermissionInSystem::CERTIFICATE_REPLACEMENT);
-    }
-
-    /**
-     * @return bool
-     */
-    private function canTestWithoutOtp()
-    {
-        return $this->getAuthorizationService()->isGranted(PermissionInSystem::MOT_TEST_WITHOUT_OTP);
     }
 }

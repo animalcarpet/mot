@@ -69,8 +69,8 @@ public abstract class PageLocator {
         return new HomePage(driver);
     }
 
-    public static NotificationPage getNotificationPage(MotAppDriver driver) {
-        return new NotificationPage(driver);
+    public static SiteNotificationPage getNotificationPage(MotAppDriver driver) {
+        return new SiteNotificationPage(driver);
     }
 
     public static SiteTestQualityPage getSiteTestQualityPage(MotAppDriver driver) {

@@ -185,4 +185,14 @@ class Identity implements MotIdentityInterface
     {
         return $this->person;
     }
+
+    /**
+     * @param $isFeatureToggleRequired
+     * @return $this
+     */
+    public function setIsSecondFactorRequired($isSecondFactorRequired)
+    {
+        $this->isSecondFactorRequired = $isSecondFactorRequired;
+        return $this;
+    }
 }

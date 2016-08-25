@@ -120,7 +120,7 @@ class TestQualityInformationActionTest extends \PHPUnit_Framework_TestCase
         /** @var TestQualityInformationViewModel $vm */
         $vm = $result->getViewModel();
         $this->assertInstanceOf(TestQualityInformationViewModel::class, $vm);
-        $this->assertEquals($result->layout()->getBreadcrumbs(), ["breadcrumbs" => $breadcrumb]);
+        $this->assertEquals($result->layout()->getBreadcrumbs(), $breadcrumb);
         $this->assertEquals($result->layout()->getPageLede(), 'Tests done at all associated sites in July 2013');
         $this->assertEquals($result->layout()->getPageTitle(), 'Test quality information');
     }

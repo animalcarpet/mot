@@ -6,6 +6,7 @@ use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Transaction\TransactionAwareInterface;
 use DvsaCommonApi\Transaction\TransactionAwareTrait;
 use OrganisationApi\Service\NominateRoleService;
+use OrganisationApi\Service\NominateRoleServiceBuilder;
 use OrganisationApi\Service\OrganisationPositionService;
 use OrganisationApi\Service\Validator\NominateRoleValidator;
 
@@ -42,10 +43,25 @@ class OrganisationPositionController extends AbstractDvsaRestfulController imple
         $nomineeId = $data['nomineeId'];
         $roleId    = $data['roleId'];
 
-        $service              = $this->getNominateRoleService();
-        $organisationPosition = $service->nominateRole($organisationId, $nomineeId, $roleId);
+        $service = $this->getNominateRoleServiceBuilder()
+            ->buildForNominationCreation($nomineeId, $organisationId, $roleId);
+        $organisationPosition = $service->nominateRole();
 
         return ApiResponse::jsonOk(['id' => $organisationPosition->getId()]);
+    }
+
+    public function update($id, $data)
+    {
+        $nomineeId = $data['nomineeId'];
+        $roleCode = $data['roleId'];
+        $organisationId = intval($this->params()->fromRoute('organisationId'));
+
+        $nominateRoleService = $this->getNominateRoleServiceBuilder()
+            ->buildForNominationUpdate($nomineeId, $organisationId, $roleCode);
+
+        $position = $nominateRoleService->updateRoleNominationNotification();
+
+        return ApiResponse::jsonOk(['id' => $position->getId()]);
     }
 
     /**
@@ -74,10 +90,10 @@ class OrganisationPositionController extends AbstractDvsaRestfulController imple
 
     /**
      *
-     * @return NominateRoleService
+     * @return NominateRoleServiceBuilder
      */
-    private function getNominateRoleService()
+    private function getNominateRoleServiceBuilder()
     {
-        return $this->getServiceLocator()->get(NominateRoleService::class);
+        return $this->getServiceLocator()->get(NominateRoleServiceBuilder::class);
     }
 }

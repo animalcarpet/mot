@@ -40,6 +40,8 @@ use Dvsa\Mot\ApiClient\Service\VehicleService;
 class StartTestConfirmationController extends AbstractDvsaMotTestController
 {
     const ROUTE_START_TEST_CONFIRMATION = 'start-test-confirmation';
+    const ROUTE_START_RETEST_CONFIRMATION = 'start-retest-confirmation';
+
     const ROUTE_PARAM_NO_REG = 'noRegistration';
     const ROUTE_PARAM_ID = 'id';
     const ROUTE_PARAM_SOURCE = 'source';
@@ -233,9 +235,11 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
             return false;
         }
 
+        $changeConfirmed = $this->request->getPost('changeConfirmed') === '1';
+
         if (
             !$this->getAuthorizationService()->isGranted(PermissionInSystem::MOT_TEST_WITHOUT_OTP) &&
-            $this->needToUpdateDvsaVehicleUnderTest()
+            $this->needToUpdateDvsaVehicleUnderTest() && $changeConfirmed === false
         ) {
             return true;
         } else {

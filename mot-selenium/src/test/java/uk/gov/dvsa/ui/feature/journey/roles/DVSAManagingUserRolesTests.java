@@ -1,6 +1,6 @@
 package uk.gov.dvsa.ui.feature.journey.roles;
 
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import uk.gov.dvsa.domain.model.AeDetails;
@@ -8,7 +8,9 @@ import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.helper.RandomDataGenerator;
 import uk.gov.dvsa.ui.DslTest;
-import uk.gov.dvsa.ui.pages.dvsa.*;
+import uk.gov.dvsa.ui.pages.dvsa.RolesAndAssociationsPage;
+import uk.gov.dvsa.ui.pages.dvsa.UserSearchPage;
+import uk.gov.dvsa.ui.pages.dvsa.UserSearchResultsPage;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -26,7 +28,7 @@ public class DVSAManagingUserRolesTests extends DslTest {
     private AeDetails aeDetails;
     private Site site;
 
-    @BeforeClass(alwaysRun = true)
+    @BeforeMethod(alwaysRun = true)
     private void setup() throws IOException {
         aeDetails = aeData.createAeWithDefaultValues();
         site = siteData.createNewSite(aeDetails.getId(), "Test_Site");
@@ -107,11 +109,11 @@ public class DVSAManagingUserRolesTests extends DslTest {
         assertThat(motUI.searchUser.isNoResultsMessageDisplayed(), is(true));
     }
 
-    @Test(groups = {"VM-7646", "Regression"}, dataProvider = "dvsaUserCanSearchForAUserByTown")
-    public void dvsaUserCanSearchOnTown(User user) throws IOException, URISyntaxException {
+    @Test(groups = {"VM-7646", "Regression"})
+    public void dvsaUserCanSearchOnTown() throws IOException, URISyntaxException {
 
         //Given that I am on Search user page as a authorised DVSA user
-        pageNavigator.navigateToPage(user, UserSearchPage.PATH, UserSearchPage.class);
+        pageNavigator.navigateToPage(userData.createAreaOfficeOne("Ao11"), UserSearchPage.PATH, UserSearchPage.class);
 
         //When I search for user by town
         motUI.searchUser.searchForUserByTown("Bristol");

@@ -9,6 +9,7 @@ use Core\Factory\UrlHelperFactory;
 use Core\Factory\WebPerformMotTestAssertionFactory;
 use Core\Authorisation\Assertion\WebAcknowledgeSpecialNoticeAssertion;
 use Core\Factory\WebAcknowledgeSpecialNoticeAssertionFactory;
+use Core\Service\MotFrontendIdentityProviderInterface;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Configuration\MotConfig;
@@ -21,6 +22,7 @@ use Zend\View\Helper\Url;
 return [
     'factories' => [
         'MotIdentityProvider' => MotIdentityProviderFactory::class,
+        MotFrontendIdentityProviderInterface::class => MotIdentityProviderFactory::class,
         MotIdentityProviderInterface::class => MotIdentityProviderFactory::class,
         'AuthorisationService' => LazyMotFrontendAuthorisationServiceFactory::class,
         MotAuthorisationServiceInterface::class => LazyMotFrontendAuthorisationServiceFactory::class,

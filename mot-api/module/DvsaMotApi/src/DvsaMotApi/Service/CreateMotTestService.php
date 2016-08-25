@@ -281,6 +281,7 @@ class CreateMotTestService implements TransactionAwareInterface
                     $this->motTestValidator,
                     $this->retestEligibilityValidator,
                     $this->otpService,
+                    $this->identityProvider,
                     $this->newVehicleService
                 ));
 

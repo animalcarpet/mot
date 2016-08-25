@@ -8,7 +8,7 @@ $tabIdx = (int) $this->tabIndex;
 
 $pattern = !empty($this->pattern) ? $this->pattern : '';
 $patternError = !empty($this->patternErrorMsg) ? $this->patternErrorMsg : '';
-$autoCompleteOff = !empty($autoCompleteOff) ? $autoCompleteOff : '';
+$autoCompleteOff = isset($this->autoCompleteOff) ? $this->autoCompleteOff : false;
 ?>
 
 <input

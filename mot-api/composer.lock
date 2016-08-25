@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d5a7644b859cbd0fec6556acb6a024f7",
-    "content-hash": "e57ad99b4a0e547dbccb2422d473b93e",
+    "hash": "97e2ae4ded1978d403f9903d4f66c944",
+    "content-hash": "3b2c00fcbc39707623161da1677fb19d",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -1118,6 +1118,12 @@
                 "url": "git@gitlab.motdev.org.uk:mot/dvsa-application-logger.git",
                 "reference": "34da62e20b980a569bbca4a5d7cf9dbe2810bbd4"
             },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-application-logger-v1.3.0-824d6d.tar",
+                "reference": "34da62e20b980a569bbca4a5d7cf9dbe2810bbd4",
+                "shasum": "3a380f09ce4977c63a1e48cc37c04656c5f0a056"
+            },
             "require": {
                 "php": ">=5.5",
                 "zendframework/zendframework": "~2.3"
@@ -1162,6 +1168,12 @@
                 "url": "git@gitlab.motdev.org.uk:mot/dvsa-doctrine-module.git",
                 "reference": "93bc7be62d7485a17c72963e1c0e1512ff3b2756"
             },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-doctrine-module-v1.1.3-e0ef88.tar",
+                "reference": "93bc7be62d7485a17c72963e1c0e1512ff3b2756",
+                "shasum": "796dc0dd9168a98d42ebc17ac14cd4b6b819aa85"
+            },
             "require": {
                 "doctrine/cache": "~1.4",
                 "zendframework/zend-servicemanager": "~2.3"
@@ -1192,6 +1204,12 @@
                 "url": "git@gitlab.motdev.org.uk:mot/dvsa-document-module.git",
                 "reference": "da37395f85f0d7d92315156cb23d38d65992c788"
             },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-document-module-1.3.0-279cfb.tar",
+                "reference": "da37395f85f0d7d92315156cb23d38d65992c788",
+                "shasum": "0721dbc637470cebc2ae5c3d1c83d65ea047444e"
+            },
             "require": {
                 "doctrine/doctrine-module": "~0.8",
                 "doctrine/doctrine-orm-module": "~0.8",
@@ -1220,6 +1238,12 @@
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/dvsa-logger.git",
                 "reference": "0b3ea38a2f132333c6a5480a3f17f4b1add58607"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-logger-v1.1.0-5b6358.tar",
+                "reference": "0b3ea38a2f132333c6a5480a3f17f4b1add58607",
+                "shasum": "18939957c564bd36db31148e20a01a7297533c38"
             },
             "require": {
                 "doctrine/doctrine-module": "~0.8",
@@ -1266,6 +1290,12 @@
                 "url": "git@gitlab.motdev.org.uk:mot/dvsa-openam-client.git",
                 "reference": "26b428061cd69fd341cdc738e717c9a091483834"
             },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/dvsa-dvsa-openam-client-v1.9.5-13add7.tar",
+                "reference": "26b428061cd69fd341cdc738e717c9a091483834",
+                "shasum": "3127152a4b983c18d815a6cf14e9c38d1b10e743"
+            },
             "require": {
                 "php": ">=5.5",
                 "zendframework/zend-http": "~2.3",
@@ -1301,6 +1331,12 @@
                 "url": "git@gitlab.motdev.org.uk:mot/featuretoggle.git",
                 "reference": "2ca85b84d5b20959a5f4fe899fd989f92602403f"
             },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/dvsa-feature-toggle-v1.1.1-fac088.tar",
+                "reference": "2ca85b84d5b20959a5f4fe899fd989f92602403f",
+                "shasum": "69299c57dad3466801f58cfd6027c480900f6b0c"
+            },
             "require": {
                 "php": ">=5.3.3",
                 "zendframework/zendframework": "~2.3"
@@ -1329,6 +1365,12 @@
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/dvsa-scripts.git",
                 "reference": "936bd13932b4f121150ff78ee23b7438b46cb3a9"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/dvsa-scripts-v2.0.3-f93058.tar",
+                "reference": "936bd13932b4f121150ff78ee23b7438b46cb3a9",
+                "shasum": "18954677b5079c185e020063fcd4743440a7c59d"
             },
             "type": "library",
             "description": "Shared facility for developer tools, shell scripts, jenkins scripts and anything infrastructure related",
@@ -1864,17 +1906,17 @@
         },
         {
             "name": "mot/api-client-php",
-            "version": "6.0.0",
+            "version": "6.1.0",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/api-client-php.git",
-                "reference": "ebfc1e96a40448b001530bb3e31fcaff969058bc"
+                "reference": "9b4036316a80a0218e01b93ba6963c7599fb5379"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-6.0.0-5b423f.tar",
-                "reference": "ebfc1e96a40448b001530bb3e31fcaff969058bc",
-                "shasum": "e9843adea2841f677f2c3dd68c6b2fcb307b8298"
+                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-6.1.0-5f74bf.tar",
+                "reference": "9b4036316a80a0218e01b93ba6963c7599fb5379",
+                "shasum": "653c4cd5e1958746b459d97e0423ae463fdee918"
             },
             "require": {
                 "guzzlehttp/guzzle": "~6.1",
@@ -1931,7 +1973,7 @@
                     "email": "a.bahman@kainos.com"
                 }
             ],
-            "time": "2016-08-19 10:04:59"
+            "time": "2016-08-25 03:59:22"
         },
         {
             "name": "mtdowling/jmespath.php",
@@ -2741,10 +2783,10 @@
                 "reference": "ebdb5723df7a33af5b4247999188db03b241f4d0"
             },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/ZendPdf/zipball/ebdb5723df7a33af5b4247999188db03b241f4d0",
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/zendframework-zendpdf-2.0.2-0d86fd.tar",
                 "reference": "ebdb5723df7a33af5b4247999188db03b241f4d0",
-                "shasum": ""
+                "shasum": "674fec40e5290aa80f3448011bfb61aa8a0f661d"
             },
             "require": {
                 "php": ">=5.3.3",

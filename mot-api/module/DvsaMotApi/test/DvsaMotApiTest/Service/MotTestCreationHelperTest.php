@@ -3,6 +3,8 @@
 namespace DvsaMotApiTest\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use DvsaAuthentication\Identity;
+use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
@@ -59,6 +61,18 @@ class MotTestCreationHelperTest extends AbstractServiceTestCase
             ->method('getRepository')
             ->willReturn($mockMotTestTypeRepository);
 
+        $identityMock = XMock::of(Identity::class);
+        $identityMock
+            ->expects($this->any())
+            ->method('isSecondFactorRequired')
+            ->willReturn(true);
+
+        $mockIdentityProvider = XMock::of(MotIdentityProviderInterface::class);
+        $mockIdentityProvider
+            ->expects($this->any())
+            ->method('getIdentity')
+            ->willReturn($identityMock);
+
         $this->motTestCreationHelper = new MotTestCreationHelper(
             $mockEntityManager,
             $mocks['mockAuthService'],
@@ -67,6 +81,7 @@ class MotTestCreationHelperTest extends AbstractServiceTestCase
             $mocks['mockMotTestValidator'],
             $motTestServiceTest->getMockWithDisabledConstructor(RetestEligibilityValidator::class),
             $mocks['mockOtpService'],
+            $mockIdentityProvider,
             $mocks['mockNewVehicleService']
         );
     }

@@ -5,6 +5,8 @@ use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\HttpRestJson\ZendClient;
 use DvsaCommon\Obfuscate\ParamEncrypter;
 use DvsaCommon\Obfuscate\ParamObfuscator;
+use TestSupport\Factory\CatUserServiceFactory;
+use TestSupport\Factory\ClaimAccountServiceFactory;
 use TestSupport\Factory\TesterAuthorisationStatusServiceFactory;
 use TestSupport\Helper\NotificationsHelper;
 use TestSupport\Helper\SitePermissionsHelper;
@@ -16,7 +18,9 @@ use TestSupport\Service\AedmService;
 use TestSupport\Service\AEService;
 use TestSupport\Service\AreaOffice1Service;
 use TestSupport\Service\AreaOffice2Service;
+use TestSupport\Service\CatUserService;
 use TestSupport\Service\CertificateReplacementService;
+use TestSupport\Service\ClaimAccountService;
 use TestSupport\Service\CronUserService;
 use TestSupport\Service\CSCOService;
 use TestSupport\Service\CsmService;
@@ -34,6 +38,7 @@ use TestSupport\Service\PasswordResetService;
 use TestSupport\Service\PaymentNotificationsAuditService;
 use TestSupport\Service\SchemeManagerService;
 use TestSupport\Service\SchemeUserService;
+use TestSupport\Service\SiteRoleNominationService;
 use TestSupport\Service\SiteUserDataService;
 use TestSupport\Service\SlotTransactionService;
 use TestSupport\Service\StatisticsAmazonCacheService;
@@ -44,10 +49,16 @@ use TestSupport\Service\VehicleExaminerService;
 use TestSupport\Service\VehicleService;
 use TestSupport\Service\VM10519UserService;
 use TestSupport\Service\VM10619RoleManagementUpgradeService;
+use TestSupport\Service\TwoFactorAuthCardService;
 use TestSupport\Service\VtsService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use TestSupport\Service\GdsSurveyService;
 use TestSupport\Factory\GdsSurveyServiceFactory;
+use TestSupport\Service\SecurityQuestionsService;
+use TestSupport\Factory\SecurityQuestionsServiceFactory;
+use TestSupport\Factory\SiteRoleNominationServiceFactory;
+use TestSupport\Service\OrganisationRoleNominationService;
+use TestSupport\Factory\RoleNominationServiceFactory;
 
 return [
     'factories' => [
@@ -78,7 +89,8 @@ return [
                 return new AccountService(
                     $sm->get(EntityManager::class),
                     $sm->get(Client::class),
-                    $tokenManager
+                    $tokenManager,
+                    $sm->get(SecurityQuestionsService::class)
                 );
             },
         VehicleService::class                  =>
@@ -148,10 +160,16 @@ return [
         VM10519UserService::class          => \TestSupport\Factory\VM10519UserServiceFactory::class,
         VM10619RoleManagementUpgradeService::class          => \TestSupport\Factory\VM10619RoleManagementUpgradeServiceFactory::class,
         TesterAuthorisationStatusService::class => TesterAuthorisationStatusServiceFactory::class,
+        TwoFactorAuthCardService::class    => \TestSupport\Factory\TwoFactorAuthCardServiceFactory::class,
         AedmService::class                 => \TestSupport\Factory\AedmServiceFactory::class,
         DocumentService::class             => \TestSupport\Factory\DocumentServiceFactory::class,
         GVTSTesterService::class           => \TestSupport\Factory\GVTSTesterServiceFactory::class,
         StatisticsAmazonCacheService::class  => \TestSupport\Factory\StatisticsAmazonCacheFactory::class,
         GdsSurveyService::class            => GdsSurveyServiceFactory::class,
+        SecurityQuestionsService::class => SecurityQuestionsServiceFactory::class,
+        ClaimAccountService::class         => ClaimAccountServiceFactory::class,
+        CatUserService::class              => CatUserServiceFactory::class,
+        SiteRoleNominationService::class => SiteRoleNominationServiceFactory::class,
+        OrganisationRoleNominationService::class => RoleNominationServiceFactory::class,
     ]
 ];

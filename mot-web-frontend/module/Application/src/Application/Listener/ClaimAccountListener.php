@@ -16,7 +16,7 @@ use Zend\Mvc\MvcEvent;
 class ClaimAccountListener
 {
 
-    const CLAIM_ACCOUNT_DISPLAY_PIN_ROUTE = 'account/claim/displayPin';
+    const CLAIM_ACCOUNT_SUCCESS_ROUTE = 'account/claim/success';
 
     /**
      * @var MotIdentityProviderInterface
@@ -26,14 +26,14 @@ class ClaimAccountListener
     private $whiteList = [
         'login',
         'logout',
-        'forgotten-password/update-password'
+        'forgotten-password/update-password',
     ];
 
     private $claimAccountRoutes = [
         'account/claim',
         'account/claim/confirmEmailAndPassword',
         'account/claim/setSecurityQuestion',
-        'account/claim/displayPin',
+        'account/claim/success',
         'account/claim/review',
         'account/claim/reset',
     ];
@@ -58,7 +58,7 @@ class ClaimAccountListener
         } elseif (in_array($routeName, $this->claimAccountRoutes)
             && $identity
             && !$identity->isAccountClaimRequired()
-            && $routeName != self::CLAIM_ACCOUNT_DISPLAY_PIN_ROUTE
+            && $routeName != self::CLAIM_ACCOUNT_SUCCESS_ROUTE
         ) {
             $redirectUrl = $event->getRouter()->assemble([], ['name' => 'user-home']);
         }

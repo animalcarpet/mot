@@ -113,7 +113,7 @@ Test clasess should be written in Gherkin Syntax
 **Then I should see "Your article was published.**
 
         //Given I have a vehicle with a failed MOT test
-        motApi.createTest(tester, site.getId(), vehicle,   TestOutcome.FAILED, 12345, DateTime.now());
+        motApi.createTest(tester, site.getId(), vehicle, TestOutcome.FAILED, 12345, DateTime.now());
 
         //And all faults has been fixed
 
@@ -136,16 +136,16 @@ The views package is similar to unit testing. Tests classes under this package w
 
 		uk.gov.dvsa.ui.views
 		
-		public class VehicleSearchPageViewTest extends BaseTest {
+		public class VehicleSearchPageViewTest extends DslTest {
 
-    	@Test(groups = {"Regression"}, description = "VM-9368")
-    	public void breadCrumbTrailIsDisplayed() throws IOException, URISyntaxException {}
+    	@Test(groups = {"BVT", "Regression"}, description = "Two Factor Authenticated users should not be required to enter one time password")
+        public void passTestSuccessfullyWithNoOTPForTwoFactorAuthTester() throws IOException, URISyntaxException {}
     	
 * 5.3.2 Feature-> Journey Package    
 This package is for tests around complete feature Journey (i.e. end to end scenarios). This a combination of pages and features that makes a complete journey. No stopping in the middle of the test to check for errors etc. 
  e.g.
 
-		public class ContingencyMotTest extends BaseTest {
+		public class ContingencyMotTest extends DslTest {
     
     	@Test(groups = {"BVT", "Regression"})
     	public void conductTestSuccessfully() throws IOException, URISyntaxException {}
@@ -170,9 +170,9 @@ To run a single test class
 * 6.2 screenshot folder
 
 		/Users/Shared/selenium/screenshots/error
-		
 
-##7. Reporting 
+
+##7. Reporting
 * We use the ([Allure Reporting framwork](http://allure.qatools.ru/))
 
 * Example usage ([TestNg Example](https://github.com/allure-examples/allure-testng-example))
@@ -181,9 +181,9 @@ To run a single test class
 
 * There is a Jenkins plugin, which automatically compiles report, an icon will appear next to the build number, simply click and view.
 
-* To view in Chrome, type this line into terminal                                              	
+* To view in Chrome, type this line into terminal
    	```open /Applications/Google\ Chrome.app --args --allow-file-access-from-files```
-   	
+
 * To run on your local and view the results in allure, run:
 ```mvn clean test site``` , then go to **$WORSPACE/mot-selenium/target/site/allure-maven-plugin/index.html**
 

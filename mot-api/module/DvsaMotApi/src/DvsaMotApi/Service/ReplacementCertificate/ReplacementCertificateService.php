@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping\Entity;
 use DvsaAuthentication\Service\OtpService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
+use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Enum\CertificateTypeCode;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Transaction\TransactionAwareInterface;
@@ -76,6 +77,11 @@ class ReplacementCertificateService implements TransactionAwareInterface
     private $otpService;
 
     /**
+     * @var MotIdentityProviderInterface $motIdentityProvider
+     */
+    private $motIdentityProvider;
+
+    /**
      * @param \Doctrine\ORM\EntityManager           $entityManager
      * @param ReplacementCertificateDraftRepository $repository
      * @param ReplacementCertificateDraftCreator    $draftCreator
@@ -86,9 +92,11 @@ class ReplacementCertificateService implements TransactionAwareInterface
      * @param MotTestRepository                     $motTestRepository
      * @param OtpService                            $otpService
      * @param CertificateCreationService            $certificateCreationService
+     * @param \DvsaCommon\Auth\MotIdentityProviderInterface $motIdentityProvider
      */
     public function __construct(
         EntityManager $entityManager,
+        MotIdentityProviderInterface $motIdentityProvider,
         ReplacementCertificateDraftRepository $repository,
         ReplacementCertificateDraftCreator $draftCreator,
         ReplacementCertificateDraftUpdater $draftUpdater,
@@ -100,6 +108,7 @@ class ReplacementCertificateService implements TransactionAwareInterface
         CertificateCreationService $certificateCreationService
     ) {
         $this->entityManager = $entityManager;
+        $this->motIdentityProvider = $motIdentityProvider;
         $this->repository = $repository;
         $this->authService = $authService;
         $this->draftCreator = $draftCreator;
@@ -183,7 +192,9 @@ class ReplacementCertificateService implements TransactionAwareInterface
     {
         $this->authService->assertGranted(PermissionInSystem::CERTIFICATE_REPLACEMENT);
 
-        if (!$this->authService->isGranted(PermissionInSystem::MOT_TEST_WITHOUT_OTP)) {
+        $userIsAllowedToTestWithoutPin = $this->authService->isGranted(PermissionInSystem::MOT_TEST_WITHOUT_OTP);
+        $userHasActivatedA2FaCard = $this->motIdentityProvider->getIdentity()->isSecondFactorRequired();
+        if (!$userIsAllowedToTestWithoutPin && !$userHasActivatedA2FaCard) {
             $token = ArrayUtils::tryGet($data, 'oneTimePassword');
             $this->otpService->authenticate($token);
         }

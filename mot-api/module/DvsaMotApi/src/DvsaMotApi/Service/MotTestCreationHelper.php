@@ -7,10 +7,10 @@ use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleUnderTestRequest;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaAuthentication\Service\OtpService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
+use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Constants\Role;
-use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Dto\MotTesting\ContingencyTestDto;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
@@ -66,6 +66,8 @@ class MotTestCreationHelper
 
     /** @var OtpService */
     private $otpService;
+    /** @var MotIdentityProviderInterface */
+    private $identityProvider;
 
     /** @var VehicleService */
     private $vehicleService;
@@ -78,6 +80,7 @@ class MotTestCreationHelper
         MotTestValidator $motTestValidator,
         RetestEligibilityValidator $retestEligibilityValidator,
         OtpService $otpService,
+        MotIdentityProviderInterface $identityProvider,
         VehicleService $vehicleService
     ) {
         $this->entityManager = $entityManager;
@@ -86,7 +89,8 @@ class MotTestCreationHelper
         $this->motTestRepository = $motTestRepository;
         $this->motTestValidator = $motTestValidator;
         $this->retestEligibilityValidator = $retestEligibilityValidator;
-        $this->otpService = $otpService;
+        $this->otpService                 = $otpService;
+        $this->identityProvider           = $identityProvider;
         $this->vehicleService = $vehicleService;
     }
 
@@ -286,7 +290,9 @@ class MotTestCreationHelper
         if ($this->isVehicleModified($vehicle, $vehicleClass, $fuelType, $primaryColour, $secondaryColour)
             && !$motTestType->getIsDemo()
         ) {
-            if (!$this->authService->isGranted(PermissionInSystem::MOT_TEST_WITHOUT_OTP)) {
+            if (!$this->identityProvider->getIdentity()->isSecondFactorRequired() &&
+                !$this->authService->isGranted(PermissionInSystem::MOT_TEST_WITHOUT_OTP)
+            ) {
                 $this->otpService->authenticate($oneTimePassword);
             }
 

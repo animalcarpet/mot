@@ -7,6 +7,7 @@ import uk.gov.dvsa.domain.model.AeDetails;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.helper.RandomDataGenerator;
+import uk.gov.dvsa.helper.ContactDetailsHelper;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.profile.ProfilePage;
 
@@ -49,11 +50,10 @@ public class ChangePersonEmailTests extends DslTest {
             description = "Test that Trade user can edit their email from their profile page")
     public void tradeUserCanEditTheirEmailAddress() throws Exception {
         //Given I am logged in as a Tester and I am on the My Profile Page
-        motUI.profile.viewYourProfile(tester);
+        motUI.profile.viewYourProfile(userData.createTester(testSite.getId()));
 
         //When I edit my Email address
-        String emailAddress = RandomDataGenerator.generateEmail(20, System.nanoTime());
-        ProfilePage profilePage = motUI.profile.changeYourEmailTo(emailAddress);
+        ProfilePage profilePage = motUI.profile.changeYourEmailTo(ContactDetailsHelper.getEmail());
 
         //Then My Profile Email address will be amended
         assertThat(profilePage.isSuccessMessageDisplayed(), is(true));
@@ -114,7 +114,7 @@ public class ChangePersonEmailTests extends DslTest {
             String expectedvalidationMessage) throws IOException {
 
         // Given I am on other person profile as an authorised user
-        motUI.profile.dvsaViewUserProfile(areaOffice1User, tester);
+        motUI.profile.dvsaViewUserProfile(userData.createAreaOfficeOne("ValidAo1"), tester);
 
         // When I am trying to submit an an invalid email
         String validationMessage = motUI.profile.changeEmailWithInvalidInputs(email, confirmationEmail);
@@ -142,11 +142,11 @@ public class ChangePersonEmailTests extends DslTest {
     }
 
     @DataProvider
-    private Object[][] dvsaUserChangeEmailProvider() {
+    private Object[][] dvsaUserChangeEmailProvider() throws IOException {
         return new Object[][] {
-                {areaOffice1User},
-                {vehicleExaminerUser},
-                {schemeManager}
+                {userData.createAreaOfficeOne("Ao1")},
+                {userData.createVehicleExaminer("veguy", false)},
+                {userData.createSchemeUser(false)}
         };
     }
 

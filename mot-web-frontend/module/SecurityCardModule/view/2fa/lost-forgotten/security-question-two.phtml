@@ -1,0 +1,38 @@
+<?php
+use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Form\LostOrForgottenSecurityQuestionForm;
+/** @var LostOrForgottenSecurityQuestionForm $form */
+
+$this->securityQuestionText = 'Test';
+$this->layout('layout/layout-govuk.phtml');
+$this->layout()->setVariables([
+    'pageTitle' => 'Second security question',
+    'pageSubTitle' => 'Sign in without your security card',
+    'hideUserNav' => true
+]);
+
+$successMessages    = $this->layout()->flashMessenger->getSuccessMessages();
+echo $this->partial('partial/gds/general/system-message', ['messages' => $successMessages, 'type' => 'success']);
+$this->layout()->flashMessenger->clearCurrentMessages();
+?>
+<form action="<?php echo $this->url('lost-or-forgotten-card/question-two'); ?>" method="post" autocomplete="off">
+    <?php echo $this->csrfToken(); ?>
+    <fieldset>
+        <legend class="form-title heading-large" id="question2"></legend>
+        <?php
+        echo $this->partial(
+            'partial/gds/form/control', [
+                'element' => $form->getAnswerField(),
+            ]
+        );
+        ?>
+    </fieldset>
+    <a href="<?php echo $this->url('lost-or-forgotten-card/forgot-question'); ?>">Forgotten security question</a>
+    <nav class="content-navigation">
+        <input type="submit" id = "submit" value="Continue" class="button">
+        <ul class="content-navigation__secondary">
+            <li>
+                <a href="<?php echo $this->url('lost-or-forgotten-card/question-one'); ?>">Back</a>
+            </li>
+        </ul>
+    </nav>
+</form>

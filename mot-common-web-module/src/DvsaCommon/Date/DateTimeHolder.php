@@ -45,4 +45,32 @@ class DateTimeHolder implements DateTimeHolderInterface, AutoWireableInterface
     {
         return microtime($asFloat);
     }
+
+    /**
+     * Returns current user datetime
+     *
+     * @return \DateTime
+     */
+    public function getUserCurrent($withMilliseconds = false)
+    {
+        if ($withMilliseconds === true) {
+            $microTime = microtime(true);
+
+            return new \DateTime(
+                date('Y-m-d H:i:s.'.(string)ceil(($microTime - floor($microTime))*1000000), $microTime),
+                new \DateTimeZone('Europe\London')
+            );
+
+        }
+        return new \DateTime('now', new \DateTimeZone('Europe/London'));
+    }
+
+    /**
+     * Returns current date (with time part zeroed)
+     * @return \DateTime
+     */
+    public function getUserCurrentDate()
+    {
+        return DateUtils::cropTime($this->getUserCurrent());
+    }
 }

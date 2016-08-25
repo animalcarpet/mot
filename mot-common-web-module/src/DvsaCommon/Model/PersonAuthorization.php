@@ -329,7 +329,7 @@ class PersonAuthorization
 
         return false;
     }
-
+    
     /**
      * @param $permissionName
      * @param $siteId

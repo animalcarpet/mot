@@ -1,0 +1,33 @@
+<?php $this->layout('layout/layout-govuk.phtml');
+/** @var \Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\ViewModel\RegisterCardSuccessViewModel $viewModel */
+?>
+<div></div>
+<div class="transaction-header">
+    <h1 class="transaction-header__title">Your security card has been activated</h1>
+    <span class="transaction-header__next-step">You'll need your card each time you sign in</span>
+</div>
+<div id="signIn">
+    <h3 class="heading-small">What happens next</h3>
+        <p>Next time you sign in to the MOT testing service, you will be asked for:</p>
+        <ul class="list-bullet">
+            <li>your username</li>
+            <li>your password</li>
+            <li>the PIN from your security card</li>
+        </ul>
+        <?php if ($viewModel->getHasNewAedmRole()): ?>
+        <div id="role-assignments">
+            <p><strong>You now have the role of AEDM (Authorised Examiner Designated Manager)</strong></p>
+            <p><a href="<?php echo $this->url('logout')?>">Sign out</a> and in again for the role to take effect.</p>
+        </div>
+        <?php endif; ?>
+        <?php if($viewModel->getHasPendingNominations()): ?>
+        <div id="role-nominations">
+            <h3 class="heading-small">Role nomination(s)</h3>
+            <p></p><a href="<?php echo $this->url('user-home/notification/list')?>">Accept or Reject your role nomination</a> from your list of notifications.</p>
+        <?php endif; ?>
+        <nav class="content-navigation">
+            <a href="<?php echo $this->url('user-home'); ?>" class="button">Continue to home page</a>
+            <ul class="content-navigation__secondary"></ul>
+        </nav>
+    </div>
+</>

@@ -2,12 +2,15 @@ package uk.gov.dvsa.shared;
 
 import org.joda.time.DateTime;
 import uk.gov.dvsa.data.VehicleData;
+import uk.gov.dvsa.domain.model.TwoFactorDetails;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.MotTest;
 import uk.gov.dvsa.domain.model.mot.TestOutcome;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.domain.service.MotTestService;
+import uk.gov.dvsa.domain.service.NominationService;
 import uk.gov.dvsa.domain.service.SessionManager;
+import uk.gov.dvsa.domain.service.TwoFactorService;
 import uk.gov.dvsa.helper.ReasonForRejection;
 
 import java.io.IOException;
@@ -15,9 +18,10 @@ import java.util.List;
 
 public class MotApi extends MotTestService{
     private VehicleData vehicleData = new VehicleData();
+    public final NominationService nominations = new NominationService();
 
     public MotTest createTest(User requestor, int siteId, Vehicle vehicle, TestOutcome outcome,
-                                 int mileage, DateTime issuedDate) throws IOException {
+                              int mileage, DateTime issuedDate) throws IOException {
         return createMotTest(requestor, siteId, vehicle, outcome, mileage, issuedDate);
     }
 

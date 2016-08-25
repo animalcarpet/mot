@@ -9,8 +9,8 @@ import uk.gov.dvsa.ui.pages.Page;
 
 public class LockedAccountWarningPage extends Page implements WarningPage{
 
-    private static final String PAGE_TITLE = "Your account has been locked";
-    private static final String LOCKOUT_WARNING_MESSAGE = "Your account has been locked for 30 minutes";
+    private static final String PAGE_TITLE = "Your account is locked";
+    private static final String LOCKOUT_WARNING_MESSAGE = "You have tried to sign in too many times. Try again in 30 min or reset your password.";
     @FindBy(className = "lede") private WebElement warningMessage;
 
     public LockedAccountWarningPage(MotAppDriver driver) {

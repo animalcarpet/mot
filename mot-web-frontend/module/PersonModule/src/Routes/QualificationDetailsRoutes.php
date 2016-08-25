@@ -10,6 +10,7 @@ class QualificationDetailsRoutes extends PersonProfileRoutes implements AutoWire
     const ROUTE_QUALIFICATION_DETAILS_EDIT = '/edit';
     const ROUTE_QUALIFICATION_DETAILS_REVIEW = '/review';
     const ROUTE_QUALIFICATION_DETAILS_REMOVE = '/remove';
+    const ROUTE_QUALIFICATION_DETAILS_ADD_CONFIRMATION = '/add-confirmation';
 
     public function getRoute()
     {
@@ -25,6 +26,11 @@ class QualificationDetailsRoutes extends PersonProfileRoutes implements AutoWire
     public function getAddReviewRoute()
     {
         return $this->getAddRoute().self::ROUTE_QUALIFICATION_DETAILS_REVIEW;
+    }
+
+    public function getAddConfirmationRoute()
+    {
+        return $this->getAddRoute().self::ROUTE_QUALIFICATION_DETAILS_ADD_CONFIRMATION;
     }
 
     public function getEditRoute()

@@ -7,11 +7,12 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\Factory\Security;
 
+use Core\Service\MotFrontendAuthorisationServiceInterface;
 use Dashboard\Service\TradeRolesAssociationsService;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuard;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuardBuilder;
+use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
-use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -28,7 +29,7 @@ class PersonProfileGuardBuilderFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var MotAuthorisationServiceInterface $authorisationService */
+        /** @var MotFrontendAuthorisationServiceInterface $authorisationService */
         $authorisationService = $serviceLocator->get('AuthorisationService');
 
         /** @var MotIdentityProviderInterface $identityProvider */
@@ -40,7 +41,9 @@ class PersonProfileGuardBuilderFactory implements FactoryInterface
         /** @var TradeRolesAssociationsService $tradeRolesAssociationsService */
         $tradeRolesAssociationsService = $serviceLocator->get(TradeRolesAssociationsService::class);
 
+        $twoFaFeatureToggle = $serviceLocator->get(TwoFaFeatureToggle::class);
+
         return new PersonProfileGuardBuilder($authorisationService, $identityProvider, $testerGroupAuthorisationMapper,
-            $tradeRolesAssociationsService);
+            $tradeRolesAssociationsService, $twoFaFeatureToggle);
     }
 }

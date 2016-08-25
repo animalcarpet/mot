@@ -3,6 +3,7 @@
 namespace Organisation\Controller;
 
 use Core\Controller\AbstractAuthActionController;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\Organisation\OrganisationPositionDto;
 use DvsaCommon\Enum\OrganisationBusinessRoleName;
 use DvsaCommon\Exception\UnauthorisedException;
@@ -227,9 +228,10 @@ class RoleController extends AbstractAuthActionController
      */
     public function confirmNominationAction()
     {
-        $organisationId = $this->params('id');
-        $nomineeId      = $this->params('nomineeId');
-        $roleId         = $this->params('roleId');
+        $organisationId   = $this->params('id');
+        $nomineeId        = $this->params('nomineeId');
+        $roleId           = $this->params('roleId');
+        $featureToggles   = $this->getFeatureToggles();
 
         $roleName = $this->getRoleName($roleId);
 
@@ -256,6 +258,7 @@ class RoleController extends AbstractAuthActionController
         }
 
         $displayNotification = true;
+        $twoFactorOn = $featureToggles->isEnabled(FeatureToggle::TWO_FA);
 
         if ($roleName == OrganisationBusinessRoleName::AUTHORISED_EXAMINER_DESIGNATED_MANAGER) {
             $displayNotification = false;
@@ -268,7 +271,8 @@ class RoleController extends AbstractAuthActionController
                 'nominee'             => $nominee,
                 'roleName'            => $roleName,
                 'authorisedExaminer'  => $ae,
-                'displayNotification' => $displayNotification
+                'displayNotification' => $displayNotification,
+                'twoFactorEnabled'    => $twoFactorOn
             ]
         );
     }

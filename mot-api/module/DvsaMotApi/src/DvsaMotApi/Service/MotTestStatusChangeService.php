@@ -300,16 +300,14 @@ class MotTestStatusChangeService implements TransactionAwareInterface
 
     private function isOtpApplicable($newStatus, MotTestType $testType)
     {
-        $isApplicable = false;
         $statusChangeRequiresOtp = in_array($newStatus, self::$MOT_STATUS_REQUIRE_OTP);
-        if ($statusChangeRequiresOtp
-            && !$testType->getIsDemo()
-            && !$this->authService->isGranted(PermissionInSystem::MOT_TEST_WITHOUT_OTP)
-        ) {
-            $isApplicable = true;
-        }
+        $cannotIgnoreOtp = $statusChangeRequiresOtp && !$testType->getIsDemo();
 
-        return $isApplicable;
+        $secondFactorNotRequiredForCurrentIdentity =
+            !$this->motIdentityProvider->getIdentity()->isSecondFactorRequired() &&
+            !$this->authService->isGranted(PermissionInSystem::MOT_TEST_WITHOUT_OTP);
+
+        return $cannotIgnoreOtp && $secondFactorNotRequiredForCurrentIdentity;
     }
 
     // NOTE: there should be a cancel status from client point of view that

@@ -38,6 +38,16 @@ class SitePositionController extends AbstractDvsaRestfulController implements Tr
         return ApiResponse::jsonOk(['id' => $position->getId()]);
     }
 
+    public function update($id, $data)
+    {
+        $nomineeId = $data['nomineeId'];
+        $roleCode = $data['roleCode'];
+        $siteId = intval($this->params()->fromRoute('siteId'));
+
+        $position = $this->getNominateRoleService()->updateRoleNominationNotification($siteId, $nomineeId, $roleCode);
+        return ApiResponse::jsonOk(['id' => $position->getId()]);
+    }
+
     /**
      * Removes site position of a person
      *

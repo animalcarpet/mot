@@ -1,0 +1,15 @@
+<?php
+$this->layout('layout/layout-govuk.phtml');
+$this->layout()->setVariables([
+    'pageTitle' => 'Forgotten security question(s)',
+    'hideUserNav' => true,
+]);
+?>
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <div class="lede">
+            <?php echo $this->partial('partial/gds/general/contactHelpdesk', ['config' => $this->helpdesk]); ?>
+        </div>
+        <p>You will need to provide your personal details to validate your identity, including the email address you may have used to create the account. If you have changed or forgotten this email address, please inform the advisor when you contact them.</p>
+    </div>
+</div>

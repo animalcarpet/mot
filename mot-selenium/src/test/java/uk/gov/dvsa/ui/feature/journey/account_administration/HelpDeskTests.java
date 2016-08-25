@@ -22,7 +22,6 @@ public class HelpDeskTests extends DslTest {
     private Site testSite;
     private AeDetails aeDetails;
     private String randomName = RandomDataGenerator.generateRandomString(5, System.nanoTime());
-    FeaturesService service = new FeaturesService();
 
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws IOException {

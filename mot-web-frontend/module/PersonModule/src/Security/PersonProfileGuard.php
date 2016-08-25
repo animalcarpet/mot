@@ -7,20 +7,22 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\Security;
 
+use Core\Service\MotFrontendAuthorisationServiceInterface;
 use Dashboard\Model\PersonalDetails;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
+use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Auth\Assertion\CreateMotTestingCertificateAssertion;
 use DvsaCommon\Auth\Assertion\UpdateMotTestingCertificateAssertion;
 use DvsaCommon\Auth\Assertion\RemoveMotTestingCertificateAssertion;
 use DvsaCommon\Auth\Assertion\ViewTesterTestQualityAssertion;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommon\Model\TesterAuthorisation;
-use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\Enum\RoleCode;
 use DvsaCommon\Model\OrganisationBusinessRoleCode;
+use DvsaFeature\FeatureToggles;
 use InvalidArgumentException;
 use PersonApi\Dto\PersonDetails;
 
@@ -30,7 +32,7 @@ use PersonApi\Dto\PersonDetails;
 class PersonProfileGuard
 {
     /**
-     * @var MotAuthorisationServiceInterface
+     * @var MotFrontendAuthorisationServiceInterface
      */
     private $authorisationService;
 
@@ -74,6 +76,9 @@ class PersonProfileGuard
      */
     private $loggedInPersonRoles;
 
+    /** @var  TwoFaFeatureToggle */
+    private $twoFaFeatureToggle;
+
     private static $dvsaRoles = [
         RoleCode::SCHEME_MANAGER,
         RoleCode::SCHEME_USER,
@@ -91,18 +96,19 @@ class PersonProfileGuard
     /**
      * PersonProfileGuard constructor.
      *
-     * @param MotAuthorisationServiceInterface $authorisationService
+     * @param MotFrontendAuthorisationServiceInterface $authorisationService
      * @param MotIdentityProviderInterface     $identityProvider
      * @param PersonalDetails                  $targetPersonDetails
      * @param TesterAuthorisation              $testerAuthorisation
      * @param array                            $tradeRolesAndAssociations
      * @param string                           $context                   The context in which we are viewing the profile. Could be AE, VE
      *                                                                    or User Search.
+     * @param TwoFaFeatureToggle                   $twoFaFeatureToggle
      */
-    public function __construct(MotAuthorisationServiceInterface $authorisationService,
+    public function __construct(MotFrontendAuthorisationServiceInterface $authorisationService,
                                 MotIdentityProviderInterface $identityProvider, PersonalDetails $targetPersonDetails,
                                 TesterAuthorisation $testerAuthorisation, array $tradeRolesAndAssociations,
-                                $context)
+                                $context, TwoFaFeatureToggle $twoFaFeatureToggle)
     {
         $this->authorisationService = $authorisationService;
         $this->identityProvider = $identityProvider;
@@ -116,6 +122,7 @@ class PersonProfileGuard
                 $context, implode('", "', $availableContexts)));
         }
         $this->context = $context;
+        $this->twoFaFeatureToggle = $twoFaFeatureToggle;
     }
 
     /**
@@ -206,6 +213,14 @@ class PersonProfileGuard
     {
         return $this->isViewingOwnProfile()
         || $this->authorisationService->isGranted(PermissionInSystem::EDIT_TELEPHONE_NUMBER);
+    }
+
+    public function canOrderSecurityCardForAnotherPerson()
+    {
+        return $this->context === ContextProvider::USER_SEARCH_CONTEXT && $this->loggedInPersonHasAnyRoleOf([
+            RoleCode::CUSTOMER_SERVICE_MANAGER,
+            RoleCode::CUSTOMER_SERVICE_OPERATIVE
+        ]);
     }
 
     /**
@@ -384,6 +399,31 @@ class PersonProfileGuard
     {
         return $this->authorisationService->isGranted(PermissionInSystem::EDIT_PERSON_ADDRESS)
             || ($this->isViewingOwnProfile());
+    }
+
+    /**
+     * @return bool
+     */
+    public function canViewSecurityCard()
+    {
+        $isViewingOwnProfile = $this->isViewingOwnProfile();
+        $canViewOtherUsersSecurityCard = $this->authorisationService->isGranted(
+            PermissionInSystem::CAN_VIEW_OTHER_2FA_SECURITY_CARD
+        );
+
+        return $this->twoFaFeatureToggle->isEnabled()
+            && ((!$isViewingOwnProfile && $canViewOtherUsersSecurityCard) ||
+            ($isViewingOwnProfile && $this->identityProvider->getIdentity()->isSecondFactorRequired()));
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExpectedToRegisterForTwoFactorAuth()
+    {
+        return $this->authorisationService->isGranted(PermissionInSystem::AUTHENTICATE_WITH_2FA)
+                && !$this->authorisationService->isDvsa()
+                && !$this->identityProvider->getIdentity()->isSecondFactorRequired();
     }
 
     /**

@@ -5,6 +5,9 @@ namespace Account\Controller;
 use Account\Service\ClaimAccountService;
 use Account\Validator\ClaimValidator;
 use Core\Controller\AbstractAuthActionController;
+use Core\Service\MotFrontendIdentityProviderInterface;
+use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
+use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use DvsaCommon\UrlBuilder\AccountUrlBuilderWeb;
 use Zend\Http\Response;
@@ -23,7 +26,7 @@ class ClaimController extends AbstractAuthActionController
     const STEP_1_NAME = 'confirmEmailAndPassword';
     const STEP_2_NAME = 'setSecurityQuestion';
     const STEP_3_NAME = 'review';
-    const STEP_4_NAME = 'displayPin';
+    const STEP_4_NAME = 'success';
 
     const PIN_ARRAY_KEY = 'pin';
 
@@ -31,16 +34,20 @@ class ClaimController extends AbstractAuthActionController
     private $claimAccountService;
     /** @var  ClaimValidator */
     private $claimValidator;
+    /** @var MotIdentityProviderInterface  */
+    private $motIdentityProvider;
     /** @var  array */
     private $config;
 
     public function __construct(
         ClaimAccountService $claimAccountService,
         ClaimValidator $claimValidator,
+        MotIdentityProviderInterface $motIdentityProvider,
         $config
     ) {
         $this->claimAccountService = $claimAccountService;
         $this->claimValidator = $claimValidator;
+        $this->motIdentityProvider = $motIdentityProvider;
         $this->config = $config;
     }
 
@@ -171,11 +178,16 @@ class ClaimController extends AbstractAuthActionController
     }
 
 
-    public function displayPinAction()
+    public function successAction()
     {
         $sessionAsArray = $this->claimAccountService->sessionToArray() ?: [];
         $stepData = $this->getStepData(self::STEP_3_NAME) + $sessionAsArray;
-        return new ViewModel($stepData);
+
+        $is2FA = $this->motIdentityProvider->getIdentity()->isSecondFactorRequired();
+
+        $vm = new ViewModel($stepData);
+        $vm->setTemplate($is2FA ? 'account/claim/2fa-success' : 'account/claim/pin-success');
+        return $vm;
     }
 
     /**
@@ -235,7 +247,7 @@ class ClaimController extends AbstractAuthActionController
         } elseif ($stepName == self::STEP_3_NAME) {
             $url = AccountUrlBuilderWeb::claimReview();
         } elseif ($stepName == self::STEP_4_NAME) {
-            $url = AccountUrlBuilderWeb::claimDisplayPin();
+            $url = $this->url()->fromRoute('account/claim/success');
         } else {
             $url = AccountUrlBuilderWeb::claimEmailAndPassword();
         }

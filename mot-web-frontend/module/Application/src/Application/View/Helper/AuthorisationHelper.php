@@ -83,6 +83,12 @@ class AuthorisationHelper extends AbstractHelper implements MotFrontendAuthorisa
         return $this->authorisationService->isTester();
     }
 
+    /** @deprecated check permissions, not roles */
+    public function isDvsa()
+    {
+        return $this->authorisationService->isDvsa();
+    }
+
     /**
      * Returns the user's roles (at any level) as an array.
      *

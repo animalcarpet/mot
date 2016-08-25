@@ -1,0 +1,24 @@
+<?php
+$this->layout('layout/layout-govuk.phtml');
+$this->layout()->setVariables([
+    'pageTitle' => 'Sign in successful',
+]);
+?>
+<div class="banner--confirmation">
+    <span class="banner__heading-large">You have signed in without your security card</span>
+</div>
+<h3 class="heading-medium">What happens next</h3>
+<p>Next time you sign in, you will need to answer your security questions. </p>
+
+<?php if ($this->showCardOrderLink) : ?>
+    <p>If your card is lost or damaged, then <a id="orderCard" href="<?php echo $this->url('security-card-order/new') ?>">order a new security card</a>.
+        You can also order one later from your profile.</p>
+<?php endif; ?>
+
+<nav class="content-navigation">
+    <ul class="content-navigation__secondary">
+        <li>
+            <a id="continueToHome" href="<?php echo $this->url('user-home'); ?>">Continue to home</a>
+        </li>
+    </ul>
+</nav>

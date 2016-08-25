@@ -34,14 +34,21 @@ class AccountService
      */
     private $tokenManager;
 
+    /**
+     * @var SecurityQuestionsService $securityQuestionsService
+     */
+    private $securityQuestionsService;
+
     public function __construct(
         EntityManager $entityManager,
         Client $restClient,
-        TestSupportAccessTokenManager $tokenManager
+        TestSupportAccessTokenManager $tokenManager,
+        SecurityQuestionsService $securityQuestionsService
     ) {
         $this->entityManager = $entityManager;
         $this->restClient = $restClient;
         $this->tokenManager = $tokenManager;
+        $this->securityQuestionsService = $securityQuestionsService;
     }
 
     /**
@@ -81,7 +88,7 @@ class AccountService
             'accountClaimRequired' => $accountPerson->isAccountClaimRequired(),
             'passwordChangeRequired' => $accountPerson->isPasswordChangeRequired(),
             'pin' => '123456',
-            'authenticationMethod' => PersonAuthType::PIN
+            'authenticationMethod' => $accountPerson->getAuthenticationMethod()
         ];
 
         if ($addLicence) {
@@ -93,6 +100,9 @@ class AccountService
         }
 
         $result = $this->restClient->post(UrlBuilder::of()->account()->toString(), $personDetails);
+
+        $this->securityQuestionsService->create($result['data'], 1);
+        $this->securityQuestionsService->create($result['data'], 2);
 
         if ($accountPerson->isSecurityQuestionsRequired()) {
             foreach ([1, 2] as $questionId) {

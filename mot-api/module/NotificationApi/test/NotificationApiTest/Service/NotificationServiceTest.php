@@ -35,9 +35,7 @@ class NotificationServiceTest extends AbstractServiceTestCase
     {
         $mocks = $this->prepSoNotificationGetUsesNotificationAndPersonIdValues(999, 123, false);
 
-        $notificationService = new NotificationService(
-            $mocks->serviceManager, $mocks->validator, $mocks->notificationRepository
-        );
+        $notificationService = new NotificationService($mocks->serviceManager, $mocks->validator, $mocks->notificationRepository);
 
         // We are userid: 999 so this should throw an exception
         $notificationService->get(123);
@@ -47,16 +45,14 @@ class NotificationServiceTest extends AbstractServiceTestCase
     public function testThrowsIfRecipientFailsToLoad()
     {
         $mocks = $this->prepSoNotificationGetUsesNotificationAndPersonIdValues(999, null);
-        $notificationService = new NotificationService(
-            $mocks->serviceManager, $mocks->validator, $mocks->notificationRepository
-        );
+        $notificationService = $this->getMockNotificationService($mocks);
         $notificationService->get(123);
     }
 
     public function test_get_notification_works_when_user_can_see_same_id()
     {
         $mocks = $this->prepSoNotificationGetUsesNotificationAndPersonIdValues(42, 42);
-        $notificationService = new NotificationService($mocks->serviceManager, $mocks->validator, $mocks->notificationRepository);
+        $notificationService = $this->getMockNotificationService($mocks);
         $notification = $notificationService->get(42);
         $this->assertEquals(42, $notification->getId());
     }
@@ -64,9 +60,8 @@ class NotificationServiceTest extends AbstractServiceTestCase
     public function test_delete_validId_shouldBeOk()
     {
         $mocks = $this->prepSoNotificationGetUsesNotificationAndPersonIdValues(123, 123);
-        $notificationService = new NotificationService(
-            $mocks->serviceManager, $mocks->validator, $mocks->notificationRepository
-        );
+        $notificationService = $this->getMockNotificationService($mocks);
+
         // We are userid: 999 so this should throw an exception
         $notificationService->get(123);
     }
@@ -75,9 +70,8 @@ class NotificationServiceTest extends AbstractServiceTestCase
     public function test_delete_invalidId_shouldFail()
     {
         $mocks = $this->prepSoNotificationGetUsesNotificationAndPersonIdValues(999, 123);
-        $notificationService = new NotificationService(
-            $mocks->serviceManager, $mocks->validator, $mocks->notificationRepository
-        );
+        $notificationService = $this->getMockNotificationService($mocks);
+
         // We are userid: 999 so this should throw an exception
         $notificationService->get(123);
     }
@@ -130,9 +124,7 @@ class NotificationServiceTest extends AbstractServiceTestCase
         $notificationId = 123;
         $mocks = $this->prepSoNotificationGetUsesNotificationAndPersonIdValues(123, $notificationId);
 
-        $notificationService = new NotificationService(
-            $mocks->serviceManager, $mocks->validator, $mocks->notificationRepository
-        );
+        $notificationService = $this->getMockNotificationService($mocks);
 
         $mocks->notification->setReadOn(null);
         $notificationService->markAsRead($notificationId);
@@ -147,9 +139,7 @@ class NotificationServiceTest extends AbstractServiceTestCase
         $notificationId = 123;
         $mocks = $this->prepSoNotificationGetUsesNotificationAndPersonIdValues(123, $notificationId);
 
-        $notificationService = new NotificationService(
-            $mocks->serviceManager, $mocks->validator, $mocks->notificationRepository
-        );
+        $notificationService = $this->getMockNotificationService($mocks);
 
         $mocks->notification->setReadOn(null);
         $notificationService->markAsRead($notificationId);
@@ -163,9 +153,8 @@ class NotificationServiceTest extends AbstractServiceTestCase
         $originalNotification = $mocks->notification;
         $mocks = $this->prepSoNotificationGetUsesNotificationAndPersonIdValues(123, $notificationId);
         $mocks->notification = $originalNotification;
-        $notificationService = new NotificationService(
-            $mocks->serviceManager, $mocks->validator, $mocks->notificationRepository
-        );
+        $notificationService = $this->getMockNotificationService($mocks);
+
         // ensure a second passed to make timestamps stale...
         sleep(1);
         // $n is the returned notification, should be the original
@@ -488,7 +477,7 @@ class NotificationServiceTest extends AbstractServiceTestCase
             'authService'    => $mockAuthService,
             'person'         => $mockIdentity,
             'notification'   => $dataNotification,
-            'notificationRepository' => $notificationRepository
+            'notificationRepository' => $notificationRepository,
         ];
     }
 
@@ -507,5 +496,10 @@ class NotificationServiceTest extends AbstractServiceTestCase
         }
 
         return $mockAuthorisationService;
+    }
+
+    private function getMockNotificationService($mocks)
+    {
+        return new NotificationService($mocks->serviceManager, $mocks->validator, $mocks->notificationRepository);
     }
 }

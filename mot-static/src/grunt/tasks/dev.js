@@ -119,6 +119,11 @@ module.exports = function (grunt, config) {
             'sshexec:mysql_restart_dev',
             'sshexec:jasper_restart'
         ]);
+        grunt.registerTask('dev:2fa_off', 'Sets 2fa toggle off', ['sshexec:ft2fa_off_dev', 'sshexec:ft2fa_off_dev2', 'sshexec:authr_restart', 'dev:restart:apache'])
+        grunt.registerTask('dev:2fa_on', 'Sets 2fa toggle on', ['sshexec:ft2fa_on_dev', 'sshexec:ft2fa_on_dev2', 'sshexec:authr_restart','dev:restart:apache'])
+        grunt.registerTask('dev:2fa_hardstop_off', 'Sets 2fa toggle off', ['sshexec:ft2fahardstop_off_dev', 'dev:restart:apache'])
+        grunt.registerTask('dev:2fa_hardstop_on', 'Sets 2fa toggle on', ['sshexec:ft2fahardstop_on_dev', 'dev:restart:apache'])
+
         grunt.registerTask('amazon:cache:clear:national-statistics', 'Clears the Amazon S3 cache of national statistics for test quality information', [
             'shell:national_statistics_amazon_cache_clear'
         ]);

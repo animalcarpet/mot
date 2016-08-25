@@ -11,12 +11,12 @@ use DvsaEntities\Entity\OrganisationBusinessRoleMap;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Repository\OrganisationRepository;
 use OrganisationApi\Model\NominationVerifier;
-use OrganisationApi\Model\Operation\NominateByRequestOperation;
+use OrganisationApi\Model\Operation\ConditionalNominationOperation;
 use OrganisationApi\Model\RoleAvailability;
 use OrganisationApi\Model\RoleRestriction\AedmRestriction;
 use OrganisationApi\Model\RoleRestriction\AedRestriction;
 use OrganisationApi\Model\RoleRestrictionsSet;
-use OrganisationApi\Service\OrganisationNominationService;
+use OrganisationApi\Service\OrganisationNominationNotificationService;
 use NotificationApi\Service\NotificationService;
 
 class NominateAedmTest extends AbstractServiceTestCase
@@ -24,7 +24,7 @@ class NominateAedmTest extends AbstractServiceTestCase
     /** @var OrganisationRepository */
     private $positionRepository;
 
-    /** @var NominateByRequestOperation */
+    /** @var ConditionalNominationOperation */
     private $nominateOperation;
     private $person;
 
@@ -50,11 +50,11 @@ class NominateAedmTest extends AbstractServiceTestCase
 
         $nominationVerifier       = new NominationVerifier($roleAvailability);
         $this->positionRepository = $this->getMockWithDisabledConstructor(\Doctrine\ORM\EntityManager::class);
-        $nominationServiceMock    = $this->getMockWithDisabledConstructor(OrganisationNominationService::class);
+        $nominationServiceMock    = $this->getMockWithDisabledConstructor(OrganisationNominationNotificationService::class);
 
         $this->notificationService = XMock::of(NotificationService::class);
 
-        $this->nominateOperation = new NominateByRequestOperation(
+        $this->nominateOperation = new ConditionalNominationOperation(
             $this->positionRepository, $nominationVerifier, $nominationServiceMock, $this->notificationService
         );
     }

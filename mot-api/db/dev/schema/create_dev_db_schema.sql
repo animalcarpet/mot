@@ -30,6 +30,41 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/ `mot2` /*!40100 DEFAULT CHARACTER SET u
 
 USE `mot2`;
 
+DELIMITER ;;
+CREATE FUNCTION `mot2`.`is_mot_trigger_disabled`() RETURNS BOOLEAN
+    NO SQL
+    SQL SECURITY INVOKER
+BEGIN
+    /**
+    * Check @is_mot_trigger_disabled to see if after-update history triggers should be enabled. If the session variable
+    * is not set then it is set to FALSE, i.e. triggers are enabled (not disabled).
+    *
+    * return    current session held trigger disabler @is_mot_trigger_disabled
+    *
+    * see       `mot2`.`set_mot_trigger_disabled`()
+    */
+    DECLARE c_module VARCHAR(64) DEFAULT 'is_mot_trigger_disabled';
+    DECLARE c_version VARCHAR(256) DEFAULT '$Id$';
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        DECLARE c_null CHAR(4) CHARACTER SET latin1 DEFAULT 'NULL';
+        DECLARE v_returned_sqlstate, v_message_text VARCHAR(1024) DEFAULT '';
+        GET DIAGNOSTICS CONDITION 1 v_returned_sqlstate = RETURNED_SQLSTATE, v_message_text = MESSAGE_TEXT;
+        CALL `ddr_util`.`logger`('error', c_module, CONCAT_WS('|', v_returned_sqlstate, v_message_text,
+                                                              IFNULL(@is_mot_trigger_disabled, c_null)));
+        RESIGNAL;
+    END;
+
+    IF (@is_mot_trigger_disabled IS NULL)
+    THEN
+        CALL `mot2`.`set_mot_trigger_disabled`(FALSE); -- this call will log a 'warn' message
+    END IF;
+
+    RETURN @is_mot_trigger_disabled;
+END;;
+DELIMITER ;
+
 --
 -- Table structure for table `BATCH_JOB_EXECUTION`
 --
@@ -38107,3 +38142,4 @@ USE `ut_mot2`;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2016-07-04 16:40:12
+

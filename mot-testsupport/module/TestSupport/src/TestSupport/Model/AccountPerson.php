@@ -4,6 +4,7 @@ namespace TestSupport\Model;
 
 
 use DvsaCommon\Enum\LicenceCountryCode;
+use DvsaCommon\Enum\PersonAuthType;
 use DvsaCommon\Utility\ArrayUtils;
 use TestSupport\Helper\DataGeneratorHelper;
 use TestSupport\Helper\RequestorParserHelper;
@@ -23,10 +24,10 @@ class AccountPerson {
     private $securityQuestionsRequired;
     private $drivingLicenceNumber;
     private $drivingLicenceRegion;
+    private $authenticationMethod;
 
     private $creatorUsername;
     private $creatorPassword;
-
 
     /**
      * @param array               $data
@@ -49,6 +50,7 @@ class AccountPerson {
         $this->passwordChangeRequired = ArrayUtils::tryGet($data, 'passwordChangeRequired', false);
         $this->addressLine2 = ArrayUtils::tryGet($data, 'addressLine2', $dataGeneratorHelper->addressLine2());
         $this->securityQuestionsRequired = ArrayUtils::tryGet($data, 'securityQuestionsRequired', false);
+        $this->authenticationMethod = ArrayUtils::tryGet($data, 'authenticationMethod', PersonAuthType::PIN);
         $this->drivingLicenceNumber = ArrayUtils::tryGet(
             $data,
             'drivingLicenceNumber',
@@ -135,6 +137,11 @@ class AccountPerson {
     public function getDateOfBirth()
     {
         return $this->dateOfBirth;
+    }
+
+    public function getAuthenticationMethod()
+    {
+        return $this->authenticationMethod;
     }
 
     public function isAccountClaimRequired()

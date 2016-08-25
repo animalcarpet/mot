@@ -12,6 +12,8 @@ use Application\Service\CatalogService;
 use Dashboard\Authorisation\ViewTradeRolesAssertion;
 use Dashboard\ViewModel\Sidebar\ProfileSidebar;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\RegisteredCardService;
+use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -34,6 +36,8 @@ class UserProfileController extends AbstractDvsaMotTestController
     const PAGE_SUBTITLE_INDEX = 'User profile';
     const RECLAIM_ACCOUNT_SUCCESS = 'Account reclaim by email was requested';
     const RECLAIM_ACCOUNT_FAILURE = 'Account reclaim by email has failed';
+    const RECLAIM_ACCOUNT_SYSTEM_MESSAGE_NON_2FA_USER = 'This will reset the user\'s password and require them to set up their security questions and PIN when they next sign in.';
+    const RECLAIM_ACCOUNT_SYSTEM_MESSAGE_2FA_USER = 'This will reset the user\'s password and require them to set up their security questions when they next sign in.';
 
     /**
      * @var HelpdeskAccountAdminService
@@ -66,12 +70,25 @@ class UserProfileController extends AbstractDvsaMotTestController
     private $viewTradeRolesAssertion;
 
     /**
+     * @var RegisteredCardService
+     */
+    private $registeredCardService;
+
+    /**
+     * @var TwoFaFeatureToggle
+     */
+    private $twoFaFeatureToggle;
+
+
+    /**
      * @param MotAuthorisationServiceInterface $authorisationService
      * @param HelpdeskAccountAdminService      $userAccountAdminService
      * @param TesterGroupAuthorisationMapper   $testerGroupAuthorisationMapper
      * @param PersonRoleManagementService      $personRoleManagementService
      * @param CatalogService                   $catalogService
      * @param ViewTradeRolesAssertion          $viewTradeRolesAssertion
+     * @param RegisteredCardService            $registeredCardService
+     * @param TwoFaFeatureToggle               $twoFaFeatureToggle
      */
     public function __construct(
         MotAuthorisationServiceInterface $authorisationService,
@@ -79,7 +96,9 @@ class UserProfileController extends AbstractDvsaMotTestController
         TesterGroupAuthorisationMapper $testerGroupAuthorisationMapper,
         PersonRoleManagementService $personRoleManagementService,
         CatalogService $catalogService,
-        ViewTradeRolesAssertion $viewTradeRolesAssertion
+        ViewTradeRolesAssertion $viewTradeRolesAssertion,
+        RegisteredCardService $registeredCardService,
+        TwoFaFeatureToggle $twoFaFeatureToggle
     ) {
         $this->userAccountAdminService = $userAccountAdminService;
         $this->authorisationService = $authorisationService;
@@ -87,6 +106,8 @@ class UserProfileController extends AbstractDvsaMotTestController
         $this->personRoleManagementService = $personRoleManagementService;
         $this->catalogService = $catalogService;
         $this->viewTradeRolesAssertion = $viewTradeRolesAssertion;
+        $this->registeredCardService = $registeredCardService;
+        $this->twoFaFeatureToggle = $twoFaFeatureToggle;
     }
 
     /**
@@ -223,6 +244,8 @@ class UserProfileController extends AbstractDvsaMotTestController
             $this->params()->fromRoute('id') :
             $this->params()->fromRoute('personId');
 
+        $person = $this->userAccountAdminService->getUserProfile($personId);
+
         $prgHelper = new PrgHelper($this->getRequest());
         if ($prgHelper->isRepeatPost()) {
             return $this->redirect()->toUrl($prgHelper->getRedirectUrl());
@@ -232,13 +255,18 @@ class UserProfileController extends AbstractDvsaMotTestController
             return $this->claimAccountProcess($personId, $prgHelper);
         }
         $presenter = new UserProfilePresenter(
-            $this->userAccountAdminService->getUserProfile($personId),
+            $person,
             $this->getTesterAuthorisationViewModel($personId),
             $this->catalogService
         );
 
         $pageTitle = 'Reclaim account';
-        $view = $this->createViewModel($personId, $pageTitle, $presenter);
+
+        /* @var bool */
+        $is2faActiveUser =$this->twoFaFeatureToggle->isEnabled() &&
+            $this->registeredCardService->is2faActiveUser($person->getUserName());
+
+        $view = $this->createViewModel($personId, $pageTitle, $presenter, false, $is2faActiveUser);
 
         return $view->setVariable('prgHelper', $prgHelper);
     }
@@ -276,10 +304,12 @@ class UserProfileController extends AbstractDvsaMotTestController
      * @param string               $pageTitle
      * @param UserProfilePresenter $presenter
      * @param bool                 $isProfile
+     * @param bool                 $isFor2FaEnabledUser
      *
      * @return ViewModel
      */
-    private function createViewModel($personId, $pageTitle, UserProfilePresenter $presenter, $isProfile = false)
+    private function createViewModel($personId, $pageTitle, UserProfilePresenter $presenter,
+                                     $isProfile = false, $isFor2FaEnabledUser = false)
     {
         $this->layout()->setVariable('pageSubTitle', self::PAGE_SUBTITLE_INDEX);
         $this->layout()->setVariable('pageTitle', $pageTitle);
@@ -328,6 +358,10 @@ class UserProfileController extends AbstractDvsaMotTestController
                     $this->buildUrlWithCurrentSearchQuery(
                         UserAdminUrlBuilderWeb::userProfile($personId)
                     ),
+                'reclaimSystemMessage' => $isFor2FaEnabledUser ?
+                    self::RECLAIM_ACCOUNT_SYSTEM_MESSAGE_2FA_USER :
+                    self::RECLAIM_ACCOUNT_SYSTEM_MESSAGE_NON_2FA_USER,
+
             ]
         );
 

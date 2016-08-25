@@ -57,6 +57,10 @@ final class ReviewStepAction implements AutoWireableInterface
         if ($isPost) {
             try {
                 $process->update($formData);
+
+                if ($process->hasConfirmationPage()) {
+                    return $process->redirectToConfirmationPage();
+                }
                 $result = $process->redirectToStartPage();
                 $result->addSuccessMessage($process->getSuccessfulEditMessage());
 

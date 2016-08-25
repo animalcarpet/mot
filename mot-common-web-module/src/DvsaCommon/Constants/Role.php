@@ -31,4 +31,5 @@ class Role
     const VEHICLE_EXAMINER = 'VEHICLE-EXAMINER';
     const FINANCE = 'FINANCE';
     const GVTS_TESTER = 'GVTS-TESTER';
+    const CENTRAL_ADMIN_TEAM = 'CENTRAL-ADMIN-TEAM';
 }

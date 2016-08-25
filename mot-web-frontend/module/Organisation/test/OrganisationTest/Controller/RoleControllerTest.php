@@ -128,7 +128,8 @@ class RoleControllerTest extends AbstractFrontendControllerTestCase
                 'id'        => $this->organisationId,
                 'nomineeId' => $this->personId,
                 'roleId'    => $this->roleId,
-                'displayNotification' => true
+                'displayNotification' => true,
+                'twoFactorEnabled'    => true
             ]
         );
 

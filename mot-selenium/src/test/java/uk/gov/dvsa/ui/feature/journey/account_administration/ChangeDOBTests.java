@@ -3,7 +3,6 @@ package uk.gov.dvsa.ui.feature.journey.account_administration;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import uk.gov.dvsa.domain.model.AeDetails;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.ui.DslTest;
@@ -17,26 +16,11 @@ import static org.hamcrest.core.Is.is;
 
 public class ChangeDOBTests extends DslTest {
     private static final String DOB_ERROR_MESSAGE = "must be a valid date of birth";
-
-    private User areaOffice1User;
-    private User vehicleExaminerUser;
-    private User tester;
-    private User schemeManager;
-    private Site testSite;
-    private AeDetails aeDetails;
-    private User aedm;
-    private User siteManager;
+    private Site site;
 
     @BeforeClass(alwaysRun = true)
-    private void setup() throws IOException {
-        aeDetails = aeData.createAeWithDefaultValues();
-        testSite = siteData.createNewSite(aeDetails.getId(), "Test_Site");
-        areaOffice1User = userData.createAreaOfficeOne("AreaOfficerOne");
-        vehicleExaminerUser = userData.createVehicleExaminer("VehicleExaminer", false);
-        tester = userData.createTester(testSite.getId());
-        schemeManager = userData.createSchemeUser(false);
-        aedm = userData.createAedm(aeDetails.getId(), "Test", false);
-        siteManager = userData.createSiteManager(testSite.getId(), false);
+    private void setUp() throws IOException {
+        site = siteData.createSite();
     }
 
     @Test(groups = {"Regression", "BL-927"},
@@ -45,7 +29,7 @@ public class ChangeDOBTests extends DslTest {
             dataProvider = "dvsaUserChangeDOBProvider")
     public void dvsaUserCanChangeDOBOnOtherPersonProfile(User user) throws IOException {
         // Given I am on the profile page of a user as DVSA
-        motUI.profile.dvsaViewUserProfile(user, tester);
+        motUI.profile.dvsaViewUserProfile(user, userData.createTester(site.getId()));
 
         // When I change the Date of Birth
         motUI.profile.changeDateOfBirthTo("10 Apr 1980");
@@ -74,7 +58,7 @@ public class ChangeDOBTests extends DslTest {
     public void validationMessageDisplayedForInvalidInput(String day, String month, String year) throws IOException, URISyntaxException {
 
         // Given I'm on the New Person Profile page as logged user
-        motUI.profile.dvsaViewUserProfile(areaOffice1User, tester);
+        motUI.profile.dvsaViewUserProfile(userData.createAreaOfficeOne("ao1"), userData.createTester(site.getId()));
 
         // When I am trying to change a date of birth for a person with invalid values
         String validationMessage = motUI.profile.changeDOBwithInvalidValues(day, month, year);
@@ -88,7 +72,7 @@ public class ChangeDOBTests extends DslTest {
             description = "Test that Authorised user can navigate to Change date of birth page and backward")
     public void dvsaUserCanNavigateToAndBackwardDOBPage() throws IOException {
         // Given I am on other person profile as an authorised user
-        motUI.profile.dvsaViewUserProfile(areaOffice1User, tester);
+        motUI.profile.dvsaViewUserProfile(userData.createAreaOfficeOne("ao1"), userData.createTester(site.getId()));
 
         // When I am navigating to Change date of birth page and clicking on cancel and return link
         motUI.profile.page().clickChangeDOBLink().clickCancelAndReturnLink();
@@ -98,11 +82,11 @@ public class ChangeDOBTests extends DslTest {
     }
 
     @DataProvider
-    private Object[][] dvsaUserChangeDOBProvider() {
+    private Object[][] dvsaUserChangeDOBProvider() throws IOException {
         return new Object[][] {
-                {areaOffice1User},
-                {vehicleExaminerUser},
-                {schemeManager}
+                {userData.createAreaOfficeOne("Ao1Test")},
+                {userData.createVehicleExaminer("vetest", false)},
+                {userData.createSchemeUser(false)}
         };
     }
 
@@ -116,14 +100,14 @@ public class ChangeDOBTests extends DslTest {
     }
 
     @DataProvider
-    private Object[][] userCantSeeChangeDOBLinkProvider() {
+    private Object[][] userCantSeeChangeDOBLinkProvider() throws IOException {
         return new Object[][] {
-                {areaOffice1User},
-                {vehicleExaminerUser},
-                {schemeManager},
-                {aedm},
-                {siteManager},
-                {tester}
+                {userData.createUserAsAreaOfficeOneUser("areaOne")},
+                {userData.createVehicleExaminer("ve1", false)},
+                {userData.createSchemeUser(false)},
+                {userData.createAedm(false)},
+                {userData.createSiteManager(site.getId(), false)},
+                {userData.createTester(site.getId())}
         };
     }
 }

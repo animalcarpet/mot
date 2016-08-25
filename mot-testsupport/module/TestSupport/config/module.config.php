@@ -13,7 +13,7 @@ return [
             Controller\SchemeMgtUserDataController::class   => Controller\SchemeMgtUserDataController::class,
             Controller\SchemeUserDataController::class      => Controller\SchemeUserDataController::class,
             Controller\AeDataController::class              => Controller\AeDataController::class,
-            Controller\AedDataController::class             => Controller\AedDataController::class,
+            Controller\OrganisationRoleDataController::class             => Controller\OrganisationRoleDataController::class,
             Controller\AedmDataController::class            => Controller\AedmDataController::class,
             Controller\VtsDataController::class             => Controller\VtsDataController::class,
             Controller\SiteManagerDataController::class     => Controller\SiteManagerDataController::class,
@@ -33,6 +33,7 @@ return [
             Controller\SpecialNoticeDataController::class   => Controller\SpecialNoticeDataController::class,
             Controller\CustomerServiceCentreOperativeDataController::class
                 => Controller\CustomerServiceCentreOperativeDataController::class,
+            Controller\CustomerServiceManagerDataController::class     => Controller\CustomerServiceManagerDataController::class,
             Controller\DvlaOperativeDataController::class   => Controller\DvlaOperativeDataController::class,
             Controller\EventDataController::class           => Controller\EventDataController::class,
             Controller\SecurityQuestionDataController::class=> Controller\SecurityQuestionDataController::class,
@@ -40,10 +41,16 @@ return [
             Controller\SlotTransactionController::class     =>   Controller\SlotTransactionController::class,
             Controller\DvlaVehicleDataController::class => Controller\DvlaVehicleDataController::class,
             Controller\TesterAuthorisationStatusController::class => Controller\TesterAuthorisationStatusController::class,
-            Controller\DocumentController::class            =>  Controller\DocumentController::class,
-            Controller\PersonRoleController::class            =>  Controller\PersonRoleController::class,
+            Controller\DocumentController::class            => Controller\DocumentController::class,
+            Controller\PersonRoleController::class          => Controller\PersonRoleController::class,
+            Controller\SiteRoleController::class            => Controller\SiteRoleController::class,
+            Controller\TwoFactorAuthCardController::class   => Controller\TwoFactorAuthCardController::class,
             Controller\QualificationDetailsController::class => Controller\QualificationDetailsController::class,
             Controller\StatisticsAmazonCacheController::class => Controller\StatisticsAmazonCacheController::class,
+            Controller\ClaimAccountController::class => Controller\ClaimAccountController::class,
+            Controller\CatUserController::class => Controller\CatUserController::class,
+            Controller\SiteRoleNominationController::class => Controller\SiteRoleNominationController::class,
+            Controller\OrganisationRoleNominationController::class => Controller\OrganisationRoleNominationController::class,
             Controller\AnnualAssessmentCertificateController::class => Controller\AnnualAssessmentCertificateController::class,
         ],
     ],
@@ -73,6 +80,15 @@ return [
                     'route' => '/testsupport',
                 ],
                 'child_routes' => [
+                    'claimAccountSub' => [
+                        'type'    => 'Segment',
+                        'options' => [
+                            'route'    => '/claimaccount',
+                            'defaults' => [
+                                'controller' => Controller\ClaimAccountController::class
+                            ],
+                        ],
+                    ],
                     'testerSub'          => [
                         'type'    => 'Segment',
                         'options' => [
@@ -88,6 +104,15 @@ return [
                             'route'    => '/inactivetester',
                             'defaults' => [
                                 'controller' => Controller\InactiveTesterDataController::class
+                            ],
+                        ],
+                    ],
+                    'catUserSub'          => [
+                        'type'    => 'Segment',
+                        'options' => [
+                            'route'    => '/catuser',
+                            'defaults' => [
+                                'controller' => Controller\CatUserController::class
                             ],
                         ],
                     ],
@@ -132,7 +157,7 @@ return [
                         'options' => [
                             'route'    => '/aed',
                             'defaults' => [
-                                'controller' => Controller\AedDataController::class
+                                'controller' => Controller\OrganisationRoleDataController::class
                             ],
                         ],
                     ],
@@ -262,6 +287,15 @@ return [
                             'route'    => '/csco',
                             'defaults' => [
                                 'controller' => Controller\CustomerServiceCentreOperativeDataController::class,
+                            ],
+                        ],
+                    ],
+                    'csmSub'             => [
+                        'type'    => 'Segment',
+                        'options' => [
+                            'route'    => '/csm',
+                            'defaults' => [
+                                'controller' => Controller\CustomerServiceManagerDataController::class,
                             ],
                         ],
                     ],
@@ -459,6 +493,16 @@ return [
                                     ],
                                 ]
                             ],
+                            'add_site_role' => [
+                                'verb'    => 'put',
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'       => '/site/:site/site-role/:role',
+                                    'defaults'    => [
+                                        'controller' => Controller\SiteRoleController::class
+                                    ],
+                                ]
+                            ],
                             'delete_role' => [
                                 'verb'    => 'delete',
                                 'type'    => 'Segment',
@@ -473,8 +517,35 @@ return [
                                 ]
                             ],
                         ],
-                    ]
-                ]
+                    ],
+                    'twoFactorAuthSub'          => [
+                        'type'    => 'Segment',
+                        'options' => [
+                            'route'    => '/two-factor-auth/card',
+                            'defaults' => [
+                                'controller' => Controller\TwoFactorAuthCardController::class
+                            ],
+                        ],
+                    ],
+                    'site-role-nomination'          => [
+                        'type'    => 'Segment',
+                        'options' => [
+                            'route'    => '/site/role/nomination',
+                            'defaults' => [
+                                'controller' => Controller\SiteRoleNominationController::class
+                            ],
+                        ],
+                    ],
+                    'role-nomination'          => [
+                        'type'    => 'Segment',
+                        'options' => [
+                            'route'    => '/org/role/nomination',
+                            'defaults' => [
+                                'controller' => Controller\OrganisationRoleNominationController::class
+                            ],
+                        ],
+                    ],
+                ],
             ],
             'cache'       => [
                 'type'          => 'Literal',

@@ -8,6 +8,11 @@ import org.openqa.selenium.support.ui.Select;
 import uk.gov.dvsa.domain.model.vehicle.Make;
 import uk.gov.dvsa.domain.model.vehicle.TransmissionType;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
+
+
+import uk.gov.dvsa.domain.model.vehicle.Make;
+import uk.gov.dvsa.domain.model.vehicle.TransmissionType;
+import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;

@@ -11,14 +11,19 @@ use Application\Data\ApiPersonalDetails;
 use Application\Service\CatalogService;
 use Dashboard\Authorisation\ViewTradeRolesAssertion;
 use Dashboard\Data\ApiDashboardResource;
+use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 use Dvsa\Mot\Frontend\PersonModule\Controller\PersonProfileController;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuardBuilder;
+use Dvsa\Mot\Frontend\SecurityCardModule\Security\SecurityCardGuard;
+use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
+use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaClient\MapperFactory;
 use UserAdmin\Service\UserAdminSessionManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
+use Application\Service\CanTestWithoutOtpService;
 
 /**
  * Factory for PersonProfileController instances.
@@ -59,8 +64,20 @@ class PersonProfileControllerFactory implements FactoryInterface
         /** @var ContextProvider $contextProvider */
         $contextProvider = $serviceLocator->get(ContextProvider::class);
 
+        /** @var CanTestWithoutOtpService $canTestWithoutOtpService */
+        $canTestWithoutOtpService = $serviceLocator->get(CanTestWithoutOtpService::class);
+
+        /** @var SecurityCardService $securityCardService */
+        $securityCardService = $serviceLocator->get(SecurityCardService::class);
+
+        /** @var SecurityCardGuard $securityCardGuard */
+        $securityCardGuard = $serviceLocator->get(SecurityCardGuard::class);
+
+        /** @var TwoFaFeatureToggle $twoFaFeatureToggle */
+        $twoFaFeatureToggle = $serviceLocator->get(TwoFaFeatureToggle::class);
+
         return new PersonProfileController($apiPersonalDetails, $apiDashboardResource, $catalogService,
             $userAdminSessionManager, $viewTradeRolesAssertion, $personProfileGuardBuilder, $mapperFactory,
-            $contextProvider);
+            $contextProvider, $canTestWithoutOtpService, $securityCardService, $securityCardGuard, $twoFaFeatureToggle);
     }
 }

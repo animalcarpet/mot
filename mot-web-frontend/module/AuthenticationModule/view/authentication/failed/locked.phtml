@@ -1,17 +1,20 @@
 <?php $this->gtmDataLayer(['event' => 'user-locked-out']); ?>
 <div class="text">
+
+    <div class="banner--error">
+        <span class="banner__heading-large"> Your account is locked </span>
+        <span> You can try to sign in again after 30 minutes </span>
+    </div>
+
     <p class="lede">
-        Your account has been locked for 30 minutes. Please try again soon.
+        You have tried to sign in too many times. Try again in 30 min or reset your password.
     </p>
+
+    <nav class="content-navigation">
+        <a href="<?php echo $this->url('forgotten-password') ?>" type="submit" class="button" name="reset_password"> Reset your password </a>
+    </nav>
+
     <p>
-        You can <a href="<?php echo $this->url('forgotten-password') ?>">change your password</a> if you have forgotten it. For other sign in related queries you can contact the <strong><?php echo $this->helpdesk['name'] ?></strong> on <strong><?php echo $this->helpdesk['phoneNumber'] ?></strong>.
-    </p>
-    <p>
-        <?php echo $this->helpdesk['name'] ?> opening hours
-    </p>
-    <p>
-        <?php echo $this->helpdesk['openingHrsWeekdays'] ?><br>
-        <?php echo $this->helpdesk['openingHrsSaturday'] ?><br>
-        <?php echo $this->helpdesk['openingHrsSunday'] ?>
+        <a href="<?php echo $this->url($this->loginRoute); ?>">Return to sign in</a>
     </p>
 </div>

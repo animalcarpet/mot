@@ -83,7 +83,7 @@ public class AreaOfficerAuthorisedExaminerViewPage extends AuthorisedExaminerVie
         return new ChangeBusinessTypePage(driver);
     }
 
-    public RemoveAepPage clickRemoveAepLink() {
+    public RemoveAepPage clickRemoveAep() {
         removeFirstAepLink.click();
         return new RemoveAepPage(driver);
     }

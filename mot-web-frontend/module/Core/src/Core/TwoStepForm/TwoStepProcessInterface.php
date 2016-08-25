@@ -63,4 +63,23 @@ interface TwoStepProcessInterface extends SingleStepProcessInterface
      * @return string
      */
     public function getSessionStoreKey();
+
+    /**
+     * Does the process have a confirmation page at the end.
+     * If true, will redirect to the confirmation page on the process,
+     * if false will redirect to start with success message
+     *
+     * @return bool
+     */
+    public function hasConfirmationPage();
+
+    /**
+     * @return AbstractRedirectActionResult
+     */
+    public function redirectToConfirmationPage();
+
+    /**
+     * @return mixed
+     */
+    public function populateConfirmationPageVariables();
 }

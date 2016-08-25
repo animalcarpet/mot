@@ -23,7 +23,7 @@ public class ReviewCreateAepPage extends Page {
         return PageInteractionHelper.verifyTitle(this.getTitle(), pageTitle);
     }
 
-    public AuthorisedExaminerViewPage submitForm() {
+    public AuthorisedExaminerViewPage addPrincipal() {
         submit.click();
         return new AedmAuthorisedExaminerViewPage(driver);
     }

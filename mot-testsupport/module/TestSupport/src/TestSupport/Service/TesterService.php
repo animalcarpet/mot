@@ -109,7 +109,7 @@ class TesterService
             )
         );
 
-        $this->sendNominationsForTesterAndAcceptThem($account, $data);
+        $this->addUserRolesToSite($account, $data);
 
         return TestDataResponseHelper::jsonOk([
             "message"  => "Tester created",
@@ -161,16 +161,9 @@ class TesterService
         $this->testerAuthorisationStatusService->deleteTesterQualificationStatusForGroup($testerId, $group);
     }
 
-    private function sendNominationsForTesterAndAcceptThem(Account $account, $data)
+    private function addUserRolesToSite(Account $account, $data)
     {
         $this->sitePermissionsHelper->addPermissionToSites($account, SiteBusinessRoleCode::TESTER, $data['siteIds']);
-
-        $notifications = $this->notificationsHelper->getNotifications($account);
-        $this->notificationsHelper->acceptUnreadNotification(
-            $account,
-            $notifications,
-            self::SITE_POSITION_NOTIFICATION_ID
-        );
     }
 
     /**

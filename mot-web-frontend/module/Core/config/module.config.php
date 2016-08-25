@@ -1,6 +1,7 @@
 <?php
 
 use Core\View\Helper\Factory\GetReleaseTagFactory;
+use DvsaFeature\Factory\View\Helper\FeatureToggleViewHelperFactory;
 
 return [
     'view_manager' => [
@@ -16,7 +17,8 @@ return [
     'view_helpers' => [
         'factories' => [
             'getReleaseTag' => GetReleaseTagFactory::class,
-            'googleAnalyticsHelper' => \Core\Factory\GoogleAnalyticsHelperFactory::class
+            'googleAnalyticsHelper' => \Core\Factory\GoogleAnalyticsHelperFactory::class,
+            'featureToggle' => FeatureToggleViewHelperFactory::class
         ]
     ]
 ];

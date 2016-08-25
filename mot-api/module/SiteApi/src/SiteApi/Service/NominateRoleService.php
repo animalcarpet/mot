@@ -8,6 +8,7 @@ use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Database\Transaction;
 use DvsaCommon\Enum\BusinessRoleStatusCode;
 use DvsaCommonApi\Service\Exception\NotFoundException;
+use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\SiteBusinessRole;
 use DvsaEntities\Entity\SiteBusinessRoleMap;
 use SiteApi\Model\Operation\NominateOperation;
@@ -74,6 +75,31 @@ class NominateRoleService
      * @param $siteId
      * @param $nomineeId
      * @param $roleCode
+     * @return SiteBusinessRoleMap
+     * @throws \Exception
+     */
+    public function updateRoleNominationNotification($siteId, $nomineeId, $roleCode)
+    {
+        $roleId = $this->getRole($roleCode)->getId();
+
+        /**
+         * @var SiteBusinessRoleMap $siteBusinessRoleMap
+         */
+        $siteBusinessRoleMap = $this->getSiteBusinessRoleMap($siteId, $nomineeId, $roleId);
+
+        if (!$siteBusinessRoleMap) {
+            throw new \Exception('Site Business role map not found');
+        }
+
+        $nominator = $siteBusinessRoleMap->getCreatedBy();
+
+        return $this->nominateOperation->sendUpdatedNominationNotification($nominator, $siteBusinessRoleMap);
+    }
+
+    /**
+     * @param $siteId
+     * @param $nomineeId
+     * @param $roleCode
      *
      * @return SiteBusinessRoleMap
      */
@@ -122,13 +148,40 @@ class NominateRoleService
         return $this->entityManager->getRepository(\DvsaEntities\Entity\Person::class)->findOneBy(['id' => $nomineeId]);
     }
 
+    /**
+     * @param $roleCode
+     * @return SiteBusinessRole
+     */
     private function getRole($roleCode)
     {
         return $this->entityManager->getRepository(SiteBusinessRole::class)->findOneBy(['code' => $roleCode]);
     }
 
+    /**
+     * @param $siteId
+     * @return Site
+     */
     private function getSite($siteId)
     {
-        return $this->entityManager->getRepository(\DvsaEntities\Entity\Site::class)->findOneBy(['id' => $siteId]);
+        return $this->entityManager->getRepository(Site::class)->findOneBy(['id' => $siteId]);
+    }
+
+    /**
+     * @param $nomineeId
+     * @param $roleId
+     * @param $siteId
+     * @return SiteBusinessRoleMap
+     */
+    private function getSiteBusinessRoleMap($siteId, $nomineeId, $roleId)
+    {
+        return $this->entityManager->getRepository(SiteBusinessRoleMap::class)
+            ->findOneBy(
+                [
+                    'site' => $siteId,
+                    'person' => $nomineeId,
+                    'siteBusinessRole' => $roleId,
+                    'businessRoleStatus' => $this->getStatus(BusinessRoleStatusCode::PENDING)
+                ]
+            );
     }
 }

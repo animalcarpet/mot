@@ -66,4 +66,16 @@ class ApiPersonalDetails extends ApiResources
 
         return $this->restGet($path)['data'];
     }
+
+    /**
+     * @param int $personId
+     *
+     * @return array
+     */
+    public function getPendingRolesForPerson($personId)
+    {
+        $path = UrlBuilder::pendingRoles($personId)->toString();
+
+        return $this->restGet($path)['data'];
+    }
 }

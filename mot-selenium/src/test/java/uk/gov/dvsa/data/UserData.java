@@ -1,6 +1,5 @@
 package uk.gov.dvsa.data;
 
-import uk.gov.dvsa.domain.model.QualificationCertificate;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.service.UserService;
 
@@ -18,12 +17,24 @@ public class UserData extends UserService{
         return createUserAsTester(siteId);
     }
 
+    public User createCentralAdminTeamUser() throws IOException {
+        return super.createCentralAdminTeamUser();
+    }
+
     public User createTester(int siteId, boolean claimAccount) throws IOException {
         return createUserAsTester(siteId, claimAccount);
     }
 
     public User createCustomerServiceOfficer(boolean claimAccount) throws IOException {
         return createUserAsCsco(claimAccount);
+    }
+
+    public User createCSCO() throws IOException {
+        return createUserAsCsco(false);
+    }
+
+    public User createCustomerServiceManager(boolean claimAccount) throws IOException {
+        return createUserAsCsm(claimAccount);
     }
 
     public User createAedm(boolean claimAccount) throws IOException {
@@ -41,6 +52,10 @@ public class UserData extends UserService{
 
     public User createSchemeUser(boolean accountClaimRequired) throws IOException {
         return createUserAsSchemeUser(accountClaimRequired);
+    }
+
+    public User createSchemeManagerUser(boolean accountClaimRequired) throws IOException {
+        return createUserAsSchemeManagerUser(accountClaimRequired);
     }
 
     public User createAreaOfficeOne(String namePrefix) throws IOException {

@@ -1,44 +1,71 @@
 <?php
 use Csrf\CsrfConstants;
+use Dvsa\Mot\Frontend\AuthenticationModule\Form\LoginForm;
+use DvsaCommon\Constants\FeatureToggle;
 $this->headScript()->appendFile('/assets/javascripts/authentication.js');
+/** @var LoginForm $form */
+
 ?>
-<div id="signIn" class="grid-row">
-    <div class="column-two-thirds">
-        <form id="Login" name="Login" action="<?php echo $this->url($this->loginCheckRoute); ?>" method="post">
-            <div class="sign-in">
-                <fieldset>
-                    <legend class="form-title heading-large">Sign in</legend>
-                    <div class="form-group">
-                        <label  class="form-label" for="IDToken1">
-                            User ID
-                        </label>
-                        <input class="form-control" type="text" name="IDToken1" id="IDToken1" value="" maxlength="50" tabindex="1" />
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="IDToken2">
-                            Password
-                        </label>
-                        <input type="hidden" id="goto" name="goto" value="<?php echo $this->escapeHtmlAttr($this->gotoUrl) ?>"/>
-                        <input class="form-control" type="password" name="IDToken2" id="IDToken2" value="" maxlength="100" autocomplete="off" tabindex="2" />
-                        <input type="hidden" name="<?php echo CsrfConstants::REQ_TOKEN; ?>" value="<?php echo $csrfToken; ?>">
-                    </div>
-                </fieldset>
-                <nav class="module-content-navigation">
-                    <input name="Login.Submit" type="submit" class="button" value="Sign in" tabindex="3" />
-                    <ul class="content-navigation__secondary">
-                        <li>
-                            <a href="<?php echo $this->url($this->forgottenPasswordRoute); ?>" tabindex="4">Forgotten password</a>
-                        </li>
-                    </ul>
-                </nav>
+<div class="grid-row">
+    <div class="__sign-in">
+        <?php if(!$authError) : ?>
+            <?php echo $this->partial('zendFormErrorMessages', ['form' => $form]); ?>
+        <?php else : ?>
+            <div id="validationBox">
+                <div id="validationErrors" class="validation-summary">
+                    <ol>There was a problem with your User ID or password.
+                        <br/> Please try again.</ol>
+                </div>
             </div>
+        <?php endif; ?>
+    <div class="column-half">
+        <form id="Login" name="Login" action="<?php echo $this->url('login'); ?>" method="post">
+            <fieldset>
+                <legend class="form-title heading-large">Sign in</legend>
+                <?php
+                    echo $this->partial(
+                        'partial/gds/form/control',
+                        [
+                            'element' => $form->getUsernameField()
+                        ]
+                    );
+                    echo $this->partial(
+                        'partial/gds/form/control',
+                        [
+                            'element' => $form->getPasswordField()
+                        ]
+                    );
+                ?>
+                <input type="hidden" name="<?php echo CsrfConstants::REQ_TOKEN; ?>" value="<?php echo $csrfToken; ?>">
+                <input type="hidden" id="goto" name="goto" value="<?php echo $this->escapeHtmlAttr($this->gotoUrl) ?>"/>
+            </fieldset>
+            <a id="forgotten-or-change-password" href="<?php echo $this->url('forgotten-password') ?>">Forgotten your password?</a>
+            <nav class="content-navigation">
+                <input type= "submit" class="button" name="Login.Submit" value="Sign in">
+            </nav>
             <input name="IDButton" type="hidden" style="display: none;">
         </form>
-        <div class="message">
-            <p>If you <strong>don't have</strong> an MOT testing service account you can <a href="<?php echo $this->url('account-register'); ?>">create an account</a> to register as a new user.</p>
-        </div>
     </div>
-    <div class="column-third">
-        <img src="<?php echo $this->basePath('assets/images/icons/dvsa-org-logo2x.png'); ?>" alt="Driver and Vehicle Standards Agency" width="154">
+    </div>
+    <div class="column-half">
+        <h3 class="heading-medium">Sign in help</h3>
+        <?php if($twoFaEnabled): ?>
+            <details role="group">
+                <summary role="button" aria-controls="details-content-3" aria-expanded="false" tabindex="0">
+                    <span class="summary">Lost, forgotten or damaged security card</span>
+                </summary>
+                <div class="panel panel-indent" id="details-content-3" aria-hidden="true" style="display: none;">
+                    <p>Sign in with your user ID and password. You’ll then see an option to sign in without your card and order a new one if you need to.</p>
+                </div>
+            </details>
+        <?php endif; ?>
+        <details role="group">
+            <summary role="button" aria-controls="details-content-0" aria-expanded="false" tabindex="0">
+                <span class="summary" id="do-not-have-account-section">Don't have an account</span>
+            </summary>
+            <div class="panel panel-indent" id="details-content-0" aria-hidden="true" style="display: none;">
+                <p><a id="create-an-account" href="<?php echo $this->url('account-register') ?>">Create a new account</a> for the MOT testing service. Only do this if you don’t already have one.</p>
+            </div>
+        </details>
     </div>
 </div>

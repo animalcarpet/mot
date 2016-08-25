@@ -1,7 +1,10 @@
 package uk.gov.dvsa.ui.pages.accountclaim;
 
+
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+
+import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
@@ -24,8 +27,13 @@ public class AccountClaimReviewPage extends Page {
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
     }
 
-    public AccountClaimConfirmationPage clickClaimYourAccountButton() {
-        claimYourAccountButton.click();
+    public AccountClaimConfirmationPage clickBackButton() {
+        goBackLink.click();
         return new AccountClaimConfirmationPage(driver);
+    }
+
+    public <T extends Page> T clickClaimYourAccountButton(Class<T> expectedResultPageClass) {
+        claimYourAccountButton.click();
+        return MotPageFactory.newPage(driver, expectedResultPageClass);
     }
 }

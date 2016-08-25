@@ -68,11 +68,31 @@ class PersonProfileSidebar extends GeneralSidebar
     private $personProfileRoutes;
 
     /**
-     * @param int $personId
+     * @var bool
+     */
+    private $hideResetPin;
+
+    /**
+     * @var bool
+     */
+    private $isTwoFactorAuthEnabled;
+
+    /**
+     * @var bool
+     */
+    private $canOrderSecurityCard;
+
+    /**
+     * @param $personId
      * @param PersonProfileGuard $personProfileGuard
      * @param TesterAuthorisation $testerAuthorisation
-     * @param bool $newProfileEnabled
-     * @param string $currentUrl
+     * @param $newProfileEnabled
+     * @param $currentUrl
+     * @param PersonProfileRoutes $personProfileRoutes
+     * @param Url $urlPlugin
+     * @param $hideResetPin
+     * @param $isTwoFactorAuthEnabled
+     * @param $canOrderSecurityCard
      */
     public function __construct(
         $personId,
@@ -81,13 +101,19 @@ class PersonProfileSidebar extends GeneralSidebar
         $newProfileEnabled,
         $currentUrl,
         PersonProfileRoutes $personProfileRoutes,
-        Url $urlPlugin
+        Url $urlPlugin,
+        $hideResetPin,
+        $isTwoFactorAuthEnabled,
+        $canOrderSecurityCard
     ) {
         $this->personId = $personId;
         $this->personProfileGuard = $personProfileGuard;
         $this->testerAuthorisation = $testerAuthorisation;
         $this->newProfileEnabled = $newProfileEnabled;
         $this->currentUrl = $currentUrl;
+        $this->hideResetPin = $hideResetPin;
+        $this->isTwoFactorAuthEnabled = $isTwoFactorAuthEnabled;
+        $this->canOrderSecurityCard = $canOrderSecurityCard;
         $this->personProfileRoutes = $personProfileRoutes;
         $this->urlPlugin = $urlPlugin;
 
@@ -173,9 +199,19 @@ class PersonProfileSidebar extends GeneralSidebar
 
         $accountSecurityBox = new GeneralSidebarLinkList('Account security');
         $accountSecurityBox->setId('account_security');
-        $accountSecurityBox->addLink(new GeneralSidebarLink('change-password', 'Change your password',
-            $changePasswordUrl));
-        $accountSecurityBox->addLink(new GeneralSidebarLink('reset-pin', 'Reset your PIN', $resetPinUrl));
+        $accountSecurityBox->addLink(new GeneralSidebarLink('change-password', 'Change your password', $changePasswordUrl));
+
+        if (!$this->hideResetPin) {
+            $accountSecurityBox->addLink(new GeneralSidebarLink('reset-pin', 'Reset your PIN', $resetPinUrl));
+        }
+
+        if ($this->isTwoFactorAuthEnabled && $this->personProfileGuard->isExpectedToRegisterForTwoFactorAuth()) {
+            $accountSecurityBox->addLink(new GeneralSidebarLink('register-card', 'Activate your security card', '/register-card'));
+        }
+
+        if ($this->isTwoFactorAuthEnabled && $this->canOrderSecurityCard) {
+            $accountSecurityBox->addLink(new GeneralSidebarLink('security-card-order', 'Order a security card', 'security-card-order/new'));
+        }
 
         $this->addItem($accountSecurityBox);
     }
@@ -233,6 +269,16 @@ class PersonProfileSidebar extends GeneralSidebar
                     'password-by-post',
                     'Send password reset by post',
                     '/' . $userAdminUrl . $this->personId . '/claim-reset/post'
+                )
+            );
+        }
+
+        if ($this->isTwoFactorAuthEnabled && true === $this->personProfileGuard->canOrderSecurityCardForAnotherPerson()) {
+            $accountManagementBox->addLink(
+                new GeneralSidebarLink(
+                    'management-order-card',
+                    'Order Security Card',
+                    '/security-card-order/new/' . $this->personId
                 )
             );
         }
@@ -389,13 +435,5 @@ class PersonProfileSidebar extends GeneralSidebar
         return $this->newProfileEnabled ?
             self::NEW_USER_ADMIN_PROFILE_URL :
             self::OLD_USER_ADMIN_PROFILE_URL;
-    }
-
-    /**
-     * @return string
-     */
-    private function getUserProfileUrl()
-    {
-        return $this->newProfileEnabled ? self::NEW_USER_PROFILE_URL : self::OLD_USER_PROFILE_URL;
     }
 }

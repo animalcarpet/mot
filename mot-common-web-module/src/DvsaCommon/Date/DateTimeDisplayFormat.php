@@ -74,7 +74,7 @@ class DateTimeDisplayFormat
      */
     public static function textDateShort($textDateTime)
     {
-        return is_null($textDateTime) ? '' : self::dateShort(DateUtils::toDateTime($textDateTime));
+        return is_null($textDateTime) ? '' : self::dateShort(DateUtils::toDateTime($textDateTime, false));
     }
 
 

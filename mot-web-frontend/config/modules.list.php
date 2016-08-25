@@ -10,6 +10,7 @@ return [
     'Dvsa\Mot\Frontend\AuthenticationModule',
     'Dvsa\Mot\Frontend\MotTestModule',
     'Dvsa\Mot\Frontend\PersonModule',
+    'Dvsa\Mot\Frontend\SecurityCardModule',
     'Dvsa\Mot\Frontend\RegistrationModule',
     'Dvsa\Mot\Frontend\ServiceModule',
     'Dvsa\Mot\Frontend\TestQualityInformation',

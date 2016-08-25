@@ -34,7 +34,8 @@ module.exports = function (grunt, config) {
             httpdServiceName: 'httpd24-httpd',
             opendjServiceName: 'opendj',
             mysqlServiceName: 'mysql',
-            jasperServiceName: 'tomcat'
+            jasperServiceName: 'tomcat',
+            authrServiceName: 'authorisation-service'
         });
 
         // dev (Frontend, OpenDJ, Jasper, MySQL, Distauth)

@@ -5,10 +5,10 @@ namespace DvsaMotApiTest\Factory\Service;
 use Doctrine\ORM\EntityManager;
 use DvsaAuthentication\Service\OtpService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
+use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Repository\CertificateReplacementRepository;
-use DvsaEntities\Repository\CertificateTypeRepository;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\ReplacementCertificateDraftRepository;
 use DvsaMotApi\Factory\Service\ReplacementCertificateServiceFactory;
@@ -57,6 +57,7 @@ class ReplacementCertificateServiceFactoryTest extends AbstractServiceTestCase
         $this->serviceLocator->setService(MotTestRepository::class, $motTestRepository);
         $this->serviceLocator->setService(OtpService::class, $otpService);
         $this->serviceLocator->setService(CertificateCreationService::class, $certificateCreationService);
+        $this->serviceLocator->setService(MotIdentityProviderInterface::class, XMock::of(MotIdentityProviderInterface::class));
     }
 
     public function testReplacementCertificateServiceFactory()

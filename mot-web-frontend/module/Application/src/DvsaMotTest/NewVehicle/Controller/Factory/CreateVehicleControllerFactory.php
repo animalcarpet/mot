@@ -8,6 +8,7 @@ use DvsaMotTest\NewVehicle\Controller\CreateVehicleController;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Session\Container;
+use Application\Service\CanTestWithoutOtpService;
 
 
 class CreateVehicleControllerFactory implements FactoryInterface
@@ -28,7 +29,8 @@ class CreateVehicleControllerFactory implements FactoryInterface
             $sl->get(CreateVehicleFormWizard::class),
             $authService,
             $request,
-            $sl->get(ContingencySessionManager::class)
+            $sl->get(ContingencySessionManager::class),
+            $sl->get(CanTestWithoutOtpService::class)
         );
     }
 }

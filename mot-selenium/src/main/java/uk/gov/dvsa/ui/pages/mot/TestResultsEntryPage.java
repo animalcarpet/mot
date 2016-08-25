@@ -140,6 +140,12 @@ public class TestResultsEntryPage extends Page implements TestResultsEntryPageIn
         return new TestAbandonedPage(driver);
     }
 
+    public TestAbandonedPage abandonMotTest2FaActiveUser(CancelTestReason reason){
+        processTestCancellation2faActiveUser(reason);
+
+        return new TestAbandonedPage(driver);
+    }
+
     public TestAbortedPage abortMotTest(CancelTestReason reason){
         processTestCancellation(reason);
 
@@ -151,6 +157,14 @@ public class TestResultsEntryPage extends Page implements TestResultsEntryPageIn
 
         ReasonToCancelTestPage cancelTestPage = new ReasonToCancelTestPage(driver);
         cancelTestPage.enterReason(reason);
+        cancelTestPage.clickConfirmAndCancelTest();
+    }
+
+    private void processTestCancellation2faActiveUser(CancelTestReason reason) {
+        cancelMotTestLink.click();
+
+        ReasonToCancelTestPage cancelTestPage = new ReasonToCancelTestPage(driver);
+        cancelTestPage.enterReason2FaActiveUser(reason);
         cancelTestPage.clickConfirmAndCancelTest();
     }
 

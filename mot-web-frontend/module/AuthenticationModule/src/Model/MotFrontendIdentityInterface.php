@@ -25,4 +25,6 @@ interface MotFrontendIdentityInterface extends MotIdentityInterface
     public function getCurrentVts();
 
     public function hasPasswordExpired();
+
+    public function isAuthenticatedWithLostForgotten();
 }

@@ -6,6 +6,8 @@ use DvsaAuthentication\Identity;
 use DvsaAuthentication\IdentityFactory;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Repository\PersonRepository;
+use DvsaFeature\FeatureToggles;
+use DvsaCommon\Constants\FeatureToggle;
 
 class DoctrineIdentityFactory implements IdentityFactory
 {
@@ -15,11 +17,17 @@ class DoctrineIdentityFactory implements IdentityFactory
     private $personRepository;
 
     /**
+     * @var FeatureToggles
+     */
+    private $featureToggles;
+
+    /**
      * @param PersonRepository $personRepository
      */
-    public function __construct(PersonRepository $personRepository)
+    public function __construct(PersonRepository $personRepository, FeatureToggles $featureToggles)
     {
         $this->personRepository = $personRepository;
+        $this->featureToggles = $featureToggles;
     }
 
     /**
@@ -38,6 +46,12 @@ class DoctrineIdentityFactory implements IdentityFactory
             throw new \InvalidArgumentException(sprintf('Person "%s" not found', $username));
         }
 
-        return (new Identity($person))->setToken($token)->setUuid($uuid)->setPasswordExpiryDate($passwordExpiryDate);
+        $identity = (new Identity($person))->setToken($token)->setUuid($uuid)->setPasswordExpiryDate($passwordExpiryDate);
+
+        if(!$this->featureToggles->isEnabled(FeatureToggle::TWO_FA)) {
+            $identity->setIsSecondFactorRequired(false);
+        }
+
+        return $identity;
     }
 }

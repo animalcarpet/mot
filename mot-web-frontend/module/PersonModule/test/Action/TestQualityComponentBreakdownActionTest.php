@@ -139,7 +139,7 @@ class TestQualityComponentBreakdownActionTest extends PHPUnit_Framework_TestCase
         $this->assertNotNull($result->layout()->getTemplate());
 
         $this->assertSame(
-            ['breadcrumbs' => $this->breadcrumbs + ["Test quality information" => null]],
+            ["Test quality information" => null],
             $result->layout()->getBreadcrumbs()
         );
     }

@@ -31,6 +31,7 @@ use Zend\Stdlib\ArrayObject;
 use Zend\Stdlib\Parameters;
 use Core\Service\RemoteAddress;
 use Application\Service\ContingencySessionManager;
+use Application\Service\CanTestWithoutOtpService;
 
 /* @method CreateVehicleController sut() service/controller under test, see parent::sut() */
 class CreateVehicleControllerTest extends AbstractLightWebControllerTest
@@ -56,6 +57,11 @@ class CreateVehicleControllerTest extends AbstractLightWebControllerTest
     /** @var ContingencySessionManager */
     private $contingencySessionManager;
 
+    /**
+     * @var CanTestWithoutOtpService
+     */
+    private $canTestWithoutOtpService;
+
     /** @var VehicleService */
     private $vehicleService;
 
@@ -72,6 +78,7 @@ class CreateVehicleControllerTest extends AbstractLightWebControllerTest
             ->method('createVehicle')
             ->willReturn(self::getMockVehicle());
         $this->contingencySessionManager = XMock::of(ContingencySessionManager::class);
+        $this->canTestWithoutOtpService = XMock::of(CanTestWithoutOtpService::class);
 
         $this->expectIdentitySet();
 
@@ -80,7 +87,8 @@ class CreateVehicleControllerTest extends AbstractLightWebControllerTest
             $this->wizard,
             $this->authorisationMock,
             $this->request,
-            $this->contingencySessionManager
+            $this->contingencySessionManager,
+            $this->canTestWithoutOtpService
         );
         $this->setController($ctrl);
 

@@ -34,8 +34,14 @@ public class ChooseARolePage extends Page {
         return this;
     }
 
+    public ChooseARolePage selectTesterRole() {
+        testerRole.click();
+        return this;
+    }
+
     public ChooseARolePage clickSelectButton() {
         selectButton.click();
         return this;
     }
+
 }

@@ -10,10 +10,10 @@ import uk.gov.dvsa.ui.pages.Page;
 public class LockOutWarningPage extends Page implements WarningPage {
 
     private static final String PAGE_TITLE = "Authentication failed";
-    private static final String LOCKOUT_WARNING_MESSAGE = "Your account will be locked";
+    private static final String LOCKOUT_WARNING_MESSAGE = "You have tried to sign in 4 times";
 
     @FindBy(linkText = "change your password") private WebElement changePasswordLink;
-    @FindBy(className = "lede") private WebElement warningMessage;
+    @FindBy(className = "banner--error") private WebElement warningMessage;
 
     public LockOutWarningPage(MotAppDriver driver) {
         super(driver);

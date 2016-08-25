@@ -7,7 +7,6 @@ use TestSupport\Helper\DataGeneratorHelper;
 use TestSupport\Helper\TestDataResponseHelper;
 use TestSupport\Model\AccountPerson;
 use Zend\ServiceManager\ServiceManager;
-use TestSupport\Service\AccountService;
 
 /**
  * Creates new accounts in system with different roles.
@@ -99,6 +98,25 @@ class AccountDataService
 
         $stmt->bindValue(1, $personId);
         $stmt->bindValue(2, $role);
+        $stmt->execute();
+    }
+
+    public function addSiteRole($personId, $siteId, $role)
+    {
+        $stmt = $this->entityManager->getConnection()->prepare("
+            INSERT INTO site_business_role_map (`site_id`, `person_id`, `site_business_role_id`, `status_id`, `created_by`)
+            VALUES (
+                :siteId,
+                :personId,
+                (SELECT `id` FROM `site_business_role` WHERE `name` = :role),
+                (SELECT `id` FROM `business_role_status` WHERE `code` = 'AC'),
+                1
+            )
+        ");
+
+        $stmt->bindValue(':personId', $personId);
+        $stmt->bindValue(':siteId', $siteId);
+        $stmt->bindValue(':role', $role);
         $stmt->execute();
     }
 

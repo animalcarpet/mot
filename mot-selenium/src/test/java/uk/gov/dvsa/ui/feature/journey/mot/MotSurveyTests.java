@@ -53,7 +53,7 @@ public class MotSurveyTests extends DslTest {
           description = "Verifies that user can navigate back from survey page to home page")
     public void backwardNavigationFromSurveyPageToHomePage() throws IOException, URISyntaxException {
         // Given I am on the Test Complete Page as a tester
-        TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle);
+        TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle).finishTest();
 
         // When I click on the back home link I should be on the Give Feedback Page
         GiveFeedbackPage giveFeedbackPage = testCompletePage.clickBackHomeLink();
@@ -69,7 +69,7 @@ public class MotSurveyTests extends DslTest {
             description = "Verifies that user is redirected to home page after submitting empty survey")
     public void userRedirectedToHomePageOnSubmissionOfEmptySurvey() throws IOException, URISyntaxException {
         // Given I am on the Test Complete Page as a tester
-        TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle);
+        TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle).finishTest();
 
         // When I click on the back home link I should be on the Give Feedback Page
         GiveFeedbackPage giveFeedbackPage = testCompletePage.clickBackHomeLink();
@@ -85,7 +85,7 @@ public class MotSurveyTests extends DslTest {
             description = "Verifies that user is able to submit feedback")
     public void userCanSubmitFeedback() throws IOException, URISyntaxException {
         // Given I am on the Test Complete Page as a tester
-        TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle);
+        TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle).finishTest();
 
         // When I click on the back home link I should be on the Give Feedback Page
         GiveFeedbackPage giveFeedbackPage = testCompletePage.clickBackHomeLink();

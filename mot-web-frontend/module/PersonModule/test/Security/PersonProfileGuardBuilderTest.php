@@ -7,15 +7,18 @@
 
 namespace Dvsa\Mot\Frontend\PersonModuleTest\Security;
 
+use Core\Service\MotFrontendAuthorisationServiceInterface;
 use Dashboard\Model\PersonalDetails;
 use Dashboard\Service\TradeRolesAssociationsService;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuard;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuardBuilder;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
+use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Model\TesterAuthorisation;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
-use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
+use DvsaCommonTest\TestUtils\XMock;
+use DvsaFeature\FeatureToggles;
 
 class PersonProfileGuardBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -24,11 +27,19 @@ class PersonProfileGuardBuilderTest extends \PHPUnit_Framework_TestCase
      */
     private $builder;
 
+    /**
+     * @var TwoFaFeatureToggle
+     */
+    private $twoFaFeatureToggle;
+
     public function setUp()
     {
-        /** @var MotAuthorisationServiceInterface $authorisationService */
+
+        $this->twoFaFeatureToggle = XMock::of(TwoFaFeatureToggle::class);
+
+        /** @var MotFrontendAuthorisationServiceInterface $authorisationService */
         $authorisationService = $this
-            ->getMockBuilder(MotAuthorisationServiceInterface::class)
+            ->getMockBuilder(MotFrontendAuthorisationServiceInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -63,7 +74,8 @@ class PersonProfileGuardBuilderTest extends \PHPUnit_Framework_TestCase
             ->willReturn([]);
 
         $this->builder = new PersonProfileGuardBuilder($authorisationService, $identityProvider,
-            $testerGroupAuthorisationMapper, $tradeRolesAndAssociationsService);
+            $testerGroupAuthorisationMapper, $tradeRolesAndAssociationsService,
+            $this->twoFaFeatureToggle);
     }
 
     public function testReturnsTesterAuthorisation()
