@@ -11,7 +11,7 @@ import java.util.Date;
 public class QualificationDetailsPage extends Page {
 
     public static final String PATH = "/your-profile/%s/qualification-details";
-    private static final String PAGE_TITLE = "Qualification details";
+    private static final String PAGE_TITLE = "MOT tester training certificates";
 
     @FindBy (id = "certificate-number-group-A-change") private WebElement certificateGroupAChangeLink;
     @FindBy (id = "certificate-number-group-B-remove") private WebElement certificateGroupBRemoveLink;

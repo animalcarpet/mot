@@ -54,8 +54,9 @@ class AnnualAssessmentCertificatesAction implements AutoWireableInterface
 
     private function buildActionResult(FormContext $formContext, AbstractAuthActionController $controller)
     {
+        $isUserViewingHisOwnProfile = $this->isUserViewingHisOwnProfile($formContext);
         $vm = new AnnualAssessmentCertificatesViewModel(
-            $this->getPageSubtitle($formContext),
+            $this->getPageSubtitle($isUserViewingHisOwnProfile),
             $this->getPreviousUrl(),
             $this->getGroupViewModel($formContext, 'A'),
             $this->getAddLinkForGroup($controller, 'A'),
@@ -64,7 +65,8 @@ class AnnualAssessmentCertificatesAction implements AutoWireableInterface
             $this->certificatesPermissions->isGrantedCreate(
                 $formContext->getTargetPersonId(),
                 $formContext->getLoggedInPersonId()
-            )
+            ),
+            $isUserViewingHisOwnProfile
         );
 
         $breadcrumbs = $this->personProfileBreadcrumbs->getBreadcrumbs($formContext->getTargetPersonId(), $controller,
@@ -101,10 +103,9 @@ class AnnualAssessmentCertificatesAction implements AutoWireableInterface
         );
     }
 
-    private function getPageSubtitle(FormContext $formContext)
+    private function getPageSubtitle($isPersonViewingItsOwnProfile)
     {
-        return $formContext->getLoggedInPersonId() === $formContext->getTargetPersonId() ? self::SUBTITLE_YOUR_PROFILE :
-            self::SUBTITLE_USER_PROFILE;
+        return $isPersonViewingItsOwnProfile ? self::SUBTITLE_YOUR_PROFILE : self::SUBTITLE_USER_PROFILE;
     }
 
     private function getAddLinkForGroup(AbstractAuthActionController $controller, $group)
@@ -112,5 +113,14 @@ class AnnualAssessmentCertificatesAction implements AutoWireableInterface
         return $controller->url()->fromRoute($this->annualAssessmentCertificatesRoutes->getAddRoute(),
             $controller->params()->fromRoute() + ['group' => $group]
         );
+    }
+
+    /**
+     * @param FormContext $formContext
+     * @return bool
+     */
+    private function isUserViewingHisOwnProfile(FormContext $formContext)
+    {
+        return $formContext->getLoggedInPersonId() === $formContext->getTargetPersonId();
     }
 }

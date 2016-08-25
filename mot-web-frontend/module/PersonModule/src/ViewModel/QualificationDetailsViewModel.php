@@ -7,7 +7,7 @@ use Zend\Form\Form;
 class QualificationDetailsViewModel
 {
     private $template = 'qualification-details/view';
-    private $pageTitle = 'Qualification details';
+    private $pageTitle = 'MOT tester training certificates';
     private $returnLinkText = 'Return to %s';
     private $returnLink;
     private $pageSubtitle;

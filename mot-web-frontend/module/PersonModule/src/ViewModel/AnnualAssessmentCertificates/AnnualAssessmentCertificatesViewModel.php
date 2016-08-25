@@ -2,6 +2,8 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\ViewModel\AnnualAssessmentCertificates;
 
+use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
+
 class AnnualAssessmentCertificatesViewModel
 {
     private $template = 'annual-assessment-certificates/view';
@@ -19,6 +21,9 @@ class AnnualAssessmentCertificatesViewModel
     /** @var AnnualAssessmentCertificatesGroupViewModel  */
     private $annualAssessmentCertificatesGroupBViewModel;
 
+    /** @var bool */
+    private $isUserViewingHisOwnProfile;
+
     public function __construct(
         $pageSubtitle,
         $returnUrl,
@@ -26,7 +31,8 @@ class AnnualAssessmentCertificatesViewModel
         $addGroupALink,
         AnnualAssessmentCertificatesGroupViewModel $annualAssessmentCertificatesGroupBViewModel,
         $addGroupBLink,
-        $isGrantedToAddCertificates
+        $isGrantedToAddCertificates,
+        $isUserViewingHisOwnProfile
     )
     {
         $this->pageSubtitle = $pageSubtitle;
@@ -36,6 +42,7 @@ class AnnualAssessmentCertificatesViewModel
         $this->annualAssessmentCertificatesGroupBViewModel = $annualAssessmentCertificatesGroupBViewModel;
         $this->addGroupBLink = $addGroupBLink;
         $this->isGrantedToAddCertificates = $isGrantedToAddCertificates;
+        $this->isUserViewingHisOwnProfile = $isUserViewingHisOwnProfile;
     }
 
     public function getTemplate()
@@ -86,5 +93,15 @@ class AnnualAssessmentCertificatesViewModel
     public function isAddLinkVisible()
     {
         return $this->isGrantedToAddCertificates;
+    }
+
+    public function getQualificationDetailsLink()
+    {
+        return ContextProvider::YOUR_PROFILE_PARENT_ROUTE . "/qualification-details";
+    }
+
+    public function isUserViewingHisOwnProfile()
+    {
+        return $this->isUserViewingHisOwnProfile;
     }
 }

@@ -14,12 +14,22 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $succes
 ?>
 <?php echo $this->partial('errorMessages', array('getFromFlash' => true)); ?>
 
-<div>
-    <div class="text">
-        <p class="lede">
-            You must complete an assessment each year (from 1 April to 31 March of the following year) and record it here to keep your tester status.
+<?php if($viewModel->isUserViewingHisOwnProfile()): ?>
+    <div class="message">
+        <p>You can only record an annual assessment once you’ve passed your tester qualification and recorded it in
+            <a href="<?php echo $this->url($viewModel->getQualificationDetailsLink())?>">MOT tester training certificates</a>
         </p>
     </div>
+<?php endif ?>
+
+<div>
+    <?php if($viewModel->isUserViewingHisOwnProfile()): ?>
+        <div class="text">
+            <p class="lede">
+                You must pass an assessment each year (between 1 April and 31 March) and record it here to keep your tester status.
+            </p>
+        </div>
+    <?php endif ?>
 
     <h3 class="summary-heading">
         Record your assessment result
@@ -70,15 +80,15 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $succes
         ?>
         <?php endif; ?>
 
-        <div class="message--important">
-            <h3 class="message__heading">
-                Keep your assessment certificates
-            </h3>
-
-            <p>
-                Keep it with your MOT annual training record - you will be asked to show this to the DVSA.
-            </p>
-        </div>
+        <?php if($viewModel->isUserViewingHisOwnProfile()): ?>
+            <div class="message--important">
+                <h3 class="message__heading">
+                    Keep your assessment certificates
+                </h3>
+                <p>You’re given a certificate after completing the annual assessment.</p>
+                <p>Keep it with your MOT annual training record - you may be asked to show this to the DVSA.</p>
+            </div>
+        <?php endif; ?>
 
         <nav class="content-navigation">
             <ul class="content-navigation__secondary">

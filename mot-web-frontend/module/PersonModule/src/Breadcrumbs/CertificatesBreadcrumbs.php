@@ -6,7 +6,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 class CertificatesBreadcrumbs extends PersonProfileBreadcrumbs
 {
     const ROUTE_QUALIFICATION_DETAILS = '/qualification-details';
-    const QUALIFICATION_DETAILS_BREADCRUMB = 'Qualification details';
+    const QUALIFICATION_DETAILS_BREADCRUMB = 'MOT tester training certificates';
     const ROUTE_ANNUAL_ASSESSMENT_CERTIFICATE = '/annual-assessment-certificates';
     const ANNUAL_ASSESSMENT_CERTIFICATE_BREADCRUMB = 'Annual assessment certificates';
 
