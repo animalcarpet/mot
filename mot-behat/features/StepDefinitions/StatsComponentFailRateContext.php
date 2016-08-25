@@ -3,24 +3,22 @@
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
-use Dvsa\Mot\Behat\Support\Data\Generator\MotTestGenerator;
-use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupA;
-use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupB;
+use Dvsa\Mot\Behat\Support\Data\Generator\ComponentBreakdownMotTestGenerator;
 use Dvsa\Mot\Behat\Support\Data\MotTestData;
+use Dvsa\Mot\Behat\Support\Data\Statistics\ComponentBreakdownCalculator;
 use Dvsa\Mot\Behat\Support\Data\UserData;
 use Dvsa\Mot\Behat\Support\Data\VehicleData;
 use Dvsa\Mot\Behat\Support\Helper\ApiResourceHelper;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\ComponentFailRateApiResource;
-use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentBreakdownDto;
+use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentDto;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\NationalComponentStatisticApiResource;
 use DvsaCommon\Dto\Site\SiteDto;
-use DvsaCommon\Enum\VehicleClassCode;
 use PHPUnit_Framework_Assert as PHPUnit;
+use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentBreakdownDto;
 
 class StatsComponentFailRateContext implements Context
 {
-
     /** @var TestSupportHelper */
     private $testSupportHelper;
 
@@ -31,11 +29,6 @@ class StatsComponentFailRateContext implements Context
     private $vehicleData;
 
     private $apiResourceHelper;
-
-    private $statistics = [
-        'tester' => [],
-        'national' => [],
-    ];
 
     public function __construct(
         TestSupportHelper $testSupportHelper,
@@ -63,44 +56,8 @@ class StatsComponentFailRateContext implements Context
      */
     public function thereAreTestsWithReasonForRejectionPerformedAtSiteBy(SiteDto $site, AuthenticatedUser $tester)
     {
-        $motTestGenerator = new MotTestGenerator($this->motTestData);
-
-        $testStartedDate = "first day of previous month";
-        $dateOfManufacture = new \DateTime("first day of 2 years ago");
-        $motorcycleClass1 = $this->vehicleData->create(["testClass" => VehicleClassCode::CLASS_1, "dateOfManufacture" => $dateOfManufacture->format("Y-m-d")]);
-
-        $motTestGenerator
-            ->setDuration(60)
-            ->setStartedDate($testStartedDate);
-        $motTestGenerator->generatePassedMotTests($tester, $site, $motorcycleClass1);
-
-        $dateOfManufacture = new \DateTime("first day of 4 years ago");
-        $motorcycleClass2 = $this->vehicleData->create(["testClass" => VehicleClassCode::CLASS_2, "dateOfManufacture" => $dateOfManufacture->format("Y-m-d")]);
-        $motTestGenerator
-            ->setDuration(50)
-            ->setStartedDate("{$testStartedDate}")
-            ->setRfrId(ReasonForRejectionGroupA::RFR_BRAKES_PERFORMANCE_GRADIENT);
-        $motTestGenerator->generateFailedMotTests($tester, $site, $motorcycleClass2);
-
-        $motTestGenerator
-            ->setDuration(50)
-            ->setStartedDate($testStartedDate)
-            ->setRfrId(ReasonForRejectionGroupA::RFR_SIDECAR_SHOCK_ABSORBER_LEAKING);
-        $motTestGenerator->generateFailedMotTestsWithAdvisories($tester, $site, $motorcycleClass2);
-
-        $dateOfManufacture = new \DateTime("first day of 14 years ago");
-        $vehicleClass4 = $this->vehicleData->create(["testClass" => VehicleClassCode::CLASS_4, "dateOfManufacture" => $dateOfManufacture->format("Y-m-d")]);
-        $motTestGenerator
-            ->setDuration(40)
-            ->setStartedDate($testStartedDate)
-            ->setRfrId(ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION);
-        $motTestGenerator->generateFailedMotTests($tester, $site, $vehicleClass4);
-
-        $motTestGenerator
-            ->setDuration(30)
-            ->setStartedDate($testStartedDate)
-            ->setRfrId(ReasonForRejectionGroupB::RFR_ROAD_WHEELS_CONDITION);
-        $motTestGenerator->generateFailedMotTestsWithAdvisories($tester, $site, $vehicleClass4);
+        $motTestGenerator = new ComponentBreakdownMotTestGenerator($this->motTestData, $this->vehicleData);
+        $motTestGenerator->generate($site, $tester);
     }
 
     /**
@@ -115,8 +72,40 @@ class StatsComponentFailRateContext implements Context
         $apiResource = $this->apiResourceHelper->create(ComponentFailRateApiResource::class);
         $componentBreakdown = $apiResource->getForTesterAtSite($site->getId(), $tester->getUserId(), $group, $date->format("m"), $date->format("Y"));
 
+        $calculator = new ComponentBreakdownCalculator($this->motTestData->getAll());
+        $expectedComponentBreakdown = $calculator->calculateStatisticsForSite($site->getId(), $tester->getUserId(), $months, $group);
+
         PHPUnit::assertEquals($tester->getUsername(), $componentBreakdown->getUserName());
-        $this->statistics['tester'][$group][] = $componentBreakdown;
+        $this->assertComponents($expectedComponentBreakdown->getComponents(), $componentBreakdown->getComponents());
+        PHPUnit::assertEquals($expectedComponentBreakdown->getGroupPerformance(), $componentBreakdown->getGroupPerformance());
+    }
+
+    /**
+     * @param ComponentDto[] $expectedComponents
+     * @param ComponentDto[] $actualComponents
+     */
+    private function assertComponents(array $expectedComponents, array $actualComponents)
+    {
+        $findComponentById = function ($categoryId) use ($actualComponents) {
+            $component = null;
+            foreach ($actualComponents as $actualComponent) {
+                if ($categoryId === $actualComponent->getId()) {
+                    $component = $actualComponent;
+                }
+            }
+
+            if ($component === null) {
+                throw new \InvalidArgumentException(sprintf("Component with id '%d' not found", $categoryId));
+            }
+
+            return $component;
+        };
+
+        foreach ($expectedComponents as $expectedComponent) {
+            /** @var ComponentDto $actualComponent */
+            $actualComponent = $findComponentById($expectedComponent->getId());
+            PHPUnit::assertEquals($expectedComponent->getPercentageFailed(), $actualComponent->getPercentageFailed());
+        }
     }
 
     /**
@@ -132,7 +121,12 @@ class StatsComponentFailRateContext implements Context
         $componentBreakdown = $apiResource->getForTesterAtSite($site->getId(), $tester->getUserId(), $group, $date->format("m"), $date->format("Y"));
 
         PHPUnit::assertEquals($tester->getUsername(), $componentBreakdown->getUserName());
+        $this->assertEmptyComponentBreakdown($componentBreakdown);
 
+    }
+
+    private function assertEmptyComponentBreakdown(ComponentBreakdownDto $componentBreakdown)
+    {
         foreach ($componentBreakdown->getComponents() as $component) {
             PHPUnit::assertEquals(0, $component->getPercentageFailed());
         }
@@ -167,33 +161,42 @@ class StatsComponentFailRateContext implements Context
         PHPUnit::assertEquals($group, $nationalComponentStatistics->getGroup());
         PHPUnit::assertEquals($month, $nationalComponentStatistics->getMonth());
         PHPUnit::assertEquals($year, $nationalComponentStatistics->getYear());
-
-        $this->statistics['national'][$group][] = $nationalComponentStatistics;
     }
 
     /**
-     * @Given /^none of the statistics should include advisory RFRs$/
+     * @Then I should be able to see component fail rate statistics performed :months months ago for tester :tester and group :group
      */
-    public function noneOfTheStatisticsShouldIncludeAdvisoryRFRs()
+    public function iShouldBeAbleToSeeComponentFailRateStatisticsPerformedMonthsAgoForTesterAndGroup($months, AuthenticatedUser $tester, $group)
     {
-        $this->assertComponentBreakdownDoesNotIncludeRfrsFromCategory($this->statistics['tester']['A'], ReasonForRejectionGroupA::CATEGORY_NAME_SIDECAR);
-        $this->assertComponentBreakdownDoesNotIncludeRfrsFromCategory($this->statistics['national']['A'], ReasonForRejectionGroupA::CATEGORY_NAME_SIDECAR);
-        $this->assertComponentBreakdownDoesNotIncludeRfrsFromCategory($this->statistics['tester']['B'], ReasonForRejectionGroupB::CATEGORY_NAME_ROAD_WHEELS);
-        $this->assertComponentBreakdownDoesNotIncludeRfrsFromCategory($this->statistics['national']['B'], ReasonForRejectionGroupB::CATEGORY_NAME_ROAD_WHEELS);
+        $interval = sprintf("P%sM", $months);
+        $date = (new \DateTime())->sub(new \DateInterval($interval));
+
+        /** @var ComponentFailRateApiResource $apiResource */
+        $apiResource = $this->apiResourceHelper->create(ComponentFailRateApiResource::class);
+        $componentBreakdown = $apiResource->getForTester($tester->getUserId(), $group, $date->format("m"), $date->format("Y"));
+
+        $calculator = new ComponentBreakdownCalculator($this->motTestData->getAll());
+        $expectedComponentBreakdown = $calculator->calculateStatisticsForAllSites($tester->getUserId(), $months, $group);
+
+        PHPUnit::assertEquals($tester->getUsername(), $componentBreakdown->getUserName());
+        $this->assertComponents($expectedComponentBreakdown->getComponents(), $componentBreakdown->getComponents());
+        PHPUnit::assertEquals($expectedComponentBreakdown->getGroupPerformance(), $componentBreakdown->getGroupPerformance());
     }
 
     /**
-     * @param ComponentBreakdownDto[] $statistics
-     * @param string $categoryThatShouldBeEmpty
+     * @Then there is no component fail rate statistics performed :months months ago for tester :tester and group :group
      */
-    private function assertComponentBreakdownDoesNotIncludeRfrsFromCategory($statistics, $categoryThatShouldBeEmpty)
+    public function thereIsNoComponentFailRateStatisticsPerformedMonthsAgoForTesterAndGroup($months, AuthenticatedUser $tester, $group)
     {
-        foreach ($statistics as $componentStatistics) {
-            foreach ($componentStatistics->getComponents() as $category) {
-                if($category->getName() == $categoryThatShouldBeEmpty){
-                    PHPUnit::assertSame(0, $category->getPercentageFailed());
-                }
-            }
-        }
+        $interval = sprintf("P%sM", $months);
+        $date = (new \DateTime())->sub(new \DateInterval($interval));
+
+        /** @var ComponentFailRateApiResource $apiResource */
+        $apiResource = $this->apiResourceHelper->create(ComponentFailRateApiResource::class);
+        $componentBreakdown = $apiResource->getForTester($tester->getUserId(), $group, $date->format("m"), $date->format("Y"));
+
+        PHPUnit::assertEquals($tester->getUsername(), $componentBreakdown->getUserName());
+        $this->assertEmptyComponentBreakdown($componentBreakdown);
     }
 }
+

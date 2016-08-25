@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\Mot\Behat\Support\Data\Model;
 
 class ReasonForRejectionGroupA
@@ -9,6 +8,7 @@ class ReasonForRejectionGroupA
 
     const RFR_BRAKES_PERFORMANCE_GRADIENT = 511;
     const RFR_BRAKE_HANDLEBAR_LEVER = 356;
+    const RFR_POSITION_LAMPS_MOTORCYCLE_FRONT = 4;
     /** Example RFR that can be added as advisory */
     const RFR_SIDECAR_SHOCK_ABSORBER_LEAKING = 618;
 }

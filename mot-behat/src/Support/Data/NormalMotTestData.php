@@ -44,6 +44,12 @@ class NormalMotTestData extends AbstractMotTestData
         return $this->failMotTest($mot);
     }
 
+    public function createFailedMotTestWithManyRfrs(AuthenticatedUser $tester, VehicleDto $vehicle, SiteDto $site, array $rfrs)
+    {
+        $mot = $this->create($tester, $vehicle, $site);
+        return $this->failMotTestWithManyRfrs($mot, $rfrs);
+    }
+
     public function createFailedMotTestWithPrs(AuthenticatedUser $tester, VehicleDto $vehicle, SiteDto $site, $rfrId = null)
     {
         $mot = $this->create($tester, $vehicle, $site);
