@@ -4,7 +4,7 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
-use Dvsa\Mot\Behat\Support\Data\Generator\MotTestGenerator;
+use Dvsa\Mot\Behat\Support\Data\Generator\TesterPerformanceMotTestGenerator;
 use Dvsa\Mot\Behat\Support\Data\MotTestData;
 use Dvsa\Mot\Behat\Support\Data\SiteData;
 use Dvsa\Mot\Behat\Support\Data\Statistics\TesterPerformanceCalculator;
@@ -16,7 +16,6 @@ use DvsaCommon\ApiClient\Statistics\TesterPerformance\NationalPerformanceApiReso
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\SitePerformanceApiResource;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\TesterPerformanceApiResource;
 use DvsaCommon\Dto\Site\SiteDto;
-use DvsaCommon\Enum\VehicleClassCode;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 
@@ -26,7 +25,6 @@ class StatsTesterPerformanceContext implements Context
     private $vehicleData;
     private $motTestData;
     private $userData;
-    private $testerPerformanceCalculator;
     private $testSupportHelper;
     private $apiResourceHelper;
 
@@ -35,7 +33,6 @@ class StatsTesterPerformanceContext implements Context
         VehicleData $vehicleData,
         MotTestData $motTestData,
         UserData $userData,
-        TesterPerformanceCalculator $testerPerformanceCalculator,
         TestSupportHelper $testSupportHelper,
         ApiResourceHelper $apiResourceHelper
     )
@@ -44,7 +41,6 @@ class StatsTesterPerformanceContext implements Context
         $this->vehicleData = $vehicleData;
         $this->motTestData = $motTestData;
         $this->userData = $userData;
-        $this->testerPerformanceCalculator = $testerPerformanceCalculator;
         $this->testSupportHelper = $testSupportHelper;
         $this->apiResourceHelper = $apiResourceHelper;
     }
@@ -84,19 +80,8 @@ class StatsTesterPerformanceContext implements Context
      */
     public function thereAreTestsPerformedAtSiteBy(SiteDto $site, AuthenticatedUser $tester)
     {
-        $motTestGenerator = new MotTestGenerator($this->motTestData);
-
-        $vehicle = $this->vehicleData->create(["testClass" => VehicleClassCode::CLASS_4]);
-        $motTestGenerator
-            ->setDuration(70)
-            ->setStartedDate("first day of 2 months ago");
-        $motTestGenerator->generateMotTests($tester, $site, $vehicle);
-
-        $vehicle = $this->vehicleData->create(["testClass" => VehicleClassCode::CLASS_1]);
-        $motTestGenerator
-            ->setDuration(60)
-            ->setStartedDate("first day of 1 months ago");
-        $motTestGenerator->generateMotTests($tester, $site, $vehicle);
+        $motTestGenerator = new TesterPerformanceMotTestGenerator($this->motTestData, $this->vehicleData);
+        $motTestGenerator->generate($site, $tester);
     }
 
     /**
@@ -111,13 +96,8 @@ class StatsTesterPerformanceContext implements Context
         $apiResource = $this->apiResourceHelper->create(SitePerformanceApiResource::class);
         $actualStats = $apiResource->getForDate($site->getId(), $date->format("m"), $date->format("Y"));
 
-        $expectedStats = $this
-            ->testerPerformanceCalculator
-            ->calculateTesterPerformanceStatisticsForSite(
-                $this->motTestData->getAll(),
-                $site->getId(),
-                $months
-            );
+        $testerPerformanceCalculator = new TesterPerformanceCalculator($this->motTestData->getAll());
+        $expectedStats = $testerPerformanceCalculator->calculateTesterPerformanceStatisticsForSite($site->getId(), $months);
 
         PHPUnit::assertEquals($expectedStats, $actualStats);
     }
@@ -169,13 +149,11 @@ class StatsTesterPerformanceContext implements Context
         $apiResource = $this->apiResourceHelper->create(TesterPerformanceApiResource::class);
         $actualStats = $apiResource->get($this->userData->getCurrentLoggedUser()->getUserId(), $date->format("m"), $date->format("Y"));
 
-        $expectedStats = $this
-            ->testerPerformanceCalculator
-            ->calculateTesterPerformanceStatisticsForTester(
-                $this->motTestData->getAll(),
-                $this->userData->getCurrentLoggedUser()->getUserId(),
-                $months
-            );
+        $testerPerformanceCalculator = new TesterPerformanceCalculator($this->motTestData->getAll());
+        $expectedStats = $testerPerformanceCalculator->calculateTesterPerformanceStatisticsForTester(
+            $this->userData->getCurrentLoggedUser()->getUserId(),
+            $months
+        );
 
         PHPUnit::assertEquals($expectedStats, $actualStats);
     }

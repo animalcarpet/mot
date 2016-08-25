@@ -44,7 +44,6 @@ parameters:
           Dvsa\Mot\Behat\Support\Data\ContingencyMotTestData: dvsa.data.contingency_mot_test
           Dvsa\Mot\Behat\Support\Data\AbstractMotTestData: dvsa.data.abstract_mot_test
           Dvsa\Mot\Behat\Support\Data\SiteData: dvsa.data.site
-          Dvsa\Mot\Behat\Support\Data\Statistics\TesterPerformanceCalculator: dvsa.data.statistics.tester_performance_calculator
           Dvsa\Mot\Behat\Support\Data\UserData: dvsa.data.user
           Dvsa\Mot\Behat\Support\Data\VehicleData: dvsa.data.vehicle
 

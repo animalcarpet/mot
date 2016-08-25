@@ -7,7 +7,6 @@ use DvsaCommon\Dto\Site\SiteDto;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\Enum\MotTestStatusCode;
 use DvsaCommon\Enum\MotTestTypeCode;
-use DvsaCommon\Utility\ArrayUtils;
 
 class MotTestGenerator
 {
@@ -82,8 +81,6 @@ class MotTestGenerator
         $this->rfrId = $rfrId;
         return $this;
     }
-
-
 
     public function generatePassedMotTests(AuthenticatedUser $tester, SiteDto $site, VehicleDto $vehicle)
     {

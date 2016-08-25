@@ -77,12 +77,6 @@ services:
             - @dvsa.data.user
             - @dvsa.test_support_helper
 
-    dvsa.data.statistics.tester_performance_calculator:
-        class: Dvsa\Mot\Behat\Support\Data\Statistics\TesterPerformanceCalculator
-        arguments:
-            - @dvsa.data.user
-            - @dvsa.data.site
-
     dvsa.data.user:
         class: Dvsa\Mot\Behat\Support\Data\UserData
         arguments:

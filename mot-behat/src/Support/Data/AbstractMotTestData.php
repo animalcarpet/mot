@@ -63,16 +63,14 @@ abstract class AbstractMotTestData
     {
         $tester = $this->getTester($mot);
         $this->reasonForRejection->addAdvisory($tester->getAccessToken(), $mot->getMotTestNumber(), $rfrId);
-        $this->passMotTest($mot);
-        return $mot;
+        return $this->passMotTest($mot);
     }
 
     public function failMotTestWithAdvisory(MotTestDto $mot, $rfrId)
     {
         $tester = $this->getTester($mot);
         $this->reasonForRejection->addAdvisory($tester->getAccessToken(), $mot->getMotTestNumber(), $rfrId);
-        $this->failMotTest($mot);
-        return $mot;
+        return $this->failMotTest($mot);
     }
 
     public function failMotTest(MotTestDto $mot, $rfrId = null)
@@ -97,6 +95,27 @@ abstract class AbstractMotTestData
 
         return $mot;
     }
+
+    public function failMotTestWithManyRfrs(MotTestDto $mot, array $rfrs)
+    {
+        $tester = $this->getTester($mot);
+
+        $this->addBrakeTestDecelerometerClass($mot);
+        $this->addMeterReading($mot);
+
+        foreach ($rfrs as $id) {
+            $this->reasonForRejection->addFailure($tester->getAccessToken(), $mot->getMotTestNumber(), $id);
+        }
+
+        $response = $this->motTest->failed($tester->getAccessToken(), $mot->getMotTestNumber());
+
+        $mot = $this->hydrateToDto($response);
+
+        $this->motCollection->add($mot, $mot->getMotTestNumber());
+
+        return $mot;
+    }
+
 
     public function failMotTestWithPrs(MotTestDto $mot, $rfrId = null)
     {
@@ -140,7 +159,7 @@ abstract class AbstractMotTestData
         return $this->abandonMotTest($mot, 5);
     }
 
-    protected function addBrakeTestDecelerometerClass(MotTestDto $motTest)
+    public function addBrakeTestDecelerometerClass(MotTestDto $motTest)
     {
         $tester = $this->getTester($motTest);
 
@@ -151,7 +170,7 @@ abstract class AbstractMotTestData
         }
     }
 
-    protected function addMeterReading(MotTestDto $motTest)
+    public function addMeterReading(MotTestDto $motTest)
     {
         $tester = $this->getTester($motTest);
 
