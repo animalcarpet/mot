@@ -13,23 +13,14 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $succes
 ?>
 <?php echo $this->partial('errorMessages', array('getFromFlash' => true)); ?>
 
-
 <?php if ($viewModel->canUserSeeGuidance()): ?>
     <div class="text">
         <p class="lede">
-            Add your training certificate to request a Demo test with a Vehicle Examiner
+            If you’ve passed your initial MOT tester training, enter your certificate details to request a demo test.
         </p>
-        <p>
-            Once you’ve added a certificate to a group we will contact you to arrange your test.
-        </p>
+        <p>We’ll contact you to arrange a demo MOT test with a Vehicle Examiner.</p>
     </div>
 <?php endif ?>
-
-<div class="message--important">
-    <p>
-        Only use this section if you're part of the MOT tester training pilot and been told to by DVSA or your training provider.
-    </p>
-</div>
 
 <div>
     <h3 class="summary-heading">
@@ -57,7 +48,6 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $succes
             'table' => $viewModel->getQualificationDetailsGroupBViewModel()->getTable('group-B'),
         ]
     );?>
-
 
     <nav class="content-navigation">
         <ul class="content-navigation__secondary">

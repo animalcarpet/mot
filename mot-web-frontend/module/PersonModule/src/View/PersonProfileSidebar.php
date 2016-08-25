@@ -250,14 +250,14 @@ class PersonProfileSidebar extends GeneralSidebar
                 $this->currentUrl :
                 self::OLD_USER_PROFILE_URL . $this->personId) . '/annual-assessment-certificates';
 
-        $relatedBox = new GeneralSidebarLinkList('Qualifications and annual assessment');
+        $relatedBox = new GeneralSidebarLinkList('MOT training and certificates');
         $relatedBox->setId('qualifications');
 
         if ($this->personProfileGuard->canViewQualificationDetails()) {
             $relatedBox->addLink(
                 new GeneralSidebarLink(
                     'qualification-details',
-                    'Qualification details',
+                    'MOT tester training certificates',
                     $qualificationDetailsUrl
                 )
             );

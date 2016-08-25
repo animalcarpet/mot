@@ -52,7 +52,7 @@ class QualificationDetailsForm extends Form
 
         $this->add((new Text())
             ->setName(self::FIELD_VTS_ID)
-            ->setLabel('VTS ID (optional)')
+            ->setLabel('VTS ID')
             ->setAttribute('help', 'For example, V12345')
             ->setAttribute('inputModifier', '1-4')
             ->setAttribute('group', true)

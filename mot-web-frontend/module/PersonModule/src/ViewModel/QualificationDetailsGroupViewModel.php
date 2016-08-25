@@ -71,7 +71,7 @@ class QualificationDetailsGroupViewModel
         }
 
         if(!empty($this->addUrl)) {
-            $certificateNumberRow->addActionLink('Add certificate', $this->addUrl);
+            $certificateNumberRow->addActionLink('Add certificate and request a demo test', $this->addUrl);
         }
 
         return $table;
