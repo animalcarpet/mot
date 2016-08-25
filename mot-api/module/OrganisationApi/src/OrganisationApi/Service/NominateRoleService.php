@@ -5,20 +5,16 @@ namespace OrganisationApi\Service;
 use Doctrine\ORM\EntityRepository;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtOrganisation;
-use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Database\Transaction;
 use DvsaCommon\Enum\BusinessRoleStatusCode;
-use DvsaCommon\Enum\RoleCode;
+use DvsaEntities\Entity\Organisation;
+use DvsaEntities\Entity\OrganisationBusinessRole;
 use DvsaEntities\Entity\OrganisationBusinessRoleMap;
-use DvsaEntities\Entity\OrganisationPositionHistory;
 use DvsaEntities\Entity\Person;
-use DvsaEntities\Repository\OrganisationPositionHistoryRepository;
-use DvsaEntities\Repository\OrganisationRepository;
-use DvsaEntities\Repository\PersonRepository;
-use OrganisationApi\Model\Operation\DirectNominationOperation;
-use OrganisationApi\Model\Operation\NominateByRequestOperation;
+use DvsaEntities\Repository\OrganisationBusinessRoleMapRepository;
 use OrganisationApi\Model\Operation\NominateOperationInterface;
 use Zend\Authentication\AuthenticationService;
+use Exception;
 
 /**
  * Class NominateRoleService
@@ -27,117 +23,118 @@ use Zend\Authentication\AuthenticationService;
  */
 class NominateRoleService
 {
-
-    private $personRepository;
-    private $organisationRepository;
-    private $organisationPositionHistoryRepository;
-    private $organisationBusinessRoleRepository;
+    private $organisationBusinessRole;
+    private $organisation;
+    private $currentUser;
+    private $nominee;
     private $authorisationService;
     private $nominateOperation;
-    private $assignRoleOperation;
     private $transaction;
-
-    /** @var AuthenticationService $motIdentityProvider */
-    private $motIdentityProvider;
-
+    private $organisationBusinessRoleMapRepository;
     private $businessRoleStatusRepository;
 
     public function __construct(
-        OrganisationRepository $organisationRepository,
-        OrganisationPositionHistoryRepository $organisationPositionHistoryRepository,
-        PersonRepository $personRepository,
-        EntityRepository $organisationBusinessRoleRepository,
+        Person $currentUser,
+        Person $nominee,
+        Organisation $organisation,
+        OrganisationBusinessRole $organisationBusinessRole,
         EntityRepository $businessRoleStatusRepository,
+        OrganisationBusinessRoleMapRepository $organisationBusinessRoleMapRepository,
         AuthorisationServiceInterface $authorisationService,
-        NominateByRequestOperation $nominateOperation,
-        DirectNominationOperation $assignRoleOperation,
-        Transaction $transaction,
-        AuthenticationService $motIdentityProvider
+        NominateOperationInterface $nominateOperation,
+        Transaction $transaction
     ) {
-        $this->organisationRepository                = $organisationRepository;
-        $this->organisationPositionHistoryRepository = $organisationPositionHistoryRepository;
-        $this->personRepository                      = $personRepository;
-        $this->organisationBusinessRoleRepository    = $organisationBusinessRoleRepository;
-        $this->authorisationService                  = $authorisationService;
+        $this->currentUser                           = $currentUser;
+        $this->nominee                               = $nominee;
+        $this->organisation                          = $organisation;
+        $this->organisationBusinessRole              = $organisationBusinessRole;
         $this->nominateOperation                     = $nominateOperation;
-        $this->assignRoleOperation                   = $assignRoleOperation;
         $this->transaction                           = $transaction;
         $this->authorisationService                  = $authorisationService;
-        $this->motIdentityProvider                   = $motIdentityProvider;
         $this->businessRoleStatusRepository          = $businessRoleStatusRepository;
+        $this->organisationBusinessRoleMapRepository = $organisationBusinessRoleMapRepository;
     }
 
     /**
-     * @param $organisationId
-     * @param $nomineeId
-     * @param $roleId
-     *
      * @return OrganisationBusinessRoleMap
      */
-    public function nominateRole($organisationId, $nomineeId, $roleId)
+    public function nominateRole()
     {
-        $this->authorisationService->assertGrantedAtOrganisation(PermissionAtOrganisation::NOMINATE_ROLE_AT_AE, $organisationId);
+        $this->authorisationService->assertGrantedAtOrganisation(
+            PermissionAtOrganisation::NOMINATE_ROLE_AT_AE,
+            $this->organisation->getId()
+        );
 
-        $nominator  = $this->getNominator();
-        $nomination = $this->getNomination($nomineeId, $roleId, $organisationId);
+        $nominator = $this->currentUser;
 
-        $businessRole = $nomination->getOrganisationBusinessRole()->getRole();
-
-        if ($businessRole->getCode() == RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER) {
-            $nominationOperation = $this->assignRoleOperation;
-        } else {
-            $nominationOperation =  $this->nominateOperation;
-        }
-
-        $organisationPosition = $nominationOperation->nominate($nominator, $nomination);
+        $organisationPosition = $this->nominateOperation->nominate($nominator, $this->getNomination());
 
         $this->transaction->flush();
 
         return $organisationPosition;
     }
 
-    private function getNomination($nomineeId, $roleId, $organisationId)
+    /**
+     * @return OrganisationBusinessRoleMap
+     * @throws Exception
+     */
+    public function updateRoleNominationNotification()
     {
-        $role         = $this->getRole($roleId);
-        $organisation = $this->getOrganisation($organisationId);
-        $nominee      = $this->getNominee($nomineeId);
+        $organisationBusinessRoleMap = $this->getOrganisationBusinessRoleMap(
+            $this->organisation->getId(),
+            $this->nominee->getId(),
+            $this->organisationBusinessRole->getId()
+        );
+
+        if (!$organisationBusinessRoleMap) {
+            throw new Exception('Organisation Business role map not found');
+        }
+
+        $nominator = $organisationBusinessRoleMap->getCreatedBy();
+
+        return $this->nominateOperation->updateNomination($nominator, $organisationBusinessRoleMap);
+    }
+
+    private function getNomination()
+    {
+        $organisation = $this->organisation;
 
         $status = $this->businessRoleStatusRepository->findOneBy(
             ['code' => BusinessRoleStatusCode::PENDING]
         );
 
         $map = new OrganisationBusinessRoleMap();
-        $map->setPerson($nominee)
-            ->setOrganisationBusinessRole($role)
+        $map->setPerson($this->nominee)
+            ->setOrganisationBusinessRole($this->organisationBusinessRole)
             ->setOrganisation($organisation)
             ->setBusinessRoleStatus($status);
 
         return $map;
     }
 
-    private function getNominator()
+    private function getStatus($code)
     {
-        $personId = $this->motIdentityProvider->getIdentity()->getUserId();
-
-        return $this->personRepository->get($personId);
-    }
-
-    private function getNominee($nomineeId)
-    {
-        return $this->personRepository->get($nomineeId);
-    }
-
-    private function getRole($roleId)
-    {
-        $role = $this->organisationBusinessRoleRepository->findOneBy(
-            ['id' => $roleId]
+        return $this->businessRoleStatusRepository->findOneBy(
+            ['code' => $code]
         );
-
-        return $role;
     }
 
-    private function getOrganisation($organisationId)
+    /**
+     * @param $nomineeId
+     * @param $roleId
+     * @param $siteId
+     * @return OrganisationBusinessRoleMap
+     */
+    private function getOrganisationBusinessRoleMap($organisationId, $nomineeId, $roleId)
     {
-        return $this->organisationRepository->get($organisationId);
+        return $this->organisationBusinessRoleMapRepository
+            ->findOneBy(
+                [
+                    'organisation' => $organisationId,
+                    'person' => $nomineeId,
+                    'organisationBusinessRole' => $roleId,
+                    'businessRoleStatus' => $this->getStatus(BusinessRoleStatusCode::PENDING)
+                ]
+            );
     }
 }

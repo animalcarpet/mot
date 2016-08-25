@@ -6,8 +6,6 @@ import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
-import java.util.Date;
-
 public class QualificationDetailsPage extends Page {
 
     public static final String PATH = "/your-profile/%s/qualification-details";
@@ -20,6 +18,8 @@ public class QualificationDetailsPage extends Page {
     @FindBy (id = "certificate-number-group-A-meta-data") private WebElement certificateDateGroupA;
     @FindBy (id = "validation-message--success") private WebElement validationMessageSuccess;
     @FindBy (id = "qualification-status-group-B") private WebElement qualificationStatusGroupB;
+    @FindBy (id = "certificate-number-group-A-certificate-number-group-A") private WebElement certificateGroupAAddLink;
+    @FindBy (id = "certificate-number-group-A-certificate-number-group-B") private WebElement certificateGroupBAddLink;
 
     public QualificationDetailsPage(MotAppDriver driver) {
         super(driver);
@@ -31,9 +31,14 @@ public class QualificationDetailsPage extends Page {
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
     }
 
-    public QualificationDetailsGroupAPage clickChangeGroupADetails() {
+    public QualificationDetailsGroupAddPage clickAddGroupADetails() {
+        certificateGroupAAddLink.click();
+        return new QualificationDetailsGroupAddPage(driver);
+    }
+
+    public QualificationDetailsGroupEditPage clickChangeGroupADetails() {
         certificateGroupAChangeLink.click();
-        return new QualificationDetailsGroupAPage(driver);
+        return new QualificationDetailsGroupEditPage(driver);
     }
 
     public QualificationDetailsRemovePage clickRemoveGroupBDetails() {

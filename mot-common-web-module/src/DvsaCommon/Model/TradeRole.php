@@ -32,4 +32,5 @@ class TradeRole
     {
         return in_array($role, self::getTradeRoles());
     }
+
 }

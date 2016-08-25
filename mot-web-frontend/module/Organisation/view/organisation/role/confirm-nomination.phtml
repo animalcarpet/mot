@@ -4,6 +4,7 @@
  * @var \DvsaCommon\Dto\Organisation\OrganisationDto $authorisedExaminer
  * @var string                                       $roleName
  * @var boolean                                      $displayNotification
+ * @var boolean                                      $twoFactorEnabled
  */
 ?>
 
@@ -39,18 +40,25 @@
                 <th class="key-value-list__key">New role</th>
                 <td class="key-value-list__value"><?php echo $roleName ?></td>
             </tr>
-
         </tbody>
     </table>
-
-
 </div>
 
-<?php if ($displayNotification): ?>
-    <div class="message">
+<div class="message" id="security-card-notification">
+    <?php if ($displayNotification && $twoFactorEnabled): ?>
+        <p>The user will receive a notification of the nomination.</p>
+        <p>To accept or reject the role the user needs an active security card.</p>
+        If they do not have one they will need to order one and activate it.
+
+    <?php elseif (!$displayNotification && $twoFactorEnabled):?>
+        <p>The user will receive a notification of the nomination.</p>
+        <p>To perform the role the user needs an active security card.</p>
+        If they do not have one they will need to order one and activate it.
+
+    <?php elseif ($displayNotification && !$twoFactorEnabled):?>
         <p>A notification will be sent to the user. To make the role active they must accept the role nomination.</p>
-    </div>
-<?php endif; ?>
+    <?php endif; ?>
+</div>
 
 <form method="POST">
     <nav class="content-navigation">

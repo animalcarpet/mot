@@ -15,7 +15,7 @@ class IdentityProvider implements MotIdentityProviderInterface
         $this->authenticationService = $authenticationService;
     }
 
-    /** @return MotIdentityInterface */
+    /** @return Identity */
     public function getIdentity()
     {
         return $this->authenticationService->getIdentity();

@@ -7,6 +7,7 @@ use DvsaCommon\Auth\MotIdentityInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Constants\Role;
 use DvsaCommon\HttpRestJson\Client;
+use DvsaCommon\Model\DvsaRole;
 use DvsaCommon\Model\PersonAuthorization;
 use DvsaCommon\UrlBuilder\PersonUrlBuilder;
 
@@ -40,6 +41,13 @@ class LazyMotFrontendAuthorisationService extends AbstractMotAuthorisationServic
     public function isTester()
     {
         return $this->hasRole(Role::TESTER_ACTIVE);
+    }
+    
+    public function isDvsa()
+    {
+        $rolesAndPermissions = $this->getPersonAuthorization()->getRoles()->asArray();
+
+        return DvsaRole::containDvsaRole($rolesAndPermissions['roles']);
     }
 
     /**

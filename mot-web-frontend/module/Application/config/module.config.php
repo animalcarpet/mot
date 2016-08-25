@@ -7,6 +7,7 @@ use Application\Navigation\Breadcrumbs\Handler\SiteNameResolver;
 use Application\View\Helper\CamelCaseToFirstUppercaseReadable;
 use Application\View\Helper\CamelCaseToReadable;
 use Application\View\HelperFactory\AuthorisationHelperFactory;
+use Application\View\HelperFactory\CanTestWithoutOtpFactory;
 use Application\View\HelperFactory\CurrentMotTestFactory;
 use Application\View\HelperFactory\DashboardDataProviderFactory;
 use Application\View\HelperFactory\GetSiteCountFactory;
@@ -30,6 +31,8 @@ use DvsaMotTest\Factory\Service\MotChecklistPdfServiceFactory;
 use DvsaMotTest\Form\Validator\SpecialNoticePublishDateValidator;
 use DvsaMotTest\NewVehicle\Controller\CreateVehicleController;
 use DvsaMotTest\Service\MotChecklistPdfService;
+use Application\Service\CanTestWithoutOtpService;
+use Application\Factory\Service\CanTestWithoutOtpServiceFactory;
 
 return [
     'controllers' => require __DIR__ . '/controllers.config.php',
@@ -975,7 +978,9 @@ return [
             'translator' => 'MvcTranslator',
         ],
         'factories' => [
-               MotChecklistPdfService::class => MotChecklistPdfServiceFactory::class
+            MotChecklistPdfService::class => MotChecklistPdfServiceFactory::class,
+            CanTestWithoutOtpService::class    => CanTestWithoutOtpServiceFactory::class,
+
         ],
     ],
     'session_namespace_prefixes' => [
@@ -1066,6 +1071,8 @@ return [
                 __DIR__ . '/../view/partials/genericSearchResultsVTS.phtml',
             'otpInput'                                                                   =>
                 __DIR__ . '/../view/partials/otpInput.phtml',
+            '2faDeclaration'                                                             =>
+                __DIR__ . '/../view/partials/2faDeclaration.phtml',
             'otpError'                                                                   =>
                 __DIR__ . '/../view/partials/otpError.phtml',
             'checkboxesElement'                                                          =>
@@ -1157,6 +1164,7 @@ return [
             'getSiteCount'           => GetSiteCountFactory::class,
             'manualsHelper'          => ManualsAndGuidesFactory::class,
             'resourcesOnGovUkHelper' => ResourcesOnGovUkFactory::class,
+            'canTestWithoutOtp'      => CanTestWithoutOtpFactory::class,
         ]
     ],
     'module_layouts'             => [

@@ -32,12 +32,7 @@ Feature: VTS
       | user                  |
       | an Area Office User 2 |
       | a DVLA Operative      |
-
-  Scenario: As a DVSA User I can add more than one site-manager to a vehicle testing station
-    Given I am logged in as an Area Office User
-    When I attempt to assign the role of site manager to more than one user of a vehicle testing station
-    Then the site manager roles should be assigned successfully
-
+    
   Scenario Outline: As a DVSA User I can add rag status to site
     Given I am logged in as a Scheme Manager
     When I attempt to add risk assessment to site with data:

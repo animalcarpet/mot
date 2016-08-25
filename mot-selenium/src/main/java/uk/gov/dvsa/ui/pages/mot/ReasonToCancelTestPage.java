@@ -1,5 +1,6 @@
 package uk.gov.dvsa.ui.pages.mot;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.model.User;
@@ -9,21 +10,33 @@ import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
 public class ReasonToCancelTestPage extends Page {
-    @FindBy(id = "reasonForCancel13") private WebElement reasonAccidentOrIllness;
-    @FindBy(id = "reasonForCancel25") private WebElement reasonAbortedByVE;
-    @FindBy(id = "reasonForCancel28") private WebElement reasonVehicleRegisteredError;
-    @FindBy(id = "reasonForCancel12") private WebElement reasonTestEquipmentIssue;
-    @FindBy(id = "reasonForCancel5") private WebElement reasonVTSincident;
-    @FindBy(id = "reasonForCancel6") private WebElement reasonIncorrectLocation;
-    @FindBy(id = "reasonForCancel21") private WebElement reasonDangerousOrCauseDamage;
-    @FindBy(id = "oneTimePassword") private WebElement enterYourPinField;
-    @FindBy(id = "declarationStatement") private WebElement declarationElement;
-    @FindBy(id = "mot_test_cancel_confirm") private WebElement confirmAndCancelTestButton;
-    @FindBy(id = "returnToMotTest") private WebElement returnToMotTest;
-    @FindBy(id = "cancelComment") private WebElement cancelComment;
+    @FindBy(id = "reasonForCancel13")
+    private WebElement reasonAccidentOrIllness;
+    @FindBy(id = "reasonForCancel25")
+    private WebElement reasonAbortedByVE;
+    @FindBy(id = "reasonForCancel28")
+    private WebElement reasonVehicleRegisteredError;
+    @FindBy(id = "reasonForCancel12")
+    private WebElement reasonTestEquipmentIssue;
+    @FindBy(id = "reasonForCancel5")
+    private WebElement reasonVTSincident;
+    @FindBy(id = "reasonForCancel6")
+    private WebElement reasonIncorrectLocation;
+    @FindBy(id = "reasonForCancel21")
+    private WebElement reasonDangerousOrCauseDamage;
+    private By enterYourPinField = By.id("oneTimePassword");
+    @FindBy(id = "declarationStatement")
+    private WebElement declarationElement;
+    @FindBy(id = "mot_test_cancel_confirm")
+    private WebElement confirmAndCancelTestButton;
+    @FindBy(id = "returnToMotTest")
+    private WebElement returnToMotTest;
+    @FindBy(id = "cancelComment")
+    private WebElement cancelComment;
 
     private static final String PAGE_TITLE = "Reasons to cancel test";
     public static final String PATH = "mot-test/%s/cancel";
+    private static final String PIN = "123456";
 
     public ReasonToCancelTestPage(MotAppDriver driver) {
         super(driver);
@@ -35,20 +48,29 @@ public class ReasonToCancelTestPage extends Page {
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
     }
 
-    public void enterReason(CancelTestReason reason){
+    public void enterReason(CancelTestReason reason) {
         selectReason(reason);
         if (reason.equals(CancelTestReason.DANGEROUS_OR_CAUSE_DAMAGE)) {
             enterCancelComment(reason.getDescription());
-            enterUserPin(driver.getCurrentUser());
+            if (isOneTimePasswordBoxDisplayed()) {
+                enterUserPin(driver.getCurrentUser());
+            }
         }
     }
 
-    public void clickConfirmAndCancelTest(){
+    public void enterReason2FaActiveUser(CancelTestReason reason) {
+        selectReason(reason);
+        if (reason.equals(CancelTestReason.DANGEROUS_OR_CAUSE_DAMAGE)) {
+            enterCancelComment(reason.getDescription());
+        }
+    }
+
+    public void clickConfirmAndCancelTest() {
         confirmAndCancelTestButton.click();
     }
 
     private void enterUserPin(User currentUser) {
-        enterYourPinField.sendKeys(currentUser.getPin());
+        driver.findElement(enterYourPinField).sendKeys(currentUser.getOneTimePasswordPin());
     }
 
     public void selectReason(CancelTestReason reason) {
@@ -77,6 +99,10 @@ public class ReasonToCancelTestPage extends Page {
             default:
                 break;
         }
+    }
+
+    public boolean isOneTimePasswordBoxDisplayed() {
+        return PageInteractionHelper.isElementDisplayed((enterYourPinField));
     }
 
     private void selectReasonAccidentOrIllness() {

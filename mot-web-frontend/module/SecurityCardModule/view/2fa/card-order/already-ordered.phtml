@@ -1,0 +1,28 @@
+<?php
+    use Dashboard\Controller\UserHomeController;
+    use DvsaCommon\Date\DateTimeDisplayFormat;
+
+    $this->layout('layout/layout-govuk.phtml');
+?>
+
+<header class="content-header">
+    <h1>
+        <span class="content-header__title">Order a security card</span>
+    </h1>
+</header>
+
+<div>
+
+    <div class="banner--error">
+        <span class="banner__heading-large"> You have already ordered a security card</span>
+        <span> Activate your card as soon as it arrives </span>
+    </div>
+
+    <p class="lede">
+        The card was ordered on <?php echo DateTimeDisplayFormat::textDate($this->cardOrder->getSubmittedOn()); ?>.
+    </p>
+
+    <p>
+        <a href="<?php echo $this->url(UserHomeController::ROUTE); ?>">Return home</a>
+    </p>
+</div>

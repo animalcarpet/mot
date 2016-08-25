@@ -1,21 +1,21 @@
 <?php $this->gtmDataLayer(['event' => 'user-lockout-warning']); ?>
+<div></div>
+<div class="banner--error column-two-thirds">
+    <span class="banner__heading-large">You have tried to sign in 4 times</span>
+    <span>If you enter the wrong password one more time your account will be locked for 30 minutes</span>
+</div>
 <div class="text">
 
-    <p class='lede'><?php echo $this->yourAccountWillBeLockedMessage; ?></p>
-
-    You can <a href="<?php echo $this->url('forgotten-password') ?>">change your password</a> if you have forgotten it. For other sign in related queries you can contact <?php echo $this->helpdesk['name'] ?> on <?php echo $this->helpdesk['phoneNumber'] ?>.
-
-    <p>
-        <?php echo $this->helpdesk['name'] ?> opening hours
-    </p>
-    <p>
-        <?php echo $this->helpdesk['openingHrsWeekdays'] ?><br>
-        <?php echo $this->helpdesk['openingHrsSaturday'] ?><br>
-        <?php echo $this->helpdesk['openingHrsSunday'] ?>
-    </p>
+    <div class="row">
+        <nav class="module-content-navigation">
+            <a href="<?php echo $this->url('forgotten-password'); ?>" class="button" id="go-to-password-reset">
+                Reset your password
+            </a>
+        </nav>
+    </div>
 
     <p>
-        <a href="<?php echo $this->url($this->loginRoute); ?>">Return to sign in</a>
+        <a href="<?php echo $this->url($this->loginRoute); ?>">Back to sign in</a>
     </p>
 
 </div>

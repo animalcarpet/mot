@@ -12,7 +12,7 @@ public class RemoveAepPage extends Page {
 
     @FindBy(id = "confirm-button") private WebElement submit;
 
-    private static String pageTitle = "Remove a principal";
+    private static String PAGE_TITLE = "Remove a principal";
 
     public RemoveAepPage(MotAppDriver driver) {
         super(driver);
@@ -20,10 +20,10 @@ public class RemoveAepPage extends Page {
     }
 
     @Override public boolean selfVerify() {
-        return PageInteractionHelper.verifyTitle(this.getTitle(), pageTitle);
+        return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
     }
 
-    public AuthorisedExaminerViewPage submitForm() {
+    public AuthorisedExaminerViewPage removePrincipal() {
         submit.click();
         return new AedmAuthorisedExaminerViewPage(driver);
     }

@@ -29,6 +29,9 @@ class SecurityQuestionController extends AbstractSecurityQuestionController
      */
     public function indexAction()
     {
+        if($this->getIdentity()->isSecondFactorRequired()) {
+            return $this->notFoundAction();
+        }
         $personId = $this->getIdentity()->getUserId();
         $questionNumber = $this->params()->fromRoute('questionNumber', 1);
         $viewModel = $this->createViewModel();

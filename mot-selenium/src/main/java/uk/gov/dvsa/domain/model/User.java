@@ -2,10 +2,16 @@ package uk.gov.dvsa.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import uk.gov.dvsa.domain.service.TwoFactorService;
+import uk.gov.dvsa.helper.enums.TesterStatus;
+
+import java.io.IOException;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class User {
+
+    private static final String ONE_TIME_PASSWORD_PIN = "123456";
 
     private String title;
     private String username;
@@ -24,6 +30,7 @@ public class User {
     private String drivingLicenceRegion;
     private boolean multiSiteUser;
     private final String DEFAULT_TITLE = "Mr";
+    private TwoFactorDetails twoFactorDetails;
 
     public User() {
     }
@@ -113,12 +120,32 @@ public class User {
         return middleName != null && !middleName.isEmpty();
     }
 
-    public String getPin() {
-        return "123456";
+    public String getSerialNumber() {
+        createTwoFactorDetails();
+        return twoFactorDetails.serialNumber();
+    }
+
+    public String getOneTimePasswordPin() {
+        return ONE_TIME_PASSWORD_PIN;
+    }
+
+    public String getTwoFactorPin() {
+        createTwoFactorDetails();
+        return twoFactorDetails.pin();
     }
 
     public String getPersonId() {
         return personId;
+    }
+
+    private void createTwoFactorDetails() {
+        if(twoFactorDetails == null){
+            try {
+                twoFactorDetails = new TwoFactorService().createTwoFactorDetails();
+            } catch (IOException e) {
+                throw new IllegalStateException("Could not create Two factor Details");
+            }
+        }
     }
 
     @Override

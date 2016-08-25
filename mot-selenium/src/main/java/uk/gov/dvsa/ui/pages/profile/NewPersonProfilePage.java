@@ -11,6 +11,8 @@ import uk.gov.dvsa.ui.pages.dvsa.RolesAndAssociationsPage;
 import uk.gov.dvsa.ui.pages.profile.annualassessmentcertificates.AnnualAssessmentCertificatesIndexPage;
 import uk.gov.dvsa.ui.pages.profile.qualificationdetails.QualificationDetailsPage;
 import uk.gov.dvsa.ui.pages.profile.testqualityinformation.AggregatedTestQualityPage;
+import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardPage;
+import uk.gov.dvsa.ui.pages.profile.testqualityinformation.AggregatedTestQualityPage;
 
 public class NewPersonProfilePage extends ProfilePage {
 
@@ -33,6 +35,10 @@ public class NewPersonProfilePage extends ProfilePage {
     @FindBy(css = "#telephone-number") private WebElement userTelephone;
     @FindBy(css = "#telephone-number a") private WebElement userTelephoneLink;
     @FindBy(css = "#validation-message--success") private WebElement successMessage;
+    @FindBy(id = "reset-pin") private WebElement resetPinLink;
+    @FindBy(id = "register-card") private WebElement registerCardLink;
+    @FindBy(id = "security-card-order") private WebElement orderSecurityCardLink;
+    private By securityCardPanel = By.id("security-card");
     @FindBy(id = "annual-assessment-certificates") WebElement annualAssessmentCertificates;
     @FindBy(id = "test-quality-information") private WebElement testQualityInformationLink;
 
@@ -112,6 +118,11 @@ public class NewPersonProfilePage extends ProfilePage {
     }
 
     @Override
+    public boolean isOrderSecurityCardDisplayed(){
+        return orderSecurityCardLink.isDisplayed();
+    }
+
+    @Override
     public RolesAndAssociationsPage clickRolesAndAssociationsLink() {
         rolesAndAssociationsLink.click();
         return new RolesAndAssociationsPage(driver);
@@ -147,9 +158,28 @@ public class NewPersonProfilePage extends ProfilePage {
         return new ChangeAddressPage(driver);
     }
 
+    @Override
+    public boolean isResetPinLinkDisplayed() { return PageInteractionHelper.isElementDisplayed(resetPinLink); }
+
     public QualificationDetailsPage clickQualificationDetailsLink(){
         qualificationDetails.click();
         return new QualificationDetailsPage(driver);
+    }
+
+    @Override
+    public boolean isRegisterSecurityCardLinkDisplayed() {
+        return PageInteractionHelper.isElementDisplayed(registerCardLink);
+    }
+
+    @Override
+    public boolean isSecurityCardPanelDisplayed() {
+        return PageInteractionHelper.isElementDisplayed(securityCardPanel);
+    }
+
+    @Override
+    public RegisterCardPage clickRegisterSecurityCardLink() {
+        registerCardLink.click();
+        return new RegisterCardPage(driver);
     }
 
     public AnnualAssessmentCertificatesIndexPage clickAnnualAssessmentCertificatesLink() {

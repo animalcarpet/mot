@@ -68,7 +68,7 @@ class ActionResultLayout
 
     public function getBreadcrumbs()
     {
-        return ["breadcrumbs" => $this->breadcrumbs];
+        return $this->breadcrumbs;
     }
 
     public function getPageTertiaryTitle()
@@ -81,5 +81,4 @@ class ActionResultLayout
         $this->pageTertiaryTitle = $pageTertiaryTitle;
         return $this;
     }
-
 }

@@ -197,7 +197,8 @@ class ResetClaimAccountService
             $this->config[self::CFG_HELPDESK],
             $this->mailerService,
             $mailerDto,
-            $emailAddress
+            $emailAddress,
+            $person->getAuthenticationMethod()->isCard()
         );
 
         return $passwordReminder->send(

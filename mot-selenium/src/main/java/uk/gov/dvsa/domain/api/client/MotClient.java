@@ -60,6 +60,10 @@ public class MotClient {
                 .put(endpointUrl + resourceUrl);
     }
 
+    public Response createTwoFactorDetails(String path) {
+        return postRequestWithoutToken("", path);
+    }
+
     public Response getFeature(String path)
     {
         return getWithoutToken(path);

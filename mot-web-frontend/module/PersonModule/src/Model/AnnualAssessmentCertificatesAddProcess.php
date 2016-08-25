@@ -349,4 +349,33 @@ class AnnualAssessmentCertificatesAddProcess implements TwoStepProcessInterface,
     {
         return null;
     }
+    
+
+    /**
+     * Does the process have a confirmation page at the end.
+     * If true, will redirect to the confirmation page on the process,
+     * if false will redirect to start with success message
+     *
+     * @return bool
+     */
+    public function hasConfirmationPage()
+    {
+        return false;
+    }
+
+    /**
+     * @return AbstractRedirectActionResult
+     */
+    public function redirectToConfirmationPage()
+    {
+        // TODO: Implement redirectToConfirmationPage() method.
+    }
+
+    /**
+     * @return mixed
+     */
+    public function populateConfirmationPageVariables()
+    {
+        // TODO: Implement populateConfirmationPageVariables() method.
+    }
 }

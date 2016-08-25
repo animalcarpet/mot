@@ -128,4 +128,9 @@ class QualificationDetailsEditProcess extends QualificationDetailsAbstractProces
     {
         return null;
     }
+
+    public function populateConfirmationPageVariables()
+    {
+
+    }
 }

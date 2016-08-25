@@ -12,13 +12,18 @@ abstract class AbstractTwoStepAeProcess extends AbstractSingleStepAeProcess impl
 {
     public function buildReviewStepViewModel($formUuid, $formData, GdsTable $table)
     {
-        return new UpdateAePropertyReviewViewModel($this->context->getAeId(), $this->context->getPropertyName(), $formUuid, $this->getReviewPageButtonText(), $formData, $table);
+        return new UpdateAePropertyReviewViewModel($this->context->getAeId(), $this->context->getPropertyName(),
+            $formUuid, $this->getReviewPageButtonText(), $formData, $table);
     }
 
     public function redirectToReviewPage($formUuid)
     {
         return new RedirectToRoute(AeRouteList::AE_EDIT_PROPERTY_REVIEW,
-            ['id' => $this->context->getAeId(), 'propertyName' => $this->context->getPropertyName(), 'formUuid' => $formUuid]
+            [
+                'id' => $this->context->getAeId(),
+                'propertyName' => $this->context->getPropertyName(),
+                'formUuid' => $formUuid
+            ]
         );
     }
 
@@ -29,5 +34,20 @@ abstract class AbstractTwoStepAeProcess extends AbstractSingleStepAeProcess impl
             $this->context->getAeId(),
             $this->context->getPropertyName()
         );
+    }
+
+    public function hasConfirmationPage()
+    {
+        return false;
+    }
+
+    public function redirectToConfirmationPage()
+    {
+
+    }
+
+    public function populateConfirmationPageVariables()
+    {
+
     }
 }

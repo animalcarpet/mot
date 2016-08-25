@@ -5,6 +5,7 @@
 /** @var string $userProfileUrl */
 /** @var string $claimAccountUrl */
 /** @var \Application\Helper\PrgHelper $prgHelper */
+/** @var string $reclaimSystemMessage */
 
 ?>
 
@@ -19,9 +20,7 @@
 
     <?php echo $this->partial('partial/gds/general/system-message',
         [
-            'messages' => [
-                'This will reset the user\'s password and require them to set up their security questions and PIN when they next sign in.'
-            ],
+            'messages' => [$reclaimSystemMessage],
             'type' => 'important'
         ]
     ); ?>

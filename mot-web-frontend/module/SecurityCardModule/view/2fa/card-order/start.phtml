@@ -1,0 +1,56 @@
+<?php
+    $this->layout('layout/layout-govuk.phtml');
+?>
+
+<div class="grid-row">
+
+    <div class="column-two-thirds">
+        
+        <header class="content-header">
+            <h1>
+                <span class="content-header__type">
+                   Your profile
+                </span>
+
+                <span class="content-header__title">
+                    Order a security card
+                </span>
+            </h1>
+        </header>
+
+        <p class="lede">
+            <?php if ($viewModel->getHasAnActiveCard()) : ?>
+                If your security card is lost or damaged, order a replacement.
+            <?php else : ?>
+                You need a security card to sign in securely to the MOT testing service.
+            <?php endif; ?>
+        </p>
+
+        <p>New and replacement security cards are free of charge.</p>
+
+        <p>Your card should arrive by post within 5 working days and can be delivered to your testing station (VTS),
+            home or any other address.</p>
+
+        <p>You will not need to sign for the delivery.</p>
+
+        <?php if ($viewModel->getHasAnActiveCard()) : ?>
+            <div id="existing-card-message" class="message--important">
+                <p><strong>Your existing security card will be deactivated</strong> once you order a replacement.</p>
+            </div>
+        <?php endif; ?>
+
+        <nav class="content-navigation">
+
+            <a id="orderContinue" href="<?php echo $this->url('security-card-order/address',['userId' => $viewModel->getUserId()]) ?>" class="button">Continue</a>
+
+            <ul class="content-navigation__secondary">
+                <li>
+                    <a href="<?php echo $this->url('newProfile') ?>">Cancel and return to your profile</a>
+                </li>
+            </ul>
+
+        </nav>
+
+    </div>
+
+</div>

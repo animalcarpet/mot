@@ -73,6 +73,16 @@ class Identity implements MotFrontendIdentityInterface
     private $passwordExpiryDate;
 
     /**
+     * @var bool
+     */
+    private $authenticatedWith2FA = false;
+
+    /**
+     * @var bool
+     */
+    private $authenticatedWithLostForgotten = false;
+
+    /**
      * @return PersonAuthorization
      * @deprecated will be removed - do not use
      */
@@ -290,6 +300,45 @@ class Identity implements MotFrontendIdentityInterface
     public function setPasswordExpiryDate($passwordExpiryDate)
     {
         $this->passwordExpiryDate = $passwordExpiryDate;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAuthenticatedWith2FA()
+    {
+        return $this->authenticatedWith2FA;
+    }
+
+    /**
+     * @param $authenticatedWith2FA
+     * @return $this
+     */
+    public function setAuthenticatedWith2FA($authenticatedWith2FA)
+    {
+        $this->authenticatedWith2FA = $authenticatedWith2FA;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAuthenticatedWithLostForgotten()
+    {
+        return $this->authenticatedWithLostForgotten;
+    }
+
+    /**
+     * @param $authenticatedWithLostForgotten
+     * @return $this
+     */
+    public function setAuthenticatedWithLostForgotten($authenticatedWithLostForgotten)
+    {
+        $this->authenticatedWithLostForgotten = $authenticatedWithLostForgotten;
+
         return $this;
     }
 }

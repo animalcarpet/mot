@@ -20,4 +20,9 @@ interface MotFrontendAuthorisationServiceInterface extends MotAuthorisationServi
      * @deprecated use permissions, not roles
      */
     public function isTester();
+
+    /**
+     * @deprecated use permissions, not roles
+     */
+    public function isDvsa();
 }

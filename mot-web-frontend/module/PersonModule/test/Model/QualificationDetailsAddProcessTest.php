@@ -14,13 +14,23 @@ use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaClient\Mapper\QualificationDetailsMapper;
 use DvsaClient\Mapper\SiteMapper;
 use DvsaCommon\ApiClient\Person\MotTestingCertificate\Dto\MotTestingCertificateDto;
+use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
+use DvsaCommon\Model\TesterAuthorisation;
+use DvsaCommon\Model\TesterGroupAuthorisationStatus;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\MethodSpy;
 use DvsaCommonTest\TestUtils\XMock;
 use Zend\Mvc\Controller\AbstractActionController;
+use Dvsa\Mot\ApiClient\Service\AuthorisationService;
+use Dvsa\Mot\ApiClient\Resource\Collection;
+use Dvsa\Mot\ApiClient\Resource\Item\SecurityCardOrder;
 
 class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
 {
+    const TEST_GROUP_NAME = 'A';
+    const USER_ID = 1;
+    const USERNAME = 'tester1';
+
     /** @var QualificationDetailsMapper */
     private $qualificationDetailsMapperMock;
     /** @var  SiteMapper */
@@ -45,6 +55,8 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
     private $personProfileGuardMock;
     /** @var  QualificationDetailsRoutes */
     private $qualificationDetailsRoutesMock;
+    /** @var  AuthorisationService */
+    private $authClientMock;
 
     private $formData = [
         QualificationDetailsForm::FIELD_VTS_ID => 1,
@@ -70,6 +82,7 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
         $this->contextProviderMock = Xmock::of(ContextProvider::class);
         $this->contextMock = Xmock::of(FormContextInterface::class);
         $this->qualificationDetailsRoutesMock = Xmock::of(QualificationDetailsRoutes::class);
+        $this->authClientMock = XMock::of(AuthorisationService::class);
 
         $this->authorisationServiceMock = new AuthorisationServiceMock();
 
@@ -80,12 +93,13 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
             $this->personalDetailsServiceMock,
             $this->personProfileGuardBuilderMock,
             $this->contextProviderMock,
-            $this->qualificationDetailsRoutesMock
+            $this->qualificationDetailsRoutesMock,
+            $this->authClientMock
         );
 
         $this->controllerMock = Xmock::of(QualificationDetailsController::class);
 
-        $context = (new FormContext(1, 1, 'A', $this->controllerMock));
+        $context = (new FormContext(1, 1, self::TEST_GROUP_NAME, $this->controllerMock));
 
         $this->sut->setContext($context);
     }
@@ -153,16 +167,99 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($this->sut->getPrePopulatedData());
     }
 
+    public function testAssertConfirmationPageIsRequired()
+    {
+        $this->assertTrue($this->sut->hasConfirmationPage());
+    }
+
+    public function testConfirmationViewModelVariablesArePopulatedCorrectly()
+    {
+        $this->authClientMock
+            ->expects($this->once())
+            ->method('getSecurityCardOrders')
+            ->with(self::USERNAME)
+            ->willReturn(new Collection([], SecurityCardOrder::class));
+
+        $this->personProfileGuardBuilderMock
+            ->expects($this->once())
+            ->method("getTesterAuthorisation")
+            ->with(self::USER_ID)
+            ->willReturn($this->withGroupADemoTestNeeded());
+
+        $actual = $this->sut->populateConfirmationPageVariables();
+
+        $this->assertArrayHasKey(QualificationDetailsAddProcess::START_PAGE_ROUTE_VIEW_VARIABLE, $actual);
+        $this->assertArrayHasKey(QualificationDetailsAddProcess::CAN_ORDER_CARD_VIEW_VARIABLE, $actual);
+        $this->assertArrayHasKey(QualificationDetailsAddProcess::GROUP_NAME_VIEW_VARIABLE, $actual);
+        $this->assertEquals($actual[QualificationDetailsAddProcess::GROUP_NAME_VIEW_VARIABLE], self::TEST_GROUP_NAME);
+    }
+
+    public function testConfirmationShowSecurityCardOrdersUrlWhenNoOrdersPresent()
+    {
+        $this->authClientMock
+            ->expects($this->once())
+            ->method('getSecurityCardOrders')
+            ->with(self::USERNAME)
+            ->willReturn(new Collection([], SecurityCardOrder::class));
+
+        $this->personProfileGuardBuilderMock
+            ->expects($this->once())
+            ->method("getTesterAuthorisation")
+            ->with(self::USER_ID)
+            ->willReturn($this->withGroupADemoTestNeeded());
+
+        $actual = $this->sut->populateConfirmationPageVariables();
+
+        $this->assertTrue($actual[QualificationDetailsAddProcess::CAN_ORDER_CARD_VIEW_VARIABLE]);
+    }
+
+    public function testConfirmationHideSecurityCardOrdersUrlWhenOrdersPresent()
+    {
+        $this->authClientMock
+            ->expects($this->once())
+            ->method('getSecurityCardOrders')
+            ->with(self::USERNAME)
+            ->willReturn(new Collection([new \stdClass($this->orderResponseArray())], SecurityCardOrder::class));
+
+        $this->personProfileGuardBuilderMock
+            ->expects($this->once())
+            ->method("getTesterAuthorisation")
+            ->with(self::USER_ID)
+            ->willReturn($this->withGroupADemoTestNeeded());
+
+        $actual = $this->sut->populateConfirmationPageVariables();
+
+        $this->assertFalse($actual[QualificationDetailsAddProcess::CAN_ORDER_CARD_VIEW_VARIABLE]);
+    }
+
+    public function testConfirmationHideSecurityCardOrdersUrlWhenNotDemoTestNeededWithOrders()
+    {
+        $this->authClientMock
+            ->expects($this->once())
+            ->method('getSecurityCardOrders')
+            ->with(self::USERNAME)
+            ->willReturn(new Collection([new \stdClass($this->orderResponseArray())], SecurityCardOrder::class));
+
+        $this->personProfileGuardBuilderMock
+            ->expects($this->once())
+            ->method("getTesterAuthorisation")
+            ->willReturn($this->withFullyAuthorisedTester());
+
+        $actual = $this->sut->populateConfirmationPageVariables();
+
+        $this->assertFalse($actual[QualificationDetailsAddProcess::CAN_ORDER_CARD_VIEW_VARIABLE]);
+    }
+
     protected function buildPersonalDetailsServiceMock()
     {
         $personalDetailsServiceMock = Xmock::of(ApiPersonalDetails::class);
         $personalDetailsServiceMock->method('getPersonalDetailsData')
             ->willReturn([
-                'id'                   => 1,
+                'id'                   => self::USER_ID,
                 'firstName'            => 'foo',
                 'middleName'           => 'bar',
                 'surname'              => 'baz',
-                'username'             => 'tester1',
+                'username'             =>  self::USERNAME,
                 'dateOfBirth'          => '1979-12-20',
                 'title'                => 'Mr',
                 'gender'               => 'male',
@@ -183,6 +280,19 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
         return $personalDetailsServiceMock;
     }
 
+    private function withGroupADemoTestNeeded()
+    {
+        $demoTestStatus = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED, "name");
+        $status = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::QUALIFIED, "name");
+        return new TesterAuthorisation($demoTestStatus, $status);
+    }
+
+    private function withFullyAuthorisedTester()
+    {
+        $status = new TesterGroupAuthorisationStatus(AuthorisationForTestingMotStatusCode::QUALIFIED, "name");
+        return new TesterAuthorisation($status, $status);
+    }
+
     private function setMockRoles()
     {
         return [
@@ -201,6 +311,20 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
                 'address' => '34 Test Road',
                 'roles'   => ['TESTER'],
             ]]
+        ];
+    }
+
+    private function orderResponseArray()
+    {
+        return [
+            "submittedOn" => "2014-05-25",
+            "fullName" => "AUTH_INT_YOTURWDKSPFUMKBPMGMU AUTH_INT_YOTURWDKSPFUMKBPMGMU",
+            "recipientName" => "",
+            "addressLine1" => "9f1341",
+            "addressLine2" => "5 Uncanny St",
+            "addressLine3" => "fake address line 3",
+            "postcode" => "L1 1PQ",
+            "town" => "Liverpool"
         ];
     }
 }

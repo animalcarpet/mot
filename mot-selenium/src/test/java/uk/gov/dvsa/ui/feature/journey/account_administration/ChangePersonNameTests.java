@@ -53,7 +53,7 @@ public class ChangePersonNameTests extends DslTest {
     @Test(groups = {"BVT", "BL-59"},
             testName = "NewProfile",
             description = "Test that Authorised user can change name on person profile",
-            dataProvider = "dvsaUserChangeNameProvider")
+            dataProvider = "dvsaUserFroOwnProfileProvider")
     public void dvsaUserCanChangeNameOnOtherPersonProfile(User user) throws IOException {
         // Given I am on other person profile as an authorised user
         motUI.profile.dvsaViewUserProfile(user, tester);
@@ -70,7 +70,7 @@ public class ChangePersonNameTests extends DslTest {
             description = "Test that Authorised user should provide a first name in order to update user information")
     public void dvsaUserShouldProvideFirstName() throws IOException {
         // Given I am on other person profile as an authorised user
-        motUI.profile.dvsaViewUserProfile(areaOffice1User, tester);
+        motUI.profile.dvsaViewUserProfile(userData.createAreaOfficeOne("ao1"), userData.createTester(testSite.getId()));
 
         // When I am trying to submit an empty name for a person
         motUI.profile.changeName().changePersonName("", "Test", false);
@@ -85,11 +85,10 @@ public class ChangePersonNameTests extends DslTest {
             description = "Test that Authorised user should provide a last name in order to update user information")
     public void dvsaUserShouldProvideLastName() throws IOException {
         // Given I am on other person profile as an authorised user
-        motUI.profile.dvsaViewUserProfile(vehicleExaminerUser, tester);
+        motUI.profile.dvsaViewUserProfile(userData.createVehicleExaminer("ved", false), tester);
 
         // When I am trying to submit an empty last name for a person
         motUI.profile.changeName().changePersonName("Test", "", false);
-
 
         // Then the error validation message should be displayed
         assertThat(motUI.profile.changeName().isValidationMessageOnChangeNamePageDisplayed("LAST_NAME"), is(true));
@@ -100,7 +99,7 @@ public class ChangePersonNameTests extends DslTest {
             description = "Test that Authorised user can navigate to Change name page and backward")
     public void dvsaUserCanNavigateToAndBackwardChangeNamePage() throws IOException {
         // Given I am on other person profile as an authorised user
-        motUI.profile.dvsaViewUserProfile(areaOffice1User, tester);
+        motUI.profile.dvsaViewUserProfile(userData.createAreaOfficeOne("Ao1"), userData.createTester(testSite.getId()));
 
         // When I am navigating to Change name page and clicking on cancel and return link
         motUI.profile.page().clickChangeNameLink().clickCancelAndReturnLink();
@@ -144,21 +143,11 @@ public class ChangePersonNameTests extends DslTest {
     }
 
     @DataProvider
-    private Object[][] dvsaUserChangeNameProvider() {
+    private Object[][] dvsaUserFroOwnProfileProvider() throws IOException {
         return new Object[][] {
-                {areaOffice1User},
-                {vehicleExaminerUser},
-                {schemeManager}
-        };
-    }
-
-    @DataProvider
-    private Object[][] dvsaUserFroOwnProfileProvider() {
-        return new Object[][] {
-                {areaOffice1User},
-                {vehicleExaminerUser},
-                {csco},
-                {schemeManager}
+                {userData.createAreaOfficeOne("ao")},
+                {userData.createVehicleExaminer("ve", false)},
+                {userData.createSchemeUser(false)}
         };
     }
 

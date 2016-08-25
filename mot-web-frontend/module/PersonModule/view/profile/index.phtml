@@ -185,6 +185,30 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $errorM
 
 <?php endif ?>
 
+<?php if ($personProfileGuard->canViewSecurityCard() && $securityCard !== null && $securityCard->isActive()): ?>
+<h3 class="heading-medium">Security card</h3>
+<table class="table-summary__key" id="security-card">
+    <tbody>
+    <tr>
+        <th class="table-summary__key">
+            Activation date
+        </th>
+        <td class="table-summary__value" id="activation_date">
+            <?php echo DateTimeDisplayFormat::textDate($securityCard->getActivationDate()) ?>
+        </td>
+    </tr>
+    <tr>
+        <th class="table-summary__key">
+            Serial number
+        </th>
+        <td class="table-summary__value" id="serial_number">
+            <?php echo $securityCard->getSerialNumber() ?>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<?php endif; ?>
+
 <nav class="content-navigation">
     <ul class="content-navigation__secondary">
         <?php if($context === ContextProvider::USER_SEARCH_CONTEXT): ?>

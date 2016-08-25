@@ -1,7 +1,10 @@
 <?php
 
 use Dvsa\Mot\Frontend\AuthenticationModule\Controller\LogoutController;
+use Dvsa\Mot\Frontend\AuthenticationModule\Controller\RegisteredCardController;
 use Dvsa\Mot\Frontend\AuthenticationModule\Controller\SecurityController;
+use Dvsa\Mot\Frontend\AuthenticationModule\Controller\RegisterCardController;
+use Dvsa\Mot\Frontend\AuthenticationModule\Controller\RegisterCardInformationController;
 
 return [
     'router' => [

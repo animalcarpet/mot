@@ -18,7 +18,7 @@
         "dvsa/dvsa-doctrine-module": "~1.1",
         "zendframework/zendpdf": "2.0.2",
         "zf-commons/zfc-twig": "^1.2",
-        "mot/api-client-php": "~6.0.0",
+        "mot/api-client-php": "~6.1.0",
         "noiselabs/zf-debug-utils": "^0.3"
     },
     "autoload" : {
@@ -47,6 +47,8 @@
             "Dvsa\\Mot\\Frontend\\": "src",
             "Dvsa\\Mot\\Frontend\\AuthenticationModule\\": "module/AuthenticationModule/src",
             "Dvsa\\Mot\\Frontend\\AuthenticationModuleTest\\": "module/AuthenticationModule/test",
+            "Dvsa\\Mot\\Frontend\\SecurityCardModule\\": "module/SecurityCardModule/src",
+            "Dvsa\\Mot\\Frontend\\SecurityCardModuleTest\\": "module/SecurityCardModule/test",
             "Dvsa\\Mot\\Frontend\\RegistrationModule\\": "module/RegistrationModule/src",
             "Dvsa\\Mot\\Frontend\\RegistrationModuleTest\\": "module/RegistrationModule/test",
             "Dvsa\\Mot\\Frontend\\MotTestModule\\": "module/MotTestModule/src",

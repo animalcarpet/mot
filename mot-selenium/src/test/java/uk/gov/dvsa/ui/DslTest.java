@@ -7,7 +7,6 @@ import org.testng.annotations.Listeners;
 import ru.yandex.qatools.allure.annotations.Step;
 import uk.gov.dvsa.data.*;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
-import uk.gov.dvsa.domain.workflow.RoleAssociationWorkflow;
 import uk.gov.dvsa.domain.workflow.VehicleReInspectionWorkflow;
 import uk.gov.dvsa.framework.config.Configurator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
@@ -41,13 +40,7 @@ public abstract class DslTest {
             new ThreadLocal<>();
 
     protected PageNavigator pageNavigator = new PageNavigator();
-    private RoleAssociationWorkflow roleAssociationWorkflow = new RoleAssociationWorkflow();
-    private VehicleReInspectionWorkflow vehicleReInspectionWorkflow = new VehicleReInspectionWorkflow();
-
-    protected RoleAssociationWorkflow roleAssociationWorkflow() {
-        return roleAssociationWorkflow;
-    }
-
+     private VehicleReInspectionWorkflow vehicleReInspectionWorkflow = new VehicleReInspectionWorkflow();
     protected VehicleReInspectionWorkflow vehicleReinspectionWorkflow() {
         return vehicleReInspectionWorkflow;
     }
@@ -69,7 +62,6 @@ public abstract class DslTest {
         driver = webDriverConfigurator.get().getDriver();
         pageNavigator.setDriver(driver);
         motUI = new MotUI(driver);
-        roleAssociationWorkflow.setDriver(driver);
         vehicleReInspectionWorkflow.setDriver(driver);
 
         driver.setBaseUrl(Configurator.baseUrl());

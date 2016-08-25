@@ -2,23 +2,26 @@
 
 namespace Dvsa\Mot\Frontend\AuthenticationModule\Controller;
 
-use Account\Service\ExpiredPasswordService;
 use Core\Controller\AbstractDvsaActionController;
 use Dashboard\Controller\UserHomeController;
-use Dvsa\Mot\Frontend\AuthenticationModule\Service\AuthenticationFailureViewModelBuilder;
+use Dvsa\Mot\Frontend\AuthenticationModule\Form\LoginForm;
+use Dvsa\Mot\Frontend\AuthenticationModule\Model\LoginLandingPage;
+use Dvsa\Mot\Frontend\AuthenticationModule\Model\WebLoginResult;
+use Dvsa\Mot\Frontend\AuthenticationModule\Service\AuthenticationAccountLockoutViewModelBuilder;
+use Dvsa\Mot\Frontend\SecurityCardModule\Controller\NewUserOrderCardController;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Controller\RegisterCardInformationController;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\GotoUrlService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\IdentitySessionStateService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\LoginCsrfCookieService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\WebLoginService;
-use Dvsa\Mot\Frontend\AuthenticationModule\Service\WebAuthenticationCookieService;
+use Dvsa\Mot\Frontend\SecurityCardModule\Controller\RegisterCardInformationNewUserController;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Controller\RegisteredCardController;
+use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Authn\AuthenticationResultCode;
-use DvsaCommon\Dto\Authn\AuthenticationResponseDto;
 use Zend\Authentication\AuthenticationService;
 use Zend\Http\Request;
 use Zend\Http\Response;
-use Zend\Session\ManagerInterface;
 use Zend\View\Model\ViewModel;
-use Zend\Authentication\Result;
 
 /**
  *  SecurityController handles user's login requests. Every resource provided by this controller is not firewalled.
@@ -31,12 +34,7 @@ class SecurityController extends AbstractDvsaActionController
     const PARAM_GOTO = 'goto';
     const ROUTE_FORGOTTEN_PASSWORD = 'forgotten-password';
     const ROUTE_LOGIN_GET = 'login';
-    const ROUTE_LOGIN_POST = 'login';
-
-    /**
-     * @var WebAuthenticationCookieService
-     */
-    private $authenticationCookieService;
+    const CREATE_ACCOUNT = 'account-register/create-an-account';
 
     /**
      * @var AuthenticationService
@@ -54,53 +52,49 @@ class SecurityController extends AbstractDvsaActionController
     private $identitySessionStateService;
 
     /**
-     * @var ManagerInterface
+     * @var LoginCsrfCookieService
      */
-    private $sessionManager;
-
-    private $expiredPasswordService;
-
     private $loginCsrfCookieService;
 
-    /** @var AuthenticationFailureViewModelBuilder */
-    private $failureViewModelBuilder;
+    /** @var AuthenticationAccountLockoutViewModelBuilder */
+    private $accountLocketViewModelBuilder;
+
+    /** @var  TwoFaFeatureToggle */
+    private $twoFaFeatureToggle;
 
     /**
      * @param Request $request
      * @param Response $response
      * @param GotoUrlService $loginGotoService
-     * @param WebAuthenticationCookieService $cookieService
      * @param IdentitySessionStateService $identitySessionStateService
      * @param WebLoginService $loginService
-     * @param ManagerInterface $sessionManager
-     * @param ExpiredPasswordService $expiredPasswordService
      * @param LoginCsrfCookieService $loginCsrfCookieService
+     * @param AuthenticationService $authenticationService
+     * @param AuthenticationAccountLockoutViewModelBuilder $accountLocketViewModelBuilder
+     * @param TwoFaFeatureToggle $twoFaFeatureToggle
+     * @internal param AuthenticationAccountLockoutViewModelBuilder $failureViewModelBuilder
      */
     public function __construct(
         Request $request,
         Response $response,
         GotoUrlService $loginGotoService,
-        WebAuthenticationCookieService $cookieService,
         IdentitySessionStateService $identitySessionStateService,
         WebLoginService $loginService,
-        ManagerInterface $sessionManager,
-        ExpiredPasswordService $expiredPasswordService,
         LoginCsrfCookieService $loginCsrfCookieService,
         AuthenticationService $authenticationService,
-        AuthenticationFailureViewModelBuilder $failureViewModelBuilder
-    )
-    {
+        AuthenticationAccountLockoutViewModelBuilder $accountLocketViewModelBuilder,
+        TwoFaFeatureToggle $twoFaFeatureToggle
+
+    ) {
         $this->request = $request;
         $this->response = $response;
         $this->gotoService = $loginGotoService;
-        $this->authenticationCookieService = $cookieService;
         $this->identitySessionStateService = $identitySessionStateService;
         $this->loginService = $loginService;
-        $this->sessionManager = $sessionManager;
-        $this->expiredPasswordService = $expiredPasswordService;
         $this->loginCsrfCookieService = $loginCsrfCookieService;
-        $this->failureViewModelBuilder = $failureViewModelBuilder;
+        $this->accountLocketViewModelBuilder = $accountLocketViewModelBuilder;
         $this->authenticationService = $authenticationService;
+        $this->twoFaFeatureToggle = $twoFaFeatureToggle;
     }
 
     /**
@@ -117,7 +111,7 @@ class SecurityController extends AbstractDvsaActionController
 
         if ($response instanceof ViewModel) {
             $this->layout('layout/layout-govuk.phtml');
-            $this->layout()->setVariables($response->getVariables());
+            $this->setPageTitle(self::PAGE_TITLE);
         }
 
         return $response;
@@ -148,18 +142,11 @@ class SecurityController extends AbstractDvsaActionController
             }
         } else {
             $goto = $this->gotoService->encodeGoto($rawGoto);
-            $csrfToken = $this->loginCsrfCookieService->addCsrfCookie($this->response);
-            return (
-            new ViewModel(
-                [
-                    'forgottenPasswordRoute' => self::ROUTE_FORGOTTEN_PASSWORD,
-                    'gotoUrl' => $goto,
-                    'loginCheckRoute' => self::ROUTE_LOGIN_GET,
-                    'pageTitle' => self::PAGE_TITLE,
-                    'csrfToken' => $csrfToken
-                ]
-            )
-            )->setTemplate('authentication/login');
+            $viewVars = [
+                'gotoUrl' => $goto,
+                'form' => new LoginForm()
+            ];
+            return $this->buildLoginPageViewModel($viewVars);
         }
     }
 
@@ -172,25 +159,49 @@ class SecurityController extends AbstractDvsaActionController
         if (false === $isCsrfTokenValid) {
             return $this->redirect()->toRoute(self::ROUTE_LOGIN_GET);
         }
-
         $request = $this->request;
-        $username = $request->getPost(self::FIELD_USERNAME);
-        $password = $request->getPost(self::FIELD_PASSWORD);
+        $loginForm = new LoginForm();
+        $postArray = $request->getPost()->toArray();
+        $loginForm->setData($postArray);
+        if (false === $loginForm->isValid()) {
 
-        $this->initializeSessionOnLogon();
-
-        /** @var AuthenticationResponseDto $authnDto */
-        $authnDto = $this->loginService->login($username, $password);
-
-        if ($authnDto->getAuthnCode() !== AuthenticationResultCode::SUCCESS) {
-            return $this->failureViewModelBuilder->createFromAuthenticationResponse($authnDto);
+            $loginForm->resetPassword();
+            $viewVars = [
+                'form' => $loginForm,
+                'gotoUrl' => $request->getPost(self::PARAM_GOTO)
+            ];
+            return $this->buildLoginPageViewModel($viewVars);
         }
 
-        $this->authenticationCookieService->setUpCookie($authnDto->getAccessToken());
+        /** @var WebLoginResult $result */
+        $result = $this->loginService->login(
+            $loginForm->getUsernameField()->getValue(),
+            $loginForm->getPasswordField()->getValue()
+        );
 
-        // to be extracted to API
-        $this->expiredPasswordService->sentExpiredPasswordNotificationIfNeeded($authnDto->getAccessToken(),
-            $authnDto->getUser()->getPasswordExpiryDate());
+        if ($result->getCode() !== AuthenticationResultCode::SUCCESS) {
+            return $this->showErrorOnAuthFail($result, $loginForm);
+        }
+
+        switch ($result->getTwoFaPage()) {
+            case LoginLandingPage::LOG_IN_WITH_2FA:
+                return $this->redirect()->toRoute(RegisteredCardController::ROUTE);
+
+            case LoginLandingPage::ACTIVATE_2FA_EXISTING_USER:
+                return $this->redirect()->toRoute(
+                    RegisterCardInformationController::REGISTER_CARD_INFORMATION_ROUTE,
+                    ['userId' => $this->authenticationService->getIdentity()->getUserId()]);
+
+            case LoginLandingPage::ACTIVATE_2FA_NEW_USER:
+                return $this->redirect()->toRoute(
+                    RegisterCardInformationNewUserController::REGISTER_CARD_NEW_USER_INFORMATION_ROUTE,
+                    ['userId' => $this->authenticationService->getIdentity()->getUserId()]);
+
+            case LoginLandingPage::ORDER_2FA_NEW_USER:
+                return $this->redirect()->toRoute(
+                    NewUserOrderCardController::ORDER_CARD_NEW_USER_ROUTE,
+                    ['userId' => $this->authenticationService->getIdentity()->getUserId()]);
+        }
 
         $rawGoto = $request->getPost(self::PARAM_GOTO);
         $goto = $this->gotoService->decodeGoto($rawGoto);
@@ -201,13 +212,43 @@ class SecurityController extends AbstractDvsaActionController
         }
     }
 
-    private function initializeSessionOnLogon()
+    private function setUpLoginCsrfCookie(ViewModel $vm)
     {
-        $this->sessionManager->regenerateId(true);
+        $csrfToken = $this->loginCsrfCookieService->addCsrfCookie($this->response);
+        $vm->setVariable('csrfToken', $csrfToken);
     }
 
-    public function getUrlService()
+    private function buildLoginPageViewModel($vars)
     {
-        return $this->gotoService;
+
+        $vm = new ViewModel($vars);
+        $this->setUpLoginCsrfCookie($vm);
+        $vm->setTemplate('authentication/login');
+        $vm->setVariable('twoFaEnabled', $this->twoFaFeatureToggle->isEnabled());
+
+        return $vm;
+    }
+
+    private function showErrorOnAuthFail($result, LoginForm $loginForm)
+    {
+        $resultCode = $result->getCode();
+        if
+        (
+            $resultCode == AuthenticationResultCode::INVALID_CREDENTIALS ||
+            $resultCode == AuthenticationResultCode::ERROR ||
+            $resultCode == AuthenticationResultCode::UNRESOLVABLE_IDENTITY
+        )
+        {
+            $loginForm->setAuthenticationFailError();
+            $viewVars = [
+                'form' => $loginForm,
+                'gotoUrl' => $this->request->getPost(self::PARAM_GOTO),
+                'authError' => true,
+            ];
+
+            return $this->buildLoginPageViewModel($viewVars);
+        }
+
+        return $this->accountLocketViewModelBuilder->createFromAuthenticationResponse($result);
     }
 }

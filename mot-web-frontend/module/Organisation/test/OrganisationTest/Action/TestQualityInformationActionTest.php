@@ -118,7 +118,7 @@ class TestQualityInformationActionTest extends AbstractFrontendControllerTestCas
         $this->assertNotNull($result->layout()->getPageSubTitle());
         $this->assertNotNull($result->layout()->getTemplate());
 
-        $this->assertSame(['breadcrumbs' => $this->breadcrumbs], $result->layout()->getBreadcrumbs());
+        $this->assertSame($this->breadcrumbs, $result->layout()->getBreadcrumbs());
 
     }
 
@@ -137,7 +137,7 @@ class TestQualityInformationActionTest extends AbstractFrontendControllerTestCas
         $this->assertNotNull($result->layout()->getPageSubTitle());
         $this->assertNotNull($result->layout()->getTemplate());
 
-        $this->assertSame(['breadcrumbs' => $this->breadcrumbs], $result->layout()->getBreadcrumbs());
+        $this->assertSame($this->breadcrumbs, $result->layout()->getBreadcrumbs());
 
     }
 

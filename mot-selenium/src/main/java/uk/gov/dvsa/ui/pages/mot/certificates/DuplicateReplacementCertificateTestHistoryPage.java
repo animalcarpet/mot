@@ -25,9 +25,8 @@ public class DuplicateReplacementCertificateTestHistoryPage extends Page {
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
     }
 
-    public ReplacementCertificateUpdatePage clickFirstEditButton() {
-        WebElement editButton =
-                driver.findElement(By.xpath("((//*[@class='row'])//button[text()='Edit'])[1]"));
+    public ReplacementCertificateUpdatePage clickEditButton(String motTestId) {
+        WebElement editButton = driver.findElement(By.id(String.format("edit-%s", motTestId)));
         editButton.click();
         return new ReplacementCertificateUpdatePage(driver);
     }

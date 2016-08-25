@@ -7,8 +7,11 @@ $openingHrsSaturday	=	(isset($this->config['openingHrsSaturday']) ? $this->confi
 $openingHrsSunday	=	(isset($this->config['openingHrsSunday']) ? $this->config['openingHrsSunday'] : null);
 ?>
 <p>
-	Please contact the <?php echo $this->escapeHtml($name); ?> on <strong><?php echo $this->escapeHtml($phone); ?></strong>
+	Call the DVSA Helpdesk <?php echo $this->escapeHtml($name); ?> on <strong><?php echo $this->escapeHtml($phone); ?></strong>
 </p>
+
+<p>Opening hours are:</p>
+
 <p>
 	<?php echo $this->escapeHtml($openingHrsWeekdays); ?> <br>
 	<?php echo $this->escapeHtml($openingHrsSaturday); ?><br>

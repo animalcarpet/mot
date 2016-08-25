@@ -71,7 +71,9 @@ public class ReplacementCertificateUpdatePage extends Page {
     }
 
     public <T extends Page> T reviewChangesButton(Class<T> clazz) {
-        FormDataHelper.enterText(enterReasonForReplacement, "test of test");
+        if(PageInteractionHelper.isElementDisplayed(enterReasonForReplacement)){
+            FormDataHelper.enterText(enterReasonForReplacement, "Test Reason");
+        }
         reviewChanges.click();
         return MotPageFactory.newPage(driver, clazz);
     }

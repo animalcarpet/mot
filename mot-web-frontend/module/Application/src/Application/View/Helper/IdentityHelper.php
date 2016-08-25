@@ -79,8 +79,19 @@ class IdentityHelper extends AbstractHelper implements MotFrontendIdentityInterf
         return $this->identity->isAccountClaimRequired();
     }
 
+    /**
+     * @return bool
+     */
     public function hasPasswordExpired()
     {
         return $this->identity->hasPasswordExpired();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAuthenticatedWithLostForgotten()
+    {
+        return $this->identity->isAuthenticatedWithLostForgotten();
     }
 }

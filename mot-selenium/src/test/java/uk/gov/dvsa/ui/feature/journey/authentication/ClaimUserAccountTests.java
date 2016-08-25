@@ -1,16 +1,13 @@
 package uk.gov.dvsa.ui.feature.journey.authentication;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
 import uk.gov.dvsa.domain.model.AeDetails;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
-import uk.gov.dvsa.helper.RandomDataGenerator;
 import uk.gov.dvsa.ui.DslTest;
-import uk.gov.dvsa.ui.pages.HomePage;
-import uk.gov.dvsa.ui.pages.accountclaim.AccountClaimConfirmationPage;
-import uk.gov.dvsa.ui.pages.accountclaim.AccountClaimPage;
-import uk.gov.dvsa.ui.pages.accountclaim.AccountClaimReviewPage;
 
 import java.io.IOException;
 
@@ -19,10 +16,19 @@ import static org.hamcrest.core.Is.is;
 
 public class ClaimUserAccountTests extends DslTest {
 
+    AeDetails aeDetails;
+    Site testSite;
+
+    @BeforeMethod(alwaysRun = true)
+    public void setUp() throws Exception {
+         aeDetails = aeData.createAeWithDefaultValues();
+         testSite = siteData.createNewSite(aeDetails.getId(), "My_Site");
+    }
+
+
     @DataProvider(name = "createTester")
     public Object[][] createTesterAndVehicle() throws IOException {
-        AeDetails aeDetails = aeData.createAeWithDefaultValues();
-        Site testSite = siteData.createNewSite(aeDetails.getId(), "My_Site");
+
 
         return new Object[][]{
                 {userData.createTester(testSite.getId(), true)},
@@ -33,32 +39,32 @@ public class ClaimUserAccountTests extends DslTest {
 
     @Test(groups = {"BVT"}, description = "VM-10319 - Tester, CSCO, AEDM can Claim Account and Set Password",
     dataProvider = "createTester")
-    public void claimAsUser(User user) throws Exception {
+    public void whenIclaimAccountAsUserIShouldSeePin(User user) throws Exception {
 
-        //Given I am on the AccountClaim page to my claim my account
-        AccountClaimPage accountClaimPage = pageNavigator.navigateToPage(user, AccountClaimPage.PATH, AccountClaimPage.class);
+        // Given I claim my account as non 2fa user
+        motUI.claimAccount.claimAsUser(user);
 
-        //When I Enter a valid Email Address and a compliant Password
-        accountClaimPage.enterEmailAndPassword(
-                RandomDataGenerator.generateEmail(7), RandomDataGenerator.generatePassword(8));
+        // Then I should see pin
+        assertThat(motUI.claimAccount.isPinDisplayed(), is(true));
 
-        accountClaimPage.clickContinueButton();
+    }
 
-        //And I set my security answers
-        accountClaimPage.setSecurityQuestionsAndAnswers(
-                RandomDataGenerator.generateRandomString(), RandomDataGenerator.generateRandomString());
+    @Test(testName = "2fa", groups = {"BVT", "Regression"}, description="2Fa user should see different confirmation page for claim account")
+    public void whenIclaimAccountAs2FaUserIshouldNotSeePin() throws Exception {
 
-        AccountClaimReviewPage claimReviewPage = accountClaimPage.clickContinueToAccountReview();
+        // Given I am 2FA user
+        User twoFaUser = userData.createTester(testSite.getId());
+        motUI.authentication.securityCard.activate2faCard(twoFaUser);
+        motUI.logout(twoFaUser);
 
-        //And I verify my details entered
-        AccountClaimConfirmationPage claimConfirmationPage = claimReviewPage.clickClaimYourAccountButton();
+        // And I need to claim my account
+        userData.requireClaimAccount(twoFaUser);
 
-        //Then verify a pin number is displayed
-        assertThat(claimConfirmationPage.isPinNumberDisplayed(), is(true));
+        // When I claim account
+        motUI.claimAccount.claimAs2FaUser(twoFaUser);
 
-        //And user is directed to the HomePage
-        HomePage homePage = claimConfirmationPage.clickContinueToTheMotTestingService();
-        assertThat(homePage.compareUserNameWithSessionUsername(), is(true));
+        // Then I should not see pin
+        assertThat(motUI.claimAccount.isPinDisplayed(), is(false));
     }
 }
 

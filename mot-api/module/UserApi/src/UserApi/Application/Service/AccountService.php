@@ -174,7 +174,7 @@ class AccountService extends BasePersonService
      */
     private function getAuthenticationMethod($data)
     {
-        $code = ArrayUtils::get($data, 'drivingLicenceNumber');
+        $code = ArrayUtils::get($data, 'authenticationMethod');
 
         /** @var AuthenticationMethodRepository $authMethodRepo */
         $authMethodRepo = $this->entityManager->getRepository(AuthenticationMethod::class);

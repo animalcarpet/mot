@@ -68,7 +68,24 @@ abstract class AbstractMotTest extends MotApi
      */
     public function passed($token, $testNumber)
     {
-        return $this->setFinalState($token, $testNumber, [ 'status' => self::STATUS_PASSED ]);
+        $params = [
+            'status' => self::STATUS_PASSED,
+            'oneTimePassword' => Authentication::ONE_TIME_PASSWORD
+        ];
+
+        return $this->setFinalState($token, $testNumber, $params);
+    }
+
+    /**
+     * @param string $token
+     * @param string $testNumber
+     * @return \Dvsa\Mot\Behat\Support\Response
+     */
+    public function passedWithoutPin($token, $testNumber)
+    {
+        $params = [ 'status' => self::STATUS_PASSED ];
+
+        return $this->setFinalState($token, $testNumber, $params);
     }
 
     /**
@@ -84,7 +101,8 @@ abstract class AbstractMotTest extends MotApi
             $testNumber,
             [
                 'status' => self::STATUS_PASSED,
-                'clientIp' => $clientIp
+                'clientIp' => $clientIp,
+                'oneTimePassword' => Authentication::ONE_TIME_PASSWORD
             ]
         );
     }
@@ -96,7 +114,12 @@ abstract class AbstractMotTest extends MotApi
      */
     public function failed($token, $testNumber)
     {
-        return $this->setFinalState($token, $testNumber, [ 'status' => self::STATUS_FAILED ]);
+        $params = [
+            'status' => self::STATUS_FAILED,
+            'oneTimePassword' => Authentication::ONE_TIME_PASSWORD
+        ];
+
+        return $this->setFinalState($token, $testNumber, $params);
     }
 
     /**
@@ -109,8 +132,7 @@ abstract class AbstractMotTest extends MotApi
         $params = [
             'status' => self::STATUS_ABORTED,
             'reasonForCancelId' => 25,
-            'cancelComment' => 'ABORTED TEST',
-            'oneTimePassword' => Authentication::ONE_TIME_PASSWORD,
+            'cancelComment' => 'ABORTED TEST'
         ];
 
         return $this->setFinalState($token, $testNumber, $params);
@@ -137,7 +159,8 @@ abstract class AbstractMotTest extends MotApi
         $params = [
             'status' => ($cancelReason == 7) ? self::STATUS_ABANDONED : self::STATUS_ABORTED,
             'reasonForCancelId' => $cancelReason,
-            'cancelComment' => 'ABORTED TEST'
+            'cancelComment' => 'ABORTED TEST',
+            'oneTimePassword' => Authentication::ONE_TIME_PASSWORD
         ];
 
         return $this->setFinalState($token, $testNumber, $params);
@@ -165,10 +188,6 @@ abstract class AbstractMotTest extends MotApi
      */
     private function setFinalState($token, $testNumber, array $params = array())
     {
-        if (!isset($params['oneTimePassword'])) {
-            $params['oneTimePassword'] = Authentication::ONE_TIME_PASSWORD;
-        }
-
         return $this->sendRequest($token, MotApi::METHOD_POST, $this->getStatusPath($testNumber), $params);
     }
 

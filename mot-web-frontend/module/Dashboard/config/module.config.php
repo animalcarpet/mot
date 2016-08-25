@@ -9,6 +9,7 @@ use Dashboard\Factory\Controller\SecurityQuestionControllerFactory;
 use Dashboard\Controller\UserTradeRolesController;
 use Dashboard\Factory\Controller\PasswordControllerFactory;
 use Dashboard\Factory\Controller\UserTradeRolesControllerFactory;
+use Dashboard\ViewHelper\NotificationLinkViewHelper;
 use Dvsa\Mot\Frontend\PersonModule\Factory\Service\QualificationDetailsServiceFactory;
 
 return [
@@ -251,6 +252,11 @@ return [
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'notificationLink' => NotificationLinkViewHelper::class
+        ]
     ],
     'service_manager' => [
         'factories' => [

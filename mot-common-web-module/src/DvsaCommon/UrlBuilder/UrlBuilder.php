@@ -62,6 +62,7 @@ class UrlBuilder extends AbstractUrlBuilder
     const APPLICATION_LOCK = 'application-lock/:uuid';
     const ACCOUNT = 'user-account';
     const PERSONAL_DETAILS = 'personal-details/:id';
+    const PERSON_PENDING_ROLES = 'personal-details/:id/pending-roles';
     const PERSON = 'person/:id';
     const PERSON_CURRENT_MOT_TEST_NUMBER = '/current-mot-test';
     const PERSON_SITE_COUNT = '/site-count';
@@ -166,6 +167,7 @@ class UrlBuilder extends AbstractUrlBuilder
             self::APPLICATION_LOCK                       => '',
             self::ACCOUNT                                => '',
             self::PERSONAL_DETAILS                       => '',
+            self::PERSON_PENDING_ROLES                   => '',
             self::PERSON                                 => [
                 self::PERSON_CURRENT_MOT_TEST_NUMBER     => '',
                 self::PERSON_SITE_COUNT                  => '',
@@ -469,6 +471,12 @@ class UrlBuilder extends AbstractUrlBuilder
     public static function personalDetails($id)
     {
         return UrlBuilder::of()->appendRoutesAndParams(self::PERSONAL_DETAILS)
+            ->routeParam('id', $id);
+    }
+
+    public static function pendingRoles($id)
+    {
+        return UrlBuilder::of()->appendRoutesAndParams(self::PERSON_PENDING_ROLES)
             ->routeParam('id', $id);
     }
 

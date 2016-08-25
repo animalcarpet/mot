@@ -51,13 +51,13 @@ return [
                                 ],
                                 'may_terminate' => true
                             ],
-                            'displayPin' => [
+                            'success' => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/display-pin',
+                                    'route'    => '/success',
                                     'defaults' => [
                                         'controller' => ClaimAccountControllerFactory::class,
-                                        'action'     => 'displayPin',
+                                        'action'     => 'success',
                                     ],
                                 ],
                                 'may_terminate' => true

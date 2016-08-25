@@ -9,6 +9,7 @@ use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaEntities\Entity\AuthenticationMethod;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Repository\PersonRepository;
 use DvsaEventApi\Service\EventService;
@@ -84,6 +85,8 @@ class ResetClaimAccountServiceTest extends AbstractServiceTestCase
     public function testResetClaimAccount()
     {
         $mockPerson = XMock::of(Person::class);
+        $mockAuthenticationMethod = XMock::of(AuthenticationMethod::class);
+
         $this->mockPersonRepo->expects($this->once())
             ->method('get')
             ->with(self::PERSON_ID)
@@ -94,6 +97,12 @@ class ResetClaimAccountServiceTest extends AbstractServiceTestCase
         $this->mockOpenAmIdentityService->expects($this->once())
             ->method('changePassword')
             ->willReturn(true);
+        $mockPerson->expects($this->any())
+            ->method('getAuthenticationMethod')
+            ->willReturn($mockAuthenticationMethod);
+        $mockAuthenticationMethod->expects($this->once())
+            ->method('isCard')
+            ->willReturn(false);
 
         $this->assertTrue($this->service->resetClaimAccount(self::PERSON_ID, self::PERSON_USERNAME));
     }

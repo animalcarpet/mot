@@ -26,8 +26,10 @@ public class VehicleDetailsChangedPage extends Page {
     }
 
     public boolean isDeclarationTextDisplayed() {
-        return declarationElement.isDisplayed();
+        return PageInteractionHelper.isElementDisplayed(declarationElement);
     }
+
+    public boolean isPinBoxDisplayed() { return PageInteractionHelper.isElementDisplayed(oneTimePassword); }
 
     public String getDeclarationText() {
         return declarationElement.getText();

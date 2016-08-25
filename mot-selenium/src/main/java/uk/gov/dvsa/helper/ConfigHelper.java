@@ -13,6 +13,10 @@ public class ConfigHelper {
         return service.getToggleValue("survey_page");
     }
 
+    public static boolean is2faEnabled() {
+        return service.getToggleValue("2fa.enabled");
+    }
+
     public static boolean isTestResultEntryImprovementsEnabled() {
         return service.getToggleValue("test_result_entry_improvements");
     }

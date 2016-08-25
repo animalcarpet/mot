@@ -12,6 +12,7 @@ use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use DvsaCommon\UrlBuilder\PersonUrlBuilder;
+use DvsaCommon\UrlBuilder\UrlBuilder;
 
 class PersonRoleManagementService
 {
@@ -293,6 +294,37 @@ class PersonRoleManagementService
         );
 
         return $this->sortRolesByName($manageableRolesAndUrl);
+    }
+
+    public function personHasPendingRole($personId)
+    {
+        $path = UrlBuilder::pendingRoles($personId)->toString();
+
+        $data = $this->client->get($path)['data'];
+
+        $roles = $this->flattenRoleData($data);
+
+        return !empty($roles);
+    }
+
+    private function flattenRoleData($data)
+    {
+        $roles = $data['system']['roles'];
+
+        $siteAndOrganisationRoles = $data;
+        unset($siteAndOrganisationRoles['system']);
+
+        foreach ($siteAndOrganisationRoles as $roleType => $organisationOrSiteRoles) {
+            foreach ($organisationOrSiteRoles as $siteAndOrganisation) {
+                foreach ($siteAndOrganisation['roles'] as $role) {
+                    if (!in_array($role, $roles)) {
+                        $roles[] = $role;
+                    }
+                }
+            }
+        }
+
+        return $roles;
     }
 
     /**

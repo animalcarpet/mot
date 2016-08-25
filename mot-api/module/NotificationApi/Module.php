@@ -17,6 +17,8 @@ use NotificationApi\Service\Helper\OrganisationNominationEventHelper;
 use NotificationApi\Factory\Helper\OrganisationNominationEventHelperFactory;
 use NotificationApi\Factory\Service\PositionRemovalNotificationServiceFactory;
 use NotificationApi\Service\PositionRemovalNotificationService;
+use NotificationApi\Service\Helper\NotificationTradeTemplateHelper;
+use NotificationApi\Factory\Service\Helper\NotificationTradeTemplateHelperFactory;
 
 /**
  * Class Module
@@ -42,7 +44,8 @@ class Module
                 SiteNominationEventHelper::class => SiteNominationEventHelperFactory::class,
                 OrganisationNominationEventHelper::class => OrganisationNominationEventHelperFactory::class,
                 PositionRemovalNotificationService::class => PositionRemovalNotificationServiceFactory::class,
-                UserOrganisationNotificationService::class        => UserOrganisationNotificationServiceFactory::class,
+                UserOrganisationNotificationService::class => UserOrganisationNotificationServiceFactory::class,
+                NotificationTradeTemplateHelper::class => NotificationTradeTemplateHelperFactory::class,
             ],
             'invokables' => [
 

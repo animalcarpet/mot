@@ -6,6 +6,8 @@ use Account\Controller\ClaimController;
 use Account\Service\ClaimAccountService;
 use Account\Validator\ClaimValidator;
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
+use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
+use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\UrlBuilder\AccountUrlBuilderWeb;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonTest\Bootstrap;
@@ -57,10 +59,17 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
             'helpdesk' => [],
         ];
 
+        $identityProvider = XMock::of(MotIdentityProviderInterface::class);
+        $identity = new Identity();
+        $identity->setSecondFactorRequired(false);
+
+        $identityProvider->expects($this->any())->method("getIdentity")->willReturn($identity);
+
         $this->setController(
             new ClaimController(
                 $this->mockClaimAccountSrv,
                 $this->mockClaimValidator,
+                $identityProvider,
                 $this->config
             )
         );
@@ -414,7 +423,7 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                     ],
                 ],
                 'expect' => [
-                    'url' => AccountUrlBuilderWeb::claimDisplayPin(),
+                    'url' => '/account/claim/success',
                 ],
             ],
 
@@ -422,7 +431,7 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
             // generatePin: get: access action
             [
                 'method' => 'get',
-                'action' => 'displayPin',
+                'action' => 'success',
                 'params' => [],
                 'mocks'  => [
                     [

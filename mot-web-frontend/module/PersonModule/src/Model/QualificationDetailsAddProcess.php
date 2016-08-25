@@ -4,13 +4,50 @@ namespace Dvsa\Mot\Frontend\PersonModule\Model;
 use Core\Action\AbstractRedirectActionResult;
 use Core\Action\RedirectToRoute;
 use Dashboard\Model\PersonalDetails;
+use Dvsa\Mot\ApiClient\Service\AuthorisationService;
+use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\CertificatesBreadcrumbs;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
+use DvsaClient\Mapper\QualificationDetailsMapper;
 use DvsaCommon\ApiClient\Person\MotTestingCertificate\Dto\MotTestingCertificateDto;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
+use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\HttpRestJson\Exception\NotFoundException;
+use Application\Data\ApiPersonalDetails;
+use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\QualificationDetailsBreadcrumbs;
+use Dvsa\Mot\Frontend\PersonModule\Routes\QualificationDetailsRoutes;
+use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuardBuilder;
+use DvsaClient\Mapper\SiteMapper;
 
 class QualificationDetailsAddProcess extends QualificationDetailsAbstractProcess
 {
+    const GROUP_NAME_VIEW_VARIABLE = 'groupName';
+    const CAN_ORDER_CARD_VIEW_VARIABLE = 'canOrderCard';
+    const START_PAGE_ROUTE_VIEW_VARIABLE = 'startPageRoute';
+
+    /**
+     * @var AuthorisationService $authorisationService
+     */
+    private $authorisationService;
+
+    public function __construct(
+        QualificationDetailsMapper $qualificationDetailsMapper,
+        SiteMapper $siteMapper,
+        CertificatesBreadcrumbs $qualificationDetailsBreadcrumbs,
+        ApiPersonalDetails $personalDetailsService,
+        PersonProfileGuardBuilder $personProfileGuardBuilder,
+        ContextProvider $contextProvider,
+        QualificationDetailsRoutes $qualificationDetailsRoutes,
+        AuthorisationService $authorisationService
+    )
+    {
+        parent::__construct($qualificationDetailsMapper, $siteMapper, $qualificationDetailsBreadcrumbs,
+            $personalDetailsService, $personProfileGuardBuilder, $contextProvider,
+            $qualificationDetailsRoutes
+        );
+
+        $this->authorisationService = $authorisationService;
+
+    }
     const QUERY_PARAM_FORM_UUID = 'formUuid';
 
     /**
@@ -53,6 +90,16 @@ class QualificationDetailsAddProcess extends QualificationDetailsAbstractProcess
             self::ROUTE_PARAM_ID => $this->context->getTargetPersonId(),
             self::ROUTE_PARAM_GROUP => $this->context->getGroup(),
             self::ROUTE_PARAM_FORM_UUID => $formUuid,
+        ];
+        return new RedirectToRoute($route, $params);
+    }
+
+    public function redirectToConfirmationPage()
+    {
+        $route = $this->qualificationDetailsRoutes->getAddConfirmationRoute();
+        $params = $this->context->getController()->params()->fromRoute() + [
+            self::ROUTE_PARAM_ID => $this->context->getTargetPersonId(),
+            self::ROUTE_PARAM_GROUP => $this->context->getGroup(),
         ];
         return new RedirectToRoute($route, $params);
     }
@@ -117,6 +164,15 @@ class QualificationDetailsAddProcess extends QualificationDetailsAbstractProcess
         return $personProfileGuard->canCreateQualificationDetails(strtoupper($this->context->getGroup()));
     }
 
+    public function populateConfirmationPageVariables()
+    {
+        $variables = [];
+        $variables[self::GROUP_NAME_VIEW_VARIABLE] = $this->context->getGroup();
+        $variables[self::CAN_ORDER_CARD_VIEW_VARIABLE] = $this->shouldSeeOrderSecurityCard();
+        $variables[self::START_PAGE_ROUTE_VIEW_VARIABLE] = $this->certificatesBreadcrumbs->getQualificationDetailsRoute();
+
+        return $variables;
+    }
 
     public function getEditStepPageTitle()
     {
@@ -128,8 +184,31 @@ class QualificationDetailsAddProcess extends QualificationDetailsAbstractProcess
         return 'Back to add a certificate';
     }
 
+    public function hasConfirmationPage()
+    {
+        return true;
+    }
+
+    private function shouldSeeOrderSecurityCard()
+    {
+        $personId = $this->context->getLoggedInPersonId();
+        $personalDetailsData = $this->personalDetailsService->getPersonalDetailsData($personId);
+        $personalDetails = new PersonalDetails($personalDetailsData);
+        $testerAuthorisation = $this->personProfileGuardBuilder->getTesterAuthorisation($personId);
+        $securityCardOrders = $this->authorisationService->getSecurityCardOrders($personalDetails->getUsername());
+
+        if ($securityCardOrders->getCount() === 0 &&
+            ($testerAuthorisation->getGroupAStatus()->getCode() == AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED ||
+            $testerAuthorisation->getGroupBStatus()->getCode() == AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED)) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function getEditPageLede()
     {
         return null;
     }
+
 }

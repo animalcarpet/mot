@@ -151,7 +151,7 @@ public abstract class AuthorisedExaminerViewPage extends Page {
         return validationMessage.getText();
     }
 
-    public CreateAepPage clickCreateAepLink(String aeId) {
+    public CreateAepPage clickCreateAepLink() {
         createAEPLink.click();
         return new CreateAepPage(driver);
     }

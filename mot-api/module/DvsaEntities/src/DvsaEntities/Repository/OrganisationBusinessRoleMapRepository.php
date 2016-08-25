@@ -22,6 +22,16 @@ class OrganisationBusinessRoleMapRepository extends EntityRepository
 {
     public function getActiveUserRoles($personId)
     {
+        return $this->getUserRoles($personId, BusinessRoleStatusCode::ACTIVE);
+    }
+
+    public function getPendingUserRoles($personId)
+    {
+        return $this->getUserRoles($personId, BusinessRoleStatusCode::PENDING);
+    }
+
+    private function getUserRoles($personId, $businessRoleStatusCode)
+    {
         $qb = $this
             ->createQueryBuilder("orbm")
             ->addSelect(['p', 'st', 'br', 'org', 'o_cnt', 'cnt_detail', 'addr'])
@@ -35,7 +45,7 @@ class OrganisationBusinessRoleMapRepository extends EntityRepository
             ->where("p.id = :personId")
             ->andWhere("st.code in (:statusCode)")
             ->setParameter("personId", $personId)
-            ->setParameter("statusCode", BusinessRoleStatusCode::ACTIVE);
+            ->setParameter("statusCode", $businessRoleStatusCode);
 
         $roles = $qb->getQuery()->getResult();
 

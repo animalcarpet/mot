@@ -56,7 +56,10 @@ public class UserRegistrationTests extends DslTest {
         //Given I am on the Home Page
         LoginPage loginPage = pageNavigator.goToLoginPage();
 
-        //When I click the create Account Link
+        //When I expand the do not have account section
+        loginPage.expandDoNotHaveAccountSection();
+
+        //And click the create Account Link
         CreateAnAccountPage createAnAccountPage = loginPage.clickCreateAnAccountLink();
 
         //Then I should be on the create account page

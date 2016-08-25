@@ -136,6 +136,14 @@ class UpdateAeRegisteredAddressProcess extends AbstractTwoStepAeProcess implemen
         ];
     }
 
+    /**
+     * @return mixed
+     */
+    public function populateConfirmationPageVariables()
+    {
+        // TODO: Implement populateConfirmationPageVariables() method.
+    }
+
     public function getEditPageLede()
     {
         return null;

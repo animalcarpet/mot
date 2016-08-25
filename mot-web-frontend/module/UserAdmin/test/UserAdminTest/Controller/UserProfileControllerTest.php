@@ -6,6 +6,8 @@ use Application\Helper\PrgHelper;
 use Application\Service\CatalogService;
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
 use Dashboard\Authorisation\ViewTradeRolesAssertion;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\RegisteredCardService;
+use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Model\TesterAuthorisation;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
@@ -23,6 +25,7 @@ use Zend\Session\Container;
 class UserProfileControllerTest extends AbstractFrontendControllerTestCase
 {
     const PERSON_ID = 7;
+    const TEST_USERNAME = 'TEST_USERNAME';
 
     private $accountAdminServiceMock;
     private $authorisationMock;
@@ -30,6 +33,8 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
     /** @var PersonRoleManagementService | \PHPUnit_Framework_MockObject_MockObject */
     private $personRoleManagementService;
     private $catalogService;
+    private $registeredCardServiceMock;
+    private $twoFaFeatureToggleMock;
 
     public function setUp()
     {
@@ -45,6 +50,8 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
             ->willReturn(new TesterAuthorisation());
         $this->personRoleManagementService = XMock::of(PersonRoleManagementService::class);
         $this->catalogService = XMock::of(CatalogService::class);
+            $this->registeredCardServiceMock = XMock::of(RegisteredCardService::class);
+        $this->twoFaFeatureToggleMock = XMock::of(TwoFaFeatureToggle::class);
 
         $this->setController(
             new UserProfileController(
@@ -53,7 +60,9 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
                 $this->testerGroupAuthorisationMapper,
                 $this->personRoleManagementService,
                 $this->catalogService,
-                XMock::of(ViewTradeRolesAssertion::class)
+                XMock::of(ViewTradeRolesAssertion::class),
+                $this->registeredCardServiceMock,
+                $this->twoFaFeatureToggleMock
             )
         );
 
@@ -62,6 +71,54 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
         $this->createHttpRequestForController('Reset');
 
         parent::setUp();
+    }
+
+    /**
+     * @dataProvider dataProviderTestWordingCorrectDependingOn2FaEnabled
+     */
+    public function testWordingCorrectDependingOn2FaEnabled($method, $action, $params, $mocks, $expect)
+    {
+        $result = null;
+        $session = new Container('prgHelperSession');
+        $session->offsetSet('testToken', 'redirectUrl');
+
+        if ($mocks !== null) {
+            foreach ($mocks as $mock) {
+                $this->mockMethod(
+                    $this->{$mock['class']},
+                    $mock['method'],
+                    $this->once(),
+                    $mock['result'],
+                    $mock['params']
+                );
+            }
+        }
+
+        $this->personRoleManagementService
+            ->expects($this->any())
+            ->method('getPersonAssignedInternalRoles')
+            ->willReturn([]);
+
+        $result = $this->getResultForAction2(
+            $method,
+            $action,
+            ArrayUtils::tryGet($params, 'route'),
+            ArrayUtils::tryGet($params, 'get'),
+            ArrayUtils::tryGet($params, 'post')
+        );
+
+        //  --  check   --
+        if (!empty($expect['viewModel'])) {
+            $this->assertInstanceOf(ViewModel::class, $result);
+            $this->assertResponseStatus(self::HTTP_OK_CODE);
+        }
+
+        if (!empty($expect['viewModelVariables'])) {
+            foreach ($expect['viewModelVariables'] as $variable => $value) {
+                $this->assertArrayHasKey($variable, $result->getVariables());
+                $this->assertSame($result->getVariable($variable), $value);
+            }
+        }
     }
 
     /**
@@ -128,6 +185,123 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
         if (!empty($expect['url'])) {
             $this->assertRedirectLocation2($expect['url']);
         }
+    }
+
+    public function dataProviderTestWordingCorrectDependingOn2FaEnabled()
+    {
+        return [
+            //  --  claimAccount: wording appropriate for 2fa user  --
+            [
+                'method' => 'get',
+                'action' => 'claimAccount',
+                'params' => [
+                    'route' => [
+                        'personId' => self::PERSON_ID,
+                    ],
+                    'get' => [
+                        'test' => 'test',
+                    ],
+                ],
+                'mocks' => [
+                    [
+                        'class'  => 'accountAdminServiceMock',
+                        'method' => 'getUserProfile',
+                        'params' => [self::PERSON_ID],
+                        'result' => $this->createPersonHelpDeskProfileDtoWithUsername(),
+                    ],
+                    [
+                        'class'  => 'twoFaFeatureToggleMock',
+                        'method' => 'isEnabled',
+                        'params' => [],
+                        'result' => true,
+                    ],
+                    [
+                        'class'  => 'registeredCardServiceMock',
+                        'method' => 'is2faActiveUser',
+                        'params' => [self::TEST_USERNAME],
+                        'result' => true,
+                    ],
+                ],
+                'expect' => [
+                    'viewModel' => true,
+                    'viewModelVariables' => [
+                        'reclaimSystemMessage' => UserProfileController::RECLAIM_ACCOUNT_SYSTEM_MESSAGE_2FA_USER,
+                    ],
+                ],
+            ],
+            //  --  claimAccount: wording appropriate for NON-2fa user when not 2fa user but toggle on --
+            [
+                'method' => 'get',
+                'action' => 'claimAccount',
+                'params' => [
+                    'route' => [
+                        'personId' => self::PERSON_ID,
+                    ],
+                    'get' => [
+                        'test' => 'test',
+                    ],
+                ],
+                'mocks' => [
+                    [
+                        'class'  => 'accountAdminServiceMock',
+                        'method' => 'getUserProfile',
+                        'params' => [self::PERSON_ID],
+                        'result' => $this->createPersonHelpDeskProfileDtoWithUsername(),
+                    ],
+                    [
+                        'class'  => 'twoFaFeatureToggleMock',
+                        'method' => 'isEnabled',
+                        'params' => [],
+                        'result' => true,
+                    ],
+                    [
+                        'class'  => 'registeredCardServiceMock',
+                        'method' => 'is2faActiveUser',
+                        'params' => [self::TEST_USERNAME],
+                        'result' => false,
+                    ],
+                ],
+                'expect' => [
+                    'viewModel' => true,
+                    'viewModelVariables' => [
+                        'reclaimSystemMessage' => UserProfileController::RECLAIM_ACCOUNT_SYSTEM_MESSAGE_NON_2FA_USER,
+                    ],
+                ],
+            ],
+            //  --  claimAccount: wording appropriate for NON-2fa user when 2fa toggle off --
+            [
+                'method' => 'get',
+                'action' => 'claimAccount',
+                'params' => [
+                    'route' => [
+                        'personId' => self::PERSON_ID,
+                    ],
+                    'get' => [
+                        'test' => 'test',
+                    ],
+                ],
+                'mocks' => [
+                    [
+                        'class'  => 'accountAdminServiceMock',
+                        'method' => 'getUserProfile',
+                        'params' => [self::PERSON_ID],
+                        'result' => $this->createPersonHelpDeskProfileDtoWithUsername(),
+                    ],
+                    [
+                        'class'  => 'twoFaFeatureToggleMock',
+                        'method' => 'isEnabled',
+                        'params' => [],
+                        'result' => false,
+                    ],
+                ],
+                'expect' => [
+                    'viewModel' => true,
+                    'viewModelVariables' => [
+                        'reclaimSystemMessage' => UserProfileController::RECLAIM_ACCOUNT_SYSTEM_MESSAGE_NON_2FA_USER,
+                    ],
+                ],
+            ],
+        ];
     }
 
     public function dataProviderTestActionsResultAndAccess()
@@ -336,7 +510,14 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
     {
         $dto = new PersonHelpDeskProfileDto();
         $dto->setRoles(['organisations' => [], 'sites' => []]);
+        return $dto;
+    }
 
+    private function createPersonHelpDeskProfileDtoWithUsername()
+    {
+        $dto = new PersonHelpDeskProfileDto();
+        $dto->setRoles(['organisations' => [], 'sites' => []]);
+        $dto->setUserName(self::TEST_USERNAME);
         return $dto;
     }
 }

@@ -29,7 +29,8 @@ class ChangeTempPasswordListener
         'account/claim/generatePin',
         'account/claim/reset',
         'account/claim/review',
-        'account/claim/displayPin',
+        'account/claim/success',
+        'login-2fa',
     ];
 
     private $ChangeTempPasswordRoutes = [

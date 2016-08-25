@@ -298,7 +298,7 @@ class MotTestController extends AbstractDvsaMotTestController
                 'isMotContingency'  => $this->getContingencySessionManager()->isMotContingency(),
                 'motDetails'        => $motTest,
                 'odometerReading'   => $odometerReadingVO,
-                'canTestWithoutOpt' => $this->canTestWithoutOtp() || $isDemo,
+                'isDemo'            => $isDemo,
                 'brakeTestTypeCode2Name' => $this->getBrakeTestTypeCode2Name(),
                 'motTestTitleViewModel' => (new MotTestTitleModel()),
             ]
@@ -398,7 +398,7 @@ class MotTestController extends AbstractDvsaMotTestController
                 'motDetails'           => $motTest,
                 'id'                   => $this->params()->fromRoute('id', 0),
                 'odometerReading'      => $odometerReadingVO,
-                'canTestWithoutOpt'    => $this->canTestWithoutOtp() || $isDemo,
+                'isDemo'               => $isDemo,
                 'otpErrorData'         => $otpErrorData,
                 'otpErrorMessage'      => $errorMessage,
                 'otpErrorShortMessage' => $shortMessage,

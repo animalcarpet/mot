@@ -123,7 +123,8 @@ class VehicleService
 
         $this->validator->validate($data);
 
-        if (!$this->authService->isGranted(PermissionInSystem::MOT_TEST_WITHOUT_OTP)) {
+        if ($this->isPinRequired())
+        {
             $token = ArrayUtils::tryGet($data, 'oneTimePassword');
             $this->otpService->authenticate($token);
         }
@@ -505,5 +506,18 @@ class VehicleService
     public function getVehicleIdIfAlreadyImportedFromDvla($dvlaVehicleId)
     {
         return $this->dvlaVehicleRepository->findMatchingDvsaVehicleIdForDvlaVehicle($dvlaVehicleId);
+    }
+
+    private function isPinRequired()
+    {
+        if($this->authService->isGranted(PermissionInSystem::MOT_TEST_WITHOUT_OTP)) {
+            return false;
+        }
+
+        if($this->identityProvider->getIdentity()->isSecondFactorRequired()) {
+            return false;
+        }
+
+        return true;
     }
 }

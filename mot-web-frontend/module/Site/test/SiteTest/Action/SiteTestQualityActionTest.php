@@ -147,7 +147,7 @@ class SiteTestQualityActionTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($result->layout()->getTemplate());
         $this->assertNotNull($result->layout()->getPageTertiaryTitle());
 
-        $this->assertSame(['breadcrumbs' => $this->breadcrumbs], $result->layout()->getBreadcrumbs());
+        $this->assertSame($this->breadcrumbs, $result->layout()->getBreadcrumbs());
     }
 
     public function testCsvFileIsReturned()

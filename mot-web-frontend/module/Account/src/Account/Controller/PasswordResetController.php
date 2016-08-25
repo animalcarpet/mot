@@ -333,7 +333,10 @@ class PasswordResetController extends AbstractAuthActionController
                                 'password' => $this->obfuscator->obfuscate($data['password'])
                             ]
                         );
-                        $this->getServiceLocator()->get('ZendAuthenticationService')->clearIdentity();
+
+                        /** @var \Zend\Authentication\AuthenticationService $authenticationService */
+                        $authenticationService = $this->getServiceLocator()->get('ZendAuthenticationService');
+                        $authenticationService->getIdentity()->setPasswordChangeRequired(false);
 
                         return $this->redirect()->toUrl(PersonUrlBuilderWeb::home());
                     } catch (ValidationException $e) {

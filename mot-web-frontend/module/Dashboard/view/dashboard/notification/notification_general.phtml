@@ -6,6 +6,9 @@ use Dashboard\Controller\UserHomeController;
 
 /** @var $notification \Dashboard\Model\Notification */
 
+$fields = $notification->getFields();
+$displayButton = isset($fields['buttonLink']) && isset($fields['buttonText']);
+
 ?>
 
 <div class="text"></div>
@@ -15,9 +18,11 @@ use Dashboard\Controller\UserHomeController;
         <?php if ($notification->getTemplateId() === 24): ?>
             <?php echo $notification->getContent(); ?>
         <?php else: ?>
-            <?php echo $this->escapeHtml($notification->getContent()); ?>
+            <?php echo nl2br($this->escapeHtml($notification->getContent())); ?>
         <?php endif; ?>
     </p>
+
+    <?php echo $this->notificationLink($notification); ?>
 </div>
 <div class="text">
     <p id="notification-sent">Notification sent <?php echo DateTimeDisplayFormat::textDateTime($notification->getCreatedOn()); ?></p>

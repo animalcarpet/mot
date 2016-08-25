@@ -7,10 +7,13 @@ use Doctrine\ORM\EntityManager;
 use DvsaAuthentication\Factory\IdentityFactoryFactory;
 use DvsaAuthentication\IdentityFactory\CacheableIdentityFactory;
 use DvsaAuthentication\IdentityFactory\DoctrineIdentityFactory;
+use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Repository\PersonRepository;
+use DvsaFeature\FeatureToggles;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceManager;
 
 class IdentityFactoryFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -23,6 +26,8 @@ class IdentityFactoryFactoryTest extends \PHPUnit_Framework_TestCase
 
     private $cache;
 
+    private $featureToggles;
+
     protected function setUp()
     {
         $this->identityFactoryFactory = new IdentityFactoryFactory();
@@ -31,9 +36,14 @@ class IdentityFactoryFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->featureToggles = $this->getMockBuilder(FeatureToggles::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->entityManager = $this->getMockBuilder(EntityManager::class)
             ->disableOriginalConstructor()
             ->getMock();
+
         $this->entityManager->expects($this->any())
             ->method('getRepository')
             ->with(Person::class)
@@ -53,9 +63,13 @@ class IdentityFactoryFactoryTest extends \PHPUnit_Framework_TestCase
             'config' => [],
             EntityManager::class => $this->entityManager,
             Cache::class => $this->cache,
+            'Feature\FeatureToggles' => $this->featureToggles,
         ]);
 
         $identityFactory = $this->identityFactoryFactory->createService($serviceLocator);
+
+        $serviceLocator = new ServiceManager;
+        $serviceLocator->setAllowOverride(true);
 
         $this->assertInstanceOf(DoctrineIdentityFactory::class, $identityFactory);
     }
@@ -75,6 +89,7 @@ class IdentityFactoryFactoryTest extends \PHPUnit_Framework_TestCase
             ],
             EntityManager::class => $this->entityManager,
             Cache::class => $this->cache,
+            'Feature\FeatureToggles'  => $this->featureToggles,
         ]);
 
         $identityFactory = $this->identityFactoryFactory->createService($serviceLocator);
@@ -98,6 +113,7 @@ class IdentityFactoryFactoryTest extends \PHPUnit_Framework_TestCase
             ],
             EntityManager::class => $this->entityManager,
             Cache::class => $this->cache,
+            'Feature\FeatureToggles'  => $this->featureToggles,
         ]);
 
         $identityFactory = $this->identityFactoryFactory->createService($serviceLocator);

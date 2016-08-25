@@ -1,6 +1,7 @@
 package uk.gov.dvsa.ui.views.mot_test;
 
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.gov.dvsa.helper.ContingencyValidation;
 import uk.gov.dvsa.domain.model.User;
@@ -16,7 +17,7 @@ import static org.hamcrest.core.Is.is;
 public class ContingencyFieldValidationTest extends DslTest {
     User tester;
 
-    @BeforeClass(alwaysRun = true)
+    @BeforeMethod(alwaysRun = true)
     void setupUser() throws IOException, URISyntaxException {
         tester = userData.createTester(siteData.createSite().getId());
     }

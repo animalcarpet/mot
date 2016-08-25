@@ -51,6 +51,8 @@ public class VehicleData extends VehicleService {
         return createVehicle(user);
     }
 
+
+
     public Vehicle getNewVehicle(User user, VehicleClass vehicleClass) throws IOException {
         return createVehicle(user, vehicleClass);
     }

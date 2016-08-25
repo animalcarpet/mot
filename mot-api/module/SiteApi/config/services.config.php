@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\ORM\EntityManager;
+use DvsaAuthentication\Service\TwoFactorStatusService;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Database\Transaction;
 use DvsaCommon\Utility\Hydrator;
@@ -10,9 +11,9 @@ use DvsaEntities\Entity\SiteBusinessRoleMap;
 use DvsaEntities\Entity\SiteTestingDailySchedule;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEventApi\Service\EventService;
+use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Service\Validator\BrakeTestConfigurationValidator;
 use NotificationApi\Service\NotificationService;
-use NotificationApi\Service\PositionRemovalNotificationService;
 use NotificationApi\Service\UserOrganisationNotificationService;
 use SiteApi\Factory\Model\NominationVerifierFactory;
 use SiteApi\Factory\Service\EnforcementSiteAssessmentServiceFactory;
@@ -115,7 +116,9 @@ return [
         SiteNominationService::class           =>
             function (ServiceLocatorInterface $sm) {
                 return new SiteNominationService(
-                    $sm->get(NotificationService::class)
+                    $sm->get(NotificationService::class),
+                    $sm->get(TwoFactorStatusService::class),
+                    $sm->get('Feature\FeatureToggles')
                 );
             },
         SiteTestingDailyScheduleService::class =>

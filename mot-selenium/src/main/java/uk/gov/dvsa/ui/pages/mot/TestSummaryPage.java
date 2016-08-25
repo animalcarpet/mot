@@ -19,6 +19,7 @@ public class TestSummaryPage extends Page {
             "MOT reinspection summary";
     private static final By SITE_ID_INPUT_LOCATOR = By.id("siteidentry");
     private static final String FAIL_MSG = "Fail";
+    private static final String VALID_PIN = "123456";
 
     private WebElement siteIdInput() {
         return driver.findElement(SITE_ID_INPUT_LOCATOR);
@@ -29,10 +30,10 @@ public class TestSummaryPage extends Page {
     @FindBy(id = "testStatus") private WebElement testStatus;
     @FindBy(id = "start_inspection_button") private WebElement startReinspectionButton;
     @FindBy(id = "motTestType") private WebElement testTypePrompt;
-    @FindBy(id = "declarationStatement") private WebElement declarationElement;
     @FindBy(id = "cancel_test_result") private WebElement backToResultsEntryLink;
     private By siteIdTextBox = By.id("siteidentry");
     private By expiryDate = By.id("expiryDate");
+    private By declarationElement = By.id("declarationStatement");
 
     public TestSummaryPage(MotAppDriver driver) {
         super(driver);
@@ -44,21 +45,21 @@ public class TestSummaryPage extends Page {
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE, PAGE_TITLE_REINSPECTION);
     }
 
-    public TestCompletePage finishTestAndPrint(){
-        pinInputField.sendKeys("123456");
+    public TestCompletePage finishTest(){
+        if (isOneTimePasswordBoxDisplayed()) {
+            pinInputField.sendKeys(VALID_PIN);
+        }
 
         return clickFinishButton();
     }
 
     public TestSummaryPage fillSiteIdInput(String siteId) {
         siteIdInput().sendKeys(siteId);
-
         return this;
     }
 
     public TestCompletePage clickFinishButton() {
         finishTestButton.click();
-
         return new TestCompletePage(driver);
     }
 
@@ -68,20 +69,23 @@ public class TestSummaryPage extends Page {
 
     public TestSummaryPage selectTestType(String testType) {
         FormDataHelper.selectFromDropDownByValue(testTypePrompt, testType);
-
         return this;
     }
 
-    public boolean isFailedNoticeDisplayed() {
-        return testStatus.getText().contains(FAIL_MSG);
-    }
-
     public boolean isDeclarationTextDisplayed() {
-        return declarationElement.isDisplayed();
+        return PageInteractionHelper.isElementDisplayed(driver.findElement(declarationElement));
     }
 
     public String getDeclarationText() {
-        return declarationElement.getText();
+        return driver.findElement(declarationElement).getText();
+    }
+
+    public boolean isDeclarationDisplayed() {
+        return PageInteractionHelper.isElementDisplayed(declarationElement);
+    }
+
+    public boolean isOneTimePasswordBoxDisplayed() {
+        return PageInteractionHelper.isElementDisplayed(pinInputField);
     }
 
     public boolean isDeclarationElementPresentInDom() throws NoSuchElementException {

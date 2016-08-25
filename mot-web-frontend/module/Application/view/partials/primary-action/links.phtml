@@ -83,4 +83,12 @@ use Dvsa\Mot\Frontend\MotTestModule\Controller\SurveyPageController;
             </a>
         </li>
     <?php endif; ?>
+    <?php if ($this->isTwoFaEnabled() && $this->authorisationHelper()->isGranted(PermissionInSystem::VIEW_SECURITY_CARD_ORDER)): ?>
+        <li>
+            <a href="<?php echo $this->url('security-card-order-report-list'); ?>"
+               id="action-security-card-order-report-list">
+                Security card order list
+            </a>
+        </li>
+    <?php endif; ?>
 </ul>

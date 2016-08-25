@@ -10,6 +10,8 @@ use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonApiTest\Transaction\TestTransactionExecutor;
 use DvsaCommonTest\TestUtils\ArgCapture;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaCommon\Auth\MotIdentityProviderInterface;
+use DvsaCommon\Auth\MotIdentityInterface;
 use DvsaEntities\Entity\CertificateReplacement;
 use DvsaEntities\Entity\ReplacementCertificateDraft;
 use DvsaEntities\Repository\CertificateReplacementRepository;
@@ -25,6 +27,7 @@ use DvsaMotApiTest\Factory\MotTestObjectsFactory;
 use DvsaMotApiTest\Factory\ReplacementCertificateObjectsFactory;
 use IntegrationApi\DvlaVehicle\Service\DvlaVehicleUpdatedService;
 use PHPUnit_Framework_TestCase;
+use DvsaCommon\Auth\PermissionInSystem;
 
 /**
  * Class ReplacementCertificateServiceTest
@@ -41,6 +44,12 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
     private $draftRepository;
     private $otpService;
     private $certificateCreationService;
+
+    /** @var  MotIdentityInterface $motIdentity */
+    private $motIdentity;
+
+    /** @var  MotIdentityProviderInterface $motIdentityProvider */
+    private $motIdentityProvider;
 
     public function setUp()
     {
@@ -62,12 +71,8 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
             ->will(
                 $this->returnValueMap(
                     [
-                        [
-                            CertificateTypeCode::TRANSFER, $transferType
-                        ],
-                        [
-                            CertificateTypeCode::REPLACE, $replaceType
-                        ]
+                        [CertificateTypeCode::TRANSFER, $transferType],
+                        [CertificateTypeCode::REPLACE, $replaceType]
                     ]
                 )
             );
@@ -84,15 +89,27 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
         $this->certificateReplacementRepository = XMock::of(CertificateReplacementRepository::class);
         $this->draftRepository = XMock::of(ReplacementCertificateDraftRepository::class);
         $this->authorizationService = XMock::of('DvsaAuthorisation\Service\AuthorisationServiceInterface', ['isGranted']);
-        $this->authorizationService->expects($this->any())->method("isGranted")->will($this->returnValue(true));
         $this->otpService = XMock::of(OtpService::class);
         $this->certificateCreationService = XMock::of(CertificateCreationService::class);
+
+        $this->motIdentity = XMock::of(\DvsaAuthentication\Identity::class);
+        $this->motIdentityProvider = XMock::of(MotIdentityProviderInterface::class);
+
+        $this->motIdentity->expects($this->any())
+            ->method('getUserId')
+            ->willReturn(1);
+
+        $this->motIdentityProvider
+            ->expects($this->any())
+            ->method('getIdentity')
+            ->willReturn($this->motIdentity);
     }
 
     private function createSUT()
     {
         $sut = new ReplacementCertificateService(
             $this->entityManager,
+            $this->motIdentityProvider,
             $this->draftRepository,
             $this->draftCreator,
             $this->draftUpdater,
@@ -239,6 +256,66 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
             CertificateTypeCode::TRANSFER, $certReplacement->getCertificateType()->getCode(),
             "Certificate replacement type should be 'Transfer' when generated for a cherished transfer"
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function dataProviderTestUpdateStatusAuthorisesPinIfNecessary()
+    {
+        return [
+            //Auth Not Expected If Tester Has Two Factor Auth
+            [false, true, false],
+
+            //Auth Expected If Tester Does Not Have Two Factor Auth
+            [false, false, true],
+
+            //Auth Not Expected If No Otp Permission And Tester Has Two Factor Auth
+            [true, true, false],
+
+            //Auth Not Expected If No Otp Permission And Tester Does Not Have Two Factor Auth
+            [true, false, false]
+        ];
+    }
+
+    /**
+     * @param bool $isMotTestWithoutOtpPermissionGranted
+     * @param bool $isSecondFactorRequiredForIdentity
+     * @param bool $isAuthorisationExpected
+     *
+     * @dataProvider dataProviderTestUpdateStatusAuthorisesPinIfNecessary
+     */
+    public function testCreateCertificateReplacement_authorisesPinIfNecessary(
+        $isMotTestWithoutOtpPermissionGranted,
+        $isSecondFactorRequiredForIdentity,
+        $isAuthorisationExpected
+    ) {
+        $exampleReason = "EXAMPLE_REASON";
+        $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft()
+            ->setId(12345)->setReplacementReason($exampleReason);
+        $this->returnsDraftForId($draft->getId(), $draft);
+        $certificateReplacementCapture = ArgCapture::create();
+
+        $this->certificateCreator->expects($this->any())->method("create");
+        $this->certificateReplacementRepository->expects($this->any())->method("save")
+            ->with($certificateReplacementCapture());
+
+        $otpPin = '123456';
+        $draftData = ['oneTimePassword' => $otpPin];
+        $this->authorizationService
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo(PermissionInSystem::MOT_TEST_WITHOUT_OTP))
+            ->willReturn($isMotTestWithoutOtpPermissionGranted);
+        $this->motIdentity
+            ->expects($this->once())
+            ->method('isSecondFactorRequired')
+            ->willReturn($isSecondFactorRequiredForIdentity);
+        $this->otpService
+            ->expects($isAuthorisationExpected ? $this->once() : $this->never())
+            ->method('authenticate')
+            ->with($otpPin);
+        $this->createSUT()->applyDraft($draft->getId(), $draftData);
     }
 
     private function returnsDraftForId($inputDraftId, $returnedDraft)

@@ -51,7 +51,7 @@ use DvsaMotApiTest\Factory\VehicleObjectsFactory as VOF;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use VehicleApi\Service\VehicleService;
 use Zend\ServiceManager\ServiceLocatorInterface;
-
+use DvsaAuthentication\Identity;
 /**
  * it test functionality of class VehicleService
  *
@@ -125,7 +125,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
         $this->mockMotTestService = XMock::of(MotTestService::class);
         $this->motIdentityProviderInterface = XMock::of(MotIdentityProviderInterface::class);
         $this->motIdentityProviderInterface->expects($this->any())->method('getIdentity')
-            ->willReturn(XMock::of(MotIdentityInterface::class));
+                                                          ->willReturn(XMock::of(Identity::class));
         $this->mockNewVehicleService = XMock::of(NewVehicleService::class);
         $this->mockNewVehicleService->expects($this->any())
             ->method('createDvlaVehicle')

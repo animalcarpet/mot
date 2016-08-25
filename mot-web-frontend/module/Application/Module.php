@@ -39,6 +39,8 @@ use Application\Navigation\Breadcrumbs\Handler\SiteNameResolver;
 use Application\Service\CatalogService;
 use Application\Service\ContingencySessionManager;
 use Application\View\HelperFactory\AuthorisationHelperFactory;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Listener\RegisterCardHardStopListener;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Listener\CardPinValidationListener;
 use DvsaCommon\Configuration\MotConfig;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
@@ -122,6 +124,20 @@ class Module implements
             );
         }
 
+        $cardPinValidation = $e->getApplication()->getServiceManager()->get(CardPinValidationListener::class);
+        $eventManager->attach(
+            MvcEvent::EVENT_DISPATCH,
+            $cardPinValidation,
+            WebListenerEventsPriorities::DISPATCH_CARD_VALIDATION
+        );
+
+        $registerCardHardStopListener = $e->getApplication()->getServiceManager()->get(RegisterCardHardStopListener::class);
+        $eventManager->attach(
+            MvcEvent::EVENT_DISPATCH,
+            $registerCardHardStopListener,
+            WebListenerEventsPriorities::DISPATCH_REGISTER_CARD_HARD_STOP
+        );
+
         $eventManager->attach(
             MvcEvent::EVENT_RENDER,
             function ($e) {
@@ -198,6 +214,7 @@ class Module implements
                 OrganisationNameBySiteResolver::class     => OrganisationNameBySiteResolverFactory::class,
                 SurveyService::class                      => SurveyServiceFactory::class,
                 'AuthorisationHelper'                     => AuthorisationHelperFactory::class,
+                OrganisationNameBySiteResolver::class     => OrganisationNameBySiteResolverFactory::class,
             ],
             'aliases'    => [
                 AuthenticationService::class => 'ZendAuthenticationService'

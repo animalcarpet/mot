@@ -5,6 +5,7 @@ namespace Core\Controller;
 use Application\Navigation\Breadcrumbs\BreadcrumbsBuilder;
 use Core\Action\AbstractActionResult;
 use Core\Action\ActionResult;
+use Core\Action\HttpResponseResult;
 use Core\Action\FileAction;
 use Core\Action\NotFoundActionResult;
 use Core\Action\RedirectToRoute;
@@ -299,7 +300,7 @@ abstract class AbstractDvsaActionController
             }
 
             if ($result->layout()->getBreadcrumbs()) {
-                $this->setBreadcrumbs($result->layout()->getBreadcrumbs());
+                $this->setBreadcrumbs(["breadcrumbs" => $result->layout()->getBreadcrumbs()]);
             }
 
             $viewModel = new ViewModel([
@@ -321,6 +322,8 @@ abstract class AbstractDvsaActionController
             return $this->redirect()->toUrl($result->getUrl());
         } elseif ($result instanceof NotFoundActionResult) {
             return $this->notFoundAction();
+        } elseif ($result instanceof HttpResponseResult) {
+            return $result->getResponse();
         }
 
         throw new \InvalidArgumentException();

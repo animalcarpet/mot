@@ -45,4 +45,15 @@ class TestDateTimeHolder extends DateTimeHolder
     {
         return clone $this->currentDateTime;
     }
+
+
+    public function getUserCurrent($withMilliseconds = false)
+    {
+        return clone $this->currentDateTime;
+    }
+
+    public function getUserCurrentDate()
+    {
+        return clone $this->currentDateTime;
+    }
 }

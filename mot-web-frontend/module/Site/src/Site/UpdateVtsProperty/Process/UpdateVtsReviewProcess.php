@@ -122,4 +122,19 @@ class UpdateVtsReviewProcess extends UpdateVtsPropertyProcess implements TwoStep
     {
         return self::SESSION_KEY;
     }
+
+    public function hasConfirmationPage()
+    {
+        return false;
+    }
+
+    public function redirectToConfirmationPage()
+    {
+
+    }
+
+    public function populateConfirmationPageVariables()
+    {
+
+    }
 }

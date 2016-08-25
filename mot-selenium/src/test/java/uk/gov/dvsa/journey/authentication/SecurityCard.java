@@ -1,0 +1,136 @@
+package uk.gov.dvsa.journey.authentication;
+
+import uk.gov.dvsa.domain.model.User;
+import uk.gov.dvsa.domain.navigation.MotPageFactory;
+import uk.gov.dvsa.domain.navigation.PageNavigator;
+import uk.gov.dvsa.framework.validation.ValidationSummary;
+import uk.gov.dvsa.ui.pages.Page;
+import uk.gov.dvsa.ui.pages.authentication.securitycard.EnterSecurityCardAddressPage;
+import uk.gov.dvsa.ui.pages.authentication.securitycard.OrderNewCardPage;
+import uk.gov.dvsa.ui.pages.authentication.securitycard.ReviewSecurityCardAddressPage;
+import uk.gov.dvsa.ui.pages.authentication.securitycard.card_order_report.CardOrderReportListPage;
+import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostForgottenCardConfirmationPage;
+import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostForgottenCardSignInPage;
+import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardPage;
+import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardSuccessPage;
+import uk.gov.dvsa.ui.pages.authentication.twofactorauth.TwoFactorPinEntryPage;
+
+import java.io.IOException;
+
+public class SecurityCard {
+    private PageNavigator pageNavigator;
+    private boolean isCardDeactivationMessageDisplayed = false;
+
+    SecurityCard(final PageNavigator pageNavigator) {
+        this.pageNavigator = pageNavigator;
+    }
+
+    public final RegisterCardSuccessPage activate2faCard(final User user) throws IOException {
+        return activate2faCard(user, user.getSerialNumber(), user.getTwoFactorPin(), RegisterCardSuccessPage.class);
+    }
+
+    public final RegisterCardPage activateInvalid2faCard(final User user, String serialNumber, String pin)
+        throws IOException {
+        return activate2faCard(user, serialNumber, pin, RegisterCardPage.class);
+    }
+
+    public void signInWithoutSecurityCardLandingOnHomePage(User user) throws IOException {
+        signInWithoutSecurityCard(user).continueToHome();
+    }
+
+    public void signInWithoutSecurityCardAndOrderCard(User user) throws IOException {
+        OrderNewCardPage orderNewCardPage = signInWithoutSecurityCard(user).orderSecurityCard();
+        isCardDeactivationMessageDisplayed = orderNewCardPage.isCardDeactivationMessageDisplayed();
+    }
+
+    public CardOrderReportListPage goToSecurityCardOrderReportList(User user) throws IOException {
+        return pageNavigator.navigateToPage(user, CardOrderReportListPage.PATH, CardOrderReportListPage.class);
+    }
+
+    public final String orderSecurityCardWithCustomAddress(User user, String addresssLine1, String townOrCity, String postcode) throws IOException {
+        EnterSecurityCardAddressPage addressPage = pageNavigator.navigateToPage(
+                user, OrderNewCardPage.PATH, OrderNewCardPage.class)
+                .continueToAddressPage();
+
+        ReviewSecurityCardAddressPage reviewPage =
+                addressPage.chooseCustomAddress()
+                        .fillAddressLine1(addresssLine1)
+                        .fillTownOrCity(townOrCity)
+                        .fillPostcode(postcode)
+                        .submitAddress(ReviewSecurityCardAddressPage.class);
+
+        return reviewPage.orderSecurityCard().orderStatusMessage();
+    }
+
+    public void orderSecurityCardWithInvalidAddress(User user, String addressLine1, String townOrCity, String postcode) throws IOException {
+        EnterSecurityCardAddressPage addressPage = pageNavigator.navigateToPage(
+                user, OrderNewCardPage.PATH, OrderNewCardPage.class)
+                .continueToAddressPage();
+
+        addressPage.chooseCustomAddress()
+                .fillAddressLine1(addressLine1)
+                .fillTownOrCity(townOrCity)
+                .fillPostcode(postcode)
+                .submitAddress(EnterSecurityCardAddressPage.class);
+
+    }
+
+    public String orderSecurityCardWithVTSAddress(User user) throws IOException {
+        return orderCardWithAddressType(user, OrderNewCardPage.PATH, "VTS");
+    }
+
+    public String orderSecurityCardWithHomeAddress(User user) throws IOException {
+        return orderCardWithAddressType(user, OrderNewCardPage.PATH,  "Home");
+    }
+
+    public String orderCardForTradeUserAsCSCO(User csco, User tradeUser) throws IOException {
+        String path = String.format(OrderNewCardPage.CSCO_PATH, tradeUser.getId());
+        return orderCardWithAddressType(csco, path, "Home");
+    }
+
+        public boolean isValidationSummaryDisplayed() {
+            return ValidationSummary.isValidationSummaryDisplayed(pageNavigator.getDriver());
+    }
+
+    public boolean isExistingCardDeactivationMessageDisplayed() {
+        return isCardDeactivationMessageDisplayed;
+    }
+
+    public LostForgottenCardConfirmationPage signInWithoutSecurityCard(User user) throws IOException {
+        LostForgottenCardSignInPage signInPage =
+                pageNavigator
+                        .navigateToPage(user, TwoFactorPinEntryPage.PATH, TwoFactorPinEntryPage.class)
+                        .clickLostForgottenLink();
+
+        return signInPage.continueToSecurityQuestionOnePage()
+                .enterAnswer("Blah")
+                .continueToQuestionTwoPage()
+                .enterAnswer("Blah")
+                .continueToConfirmationPage();
+
+    }
+
+    protected <T extends Page> T activate2faCard(User user, String serialNumber, String pin, Class<T> returnPage)
+        throws IOException {
+        RegisterCardPage registerCardPage = pageNavigator.navigateToPage(user, RegisterCardPage.PATH, RegisterCardPage.class);
+        registerCardPage.enterSerialNumber(serialNumber);
+        registerCardPage.enterPin(pin);
+
+        registerCardPage.continueButton();
+        return MotPageFactory.newPage(pageNavigator.getDriver(), returnPage);
+    }
+
+    private String orderCardWithAddressType(User user, String path, String addressType) throws IOException {
+        EnterSecurityCardAddressPage addressPage = pageNavigator.navigateToPage(
+            user, path, OrderNewCardPage.class)
+            .continueToAddressPage();
+
+
+        ReviewSecurityCardAddressPage reviewPage =
+            addressType.equalsIgnoreCase("VTS") ? addressPage.chooseVTSAddress()
+                .submitAddress(ReviewSecurityCardAddressPage.class) : addressPage.chooseHomeAddress()
+                .submitAddress(ReviewSecurityCardAddressPage.class);
+
+        return reviewPage.orderSecurityCard().orderStatusMessage();
+    }
+}

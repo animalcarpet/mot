@@ -1,0 +1,10 @@
+<?php
+$declarationMessage = isset($declarationMessage) ? $declarationMessage : false;
+
+?>
+
+<div class="info-alert" style="border-left: 4px solid #bfc1c3;background-color: #f8f8f8;background-position:10px 10px">
+    <p id="declarationStatement" style="font-weight:normal;padding-left: 15px;padding-top: 10px">
+        <?php echo $this->escapeHtml($declarationMessage); ?>
+    </p>
+</div>

@@ -89,6 +89,41 @@ public class ReplacementCertificatesTest extends DslTest {
         assertThat(motUI.certificate.isReprintButtonDisplayed(), is(true));
     }
 
+    @Test(testName = "2fa", groups = {"BVT", "Regression"})
+    public void pinBoxNotShownWhenTwoFactorUserEditCertificate() throws IOException, URISyntaxException {
+
+        //Given I create a test as a 2FA user
+        int siteId = siteData.createSite().getId();
+        User twoFactorTester = userData.createTester(siteId);
+        motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
+
+        Vehicle vehicle = vehicleData.getNewVehicle(twoFactorTester);
+        MotTest test = motApi.createTest(twoFactorTester, siteId, vehicle, TestOutcome.PASSED, 123456, DateTime.now());
+
+        //When I review the updated Certificate
+        motUI.certificate.updateAndReviewCeritficate(twoFactorTester, vehicle, test.getMotTestNumber());
+
+        //Then I should NOT see the PIN Box on the Review Page
+        assertThat("Pin Box is not Displayed", motUI.certificate.isPinBoxDisplayed(), is(false));
+    }
+
+    @Test(groups = {"BVT", "Regression"})
+    public void pinBoxShownWhenNonTwoFactorUserEditCertificate() throws IOException, URISyntaxException {
+
+        //Given I create a test as a non 2fa tester
+        int siteId = siteData.createSite().getId();
+        User tester = userData.createTester(siteId);
+
+        Vehicle vehicle = vehicleData.getNewVehicle(tester);
+        String testId = motApi.createTest(tester, siteId, vehicle, TestOutcome.PASSED, 123456, DateTime.now()).getMotTestNumber();
+
+        //When I review the updated Certificate
+        motUI.certificate.updateAndReviewCeritficate(tester, vehicle, testId);
+
+        //Then I should see the PIN Box on the Review Page
+        assertThat("Pin Box is Displayed", motUI.certificate.isPinBoxDisplayed(), is(true));
+    }
+
     @DataProvider(name = "usersWhoCanPrintCertificate")
     public Object[][] usersWhoCanPrintCertificate() throws IOException {
         return new Object[][]

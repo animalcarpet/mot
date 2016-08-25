@@ -7,6 +7,7 @@ class Person extends MotApi
     const PATH = 'person/{user_id}';
     const PATH_PERSONAL_DETAILS = 'personal-details/{user_id}';
     const PATH_ROLES = '/roles';
+    const PATH_PENDING_ROLES = '/pending-roles';
     const PATH_ROLES_ROLE = '/roles/{role}';
     const PATH_DASHBOARD = '/dashboard';
     const PATH_STATS = '/stats';
@@ -119,6 +120,15 @@ class Person extends MotApi
             $token,
             MotApi::METHOD_GET,
             str_replace('{user_id}', $user_id, self::PATH_PERSONAL_DETAILS)
+        );
+    }
+
+    public function getPendingRoles($token, $user_id)
+    {
+        return $this->sendRequest(
+            $token,
+            MotApi::METHOD_GET,
+            str_replace('{user_id}', $user_id, self::PATH_PERSONAL_DETAILS.self::PATH_PENDING_ROLES)
         );
     }
 

@@ -5,14 +5,15 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.helper.Utilities.Logger;
-
 import java.io.File;
+import uk.gov.dvsa.helper.Utilities.Logger;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class MotAppDriver implements MotWebDriver {
-
     protected RemoteWebDriver remoteWebDriver;
     private User user = null;
-
+    private Map<String, Boolean> userSessionMap = new HashMap<>();
     private String baseUrl = "";
 
     public MotAppDriver(RemoteWebDriver remoteWebDriver) {
@@ -33,6 +34,13 @@ public abstract class MotAppDriver implements MotWebDriver {
 
     public void setUser(User user) {
         this.user = user;
+        userSessionMap.put(user.getUsername(), true);
+    }
+
+    public void removeUser(User user) {
+        if(user != null) {
+            userSessionMap.remove(user.getUsername());
+        }
     }
 
     public User getCurrentUser() {
@@ -58,4 +66,7 @@ public abstract class MotAppDriver implements MotWebDriver {
         }
     }
 
+    public boolean userHasSession(User user) {
+        return userSessionMap.get(user.getUsername()) != null;
+    }
 }

@@ -5,6 +5,8 @@ namespace UserAdminTest\Factory\Controller;
 use Application\Service\CatalogService;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
 use Dashboard\Authorisation\ViewTradeRolesAssertion;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\RegisteredCardService;
+use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaCommon\Configuration\MotConfig;
 use DvsaCommonTest\TestUtils\XMock;
@@ -41,6 +43,12 @@ class UserProfileControllerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $viewTradeRolesAssertion = XMock::of(ViewTradeRolesAssertion::class);
         $serviceManager->setService(ViewTradeRolesAssertion::class, $viewTradeRolesAssertion);
+
+        $registeredCardService = XMock::of(RegisteredCardService::class);
+        $serviceManager->setService(RegisteredCardService::class, $registeredCardService);
+
+        $twoFaFeatureToggle = XMock::of(TwoFaFeatureToggle::class);
+        $serviceManager->setService(TwoFaFeatureToggle::class, $twoFaFeatureToggle);
 
         $serviceManager->setService(
             MotConfig::class,

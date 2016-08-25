@@ -8,6 +8,7 @@ import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.helper.RandomDataGenerator;
 import uk.gov.dvsa.ui.DslTest;
+import uk.gov.dvsa.ui.pages.profile.ProfilePage;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -18,32 +19,23 @@ import static org.hamcrest.core.Is.is;
 public class ProfilePageViewTests extends DslTest {
 
     private User tester;
-    private User schemeManager;
-    private User areaOffice1User;
     private User areaOffice2User;
-    private User vehicleExaminer;
-    private User csco;
-    private User aedm;
+    private Site site;
     private String randomName = RandomDataGenerator.generateRandomString(5, System.nanoTime());
 
     @BeforeClass(alwaysRun = true)
     private void setup() throws IOException {
         AeDetails aeDetails = aeData.createAeWithDefaultValues();
-        Site site = siteData.createNewSite(aeDetails.getId(), "Test_Site");
+        site = siteData.createNewSite(aeDetails.getId(), "Test_Site");
         tester = userData.createTester(site.getId());
-        schemeManager = userData.createSchemeUser(false);
-        areaOffice1User = userData.createAreaOfficeOne(randomName);
         areaOffice2User = userData.createAreaOfficeTwo(randomName);
-        vehicleExaminer = userData.createVehicleExaminer(randomName, false);
-        csco = userData.createCustomerServiceOfficer(false);
-        aedm = userData.createAedm(aeDetails.getId(), randomName, false);
     }
 
     @Test(groups = {"BVT"}, description = "VM-10334")
     public void testerQualificationStatusDisplayedOnProfilePage() throws IOException {
 
         //Given I'm on the Your Profile Details page
-        motUI.profile.viewYourProfile(tester);
+        motUI.profile.viewYourProfile(userData.createTester(site.getId()));
 
         //Then I should be able to see the qualification status
         assertThat(motUI.profile.isTesterQualificationStatusDisplayed(), is(true));
@@ -55,7 +47,7 @@ public class ProfilePageViewTests extends DslTest {
     public void tradeUserCanViewHisOwnRolesAndAssociations() throws IOException, URISyntaxException {
 
         //Given I'm on the Your Profile Details page
-        motUI.profile.viewYourProfile(tester);
+        motUI.profile.viewYourProfile(userData.createTester(site.getId()));
 
         //When I click on Roles and Associations link
         motUI.profile.page().clickRolesAndAssociationsLink();
@@ -110,7 +102,7 @@ public class ProfilePageViewTests extends DslTest {
     public void anyUserCanSeeQualificationsSection(User user) throws IOException, URISyntaxException {
 
         //Given I'm on the Trade user New Profile Details page as authorised DVSA user
-        motUI.profile.dvsaViewUserProfile(user, tester);
+        motUI.profile.dvsaViewUserProfile(userData.createAreaOfficeOne("Ao1"), tester);
 
         //Then Qualification section should be displayed
         assertThat(motUI.profile.page().isQualificationStatusSectionIsDisplayed(), is(true));
@@ -122,7 +114,7 @@ public class ProfilePageViewTests extends DslTest {
     public void anyUserCanSeeAccountSecuritySectionOnOwnProfile(User user) throws IOException, URISyntaxException {
 
         //Given I'm on the New Profile Details page as logged user
-        motUI.profile.viewYourProfile(user);
+        motUI.profile.viewYourProfile(userData.createTester(site.getId()));
 
         //Then Account security section should be displayed
         assertThat(motUI.profile.page().isAccountSecuritySectionDisplayed(), is(true));
@@ -131,10 +123,12 @@ public class ProfilePageViewTests extends DslTest {
     @Test(testName = "NewProfile", groups = {"BVT", "BL-448"},
             description = "Verifies that csco user can see account management section on other user profile",
             dataProvider = "anyUserForAccountManagement")
-    public void cscoUserCanSeeAccountManagementSectionOnAnyProfile(User user) throws IOException, URISyntaxException {
+    public void cscoUserCanSeeAccountManagementSectionOnAnyProfile() throws IOException, URISyntaxException {
 
         //Given I'm on the New Profile Details page as logged user
-        motUI.profile.dvsaViewUserProfile(csco, user);
+        motUI.profile.dvsaViewUserProfile(
+                userData.createCustomerServiceOfficer(false), userData.createUserAsAreaOfficeTwo("ao2")
+        );
 
         //Then Account management section should be displayed
         assertThat(motUI.profile.page().isAccountManagementSectionDisplayed(), is(true));
@@ -143,7 +137,7 @@ public class ProfilePageViewTests extends DslTest {
     @Test(testName = "NewProfile", groups = {"BVT", "BL-448"},
             description = "Verifies that authorised dvsa user can see change qualification links " +
                     "on trade user profile",
-            dataProvider = "dvsaUserForChangeQualifications")
+            dataProvider = "dvsaUser")
     public void dvsaUserCanSeeChangeQualificationLinksOnTradeProfile(User user) throws IOException, URISyntaxException {
 
         //Given I'm on the New Profile Details page as logged user
@@ -156,7 +150,7 @@ public class ProfilePageViewTests extends DslTest {
     @Test(testName = "NewProfile", groups = {"BVT", "BL-448"},
             description = "Verifies that authorised dvsa user can see manage roles link " +
                     "on other dvsa user profile",
-            dataProvider = "dvsaUserForManageRoles")
+            dataProvider = "dvsaUser")
     public void dvsaUserCanSeeManageRolesOnUserProfile(User user) throws IOException, URISyntaxException {
 
         //Given I'm on the New Profile Details page as logged user
@@ -166,68 +160,119 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isChangeQualificationLinksDisplayed(), is(true));
     }
 
+    @Test(testName = "2fa", groups = {"BVT", "BL-1963"})
+    public void registered2faTradeUserCanSeeSecurityCardPanelOnOwnProfile()  throws IOException, URISyntaxException {
+
+        // Given I have registered for two factor authentication
+        User twoFactorTester = userData.createTester(site.getId());
+        motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
+
+        // When I view my own profile
+        motUI.profile.viewYourProfile(twoFactorTester);
+
+        // Then the security card panel should be displayed
+        assertThat(motUI.profile.page().isSecurityCardPanelDisplayed(), is(true));
+    }
+
+    @Test(testName = "2fa", groups = {"BVT", "BL-1963"})
+    public void notRegistered2faTradeUserCanNotSeeSecurityCardPanelOnOwnProfile()  throws IOException, URISyntaxException {
+
+        // Given I have not registered for two factor authentication
+        User nonTwoFactorTester = userData.createTester(site.getId());
+
+        // When I view my own profile
+        motUI.profile.viewYourProfile(nonTwoFactorTester);
+
+        // Then the security card panel should not be displayed
+        assertThat(motUI.profile.page().isSecurityCardPanelDisplayed(), is(false));
+    }
+
+    @Test(testName = "2fa", groups = {"BVT", "BL-1963"}, dataProvider = "dvsaUserForSecurityCard")
+    public void dvsaCanSeeSecurityCardPanelOnRegistered2faTradeUserProfile(User dvsaUser)  throws IOException, URISyntaxException {
+
+        // Given a tester who has registered for two factor authentication
+        User twoFactorTester = userData.createTester(site.getId());
+        motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
+
+        // When I log in as a DVSA user and view their profile page
+        motUI.profile.dvsaViewUserProfile(dvsaUser, twoFactorTester);
+
+        // Then the security card panel should be displayed
+        assertThat(motUI.profile.page().isSecurityCardPanelDisplayed(), is(true));
+    }
+
+    @Test(testName = "2fa", groups = {"BVT", "BL-1963"}, dataProvider = "dvsaUserForSecurityCard")
+    public void dvsaCannotSeeSecurityCardPanelOnNonRegistered2faTradeUserProfile(User dvsaUser)  throws IOException, URISyntaxException {
+
+        // Given a tester who has not registered for two factor authentication
+
+        // When I log in as a DVSA user and view their profile page
+        motUI.profile.dvsaViewUserProfile(dvsaUser, tester);
+
+        // Then the security card panel should not be displayed
+        assertThat(motUI.profile.page().isSecurityCardPanelDisplayed(), is(false));
+    }
+
+    @Test(testName = "2fa", groups = {"BVT", "BL-1963"}, dataProvider = "dvsaUserForSecurityCard")
+    public void dvsaCanNotSeeSecurityCardPanelOnOwnProfile(User dvsaUser)  throws IOException, URISyntaxException {
+        // Given I am logged in as DVSA user
+
+        // When I view my own profile
+        motUI.profile.viewYourProfile(dvsaUser);
+
+        // Then the security card panel should not be displayed
+        assertThat(motUI.profile.page().isSecurityCardPanelDisplayed(), is(false));
+    }
+
+    @Test(testName = "2fa", groups = {"BVT", "BL-2354"})
+    public void orderSecurityCardLinkShownToUserWhoGoneThroughLostForgottenJourney()  throws IOException {
+        User twoFactorTester = userData.createTester(site.getId());
+
+        step("Given that I am on the Security card PIN page");
+            motUI.authentication.gotoTwoFactorPinEntryPage(twoFactorTester);
+
+        step("When I view my own profile");
+            motUI.authentication.securityCard.signInWithoutSecurityCard(twoFactorTester);
+            ProfilePage profilePage = motUI.profile.viewYourProfile(twoFactorTester);
+
+        step("Then the order security card link displayed on profile");
+            assertThat(profilePage.isOrderSecurityCardDisplayed(), is(true));
+    }
+
     @DataProvider(name = "dvsaUserForPersonalDetails")
     private Object[][] dvsaUserForPersonalDetails() throws IOException {
         return new Object[][]{
-                {schemeManager, true},
-                {areaOffice1User, true},
-                {vehicleExaminer, true},
-                {csco, false}};
+                {userData.createSchemeUser(false), true},
+                {userData.createAreaOfficeOne("Ao1"), true},
+                {userData.createVehicleExaminer("veguy", false), true},
+                {userData.createCustomerServiceOfficer(false), false}};
     }
 
     @DataProvider(name = "dvsaUserForContactDetails")
     private Object[][] dvsaUserForContactDetails() throws IOException {
         return new Object[][]{
-                {schemeManager},
-                {areaOffice1User},
-                {vehicleExaminer},
-                {csco}};
+                {userData.createSchemeUser(false)},
+                {userData.createAreaOfficeOne("Ao1")},
+                {userData.createVehicleExaminer("veguy", false)},
+                {userData.createCustomerServiceOfficer(false)}};
     }
 
-    @DataProvider(name = "dvsaUserForChangeQualifications")
+    @DataProvider(name = "dvsaUser")
     private Object[][] dvsaUserForChangeQualifications() throws IOException {
         return new Object[][]{
-                {schemeManager},
-                {areaOffice1User},
-                {vehicleExaminer}};
+                {userData.createSchemeUser(false)},
+                {userData.createAreaOfficeOne("Ao1")},
+                {userData.createVehicleExaminer("veguy", false)}};
     }
 
-    @DataProvider(name = "dvsaUserForManageRoles")
-    private Object[][] dvsaUserForManageRoles() throws IOException {
+    @DataProvider(name = "dvsaUserForSecurityCard")
+    private Object[][] dvsaUserForSecurityCard() throws IOException {
         return new Object[][]{
-                {schemeManager},
-                {areaOffice1User},
-                {vehicleExaminer}};
-    }
-
-    @DataProvider(name = "anyUserForQualification")
-    private Object[][] anyUserForQualification() throws IOException {
-        return new Object[][]{
-                {schemeManager},
-                {areaOffice1User},
-                {vehicleExaminer},
-                {aedm},
-                {csco}};
-    }
-
-    @DataProvider(name = "anyUserForAccountSecurity")
-    private Object[][] anyUserForAccountSecurity() throws IOException {
-        return new Object[][]{
-                {schemeManager},
-                {areaOffice1User},
-                {vehicleExaminer},
-                {csco},
-                {aedm},
-                {tester}};
-    }
-
-    @DataProvider(name = "anyUserForAccountManagement")
-    private Object[][] anyUserForAccountManagement() throws IOException {
-        return new Object[][]{
-                {schemeManager},
-                {areaOffice1User},
-                {vehicleExaminer},
-                {aedm},
-                {tester}};
+                {userData.createSchemeUser(false)},
+                {userData.createSchemeManagerUser(false)},
+                {userData.createAreaOfficeOne("Ao1")},
+                {userData.createVehicleExaminer("veguy", false)},
+                {userData.createCustomerServiceOfficer(false)},
+                {userData.createCustomerServiceManager(false)}};
     }
 }

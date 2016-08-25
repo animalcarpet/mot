@@ -148,14 +148,26 @@ echo $this->partial(
                 'otpInput',
                 [
                     'buttonText'        => $escButtonText,
-                    'canTestWithoutOpt' => $this->canTestWithoutOpt,
+                    'canTestWithoutOpt' => $this->canTestWithoutOtp() || $this->isDemo,
                     'buttonId'          => "confirm_test_result",
                     'errorMessage'      => $this->otpErrorMessage,
                     'shortErrorMessage' => $this->otpErrorShortMessage
                 ]
             );
-            ?>
 
+            if ($this->canTestWithoutOtp())
+            {
+                echo $this->partial(
+                    '2faDeclaration',
+                    [
+                        'declarationMessage' => 'By saving this test result you confirm that you have carried out ' .
+                            'this MOT test in line with DVSA conditions for MOT testing.'
+                    ]
+                );
+            }
+
+            ?>
+            
             <nav class="module-content-navigation">
                 <input type="submit" class="button" value="<?php echo $escButtonText; ?>" id="confirm_test_result">
                 <ul class="content-navigation_secondary">

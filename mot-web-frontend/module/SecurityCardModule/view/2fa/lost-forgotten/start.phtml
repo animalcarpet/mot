@@ -1,0 +1,25 @@
+<?php
+$this->layout('layout/layout-govuk.phtml');
+$this->layout()->setVariables([
+    'pageTitle' => 'Sign in without your security card',
+    'pageSubTitle' => 'Sign in',
+    'hideUserNav' => true
+]);
+?>
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <p class="lede">If your security card is lost, forgotten or damaged then you can sign in by answering your security questions.</p>
+        <?php if ($this->showCardOrderLink) : ?>
+            <p>If you need a new card then you can order one from your profile, once you’ve signed in.</p>
+        <?php endif; ?>
+        <nav class="content-navigation">
+            <a id="continueToQuestionOne" href="<?php echo $this->url('lost-or-forgotten-card/question-one'); ?>" class="button">Continue</a>
+            <ul class="content-navigation__secondary">
+                <li>
+                    <a href="<?php echo $this->url('login-2fa') ?>">Cancel and return to your security card PIN</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

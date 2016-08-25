@@ -2,7 +2,7 @@
     <div class="header-wrapper">
         <div class="header-global">
             <div class="header-logo">
-                <a href="<?php echo $this->basePath('/'); ?>"
+                <a href="<?php $test = $this->hideUserNav ; echo $this->basePath('/'); ?>"
                    title="Go to the homepage" id="logo" class="content">
                     <img src="<?php echo $this->basePath('img/logo_mot2.gif'); ?>"
                     width="56" height="53" alt=""></a>
@@ -12,8 +12,10 @@
         <div class="header-proposition">
             <div class="content">
                 <nav id="proposition-menu">
-                    <?php echo $this->partial('partial/fragments/user-header.phtml'); ?>
-                    <?php echo $this->partial('partial/fragments/user-menu.phtml'); ?>
+                    <?php if($this->hideUserNav != true) : ?>
+                        <?php echo $this->partial('partial/fragments/user-header.phtml'); ?>
+                        <?php echo $this->partial('partial/fragments/user-menu.phtml'); ?>
+                    <?php endif; ?>
                 </nav>
             </div>
         </div>

@@ -9,6 +9,7 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\OrganisationBusinessRoleMap;
 use OrganisationApi\Controller\OrganisationPositionController;
 use OrganisationApi\Service\NominateRoleService;
+use OrganisationApi\Service\NominateRoleServiceBuilder;
 use OrganisationApi\Service\OrganisationPositionService;
 
 /**
@@ -23,12 +24,14 @@ class OrganisationPositionControllerTest extends AbstractRestfulControllerTestCa
     private $roleId         = 1;
     private $organisationPositionServiceMock;
     private $nominateRoleServiceMock;
+    private $nominateRoleServiceBuilderMock;
 
     protected function setUp()
     {
         $this->controller                      = new OrganisationPositionController();
         $this->organisationPositionServiceMock = $this->getOrganisationPositionServiceMock();
         $this->nominateRoleServiceMock         = $this->getNominateRoleServiceMock();
+        $this->nominateRoleServiceBuilderMock  = $this->getNominateRoleServiceBuilderMock();
         $this->setupServiceManager();
         TestTransactionExecutor::inject($this->controller);
         parent::setUp();
@@ -95,10 +98,30 @@ class OrganisationPositionControllerTest extends AbstractRestfulControllerTestCa
 
         $nominatedRoleServiceMock->expects($this->any())
             ->method('nominateRole')
-            ->with($this->organisationId, $this->nomineeId, $this->roleId)
+            ->will($this->returnValue($orgPosition));
+
+        $nominatedRoleServiceMock->expects($this->any())
+        ->method('updateRoleNominationNotification')
             ->will($this->returnValue($orgPosition));
 
         return $nominatedRoleServiceMock;
+    }
+
+    private function getNominateRoleServiceBuilderMock()
+    {
+        $builder = XMock::of(NominateRoleServiceBuilder::class);
+        $builder
+            ->expects($this->any())
+            ->method('buildForNominationCreation')
+            ->with($this->organisationId, $this->nomineeId, $this->roleId)
+            ->willReturn($this->nominateRoleServiceMock);
+        $builder
+            ->expects($this->any())
+            ->method('buildForNominationUpdate')
+            ->with($this->organisationId, $this->nomineeId, $this->roleId)
+            ->willReturn($this->nominateRoleServiceMock);
+
+        return $builder;
     }
 
     private function setupServiceManager()
@@ -106,7 +129,7 @@ class OrganisationPositionControllerTest extends AbstractRestfulControllerTestCa
         $serviceManager = Bootstrap::getServiceManager();
         $serviceManager->setAllowOverride(true);
         $serviceManager->setService(OrganisationPositionService::class, $this->organisationPositionServiceMock);
-        $serviceManager->setService(NominateRoleService::class, $this->nominateRoleServiceMock);
+        $serviceManager->setService(NominateRoleServiceBuilder::class, $this->nominateRoleServiceBuilderMock);
 
         $this->controller->setServiceLocator($serviceManager);
     }

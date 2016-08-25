@@ -19,7 +19,6 @@ use Dvsa\Mot\Frontend\PersonModule\Controller\PersonProfileController;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaMotTest\Controller\TesterMotTestLogController;
 use UserAdmin\Controller\EmailAddressController;
-use UserAdmin\Factory\Controller\EmailAddressControllerFactory;
 use UserAdmin\Factory\Controller\DrivingLicenceControllerFactory;
 use Dashboard\Controller\UserTradeRolesController;
 use Dashboard\Factory\Controller\PasswordControllerFactory;
@@ -256,6 +255,16 @@ return [
                                             'defaults' => [
                                                 'controller' => QualificationDetailsController::class,
                                                 'action' => 'addReview',
+                                            ],
+                                        ],
+                                    ],
+                                    'add-confirmation' => [
+                                        'type' => 'segment',
+                                        'options' => [
+                                            'route' => '/confirmation',
+                                            'defaults' => [
+                                                'controller' => QualificationDetailsController::class,
+                                                'action' => 'addConfirmation',
                                             ],
                                         ],
                                     ],
@@ -692,6 +701,16 @@ return [
                                             'defaults' => [
                                                 'controller' => QualificationDetailsController::class,
                                                 'action' => 'addReview',
+                                            ],
+                                        ],
+                                    ],
+                                    'add-confirmation' => [
+                                        'type' => 'segment',
+                                        'options' => [
+                                            'route' => '/confirmation',
+                                            'defaults' => [
+                                                'controller' => QualificationDetailsController::class,
+                                                'action' => 'addConfirmation',
                                             ],
                                         ],
                                     ],
@@ -1225,6 +1244,16 @@ return [
                                             ],
                                         ],
                                     ],
+                                    'add-confirmation' => [
+                                        'type' => 'segment',
+                                        'options' => [
+                                            'route' => '/confirmation',
+                                            'defaults' => [
+                                                'controller' => QualificationDetailsController::class,
+                                                'action' => 'addConfirmation',
+                                            ],
+                                        ],
+                                    ],
                                 ],
                             ],
                             'edit' => [
@@ -1644,6 +1673,16 @@ return [
                                             'defaults' => [
                                                 'controller' => QualificationDetailsController::class,
                                                 'action' => 'addReview',
+                                            ],
+                                        ],
+                                    ],
+                                    'add-confirmation' => [
+                                        'type' => 'segment',
+                                        'options' => [
+                                            'route' => '/confirmation',
+                                            'defaults' => [
+                                                'controller' => QualificationDetailsController::class,
+                                                'action' => 'addConfirmation',
                                             ],
                                         ],
                                     ],

@@ -81,7 +81,7 @@ class SiteUserDataService implements ServiceLocatorAwareInterface
             $account = new Account($data);
         }
 
-        $this->nominateAndAcceptRoleAtSites($account, $role, $data);
+        $this->giveUserRoleAtSites($account, $role, $data);
 
         return TestDataResponseHelper::jsonOk(
             [
@@ -109,16 +109,8 @@ class SiteUserDataService implements ServiceLocatorAwareInterface
      * @param string  $role
      * @param array   $data
      */
-    private function nominateAndAcceptRoleAtSites(Account $account, $role, array $data)
+    private function giveUserRoleAtSites(Account $account, $role, array $data)
     {
         $this->sitePermissionsHelper->addPermissionToSites($account, $role, $data['siteIds']);
-
-        $notifications = $this->notificationsHelper->getNotifications($account);
-
-        $this->notificationsHelper->acceptUnreadNotification(
-            $account,
-            $notifications,
-            self::SITE_POSITION_NOTIFICATION_ID
-        );
     }
 }

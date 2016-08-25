@@ -35,6 +35,17 @@ class OrganisationPositionMapper extends DtoMapper implements BusinessPositionMa
         return parent::post($apiUrl, $data);
     }
 
+    public function updatePosition($organisationId, $nomineeId, $roleId)
+    {
+        $apiUrl = OrganisationUrlBuilder::position($organisationId);
+        $data = [
+            'nomineeId' => $nomineeId,
+            'roleId'    => $roleId
+        ];
+
+        return parent::put($apiUrl, $data);
+    }
+
     /**
      * Removes position in organisation from a person
      *

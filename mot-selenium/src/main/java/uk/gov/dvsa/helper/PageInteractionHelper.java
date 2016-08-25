@@ -7,7 +7,9 @@ import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.Configurator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.ui.pages.Page;
+import uk.gov.dvsa.ui.pages.exception.ExpectedElementNotFoundOnPageException;
 import uk.gov.dvsa.ui.pages.exception.PageInstanceNotFoundException;
+import uk.gov.dvsa.ui.pages.exception.UnExpectedElementFoundOnPageException;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -18,14 +20,32 @@ import java.util.concurrent.TimeUnit;
 public class PageInteractionHelper {
     protected static final int AJAX_MAXIMUM_TIMEOUT = 5;
 
-    private static MotAppDriver driver;
+    private static ThreadLocal<MotAppDriver> driver = new ThreadLocal<>();
 
     private PageInteractionHelper(MotAppDriver driver) {
-        PageInteractionHelper.driver = driver;
+        PageInteractionHelper.driver.set(driver);
     }
 
     public static PageInteractionHelper setDriver(MotAppDriver driver){
         return new PageInteractionHelper(driver);
+    }
+
+    public static boolean expectElementOnPage(WebElement elementLocator, String elementName) {
+        if(isElementDisplayed(elementLocator)){
+            return true;
+        }
+
+        throw new ExpectedElementNotFoundOnPageException(
+            String.format("Expected Element: %s not found on Page", elementName));
+    }
+
+    public static boolean elementNotExpectedOnPage(WebElement elementLocator, String elementName) {
+        if(!isElementDisplayed(elementLocator)){
+            return true;
+        }
+
+        throw new UnExpectedElementFoundOnPageException(
+            String.format("Unexpected Element: %s found on Page", elementName));
     }
 
     public static boolean verifyTitle(String actual, String expected) {
@@ -55,32 +75,32 @@ public class PageInteractionHelper {
      * required step is done
      */
     protected static void turnOffImplicitWaits() {
-        driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+        driver.get().manage().timeouts().implicitlyWait(0, TimeUnit.MILLISECONDS);
     }
 
     /**
      * Used for resetting implicit waits to the default
      */
     protected static void turnOnImplicitWaits() {
-        driver.manage().timeouts().implicitlyWait(Configurator.defaultWebElementTimeout, TimeUnit.SECONDS);
+        driver.get().manage().timeouts().implicitlyWait(Configurator.defaultWebElementTimeout, TimeUnit.SECONDS);
     }
 
     /**
      * Returns the element marked invalid by HTML5 validation
      */
     public WebElement findElementMarkedInvalid() {
-        return driver.findElement(By.cssSelector("input:invalid"));
+        return driver.get().findElement(By.cssSelector("input:invalid"));
     }
 
     public List<WebElement> findElementWithoutImplicitWaits(By by) {
         turnOffImplicitWaits();
-        List<WebElement> elements = driver.findElements(by);
+        List<WebElement> elements = driver.get().findElements(by);
         turnOnImplicitWaits();
         return elements;
     }
 
     public static WebElement waitForElementToBeVisible(By locator, int timeOut) {
-        return new WebDriverWait(driver, timeOut)
+        return new WebDriverWait(driver.get(), timeOut)
                 .until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
@@ -94,7 +114,7 @@ public class PageInteractionHelper {
             }
         };
 
-        Wait<WebDriver> wait = new WebDriverWait(driver, 60);
+        Wait<WebDriver> wait = new WebDriverWait(driver.get(), 60);
 
         try {
             wait.until(pageLoad);
@@ -127,7 +147,7 @@ public class PageInteractionHelper {
             }
         };
 
-        Wait<WebDriver> wait = new WebDriverWait(driver, 60);
+        Wait<WebDriver> wait = new WebDriverWait(driver.get(), 60);
 
         try {
             wait.until(jqueryActive);
@@ -143,11 +163,11 @@ public class PageInteractionHelper {
      * @param timeout maximum time to wait in seconds
      */
     public static void waitForElementToBeVisible(WebElement element, int timeout) {
-        new WebDriverWait(driver, timeout).until(ExpectedConditions.visibilityOf(element));
+        new WebDriverWait(driver.get(), timeout).until(ExpectedConditions.visibilityOf(element));
     }
 
     public static WebElement refreshPageUntilElementWontBeVisible(final By locator, int timeout, int refreshEveryTimeout) {
-        Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
+        Wait<WebDriver> wait = new FluentWait<WebDriver>(driver.get())
                 .withTimeout(timeout, TimeUnit.SECONDS)
                 .pollingEvery(refreshEveryTimeout, TimeUnit.SECONDS)
                 .ignoring(NoSuchElementException.class);
@@ -162,29 +182,29 @@ public class PageInteractionHelper {
 
     public static <T extends Page> T refreshPageWhileElementIsVisible(Class<T> clazz, WebElement element) throws InterruptedException {
         while (element.isDisplayed()) {
-            driver.navigate().refresh();
+            driver.get().navigate().refresh();
         }
-        return MotPageFactory.newPage(driver, clazz);
+        return MotPageFactory.newPage(driver.get(), clazz);
     }
 
     protected boolean isElementClickable(WebElement element, int timeout) {
-        return new WebDriverWait(driver, timeout)
+        return new WebDriverWait(driver.get(), timeout)
                 .until(ExpectedConditions.elementToBeClickable(element)) != null;
     }
 
     public static void waitForTextToBePresentInElement(WebElement element, String text, int timeout) {
-        new WebDriverWait(driver, timeout)
+        new WebDriverWait(driver.get(), timeout)
                 .until(ExpectedConditions.textToBePresentInElement(element, text));
 
     }
 
     public static WebElement waitForElementToBeClickable(By locator) {
-        return new WebDriverWait(driver, AJAX_MAXIMUM_TIMEOUT)
+        return new WebDriverWait(driver.get(), AJAX_MAXIMUM_TIMEOUT)
                 .until(ExpectedConditions.elementToBeClickable(locator));
     }
 
     public static WebElement waitForElementToBeClickable(WebElement element) {
-        return new WebDriverWait(driver, AJAX_MAXIMUM_TIMEOUT)
+        return new WebDriverWait(driver.get(), AJAX_MAXIMUM_TIMEOUT)
                 .until(ExpectedConditions.elementToBeClickable(element));
     }
 
@@ -194,7 +214,7 @@ public class PageInteractionHelper {
     public static boolean isElementPresent(By locator) {
         try {
             turnOffImplicitWaits();
-            List<WebElement> elements = new WebDriverWait(driver, Configurator.defaultWebElementTimeout)
+            List<WebElement> elements = new WebDriverWait(driver.get(), Configurator.defaultWebElementTimeout)
                     .until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
 
             return elements.size() > 0;
@@ -209,7 +229,7 @@ public class PageInteractionHelper {
      * Refresh the current page
      */
     public static void refreshPage(){
-        driver.navigate().refresh();
+        driver.get().navigate().refresh();
     }
 
     /**
@@ -232,7 +252,7 @@ public class PageInteractionHelper {
     public static boolean isElementDisplayed(By elementLocator) {
         try {
             turnOffImplicitWaits();
-            WebElement element = driver.findElement(elementLocator);
+            WebElement element = driver.get().findElement(elementLocator);
             return element.isDisplayed();
         } catch (NoSuchElementException | TimeoutException ex) {
             return false;
@@ -240,6 +260,8 @@ public class PageInteractionHelper {
             turnOnImplicitWaits();
         }
     }
+
+
 
     /**
      * Method for calling Javascript in the context of the page running in
@@ -252,8 +274,8 @@ public class PageInteractionHelper {
      * @see org.openqa.selenium.JavascriptExecutor
      */
     public static Object executeJavascript(String script, Object... args) {
-        if (driver instanceof JavascriptExecutor) {
-            return driver.executeScript(script, args);
+        if (driver.get() instanceof JavascriptExecutor) {
+            return driver.get().executeScript(script, args);
         } else {
             throw new IllegalStateException(
                     "Cannot execute Javascript (the driver " + driver.getClass().getSimpleName()
@@ -262,6 +284,6 @@ public class PageInteractionHelper {
     }
 
     public static MotAppDriver getDriver(){
-        return driver;
+        return driver.get();
     }
 }

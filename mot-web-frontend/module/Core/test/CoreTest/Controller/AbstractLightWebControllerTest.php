@@ -5,6 +5,7 @@ namespace CoreTest\Controller;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\Controller\Plugin\FlashMessenger;
 use Zend\Mvc\Controller\Plugin\Params;
 use DvsaCommonTest\TestUtils\XMock;
 use Zend\Mvc\Controller\PluginManager;
@@ -38,6 +39,9 @@ abstract class AbstractLightWebControllerTest extends \PHPUnit_Framework_TestCas
 
     /** @var ModelInterface|MockObject */
     protected $layoutPluginMock;
+
+    /** @var FlashMessenger|MockObject */
+    protected $flashMessengerPluginMock;
 
     /** @var PluginManager|MockObject */
     private $pluginManagerMock;
@@ -98,6 +102,7 @@ abstract class AbstractLightWebControllerTest extends \PHPUnit_Framework_TestCas
         $this->redirectPluginMock = $this->createPluginMock(Redirect::class);
         $this->urlPluginMock = $this->createPluginMock(Url::class);
         $this->layoutPluginMock = $this->createPluginMock(ModelInterface::class);
+        $this->flashMessengerPluginMock = $this->createPluginMock(FlashMessenger::class);
 
         $this->pluginManagerMock = XMock::of(PluginManager::class);
         $this->pluginManagerMock
@@ -110,6 +115,7 @@ abstract class AbstractLightWebControllerTest extends \PHPUnit_Framework_TestCas
                         ['params', null, true, $this->paramsPluginMock],
                         ['redirect', null, true, $this->redirectPluginMock],
                         ['url', null, true, $this->urlPluginMock],
+                        ['flashMessenger', null, true, $this->flashMessengerPluginMock],
                     ]
                 )
             );
@@ -142,5 +148,16 @@ abstract class AbstractLightWebControllerTest extends \PHPUnit_Framework_TestCas
             ->expects($this->once())
             ->method('toUrl')
             ->with($url);
+    }
+
+    protected function expectNoRedirect()
+    {
+        $this->redirectPluginMock
+            ->expects($this->never())
+            ->method('toRoute');
+
+        $this->redirectPluginMock
+            ->expects($this->never())
+            ->method('toUrl');
     }
 }

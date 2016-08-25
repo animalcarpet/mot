@@ -6,7 +6,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class MotBrowserFactory {
 
-    protected static MotAppDriver createMotDriver(RemoteWebDriver remoteWebDriver){
+     public static MotAppDriver createMotDriver(RemoteWebDriver remoteWebDriver){
         return new MotRemoteWebDriver(remoteWebDriver);
 
     }

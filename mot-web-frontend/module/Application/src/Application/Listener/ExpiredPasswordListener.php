@@ -21,7 +21,7 @@ use Zend\Mvc\MvcEvent;
  */
 class ExpiredPasswordListener
 {
-    const CLAIM_ACCOUNT_DISPLAY_PIN_ROUTE = 'account/claim/displayPin';
+    const CLAIM_ACCOUNT_SUCCESS_ROUTE = 'account/claim/success';
 
     /**
      * @var MotIdentityProviderInterface
@@ -125,6 +125,7 @@ class ExpiredPasswordListener
         return [
             'login',
             'logout',
+            'login-2fa',
             'forgotten-password/update-password',
             'account/claim',
             'account/claim/confirmEmailAndPassword',

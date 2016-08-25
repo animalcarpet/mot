@@ -6,6 +6,7 @@ use Core\Action\ActionResult;
 use Core\Controller\AbstractAuthActionController;
 use Core\TwoStepForm\EditStepAction;
 use Core\TwoStepForm\ReviewStepAction;
+use Doctrine\DBAL\Schema\View;
 use Dvsa\Mot\Frontend\PersonModule\Action\QualificationDetailsAction;
 use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\CertificatesBreadcrumbs;
 use Dvsa\Mot\Frontend\PersonModule\Model\QualificationDetailsAddProcess;
@@ -17,12 +18,14 @@ use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use Zend\View\Model\ViewModel;
+use Core\TwoStepForm\ConfirmationStepAction;
 
 class QualificationDetailsController extends AbstractAuthActionController implements AutoWireableInterface
 {
     private $viewAction;
     private $editStepAction;
     private $reviewStepAction;
+    private $confirmationStepAction;
     private $qualificationDetailsAddProcess;
     private $qualificationDetailsEditProcess;
 
@@ -39,6 +42,7 @@ class QualificationDetailsController extends AbstractAuthActionController implem
         QualificationDetailsAction $viewAction,
         EditStepAction $editStepAction,
         ReviewStepAction $reviewStepAction,
+        ConfirmationStepAction $confirmationStepAction,
         QualificationDetailsAddProcess $qualificationDetailsAddProcess,
         QualificationDetailsEditProcess $qualificationDetailsEditProcess,
         RemoveCertificateDetailsService $removeCertificateDetailsService,
@@ -49,6 +53,7 @@ class QualificationDetailsController extends AbstractAuthActionController implem
         $this->viewAction = $viewAction;
         $this->editStepAction = $editStepAction;
         $this->reviewStepAction = $reviewStepAction;
+        $this->confirmationStepAction = $confirmationStepAction;
         $this->qualificationDetailsAddProcess = $qualificationDetailsAddProcess;
         $this->qualificationDetailsEditProcess = $qualificationDetailsEditProcess;
         $this->removeCertificateDetailsService = $removeCertificateDetailsService;
@@ -86,6 +91,8 @@ class QualificationDetailsController extends AbstractAuthActionController implem
             $actionResult = $action->execute($isPost, $process, $context, $formUuid, $formData);
         } elseif(get_class($action) == ReviewStepAction::class) {
             $actionResult = $action->execute($isPost, $process, $context, $formUuid);
+        } elseif(get_class($action) == ConfirmationStepAction::class) {
+            $actionResult = $action->execute($isPost, $process, $context);
         }
 
         //todo if there's no redirect
@@ -108,6 +115,13 @@ class QualificationDetailsController extends AbstractAuthActionController implem
     {
         return $this->runQualificationDetailsProcessAction($this->qualificationDetailsAddProcess,
             $this->reviewStepAction, 'qualification-details/review'
+        );
+    }
+
+    public function addConfirmationAction()
+    {
+        return $this->runQualificationDetailsProcessAction($this->qualificationDetailsAddProcess,
+            $this->confirmationStepAction, 'qualification-details/confirmation'
         );
     }
 

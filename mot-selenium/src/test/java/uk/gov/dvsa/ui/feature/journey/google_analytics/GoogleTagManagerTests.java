@@ -1,8 +1,8 @@
 package uk.gov.dvsa.ui.feature.journey.google_analytics;
 
 import org.testng.annotations.Test;
+
 import uk.gov.dvsa.domain.model.User;
-import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.HomePage;
 import uk.gov.dvsa.ui.pages.login.LoginPage;
@@ -31,10 +31,9 @@ public class GoogleTagManagerTests extends DslTest {
         User validUser = userData.createTester(siteData.createSite().getId());
 
         // When I login through the login page
-        motUI.login(validUser);
+        HomePage homePage = pageNavigator.gotoHomePage(validUser);
 
         // Then the Google TagManager's dataLayer structure with the "userId" property should be displayed
-        HomePage homePage = MotPageFactory.newPage(pageNavigator.getDriver(), HomePage.class);
-        assertThat(homePage.isGoogleTagManagerDataLayerRendered(), is(true));
+        assertThat(homePage.refresh().isGoogleTagManagerDataLayerRendered(), is(true));
     }
 }

@@ -1,0 +1,51 @@
+<?php
+$this->layout('layout/layout-govuk.phtml');
+use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\ViewModel\CardOrderReviewViewModel;
+/**
+ * @var CardOrderReviewViewModel $viewModel
+ */
+?>
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <form method="post" action="<?php echo $this->url('security-card-order/review', ['userId' => $viewModel->getUserId()])?>">
+            <?php echo $this->csrfToken(); ?>
+            <p class="lede">Check your chosen delivery address is correct.</p>
+            <table class="key-value-list">
+                <caption class="visuallyhidden">Summary of your delivery address</caption>
+                <tbody>
+                <tr>
+                    <th scope="col" class="key-value-list__key">Name</th>
+                    <td scope="col" class="key-value-list__value"><?php echo $this->escapeHtml($viewModel->getName()) ?></td>
+                </tr>
+                <tr>
+                    <th scope="col" class="key-value-list__key">Address</th>
+                    <td scope="col" class="key-value-list__value">
+                        <?php if (!empty($viewModel->getVtsName())): ?>
+                            <?php echo $this->escapeHtml($viewModel->getVtsName()) ?>,<br/>
+                        <?php endif ?>
+                        <?php echo $this->escapeHtml($viewModel->getAddressLineOne()) ?>,<br/>
+                        <?php if (!empty($viewModel->getAddressLineTwo())): ?>
+                            <?php echo $this->escapeHtml($viewModel->getAddressLineTwo()) ?>,<br/>
+                        <?php endif ?>
+                        <?php if (!empty($viewModel->getAddressLineTwo())): ?>
+                            <?php echo $this->escapeHtml($viewModel->getAddressLineTwo()) ?>,<br/>
+                        <?php endif ?>
+                        <?php echo $this->escapeHtml($viewModel->getTown()) ?>,<br/>
+                        <?php echo $this->escapeHtml($viewModel->getPostcode()) ?></td>
+                </tr>
+                </tbody>
+            </table>
+
+        <nav class="content-navigation">
+            <input type="submit" id="orderConfirmation" class="button" value="Order security card"/>
+            <ul class="content-navigation__secondary">
+                <li>
+                    <a href="<?php echo $this->url('security-card-order/address', ['userId' => $viewModel->getUserId()]) ?>">Back</a>
+                </li>
+            </ul>
+        </nav>
+        </form>
+
+    </div>
+</div>

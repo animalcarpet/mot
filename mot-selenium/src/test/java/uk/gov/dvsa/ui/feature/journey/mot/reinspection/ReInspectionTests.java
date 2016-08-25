@@ -107,7 +107,7 @@ public class ReInspectionTests extends DslTest {
         //Given I am a User with a AO1 and VE Role
         User ao1PlusVe = userData.createAreaOfficeOne("AO1PlusVE");
         Vehicle vehicle = vehicleData.getNewVehicle(tester);
-        RoleManager.addRole(ao1PlusVe.getId(), DvsaRoles.VEHICLE_EXAMINER);
+        RoleManager.addSystemRole(ao1PlusVe, DvsaRoles.VEHICLE_EXAMINER);
 
         //When I start a reInspection test
         MotTest motTest = motApi.createTest(tester, testSite.getId(), vehicle,

@@ -3,8 +3,9 @@
 namespace UserAdmin\Factory\Controller;
 
 use Dashboard\Authorisation\ViewTradeRolesAssertion;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\RegisteredCardService;
+use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
-use DvsaCommon\Configuration\MotConfig;
 use UserAdmin\Controller\UserProfileController;
 use UserAdmin\Service\HelpdeskAccountAdminService;
 use UserAdmin\Service\PersonRoleManagementService;
@@ -25,8 +26,10 @@ class UserProfileControllerFactory implements FactoryInterface
         $testerGroupAuthorisationMapper = $appServiceLocator->get(TesterGroupAuthorisationMapper::class);
         $personRoleManagementService = $appServiceLocator->get(PersonRoleManagementService::class);
         $catalogService = $appServiceLocator->get("CatalogService");
-
         $viewTradeRolesAssertion = $appServiceLocator->get(ViewTradeRolesAssertion::class);
+        $registeredCardService = $appServiceLocator->get(RegisteredCardService::class);
+        /** @var TwoFaFeatureToggle */
+        $twoFaFeatureToggle = $appServiceLocator->get(TwoFaFeatureToggle::class);
 
         $controller = new UserProfileController(
             $authorisationService,
@@ -34,7 +37,9 @@ class UserProfileControllerFactory implements FactoryInterface
             $testerGroupAuthorisationMapper,
             $personRoleManagementService,
             $catalogService,
-            $viewTradeRolesAssertion
+            $viewTradeRolesAssertion,
+            $registeredCardService,
+            $twoFaFeatureToggle
         );
 
         return $controller;

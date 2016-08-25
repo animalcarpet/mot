@@ -88,12 +88,14 @@ public class CreateNewVehicleRecordConfirmPage extends Page {
     }
 
     public boolean isDeclarationTextDisplayed() {
-        return declarationElement.isDisplayed();
+        return PageInteractionHelper.isElementDisplayed(declarationElement);
     }
 
     public String getDeclarationText() {
         return declarationElement.getText();
     }
+
+    public boolean isPinBoxDisplayed() { return PageInteractionHelper.isElementDisplayed(oneTimePassword);}
 
     public CreateNewVehicleRecordConfirmPage setOneTimePassword(String pin)
     {

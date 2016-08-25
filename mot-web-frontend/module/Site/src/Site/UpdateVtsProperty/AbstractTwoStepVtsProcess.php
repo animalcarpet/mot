@@ -31,4 +31,19 @@ abstract class AbstractTwoStepVtsProcess extends AbstractSingleStepVtsProcess im
             $this->context->getPropertyName()
         );
     }
+
+    public function hasConfirmationPage()
+    {
+        return false;
+    }
+
+    public function redirectToConfirmationPage()
+    {
+
+    }
+
+    public function populateConfirmationPageVariables()
+    {
+
+    }
 }

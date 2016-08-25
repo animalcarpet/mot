@@ -128,7 +128,7 @@ public class CreateAepPage extends Page {
                 .changeTown(aep.getAddress().getTown());
     }
 
-    public ReviewCreateAepPage submitForm() {
+    public ReviewCreateAepPage reviewPrincipal() {
         submit.click();
         return new ReviewCreateAepPage(driver);
     }

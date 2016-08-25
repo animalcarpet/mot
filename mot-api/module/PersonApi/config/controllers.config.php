@@ -13,6 +13,7 @@ use PersonApi\Controller\PersonContactController;
 use PersonApi\Controller\PersonController;
 use PersonApi\Controller\PersonCurrentMotTestController;
 use PersonApi\Controller\PersonEventController;
+use PersonApi\Controller\PersonPendingRoleController;
 use PersonApi\Controller\PersonProfileRestrictedController;
 use PersonApi\Controller\PersonProfileUnrestrictedController;
 use PersonApi\Controller\PersonRoleController;
@@ -38,6 +39,7 @@ use PersonApi\Factory\Controller\PersonContactControllerFactory;
 use PersonApi\Factory\Controller\PersonControllerFactory;
 use PersonApi\Factory\Controller\PersonCurrentMotTestControllerFactory;
 use PersonApi\Factory\Controller\PersonEventControllerFactory;
+use PersonApi\Factory\Controller\PersonPendingRoleControllerFactory;
 use PersonApi\Factory\Controller\PersonProfileRestrictedControllerFactory;
 use PersonApi\Factory\Controller\PersonProfileUnrestrictedControllerFactory;
 use PersonApi\Factory\Controller\PersonRoleControllerFactory;
@@ -65,6 +67,7 @@ return [
         PersonContactController::class             => PersonContactControllerFactory::class,
         PersonCurrentMotTestController::class      => PersonCurrentMotTestControllerFactory::class,
         PersonEventController::class               => PersonEventControllerFactory::class,
+        PersonPendingRoleController::class         => PersonPendingRoleControllerFactory::class,
         PersonProfileRestrictedController::class   => PersonProfileRestrictedControllerFactory::class,
         PersonProfileUnrestrictedController::class => PersonProfileUnrestrictedControllerFactory::class,
         PersonSiteCountController::class           => PersonSiteCountControllerFactory::class,

@@ -309,4 +309,19 @@ abstract class QualificationDetailsAbstractProcess implements TwoStepProcessInte
     {
         return ContextProvider::YOUR_PROFILE_CONTEXT === $this->contextProvider->getContext();
     }
+
+    public function hasConfirmationPage()
+    {
+        return false;
+    }
+
+    public function redirectToConfirmationPage()
+    {
+        throw new \Exception('implement in child!');
+    }
+
+    public function populateConfirmationPageVariables()
+    {
+
+    }
 }

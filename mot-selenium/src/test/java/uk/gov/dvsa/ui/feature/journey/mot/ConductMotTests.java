@@ -39,7 +39,6 @@ public class ConductMotTests extends DslTest {
 
     @Test(testName = "OldRFRTest", groups = {"BVT"})
     public void passTestSuccessfullyWithNoRFR() throws IOException, URISyntaxException {
-
         //Given I am on the Test Results Entry Page
         TestResultsEntryPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester,vehicle);
 
@@ -50,11 +49,25 @@ public class ConductMotTests extends DslTest {
         assertThat(testResultsEntryPage.isPassNoticeDisplayed(), is(true));
 
         //Then I should be able to complete the Test Successfully
-        TestSummaryPage testSummaryPage = testResultsEntryPage.clickReviewTestButton();
-
-        TestCompletePage testCompletePage = testSummaryPage.finishTestAndPrint();
+        TestCompletePage testCompletePage = testResultsEntryPage.clickReviewTestButton().finishTest();
 
         assertThat(testCompletePage.verifyBackToHomeLinkDisplayed(), is(true));
+    }
+
+    @Test(testName = "2fa", groups = {"BVT", "Regression"}, description = "Two Factor Authenticated users " +
+            "should not be required to enter one time password")
+    public void oneTimePasswordBoxNotDisplayedForTwoFactorAuthTester() throws IOException, URISyntaxException {
+
+        //Given I am logged in as a tester authenticated by 2fa Card
+        User twoFactorTester = userData.createTester(site.getId());
+        motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
+
+        //When I complete an mot test
+        motUI.normalTest.conductTestPass(twoFactorTester, vehicleData.getNewVehicle(twoFactorTester));
+
+        //Then I should not see the PIN Box on test summary page
+        assertThat(motUI.normalTest.isOneTimeInputBoxDisplayed(), is(false));
+
     }
 
     @Test(testName = "OldRFRTest", groups = {"BVT"} )
@@ -68,6 +81,21 @@ public class ConductMotTests extends DslTest {
                 testResultsEntryPage.abandonMotTest(CancelTestReason.DANGEROUS_OR_CAUSE_DAMAGE);
 
         //Then I the test process should be cancelled and a VT30 Certificate generated message is displayed
+        assertThat(testAbandonedPage.isVT30messageDisplayed(), is(true));
+    }
+
+    @Test(testName = "2fa", groups = {"BVT", "Regression"} )
+    public void startAndAbandonTest2FaActiveUser() throws URISyntaxException, IOException {
+        //Given I am a 2FA activated user and I am on the Test Results Page
+        User twoFactorUser = userData.createTester(site.getId());
+        motUI.authentication.registerAndSignInTwoFactorUser(twoFactorUser);
+        TestResultsEntryPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(twoFactorUser, vehicle);
+
+        //When I abandon the test with a reason
+        TestAbandonedPage testAbandonedPage =
+                testResultsEntryPage.abandonMotTest2FaActiveUser(CancelTestReason.DANGEROUS_OR_CAUSE_DAMAGE);
+
+        //Then I the test process should be cancelled without needing a pin and a VT30 Certificate generated message is displayed
         assertThat(testAbandonedPage.isVT30messageDisplayed(), is(true));
     }
 

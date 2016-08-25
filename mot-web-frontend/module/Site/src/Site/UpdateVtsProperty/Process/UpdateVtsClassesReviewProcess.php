@@ -100,6 +100,14 @@ class UpdateVtsClassesReviewProcess extends AbstractTwoStepVtsProcess implements
         return $this->reviewPageButtonText;
     }
 
+    /**
+     * @return mixed
+     */
+    public function populateConfirmationPageVariables()
+    {
+        // TODO: Implement populateConfirmationPageVariables() method.
+    }
+
     public function getEditPageLede()
     {
         return null;

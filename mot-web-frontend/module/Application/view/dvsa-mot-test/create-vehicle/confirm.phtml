@@ -14,6 +14,7 @@
 <div class="row">
     <div class="col-sm-12">
         <h1>Confirm new vehicle record</h1>
+
         <h2>Vehicle record summary</h2>
     </div>
 </div>
@@ -30,8 +31,8 @@ echo $this->partial('infoMessages', array('getFromFlash' => true));
         echo $this->partial(
             'dvsa-mot-test/create-vehicle/_saved_data',
             [
-                'title'          => 'Vehicle identification',
-                'url'            => 'add-step-one',
+                'title' => 'Vehicle identification',
+                'url' => 'add-step-one',
                 'sectionData' => $sectionOneData,
             ]
         );
@@ -39,27 +40,37 @@ echo $this->partial('infoMessages', array('getFromFlash' => true));
         echo $this->partial(
             'dvsa-mot-test/create-vehicle/_saved_data',
             [
-                'title'          => 'Vehicle specification',
-                'url'            => 'add-step-two',
+                'title' => 'Vehicle specification',
+                'url' => 'add-step-two',
                 'sectionData' => $sectionTwoData,
             ]
         );
 
         ?>
-
-        <h2>Authenticate and start MOT test</h2>
-
+        <?php if (!$this->canTestWithoutOtp()): ?>
+            <h2>Authenticate and start MOT test</h2>
+        <?php endif ?>
         <form method="post" action="">
             <?php echo $this->csrfToken() ?>
             <?php
+            echo $this->partial(
+                'otpInput',
+                [
+                    'canTestWithoutOpt' => $canTestWithoutOtp,
+                    'errorMessage' => $this->otpErrorMessage,
+                    'shortErrorMessage' => $this->otpErrorShortMessage
+                ]
+            );
+            if ($this->canTestWithoutOtp()) {
                 echo $this->partial(
-                    'otpInput',
+                    '2faDeclaration',
                     [
-                        'canTestWithoutOpt' => $canTestWithoutOtp,
-                        'errorMessage' => $this->otpErrorMessage,
-                        'shortErrorMessage' => $this->otpErrorShortMessage
+                        'declarationMessage' => 'By saving this new vehicle record you confirm that the vehicle ' .
+                            'can\'t be found in the vehicle search and that you have made the record in line with ' .
+                            'DVSA conditions for MOT testing.'
                     ]
                 );
+            }
             ?>
 
             <nav class="module-content-navigation">

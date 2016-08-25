@@ -2,9 +2,8 @@
 
 namespace TestSupport\Helper;
 
+use Doctrine\ORM\EntityManager;
 use TestSupport\Model\Account;
-use TestSupport\Helper\TestSupportRestClientHelper;
-use DvsaCommon\UrlBuilder\SiteUrlBuilder;
 
 class SitePermissionsHelper
 {
@@ -19,17 +18,16 @@ class SitePermissionsHelper
     private $role;
 
     /**
-     * @var  TestSupportRestClientHelper
+     * @var  EntityManager
      */
-    private $testSupportRestClientHelper;
+    private $entityManager;
 
     /**
-     * @param TestSupportRestClientHelper $testSupportRestClientHelper
      * @see DvsaCommon\Enum\SiteBusinessRoleCode
      */
-    public function __construct(TestSupportRestClientHelper $testSupportRestClientHelper)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->testSupportRestClientHelper = $testSupportRestClientHelper;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -42,20 +40,22 @@ class SitePermissionsHelper
      */
     public function addPermissionToSites(Account $account, $role, array $siteIds)
     {
-        $data = [];
-        TestSupportAccessTokenManager::addSchemeManagerAsRequestorIfNecessary($data);
-        $restClient = $this->testSupportRestClientHelper->getJsonClient($data);
-
         foreach ($siteIds as $id) {
-            $positionPath = SiteUrlBuilder::site($id)->position()->toString();
+            $stmt = $this->entityManager->getConnection()->prepare("
+            INSERT INTO site_business_role_map (`site_id`, `person_id`, `site_business_role_id`, `status_id`, `created_by`)
+            VALUES (
+                :siteId,
+                :personId,
+                (SELECT `id` FROM `site_business_role` WHERE `code` = :role),
+                (SELECT `id` FROM `business_role_status` WHERE `code` = 'AC'),
+                1
+            )
+        ");
 
-            $return = $restClient->post($positionPath, [
-                'nomineeId' => $account->getPersonId(),
-                'roleCode'  => $role,
-            ]);
-            if (! isset($return['data'])) {
-                throw new \Exception('Failed to add permission to siteId '.$id);
-            }
+            $stmt->bindValue(':personId', $account->getPersonId());
+            $stmt->bindValue(':siteId', $id);
+            $stmt->bindValue(':role', $role);
+            $stmt->execute();
         }
     }
 }

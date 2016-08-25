@@ -11,6 +11,7 @@ use MailerApi\Service\MailerService;
 use UserApi\HelpDesk\Service\ResetClaimAccountService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Authentication\AuthenticationService;
 
 /**
  * Class ResetClaimAccountServiceFactory

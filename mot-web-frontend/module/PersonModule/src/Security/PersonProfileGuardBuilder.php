@@ -7,12 +7,14 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\Security;
 
+use Core\Service\MotFrontendAuthorisationServiceInterface;
 use Dashboard\Model\PersonalDetails;
 use Dashboard\Service\TradeRolesAssociationsService;
+use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Model\TesterAuthorisation;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
-use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
+use DvsaFeature\FeatureToggles;
 
 /**
  * PersonProfileGuardBuilder creates PersonProfileGuard instances.
@@ -20,7 +22,7 @@ use DvsaCommon\Auth\MotIdentityProviderInterface;
 class PersonProfileGuardBuilder
 {
     /**
-     * @var MotAuthorisationServiceInterface
+     * @var MotFrontendAuthorisationServiceInterface
      */
     private $authorisationService;
 
@@ -40,22 +42,28 @@ class PersonProfileGuardBuilder
     private $tradeRolesAndAssociationsService;
 
     /**
-     * PersonProfileGuardBuilder constructor.
-     *
-     * @param MotAuthorisationServiceInterface $authorisationService
-     * @param MotIdentityProviderInterface     $identityProvider
-     * @param TesterGroupAuthorisationMapper   $testerGroupAuthorisationMapper
-     * @param TradeRolesAssociationsService    $tradeRolesAndAssociationsService
+     * @var TwoFaFeatureToggle
      */
-    public function __construct(MotAuthorisationServiceInterface $authorisationService,
+    private $twoFeatureToggle;
+
+    /**
+     * @param MotFrontendAuthorisationServiceInterface $authorisationService
+     * @param MotIdentityProviderInterface $identityProvider
+     * @param TesterGroupAuthorisationMapper $testerGroupAuthorisationMapper
+     * @param TradeRolesAssociationsService $tradeRolesAndAssociationsService
+     * @param TwoFaFeatureToggle $twoFeatureToggle
+     */
+    public function __construct(MotFrontendAuthorisationServiceInterface $authorisationService,
                                 MotIdentityProviderInterface $identityProvider,
                                 TesterGroupAuthorisationMapper $testerGroupAuthorisationMapper,
-                                TradeRolesAssociationsService $tradeRolesAndAssociationsService)
+                                TradeRolesAssociationsService $tradeRolesAndAssociationsService,
+                                TwoFaFeatureToggle $twoFeatureToggle)
     {
         $this->authorisationService = $authorisationService;
         $this->identityProvider = $identityProvider;
         $this->testerGroupAuthorisationMapper = $testerGroupAuthorisationMapper;
         $this->tradeRolesAndAssociationsService = $tradeRolesAndAssociationsService;
+        $this->twoFeatureToggle = $twoFeatureToggle;
     }
 
     /**
@@ -92,6 +100,6 @@ class PersonProfileGuardBuilder
         $tradeRolesAndAssociations = $this->getTradeRolesAndAssociations($targetPersonId);
 
         return new PersonProfileGuard($this->authorisationService, $this->identityProvider,
-            $targetPersonDetails, $testerAuthorisation, $tradeRolesAndAssociations, $context);
+            $targetPersonDetails, $testerAuthorisation, $tradeRolesAndAssociations, $context, $this->twoFeatureToggle);
     }
 }

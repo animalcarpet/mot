@@ -39,11 +39,21 @@ public class ReTestSummaryPage extends Page {
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE, PAGE_TITLE_REINSPECTION);
     }
 
-    public ReTestCompletePage finishTestAndPrint(){
-        pinInputField.sendKeys("123456");
+    public ReTestCompletePage finishTest(){
+        if(PageInteractionHelper.isElementDisplayed(pinInputField)) {
+            pinInputField.sendKeys("123456");
+        }
         finishTestButton.click();
 
         return new ReTestCompletePage(driver);
+    }
+
+    private void enterOneTimePassword(String oneTimePassword) {
+        if(oneTimePassword == null) {
+            FormDataHelper.enterText(pinInputField, "123456");
+        } else {
+            FormDataHelper.enterText(pinInputField, oneTimePassword);
+        }
     }
 
     public ReTestSummaryPage fillSiteIdInput(String siteId) {
@@ -71,7 +81,7 @@ public class ReTestSummaryPage extends Page {
     }
 
     public boolean isDeclarationTextDisplayed() {
-        return declarationElement.isDisplayed();
+        return PageInteractionHelper.isElementDisplayed(declarationElement);
     }
 
     public String getDeclarationText() {

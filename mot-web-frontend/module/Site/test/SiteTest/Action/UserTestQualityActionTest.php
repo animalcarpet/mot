@@ -159,7 +159,7 @@ class UserTestQualityActionTest extends PHPUnit_Framework_TestCase
         $this->assertNotNull($result->layout()->getTemplate());
 
         $this->assertSame(
-            ['breadcrumbs' => $this->breadcrumbs + [UserTestQualityViewModelTest::DISPLAY_NAME => null]],
+            $this->breadcrumbs + [UserTestQualityViewModelTest::DISPLAY_NAME => null],
             $result->layout()->getBreadcrumbs()
         );
     }

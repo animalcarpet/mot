@@ -166,11 +166,20 @@ class UserRoleServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals([], $roles['system']['roles']);
         $this->assertEquals([], $roles['organisations']);
+
         $this->assertEquals(
             [
                 'name' => 'SITE NAME',
                 'number' => 'SITE1234',
                 'address' => 'Stoke Gifford Office, Test Road, Bristol, Bristol 2, BS12',
+                'addressParts' => [
+                    'addressLine1' => 'Stoke Gifford Office',
+                    'addressLine2' => 'Test Road',
+                    'addressLine3' => 'Bristol',
+                    'addressLine4' => 'Bristol 2',
+                    'town' => '',
+                    'postcode' => 'BS12',
+                ],
                 'roles' => [
                     'ROLE'
                 ]
@@ -197,6 +206,27 @@ class UserRoleServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->siteRoleMapRepository->expects($this->any())
             ->method('getActiveUserRoles')
+            ->willReturn($result);
+    }
+
+    private function personSystemPendingRoleMapRepositoryWithResults($result)
+    {
+        $this->personSystemRoleMapRepository->expects($this->any())
+            ->method('getPendingUserRoles')
+            ->willReturn($result);
+    }
+
+    private function organisationPendingRoleMapRepositoryWithResults($result)
+    {
+        $this->organisationRoleMapRepository->expects($this->any())
+            ->method('getPendingUserRoles')
+            ->willReturn($result);
+    }
+
+    private function sitePendingRoleMapRepositoryWithResults($result)
+    {
+        $this->siteRoleMapRepository->expects($this->any())
+            ->method('getPendingUserRoles')
             ->willReturn($result);
     }
 

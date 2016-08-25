@@ -1,0 +1,34 @@
+<?php
+use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\ViewModel\RegisterCardHardStopViewModel;
+
+$this->layout('layout/layout-govuk.phtml');
+$this->layout()->setVariables([
+    'pageTitle' => '' /* design required empty title */,
+]);
+/** @var  RegisterCardHardStopViewModel $viewModel */
+?>
+
+<div></div>
+<div class="banner--error">
+    <span class="banner__heading-large">Activate your security now</span>
+    <span>You can only continue with an active card</span>
+</div>
+<div>
+    <p class="lede">You need an active security card to continue using the MOT testing service.
+    </p>
+    <a id="activate-card" href="<?php echo $this->url('register-card'); ?>">Activate your security card</a>
+    <h3 class="heading-medium">Problems with your security card</h3
+    <p>If you haven’t received a card in the post or are having trouble with activation, contact the helpdesk.</p>
+    <details role="group" >
+        <summary role="button" aria-controls="details-content-0" aria-expanded="true" tabindex="0">
+            <span class="summary" id="contact-helpdesk">Contact the helpdesk</span>
+        </summary>
+        <div class="panel-indent" id="details-content-0" aria-hidden="false" style="display: block;">
+            <p><?php echo $this->partial('partial/gds/general/contactHelpdesk', ['config' => $viewModel->getHelpdeskConfig()]); ?></p>
+        </div>
+
+    </details>
+    <nav class="content-navigation">
+        <a href="<?php echo $this->url('logout'); ?>" >Cancel and return to sign in</a>
+    </nav>
+</div>

@@ -41,10 +41,10 @@ class Account
         }
 
         $this->setPersonId(ArrayUtils::get($data, 'personId'));
-        $this->setUsername(ArrayUtils::get($data, 'username'));
-        $this->setPassword(ArrayUtils::get($data, 'password'));
-        $this->setFirstName(ArrayUtils::tryGet($data, 'firstName'));
-        $this->setSurname(ArrayUtils::tryGet($data, 'surname'));
+        $this->setUsername(ArrayUtils::tryGet($data, 'username', ''));
+        $this->setPassword(ArrayUtils::tryGet($data, 'password', ''));
+        $this->setFirstName(ArrayUtils::tryGet($data, 'firstName', ''));
+        $this->setSurname(ArrayUtils::tryGet($data, 'surname', ''));
     }
 
     /**

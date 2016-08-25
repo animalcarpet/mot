@@ -2,15 +2,19 @@ package uk.gov.dvsa.ui.pages.profile.qualificationdetails;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
 public class QualificationDetailsConfirmationPage extends Page {
+    public static final String PATH = "/your-profile/qualification-details/a/add/confirmation";
 
-    private static final String PAGE_TITLE = "Review certificate and demo test details";
+    @FindBy(id = "qualification-details-confirmation-header") private WebElement header;
+    @FindBy(id = "order-card-section") private WebElement orderCardSection;
+    @FindBy(css = "a[href*='security-card-order/new']") private WebElement orderCardLink;
+    @FindBy(id = "return-to-qualification-details") private WebElement returnToQualificationDetails;
 
-    @FindBy (id = "confirm-button") private WebElement submit;
 
     public QualificationDetailsConfirmationPage(MotAppDriver driver) {
         super(driver);
@@ -19,11 +23,15 @@ public class QualificationDetailsConfirmationPage extends Page {
 
     @Override
     protected boolean selfVerify() {
-        return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
+        return PageInteractionHelper.isElementDisplayed(header);
     }
 
-    public QualificationDetailsPage submitConfirmChanges(){
-        submit.click();
+    public QualificationDetailsPage returnToQualificationDetailsPage() {
+        returnToQualificationDetails.click();
         return new QualificationDetailsPage(driver);
+    }
+
+    public boolean isOrderCardLinkDisplayed() {
+        return PageInteractionHelper.isElementDisplayed(orderCardLink);
     }
 }
