@@ -31,9 +31,15 @@
 <div class="issue-lists" id="listContainer">
     <div class="browse--{{ browseColumns }}">
         {% for column in defectCategories.columns %}
-            {% if loop.first %}
+            {# After three columns are displayed using the "browse__cats" class, use the "browse__cats--sub" class
+               for all following columns to maintain the column layout when there are five columns. #}
+            {% if loop.index <= 3 %}
                 <div class="browse__cats">
-                    <h3 class="browse__title hide-small">Categories</h3>
+                    {% if loop.first %}
+                        <h3 class="browse__title hide-small">Categories</h3>
+                    {% else %}
+                        <h3 class="browse__title hide-small">{{ column.columnTitle }}</h3>
+                    {% endif %}
                     <ul class="browse__list">
                         {% for componentCategory in column.componentCategories %}
                             <li>

@@ -1144,17 +1144,17 @@
         },
         {
             "name": "dvsa/web-frontend-assets",
-            "version": "v0.8.4",
+            "version": "v0.9.0",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/web-frontend-assets.git",
-                "reference": "980fa67fbae55fdb7135c776b34fc87e06319918"
+                "reference": "2e2b71dcd554b134d799939ed12d1866d5740574"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/dvsa-web-frontend-assets-v0.8.4-715943.tar",
-                "reference": "980fa67fbae55fdb7135c776b34fc87e06319918",
-                "shasum": "104b180e85a842b2e329e2646ce5cb86227b20f5"
+                "url": "https://packages.motdev.org.uk//dist/dvsa-web-frontend-assets-v0.9.0-6184ac.tar",
+                "reference": "2e2b71dcd554b134d799939ed12d1866d5740574",
+                "shasum": "25a5ff2b5535de646bf49197c12280355b3a44a7"
             },
             "type": "library",
             "authors": [
@@ -1163,7 +1163,7 @@
                     "email": ""
                 }
             ],
-            "time": "2016-08-03 06:37:54"
+            "time": "2016-08-12 07:41:13"
         },
         {
             "name": "erusev/parsedown",
