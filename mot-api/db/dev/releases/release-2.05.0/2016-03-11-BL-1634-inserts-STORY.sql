@@ -1,4 +1,5 @@
-SET @app_user_id = (SELECT `id` FROM `person` WHERE `username` = 'static data');
+SET @app_user_id = (SELECT `id` FROM `person` WHERE `username` = 'static data' OR `user_reference` = 'Static Data');
+
 INSERT INTO `security_card_status_lookup`
 (`code`, `name`, `created_by`, `created_on`, `last_updated_by`, `last_updated_on`, `version`)
 VALUES
