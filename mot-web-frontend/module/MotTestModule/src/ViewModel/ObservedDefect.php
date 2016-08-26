@@ -4,9 +4,9 @@ namespace Dvsa\Mot\Frontend\MotTestModule\ViewModel;
 
 /**
  * A defect that has been observed on a vehicle during a test, as opposed to a
- * potential defect. Once a defect has been added to a vehicle, it becomes an 
+ * potential defect. Once a defect has been added to a vehicle, it becomes an
  * ObservedDefect.
- * 
+ *
  * @see Defect
  */
 class ObservedDefect
@@ -98,6 +98,13 @@ class ObservedDefect
     private $breadcrumb = '';
 
     /**
+     * This specifies if the defect was added in the first MOT test (before an MOT retest)
+     *
+     * @var bool
+     */
+    private $onOriginalTest;
+
+    /**
      * ObservedDefect constructor.
      *
      * @param string $defectType
@@ -105,10 +112,11 @@ class ObservedDefect
      * @param string $longitudinalLocation
      * @param string $verticalLocation
      * @param string $userComment
-     * @param bool   $dangerous
+     * @param bool $dangerous
      * @param string $name
-     * @param int    $id
-     * @param int    $defectId
+     * @param int $id
+     * @param int $defectId
+     * @param bool $onOriginalTest
      */
     public function __construct(
         $defectType,
@@ -119,7 +127,8 @@ class ObservedDefect
         $dangerous,
         $name,
         $id,
-        $defectId
+        $defectId,
+        $onOriginalTest
     ) {
         $this->defectType = $defectType;
         $this->lateralLocation = $lateralLocation;
@@ -130,13 +139,14 @@ class ObservedDefect
         $this->name = $name;
         $this->id = $id;
         $this->defectId = $defectId;
+        $this->onOriginalTest = $onOriginalTest;
     }
 
     /**
      * Whether or not the defect has had its location recorded.
      * If $lateralLocation, $longitudinalLocation and $verticalLocation are
      * empty, no location is available.
-     * 
+     *
      * @return bool
      */
     public function hasLocation()
@@ -247,6 +257,14 @@ class ObservedDefect
     }
 
     /**
+     * @return boolean
+     */
+    public function isOnOriginalTest()
+    {
+        return $this->onOriginalTest;
+    }
+
+    /**
      * Unfortunately, we have no way of knowing what the breadcrumb is on
      * construction. This is due to the breadcrumb information coming from
      * a different API endpoint.
@@ -256,5 +274,13 @@ class ObservedDefect
     public function setBreadcrumb($breadcrumb)
     {
         $this->breadcrumb = $breadcrumb;
+    }
+
+    /**
+     * @param boolean $onOriginalTest
+     */
+    public function setOnOriginalTest($onOriginalTest)
+    {
+        $this->onOriginalTest = $onOriginalTest;
     }
 }

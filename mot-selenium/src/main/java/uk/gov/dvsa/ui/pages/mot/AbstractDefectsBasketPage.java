@@ -13,10 +13,20 @@ public abstract class AbstractDefectsBasketPage extends AbstractReasonsForReject
         super(driver);
     }
 
+    public void toggleShowDefectBasketLink() {
+        showDefectsLink.click();
+    }
+
     @Override
     public RemoveDefectPage navigateToRemoveDefectPage(Defect defect) {
         this.toggleShowDefectBasketLink();
         return super.navigateToRemoveDefectPage(defect);
+    }
+
+    @Override
+    public EditDefectPage navigateToEditDefectPage(Defect defect) {
+        this.toggleShowDefectBasketLink();
+        return super.navigateToEditDefectPage(defect);
     }
 
     @Override
@@ -25,7 +35,9 @@ public abstract class AbstractDefectsBasketPage extends AbstractReasonsForReject
         return super.isDefectInReasonsForRejection(defect);
     }
 
-    public void toggleShowDefectBasketLink() {
-        showDefectsLink.click();
+    @Override
+    public boolean isDefectDangerous(Defect defect) {
+        this.toggleShowDefectBasketLink();
+        return super.isDefectDangerous(defect);
     }
 }

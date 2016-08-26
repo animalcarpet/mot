@@ -15,6 +15,7 @@ use DvsaCommonApi\Service\Exception\RequiredFieldException;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\ReasonForRejection;
+use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Service\Validator\MotTestValidator;
 use Zend\Db\TableGateway\Exception\RuntimeException;
 
@@ -32,10 +33,14 @@ class MotTestReasonForRejectionService extends AbstractService
 
     /** @var MotTestValidator $motTestValidator */
     protected $motTestValidator;
-    /** @var AuthorisationServiceInterface */
+
+    /** @var AuthorisationServiceInterface $authService */
     protected $authService;
-    /** @var TestItemSelectorService */
+
+    /** @var TestItemSelectorService $testItemSelectorService */
     protected $testItemSelectorService;
+
+    /** @var ApiPerformMotTestAssertion $performMotTestAssertion  */
     private $performMotTestAssertion;
 
     public function __construct(
@@ -54,25 +59,25 @@ class MotTestReasonForRejectionService extends AbstractService
     }
 
     /**
-     * @param int $motTestRfrId
-     *
-     * @throws NotFoundException If the ReasonForRejection entity is not found in the database.
+     * @param int $defectId
      *
      * @return ReasonForRejection
+     *
+     * @throws NotFoundException If the ReasonForRejection entity is not found in the database.
      */
-    public function getDefect($motTestRfrId)
+    public function getDefect($defectId)
     {
         /** @var ReasonForRejection $reasonForRejection */
-        $reasonForRejection = $this
+        $defect = $this
             ->entityManager
             ->getRepository(ReasonForRejection::class)
-            ->find($motTestRfrId);
+            ->find($defectId);
 
-        if (!$reasonForRejection) {
-            throw new NotFoundException("Reason for rejection", $motTestRfrId);
+        if (!$defect) {
+            throw new NotFoundException("Defect", $defectId);
         }
 
-        return $reasonForRejection;
+        return $defect;
     }
 
     public function addReasonForRejection(MotTest $motTest, $data)
@@ -100,6 +105,7 @@ class MotTestReasonForRejectionService extends AbstractService
     {
         /** @var MotTestReasonForRejection $rfr */
         $rfr = $this->entityManager->find(MotTestReasonForRejection::class, $motTestRfrId);
+
         $motTest = $rfr->getMotTest();
 
         if($this->isTrainingTest($motTest)){

@@ -124,7 +124,7 @@ class AddDefectController extends AbstractDvsaMotTestController
                     'locationLateral' => ($locationLateral !== 'n/a') ? $locationLateral : null,
                     'locationLongitudinal' => ($locationLongitudinal !== 'n/a') ? $locationLongitudinal : null,
                     'locationVertical' => ($locationVertical !== 'n/a') ? $locationVertical : null,
-                    'comment' => $comment,
+                    'comment' => trim($comment),
                     'failureDangerous' => $failureDangerous,
                 ];
 

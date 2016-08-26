@@ -86,7 +86,8 @@ class ObservedDefectCollection
                 $failure['failureDangerous'],
                 $failure['testItemSelectorDescription'].' '.$failure['failureText'],
                 $failure['id'],
-                $failure['rfrId']
+                $failure['rfrId'],
+                $failure['onOriginalTest']
             );
 
             array_push($failures, $observedDefect);
@@ -102,7 +103,8 @@ class ObservedDefectCollection
                 $loopPrs['failureDangerous'],
                 $loopPrs['testItemSelectorDescription'].' '.$loopPrs['failureText'],
                 $loopPrs['id'],
-                $loopPrs['rfrId']
+                $loopPrs['rfrId'],
+                $loopPrs['onOriginalTest']
             );
 
             array_push($prs, $observedDefect);
@@ -118,7 +120,8 @@ class ObservedDefectCollection
                 $advisory['failureDangerous'],
                 $advisory['testItemSelectorDescription'].' '.$advisory['failureText'],
                 $advisory['id'],
-                $advisory['rfrId']
+                $advisory['rfrId'],
+                $advisory['onOriginalTest']
             );
 
             array_push($advisories, $observedDefect);

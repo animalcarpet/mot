@@ -30,7 +30,7 @@
         {% endif %}
     </div>
     <div id="rfrList" class="js-hidden">
-        {% include '/defects/observed-defects.twig' with {'observedDefects': observedDefects} %}
+        {% include '/defects/observed-defects.twig' with {'observedDefects': observedDefects, 'motTestNumber': motTest.motTestNumber} %}
     </div>
 </div>
 

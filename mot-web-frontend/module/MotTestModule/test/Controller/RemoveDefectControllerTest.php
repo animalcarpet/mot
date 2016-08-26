@@ -186,6 +186,7 @@ class RemoveDefectControllerTest extends AbstractFrontendControllerTestCase
             $rfr['failureText'] = '';
             $rfr['id'] = $defectId;
             $rfr['rfrId'] = '';
+            $rfr['onOriginalTest'] = '';
 
             $failArray[] = $rfr;
             ++$defectId;
@@ -203,6 +204,7 @@ class RemoveDefectControllerTest extends AbstractFrontendControllerTestCase
             $rfr['failureText'] = '';
             $rfr['id'] = $defectId;
             $rfr['rfrId'] = '';
+            $rfr['onOriginalTest'] = '';
 
             $prsArray[] = $rfr;
 
@@ -221,6 +223,7 @@ class RemoveDefectControllerTest extends AbstractFrontendControllerTestCase
             $rfr['failureText'] = '';
             $rfr['id'] = $defectId;
             $rfr['rfrId'] = '';
+            $rfr['onOriginalTest'] = '';
 
             $advisoryArray[] = $rfr;
             ++$defectId;

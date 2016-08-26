@@ -17,6 +17,7 @@ use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Constants\Role;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Dto\Common\MotTestDto;
+use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
@@ -99,12 +100,14 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
 
         $isDemo = false;
         $isReinspection = false;
+        $isRetest = false;
 
         try {
             $motTest = $this->getMotTestFromApi($motTestNumber);
             $testType = $motTest->getTestType();
             $isDemo = MotTestType::isDemo($testType->getCode());
             $isReinspection = MotTestType::isReinspection($testType->getCode());
+            $isRetest = $motTest->getTestType()->getCode() === MotTestTypeCode::RE_TEST;
             $defectCategories = $this->getDefectCategories($motTestNumber, $categoryId);
         } catch (RestApplicationException $e) {
             $this->addErrorMessages($e->getDisplayMessages());
@@ -112,7 +115,7 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
 
         if (true === $this->isDefectsParent($defectCategories)) {
             return $this->defectsForCategoryAction($motTestNumber, $defectCategories,
-                $motTest, $isDemo, $isReinspection, $categoryId);
+                $motTest, $isDemo, $isReinspection, $categoryId, $isRetest);
         }
 
         $this->enableGdsLayout('Defect categories', '');
@@ -133,6 +136,7 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
             'observedDefects' => $observedDefects,
             'defectCategories' => $defectCategories,
             'browseColumns' => $defectCategories->getColumnCountForHtml(),
+            'isRetest' => $isRetest,
         ]);
     }
 
@@ -158,7 +162,8 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
         MotTestDto $motTest,
         $isDemo,
         $isReinspection,
-        $categoryId
+        $categoryId,
+        $isRetest
     ) {
         $this->enableGdsLayout('Defects', '');
 
@@ -185,6 +190,7 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
             'defects' => $defects->getDefects(),
             'contentBreadcrumbs' => $contentBreadcrumbs,
             'observedDefects' => $observedDefects,
+            'isRetest' => $isRetest,
         ]);
     }
 
