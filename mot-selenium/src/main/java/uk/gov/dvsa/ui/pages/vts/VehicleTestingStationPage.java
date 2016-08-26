@@ -7,7 +7,6 @@ import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.ConfigHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.*;
-import uk.gov.dvsa.ui.pages.mot.MotTestCertificatesPage;
 import uk.gov.dvsa.ui.pages.mot.TestShortSummaryPage;
 import uk.gov.dvsa.ui.pages.profile.ProfilePage;
 import uk.gov.dvsa.ui.pages.vts.ChangeDetails.*;
@@ -45,7 +44,6 @@ public class VehicleTestingStationPage extends Page {
     @FindBy(id = "authorisedExaminer") private WebElement authorisedExaminer;
     @FindBy(id = "site-number") private WebElement vtsNumber;
     @FindBy(id = "site-name") private WebElement vtsName;
-    @FindBy(id = "mot-test-recent-certificates-link") private WebElement motTestRecentCertificatesLink;
     @FindBy(id = "change-site-details") private WebElement changeSiteDetailsLink;
     @FindBy(id = "test-classes") private WebElement vtsClasseValue;
     @FindBy(id = "site-type") private WebElement vtsTypeValue;
@@ -108,15 +106,6 @@ public class VehicleTestingStationPage extends Page {
 
     public void clickOnViewHistoryLink() {
         viewEventHistoryLink.click();
-    }
-
-    public MotTestCertificatesPage clickOnMotTestRecentCertificatesLink() {
-        motTestRecentCertificatesLink.click();
-        return new MotTestCertificatesPage(driver);
-    }
-
-    public boolean isMotTestRecentCertificatesLink() {
-        return motTestRecentCertificatesLink.isDisplayed();
     }
 
     public boolean isTesterDisplayed(String id) {

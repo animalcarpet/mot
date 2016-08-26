@@ -11,7 +11,6 @@ class MotTest extends AbstractMotTest
     const PATH = 'mot-test';
     const PATH_GET_CERT = 'mot-test-certificate?number=651157444199';
     const PATH_SEARCH = 'mot-test-search';
-    const PATH_RECENT_CERTIFICATE = 'mot-recent-certificate';
     const PATH_SURVEY = '/survey';
     const PATH_SURVEY_REPORTS = '/reports';
 
@@ -104,25 +103,6 @@ class MotTest extends AbstractMotTest
             $token,
             MotApi::METHOD_GET,
             self::PATH . '/' . $motTestNumber
-        );
-    }
-
-    public function getRecentTestsCertificateDetails($token, $vtsId)
-    {
-        $query = http_build_query(["vtsId" => $vtsId, "firstResult" => 0, "maxResult" => 20]);
-        return $this->sendRequest(
-            $token,
-            MotApi::METHOD_GET,
-            self::PATH_RECENT_CERTIFICATE . '?' . $query
-        );
-    }
-
-    public function getRecentTestCertificateDetails($token, $vtsId)
-    {
-        return $this->sendRequest(
-            $token,
-            MotApi::METHOD_GET,
-            self::PATH_RECENT_CERTIFICATE . '/' . $vtsId
         );
     }
 

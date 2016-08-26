@@ -129,7 +129,6 @@ class UserHomeController extends AbstractAuthActionController
         $return = array_merge(
             [
                 'dashboard' => $dashboard,
-                'jasperAsyncEnabled' => $this->isFeatureEnabled(FeatureToggle::JASPER_ASYNC),
             ],
             $authenticatedData,
             [

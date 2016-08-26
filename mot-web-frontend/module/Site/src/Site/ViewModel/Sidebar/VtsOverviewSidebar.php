@@ -99,13 +99,6 @@ class VtsOverviewSidebar extends GeneralSidebar
         return $this->authorisationService->isGranted(PermissionInSystem::EVENT_READ);
     }
 
-    private function canSeeRecentCertificates()
-    {
-        $isJasperAsyncEnabled = $this->featureToggles->isEnabled(FeatureToggle::JASPER_ASYNC);
-        $permittedToReadCertificates = $this->authorisationService->isGrantedAtSite(PermissionAtSite::RECENT_CERTIFICATE_PRINT, $this->vtsId);
-        return $permittedToReadCertificates && $isJasperAsyncEnabled;
-    }
-
     private function canViewRiskAssessment()
     {
         return $this->authorisationService->isGrantedAtSite(
@@ -139,10 +132,6 @@ class VtsOverviewSidebar extends GeneralSidebar
             $relatedLinks->addLink($this->createTestLogsLink());
         }
 
-        if ($this->canSeeRecentCertificates()) {
-            $relatedLinks->addLink($this->createRecentCertificatesLink());
-        }
-
         if ($this->canAssessSite()) {
             $relatedLinks->addLink($this->createSiteAssessmentLink());
         }
@@ -160,12 +149,6 @@ class VtsOverviewSidebar extends GeneralSidebar
     {
         $eventsUrl = '/event/list/site/' . $this->vtsId;
         return new GeneralSidebarLink('event-history', 'Events history', $eventsUrl);
-    }
-
-    private function createRecentCertificatesLink()
-    {
-        $motCertsUrl = '/vehicle-testing-station/' . $this->vtsId . '/mot-test-certificates';
-        return new GeneralSidebarLink('mot-test-recent-certificates-link', 'MOT test certificates', $motCertsUrl);
     }
 
     private function createTestLogsLink()

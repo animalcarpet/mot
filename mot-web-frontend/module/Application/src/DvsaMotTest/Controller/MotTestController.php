@@ -628,16 +628,8 @@ class MotTestController extends AbstractDvsaMotTestController
                     ),
             ]
         );
-        /* @var MotTestDto $motDetails */
-        $isDemoMotTest = ($motDetails->getTestType()->getCode() === MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING);
 
-        if (true === $model->isReinspection
-            || $isDemoMotTest
-            || !$this->isFeatureEnabled(FeatureToggle::JASPER_ASYNC)) {
-            $model->setTemplate('dvsa-mot-test/mot-test/print-test-result');
-        } else {
-            $this->layout('layout/layout-govuk.phtml');
-        }
+        $model->setTemplate('dvsa-mot-test/mot-test/print-test-result');
 
         return $model;
     }
