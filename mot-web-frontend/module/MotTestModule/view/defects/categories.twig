@@ -6,6 +6,14 @@
     </ul>
 </header>
 
+{% if flashMessenger().hasSuccessMessages() %}
+    {% for message in flashMessenger().getSuccessMessages() %}
+        <div class="message--success" id="validation-message--success">
+            <p>{{ message|raw }}</p>
+        </div>
+    {% endfor %}
+{% endif %}
+
 <div class="defect-summary">
     <div class="defect-summary__total">
         <h2 class="defect-summary__total-heading">Defects</h2>
@@ -22,7 +30,7 @@
         {% endif %}
     </div>
     <div id="rfrList" class="js-hidden">
-        {% include '/defects/observed-defects.twig' with {'observedDefects': observedDefects} %}
+        {% include '/defects/observed-defects.twig' with {'observedDefects': observedDefects, 'motTestNumber': motTest.motTestNumber} %}
     </div>
 </div>
 

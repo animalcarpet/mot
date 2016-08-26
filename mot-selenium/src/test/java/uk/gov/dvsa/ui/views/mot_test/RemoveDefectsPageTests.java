@@ -8,6 +8,7 @@ import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
+import uk.gov.dvsa.helper.DefectsTestsDataProvider;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.mot.DefectsPage;
 import uk.gov.dvsa.ui.pages.mot.RemoveDefectPage;
@@ -21,17 +22,22 @@ import static org.hamcrest.core.Is.is;
 
 public class RemoveDefectsPageTests extends DslTest {
 
-    private User tester;
-    private Vehicle vehicle;
+    protected User tester;
+    protected Vehicle vehicle;
 
     @BeforeMethod(alwaysRun = true)
-    public void setUp() throws IOException {
+    protected void setUp() throws IOException {
         Site site = siteData.createSite();
         tester = userData.createTester(site.getId());
         vehicle = vehicleData.getNewVehicle(tester);
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-2405"}, dataProvider = "getData",
+    @DataProvider(name = "getDefectArray")
+    public Object[][] getDefectArray() throws IOException {
+        return DefectsTestsDataProvider.getDefectArray();
+    }
+
+    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-2405"}, dataProvider = "getDefectArray",
             description = "Checks that the Remove a defect page has the correct breadcrumb and button text")
     public void testRemoveDefectPageElements(Defect defect) throws IOException, URISyntaxException {
 
@@ -49,7 +55,7 @@ public class RemoveDefectsPageTests extends DslTest {
     }
 
     @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-2405"}, expectedExceptions = TimeoutException.class,
-            dataProvider = "getData", description = "Checks that you can remove a defect from the defects screen")
+            dataProvider = "getDefectArray", description = "Checks that you can remove a defect from the defects screen")
     public void testCanRemoveADefectFromDefectScreenAsTester(Defect defect) throws IOException, URISyntaxException {
 
         // Given I am on the defects screen with a defect as a tester
@@ -65,7 +71,7 @@ public class RemoveDefectsPageTests extends DslTest {
         assertThat(defectsPage.isDefectInReasonsForRejection(defect), is(false));
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-2405"}, dataProvider = "getData",
+    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-2405"}, dataProvider = "getDefectArray",
             description = "Checks that you can return to the defects screen without removing a defect")
     public void testCanReturnToDefectsScreenAsTester(Defect defect) throws IOException, URISyntaxException {
 
@@ -80,7 +86,7 @@ public class RemoveDefectsPageTests extends DslTest {
     }
 
     @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-2405"}, expectedExceptions = TimeoutException.class,
-            dataProvider = "getData", description = "Checks that you can remove a defect from the test results screen")
+            dataProvider = "getDefectArray", description = "Checks that you can remove a defect from the test results screen")
     public void testCanRemoveADefectFromTestResultsScreenAsTester(Defect defect) throws IOException, URISyntaxException {
 
         // Given I am on the test results screen with a defect as a tester
@@ -97,7 +103,7 @@ public class RemoveDefectsPageTests extends DslTest {
         assertThat(testResultsEntryNewPage.isDefectInReasonsForRejection(defect), is(false));
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-2405"}, dataProvider = "getData",
+    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-2405"}, dataProvider = "getDefectArray",
             description = "Checks that you can remove a defect from the test results screen")
     public void testCanReturnToTestResultsScreenAsTester(Defect defect) throws IOException, URISyntaxException {
 
@@ -110,24 +116,5 @@ public class RemoveDefectsPageTests extends DslTest {
 
         // Then I am returned to the test results entry page and the defect still remains
         assertThat(testResultsEntryNewPage.isDefectInReasonsForRejection(defect), is(true));
-    }
-
-    @DataProvider(name = "getData")
-    private Object[][] getData() throws IOException {
-        Object[][] data = new Object[3][1];
-
-        // Advisory
-        data[0][0] = new Defect(new String[] {"Brakes", "Brake performance", "Decelerometer", "Brake operation"}, "grabbing slightly",
-                Defect.DefectType.Advisory, "Service brake grabbing slightly");
-
-        // PRS
-        data[1][0] = new Defect(new String[] {"Tyres", "Condition"}, "has ply or cords exposed",
-                Defect.DefectType.PRS, "Tyre has ply or cords exposed");
-
-        // Failure
-        data[2][0] = new Defect(new String[] {"Drivers view of the road", "Windscreen"}, "is of a temporary type",
-                Defect.DefectType.Failure, "Windscreen is of a temporary type");
-
-        return data;
     }
 }

@@ -6,7 +6,6 @@ import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
-import uk.gov.dvsa.ui.pages.Page;
 
 public class DefectsPage extends AbstractDefectsBasketPage {
 
@@ -50,10 +49,5 @@ public class DefectsPage extends AbstractDefectsBasketPage {
     public DefectCategoriesPage clickReturnToDefectCategoriesLink() {
         returnToDefectCategoriesLink.click();
         return new DefectCategoriesPage(driver);
-    }
-
-    public boolean isDefectAddedSuccessMessageDisplayed(Defect defect) {
-        return validationMessage.getText().equals(
-                String.format("This %s has been added:\n%s", defect.getAddOrRemovalType(), defect.getAddOrRemoveName()));
     }
 }

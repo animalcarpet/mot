@@ -85,7 +85,7 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
 
         $this->motTestMock = $this->getMockBuilder(MotTestDto::class)->getMock();
         $this->motTestMock
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('getTestType')
             ->willReturn($motTestTypeMock);
         $this->motTestMock
@@ -148,7 +148,7 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
 
         $this->motTestMock = $this->getMockBuilder(MotTestDto::class)->getMock();
         $this->motTestMock
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('getTestType')
             ->willReturn($motTestTypeMock);
         $this->motTestMock
@@ -211,7 +211,7 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
 
         $this->motTestMock = $this->getMockBuilder(MotTestDto::class)->getMock();
         $this->motTestMock
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('getTestType')
             ->willReturn($motTestTypeMock);
         $this->motTestMock
@@ -297,7 +297,7 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
             ->method('getVehicleClass')
             ->willReturn($vehicleClassMock);
         $this->motTestMock
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('getTestType')
             ->willReturn($motTestTypeMock);
         $this->motTestMock

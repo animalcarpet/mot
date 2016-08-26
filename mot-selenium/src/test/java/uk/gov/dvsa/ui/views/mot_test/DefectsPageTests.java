@@ -1,11 +1,13 @@
 package uk.gov.dvsa.ui.views.mot_test;
 
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
+import uk.gov.dvsa.helper.DefectsTestsDataProvider;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.mot.DefectCategoriesPage;
 import uk.gov.dvsa.ui.pages.mot.DefectsPage;
@@ -19,21 +21,24 @@ import static org.hamcrest.core.Is.is;
 
 public class DefectsPageTests extends DslTest {
 
-    private User tester;
-    private Vehicle vehicle;
+    protected User tester;
+    protected Vehicle vehicle;
+
 
     @BeforeMethod(alwaysRun = true)
-    public void setUp() throws IOException {
+    protected void setUp() throws IOException {
         Site site = siteData.createSite();
         tester = userData.createTester(site.getId());
         vehicle = vehicleData.getNewVehicle(tester);
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1952"})
-    public void testCanAddADefectAsTester() throws IOException, URISyntaxException {
-        Defect defect = new Defect(new String[] {"Brakes", "Brake performance", "Decelerometer", "Brake operation"},
-                "grabbing slightly", Defect.DefectType.Advisory, "Brake operation grabbing slightly");
+    @DataProvider(name = "getAdvisoryDefect")
+    public Object[][] getAdvisoryDefect() throws IOException {
+        return DefectsTestsDataProvider.getAdvisoryDefect();
+    }
 
+    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1952"}, dataProvider = "getAdvisoryDefect")
+    public void testCanAddADefectAsTester(Defect defect) throws IOException, URISyntaxException {
         // Given I am on the test results entry screen as a tester
         TestResultsEntryNewPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);
 

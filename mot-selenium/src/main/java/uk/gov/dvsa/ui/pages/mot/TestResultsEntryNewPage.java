@@ -9,7 +9,6 @@ import uk.gov.dvsa.domain.model.mot.OdometerUnit;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
-import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.PageLocator;
 import uk.gov.dvsa.ui.pages.braketest.BrakeTestConfigurationPage;
 import uk.gov.dvsa.ui.pages.braketest.BrakeTestResultsPage;
@@ -34,6 +33,8 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
     @FindBy(id = "addOdometerReadingButton") private WebElement addOdometerReading;
     @FindBy(id = "odometer_submit") private WebElement odometerSubmit;
     @FindBy(id = "unit") private WebElement odometerUnit;
+    @FindBy(xpath = "//*[@id='rfrList']//a[contains(., 'Edit')]") private WebElement editDefectLink;
+    @FindBy(id = "rfrList") private WebElement rfrList;
 
     public TestResultsEntryNewPage(MotAppDriver driver) {
         super(driver);
@@ -115,6 +116,12 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
         return new DefectCategoriesPage(driver);
     }
 
+    public EditDefectPage navigateToEditDefectPage(Defect defect) {
+        editDefectLink.click();
+
+        return new EditDefectPage(driver, defect.getAddOrRemovalType());
+    }
+
     private void processTestCancellation(CancelTestReason reason) {
         cancelTest.click();
 
@@ -139,6 +146,26 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
 
     public boolean isOdometerReadingUpdateSuccessMessageDisplayed(){
         return validationMessage.getText().equals("The odometer reading has been updated");
+    }
+
+    public RemoveDefectPage navigateToRemoveDefectPage(Defect defect) {
+        removeDefectLink.click();
+
+        return new RemoveDefectPage(driver, defect.getAddOrRemovalType());
+    }
+
+    public boolean isDefectRemovedSuccessMessageDisplayed(Defect defect) {
+        return validationMessage.getText().equals(
+                String.format("This %s has been removed:\n%s", defect.getAddOrRemovalType(), defect.getAddOrRemoveName()));
+    }
+
+    public boolean isDefectEditedSuccessMessageDisplayed(Defect defect) {
+        return validationMessage.getText().equals(
+                String.format("This %s has been edited:\n%s", defect.getAddOrRemovalType(), defect.getAddOrRemoveName()));
+    }
+
+    public boolean isDefectInReasonsForRejection(Defect defect) {
+        return reasonForRejectionTitle.isDisplayed() && reasonForRejectionTitle.getText().contains(defect.getDefectName());
     }
 
     public Boolean isClickReviewTestButtonPresent(){

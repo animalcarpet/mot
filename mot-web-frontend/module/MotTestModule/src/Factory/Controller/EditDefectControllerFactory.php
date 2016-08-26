@@ -8,6 +8,8 @@
 namespace Dvsa\Mot\Frontend\MotTestModule\Factory\Controller;
 
 use Dvsa\Mot\Frontend\MotTestModule\Controller\EditDefectController;
+use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyContextProvider;
+use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -26,6 +28,12 @@ class EditDefectControllerFactory implements FactoryInterface
         /** @var ServiceLocatorInterface $mainServiceManager */
         $mainServiceManager = $serviceLocator->getServiceLocator();
 
-        return new EditDefectController();
+        /** @var DefectsJourneyContextProvider $defectsJourneyContextProvider */
+        $defectsJourneyContextProvider = $mainServiceManager->get(DefectsJourneyContextProvider::class);
+
+        /** @var DefectsJourneyUrlGenerator $defectsJourneyUrlGenerator */
+        $defectsJourneyUrlGenerator = $mainServiceManager->get(DefectsJourneyUrlGenerator::class);
+
+        return new EditDefectController($defectsJourneyContextProvider, $defectsJourneyUrlGenerator);
     }
 }
