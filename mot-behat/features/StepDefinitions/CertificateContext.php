@@ -37,8 +37,6 @@ class CertificateContext implements Context
     private $motTestContext;
 
     private $certificateResult;
-
-    private $recentTestsCertificateDetails;
     /**
      * @var TestSupportHelper
      */
@@ -106,35 +104,6 @@ class CertificateContext implements Context
             $result = (bool)strpos($pdf->getText(), $expectedText);
             PHPUnit::assertTrue($result, 'Could not find expected text in document - ' . $expectedText);
         }
-    }
-
-    /**
-     * @When /^I retrieve recent tests certificate details in the VTS recent test was performed$/
-     */
-    public function iRetrieveRecentTestsCertificateDetails()
-    {
-        $token = $this->sessionContext->getCurrentAccessToken();
-        $vtsId = $this->motTestContext->getMotTestData()['vehicleTestingStation']['id'];
-        $this->recentTestsCertificateDetails = $this->motTest->getRecentTestsCertificateDetails($token, $vtsId)->getBody();
-    }
-
-    /**
-     * @Then /^I can retrieve certificate details for the most recent test from the list$/
-     */
-    public function certificateDetailsForRecentTestAreAvailable()
-    {
-        $token = $this->sessionContext->getCurrentAccessToken();
-        $certificateDetailsId = $this->recentTestsCertificateDetails['data']['items'][0]['id'];
-        $certificateDetailsResponse = $this->motTest->getRecentTestCertificateDetails(
-            $token,
-            $certificateDetailsId
-        );
-
-        PHPUnit::assertEquals(
-            200,
-            $certificateDetailsResponse->getStatusCode(),
-            "Recent test certificate details enpoint did not return 200 code"
-        );
     }
 
     /**

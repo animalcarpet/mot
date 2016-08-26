@@ -14,11 +14,6 @@ return [
         'openam.password.expiry.enabled' => false,
 
         /*
-         * Enable Jasper async printing.
-         */
-        'jasper.async' => false,
-
-        /*
          * Enable VTS risk score & RAG.
          */
         'vts.risk.score' => true,

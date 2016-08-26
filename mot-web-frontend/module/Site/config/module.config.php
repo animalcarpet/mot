@@ -1,7 +1,6 @@
 <?php
 
 use DvsaCommon\Factory\AutoWire\AutoWireFactory;
-use DvsaMotTest\Controller\MotTestCertificatesController;
 use Site\Controller\MotTestLogController;
 use Site\Controller\RoleController;
 use Site\Controller\SiteController;
@@ -57,19 +56,6 @@ return [
                     ],
                     'defaults'    => [
                         'controller' => SiteController::class,
-                        'action'     => 'index',
-                    ],
-                ],
-            ],
-            'mot-test-certificate-list'    => [
-                'type'    => 'segment',
-                'options' => [
-                    'route'       => '/vehicle-testing-station/:id/mot-test-certificates',
-                    'constraints' => [
-                        'id' => '[0-9]+',
-                    ],
-                    'defaults'    => [
-                        'controller' => MotTestCertificatesController::class,
                         'action'     => 'index',
                     ],
                 ],

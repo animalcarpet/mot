@@ -11,7 +11,6 @@ use DvsaMotEnforcementApi\Controller\MotTestApiController;
 use DvsaMotTest\Controller\BrakeTestResultsController;
 use DvsaMotTest\Controller\CertificatePrintingController;
 use DvsaMotTest\Controller\LocationSelectController;
-use DvsaMotTest\Controller\MotTestCertificatesController;
 use DvsaMotTest\Controller\MotTestController;
 use DvsaMotTest\Controller\RefuseToTestController;
 use DvsaMotTest\Controller\ReplacementCertificateController;
@@ -22,7 +21,6 @@ use DvsaMotTest\Controller\TestItemSelectorController;
 use DvsaMotTest\Controller\VehicleDictionaryController;
 use DvsaMotTest\Controller\VehicleSearchController;
 use DvsaMotTest\Factory\Controller\CertificatePrintingControllerFactory;
-use DvsaMotTest\Factory\Controller\MotTestCertificatesControllerFactory;
 use DvsaMotTest\Factory\Controller\MotTestControllerFactory;
 use DvsaMotTest\Factory\Controller\RefuseToTestControllerFactory;
 use DvsaMotTest\Factory\Controller\ReplacementCertificateControllerFactory;
@@ -56,7 +54,6 @@ return [
         ReplacementCertificateController::class   => ReplacementCertificateControllerFactory::class,
         CertificatePrintingController::class      => CertificatePrintingControllerFactory::class,
         ReplacementCertificateController::class   => ReplacementCertificateControllerFactory::class,
-        MotTestCertificatesController::class      => MotTestCertificatesControllerFactory::class,
         MotTestController::class                  => MotTestControllerFactory::class,
     ],
 ];

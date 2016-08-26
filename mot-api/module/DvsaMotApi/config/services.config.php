@@ -9,12 +9,10 @@ use DvsaMotApi\Factory\AmazonS3ServiceFactory;
 use DvsaMotApi\Factory\AmazonSDKServiceFactory;
 use DvsaMotApi\Factory\AwsCredentialsProviderFactory;
 use DvsaMotApi\Factory\CertificateReplacementRepositoryFactory;
-use DvsaMotApi\Factory\CertificateStorageServiceFactory;
 use DvsaMotApi\Factory\ConfigurationRepositoryFactory;
 use DvsaMotApi\Factory\Helper\RoleEventHelperFactory;
 use DvsaMotApi\Factory\Helper\RoleNotificationHelperFactory;
 use DvsaMotApi\Factory\Helper\TesterQualificationStatusChangeEventHelperFactory;
-use DvsaMotApi\Factory\MotTestCertificatesServiceFactory;
 use DvsaMotApi\Factory\MotTestRepositoryFactory;
 use DvsaMotApi\Factory\MotTestTypeRepositoryFactory;
 use DvsaMotApi\Factory\OdometerReadingRepositoryFactory;
@@ -35,7 +33,6 @@ use DvsaMotApi\Factory\Service\MotTestCompareServiceFactory;
 use DvsaMotApi\Factory\Service\MotTestDateHelperFactory;
 use DvsaMotApi\Factory\Service\MotTestOptionsServiceFactory;
 use DvsaMotApi\Factory\Service\MotTestReasonForRejectionServiceFactory;
-use DvsaMotApi\Factory\Service\MotTestRecentCertificateServiceFactory;
 use DvsaMotApi\Factory\Service\MotTestSecurityServiceFactory;
 use DvsaMotApi\Factory\Service\MotTestServiceFactory;
 use DvsaMotApi\Factory\Service\MotTestShortSummaryServiceFactory;
@@ -74,16 +71,13 @@ use DvsaMotApi\Service\AmazonSDKService;
 use DvsaMotApi\Service\AwsCredentialsProviderService;
 use DvsaMotApi\Service\CertificateCreationService;
 use DvsaMotApi\Service\CertificatePdfService;
-use DvsaMotApi\Service\CertificateStorageService;
 use DvsaMotApi\Service\CreateMotTestService;
 use DvsaMotApi\Service\DemoTestAssessmentService;
 use DvsaMotApi\Service\EmergencyService;
-use DvsaMotApi\Service\MotTestCertificatesService;
 use DvsaMotApi\Service\MotTestDateHelper;
 use DvsaMotApi\Service\MotTestDateHelperService;
 use DvsaMotApi\Service\MotTestOptionsService;
 use DvsaMotApi\Service\MotTestReasonForRejectionService;
-use DvsaMotApi\Service\MotTestRecentCertificateService;
 use DvsaMotApi\Service\MotTestStatusChangeNotificationService;
 use DvsaMotApi\Service\SurveyService;
 use DvsaMotApi\Service\TesterMotTestLogService;
@@ -162,8 +156,6 @@ return [
         SurveyService::class                                => SurveyServiceFactory::class,
         MotConfig::class                                    => MotConfigFactory::class,
         ReplacementCertificateDraftChangeValidator::class   => ReplacementCertificateDraftChangeValidatorFactory::class,
-        MotTestCertificatesService::class                   => MotTestCertificatesServiceFactory::class,
-        CertificateStorageService::class                    => CertificateStorageServiceFactory::class,
         AmazonS3Service::class                              => AmazonS3ServiceFactory::class,
         AmazonSDKService::class                             => AmazonSDKServiceFactory::class,
         AwsCredentialsProviderService::class                => AwsCredentialsProviderFactory::class,

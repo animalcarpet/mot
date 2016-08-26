@@ -41,9 +41,6 @@ class UrlBuilder extends AbstractUrlBuilder
     const MOT_TEST = 'mot-test[/:motTestNumber]';
     const MOT_TEST_SHORT_SUMMARY = '/short-summary';
     const MOT_TEST_CERTIFICATE = 'mot-test-certificate';
-    const MOT_CERTIFICATE_LIST = 'mot-recent-certificate[/:id]';
-    const MOT_CERTIFICATE_EMAIL = 'mot-recent-certificate/:id/email';
-    const MOT_PDF_DOWNLOAD = 'mot-recent-certificate/:motRecentCertificateId/pdf-link';
     const MOT_TEST_COMPARE_BY_ID = '/compare';
     const MOT_TEST_BRAKE_TEST_RESULT = '/brake-test-result';
     const MOT_TEST_BRAKE_TEST_VALIDATE_CONFIGURATION = '/validate-configuration';
@@ -137,9 +134,6 @@ class UrlBuilder extends AbstractUrlBuilder
             self::SPECIAL_NOTICE_CONTENT_PUBLISH         => '',
             self::SPECIAL_NOTICE_OVERDUE                 => '',
             self::MOT_TEST_CERTIFICATE                   => '',
-            self::MOT_CERTIFICATE_LIST                   => '',
-            self::MOT_CERTIFICATE_EMAIL                  => '',
-            self::MOT_PDF_DOWNLOAD                      =>  '',
             self::MOT_TEST                               => [
                 self::TEST_ITEM_SELECTOR_LIST       => '',
                 self::TEST_ITEM_SELECTOR            => '',
@@ -359,30 +353,6 @@ class UrlBuilder extends AbstractUrlBuilder
     public function motTestCertificate()
     {
         return $this->appendRoutesAndParams(self::MOT_TEST_CERTIFICATE);
-    }
-
-    public function motTestCertificates($vtsId)
-    {
-        return $this->appendRoutesAndParams(self::MOT_CERTIFICATE_LIST)
-            ->queryParam('vtsId', $vtsId);
-    }
-
-    public function motRecentCertificate($id)
-    {
-        return $this->appendRoutesAndParams(self::MOT_CERTIFICATE_LIST)
-            ->routeParam('id', $id);
-    }
-
-    public function motRecentCertificateEmail($id)
-    {
-        return $this->appendRoutesAndParams(self::MOT_CERTIFICATE_EMAIL)
-            ->routeParam('id', $id);
-    }
-
-    public function motPdfDownloadLink($motRecentCertificateId)
-    {
-        return $this->appendRoutesAndParams(self::MOT_PDF_DOWNLOAD)
-            ->routeParam('motRecentCertificateId', $motRecentCertificateId);
     }
 
     public function motTestCompareById()

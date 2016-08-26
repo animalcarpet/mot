@@ -106,7 +106,6 @@ return [
     ],
     // merged from feature toggles config file
     'feature_toggle' => [
-        'jasper.async'                   => false,
         'openam.password.expiry.enabled' => false,
         'vts.risk.score'                 => true,
         '2fa.method.visible'             => false,

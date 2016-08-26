@@ -3,7 +3,6 @@
 use DvsaMotApi\Controller\CertificatePrintingController;
 use DvsaMotApi\Controller\ContingencyTestController;
 use DvsaMotApi\Controller\IdentityDataController;
-use DvsaMotApi\Controller\MotCertificateEmailController;
 use DvsaMotApi\Controller\MotTestController;
 use DvsaMotApi\Controller\MotTestOptionsController;
 use DvsaMotApi\Controller\MotTestSearchController;
@@ -15,9 +14,7 @@ use DvsaMotApi\Controller\RetestController;
 use DvsaMotApi\Controller\SurveyController;
 use DvsaMotApi\Controller\TestItemCategoryNameController;
 use DvsaMotApi\Controller\TesterMotTestLogController;
-use DvsaMotApi\Controller\MotCertificatesController;
 
-use DvsaMotApi\Factory\Controller\MotCertificateEmailControllerFactory;
 use DvsaMotApi\Factory\Controller\MotTestStatusControllerFactory;
 use DvsaMotApi\Factory\Controller\TesterControllerFactory;
 use DvsaMotApi\Factory\Controller\UserControllerFactory;
@@ -27,10 +24,7 @@ use DvsaCommon\Validator\UsernameValidator;
 use DvsaMotApi\Controller\DemoTestAssessmentController;
 use DvsaMotApi\Factory\Controller\DemoTestAssessmentControllerFactory;
 use DvsaMotApi\Factory\Controller\ReplacementCertificateDraftControllerFactory;
-use DvsaMotApi\Factory\Controller\MotCertificatesControllerFactory;
 use DvsaMotApi\Factory\CertificatePdfServiceFactory;
-use DvsaMotApi\Controller\MotCertificatePdfController;
-use DvsaMotApi\Factory\Controller\MotCertificatePdfControllerFactory;
 
 return [
     'controllers' => include 'controllers.config.php',
@@ -414,39 +408,6 @@ return [
                             ],
                         ]
 
-                    ],
-                ],
-            ],
-            'recent-mot-certificate' => [
-                'type'    => 'Segment',
-                'options' => [
-                    'route'    => '/mot-recent-certificate[/:id]',
-                    'constraints' => [
-                        'id' => '[0-9]+',
-                    ],
-                    'defaults' => [
-                        'controller' => MotCertificatesController::class
-                    ]
-                ],
-                'may_terminate' => true,
-                'child_routes' => [
-                    'pdf-certificate-link' => [
-                        'type'    => 'Segment',
-                        'options' => [
-                            'route'    => '/pdf-link',
-                            'defaults' => [
-                                'controller' => MotCertificatePdfController::class,
-                            ],
-                        ],
-                    ],
-                    'email-certificate' => [
-                        'type'    => 'Segment',
-                        'options' => [
-                            'route'    => '/email',
-                            'defaults' => [
-                                'controller' => MotCertificateEmailController::class,
-                            ],
-                        ],
                     ],
                 ],
             ],

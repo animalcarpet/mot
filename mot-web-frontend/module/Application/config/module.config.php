@@ -25,7 +25,6 @@ use DvsaMotEnforcement\Controller\MotTestController as EnforcementMotTestControl
 use DvsaMotEnforcement\Controller\MotTestSearchController as EnforcementMotTestSearchController;
 use DvsaMotEnforcementApi\Controller as Ajax;
 use DvsaMotTest\Controller as MotTest;
-use DvsaMotTest\Controller\MotTestCertificatesController;
 use DvsaMotTest\Controller\MotTestController;
 use DvsaMotTest\Factory\Service\MotChecklistPdfServiceFactory;
 use DvsaMotTest\Form\Validator\SpecialNoticePublishDateValidator;
@@ -384,34 +383,6 @@ return [
                     ],
                 ],
             ],
-            'print-certificate-pdf' => [
-                'type' => 'segment',
-                'options' => [
-                    'route'    => '/print-certificate-pdf/[:vin]-[:status]-[:motRecentCertificateId].pdf',
-                    'constraints' => [
-                        'timestamp' => '[0-9]{10}',
-                        'vin' => '[0-9A-Z]{1,30}',
-                    ],
-                    'defaults' => [
-                        'controller'  => MotTestCertificatesController::class,
-                        'action'      => 'printPdf',
-                    ],
-                ],
-            ],
-            'download-certificate-pdf' => [
-                'type' => 'segment',
-                'options' => [
-                    'route'    => '/download-certificate-pdf/[:vin]-[:status]-[:motRecentCertificateId].pdf',
-                    'constraints' => [
-                        'timestamp' => '[0-9]{10}',
-                        'vin' => '[0-9A-Z]{1,30}',
-                    ],
-                    'defaults' => [
-                        'controller'  => MotTestCertificatesController::class,
-                        'action'      => 'downloadPdf',
-                    ],
-                ],
-            ],
             'mot-test'                                    => [
                 'type'          => 'segment',
                 'options'       => [
@@ -734,39 +705,6 @@ return [
                         ],
                     ],
                 ],
-            ],
-            'mot-test-certificate-email'=> [
-                'type'    => 'segment',
-                'options' => [
-                    'route'       => '/mot-test-certificate/:certificateId/email',
-                    'defaults'    => [
-                        'controller' => MotTest\MotTestCertificatesController::class,
-                        'action'     => 'emailCertificate',
-                    ],
-                ],
-                'may_terminate' => true,
-                'child_routes' => [
-                    'confirmation'=> [
-                        'type'    => 'segment',
-                        'options' => [
-                            'route'       => '/confirmation',
-                            'defaults'    => [
-                                'controller' => MotTest\MotTestCertificatesController::class,
-                                'action'     => 'emailConfirmation',
-                            ],
-                        ],
-                    ],
-                    'error'=> [
-                        'type'    => 'segment',
-                        'options' => [
-                            'route'       => '/error',
-                            'defaults'    => [
-                                'controller' => MotTest\MotTestCertificatesController::class,
-                                'action'     => 'emailError',
-                            ],
-                        ],
-                    ],
-                ]
             ],
             'mot-test-certificate'                        => [
                 'type'    => 'segment',

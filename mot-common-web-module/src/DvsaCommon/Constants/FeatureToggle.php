@@ -7,7 +7,6 @@ namespace DvsaCommon\Constants;
  */
 class FeatureToggle
 {
-    const JASPER_ASYNC = 'jasper.async';
     const VTS_RISK_SCORE = 'vts.risk.score';
     const INFINITY_CONTINGENCY = 'infinity.contingency';
     const NEW_PERSON_PROFILE = 'new_person_profile';
