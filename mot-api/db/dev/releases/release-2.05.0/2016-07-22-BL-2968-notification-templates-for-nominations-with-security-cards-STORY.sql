@@ -1,4 +1,4 @@
-SET @app_user_id = (SELECT id FROM person WHERE username = 'static data');
+SET @app_user_id = (SELECT `id` FROM `person` WHERE `username` = 'static data' OR `user_reference` = 'Static Data');
 
 INSERT INTO `notification_template` (`id`, `content`, `subject`, `created_by`, `last_updated_by`, `last_updated_on`)
 VALUES

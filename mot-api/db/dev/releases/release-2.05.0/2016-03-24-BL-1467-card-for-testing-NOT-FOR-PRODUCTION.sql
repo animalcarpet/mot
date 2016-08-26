@@ -6,7 +6,7 @@ jA0EAwMCZIsq2TVkHiZgyUZvaApIr4zLJu52omoor/JIGIc211J3fm41+jYVvD6j
 =GW7j
 -----END PGP MESSAGE-----';
 
-SET @app_user_id = (SELECT `id` FROM `person` WHERE `username` = 'static data');
+SET @app_user_id = (SELECT `id` FROM `person` WHERE `username` = 'static data' OR `user_reference` = 'Static Data');
 
 INSERT INTO `security_card` (`serial_number`, `secret`, `security_card_status_lookup_id`, `created_by`, `created_on`, `last_updated_by`, `last_updated_on`, `version`)
 VALUES
