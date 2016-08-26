@@ -101,7 +101,7 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.normalTest.isDeclarationStatementFor2FaDisplayed(), is(true));
     }
 
-    @Test (groups = {"BVT"})
+    @Test (testName = "OldRFRTest", groups = {"Regression"})
     public void statementShouldNotBeDisplayedForTrainingTest() throws IOException, URISyntaxException {
 
         //Given I am on the review Page of training test
