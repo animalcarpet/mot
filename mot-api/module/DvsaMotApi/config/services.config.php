@@ -5,6 +5,7 @@ use DvsaCommon\Configuration\MotConfigFactory;
 use DvsaCommonApi\Transaction\ServiceTransactionAwareInitializer;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\TestItemCategoryRepository;
+use DvsaMotApi\Factory\S3CsvStoreFactory;
 use DvsaMotApi\Factory\CertificateReplacementRepositoryFactory;
 use DvsaMotApi\Factory\ConfigurationRepositoryFactory;
 use DvsaMotApi\Factory\Helper\RoleEventHelperFactory;
@@ -56,7 +57,7 @@ use DvsaMotApi\Factory\Service\Validator\ReplacementCertificateDraftChangeValida
 use DvsaMotApi\Factory\Service\Validator\RetestEligibilityValidatorFactory;
 use DvsaMotApi\Factory\Service\VehicleHistoryServiceFactory;
 use DvsaMotApi\Factory\Service\VehicleServiceFactory;
-use DvsaMotApi\Factory\SurveyServiceFactory;
+use DvsaMotApi\Factory\Service\SurveyServiceFactory;
 use DvsaMotApi\Factory\TestItemCategoryRepositoryFactory;
 use DvsaMotApi\Factory\VehicleRepositoryFactory;
 use DvsaMotApi\Helper\RoleEventHelper;
@@ -70,6 +71,7 @@ use DvsaMotApi\Service\MotTestDateHelperService;
 use DvsaMotApi\Service\MotTestOptionsService;
 use DvsaMotApi\Service\MotTestReasonForRejectionService;
 use DvsaMotApi\Service\MotTestStatusChangeNotificationService;
+use DvsaMotApi\Service\S3\S3CsvStore;
 use DvsaMotApi\Service\SurveyService;
 use DvsaMotApi\Service\TesterMotTestLogService;
 use DvsaMotApi\Service\TestingOutsideOpeningHoursNotificationService;
@@ -147,5 +149,6 @@ return [
         SurveyService::class                                => SurveyServiceFactory::class,
         MotConfig::class                                    => MotConfigFactory::class,
         ReplacementCertificateDraftChangeValidator::class   => ReplacementCertificateDraftChangeValidatorFactory::class,
+        S3CsvStore::class                                   => S3CsvStoreFactory::class,
     ],
 ];

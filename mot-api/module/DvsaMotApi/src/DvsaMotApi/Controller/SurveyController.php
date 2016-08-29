@@ -7,6 +7,7 @@ use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaMotApi\Service\SurveyService;
 use Zend\Json\Json;
+use Zend\View\Model\JsonModel;
 
 /**
  * Class SurveyController.
@@ -29,13 +30,13 @@ class SurveyController extends AbstractDvsaRestfulController
     }
 
     /**
-     * @param mixed $data
+     * @param array $data Contains token and survey rating.
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return JsonModel|array
      */
     public function create($data)
     {
-        if (!$this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
+        if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
             return $this->notFoundAction();
         }
 
@@ -43,10 +44,13 @@ class SurveyController extends AbstractDvsaRestfulController
 
         return ApiResponse::jsonOk($response);
     }
-    
+
+    /**
+     * @return JsonModel|array
+     */
     public function generateReportsAction()
     {
-        if (!$this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
+        if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
             return $this->notFoundAction();
         }
 
@@ -54,25 +58,24 @@ class SurveyController extends AbstractDvsaRestfulController
         $total = 0;
 
         foreach (range(1, 5) as $rating) {
-            $count = count(
-                $this->surveyService->getSurveyResultSatisfactionRatingsCount($rating)
-            );
+            $count = count($this->surveyService->getSurveyResultSatisfactionRatingsCount($rating));
             $total += $count;
-            $ratingCounts['rating_'.$rating] = $count;
+            $ratingCounts['rating_' . $rating] = $count;
         }
 
         $ratingCounts['total'] = $total;
-        
+
         $this->surveyService->generateSurveyReports($ratingCounts);
 
-        return ApiResponse::jsonOk(
-            $ratingCounts
-        );
+        return ApiResponse::jsonOk($ratingCounts);
     }
 
+    /**
+     * @return JsonModel|array
+     */
     public function getReportsAction()
     {
-        if (!$this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
+        if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
             return $this->notFoundAction();
         }
 
@@ -84,21 +87,56 @@ class SurveyController extends AbstractDvsaRestfulController
     }
 
     /**
-     * @return bool
+     * Returns whether or not a survey should be displayed.
+     *
+     * @return JsonModel|array
      */
     public function shouldDisplaySurveyAction()
     {
-        if (!$this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
+        if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
             return $this->notFoundAction();
         }
 
-        $data = Json::decode($this->request->getContent());
-
-        $motTestDetails = $data->motTestDetails;
-        $surveyIsEnabled = $data->surveyEnabled;
+        $data = Json::decode($this->request->getContent(), Json::TYPE_ARRAY);
+        if (!isset($data['motTestTypeCode']) || !isset($data['testerId'])) {
+            return ApiResponse::jsonOk(false);
+        }
 
         return ApiResponse::jsonOk(
-            $this->surveyService->shouldDisplaySurvey($motTestDetails, $surveyIsEnabled)
+            $this->surveyService->shouldDisplaySurvey($data['motTestTypeCode'], $data['testerId'])
         );
+    }
+
+    /**
+     * @return JsonModel|array
+     */
+    public function createSessionTokenAction()
+    {
+        if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
+            return $this->notFoundAction();
+        }
+
+        $data = Json::decode($this->request->getContent(), Json::TYPE_ARRAY);
+
+        return ApiResponse::jsonOk($this->surveyService->createSessionToken($data['motTestNumber']));
+    }
+
+    /**
+     * @return JsonModel|array
+     */
+    public function validateTokenAction()
+    {
+        if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
+            return $this->notFoundAction();
+        }
+
+        $data = Json::decode($this->request->getContent(), Json::TYPE_ARRAY);
+        if (!isset($data['token'])) {
+            return ApiResponse::jsonError(false);
+        }
+
+        $result = $this->surveyService->sessionTokenIsValid($data['token']);
+
+        return (true === $result) ? ApiResponse::jsonOk($result) : ApiResponse::jsonError($result);
     }
 }

@@ -1,14 +1,16 @@
 <?php
 
+use Core\Authorisation\Assertion\WebAcknowledgeSpecialNoticeAssertion;
+use Core\Authorisation\Assertion\WebPerformMotTestAssertion;
 use Core\Catalog\EnumCatalog;
 use Core\Factory\EnumCatalogFactory;
-use Core\Factory\MotIdentityProviderFactory;
 use Core\Factory\LazyMotFrontendAuthorisationServiceFactory;
-use Core\Authorisation\Assertion\WebPerformMotTestAssertion;
+use Core\Factory\MotEventManagerFactory;
+use Core\Factory\MotIdentityProviderFactory;
 use Core\Factory\UrlHelperFactory;
-use Core\Factory\WebPerformMotTestAssertionFactory;
-use Core\Authorisation\Assertion\WebAcknowledgeSpecialNoticeAssertion;
 use Core\Factory\WebAcknowledgeSpecialNoticeAssertionFactory;
+use Core\Factory\WebPerformMotTestAssertionFactory;
+use Core\Service\MotEventManager;
 use Core\Service\MotFrontendIdentityProviderInterface;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
@@ -32,6 +34,7 @@ return [
         MotConfig::class => MotConfigFactory::class,
         EnumCatalog::class => EnumCatalogFactory::class,
         Url::class => UrlHelperFactory::class,
+        MotEventManager::class => MotEventManagerFactory::class
     ],
     'abstract_factories' => [
         AutoWireFactory::class,

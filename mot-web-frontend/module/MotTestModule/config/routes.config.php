@@ -267,7 +267,7 @@ return [
             'survey' => [
                 'type' => 'segment',
                 'options' => [
-                    'route' => '/survey',
+                    'route' => '/survey/[:token]',
                     'defaults' => [
                         'controller' => SurveyPageController::class,
                         'action'     => 'index',
@@ -285,26 +285,26 @@ return [
                             ],
                         ],
                     ],
-                    'reports'                           => [
-                        'type'    => 'segment',
+                ],
+            ],
+            'survey-reports' => [
+                'type'    => 'segment',
+                'options' => [
+                    'route'    => '/survey/reports',
+                    'defaults' => [
+                        'controller' => SurveyPageController::class,
+                        'action'     => 'reports',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'downloadCsv' => [
+                        'type' => 'segment',
                         'options' => [
-                            'route'    => '/reports',
+                            'route' => '/download/:month',
                             'defaults' => [
                                 'controller' => SurveyPageController::class,
-                                'action'     => 'reports',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                        'child_routes' => [
-                            'downloadCsv' => [
-                                'type' => 'segment',
-                                'options' => [
-                                    'route' => '/download/:month',
-                                    'defaults' => [
-                                        'controller' => SurveyPageController::class,
-                                        'action' => 'downloadReportCsv',
-                                    ],
-                                ],
+                                'action' => 'downloadReportCsv',
                             ],
                         ],
                     ],

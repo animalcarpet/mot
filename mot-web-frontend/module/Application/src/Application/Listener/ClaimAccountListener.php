@@ -27,6 +27,7 @@ class ClaimAccountListener
         'login',
         'logout',
         'forgotten-password/update-password',
+        'survey'
     ];
 
     private $claimAccountRoutes = [

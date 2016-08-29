@@ -24,11 +24,9 @@ public class MotSurveyTests extends DslTest {
 
     private AeDetails aeDetails;
     private Site site;
-    private User tester;
     private Vehicle vehicle;
-
+    private User tester;
     private User schemeUser;
-
     private User areaOffice1User;
     private User vehicleExaminerUser;
     private User aedm;
@@ -40,65 +38,68 @@ public class MotSurveyTests extends DslTest {
         site = siteData.createNewSite(aeDetails.getId(), "TestSite");
         tester = userData.createTester(site.getId());
         vehicle = vehicleData.getNewVehicle(tester);
-
         schemeUser = userData.createSchemeUser(false);
-
         areaOffice1User = userData.createAreaOfficeOne("AreaOfficerOne");
         vehicleExaminerUser = userData.createVehicleExaminer("VehicleExaminer", false);
         aedm = userData.createAedm(aeDetails.getId(), "Test", false);
         siteManager = userData.createSiteManager(site.getId(), false);
     }
 
-    @Test(testName = "Survey", groups = {"BL-1529"},
-          description = "Verifies that user can navigate back from survey page to home page")
-    public void backwardNavigationFromSurveyPageToHomePage() throws IOException, URISyntaxException {
+    @Test(testName = "Survey", groups = {"Regression", "BL-1529"},
+            description = "Verifies that user can navigate back from survey page to login page")
+    public void backwardNavigationFromSurveyPageToLoginPage() throws IOException, URISyntaxException {
         // Given I am on the Test Complete Page as a tester
         TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle).finishTest();
 
-        // When I click on the back home link I should be on the Give Feedback Page
-        GiveFeedbackPage giveFeedbackPage = testCompletePage.clickBackHomeLink();
+        // When I click on the sign out link I should be on the Give Feedback Page
+        GiveFeedbackPage giveFeedbackPage = testCompletePage.clickSignOutLink();
 
-        // When I click on Cancel and return home link
-        giveFeedbackPage.clickCancelAndReturnHome();
+        // When I click on Cancel and return link
+        giveFeedbackPage.clickCancelAndReturn();
 
-        // Then I should be redirected to the home page
+        // Then I should be redirected to the login page
 
     }
 
-    @Test(testName = "Survey", groups = {"BL-1529"},
-            description = "Verifies that user is redirected to home page after submitting empty survey")
-    public void userRedirectedToHomePageOnSubmissionOfEmptySurvey() throws IOException, URISyntaxException {
+    @Test(testName = "Survey", groups = {"Regression", "BL-1529"},
+            description = "Verifies that user is redirected to login page after submitting empty survey")
+    public void userRedirectedToThankYouPageOnSubmissionOfEmptySurvey() throws IOException, URISyntaxException {
         // Given I am on the Test Complete Page as a tester
         TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle).finishTest();
 
-        // When I click on the back home link I should be on the Give Feedback Page
-        GiveFeedbackPage giveFeedbackPage = testCompletePage.clickBackHomeLink();
+        // When I click on the sign out link I should be on the Give Feedback Page
+        GiveFeedbackPage giveFeedbackPage = testCompletePage.clickSignOutLink();
 
-        // When I submit an empty survey
-        giveFeedbackPage.submitFeedback(true, HomePage.class);
+        // When I submit empty survey
+        SurveyThankYouPage surveyThankYouPage = giveFeedbackPage.submitEmptyFeedback();
 
-        // Then I should be redirected to the home page
+        // Then I should be redirected to the survey thank you page
+        surveyThankYouPage.clickSignIn();
+
+        // Then I should be redirected to the login page
 
     }
 
-    @Test(testName = "Survey", groups = {"BL-1529"},
+    @Test(testName = "Survey", groups = {"Regression", "BL-1529"},
             description = "Verifies that user is able to submit feedback")
-    public void userCanSubmitFeedback() throws IOException, URISyntaxException {
+    public void userRedirectedToThankYouPageOnSubmissionOfCompletedSurvey() throws IOException, URISyntaxException {
         // Given I am on the Test Complete Page as a tester
         TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle).finishTest();
 
-        // When I click on the back home link I should be on the Give Feedback Page
-        GiveFeedbackPage giveFeedbackPage = testCompletePage.clickBackHomeLink();
+        // When I click on the sign out link I should be on the Give Feedback Page
+        GiveFeedbackPage giveFeedbackPage = testCompletePage.clickSignOutLink();
 
-        // When I submit some feedback and click on the Back Home link
-        giveFeedbackPage.submitFeedback(false, SurveyThankYouPage.class)
-                .clickBackHomeLink();
+        // When I submit non-empty survey
+        SurveyThankYouPage surveyThankYouPage = giveFeedbackPage.submitCompletedFeedback();
 
-        // Then I should be redirected to the Home page
+        // Then I should be redirected to the survey thank you page
+        surveyThankYouPage.clickSignIn();
+
+        // Then I should be redirected to the login page
 
     }
 
-    @Test(testName = "Survey", groups = {"BL-1531"},
+    @Test(testName = "Survey", groups = {"Regression", "BL-1531"},
             description = "Verifies that a valid user can navigate back from Survey Reports page to Home page")
     public void backwardNavigationFromSurveyReportsPageToHomePage() throws IOException, URISyntaxException {
         // Given I am on the Survey Reports page as a scheme user
@@ -123,8 +124,9 @@ public class MotSurveyTests extends DslTest {
         assertThat(homePage.isGenerateSurveyReportsLinkDisplayed(), is(false));
     }
 
-    @Test(testName = "Survey", groups = {"BL-1531"},
-            description = "Verifies that a user can download a survey report")
+    @Test(testName = "WIP", groups = {"Regression", "BL-1531"},
+            description = "Verifies that a user can download a survey report",
+            enabled = false)
     public void userCanDownloadReport() throws IOException, URISyntaxException {
         // Given I am on the Survey Reports page as a scheme user
         GenerateSurveyReportsPage generateSurveyReportsPage =

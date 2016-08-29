@@ -76,4 +76,22 @@ class MotService
             ['number' => $motNumber]
         );
     }
+
+    public function removeAllTests()
+    {
+        $this->entityManager->getConnection()->prepare('DELETE FROM brake_test_result_class_1_2')->execute();
+        $this->entityManager->getConnection()->prepare('DELETE FROM brake_test_result_class_3_and_above')->execute();
+        $this->entityManager->getConnection()->prepare('DELETE FROM enforcement_mot_test_differences')->execute();
+        $this->entityManager->getConnection()->prepare('DELETE FROM enforcement_mot_demo_test')->execute();
+        $this->entityManager->getConnection()->prepare('DELETE FROM enforcement_mot_test_result_witnesses')->execute();
+        $this->entityManager->getConnection()->prepare('DELETE FROM enforcement_mot_test_result')->execute();
+        $this->entityManager->getConnection()->prepare('DELETE FROM mot_test_rfr_map')->execute();
+        $this->entityManager->getConnection()->prepare('UPDATE mot_test SET prs_mot_test_id = NULL, mot_test_id_original = NULL')->execute();
+        $this->entityManager->getConnection()->prepare('DELETE FROM certificate_replacement')->execute();
+        $this->entityManager->getConnection()->prepare('DELETE FROM replacement_certificate_draft')->execute();
+        $this->entityManager->getConnection()->prepare('DELETE FROM mot_test_event')->execute();
+        $this->entityManager->getConnection()->prepare('DELETE FROM mot_test_recent_certificate')->execute();
+        $this->entityManager->getConnection()->prepare('DELETE FROM mot_test_survey')->execute();
+        $this->entityManager->getConnection()->prepare('DELETE FROM mot_test')->execute();
+    }
 }

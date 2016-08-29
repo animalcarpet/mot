@@ -40,10 +40,10 @@ class S3KeyValueStorage implements KeyValueStorageInterface
     public function delete($key)
     {
         $this->s3Client->deleteObject(
-            array(
+            [
                 'Bucket' => $this->bucket,
                 'Key'    => $key,
-            )
+            ]
         );
     }
 
@@ -53,11 +53,11 @@ class S3KeyValueStorage implements KeyValueStorageInterface
 
         try {
             $object = $this->s3Client->getObject(
-                array(
+                [
                     'Bucket'              => $this->bucket,
                     'Key'                 => $storageKey,
                     'ResponseContentType' => 'application/json',
-                )
+                ]
             )['Body'];
             return json_decode($object, true);
         } catch (S3Exception $ex) {
@@ -99,7 +99,8 @@ class S3KeyValueStorage implements KeyValueStorageInterface
         fputs($fileHandle, json_encode($json));
         rewind($fileHandle);
 
-        $this->s3Client->putObject([
+        $this->s3Client->putObject(
+            [
                 'Bucket'      => $this->bucket,
                 'Key'         => $storageKey,
                 'ContentType' => 'application/json',
@@ -121,10 +122,12 @@ class S3KeyValueStorage implements KeyValueStorageInterface
     {
         $storagePath = $this->getFullPath($path);
 
-        $command = $this->s3Client->getCommand('ListObjects', [
-            'Bucket' => $this->bucket,
-            'Prefix' => $storagePath,
-        ]);
+        $command = $this->s3Client->getCommand(
+            'ListObjects', [
+                'Bucket' => $this->bucket,
+                'Prefix' => $storagePath,
+            ]
+        );
 
         $objects = $this->s3Client->execute($command)['Contents'];
 
@@ -145,20 +148,26 @@ class S3KeyValueStorage implements KeyValueStorageInterface
      */
     public function listKeys($keyPrefix = '')
     {
-        $command = $this->s3Client->getCommand('ListObjects', [
-            'Bucket' => $this->bucket,
-            'Prefix' => $this->rootFolder . '/' . $keyPrefix,
-        ]);
+        $command = $this->s3Client->getCommand(
+            'ListObjects', [
+                'Bucket' => $this->bucket,
+                'Prefix' => $this->rootFolder . '/' . $keyPrefix,
+            ]
+        );
 
         $objects = $this->s3Client->execute($command)['Contents'];
 
-        $keys = ArrayUtils::map($objects, function (array $object) {
-            return $object['Key'];
-        });
+        $keys = ArrayUtils::map(
+            $objects, function (array $object) {
+                return $object['Key'];
+            }
+        );
 
-        $keys = ArrayUtils::map($keys, function ($key) {
-            return $this->stripRootFolderFromKey($key);
-        });
+        $keys = ArrayUtils::map(
+            $keys, function ($key) {
+                return $this->stripRootFolderFromKey($key);
+            }
+        );
 
         return $keys;
     }

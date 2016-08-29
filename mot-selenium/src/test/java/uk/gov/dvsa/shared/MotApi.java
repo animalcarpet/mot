@@ -51,4 +51,8 @@ public class MotApi extends MotTestService{
     public MotTest createPassedTestForVehicle(User user, int siteId, Vehicle vehicle) throws IOException {
         return createTest(user, siteId, vehicle, TestOutcome.PASSED, 123456, DateTime.now());
     }
+
+    public void createOneHundredTests(User user) throws IOException {
+        createOneHundredMotTests(user);
+    }
 }
