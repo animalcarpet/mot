@@ -6,6 +6,7 @@ use Application\Data\ApiPersonalDetails;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Action\CardOrderProtection;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Action\CardOrderReviewAction;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderNewSecurityCardSessionService;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardEventService;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardStepService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
 use Zend\ServiceManager\FactoryInterface;
@@ -29,12 +30,15 @@ class CardOrderReviewActionFactory implements FactoryInterface
 
         $cardOrderProtection = $serviceLocator->get(CardOrderProtection::class);
 
+        $eventService = $serviceLocator->get(OrderSecurityCardEventService::class);
+
         return new CardOrderReviewAction(
             $securityCardSessionService,
             $apiPersonalDetails,
             $securityCardService,
             $orderSecurityCardStepService,
-            $cardOrderProtection
+            $cardOrderProtection,
+            $eventService
         );
     }
 }

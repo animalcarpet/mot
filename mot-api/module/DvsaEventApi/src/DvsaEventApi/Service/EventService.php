@@ -29,6 +29,7 @@ use DvsaEntities\Entity\Event;
 use DvsaEntities\Entity\EventCategory;
 use DvsaEntities\Entity\EventOrganisationMap;
 use DvsaEntities\Entity\EventOutcome;
+use DvsaEntities\Entity\EventPersonMap;
 use DvsaEntities\Entity\EventType;
 use DvsaEntities\Entity\Organisation;
 use DvsaEntities\Entity\Person;

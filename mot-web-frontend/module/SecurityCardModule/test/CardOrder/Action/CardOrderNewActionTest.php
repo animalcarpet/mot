@@ -103,7 +103,7 @@ class CardOrderNewActionTest extends \PHPUnit_Framework_TestCase
         $this->identity
             ->expects($this->any())
             ->method('isSecondFactorRequired')
-            ->willReturn(true);
+            ->willReturn($secondFactorRequired);
 
         $this->identityProvider
             ->expects($this->any())

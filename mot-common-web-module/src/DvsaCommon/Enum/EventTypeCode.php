@@ -77,6 +77,7 @@ class EventTypeCode
     const CHANGE_GROUP_B_TESTER_ANNUAL_EXAM = 'CGBAE';
     const REMOVE_GROUP_A_TESTER_ANNUAL_EXAM = 'RGAAE';
     const REMOVE_GROUP_B_TESTER_ANNUAL_EXAM = 'RGBAE';
+    const CREATE_SECURITY_CARD_ORDER = 'SCO';
 
     /**
      * @return array of values for the type EventTypeCode

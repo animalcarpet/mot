@@ -2,13 +2,11 @@ package uk.gov.dvsa.ui.pages.dvsa;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
-import uk.gov.dvsa.ui.pages.profile.ChangeAddressPage;
+import uk.gov.dvsa.ui.pages.changedriverlicence.ChangeDrivingLicencePage;
 import uk.gov.dvsa.ui.pages.profile.ChangeNamePage;
 import uk.gov.dvsa.ui.pages.profile.ProfilePage;
-import uk.gov.dvsa.ui.pages.changedriverlicence.ChangeDrivingLicencePage;
 
 public class UserSearchProfilePage extends ProfilePage {
 
@@ -22,7 +20,7 @@ public class UserSearchProfilePage extends ProfilePage {
     @FindBy(id = "person-driving-licence-region") private WebElement personDrivingLicenceRegion;
     @FindBy(id = "add-edit-driving-licence-link") private WebElement changeDrivingLicenceLink;
     @FindBy(id = "validation-message--success") private WebElement messageSuccess;
-    @FindBy(id="roles-and-associations-link") private WebElement rolesAndAssociationsLink;
+    @FindBy(id= "roles-and-associations-link") private WebElement rolesAndAssociationsLink;
 
     public UserSearchProfilePage(MotAppDriver driver) {
         super(driver);

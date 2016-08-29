@@ -58,7 +58,7 @@ class DateTimeHolder implements DateTimeHolderInterface, AutoWireableInterface
 
             return new \DateTime(
                 date('Y-m-d H:i:s.'.(string)ceil(($microTime - floor($microTime))*1000000), $microTime),
-                new \DateTimeZone('Europe\London')
+                new \DateTimeZone('Europe/London')
             );
 
         }

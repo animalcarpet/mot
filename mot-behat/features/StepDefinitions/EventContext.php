@@ -178,6 +178,20 @@ class EventContext implements Context
     }
 
     /**
+     * @When I submit the non manual event
+     */
+    public function iSubmitTheNonManualEvent()
+    {
+        $this->eventCreationData['description'] = 'Card order';
+        $reponse = $this->event->postNonManualEvent(
+            $this->sessionContext->getCurrentAccessToken(),
+            $this->personContext->getPersonUserId(),
+            $this->eventCreationData
+        );
+        PHPUnit::assertSame(200, $reponse->getStatusCode());
+    }
+
+    /**
      * @Then a status change event is generated for the user of :eventType
      * @Then an event is generated for the user of :eventType
      */

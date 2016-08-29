@@ -28,8 +28,8 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\ViewModel\CardOrderReviewView
                         <?php if (!empty($viewModel->getAddressLineTwo())): ?>
                             <?php echo $this->escapeHtml($viewModel->getAddressLineTwo()) ?>,<br/>
                         <?php endif ?>
-                        <?php if (!empty($viewModel->getAddressLineTwo())): ?>
-                            <?php echo $this->escapeHtml($viewModel->getAddressLineTwo()) ?>,<br/>
+                        <?php if (!empty($viewModel->getAddressLineThree())): ?>
+                            <?php echo $this->escapeHtml($viewModel->getAddressLineThree()) ?>,<br/>
                         <?php endif ?>
                         <?php echo $this->escapeHtml($viewModel->getTown()) ?>,<br/>
                         <?php echo $this->escapeHtml($viewModel->getPostcode()) ?></td>

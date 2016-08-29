@@ -8,6 +8,7 @@ use Core\Action\RedirectToRoute;
 use Core\Service\MotFrontendIdentityProvider;
 use Dashboard\Model\PersonalDetails;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderNewSecurityCardSessionService;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardEventService;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardStepService;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\ViewModel\CardOrderReviewViewModel;
 use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
@@ -44,17 +45,24 @@ class CardOrderReviewAction
      */
     private $cardOrderProtection;
 
+    /**
+     * @var OrderSecurityCardEventService $eventService
+     */
+    private $eventService;
+
     public function __construct(OrderNewSecurityCardSessionService $sessionService,
                                 ApiPersonalDetails $apiPersonalDetails,
                                 SecurityCardService $securityCardService,
                                 OrderSecurityCardStepService $stepService,
-                                CardOrderProtection $cardOrderProtection)
+                                CardOrderProtection $cardOrderProtection,
+                                OrderSecurityCardEventService $eventService)
     {
         $this->sessionService = $sessionService;
         $this->apiPersonalDetails = $apiPersonalDetails;
         $this->securityCardService = $securityCardService;
         $this->stepService = $stepService;
         $this->cardOrderProtection = $cardOrderProtection;
+        $this->eventService = $eventService;
     }
 
     public function execute(Request $request, $userId)
@@ -76,8 +84,11 @@ class CardOrderReviewAction
             if (!$this->hasAlreadySubmittedOrder($userId)) {
                 $addressStepData = $this->sessionService->loadByGuid($userId)[OrderNewSecurityCardSessionService::ADDRESS_STEP_STORE];
                 $cardOrdered = (bool)$this->securityCardService->orderNewCard($personalDetails->getUsername(), $userId, $addressStepData);
-                $this->setUpHasAlreadySubmittedOrder($userId, $cardOrdered);
-                return new RedirectToRoute('security-card-order/confirmation', ['userId' => $userId]);
+                if ($cardOrdered === true) {
+                    $this->setUpHasAlreadySubmittedOrder($userId, $cardOrdered);
+                    $this->eventService->createEvent($userId, $this->formatAddressForEvent($addressStepData));
+                    return new RedirectToRoute('security-card-order/confirmation', ['userId' => $userId]);
+                }
             } else {
                 return new RedirectToRoute('security-card-order/confirmation', ['userId' => $userId]);
             }
@@ -121,5 +132,12 @@ class CardOrderReviewAction
     private function hasAlreadySubmittedOrder($userId)
     {
         return $this->sessionService->loadByGuid($userId)[OrderNewSecurityCardSessionService::HAS_ORDERED_STORE];
+    }
+
+    private function formatAddressForEvent(array $addressData)
+    {
+        $addressData['addressChoice'] = '';
+        $test =  implode(', ', array_filter($addressData));
+        return $test;
     }
 }
