@@ -1,20 +1,20 @@
 <?php
 namespace DvsaMotApiTest\Service;
 
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommonTest\TestUtils\MockHandler;
+use DvsaEntities\Entity\MotTest;
+use DvsaEntities\Entity\ReasonForRejection;
+use DvsaEntities\Entity\TestItemSelector;
+use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
 use DvsaEntities\Repository\RfrRepository;
 use DvsaEntities\Repository\TestItemCategoryRepository;
+use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Service\TestItemSelectorService;
-use DvsaEntities\Entity\TestItemSelector;
-use DvsaEntities\Entity\MotTest;
-use DvsaEntities\Entity\Vehicle;
-use DvsaEntities\Entity\ReasonForRejection;
 
 /**
- * Class TestItemSelectorServiceTest
- *
- * @package DvsaMotApiTest\Service
+ * Class TestItemSelectorServiceTest.
  */
 class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
 {
@@ -26,6 +26,11 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
     private $mockTestItemCategoryRepository;
     private $mockRfrRepository;
 
+    /**
+     * @var FeatureToggles
+     */
+    private $featureTogglesMock;
+
     public function setUp()
     {
         $this->testItemSelector = $this->getTestItemSelector();
@@ -34,6 +39,8 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
             = $this->getMockWithDisabledConstructor(TestItemCategoryRepository::class);
 
         $this->mockRfrRepository = $this->getMockWithDisabledConstructor(RfrRepository::class);
+
+        $this->withFeatureToggles([FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS => false]);
     }
 
     public function testGetTestItemSelectorsDataByClass()
@@ -251,6 +258,7 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
         $vehicle = new Vehicle();
         $vehicle->setVehicleClass(new VehicleClass($this->vehicleClass));
         $motTest->setVehicle($vehicle);
+
         return $motTest;
     }
 
@@ -283,7 +291,8 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
             $this->mockRfrRepository,
             $mockAuthService,
             $this->mockTestItemCategoryRepository,
-            $disabledRfrs
+            $disabledRfrs,
+            $this->featureTogglesMock
         );
     }
 
@@ -292,5 +301,30 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
         return (new TestItemSelector())
             ->setId($id)
             ->setParentTestItemSelectorId($parentId);
+    }
+
+    /**
+     * @param array $featureToggles
+     *
+     * @return $this
+     */
+    public function withFeatureToggles(array $featureToggles = [])
+    {
+        $map = [];
+        foreach ($featureToggles as $name => $value) {
+            $map[] = [(string) $name, (bool) $value];
+        }
+
+        $featureToggles = $this
+            ->getMockBuilder(FeatureToggles::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $featureToggles
+            ->method('isEnabled')
+            ->will($this->returnValueMap($map));
+
+        $this->featureTogglesMock = $featureToggles;
+
+        return $this;
     }
 }

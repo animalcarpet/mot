@@ -39,16 +39,16 @@
         <label class="search-bar__label visuallyhidden" for="search-main">Search the MOT testing service</label>
         <div class="search-bar__control-group">
             <input class="search-bar__search-input" type="search" title="Search" id="search-main" name="q" value="{{ searchTerm }}">
-            <input type="hidden" name="p" value="{{ page }}">
+            <input type="hidden" name="p" value="1">
             <input class="search-bar__search-submit" type="submit" value="Search">
         </div>
         <span class="search-bar__secondary-action">or view <a href="{{ url('mot-test-defects/categories', {'motTestNumber' : motTestNumber}) }}">defect categories</a></span>
     </fieldset>
     {% if searchTerm != '' %}
         <p class="search-bar__results">
-            Your search for <strong>"{{ searchTerm }}"</strong> returned <strong>{{ numberOfResults }}</strong> defect{% if numberOfResults != 1 %}s{% endif %}.
+            Your search for <strong>"{{ searchTerm }}"</strong> returned <strong>{{ paginator.pages.totalItemCount }}</strong> defect{% if numberOfResults != 1 %}s{% endif %}.
         </p>
-        {% if numberOfResults == 0 %}
+        {% if paginator.pages.totalItemCount == 0 %}
             Try again with a different search term.
         {% endif %}
     {% endif %}
@@ -57,7 +57,7 @@
 
 {% if hasResults %}
     <ol id="defects-list" class="defect-results">
-        {% for defect in defects %}
+        {% for defect in paginator.currentItems %}
             <li class="defect">
                 <div>
                     <strong class="defect__title">{{ defect.description }}</strong>
@@ -103,6 +103,29 @@
             </li>
         {% endfor %}
     </ol>
+    {% if paginator.pages.totalItemCount > 10 %}
+        <div class="pager">
+            <br>
+            <div class="pager__controls">
+                {% if paginator.pages.previous is defined %}
+                    <a class="pager__prev" href="{{ url('mot-test-defects/search', {motTestNumber : motTestNumber}, {query : {'q' : searchTerm, 'p' : page - 1}}) }}">Prev</a>
+                {% endif %}
+                <ul class="pager__list">
+                    {% for page in paginator.pages.pagesInRange %}
+                        {% if page != paginator.pages.current %}
+                            <li><a href="{{ url('mot-test-defects/search', {motTestNumber : motTestNumber}, {query : {'q' : searchTerm, 'p' : page}}) }}">{{ page }}</a></li>
+                        {% else %}
+                            <li>{{ page }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                {% if paginator.pages.next is defined %}
+                    <a class="pager__next" href="{{ url('mot-test-defects/search', {motTestNumber : motTestNumber}, {query : {'q' : searchTerm, 'p' : page + 1}}) }}">Next</a>
+                {% endif %}
+            </div>
+            <div class="pager__summary">Showing {{ paginator.pages.firstItemNumber }} – {{ paginator.pages.lastItemNumber }} of {{ paginator.pages.totalItemCount }} defects</div>
+        </div>
+    {% endif %}
 {% endif %}
 
 <div class="panel-indent">
