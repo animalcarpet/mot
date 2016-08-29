@@ -42,7 +42,9 @@ module.exports = function (grunt, config) {
         var opcache_ini_file = 'opcache.ini';
         var xdebug_ini_file = 'xdebug.ini';
 
-        var trace_file_command = 'sudo tail -n 40 -f /var/log';
+        var trace_command = 'sudo tail -n 40 -f ';
+        var trace_file_var_log = trace_command + '/var/log';
+        var trace_file_opt_dvsa = trace_command + '/opt/dvsa';
 
         grunt.config('sshexec', {
             options: {
@@ -88,27 +90,19 @@ module.exports = function (grunt, config) {
                 command: 'sudo service <%= service_config.httpdServiceName %> stop; sudo rm -f <%= vagrant_config.phpRootDir %>/var/lib/php/session/sess_*; sudo service <%= service_config.httpdServiceName %> start;'
             },
             apache_restart: {
-                command: function () {
-                    return 'sudo service <%= service_config.httpdServiceName %> restart';
-                }
+                command: 'sudo service <%= service_config.httpdServiceName %> restart'
             },
             apache_restart_dev: {
                 options: dev_ssh_options,
-                command: function () {
-                    return 'sudo service <%= service_config.httpdServiceName %> restart';
-                }
+                command: 'sudo service <%= service_config.httpdServiceName %> restart'
             },
             apache_restart_dev2: {
                 options: dev2_ssh_options,
-                command: function () {
-                    return 'sudo service <%= service_config.httpdServiceName %> restart';
-                }
+                command: 'sudo service <%= service_config.httpdServiceName %> restart'
             },
             authr_restart: {
                 options: dev2_ssh_options,
-                command: function () {
-                    return 'sudo service <%= service_config.authrServiceName %> restart';
-                }
+                command: 'sudo service <%= service_config.authrServiceName %> restart'
             },
             papply_dev: {
                 options: dev_ssh_options,
@@ -126,21 +120,15 @@ module.exports = function (grunt, config) {
             },
             opendj_restart_dev: {
                 options: dev_ssh_options,
-                command: function() {
-                    return 'sudo service <%= service_config.opendjServiceName %> restart';
-                }
+                command: 'sudo service <%= service_config.opendjServiceName %> restart'
             },
             jasper_restart: {
                 options: dev_ssh_options,
-                command: function() {
-                    return 'sudo service <%= service_config.jasperServiceName %> restart';
-                }
+                command: 'sudo service <%= service_config.jasperServiceName %> restart'
             },
             mysql_restart_dev: {
                 options: dev_ssh_options,
-                command: function() {
-                    return 'sudo service <%= service_config.mysqlServiceName %> restart';
-                }
+                command: 'sudo service <%= service_config.mysqlServiceName %> restart'
             },
             fix_db_configs: {
                 command: function () {
@@ -377,53 +365,61 @@ module.exports = function (grunt, config) {
             },
             trace_api_log: {
                 options: dev2_ssh_options,
-                command: trace_file_command + '/dvsa/mot-api.log'
+                command: trace_file_var_log + '/dvsa/mot-api.log'
             },
             trace_web_log: {
                 options: dev_ssh_options,
-                command: trace_file_command + '/dvsa/mot-webfrontend.log'
+                command: trace_file_var_log + '/dvsa/mot-webfrontend.log'
             },
             trace_mysql_log: {
                 options: dev_ssh_options,
-                command: trace_file_command + '/mysql/general.log'
+                command: trace_file_var_log + '/mysql/general.log'
             },
             trace_api_access_log: {
                 options: dev2_ssh_options,
-                command: trace_file_command + '/httpd/mot-api_access.log'
+                command: trace_file_var_log + '/httpd/mot-api_access.log'
             },
             trace_frontend_access_log: {
                 options: dev_ssh_options,
-                command: trace_file_command + '/httpd/dev.motdev.org.uk_ssl_access_ssl.log'
+                command: trace_file_var_log + '/httpd/dev.motdev.org.uk_ssl_access_ssl.log'
             },
             trace_api_error_log: {
                 options: dev2_ssh_options,
-                command: trace_file_command + '/httpd/mot-api_error.log'
+                command: trace_file_var_log + '/httpd/mot-api_error.log'
             },
             trace_frontend_error_log: {
                 options: dev_ssh_options,
-                command: trace_file_command + '/httpd/dev.motdev.org.uk_ssl_error_ssl.log'
+                command: trace_file_var_log + '/httpd/dev.motdev.org.uk_ssl_error_ssl.log'
             },
             trace_api_system_log: {
                 options: dev2_ssh_options,
-                command: trace_file_command + '/messages'
+                command: trace_file_var_log + '/messages'
             },
             trace_frontend_system_log: {
                 options: dev_ssh_options,
-                command: trace_file_command + '/messages'
+                command: trace_file_var_log + '/messages'
             },
             trace_testsupport_access_log: {
                 options: dev_ssh_options,
-                command: trace_file_command + '/httpd/mot-testsupport_access.log'
+                command: trace_file_var_log + '/httpd/mot-testsupport_access.log'
             },
             trace_testsupport_error_log: {
                 options: dev_ssh_options,
-                command: trace_file_command + '/httpd/mot-testsupport_error.log'
+                command: trace_file_var_log + '/httpd/mot-testsupport_error.log'
             },
             trace_jasper_access_log: {
                 options: dev_ssh_options,
                 command: function(){
-                    return trace_file_command + '/tomcat/localhost_access_log.' + new Date().toISOString().substr(0, 10) + '.txt'
+                    return trace_file_var_log + '/tomcat/localhost_access_log.' + new Date().toISOString().substr(0, 10) + '.txt'
                 }
+            },
+            trace_vehicle_service_access_log: {
+                options: dev2_ssh_options,
+                command: trace_file_opt_dvsa + '/vehicle-service/log/access.log'
+            },
+            trace_vehicle_service_error_log: {
+                options: dev2_ssh_options,
+                command: trace_file_opt_dvsa + '/vehicle-service/log/vehicle-service.log'
             },
             password_policy_show: {
                 command: 'cd /etc/openam/opends/bin/ && sudo ./dsconfig  get-password-policy-prop  \
