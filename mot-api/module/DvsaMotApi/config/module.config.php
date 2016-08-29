@@ -1,6 +1,5 @@
 <?php
 
-use DvsaMotApi\Controller\CertificatePrintingController;
 use DvsaMotApi\Controller\ContingencyTestController;
 use DvsaMotApi\Controller\IdentityDataController;
 use DvsaMotApi\Controller\MotTestController;
@@ -14,17 +13,9 @@ use DvsaMotApi\Controller\RetestController;
 use DvsaMotApi\Controller\SurveyController;
 use DvsaMotApi\Controller\TestItemCategoryNameController;
 use DvsaMotApi\Controller\TesterMotTestLogController;
-
-use DvsaMotApi\Factory\Controller\MotTestStatusControllerFactory;
-use DvsaMotApi\Factory\Controller\TesterControllerFactory;
-use DvsaMotApi\Factory\Controller\UserControllerFactory;
-use DvsaMotApi\Factory\Controller\TesterMotTestLogControllerFactory;
 use DvsaEntities\Entity\Person;
 use DvsaCommon\Validator\UsernameValidator;
 use DvsaMotApi\Controller\DemoTestAssessmentController;
-use DvsaMotApi\Factory\Controller\DemoTestAssessmentControllerFactory;
-use DvsaMotApi\Factory\Controller\ReplacementCertificateDraftControllerFactory;
-use DvsaMotApi\Factory\CertificatePdfServiceFactory;
 
 return [
     'controllers' => include 'controllers.config.php',
