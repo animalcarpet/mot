@@ -16,6 +16,8 @@ use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
+use Zend\Paginator\Adapter\ArrayAdapter;
+use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
 class SearchDefectsController extends AbstractDvsaMotTestController
@@ -24,6 +26,12 @@ class SearchDefectsController extends AbstractDvsaMotTestController
     const CONTENT_HEADER_TYPE__MOT_TEST_REINSPECTION = 'MOT test reinspection';
     const CONTENT_HEADER_TYPE__MOT_TEST_RESULTS = 'MOT test results';
     const CONTENT_HEADER_TYPE__SEARCH = 'Search for a defect';
+
+    /*
+     * Due to constraints in the API, we are not using the 'start' or 'end'
+     * query parameters. Instead we just get all the search results at once.
+     */
+    const WE_ARE_NOT_USING_THIS_PARAMETER = 0;
 
     const QUERY_PARAM_SEARCH_TERM = 'q';
     const QUERY_PARAM_SEARCH_PAGE = 'p';
@@ -39,12 +47,19 @@ class SearchDefectsController extends AbstractDvsaMotTestController
     {
         $motTestNumber = $this->params()->fromRoute('motTestNumber');
         $searchTerm = $this->getRequest()->getQuery(self::QUERY_PARAM_SEARCH_TERM);
+        $page = $this->getRequest()->getQuery(self::QUERY_PARAM_SEARCH_PAGE);
+        if (empty($page)) {
+            $page = 1;
+        }
+
         $vehicleClassCode = 0;
 
         /** @var MotTestDto $motTest */
         $motTest = null;
         $isReinspection = false;
         $isDemoTest = false;
+        $paginator = null;
+        $defects = null;
 
         try {
             $motTest = $this->getMotTestFromApi($motTestNumber);
@@ -65,17 +80,19 @@ class SearchDefectsController extends AbstractDvsaMotTestController
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
         $this->enableGdsLayout('Search for a defect', '');
 
-        $defects = $this->getSearchResultsFromApi();
-
-        if (!is_null($defects)) {
-            $defects = $this->addInspectionManualReferenceUrls($this->getSearchResultsFromApi(), $vehicleClassCode);
+        if ($searchTerm !== '' && !is_null($searchTerm)) {
+            $defects = $this->getSearchResultsFromApi();
         }
 
-        $defectsCount = is_null($defects) ? 0 : count($defects->getDefects());
-        $hasResults = !empty($defects);
+        if (!is_null($defects)) {
+            $defects = $this->addInspectionManualReferenceUrls($defects, $vehicleClassCode);
+            $paginator = new Paginator(new ArrayAdapter($defects->getDefects()));
+            $paginator->setItemCountPerPage(10);
+            $paginator->setPageRange(5);
+            $paginator->setCurrentPageNumber($page);
+        }
 
-        // TODO: Remove these hardcoded values as part of BL-3075
-        $page = 0;
+        $hasResults = !empty($defects);
 
         return $this->createViewModel('defects/search.twig', [
             'motTestNumber' => $motTestNumber,
@@ -85,9 +102,8 @@ class SearchDefectsController extends AbstractDvsaMotTestController
             'vehicleFirstUsedDate' => $vehicleFirstUsedDate,
             'searchTerm' => $searchTerm,
             'hasResults' => $hasResults,
-            'numberOfResults' => $defectsCount,
-            'defects' => $defects,
             'page' => $page,
+            'paginator' => $paginator,
         ]);
     }
 
@@ -140,7 +156,23 @@ class SearchDefectsController extends AbstractDvsaMotTestController
     }
 
     /**
+     * Due to time constraints I wasn't able to change the API to make it work
+     * in a sane way. So we just fetch all the results for the search term.
+     *
+     * This doesn't work too badly. A search term returning >500 results only
+     * takes around half a second to return.
+     *
+     * This will return a DefectCollection containing all the defects which
+     * correspond to the search term, which can then be used in a Paginator.
+     *
+     * The API is broken in two ways:
+     *  the 'end' parameter doesn't do anything;
+     *  the 'count' which the API returns is always 10 or less, regardless of how
+     *      many results there actually are.
+     *
      * @return DefectCollection|null
+     *
+     * @see Paginator
      */
     private function getSearchResultsFromApi()
     {
@@ -152,22 +184,18 @@ class SearchDefectsController extends AbstractDvsaMotTestController
         $motTestNumber = $this->params()->fromRoute('motTestNumber');
         $searchResults = null;
 
-        // TODO: Remove these hardcoded values as part of BL-3075
-        $start = 0;
-        $end = 9999;
-
         try {
             $params =
                 [
                     'search' => $searchTerm,
-                    'start' => $start,
-                    'end' => $end,
+                    'start' => self::WE_ARE_NOT_USING_THIS_PARAMETER,
+                    'end' => self::WE_ARE_NOT_USING_THIS_PARAMETER,
                 ];
 
             $endPoint = MotTestUrlBuilder::motSearchTestItem($motTestNumber);
 
             /**
-             * @var array $resultsFromApi
+             * @var array
              */
             $resultsFromApi = $this
                 ->getRestClient()

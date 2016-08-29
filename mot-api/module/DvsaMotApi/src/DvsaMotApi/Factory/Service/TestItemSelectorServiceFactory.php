@@ -3,16 +3,14 @@
 namespace DvsaMotApi\Factory\Service;
 
 use Doctrine\ORM\EntityManager;
+use DvsaCommon\Configuration\MotConfig;
 use DvsaEntities\Repository\TestItemCategoryRepository;
 use DvsaMotApi\Service\TestItemSelectorService;
-use DvsaCommon\Configuration\MotConfig;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class TestItemSelectorServiceFactory
- *
- * @package DvsaMotApi\Factory\Service
+ * Class TestItemSelectorServiceFactory.
  */
 class TestItemSelectorServiceFactory implements FactoryInterface
 {
@@ -23,8 +21,9 @@ class TestItemSelectorServiceFactory implements FactoryInterface
             $serviceLocator->get('Hydrator'),
             $serviceLocator->get('RfrRepository'),
             $serviceLocator->get('DvsaAuthorisationService'),
-            $serviceLocator->get(TestItemCategoryRepository::CLASS),
-            $serviceLocator->get(MotConfig::class)->withDefault([])->get('disabled_rfrs')
+            $serviceLocator->get(TestItemCategoryRepository::class),
+            $serviceLocator->get(MotConfig::class)->withDefault([])->get('disabled_rfrs'),
+            $serviceLocator->get('Feature\FeatureToggles')
         );
     }
 }
