@@ -1,51 +1,43 @@
 <?php
 
 use Dvsa\Mot\Frontend\MotTestModule\Controller\SurveyPageController;
+use Dvsa\Mot\Frontend\MotTestModule\Model\SurveyRating;
+/**
+* @var SurveyRating $ratings
+*/
 
-$this->layout()->setVariable('pageTitle', 'Give feedback');
+$this->layout()->setVariable('pageTitle', "Give feedback");
 ?>
+
+<div class="text">
+    <p>Before you go, please help us to make the service better by giving some quick feedback.</p>
+</div>
 
 <form method="POST">
     <?php echo $this->csrfToken(); ?>
     <fieldset>
-        <legend class="form-label">Overall, how did you feel about the service you received today?</legend>
+        <legend class="form-label-bold">Overall, how did you feel about the service you received today?</legend>
 
-        <input type="hidden" name="motTestId" value="<?php echo $this->motTestId?>"/>
+        <input type="hidden" name="<?php echo SurveyPageController::TOKEN_KEY ?>" value="<?php echo $this->token?>"/>
 
         <?php
+
+        $options = [];
+        foreach ($ratings->getAll() as $key => $value) {
+            $ratingOption = [
+                'inputName' => 'satisfactionRating',
+                'value' => $value,
+                'key' => $key,
+            ];
+            array_push($options, $ratingOption);
+        }
 
         echo $this->partial(
             'partial/gds/form/control-radio-group',
             [
                 'name' => 'satisfactionRating',
                 'splitLastOption' => false,
-                'options' => [
-                    [
-                        'inputName' => 'satisfactionRating',
-                        'value' => SurveyPageController::VERY_SATISFIED,
-                        'key' => 'Very satisfied',
-                    ],
-                    [
-                        'inputName' => 'satisfactionRating',
-                        'value' => SurveyPageController::SATISFIED,
-                        'key' => 'Satisfied',
-                    ],
-                    [
-                        'inputName' => 'satisfactionRating',
-                        'value' => SurveyPageController::NEITHER_SATISFIED_NOR_DISSATISFIED,
-                        'key' => 'Neither satisfied nor dissatisfied',
-                    ],
-                    [
-                        'inputName' => 'satisfactionRating',
-                        'value' => SurveyPageController::DISSATISFIED,
-                        'key' => 'Dissatisfied',
-                    ],
-                    [
-                        'inputName' => 'satisfactionRating',
-                        'value' => SurveyPageController::VERY_DISSATISFIED,
-                        'key' => 'Very dissatisfied',
-                    ],
-                ],
+                'options' => $options
             ]
         );
         ?>
@@ -62,7 +54,7 @@ $this->layout()->setVariable('pageTitle', 'Give feedback');
             <a id="cancel-and-return" href="<?php
             echo '/';
             ?>">
-                <?php echo 'Cancel and return home' ?>
+                <?php echo 'Sign in' ?>
             </a>
         </li>
     </ul>

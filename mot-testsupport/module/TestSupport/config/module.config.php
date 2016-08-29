@@ -1,6 +1,7 @@
 <?php
 
 use TestSupport\Controller;
+use TestSupport\Controller\GdsSurveyController;
 
 return [
     'controllers'  => [
@@ -52,6 +53,8 @@ return [
             Controller\SiteRoleNominationController::class => Controller\SiteRoleNominationController::class,
             Controller\OrganisationRoleNominationController::class => Controller\OrganisationRoleNominationController::class,
             Controller\AnnualAssessmentCertificateController::class => Controller\AnnualAssessmentCertificateController::class,
+            Controller\OneHundredMotTestsController::class => Controller\OneHundredMotTestsController::class,
+            GdsSurveyController::class => GdsSurveyController::class,
         ],
     ],
     'router'       => [
@@ -95,6 +98,15 @@ return [
                             'route'    => '/tester',
                             'defaults' => [
                                 'controller' => Controller\TesterDataController::class
+                            ],
+                        ],
+                    ],
+                    'generate-survey' => [
+                        'type'    => 'Segment',
+                        'options' => [
+                            'route'    => '/survey/reports/generate',
+                            'defaults' => [
+                                'controller' => GdsSurveyController::class,
                             ],
                         ],
                     ],
@@ -188,6 +200,15 @@ return [
                             ],
                             'defaults'    => [
                                 'controller' => Controller\TestSupportMotTestController::class
+                            ],
+                        ],
+                    ],
+                    'oneHundredMotTestsSub'         => [
+                        'type'    => 'Segment',
+                        'options' => [
+                            'route'       => '/onehundredmottests',
+                            'defaults'    => [
+                                'controller' => Controller\OneHundredMotTestsController::class
                             ],
                         ],
                     ],

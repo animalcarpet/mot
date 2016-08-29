@@ -31,6 +31,7 @@ class ChangeTempPasswordListener
         'account/claim/review',
         'account/claim/success',
         'login-2fa',
+        'survey',
     ];
 
     private $ChangeTempPasswordRoutes = [

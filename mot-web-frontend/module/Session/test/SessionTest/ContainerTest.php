@@ -2,10 +2,10 @@
 
 namespace SessionTest;
 
-use Session\Container;
+use Zend\Session\Container;
 
 /**
- * Class ContainerTest
+ * Class ContainerTest.
  */
 class ContainerTest extends \PHPUnit_Framework_TestCase
 {
@@ -23,7 +23,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     public function testGetArrayCopyAfterExchangeArray()
     {
         $sut = new Container();
-        $sut->exchangeArray(['foo'=>'bar']);
+        $sut->exchangeArray(['foo' => 'bar']);
 
         $contents = $sut->getArrayCopy();
 

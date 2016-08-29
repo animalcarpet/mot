@@ -23,7 +23,7 @@ use TestSupport\Service\CertificateReplacementService;
 use TestSupport\Service\ClaimAccountService;
 use TestSupport\Service\CronUserService;
 use TestSupport\Service\CSCOService;
-use TestSupport\Service\CsmService;
+use TestSupport\Service\CSMService;
 use TestSupport\Service\DocumentService;
 use TestSupport\Service\DVLAManagerService;
 use TestSupport\Service\DVLAOperativeService;
@@ -59,6 +59,8 @@ use TestSupport\Factory\SecurityQuestionsServiceFactory;
 use TestSupport\Factory\SiteRoleNominationServiceFactory;
 use TestSupport\Service\OrganisationRoleNominationService;
 use TestSupport\Factory\RoleNominationServiceFactory;
+use TestSupport\Service\OneHundredMotTestsService;
+use TestSupport\Factory\TestSupportOneHundredMotTestsServiceFactory;
 
 return [
     'factories' => [
@@ -166,6 +168,7 @@ return [
         GVTSTesterService::class           => \TestSupport\Factory\GVTSTesterServiceFactory::class,
         StatisticsAmazonCacheService::class  => \TestSupport\Factory\StatisticsAmazonCacheFactory::class,
         GdsSurveyService::class            => GdsSurveyServiceFactory::class,
+        OneHundredMotTestsService::class            => TestSupportOneHundredMotTestsServiceFactory::class,
         SecurityQuestionsService::class => SecurityQuestionsServiceFactory::class,
         ClaimAccountService::class         => ClaimAccountServiceFactory::class,
         CatUserService::class              => CatUserServiceFactory::class,

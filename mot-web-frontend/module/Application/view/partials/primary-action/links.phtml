@@ -77,7 +77,7 @@ use Dvsa\Mot\Frontend\MotTestModule\Controller\SurveyPageController;
     <?php if ($this->authorisationHelper()->isGranted(PermissionInSystem::GENERATE_SATISFACTION_SURVEY_REPORT)
                 && $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)): ?>
         <li>
-            <a href="<?php echo $this->url('survey/reports'); ?>"
+            <a href="<?php echo $this->url('survey-reports'); ?>"
                id="action-start-survey-reports">
                 Generate survey report
             </a>

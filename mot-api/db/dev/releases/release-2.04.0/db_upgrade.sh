@@ -8,7 +8,6 @@ readonly MYSQL_USER=motdbuser
 readonly MYSQL_ADMIN_PASSWORD=password
 
 # Add files here in intended run order for release.
-upgrade_files+=('2016-06-16-BL-2048-confirm-trigger-point-for-gds-satisfaction-survey-presentation-STORY.sql');
 upgrade_files+=('2016-08-05-BL-2760-BL-3113-tester-tqi-permissions-STORY.sql');
 
 # Necessary for first deployment.

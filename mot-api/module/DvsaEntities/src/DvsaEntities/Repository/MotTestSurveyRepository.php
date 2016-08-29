@@ -4,15 +4,15 @@ namespace DvsaEntities\Repository;
 
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\MotTest;
-use DvsaEntities\Entity\MotTestSurveyResult;
+use DvsaEntities\Entity\MotTestSurvey;
 
-interface MotTestSurveyResultRepository
+interface MotTestSurveyRepository
 {
     /**
-     * @param int|string $motTestId
-     * @return MotTestSurveyResult
+     * @param string $token
+     * @return MotTestSurvey
      */
-    public function findByMotTestId($motTestId);
+    public function findByToken($token);
 
     /**
      * @param int|string $userId

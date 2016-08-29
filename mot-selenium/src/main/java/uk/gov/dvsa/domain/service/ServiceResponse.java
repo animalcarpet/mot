@@ -35,7 +35,7 @@ public class ServiceResponse {
         }
     }
 
-    private static void checkResponseSanity(final Response response) {
+    protected static void checkResponseSanity(final Response response) {
 
         if (response.statusCode() == HttpStatus.SC_OK) {
             return;

@@ -15,7 +15,8 @@ return [
         'DoctrineModule',
         'DoctrineORMModule',
         'DvsaEntities',
-        'DvsaFeature'
+        'DvsaFeature',
+        'Noiselabs\ZfDebugModule'
     ],
     'module_listener_options' => [
         'module_paths'      => [

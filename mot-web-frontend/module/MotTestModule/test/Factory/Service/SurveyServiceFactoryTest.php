@@ -1,6 +1,6 @@
 <?php
 
-namespace DvsaMotTesttest\Factory\Service;
+namespace Dvsa\Mot\Frontend\MotTestModuleTest\Factory\Service;
 
 use Aws\S3\S3Client;
 use Dvsa\Mot\Frontend\MotTestModule\Factory\Service\SurveyServiceFactory;

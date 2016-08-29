@@ -18,9 +18,7 @@ upgrade_files+=('2016-07-22-BL-2968-notification-templates-for-nominations-with-
 upgrade_files+=('2016-08-07-BL-375-order-card-as-csco-permission-STORY.sql');
 upgrade_files+=('2016-08-08-BL-3055-notification-templates-for-aedm-nominations-with-security-cards-STORY.sql');
 upgrade_files+=('2016-08-22-Date-TBD-BL-373-2fa-security-card-order-event-STORY.sql');
-
-
-
+upgrade_files+=('2016-06-16-BL-2048-confirm-trigger-point-for-gds-satisfaction-survey-presentation-STORY.sql');
 
 # Necessary for first deployment.
 $(mysql -h ${MYSQL_HOST} -u ${MYSQL_USER} -p${MYSQL_ADMIN_PASSWORD} ${MYSQL_DB_NAME} -e "CREATE TABLE IF NOT EXISTS db_upgrade (

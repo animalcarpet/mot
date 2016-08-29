@@ -2,7 +2,7 @@
 /**
  * This file is part of the DVSA MOT API project.
  *
- * @link http://gitlab.clb.npm/mot/mot
+ * @link https://gitlab.motdev.org.uk/mot/mot
  */
 
 namespace DvsaEntities\Repository;
@@ -24,7 +24,7 @@ use DvsaEntities\DqlBuilder\SearchParam\MotTestSearchParam;
 use DvsaEntities\Entity\Make;
 use DvsaEntities\Entity\Model;
 use DvsaEntities\Entity\MotTest;
-use DvsaEntities\Entity\MotTestSurveyResult;
+use DvsaEntities\Entity\MotTestSurvey;
 use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Site;
@@ -32,8 +32,6 @@ use DvsaEntities\Entity\Vehicle;
 
 /**
  * MotTest Repository.
- *
- * @codeCoverageIgnore
  */
 class MotTestRepository extends AbstractMutableRepository
 {
@@ -82,14 +80,14 @@ class MotTestRepository extends AbstractMutableRepository
     public function findLastNormalTest($vehicleId, $contingencyDto = null, $vtsId = null)
     {
         $qb = $this
-            ->createQueryBuilder("mt")
-            ->innerJoin("mt.vehicle", "v")
-            ->innerJoin("mt.motTestType", "t")
-            ->where("v.id = :vehicleId")
-            ->andWhere("t.code = :code")
-            ->orderBy("mt.completedDate", "DESC")
-            ->setParameter("vehicleId", $vehicleId)
-            ->setParameter("code", MotTestTypeCode::NORMAL_TEST)
+            ->createQueryBuilder('mt')
+            ->innerJoin('mt.vehicle', 'v')
+            ->innerJoin('mt.motTestType', 't')
+            ->where('v.id = :vehicleId')
+            ->andWhere('t.code = :code')
+            ->orderBy('mt.completedDate', 'DESC')
+            ->setParameter('vehicleId', $vehicleId)
+            ->setParameter('code', MotTestTypeCode::NORMAL_TEST)
             ->setMaxResults(1);
 
         if ($contingencyDto instanceof ContingencyTestDto) {
@@ -100,8 +98,8 @@ class MotTestRepository extends AbstractMutableRepository
 
         if ($vtsId !== null) {
             $qb
-                ->andWhere("mt.vehicleTestingStation = :vtsId")
-                ->setParameter("vtsId", $vtsId);
+                ->andWhere('mt.vehicleTestingStation = :vtsId')
+                ->setParameter('vtsId', $vtsId);
         }
 
         $resultArray = $qb->getQuery()->getResult();
@@ -110,27 +108,28 @@ class MotTestRepository extends AbstractMutableRepository
     }
 
     /**
-     * @param int $vehicleId
+     * @param int       $vehicleId
      * @param \DateTime $from
      * @param $contingencyDto
+     *
      * @return int
      */
     public function countNotCancelledTests($vehicleId, \DateTime $from, $contingencyDto = null)
     {
         $qb = $this
-            ->createQueryBuilder("mt")
-            ->select("count(mt.id) AS amount")
-            ->innerJoin("mt.vehicle", "v")
-            ->innerJoin("mt.motTestType", "t")
-            ->innerJoin("mt.status", "s")
-            ->where("v.id = :vehicleId")
-            ->andWhere("t.code = :motTestTypeCode")
-            ->andWhere("s.code NOT IN (:motTestStatusCode)")
-            ->andWhere("mt.completedDate > :completedDate")
-            ->setParameter("vehicleId", $vehicleId)
-            ->setParameter("motTestTypeCode", MotTestTypeCode::NORMAL_TEST)
-            ->setParameter("motTestStatusCode", [MotTestStatusCode::ABANDONED, MotTestStatusCode::ABORTED, MotTestStatusCode::ABORTED_VE])
-            ->setParameter("completedDate", $from);
+            ->createQueryBuilder('mt')
+            ->select('count(mt.id) AS amount')
+            ->innerJoin('mt.vehicle', 'v')
+            ->innerJoin('mt.motTestType', 't')
+            ->innerJoin('mt.status', 's')
+            ->where('v.id = :vehicleId')
+            ->andWhere('t.code = :motTestTypeCode')
+            ->andWhere('s.code NOT IN (:motTestStatusCode)')
+            ->andWhere('mt.completedDate > :completedDate')
+            ->setParameter('vehicleId', $vehicleId)
+            ->setParameter('motTestTypeCode', MotTestTypeCode::NORMAL_TEST)
+            ->setParameter('motTestStatusCode', [MotTestStatusCode::ABANDONED, MotTestStatusCode::ABORTED, MotTestStatusCode::ABORTED_VE])
+            ->setParameter('completedDate', $from);
 
         if ($contingencyDto instanceof ContingencyTestDto) {
             $qb
@@ -151,7 +150,7 @@ class MotTestRepository extends AbstractMutableRepository
     {
         $exception = new ServiceException(null);
         $exception->addError(
-            "TODO(PT): To be implemented when a placement of v5c is known.",
+            'TODO(PT): To be implemented when a placement of v5c is known.',
             ServiceException::DEFAULT_STATUS_CODE
         );
 
@@ -169,16 +168,16 @@ class MotTestRepository extends AbstractMutableRepository
     public function findLastCertificateExpiryDate($vehicleId)
     {
         $qb = $this
-            ->createQueryBuilder("mt")
-            ->innerJoin("mt.motTestType", "t")
-            ->innerJoin("mt.status", "ts")
-            ->where("mt.vehicle = :vehicleId")
-            ->andWhere("t.code IN (:testTypes)")
-            ->andWhere("ts.name = :status")
-            ->orderBy("mt.expiryDate", "DESC")
-            ->setParameter("vehicleId", $vehicleId)
-            ->setParameter("status", MotTestStatusName::PASSED)
-            ->setParameter("testTypes", $this->testTypes)
+            ->createQueryBuilder('mt')
+            ->innerJoin('mt.motTestType', 't')
+            ->innerJoin('mt.status', 'ts')
+            ->where('mt.vehicle = :vehicleId')
+            ->andWhere('t.code IN (:testTypes)')
+            ->andWhere('ts.name = :status')
+            ->orderBy('mt.expiryDate', 'DESC')
+            ->setParameter('vehicleId', $vehicleId)
+            ->setParameter('status', MotTestStatusName::PASSED)
+            ->setParameter('testTypes', $this->testTypes)
             ->setMaxResults(1);
 
         $resultArray = $qb->getQuery()->getArrayResult();
@@ -210,16 +209,16 @@ class MotTestRepository extends AbstractMutableRepository
     public function findInProgressTestForPerson($personId)
     {
         $qb = $this
-            ->createQueryBuilder("mt")
-            ->innerJoin("mt.motTestType", "t")
-            ->innerJoin("mt.status", "ts")
-            ->where("mt.tester = :personId")
-            ->andWhere("ts.name = :status")
-            ->andWhere("t.code NOT IN (:code)")
-            ->setParameter("personId", $personId)
-            ->setParameter("status", MotTestStatusName::ACTIVE)
+            ->createQueryBuilder('mt')
+            ->innerJoin('mt.motTestType', 't')
+            ->innerJoin('mt.status', 'ts')
+            ->where('mt.tester = :personId')
+            ->andWhere('ts.name = :status')
+            ->andWhere('t.code NOT IN (:code)')
+            ->setParameter('personId', $personId)
+            ->setParameter('status', MotTestStatusName::ACTIVE)
             ->setParameter(
-                "code",
+                'code',
                 [MotTestTypeCode::ROUTINE_DEMONSTRATION_TEST, MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING]
             )
             ->setMaxResults(1);
@@ -234,8 +233,8 @@ class MotTestRepository extends AbstractMutableRepository
      *
      * @see findInProgressDemoTestForPerson for different type of demo tests
      *
-     * @param int     $personId
-     * @param boolean $routine  To set the demo test type
+     * @param int  $personId
+     * @param bool $routine  To set the demo test type
      *
      * @return string|null
      */
@@ -254,24 +253,24 @@ class MotTestRepository extends AbstractMutableRepository
      *          - Routine Demonstration Test (DR)
      *       this method will return the "Demonstration Test following training" by default
      *
-     * @param int     $personId
-     * @param boolean $routine  To set the demo test type
+     * @param int  $personId
+     * @param bool $routine  To set the demo test type
      *
      * @return MotTest|null
      */
     public function findInProgressDemoTestForPerson($personId, $routine = false)
     {
         $qb = $this
-            ->createQueryBuilder("mt")
-            ->innerJoin("mt.motTestType", "t")
-            ->innerJoin("mt.status", "ts")
-            ->where("mt.tester = :personId")
-            ->andWhere("ts.name = :status")
-            ->andWhere("t.code = :code")
-            ->setParameter("personId", $personId)
-            ->setParameter("status", MotTestStatusName::ACTIVE)
+            ->createQueryBuilder('mt')
+            ->innerJoin('mt.motTestType', 't')
+            ->innerJoin('mt.status', 'ts')
+            ->where('mt.tester = :personId')
+            ->andWhere('ts.name = :status')
+            ->andWhere('t.code = :code')
+            ->setParameter('personId', $personId)
+            ->setParameter('status', MotTestStatusName::ACTIVE)
             ->setParameter(
-                "code",
+                'code',
                 $routine ? MotTestTypeCode::ROUTINE_DEMONSTRATION_TEST : MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING
             )
             ->setMaxResults(1);
@@ -284,7 +283,7 @@ class MotTestRepository extends AbstractMutableRepository
     /**
      * @param $vehicleId
      *
-     * @return integer
+     * @return int
      */
     public function isTestInProgressForVehicle($vehicleId)
     {
@@ -312,14 +311,14 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function findInProgressTestsForVts($vtsId)
     {
-        $qb = $this->createQueryBuilder("mt");
+        $qb = $this->createQueryBuilder('mt');
         $query =
             $qb
-            ->innerJoin("mt.status", "ts")
-            ->where("ts.name = :status")
-            ->andWhere("mt.vehicleTestingStation = :vehicleTestingStation")
-            ->setParameter("status", MotTestStatusName::ACTIVE)
-            ->setParameter("vehicleTestingStation", $vtsId)
+            ->innerJoin('mt.status', 'ts')
+            ->where('ts.name = :status')
+            ->andWhere('mt.vehicleTestingStation = :vehicleTestingStation')
+            ->setParameter('status', MotTestStatusName::ACTIVE)
+            ->setParameter('vehicleTestingStation', $vtsId)
             ->getQuery();
 
         return $query->getResult();
@@ -332,13 +331,13 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function countInProgressTestsForVts($vtsId)
     {
-        $qb = $this->createQueryBuilder("mt")
+        $qb = $this->createQueryBuilder('mt')
             ->select('COUNT(mt.id) AS cnt')
-            ->innerJoin("mt.status", 'ts')
-            ->where("ts.code = :STATUS")
-            ->andWhere("mt.vehicleTestingStation = :VTS_ID")
-            ->setParameter(":STATUS", MotTestStatusCode::ACTIVE)
-            ->setParameter(":VTS_ID", $vtsId);
+            ->innerJoin('mt.status', 'ts')
+            ->where('ts.code = :STATUS')
+            ->andWhere('mt.vehicleTestingStation = :VTS_ID')
+            ->setParameter(':STATUS', MotTestStatusCode::ACTIVE)
+            ->setParameter(':VTS_ID', $vtsId);
 
         return (int) $qb->getQuery()->getSingleScalarResult();
     }
@@ -351,16 +350,16 @@ class MotTestRepository extends AbstractMutableRepository
     public function findRetestForMotTest($motTestNumber)
     {
         $qb = $this
-            ->createQueryBuilder("mt")
-            ->innerJoin("mt.motTestIdOriginal", "omt")
-            ->innerJoin("mt.motTestType", "t")
-            ->innerJoin("mt.status", "ts")
-            ->where("t.code = :code")
-            ->andWhere("omt.number = :normalTestId")
-            ->andWhere("ts.name IN (:statuses)")
-            ->setParameter("normalTestId", $motTestNumber)
-            ->setParameter("code", MotTestTypeCode::RE_TEST)
-            ->setParameter("statuses", [MotTestStatusName::PASSED, MotTestStatusName::FAILED])
+            ->createQueryBuilder('mt')
+            ->innerJoin('mt.motTestIdOriginal', 'omt')
+            ->innerJoin('mt.motTestType', 't')
+            ->innerJoin('mt.status', 'ts')
+            ->where('t.code = :code')
+            ->andWhere('omt.number = :normalTestId')
+            ->andWhere('ts.name IN (:statuses)')
+            ->setParameter('normalTestId', $motTestNumber)
+            ->setParameter('code', MotTestTypeCode::RE_TEST)
+            ->setParameter('statuses', [MotTestStatusName::PASSED, MotTestStatusName::FAILED])
             ->setMaxResults(1);
 
         $resultArray = $qb->getQuery()->getResult();
@@ -375,15 +374,15 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function getLatestMotTestsBySiteNumber($siteNumber)
     {
-        $mtQb =  $this
-            ->createQueryBuilder("it")
-            ->select("DATE(it.startedDate) AS sort_date")
+        $mtQb = $this
+            ->createQueryBuilder('it')
+            ->select('DATE(it.startedDate) AS sort_date')
             ->distinct(true)
-            ->innerJoin("it.vehicleTestingStation", "ivts")
-            ->where("ivts.siteNumber = :siteNumber")
+            ->innerJoin('it.vehicleTestingStation', 'ivts')
+            ->where('ivts.siteNumber = :siteNumber')
             ->andWhere("it.startedDate >= DATE_SUB(CURRENT_DATE(), 2, 'MONTH')")
-            ->addOrderBy("sort_date", "DESC")
-            ->setParameter("siteNumber", $siteNumber)
+            ->addOrderBy('sort_date', 'DESC')
+            ->setParameter('siteNumber', $siteNumber)
             ->setMaxResults(2);
 
         $res = $mtQb->getQuery()->getArrayResult();
@@ -461,17 +460,17 @@ class MotTestRepository extends AbstractMutableRepository
     public function findTestByVehicleRegistrationAndTestNumber($registration, $testNumber)
     {
         $qb = $this
-            ->createQueryBuilder("mt")
-            ->innerJoin("mt.motTestType", "t")
-            ->innerJoin("mt.status", "ts")
-            ->where("ts.name IN (:statuses)")
-            ->andWhere("t.code IN (:testTypes)")
-            ->andWhere("mt.registration = :registration")
-            ->andWhere("mt.number = :number")
-            ->setParameter("statuses", [MotTestStatusName::PASSED, MotTestStatusName::FAILED])
-            ->setParameter("testTypes", $this->testTypes)
-            ->setParameter("registration", $registration)
-            ->setParameter("number", $testNumber);
+            ->createQueryBuilder('mt')
+            ->innerJoin('mt.motTestType', 't')
+            ->innerJoin('mt.status', 'ts')
+            ->where('ts.name IN (:statuses)')
+            ->andWhere('t.code IN (:testTypes)')
+            ->andWhere('mt.registration = :registration')
+            ->andWhere('mt.number = :number')
+            ->setParameter('statuses', [MotTestStatusName::PASSED, MotTestStatusName::FAILED])
+            ->setParameter('testTypes', $this->testTypes)
+            ->setParameter('registration', $registration)
+            ->setParameter('number', $testNumber);
 
         return $qb->getQuery()->getSingleResult();
     }
@@ -496,23 +495,23 @@ class MotTestRepository extends AbstractMutableRepository
         $testTypes[] = MotTestTypeCode::TARGETED_REINSPECTION;
 
         $qb = $this
-            ->createQueryBuilder("mt")
-            ->innerJoin("mt.motTestType", "t")
-            ->innerJoin("mt.status", "ts")
-            ->where("ts.name IN (:statuses)")
-            ->andWhere("t.code IN (:testTypes)")
-            ->andWhere("mt.vehicle = :vehicleId")
-            ->orderBy("mt.issuedDate", "DESC")
-            ->addOrderBy("mt.completedDate", "DESC")
-            ->addOrderBy("mt.vehicleTestingStation", "ASC")
-            ->setParameter("statuses", $statuses)
-            ->setParameter("testTypes", $testTypes)
-            ->setParameter("vehicleId", $vehicleId);
+            ->createQueryBuilder('mt')
+            ->innerJoin('mt.motTestType', 't')
+            ->innerJoin('mt.status', 'ts')
+            ->where('ts.name IN (:statuses)')
+            ->andWhere('t.code IN (:testTypes)')
+            ->andWhere('mt.vehicle = :vehicleId')
+            ->orderBy('mt.issuedDate', 'DESC')
+            ->addOrderBy('mt.completedDate', 'DESC')
+            ->addOrderBy('mt.vehicleTestingStation', 'ASC')
+            ->setParameter('statuses', $statuses)
+            ->setParameter('testTypes', $testTypes)
+            ->setParameter('vehicleId', $vehicleId);
 
         if ($startDate !== null) {
             $qb
-                ->andWhere("mt.issuedDate >= :startDate OR mt.issuedDate IS NULL")
-                ->setParameter("startDate", $startDate);
+                ->andWhere('mt.issuedDate >= :startDate OR mt.issuedDate IS NULL')
+                ->setParameter('startDate', $startDate);
         }
 
         return $qb->getQuery()->getResult();
@@ -531,7 +530,7 @@ class MotTestRepository extends AbstractMutableRepository
     {
         $exception = new ServiceException(null);
         $exception->addError(
-            "TODO(PT): To be implemented when a placement of v5c is known.",
+            'TODO(PT): To be implemented when a placement of v5c is known.',
             ServiceException::DEFAULT_STATUS_CODE
         );
 
@@ -551,7 +550,7 @@ class MotTestRepository extends AbstractMutableRepository
     {
         $exception = new ServiceException(null);
         $exception->addError(
-            "TODO(PT): To be implemented when a placement of v5c is known.",
+            'TODO(PT): To be implemented when a placement of v5c is known.',
             ServiceException::DEFAULT_STATUS_CODE
         );
 
@@ -575,21 +574,21 @@ class MotTestRepository extends AbstractMutableRepository
         $testTypeCodes = \DvsaCommon\Domain\MotTestType::getExpiryDateDefiningTypes();
 
         $qb = $this
-            ->createQueryBuilder("t")
-            ->innerJoin("t.motTestType", "tt")
-            ->innerJoin("t.status", "ts")
-            ->where("t.vehicle = :vehicleId")
-            ->andWhere("t.completedDate IS NOT NULL")
-            ->andWhere("tt.code IN (:codes)")
-            ->andWhere("ts.name = :status")
-            ->orderBy("t.completedDate", "DESC")
+            ->createQueryBuilder('t')
+            ->innerJoin('t.motTestType', 'tt')
+            ->innerJoin('t.status', 'ts')
+            ->where('t.vehicle = :vehicleId')
+            ->andWhere('t.completedDate IS NOT NULL')
+            ->andWhere('tt.code IN (:codes)')
+            ->andWhere('ts.name = :status')
+            ->orderBy('t.completedDate', 'DESC')
             ->setParameter('vehicleId', $vehicleId)
             ->setParameter('status', $status)
             ->setParameter('codes', $testTypeCodes)
             ->setMaxResults(1);
 
         if ($issuedDate) {
-            $qb->andWhere("t.issuedDate < :issuedDate")
+            $qb->andWhere('t.issuedDate < :issuedDate')
                ->setParameter('issuedDate', $issuedDate);
         }
 
@@ -618,16 +617,16 @@ class MotTestRepository extends AbstractMutableRepository
         ]
     ) {
         $qb = $this
-            ->createQueryBuilder("t")
-            ->innerJoin("t.motTestType", "tt")
-            ->innerJoin("t.status", "ts")
-            ->innerJoin("t.vehicle", "v")
-            ->where("v.registration = :vrm")
-            ->andWhere("t.completedDate IS NOT NULL")
-            ->andWhere("tt.code NOT IN (:codes)")
-            ->andWhere("ts.name = :status")
-            ->andWhere("t.issuedDate < :issuedDate")
-            ->orderBy("t.completedDate", "DESC")
+            ->createQueryBuilder('t')
+            ->innerJoin('t.motTestType', 'tt')
+            ->innerJoin('t.status', 'ts')
+            ->innerJoin('t.vehicle', 'v')
+            ->where('v.registration = :vrm')
+            ->andWhere('t.completedDate IS NOT NULL')
+            ->andWhere('tt.code NOT IN (:codes)')
+            ->andWhere('ts.name = :status')
+            ->andWhere('t.issuedDate < :issuedDate')
+            ->orderBy('t.completedDate', 'DESC')
             ->setParameter('vrm', $vrm)
             ->setParameter('status', $status)
             ->setParameter('issuedDate', $issuedDate)
@@ -652,15 +651,15 @@ class MotTestRepository extends AbstractMutableRepository
     public function getLatestMotTestIdByVehicleId($vehicleId, $status = MotTestStatusName::PASSED)
     {
         $qb = $this
-            ->createQueryBuilder("t")
+            ->createQueryBuilder('t')
             ->select('t.number')
-            ->innerJoin("t.motTestType", "tt")
-            ->innerJoin("t.status", "ts")
-            ->where("t.vehicle = :vehicleId")
-            ->andWhere("t.completedDate IS NOT NULL")
-            ->andWhere("tt.code NOT IN (:codes)")
-            ->andWhere("ts.name = :status")
-            ->orderBy("t.completedDate", "DESC")
+            ->innerJoin('t.motTestType', 'tt')
+            ->innerJoin('t.status', 'ts')
+            ->where('t.vehicle = :vehicleId')
+            ->andWhere('t.completedDate IS NOT NULL')
+            ->andWhere('tt.code NOT IN (:codes)')
+            ->andWhere('ts.name = :status')
+            ->orderBy('t.completedDate', 'DESC')
             ->setParameter('vehicleId', $vehicleId)
             ->setParameter('status', $status)
             ->setParameter(
@@ -688,15 +687,15 @@ class MotTestRepository extends AbstractMutableRepository
     public function getLatestMotTestsByVehicleId($vehicleId, $maxResults = 100)
     {
         $qb = $this
-            ->createQueryBuilder("mt")
-            ->addSelect("v, vt, t, rfr")
-            ->innerJoin("mt.vehicle", "v")
-            ->innerJoin("mt.vehicleTestingStation", "vt")
-            ->innerJoin("mt.tester", "t")
-            ->innerJoin("mt.motTestType", "tt")
-            ->leftJoin("mt.motTestReasonForRejections", "rfr")
-            ->where("mt.vehicle = :vehicleId")
-            ->orderBy("mt.startedDate", "DESC")
+            ->createQueryBuilder('mt')
+            ->addSelect('v, vt, t, rfr')
+            ->innerJoin('mt.vehicle', 'v')
+            ->innerJoin('mt.vehicleTestingStation', 'vt')
+            ->innerJoin('mt.tester', 't')
+            ->innerJoin('mt.motTestType', 'tt')
+            ->leftJoin('mt.motTestReasonForRejections', 'rfr')
+            ->where('mt.vehicle = :vehicleId')
+            ->orderBy('mt.startedDate', 'DESC')
             ->setParameter('vehicleId', $vehicleId)
             ->setMaxResults($maxResults);
 
@@ -716,7 +715,7 @@ class MotTestRepository extends AbstractMutableRepository
     {
         $motTest = $this->find($id);
         if (!$motTest) {
-            throw new NotFoundException("Mot Test", $id);
+            throw new NotFoundException('Mot Test', $id);
         }
 
         return $motTest;
@@ -747,20 +746,20 @@ class MotTestRepository extends AbstractMutableRepository
             ->innerJoin('t.odometerReading', 'o')
             ->innerJoin('t.motTestType', 'tt')
             ->innerJoin('t.status', 'ts')
-            ->where("t.vehicle = :vehicleId")
-            ->andWhere("ts.name = :name")
-            ->andWhere("tt.code IN (:codes)")
+            ->where('t.vehicle = :vehicleId')
+            ->andWhere('ts.name = :name')
+            ->andWhere('tt.code IN (:codes)')
             ->orderBy('t.issuedDate', 'DESC')
             ->setMaxResults($limit);
 
         if ($dateTo != null) {
-            $qb->andWhere("t.startedDate <= :dateTo")
-                ->setParameter("dateTo", $dateTo->format('Y-m-d H:i:s'));
+            $qb->andWhere('t.startedDate <= :dateTo')
+                ->setParameter('dateTo', $dateTo->format('Y-m-d H:i:s'));
         }
 
-        $qb->setParameter("vehicleId", $vehicleId)
-            ->setParameter("name", MotTestStatusName::PASSED)
-            ->setParameter("codes", $codes);
+        $qb->setParameter('vehicleId', $vehicleId)
+            ->setParameter('name', MotTestStatusName::PASSED)
+            ->setParameter('codes', $codes);
 
         return $qb->getQuery()->getArrayResult();
     }
@@ -778,7 +777,7 @@ class MotTestRepository extends AbstractMutableRepository
 
         $qb->select('o.value, o.unit, o.resultType')
             ->from($this->getEntityName(), 't')
-            ->innerJoin("t.odometerReading", "o")
+            ->innerJoin('t.odometerReading', 'o')
             ->where('t.id = ?0')
             ->setMaxResults(1);
 
@@ -819,7 +818,7 @@ class MotTestRepository extends AbstractMutableRepository
 
         $statement->execute([
             'motTestId' => $motTestId,
-            'v5c' => str_replace(' ', '', $v5c)
+            'v5c' => str_replace(' ', '', $v5c),
         ]);
 
         $result = $statement->fetch();
@@ -870,10 +869,10 @@ class MotTestRepository extends AbstractMutableRepository
         $hydrateMode = Query::HYDRATE_OBJECT
     ) {
         $qb = $this
-            ->createQueryBuilder("test")
-            ->addSelect(["model", "make"])
-            ->leftJoin("test.make", "make")
-            ->leftJoin("test.model", "model")
+            ->createQueryBuilder('test')
+            ->addSelect(['model', 'make'])
+            ->leftJoin('test.make', 'make')
+            ->leftJoin('test.model', 'model')
             ->orderBy($orderBy);
 
         $paginate = new Paginator($qb->getQuery(), $fetchJoinCollection = true);
@@ -887,18 +886,20 @@ class MotTestRepository extends AbstractMutableRepository
     }
 
     /**
-     * Generic function to get MOT test count through organisation_site_map
+     * Generic function to get MOT test count through organisation_site_map.
+     *
      * @param $whereString
      * @param $whereParam
      * @param $whereValue
      * @param bool $getTestLogsForAe
+     *
      * @return mixed
      */
     private function getCountOfMotTests($whereString, $whereParam, $whereValue, $getTestLogsForAe = false)
     {
         $sql = $this->getMotTestCountQuery($whereString, $getTestLogsForAe);
 
-        if(!$getTestLogsForAe){
+        if (!$getTestLogsForAe) {
             $sql = $this->addMotTestSpecificConstraints($sql);
         }
 
@@ -915,7 +916,7 @@ class MotTestRepository extends AbstractMutableRepository
 
         $sql->bindValue($whereParam, $whereValue);
 
-        if(!$getTestLogsForAe){
+        if (!$getTestLogsForAe) {
             $this->bindMotTestSpecificConstraints($sql);
         }
 
@@ -1024,29 +1025,21 @@ class MotTestRepository extends AbstractMutableRepository
                 ->setParameter('VEHICLE_ID', $searchParam->getVehicleId());
         }
 
-        if($searchParam->getOrganisationId()) {
+        if ($searchParam->getOrganisationId()) {
             $qb->andWhere('osm.organisation_id = :OSM_ORGANISATION_ID')
                 ->setParameter('OSM_ORGANISATION_ID', $searchParam->getOrganisationId());
         }
 
-        if($searchParam->getSiteId()) {
+        if ($searchParam->getSiteId()) {
             $qb->andWhere('osm.site_id = :OSM_SITE_ID')
                 ->setParameter('OSM_SITE_ID', $searchParam->getSiteId());
         }
 
-        $organisationSiteStatuses = [
-            OrganisationSiteStatusCode::APPLIED,
-            OrganisationSiteStatusCode::UNKNOWN
-        ];
-
-        $query = [];
-        foreach ($organisationSiteStatuses as $key => $item) {
-            $query[] = ':ORGANISATION_SITE_STATUS' . $key;
-
-            $qb->setParameter('ORGANISATION_SITE_STATUS' . $key, $item);
-        }
-
-        $qb->andwhere('oss.code NOT IN (' . implode(',', $query) . ')');
+        $qb->andWhere('oss.code NOT IN (:ORGANISATION_SITE_STATUS_ID)')
+                ->setParameter('ORGANISATION_SITE_STATUS_ID', implode(',', [
+                    OrganisationSiteStatusCode::APPLIED,
+                    OrganisationSiteStatusCode::UNKNOWN,
+            ]));
 
         $statuses = $searchParam->getStatus();
         if (!empty($statuses)) {
@@ -1132,8 +1125,8 @@ class MotTestRepository extends AbstractMutableRepository
         if ($searchParam->getFormat() === SearchParamConst::FORMAT_DATA_CSV) {
             $qb
                 ->resetPart('orderBy')
-                ->orderBy("siteNumber ASC")
-                ->orderBy("testDate ASC")
+                ->orderBy('siteNumber ASC')
+                ->orderBy('testDate ASC')
                 ->select(
                     'CASE WHEN eml.id IS NOT NULL THEN emp.username ELSE NULL END AS emRecTester,
                     CASE WHEN eml.id IS NOT NULL THEN mt.created_on ELSE NULL END AS emRecDateTime,
@@ -1202,8 +1195,8 @@ class MotTestRepository extends AbstractMutableRepository
             ->leftJoin(Model::class, 'model', 'WITH', 'model.id = test.model')
             ->innerJoin(MotTestType::class, 'testType', 'WITH', 'test.motTestType = testType.id')
             ->innerJoin(Person::class, 'tester', 'WITH', 'tester.id = test.tester')
-            ->andWhere("testType.code IN (:testTypes)")
-            ->setParameter("testTypes", $this->getMotTestHistoryTestTypes());
+            ->andWhere('testType.code IN (:testTypes)')
+            ->setParameter('testTypes', $this->getMotTestHistoryTestTypes());
 
         if ($searchParam->getDateFrom()) {
             $qb->andwhere('test.startedDate >= :DATE_FROM')
@@ -1319,9 +1312,9 @@ class MotTestRepository extends AbstractMutableRepository
     public function getNormalMotTestCountSinceLastSurvey()
     {
         $qb = $this->_em->createQueryBuilder();
-        
-        /** @var MotTestSurveyResultRepository $motTestSurveyRepository */
-        $motTestSurveyRepository = $this->_em->getRepository(MotTestSurveyResult::class);
+
+        /** @var MotTestSurveyRepository $motTestSurveyRepository */
+        $motTestSurveyRepository = $this->_em->getRepository(MotTestSurvey::class);
 
         /** @var MotTest $lastSurveyMotTest */
         $lastSurveyMotTest = $motTestSurveyRepository->getLastUserSurveyTest();
@@ -1336,7 +1329,7 @@ class MotTestRepository extends AbstractMutableRepository
         $qb->setParameter('testTypeCode', MotTestTypeCode::NORMAL_TEST);
         $qb->setParameter('previousTest', $lastTestId);
 
-        $count = $qb->getQuery()->getSingleScalarResult();
+        $count = (int) $qb->getQuery()->getSingleScalarResult();
 
         return $count;
     }
@@ -1380,13 +1373,14 @@ class MotTestRepository extends AbstractMutableRepository
 
     /**
      * @param string $whereString
-     * @param bool $isQueryForAe
+     * @param bool   $isQueryForAe
+     *
      * @return string
      */
     private function getMotTestCountQuery($whereString, $isQueryForAe)
     {
         $joins = '';
-        if(!$isQueryForAe){
+        if (!$isQueryForAe) {
             $joins = '
                 INNER JOIN mot_test_type AS tt ON
                     tt.id = t.mot_test_type_id
@@ -1395,6 +1389,7 @@ class MotTestRepository extends AbstractMutableRepository
                     ts.id = t.status_id
             ';
         }
+
         return "
         SELECT COUNT(t.id) AS `year`,
             SUM(CASE 
@@ -1446,6 +1441,7 @@ class MotTestRepository extends AbstractMutableRepository
 
     /**
      * @param string $sql
+     *
      * @return string
      */
     private function addMotTestSpecificConstraints($sql)
@@ -1469,6 +1465,7 @@ class MotTestRepository extends AbstractMutableRepository
 
     /**
      * @param \Doctrine\DBAL\Driver\Statement $sql
+     *
      * @return \Doctrine\DBAL\Driver\Statement
      */
     private function bindMotTestSpecificConstraints($sql)

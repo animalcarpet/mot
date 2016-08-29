@@ -4,23 +4,27 @@
  *
  * @link http://gitlab.clb.npm/mot/mot
  */
+
 namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 
 use Core\Controller\AbstractAuthActionController;
+use DateTime;
+use Dvsa\Mot\Frontend\MotTestModule\Model\SurveyRating;
 use Dvsa\Mot\Frontend\MotTestModule\Service\SurveyService;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\FeatureToggle;
-use DvsaCommon\Constants\MotTestNumberConstraint;
 use Zend\Http\Headers;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\View\Model\ViewModel;
-use DateTime;
 
 /**
  * Class SurveyPageController.
  */
 class SurveyPageController extends AbstractAuthActionController
 {
+    const SATISFACTION_RATING = 'satisfactionRating';
+    const TOKEN_KEY = 'token';
+
     /**
      * @var SurveyService
      */
@@ -30,15 +34,6 @@ class SurveyPageController extends AbstractAuthActionController
      * @var array
      */
     private $reports;
-
-    const VERY_SATISFIED = 5;
-    const SATISFIED = 4;
-    const NEITHER_SATISFIED_NOR_DISSATISFIED = 3;
-    const DISSATISFIED = 2;
-    const VERY_DISSATISFIED = 1;
-
-    const SATISFACTION_RATING = 'satisfactionRating';
-    const MOT_TEST_NUMBER = 'motTestId';
 
     /**
      * @var
@@ -50,59 +45,24 @@ class SurveyPageController extends AbstractAuthActionController
      *
      * @param SurveyService $surveyService
      */
-    public function __construct(
-        SurveyService $surveyService
-    ) {
+    public function __construct(SurveyService $surveyService)
+    {
         $this->surveyService = $surveyService;
     }
 
     /**
-     * @return array|\Zend\Http\Response|ViewModel
+     * @return array|ViewModel
      */
     public function indexAction()
     {
-        $ref = $_SERVER['HTTP_REFERER'];
-
-        $noTestResult = strpos($ref, 'test-result') === false;
-        $noSurvey = strpos($ref, 'survey') === false;
-
-        if ($noTestResult && $noSurvey) {
-            return $this->notFoundAction();
-        }
         if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
             return $this->notFoundAction();
         }
 
-        $this->layout('layout/layout-govuk.phtml');
+        // Token will be null unless set when event is triggered.
+        $token = $this->params()->fromRoute(self::TOKEN_KEY);
 
-        if ($this->getRequest()->isPost()) {
-            $satisfactionRating = $this->getRequest()->getPost(self::SATISFACTION_RATING);
-            $motTestNumber = $this->getRequest()->getPost(self::MOT_TEST_NUMBER);
-
-            $surveyData = [
-                'mot_test_number'     => $motTestNumber,
-                'satisfaction_rating' => $satisfactionRating,
-            ];
-
-            $this->surveyService->submitSurveyResult(
-                $surveyData
-            );
-
-            if (is_null($satisfactionRating)) {
-                return $this->redirect()->toUrl('/');
-            } else {
-                return $this->redirect()->toRoute('survey/thanks');
-            }
-        }
-
-        $matches = [];
-        preg_match('/'.MotTestNumberConstraint::FORMAT_REGEX.'/', $ref, $matches);
-        $motTestId = $matches[0];
-
-        return $this->createViewModel(
-            'survey-page/index.phtml',
-            ['motTestId' => $motTestId]
-        );
+        return $this->handleSurveyRequest($token);
     }
 
     /**
@@ -110,25 +70,22 @@ class SurveyPageController extends AbstractAuthActionController
      */
     public function thanksAction()
     {
+        if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
+            return $this->notFoundAction();
+        }
+
         $ref = $_SERVER['HTTP_REFERER'];
         if (strpos($ref, 'survey') === false) {
             return $this->notFoundAction();
         }
 
-        if (!$this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
-            return $this->notFoundAction();
-        }
-
         $this->layout('layout/layout-govuk.phtml');
 
-        return $this->createViewModel(
-            'survey-page/thanks.phtml',
-            []
-        );
+        return $this->createViewModel('survey-page/thanks.phtml', []);
     }
 
     /**
-     * @return ViewModel
+     * @return ViewModel|array
      */
     public function reportsAction()
     {
@@ -138,24 +95,18 @@ class SurveyPageController extends AbstractAuthActionController
         }
 
         $this->layout('layout/layout-govuk.phtml');
-
         $this->reports = $this->surveyService->getSurveyReports();
 
-        return $this->createViewModel(
-            'survey-reports/reports.phtml',
-            [
-                'reports' => $this->reports,
-            ]
-        );
+        return $this->createViewModel('survey-reports/reports.phtml', ['reports' => $this->reports]);
     }
 
     /**
-     * @return Response
+     * @return Response|array
      */
     public function downloadReportCsvAction()
     {
         $this->assertGranted(PermissionInSystem::GENERATE_SATISFACTION_SURVEY_REPORT);
-        if (!$this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
+        if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
             return $this->notFoundAction();
         }
 
@@ -164,7 +115,7 @@ class SurveyPageController extends AbstractAuthActionController
         $headers = (new Headers())->addHeaders(
             [
                 'Content-Type' => 'text/csv; charset=utf-8',
-                'Content-Disposition' => 'attachment; filename="'.$reportMonth.'.csv"',
+                'Content-Disposition' => 'attachment; filename="' . $reportMonth . '.csv"',
                 'Accept-Ranges' => 'bytes',
                 'Cache-Control' => 'no-cache, no-store, max-age=0, must-revalidate',
                 'Pragma' => 'no-cache',
@@ -181,6 +132,48 @@ class SurveyPageController extends AbstractAuthActionController
         fclose($this->csvHandle);
 
         return $this->response;
+    }
+
+    /**
+     * @param string $token
+     *
+     * @return ViewModel|array
+     */
+    private function handleSurveyRequest($token)
+    {
+        $this->layout('layout/layout-govuk.phtml');
+
+        if ($this->getRequest()->isPost()) {
+            $satisfactionRating = $this->getRequest()->getPost(self::SATISFACTION_RATING);
+
+            // Trying to submit a survey without a linked MOT test.
+            if ($token == null) {
+                return $this->notFoundAction();
+            }
+
+            $surveyData = [
+                'token'               => $token,
+                'satisfaction_rating' => $satisfactionRating,
+            ];
+
+            $this->surveyService->submitSurveyResult($surveyData);
+
+            return $this->redirect()->toRoute('survey/thanks', ['token' => $token]);
+        }
+
+        if ($token == null) {
+            return $this->redirect()->toRoute('login');
+        }
+
+        if (!$this->surveyService->isTokenValid($token)) {
+            return $this->redirect()->toRoute('login');
+        }
+
+        return $this->createViewModel(
+            'survey-page/index.phtml', [
+                'token' => $token,
+                'ratings' => new SurveyRating()
+        ]);
     }
 
     /**
@@ -218,6 +211,11 @@ class SurveyPageController extends AbstractAuthActionController
         }
     }
 
+    /**
+     * @param $reportMonth
+     *
+     * @return string
+     */
     private function getMonthNameFromReportMonth($reportMonth)
     {
         $date = DateTime::createFromFormat('Y-m', $reportMonth);

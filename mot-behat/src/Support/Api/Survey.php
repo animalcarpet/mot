@@ -7,12 +7,13 @@ use PHPUnit_Framework_Assert as PHPUnit;
 
 class Survey extends MotApi
 {
-    const PATH_SURVEY_SHOULD_DISPLAY = 'survey/shouldDisplay';
+    const PATH_SURVEY_SHOULD_DISPLAY = 'survey/should-display';
     const PATH_SURVEY_CREATE = 'survey';
 
     /**
-     * @param string    $token
-     * @param \StdClass $motTestDetails
+     * @param string $token
+     * @param array  $motTestDetails
+     *
      * @return bool
      */
     public function surveyIsDisplayed($token, $motTestDetails)
@@ -32,18 +33,24 @@ class Survey extends MotApi
     }
 
     /**
-     * @param string $token
-     * @param array    $surveyValue
+     * @param string $authToken
+     * @param array  $surveyValue
+     * @param string $surveyToken
      */
-    public function createSurvey($token, $surveyValue)
+    public function createSurvey($authToken, $surveyValue, $surveyToken)
     {
-        $body = json_encode($surveyValue);
-        
+        $body = json_encode(
+            [
+                'satisfaction_survey' => $surveyValue,
+                'token' => $surveyToken,
+            ]
+        );
+
         $result = $this->client->request(
             new Request(
                 'POST',
                 self::PATH_SURVEY_CREATE,
-                ['Content-Type' => 'application/json', 'Authorization' => 'Bearer ' . $token],
+                ['Content-Type' => 'application/json', 'Authorization' => 'Bearer ' . $authToken],
                 $body
             )
         );
