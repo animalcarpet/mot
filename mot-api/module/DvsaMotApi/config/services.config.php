@@ -5,9 +5,6 @@ use DvsaCommon\Configuration\MotConfigFactory;
 use DvsaCommonApi\Transaction\ServiceTransactionAwareInitializer;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\TestItemCategoryRepository;
-use DvsaMotApi\Factory\AmazonS3ServiceFactory;
-use DvsaMotApi\Factory\AmazonSDKServiceFactory;
-use DvsaMotApi\Factory\AwsCredentialsProviderFactory;
 use DvsaMotApi\Factory\CertificateReplacementRepositoryFactory;
 use DvsaMotApi\Factory\ConfigurationRepositoryFactory;
 use DvsaMotApi\Factory\Helper\RoleEventHelperFactory;
@@ -22,7 +19,6 @@ use DvsaMotApi\Factory\Service\BrakeTestResultServiceFactory;
 use DvsaMotApi\Factory\Service\CertificateChangeServiceFactory;
 use DvsaMotApi\Factory\Service\CertificateCreationServiceFactory;
 use DvsaMotApi\Factory\Service\CertificateExpiryServiceFactory;
-use DvsaMotApi\Factory\Service\CertificatePdfServiceFactory;
 use DvsaMotApi\Factory\Service\CreateMotTestServiceFactory;
 use DvsaMotApi\Factory\Service\DemoTestAssessmentServiceFactory;
 use DvsaMotApi\Factory\Service\EmergencyServiceFactory;
@@ -66,15 +62,10 @@ use DvsaMotApi\Factory\VehicleRepositoryFactory;
 use DvsaMotApi\Helper\RoleEventHelper;
 use DvsaMotApi\Helper\RoleNotificationHelper;
 use DvsaMotApi\Helper\TesterQualificationStatusChangeEventHelper;
-use DvsaMotApi\Service\AmazonS3Service;
-use DvsaMotApi\Service\AmazonSDKService;
-use DvsaMotApi\Service\AwsCredentialsProviderService;
 use DvsaMotApi\Service\CertificateCreationService;
-use DvsaMotApi\Service\CertificatePdfService;
 use DvsaMotApi\Service\CreateMotTestService;
 use DvsaMotApi\Service\DemoTestAssessmentService;
 use DvsaMotApi\Service\EmergencyService;
-use DvsaMotApi\Service\MotTestDateHelper;
 use DvsaMotApi\Service\MotTestDateHelperService;
 use DvsaMotApi\Service\MotTestOptionsService;
 use DvsaMotApi\Service\MotTestReasonForRejectionService;
@@ -156,8 +147,5 @@ return [
         SurveyService::class                                => SurveyServiceFactory::class,
         MotConfig::class                                    => MotConfigFactory::class,
         ReplacementCertificateDraftChangeValidator::class   => ReplacementCertificateDraftChangeValidatorFactory::class,
-        AmazonS3Service::class                              => AmazonS3ServiceFactory::class,
-        AmazonSDKService::class                             => AmazonSDKServiceFactory::class,
-        AwsCredentialsProviderService::class                => AwsCredentialsProviderFactory::class,
     ],
 ];
