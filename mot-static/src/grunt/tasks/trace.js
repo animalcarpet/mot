@@ -18,5 +18,7 @@ module.exports = function(grunt, config) {
         grunt.registerTask('trace:testsupport:access', 'Trace the testsupport access log', 'sshexec:trace_testsupport_access_log');
         grunt.registerTask('trace:testsupport:error', 'Trace the testsupport error log', 'sshexec:trace_testsupport_error_log');
         grunt.registerTask('trace:jasper:access', 'Trace the jasper access log', 'sshexec:trace_jasper_access_log');
+        grunt.registerTask('trace:vehicle-service:access', 'Trace the vehicle service access log', 'sshexec:trace_vehicle_service_access_log');
+        grunt.registerTask('trace:vehicle-service:error', 'Trace the vehicle service error log', 'sshexec:trace_vehicle_service_error_log');
     }
 };
