@@ -10,6 +10,7 @@ class EventUrlBuilder extends AbstractUrlBuilder
     const MAIN = 'event';
     const EVENT_LIST = '/list/:type/:id';
     const EVENT = '/:id';
+    const EVENT_PERSON_ADD = '/add/person/:id';
 
     protected $routesStructure
         = [
@@ -17,6 +18,7 @@ class EventUrlBuilder extends AbstractUrlBuilder
                 [
                     self::EVENT_LIST    => '',
                     self::EVENT         => '',
+                    self::EVENT_PERSON_ADD     => '',
                 ],
         ];
 
@@ -43,6 +45,14 @@ class EventUrlBuilder extends AbstractUrlBuilder
     public function event($id)
     {
         $this->appendRoutesAndParams(self::EVENT);
+        $this->routeParam('id', $id);
+
+        return $this;
+    }
+
+    public function addPersonEvent($id)
+    {
+        $this->appendRoutesAndParams(self::EVENT_PERSON_ADD);
         $this->routeParam('id', $id);
 
         return $this;

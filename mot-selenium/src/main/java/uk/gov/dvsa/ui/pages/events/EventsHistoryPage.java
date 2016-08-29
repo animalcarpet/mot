@@ -17,6 +17,7 @@ public class EventsHistoryPage extends Page {
     @FindBy(id = "listLogs_wrapper") private WebElement listOfEventsTable;
     @FindBy(partialLinkText = "Record an event") private WebElement recordNewEventLink;
     @FindBy(name = "submit") private WebElement applyButton;
+    @FindBy(partialLinkText = "Security Card Order") private WebElement securityCardOrderEventLink;
 
     private String eventNames = "#listLogs a[href*='%s']";
 
@@ -58,5 +59,9 @@ public class EventsHistoryPage extends Page {
     public EventsHistoryPage clickApplyButton() {
         applyButton.click();
         return this;
+    }
+
+    public boolean isSecurityOrderCardEventLinkDisplayed() {
+        return PageInteractionHelper.isElementDisplayed(securityCardOrderEventLink);
     }
 }

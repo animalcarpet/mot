@@ -17,6 +17,7 @@ upgrade_files+=('2016-06-24-BL-2195-1-securely-send-requests-for-new-cards-to-sw
 upgrade_files+=('2016-07-22-BL-2968-notification-templates-for-nominations-with-security-cards-STORY.sql');
 upgrade_files+=('2016-08-07-BL-375-order-card-as-csco-permission-STORY.sql');
 upgrade_files+=('2016-08-08-BL-3055-notification-templates-for-aedm-nominations-with-security-cards-STORY.sql');
+upgrade_files+=('2016-08-22-Date-TBD-BL-373-2fa-security-card-order-event-STORY.sql');
 
 
 

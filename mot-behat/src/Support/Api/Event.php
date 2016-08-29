@@ -11,6 +11,7 @@ class Event extends MotApi
     const PATH_CREATE_EVENT_PERSON = 'person/{id}/event';
     const PATH_CREATE_EVENT_SITE = 'site/{id}/event';
     const PATH_CREATE_EVENT_ORGANISATION = 'organisation/{id}/event';
+    const PATH_CREATE_NON_MANUAL_EVENT = 'event/add/person/{personId}';
 
     private $params = [
         "dateFrom" => [
@@ -80,6 +81,18 @@ class Event extends MotApi
             $token,
             MotApi::METHOD_GET,
             $path
+        );
+    }
+
+    public function postNonManualEvent($token, $id, $data)
+    {
+        $path = str_replace("{personId}", $id, self::PATH_CREATE_NON_MANUAL_EVENT);
+
+        return $this->sendRequest(
+            $token,
+            MotApi::METHOD_POST,
+            $path,
+            $data
         );
     }
 

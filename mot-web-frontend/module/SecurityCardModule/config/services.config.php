@@ -45,6 +45,8 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Action\CardOrderReviewAction;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Factory\Action\CardOrderReviewActionFactory;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Action\CardOrderProtection;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Factory\Action\CardOrderProtectionFactory;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardEventService;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Factory\Service\OrderSecurityCardEventServiceFactory;
 
 return [
     'factories' => [
@@ -71,5 +73,6 @@ return [
         CardOrderAddressAction::class => CardOrderAddressActionFactory::class,
         CardOrderReviewAction::class => CardOrderReviewActionFactory::class,
         CardOrderProtection::class => CardOrderProtectionFactory::class,
+        OrderSecurityCardEventService::class => OrderSecurityCardEventServiceFactory::class,
     ]
 ];

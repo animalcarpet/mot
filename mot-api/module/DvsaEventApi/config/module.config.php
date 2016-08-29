@@ -1,9 +1,14 @@
 <?php
 
 use DvsaEventApi\Controller\EventController;
+use DvsaEventApi\Controller\EventPersonCreationController;
+use DvsaEventApi\Factory\Controller\EventPersonCreationControllerFactory;
 
 return [
     'controllers'     => [
+        'factories'  => [
+            EventPersonCreationController::class => EventPersonCreationControllerFactory::class,
+        ],
         'invokables' => [
             EventController::class       => EventController::class,
         ],
@@ -35,7 +40,18 @@ return [
                     ],
                 ],
             ],
-
+            'event-add-person'     => [
+                'type'    => 'segment',
+                'options' => [
+                    'route'       => '/event/add/person/:id',
+                    'constraints' => [
+                        'id' => '[1-9]+[0-9]*',
+                    ],
+                    'defaults'    => [
+                        'controller' => EventPersonCreationController::class,
+                    ],
+                ],
+            ],
         ],
     ],
 ];

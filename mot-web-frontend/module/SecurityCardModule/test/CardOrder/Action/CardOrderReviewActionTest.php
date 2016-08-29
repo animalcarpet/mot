@@ -12,6 +12,7 @@ use DvsaCommonTest\TestUtils\XMock;
 use Zend\Http\Request;
 use Core\Action\RedirectToRoute;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Action\CardOrderProtection;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardEventService;
 
 class CardOrderReviewActionTest extends \PHPUnit_Framework_TestCase
 {
@@ -64,6 +65,8 @@ class CardOrderReviewActionTest extends \PHPUnit_Framework_TestCase
     /** @var CardOrderProtection $cardOrderProtection */
     private $cardOrderProtection;
 
+    private $orderSecurityCardEventService;
+
     public function setUp()
     {
         parent::setUp();
@@ -72,6 +75,8 @@ class CardOrderReviewActionTest extends \PHPUnit_Framework_TestCase
         $this->securityCardService = XMock::of(SecurityCardService::class);
         $this->stepService = XMock::of(OrderSecurityCardStepService::class);
         $this->cardOrderProtection = XMock::of(CardOrderProtection::class);
+        $this->orderSecurityCardEventService = XMock::of(OrderSecurityCardEventService::class);
+
         $this->request = XMock::of(Request::class);
     }
 
@@ -91,13 +96,18 @@ class CardOrderReviewActionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(self::USER_ID, $actionResult->getRouteParams()['userId']);
     }
 
-    public function testRedirectedToConfirmation_WhenPostAndNotAlreadyOrdered() {
+    public function testRedirectedToConfirmation_EventCreated_WhenPostAndNotAlreadyOrdered() {
         $this->setUpProtection();
         $this->stepService
             ->expects($this->once())
             ->method('isAllowedOnStep')
             ->with(self::USER_ID, OrderSecurityCardStepService::REVIEW_STEP)
             ->willReturn(true);
+
+        $this->orderSecurityCardEventService
+            ->expects($this->once())
+            ->method('createEvent')
+            ->with(self::USER_ID, 'test_address_data');
 
         $this->setupPostMocks();
 
@@ -178,7 +188,8 @@ class CardOrderReviewActionTest extends \PHPUnit_Framework_TestCase
             $this->apiPersonalDetails,
             $this->securityCardService,
             $this->stepService,
-            $this->cardOrderProtection
+            $this->cardOrderProtection,
+            $this->orderSecurityCardEventService
         );
         return $action;
     }

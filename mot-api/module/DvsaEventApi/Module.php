@@ -14,6 +14,8 @@ use DvsaEventApi\Service\EventService;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ControllerProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
+use DvsaEventApi\Service\EventPersonCreationService;
+use DvsaEventApi\Factory\Service\EventPersonCreationServiceFactory;
 
 /**
  * Event module.
@@ -41,6 +43,7 @@ class Module implements
         return [
             'factories'  => [
                 EventService::class => EventServiceFactory::class,
+                EventPersonCreationService::class => EventPersonCreationServiceFactory::class,
             ],
             'invokables' => [
             ],
