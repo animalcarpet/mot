@@ -113,6 +113,32 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($result, $report);
     }
 
+    public function testTokenValidityTestInvalid()
+    {
+        $token = 'invalid';
+        $service = $this->createService();
+        $this->clientMock
+            ->expects($this->once())
+            ->method('post')
+            ->with(SurveyService::API_URL.SurveyService::TOKEN_VALIDATION_ENDPOINT, ['token' => $token])
+            ->willReturn(['data' => 'false']);
+
+        $this->assertEquals('false', $service->isTokenValid($token));
+    }
+
+    public function testTokenValidityTestValid()
+    {
+        $token = 'valid';
+        $service = $this->createService();
+        $this->clientMock
+            ->expects($this->once())
+            ->method('post')
+            ->with(SurveyService::API_URL.SurveyService::TOKEN_VALIDATION_ENDPOINT, ['token' => $token])
+            ->willReturn(['data' => 'true']);
+
+        $this->assertEquals('true', $service->isTokenValid($token));
+    }
+
     /**
      * @return SurveyService
      */

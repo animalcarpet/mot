@@ -1,5 +1,6 @@
 <?php
 
+use Dvsa\Mot\Frontend\AuthenticationModule\Controller\SecurityController;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\AddDefectController;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\AddManualAdvisoryController;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\ContingencyTestController;
@@ -13,6 +14,17 @@ use Dvsa\Mot\Frontend\MotTestModule\Module;
 use DvsaCommon\Constants\MotTestNumberConstraint;
 
 return [
+    'login' => [
+        'type'    => 'literal',
+        'options' => [
+            'route'    => '/login',
+            'defaults' => [
+                'controller' => SecurityController::class,
+                'action'     => 'login',
+            ],
+        ],
+        'may_terminate' => true,
+    ],
     'contingency' => [
         'type' => 'segment',
         'options' => [

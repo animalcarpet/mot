@@ -12,6 +12,7 @@ use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaFeature\FeatureToggles;
 use Zend\EventManager\EventManager;
 use Zend\Session\Container;
 
@@ -146,6 +147,72 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
         ];
     }
 
+    public function testRedirectToLoginWithNoToken()
+    {
+        $this->withFeatureToggles([FeatureToggle::SURVEY_PAGE => true]);
+        $this->getResponseForAction('index', ['token' => null]);
+
+        $this->assertResponseStatus(self::HTTP_REDIRECT_CODE);
+    }
+
+    public function testRedirectToLoginWithInvalidToken()
+    {
+        $this->withFeatureToggles([FeatureToggle::SURVEY_PAGE => true]);
+        $this->surveyService->method('isTokenValid')->willReturn(false);
+        $this->getResponseForAction('index', ['token' => 'invalid']);
+
+        $this->assertResponseStatus(self::HTTP_REDIRECT_CODE);
+    }
+
+    public function test200WithNoPostAndValidToken()
+    {
+        $this->withFeatureToggles([FeatureToggle::SURVEY_PAGE => true]);
+        $this->surveyService->method('isTokenValid')->willReturn(true);
+        $this->getResponseForAction('index', ['token' => 'valid']);
+
+        $this->assertResponseStatus(self::HTTP_OK_CODE);
+    }
+
+    public function testGetReportsWithData()
+    {
+        ob_start();
+        $this->withFeatureToggles([FeatureToggle::SURVEY_PAGE => true]);
+        $this->setupAuthenticationServiceForIdentity(StubIdentityAdapter::asSchemauser());
+        $this->setupAuthorizationService([PermissionInSystem::GENERATE_SATISFACTION_SURVEY_REPORT]);
+
+        $this->surveyService->method('getSurveyReports')->willReturn([
+            'data' => [
+                [
+                    'month' => '2016-05',
+                    'csv' => 'really cool csv string',
+                ]
+            ]
+        ]);
+
+        $this->getResponseForAction('downloadReportCsv', ['month' => 'May']);
+        $this->assertResponseStatus(self::HTTP_OK_CODE);
+        ob_end_clean();
+    }
+
+    public function testGetReportsWithNoData()
+    {
+        $this->withFeatureToggles([FeatureToggle::SURVEY_PAGE => true]);
+        $this->setupAuthenticationServiceForIdentity(StubIdentityAdapter::asSchemauser());
+        $this->setupAuthorizationService([PermissionInSystem::GENERATE_SATISFACTION_SURVEY_REPORT]);
+
+        $this->surveyService->method('getSurveyReports')->willReturn([
+            'data' => [
+                [
+                    'month' => '2016-06',
+                    'csv' => 'really cool csv string',
+                ]
+            ]
+        ]);
+
+        $this->getResponseForAction('downloadReportCsv', ['month' => 'May']);
+        $this->assertResponseStatus(self::HTTP_OK_CODE);
+    }
+
     /**
      * @dataProvider testThanksActionDataProvider
      * @group survey_page_controller_tests
@@ -226,6 +293,17 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
             [true],
             [false],
         ];
+    }
+
+    public function test404OnReportsActionWithoutFeatureToggle()
+    {
+        $this->withFeatureToggles([FeatureToggle::SURVEY_PAGE => false]);
+
+        $this->setupAuthenticationServiceForIdentity(StubIdentityAdapter::asSchemauser());
+        $this->setupAuthorizationService([PermissionInSystem::GENERATE_SATISFACTION_SURVEY_REPORT]);
+
+        $this->getResponseForAction('reports');
+        $this->assertResponseStatus(self::HTTP_ERR_404);
     }
 
     /**
