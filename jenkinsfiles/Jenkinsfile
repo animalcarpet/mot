@@ -297,7 +297,7 @@ wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
      }
      clean_repo('ci')
      tag_repo('mot')
-   }}
-  }} //wrappers
+   }
+  } //wrappers
 }
 slackSend "FINISHED => Job: '${env.JOB_NAME}' - Build: ${env.BUILD_NUMBER} @ Node: "+NODE+" (GoTo: <${env.BUILD_URL}|Build> | <${env.BUILD_URL}console|Console>)"
