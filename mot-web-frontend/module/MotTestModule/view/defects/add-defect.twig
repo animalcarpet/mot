@@ -7,8 +7,7 @@
     </div>
 {% endif %}
 
-<form name="itemDetailsForm" method="post"
-      action="{{ defectJourneyUrl().toAddDefect(defectId, type) }}">
+<form name="itemDetailsForm" method="post" action="{{ defectJourneyUrl().toAddDefect(defectId, type) }}">
     {{ csrfToken() }}
     <fieldset>
         <h3 class="heading-medium">Location</h3>
@@ -42,8 +41,13 @@
     </fieldset>
 
     <div class="form-group {% if errorMessages is not empty %} has-error {% endif %}">
-        <h3 class=" heading-medium">Additional information</h3>
-        <label for="comment" class="form-label">Add any further comments if required</label>
+        {% if isManualAdvisory %}
+            <h3 class=" heading-medium">Manual advisory description</h3>
+            <label for="comment" class="form-label">Give brief details of the defect</label>
+        {% else %}
+            <h3 class=" heading-medium">Additional information</h3>
+            <label for="comment" class="form-label">Add any further comments if required</label>
+        {% endif %}
         {% if errorMessages is not empty %}
             <span class="validation-message">{{ errorMessages.displayMessage }}</span>
         {% endif %}
@@ -59,7 +63,7 @@
 
     <nav class="content-navigation">
         <input type="hidden" name="confirmDetailPage" value="">
-        <button id="submit-defect" type="submit" class="button">Add {{ type }}</button>
+        <button id="submit-defect" type="submit" class="button">Add {% if isManualAdvisory %}manual advisory{% else %}{{ type }}{% endif %}</button>
 
         <ul class="content-navigation__secondary">
             <li>

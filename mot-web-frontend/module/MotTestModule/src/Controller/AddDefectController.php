@@ -7,12 +7,10 @@
 
 namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 
-use Dashboard\Controller\UserHomeController;
 use Dvsa\Mot\Frontend\MotTestModule\Exception\DefectTypeNotFoundException;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyContextProvider;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Defect;
-use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
@@ -67,10 +65,6 @@ class AddDefectController extends AbstractDvsaMotTestController
      */
     public function addAction()
     {
-        if (!$this->getAuthorizationService()->isGranted(PermissionInSystem::RFR_LIST)) {
-            return $this->redirect()->toRoute(UserHomeController::ROUTE);
-        }
-
         $motTestNumber = $this->params()->fromRoute('motTestNumber');
         $defectId = $this->params()->fromRoute('defectId');
         $type = $this->params()->fromRoute('type');
@@ -156,6 +150,7 @@ class AddDefectController extends AbstractDvsaMotTestController
             'type' => $type,
             'breadcrumbs' => $breadcrumbs,
             'errorMessages' => $errorMessages,
+            'isManualAdvisory' => false,
             'backUrl' => $backUrl,
             'context' => $this->defectsJourneyContextProvider->getContextForBackUrlText(),
         ]);
@@ -262,9 +257,9 @@ class AddDefectController extends AbstractDvsaMotTestController
     /**
      * @param $type
      *
-     * @return string
-     *
      * @throws DefectTypeNotFoundException
+     *
+     * @return string
      */
     private function transformDefectTypeForView($type)
     {

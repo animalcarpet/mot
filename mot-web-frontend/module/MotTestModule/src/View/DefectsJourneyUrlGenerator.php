@@ -3,6 +3,7 @@
 namespace Dvsa\Mot\Frontend\MotTestModule\View;
 
 use Dvsa\Mot\Frontend\MotTestModule\Exception\RouteNotAllowedInContextException;
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\ObservedDefect;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\Router\RouteStackInterface as Router;
@@ -31,8 +32,8 @@ class DefectsJourneyUrlGenerator
     /**
      * DefectsJourneyUrlGenerator constructor.
      *
-     * @param Router $router
-     * @param Request $request
+     * @param Router                        $router
+     * @param Request                       $request
      * @param DefectsJourneyContextProvider $contextProvider
      */
     public function __construct(Router $router, Request $request, DefectsJourneyContextProvider $contextProvider)
@@ -43,13 +44,14 @@ class DefectsJourneyUrlGenerator
     }
 
     /**
-     * Generates url to add-defect route depending on context
+     * Generates url to add-defect route depending on context.
      *
-     * @param int $defectId
+     * @param int    $defectId
      * @param string $defectType Severity of a defect: advisory, prs ,failure
-     * @return string
      *
      * @throws RouteNotAllowedInContextException
+     *
+     * @return string
      */
     public function toAddDefect($defectId, $defectType)
     {
@@ -58,46 +60,67 @@ class DefectsJourneyUrlGenerator
             self::MOT_TEST_ID_PARAM => $this->getParamFromRoute(self::MOT_TEST_ID_PARAM),
             self::CATEGORY_ID_PARAM => $this->getParamFromRoute(self::CATEGORY_ID_PARAM),
             self::DEFECT_ID_PARAM => $defectId,
-            self::DEFECT_TYPE_PARAM => $defectType
+            self::DEFECT_TYPE_PARAM => $defectType,
         ];
-        $options = [
-            'query' => $this->request->getQuery()->toArray(),
-        ];
+        $options = ['query' => $this->request->getQuery()->toArray()];
 
-        switch($context){
-            case DefectsJourneyContextProvider::SEARCH_CONTEXT: {
-                $route = sprintf('%s/%s/%s',
-                    DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE,
-                    DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE,
-                    DefectsJourneyContextProvider::ADD_DEFECT_ROUTE
-                );
+        $route = '';
+        switch ($context) {
+            case DefectsJourneyContextProvider::SEARCH_CONTEXT:
+                if (true === $this->isManualAdvisory($defectId, $defectType)) {
+                    $route = sprintf('%s/%s/%s',
+                        DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE,
+                        DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE,
+                        DefectsJourneyContextProvider::ADD_MANUAL_ADVISORY_ROUTE
+                    );
+                } else {
+                    $route = sprintf('%s/%s/%s',
+                        DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE,
+                        DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE,
+                        DefectsJourneyContextProvider::ADD_DEFECT_ROUTE
+                    );
+                }
                 break;
-            }
-            case DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT: {
-                $route = sprintf('%s/%s/%s/%s',
-                    DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE,
-                    DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE,
-                    DefectsJourneyContextProvider::CATEGORY_ROUTE,
-                    DefectsJourneyContextProvider::ADD_DEFECT_ROUTE
-                );
+            case DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT:
+                if (true === $this->isManualAdvisory($defectId, $defectType)) {
+                    $route = sprintf('%s/%s/%s/%s',
+                        DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE,
+                        DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE,
+                        DefectsJourneyContextProvider::CATEGORY_ROUTE,
+                        DefectsJourneyContextProvider::ADD_MANUAL_ADVISORY_ROUTE
+                    );
+                } else {
+                    $route = sprintf('%s/%s/%s/%s',
+                        DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE,
+                        DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE,
+                        DefectsJourneyContextProvider::CATEGORY_ROUTE,
+                        DefectsJourneyContextProvider::ADD_DEFECT_ROUTE
+                    );
+                }
                 break;
-            }
-            case DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT:
             case DefectsJourneyContextProvider::BROWSE_CATEGORIES_ROOT_CONTEXT:
-            case DefectsJourneyContextProvider::NO_CONTEXT: {
+                if (true === $this->isManualAdvisory($defectId, $defectType)) {
+                    $route = sprintf('%s/%s/%s',
+                        DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE,
+                        DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE,
+                        DefectsJourneyContextProvider::ADD_MANUAL_ADVISORY_ROUTE
+                    );
+                    break;
+                }
+            case DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT:
+            case DefectsJourneyContextProvider::NO_CONTEXT:
                 throw new RouteNotAllowedInContextException();
-            }
         }
 
         $route = rtrim($route, '/');
 
         return $this->generateUrlFromRoute($route, $params, $options);
-
     }
 
     /**
-     * @return string
      * @throws RouteNotAllowedInContextException
+     *
+     * @return string
      */
     public function toAddManualAdvisory()
     {
@@ -111,7 +134,8 @@ class DefectsJourneyUrlGenerator
             'query' => $this->request->getQuery()->toArray(),
         ];
 
-        switch($context){
+        $route = '';
+        switch ($context) {
             case DefectsJourneyContextProvider::SEARCH_CONTEXT: {
                 $route = sprintf('%s/%s/%s',
                     DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE,
@@ -144,13 +168,16 @@ class DefectsJourneyUrlGenerator
         }
 
         $route = rtrim($route, '/');
+
         return $this->generateUrlFromRoute($route, $params, $options);
     }
 
     /**
      * @param int $observedDefectId - id of defect that was already added to specified motTest
-     * @return string
+     *
      * @throws RouteNotAllowedInContextException
+     *
+     * @return string
      */
     public function toEditDefect($observedDefectId)
     {
@@ -164,7 +191,8 @@ class DefectsJourneyUrlGenerator
             'query' => $this->request->getQuery()->toArray(),
         ];
 
-        switch($context){
+        $route = '';
+        switch ($context) {
             case DefectsJourneyContextProvider::SEARCH_CONTEXT: {
                 $route = sprintf('%s/%s/%s',
                     DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE,
@@ -203,13 +231,16 @@ class DefectsJourneyUrlGenerator
         }
 
         $route = rtrim($route, '/');
+
         return $this->generateUrlFromRoute($route, $params, $options);
     }
 
     /**
      * @param int $observedDefectId Id of a defect attached to mot test
-     * @return string
+     *
      * @throws RouteNotAllowedInContextException
+     *
+     * @return string
      */
     public function toRemoveDefect($observedDefectId)
     {
@@ -223,7 +254,7 @@ class DefectsJourneyUrlGenerator
             'query' => $this->request->getQuery()->toArray(),
         ];
 
-        switch($context){
+        switch ($context) {
             case DefectsJourneyContextProvider::SEARCH_CONTEXT: {
                 $route = sprintf('%s/%s/%s',
                     DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE,
@@ -262,11 +293,12 @@ class DefectsJourneyUrlGenerator
         }
 
         $route = rtrim($route, '/');
+
         return $this->generateUrlFromRoute($route, $params, $options);
     }
 
     /**
-     * get "back" url from add/add manual advisory/edit/remove defect actions
+     * get "back" url from add/add manual advisory/edit/remove defect actions.
      */
     public function goBack()
     {
@@ -279,7 +311,8 @@ class DefectsJourneyUrlGenerator
             'query' => $this->request->getQuery()->toArray(),
         ];
 
-        switch($context){
+        $route = '';
+        switch ($context) {
             case DefectsJourneyContextProvider::SEARCH_CONTEXT: {
                 $route = sprintf('%s/%s',
                     DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE,
@@ -312,15 +345,16 @@ class DefectsJourneyUrlGenerator
         }
 
         $route = rtrim($route, '/');
+
         return $this->generateUrlFromRoute($route, $params, $options);
     }
 
     /**
-     * Generates an URL base on route name
+     * Generates an URL base on route name.
      *
      * @param string $routeName
-     * @param array $params
-     * @param array $options
+     * @param array  $params
+     * @param array  $options
      *
      * @return string
      */
@@ -328,11 +362,12 @@ class DefectsJourneyUrlGenerator
     {
         $options['name'] = $routeName;
 
-        return $this->router->assemble($params,$options);
+        return $this->router->assemble($params, $options);
     }
 
     /**
      * @param string $param
+     *
      * @return mixed|null
      */
     private function getParamFromRoute($param)
@@ -345,5 +380,16 @@ class DefectsJourneyUrlGenerator
         $params = $match->getParams();
 
         return isset($params[$param]) ? $params[$param] : null;
+    }
+
+    /**
+     * @param int    $defectId
+     * @param string $defectType Severity of a defect: advisory, prs ,failure
+     *
+     * @return bool
+     */
+    private function isManualAdvisory($defectId, $defectType)
+    {
+        return !$defectId && ObservedDefect::ADVISORY === $defectType;
     }
 }

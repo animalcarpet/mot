@@ -5,6 +5,7 @@ namespace DvsaMotApi\Service;
 use Doctrine\ORM\EntityManager;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
@@ -17,12 +18,9 @@ use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\ReasonForRejection;
 use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Service\Validator\MotTestValidator;
-use Zend\Db\TableGateway\Exception\RuntimeException;
 
 /**
- * Class MotTestReasonForRejectionService
- *
- * @package DvsaMotApi\Service
+ * Class MotTestReasonForRejectionService.
  */
 class MotTestReasonForRejectionService extends AbstractService
 {
@@ -43,12 +41,28 @@ class MotTestReasonForRejectionService extends AbstractService
     /** @var ApiPerformMotTestAssertion $performMotTestAssertion  */
     private $performMotTestAssertion;
 
+    /**
+     * @var FeatureToggles
+     */
+    private $featureToggles;
+
+    /**
+     * MotTestReasonForRejectionService constructor.
+     *
+     * @param EntityManager                 $entityManager
+     * @param AuthorisationServiceInterface $authService
+     * @param MotTestValidator              $motTestValidator
+     * @param TestItemSelectorService       $motTestItemSelectorService
+     * @param ApiPerformMotTestAssertion    $performMotTestAssertion
+     * @param FeatureToggles                $featureToggles
+     */
     public function __construct(
         EntityManager $entityManager,
         AuthorisationServiceInterface $authService,
         MotTestValidator $motTestValidator,
         TestItemSelectorService $motTestItemSelectorService,
-        ApiPerformMotTestAssertion $performMotTestAssertion
+        ApiPerformMotTestAssertion $performMotTestAssertion,
+        FeatureToggles $featureToggles
     ) {
         parent::__construct($entityManager);
 
@@ -56,18 +70,19 @@ class MotTestReasonForRejectionService extends AbstractService
         $this->motTestValidator = $motTestValidator;
         $this->testItemSelectorService = $motTestItemSelectorService;
         $this->performMotTestAssertion = $performMotTestAssertion;
+        $this->featureToggles = $featureToggles;
     }
 
     /**
      * @param int $defectId
      *
-     * @return ReasonForRejection
-     *
      * @throws NotFoundException If the ReasonForRejection entity is not found in the database.
+     *
+     * @return ReasonForRejection
      */
     public function getDefect($defectId)
     {
-        /** @var ReasonForRejection $reasonForRejection */
+        /* @var ReasonForRejection $reasonForRejection */
         $defect = $this
             ->entityManager
             ->getRepository(ReasonForRejection::class)
@@ -87,7 +102,7 @@ class MotTestReasonForRejectionService extends AbstractService
 
         $rfr = $this->createRfrFromData($data, $motTest);
 
-        if(!$this->isTrainingTest($motTest)) {
+        if (!$this->isTrainingTest($motTest)) {
             $this->checkPermissionsForRfr($rfr);
         }
 
@@ -108,10 +123,9 @@ class MotTestReasonForRejectionService extends AbstractService
 
         $motTest = $rfr->getMotTest();
 
-        if($this->isTrainingTest($motTest)){
+        if ($this->isTrainingTest($motTest)) {
             $this->authService->assertGranted(PermissionInSystem::MOT_DEMO_TEST_PERFORM);
-        }
-        else {
+        } else {
             $this->authService->assertGranted(PermissionInSystem::MOT_TEST_PERFORM);
         }
 
@@ -129,7 +143,7 @@ class MotTestReasonForRejectionService extends AbstractService
             ->setComment($comment)
             ->setFailureDangerous($failureDangerous);
 
-        if(!$this->isTrainingTest($motTest)){
+        if (!$this->isTrainingTest($motTest)) {
             $this->checkPermissionsForRfr($rfr);
         }
 
@@ -144,12 +158,13 @@ class MotTestReasonForRejectionService extends AbstractService
     }
 
     /**
-     * @param array $data
+     * @param array   $data
      * @param MotTest $motTest
      *
-     * @return MotTestReasonForRejection
      * @throws NotFoundException
      * @throws RequiredFieldException
+     *
+     * @return MotTestReasonForRejection
      */
     public function createRfrFromData($data, MotTest $motTest)
     {
@@ -185,9 +200,10 @@ class MotTestReasonForRejectionService extends AbstractService
             }
             $motTestRfr->setReasonForRejection($reasonForRejection);
         } else {
-            // TODO add 'Manual Advisory' RFR
-            $motTestRfr
-                ->setCustomDescription($comment);
+            // "Custom description" field is capped to 100 characters.
+            $customDescription = (true === $this->featureToggles->isEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS))
+                ? substr($comment, 0, 100) : $comment;
+            $motTestRfr->setCustomDescription($customDescription);
         }
 
         return $motTestRfr;
@@ -206,11 +222,11 @@ class MotTestReasonForRejectionService extends AbstractService
 
         $motTest = $rfrToDelete->getMotTest();
 
-        if(!$this->isTrainingTest($motTest)) {
+        if (!$this->isTrainingTest($motTest)) {
             $this->checkPermissionsForRfr($rfrToDelete);
         }
 
-        if ($rfrToDelete->getMotTest()->getNumber() !== (string)$motTestNumber) {
+        if ($rfrToDelete->getMotTest()->getNumber() !== (string) $motTestNumber) {
             throw new NotFoundException('Match for Reason for Rejection on Selected Mot Test');
         }
 

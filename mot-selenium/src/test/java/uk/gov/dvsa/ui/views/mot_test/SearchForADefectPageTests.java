@@ -1,13 +1,15 @@
 package uk.gov.dvsa.ui.views.mot_test;
 
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
+import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
+import uk.gov.dvsa.helper.DefectsTestsDataProvider;
 import uk.gov.dvsa.ui.DslTest;
-import uk.gov.dvsa.ui.pages.mot.SearchForADefectPage;
-import uk.gov.dvsa.ui.pages.mot.TestResultsEntryNewPage;
+import uk.gov.dvsa.ui.pages.mot.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -185,5 +187,49 @@ public class SearchForADefectPageTests extends DslTest {
                 && searchForADefectPage.doesPageLinkExist(4)
                 && searchForADefectPage.doesPageLinkExist(6)
                 && searchForADefectPage.doesPageLinkExist(7), is(true));
+    }
+
+    @DataProvider(name = "getManualAdvisoryDefect")
+    public Object[][] getManualAdvisoryDefect() throws IOException {
+        return DefectsTestsDataProvider.getManualAdvisoryDefect();
+    }
+
+    @DataProvider(name = "getManualAdvisoryDefectNoDescription")
+    public Object[][] getManualAdvisoryDefectNoDescription() throws IOException {
+        return DefectsTestsDataProvider.getManualAdvisoryDefectWithNoDescription();
+    }
+
+    @Test(testName = "TestResultEntryImprovements",
+            groups = {"BVT", "BL-2421"},
+            dataProvider = "getManualAdvisoryDefect")
+    public void canAddManualAdvisoryAsTester(Defect defect) throws IOException, URISyntaxException {
+        // Given I am on the Search for a defect page
+        SearchForADefectPage searchForADefectPage = pageNavigator.gotoSearchForADefectPage(tester, vehicle);
+
+        // When I add a manual advisory
+        DefectsPage defectsPage = searchForADefectPage
+                .navigateToAddAManualAdvisory()
+                .fillDefectDescription(defect)
+                .clickAddDefectButton();
+
+        // Then I should see a message confirming the defect was successfully added
+        assertThat(defectsPage.isManualAdvisoryDefectSuccessMessageDisplayed(defect), is(true));
+    }
+
+    @Test(testName = "TestResultEntryImprovements",
+            groups = {"BVT", "BL-2421"},
+            dataProvider = "getManualAdvisoryDefectNoDescription")
+    public void testAddingManualAdvisoryWithoutDescriptionShowsValidationError(Defect defect) throws IOException, URISyntaxException {
+        // Given I am on the Search for a defect page
+        SearchForADefectPage searchForADefectPage = pageNavigator.gotoSearchForADefectPage(tester, vehicle);
+
+        // When I add a manual advisory
+        AddAManualAdvisoryPage defectsPage = searchForADefectPage
+                .navigateToAddAManualAdvisory()
+                .fillDefectDescription(defect)
+                .clickAddDefectButtonExpectingFailure();
+
+        // Then I should see a message telling me that I need to enter a description
+        assertThat(defectsPage.isManualAdvisoryDefectFailureMessageDisplayed(), is(true));
     }
 }

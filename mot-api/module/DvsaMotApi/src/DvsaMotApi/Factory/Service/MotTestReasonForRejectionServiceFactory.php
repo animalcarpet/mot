@@ -3,18 +3,21 @@
 namespace DvsaMotApi\Factory\Service;
 
 use Doctrine\ORM\EntityManager;
+use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
 use DvsaMotApi\Service\MotTestReasonForRejectionService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
 
 /**
- * Class MotTestReasonForRejectionServiceFactory
- *
- * @package DvsaMotApi\Factory\Service
+ * Class MotTestReasonForRejectionServiceFactory.
  */
 class MotTestReasonForRejectionServiceFactory implements FactoryInterface
 {
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     *
+     * @return MotTestReasonForRejectionService
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new MotTestReasonForRejectionService(
@@ -22,7 +25,8 @@ class MotTestReasonForRejectionServiceFactory implements FactoryInterface
             $serviceLocator->get('DvsaAuthorisationService'),
             $serviceLocator->get('MotTestValidator'),
             $serviceLocator->get('TestItemSelectorService'),
-            $serviceLocator->get(ApiPerformMotTestAssertion::class)
+            $serviceLocator->get(ApiPerformMotTestAssertion::class),
+            $serviceLocator->get('Feature\FeatureToggles')
         );
     }
 }

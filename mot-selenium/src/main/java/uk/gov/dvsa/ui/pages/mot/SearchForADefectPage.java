@@ -126,4 +126,9 @@ public class SearchForADefectPage extends Page {
     public SearchForADefectPage navigateToLastPage() {
         return navigateToPage((int) Math.ceil((float) getSearchResultsCount() / 10));
     }
+
+    public AddAManualAdvisoryPage navigateToAddAManualAdvisory() {
+        addAManualAdvisory.click();
+        return new AddAManualAdvisoryPage(driver);
+    }
 }

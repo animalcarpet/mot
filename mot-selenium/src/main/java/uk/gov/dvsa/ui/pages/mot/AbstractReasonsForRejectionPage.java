@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 public abstract class AbstractReasonsForRejectionPage extends Page {
 
     @FindBy(id = "validation-message--success") protected WebElement validationMessage;
+    @FindBy(className = "validation-summary") protected WebElement validationSummary;
     @FindBy(xpath = ".//*[@id='rfrList']//*[@class='defect__title']") protected WebElement reasonForRejectionTitle;
     @FindBy(xpath = "//*[@id='rfrList']//a[contains(., 'Remove')]") protected WebElement removeDefectLink;
     @FindBy(xpath = "//*[@id='rfrList']//a[contains(., 'Edit')]") protected WebElement editDefectLink;
@@ -46,6 +47,17 @@ public abstract class AbstractReasonsForRejectionPage extends Page {
     public boolean isDefectAddedSuccessMessageDisplayed(Defect defect) {
         return validationMessage.getText().equals(
                 String.format("This %s has been added:\n%s", defect.getAddOrRemovalType(), defect.getAddOrRemoveName()));
+    }
+
+    public boolean isManualAdvisoryDefectSuccessMessageDisplayed(Defect defect) {
+        return validationMessage.getText().equals(
+                String.format("This %s has been added:\n%s", defect.getAddOrRemovalType(), defect.getDescription()));
+    }
+
+    public boolean isManualAdvisoryDefectFailureMessageDisplayed() {
+        return validationSummary.getText().contains(
+                "Manual advisory description - you must give a description"
+        );
     }
 
     public boolean isDefectEditSuccessMessageDisplayed(Defect defect) {

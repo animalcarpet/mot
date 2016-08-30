@@ -1,1 +1,121 @@
-{% if observedDefects.failures is not empty %}<h3 class="defect-summary__heading">    <span class="badge--alert">{{ observedDefects.numberOfFailures }}</span>    <span class="defect-summary__heading-type">Failures</span></h3><ol>    {% for failure in observedDefects.failures %}    <li class="defect">        <div>            {% if failure.isDangerous %}            <span class="defect__is-dangerous">Dangerous</span>            {% endif %}            <strong class="defect__title">{{ failure.name }}</strong>            <p class="defect__meta">{{ failure.userComment }}</p>            <h4 class="visuallyhidden">Position</h4>            <ul class="defect__positions">                {% if failure.hasLocation %}                    <li>Lateral: <span class="defect__property-list-value">{{ failure.lateralLocation|default('n/a') }}</span></li>                    <li>Longitudinal: <span class="defect__property-list-value">{{ failure.longitudinalLocation|default('n/a') }}</span></li>                    <li>Vertical: <span class="defect__property-list-value">{{ failure.verticalLocation|default('n/a') }}</span></li>                {% else %}                    <li>Location not recorded</li>                {% endif %}            </ul>        </div>        <h4 class="visuallyhidden">Actions</h4>        <ul class="defect__edit">            {% if isRetest and failure.onOriginalTest %}                <a href="#" class="">Repaired</a>            {% else %}                <li> <a href="{{ defectJourneyUrl().toEditDefect(failure.id) }}" class="">Edit</a></li>                <li>or <a href="{{ defectJourneyUrl().toRemoveDefect(failure.id) }}" class="">Remove</a></li>            {% endif %}        </ul>    </li>    {% endfor %}</ol>{% endif %}{% if observedDefects.prs is not empty %}    <h3 class="defect-summary__heading">        <span class="badge--info">{{ observedDefects.numberOfPrs }}</span>        <span class="defect-summary__heading-type">PRS</span>    </h3>    <ol>        {% for prs in observedDefects.prs %}            <li class="defect">                <div>                    {% if prs.isDangerous %}                        <span class="defect__is-dangerous">Dangerous</span>                    {% endif %}                    <strong class="defect__title">{{ prs.name }}</strong>                    <p class="defect__meta">{{ prs.userComment }}</p>                    <h4 class="visuallyhidden">Position</h4>                    <ul class="defect__positions">                        {% if prs.hasLocation %}                            <li>Lateral: <span class="defect__property-list-value">{{ prs.lateralLocation|default('n/a') }}</span></li>                            <li>Longitudinal: <span class="defect__property-list-value">{{ prs.longitudinalLocation|default('n/a') }}</span></li>                            <li>Vertical: <span class="defect__property-list-value">{{ prs.verticalLocation|default('n/a') }}</span></li>                        {% else %}                            <li>Location not recorded</li>                        {% endif %}                    </ul>                </div>                <h4 class="visuallyhidden">Actions</h4>                <ul class="defect__edit">                    {% if isRetest and prs.onOriginalTest %}                        <a href="#" class="">Repaired</a>                    {% else %}                        <li> <a href="{{ defectJourneyUrl().toEditDefect(prs.id) }}" class="">Edit</a></li>                        <li>or <a href="{{ defectJourneyUrl().toRemoveDefect(prs.id) }}" class="">Remove</a></li>                    {% endif %}                </ul>            </li>        {% endfor %}    </ol>{% endif %}{% if observedDefects.advisories is not empty %}<h3 class="defect-summary__heading">    <span class="badge--warn">{{ observedDefects.numberOfAdvisories }}</span>    <span class="defect-summary__heading-type">Advisories</span></h3>    <ol>        {% for advisory in observedDefects.advisories %}            <li class="defect">                <div>                    {% if advisory.isDangerous %}                        <span class="defect__is-dangerous">Dangerous</span>                    {% endif %}                    <strong class="defect__title">{{ advisory.name }}</strong>                    <p class="defect__meta">{{ advisory.userComment }}</p>                    <h4 class="visuallyhidden">Position</h4>                    <ul class="defect__positions">                        {% if advisory.hasLocation %}                            <li>Lateral: <span class="defect__property-list-value">{{ advisory.lateralLocation|default('n/a') }}</span></li>                            <li>Longitudinal: <span class="defect__property-list-value">{{ advisory.longitudinalLocation|default('n/a') }}</span></li>                            <li>Vertical: <span class="defect__property-list-value">{{ advisory.verticalLocation|default('n/a') }}</span></li>                        {% else %}                            <li>Location not recorded</li>                        {% endif %}                    </ul>                </div>                <h4 class="visuallyhidden">Actions</h4>                <ul class="defect__edit">                    {% if isRetest and advisory.onOriginalTest %}                        <a href="#" class="">Repaired</a>                    {% else %}                        <li> <a href="{{ defectJourneyUrl().toEditDefect(advisory.id) }}" class="">Edit</a></li>                        <li>or <a href="{{ defectJourneyUrl().toRemoveDefect(advisory.id) }}" class="">Remove</a></li>                    {% endif %}                </ul>            </li>        {% endfor %}    </ol>{% endif %}
+{% if observedDefects.failures is not empty %}
+<h3 class="defect-summary__heading">
+    <span class="badge--alert">{{ observedDefects.numberOfFailures }}</span>
+    <span class="defect-summary__heading-type">Failures</span>
+</h3>
+<ol>
+    {% for failure in observedDefects.failures %}
+    <li class="defect">
+        <div>
+            {% if failure.isDangerous %}
+            <span class="defect__is-dangerous">Dangerous</span>
+            {% endif %}
+            <strong class="defect__title">{{ failure.name }}</strong>
+            <p class="defect__meta">{{ failure.userComment }}</p>
+            <h4 class="visuallyhidden">Position</h4>
+            <ul class="defect__positions">
+                {% if failure.hasLocation %}
+                    <li>Lateral: <span class="defect__property-list-value">{{ failure.lateralLocation|default('n/a') }}</span></li>
+                    <li>Longitudinal: <span class="defect__property-list-value">{{ failure.longitudinalLocation|default('n/a') }}</span></li>
+                    <li>Vertical: <span class="defect__property-list-value">{{ failure.verticalLocation|default('n/a') }}</span></li>
+                {% else %}
+                    <li>Location not recorded</li>
+                {% endif %}
+            </ul>
+        </div>
+        <h4 class="visuallyhidden">Actions</h4>
+        <ul class="defect__edit">
+            {% if isRetest and failure.onOriginalTest %}
+                <a href="#" class="">Repaired</a>
+            {% else %}
+                <li> <a href="{{ defectJourneyUrl().toEditDefect(failure.id) }}" class="">Edit</a></li>
+                <li>or <a href="{{ defectJourneyUrl().toRemoveDefect(failure.id) }}" class="">Remove</a></li>
+            {% endif %}
+        </ul>
+    </li>
+    {% endfor %}
+</ol>
+{% endif %}
+
+{% if observedDefects.prs is not empty %}
+    <h3 class="defect-summary__heading">
+        <span class="badge--info">{{ observedDefects.numberOfPrs }}</span>
+        <span class="defect-summary__heading-type">PRS</span>
+    </h3>
+    <ol>
+        {% for prs in observedDefects.prs %}
+            <li class="defect">
+                <div>
+                    {% if prs.isDangerous %}
+                        <span class="defect__is-dangerous">Dangerous</span>
+                    {% endif %}
+                    <strong class="defect__title">{{ prs.name }}</strong>
+                    <p class="defect__meta">{{ prs.userComment }}</p>
+                    <h4 class="visuallyhidden">Position</h4>
+                    <ul class="defect__positions">
+                        {% if prs.hasLocation %}
+                            <li>Lateral: <span class="defect__property-list-value">{{ prs.lateralLocation|default('n/a') }}</span></li>
+                            <li>Longitudinal: <span class="defect__property-list-value">{{ prs.longitudinalLocation|default('n/a') }}</span></li>
+                            <li>Vertical: <span class="defect__property-list-value">{{ prs.verticalLocation|default('n/a') }}</span></li>
+                        {% else %}
+                            <li>Location not recorded</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <h4 class="visuallyhidden">Actions</h4>
+                <ul class="defect__edit">
+                    {% if isRetest and prs.onOriginalTest %}
+                        <a href="#" class="">Repaired</a>
+                    {% else %}
+                        <li> <a href="{{ defectJourneyUrl().toEditDefect(prs.id) }}" class="">Edit</a></li>
+                        <li>or <a href="{{ defectJourneyUrl().toRemoveDefect(prs.id) }}" class="">Remove</a></li>
+                    {% endif %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ol>
+{% endif %}
+
+{% if observedDefects.advisories is not empty %}
+<h3 class="defect-summary__heading">
+    <span class="badge--warn">{{ observedDefects.numberOfAdvisories }}</span>
+    <span class="defect-summary__heading-type">Advisories</span>
+</h3>
+    <ol>
+        {% for advisory in observedDefects.advisories %}
+            <li class="defect">
+                <div>
+                    {% if advisory.isDangerous %}
+                        <span class="defect__is-dangerous">Dangerous</span>
+                    {% endif %}
+                    {% if advisory.isManualAdvisory %}
+                        <strong class="defect__title">{{ advisory.userComment }}</strong>
+                        <p class="defect__meta"></p>
+                    {% else %}
+                        <strong class="defect__title">{{ advisory.name }}</strong>
+                        <p class="defect__meta">{{ advisory.userComment }}</p>
+                    {% endif %}
+                    <h4 class="visuallyhidden">Position</h4>
+                    <ul class="defect__positions">
+                        {% if advisory.hasLocation %}
+                            <li>Lateral: <span class="defect__property-list-value">{{ advisory.lateralLocation|default('n/a') }}</span></li>
+                            <li>Longitudinal: <span class="defect__property-list-value">{{ advisory.longitudinalLocation|default('n/a') }}</span></li>
+                            <li>Vertical: <span class="defect__property-list-value">{{ advisory.verticalLocation|default('n/a') }}</span></li>
+                        {% else %}
+                            <li>Location not recorded</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <h4 class="visuallyhidden">Actions</h4>
+                <ul class="defect__edit">
+                    {% if isRetest and advisory.onOriginalTest %}
+                        <a href="#" class="">Repaired</a>
+                    {% else %}
+                        <li> <a href="{{ defectJourneyUrl().toEditDefect(advisory.id) }}" class="">Edit</a></li>
+                        <li>or <a href="{{ defectJourneyUrl().toRemoveDefect(advisory.id) }}" class="">Remove</a></li>
+                    {% endif %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ol>
+{% endif %}

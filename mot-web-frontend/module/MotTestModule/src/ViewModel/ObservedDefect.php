@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT Frontend project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace Dvsa\Mot\Frontend\MotTestModule\ViewModel;
 
@@ -11,6 +16,10 @@ namespace Dvsa\Mot\Frontend\MotTestModule\ViewModel;
  */
 class ObservedDefect
 {
+    const FAILURE = 'failure';
+    const PRS = 'PRS';
+    const ADVISORY = 'advisory';
+
     /**
      * Failure, PRS or advisory.
      *
@@ -98,7 +107,7 @@ class ObservedDefect
     private $breadcrumb = '';
 
     /**
-     * This specifies if the defect was added in the first MOT test (before an MOT retest)
+     * This specifies if the defect was added in the first MOT test (before an MOT retest).
      *
      * @var bool
      */
@@ -112,11 +121,11 @@ class ObservedDefect
      * @param string $longitudinalLocation
      * @param string $verticalLocation
      * @param string $userComment
-     * @param bool $dangerous
+     * @param bool   $dangerous
      * @param string $name
-     * @param int $id
-     * @param int $defectId
-     * @param bool $onOriginalTest
+     * @param int    $id
+     * @param int    $defectId
+     * @param bool   $onOriginalTest
      */
     public function __construct(
         $defectType,
@@ -140,6 +149,14 @@ class ObservedDefect
         $this->id = $id;
         $this->defectId = $defectId;
         $this->onOriginalTest = $onOriginalTest;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isManualAdvisory()
+    {
+        return !$this->defectId && self::ADVISORY === $this->defectType;
     }
 
     /**

@@ -1,7 +1,13 @@
 <?php
+/**
+ * This file is part of the DVSA MOT Frontend project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace Dvsa\Mot\Frontend\MotTestModule\ViewModel;
 
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Exception\ObservedDefectNotFoundException;
 use DvsaCommon\Dto\Common\MotTestDto;
 
 /**
@@ -84,7 +90,7 @@ class ObservedDefectCollection
                 $failure['locationVertical'],
                 $failure['comment'],
                 $failure['failureDangerous'],
-                $failure['testItemSelectorDescription'].' '.$failure['failureText'],
+                $failure['testItemSelectorDescription'] . ' ' . $failure['failureText'],
                 $failure['id'],
                 $failure['rfrId'],
                 $failure['onOriginalTest']
@@ -101,7 +107,7 @@ class ObservedDefectCollection
                 $loopPrs['locationVertical'],
                 $loopPrs['comment'],
                 $loopPrs['failureDangerous'],
-                $loopPrs['testItemSelectorDescription'].' '.$loopPrs['failureText'],
+                $loopPrs['testItemSelectorDescription'] . ' ' . $loopPrs['failureText'],
                 $loopPrs['id'],
                 $loopPrs['rfrId'],
                 $loopPrs['onOriginalTest']
@@ -111,6 +117,11 @@ class ObservedDefectCollection
         }
 
         foreach ($advisoriesFromApi as $advisory) {
+            $defectName = array_key_exists('testItemSelectorDescription', $advisory)
+                ? sprintf('%s ', $advisory['testItemSelectorDescription']) : '';
+            $defectName .= array_key_exists('failureText', $advisory) ? $advisory['failureText'] : '';
+            $defectName = trim($defectName);
+
             $observedDefect = new ObservedDefect(
                 self::ADVISORY,
                 $advisory['locationLateral'],
@@ -118,7 +129,7 @@ class ObservedDefectCollection
                 $advisory['locationVertical'],
                 $advisory['comment'],
                 $advisory['failureDangerous'],
-                $advisory['testItemSelectorDescription'].' '.$advisory['failureText'],
+                $defectName,
                 $advisory['id'],
                 $advisory['rfrId'],
                 $advisory['onOriginalTest']
@@ -208,6 +219,10 @@ class ObservedDefectCollection
          * the primary keys of elements.
          */
         $defect = array_filter($defects, function (ObservedDefect $e) use ($id) {return $e->getId() === $id;});
+
+        if (empty($defect)) {
+            throw new ObservedDefectNotFoundException($id);
+        }
 
         /*
          * We've messed with the keys, so calling array_merge rebases the
