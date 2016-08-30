@@ -5,6 +5,7 @@ namespace DvsaMotApi\Service;
 use Doctrine\ORM\EntityManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
+use DvsaCommon\Constants\BrakeTestConfigurationClass1And2;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
@@ -380,9 +381,8 @@ class BrakeTestResultService extends AbstractService
                 $brakeTestResultData = $this->objectHydrator->extract($brakeTestResult);
                 ExtractionHelper::unsetAuditColumns($brakeTestResultData);
 
-                if (in_array(
-                    $brakeTestResult->getBrakeTestType()->getCode(),
-                    $this->brakesWithLockApplicable)
+                if (BrakeTestConfigurationClass1And2::isLockApplicableToTestType(
+                    $brakeTestResult->getBrakeTestType()->getCode())
                 ) {
                     $brakeTestResultData['control1LockPercent']
                         = $this->brakeTestResultCalculatorClass1And2->calculateControl1PercentLocked($brakeTestResult);

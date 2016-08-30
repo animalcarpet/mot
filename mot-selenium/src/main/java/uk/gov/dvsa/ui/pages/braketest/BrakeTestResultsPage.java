@@ -43,6 +43,22 @@ public class BrakeTestResultsPage extends Page {
         return this;
     }
 
+    public BrakeTestResultsPage completeBrakeEffortGroupAFloorField() {
+        enterBrakeResultsPageFields(BrakeTestResultsHelper.allPassFloorWithLocks());
+        submitButton.click();
+        doneButton.click();
+
+        return this;
+    }
+
+    public BrakeTestResultsPage completeBrakeEffortGroupAPlateRollerField() {
+        enterBrakeResultsPageFields(BrakeTestResultsHelper.allPassPlateRollerWithLocks());
+        submitButton.click();
+        doneButton.click();
+
+        return this;
+    }
+
     public BrakeTestResultsPage enterField(BrakeTestResultsPageElements field, String value) {
         WebElement webElement = findElement(field);
         switch (field.getFieldType()) {

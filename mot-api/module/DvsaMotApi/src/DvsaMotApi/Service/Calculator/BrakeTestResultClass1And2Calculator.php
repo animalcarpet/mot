@@ -71,7 +71,10 @@ class BrakeTestResultClass1And2Calculator extends BrakeTestResultCalculatorBase
     {
         $potentialLocks = [];
         $potentialLocks[] = $brakeTestResult->getControl1LockFront();
-        $potentialLocks[] = $brakeTestResult->getControl1LockRear();
+        /** @BL-412 For FLOOR type test, we already only use values for front */
+        if ($brakeTestResult->getBrakeTestType()->getCode() !== BrakeTestTypeCode::FLOOR) {
+            $potentialLocks[] = $brakeTestResult->getControl1LockRear();
+        }
         return $this->calculatePercentLocked($potentialLocks);
     }
 
@@ -79,7 +82,10 @@ class BrakeTestResultClass1And2Calculator extends BrakeTestResultCalculatorBase
     {
         $potentialLocks = [];
         $potentialLocks[] = $brakeTestResult->getControl2LockFront();
-        $potentialLocks[] = $brakeTestResult->getControl2LockRear();
+        /** @BL-412 For FLOOR type test, we already only use values for front */
+        if ($brakeTestResult->getBrakeTestType()->getCode() !== BrakeTestTypeCode::FLOOR) {
+            $potentialLocks[] = $brakeTestResult->getControl2LockRear();
+        }
         return $this->calculatePercentLocked($potentialLocks);
     }
 

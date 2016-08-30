@@ -2,6 +2,7 @@
 
 namespace DvsaMotTest\Model;
 
+use DvsaCommon\Constants\BrakeTestConfigurationClass1And2;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass1And2Dto;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationDtoInterface as ConfigDto;
 use DvsaCommon\Enum\BrakeTestTypeCode;
@@ -59,7 +60,7 @@ class BrakeTestConfigurationClass1And2Helper implements BrakeTestConfigurationHe
      */
     public function locksApplicableToTestType()
     {
-        return $this->configDto->getBrakeTestType() === BrakeTestTypeCode::ROLLER;
+        return BrakeTestConfigurationClass1And2::isLockApplicableToTestType($this->configDto->getBrakeTestType());
     }
 
     /**

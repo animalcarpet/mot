@@ -38,4 +38,28 @@ public class BrakeTestResultsHelper {
         map.put(BrakeTestResultsPageElements.PARKING_ONE_OFFSIDE, "50");
         return map;
     }
+
+    public static Map<BrakeTestResultsPageElements, Object> allPassFloorWithLocks() {
+        Map<BrakeTestResultsPageElements, Object> map =
+            new LinkedHashMap<BrakeTestResultsPageElements, Object>();
+        map.put(BrakeTestResultsPageElements.CONTROL_ONE_FRONT, "0");
+        map.put(BrakeTestResultsPageElements.CONTROL_ONE_FRONT_LOCK, Boolean.TRUE);
+        map.put(BrakeTestResultsPageElements.CONTROL_TWO_FRONT, "0");
+        map.put(BrakeTestResultsPageElements.CONTROL_TWO_FRONT_LOCK, Boolean.TRUE);
+        return map;
+    }
+
+    public static Map<BrakeTestResultsPageElements, Object> allPassPlateRollerWithLocks() {
+        Map<BrakeTestResultsPageElements, Object> map =
+            new LinkedHashMap<BrakeTestResultsPageElements, Object>();
+        map.put(BrakeTestResultsPageElements.CONTROL_ONE_FRONT, "0");
+        map.put(BrakeTestResultsPageElements.CONTROL_ONE_REAR, "0");
+        map.put(BrakeTestResultsPageElements.CONTROL_TWO_FRONT, "0");
+        map.put(BrakeTestResultsPageElements.CONTROL_TWO_REAR, "0");
+        map.put(BrakeTestResultsPageElements.CONTROL_ONE_FRONT_LOCK, Boolean.TRUE);
+        map.put(BrakeTestResultsPageElements.CONTROL_ONE_REAR_LOCK, Boolean.TRUE);
+        map.put(BrakeTestResultsPageElements.CONTROL_TWO_FRONT_LOCK, Boolean.TRUE);
+        map.put(BrakeTestResultsPageElements.CONTROL_TWO_REAR_LOCK, Boolean.TRUE);
+        return map;
+    }
 }

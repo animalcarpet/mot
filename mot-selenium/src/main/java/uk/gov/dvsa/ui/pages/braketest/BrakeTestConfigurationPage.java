@@ -17,6 +17,12 @@ public class BrakeTestConfigurationPage extends Page {
 
     @FindBy(id = "brake_test_results_cancel") private WebElement cancelButton;
 
+    @FindBy(id = "brakeTestType") private WebElement brakeTestType;
+    @FindBy(id = "vehicleWeightFront") private WebElement vehicleWeightFront;
+    @FindBy(id = "vehicleWeightRear") private WebElement vehicleWeightRear;
+    @FindBy(id = "riderWeight") private WebElement riderWeight;
+    @FindBy(id = "isSidecarAttachedNo") private WebElement sidecarRadio;
+
     @FindBy(id = "serviceBrake1TestType") private WebElement serviceBrakeTestType;
 
     @FindBy(id = "parkingBrakeTestType") private WebElement parkingBrakeTestType;
@@ -50,9 +56,25 @@ public class BrakeTestConfigurationPage extends Page {
         return new BrakeTestResultsPage(driver);
     }
 
+    public BrakeTestResultsPage fillAllFieldsWithValidDataForGroupAAndSubmit(BrakeTestType testType) {
+        fillBrakeTestType(testType.getValue());
+
+        FormDataHelper.enterText(vehicleWeightFront, "400");
+        FormDataHelper.enterText(vehicleWeightRear, "400");
+        FormDataHelper.enterText(riderWeight, "80");
+        FormDataHelper.selectInputBox(sidecarRadio);
+        nextButton.click();
+
+        return new BrakeTestResultsPage(driver);
+    }
+
     private void fillBrakeTestType() {
         FormDataHelper.selectFromDropDownByValue(serviceBrakeTestType, BrakeTestType.ROLLER.getValue());
         FormDataHelper.selectFromDropDownByValue(parkingBrakeTestType, BrakeTestType.ROLLER.getValue());
+    }
+
+    private void fillBrakeTestType(String type) {
+        FormDataHelper.selectFromDropDownByValue(brakeTestType, type);
     }
 
     private void fillWeightFields() {

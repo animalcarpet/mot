@@ -329,16 +329,6 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
                     BrakeTestResultValidator::MESSAGE_FLOOR_ONLY_FRONT_APPLICABLE,
                 ],
                 [
-                    'Test values in locks throw exception in floor type test',
-                    self::getValidBrakeTestResultClass1And2TypeFloor()
-                        ->setControl1LockFront(true)
-                        ->setControl1LockRear(false)
-                        ->setControl2LockFront(true)
-                        ->setControl2LockRear(false),
-                    4,
-                    BrakeTestResultValidator::VALUE_LOCK_NOT_APPLICABLE,
-                ],
-                [
                     'Test valid decelerometer brake test',
                     self::getValidBrakeTestResultClass1And2TypeDecelerometer(),
                 ],

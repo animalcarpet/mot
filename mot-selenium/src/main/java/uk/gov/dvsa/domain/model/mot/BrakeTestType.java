@@ -4,7 +4,8 @@ public enum BrakeTestType {
     ROLLER("Roller", "ROLLR"),
     PLATE("Plate", "PLATE"),
     DECELEROMETER("Decelerometer", "DECEL"),
-    GRADIENT("Gradient", "GRADT");
+    GRADIENT("Gradient", "GRADT"),
+    FLOOR("Floor", "FLOOR");
 
     private final String dropDownName;
     private final String dropDownValue;
