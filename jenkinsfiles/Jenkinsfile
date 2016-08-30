@@ -34,7 +34,7 @@ def check_out_repo(group, repo, gitbranch, creds){
 
 def push_rpm_2_yum_repo(fb,file_path) {
     sshagent(['ba60fadb-4090-4b7c-b809-c0c4a44c923f']) {
-        sh 'rsync -avzR --rsync-path="sudo rsync" --no-owner --no-group -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" --progress '+file_path+' deploy@management-1:/srv/yum/env-'+fb+'/ && if [ $(ls '+file_path+' | wc -l) -ne 0 ]; then rm '+file_path+';fi'
+        sh 'rsync -avzR --rsync-path="sudo rsync" --no-owner --no-group -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" --progress '+file_path+' deploy@management-1:/srv/yum/env-'+fb+'/'
     }
 }
 
@@ -163,6 +163,15 @@ def check_sonar(component){
         '''
     }
 }
+
+def tag_repo(repo){
+    dir(repo) {
+        sshagent(['032a3717-f47d-4b4e-98bc-789aae33c968']) {
+            sh 'git tag -a ci2_build_$BUILD_NUMBER -m "CI2 build number: $BUILD_NUMBER" && git push origin --tags'
+        }
+    }
+}
+
 // PARTY
 node(NODE) {
 wrap([$class: 'TimestamperBuildWrapper']) {
@@ -249,7 +258,7 @@ wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
     parallel(
         'consul': { run_ansible("${AWS_ACCESS_KEY_ID}", "${AWS_SECRET_ACCESS_KEY}", "${FB}", 'playbook_puppet.yml', 'consul') },
         'openam': { run_ansible("${AWS_ACCESS_KEY_ID}", "${AWS_SECRET_ACCESS_KEY}", "${FB}", 'playbook_puppet.yml', 'openam') }
-    )    
+    )
     parallel(
         'api': { run_ansible("${AWS_ACCESS_KEY_ID}", "${AWS_SECRET_ACCESS_KEY}", "${FB}", 'playbook_puppet.yml', 'api') },
         'frontend': { run_ansible("${AWS_ACCESS_KEY_ID}", "${AWS_SECRET_ACCESS_KEY}", "${FB}", 'playbook_puppet.yml', 'frontend') },
@@ -281,6 +290,14 @@ wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
         sh 'set +x; echo -e "\033[34mSelenium Regression tests\033[0m"'
         run_selenium("${SELENIUM_HUB}","regression.xml")
     }
+    stage 'Promote RPMs to CI'
+     sh 'set +x; echo -e "\033[34mPromote RPMs to CI\033[0m"'
+     dir('RPMS'){
+         push_rpm_2_yum_repo('ci','mot-*.rpm')
+     }
+     clean_repo('ci')
+     tag_repo('mot')
+   }}
   }} //wrappers
 }
 slackSend "FINISHED => Job: '${env.JOB_NAME}' - Build: ${env.BUILD_NUMBER} @ Node: "+NODE+" (GoTo: <${env.BUILD_URL}|Build> | <${env.BUILD_URL}console|Console>)"
