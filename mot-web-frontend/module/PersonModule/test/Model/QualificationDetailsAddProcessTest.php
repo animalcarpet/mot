@@ -10,6 +10,8 @@ use Dvsa\Mot\Frontend\PersonModule\Routes\QualificationDetailsRoutes;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuard;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuardBuilder;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
+use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
+use Dvsa\Mot\Frontend\SecurityCardModuleTest\Support\TwoFaFeatureToggleTest;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaClient\Mapper\QualificationDetailsMapper;
 use DvsaClient\Mapper\SiteMapper;
@@ -58,6 +60,8 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
     /** @var  AuthorisationService */
     private $authClientMock;
 
+    private $twoFaFeatureToggle;
+
     private $formData = [
         QualificationDetailsForm::FIELD_VTS_ID => 1,
         QualificationDetailsForm::FIELD_CERT_NUMBER => 123,
@@ -86,6 +90,8 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
 
         $this->authorisationServiceMock = new AuthorisationServiceMock();
 
+        $this->twoFaFeatureToggle = XMock::of(TwoFaFeatureToggle::class);
+
         $this->sut = new QualificationDetailsAddProcess(
             $this->qualificationDetailsMapperMock,
             $this->siteMapperMock,
@@ -94,9 +100,11 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
             $this->personProfileGuardBuilderMock,
             $this->contextProviderMock,
             $this->qualificationDetailsRoutesMock,
-            $this->authClientMock
+            $this->authClientMock,
+            $this->twoFaFeatureToggle
         );
 
+        $this->twoFaFeatureToggle->expects($this->any())->method('isEnabled')->willReturn(true);
         $this->controllerMock = Xmock::of(QualificationDetailsController::class);
 
         $context = (new FormContext(1, 1, self::TEST_GROUP_NAME, $this->controllerMock));

@@ -7,6 +7,7 @@ use Dashboard\Model\PersonalDetails;
 use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\CertificatesBreadcrumbs;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
+use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaClient\Mapper\QualificationDetailsMapper;
 use DvsaCommon\ApiClient\Person\MotTestingCertificate\Dto\MotTestingCertificateDto;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
@@ -17,6 +18,7 @@ use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\QualificationDetailsBreadcrumbs;
 use Dvsa\Mot\Frontend\PersonModule\Routes\QualificationDetailsRoutes;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuardBuilder;
 use DvsaClient\Mapper\SiteMapper;
+use DvsaFeature\FeatureToggles;
 
 class QualificationDetailsAddProcess extends QualificationDetailsAbstractProcess
 {
@@ -29,6 +31,8 @@ class QualificationDetailsAddProcess extends QualificationDetailsAbstractProcess
      */
     private $authorisationService;
 
+    private $twoFaFeatureToggle;
+
     public function __construct(
         QualificationDetailsMapper $qualificationDetailsMapper,
         SiteMapper $siteMapper,
@@ -37,7 +41,8 @@ class QualificationDetailsAddProcess extends QualificationDetailsAbstractProcess
         PersonProfileGuardBuilder $personProfileGuardBuilder,
         ContextProvider $contextProvider,
         QualificationDetailsRoutes $qualificationDetailsRoutes,
-        AuthorisationService $authorisationService
+        AuthorisationService $authorisationService,
+        TwoFaFeatureToggle $twoFaFeatureToggle
     )
     {
         parent::__construct($qualificationDetailsMapper, $siteMapper, $qualificationDetailsBreadcrumbs,
@@ -46,6 +51,7 @@ class QualificationDetailsAddProcess extends QualificationDetailsAbstractProcess
         );
 
         $this->authorisationService = $authorisationService;
+        $this->twoFaFeatureToggle = $twoFaFeatureToggle;
 
     }
     const QUERY_PARAM_FORM_UUID = 'formUuid';
@@ -186,7 +192,7 @@ class QualificationDetailsAddProcess extends QualificationDetailsAbstractProcess
 
     public function hasConfirmationPage()
     {
-        return true;
+        return $this->twoFaFeatureToggle->isEnabled();
     }
 
     private function shouldSeeOrderSecurityCard()

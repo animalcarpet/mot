@@ -28,7 +28,7 @@ public class QualificationDetailsTests extends DslTest {
     }
 
     @Test(groups = {"BVT", "Regression"},
-            testName = "Add qualification details",
+            testName = "2fa",
             description = "test that a user with no qialification can add their qualification details")
     public void userCanAddNewQualificationDetails() throws IOException
     {
@@ -41,6 +41,24 @@ public class QualificationDetailsTests extends DslTest {
         QualificationDetailsConfirmationPage confirmationPage = motUI.profile.qualificationDetails()
                 .addQualificationDetailsForGroupA(certificateNumber, testSite2.getSiteNumber(), "3", "4", "2016");
         confirmationPage.returnToQualificationDetailsPage();
+
+        step("Then the certificate should be saved");
+        Assert.assertTrue(motUI.profile.qualificationDetails().verifyCertificateAddedForGroupA(certificateNumber, "3 April 2016"));
+    }
+
+    @Test(groups = {"BVT", "Regression"},
+            testName = "non-2fa",
+            description = "test that a user with no qialification can add their qualification details")
+    public void userCanAddNewQualificationDetails2faOff() throws IOException
+    {
+        step("Given I am on my profile page as user who has a new certificate");
+        User tester = userData.createUserWithoutRole();
+        motUI.profile.viewYourProfile(tester);
+
+        step("And I add the details of the certificate");
+        String certificateNumber = RandomDataGenerator.generateRandomNumber(15, 12);
+        motUI.profile.qualificationDetails()
+                .addQualificationDetailsForGroupA(certificateNumber, testSite2.getSiteNumber(), "3", "4", "2016");
 
         step("Then the certificate should be saved");
         Assert.assertTrue(motUI.profile.qualificationDetails().verifyCertificateAddedForGroupA(certificateNumber, "3 April 2016"));
