@@ -123,12 +123,13 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
         $this
             ->withIs2FALoginApplicableToCurrentUser(true)
             ->withHasFeatureToggle(true)
-            ->withInvalidFormSubmission();
+            ->withInvalidFormSubmission("0");
 
         $vm = $this->buildController()->login2FAAction();
 
         $this->assertEquals($expectedTemplate, $vm->getTemplate());
         $this->assertPinInputIsCleared($vm->getVariable('form'));
+        $this->assertNotNull($vm->getVariable("gtmData"));
     }
 
     private function withIs2FALoginApplicableToCurrentUser($isApplicable)
@@ -172,12 +173,12 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
         return $this;
     }
 
-    private function withInvalidFormSubmission()
+    private function withInvalidFormSubmission($pin = 0)
     {
         $this->withPostSubmission();
 
         $this->request->setPost(new Parameters([
-            SecurityCardValidationForm::PIN => 0
+            SecurityCardValidationForm::PIN => $pin
         ]));
 
         return $this;

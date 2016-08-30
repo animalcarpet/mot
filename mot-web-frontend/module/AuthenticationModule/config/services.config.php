@@ -8,9 +8,7 @@ use Dvsa\Mot\Frontend\AuthenticationModule\Factory\Service\GotoUrlServiceFactory
 use Dvsa\Mot\Frontend\AuthenticationModule\Factory\Service\GotoUrlValidatorServiceFactory;
 use Dvsa\Mot\Frontend\AuthenticationModule\Factory\Service\IdentitySessionStateServiceFactory;
 use Dvsa\Mot\Frontend\AuthenticationModule\Factory\Service\LoginCsrfCookieServiceFactory;
-use Dvsa\Mot\Frontend\AuthenticationModule\Factory\Service\RegisterCardInformationCookieServiceFactory;
-use Dvsa\Mot\Frontend\AuthenticationModule\Factory\Service\RegisterCardServiceFactory;
-use Dvsa\Mot\Frontend\AuthenticationModule\Factory\Service\RegisteredCardServiceFactory;
+use Dvsa\Mot\Frontend\AuthenticationModule\Factory\Service\SuccessLoginResultRoutingServiceFactory;
 use Dvsa\Mot\Frontend\AuthenticationModule\Factory\Service\WebAuthenticationCookieServiceFactory;
 use Dvsa\Mot\Frontend\AuthenticationModule\Factory\Service\WebLoginServiceFactory;
 use Dvsa\Mot\Frontend\AuthenticationModule\Factory\Service\WebLogoutServiceFactory;
@@ -20,9 +18,7 @@ use Dvsa\Mot\Frontend\AuthenticationModule\Service\GotoUrlService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\GotoUrlValidatorService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\IdentitySessionStateService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\LoginCsrfCookieService;
-use Dvsa\Mot\Frontend\AuthenticationModule\Service\RegisterCardInformationCookieService;
-use Dvsa\Mot\Frontend\AuthenticationModule\Service\RegisterCardService;
-use Dvsa\Mot\Frontend\AuthenticationModule\Service\RegisteredCardService;
+use Dvsa\Mot\Frontend\AuthenticationModule\Service\SuccessLoginResultRoutingService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\WebLoginService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\WebLogoutService;
 use DvsaFeature\FeatureToggles;
@@ -43,6 +39,7 @@ return [
         IdentitySessionStateService::class => IdentitySessionStateServiceFactory::class,
         LoginCsrfCookieService::class      => LoginCsrfCookieServiceFactory::class,
         WebLoginService::class                => WebLoginServiceFactory::class,
+        SuccessLoginResultRoutingService::class => SuccessLoginResultRoutingServiceFactory::class
     ],
     'abstract_factories' => [
         StorageCacheAbstractServiceFactory::class,

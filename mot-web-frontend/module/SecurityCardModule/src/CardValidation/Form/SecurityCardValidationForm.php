@@ -2,16 +2,18 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Form;
 
+use Dvsa\Mot\Frontend\SecurityCardModule\Validator\SecurityCardPinValidationCallback;
 use Dvsa\Mot\Frontend\SecurityCardModule\Validator\SecurityCardPinValidator;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
+use Zend\InputFilter\Input;
 use Zend\InputFilter\InputFilter;
 
 class SecurityCardValidationForm extends Form
 {
     const PIN = 'pin';
 
-    public function __construct()
+    public function __construct(SecurityCardPinValidationCallback $validationCallback = null)
     {
         parent::__construct();
 
@@ -30,17 +32,10 @@ class SecurityCardValidationForm extends Form
 
         $filter = new InputFilter();
 
-        $filter->add([
-            'name' => self::PIN,
-            'required' => false,
-            'validators' => [
-                [
-                    'name' => SecurityCardPinValidator::class
-                ]
-            ],
-            'continue_if_empty' => true,
-            'allow_empty' => true
-        ]);
+        $pinInput = new Input(self::PIN);
+        $pinInput->setContinueIfEmpty(true)->getValidatorChain()
+            ->attach((new SecurityCardPinValidator())->setValidationCallback($validationCallback));
+        $filter->add($pinInput);
 
 
         $this->setInputFilter($filter);

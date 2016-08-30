@@ -7,6 +7,7 @@ use Dvsa\Mot\Frontend\AuthenticationModule\Service\AuthenticationAccountLockoutV
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\GotoUrlService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\IdentitySessionStateService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\LoginCsrfCookieService;
+use Dvsa\Mot\Frontend\AuthenticationModule\Service\SuccessLoginResultRoutingService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\WebLoginService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use Zend\Authentication\AuthenticationService;
@@ -36,6 +37,7 @@ class SecurityControllerFactory implements FactoryInterface
         $loginService = $serviceLocator->get(WebLoginService::class);
         $authenticationAccountLockoutViewModelBuilder = $serviceLocator->get(AuthenticationAccountLockoutViewModelBuilder::class);
         $twoFactorFeatureToggle = $serviceLocator->get(TwoFaFeatureToggle::class);
+        $successLoginResultRoutingService = $serviceLocator->get(SuccessLoginResultRoutingService::class);
 
         return new SecurityController(
             $request,
@@ -46,7 +48,8 @@ class SecurityControllerFactory implements FactoryInterface
             $loginCsrfCookieService,
             $authenticationService,
             $authenticationAccountLockoutViewModelBuilder,
-            $twoFactorFeatureToggle
+            $twoFactorFeatureToggle,
+            $successLoginResultRoutingService
         );
     }
 }

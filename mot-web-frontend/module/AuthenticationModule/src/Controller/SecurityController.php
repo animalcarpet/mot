@@ -5,17 +5,13 @@ namespace Dvsa\Mot\Frontend\AuthenticationModule\Controller;
 use Core\Controller\AbstractDvsaActionController;
 use Dashboard\Controller\UserHomeController;
 use Dvsa\Mot\Frontend\AuthenticationModule\Form\LoginForm;
-use Dvsa\Mot\Frontend\AuthenticationModule\Model\LoginLandingPage;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\WebLoginResult;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\AuthenticationAccountLockoutViewModelBuilder;
-use Dvsa\Mot\Frontend\SecurityCardModule\Controller\NewUserOrderCardController;
-use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Controller\RegisterCardInformationController;
+use Dvsa\Mot\Frontend\AuthenticationModule\Service\SuccessLoginResultRoutingService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\GotoUrlService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\IdentitySessionStateService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\LoginCsrfCookieService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\WebLoginService;
-use Dvsa\Mot\Frontend\SecurityCardModule\Controller\RegisterCardInformationNewUserController;
-use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Controller\RegisteredCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Authn\AuthenticationResultCode;
 use Zend\Authentication\AuthenticationService;
@@ -34,7 +30,6 @@ class SecurityController extends AbstractDvsaActionController
     const PARAM_GOTO = 'goto';
     const ROUTE_FORGOTTEN_PASSWORD = 'forgotten-password';
     const ROUTE_LOGIN_GET = 'login';
-    const CREATE_ACCOUNT = 'account-register/create-an-account';
 
     /**
      * @var AuthenticationService
@@ -62,6 +57,9 @@ class SecurityController extends AbstractDvsaActionController
     /** @var  TwoFaFeatureToggle */
     private $twoFaFeatureToggle;
 
+    /** @var  SuccessLoginResultRoutingService */
+    private $successLoginResultRoutingService;
+
     /**
      * @param Request $request
      * @param Response $response
@@ -72,7 +70,7 @@ class SecurityController extends AbstractDvsaActionController
      * @param AuthenticationService $authenticationService
      * @param AuthenticationAccountLockoutViewModelBuilder $accountLocketViewModelBuilder
      * @param TwoFaFeatureToggle $twoFaFeatureToggle
-     * @internal param AuthenticationAccountLockoutViewModelBuilder $failureViewModelBuilder
+     * @param SuccessLoginResultRoutingService $successLoginResultRoutingService
      */
     public function __construct(
         Request $request,
@@ -83,7 +81,8 @@ class SecurityController extends AbstractDvsaActionController
         LoginCsrfCookieService $loginCsrfCookieService,
         AuthenticationService $authenticationService,
         AuthenticationAccountLockoutViewModelBuilder $accountLocketViewModelBuilder,
-        TwoFaFeatureToggle $twoFaFeatureToggle
+        TwoFaFeatureToggle $twoFaFeatureToggle,
+        SuccessLoginResultRoutingService $successLoginResultRoutingService
 
     ) {
         $this->request = $request;
@@ -95,6 +94,7 @@ class SecurityController extends AbstractDvsaActionController
         $this->accountLocketViewModelBuilder = $accountLocketViewModelBuilder;
         $this->authenticationService = $authenticationService;
         $this->twoFaFeatureToggle = $twoFaFeatureToggle;
+        $this->successLoginResultRoutingService = $successLoginResultRoutingService;
     }
 
     /**
@@ -183,33 +183,8 @@ class SecurityController extends AbstractDvsaActionController
             return $this->showErrorOnAuthFail($result, $loginForm);
         }
 
-        switch ($result->getTwoFaPage()) {
-            case LoginLandingPage::LOG_IN_WITH_2FA:
-                return $this->redirect()->toRoute(RegisteredCardController::ROUTE);
-
-            case LoginLandingPage::ACTIVATE_2FA_EXISTING_USER:
-                return $this->redirect()->toRoute(
-                    RegisterCardInformationController::REGISTER_CARD_INFORMATION_ROUTE,
-                    ['userId' => $this->authenticationService->getIdentity()->getUserId()]);
-
-            case LoginLandingPage::ACTIVATE_2FA_NEW_USER:
-                return $this->redirect()->toRoute(
-                    RegisterCardInformationNewUserController::REGISTER_CARD_NEW_USER_INFORMATION_ROUTE,
-                    ['userId' => $this->authenticationService->getIdentity()->getUserId()]);
-
-            case LoginLandingPage::ORDER_2FA_NEW_USER:
-                return $this->redirect()->toRoute(
-                    NewUserOrderCardController::ORDER_CARD_NEW_USER_ROUTE,
-                    ['userId' => $this->authenticationService->getIdentity()->getUserId()]);
-        }
-
-        $rawGoto = $request->getPost(self::PARAM_GOTO);
-        $goto = $this->gotoService->decodeGoto($rawGoto);
-        if ($goto) {
-            return $this->redirect()->toUrl($goto);
-        } else {
-            return $this->redirect()->toRoute(UserHomeController::ROUTE);
-        }
+        // Redirect on success
+        return $this->applyActionResult($this->successLoginResultRoutingService->route($result, $request));
     }
 
     private function setUpLoginCsrfCookie(ViewModel $vm)
@@ -229,7 +204,7 @@ class SecurityController extends AbstractDvsaActionController
         return $vm;
     }
 
-    private function showErrorOnAuthFail($result, LoginForm $loginForm)
+    private function showErrorOnAuthFail(WebLoginResult $result, LoginForm $loginForm)
     {
         $resultCode = $result->getCode();
         if
@@ -237,9 +212,8 @@ class SecurityController extends AbstractDvsaActionController
             $resultCode == AuthenticationResultCode::INVALID_CREDENTIALS ||
             $resultCode == AuthenticationResultCode::ERROR ||
             $resultCode == AuthenticationResultCode::UNRESOLVABLE_IDENTITY
-        )
-        {
-            $loginForm->setAuthenticationFailError();
+        ) {
+            $loginForm->resetPassword();
             $viewVars = [
                 'form' => $loginForm,
                 'gotoUrl' => $this->request->getPost(self::PARAM_GOTO),

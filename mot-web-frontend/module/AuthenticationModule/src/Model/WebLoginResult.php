@@ -2,17 +2,14 @@
 
 namespace Dvsa\Mot\Frontend\AuthenticationModule\Model;
 
-use Dvsa\Mot\Frontend\AuthenticationModule\Model\WebLogingResult2FaPageEnum;
 
 class WebLoginResult
 {
     /** @var  string */
     private $code;
 
-    /** @var  int */
-    private $twoFaPage;
-
-    private $isSecondFactorRequired = false;
+    /** @var  string */
+    private $token;
 
     /**
      * @return string
@@ -33,37 +30,20 @@ class WebLoginResult
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getTwoFaPage()
+    public function getToken()
     {
-        return $this->twoFaPage;
+        return $this->token;
     }
 
     /**
-     * @param int $twoFaPage
-     */
-    public function setTwoFaPage($twoFaPage)
-    {
-        $this->twoFaPage = $twoFaPage;
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isSecondFactorRequired()
-    {
-        return $this->isSecondFactorRequired;
-    }
-
-    /**
-     * @param boolean $isSecondFactorRequired
+     * @param string $token
      * @return WebLoginResult
      */
-    public function setSecondFactorRequired($isSecondFactorRequired)
+    public function setToken($token)
     {
-        $this->isSecondFactorRequired = $isSecondFactorRequired;
+        $this->token = $token;
         return $this;
     }
 }
