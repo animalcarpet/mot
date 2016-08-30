@@ -55,7 +55,7 @@ class DirectNominationOperationTest extends \PHPUnit_Framework_TestCase
     public function testRoleIsAssignedOnNomination()
     {
         $person = new Person();
-        $nomination = $this->getPendingNominationWithBusinessRoleStatusCode(BusinessRoleStatusCode::PENDING);
+        $nomination = $this->getNominationWithBusinessRoleStatusCode(BusinessRoleStatusCode::PENDING);
 
         $this
             ->withNotification(new Notification())
@@ -69,7 +69,7 @@ class DirectNominationOperationTest extends \PHPUnit_Framework_TestCase
     public function testRoleIsNotAssignedOnNominationWhenTheNominationIsNotVerified()
     {
         $person = new Person();
-        $nomination = $this->getPendingNominationWithBusinessRoleStatusCode(BusinessRoleStatusCode::PENDING);
+        $nomination = $this->getNominationWithBusinessRoleStatusCode(BusinessRoleStatusCode::PENDING);
 
         $this
             ->withNotification(new Notification())
@@ -83,7 +83,7 @@ class DirectNominationOperationTest extends \PHPUnit_Framework_TestCase
     public function testRoleIsAssignedOnUpdateNomination()
     {
         $person = new Person();
-        $nomination = $this->getPendingNominationWithBusinessRoleStatusCode(BusinessRoleStatusCode::PENDING);
+        $nomination = $this->getNominationWithBusinessRoleStatusCode(BusinessRoleStatusCode::PENDING);
 
         $this
             ->withNotification(new Notification())
@@ -97,7 +97,7 @@ class DirectNominationOperationTest extends \PHPUnit_Framework_TestCase
     public function testRoleIsNotAssignedOnUpdateNominationIfRoleIsNotPending()
     {
         $person = new Person();
-        $nomination = $this->getPendingNominationWithBusinessRoleStatusCode(BusinessRoleStatusCode::ACTIVE);
+        $nomination = $this->getNominationWithBusinessRoleStatusCode(BusinessRoleStatusCode::ACTIVE);
 
         $this
             ->withNotification(new Notification())
@@ -106,7 +106,7 @@ class DirectNominationOperationTest extends \PHPUnit_Framework_TestCase
         $this->buildOperation()->updateNomination($person, $nomination);
     }
 
-    private function getPendingNominationWithBusinessRoleStatusCode($code)
+    private function getNominationWithBusinessRoleStatusCode($code)
     {
         $organisationBusinessRole = new OrganisationBusinessRole();
         $organisationBusinessRole->setFullName('Role Full Name');

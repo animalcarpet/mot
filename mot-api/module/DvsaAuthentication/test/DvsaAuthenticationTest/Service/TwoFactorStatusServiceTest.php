@@ -3,10 +3,14 @@ namespace DvsaAuthenticationTest\Service;
 
 use Dvsa\Mot\ApiClient\Resource\Collection;
 use Dvsa\Mot\ApiClient\Resource\Item\SecurityCardOrder;
-use Dvsa\Mot\ApiClient\Service\AuthorisationService;
+use Dvsa\Mot\ApiClient\Service\AuthorisationService as AuthorisationServiceClient;
 use DvsaAuthentication\Identity;
 use DvsaAuthentication\Service\TwoFactorStatusService;
 use DvsaAuthentication\TwoFactorStatus;
+use DvsaAuthorisation\Service\AuthorisationService;
+use DvsaCommon\Enum\RoleCode;
+use DvsaCommon\Model\PersonAuthorization;
+use DvsaCommon\Model\TradeRole;
 use DvsaEntities\Entity\AuthenticationMethod;
 use DvsaEntities\Entity\Person;
 use DvsaCommonTest\TestUtils\XMock;
@@ -16,12 +20,15 @@ use stdClass;
 
 class TwoFactorStatusServiceTest extends PHPUnit_Framework_TestCase
 {
+    private $authorisationServiceClient;
+
     private $authorisationService;
 
     private $personRepository;
 
     public function setUp()
     {
+        $this->authorisationServiceClient = XMock::of(AuthorisationServiceClient::class);
         $this->authorisationService = XMock::of(AuthorisationService::class);
         $this->personRepository = XMock::of(PersonRepository::class);
     }
@@ -30,6 +37,7 @@ class TwoFactorStatusServiceTest extends PHPUnit_Framework_TestCase
     {
         $this
             ->withTwoFactorInactivePerson()
+            ->withNoExistingNomineeRoles()
             ->withNoCardOrder();
         
         $status = $this->buildService()->getStatusForPerson(new Person());
@@ -39,7 +47,9 @@ class TwoFactorStatusServiceTest extends PHPUnit_Framework_TestCase
 
     public function testStatusIsAwaitingCardOrderIfPersonNotTwoFaAndHasNoCardOrder()
     {
-        $this->withNoCardOrder();
+        $this
+            ->withNoExistingNomineeRoles()
+            ->withNoCardOrder();
 
         $identity = $this->getTwoFactorInactiveIdentity();
 
@@ -52,6 +62,7 @@ class TwoFactorStatusServiceTest extends PHPUnit_Framework_TestCase
     {
         $this
             ->withTwoFactorInactivePerson()
+            ->withNoExistingNomineeRoles()
             ->withCardOrder();
 
         $status = $this->buildService()->getStatusForPerson(new Person());
@@ -61,7 +72,9 @@ class TwoFactorStatusServiceTest extends PHPUnit_Framework_TestCase
 
     public function testStatusIsAwaitingCardActivationIfPersonIsNotTwoFaButHasCardOrder()
     {
-        $this->withCardOrder();
+        $this
+            ->withCardOrder()
+            ->withNoExistingNomineeRoles();
 
         $identity = $this->getTwoFactorInactiveIdentity();
 
@@ -90,6 +103,44 @@ class TwoFactorStatusServiceTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(TwoFactorStatus::ACTIVE, $status);
     }
 
+    public function testStatusIsInactiveTradeUserIfPersonAlreadyHasTradeRole()
+    {
+        $this
+            ->withTwoFactorInactivePerson()
+            ->withNoCardOrder()
+            ->withExistingNomineeTradeRoles();
+
+        $status = $this->buildService()->getStatusForPerson(new Person());
+
+        $this->assertEquals(TwoFactorStatus::INACTIVE_TRADE_USER, $status);
+    }
+
+    public function testStatusIsInactiveTradeUserIfIdentityAlreadyHasTradeRole()
+    {
+        $this
+            ->withNoCardOrder()
+            ->withExistingNomineeTradeRoles();
+
+        $identity = $this->getTwoFactorInactiveIdentity();
+
+        $status = $this->buildService()->getStatusForIdentity($identity);
+
+        $this->assertEquals(TwoFactorStatus::INACTIVE_TRADE_USER, $status);
+    }
+
+    public function testStatusIsAwaitingCardOrderIfIdentityAlreadyHasNonTradeRole()
+    {
+        $this
+            ->withNoCardOrder()
+            ->withExistingNomineeNonTradeRoles();
+
+        $identity = $this->getTwoFactorInactiveIdentity();
+
+        $status = $this->buildService()->getStatusForIdentity($identity);
+
+        $this->assertEquals(TwoFactorStatus::AWAITING_CARD_ORDER, $status);
+    }
+
     private function withTwoFactorActivePerson()
     {
         $this->personRepository
@@ -106,6 +157,41 @@ class TwoFactorStatusServiceTest extends PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('findIdentity')
             ->willReturn($this->getTwoFactorInactivePerson());
+
+        return $this;
+    }
+
+    private function withExistingNomineeTradeRoles()
+    {
+        return $this->withExistingNomineeRoles([
+            RoleCode::TESTER
+        ]);
+    }
+
+    private function withExistingNomineeNonTradeRoles()
+    {
+        return $this->withExistingNomineeRoles([
+            RoleCode::SCHEME_MANAGER
+        ]);
+    }
+
+    private function withNoExistingNomineeRoles()
+    {
+        return $this->withExistingNomineeRoles([]);
+    }
+
+    private function withExistingNomineeRoles(array $roles)
+    {
+        $personAuthorization = XMock::of(PersonAuthorization::class);
+        $personAuthorization
+            ->expects($this->any())
+            ->method('getAllRoles')
+            ->willReturn($roles);
+
+        $this->authorisationService
+            ->expects($this->any())
+            ->method('getPersonAuthorization')
+            ->willReturn($personAuthorization);
 
         return $this;
     }
@@ -148,7 +234,7 @@ class TwoFactorStatusServiceTest extends PHPUnit_Framework_TestCase
 
         $securityCardOrders = new Collection([$order], SecurityCardOrder::class);
 
-        $this->authorisationService
+        $this->authorisationServiceClient
             ->expects($this->any())
             ->method("getSecurityCardOrders")
             ->willReturn($securityCardOrders);
@@ -160,7 +246,7 @@ class TwoFactorStatusServiceTest extends PHPUnit_Framework_TestCase
     {
         $securityCardOrders = new Collection([], SecurityCardOrder::class);
 
-        $this->authorisationService
+        $this->authorisationServiceClient
             ->expects($this->any())
             ->method("getSecurityCardOrders")
             ->willReturn($securityCardOrders);
@@ -171,6 +257,7 @@ class TwoFactorStatusServiceTest extends PHPUnit_Framework_TestCase
     private function buildService()
     {
         return new TwoFactorStatusService(
+            $this->authorisationServiceClient,
             $this->authorisationService,
             $this->personRepository
         );
