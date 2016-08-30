@@ -56,6 +56,7 @@ class BrakeTestResultContext implements Context
             $this->sessionContext->getCurrentAccessToken(),
             $this->motTestContext->getMotTestNumber()
         );
+        $this->assertResponseIsCorrect($this->brakeTestResultResponse);
     }
 
     /**
@@ -79,7 +80,7 @@ class BrakeTestResultContext implements Context
             $this->motTestContext->getMotTestNumber()
         );
 
-        PHPUnit::assertEquals(200, $this->brakeTestResultResponse->getStatusCode(), 'Confirm Deceleromter was added');
+        $this->assertResponseIsCorrect($this->brakeTestResultResponse, 'Confirm Deceleromter was added');
     }
 
     /**
@@ -92,6 +93,7 @@ class BrakeTestResultContext implements Context
             $this->motTestContext->getMotTestNumber(),
             $this->getDecelerometerBrakeTestDataForClass3To7($scenario)
         );
+        $this->assertResponseIsCorrect($this->brakeTestResultResponse);
     }
 
     /**
@@ -104,7 +106,7 @@ class BrakeTestResultContext implements Context
             $this->motTestContext->getMotTestNumber()
         );
 
-        PHPUnit::assertEquals(200, $this->brakeTestResultResponse->getStatusCode(), 'Incorrect status code when adding Decelerometer brake test.');
+        $this->assertResponseIsCorrect($this->brakeTestResultResponse, 'Incorrect status code when adding Decelerometer brake test.');
     }
 
     /**
@@ -117,6 +119,7 @@ class BrakeTestResultContext implements Context
             $this->motTestContext->getMotTestNumber(),
             $this->getDecelerometerBrakeTestDataForClass1To2($scenario)
         );
+        $this->assertResponseIsCorrect($this->brakeTestResultResponse);
     }
 
     /**
@@ -129,6 +132,20 @@ class BrakeTestResultContext implements Context
             $this->motTestContext->getMotTestNumber(),
             $this->getRollerBrakeTestObjectForClass1And2($scenario)
         );
+        $this->assertResponseIsCorrect($this->brakeTestResultResponse);
+    }
+
+    /**
+     * @Given /^I add plate brake test data for (.*)$/
+     */
+    public function iAddPlateBrakeTestDataFor($scenario)
+    {
+        $this->brakeTestResultResponse = $this->brakeTestResult->addBrakeTestForPlateClass1To2WithCustomData(
+            $this->sessionContext->getCurrentAccessToken(),
+            $this->motTestContext->getMotTestNumber(),
+            $this->getPlateBrakeTestObjectForClass1And2($scenario)
+        );
+        $this->assertResponseIsCorrect($this->brakeTestResultResponse);
     }
 
     /**
@@ -142,7 +159,8 @@ class BrakeTestResultContext implements Context
             $this->getGradientBrakeTestObjectForClass1And2($scenario)
         );
 
-        PHPUnit::assertEquals($this->brakeTestResultResponse->getStatusCode(), 200, 'Incorrect status code when adding Gradient brake test.');
+        $this->assertResponseIsCorrect($this->brakeTestResultResponse,
+            'Incorrect status code when adding Gradient brake test.');
     }
 
     /**
@@ -155,6 +173,7 @@ class BrakeTestResultContext implements Context
             $this->motTestContext->getMotTestNumber(),
             $this->getFloorBrakeTestObjectForClass1And2($scenario)
         );
+        $this->assertResponseIsCorrect($this->brakeTestResultResponse);
     }
 
     /**
@@ -166,6 +185,7 @@ class BrakeTestResultContext implements Context
             $this->sessionContext->getCurrentAccessToken(),
             $this->motTestContext->getMotTestNumber()
         );
+        $this->assertResponseIsCorrect($this->brakeTestResultResponse);
     }
 
     /**
@@ -180,6 +200,15 @@ class BrakeTestResultContext implements Context
             $this->motTestContext->getMotTestNumber(),
             $rollerBrakeTestObject
         );
+        $this->assertResponseIsCorrect($this->brakeTestResultResponse);
+    }
+
+    /**
+     * @param Response $response
+     */
+    private function assertResponseIsCorrect($response, $message = 'Brake test response code is not 200')
+    {
+        \PHPUnit_Framework_Assert::assertEquals(200, $response->getStatusCode(), $message);
     }
 
     private function getRollerBrakeTestObjectForClass3To7($scenario) {
@@ -289,19 +318,19 @@ class BrakeTestResultContext implements Context
             case "class4.roller.invalid.high":
                 return new RollerBrakeTestClass3To7([
                     'serviceBrake1Data' => [
-                        'effortNearsideAxle1' => 10000,
-                        'effortOffsideAxle1' => 10000,
-                        'lockNearsideAxle1' => true,
-                        'lockOffsideAxle1' => true,
-                        'effortNearsideAxle2' => 10000,
-                        'effortOffsideAxle2' => 10000,
-                        'lockNearsideAxle2' => true,
-                        'lockOffsideAxle2' => true,
+                        'effortNearsideAxle1' => 100,
+                        'effortOffsideAxle1' => 100,
+                        'lockNearsideAxle1' => false,
+                        'lockOffsideAxle1' => false,
+                        'effortNearsideAxle2' => 100,
+                        'effortOffsideAxle2' => 100,
+                        'lockNearsideAxle2' => false,
+                        'lockOffsideAxle2' => false,
                     ],
-                    'parkingBrakeEffortSingle' => 10000,
+                    'parkingBrakeEffortSingle' => 1500,
                     'parkingBrakeLockSingle' => false,
-                    'parkingBrakeEffortNearside' => 10000,
-                    'parkingBrakeEffortOffside' => 10000,
+                    'parkingBrakeEffortNearside' => 1500,
+                    'parkingBrakeEffortOffside' => 1500,
                     'parkingBrakeLockNearside' => false,
                     'parkingBrakeLockOffside' => false,
                     'serviceBrake1TestType' => 'rollr',
@@ -365,39 +394,226 @@ class BrakeTestResultContext implements Context
                 ];
             case "class1.roller.invalid.high":
                 return [
-                    "control1EffortFront"    => 10000,
-                    "control1EffortRear"     => 10000,
-                    "control1EffortSidecar"  => 10000,
-                    "control2EffortFront"    => 10000,
-                    "control2EffortRear"     => 10000,
-                    "control2EffortSidecar"  => 10000,
+                    "control1EffortFront"    => 50,
+                    "control1EffortRear"     => 50,
+                    "control1EffortSidecar"  => 50,
+                    "control2EffortFront"    => 50,
+                    "control2EffortRear"     => 50,
+                    "control2EffortSidecar"  => 50,
                     "control1LockFront"      => false,
                     "control1LockRear"       => false,
                     "control2LockFront"      => false,
                     "control2LockRear"       => false,
-                    "vehicleWeightFront"     => 10000,
-                    "vehicleWeightRear"      => 10000,
-                    "riderWeight"            => 80,
+                    "vehicleWeightFront"     => 400,
+                    "vehicleWeightRear"      => 400,
+                    "riderWeight"            => 78,
                     "isSideCarAttached"      => 0,
                     "sidecarWeight"          => 0
                 ];
             case "class1.roller.invalid.low":
                 return [
-                    "control1EffortFront"    => -1,
-                    "control1EffortRear"     => -1,
-                    "control1EffortSidecar"  => -1,
-                    "control2EffortFront"    => 0,
-                    "control2EffortRear"     => 0,
-                    "control2EffortSidecar"  => -1,
+                    "control1EffortFront"    => 3,
+                    "control1EffortRear"     => 3,
+                    "control1EffortSidecar"  => 3,
+                    "control2EffortFront"    => 3,
+                    "control2EffortRear"     => 3,
+                    "control2EffortSidecar"  => 3,
                     "control1LockFront"      => false,
                     "control1LockRear"       => false,
                     "control2LockFront"      => false,
                     "control2LockRear"       => false,
-                    "vehicleWeightFront"     => 0,
-                    "vehicleWeightRear"      => 10,
-                    "riderWeight"            => 70,
-                    "isSideCarAttached"      => 1,
-                    "sidecarWeight"          => 50
+                    "vehicleWeightFront"     => 400,
+                    "vehicleWeightRear"      => 400,
+                    "riderWeight"            => 78,
+                    "isSideCarAttached"      => 0,
+                    "sidecarWeight"          => 0
+                ];
+            case "class1.roller.locks.locked":
+                return [
+                    "control1EffortFront"    => 0,
+                    "control1EffortRear"     => 0,
+                    "control1EffortSidecar"  => 0,
+                    "control2EffortFront"    => 0,
+                    "control2EffortRear"     => 0,
+                    "control2EffortSidecar"  => 0,
+                    "control1LockFront"      => true,
+                    "control1LockRear"       => true,
+                    "control2LockFront"      => true,
+                    "control2LockRear"       => true,
+                    "vehicleWeightFront"     => 400,
+                    "vehicleWeightRear"      => 400,
+                    "riderWeight"            => 78,
+                    "isSideCarAttached"      => 0,
+                    "sidecarWeight"          => 0
+                ];
+            case "class1.roller.locks.ctrl1Pass":
+                return [
+                    "control1EffortFront"    => 0,
+                    "control1EffortRear"     => 0,
+                    "control1EffortSidecar"  => 0,
+                    "control2EffortFront"    => 0,
+                    "control2EffortRear"     => 0,
+                    "control2EffortSidecar"  => 0,
+                    "control1LockFront"      => true,
+                    "control1LockRear"       => false,
+                    "control2LockFront"      => true,
+                    "control2LockRear"       => false,
+                    "vehicleWeightFront"     => 400,
+                    "vehicleWeightRear"      => 400,
+                    "riderWeight"            => 78,
+                    "isSideCarAttached"      => 0,
+                    "sidecarWeight"          => 0
+                ];
+            case "class1.roller.locks.ctrl2Pass":
+                return [
+                    "control1EffortFront"    => 0,
+                    "control1EffortRear"     => 0,
+                    "control1EffortSidecar"  => 0,
+                    "control2EffortFront"    => 0,
+                    "control2EffortRear"     => 0,
+                    "control2EffortSidecar"  => 0,
+                    "control1LockFront"      => false,
+                    "control1LockRear"       => true,
+                    "control2LockFront"      => false,
+                    "control2LockRear"       => true,
+                    "vehicleWeightFront"     => 400,
+                    "vehicleWeightRear"      => 400,
+                    "riderWeight"            => 78,
+                    "isSideCarAttached"      => 0,
+                    "sidecarWeight"          => 0
+                ];
+            default:
+                Throw new InvalidArgumentException();
+        }
+    }
+
+    private function getPlateBrakeTestObjectForClass1And2($scenario){
+        switch ($scenario){
+            case "class1.plate.valid.high":
+                return [
+                    "control1EffortFront"    => 9999,
+                    "control1EffortRear"     => 9999,
+                    "control1EffortSidecar"  => 9999,
+                    "control2EffortFront"    => 9999,
+                    "control2EffortRear"     => 9999,
+                    "control2EffortSidecar"  => 9999,
+                    "control1LockFront"      => false,
+                    "control1LockRear"       => false,
+                    "control2LockFront"      => false,
+                    "control2LockRear"       => false,
+                    "vehicleWeightFront"     => 9999,
+                    "vehicleWeightRear"      => 9999,
+                    "riderWeight"            => 80,
+                    "isSideCarAttached"      => 0,
+                    "sidecarWeight"          => 0
+                ];
+            case "class1.plate.valid.low":
+                return [
+                    "control1EffortFront"    => 23,
+                    "control1EffortRear"     => 23,
+                    "control1EffortSidecar"  => 23,
+                    "control2EffortFront"    => 23,
+                    "control2EffortRear"     => 23,
+                    "control2EffortSidecar"  => 23,
+                    "control1LockFront"      => false,
+                    "control1LockRear"       => false,
+                    "control2LockFront"      => false,
+                    "control2LockRear"       => false,
+                    "vehicleWeightFront"     => 23,
+                    "vehicleWeightRear"      => 23,
+                    "riderWeight"            => 23,
+                    "isSideCarAttached"      => 0,
+                    "sidecarWeight"          => 0
+                ];
+            case "class1.plate.invalid.high":
+                return [
+                    "control1EffortFront"    => 50,
+                    "control1EffortRear"     => 50,
+                    "control1EffortSidecar"  => 50,
+                    "control2EffortFront"    => 50,
+                    "control2EffortRear"     => 50,
+                    "control2EffortSidecar"  => 50,
+                    "control1LockFront"      => false,
+                    "control1LockRear"       => false,
+                    "control2LockFront"      => false,
+                    "control2LockRear"       => false,
+                    "vehicleWeightFront"     => 400,
+                    "vehicleWeightRear"      => 400,
+                    "riderWeight"            => 78,
+                    "isSideCarAttached"      => 0,
+                    "sidecarWeight"          => 0
+                ];
+            case "class1.plate.invalid.low":
+                return [
+                    "control1EffortFront"    => 3,
+                    "control1EffortRear"     => 3,
+                    "control1EffortSidecar"  => 3,
+                    "control2EffortFront"    => 3,
+                    "control2EffortRear"     => 3,
+                    "control2EffortSidecar"  => 3,
+                    "control1LockFront"      => false,
+                    "control1LockRear"       => false,
+                    "control2LockFront"      => false,
+                    "control2LockRear"       => false,
+                    "vehicleWeightFront"     => 400,
+                    "vehicleWeightRear"      => 400,
+                    "riderWeight"            => 78,
+                    "isSideCarAttached"      => 0,
+                    "sidecarWeight"          => 0
+                ];
+            case "class1.plate.locks.locked":
+                return [
+                    "control1EffortFront"    => 0,
+                    "control1EffortRear"     => 0,
+                    "control1EffortSidecar"  => 0,
+                    "control2EffortFront"    => 0,
+                    "control2EffortRear"     => 0,
+                    "control2EffortSidecar"  => 0,
+                    "control1LockFront"      => true,
+                    "control1LockRear"       => true,
+                    "control2LockFront"      => true,
+                    "control2LockRear"       => true,
+                    "vehicleWeightFront"     => 400,
+                    "vehicleWeightRear"      => 400,
+                    "riderWeight"            => 78,
+                    "isSideCarAttached"      => 0,
+                    "sidecarWeight"          => 0
+                ];
+            case "class1.plate.locks.ctrl1Pass":
+                return [
+                    "control1EffortFront"    => 0,
+                    "control1EffortRear"     => 0,
+                    "control1EffortSidecar"  => 0,
+                    "control2EffortFront"    => 0,
+                    "control2EffortRear"     => 0,
+                    "control2EffortSidecar"  => 0,
+                    "control1LockFront"      => true,
+                    "control1LockRear"       => false,
+                    "control2LockFront"      => true,
+                    "control2LockRear"       => false,
+                    "vehicleWeightFront"     => 400,
+                    "vehicleWeightRear"      => 400,
+                    "riderWeight"            => 78,
+                    "isSideCarAttached"      => 0,
+                    "sidecarWeight"          => 0
+                ];
+            case "class1.plate.locks.ctrl2Pass":
+                return [
+                    "control1EffortFront"    => 0,
+                    "control1EffortRear"     => 0,
+                    "control1EffortSidecar"  => 0,
+                    "control2EffortFront"    => 0,
+                    "control2EffortRear"     => 0,
+                    "control2EffortSidecar"  => 0,
+                    "control1LockFront"      => false,
+                    "control1LockRear"       => true,
+                    "control2LockFront"      => false,
+                    "control2LockRear"       => true,
+                    "vehicleWeightFront"     => 400,
+                    "vehicleWeightRear"      => 400,
+                    "riderWeight"            => 78,
+                    "isSideCarAttached"      => 0,
+                    "sidecarWeight"          => 0
                 ];
             default:
                 Throw new InvalidArgumentException();
@@ -413,6 +629,8 @@ class BrakeTestResultContext implements Context
                     "control2Effort" => 9999,
                     "vehicleWeightFront" => 9999,
                     "vehicleWeightRear" => 9999,
+                    "control1LockFront" => false,
+                    "control2LockFront" => false,
                     "riderWeight" => 80,
                     "sidecarWeight" => 0
                 ];
@@ -422,25 +640,53 @@ class BrakeTestResultContext implements Context
                     "control2Effort" => 1,
                     "vehicleWeightFront" => 1,
                     "vehicleWeightRear" => 1,
+                    "control1LockFront" => false,
+                    "control2LockFront" => false,
                     "riderWeight" => 1,
                     "sidecarWeight" => 0
                 ];
             case "class1.floor.invalid.high":
                 return [
-                    "control1Effort" => 10000,
-                    "control2Effort" => 10000,
-                    "vehicleWeightFront" => 10000,
-                    "vehicleWeightRear" => 10000,
-                    "riderWeight" => 10000,
-                    "sidecarWeight" => 10000
+                    "control1Effort" => 500,
+                    "control2Effort" => 500,
+                    "vehicleWeightFront" => 9999,
+                    "vehicleWeightRear" => 9999,
+                    "control1LockFront" => false,
+                    "control2LockFront" => false,
+                    "riderWeight" => 80,
+                    "sidecarWeight" => 0
                 ];
             case "class1.floor.invalid.low":
                 return [
+                    "control1Effort" => 4,
+                    "control2Effort" => 4,
+                    "vehicleWeightFront" => 19,
+                    "vehicleWeightRear" => 19,
+                    "control1LockFront" => false,
+                    "control2LockFront" => false,
+                    "riderWeight" => 10,
+                    "sidecarWeight" => 1
+                ];
+            case "class1.floor.valid.allLocks":
+                return [
                     "control1Effort" => 0,
                     "control2Effort" => 0,
-                    "vehicleWeightFront" => 0,
-                    "vehicleWeightRear" => 0,
-                    "riderWeight" => 0,
+                    "control1LockFront" => true,
+                    "control2LockFront" => true,
+                    "vehicleWeightFront" => 400,
+                    "vehicleWeightRear" => 400,
+                    "riderWeight" => 10,
+                    "sidecarWeight" => 0
+                ];
+            case "class1.floor.valid.oneLock":
+                return [
+                    "control1Effort" => 0,
+                    "control2Effort" => 0,
+                    "control1LockFront" => true,
+                    "control2LockFront" => false,
+                    "vehicleWeightFront" => 400,
+                    "vehicleWeightRear" => 400,
+                    "riderWeight" => 10,
                     "sidecarWeight" => 0
                 ];
             default:
@@ -488,8 +734,8 @@ class BrakeTestResultContext implements Context
         switch ($scenario) {
             case "class1.decelerometer.valid.high":
                 return [
-                    'control1BrakeEfficiency' => 65535,
-                    'control2BrakeEfficiency' => 65535
+                    'control1BrakeEfficiency' => 9999,
+                    'control2BrakeEfficiency' => 9999
                 ];
             case "class1.decelerometer.valid.low":
                 return [
@@ -498,14 +744,16 @@ class BrakeTestResultContext implements Context
                 ];
             case "class1.decelerometer.invalid.high":
                 return [
-                    'control1BrakeEfficiency' => 65536,
-                    'control2BrakeEfficiency' => 65536
-                ];
-            case "class1.decelerometer.invalid.low":
-                return [
                     'control1BrakeEfficiency' => 29,
                     'control2BrakeEfficiency' => 29
                 ];
+            case "class1.decelerometer.invalid.low":
+                return [
+                    'control1BrakeEfficiency' => 2,
+                    'control2BrakeEfficiency' => 3
+                ];
+            default:
+                Throw new InvalidArgumentException();
         }
     }
 
@@ -526,8 +774,8 @@ class BrakeTestResultContext implements Context
                 ];
             case "class4.decelerometer.invalid.high":
                 return [
-                    "serviceBrake1Efficiency" => 101,
-                    "parkingBrakeEfficiency" => 101,
+                    "serviceBrake1Efficiency" => 49,
+                    "parkingBrakeEfficiency" => 49,
                     "isCommercialVehicle" => false
                 ];
             case "class4.decelerometer.invalid.low":

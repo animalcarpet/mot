@@ -29,6 +29,8 @@ class BrakeTestResultClass1And2CalculatorTest extends \PHPUnit_Framework_TestCas
         $results = $brakeTestResultItem['results'];
         $message = $brakeTestResultItem['message'];
         $rfrs = $brakeTestResultItem['rfrs'];
+        $lockPercentage = isset($brakeTestResultItem['lockPercentage']) ? $brakeTestResultItem['lockPercentage'] : [];
+
         $firstUsedDate = new \DateTime(
             isset($brakeTestResultItem['oldBike'])
             ? self::DATE_BIKE_ONE_CONTROL_ALLOWED : self::DATE_BIKE_TWO_CONTROLS_REQUIRED
@@ -53,7 +55,7 @@ class BrakeTestResultClass1And2CalculatorTest extends \PHPUnit_Framework_TestCas
         $brakeTestResultCalculator = new BrakeTestResultClass1And2Calculator();
         $brakeTestResultCalculator->calculateBrakeTestResult($brakeTestResult, $firstUsedDate);
         $this->assertBrakeTestResults(
-            $brakeTestResult, $brakeTestResultCalculator, $message, $results, $rfrs, $efficiency
+            $brakeTestResult, $brakeTestResultCalculator, $message, $results, $rfrs, $efficiency, $lockPercentage
         );
     }
 
@@ -63,7 +65,8 @@ class BrakeTestResultClass1And2CalculatorTest extends \PHPUnit_Framework_TestCas
         $message,
         $results,
         $rfrs,
-        $efficiencies = null
+        $efficiencies = null,
+        $lockPercentage = null
     ) {
         if ($efficiencies) {
             $this->assertEquals(
@@ -76,243 +79,309 @@ class BrakeTestResultClass1And2CalculatorTest extends \PHPUnit_Framework_TestCas
         $this->assertSame($results[0], $brakeTestResult->getControl1EfficiencyPass(), 'Pass 1 - ' . $message);
         $this->assertSame($results[1], $brakeTestResult->getControl2EfficiencyPass(), 'Pass 2 - ' . $message);
         $this->assertSame($results[2], $brakeTestResult->getGeneralPass(), 'Pass - ' . $message);
+        if(!empty($lockPercentage)){
+            $ctrl1Lock = $brakeTestResultCalculator->calculateControl1PercentLocked($brakeTestResult);
+            $ctrl2Lock = $brakeTestResultCalculator->calculateControl2PercentLocked($brakeTestResult);
+            $this->assertEquals($ctrl1Lock, $lockPercentage[0]);
+            $this->assertEquals($ctrl2Lock, $lockPercentage[2]);
+        }
         $this->assertRfrs($brakeTestResultCalculator, $brakeTestResult, $rfrs, $message);
     }
 
     public static function brakeTestResultItemsRollerFloorPlate()
     {
-        return [
+        $floorDataProvider = [
             [
                 [
-                    'type'       => BrakeTestTypeCode::ROLLER,
+                    'type'       => BrakeTestTypeCode::FLOOR,
                     'weights'    => [185, 135, 0, 80],
-                    'efforts'    => [20, 100, 0, 100, 20, 0],
-                    'locks'      => [false, false, false, false],
-                    'efficiency' => [30, 30],
+                    'efforts'    => [20, null, null, 20, null, null],
+                    'locks'      => [true, false, true, false],
+                    'efficiency' => [5, 5],
                     'results'    => [true, true, true],
                     'rfrs'       => [false, false, false],
-                    'message'    => 'Test passing with both controls above 30',
+                    'message'    => 'Test passing with both locks',
+                    'lockPercentage' => [100, 0, 100, 0]
                 ]
             ],
             [
                 [
-                    'type'       => BrakeTestTypeCode::ROLLER,
+                    'type'       => BrakeTestTypeCode::FLOOR,
                     'weights'    => [185, 135, 0, 80],
-                    'efforts'    => [20, 100, 0, 90, 10, 0],
-                    'locks'      => [false, false, false, false],
-                    'efficiency' => [30, 25],
-                    'results'    => [true, true, true],
-                    'rfrs'       => [false, false, false],
-                    'message'    => 'Test passing with one control over 30 and second over 25',
+                    'efforts'    => [20, null, null, 20, null, null],
+                    'locks'      => [false, false, true, false],
+                    'efficiency' => [5, 5],
+                    'results'    => [false, true, false],
+                    'rfrs'       => [false, false, true],
+                    'message'    => 'Test failing with secondary control lock',
+                    'lockPercentage' => [0, 0, 100, 0]
                 ]
             ],
             [
                 [
-                    'type'       => BrakeTestTypeCode::ROLLER,
+                    'type'       => BrakeTestTypeCode::FLOOR,
                     'weights'    => [185, 135, 0, 80],
-                    'efforts'    => [20, 100, 0, 90, 9, 0],
-                    'locks'      => [false, false, false, false],
-                    'efficiency' => [30, 24],
+                    'efforts'    => [20, null, null, 20, null, null],
+                    'locks'      => [true, false, false, false],
+                    'efficiency' => [5, 5],
                     'results'    => [true, false, false],
                     'rfrs'       => [false, false, true],
-                    'message'    => 'Test fail with one control over 30 and second under 25',
+                    'message'    => 'Test failing with primary control lock',
+                    'lockPercentage' => [100, 0, 0, 0]
                 ]
             ],
             [
                 [
-                    'type'       => BrakeTestTypeCode::ROLLER,
+                    'type'       => BrakeTestTypeCode::FLOOR,
                     'weights'    => [185, 135, 0, 80],
-                    'efforts'    => [18, 90, 0, 90, 10, 0],
-                    'locks'      => [true, false, false, true],
-                    'efficiency' => [27, 25],
-                    'results'    => [true, true, true],
-                    'rfrs'       => [false, false, false],
-                    'message'    => 'Test pass with both controls between 25 and 30 and locks applied',
-                ]
-            ],
-            [
-                [
-                    'type'       => BrakeTestTypeCode::ROLLER,
-                    'weights'    => [185, 135, 0, 80],
-                    'efforts'    => [18, 90, 0, 90, 10, 0],
+                    'efforts'    => [20, null, null, 20, null, null],
                     'locks'      => [false, false, false, false],
-                    'efficiency' => [27, 25],
-                    'results'    => [false, false, false],
-                    'rfrs'       => [false, true, false],
-                    'message'    => 'Test fail with both controls between 25 and 30',
-                ]
-            ],
-            [
-                [
-                    'type'       => BrakeTestTypeCode::ROLLER,
-                    'weights'    => [175, 125, 40, 60],
-                    'efforts'    => [33, 90, 10, 190, 70, 13],
-                    'locks'      => [false, false, false, false],
-                    'efficiency' => [33, 68],
-                    'results'    => [true, true, true],
-                    'rfrs'       => [false, false, false],
-                    'message'    => 'Test passing with both controls above 30 with sidecar',
-                ]
-            ],
-            [
-                [
-                    'type'       => BrakeTestTypeCode::ROLLER,
-                    'weights'    => [185, 135, 0, 80],
-                    'efforts'    => [40, 41, 0, 100, 20, 0],
-                    'locks'      => [true, true, false, true],
-                    'efficiency' => [20, 30],
-                    'results'    => [true, true, true],
-                    'rfrs'       => [false, false, false],
-                    'message'    => 'Test passing with one control locked, second above 30, locks',
-                ]
-            ],
-            [
-                [
-                    'type'       => BrakeTestTypeCode::ROLLER,
-                    'weights'    => [185, 135, 0, 80],
-                    'efforts'    => [40, 41, 0, 50, 49, 0],
-                    'locks'      => [true, true, true, true],
-                    'efficiency' => [20, 24],
-                    'results'    => [true, true, true],
-                    'rfrs'       => [false, false, false],
-                    'message'    => 'Test passing with both controls locked, locks',
-                ]
-            ],
-            [
-                [
-                    'type'       => BrakeTestTypeCode::ROLLER,
-                    'weights'    => [100, 100, 20, 80],
-                    'efforts'    => [24, 50, 0, 33, 5, 0],
-                    'locks'      => [true, true, false, true],
-                    'efficiency' => [24, 12],
-                    'results'    => [true, true, true],
-                    'rfrs'       => [false, false, false],
-                    'message'    => 'Test pass with both controls below 25 and locks on both controls',
-                ]
-            ],
-            [
-                [
-                    'type'       => BrakeTestTypeCode::ROLLER,
-                    'weights'    => [100, 100, 20, 80],
-                    'efforts'    => [24, 50, 0, 33, 5, 0],
-                    'locks'      => [false, false, false, false],
-                    'efficiency' => [24, 12],
+                    'efficiency' => [5, 5],
                     'results'    => [false, false, false],
                     'rfrs'       => [true, true, false],
-                    'message'    => 'Test fail with both controls below 25',
-                ]
-            ],
-            [
-                [
-                    'type'       => BrakeTestTypeCode::ROLLER,
-                    'weights'    => [100, 100, 20, 80],
-                    'efforts'    => [null, 101, null, 104, null, null],
-                    'locks'      => [null, null, null, null],
-                    'efficiency' => [33, 34],
-                    'results'    => [true, true, true],
-                    'rfrs'       => [false, false, false],
-                    'message'    => 'Test pass with not linked brakes, null on some values',
-                ]
-            ],
-            [
-                [
-                    'type'       => BrakeTestTypeCode::ROLLER,
-                    'weights'    => [100, 100, 20, 80],
-                    'efforts'    => [null, 101, null, null, null, null],
-                    'locks'      => [null, null, null, null],
-                    'oldBike'    => true,
-                    'efficiency' => [33, null],
-                    'results'    => [true, null, true],
-                    'rfrs'       => [false, false, false],
-                    'message'    => 'Test pass with old bike only one control',
-                ]
-            ],
-            [
-                [
-                    'type'       => BrakeTestTypeCode::ROLLER,
-                    'weights'    => [100, 100, 20, 80],
-                    'efforts'    => [null, 101, null, null, null, null],
-                    'locks'      => [null, null, null, null],
-                    'efficiency' => [33, null],
-                    'results'    => [true, false, false],
-                    'rfrs'       => [false, false, true],
-                    'message'    => 'Test fail with new bike only one control',
-                ]
-            ],
-            [
-                [
-                    'type'       => BrakeTestTypeCode::ROLLER,
-                    'weights'    => [225, 175, 0, 0],
-                    'efforts'    => [20, 100, 0, 100, 20, 0],
-                    'locks'      => [false, false, false, false],
-                    'efficiency' => [30, 30],
-                    'results'    => [true, true, true],
-                    'rfrs'       => [false, false, false],
-                    'message'    => 'Test passing with both controls above 30',
-                ]
-            ],
-            [
-                [
-                    'type'       => BrakeTestTypeCode::ROLLER,
-                    'weights'    => [225, 175, 0, 0],
-                    'efforts'    => [40, 41, 0, 50, 49, 0],
-                    'locks'      => [true, true, true, true],
-                    'efficiency' => [20, 24],
-                    'results'    => [true, true, true],
-                    'rfrs'       => [false, false, false],
-                    'message'    => 'Test passing with both controls locked, floor brake test',
-                ]
-            ],
-            [
-                [
-                    'type'       => BrakeTestTypeCode::ROLLER,
-                    'weights'    => [225, 175, 0, 0],
-                    'efforts'    => [40, 41, 0, 50, 49, 0],
-                    'locks'      => [false, false, false, false],
-                    'efficiency' => [20, 24],
-                    'results'    => [false, false, false],
-                    'rfrs'       => [true, true, false],
-                    'message'    => 'Test failing with both below minimum, floor brake test',
-                ]
-            ],
-            [
-                [
-                    'type'       => BrakeTestTypeCode::ROLLER,
-                    'weights'    => [225, 175, 0, null],
-                    'efforts'    => [40, 41, 0, 50, 49, 0],
-                    'locks'      => [false, false, false, false],
-                    'efficiency' => [20, 24],
-                    'results'    => [false, false, false],
-                    'rfrs'       => [true, true, false],
-                    'message'    => 'Test failing with both below minimum, plate brake test',
-                ]
-            ],
-            [
-                [
-                    'type'       => BrakeTestTypeCode::ROLLER,
-                    'weights'    => [225, 175, 0, null],
-                    'efforts'    => [40, 41, 0, 50, 49, 0],
-                    'locks'      => [true, true, true, true],
-                    'efficiency' => [20, 24],
-                    'results'    => [true, true, true],
-                    'rfrs'       => [false, false, false],
-                    'message'    => 'Test passing with both controls locked, plate brake test',
-                ]
-            ],
-
-            [
-                [
-                    'type'       => BrakeTestTypeCode::ROLLER,
-                    'weights'    => [100, 100, 0, 0],
-                    'efforts'    => [58, 0, 0, 0, 50, 0],
-                    'locks'      => [true, false, false, true],
-                    'efficiency' => [29, 25],
-                    'results'    => [true, true, true],
-                    'rfrs'       => [false, false, false],
-                    'message'    => 'Test passing with both controls locked but efficiency below minimum, roller brake test',
+                    'message'    => 'Test failing without both locks',
+                    'lockPercentage' => [0, 0, 0, 0]
                 ]
             ],
         ];
+
+        $rollerPlateDataProvider = function($testType) {
+            $tests = [
+                [
+                    [
+                        'type'       => $testType,
+                        'weights'    => [185, 135, 0, 80],
+                        'efforts'    => [20, 100, 0, 100, 20, 0],
+                        'locks'      => [false, false, false, false],
+                        'efficiency' => [30, 30],
+                        'results'    => [true, true, true],
+                        'rfrs'       => [false, false, false],
+                        'message'    => 'Test passing with both controls above 30',
+                    ]
+                ],
+                [
+                    [
+                        'type'       => $testType,
+                        'weights'    => [185, 135, 0, 80],
+                        'efforts'    => [20, 100, 0, 90, 10, 0],
+                        'locks'      => [false, false, false, false],
+                        'efficiency' => [30, 25],
+                        'results'    => [true, true, true],
+                        'rfrs'       => [false, false, false],
+                        'message'    => 'Test passing with one control over 30 and second over 25',
+                    ]
+                ],
+                [
+                    [
+                        'type'       => $testType,
+                        'weights'    => [185, 135, 0, 80],
+                        'efforts'    => [20, 100, 0, 90, 9, 0],
+                        'locks'      => [false, false, false, false],
+                        'efficiency' => [30, 24],
+                        'results'    => [true, false, false],
+                        'rfrs'       => [false, false, true],
+                        'message'    => 'Test fail with one control over 30 and second under 25',
+                    ]
+                ],
+                [
+                    [
+                        'type'       => $testType,
+                        'weights'    => [185, 135, 0, 80],
+                        'efforts'    => [18, 90, 0, 90, 10, 0],
+                        'locks'      => [true, false, false, true],
+                        'efficiency' => [27, 25],
+                        'results'    => [true, true, true],
+                        'rfrs'       => [false, false, false],
+                        'message'    => 'Test pass with both controls between 25 and 30 and locks applied',
+                    ]
+                ],
+                [
+                    [
+                        'type'       => $testType,
+                        'weights'    => [185, 135, 0, 80],
+                        'efforts'    => [18, 90, 0, 90, 10, 0],
+                        'locks'      => [false, false, false, false],
+                        'efficiency' => [27, 25],
+                        'results'    => [false, false, false],
+                        'rfrs'       => [false, true, false],
+                        'message'    => 'Test fail with both controls between 25 and 30',
+                    ]
+                ],
+                [
+                    [
+                        'type'       => $testType,
+                        'weights'    => [175, 125, 40, 60],
+                        'efforts'    => [33, 90, 10, 190, 70, 13],
+                        'locks'      => [false, false, false, false],
+                        'efficiency' => [33, 68],
+                        'results'    => [true, true, true],
+                        'rfrs'       => [false, false, false],
+                        'message'    => 'Test passing with both controls above 30 with sidecar',
+                    ]
+                ],
+                [
+                    [
+                        'type'       => $testType,
+                        'weights'    => [185, 135, 0, 80],
+                        'efforts'    => [40, 41, 0, 100, 20, 0],
+                        'locks'      => [true, true, false, true],
+                        'efficiency' => [20, 30],
+                        'results'    => [true, true, true],
+                        'rfrs'       => [false, false, false],
+                        'message'    => 'Test passing with one control locked, second above 30, locks',
+                    ]
+                ],
+                [
+                    [
+                        'type'       => $testType,
+                        'weights'    => [185, 135, 0, 80],
+                        'efforts'    => [40, 41, 0, 50, 49, 0],
+                        'locks'      => [true, true, true, true],
+                        'efficiency' => [20, 24],
+                        'results'    => [true, true, true],
+                        'rfrs'       => [false, false, false],
+                        'message'    => 'Test passing with both controls locked, locks',
+                    ]
+                ],
+                [
+                    [
+                        'type'       => $testType,
+                        'weights'    => [100, 100, 20, 80],
+                        'efforts'    => [24, 50, 0, 33, 5, 0],
+                        'locks'      => [true, true, false, true],
+                        'efficiency' => [24, 12],
+                        'results'    => [true, true, true],
+                        'rfrs'       => [false, false, false],
+                        'message'    => 'Test pass with both controls below 25 and locks on both controls',
+                    ]
+                ],
+                [
+                    [
+                        'type'       => $testType,
+                        'weights'    => [100, 100, 20, 80],
+                        'efforts'    => [24, 50, 0, 33, 5, 0],
+                        'locks'      => [false, false, false, false],
+                        'efficiency' => [24, 12],
+                        'results'    => [false, false, false],
+                        'rfrs'       => [true, true, false],
+                        'message'    => 'Test fail with both controls below 25',
+                    ]
+                ],
+                [
+                    [
+                        'type'       => $testType,
+                        'weights'    => [100, 100, 20, 80],
+                        'efforts'    => [null, 101, null, 104, null, null],
+                        'locks'      => [null, null, null, null],
+                        'efficiency' => [33, 34],
+                        'results'    => [true, true, true],
+                        'rfrs'       => [false, false, false],
+                        'message'    => 'Test pass with not linked brakes, null on some values',
+                    ]
+                ],
+                [
+                    [
+                        'type'       => $testType,
+                        'weights'    => [100, 100, 20, 80],
+                        'efforts'    => [null, 101, null, null, null, null],
+                        'locks'      => [null, null, null, null],
+                        'oldBike'    => true,
+                        'efficiency' => [33, null],
+                        'results'    => [true, null, true],
+                        'rfrs'       => [false, false, false],
+                        'message'    => 'Test pass with old bike only one control',
+                    ]
+                ],
+                [
+                    [
+                        'type'       => $testType,
+                        'weights'    => [100, 100, 20, 80],
+                        'efforts'    => [null, 101, null, null, null, null],
+                        'locks'      => [null, null, null, null],
+                        'efficiency' => [33, null],
+                        'results'    => [true, false, false],
+                        'rfrs'       => [false, false, true],
+                        'message'    => 'Test fail with new bike only one control',
+                    ]
+                ],
+                [
+                    [
+                        'type'       => $testType,
+                        'weights'    => [225, 175, 0, 0],
+                        'efforts'    => [20, 100, 0, 100, 20, 0],
+                        'locks'      => [false, false, false, false],
+                        'efficiency' => [30, 30],
+                        'results'    => [true, true, true],
+                        'rfrs'       => [false, false, false],
+                        'message'    => 'Test passing with both controls above 30',
+                    ]
+                ],
+                [
+                    [
+                        'type'       => $testType,
+                        'weights'    => [225, 175, 0, 0],
+                        'efforts'    => [40, 41, 0, 50, 49, 0],
+                        'locks'      => [true, true, true, true],
+                        'efficiency' => [20, 24],
+                        'results'    => [true, true, true],
+                        'rfrs'       => [false, false, false],
+                        'message'    => 'Test passing with both controls locked, floor brake test',
+                    ]
+                ],
+                [
+                    [
+                        'type'       => $testType,
+                        'weights'    => [225, 175, 0, 0],
+                        'efforts'    => [40, 41, 0, 50, 49, 0],
+                        'locks'      => [false, false, false, false],
+                        'efficiency' => [20, 24],
+                        'results'    => [false, false, false],
+                        'rfrs'       => [true, true, false],
+                        'message'    => 'Test failing with both below minimum, floor brake test',
+                    ]
+                ],
+                [
+                    [
+                        'type'       => $testType,
+                        'weights'    => [225, 175, 0, null],
+                        'efforts'    => [40, 41, 0, 50, 49, 0],
+                        'locks'      => [false, false, false, false],
+                        'efficiency' => [20, 24],
+                        'results'    => [false, false, false],
+                        'rfrs'       => [true, true, false],
+                        'message'    => 'Test failing with both below minimum, plate brake test',
+                    ]
+                ],
+                [
+                    [
+                        'type'       => $testType,
+                        'weights'    => [225, 175, 0, null],
+                        'efforts'    => [40, 41, 0, 50, 49, 0],
+                        'locks'      => [true, true, true, true],
+                        'efficiency' => [20, 24],
+                        'results'    => [true, true, true],
+                        'rfrs'       => [false, false, false],
+                        'message'    => 'Test passing with both controls locked, plate brake test',
+                    ]
+                ],
+                [
+                    [
+                        'type'       => $testType,
+                        'weights'    => [100, 100, 0, 0],
+                        'efforts'    => [58, 0, 0, 0, 50, 0],
+                        'locks'      => [true, false, false, true],
+                        'efficiency' => [29, 25],
+                        'results'    => [true, true, true],
+                        'rfrs'       => [false, false, false],
+                        'message'    => 'Test passing with both controls locked but efficiency below minimum, roller brake test',
+                    ]
+                ],
+            ];
+            return $tests;
+        };
+
+
+        return array_merge($floorDataProvider, $rollerPlateDataProvider(BrakeTestTypeCode::ROLLER), $rollerPlateDataProvider(BrakeTestTypeCode::PLATE));
     }
 
     /**

@@ -67,7 +67,7 @@ class BrakeTestConfigurationClass1And2Test extends \PHPUnit_Framework_TestCase
                     'sidecarWeight' => null,
                 ],
                 [
-                    'locksApplicable' => false,
+                    'locksApplicable' => true,
                     'isDecelerometer' => false,
                     'isFloor' => false,
                     'isGradient' => false,
@@ -86,7 +86,7 @@ class BrakeTestConfigurationClass1And2Test extends \PHPUnit_Framework_TestCase
                     'sidecarWeight' => 50,
                 ],
                 [
-                    'locksApplicable' => false,
+                    'locksApplicable' => true,
                     'isDecelerometer' => false,
                     'isFloor' => true,
                     'isGradient' => false,

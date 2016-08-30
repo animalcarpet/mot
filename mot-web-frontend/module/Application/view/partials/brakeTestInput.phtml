@@ -37,10 +37,14 @@ $required = (isset($required)) ? $required : true;
     );
     ?>
 
-    <?php if ($lockName && !$hideLock): ?>
-    <label class="checkbox-inline" for="<?php echo $this->escapeHtml($lockId); ?>">
-        <input type="hidden" name="<?php echo $this->escapeHtml($lockName); ?>" value="0">
-        <input type="checkbox" id="<?php echo $this->escapeHtml($lockId); ?>" name="<?php echo $this->escapeHtml($lockName); ?>" value="1" <?php echo $lockValue ? 'checked':'';?>> Lock
-    </label>
-    <?php endif; ?>
+    <?php if ($lockName && !$hideLock){
+        echo $this->partial(
+            'partials/lock-box.phtml',
+            [
+                'id' => $lockId,
+                'name' => $lockName,
+                'locked' => $lockValue,
+            ]
+        );
+    } ?>
 </div>

@@ -3,6 +3,7 @@
 namespace Dvsa\Mot\Behat\Support\Api;
 
 use Dvsa\Mot\Behat\Support\Request;
+use Dvsa\Mot\Behat\Support\Response;
 
 class BrakeTestResult extends MotApi
 {
@@ -11,7 +12,7 @@ class BrakeTestResult extends MotApi
 
     public function addBrakeTestRollerClass3To7($token, $motNumber)
     {
-        $body = json_encode([
+        $body = [
             'serviceBrake1Data' => [
                 'effortNearsideAxle1' => 100,
                 'effortOffsideAxle1' => 100,
@@ -44,19 +45,14 @@ class BrakeTestResult extends MotApi
             'weightIsUnladen' => false,
             'isCommercialVehicle' => false,
 
-        ]);
+        ];
 
-        return $this->client->request(new Request(
-            'POST',
-            str_replace('{mot_test_number}', $motNumber, self::PATH),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token],
-            $body
-        ));
+        return $this->addBrakeTestResult($token, $motNumber, $body);
     }
 
     public function addBrakeTestRollerClass3To7WithCustomData($token, $motNumber, RollerBrakeTestClass3To7 $rollerObject)
     {
-        $body = json_encode([
+        $body = [
             'serviceBrake1Data' => [
                 'effortNearsideAxle1' => $rollerObject->getEffortNearsideAxle1(),
                 'effortOffsideAxle1' => $rollerObject->getEffortOffsideAxle1(),
@@ -89,19 +85,14 @@ class BrakeTestResult extends MotApi
             'weightIsUnladen' => $rollerObject->getWeightIsUnladen(),
             'isCommercialVehicle' => $rollerObject->getIsCommercialVehicle(),
 
-        ]);
+        ];
 
-        return $this->client->request(new Request(
-            'POST',
-            str_replace("{mot_test_number}", $motNumber, self::PATH),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token],
-            $body
-        ));
+        return $this->addBrakeTestResult($token, $motNumber, $body);
     }
 
     public function addBrakeTestForRollerClass1To2($token, $motNumber)
     {
-        $body = json_encode([
+        $body = [
             'control1EffortFront' => 100,
             'control1EffortRear' => 100,
             'control1EffortSidecar' => null,
@@ -118,19 +109,14 @@ class BrakeTestResult extends MotApi
             'riderWeight' => 100,
             'isSidecarAttached' => 0,
             'sidecarWeight' => null,
-        ]);
+        ];
 
-        return $this->client->request(new Request(
-            'POST',
-            str_replace('{mot_test_number}', $motNumber, self::PATH),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token],
-            $body
-        ));
+        return $this->addBrakeTestResult($token, $motNumber, $body);
     }
 
     public function addBrakeTestForRollerClass1To2WithCustomData($token, $motNumber, $dataMap)
     {
-        $body = json_encode([
+        $body = [
             'control1EffortFront' => $dataMap['control1EffortFront'],
             'control1EffortRear' => $dataMap['control1EffortRear'],
             'control1EffortSidecar' => $dataMap['control1EffortSidecar'],
@@ -147,20 +133,39 @@ class BrakeTestResult extends MotApi
             'riderWeight' => $dataMap['riderWeight'],
             'isSidecarAttached' => $dataMap['isSideCarAttached'],
             'sidecarWeight' => $dataMap['isSideCarAttached'] == "1" ? $dataMap['sidecarWeight'] : null
-        ]);
+        ];
 
-        return $this->client->request(new Request(
-            'POST',
-            str_replace('{mot_test_number}', $motNumber, self::PATH),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token],
-            $body
-        ));
+        return $this->addBrakeTestResult($token, $motNumber, $body);
+    }
+
+    public function addBrakeTestForPlateClass1To2WithCustomData($token, $motNumber, $dataMap)
+    {
+        $body = [
+            'control1EffortFront' => $dataMap['control1EffortFront'],
+            'control1EffortRear' => $dataMap['control1EffortRear'],
+            'control1EffortSidecar' => $dataMap['control1EffortSidecar'],
+            'control2EffortFront' => $dataMap['control2EffortFront'],
+            'control2EffortRear' => $dataMap['control2EffortRear'],
+            'control2EffortSidecar' => $dataMap['control2EffortSidecar'],
+            'control1LockFront' => $dataMap['control1LockFront'] == "true" ? true : false,
+            'control1LockRear' => $dataMap['control1LockRear']   == "true" ? true : false,
+            'control2LockFront' => $dataMap['control2LockFront'] == "true" ? true : false,
+            'control2LockRear' => $dataMap['control2LockRear']   == "true" ? true : false,
+            'brakeTestType' => 'PLATE',
+            'vehicleWeightFront' => $dataMap['vehicleWeightFront'],
+            'vehicleWeightRear' => $dataMap['vehicleWeightRear'],
+            'riderWeight' => $dataMap['riderWeight'],
+            'isSidecarAttached' => $dataMap['isSideCarAttached'],
+            'sidecarWeight' => $dataMap['isSideCarAttached'] == "1" ? $dataMap['sidecarWeight'] : null
+        ];
+
+        return $this->addBrakeTestResult($token, $motNumber, $body);
     }
 
 
     public function addBrakeTestDecelerometerClass3To7($token, $motNumber)
     {
-        $body = json_encode([
+        $body = [
             'serviceBrake1Efficiency' => 80,
             'parkingBrakeEfficiency' => 75,
             'serviceBrake1TestType' => 'DECEL',
@@ -175,19 +180,15 @@ class BrakeTestResult extends MotApi
             'serviceBrakeControlsCount' => null,
             'vehiclePurposeType' => null,
             'serviceBrakeIsSingleLine' => false,
-            'isCommercialVehicle' => false, ]);
+            'isCommercialVehicle' => false,
+        ];
 
-        return $this->client->request(new Request(
-            'POST',
-            str_replace('{mot_test_number}', $motNumber, self::PATH),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token],
-            $body
-        ));
+        return $this->addBrakeTestResult($token, $motNumber, $body);
     }
 
     public function addBrakeTestDecelerometerClass3To7WithCustomData($token, $motNumber, $data)
     {
-        $body = json_encode([
+        $body = [
             'serviceBrake1Efficiency' => $data['serviceBrake1Efficiency'],
             'parkingBrakeEfficiency' => $data['parkingBrakeEfficiency'],
             'serviceBrake1TestType' => 'DECEL',
@@ -203,19 +204,14 @@ class BrakeTestResult extends MotApi
             'vehiclePurposeType' => null,
             'serviceBrakeIsSingleLine' => false,
             'isCommercialVehicle' => $data['isCommercialVehicle'],
-        ]);
+        ];
 
-        return $this->client->request(new Request(
-            'POST',
-            str_replace('{mot_test_number}', $motNumber, self::PATH),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token],
-            $body
-        ));
+        return $this->addBrakeTestResult($token, $motNumber, $body);
     }
 
     public function addBrakeTestDecelerometerClass1To2($token, $motNumber, $control1BrakeEfficiency = 66, $control2BrakeEfficiency = 66)
     {
-        $body = json_encode([
+        $body = [
             'control1EffortFront' => null,
             'control1EffortRear' => null,
             'control1EffortSidecar' => null,
@@ -230,19 +226,14 @@ class BrakeTestResult extends MotApi
             'sidecarWeight' => null,
             'control1BrakeEfficiency' => $control1BrakeEfficiency,
             'control2BrakeEfficiency' => $control2BrakeEfficiency,
-        ]);
+        ];
 
-        return $this->client->request(new Request(
-            'POST',
-            str_replace('{mot_test_number}', $motNumber, self::PATH),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token],
-            $body
-        ));
+        return $this->addBrakeTestResult($token, $motNumber, $body);
     }
 
     public function addBrakeTestDecelerometerClass1To2WithCustomData($token, $motNumber, $dataMap)
     {
-        $body = json_encode([
+        $body = [
             'control1EffortFront' => null,
             'control1EffortRear' => null,
             'control1EffortSidecar' => null,
@@ -257,59 +248,46 @@ class BrakeTestResult extends MotApi
             'sidecarWeight' => null,
             'control1BrakeEfficiency' => $dataMap['control1BrakeEfficiency'],
             'control2BrakeEfficiency' => $dataMap['control2BrakeEfficiency'],
-        ]);
+        ];
 
-        return $this->client->request(new Request(
-            'POST',
-            str_replace('{mot_test_number}', $motNumber, self::PATH),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token],
-            $body
-        ));
+        return $this->addBrakeTestResult($token, $motNumber, $body);
     }
 
     public function addBrakeTestGradientClass1To2WithCustomData($token, $motNumber, $param)
     {
 
-        $body = json_encode([
+        $body = [
             'gradientControl1AboveUpperMinimum' => $param['control1Above30'],
             'gradientControl2AboveUpperMinimum' => $param['control2Above30'],
             'gradientControl1BelowMinimum'      => $param['control1Below25'],
             'gradientControl2BelowMinimum'      => $param['control2Below25'],
             'brakeTestType' => 'GRADT'
-        ]);
+        ];
 
-        return $this->client->request(new Request(
-            'POST',
-            str_replace('{mot_test_number}', $motNumber, self::PATH),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer ' . $token],
-            $body
-        ));
+        return $this->addBrakeTestResult($token, $motNumber, $body);
     }
 
     public function addBrakeTestFloorClass1To2WithCustomData($token, $motNumber, $param)
     {
-        $body = json_encode([
+        $body = [
             'control1EffortFront' => $param['control1Effort'],
             'control2EffortFront' => $param['control2Effort'],
             'vehicleWeightFront' => $param['vehicleWeightFront'],
             'vehicleWeightRear' => $param['vehicleWeightRear'],
+            'control1LockFront' => $param['control1LockFront'],
+            'control2LockFront' => $param['control2LockFront'],
             'riderWeight' => $param['riderWeight'],
             'isSidecarAttached' => 0,
             'sidecarWeight' => null,
             'brakeTestType' => 'FLOOR'
-        ]);
+        ];
 
-        return $this->client->request(new Request(
-            'POST',
-            str_replace('{mot_test_number}', $motNumber, self::PATH),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token],
-            $body
-        ));
+        return $this->addBrakeTestResult($token, $motNumber, $body);
     }
 
-    public function addBrakeTestPlateClass3to7($token, $motTestNumber)
+    public function addBrakeTestPlateClass3to7($token, $motNumber)
     {
-        $body = json_encode([
+        $body = [
           'serviceBrake1Data' => [
               'effortNearsideAxle1' => 90,
               'effortOffsideAxle1' => 90,
@@ -330,13 +308,26 @@ class BrakeTestResult extends MotApi
           'vehicleWeight' => self::VEHICLE_WEIGHT,
           'weightIsUnladen' => false,
           'weightType' => 'VSI',
-        ]);
+        ];
 
-        return $this->client->request(new Request(
-            'POST',
-            str_replace('{mot_test_number}', $motTestNumber, self::PATH),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token],
+        return $this->addBrakeTestResult($token, $motNumber, $body);
+    }
+
+    /**
+     * @param string $token
+     * @param int $motNumber
+     * @param array $body
+     * @return Response
+     */
+    private function addBrakeTestResult($token, $motNumber, $body)
+    {
+        $response = $this->sendRequest(
+            $token,
+            self::METHOD_POST,
+            str_replace('{mot_test_number}', $motNumber, self::PATH),
             $body
-        ));
+        );
+
+        return $response;
     }
 }

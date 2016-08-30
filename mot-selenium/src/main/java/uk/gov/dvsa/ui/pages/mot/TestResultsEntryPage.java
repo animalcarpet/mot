@@ -3,6 +3,7 @@ package uk.gov.dvsa.ui.pages.mot;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
+import uk.gov.dvsa.domain.model.mot.BrakeTestType;
 import uk.gov.dvsa.domain.model.mot.CancelTestReason;
 import uk.gov.dvsa.domain.model.mot.OdometerUnit;
 import uk.gov.dvsa.framework.config.Configurator;
@@ -13,7 +14,8 @@ import uk.gov.dvsa.ui.pages.PageLocator;
 import uk.gov.dvsa.ui.pages.braketest.BrakeTestConfigurationPage;
 import uk.gov.dvsa.ui.pages.braketest.BrakeTestResultsPage;
 
-public class TestResultsEntryPage extends Page implements TestResultsEntryPageInterface {
+public class TestResultsEntryPage extends Page implements
+    TestResultsEntryPageInterface, TestResultsEntryGroupAPageInterface {
     private static final String PAGE_TITLE = "MOT test results entry";
     private static final String PAGE_TITLE_TRAINING = "Training test\n" + "MOT test started";
 
@@ -76,10 +78,7 @@ public class TestResultsEntryPage extends Page implements TestResultsEntryPageIn
     }
 
     private TestResultsEntryPage addDefaultBrakeTestValues(String outcome) {
-        addBrakeTest.click();
-
-        BrakeTestConfigurationPage brakeTestConfigurationPage =
-                PageLocator.getBrakeTestConfigurationPage(driver);
+        BrakeTestConfigurationPage brakeTestConfigurationPage = clickAddBrakeTest();
 
         BrakeTestResultsPage brakeTestResultsPage =
                 brakeTestConfigurationPage.fillAllFieldsWithValidDataAndSubmit();
@@ -87,6 +86,41 @@ public class TestResultsEntryPage extends Page implements TestResultsEntryPageIn
         brakeTestResultsPage.completeBrakeEffortField(outcome);
 
         return this;
+    }
+
+    public BrakeTestResultsPage completeTestWithFloorBrakeTestsWithLockBoxes() {
+        addOdometerReading(10000);
+        return addFloorBrakeTestsWithLockBoxes();
+    }
+
+    public BrakeTestResultsPage addFloorBrakeTestsWithLockBoxes() {
+        BrakeTestConfigurationPage brakeTestConfigurationPage = clickAddBrakeTest();
+
+        BrakeTestResultsPage brakeTestResultsPage =
+            brakeTestConfigurationPage.fillAllFieldsWithValidDataForGroupAAndSubmit(BrakeTestType.FLOOR);
+
+        brakeTestResultsPage.completeBrakeEffortGroupAFloorField();
+        return brakeTestResultsPage;
+    }
+
+    public BrakeTestResultsPage completeTestWithRollerBrakeTestsWithLockBoxes() {
+        addOdometerReading(10000);
+        return addRollerBrakeTestsWithLockBoxes();
+    }
+
+    public BrakeTestResultsPage addRollerBrakeTestsWithLockBoxes(){
+        BrakeTestConfigurationPage brakeTestConfigurationPage = clickAddBrakeTest();
+
+        BrakeTestResultsPage brakeTestResultsPage =
+            brakeTestConfigurationPage.fillAllFieldsWithValidDataForGroupAAndSubmit(BrakeTestType.ROLLER);
+
+        brakeTestResultsPage.completeBrakeEffortGroupAPlateRollerField();
+        return brakeTestResultsPage;
+    }
+
+    private BrakeTestConfigurationPage clickAddBrakeTest() {
+        addBrakeTest.click();
+        return PageLocator.getBrakeTestConfigurationPage(driver);
     }
 
     public TestItemSelector clickAddFRFButton() {
@@ -104,7 +138,7 @@ public class TestResultsEntryPage extends Page implements TestResultsEntryPageIn
         reviewTestButton.click();
     }
 
-    private TestResultsEntryPage addOdometerReading(int odometerReading) {
+    public TestResultsEntryPage addOdometerReading(int odometerReading) {
         editOdometerButton.click();
         odometerField.sendKeys(String.valueOf(odometerReading));
 

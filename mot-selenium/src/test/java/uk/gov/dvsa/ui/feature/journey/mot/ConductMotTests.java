@@ -9,7 +9,7 @@ import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.CancelTestReason;
 import uk.gov.dvsa.domain.model.mot.TestOutcome;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
-import uk.gov.dvsa.domain.navigation.PageNavigator;
+import uk.gov.dvsa.domain.model.vehicle.VehicleClass;
 import uk.gov.dvsa.helper.ConfigHelper;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.mot.*;
@@ -67,7 +67,50 @@ public class ConductMotTests extends DslTest {
 
         //Then I should not see the PIN Box on test summary page
         assertThat(motUI.normalTest.isOneTimeInputBoxDisplayed(), is(false));
+    }
 
+    @Test(groups = {"BVT"})
+    public void passSuccessfullyFloorBrakeTestWithLockBoxes() throws IOException, URISyntaxException {
+        vehicle = vehicleData.getNewVehicle(tester, VehicleClass.one);
+        TestResultsEntryGroupAPageInterface testResultsEntryPage;
+
+        //Given I am on the Test Results Entry Page
+        if (!ConfigHelper.isTestResultEntryImprovementsEnabled()) {
+            testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester, vehicle);
+        } else {
+            testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);
+        }
+
+        //When I complete all test details with brake lock boxes checked
+        testResultsEntryPage.completeTestWithFloorBrakeTestsWithLockBoxes();
+
+        //Then I should see a pass on the test result page
+        assertThat(testResultsEntryPage.isPassNoticeDisplayed(), is(true));
+
+        //Then I should be able to complete the Test Successfully
+        testResultsEntryPage.clickReviewTestButton().finishTest();
+    }
+
+    @Test(groups = {"BVT"})
+    public void passSuccessfullyRollerBrakeTestWithLockBoxes() throws IOException, URISyntaxException {
+        vehicle = vehicleData.getNewVehicle(tester, VehicleClass.one);
+        TestResultsEntryGroupAPageInterface testResultsEntryPage;
+
+        //Given I am on the Test Results Entry Page
+        if (ConfigHelper.isTestResultEntryImprovementsEnabled()) {
+            testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);
+        } else {
+            testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester, vehicle);
+        }
+
+        //When I complete all test details with brake lock boxes checked
+        testResultsEntryPage.completeTestWithRollerBrakeTestsWithLockBoxes();
+
+        //Then I should see a pass on the test result page
+        assertThat(testResultsEntryPage.isPassNoticeDisplayed(), is(true));
+
+        //Then I should be able to complete the Test Successfully
+        testResultsEntryPage.clickReviewTestButton().finishTest();
     }
 
     @Test(testName = "OldRFRTest", groups = {"BVT"} )

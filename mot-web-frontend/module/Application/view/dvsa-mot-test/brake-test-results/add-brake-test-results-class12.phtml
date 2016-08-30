@@ -1,4 +1,5 @@
 <?php
+use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaMotTest\Model\BrakeTestResultClass1And2ViewModel;
 use DvsaMotTest\View\Model\MotTestTitleModel;
 
@@ -8,6 +9,7 @@ use DvsaMotTest\View\Model\MotTestTitleModel;
  * @var BrakeTestResultClass1And2ViewModel $brakeTestResult
  * @var \DvsaMotTest\Model\BrakeTestConfigurationClass1And2Helper $brakeTestConfiguration
  * @var MotTestTitleModel $motTestTitleViewModel
+ * @var MotTestDto $motTest
  */
 
 /** @var MotTestTitleModel $motTestTitleViewModel */
@@ -74,38 +76,14 @@ $this->placeholder('progressBar')->captureEnd();
                     </table>
                 <?php endif; ?>
 
-                <?php if ($brakeTestConfiguration->isFloorTypeTest()) : ?>
-                    <legend>Floor brake test</legend>
-
-                    <p>Force in kilograms</p>
-                    <?php echo $this->partial(
-                        'partial/forms/inputBox.phtml',
+                <?php if ($brakeTestConfiguration->isFloorTypeTest()) :
+                    echo $this->partial(
+                        'dvsa-mot-test/brake-test-results/type/floor-brake-test-result.phtml',
                         [
-                            'id' => BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_EFFORT_FRONT,
-                            'label' => 'Control one',
-                            'labelLayout' => 'col-sm-6',
-                            'value' => $brakeTestResult->getEffortFront1(),
-                            'type' => 'number',
-                            'min' => 0,
-                            'max' => 9999,
-                            'pattern' => "\d{0,4}",
-                            'optional' => true,
+                            'brakeTestResult' => $brakeTestResult,
                         ]
                     );
-                    echo $this->partial(
-                        'partial/forms/inputBox.phtml',
-                        [
-                            'id' => BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_EFFORT_FRONT,
-                            'label' => 'Control two',
-                            'labelLayout' => 'col-sm-6',
-                            'value' => $brakeTestResult->getEffortFront2(),
-                            'type' => 'number',
-                            'min' => 0,
-                            'max' => 9999,
-                            'pattern' => "\d{0,4}",
-                            'optional' => true,
-                        ]
-                    ); ?>
+                ?>
                 <?php endif; ?>
 
                 <?php if ($brakeTestConfiguration->isDecelerometerTypeTest()) : ?>

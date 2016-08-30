@@ -3,6 +3,7 @@ package uk.gov.dvsa.ui.pages.mot;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
+import uk.gov.dvsa.domain.model.mot.BrakeTestType;
 import uk.gov.dvsa.domain.model.mot.CancelTestReason;
 import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.domain.model.mot.OdometerUnit;
@@ -13,7 +14,8 @@ import uk.gov.dvsa.ui.pages.PageLocator;
 import uk.gov.dvsa.ui.pages.braketest.BrakeTestConfigurationPage;
 import uk.gov.dvsa.ui.pages.braketest.BrakeTestResultsPage;
 
-public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage implements TestResultsEntryPageInterface {
+public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage implements
+    TestResultsEntryPageInterface, TestResultsEntryGroupAPageInterface {
 
     public static final String PATH = "/mot-test";
 
@@ -35,6 +37,7 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
     @FindBy(id = "unit") private WebElement odometerUnit;
     @FindBy(xpath = "//*[@id='rfrList']//a[contains(., 'Edit')]") private WebElement editDefectLink;
     @FindBy(id = "rfrList") private WebElement rfrList;
+    @FindBy(id = "brakeTestResultsNotice") private WebElement brakeTestResultsNotice;
 
     public TestResultsEntryNewPage(MotAppDriver driver) {
         super(driver);
@@ -172,13 +175,17 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
         return reviewTestButton.isDisplayed();
     }
 
-    private TestResultsEntryNewPage addOdometerReading(int odometerReading) {
+    public TestResultsEntryNewPage addOdometerReading(int odometerReading) {
         addOdometerReading.click();
         FormDataHelper.enterText(odometerField, String.valueOf(odometerReading));
         setOdometerUnit(OdometerUnit.KILOMETRES);
         odometerSubmit.click();
 
         return this;
+    }
+
+    public boolean isPassNoticeDisplayed(){
+        return brakeTestResultsNotice.getText().contains("Pass");
     }
 
     private void setOdometerUnit(OdometerUnit unit) {
@@ -195,5 +202,38 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
     public SearchForADefectPage clickSearchForADefectButton() {
         searchForDefect.click();
         return new SearchForADefectPage(driver);
+    }
+
+    private BrakeTestConfigurationPage clickAddBrakeTest() {
+        addBrakeTest.click();
+        return PageLocator.getBrakeTestConfigurationPage(driver);
+    }
+
+    public BrakeTestResultsPage completeTestWithFloorBrakeTestsWithLockBoxes(){
+        addOdometerReading(10000);
+        return addFloorBrakeTestsWithLockBoxes();
+    }
+
+    public BrakeTestResultsPage addFloorBrakeTestsWithLockBoxes() {
+        BrakeTestConfigurationPage brakeTestConfigurationPage = clickAddBrakeTest();
+
+        BrakeTestResultsPage brakeTestResultsPage =
+            brakeTestConfigurationPage.fillAllFieldsWithValidDataForGroupAAndSubmit(BrakeTestType.FLOOR);
+
+        return brakeTestResultsPage.completeBrakeEffortGroupAFloorField();
+    }
+
+    public BrakeTestResultsPage completeTestWithRollerBrakeTestsWithLockBoxes() {
+        addOdometerReading(10000);
+        return addRollerBrakeTestWithLockBoxes();
+    }
+
+    public BrakeTestResultsPage addRollerBrakeTestWithLockBoxes(){
+        BrakeTestConfigurationPage brakeTestConfigurationPage = clickAddBrakeTest();
+
+        BrakeTestResultsPage brakeTestResultsPage =
+            brakeTestConfigurationPage.fillAllFieldsWithValidDataForGroupAAndSubmit(BrakeTestType.ROLLER);
+
+        return brakeTestResultsPage.completeBrakeEffortGroupAPlateRollerField();
     }
 }

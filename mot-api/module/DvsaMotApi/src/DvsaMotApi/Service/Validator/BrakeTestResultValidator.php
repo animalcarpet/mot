@@ -2,6 +2,7 @@
 
 namespace DvsaMotApi\Service\Validator;
 
+use DvsaCommon\Constants\BrakeTestConfigurationClass1And2;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommonApi\Service\Exception\ServiceException;
 use DvsaCommonApi\Service\Validator\AbstractValidator;
@@ -459,10 +460,7 @@ class BrakeTestResultValidator extends AbstractValidator
             $validationException,
             $lockValues,
             $brakeTestResult->getBrakeTestType()->getCode(),
-            [
-                BrakeTestTypeCode::ROLLER,
-                BrakeTestTypeCode::PLATE
-            ]
+            BrakeTestConfigurationClass1And2::$locksApplicable
         );
 
         $this->validateClass1And2Rules($validationException, $brakeTestResult, $firstUsedDate);
