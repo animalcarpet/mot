@@ -3,6 +3,8 @@ package uk.gov.dvsa.domain.api.request;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import uk.gov.dvsa.domain.shared.role.OrganisationBusinessRoleCodes;
+
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CreateNominationRequest {
@@ -28,5 +30,11 @@ public class CreateNominationRequest {
         this.userId = userId;
         this.orgId = orgId;
         this.roleId = roleId;
+    }
+
+    public CreateNominationRequest(int userId, int orgId, OrganisationBusinessRoleCodes roleCode) {
+        this.userId = userId;
+        this.orgId = orgId;
+        this.roleCode = roleCode.toString();
     }
 }

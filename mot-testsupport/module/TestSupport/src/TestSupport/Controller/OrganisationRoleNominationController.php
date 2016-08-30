@@ -9,14 +9,14 @@ class OrganisationRoleNominationController extends BaseTestSupportRestfulControl
 {
     public function create($data)
     {
+        /** @var OrganisationRoleNominationService $service */
         $service = $this->serviceLocator->get(OrganisationRoleNominationService::class);
 
         $userId = $data['userId'];
         $orgId = $data['orgId'];
-        $roleId = $data['roleId'];
+        $roleCode = $data['roleCode'];
 
-
-        $result = $service->nominateUser($userId, $orgId, $roleId);
+        $result = $service->nominateUser($userId, $orgId, $roleCode);
 
         return TestDataResponseHelper::jsonOk($result);
     }

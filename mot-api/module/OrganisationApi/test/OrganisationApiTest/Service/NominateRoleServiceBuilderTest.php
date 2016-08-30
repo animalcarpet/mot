@@ -4,7 +4,6 @@ namespace OrganisationApiTest\Service;
 
 use Doctrine\ORM\EntityRepository;
 use DvsaAuthentication\Identity;
-use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 use DvsaAuthentication\Service\TwoFactorStatusService;
 use DvsaAuthentication\TwoFactorStatus;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
@@ -99,6 +98,19 @@ class NominateRoleServiceBuilderTest extends PHPUnit_Framework_TestCase
             ->buildForNominationCreation(StubNominationPersonRepository::PERSON_ID_NOMINEE, 1, 2);
 
         $this->assertAttributeEquals($this->conditionalNominationOperation, 'nominateOperation', $service);
+    }
+
+    public function testGivenAedmRoleForNon2faTradeNominee_BuilderWillInjectDirectNominationOperation()
+    {
+        $this
+            ->withOrganisationBusinessRole(RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER)
+            ->withNomineeTwoFactorStatus(TwoFactorStatus::INACTIVE_TRADE_USER);
+
+        $builder = $this->buildServiceBuilder();
+        $service = $builder
+            ->buildForNominationCreation(StubNominationPersonRepository::PERSON_ID_NOMINEE, 1, 2);
+
+        $this->assertAttributeEquals($this->directNominationOperation, 'nominateOperation', $service);
     }
 
     public function testGivenAedmRoleAndTwoFactorFeatureToggleDisabled_BuilderWillInjectDirectNominationOperation()

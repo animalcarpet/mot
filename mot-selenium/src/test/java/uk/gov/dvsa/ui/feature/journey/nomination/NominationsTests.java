@@ -3,6 +3,7 @@ package uk.gov.dvsa.ui.feature.journey.nomination;
 import org.testng.annotations.Test;
 import ru.yandex.qatools.allure.annotations.Description;
 import uk.gov.dvsa.domain.model.User;
+import uk.gov.dvsa.domain.shared.role.OrganisationBusinessRoleCodes;
 import uk.gov.dvsa.domain.shared.role.TradeRoles;
 import uk.gov.dvsa.ui.DslTest;
 
@@ -13,8 +14,6 @@ import static org.hamcrest.Matchers.containsString;
 
 @Description("Nomination notifications signposts nominees to next step")
 public class NominationsTests extends DslTest {
-
-    private static final int AUTHORISED_EXAMINER_DESIGNATED_MANAGER_ID = 1;
 
     @Test(testName = "2fa", groups = {"BVT"})
     void non2faUserCanOrderCardViaNominationsNotificationLink() throws IOException {
@@ -64,58 +63,79 @@ public class NominationsTests extends DslTest {
 
     @Test(testName ="2fa", groups = {"BVT"})
     void aedmNon2faUserNominatedWithNoCardDirectedToOrderACard() throws Exception {
-        step("Given I am not 2fa and dont have a card");
+        step("Given I am not 2fa and I am nominated for an AEDM role");
         User not2faActiveUser = userData.createUserWithoutRole();
-        step("I have been nominated for AEDM");
-        motApi.nominations.nominateOrganisationRoleWithRoleId(not2faActiveUser, aeData.createAeWithDefaultValues().getId(), AUTHORISED_EXAMINER_DESIGNATED_MANAGER_ID);//replace with role id for AEDM
+        motApi.nominations.nominateOrganisationRoleWithRoleCode(not2faActiveUser, aeData.createAeWithDefaultValues().getId(), OrganisationBusinessRoleCodes.AEDM);
 
-        step("When I am nominated, I am asked to order a card");
-        //assert that order card notification is generated.
+        step("Then I receive a notification, prompting me to order a security card");
         String message = motUI.nominations.viewMostRecent(not2faActiveUser).getNotificationText();
-        System.out.println(message);
-        assertThat("Notification for AEDM - prompted to order a security card is shown", message, containsString("You need to order a security card."));
+
+        assertThat("Order a security card notification is shown", message, containsString("You need to order a security card."));
     }
 
     @Test(testName = "2fa", groups = {"BVT"})
     void aedmNon2faUserNominatedWithCardDirectedToActivateCard() throws Exception {
-        step("Given I am not 2fa and I am going to be nominated for AEDM");
+        step("Given I am not 2fa and I am nominated for an AEDM role");
         User orderedCardUser = userData.createUserWithoutRole();
-        motApi.nominations.nominateOrganisationRoleWithRoleId(orderedCardUser, aeData.createAeWithDefaultValues().getId(), AUTHORISED_EXAMINER_DESIGNATED_MANAGER_ID);
+        motApi.nominations.nominateOrganisationRoleWithRoleCode(orderedCardUser, aeData.createAeWithDefaultValues().getId(), OrganisationBusinessRoleCodes.AEDM);
 
-        step("And I have ordered a card");
+        step("When I have ordered a card");
         motUI.authentication.securityCard.orderSecurityCardWithHomeAddress(orderedCardUser);
 
-        step("When I am nominated, I recieve a notification to activate my card");
+        step("Then I receive a notification, prompting me to activate my card");
         String message = motUI.nominations.viewMostRecent(orderedCardUser).getNotificationText();
         assertThat("Notification for AEDM - prompted to activate a security card", message, containsString("once you have activated the card."));
     }
 
     @Test(testName = "2fa", groups = {"BVT"})
     void aedmNominationNotificationsAreSentAfterCardActivation() throws Exception {
-        step("Given I am not 2fa and I am going to be nominated for AEDM");
+        step("Given I am not 2fa and I am nominated for an AEDM role");
         User orderedCardUser = userData.createUserWithoutRole();
+        motApi.nominations.nominateOrganisationRoleWithRoleCode(orderedCardUser, aeData.createAeWithDefaultValues().getId(), OrganisationBusinessRoleCodes.AEDM);
 
-        step("And I have ordered a card and then been subsequently nominated");
-        motApi.nominations.nominateOrganisationRoleWithRoleId(orderedCardUser, aeData.createAeWithDefaultValues().getId(), AUTHORISED_EXAMINER_DESIGNATED_MANAGER_ID);
+        step("And I have ordered and activated a card");
         motUI.authentication.securityCard.orderSecurityCardWithHomeAddress(orderedCardUser);
         motUI.authentication.securityCard.activate2faCard(orderedCardUser);
 
-        step("I recieve a notification telling me I have been nominated as AEDM");
+        step("I receive a notification advising me that I have been assigned the role of AEDM");
         String message = motUI.nominations.viewMostRecent(orderedCardUser).getNotificationText();
-        assertThat("Notification for AEDM - prompted to activate a security card", message, containsString("You have been assigned a role of Authorised Examiner Designated Manager"));
+        assertThat("Notification for AEDM - assigned the role of AEDM", message, containsString("You have been assigned a role of Authorised Examiner Designated Manager"));
     }
 
     @Test(testName = "2fa", groups = {"BVT"})
-    public void user_Get_Notification_When_Csco_Orders_Card_For_Them() throws IOException {
-        step("Given I have been nominated as a Site manager");
+    void aedmNominationNotificationsAreSentWithoutOrderingACardForAnExistingTradeUser() throws Exception {
+        step("Given I am a non-2fa trade user with a role");
+        User nominee = userData.createTester(siteData.createSite().getId(), false);
+
+        step("When I have been nominated for an AEDM role");
+        motApi.nominations.nominateOrganisationRoleWithRoleCode(nominee, aeData.createAeWithDefaultValues().getId(), OrganisationBusinessRoleCodes.AEDM);
+
+        step("Then I receive a notification advising me I have been automatically assigned the AEDM role");
+        String message = motUI.nominations.viewMostRecent(nominee).getNotificationText();
+        assertThat("Notification for AEDM - assigned the AEDM role", message, containsString("You have been assigned a role of Authorised Examiner Designated Manager"));
+    }
+
+    @Test(testName = "non-2fa", groups = {"BVT"})
+    void aedmNominationNotificationsAreSentImmediatelyWhen2faFeatureIsDisabled() throws Exception {
+        step("Given I am not 2fa and I am nominated for an AEDM role");
+        User user = userData.createUserWithoutRole();
+        motApi.nominations.nominateOrganisationRoleWithRoleCode(user, aeData.createAeWithDefaultValues().getId(), OrganisationBusinessRoleCodes.AEDM);
+
+        step("I receive a notification advising me that I have been assigned the role of AEDM");
+        String message = motUI.nominations.viewMostRecent(user).getNotificationText();
+        assertThat("Notification for AEDM - assigned the role of AEDM", message, containsString("You have been assigned a role of Authorised Examiner Designated Manager"));
+    }
+
+    @Test(testName = "2fa", groups = {"BVT"})
+    public void tradeUserReceivesNotificationWhenCscoOrdersCardOnTheirBehalf() throws IOException {
+        step("Given I have been nominated for a Site Manager role as non 2fa user");
         User tradeUser = userData.createUserWithoutRole();
         motApi.nominations.nominateSiteRole(tradeUser, siteData.createSite().getId(), TradeRoles.SITE_MANAGER);
 
         step("When a CSCO orders a card on my behalf");
         motUI.authentication.securityCard.orderCardForTradeUserAsCSCO(userData.createCSCO(), tradeUser);
 
-        step("Then I should see an activate notification on my homepage");
+        step("Then I receive an activate notification on my homepage");
         motUI.nominations.viewActivateCardNotification(tradeUser);
     }
-
 }

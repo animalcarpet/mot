@@ -151,10 +151,14 @@ class NominateRoleServiceBuilder
     private function getNominationOperation(OrganisationBusinessRole $organisationBusinessRole, $nomineeTwoFactorStatus)
     {
         $isDirectNomination = $organisationBusinessRole->getRole()->getCode() == RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER;
+
         $isNomineeTwoFaActive = $nomineeTwoFactorStatus == TwoFactorStatus::ACTIVE;
+        $canNomineeSkipTwoFaActivation = $nomineeTwoFactorStatus == TwoFactorStatus::INACTIVE_TRADE_USER;
+        $nomineeDoesNotRequireTwoFaActivation = $isNomineeTwoFaActive || $canNomineeSkipTwoFaActivation;
+
         $isTwoFaToggleEnabled = $this->featureToggles->isEnabled(FeatureToggle::TWO_FA);
 
-        if ($isDirectNomination && ($isNomineeTwoFaActive || !$isTwoFaToggleEnabled)) {
+        if ($isDirectNomination && ($nomineeDoesNotRequireTwoFaActivation || !$isTwoFaToggleEnabled)) {
             $nominationOperation = $this->directNominationOperation;
         } else {
             if ($isDirectNomination) {

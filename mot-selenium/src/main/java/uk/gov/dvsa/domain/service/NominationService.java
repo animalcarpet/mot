@@ -2,6 +2,7 @@ package uk.gov.dvsa.domain.service;
 
 import uk.gov.dvsa.domain.api.request.CreateNominationRequest;
 import uk.gov.dvsa.domain.model.User;
+import uk.gov.dvsa.domain.shared.role.OrganisationBusinessRoleCodes;
 import uk.gov.dvsa.domain.shared.role.Role;
 import uk.gov.dvsa.framework.config.webdriver.WebDriverConfigurator;
 
@@ -30,9 +31,9 @@ public class NominationService extends Service {
         motClient.postWithoutToken(request, ORG_NOMINATION_ENDPOINT);
     }
 
-    public void nominateOrganisationRoleWithRoleId(User user, int organisationId, int roleId) throws IOException{
+    public void nominateOrganisationRoleWithRoleCode(User user, int organisationId, OrganisationBusinessRoleCodes roleCode) throws IOException{
         String request = jsonHandler.convertToString(
-                new CreateNominationRequest(Integer.valueOf(user.getId()), organisationId, roleId));
+                new CreateNominationRequest(Integer.valueOf(user.getId()), organisationId, roleCode));
 
         motClient.postWithoutToken(request, ORG_NOMINATION_ENDPOINT);
     }

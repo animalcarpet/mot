@@ -3,7 +3,10 @@ package uk.gov.dvsa.ui.feature.journey.nomination;
 import org.testng.annotations.Test;
 import ru.yandex.qatools.allure.annotations.Description;
 import ru.yandex.qatools.allure.annotations.Features;
+
+import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
+import uk.gov.dvsa.domain.shared.role.OrganisationBusinessRoleCodes;
 import uk.gov.dvsa.domain.shared.role.TradeRoles;
 import uk.gov.dvsa.ui.DslTest;
 
@@ -17,8 +20,6 @@ import static org.hamcrest.Matchers.is;
 @Description("This Journey does not include nominations for AEDM role")
 @Features("Nomination notification(s) for nominees to accept or reject role")
 public class RejectNotificationsTests extends DslTest {
-
-    private static final int AUTHORISED_EXAMINER_DESIGNATED_ID = 2;
 
     @Test(testName = "2fa", groups = {"BVT"})
     void non2faUserCannotRejectNominationWith2faOn() throws IOException {
@@ -68,15 +69,18 @@ public class RejectNotificationsTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"})
     void userRejectsTesterNominationWith2FAon() throws IOException {
         step("Given I have been nominated for a Tester role as non 2fa user");
-        User user = userData.createTester(siteData.createSite().getId());
-        motApi.nominations.nominateSiteRole(user,siteData.createSite().getId(), TradeRoles.TESTER);
+        User user = userData.createUserWithoutRole();
+        Site testSite = siteData.createSite();
+        qualificationDetailsData.createQualificationCertificateForGroupA(
+                user, "1234123412341234", "2016-04-01", testSite.getSiteNumber()
+        );
+        motApi.nominations.nominateSiteRole(user,testSite.getId(), TradeRoles.TESTER);
 
         step("When I order and activate the card from Tester nomination notification");
         motUI.nominations.orderAndActivateSecurityCard(user);
         String message = motUI.nominations.viewMostRecent(user).rejectNomination().getConfirmationText();
 
         step("Then I can reject my nomination");
-
         assertThat("Nominated was rejected successfully",
                 message, containsString("You have rejected the role of 'Tester'"));
     }
@@ -85,7 +89,7 @@ public class RejectNotificationsTests extends DslTest {
     void userRejectsAEDNominationWith2FAon() throws IOException {
         step("Given I have been nominated for an AED role as non 2fa user");
         User user = userData.createUserWithoutRole();
-        motApi.nominations.nominateOrganisationRoleWithRoleId(user, aeData.createAeWithDefaultValues().getId(), AUTHORISED_EXAMINER_DESIGNATED_ID);
+        motApi.nominations.nominateOrganisationRoleWithRoleCode(user, aeData.createAeWithDefaultValues().getId(), OrganisationBusinessRoleCodes.AED);
 
         step("When I order and activate the card from AED nomination notification");
         motUI.nominations.orderAndActivateSecurityCard(user);
@@ -113,7 +117,7 @@ public class RejectNotificationsTests extends DslTest {
     void userRejectAedNominationWith2faOff() throws IOException {
         step("Given I nominate a user as an aed");
         User nominee = userData.createUserWithoutRole();
-        motApi.nominations.nominateOrganisationRoleWithRoleId(nominee, aeData.createAeWithDefaultValues().getId(), AUTHORISED_EXAMINER_DESIGNATED_ID);
+        motApi.nominations.nominateOrganisationRoleWithRoleCode(nominee, aeData.createAeWithDefaultValues().getId(), OrganisationBusinessRoleCodes.AED);
 
         step("When I reject the nomination");
         String message = motUI.nominations.viewMostRecent(nominee).rejectNomination().getConfirmationText();

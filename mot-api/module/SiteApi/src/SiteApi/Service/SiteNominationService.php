@@ -90,7 +90,7 @@ class SiteNominationService
         $nomineeTwoFactorStatus = $this->twoFactorStatusService->getStatusForPerson($nominee);
         $isTwoFactorToggleEnabled = $this->featureToggles->isEnabled(FeatureToggle::TWO_FA);
 
-        return TwoFactorNotificationTemplateHelper::forPendingDirectNomination(
+        return TwoFactorNotificationTemplateHelper::forPendingConditionalNomination(
             $nomineeTwoFactorStatus,
             $isTwoFactorToggleEnabled
         );
