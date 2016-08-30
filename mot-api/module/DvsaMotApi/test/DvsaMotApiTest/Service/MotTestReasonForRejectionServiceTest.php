@@ -17,6 +17,7 @@ use DvsaEntities\Entity\OdometerReading;
 use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Entity\TestItemSelector;
 use DvsaEntitiesTest\Entity\MotTestReasonForRejectionTest;
+use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Service\MotTestReasonForRejectionService;
 use DvsaMotApi\Service\TestItemSelectorService;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
@@ -54,13 +55,13 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
     public function testAddReasonForRejectionOk()
     {
         $data = [
-            'rfrId'                => 3,
-            'type'                 => 'FAIL',
-            'locationLateral'      => 'nearside',
+            'rfrId' => 3,
+            'type' => 'FAIL',
+            'locationLateral' => 'nearside',
             'locationLongitudinal' => 'front',
-            'locationVertical'     => 'top',
-            'comment'              => 'comment goes here',
-            'failureDangerous'     => false,
+            'locationVertical' => 'top',
+            'comment' => 'comment goes here',
+            'failureDangerous' => false,
         ];
 
         $failureText = 'adversely affected by the operation of another lamp';
@@ -84,13 +85,13 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
     public function testAddManualAdvisoryOk()
     {
         $data = [
-            'rfrId'                => 0,
-            'type'                 => 'ADVISORY',
-            'locationLateral'      => 'nearside',
+            'rfrId' => 0,
+            'type' => 'ADVISORY',
+            'locationLateral' => 'nearside',
             'locationLongitudinal' => 'front',
-            'locationVertical'     => 'top',
-            'comment'              => 'comment goes here',
-            'failureDangerous'     => false,
+            'locationVertical' => 'top',
+            'comment' => 'comment goes here',
+            'failureDangerous' => false,
         ];
 
         $failureText = '';
@@ -144,7 +145,7 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
 
         $data = [
             'rfrId' => $rfrId,
-            'type'  => 'FAIL',
+            'type' => 'FAIL',
         ];
 
         $motTest = self::getTestMotTestEntity();
@@ -350,7 +351,28 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
             $this->mockAuthService,
             $this->mockMotTestValidator,
             $this->mockTestItemSelectorService,
-            $this->mockPerformMotTestAssertion
+            $this->mockPerformMotTestAssertion,
+            $this->createFeatureToggles(false)
         );
+    }
+
+    /**
+     * @param $testResultEntryImprovements
+     *
+     * @return MockObj|FeatureToggles
+     */
+    private function createFeatureToggles($testResultEntryImprovements)
+    {
+        $featureToggles = $this
+            ->getMockBuilder(FeatureToggles::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $featureToggles
+            ->method('isEnabled')
+            ->with('test_result_entry_improvements')
+            ->will($this->returnValue($testResultEntryImprovements));
+
+        return $featureToggles;
     }
 }

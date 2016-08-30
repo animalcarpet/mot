@@ -9,7 +9,7 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * MotTest
+ * MotTest.
  *
  * @ORM\Table(name="mot_test_rfr_map", options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"})
  * @ORM\Entity
@@ -100,7 +100,7 @@ class MotTestReasonForRejection extends Entity
     /**
      * @var string
      *
-     * @ORM\Column(name="custom_description", type="string", length=255, nullable=true)
+     * @ORM\Column(name="custom_description", type="string", length=100, nullable=true)
      */
     private $customDescription;
 
@@ -113,7 +113,7 @@ class MotTestReasonForRejection extends Entity
     private $onOriginalTest;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -123,7 +123,7 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * Set MotTest
+     * Set MotTest.
      *
      * @param \DvsaEntities\Entity\MotTest $motTest
      *
@@ -137,7 +137,7 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * Get MotTest
+     * Get MotTest.
      *
      * @return \DvsaEntities\Entity\MotTest
      */
@@ -167,7 +167,7 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $type
      *
@@ -181,7 +181,7 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return string
      */
@@ -191,7 +191,7 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * Set locationLateral
+     * Set locationLateral.
      *
      * @param string $locationLateral
      *
@@ -205,7 +205,7 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * Get locationLateral
+     * Get locationLateral.
      *
      * @return string
      */
@@ -215,7 +215,7 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * Set locationLongitudinal
+     * Set locationLongitudinal.
      *
      * @param string $locationLongitudinal
      *
@@ -229,7 +229,7 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * Get locationLongitudinal
+     * Get locationLongitudinal.
      *
      * @return string
      */
@@ -239,7 +239,7 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * Set locationVertical
+     * Set locationVertical.
      *
      * @param string $locationVertical
      *
@@ -253,7 +253,7 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * Get locationVertical
+     * Get locationVertical.
      *
      * @return string
      */
@@ -263,7 +263,7 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * Set comment
+     * Set comment.
      *
      * @param string $comment
      *
@@ -277,7 +277,7 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * Get comment
+     * Get comment.
      *
      * @return string
      */
@@ -287,7 +287,7 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * Set failureDangerous
+     * Set failureDangerous.
      *
      * @param boolean $failureDangerous
      *
@@ -301,7 +301,7 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * Get failureDangerous
+     * Get failureDangerous.
      *
      * @return boolean
      */
@@ -333,6 +333,7 @@ class MotTestReasonForRejection extends Entity
     /**
      * Generated RFRs can't be deleted by the end-user, other than
      * as part of updating a brake test result.
+     *
      * @return boolean
      */
     public function getCanBeDeleted()
@@ -348,6 +349,7 @@ class MotTestReasonForRejection extends Entity
     public function setCustomDescription($value)
     {
         $this->customDescription = $value;
+
         return $this;
     }
 
@@ -405,12 +407,14 @@ class MotTestReasonForRejection extends Entity
     public function setReasonForRejection($reasonForRejection)
     {
         $this->reasonForRejection = $reasonForRejection;
+
         return $this;
     }
 
     /**
-     * @return string
      * @throws NotFoundException
+     *
+     * @return string
      */
     public function getEnglishName()
     {

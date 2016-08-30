@@ -10,6 +10,7 @@ namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyContextProvider;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Defect;
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Exception\ObservedDefectNotFoundException;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\ObservedDefect;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\ObservedDefectCollection;
 use DvsaCommon\Domain\MotTestType;
@@ -80,7 +81,11 @@ class RemoveDefectController extends AbstractDvsaMotTestController
             $this->addErrorMessages($e->getDisplayMessages());
         }
 
-        $observedDefect = $this->getObservedDefect($observedDefectId, $motTest);
+        try {
+            $observedDefect = $this->getObservedDefect($observedDefectId, $motTest);
+        } catch (ObservedDefectNotFoundException $e) {
+            return $this->redirect()->toUrl($backUrl);
+        }
 
         /*
          * If we're making a POST request to this URL, i.e., we've clicked
@@ -115,7 +120,7 @@ class RemoveDefectController extends AbstractDvsaMotTestController
 
         $breadcrumbs = $this->getBreadcrumbs($isDemoTest, $isReinspection, $observedDefect->getDefectType());
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
-        $this->enableGdsLayout('Remove '.$observedDefect->getDefectType(), '');
+        $this->enableGdsLayout('Remove ' . $observedDefect->getDefectType(), '');
 
         return $this->createViewModel('defects/remove-defect.twig', [
             'motTestNumber' => $motTestNumber,
@@ -152,11 +157,12 @@ class RemoveDefectController extends AbstractDvsaMotTestController
     {
         $observedDefect = ObservedDefectCollection::fromMotApiData($motTest)->getDefectById($observedDefectId);
 
-        $breadcrumb = Defect::fromApi($this->restClient->get(
-            MotTestUrlBuilder::reasonForRejection($motTest->getMotTestNumber(), $observedDefect->getDefectId())
-        )['data'])->getDefectBreadcrumb();
-
-        $observedDefect->setBreadcrumb($breadcrumb);
+        if (true !== $observedDefect->isManualAdvisory()) {
+            $breadcrumb = Defect::fromApi($this->restClient->get(
+                MotTestUrlBuilder::reasonForRejection($motTest->getMotTestNumber(), $observedDefect->getDefectId())
+            )['data'])->getDefectBreadcrumb();
+            $observedDefect->setBreadcrumb($breadcrumb);
+        }
 
         return $observedDefect;
     }
@@ -221,7 +227,7 @@ class RemoveDefectController extends AbstractDvsaMotTestController
                 self::CONTENT_HEADER_TYPE__SEARCH_RESULTS => $this->defectsJourneyUrlGenerator->goBack(),
             ];
         }
-        $breadcrumbs += ['Remove a '.$defectType => ''];
+        $breadcrumbs += ['Remove a ' . $defectType => ''];
 
         return $breadcrumbs;
     }

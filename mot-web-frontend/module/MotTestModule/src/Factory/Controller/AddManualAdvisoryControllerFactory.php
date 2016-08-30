@@ -8,12 +8,14 @@
 namespace Dvsa\Mot\Frontend\MotTestModule\Factory\Controller;
 
 use Dvsa\Mot\Frontend\MotTestModule\Controller\AddManualAdvisoryController;
+use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyContextProvider;
+use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Factory for creating EditDefectController instances.
+ * Factory for creating AddManualAdvisoryController instances.
  */
 class AddManualAdvisoryControllerFactory implements FactoryInterface
 {
@@ -27,6 +29,11 @@ class AddManualAdvisoryControllerFactory implements FactoryInterface
         /** @var ServiceLocatorInterface|ControllerManager $mainServiceManager */
         $mainServiceManager = $serviceLocator->getServiceLocator();
 
-        return new AddManualAdvisoryController();
+        /** @var DefectsJourneyUrlGenerator $defectsJourneyUrlGenerator */
+        $defectsJourneyUrlGenerator = $mainServiceManager->get(DefectsJourneyUrlGenerator::class);
+        /** @var DefectsJourneyContextProvider $defectsJourneyContextProvider */
+        $defectsJourneyContextProvider = $mainServiceManager->get(DefectsJourneyContextProvider::class);
+
+        return new AddManualAdvisoryController($defectsJourneyUrlGenerator, $defectsJourneyContextProvider);
     }
 }

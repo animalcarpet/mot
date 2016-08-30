@@ -41,8 +41,13 @@
     </fieldset>
 
     <div class="form-group {% if errorMessages is not empty %} has-error {% endif %}">
-        <h3 class=" heading-medium">Additional information {{ observedDefect.comment }}</h3>
-        <label for="comment" class="form-label">Add any further comments if required</label>
+        {% if observedDefect.isManualAdvisory %}
+            <h3 class=" heading-medium">Manual advisory description</h3>
+            <label for="comment" class="form-label">Give brief details of the defect</label>
+        {% else %}
+            <h3 class=" heading-medium">Additional information {{ observedDefect.comment }}</h3>
+            <label for="comment" class="form-label">Add any further comments if required</label>
+        {% endif %}
         {% if errorMessages is not empty %}
             <span class="validation-message">{{ errorMessages.displayMessage }}</span>
         {% endif %}

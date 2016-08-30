@@ -4,8 +4,8 @@ namespace DvsaMotApi\Service\Validator;
 
 use CensorApi\Service\CensorService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
-use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Auth\PermissionAtSite;
+use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Constants\ReasonForRejection;
 use DvsaCommon\Date\DateUtils;
@@ -23,13 +23,10 @@ use UserApi\SpecialNotice\Service\SpecialNoticeService;
 use Zend\Authentication\AuthenticationService;
 
 /**
- * Class MotTestValidator
- *
- * @package DvsaMotApi\Service\Validator
+ * Class MotTestValidator.
  */
 class MotTestValidator extends AbstractValidator
 {
-
     const ERROR_MSG_OUT_OF_SLOTS = 'You do not have slots to perform an MOT Test';
     const ERROR_MSG_INVALID_TESTER = 'You cannot make changes to this test';
     const ERROR_MSG_NOT_VALID_TO_TEST_VEHICLE_CLASS = 'You are not authorised to test a class %s vehicle';
@@ -115,10 +112,10 @@ class MotTestValidator extends AbstractValidator
         if ($rfr->getReasonForRejection() === null
             && ($rfr->getCustomDescription() === null || strlen($rfr->getCustomDescription()) == 0)
         ) {
-            throw new BadRequestException(
-                'Either RFR Id or description has to be provided',
-                BadRequestException::ERROR_CODE_INVALID_DATA
-            );
+            $message = (true === $this->featureToggles->isEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)) ?
+                'You must give a description' : 'Either RFR Id or description has to be provided';
+
+            throw new BadRequestException($message, BadRequestException::ERROR_CODE_INVALID_DATA);
         }
 
         if ($this->censorService->containsProfanity($rfr->getCustomDescription())
@@ -130,8 +127,7 @@ class MotTestValidator extends AbstractValidator
                     BadRequestException::ERROR_CODE_INVALID_DATA,
                     'Must not include any swearwords'
                 );
-            }
-            else {
+            } else {
                 throw new BadRequestException(
                     'Profanity has been detected in the description of RFR',
                     BadRequestException::ERROR_CODE_INVALID_DATA
@@ -139,7 +135,7 @@ class MotTestValidator extends AbstractValidator
             }
         }
 
-        if ($this->featureToggles->isEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)) {
+        if (true === $this->featureToggles->isEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)) {
             if ((strlen($rfr->getCustomDescription()) > ReasonForRejection::MAX_USER_COMMENT_LENGTH)
                 || (strlen($rfr->getComment()) > ReasonForRejection::MAX_USER_COMMENT_LENGTH)
             ) {
@@ -149,8 +145,7 @@ class MotTestValidator extends AbstractValidator
                     'Must be 250 characters or shorter'
                 );
             }
-        }
-        else {
+        } else {
             if ((strlen($rfr->getCustomDescription()) > ReasonForRejection::MAX_DESCRIPTION_LENGTH)
                 || (strlen($rfr->getComment()) > ReasonForRejection::MAX_DESCRIPTION_LENGTH)
             ) {
@@ -261,6 +256,7 @@ class MotTestValidator extends AbstractValidator
     {
         $org = $motTest->getVehicleTestingStation()->getOrganisation();
         $slots = is_object($org) ? $org->getSlotBalance() : 0;
+
         return is_int($slots) && $slots > 0;
     }
 

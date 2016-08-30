@@ -7,12 +7,10 @@
 
 namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 
-use Dashboard\Controller\UserHomeController;
 use Dvsa\Mot\Frontend\MotTestModule\Exception\DefectTypeNotFoundException;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyContextProvider;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\ObservedDefectCollection;
-use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Exception\UnauthorisedException;
@@ -47,7 +45,7 @@ class EditDefectController extends AbstractDvsaMotTestController
      * EditDefectController constructor.
      *
      * @param DefectsJourneyContextProvider $defectsJourneyContextProvider
-     * @param DefectsJourneyUrlGenerator $defectsJourneyUrlGenerator
+     * @param DefectsJourneyUrlGenerator    $defectsJourneyUrlGenerator
      */
     public function __construct(
         DefectsJourneyContextProvider $defectsJourneyContextProvider,
@@ -70,10 +68,6 @@ class EditDefectController extends AbstractDvsaMotTestController
      */
     public function editAction()
     {
-        if (!$this->getAuthorizationService()->isGranted(PermissionInSystem::RFR_LIST)) {
-            throw new UnauthorisedException("You do not have permission to edit a defect on an MOT test.");
-        }
-
         $motTestNumber = (int) $this->params()->fromRoute('motTestNumber');
         $defectId = (int) $this->params()->fromRoute('defectItemId');
 
@@ -101,13 +95,12 @@ class EditDefectController extends AbstractDvsaMotTestController
 
             $request = $this->getRequest();
             if ($request->isPost()) {
-
                 $apiPath = MotTestUrlBuilder::motTestRfr($motTest->getMotTestNumber());
 
                 $locationLateral = $request->getPost('locationLateral');
                 $locationLongitudinal = $request->getPost('locationLongitudinal');
                 $locationVertical = $request->getPost('locationVertical');
-                $comment = $request->getPost('comment');
+                $comment = trim($request->getPost('comment'));
                 $failureDangerous = $request->getPost('failureDangerous') ? true : false;
 
                 // Data to be sent to the API to edit a defect.
@@ -116,7 +109,7 @@ class EditDefectController extends AbstractDvsaMotTestController
                     'locationLateral' => ($locationLateral !== 'n/a') ? $locationLateral : null,
                     'locationLongitudinal' => ($locationLongitudinal !== 'n/a') ? $locationLongitudinal : null,
                     'locationVertical' => ($locationVertical !== 'n/a') ? $locationVertical : null,
-                    'comment' => trim($comment),
+                    'comment' => $comment,
                     'failureDangerous' => $failureDangerous,
                 ];
 
@@ -124,7 +117,7 @@ class EditDefectController extends AbstractDvsaMotTestController
                 $this->addSuccessMessage(sprintf(
                     '<strong>This %s has been edited:</strong><br> %s',
                     $type,
-                    $observedDefect->getName()
+                    $observedDefect->isManualAdvisory() ? $comment : $observedDefect->getName()
                 ));
 
                 return $this->redirect()->toUrl($backUrl);
@@ -133,7 +126,6 @@ class EditDefectController extends AbstractDvsaMotTestController
             $testType = $motTest->getTestType();
             $isDemoTest = MotTestType::isDemo($testType->getCode());
             $isReinspection = MotTestType::isReinspection($testType->getCode());
-
         } catch (RestApplicationException $e) {
             $errorMessages = $e->getErrors()[0];
         } catch (RestServiceUnexpectedContentTypeException $e) {
@@ -151,7 +143,7 @@ class EditDefectController extends AbstractDvsaMotTestController
             'type' => $type,
             'errorMessages' => $errorMessages,
             'observedDefect' => $observedDefect,
-            'context' => $this->defectsJourneyContextProvider->getContextForBackUrlText()
+            'context' => $this->defectsJourneyContextProvider->getContextForBackUrlText(),
         ]);
     }
 
@@ -199,9 +191,8 @@ class EditDefectController extends AbstractDvsaMotTestController
     /**
      * Get the breadcrumbs given the context of the url.
      *
-     * @param bool $isDemo
-     * @param bool $isReinspection
-     *
+     * @param bool   $isDemo
+     * @param bool   $isReinspection
      * @param string $title
      *
      * @return array

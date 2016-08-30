@@ -25,6 +25,22 @@ public class DefectsTestsDataProvider {
         return defect;
     }
 
+    public static Object[][] getManualAdvisoryDefect() throws IOException {
+        Object[][] defect = new Object[1][1];
+
+        defect[0][0] = buildManualAdvisory(new Defect.DefectBuilder(), "This is a manual advisory");
+
+        return defect;
+    }
+
+    public static Object[][] getManualAdvisoryDefectWithNoDescription() throws IOException {
+        Object[][] defect = new Object[1][1];
+
+        defect[0][0] = buildManualAdvisory(new Defect.DefectBuilder(), "");
+
+        return defect;
+    }
+
     private static Defect buildFailureDefect(Defect.DefectBuilder builder) {
         builder.setCategoryPath(new String[] {"Drivers view of the road", "Windscreen"});
         builder.setDefectName("is of a temporary type");
@@ -56,6 +72,13 @@ public class DefectsTestsDataProvider {
         }
 
         builder.setIsDangerous(false);
+        return builder.build();
+    }
+
+    private static Defect buildManualAdvisory(Defect.DefectBuilder builder, String description) {
+        builder.setDescription(description);
+        builder.setDefectType(Defect.DefectType.Advisory);
+
         return builder.build();
     }
 }

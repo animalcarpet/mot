@@ -12,7 +12,7 @@ public class DefectsPage extends AbstractDefectsBasketPage {
     private static final String PAGE_TITLE = "Defects";
 
     @FindBy(css = "#defects-list .defect") private WebElement defects;
-    @FindBy(id = "submit-defect") private WebElement addDefect;
+    @FindBy(id = "submit-defect") protected WebElement addDefect;
     @FindBy(css = "nav.content-navigation a.button") private WebElement finishAndReturnToMOTTestButton;
     @FindBy(css = "nav.content-navigation ul li a") private WebElement returnToDefectCategoriesLink;
 

@@ -9,6 +9,7 @@ public class Defect {
     private DefectType defectType;
     private String addOrRemoveName;
     private Boolean isDangerous;
+    private String description;
 
     private Defect(DefectBuilder builder) {
         this.categoryPath = builder.categoryPath;
@@ -16,6 +17,7 @@ public class Defect {
         this.defectType = builder.defectType;
         this.addOrRemoveName = builder.addOrRemoveName;
         this.isDangerous = builder.isDangerous;
+        this.description = builder.description;
     }
 
     public static class DefectBuilder {
@@ -25,6 +27,7 @@ public class Defect {
         private DefectType defectType;
         private String addOrRemoveName;
         private Boolean isDangerous;
+        private String description;
 
         public void setCategoryPath (String[] categoryPath) { this.categoryPath = categoryPath; }
 
@@ -35,6 +38,8 @@ public class Defect {
         public void setAddOrRemoveName (String addOrRemoveName) { this.addOrRemoveName = addOrRemoveName; }
 
         public void setIsDangerous (Boolean isDangerous) { this.isDangerous = isDangerous; }
+
+        public void setDescription (String description) { this.description = description; }
 
         public Defect build (){
             return new Defect(this);
@@ -81,5 +86,13 @@ public class Defect {
 
     public Boolean getIsDangerous() {
         return this.isDangerous;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
