@@ -5,8 +5,6 @@ use Account\Service\ExpiredPasswordService;
 use Core\Service\LazyMotFrontendAuthorisationService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\WebLoginResult;
-use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
-use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Authn\AuthenticationResultCode;
 use DvsaCommon\Dto\Authn\AuthenticationResponseDto;
 use DvsaCommon\DtoSerialization\DtoReflectiveDeserializer;
@@ -15,9 +13,6 @@ use DvsaFeature\FeatureToggles;
 use Zend\Authentication\AuthenticationService;
 use DvsaCommon\HttpRestJson\Client;
 use Zend\Session\SessionManager;
-use Dvsa\Mot\ApiClient\Resource\Collection;
-use Dvsa\Mot\ApiClient\Service\AuthorisationService;
-use Dvsa\Mot\Frontend\AuthenticationModule\Model\LoginLandingPage;
 
 class WebLoginService
 {
@@ -42,12 +37,6 @@ class WebLoginService
     /** @var  LazyMotFrontendAuthorisationService */
     private $authorisationService;
 
-    /** @var  TwoFaFeatureToggle */
-    private $twoFaFeatureToggle;
-
-    /** @var AuthorisationService */
-    private $authorisationServiceClient;
-
     /**
      * @param AuthenticationService $authenticationService
      * @param Client $client
@@ -56,8 +45,6 @@ class WebLoginService
      * @param WebAuthenticationCookieService $cookieService
      * @param ExpiredPasswordService $expiredPasswordService
      * @param LazyMotFrontendAuthorisationService $authorisationService
-     * @param TwoFaFeatureToggle $twoFaFeatureToggle
-     * @param AuthorisationService $authorisationServiceClient
      */
     public function __construct(
         AuthenticationService $authenticationService,
@@ -66,9 +53,7 @@ class WebLoginService
         SessionManager $sessionManager,
         WebAuthenticationCookieService $cookieService,
         ExpiredPasswordService $expiredPasswordService,
-        LazyMotFrontendAuthorisationService $authorisationService,
-        TwoFaFeatureToggle $twoFaFeatureToggle,
-        AuthorisationService $authorisationServiceClient
+        LazyMotFrontendAuthorisationService $authorisationService
     ) {
         $this->authenticationService = $authenticationService;
         $this->client = $client;
@@ -77,8 +62,6 @@ class WebLoginService
         $this->authenticationCookieService = $cookieService;
         $this->expiredPasswordService = $expiredPasswordService;
         $this->authorisationService = $authorisationService;
-        $this->twoFaFeatureToggle = $twoFaFeatureToggle;
-        $this->authorisationServiceClient = $authorisationServiceClient;
     }
 
     /**
@@ -96,6 +79,7 @@ class WebLoginService
         }
 
         $token = $responseDto->getAccessToken();
+        $loginResult->setToken($token);
         $this->sessionManager->regenerateId(true);
         $this->authenticationService->getStorage()->write($this->mapResponseToIdentity($responseDto));
         $this->authenticationCookieService->setUpCookie($token);
@@ -104,18 +88,6 @@ class WebLoginService
         $this->expiredPasswordService->sentExpiredPasswordNotificationIfNeeded($token,
             $responseDto->getUser()->getPasswordExpiryDate());
 
-        if ($this->userMaySeeA2FAPageAfterLogin()) {
-            if ($this->authenticationService->getIdentity()->isSecondFactorRequired()) {
-                return $loginResult->setTwoFaPage(LoginLandingPage::LOG_IN_WITH_2FA);
-            }
-            if ($this->authorisationService->isTradeUser()) {
-                return $loginResult->setTwoFaPage(LoginLandingPage::ACTIVATE_2FA_EXISTING_USER);
-            }
-            if ($this->userHasAlreadyOrderedACard($token)) {
-                return $loginResult->setTwoFaPage(LoginLandingPage::ACTIVATE_2FA_NEW_USER);
-            }
-            return $loginResult->setTwoFaPage(LoginLandingPage::ORDER_2FA_NEW_USER);
-        }
         return $loginResult;
     }
 
@@ -138,33 +110,5 @@ class WebLoginService
             ->setAccountClaimRequired($responseDto->getUser()->isIsAccountClaimRequired())
             ->setPasswordChangeRequired($responseDto->getUser()->isIsPasswordChangeRequired())
             ->setSecondFactorRequired($responseDto->getUser()->isIsSecondFactorRequired());
-    }
-
-    /**
-     * Determine if the user has ever ordered a card
-     *
-     * @return boolean
-     */
-    private function userHasAlreadyOrderedACard($token)
-    {
-        $identity = $this->authenticationService->getIdentity();
-
-        /** @var Collection $orders */
-        $orders = $this->authorisationServiceClient->getSecurityCardOrders($identity->getUsername(), null, null,  $token);
-        return $orders->getCount() > 0;
-    }
-
-    /**
-     * Determine if the user should see an activation
-     * or order card screen after login
-     * (2FA toggle is on) AND (NOT DVSA User) AND has2FAPermission AND (NOT alreadyRegisteredFor2Fa)
-     * @return boolean
-     */
-    private function userMaySeeA2FAPageAfterLogin()
-    {
-        return $this->twoFaFeatureToggle->isEnabled()
-            && !$this->authorisationService->isDvsa()
-            && ($this->authorisationService->isGranted(PermissionInSystem::AUTHENTICATE_WITH_2FA)
-            || $this->authorisationService->isNewTester());
     }
 }

@@ -5,6 +5,7 @@ namespace Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Controller;
 use Core\Controller\AbstractDvsaActionController;
 use Dashboard\Controller\UserHomeController;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Form\SecurityCardValidationForm;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Model\GtmSecurityCardPinValidationCallback;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\RegisteredCardService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use Zend\Authentication\AuthenticationService;
@@ -88,11 +89,12 @@ class RegisteredCardController extends AbstractDvsaActionController
     public function onPost2FALoginAction()
     {
         $request = $this->getRequest();
-        $form = new SecurityCardValidationForm();
+        $gtmCallback = new GtmSecurityCardPinValidationCallback();
+        $form = new SecurityCardValidationForm($gtmCallback);
         $form->setData($request->getPost()->toArray());
 
         if (!$form->isValid()) {
-            return $this->setUpViewData($form);
+            return $this->setUpViewData($form)->setVariable('gtmData', $gtmCallback->toGtmData());
         }
 
         $isPinValid = $this->registeredCardService->validatePin($form->getPinField()->getValue());

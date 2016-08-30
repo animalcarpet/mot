@@ -1,6 +1,12 @@
 <?php
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Controller\RegisteredCardController;
-/** @var \Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Form\SecurityCardValidationForm $form */
+/**
+ * @var \Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Form\SecurityCardValidationForm $form
+ * @var boolean $gtmData
+ */
+if($gtmData) {
+    $this->gtmDataLayer($gtmData);
+}
 ?>
 <div class="grid-row">
     <div class="column-two-thirds">

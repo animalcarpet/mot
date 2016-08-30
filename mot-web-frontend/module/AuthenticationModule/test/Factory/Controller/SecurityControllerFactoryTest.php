@@ -8,6 +8,7 @@ use Dvsa\Mot\Frontend\AuthenticationModule\Service\AuthenticationAccountLockoutV
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\GotoUrlService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\IdentitySessionStateService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\LoginCsrfCookieService;
+use Dvsa\Mot\Frontend\AuthenticationModule\Service\SuccessLoginResultRoutingService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\WebLoginService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommonTest\TestUtils\ServiceFactoryTestHelper;
@@ -31,7 +32,8 @@ class SecurityControllerFactoryTest extends \PHPUnit_Framework_TestCase
                 LoginCsrfCookieService::class => LoginCsrfCookieService::class,
                 'ZendAuthenticationService' => AuthenticationService::class,
                 AuthenticationAccountLockoutViewModelBuilder::class,
-                TwoFaFeatureToggle::class
+                TwoFaFeatureToggle::class,
+                SuccessLoginResultRoutingService::class
             ]
         );
     }

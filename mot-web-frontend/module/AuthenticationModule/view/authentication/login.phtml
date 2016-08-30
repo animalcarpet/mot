@@ -1,9 +1,16 @@
 <?php
 use Csrf\CsrfConstants;
 use Dvsa\Mot\Frontend\AuthenticationModule\Form\LoginForm;
-use DvsaCommon\Constants\FeatureToggle;
 $this->headScript()->appendFile('/assets/javascripts/authentication.js');
-/** @var LoginForm $form */
+/**
+ * @var LoginForm $form
+ * @var boolean $authError
+ * @var boolean $twoFaEnabled
+ */
+
+if($authError) {
+    $this->gtmDataLayer(['event' => 'user-login-failed', 'reason' => 'wrong-username-or-password']);
+}
 
 ?>
 <div class="grid-row">

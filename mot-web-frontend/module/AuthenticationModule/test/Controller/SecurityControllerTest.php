@@ -7,22 +7,19 @@
 
 namespace Dvsa\Mot\Frontend\AuthenticationModuleTest\Factory\Controller;
 
+use Core\Action\RedirectToUrl;
 use CoreTest\Controller\AbstractLightWebControllerTest;
 use Dashboard\Controller\UserHomeController;
-use Dvsa\Mot\Frontend\AuthenticationModule\Model\LoginLandingPage;
-use Dvsa\Mot\Frontend\AuthenticationModule\Service\AuthenticationAccountLockoutViewModelBuilder;
 use Dvsa\Mot\Frontend\AuthenticationModule\Controller\SecurityController;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\IdentitySessionState;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\WebLoginResult;
+use Dvsa\Mot\Frontend\AuthenticationModule\Service\AuthenticationAccountLockoutViewModelBuilder;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\GotoUrlService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\IdentitySessionStateService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\LoginCsrfCookieService;
+use Dvsa\Mot\Frontend\AuthenticationModule\Service\SuccessLoginResultRoutingService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\WebLoginService;
-use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Controller\RegisterCardInformationController;
-use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Controller\RegisteredCardController;
-use Dvsa\Mot\Frontend\SecurityCardModule\Controller\NewUserOrderCardController;
-use Dvsa\Mot\Frontend\SecurityCardModule\Controller\RegisterCardInformationNewUserController;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Authn\AuthenticationResultCode;
 use DvsaCommonTest\TestUtils\XMock;
@@ -72,6 +69,9 @@ class SecurityControllerTest extends AbstractLightWebControllerTest
     private $identity;
 
     private $featureToggle;
+
+    /** @var  SuccessLoginResultRoutingService */
+    private $successLoginResultRoutingService;
 
 
     protected function setUp()
@@ -149,27 +149,18 @@ class SecurityControllerTest extends AbstractLightWebControllerTest
         $this->assertEquals('authentication/login', $this->getController()->loginAction()->getTemplate());
     }
 
-    public function testOnPostLoginAction_whenLoginSuccess_and_gotoValid_shouldRedirectToGotoUrl()
+    public function testOnPostLoginAction_whenLoginSuccess_shouldRedirectInLineWithRoutingServiceResult()
     {
         $this->withValidPOST();
         $this->withValidGoto();
 
         $this->withLoggedInUser();
-        $this->withGotoUrlAsPostParam($this->gotoService->encodeGoto(self::VALID_GOTO_URL));
+        $this->withRoutingServiceInvoked(new RedirectToUrl(self::VALID_GOTO_URL));
 
         $this->expectRedirectToUrl(self::VALID_GOTO_URL);
         $this->getController()->loginAction();
     }
 
-    public function testOnPostLoginAction_givenLoginSuccess_and_passedCsrfValidation_shouldRedirectToUserHome()
-    {
-        $this->withValidPOST();
-        $this->withLoggedInUser();
-
-        $this->expectRedirect(UserHomeController::ROUTE);
-
-        $this->getController()->loginAction();
-    }
 
     public function testOnPostLoginAction_givenLoginSuccess_and_failedCsrfValidation_shouldRedirectToLoginPage()
     {
@@ -178,16 +169,6 @@ class SecurityControllerTest extends AbstractLightWebControllerTest
             ->willReturn(false);
         $this->expectRedirect(SecurityController::ROUTE_LOGIN_GET);
 
-        $this->getController()->loginAction();
-    }
-
-    public function testOnPostLoginAction_whenLoginSuccess_and_invalidGoto_shouldRedirectToGotoUrl()
-    {
-        $this->withValidPOST();
-        $this->withLoggedInUser();
-        $this->withValidGoto(true);
-
-        $this->expectRedirect(UserHomeController::ROUTE);
         $this->getController()->loginAction();
     }
 
@@ -201,48 +182,6 @@ class SecurityControllerTest extends AbstractLightWebControllerTest
         $this->assertEquals('authentication/login', $vm->getTemplate());
     }
 
-    public function testOnPostLogin_whenLoginSuccess_and_canLogInWith2Fa_shouldRedirectToLoginWIthCardPage()
-    {
-        $this->withValidPOST();
-        $this->withLoginResult((new WebLoginResult())
-            ->setCode(AuthenticationResultCode::SUCCESS)->setTwoFaPage(LoginLandingPage::LOG_IN_WITH_2FA));
-        $this->expectRedirect(RegisteredCardController::ROUTE);
-
-        $this->getController()->loginAction();
-    }
-
-    public function testOnPostLogin_whenLoginSuccess_and_canLogInWith2FaAsATradeUser_shouldRedirectToActivationPage()
-    {
-        $this->withValidPOST();
-        $this->withLoginResult((new WebLoginResult())
-            ->setCode(AuthenticationResultCode::SUCCESS)->setTwoFaPage(LoginLandingPage::ACTIVATE_2FA_EXISTING_USER));
-        $this->expectRedirect(RegisterCardInformationController::REGISTER_CARD_INFORMATION_ROUTE, ['userId' => null]);
-
-        $this->getController()->loginAction();
-    }
-
-    public function testOnPostLogin_whenLoginSuccess_and_canLogInAsANewTesterWithACardOrder_shouldRedirectToActivationPage()
-    {
-        $this->withValidPOST();
-        $this->withLoginResult((new WebLoginResult())
-            ->setCode(AuthenticationResultCode::SUCCESS)->setTwoFaPage(LoginLandingPage::ACTIVATE_2FA_NEW_USER));
-        $this->expectRedirect(
-            RegisterCardInformationNewUserController::REGISTER_CARD_NEW_USER_INFORMATION_ROUTE, ['userId' => null]);
-
-        $this->getController()->loginAction();
-    }
-
-    public function testOnPostLogin_whenLoginSuccess_and_canLogInAsANewTesterWithoutCardOrder_shouldRedirectToCardOrderReminderPage()
-    {
-        $this->withValidPOST();
-        $this->withLoginResult((new WebLoginResult())
-            ->setCode(AuthenticationResultCode::SUCCESS)->setTwoFaPage(LoginLandingPage::ORDER_2FA_NEW_USER));
-        $this->expectRedirect(
-            NewUserOrderCardController::ORDER_CARD_NEW_USER_ROUTE, ['userId' => null]);
-
-        $this->getController()->loginAction();
-    }
-
     private function withValidLoginResult()
     {
         $authenticationDto = (new WebLoginResult())->setCode(AuthenticationResultCode::SUCCESS);
@@ -252,6 +191,14 @@ class SecurityControllerTest extends AbstractLightWebControllerTest
     private function withLoggedInUser()
     {
         $this->withValidLoginResult();
+    }
+
+    private function withRoutingServiceInvoked($returnObject) {
+
+        $this->successLoginResultRoutingService
+            ->expects($this->once())
+            ->method('route')
+         ->willReturn($returnObject);
     }
 
     private function withLoginResult(WebLoginResult $result)
@@ -271,11 +218,6 @@ class SecurityControllerTest extends AbstractLightWebControllerTest
         $this->request->setQuery(new Parameters(['goto' => $url]));
     }
 
-    private function withGotoUrlAsPostParam($url)
-    {
-        $this->request->getPost()->offsetSet('goto', $url);
-    }
-
     private function buildController()
     {
         $this->identitySessionStateService = XMock::of(IdentitySessionStateService::class);
@@ -288,6 +230,7 @@ class SecurityControllerTest extends AbstractLightWebControllerTest
         $this->identity = XMock::of(Identity::class);
         $this->gotoService = XMock::of(GotoUrlService::class, ['isValidGoto']);
         $this->featureToggle = XMock::of(TwoFaFeatureToggle::class);
+        $this->successLoginResultRoutingService = XMock::of(SuccessLoginResultRoutingService::class);
 
         $this
             ->authenticationService
@@ -305,7 +248,8 @@ class SecurityControllerTest extends AbstractLightWebControllerTest
             $this->loginCsrfCookieService,
             $this->authenticationService,
             $this->failureViewModelBuilder,
-            $this->featureToggle
+            $this->featureToggle,
+            $this->successLoginResultRoutingService
         );
 
         return $controller;

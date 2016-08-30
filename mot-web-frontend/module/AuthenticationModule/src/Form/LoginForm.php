@@ -4,7 +4,6 @@ namespace Dvsa\Mot\Frontend\AuthenticationModule\Form;
 
 use Dvsa\Mot\Frontend\AuthenticationModule\Validator\PasswordValidator;
 use Dvsa\Mot\Frontend\AuthenticationModule\Validator\UsernameValidator;
-use DvsaCommon\Validator\EmailAddressValidator;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
@@ -99,10 +98,5 @@ class LoginForm extends Form
         if (count($this->getMessages($field))) {
             $this->getElements()[$field]->setLabel($label);
         }
-    }
-
-    public function setAuthenticationFailError()
-    {
-        $this->resetPassword();
     }
 }
