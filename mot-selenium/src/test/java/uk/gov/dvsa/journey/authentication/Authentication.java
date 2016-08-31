@@ -52,7 +52,7 @@ public class Authentication {
     }
 
     public void registerAndSignInTwoFactorUser(User user) throws IOException {
-        securityCard.activate2faCard(user, user.getSerialNumber(), user.getTwoFactorPin(), RegisterCardSuccessPage.class)
+        securityCard.activate2faCard(user, user.getSerialNumber(true), user.getTwoFactorPin(), RegisterCardSuccessPage.class)
             .continueToHomePage();
     }
 }

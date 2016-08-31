@@ -27,22 +27,16 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
     const TEST_LOG_URL = 'test-log-url';
     const TEST_QUALITY_URL = 'test-quality-information/%s';
 
-
     /** @var  PersonProfileSidebar */
     private $sut;
 
     /** @var  TesterAuthorisation | \PHPUnit_Framework_MockObject_MockObject */
     private $testerAuthorisationMock;
 
-
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $isTwoFactorAuthEnabled;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $canOrderSecurityCard;
 
     /** @var  PersonProfileRoutes | \PHPUnit_Framework_MockObject_MockObject */
@@ -54,10 +48,17 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
     /** @var  PersonProfileGuard | \PHPUnit_Framework_MockObject_MockObject */
     private $personProfileGuardMock;
 
-    /**
-     * @var TesterAuthorisation
-     */
+    /** @var TesterAuthorisation */
     private $testerAuthorisation;
+
+    /** @var bool */
+    private $hasSecurityCardOrders;
+
+    /** @var bool */
+    private $hasDeactivated2FaCard;
+
+    /** @var bool */
+    private $isAuthenticatedWithLostAndForgotten;
 
     public function setUp()
     {
@@ -65,6 +66,9 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
         $this->testerAuthorisationMock = XMock::of(TesterAuthorisation::class);
         $this->urlPluginMock = XMock::of(Url::class);
         $this->personProfileRoutesMock = XMock::of(PersonProfileRoutes::class);
+        $this->hasSecurityCardOrders = false;
+        $this->hasDeactivated2FaCard = false;
+        $this->isAuthenticatedWithLostAndForgotten = false;
     }
 
     public function testTestLogsLinkIsDisplayed()
@@ -157,6 +161,54 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Change your password', $linkTexts);
         $this->assertContains('Reset your PIN', $linkTexts);
         $this->assertContains('Activate your security card', $linkTexts);
+    }
+
+    /**
+     * @param bool $hasSecurityCardOrders
+     * @param bool $hasDeactivated2FaCard
+     * @param bool $isAuthenticatedWithLostAndForgotten
+     * @param bool $expectActivateLink
+     *
+     * @dataProvider truthMatrixActivateCardLinkProvider
+     */
+    public function testSideBarContainsActivateLinkOnDeactivationFor2FaUser(
+                        $hasSecurityCardOrders, $hasDeactivated2FaCard, $isAuthenticatedWithLostAndForgotten,
+                        $expectActivateLink)
+    {
+        $this->hasSecurityCardOrders = $hasSecurityCardOrders;
+        $this->hasDeactivated2FaCard = $hasDeactivated2FaCard;
+        $this->isAuthenticatedWithLostAndForgotten = $isAuthenticatedWithLostAndForgotten;
+
+        $sidebar = $this
+            ->withIsExpectedToRegisterForTwoFactorAuth(false)
+            ->withTwoFactorAuthEnabled(false)
+            ->withFullyAuthorisedTester()
+            ->createPersonProfileSidebar();
+
+        /** @var GeneralSidebarLinkList $sidebarLinks */
+        $sidebarLinks = $sidebar->getSidebarItems()[1];
+        $linkTexts = $this->getTextFromSidebarLinks($sidebarLinks);
+
+        if ($expectActivateLink) {
+            $this->assertCount(3, $sidebarLinks->getLinks());
+            $this->assertContains('Activate your security card', $linkTexts);
+        } else {
+            $this->assertCount(2, $sidebarLinks->getLinks());
+            $this->assertNotContains('Activate your security card', $linkTexts);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function truthMatrixActivateCardLinkProvider()
+    {
+        return [
+            [true, true, true, true],
+            [true, true, false, false],
+            [true, false, true, false],
+            [false, true, true, false],
+        ];
     }
 
     public function testSideBarDoesNotContainTwoFactorLinksIfTwoFactAuthDisabled()
@@ -312,7 +364,10 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
             $this->urlPluginMock,
             $hideResetPin,
             $this->isTwoFactorAuthEnabled,
-            $this->canOrderSecurityCard
+            $this->canOrderSecurityCard,
+            $this->hasSecurityCardOrders,
+            $this->hasDeactivated2FaCard,
+            $this->isAuthenticatedWithLostAndForgotten
         );
     }
 }

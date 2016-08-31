@@ -121,7 +121,7 @@ public abstract class ProfilePage extends Page {
         throw new UnsupportedOperationException("Operation not supported for: " + this.toString() );
     }
 
-    public boolean isRegisterSecurityCardLinkDisplayed() {
+    public boolean isActivateSecurityCardLinkDisplayed() {
         throw new UnsupportedOperationException("Operation not supported for: " + this.toString());
     }
 
@@ -145,7 +145,7 @@ public abstract class ProfilePage extends Page {
         throw new UnsupportedOperationException("Operation not supported for: " + this.toString());
     }
 
-    public RegisterCardPage clickRegisterSecurityCardLink() {
+    public RegisterCardPage activateCardLink() {
         throw new UnsupportedOperationException("Operation not supported for: " + this.toString());
     }
 

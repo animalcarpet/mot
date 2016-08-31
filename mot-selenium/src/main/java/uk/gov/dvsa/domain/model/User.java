@@ -120,8 +120,8 @@ public class User {
         return middleName != null && !middleName.isEmpty();
     }
 
-    public String getSerialNumber() {
-        createTwoFactorDetails();
+    public String getSerialNumber(boolean generateNewSerialNumber) {
+        createTwoFactorDetails(generateNewSerialNumber);
         return twoFactorDetails.serialNumber();
     }
 
@@ -130,7 +130,7 @@ public class User {
     }
 
     public String getTwoFactorPin() {
-        createTwoFactorDetails();
+        createTwoFactorDetails(false);
         return twoFactorDetails.pin();
     }
 
@@ -138,8 +138,8 @@ public class User {
         return personId;
     }
 
-    private void createTwoFactorDetails() {
-        if(twoFactorDetails == null){
+    private void createTwoFactorDetails(boolean generateNewSerialNumber) {
+        if(twoFactorDetails == null || generateNewSerialNumber){
             try {
                 twoFactorDetails = new TwoFactorService().createTwoFactorDetails();
             } catch (IOException e) {

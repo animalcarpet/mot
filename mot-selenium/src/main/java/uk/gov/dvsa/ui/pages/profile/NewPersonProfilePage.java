@@ -36,7 +36,7 @@ public class NewPersonProfilePage extends ProfilePage {
     @FindBy(css = "#telephone-number a") private WebElement userTelephoneLink;
     @FindBy(css = "#validation-message--success") private WebElement successMessage;
     @FindBy(id = "reset-pin") private WebElement resetPinLink;
-    @FindBy(id = "register-card") private WebElement registerCardLink;
+    @FindBy(id = "register-card") private WebElement activateCardLink;
     @FindBy(id = "security-card-order") private WebElement orderSecurityCardLink;
     private By securityCardPanel = By.id("security-card");
     @FindBy(id = "annual-assessment-certificates") WebElement annualAssessmentCertificates;
@@ -167,8 +167,8 @@ public class NewPersonProfilePage extends ProfilePage {
     }
 
     @Override
-    public boolean isRegisterSecurityCardLinkDisplayed() {
-        return PageInteractionHelper.isElementDisplayed(registerCardLink);
+    public boolean isActivateSecurityCardLinkDisplayed() {
+        return PageInteractionHelper.isElementDisplayed(activateCardLink);
     }
 
     @Override
@@ -177,8 +177,8 @@ public class NewPersonProfilePage extends ProfilePage {
     }
 
     @Override
-    public RegisterCardPage clickRegisterSecurityCardLink() {
-        registerCardLink.click();
+    public RegisterCardPage activateCardLink() {
+        activateCardLink.click();
         return new RegisterCardPage(driver);
     }
 

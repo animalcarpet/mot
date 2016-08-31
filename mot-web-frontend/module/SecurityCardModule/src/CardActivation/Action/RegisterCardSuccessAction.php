@@ -59,6 +59,7 @@ class RegisterCardSuccessAction implements AutoWireableInterface
     protected function defaultActionResult(Request $request)
     {
         $identity = $this->identityProvider->getIdentity();
+        $identity->setAuthenticatedWithLostForgotten(false);
         $result = new ActionResult();
         $viewModel = new RegisterCardSuccessViewModel();
 
