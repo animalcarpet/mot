@@ -24,7 +24,47 @@ class ObservedDefectTest extends \PHPUnit_Framework_TestCase
             'verticalLocation', 'userComment', false, 'name', 1, $defectId, false);
 
         $this->assertEquals($result, $observedDefect->isManualAdvisory());
+    }
 
+    public function testGetLocationStringWithLocation()
+    {
+        $observedDefect = new ObservedDefect(ObservedDefect::ADVISORY, 'lateralLocation', 'longitudinalLocation',
+            'verticalLocation', 'userComment', false, 'name', 1, 1, false);
+
+        $this->assertEquals(
+            'LateralLocation, longitudinalLocation, verticalLocation',
+            $observedDefect->getLocationString()
+        );
+    }
+
+    public function testGetLocationStringWithoutLocation()
+    {
+        $observedDefect = new ObservedDefect(ObservedDefect::ADVISORY, '', '',
+            '', 'userComment', false, 'name', 1, 1, false);
+
+        $this->assertEquals(
+            'n/a',
+            $observedDefect->getLocationString()
+        );
+    }
+
+    public function testSetOnOriginalTest()
+    {
+        $observedDefect = new ObservedDefect(ObservedDefect::ADVISORY, 'lateralLocation', 'longitudinalLocation',
+            'verticalLocation', 'userComment', false, 'name', 1, 1, false);
+        $observedDefect->setOnOriginalTest(true);
+
+        $this->assertEquals(true, $observedDefect->isOnOriginalTest());
+    }
+
+    public function testSetBreadcrumb()
+    {
+        $observedDefect = new ObservedDefect(ObservedDefect::ADVISORY, '', '',
+            '', 'userComment', false, 'name', 1, 1, false);
+
+        $observedDefect->setBreadcrumb('breadcrumb');
+
+        $this->assertEquals('breadcrumb', $observedDefect->getBreadcrumb());
     }
 
     /**
