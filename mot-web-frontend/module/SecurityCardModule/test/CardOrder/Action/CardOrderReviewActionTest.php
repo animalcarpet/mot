@@ -6,6 +6,7 @@ use Core\Action\ActionResult;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Action\CardOrderReviewAction;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderNewSecurityCardSessionService;
 use Application\Data\ApiPersonalDetails;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardNotificationService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardStepService;
 use DvsaCommonTest\TestUtils\XMock;
@@ -67,6 +68,9 @@ class CardOrderReviewActionTest extends \PHPUnit_Framework_TestCase
 
     private $orderSecurityCardEventService;
 
+    /** @var OrderSecurityCardNotificationService */
+    private $notificationService;
+
     public function setUp()
     {
         parent::setUp();
@@ -76,7 +80,7 @@ class CardOrderReviewActionTest extends \PHPUnit_Framework_TestCase
         $this->stepService = XMock::of(OrderSecurityCardStepService::class);
         $this->cardOrderProtection = XMock::of(CardOrderProtection::class);
         $this->orderSecurityCardEventService = XMock::of(OrderSecurityCardEventService::class);
-
+        $this->notificationService = XMock::of(OrderSecurityCardNotificationService::class);
         $this->request = XMock::of(Request::class);
     }
 
@@ -189,6 +193,7 @@ class CardOrderReviewActionTest extends \PHPUnit_Framework_TestCase
             $this->securityCardService,
             $this->stepService,
             $this->cardOrderProtection,
+            $this->notificationService,
             $this->orderSecurityCardEventService
         );
         return $action;

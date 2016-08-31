@@ -29,6 +29,7 @@ public class HomePage extends Page {
     @FindBy(id = "action-start-survey-reports") private WebElement generateSurveyReportsLink;
     @FindBy(id = "action-security-card-order-report-list") private WebElement securityCardOrderListLink;
     @FindBy(css = "a[title*='order a security card']") private WebElement orderCardNotificationLink;
+    @FindBy(css = "a[title*='You have ordered a security card']") private WebElement orderSecurityCardSuccessNotificationLink;
     @FindBy(css = "a[title*='activate your security card']") private WebElement activateCardNotificationLink;
     @FindBy(xpath = "//script[contains(text(),'userId') and contains(text(), 'dataLayer')]") private WebElement googleTagManagerDataLayer;
 
@@ -65,6 +66,11 @@ public class HomePage extends Page {
         if(PageInteractionHelper.isElementDisplayed(orderCardNotificationLink)) {
             orderCardNotificationLink.click();
         }
+    }
+
+    public boolean isOrderSecurityCardSuccessNotificationLinkPresent()
+    {
+        return PageInteractionHelper.isElementDisplayed(orderSecurityCardSuccessNotificationLink);
     }
 
     public HomePage clickOnLastNomination() {

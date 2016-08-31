@@ -17,10 +17,15 @@ return [
     'router'      => [
         'routes' => [
             'notification' => [
-                'type'         => 'segment',
+                'type'         => 'Segment',
                 'options'      => [
                     'route' => '/notification',
+                    'defaults' => [
+                        'controller' => NotificationController::class,
+                    ],
+                    'verb' => 'post',
                 ],
+                'may_terminate' => true,
                 'child_routes' => [
 
                     'item'   => [

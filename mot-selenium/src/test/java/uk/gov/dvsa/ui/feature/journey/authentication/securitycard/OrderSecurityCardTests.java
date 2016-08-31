@@ -4,7 +4,9 @@ import org.testng.annotations.Test;
 import ru.yandex.qatools.allure.annotations.Features;
 import ru.yandex.qatools.allure.annotations.Issue;
 import uk.gov.dvsa.domain.model.User;
+import uk.gov.dvsa.domain.shared.role.TradeRoles;
 import uk.gov.dvsa.ui.DslTest;
+import uk.gov.dvsa.ui.pages.HomePage;
 
 import java.io.IOException;
 
@@ -145,5 +147,33 @@ public class OrderSecurityCardTests extends DslTest {
 
         step("THEN my card is ordered successfully");
         assertThat("Card Order was Successful", message, containsString("Your security card has been ordered"));
+    }
+
+    @Test(testName = "2fa", groups = {"BVT"})
+    public void userGetsOrderCardNotificationWhenOrderedByCSCO() throws IOException {
+        step("Given I have been nominated as a Site manager");
+        User tradeUser = userData.createUserWithoutRole();
+        motApi.nominations.nominateSiteRole(tradeUser, siteData.createSite().getId(), TradeRoles.SITE_MANAGER);
+
+        step("When a CSCO orders a card on my behalf");
+        motUI.authentication.securityCard.orderCardForTradeUserAsCSCO(userData.createCSCO(), tradeUser);
+
+        step("Then I should see an order security card success notification on my homepage");
+        HomePage homePage = pageNavigator.gotoHomePage(tradeUser);
+        assertThat("Notification for card order present", homePage.isOrderSecurityCardSuccessNotificationLinkPresent(), is(true));
+    }
+
+    @Test(testName = "2fa", groups = {"BVT"})
+    public void userGetsOrderCardNotificationWhenOrderingACard() throws IOException {
+        step("Given I have been nominated as a Site manager");
+        User tradeUser = userData.createUserWithoutRole();
+        motApi.nominations.nominateSiteRole(tradeUser, siteData.createSite().getId(), TradeRoles.SITE_MANAGER);
+
+        step("When I order a card");
+        motUI.authentication.securityCard.orderSecurityCardWithHomeAddress(tradeUser);
+
+        step("Then I should see an order security card success notification on my homepage");
+        HomePage homePage = pageNavigator.gotoHomePage(tradeUser);
+        assertThat("Notification for card order present", homePage.isOrderSecurityCardSuccessNotificationLinkPresent(), is(true));
     }
 }

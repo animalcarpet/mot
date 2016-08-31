@@ -40,7 +40,7 @@ public class NominationsTests extends DslTest {
         motUI.authentication.securityCard.orderSecurityCardWithHomeAddress(orderedCardUser);
 
         step("When I activate the card from Site Manager nomination notification");
-        motUI.nominations.viewMostRecent(orderedCardUser).clickActivateCard();
+        motUI.nominations.viewActivateCardNotification(orderedCardUser).clickActivateCard();
         String message = motUI.authentication.securityCard.activate2faCard(orderedCardUser).getConfirmationText();
 
         step("Then my card is activated");
@@ -67,10 +67,10 @@ public class NominationsTests extends DslTest {
         User not2faActiveUser = userData.createUserWithoutRole();
         motApi.nominations.nominateOrganisationRoleWithRoleCode(not2faActiveUser, aeData.createAeWithDefaultValues().getId(), OrganisationBusinessRoleCodes.AEDM);
 
-        step("Then I receive a notification, prompting me to order a security card");
-        String message = motUI.nominations.viewMostRecent(not2faActiveUser).getNotificationText();
-
-        assertThat("Order a security card notification is shown", message, containsString("You need to order a security card."));
+        step("When I am nominated, I am asked to order a card");
+        //assert that order card notification is generated.
+        String message = motUI.nominations.viewOrderCardNotification(not2faActiveUser).getNotificationText();
+        assertThat("Notification for AEDM - prompted to order a security card is shown", message, containsString("You need to order a security card."));
     }
 
     @Test(testName = "2fa", groups = {"BVT"})
@@ -82,8 +82,8 @@ public class NominationsTests extends DslTest {
         step("When I have ordered a card");
         motUI.authentication.securityCard.orderSecurityCardWithHomeAddress(orderedCardUser);
 
-        step("Then I receive a notification, prompting me to activate my card");
-        String message = motUI.nominations.viewMostRecent(orderedCardUser).getNotificationText();
+        step("When I am nominated, I recieve a notification to activate my card");
+        String message = motUI.nominations.viewActivateCardNotification(orderedCardUser).getNotificationText();
         assertThat("Notification for AEDM - prompted to activate a security card", message, containsString("once you have activated the card."));
     }
 

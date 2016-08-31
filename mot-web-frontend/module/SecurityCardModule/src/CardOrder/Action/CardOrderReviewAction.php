@@ -9,6 +9,7 @@ use Core\Service\MotFrontendIdentityProvider;
 use Dashboard\Model\PersonalDetails;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderNewSecurityCardSessionService;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardEventService;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardNotificationService;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardStepService;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\ViewModel\CardOrderReviewViewModel;
 use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
@@ -50,11 +51,17 @@ class CardOrderReviewAction
      */
     private $eventService;
 
+    /**
+     * @var OrderSecurityCardNotificationService $notificationService
+     */
+    private $notificationService;
+
     public function __construct(OrderNewSecurityCardSessionService $sessionService,
                                 ApiPersonalDetails $apiPersonalDetails,
                                 SecurityCardService $securityCardService,
                                 OrderSecurityCardStepService $stepService,
                                 CardOrderProtection $cardOrderProtection,
+                                OrderSecurityCardNotificationService $notificationService,
                                 OrderSecurityCardEventService $eventService)
     {
         $this->sessionService = $sessionService;
@@ -62,6 +69,7 @@ class CardOrderReviewAction
         $this->securityCardService = $securityCardService;
         $this->stepService = $stepService;
         $this->cardOrderProtection = $cardOrderProtection;
+        $this->notificationService = $notificationService;
         $this->eventService = $eventService;
     }
 
@@ -80,13 +88,14 @@ class CardOrderReviewAction
         $personalDetailsData = $this->apiPersonalDetails->getPersonalDetailsData($userId);
         $personalDetails = new PersonalDetails($personalDetailsData);
 
-        if($request->isPost()) {
+        if ($request->isPost()) {
             if (!$this->hasAlreadySubmittedOrder($userId)) {
                 $addressStepData = $this->sessionService->loadByGuid($userId)[OrderNewSecurityCardSessionService::ADDRESS_STEP_STORE];
                 $cardOrdered = (bool)$this->securityCardService->orderNewCard($personalDetails->getUsername(), $userId, $addressStepData);
                 if ($cardOrdered === true) {
                     $this->setUpHasAlreadySubmittedOrder($userId, $cardOrdered);
                     $this->eventService->createEvent($userId, $this->formatAddressForEvent($addressStepData));
+                    $this->notificationService->sendNotification($userId);
                     return new RedirectToRoute('security-card-order/confirmation', ['userId' => $userId]);
                 }
             } else {

@@ -41,6 +41,14 @@ class NotificationController extends AbstractDvsaRestfulController
         return ApiResponse::jsonOk($result);
     }
 
+    public function create($data)
+    {
+        $service = $this->getNotificationService();
+        $result = $service->add($data);
+
+        return ApiResponse::jsonOk($result);
+    }
+
     /**
      * @return NotificationService
      */
