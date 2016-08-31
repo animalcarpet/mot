@@ -13,24 +13,22 @@ public class DvsaElementLocator implements ElementLocator{
     private final SearchContext searchContext;
     private final By by;
 
-    public DvsaElementLocator(SearchContext searchContext, Field field) {
+    protected DvsaElementLocator(SearchContext searchContext, Field field) {
         this(searchContext, new Annotations(field));
     }
 
-    public DvsaElementLocator(SearchContext searchContext, Annotations annotations) {
+    protected DvsaElementLocator(SearchContext searchContext, Annotations annotations) {
         this.searchContext = searchContext;
         this.by = annotations.buildBy();
     }
 
 
     public WebElement findElement() {
-        WebElement element = DvsaWebElement.wrap(searchContext.findElement(by), new FindElementLocator(searchContext, by));
-        return element;
+        return DvsaWebElement.wrap(searchContext.findElement(by), new FindElementLocator(searchContext, by));
     }
 
     public List<WebElement> findElements() {
-        List<WebElement> elements = DvsaWebElement.wrap(searchContext.findElements(by), new FindElementLocator(searchContext, by));
-        return elements;
+        return DvsaWebElement.wrap(searchContext.findElements(by), new FindElementLocator(searchContext, by));
     }
 
     @Override

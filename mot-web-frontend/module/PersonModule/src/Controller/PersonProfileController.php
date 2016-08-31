@@ -429,6 +429,11 @@ class PersonProfileController extends AbstractAuthActionController
             $this->securityCardGuard->isEligibleForNewTwoFaCardAfterMtessSubmission($this->getIdentity(), $testerAuthorisation) ||
             $this->securityCardGuard->isEligibleForReplacementTwoFaCard($this->getIdentity());
 
+        $hasSecurityCardOrders = $this->securityCardGuard->hasSecurityCardOrders($this->getIdentity());
+        $hasDeactivated2FaCard = $this->securityCardGuard->hasInactiveTwoFaCard($this->getIdentity());
+        $isAuthenticatedWithLostAndForgotten = $this->getIdentity()->isAuthenticatedWithLostForgotten();
+
+
         return new PersonProfileSidebar(
             $targetPersonId,
             $personProfileGuard,
@@ -439,7 +444,10 @@ class PersonProfileController extends AbstractAuthActionController
             $this->url(),
             $this->canTestWithoutOtpService->canTestWithoutOtp(),
             $twoFactorAuthEnabled,
-            $canOrderSecurityCard
+            $canOrderSecurityCard,
+            $hasSecurityCardOrders,
+            $hasDeactivated2FaCard,
+            $isAuthenticatedWithLostAndForgotten
         );
     }
 

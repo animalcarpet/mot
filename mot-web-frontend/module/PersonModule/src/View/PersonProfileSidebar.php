@@ -34,53 +34,44 @@ class PersonProfileSidebar extends GeneralSidebar
     const OLD_USER_ADMIN_PROFILE_URL = 'user-admin/user-profile/';
     const NEW_USER_ADMIN_PROFILE_URL = 'user-admin/user/';
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $personId;
 
-    /**
-     * @var PersonProfileGuard
-     */
+    /** @var PersonProfileGuard */
     private $personProfileGuard;
 
-    /**
-     * @var TesterAuthorisation
-     */
+    /** @var TesterAuthorisation */
     private $testerAuthorisation;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $newProfileEnabled;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $currentUrl;
-    /**
-     * @var Url
-     */
+
+    /** @var Url */
     private $urlPlugin;
-    /**
-     * @var PersonProfileRoutes
-     */
+
+    /** @var PersonProfileRoutes */
     private $personProfileRoutes;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $hideResetPin;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $isTwoFactorAuthEnabled;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $canOrderSecurityCard;
+
+    /** @var bool */
+    private $hasSecurityCardOrders;
+
+    /** @var bool */
+    private $hasDeactivated2FaCard;
+
+    /** @var bool */
+    private $isAuthenticatedWithLostAndForgotten;
 
     /**
      * @param $personId
@@ -104,7 +95,10 @@ class PersonProfileSidebar extends GeneralSidebar
         Url $urlPlugin,
         $hideResetPin,
         $isTwoFactorAuthEnabled,
-        $canOrderSecurityCard
+        $canOrderSecurityCard,
+        $hasSecurityCardOrders,
+        $hasDeactivated2FaCard,
+        $isAuthenticatedWithLostAndForgotten
     ) {
         $this->personId = $personId;
         $this->personProfileGuard = $personProfileGuard;
@@ -116,6 +110,9 @@ class PersonProfileSidebar extends GeneralSidebar
         $this->canOrderSecurityCard = $canOrderSecurityCard;
         $this->personProfileRoutes = $personProfileRoutes;
         $this->urlPlugin = $urlPlugin;
+        $this->hasSecurityCardOrders = $hasSecurityCardOrders;
+        $this->hasDeactivated2FaCard = $hasDeactivated2FaCard;
+        $this->isAuthenticatedWithLostAndForgotten = $isAuthenticatedWithLostAndForgotten;
 
         $this->setUpStatusBox();
         $this->setUpAccountSecurityBox();
@@ -201,15 +198,21 @@ class PersonProfileSidebar extends GeneralSidebar
         $accountSecurityBox->setId('account_security');
         $accountSecurityBox->addLink(new GeneralSidebarLink('change-password', 'Change your password', $changePasswordUrl));
 
-        if (!$this->hideResetPin) {
+        if (!$this->hideResetPin)
+        {
             $accountSecurityBox->addLink(new GeneralSidebarLink('reset-pin', 'Reset your PIN', $resetPinUrl));
         }
 
-        if ($this->isTwoFactorAuthEnabled && $this->personProfileGuard->isExpectedToRegisterForTwoFactorAuth()) {
-            $accountSecurityBox->addLink(new GeneralSidebarLink('register-card', 'Activate your security card', '/register-card'));
+        if (($this->isTwoFactorAuthEnabled && $this->personProfileGuard->isExpectedToRegisterForTwoFactorAuth())
+            ||
+            ($this->hasSecurityCardOrders && $this->hasDeactivated2FaCard && $this->isAuthenticatedWithLostAndForgotten))
+        {
+            $accountSecurityBox->addLink(
+                new GeneralSidebarLink('register-card', 'Activate your security card', '/register-card'));
         }
 
-        if ($this->isTwoFactorAuthEnabled && $this->canOrderSecurityCard) {
+        if ($this->isTwoFactorAuthEnabled && $this->canOrderSecurityCard)
+        {
             $accountSecurityBox->addLink(new GeneralSidebarLink('security-card-order', 'Order a security card', 'security-card-order/new'));
         }
 

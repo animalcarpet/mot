@@ -5,6 +5,7 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.framework.elements.DvsaElementLocatorFactory;
 import uk.gov.dvsa.framework.elements.DvsaWebElement;
@@ -38,6 +39,14 @@ public abstract class Page {
     }
 
     protected abstract boolean selfVerify();
+
+    public final void logOut(User user) {
+        WebElement logOutLink = driver.findElement(By.id("logout"));
+        if (PageInteractionHelper.isElementDisplayed(logOutLink)) {
+            logOutLink.click();
+            driver.removeUser(user);
+        }
+    }
 
     @Override
     public final String toString() {

@@ -61,6 +61,16 @@ class SecurityCardGuard
         return $securityCard instanceof SecurityCard && $securityCard->isActive();
     }
 
+    public function hasInactiveTwoFaCard(MotFrontendIdentityInterface $identity)
+    {
+        if (!$this->twoFaFeatureToggle->isEnabled()) {
+            return false;
+        }
+        $securityCard = $this->securityCardService->getSecurityCardForUser($identity->getUsername());
+
+        return $securityCard instanceof SecurityCard && !$securityCard->isActive();
+    }
+
     public function isEligibleForReplacementTwoFaCard(MotFrontendIdentityInterface $identity)
     {
         if (!$this->twoFaFeatureToggle->isEnabled()) {
@@ -123,7 +133,7 @@ class SecurityCardGuard
         return $status->getCode() == AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED;
     }
 
-    private function hasSecurityCardOrders(MotFrontendIdentityInterface $identity)
+    public function hasSecurityCardOrders(MotFrontendIdentityInterface $identity)
     {
         $orders = $this->authorisationServiceClient->getSecurityCardOrders($identity->getUsername());
 

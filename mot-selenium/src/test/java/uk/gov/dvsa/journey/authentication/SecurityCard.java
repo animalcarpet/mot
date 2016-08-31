@@ -26,7 +26,7 @@ public class SecurityCard {
     }
 
     public final RegisterCardSuccessPage activate2faCard(final User user) throws IOException {
-        return activate2faCard(user, user.getSerialNumber(), user.getTwoFactorPin(), RegisterCardSuccessPage.class);
+        return activate2faCard(user, user.getSerialNumber(true), user.getTwoFactorPin(), RegisterCardSuccessPage.class);
     }
 
     public final RegisterCardPage activateInvalid2faCard(final User user, String serialNumber, String pin)
@@ -41,6 +41,10 @@ public class SecurityCard {
     public void signInWithoutSecurityCardAndOrderCard(User user) throws IOException {
         OrderNewCardPage orderNewCardPage = signInWithoutSecurityCard(user).orderSecurityCard();
         isCardDeactivationMessageDisplayed = orderNewCardPage.isCardDeactivationMessageDisplayed();
+
+        orderNewCardPage.continueToAddressPage()
+            .chooseHomeAddress()
+            .submitAddress(ReviewSecurityCardAddressPage.class).orderSecurityCard();
     }
 
     public CardOrderReportListPage goToSecurityCardOrderReportList(User user) throws IOException {
@@ -107,7 +111,6 @@ public class SecurityCard {
                 .continueToQuestionTwoPage()
                 .enterAnswer("Blah")
                 .continueToConfirmationPage();
-
     }
 
     protected <T extends Page> T activate2faCard(User user, String serialNumber, String pin, Class<T> returnPage)
