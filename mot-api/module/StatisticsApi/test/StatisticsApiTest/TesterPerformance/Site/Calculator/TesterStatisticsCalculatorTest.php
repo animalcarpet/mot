@@ -1,7 +1,7 @@
 <?php
-namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\TesterAtSite\Mapper;
+namespace Dvsa\Mot\Api\StatisticsApiTest\Site\Calculator;
 
-use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Mapper\TesterStatisticsMapper;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Calculator\TesterStatisticsCalculator;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterPerformanceResult;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\EmployeePerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\SitePerformanceDto;
@@ -10,10 +10,10 @@ use DvsaCommon\Date\TimeSpan;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommon\Utility\ArrayUtils;
 
-class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
+class TesterStatisticsCalculatorTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  TesterStatisticsMapper */
-    private $sut;
+    /** @var \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Calculator\TesterStatisticsCalculator */
+    private $calculator;
 
     /** @var TesterPerformanceResult[] */
     private $results = [];
@@ -28,7 +28,7 @@ class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->sut = new TesterStatisticsMapper();
+        $this->calculator = new \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Calculator\TesterStatisticsCalculator();
     }
 
     public function testCalculateTotalTestCountForSite()
@@ -46,7 +46,7 @@ class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
         $this->addResult($this->user2, $this->groupB, 10, 0, 0);
 
         // WHEN I get statistics
-        $stats = $this->sut->buildSitePerformanceDto($this->results);
+        $stats = $this->calculator->calculateStatisticsForSite($this->results);
 
         $this->assertInstanceOf(SitePerformanceDto::class, $stats);
 
@@ -70,7 +70,7 @@ class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
         $this->addResult($this->user1, $this->groupB, 3, 0, 0);
 
         // WHEN I get statistics
-        $stats = $this->sut->buildTesterPerformanceDto($this->results);
+        $stats = $this->calculator->calculateStatisticsForTester($this->results);
 
         $this->assertInstanceOf(TesterPerformanceDto::class, $stats);
 
@@ -94,7 +94,7 @@ class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
         $this->addResult($this->user2, $this->groupB, 0, 0, 0);
 
         // WHEN I get statistics
-        $stats = $this->sut->buildSitePerformanceDto($this->results);
+        $stats = $this->calculator->calculateStatisticsForSite($this->results);
 
         // THEN the statistics contain correct failed percentage
         $this->assertEquals(0, $this->findStats($stats, $this->user1, $this->groupA)->getPercentageFailed());
@@ -118,7 +118,7 @@ class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
         $this->addResult($this->user1, $this->groupB, 5, 1, 0);
 
         // WHEN I get statistics
-        $stats = $this->sut->buildTesterPerformanceDto($this->results);
+        $stats = $this->calculator->calculateStatisticsForTester($this->results);
 
         // THEN the statistics contain correct failed percentage
         $this->assertEquals(0, $stats->getGroupAPerformance()->getPercentageFailed());
@@ -149,7 +149,7 @@ class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
         $this->addResult($this->user2, $this->groupA, $tester2testCount, 0, 0, $tester2AverageVehicleAge, $tester2IsAverageAvailable);
 
         // WHEN I get statistics
-        $stats = $this->sut->buildSitePerformanceDto($this->results);
+        $stats = $this->calculator->calculateStatisticsForSite($this->results);
 
         // THEN the statistics contain correct average vehicle age and flag about having that age
         $this->assertEquals($expectedSiteAverageAge, $stats->getA()->getTotal()->getAverageVehicleAgeInMonths());
@@ -176,7 +176,7 @@ class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
         $this->addResult($this->user1, $this->groupA, $tester1testCount, 0, 0, $tester1AverageVehicleAge, $tester1IsAverageAvailable);
 
         // WHEN I get statistics
-        $stats = $this->sut->buildTesterPerformanceDto($this->results);
+        $stats = $this->calculator->calculateStatisticsForTester($this->results);
 
         // THEN the statistics contain correct average vehicle age and flag about having that age
         $this->assertEquals($expectedAverageAge, $stats->getGroupAPerformance()->getAverageVehicleAgeInMonths());
@@ -199,7 +199,7 @@ class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
         $this->addResult($this->user2, $this->groupB, 0, 0, 0);
 
         // WHEN I get statistics
-        $stats = $this->sut->buildSitePerformanceDto($this->results);
+        $stats = $this->calculator->calculateStatisticsForSite($this->results);
 
         // THEN the statistics contain correct average time
         $this->assertEquals(new TimeSpan(0, 0, 1, 0), $this->findStats($stats, $this->user1, $this->groupA)->getAverageTime());
@@ -220,7 +220,7 @@ class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
         $this->addResult($this->user1, $this->groupB, 5, 0, 20 * 24 * 60 * 60);
 
         // WHEN I get statistics
-        $stats = $this->sut->buildTesterPerformanceDto($this->results);
+        $stats = $this->calculator->calculateStatisticsForTester($this->results);
 
         // THEN the statistics contain correct average time
         $this->assertEquals(new TimeSpan(0, 0, 1, 0), $stats->getGroupAPerformance()->getAverageTime());
@@ -232,7 +232,7 @@ class TesterStatisticsMapperTest extends \PHPUnit_Framework_TestCase
         // GIVEN no tests where done in a site
 
         // WHEN I get statistics
-        $stats = $this->sut->buildSitePerformanceDto($this->results);
+        $stats = $this->calculator->calculateStatisticsForSite($this->results);
 
         // THEN the average time is 0
         $this->assertEquals(new TimeSpan(0, 0, 0, 0), $stats->getA()->getTotal()->getAverageTime());

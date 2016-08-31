@@ -7,7 +7,6 @@ use Dvsa\Mot\Frontend\PersonModule\Action\TestQualityComponentBreakdownAction;
 use Dvsa\Mot\Frontend\PersonModule\Routes\PersonProfileRoutes;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityComponentBreakdownViewModel;
-use Dvsa\Mot\Frontend\TestQualityInformation\Breadcrumbs\TesterTqiComponentsBreadcrumbs;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\ComponentFailRateApiResource;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentBreakdownDto;
@@ -62,8 +61,6 @@ class TestQualityComponentBreakdownActionTest extends PHPUnit_Framework_TestCase
 
     private $requestParams = [];
 
-    private $testerTqiBreadcrumbs;
-
     protected function setUp()
     {
         $this->componentFailRateApiResource = XMock::of(ComponentFailRateApiResource::class);
@@ -93,13 +90,6 @@ class TestQualityComponentBreakdownActionTest extends PHPUnit_Framework_TestCase
         $this->urlPluginMock = XMock::of(Url::class);
         $this->urlPluginMock->method('fromRoute')
             ->willReturn(self::RETURN_LINK);
-
-        $this->testerTqiBreadcrumbs = XMock::of(TesterTqiComponentsBreadcrumbs::class);
-        $this
-            ->testerTqiBreadcrumbs
-            ->expects($this->any())
-            ->method("getBreadcrumbs")
-            ->willReturn($this->breadcrumbs);
     }
 
     public function test404IsReturnedWhenThereIsNoData()
@@ -111,6 +101,7 @@ class TestQualityComponentBreakdownActionTest extends PHPUnit_Framework_TestCase
             self::GROUP,
             self::MONTH,
             self::YEAR,
+            $this->breadcrumbs,
             $this->urlPluginMock,
             $this->requestParams
         );
@@ -132,6 +123,7 @@ class TestQualityComponentBreakdownActionTest extends PHPUnit_Framework_TestCase
             self::GROUP,
             self::MONTH,
             self::YEAR,
+            $this->breadcrumbs,
             $this->urlPluginMock,
             $this->requestParams
         );
@@ -196,8 +188,7 @@ class TestQualityComponentBreakdownActionTest extends PHPUnit_Framework_TestCase
             $this->contextProvider,
             $this->routes,
             $this->testerGroupAuthorisationMapper,
-            $this->assertion,
-            $this->testerTqiBreadcrumbs
+            $this->assertion
         );
     }
 

@@ -18,11 +18,18 @@ class TesterAtSiteComponentStatisticsRepository extends ComponentStatisticsRepos
         $this->setDaysConfiguration($year, $month);
 
         return $this->getResult($qb->getSql(), [
-            self::PARAM_TESTER_ID                           => $testerId,
-            self::PARAM_SITE_ID                             => $siteId,
-            ComponentStatisticsRepository::PARAM_GROUP      => $group,
-            ComponentStatisticsRepository::PARAM_START_DATE => $this->startDate,
-            ComponentStatisticsRepository::PARAM_END_DATE   => $this->endDate,
+            self::PARAM_TESTER_ID                                                                                                                   => $testerId,
+            self::PARAM_SITE_ID                                                                                                                     => $siteId,
+            ComponentStatisticsRepository::PARAM_GROUP    => $group,
+            ComponentStatisticsRepository::PARAM_START_DATE                                                                                         => $this->startDate,
+            ComponentStatisticsRepository::PARAM_END_DATE => $this->endDate,
         ]);
+    }
+
+    protected function setParameters(AbstractQuery $query, $params)
+    {
+        parent::setParameters($query, $params);
+        $query->setParameter(self::PARAM_TESTER_ID, $params[self::PARAM_TESTER_ID]);
+        $query->setParameter(self::PARAM_SITE_ID, $params[self::PARAM_SITE_ID]);
     }
 }

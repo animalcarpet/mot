@@ -14,8 +14,6 @@ class ComponentBreakdownDto implements ReflectiveDtoInterface
     private $userName;
     /** @var string */
     private $displayName;
-    /** @var string */
-    private $siteName;
 
     public function getComponents()
     {
@@ -66,14 +64,4 @@ class ComponentBreakdownDto implements ReflectiveDtoInterface
         return $this->displayName;
     }
 
-    public function setSiteName($siteName)
-    {
-        $this->siteName = $siteName;
-        return $this;
-    }
-
-    public function getSiteName()
-    {
-        return $this->siteName;
-    }
 }

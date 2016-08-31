@@ -63,8 +63,6 @@ class AddressFormatter
     /**
      * @param string $addressPartsGlue
      * @return AddressFormatter
-     *
-     * @deprecated This is hax, add a method that uses a specific glue
      */
     public function setAddressPartsGlue($addressPartsGlue)
     {

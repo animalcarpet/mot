@@ -43,28 +43,22 @@ class TestQualityInformationViewModel
 
     /**
      * @param TesterPerformanceDto $testerPerformance
-     * @param array $groupASiteTests
-     * @param array $groupBSiteTests
      * @param NationalPerformanceReportDto $nationalPerformanceStatisticsDto
      * @param TesterAuthorisation $personAuthorisation
      * @param DateTime $date
      * @param $returnLink
      * @param $returnLinkText
      * @param $componentBreakdownLinkText
-     * @param $componentBreakdownLinkTextGroup
      * @param TestQualityInformationMonthFilter $monthFilter
      */
     public function __construct(
         TesterPerformanceDto $testerPerformance,
-        array $groupASiteTests,
-        array $groupBSiteTests,
         NationalPerformanceReportDto $nationalPerformanceStatisticsDto = null,
         TesterAuthorisation $personAuthorisation,
         $date,
         $returnLink,
         $returnLinkText,
         $componentBreakdownLinkText,
-        $componentBreakdownLinkTextGroup,
         $monthFilter
     )
     {
@@ -74,24 +68,21 @@ class TestQualityInformationViewModel
 
         $this->a = new GroupStatisticsTable(
             $testerPerformance->getGroupAPerformance(),
-            $groupASiteTests,
-            $nationalPerformanceStatisticsDto->getReportStatus()->getIsCompleted() ?: false,
-            $nationalPerformanceStatisticsDto->getGroupA() ?: null,
+            $nationalPerformanceStatisticsDto->getReportStatus()->getIsCompleted() ? : false,
+            $nationalPerformanceStatisticsDto->getGroupA() ? : null,
             'Class 1 and 2',
             VehicleClassGroupCode::BIKES,
             $componentBreakdownLinkText,
-            $componentBreakdownLinkTextGroup,
             $this->getComponentBreakdownLink(VehicleClassGroupCode::BIKES)
         );
 
         $this->b = new GroupStatisticsTable(
             $testerPerformance->getGroupBPerformance(),
-            $groupBSiteTests,
-            $nationalPerformanceStatisticsDto->getReportStatus()->getIsCompleted() ?: false,
-            $nationalPerformanceStatisticsDto->getGroupB() ?: null,
-            'Class 3, 4, 5 and 7', VehicleClassGroupCode::CARS_ETC,
+            $nationalPerformanceStatisticsDto->getReportStatus()->getIsCompleted() ? : false,
+            $nationalPerformanceStatisticsDto->getGroupB() ? : null,
+            'Class 3, 4, 5 and 7',
+            VehicleClassGroupCode::CARS_ETC,
             $componentBreakdownLinkText,
-            $componentBreakdownLinkTextGroup,
             $this->getComponentBreakdownLink(VehicleClassGroupCode::CARS_ETC)
         );
 

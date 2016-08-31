@@ -19,7 +19,6 @@ use Dvsa\Mot\Frontend\PersonModule\Controller\PersonProfileController;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaMotTest\Controller\TesterMotTestLogController;
 use UserAdmin\Controller\EmailAddressController;
-use Site\Controller\SiteController;
 use UserAdmin\Factory\Controller\DrivingLicenceControllerFactory;
 use Dashboard\Controller\UserTradeRolesController;
 use Dashboard\Factory\Controller\PasswordControllerFactory;
@@ -356,21 +355,6 @@ return [
                             ],
                         ],
                         'child_routes' => [
-                            'component-breakdown-at-site' => [
-                                'type' => 'segment',
-                                'options' => [
-                                    'route' => '/components-at-site/:site/:group',
-                                    'constraints' => [
-                                        'id' => '[0-9]+',
-                                        'group' => 'A|B',
-                                        'site' => '[0-9]+',
-                                    ],
-                                    'defaults' => [
-                                        'controller' => SiteController::class,
-                                        'action' => 'userTestQuality',
-                                    ],
-                                ],
-                            ],
                             'component-breakdown' => [
                                 'type' => 'segment',
                                 'options' => [
@@ -858,21 +842,6 @@ return [
                             ],
                         ],
                         'child_routes' => [
-                            'component-breakdown-at-site' => [
-                                'type' => 'segment',
-                                'options' => [
-                                    'route' => '/components-at-site/:site/:group',
-                                    'constraints' => [
-                                        'id' => '[0-9]+',
-                                        'group' => 'A|B',
-                                        'site' => '[0-9]+',
-                                    ],
-                                    'defaults' => [
-                                        'controller' => SiteController::class,
-                                        'action' => 'userTestQuality',
-                                    ],
-                                ],
-                            ],
                             'component-breakdown' => [
                                 'type' => 'segment',
                                 'options' => [

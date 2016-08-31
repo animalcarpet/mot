@@ -113,7 +113,7 @@ class TimeSpan
         return $result;
     }
 
-    public static function subtractDates(\DateTime $date1, \DateTime $date2)
+    public static function testSubtractDates(\DateTime $date1, \DateTime $date2)
     {
         $seconds = $date1->getTimestamp() - $date2->getTimestamp();
 

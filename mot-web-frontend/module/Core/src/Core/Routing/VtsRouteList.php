@@ -9,7 +9,6 @@ class VtsRouteList
     const VTS_EDIT_PROPERTY_REVIEW = 'vehicle-testing-station-edit-property-review';
     const VTS_TEST_QUALITY = 'vehicle-testing-station-test-quality';
     const VTS_USER_TEST_QUALITY = 'vehicle-testing-station-test-quality/user-test-quality';
-    const VTS_USER_PROFILE_TEST_QUALITY = 'vehicle-testing-station-test-quality/user-profile-test-quality';
     const VTS_TEST_QUALITY_CSV = 'vehicle-testing-station-test-quality/csv';
     const VTS_USER_TEST_QUALITY_CSV = 'vehicle-testing-station-test-quality/user-test-quality/csv';
 }

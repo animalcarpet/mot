@@ -4,15 +4,11 @@ namespace SiteTest\Action;
 
 use Core\Action\NotFoundActionResult;
 use Core\File\CsvFile;
-use CoreTest\TestUtils\Identity\FrontendIdentityProviderStub;
-use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
-use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaClient\Mapper\SiteMapper;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\ComponentFailRateApiResource;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\NationalComponentStatisticApiResource;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\NationalPerformanceApiResource;
 use DvsaCommon\Auth\Assertion\ViewVtsTestQualityAssertion;
-use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\VehicleClassGroupCode;
@@ -25,7 +21,6 @@ use Site\ViewModel\TestQuality\UserTestQualityViewModel;
 use SiteTest\ViewModel\SiteTestQualityViewModelTest;
 use SiteTest\ViewModel\UserTestQualityViewModelTest;
 use Zend\Mvc\Controller\Plugin\Url;
-use Zend\Mvc\Router\Http\RouteMatch;
 
 class UserTestQualityActionTest extends PHPUnit_Framework_TestCase
 {
@@ -69,8 +64,6 @@ class UserTestQualityActionTest extends PHPUnit_Framework_TestCase
     private $siteDto;
     /** @var  NationalPerformanceApiResource */
     private $nationalPerformanceApiResourceMock;
-    /** @var  MotIdentityProviderInterface */
-    private $identityProvider;
 
     protected function setUp()
     {
@@ -108,19 +101,12 @@ class UserTestQualityActionTest extends PHPUnit_Framework_TestCase
             ->method('getById')
             ->willReturn($this->siteDto);
 
-        $identity = (new Identity())->setUserId(self::USER_ID);
-        $this->identityProvider = new FrontendIdentityProviderStub();
-        $this->identityProvider->setIdentity($identity);
-
         $this->userTestQualityAction = new UserTestQualityAction(
             $this->componentFailRateApiResource,
             $this->nationalComponentStatisticApiResource,
             $this->nationalPerformanceApiResourceMock,
             $this->assertion,
-            $this->siteMapper,
-            XMock::of(ContextProvider::class),
-            XMock::of(RouteMatch::class),
-            $this->identityProvider
+            $this->siteMapper
         );
     }
 
@@ -129,7 +115,7 @@ class UserTestQualityActionTest extends PHPUnit_Framework_TestCase
         $this->authorisationServiceMock->clearAll();
         $this->setExpectedException(UnauthorisedException::class);
 
-        $this->userTestQualityAction->execute(self::SITE_ID, 2, self::MONTH, self::YEAR,
+        $this->userTestQualityAction->execute(self::SITE_ID, self::USER_ID, self::MONTH, self::YEAR,
             VehicleClassGroupCode::BIKES, $this->breadcrumbs, self::IS_RETURN_TO_AE_TQI, $this->urlPluginMock);
     }
 
@@ -153,10 +139,7 @@ class UserTestQualityActionTest extends PHPUnit_Framework_TestCase
             $this->nationalComponentStatisticApiResource,
             $this->nationalPerformanceApiResourceMock,
             $this->assertion,
-            $this->siteMapper,
-            XMock::of(ContextProvider::class),
-            XMock::of(RouteMatch::class),
-            $this->identityProvider
+            $this->siteMapper
         );
     }
 
