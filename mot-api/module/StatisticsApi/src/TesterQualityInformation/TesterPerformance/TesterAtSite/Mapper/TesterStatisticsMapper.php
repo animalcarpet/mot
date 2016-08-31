@@ -1,23 +1,28 @@
 <?php
-namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Calculator;
+namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Mapper;
 
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Common\QueryResult\AbstractTesterPerformanceResult;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterPerformanceResult;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterMultiSite\QueryResult\TesterMultiSitePerformanceResult;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\EmployeePerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\MotTestingPerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\SiteGroupPerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\SitePerformanceDto;
+use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\TesterMultiSitePerformanceDto;
+use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\TesterMultiSitePerformanceReportDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\TesterPerformanceDto;
 use DvsaCommon\Date\TimeSpan;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommon\Utility\ArrayUtils;
+use DvsaEntities\Mapper\AddressMapper;
 
-class TesterStatisticsCalculator
+class TesterStatisticsMapper
 {
     /**
      * @param TesterPerformanceResult[] $statistics
      * @return SitePerformanceDto
      */
-    public function calculateStatisticsForSite(array $statistics)
+    public function buildSitePerformanceDto(array $statistics)
     {
         $siteDto = new SitePerformanceDto();
 
@@ -34,7 +39,7 @@ class TesterStatisticsCalculator
      * @param TesterPerformanceResult[] $statistics
      * @return TesterPerformanceDto
      */
-    public function calculateStatisticsForTester(array $statistics)
+    public function buildTesterPerformanceDto(array $statistics)
     {
         $dto = new TesterPerformanceDto();
 
@@ -47,13 +52,13 @@ class TesterStatisticsCalculator
 
         $groupATesterPerformanceResult = reset($groupAStatistics);
         if (!empty($groupATesterPerformanceResult)) {
-            $groupAPerformance = $this->calculateStatisticsForEmployee($groupATesterPerformanceResult);
+            $groupAPerformance = $this->buildEmployeePerformanceDto($groupATesterPerformanceResult);
             $dto->setGroupAPerformance($groupAPerformance);
         }
 
         $groupBTesterPerformanceResult = reset($groupBStatistics);
         if (!empty($groupBTesterPerformanceResult)) {
-            $groupBPerformance = $this->calculateStatisticsForEmployee($groupBTesterPerformanceResult);
+            $groupBPerformance = $this->buildEmployeePerformanceDto($groupBTesterPerformanceResult);
             $dto->setGroupBPerformance($groupBPerformance);
         }
 
@@ -63,12 +68,12 @@ class TesterStatisticsCalculator
     /**
      * @param array $statistics
      * @param $vehicleGroup
-     * @return TesterPerformanceResult[]
+     * @return AbstractTesterPerformanceResult[]
      */
     private function filterStatisticsByGroup(array $statistics, $vehicleGroup)
     {
-        /** @var TesterPerformanceResult[] $groupStatistics */
-        $groupStatistics = ArrayUtils::filter($statistics, function (TesterPerformanceResult $statistic) use ($vehicleGroup) {
+        /** @var AbstractTesterPerformanceResult[] $groupStatistics */
+        $groupStatistics = ArrayUtils::filter($statistics, function (AbstractTesterPerformanceResult $statistic) use ($vehicleGroup) {
             return $statistic->getVehicleClassGroup() == $vehicleGroup;
         });
 
@@ -84,7 +89,7 @@ class TesterStatisticsCalculator
     {
         $groupStatistics = $this->filterStatisticsByGroup($statistics, $vehicleGroup);
 
-        $employeeStatisticsDtos = $this->calculateStatisticsForManyEmployees($groupStatistics);
+        $employeeStatisticsDtos = $this->buildStatisticsForManyEmployees($groupStatistics);
         $totalSiteStatisticsDto = $this->calculateTotalSiteStatistics($groupStatistics);
 
         $groupDto = new SiteGroupPerformanceDto();
@@ -146,17 +151,71 @@ class TesterStatisticsCalculator
     }
 
     /**
-     * @param TesterPerformanceResult $statistic
+     * @param TesterPerformanceResult $result
      * @return EmployeePerformanceDto
      */
-    private function calculateStatisticsForEmployee(TesterPerformanceResult $statistic)
+    private function buildEmployeePerformanceDto(TesterPerformanceResult $result)
     {
         $dto = new EmployeePerformanceDto();
+        /** @var EmployeePerformanceDto $dto */
+        $dto = $this->buildMotTestingPerformanceDto($dto, $result);
+        $dto->setUsername($result->getUsername());
+        $dto->setPersonId($result->getPersonId());
 
+        return $dto;
+    }
+
+    /**
+     * @param TesterMultiSitePerformanceResult $result
+     * @return TesterMultiSitePerformanceDto
+     */
+    private function buildTesterMultiSitePerformanceDto(TesterMultiSitePerformanceResult $result)
+    {
+        $dto = new TesterMultiSitePerformanceDto();
+        /** @var TesterMultiSitePerformanceDto $dto */
+        $dto = $this->buildMotTestingPerformanceDto($dto, $result);
+        $dto->setSiteId($result->getSiteId());
+        $dto->setSiteName($result->getSiteName());
+
+        $addressMapper = new AddressMapper();
+        $dto->setSiteAddress($addressMapper->toDto($result->getSiteAddress()));
+
+        return $dto;
+    }
+
+    /**
+     * @param TesterMultiSitePerformanceResult[] $statistics
+     * @return TesterMultiSitePerformanceReportDto
+     */
+    public function buildTesterMultiSitePerformanceReportDto(array $statistics)
+    {
+        $groups = [VehicleClassGroupCode::BIKES, VehicleClassGroupCode::CARS_ETC];
+
+        $dto = new TesterMultiSitePerformanceReportDto();
+
+        $siteDtos = [
+            VehicleClassGroupCode::BIKES => [],
+            VehicleClassGroupCode::CARS_ETC => [],
+        ];
+
+        foreach($groups as $group) {
+            $groupStatistics = $this->filterStatisticsByGroup($statistics, $group);
+            /** @var TesterMultiSitePerformanceResult $statistic */
+            foreach($groupStatistics as $statistic) {
+                $siteDtos[$group][]= $this->buildTesterMultiSitePerformanceDto($statistic);
+            }
+        }
+
+        $dto->setA($siteDtos[VehicleClassGroupCode::BIKES]);
+        $dto->setB($siteDtos[VehicleClassGroupCode::CARS_ETC]);
+
+        return $dto;
+    }
+
+    private function buildMotTestingPerformanceDto(MotTestingPerformanceDto $dto, AbstractTesterPerformanceResult $statistic)
+    {
         $dto->setPercentageFailed($this->calculateFailedPercentage($statistic->getFailedCount(), $statistic->getTotalCount()));
         $dto->setAverageTime($this->getAverageTime($statistic->getTotalTime(), $statistic->getTotalCount()));
-        $dto->setUsername($statistic->getUsername());
-        $dto->setPersonId($statistic->getPersonId());
         $dto->setAverageVehicleAgeInMonths($statistic->getAverageVehicleAgeInMonths());
         $dto->setIsAverageVehicleAgeAvailable($statistic->getIsAverageVehicleAgeAvailable());
         $dto->setTotal($statistic->getTotalCount());
@@ -168,12 +227,12 @@ class TesterStatisticsCalculator
      * @param TesterPerformanceResult[] $statistics
      * @return EmployeePerformanceDto[]
      */
-    private function calculateStatisticsForManyEmployees(array $statistics)
+    private function buildStatisticsForManyEmployees(array $statistics)
     {
         $testerStatisticsDtos = [];
 
         foreach ($statistics as $statistic) {
-            $dto = $this->calculateStatisticsForEmployee($statistic);
+            $dto = $this->buildEmployeePerformanceDto($statistic);
 
             $testerStatisticsDtos[] = $dto;
         }

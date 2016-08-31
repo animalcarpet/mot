@@ -17,6 +17,7 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
     const RETURN_LINK = 'http://link.com';
     const RETURN_LINK_TEXT = 'return';
     const COMPONENT_LINK_TEXT = 'component link';
+    const COMPONENT_LINK_TEXT_GROUP = 'component link group';
     const NOT_AVAILABLE = 'Not available';
 
     /** @var TestQualityInformationMonthFilter $testQualityInformationMonthFilter  */
@@ -38,14 +39,7 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
         $date = new DateTime();
 
         $testQualityInformationViewModel = new TestQualityInformationViewModel(
-            self::buildTesterPerformanceDto(false, false),
-            self::buildNationalStatisticsPerformanceDto(),
-            self::buildTesterAuthorisation(false, false),
-            $date,
-            self::RETURN_LINK,
-            self::RETURN_LINK_TEXT,
-            self::COMPONENT_LINK_TEXT,
-            $this->testQualityInformationMonthFilter
+            self::buildTesterPerformanceDto(false, false), [], [], self::buildNationalStatisticsPerformanceDto(), self::buildTesterAuthorisation(false, false), $date, self::RETURN_LINK, self::RETURN_LINK_TEXT, self::COMPONENT_LINK_TEXT, self::COMPONENT_LINK_TEXT_GROUP, $this->testQualityInformationMonthFilter
         );
 
 
@@ -63,14 +57,7 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
         $date = new DateTime();
 
         $testQualityInformationViewModel = new TestQualityInformationViewModel(
-            self::buildTesterPerformanceDto(true, true),
-            self::buildNationalStatisticsPerformanceDto(),
-            self::buildTesterAuthorisation(false, false),
-            $date,
-            self::RETURN_LINK,
-            self::RETURN_LINK_TEXT,
-            self::COMPONENT_LINK_TEXT,
-            $this->testQualityInformationMonthFilter
+            self::buildTesterPerformanceDto(true, true), [], [], self::buildNationalStatisticsPerformanceDto(), self::buildTesterAuthorisation(false, false), $date, self::RETURN_LINK, self::RETURN_LINK_TEXT, self::COMPONENT_LINK_TEXT, self::COMPONENT_LINK_TEXT_GROUP, $this->testQualityInformationMonthFilter
         );
 
         $this->assertEquals(($testQualityInformationViewModel->getA()->getTestCount()), 1);
@@ -87,14 +74,7 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
         $date = new DateTime();
 
         $testQualityInformationViewModel = new TestQualityInformationViewModel(
-            self::buildTesterPerformanceDto(false, false),
-            self::buildNationalStatisticsPerformanceDto(),
-            self::buildTesterAuthorisation(false, false),
-            $date,
-            self::RETURN_LINK,
-            self::RETURN_LINK_TEXT,
-            self::COMPONENT_LINK_TEXT,
-            $this->testQualityInformationMonthFilter
+            self::buildTesterPerformanceDto(false, false), [], [], self::buildNationalStatisticsPerformanceDto(), self::buildTesterAuthorisation(false, false), $date, self::RETURN_LINK, self::RETURN_LINK_TEXT, self::COMPONENT_LINK_TEXT, self::COMPONENT_LINK_TEXT_GROUP, $this->testQualityInformationMonthFilter
         );
 
         $this->assertEquals(($testQualityInformationViewModel->getA()->getTestCount()), 0);
@@ -120,14 +100,7 @@ class TestQualityInformationViewModelTest extends \PHPUnit_Framework_TestCase
         $date = new DateTime();
 
         $testQualityInformationViewModel = new TestQualityInformationViewModel(
-            $testerPerformance,
-            self::buildNationalStatisticsPerformanceDto(),
-            $testerAuthorisation,
-            $date,
-            self::RETURN_LINK,
-            self::RETURN_LINK_TEXT,
-            self::COMPONENT_LINK_TEXT,
-            $this->testQualityInformationMonthFilter
+            $testerPerformance, [], [], self::buildNationalStatisticsPerformanceDto(), $testerAuthorisation, $date, self::RETURN_LINK, self::RETURN_LINK_TEXT, self::COMPONENT_LINK_TEXT, self::COMPONENT_LINK_TEXT_GROUP, $this->testQualityInformationMonthFilter
         );
 
         $this->assertEquals($resultA, $testQualityInformationViewModel->isAVisible());

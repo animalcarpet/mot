@@ -115,7 +115,7 @@ class TimeSpanTest extends \PHPUnit_Framework_TestCase
     {
         $date1 = new \DateTime('2012-05-02 03:04:05');
         $date2 = new \DateTime('2012-05-01 02:03:04');
-        $actual = TimeSpan::testSubtractDates($date1, $date2);
+        $actual = TimeSpan::subtractDates($date1, $date2);
         $this->assertEquals(new TimeSpan(1, 1, 1, 1), $actual);
     }
 
@@ -124,7 +124,7 @@ class TimeSpanTest extends \PHPUnit_Framework_TestCase
         $date1 = new \DateTime('2012-05-01 02:03:04');
         $date2 = new \DateTime('2012-05-02 03:04:05');
 
-        $actual = TimeSpan::testSubtractDates($date1, $date2);
+        $actual = TimeSpan::subtractDates($date1, $date2);
         $this->assertEquals(new TimeSpan(-1, -1, -1, -1), $actual);
     }
 
