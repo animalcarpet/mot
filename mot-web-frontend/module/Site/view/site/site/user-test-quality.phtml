@@ -9,7 +9,6 @@ use Site\ViewModel\TestQuality\UserTestQualityViewModel;
 $vm = $this->viewModel;
 ?>
 
-<?php if ($vm->showCsvSection()): ?>
 <div class="result__actions">
     Download <?php echo $vm->getTable()->getGroupName(); ?> report as a
     <a href="<?php echo $this->url(VtsRouteList::VTS_USER_TEST_QUALITY_CSV,
@@ -24,12 +23,16 @@ $vm = $this->viewModel;
         CSV (Spreadsheet)
     </a> file (<?php echo $vm->getCsvFileSize() ?>).
 </div>
-<?php endif; ?>
+
 
 <nav class="content-navigation">
     <ul class="content-navigation__secondary">
         <li>
-            <a id="return-link" href="<?php echo $vm->getReturnLink(); ?>">
+            <a id="return-link" href="<?php echo $this->url(VtsRouteList::VTS_TEST_QUALITY, [
+                'id' => $vm->getSiteId(),
+                'month' => $vm->getMonth(),
+                'year' => $vm->getYear(),
+            ],$vm->getQueryParamsForReturnLink()) ?>">
                 Return to test quality information
             </a>
         </li>

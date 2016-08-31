@@ -6,7 +6,6 @@ namespace Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityInformation;
 use Core\Formatting\VehicleAgeFormatter;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\EmployeePerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\MotTestingPerformanceDto;
-use DvsaCommon\Utility\TypeCheck;
 use Site\ViewModel\TimeSpanFormatter;
 
 class GroupStatisticsTable
@@ -27,42 +26,23 @@ class GroupStatisticsTable
     private $nationalPercentageFailed;
     private $nationalAverageVehicleAge;
     private $componentLinkText;
-    private $componentLinkTextGroup;
     private $componentLink;
 
-    private $siteTests;
-
-    /**
-     * GroupStatisticsTable constructor.
-     * @param EmployeePerformanceDto|null $groupPerformanceDto
-     * @param SiteRowViewModel[] $siteTests
-     * @param $isNationalDataAvailable
-     * @param MotTestingPerformanceDto|null $nationalTestingPerformanceDto
-     * @param $groupDescription
-     * @param $groupCode
-     * @param $componentLinkText
-     * @param $componentLink
-     */
     public function __construct(
         EmployeePerformanceDto $groupPerformanceDto = null,
-        array $siteTests,
         $isNationalDataAvailable,
         MotTestingPerformanceDto $nationalTestingPerformanceDto = null,
         $groupDescription,
         $groupCode,
         $componentLinkText,
-        $componentLinkTextGroup,
         $componentLink
     )
     {
-        TypeCheck::assertCollectionOfClass($siteTests, SiteRowViewModel::class);
-
         $timeSpanFormatter = new TimeSpanFormatter();
         $this->groupCode = $groupCode;
         $this->groupDescription = $groupDescription;
         $this->isNationalDataAvailable = $isNationalDataAvailable;
         $this->componentLinkText = $componentLinkText;
-        $this->componentLinkTextGroup = $componentLinkTextGroup;
         $this->componentLink = $componentLink;
 
         if (empty($groupPerformanceDto)) {
@@ -85,7 +65,6 @@ class GroupStatisticsTable
                 $this->nationalPercentageFailed = $nationalTestingPerformanceDto->getPercentageFailed();
             }
         }
-        $this->siteTests = $siteTests;
     }
 
     /**
@@ -105,11 +84,6 @@ class GroupStatisticsTable
         return $average;
     }
 
-    public function getSiteTests()
-    {
-        return $this->siteTests;
-    }
-
     public function getGroupCode()
     {
         return $this->groupCode;
@@ -122,7 +96,7 @@ class GroupStatisticsTable
 
     public function hasTests()
     {
-        return count($this->siteTests) > 0;
+        return $this->testCount > 0;
     }
 
     public function getNotAvailableText()
@@ -177,12 +151,7 @@ class GroupStatisticsTable
 
     public function getComponentLinkText()
     {
-        return $this->componentLinkText;
-    }
-
-    public function getComponentLinkTextGroup()
-    {
-        return sprintf($this->componentLinkTextGroup, $this->getGroupCode());
+        return sprintf($this->componentLinkText, $this->getGroupCode());
     }
 
     private function convertPercentFailed($value)
@@ -197,10 +166,5 @@ class GroupStatisticsTable
     public function getComponentLink()
     {
         return $this->componentLink;
-    }
-
-    public function getComponentLinkId()
-    {
-        return "view-components-".$this->groupCode;
     }
 }

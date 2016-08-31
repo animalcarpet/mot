@@ -6,7 +6,6 @@ use Core\Action\NotFoundActionResult;
 use Dvsa\Mot\Frontend\PersonModule\Routes\PersonProfileRoutes;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityComponentBreakdownViewModel;
-use Dvsa\Mot\Frontend\TestQualityInformation\Breadcrumbs\TesterTqiComponentsBreadcrumbs;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\ComponentFailRateApiResource;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentBreakdownDto;
@@ -16,7 +15,6 @@ use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Date\Exception\IncorrectDateFormatException;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use Zend\Mvc\Controller\Plugin\Url;
-use Dvsa\Mot\Frontend\TestQualityInformation\Breadcrumbs\TesterTqiBreadcrumbs;
 
 class TestQualityComponentBreakdownAction implements AutoWireableInterface
 {
@@ -31,7 +29,6 @@ class TestQualityComponentBreakdownAction implements AutoWireableInterface
     private $contextProvider;
     private $testerGroupAuthorisationMapper;
     private $assertion;
-    private $breadcrumbs;
 
     public function __construct(
         ComponentFailRateApiResource $componentFailRateApiResource,
@@ -39,8 +36,7 @@ class TestQualityComponentBreakdownAction implements AutoWireableInterface
         ContextProvider $contextProvider,
         PersonProfileRoutes $routes,
         TesterGroupAuthorisationMapper $testerGroupAuthorisationMapper,
-        ViewTesterTestQualityAssertion $assertion,
-        TesterTqiComponentsBreadcrumbs $breadcrumbs
+        ViewTesterTestQualityAssertion $assertion
     ) {
         $this->componentFailRateApiResource = $componentFailRateApiResource;
         $this->nationalComponentStatisticApiResource = $nationalComponentStatisticApiResource;
@@ -48,10 +44,9 @@ class TestQualityComponentBreakdownAction implements AutoWireableInterface
         $this->routes = $routes;
         $this->testerGroupAuthorisationMapper = $testerGroupAuthorisationMapper;
         $this->assertion = $assertion;
-        $this->breadcrumbs = $breadcrumbs;
     }
 
-    public function execute($testerId, $groupCode, $month, $year, Url $urlPlugin, $requestParams)
+    public function execute($testerId, $groupCode, $month, $year, array $breadcrumbs, Url $urlPlugin, $requestParams)
     {
         $personAuthorisation = $this->testerGroupAuthorisationMapper->getAuthorisation($testerId);
         $this->assertion->assertGranted($testerId, $personAuthorisation);
@@ -75,7 +70,7 @@ class TestQualityComponentBreakdownAction implements AutoWireableInterface
                     $returnUrl,
                     "Return to test quality information"
                 ),
-                $this->breadcrumbs->getBreadcrumbs($testerId, $month, $year)
+                $breadcrumbs
             );
         } else {
             return new NotFoundActionResult();

@@ -155,20 +155,6 @@ return [
                             ]
                         ],
                     ],
-                    'user-profile-test-quality' => [
-                        'type' => 'segment',
-                        'options' => [
-                            'route' => '/user-profile/:userId/group/:group',
-                            'constraints' => [
-                                'id' => '[0-9]+',
-                                'group' => 'A|B',
-                            ],
-                            'defaults' => [
-                                'controller' => SiteController::class,
-                                'action' => 'userTestQuality',
-                            ],
-                        ],
-                    ],
                     'csv' => [
                         'type' => 'segment',
                         'options' => [

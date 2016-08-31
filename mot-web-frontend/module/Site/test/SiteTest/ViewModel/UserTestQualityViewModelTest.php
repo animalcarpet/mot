@@ -43,8 +43,7 @@ class UserTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
             self::buildVehicleTestingStationDto(),
             self::buildViewedDate(),
             self::CSV_FILE_SIZE,
-            self::RETURN_LINK,
-            true
+            self::IS_RETURN_TO_AE_TQI
         );
 
         $this->userTestQualityViewModelB = new UserTestQualityViewModel(
@@ -56,8 +55,7 @@ class UserTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
             self::buildVehicleTestingStationDto(),
             self::buildViewedDate(),
             self::CSV_FILE_SIZE,
-            self::RETURN_LINK,
-            false
+            self::IS_RETURN_TO_AE_TQI
         );
     }
 
@@ -145,6 +143,16 @@ class UserTestQualityViewModelTest extends \PHPUnit_Framework_TestCase
         $breakdown->setGroupPerformance($group)->setComponents([]);
 
         return $breakdown;
+    }
+
+    /**
+     * @param ComponentStatisticsTable $getTable
+     */
+    private function checkEmptyHeaderFormatting($getTable)
+    {
+        $this->assertEquals(ComponentStatisticsTable::TEXT_EMPTY, $getTable->getAverageTestDuration());
+        $this->assertEquals(0, $getTable->getTestCount());
+        $this->assertEquals('0%', $getTable->getFailurePercentage());
     }
 
     private function assertTitlesAreCorrect()

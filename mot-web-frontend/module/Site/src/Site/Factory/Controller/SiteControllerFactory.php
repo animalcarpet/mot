@@ -3,8 +3,6 @@
 namespace Site\Factory\Controller;
 
 use Core\Catalog\EnumCatalog;
-use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
-use Dvsa\Mot\Frontend\TestQualityInformation\Breadcrumbs\TesterTqiComponentsAtSiteBreadcrumbs;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\Assertion\ViewVtsTestQualityAssertion;
 use Site\Action\SiteTestQualityAction;
@@ -40,9 +38,7 @@ class SiteControllerFactory implements FactoryInterface
             $enumCatalog->businessRole(),
             $serviceLocator->get(SiteTestQualityAction::class),
             $serviceLocator->get(UserTestQualityAction::class),
-            $serviceLocator->get(ViewVtsTestQualityAssertion::class),
-            $serviceLocator->get(ContextProvider::class),
-            $serviceLocator->get(TesterTqiComponentsAtSiteBreadcrumbs::class)
+            $serviceLocator->get(ViewVtsTestQualityAssertion::class)
         );
     }
 }

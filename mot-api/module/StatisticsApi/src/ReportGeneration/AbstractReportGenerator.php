@@ -72,7 +72,7 @@ abstract class AbstractReportGenerator
         $report->getReportStatus()->setGenerationTimeoutDate($timeoutDate);
         $report->getReportStatus()->setGenerationStartTime($startedDate);
         $report->getReportStatus()->setGenerationEndTime($endDate);
-        $totalGenerationTime = TimeSpan::subtractDates($endDate, $startedDate);
+        $totalGenerationTime = TimeSpan::testSubtractDates($endDate, $startedDate);
         $report->getReportStatus()->setGenerationTime($totalGenerationTime);
 
         return $report;

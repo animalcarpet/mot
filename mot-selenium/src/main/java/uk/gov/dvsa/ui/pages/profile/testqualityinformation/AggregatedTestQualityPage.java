@@ -18,12 +18,10 @@ public class AggregatedTestQualityPage extends Page {
     private WebElement tqiTableA;
     @FindBy(id = "tqi-table-B")
     private WebElement tqiTableB;
-    @FindBy(id = "view-components-A")
+    @FindBy(css = "#tqi-table-A a")
     private WebElement viewGroupAFailures;
-    @FindBy(id = "view-components-B")
+    @FindBy(css = "#tqi-table-B a")
     private WebElement viewGroupBFailures;
-    @FindBy(css = "#tqi-table-A tbody tr:nth-child(2) td:nth-child(1) a")
-    private WebElement viewFirstSiteInGroupAFailures;
     @FindBy(css = ".lede")
     private WebElement secondaryTitle;
 
@@ -84,11 +82,5 @@ public class AggregatedTestQualityPage extends Page {
     public AggregatedComponentBreakdownPage clickGroupAFailures() {
         viewGroupAFailures.click();
         return new AggregatedComponentBreakdownPage(driver);
-    }
-
-    public TesterAtSiteComponentBreakdownPage clickFirstSiteInGroupAFailures()
-    {
-        viewFirstSiteInGroupAFailures.click();
-        return new TesterAtSiteComponentBreakdownPage(driver);
     }
 }

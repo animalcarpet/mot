@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\Site\Service;
+namespace Dvsa\Mot\Api\StatisticsApiTest\Site\Service;
 
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\SiteGroupPerformanceDto;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterPerformanceResult;

@@ -5,7 +5,6 @@ use Application\Service\CatalogService;
 use Core\Catalog\BusinessRole\BusinessRoleCatalog;
 use Core\Catalog\EnumCatalog;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
-use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\Assertion\ViewVtsTestQualityAssertion;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
@@ -16,7 +15,6 @@ use Site\Controller\SiteController;
 use Site\Factory\Controller\SiteControllerFactory;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
-use Dvsa\Mot\Frontend\TestQualityInformation\Breadcrumbs\TesterTqiComponentsAtSiteBreadcrumbs;
 
 /**
  * Class SiteControllerFactoryTest
@@ -39,8 +37,6 @@ class SiteControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService(SiteTestQualityAction::class, XMock::of(SiteTestQualityAction::class));
         $serviceManager->setService(ViewVtsTestQualityAssertion::class, XMock::of(ViewVtsTestQualityAssertion::class));
         $serviceManager->setService(UserTestQualityAction::class, Xmock::of(UserTestQualityAction::class));
-        $serviceManager->setService(ContextProvider::class, Xmock::of(ContextProvider::class));
-        $serviceManager->setService(TesterTqiComponentsAtSiteBreadcrumbs::class, Xmock::of(TesterTqiComponentsAtSiteBreadcrumbs::class));
 
         $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
         $plugins->expects($this->any())

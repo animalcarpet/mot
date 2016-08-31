@@ -19,12 +19,12 @@ class UserTestQualityViewModel
     protected $table;
     private $groupCode;
     private $userId;
-    private $siteId;
+    private $site;
     /** @var  \DateTime */
     private $viewedDate;
     private $csvFileSize;
-    private $returnLink;
-    private $showCsvLink;
+    /** @var  bool */
+    private $isReturnToAETQI;
 
     public function __construct(
         ComponentBreakdownDto $userBreakdown,
@@ -32,11 +32,10 @@ class UserTestQualityViewModel
         NationalComponentStatisticsDto $nationalComponentStatisticsDto,
         $groupCode,
         $userId,
-        $siteId,
+        VehicleTestingStationDto $site,
         $viewedDate,
         $csvFileSize,
-        $returnLink,
-        $showCsvLink
+        $isReturnToAETQI
     ) {
         $this->table = new ComponentStatisticsTable(
             $userBreakdown,
@@ -47,11 +46,10 @@ class UserTestQualityViewModel
 
         $this->groupCode = $groupCode;
         $this->userId = $userId;
-        $this->siteId = $siteId;
+        $this->site = $site;
         $this->viewedDate = $viewedDate;
         $this->csvFileSize = $csvFileSize;
-        $this->returnLink = $returnLink;
-        $this->showCsvLink = $showCsvLink;
+        $this->isReturnToAETQI = $isReturnToAETQI;
     }
 
     /**
@@ -80,8 +78,9 @@ class UserTestQualityViewModel
 
     public function getSiteId()
     {
-        return $this->siteId;
+        return $this->site->getId();
     }
+
 
     public function getMonth()
     {
@@ -103,13 +102,17 @@ class UserTestQualityViewModel
         }
     }
 
-    public function getReturnLink()
+    public function getQueryParamsForReturnLink()
     {
-        return $this->returnLink;
-    }
-
-    public function showCsvSection()
-    {
-        return $this->showCsvLink;
+        if ($this->isReturnToAETQI)
+        {
+            return [
+                'query' => [
+                    'returnToAETQI' => true,
+                ],
+            ];
+        } else {
+            return [];
+        }
     }
 }

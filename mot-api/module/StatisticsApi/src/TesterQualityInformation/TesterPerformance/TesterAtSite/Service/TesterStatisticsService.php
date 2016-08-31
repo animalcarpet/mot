@@ -3,7 +3,7 @@
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Service;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\ParameterCheck\StatisticsParameterCheck;
-use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Mapper\TesterStatisticsMapper;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Calculator\TesterStatisticsCalculator;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Repository\TesterStatisticsRepository;
 use DvsaCommon\Auth\Assertion\ViewTesterTestQualityAssertion;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
@@ -25,7 +25,7 @@ class TesterStatisticsService implements AutoWireableInterface
 
     private $dateTimeHolder;
 
-    private $mapper;
+    private $calculator;
 
     function __construct(
         TesterStatisticsRepository $repository,
@@ -40,7 +40,7 @@ class TesterStatisticsService implements AutoWireableInterface
         $this->viewTesterTestQualityAssertion = $viewTesterTestQualityAssertion;
         $this->testerGroupAuthorisationMapper = $testerGroupAuthorisationMapper;
         $this->dateTimeHolder = $dateTimeHolder;
-        $this->mapper = new TesterStatisticsMapper();
+        $this->calculator = new TesterStatisticsCalculator();
     }
 
     public function getForSite($siteId, $year, $month)
@@ -54,7 +54,7 @@ class TesterStatisticsService implements AutoWireableInterface
 
         $statistics = $this->repository->getForSite($siteId, $year, $month);
 
-        return $this->mapper->buildSitePerformanceDto($statistics);
+        return $this->calculator->calculateStatisticsForSite($statistics);
     }
 
     public function getForTester($testerId, $year, $month)
@@ -69,6 +69,6 @@ class TesterStatisticsService implements AutoWireableInterface
 
         $statistics = $this->repository->getForTester($testerId, $year, $month);
 
-        return $this->mapper->buildTesterPerformanceDto($statistics);
+        return $this->calculator->calculateStatisticsForTester($statistics);
     }
 }

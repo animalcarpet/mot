@@ -7,7 +7,6 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\View;
 
-use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Mvc\Router\Http\TreeRouteStack as Router;
 use Zend\Mvc\Router\RouteMatch;
@@ -15,7 +14,7 @@ use Zend\Mvc\Router\RouteMatch;
 /**
  * ContextProvider uses the current route and request to determine the context (AE, VTS, User search, Your profile).
  */
-class ContextProvider implements AutoWireableInterface
+class ContextProvider
 {
     // The context in which the user is viewing the profile.
     const AE_CONTEXT = 'ae';
@@ -92,15 +91,5 @@ class ContextProvider implements AutoWireableInterface
             self::VTS_CONTEXT,
             self::YOUR_PROFILE_CONTEXT,
         ];
-    }
-
-    public function isYourProfileContext()
-    {
-        return (self::YOUR_PROFILE_CONTEXT === $this->getContext());
-    }
-
-    public function isUserSearchContext()
-    {
-        return (self::USER_SEARCH_CONTEXT === $this->getContext());
     }
 }

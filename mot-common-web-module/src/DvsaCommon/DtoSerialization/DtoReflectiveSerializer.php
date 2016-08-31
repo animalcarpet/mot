@@ -168,10 +168,8 @@ class DtoReflectiveSerializer implements AutoWireableInterface
             }
         } else {
             if ($property->isArray()) {
-                // todo check if value is array
                 return $value;
             } else {
-                // todo check if value is scalar
                 return $value;
             }
         }

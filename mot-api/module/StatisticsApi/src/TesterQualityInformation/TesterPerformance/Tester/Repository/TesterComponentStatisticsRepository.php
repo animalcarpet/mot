@@ -1,5 +1,5 @@
 <?php
-namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Tester\Repository;
+namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Tester\Repository;
 
 use Doctrine\ORM\AbstractQuery;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\Repository\ComponentStatisticsRepository;
@@ -17,10 +17,16 @@ class TesterComponentStatisticsRepository extends ComponentStatisticsRepository 
         $this->setDaysConfiguration($year, $month);
 
         return $this->getResult($qb->getSql(), [
-            self::PARAM_TESTER_ID                           => $testerId,
+            self::PARAM_TESTER_ID                                                                                                                     => $testerId,
             ComponentStatisticsRepository::PARAM_GROUP      => $group,
             ComponentStatisticsRepository::PARAM_START_DATE => $this->startDate,
             ComponentStatisticsRepository::PARAM_END_DATE   => $this->endDate,
         ]);
+    }
+
+    protected function setParameters(AbstractQuery $query, $params)
+    {
+        parent::setParameters($query, $params);
+        $query->setParameter(self::PARAM_TESTER_ID, $params[self::PARAM_TESTER_ID]);
     }
 }

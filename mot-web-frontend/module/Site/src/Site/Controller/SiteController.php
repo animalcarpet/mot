@@ -5,11 +5,9 @@ namespace Site\Controller;
 use Application\Service\CatalogService;
 use Core\Catalog\BusinessRole\BusinessRoleCatalog;
 use Core\Controller\AbstractAuthActionController;
-use Core\Routing\VtsRouteList;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
-use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
-use Dvsa\Mot\Frontend\TestQualityInformation\Breadcrumbs\TesterTqiComponentsAtSiteBreadcrumbs;
 use DvsaClient\MapperFactory;
+use DvsaCommon\Auth\Assertion\UpdateVtsAssertion;
 use DvsaCommon\Auth\Assertion\ViewVtsTestQualityAssertion;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\PermissionAtOrganisation;
@@ -99,10 +97,6 @@ class SiteController extends AbstractAuthActionController
 
     private $userTestQualityAction;
 
-    private $contextProvider;
-
-    private $testerTqiComponentsAtSiteBreadcrumbs;
-
     public function __construct(
         MotFrontendAuthorisationServiceInterface $auth,
         MapperFactory $mapper,
@@ -112,9 +106,7 @@ class SiteController extends AbstractAuthActionController
         BusinessRoleCatalog $businessRoleCatalog,
         SiteTestQualityAction $siteTestQualityAction,
         UserTestQualityAction $userTestQualityAction,
-        ViewVtsTestQualityAssertion $viewVtsTestQualityAssertion,
-        ContextProvider $contextProvider,
-        TesterTqiComponentsAtSiteBreadcrumbs $testerTqiComponentsAtSiteBreadcrumbs
+        ViewVtsTestQualityAssertion $viewVtsTestQualityAssertion
     ) {
         $this->auth = $auth;
         $this->mapper = $mapper;
@@ -125,8 +117,6 @@ class SiteController extends AbstractAuthActionController
         $this->siteTestQualityAction = $siteTestQualityAction;
         $this->userTestQualityAction = $userTestQualityAction;
         $this->viewVtsTestQualityAssertion = $viewVtsTestQualityAssertion;
-        $this->contextProvider = $contextProvider;
-        $this->testerTqiComponentsAtSiteBreadcrumbs = $testerTqiComponentsAtSiteBreadcrumbs;
     }
 
     /**
@@ -811,30 +801,14 @@ class SiteController extends AbstractAuthActionController
     {
         $this->assertFeatureEnabled(FeatureToggle::TEST_QUALITY_INFORMATION);
 
-        $isReturnToAETQI = (bool)$this->params()->fromQuery('returnToAETQI');
-
+        $vtsId = $this->params('id');
+        $userId = $this->params('userId');
         $group = $this->params('group');
         $month = $this->params('month');
         $year = $this->params('year');
+        $isReturnToAETQI = (bool)$this->params()->fromQuery('returnToAETQI');
 
-        if ($this->contextProvider->isYourProfileContext()) {
-            $vtsId = $this->params('site');
-            $userId = $this->identity->getIdentity()->getUserId();
-            $breadcrumbs = $this->testerTqiComponentsAtSiteBreadcrumbs->getBreadcrumbs($userId, $month, $year);
-        } elseif ($this->contextProvider->isUserSearchContext()) {
-            $vtsId = $this->params('site');
-            $userId = $this->params('id');
-            $breadcrumbs = $this->testerTqiComponentsAtSiteBreadcrumbs->getBreadcrumbs($userId, $month, $year);
-        } elseif ($this->getEvent()->getRouteMatch()->getMatchedRouteName() === VtsRouteList::VTS_USER_PROFILE_TEST_QUALITY) {
-            $vtsId = $this->params('id');
-            $userId = $this->params('userId');
-            $breadcrumbs = $this->testerTqiComponentsAtSiteBreadcrumbs->getBreadcrumbs($userId, $month, $year);
-        }
-        else {
-            $vtsId = $this->params('id');
-            $userId = $this->params('userId');
-            $breadcrumbs = $this->buildBreadcrumbs($vtsId);
-        }
+        $breadcrumbs = $this->buildBreadcrumbs($vtsId);
 
         return $this->applyActionResult(
             $this->userTestQualityAction->execute($vtsId, $userId, $month, $year, $group, $breadcrumbs, $isReturnToAETQI, $this->url())

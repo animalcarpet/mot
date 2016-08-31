@@ -2,7 +2,6 @@
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Mapper;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\QueryResult\ComponentFailRateResult;
-use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterAtSitePerformanceResult;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterPerformanceResult;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentBreakdownDto;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentDto;
@@ -15,7 +14,7 @@ class ComponentBreakdownDtoMapper implements AutoWireableInterface
 {
     /**
      * @param $components ComponentFailRateResult[]
-     * @param TesterAtSitePerformanceResult $testerPerformance
+     * @param TesterPerformanceResult $testerPerformance
      * @param Person $person
      * @return ComponentBreakdownDto
      */
@@ -46,7 +45,6 @@ class ComponentBreakdownDtoMapper implements AutoWireableInterface
             ->setIsAverageVehicleAgeAvailable($testerPerformance->getIsAverageVehicleAgeAvailable())
             ->setAverageTime(new TimeSpan(0, 0, 0, $testerPerformance->getTotalCount() ?
                 $testerPerformance->getTotalTime() / $testerPerformance->getTotalCount() : 0));
-        $componentBreakdownDto->setSiteName($testerPerformance->getSiteName());
         $componentBreakdownDto->setGroupPerformance($groupPerformanceDto);
         $componentBreakdownDto->setUserName($person->getUsername());
         $componentBreakdownDto->setDisplayName($person->getDisplayName());

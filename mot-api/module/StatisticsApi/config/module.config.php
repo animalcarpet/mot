@@ -7,7 +7,6 @@ use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Teste
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\AuthorisedExaminer\Controller\AuthorisedExaminerStatisticsController;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Tester\Controller\TesterAggregatedStatisticsController;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Controller\SiteStatisticsController;
-use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterMultiSite\Controller\TesterMultiSiteStatisticsController;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterNational\Controller\NationalStatisticsController;
 
 return [
@@ -121,20 +120,6 @@ return [
                     ],
                     'defaults'    => [
                         'controller' => TesterAggregatedStatisticsController::class,
-                    ],
-                ],
-            ],
-            'tester-multi-site-statistics'           => [
-                'type'    => 'Segment',
-                'options' => [
-                    'route'       => '/statistic/tester-performance/multi-site/:id/:year/:month',
-                    'constraints' => [
-                        'id'    => '[0-9]+',
-                        'year'  => '[0-9]+',
-                        'month' => '[0-9]+',
-                    ],
-                    'defaults'    => [
-                        'controller' => TesterMultiSiteStatisticsController::class,
                     ],
                 ],
             ],
