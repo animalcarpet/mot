@@ -52,9 +52,8 @@ class TestQualityInformationController extends AbstractDvsaActionController impl
         $group = $this->params('group');
         $month = (int)$this->params('month');
         $year = (int)$this->params('year');
-        $breadcrumbs = $this->testQualityBreadcrumbs->getBreadcrumbs($testerId, $this, "Failures by category");
 
-        $actionResult = $this->componentBreakdownAction->execute($testerId, $group, $month, $year, $breadcrumbs,
+        $actionResult = $this->componentBreakdownAction->execute($testerId, $group, $month, $year,
             $this->url(), $this->params()->fromRoute());
 
         return $this->applyActionResult($actionResult);
@@ -74,20 +73,13 @@ class TestQualityInformationController extends AbstractDvsaActionController impl
 
         $this->assertFeatureEnabled(FeatureToggle::TEST_QUALITY_INFORMATION);
 
-        $breadcrumbs = $this->personProfileBreadcrumbs->getBreadcrumbs(
-            $targetPersonId,
-            $this,
-            'Test quality information'
-        );
-
         return $this->applyActionResult(
             $this->testQualityAction->execute(
                 $targetPersonId,
                 $month,
                 $year,
                 $this->url(),
-                $this->params()->fromRoute(),
-                $breadcrumbs
+                $this->params()->fromRoute()
             )
         );
     }

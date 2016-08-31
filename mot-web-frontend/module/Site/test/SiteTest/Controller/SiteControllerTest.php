@@ -7,6 +7,7 @@ use Core\Catalog\BusinessRole\BusinessRoleCatalog;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
+use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaClient\Mapper\EquipmentMapper;
 use DvsaClient\Mapper\MotTestInProgressMapper;
 use DvsaClient\Mapper\SiteMapper;
@@ -39,6 +40,7 @@ use Site\Form\VtsUpdateTestingFacilitiesForm;
 use Site\ViewModel\VehicleTestingStation\VtsFormViewModel;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
+use Dvsa\Mot\Frontend\TestQualityInformation\Breadcrumbs\TesterTqiComponentsAtSiteBreadcrumbs;
 
 /**
  * Class SiteControllerTest
@@ -98,7 +100,8 @@ class SiteControllerTest extends AbstractFrontendControllerTestCase
         $this->setController(
             new SiteController(
                 $this->auth, $this->mapper, $this->identity, $this->catalog, $this->mockSession, $businessRoleCatalog,
-                $this->mockSiteTestQualityAction, $this->mockUserTestQualityAction, $this->mockViewVtsTestQualityAssertion
+                $this->mockSiteTestQualityAction, $this->mockUserTestQualityAction, $this->mockViewVtsTestQualityAssertion,
+                XMock::of(ContextProvider::class), XMock::of(TesterTqiComponentsAtSiteBreadcrumbs::class)
             )
         );
 

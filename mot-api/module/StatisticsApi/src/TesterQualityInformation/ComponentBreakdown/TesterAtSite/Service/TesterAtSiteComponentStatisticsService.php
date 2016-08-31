@@ -4,8 +4,9 @@ namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Mapper\ComponentBreakdownDtoMapper;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\ParameterCheck\GroupStatisticsParameterCheck;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterAtSite\Repository\TesterAtSiteComponentStatisticsRepository;
-use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Repository\TesterAtSiteStatisticsRepository;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Repository\TesterAtSiteSingleGroupStatisticsRepository;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
+use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
@@ -20,16 +21,17 @@ class TesterAtSiteComponentStatisticsService implements AutoWireableInterface
     private $authorisationService;
     private $personContactService;
     private $dtoMapper;
+    private $identityProvider;
 
     public function __construct(
         TesterAtSiteComponentStatisticsRepository $componentStatisticsRepository,
-        TesterAtSiteStatisticsRepository $testerStatisticsRepository,
+        TesterAtSiteSingleGroupStatisticsRepository $testerStatisticsRepository,
         DateTimeHolder $dateTimeHolder,
         MotAuthorisationServiceInterface $authorisationService,
         PersonalDetailsService $personalDetailsService,
-        ComponentBreakdownDtoMapper $dtoMapper
-    )
-    {
+        ComponentBreakdownDtoMapper $dtoMapper,
+        MotIdentityProviderInterface $identityProvider
+    ) {
         $this->componentStatisticsRepository = $componentStatisticsRepository;
         $this->dateTimeHolder = $dateTimeHolder;
         $this->testerStatisticsRepository = $testerStatisticsRepository;
@@ -37,11 +39,14 @@ class TesterAtSiteComponentStatisticsService implements AutoWireableInterface
         $this->personContactService = $personalDetailsService;
         $this->dateTimeHolder = $dateTimeHolder;
         $this->dtoMapper = $dtoMapper;
+        $this->identityProvider = $identityProvider;
     }
 
     public function get($siteId, $testerId, $group, $year, $month)
     {
-        $this->authorisationService->assertGrantedAtSite(PermissionAtSite::VTS_VIEW_TEST_QUALITY, $siteId);
+        if ($this->identityProvider->getIdentity()->getUserId() != $testerId) {
+            $this->authorisationService->assertGrantedAtSite(PermissionAtSite::VTS_VIEW_TEST_QUALITY, $siteId);
+        }
 
         $validator = new GroupStatisticsParameterCheck($this->dateTimeHolder);
         if (!$validator->isValid($year, $month, $group)) {

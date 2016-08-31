@@ -4,21 +4,28 @@ namespace Site\Action;
 use Core\Action\ActionResult;
 use Core\Action\FileAction;
 use Core\Action\NotFoundActionResult;
+use Core\Routing\ProfileRoutes;
+use Core\Routing\VtsRouteList;
 use Core\Routing\VtsRoutes;
 use DateTime;
+use Dvsa\Mot\Frontend\PersonModule\Routes\PersonProfileRoutes;
+use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
+use DvsaClient\Mapper\SiteMapper;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\ComponentFailRateApiResource;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentBreakdownDto;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\NationalComponentStatisticApiResource;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\NationalPerformanceApiResource;
 use DvsaCommon\Auth\Assertion\ViewVtsTestQualityAssertion;
+use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Date\Exception\IncorrectDateFormatException;
 use DvsaCommon\Dto\Site\SiteDto;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
-use DvsaClient\Mapper\SiteMapper;
 use Site\Mapper\UserTestQualityCsvMapper;
 use Site\ViewModel\TestQuality\UserTestQualityViewModel;
+use Zend\Mvc\Controller\Plugin\Url;
+use Zend\Mvc\Router\Http\RouteMatch;
 
 class UserTestQualityAction implements AutoWireableInterface
 {
@@ -35,24 +42,36 @@ class UserTestQualityAction implements AutoWireableInterface
     /** @var DateTime */
     private $viewedDate;
     private $nationalPerformanceApiResource;
+    private $contextProvider;
+    private $routeMatch;
+    private $identityProvider;
 
     public function __construct(
         ComponentFailRateApiResource $componentFailRateApiResource,
         NationalComponentStatisticApiResource $nationalComponentStatisticApiResource,
         NationalPerformanceApiResource $nationalPerformanceApiResource,
         ViewVtsTestQualityAssertion $assertion,
-        SiteMapper $siteMapper
-    ) {
+        SiteMapper $siteMapper,
+        ContextProvider $contextProvider,
+        RouteMatch $routeMatch,
+        MotIdentityProviderInterface $identityProvider
+    )
+    {
         $this->assertion = $assertion;
         $this->componentFailRateApiResource = $componentFailRateApiResource;
         $this->nationalComponentStatisticApiResource = $nationalComponentStatisticApiResource;
         $this->siteMapper = $siteMapper;
         $this->nationalPerformanceApiResource = $nationalPerformanceApiResource;
+        $this->contextProvider = $contextProvider;
+        $this->routeMatch = $routeMatch;
+        $this->identityProvider = $identityProvider;
     }
 
-    public function execute($siteId, $userId, $month, $year, $groupCode, array $breadcrumbs, $isReturnToAETQI, $urlPlugin)
+    public function execute($siteId, $userId, $month, $year, $groupCode, array $breadcrumbs, $isReturnToAETQI, Url $urlPlugin)
     {
-        $this->assertion->assertGranted($siteId);
+        if($this->identityProvider->getIdentity()->getUserId() != $userId) {
+            $this->assertion->assertGranted($siteId);
+        }
 
         try {
             $this->viewedDate = $this->setMonthAndYear($month, $year);
@@ -63,14 +82,44 @@ class UserTestQualityAction implements AutoWireableInterface
         $userBreakdown = $this->componentFailRateApiResource->getForTesterAtSite($siteId, $userId, $groupCode, $month, $year);
         $nationalBreakdown = $this->nationalComponentStatisticApiResource->getForDate($groupCode, $month, $year);
         $nationalGroupPerformance = $this->getNationalGroupPerformance($groupCode, $month, $year);
-        $this->site = $this->siteMapper->getById($siteId);
 
-        $returnLink = VtsRoutes::of($urlPlugin)->vtsTestQuality($siteId, $month, $year);
+        if ($this->contextProvider->isYourProfileContext()) {
+            $returnLink = ProfileRoutes::of($urlPlugin)->yourProfileTqi($month, $year);
+            $showCsvLink = false;
+        } elseif ($this->contextProvider->isUserSearchContext()) {
+            $returnLink = ProfileRoutes::of($urlPlugin)->userSearchTqi($userId, $month, $year);
+            $showCsvLink = false;
+        } else {
+            $query = [];
+            if ($isReturnToAETQI) {
+                $query['returnToAETQI'] = true;
+            }
 
-        $csvMapper = new UserTestQualityCsvMapper($userBreakdown, $nationalBreakdown, $nationalGroupPerformance, $this->site, $groupCode, $month, $year);
+            $returnLink = VtsRoutes::of($urlPlugin)->vtsTestQuality($siteId, $month, $year, $query);
+            $showCsvLink = true;
+
+            if ($this->routeMatch->getMatchedRouteName() === VtsRouteList::VTS_USER_PROFILE_TEST_QUALITY) {
+                $showCsvLink = false;
+                $returnLink = $urlPlugin->fromRoute("newProfileVTS/test-quality-information", ["vehicleTestingStationId" => $siteId, "id" => $userId, "month" => $month, "year" => $year]);
+            }
+
+            if($this->checkIfUserHasTests($userBreakdown)) {
+                $this->site = $this->siteMapper->getById($siteId);
+                $csvMapper = new UserTestQualityCsvMapper($userBreakdown, $nationalBreakdown, $nationalGroupPerformance, $this->site, $groupCode, $month, $year);
+                $csvSizeInBytes = $csvMapper->toCsvFile()->getSizeInBytes();
+            }
+        }
 
         if ($this->checkIfUserHasTests($userBreakdown)) {
-            $breadcrumbs += [self::PAGE_TITLE => $returnLink, $userBreakdown->getDisplayName() => null];
+            if (
+                $this->contextProvider->isYourProfileContext() ||
+                $this->contextProvider->isUserSearchContext() ||
+                ($this->routeMatch->getMatchedRouteName() === VtsRouteList::VTS_USER_PROFILE_TEST_QUALITY)
+            ) {
+                $breadcrumbs[$userBreakdown->getSiteName()] = null;
+            } else {
+                $breadcrumbs += [self::PAGE_TITLE => $returnLink, $userBreakdown->getDisplayName() => null];
+            }
 
             return $this->buildActionResult(
                 new UserTestQualityViewModel($userBreakdown,
@@ -78,13 +127,15 @@ class UserTestQualityAction implements AutoWireableInterface
                     $nationalBreakdown,
                     $groupCode,
                     $userId,
-                    $this->site,
+                    $siteId,
                     $this->viewedDate,
-                    $csvMapper->toCsvFile()->getSizeInBytes(),
-                    $isReturnToAETQI
+                    isset($csvSizeInBytes) ? $csvSizeInBytes : 0,
+                    $returnLink,
+                    $showCsvLink
                 ),
                 $breadcrumbs,
-                $userBreakdown->getDisplayName()
+                $userBreakdown->getDisplayName(),
+                $userBreakdown->getSiteName()
             );
         } else {
             return new NotFoundActionResult();
@@ -107,7 +158,7 @@ class UserTestQualityAction implements AutoWireableInterface
         return new FileAction($mapper->toCsvFile());
     }
 
-    private function buildActionResult(UserTestQualityViewModel $vm, array $breadcrumbs, $userName)
+    private function buildActionResult(UserTestQualityViewModel $vm, array $breadcrumbs, $userName, $siteName)
     {
         $actionResult = new ActionResult();
         $actionResult->setViewModel($vm);
@@ -116,7 +167,7 @@ class UserTestQualityAction implements AutoWireableInterface
         $actionResult->layout()->setPageSubTitle(static::PAGE_TITLE);
         $actionResult->layout()->setTemplate('layout/layout-govuk.phtml');
         $actionResult->layout()->setBreadcrumbs($breadcrumbs);
-        $actionResult->layout()->setPageTertiaryTitle($this->getTertiaryTitle());
+        $actionResult->layout()->setPageTertiaryTitle($this->getTertiaryTitle($siteName));
 
         return $actionResult;
     }
@@ -148,14 +199,9 @@ class UserTestQualityAction implements AutoWireableInterface
         return DateUtils::toDateFromParts(1, $month, $year);
     }
 
-    private function getTertiaryTitle()
+    private function getTertiaryTitle($siteName)
     {
-        return "Tests done at " . $this->getGarageName() . " in " . $this->viewedDate->format("F Y");
-    }
-
-    private function getGarageName()
-    {
-        return $this->site->getName();
+        return "Tests done at " . $siteName . " in " . $this->viewedDate->format("F Y");
     }
 
     private function getNationalGroupPerformance($groupCode, $month, $year)

@@ -7,6 +7,7 @@ use DvsaCommon\DtoSerialization\ReflectiveDtoInterface;
 use DvsaCommon\Utility\AddressUtils;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Utility\TypeCheck;
+use DvsaEntities\Entity\Address;
 
 /**
  * Dto for address data
