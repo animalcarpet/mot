@@ -36,7 +36,7 @@ class VtsRoutes extends AbstractRoutes
         );
     }
 
-    public function vtsTestQuality($id, $month, $year)
+    public function vtsTestQuality($id, $month, $year, array $query = [])
     {
         return $this->url(
             VtsRouteList::VTS_TEST_QUALITY,
@@ -44,6 +44,37 @@ class VtsRoutes extends AbstractRoutes
                 'id'    => $id,
                 'month' => $month,
                 'year'  => $year,
+            ],
+            [
+                'query' => $query
+            ]
+        );
+    }
+
+    public function vtsUserTestQuality($vtsId, $userId, $month, $year, $group)
+    {
+        return $this->url(
+            VtsRouteList::VTS_USER_TEST_QUALITY,
+            [
+                'id' => $vtsId,
+                'userId' => $userId,
+                'month' => $month,
+                'year'  => $year,
+                'group' => $group
+            ]
+        );
+    }
+
+    public function vtsUserProfileTestQuality($vtsId, $userId, $month, $year, $group)
+    {
+        return $this->url(
+            VtsRouteList::VTS_USER_PROFILE_TEST_QUALITY,
+            [
+                'id' => $vtsId,
+                'userId' => $userId,
+                'month' => $month,
+                'year'  => $year,
+                'group' => $group
             ]
         );
     }

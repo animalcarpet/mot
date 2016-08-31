@@ -2,29 +2,40 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\Action;
 
-
+use Core\Action\AbstractActionResult;
 use Core\Action\ActionResult;
 use Core\Action\NotFoundActionResult;
+use Core\Formatting\AddressFormatter;
+use Core\Routing\ProfileRoutes;
+use Core\Routing\VtsRoutes;
 use Dvsa\Mot\Frontend\PersonModule\Routes\PersonProfileRoutes;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
+use Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityInformation\SiteRowViewModel;
 use Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityInformation\TestQualityInformationMonthFilter;
 use Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityInformation\TestQualityInformationViewModel;
+use Dvsa\Mot\Frontend\TestQualityInformation\Breadcrumbs\TesterTqiBreadcrumbs;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\NationalPerformanceReportDto;
+use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\TesterMultiSitePerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\TesterPerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\NationalPerformanceApiResource;
+use DvsaCommon\ApiClient\Statistics\TesterPerformance\TesterMultiSitePerformanceApiResource;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\TesterPerformanceApiResource;
 use DvsaCommon\Auth\Assertion\ViewTesterTestQualityAssertion;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Date\Exception\IncorrectDateFormatException;
+use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
+use DvsaCommon\Utility\ArrayUtils;
+use DvsaCommon\Utility\TypeCheck;
 use Zend\Mvc\Controller\Plugin\Url;
 
 class TestQualityAction implements AutoWireableInterface
 {
     const SUBTITLE_YOUR_PROFILE = 'Your profile';
     const SUBTITLE_USER_PROFILE = 'User profile';
-    const COMPONENT_BREAKDOWN_LINK_TEXT = 'View %sGroup %s failures by category in %s %s';
+    const COMPONENT_BREAKDOWN_LINK_TEXT = 'failures by category in %s %s';
+    const COMPONENT_BREAKDOWN_LINK_TEXT_GROUP = 'View %sGroup %s ';
 
     /** @var  TesterPerformanceApiResource $testerPerformanceApiResource */
     private $testerPerformanceApiResource;
@@ -44,13 +55,23 @@ class TestQualityAction implements AutoWireableInterface
     /** @var PersonProfileRoutes $personProfileRoutes */
     private $personProfileRoutes;
 
+    private $multiSiteApiResource;
+
+    private $testerTqiBreadcrumbs;
+
+    private $contextProvider;
+
+    private $url;
+
     public function __construct(
         TesterPerformanceApiResource $testerPerformanceApiResource,
         NationalPerformanceApiResource $nationalPerformanceApiResource,
         ContextProvider $contextProvider,
         TesterGroupAuthorisationMapper $testerGroupAuthorisationMapper,
         ViewTesterTestQualityAssertion $viewTesterTestQualityAssertion,
-        PersonProfileRoutes $personProfileRoutes
+        PersonProfileRoutes $personProfileRoutes,
+        TesterMultiSitePerformanceApiResource $multiSiteApiResource,
+        TesterTqiBreadcrumbs $testerTqiBreadcrumbs
     )
     {
         $this->testerPerformanceApiResource = $testerPerformanceApiResource;
@@ -58,6 +79,9 @@ class TestQualityAction implements AutoWireableInterface
         $this->testerGroupAuthorisationMapper = $testerGroupAuthorisationMapper;
         $this->viewTesterTestQualityAssertion = $viewTesterTestQualityAssertion;
         $this->personProfileRoutes = $personProfileRoutes;
+        $this->multiSiteApiResource = $multiSiteApiResource;
+        $this->testerTqiBreadcrumbs = $testerTqiBreadcrumbs;
+        $this->contextProvider = $contextProvider;
         $this->setYourProfileFlag($contextProvider->getContext());
     }
 
@@ -65,20 +89,19 @@ class TestQualityAction implements AutoWireableInterface
      * @param int $targetPersonId
      * @param int $month
      * @param int $year
-     * @param Url $url
      * @param $requestParams
-     * @param array $breadcrumbs
-     * @return ActionResult
+     * @return AbstractActionResult
      */
     public function execute(
         $targetPersonId,
         $month,
         $year,
         Url $url,
-        $requestParams,
-        array $breadcrumbs
+        $requestParams
     )
     {
+        $this->url = $url;
+
         $personAuthorisation = $this->testerGroupAuthorisationMapper->getAuthorisation($targetPersonId);
         $this->viewTesterTestQualityAssertion->assertGranted($targetPersonId, $personAuthorisation);
 
@@ -91,32 +114,87 @@ class TestQualityAction implements AutoWireableInterface
         } catch (IncorrectDateFormatException $ie) {
             return new NotFoundActionResult();
         }
-        $returnLink = $url->fromRoute($this->personProfileRoutes->getRoute(), $requestParams);
+
+        $siteStats = $this->multiSiteApiResource->get($targetPersonId,  $month, $year);
+
+        $groupAStats = $this->mapSiteStatsDtoToViewModel($siteStats->getA(), $month, $year, $targetPersonId, VehicleClassGroupCode::BIKES);
+        $groupBStats = $this->mapSiteStatsDtoToViewModel($siteStats->getB(), $month, $year, $targetPersonId, VehicleClassGroupCode::CARS_ETC);
+
+        $returnLink = $this->url->fromRoute($this->personProfileRoutes->getRoute(), $requestParams);
 
         $componentBreakdownLinkText = sprintf(
             self::COMPONENT_BREAKDOWN_LINK_TEXT,
-            $this->isYourProfile ? 'your ' : '',
-            '%s',
             $this->getMonthFullName($date),
             $year
+        );
+
+        $componentBreakdownLinkTextGroup = sprintf(
+            self::COMPONENT_BREAKDOWN_LINK_TEXT_GROUP,
+            $this->isYourProfile ? 'your ' : '',
+            '%s'
         );
 
         return $this->buildActionResult(
             new TestQualityInformationViewModel(
                 $testerPerformance,
+                $groupAStats,
+                $groupBStats,
                 $nationalPerformance,
                 $personAuthorisation,
                 $date,
                 $returnLink,
                 $this->getReturnLinkText(),
                 $componentBreakdownLinkText,
-                $this->getMonthFilter($requestParams, $url)
+                $componentBreakdownLinkTextGroup,
+                $this->getMonthFilter($requestParams)
             ),
             $this->getMonthFullName($date),
             $year,
-            $breadcrumbs
+            $this->testerTqiBreadcrumbs->getBreadcrumbs($targetPersonId)
         );
+    }
 
+    /**
+     * @param TesterMultiSitePerformanceDto[] $siteTestsDtoArray
+     * @return SiteRowViewModel[]
+     */
+    private function mapSiteStatsDtoToViewModel(array $siteTestsDtoArray, $month, $year, $targetPersonId, $group)
+    {
+        TypeCheck::isCollectionOfClass($siteTestsDtoArray, TesterMultiSitePerformanceDto::class);
+
+        $comparator = function (TesterMultiSitePerformanceDto $a, TesterMultiSitePerformanceDto $b) {
+            return $b->getTotal() - $a->getTotal();
+        };
+
+        usort($siteTestsDtoArray, $comparator);
+
+        return ArrayUtils::map($siteTestsDtoArray, function (TesterMultiSitePerformanceDto $siteStatsDto) use ($month, $year, $targetPersonId, $group){
+            if ($this->contextProvider->isYourProfileContext()) {
+                $tqiComponentsAtSiteUrl = ProfileRoutes::of($this->url)->yourProfileTqiComponentsAtSite($siteStatsDto->getSiteId(), $month, $year, $group);
+            } elseif ($this->contextProvider->isUserSearchContext()) {
+                $tqiComponentsAtSiteUrl = ProfileRoutes::of($this->url)->userSearchTqiComponentsAtSite($targetPersonId, $siteStatsDto->getSiteId(), $month, $year, $group);
+            } else {
+                $tqiComponentsAtSiteUrl = VtsRoutes::of($this->url)->vtsUserProfileTestQuality($siteStatsDto->getSiteId(), $targetPersonId, $month, $year, $group);
+            }
+
+            $addressLine = $siteStatsDto->getSiteAddress()
+                ? (new AddressFormatter())
+                ->setAddressPartsGlue(', ')
+                ->escapedDtoToMultiLine($siteStatsDto->getSiteAddress())
+                : "";
+
+            return new SiteRowViewModel(
+                $siteStatsDto->getSiteId(),
+                $siteStatsDto->getSiteName(),
+                $addressLine,
+                $siteStatsDto->getTotal(),
+                $siteStatsDto->getIsAverageVehicleAgeAvailable(),
+                $siteStatsDto->getAverageVehicleAgeInMonths(),
+                $siteStatsDto->getAverageTime(),
+                $siteStatsDto->getPercentageFailed(),
+                $tqiComponentsAtSiteUrl
+            );
+        });
     }
 
     /**
@@ -167,11 +245,10 @@ class TestQualityAction implements AutoWireableInterface
 
     /**
      * @param $params
-     * @param $url
      * @return TestQualityInformationMonthFilter
      */
-    private function getMonthFilter($params, $url)
+    private function getMonthFilter($params)
     {
-        return new TestQualityInformationMonthFilter($this->personProfileRoutes, $params, $url);
+        return new TestQualityInformationMonthFilter($this->personProfileRoutes, $params, $this->url);
     }
 }

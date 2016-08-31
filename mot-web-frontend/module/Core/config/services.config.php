@@ -8,8 +8,9 @@ use Core\Factory\LazyMotFrontendAuthorisationServiceFactory;
 use Core\Factory\MotEventManagerFactory;
 use Core\Factory\MotIdentityProviderFactory;
 use Core\Factory\UrlHelperFactory;
-use Core\Factory\WebAcknowledgeSpecialNoticeAssertionFactory;
+use Core\Factory\HttpRouteMatchFactory;
 use Core\Factory\WebPerformMotTestAssertionFactory;
+use Core\Factory\WebAcknowledgeSpecialNoticeAssertionFactory;
 use Core\Service\MotEventManager;
 use Core\Service\MotFrontendIdentityProviderInterface;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
@@ -20,6 +21,7 @@ use DvsaCommon\Factory\AutoWire\AutoWireFactory;
 use DvsaMotTest\NewVehicle\Form\VehicleWizard\CreateVehicleFormWizard;
 use DvsaMotTest\NewVehicle\Form\VehicleWizard\Factory\CreateVehicleFormWizardFactory;
 use Zend\View\Helper\Url;
+use Zend\Mvc\Router\Http\RouteMatch;
 
 return [
     'factories' => [
@@ -34,7 +36,8 @@ return [
         MotConfig::class => MotConfigFactory::class,
         EnumCatalog::class => EnumCatalogFactory::class,
         Url::class => UrlHelperFactory::class,
-        MotEventManager::class => MotEventManagerFactory::class
+        MotEventManager::class => MotEventManagerFactory::class,
+        RouteMatch::class => HttpRouteMatchFactory::class,
     ],
     'abstract_factories' => [
         AutoWireFactory::class,
