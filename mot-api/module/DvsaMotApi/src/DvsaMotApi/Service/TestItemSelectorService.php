@@ -39,9 +39,7 @@ class TestItemSelectorService extends AbstractService
     private $testItemCategoryRepository;
     private $disabledRfrs = [];
 
-    /**
-     * @var FeatureToggles
-     */
+    /** @var FeatureToggles */
     private $featureToggles;
 
     public function __construct(
@@ -244,6 +242,19 @@ class TestItemSelectorService extends AbstractService
         $testItemSelector = current($testItemSelectorResult);
 
         $testItemSelectors = $this->testItemCategoryRepository->findByParentIdAndVehicleClass($id, $vehicleClass);
+
+        if ($this->featureToggles->isEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)) {
+            foreach ($testItemSelectors as $key => $value) {
+                if (empty($this->testItemCategoryRepository->findByParentIdAndVehicleClass(
+                        $value->getId(), $vehicleClass))
+                    &&
+                    empty($this->rfrRepository->findByIdAndVehicleClassForUserRole(
+                        $value->getId(), $vehicleClass, $role))
+                ) {
+                    unset($testItemSelectors[$key]);
+                }
+            }
+        }
 
         $reasonsForRejection = $this->rfrRepository->findByIdAndVehicleClassForUserRole($id, $vehicleClass, $role);
 
