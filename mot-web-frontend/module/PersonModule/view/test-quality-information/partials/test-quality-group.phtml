@@ -1,5 +1,6 @@
 <?php
 use Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityInformation\GroupStatisticsTable;
+use Site\ViewModel\TimeSpanFormatter;
 
 /** @var GroupStatisticsTable $group */
 ?>
@@ -51,15 +52,30 @@ use Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityInformation\GroupStatist
         ]); ?>
 
     </tr>
-    <?php if ($group->hasTests()): ?>
+
+    <?php if ($group->hasTests()) : ?>
+        <?php foreach ($group->getSiteTests() as $site): ?>
             <tr class="">
-                <td class="" colspan="5">
-                    <a href="<?php echo $group->getComponentLink(); ?>">
-                        <?php echo $group->getComponentLinkText(); ?>
-                    </a>
+                <td class=" ">
+                    <a href="<?php echo $site->getTqiComponentsAtSiteUrl() ?>"><?php echo $site->getSiteName() ?></a>
+                    <span class="table-summary__meta"><?php echo $site->getSiteAddress() ?>
+                    </span>
+                </td>
+                <td class="numeric ">
+                    <?php echo $site->getTestsDone() ?>
+                </td>
+                <td class="numeric ">
+                    <?php echo $site->getAverageVehicleAgeAsString() ?>
+                </td>
+                <td class="numeric ">
+                    <?php echo (new TimeSpanFormatter())->formatForTestQualityInformationView($site->getAverageTestTime()) ?>
+                </td>
+                <td class="numeric ">
+                    <?php echo $site->getTestsFailedPercentage() ?>
                 </td>
             </tr>
-    <?php else: ?>
+        <?php endforeach; ?>
+     <?php else: ?>
         <tr>
             <td colspan="5">
                 No Group <?php echo $group->getGroupCode() ?> tests done
@@ -97,3 +113,10 @@ use Dvsa\Mot\Frontend\PersonModule\ViewModel\TestQualityInformation\GroupStatist
     <?php endif; ?>
     </tbody>
 </table>
+<?php if ($group->hasTests()): ?>
+    <div class="result__actions">
+        <p><?php echo $group->getComponentLinkTextGroup() ?>
+            <a href="<?php echo $group->getComponentLink(); ?>" class="" id="<?php echo $group->getComponentLinkId() ?>"><?php echo $group->getComponentLinkText(); ?></a>.
+        </p>
+    </div>
+<?php endif; ?>

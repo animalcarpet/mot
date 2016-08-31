@@ -3,8 +3,8 @@ namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\Mapper\ComponentBreakdownDtoMapper;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\ParameterCheck\GroupStatisticsParameterCheck;
-use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Tester\Repository\TesterComponentStatisticsRepository;
-use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Tester\Repository\TesterStatisticsRepository;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Tester\Repository\TesterComponentStatisticsRepository;
+use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Tester\Repository\TesterSingleGroupStatisticsRepository;
 use DvsaCommon\Auth\Assertion\ViewTesterTestQualityAssertion;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Date\DateTimeHolder;
@@ -26,7 +26,7 @@ class TesterComponentStatisticsService implements AutoWireableInterface
 
     public function __construct(
         TesterComponentStatisticsRepository $componentStatisticsRepository,
-        TesterStatisticsRepository $testerStatisticsRepository,
+        TesterSingleGroupStatisticsRepository $testerStatisticsRepository,
         DateTimeHolder $dateTimeHolder,
         MotAuthorisationServiceInterface $authorisationService,
         PersonalDetailsService $personalDetailsService,

@@ -55,6 +55,8 @@ class ComponentStatisticsRepository extends AbstractStatisticsRepository impleme
 
     protected function setParameters(AbstractQuery $query, $params)
     {
+        $query->setParameters($params);
+
         $query->setParameter('failedStatusCode', MotTestStatusCode::FAILED);
         $query->setParameter('passStatusCode', MotTestStatusCode::PASSED);
         $query->setParameter('normalTestCode', MotTestTypeCode::NORMAL_TEST);

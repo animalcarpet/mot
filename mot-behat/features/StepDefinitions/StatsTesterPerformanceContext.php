@@ -89,8 +89,7 @@ class StatsTesterPerformanceContext implements Context
      */
     public function iShouldBeAbleToSeeTheTesterPerformanceStatisticsPerformedMonthsAgoAtSite($months, SiteDto $site)
     {
-        $interval = sprintf("P%sM", $months);
-        $date = (new \DateTime())->sub(new \DateInterval($interval));
+        $date = new \DateTime(sprintf("first day of %s months ago", $months));
 
         /** @var SitePerformanceApiResource $apiResource */
         $apiResource = $this->apiResourceHelper->create(SitePerformanceApiResource::class);
@@ -107,8 +106,7 @@ class StatsTesterPerformanceContext implements Context
      */
     public function iShouldBeAbleToSeeNationalTesterPerformanceStatisticsForPerformedMonthsAgo($months)
     {
-        $interval = sprintf("P%dM", $months);
-        $date = (new \DateTime())->sub(new \DateInterval($interval));
+        $date = new \DateTime(sprintf("first day of %s months ago", $months));
 
         $month = (int)$date->format("m");
         $year = (int)$date->format("Y");
@@ -126,8 +124,7 @@ class StatsTesterPerformanceContext implements Context
      */
     public function thereIsNoTesterPerformanceStatisticsPerformedMonthsAgoAtSite($months, SiteDto $site)
     {
-        $interval = sprintf("P%dM", $months);
-        $date = (new \DateTime())->sub(new \DateInterval($interval));
+        $date = new \DateTime(sprintf("first day of %s months ago", $months));
 
         /** @var SitePerformanceApiResource $apiResource */
         $apiResource = $this->apiResourceHelper->create(SitePerformanceApiResource::class);
@@ -142,8 +139,7 @@ class StatsTesterPerformanceContext implements Context
      */
     public function iShouldBeAbleToSeeTheTesterPerformanceStatisticsPerformedMonthsAgo($months)
     {
-        $interval = sprintf("P%dM", $months);
-        $date = (new \DateTime())->sub(new \DateInterval($interval));
+        $date = new \DateTime(sprintf("first day of %s months ago", $months));
 
         /** @var TesterPerformanceApiResource $apiResource */
         $apiResource = $this->apiResourceHelper->create(TesterPerformanceApiResource::class);
@@ -163,8 +159,7 @@ class StatsTesterPerformanceContext implements Context
      */
     public function thereIsNoTesterPerformanceStatisticsPerformedMonthsAgo($months)
     {
-        $interval = sprintf("P%dM", $months);
-        $date = (new \DateTime())->sub(new \DateInterval($interval));
+        $date = new \DateTime(sprintf("first day of %s months ago", $months));
 
         /** @var TesterPerformanceApiResource $apiResource */
         $apiResource = $this->apiResourceHelper->create(TesterPerformanceApiResource::class);

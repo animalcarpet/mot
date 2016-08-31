@@ -65,8 +65,7 @@ class StatsComponentFailRateContext implements Context
      */
     public function iShouldBeAbleToSeeComponentFailRateStatisticsPerformedMonthsAgoAtSiteForTesterAndGroup($months, SiteDto $site, AuthenticatedUser $tester, $group)
     {
-        $interval = sprintf("P%sM", $months);
-        $date = (new \DateTime())->sub(new \DateInterval($interval));
+        $date = new \DateTime(sprintf("first day of %s months ago", $months));
 
         /** @var ComponentFailRateApiResource $apiResource */
         $apiResource = $this->apiResourceHelper->create(ComponentFailRateApiResource::class);
@@ -113,8 +112,7 @@ class StatsComponentFailRateContext implements Context
      */
     public function thereIsNoComponentFailRateStatisticsPerformedMonthsAgoAtSiteForTesterAndGroup($months, SiteDto $site, AuthenticatedUser $tester, $group)
     {
-        $interval = sprintf("P%dM", $months);
-        $date = (new \DateTime())->sub(new \DateInterval($interval));
+        $date = new \DateTime(sprintf("first day of %s months ago", $months));
 
         /** @var ComponentFailRateApiResource $apiResource */
         $apiResource = $this->apiResourceHelper->create(ComponentFailRateApiResource::class);
@@ -148,8 +146,7 @@ class StatsComponentFailRateContext implements Context
      */
     public function iShouldBeAbleToSeeNationalFailRateStatisticsPerformedMonthsAgoForTesterAndGroup($months, $group)
     {
-        $interval = sprintf("P%sM", $months);
-        $date = (new \DateTime())->sub(new \DateInterval($interval));
+        $date = new \DateTime(sprintf("first day of %s months ago", $months));
 
         $month = (int)$date->format("m");
         $year = (int)$date->format("Y");
@@ -168,8 +165,7 @@ class StatsComponentFailRateContext implements Context
      */
     public function iShouldBeAbleToSeeComponentFailRateStatisticsPerformedMonthsAgoForTesterAndGroup($months, AuthenticatedUser $tester, $group)
     {
-        $interval = sprintf("P%sM", $months);
-        $date = (new \DateTime())->sub(new \DateInterval($interval));
+        $date = new \DateTime(sprintf("first day of %s months ago", $months));
 
         /** @var ComponentFailRateApiResource $apiResource */
         $apiResource = $this->apiResourceHelper->create(ComponentFailRateApiResource::class);
@@ -188,8 +184,7 @@ class StatsComponentFailRateContext implements Context
      */
     public function thereIsNoComponentFailRateStatisticsPerformedMonthsAgoForTesterAndGroup($months, AuthenticatedUser $tester, $group)
     {
-        $interval = sprintf("P%sM", $months);
-        $date = (new \DateTime())->sub(new \DateInterval($interval));
+        $date = new \DateTime(sprintf("first day of %s months ago", $months));
 
         /** @var ComponentFailRateApiResource $apiResource */
         $apiResource = $this->apiResourceHelper->create(ComponentFailRateApiResource::class);
