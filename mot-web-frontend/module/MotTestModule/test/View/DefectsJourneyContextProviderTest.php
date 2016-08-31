@@ -74,57 +74,102 @@ class DefectsJourneyContextProviderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedContext, $this->contextProvider->getContext());
     }
 
+    public function testGetAvailableContexts()
+    {
+        $this->assertEquals(
+            [
+                DefectsJourneyContextProvider::SEARCH_CONTEXT,
+                DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT,
+                DefectsJourneyContextProvider::BROWSE_CATEGORIES_ROOT_CONTEXT,
+                DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT,
+                DefectsJourneyContextProvider::NO_CONTEXT,
+            ],
+            DefectsJourneyContextProvider::getAvailableContexts()
+        );
+    }
+
+    /**
+     * @dataProvider testGetContextForBackUrlTextProvider
+     *
+     * @param string $routeName
+     * @param string $expectedText
+     */
+    public function testGetContextForBackUrlText($routeName, $expectedText)
+    {
+        $this
+            ->routeMatch
+            ->expects($this->once())
+            ->method('getMatchedRouteName')
+            ->willReturn($routeName);
+
+        $this->assertEquals($expectedText, $this->contextProvider->getContextForBackUrlText());
+    }
+
+    /**
+     * @return array
+     */
+    public function testGetContextForBackUrlTextProvider()
+    {
+        return [
+            ['', DefectsJourneyContextProvider::NO_CONTEXT],
+            [DefectsJourneyContextProvider::MOT_TEST_RESULTS_PARENT_ROUTE, 'MOT test results'],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE, 'search results'],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE, 'defect categories'],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE.'/category/add-defect/otherRoute', 'defects'],
+        ];
+    }
+
     /**
      * @return array
      */
     public function routesProvider()
     {
         return [
-            [ '', DefectsJourneyContextProvider::NO_CONTEXT ],
-            [ 'unknownParentRoute', DefectsJourneyContextProvider::NO_CONTEXT ],
-            [ 'unknownParentRoute/', DefectsJourneyContextProvider::NO_CONTEXT ],
-            [ 'unknownParentRoute/unknownRoute', DefectsJourneyContextProvider::NO_CONTEXT ],
+            ['', DefectsJourneyContextProvider::NO_CONTEXT],
+            ['unknownParentRoute', DefectsJourneyContextProvider::NO_CONTEXT],
+            ['unknownParentRoute/', DefectsJourneyContextProvider::NO_CONTEXT],
+            ['unknownParentRoute/unknownRoute', DefectsJourneyContextProvider::NO_CONTEXT],
 
-            [ DefectsJourneyContextProvider::MOT_TEST_RESULTS_PARENT_ROUTE, DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT ],
-            [ DefectsJourneyContextProvider::MOT_TEST_RESULTS_PARENT_ROUTE . '/unknownRoute', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT ],
-            [ DefectsJourneyContextProvider::MOT_TEST_RESULTS_PARENT_ROUTE . '/edit-defect', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT ],
-            [ DefectsJourneyContextProvider::MOT_TEST_RESULTS_PARENT_ROUTE . '/remove-defect', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT ],
+            [DefectsJourneyContextProvider::MOT_TEST_RESULTS_PARENT_ROUTE, DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT],
+            [DefectsJourneyContextProvider::MOT_TEST_RESULTS_PARENT_ROUTE.'/unknownRoute', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT],
+            [DefectsJourneyContextProvider::MOT_TEST_RESULTS_PARENT_ROUTE.'/edit-defect', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT],
+            [DefectsJourneyContextProvider::MOT_TEST_RESULTS_PARENT_ROUTE.'/remove-defect', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT],
 
-            [ Module::TOP_LEVEL_ROUTE, DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT ],
-            [ Module::TOP_LEVEL_ROUTE . '/', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT ],
-            [ Module::TOP_LEVEL_ROUTE . '/otherRoute', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT ],
-            [ Module::TOP_LEVEL_ROUTE . '/unknownRoute', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT ],
-            [ Module::TOP_LEVEL_ROUTE . '/unknownRoute/otherRoute', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT ],
-            [ Module::TOP_LEVEL_ROUTE . '/edit-defect', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT ],
-            [ Module::TOP_LEVEL_ROUTE . '/edit-defect/otherRoute', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT ],
-            [ Module::TOP_LEVEL_ROUTE . '/remove-defect', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT ],
-            [ Module::TOP_LEVEL_ROUTE . '/remove-defect/otherRoute', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT ],
+            [Module::TOP_LEVEL_ROUTE, DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT],
+            [Module::TOP_LEVEL_ROUTE.'/', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT],
+            [Module::TOP_LEVEL_ROUTE.'/otherRoute', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT],
+            [Module::TOP_LEVEL_ROUTE.'/unknownRoute', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT],
+            [Module::TOP_LEVEL_ROUTE.'/unknownRoute/otherRoute', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT],
+            [Module::TOP_LEVEL_ROUTE.'/edit-defect', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT],
+            [Module::TOP_LEVEL_ROUTE.'/edit-defect/otherRoute', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT],
+            [Module::TOP_LEVEL_ROUTE.'/remove-defect', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT],
+            [Module::TOP_LEVEL_ROUTE.'/remove-defect/otherRoute', DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT],
 
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE, DefectsJourneyContextProvider::SEARCH_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE . '/', DefectsJourneyContextProvider::SEARCH_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE . '/otherRoute', DefectsJourneyContextProvider::SEARCH_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE . '/add-manual-advisory', DefectsJourneyContextProvider::SEARCH_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE . '/add-manual-advisory/otherRoute', DefectsJourneyContextProvider::SEARCH_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE . '/add-defect', DefectsJourneyContextProvider::SEARCH_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE . '/add-defect/otherRoute', DefectsJourneyContextProvider::SEARCH_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE . '/edit-defect', DefectsJourneyContextProvider::SEARCH_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE . '/edit-defect/otherRoute', DefectsJourneyContextProvider::SEARCH_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE . '/remove-defect', DefectsJourneyContextProvider::SEARCH_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE . '/remove-defect/otherRoute', DefectsJourneyContextProvider::SEARCH_CONTEXT ],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE, DefectsJourneyContextProvider::SEARCH_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE.'/', DefectsJourneyContextProvider::SEARCH_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE.'/otherRoute', DefectsJourneyContextProvider::SEARCH_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE.'/add-manual-advisory', DefectsJourneyContextProvider::SEARCH_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE.'/add-manual-advisory/otherRoute', DefectsJourneyContextProvider::SEARCH_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE.'/add-defect', DefectsJourneyContextProvider::SEARCH_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE.'/add-defect/otherRoute', DefectsJourneyContextProvider::SEARCH_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE.'/edit-defect', DefectsJourneyContextProvider::SEARCH_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE.'/edit-defect/otherRoute', DefectsJourneyContextProvider::SEARCH_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE.'/remove-defect', DefectsJourneyContextProvider::SEARCH_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE.'/remove-defect/otherRoute', DefectsJourneyContextProvider::SEARCH_CONTEXT],
 
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE, DefectsJourneyContextProvider::BROWSE_CATEGORIES_ROOT_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE . '/', DefectsJourneyContextProvider::BROWSE_CATEGORIES_ROOT_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE . '/otherRoute', DefectsJourneyContextProvider::BROWSE_CATEGORIES_ROOT_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE . '/category', DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE . '/category/otherRoute', DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE . '/category/add-manual-advisory', DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE . '/category/add-manual-advisory/otherRoute', DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE . '/category/add-defect', DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE . '/category/add-defect/otherRoute', DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE . '/category/edit-defect', DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE . '/category/edit-defect/otherRoute', DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE . '/category/remove-defect', DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT ],
-            [ DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE . '/' . DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE . '/category/remove-defect/otherRoute', DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT ],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE, DefectsJourneyContextProvider::BROWSE_CATEGORIES_ROOT_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE.'/', DefectsJourneyContextProvider::BROWSE_CATEGORIES_ROOT_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE.'/otherRoute', DefectsJourneyContextProvider::BROWSE_CATEGORIES_ROOT_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE.'/category', DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE.'/category/otherRoute', DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE.'/category/add-manual-advisory', DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE.'/category/add-manual-advisory/otherRoute', DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE.'/category/add-defect', DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE.'/category/add-defect/otherRoute', DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE.'/category/edit-defect', DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE.'/category/edit-defect/otherRoute', DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE.'/category/remove-defect', DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT],
+            [DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE.'/'.DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE.'/category/remove-defect/otherRoute', DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT],
         ];
     }
 }

@@ -22,6 +22,9 @@ class DefectTest extends \PHPUnit_Framework_TestCase
 
         $defect->setInspectionManualReferenceUrl('http://noot.com');
 
+        $defect->setDefectBreadcrumb('breadcrumb');
+
+        $this->assertEquals('breadcrumb', $defect->getDefectBreadcrumb());
         $this->assertEquals(10, $defect->getDefectId());
         $this->assertEquals(20, $defect->getParentCategoryId());
         $this->assertEquals('Description', $defect->getDescription());

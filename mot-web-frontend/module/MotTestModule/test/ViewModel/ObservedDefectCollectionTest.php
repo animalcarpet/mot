@@ -2,6 +2,7 @@
 
 namespace DvsaMotTestTest\ViewModel;
 
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Exception\ObservedDefectNotFoundException;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\ObservedDefectCollection;
 use DvsaCommon\Dto\Common\MotTestDto;
 
@@ -12,7 +13,6 @@ class ObservedDefectCollectionTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider creationDataProvider
-     * @group wip
      *
      * @param array $reasonsForRejection
      * @param bool  $hasFailures
@@ -134,6 +134,22 @@ class ObservedDefectCollectionTest extends \PHPUnit_Framework_TestCase
                 $loopIndex += 1;
             }
         }
+        $this->assertEquals((int) $hasFailures, $testCollection->getNumberOfFailures());
+        $this->assertEquals((int) $hasPrs, $testCollection->getNumberOfPrs());
+        $this->assertEquals((int) $hasAdvisories, $testCollection->getNumberOfAdvisories());
+        $this->assertEquals($hasFailures || $hasPrs || $hasAdvisories, $testCollection->hasFailuresPrsOrAdvisories());
+    }
+
+    /**
+     * @dataProvider creationDataProvider
+     */
+    public function testGetDefectByIdThrowsExceptionOnNonExistentDefect()
+    {
+        $this->setExpectedException(ObservedDefectNotFoundException::class);
+        $motTestMock = $this->createMotTestDto($this->getTestData(true, false, false));
+        $testCollection = ObservedDefectCollection::fromMotApiData($motTestMock);
+
+        $testCollection->getDefectById(9999);
     }
 
     /**
