@@ -14,6 +14,7 @@ class NotificationUrlBuilder extends UrlBuilder
     const PERSON = '/person/:personId';
     const READ = '/read';
     const ACTION = '/action';
+    const CREATE_NOTIFICATION = "/create";
 
     protected $routesStructure
         = [
@@ -27,6 +28,7 @@ class NotificationUrlBuilder extends UrlBuilder
                         [
                             self::READ => '',
                         ],
+                    self::CREATE_NOTIFICATION
                 ],
         ];
 
@@ -42,6 +44,13 @@ class NotificationUrlBuilder extends UrlBuilder
         $urlBuilder = new self();
 
         return $urlBuilder->appendRoutesAndParams(self::NOTIFICATION)->appendRoutesAndParams(self::PERSON);
+    }
+
+    public static function newNotification()
+    {
+        $urlBuilder = new self();
+
+        return $urlBuilder->appendRoutesAndParams(self::NOTIFICATION);
     }
 
     public function read()

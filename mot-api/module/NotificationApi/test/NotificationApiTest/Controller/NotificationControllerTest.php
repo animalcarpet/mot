@@ -17,7 +17,7 @@ class NotificationControllerTest extends AbstractNotificationApiControllerTestCa
     public function testWhiteList()
     {
         $this->assertMethodsOk(
-            ['delete', 'get', 'update']
+            ['delete', 'get', 'update', 'create']
         );
     }
 }
