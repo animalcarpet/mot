@@ -12,7 +12,7 @@ import uk.gov.dvsa.ui.pages.login.LoginPage;
 
 public class GiveFeedbackPage extends Page {
 
-    private static final String PAGE_TITLE = "Give feedback";
+    private static final String PAGE_TITLE = "You've successfully signed out";
     @FindBy(id = "cancel-and-return") private WebElement cancelAndReturnHomeLink;
     @FindBy(id = "submitSurvey") private WebElement sendFeedback;
     @FindBy(id = "satisfactionRating5") private WebElement verySatisfiedOption;
