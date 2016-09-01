@@ -29,8 +29,6 @@ module.exports = function (grunt, config) {
         };
 
         grunt.config('service_config', {
-            //workspace:  '/home/vagrant/mot',
-            //phpRootDir: '/opt/rh/php55/root',
             httpdServiceName: 'httpd24-httpd',
             opendjServiceName: 'opendj',
             mysqlServiceName: 'mysql',
@@ -43,26 +41,27 @@ module.exports = function (grunt, config) {
             host: '10.10.10.30',
             port: 22,
             username: 'vagrant',
-            privateKey: getKeyCmd('dev'),
-            workspace: '/home/vagrant/mot',
-            mysqlConfigDir: ''
+            privateKey: getKeyCmd('dev')
         });
         // dev2 (API, OpenAM)
         grunt.config('dev2_config', {
             host: '10.10.10.50',
             port: 22,
             username: 'vagrant',
-            privateKey: getKeyCmd('dev2'),
-            workspace: '/home/vagrant/mot',
-            phpRootDir: '/opt/rh/php55/root'
+            privateKey: getKeyCmd('dev2')
         });
 
-        // dev2 (API, OpenAM)
-        grunt.config('vagrant_config', grunt.config.get('dev2_config'));
         // dev (Frontend, OpenDJ, Jasper, MySQL)
         grunt.config('jasper_config', grunt.config.get('dev_config'));
         // dev2 (API, OpenAM)
         grunt.config('devopenam_config', grunt.config.get('dev2_config'));
-
+        grunt.config('vagrant_config', {
+            motConfigDir: '/etc/dvsa',
+            phpRootDir: '/opt/rh/php55/root',
+            motAppDir: '/opt/dvsa',
+            logDir: '/var/log',
+            workspace: '/home/vagrant/mot',
+            mysqlConfigDir: ''
+        });
     }
 };

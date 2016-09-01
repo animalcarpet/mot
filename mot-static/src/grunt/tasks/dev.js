@@ -121,5 +121,7 @@ module.exports = function (grunt, config) {
         grunt.registerTask('amazon:cache:clear:national-statistics', 'Clears the Amazon S3 cache of national statistics for test quality information', [
             'shell:national_statistics_amazon_cache_clear'
         ]);
+        grunt.registerTask('dev:zend-dev-tools:disable', 'Enable Zend Developer Tools', 'sshexec:zend_dev_tools_disable');
+        grunt.registerTask('dev:zend-dev-tools:enable', 'Disable Zend Developer Tools', 'sshexec:zend_dev_tools_enable');
     }
 };
