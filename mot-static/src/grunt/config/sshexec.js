@@ -43,8 +43,8 @@ module.exports = function (grunt, config) {
         var xdebug_ini_file = 'xdebug.ini';
 
         var trace_command = 'sudo tail -n 40 -f ';
-        var trace_file_var_log = trace_command + '/var/log';
-        var trace_file_opt_dvsa = trace_command + '/opt/dvsa';
+        var trace_file_var_log = trace_command + '<%= vagrant_config.logDir %>';
+        var trace_file_opt_dvsa = trace_command + '<%= vagrant_config.motAppDir %>';
 
         grunt.config('sshexec', {
             options: {
@@ -546,6 +546,18 @@ module.exports = function (grunt, config) {
             },
             create_dvsa_logger_db: {
                 command: 'cd <%= vagrant_config.workspace %>/mot-api/vendor/dvsa/dvsa-logger && ./bin/create_db.sh'
+            },
+            zend_dev_tools_enable: {
+                options: dev_ssh_options,
+                command: [
+                    'sed "s/.*dummy_key.*//g" <%= vagrant_config.motAppDir %>/mot-web-frontend/config/autoload/zenddevelopertools.development.php > /tmp/zenddevelopertools.development.php',
+                    'sudo cp /tmp/zenddevelopertools.development.php <%= vagrant_config.motConfigDir %>/mot-web-frontend/zenddevelopertools.development.php',
+                    'rm -f /tmp/zenddevelopertools.development.php'
+                ]
+            },
+            zend_dev_tools_disable: {
+                options: dev_ssh_options,
+                command: 'sudo rm -f <%= vagrant_config.motConfigDir %>/mot-web-frontend/zenddevelopertools.development.php'
             },
             enable_dvsa_logger_api: {
                 command: 'cp <%= vagrant_config.workspace %>/mot-api/config/autoload/z.dvsalogger.development.php.dist.opt <%= vagrant_config.workspace %>/mot-api/config/autoload/z.dvsalogger.development.php'
