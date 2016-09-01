@@ -112,6 +112,7 @@ class SecurityController extends AbstractDvsaActionController
         if ($response instanceof ViewModel) {
             $this->layout('layout/layout-govuk.phtml');
             $this->setPageTitle(self::PAGE_TITLE);
+            $this->layout()->setVariable('showOrganisationLogo', true);
         }
 
         return $response;

@@ -139,6 +139,9 @@ use Core\ViewModel\Sidebar\SidebarInterface;
 
         <?php endif; ?>
 
+        <?php if(isset($showOrganisationLogo)): ?>
+            <div class="organisation-logo organisation-logo--md">Driver &amp; Vehicle Standards Agency</div>
+        <?php endif; ?>
         <!-- Titles -->
         <?php if (isset($this->pageSubTitle) or (isset($this->pageTitle))): ?>
             <?php echo $this->partial(
