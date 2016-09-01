@@ -43,12 +43,57 @@ class DefectSentenceCaseConverterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Category for SRS', $result);
     }
 
-    public function testStringOfAcronymns()
+    public function testStringOfAcronyms()
     {
         $testString = 'BBC DVSA DVLA';
 
         $result = DefectSentenceCaseConverter::convert($testString);
 
         $this->assertEquals($testString, $result);
+    }
+
+    public function testWhitespace()
+    {
+        $testString = ' HMRC ABS RAC  ';
+
+        $result = DefectSentenceCaseConverter::convert($testString);
+
+        $this->assertEquals('HMRC ABS RAC', $result);
+    }
+
+    public function testWhitespaceWithAcronymExpansion()
+    {
+        $testString = ' HMRC ABS RAC  ';
+
+        $result = DefectSentenceCaseConverter::convertWithFirstOccurrenceOfAcronymsExpanded($testString);
+
+        $this->assertEquals('HMRC anti-lock brake system RAC', $result);
+    }
+
+    public function testSentenceCaseWithAcronymExpansion()
+    {
+        $testString = 'the ABS';
+
+        $result = DefectSentenceCaseConverter::convertWithFirstOccurrenceOfAcronymsExpanded($testString);
+
+        $this->assertEquals('The anti-lock brake system', $result);
+    }
+
+    public function testAcronymsExpandedOnlyOnce()
+    {
+        $testString = 'ABS ABS VIN VIN';
+
+        $result = DefectSentenceCaseConverter::convertWithFirstOccurrenceOfAcronymsExpanded($testString);
+
+        $this->assertEquals('Anti-lock brake system ABS vehicle identification number VIN', $result);
+    }
+
+    public function testUpperCaseAcronymsInApostrophies()
+    {
+        $testString = 'damage to zone \'A\'';
+
+        $result = DefectSentenceCaseConverter::convertWithFirstOccurrenceOfAcronymsExpanded($testString);
+
+        $this->assertEquals('Damage to zone \'A\'', $result);
     }
 }

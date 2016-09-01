@@ -18,6 +18,7 @@ use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use Zend\Http\Response;
 use Zend\View\Model\ViewModel;
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\DefectSentenceCaseConverter;
 
 class AddDefectController extends AbstractDvsaMotTestController
 {
@@ -90,9 +91,10 @@ class AddDefectController extends AbstractDvsaMotTestController
              */
             $type === self::DEFECT_TYPE_ADVISORY ?
                 $defectDetail = $defect->getAdvisoryText() : $defectDetail = $defect->getDescription();
+            $defectDetailWithAcronymsExpanded = ucfirst(trim(DefectSentenceCaseConverter::convertWithFirstOccurrenceOfAcronymsExpanded($defectDetail)));
 
             $this->enableGdsLayout($title, '');
-            $this->layout()->setVariable('pageTertiaryTitle', $defectDetail);
+            $this->layout()->setVariable('pageTertiaryTitle', $defectDetailWithAcronymsExpanded);
 
             $type = $this->transformDefectTypeForView($type);
 
