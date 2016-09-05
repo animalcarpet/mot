@@ -23,6 +23,7 @@ public class EnterSecurityCardAddressPage extends Page {
     @FindBy (id = "addressChoice1") private WebElement firstVtsAddressRadioBox;
     @FindBy (id = "addressChoiceCustom") private WebElement customAddressRadioBox;
     private By submitButton = By.id("submit");
+    private By validationSummary = By.id("validation-summary-id");
 
     public EnterSecurityCardAddressPage(MotAppDriver driver) {
         super(driver);
@@ -78,5 +79,9 @@ public class EnterSecurityCardAddressPage extends Page {
     public EnterSecurityCardAddressPage chooseHomeAddress() {
         FormDataHelper.selectInputBox(homeAddressRadioBox);
         return this;
+    }
+
+    public boolean isValidationSummaryDisplayed(){
+        return PageInteractionHelper.isElementDisplayed(validationSummary);
     }
 }

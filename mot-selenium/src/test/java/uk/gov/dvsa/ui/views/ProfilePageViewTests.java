@@ -190,14 +190,14 @@ public class ProfilePageViewTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT", "BL-1963"}, dataProvider = "dvsaUserForSecurityCard")
     public void dvsaCanSeeSecurityCardPanelOnRegistered2faTradeUserProfile(User dvsaUser)  throws IOException, URISyntaxException {
 
-        // Given a tester who has registered for two factor authentication
+        step("Given a tester who has registered for two factor authentication");
         User twoFactorTester = userData.createTester(site.getId());
         motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
 
-        // When I log in as a DVSA user and view their profile page
+        step("When I log in as a DVSA user and view their profile page");
         motUI.profile.dvsaViewUserProfile(dvsaUser, twoFactorTester);
 
-        // Then the security card panel should be displayed
+        step("Then the security card panel should be displayed");
         assertThat(motUI.profile.page().isSecurityCardPanelDisplayed(), is(true));
     }
 

@@ -52,12 +52,12 @@ public class SecurityCard {
     }
 
     public final String orderSecurityCardWithCustomAddress(User user, String addresssLine1, String townOrCity, String postcode) throws IOException {
-        EnterSecurityCardAddressPage addressPage = pageNavigator.navigateToPage(
-                user, OrderNewCardPage.PATH, OrderNewCardPage.class)
-                .continueToAddressPage();
+        OrderNewCardPage orderNewCardPage = pageNavigator.navigateToPage(user, OrderNewCardPage.PATH, OrderNewCardPage.class);
+        isCardDeactivationMessageDisplayed = orderNewCardPage.isCardDeactivationMessageDisplayed();
 
-        ReviewSecurityCardAddressPage reviewPage =
-                addressPage.chooseCustomAddress()
+        ReviewSecurityCardAddressPage reviewPage = orderNewCardPage
+                        .continueToAddressPage()
+                        .chooseCustomAddress()
                         .fillAddressLine1(addresssLine1)
                         .fillTownOrCity(townOrCity)
                         .fillPostcode(postcode)
@@ -66,12 +66,12 @@ public class SecurityCard {
         return reviewPage.orderSecurityCard().orderStatusMessage();
     }
 
-    public void orderSecurityCardWithInvalidAddress(User user, String addressLine1, String townOrCity, String postcode) throws IOException {
+    public EnterSecurityCardAddressPage orderSecurityCardWithInvalidAddress(User user, String addressLine1, String townOrCity, String postcode) throws IOException {
         EnterSecurityCardAddressPage addressPage = pageNavigator.navigateToPage(
                 user, OrderNewCardPage.PATH, OrderNewCardPage.class)
                 .continueToAddressPage();
 
-        addressPage.chooseCustomAddress()
+        return addressPage.chooseCustomAddress()
                 .fillAddressLine1(addressLine1)
                 .fillTownOrCity(townOrCity)
                 .fillPostcode(postcode)
@@ -124,14 +124,12 @@ public class SecurityCard {
     }
 
     private String orderCardWithAddressType(User user, String path, String addressType) throws IOException {
-        EnterSecurityCardAddressPage addressPage = pageNavigator.navigateToPage(
-            user, path, OrderNewCardPage.class)
-            .continueToAddressPage();
-
+        OrderNewCardPage orderNewCardPage = pageNavigator.navigateToPage(user, path, OrderNewCardPage.class);
+        isCardDeactivationMessageDisplayed = orderNewCardPage.isCardDeactivationMessageDisplayed();
 
         ReviewSecurityCardAddressPage reviewPage =
-            addressType.equalsIgnoreCase("VTS") ? addressPage.chooseVTSAddress()
-                .submitAddress(ReviewSecurityCardAddressPage.class) : addressPage.chooseHomeAddress()
+            addressType.equalsIgnoreCase("VTS") ? orderNewCardPage.continueToAddressPage().chooseVTSAddress()
+                .submitAddress(ReviewSecurityCardAddressPage.class) : orderNewCardPage.continueToAddressPage().chooseHomeAddress()
                 .submitAddress(ReviewSecurityCardAddressPage.class);
 
         return reviewPage.orderSecurityCard().orderStatusMessage();

@@ -86,20 +86,18 @@ public class OrderSecurityCardTests extends DslTest {
 
         step("Given I am a 2fa authenticated user");
         User twoFactorUser = userData.createTester(siteData.createSite().getId());
+        motUI.authentication.securityCard.activate2faCard(twoFactorUser).logOut(twoFactorUser);
 
-        step("And I want to authenticate without a card");
-        motUI.authentication.gotoTwoFactorPinEntryPage(twoFactorUser);
-
-        step("And I complete the sign in journey");
-        motUI.authentication.securityCard.signInWithoutSecurityCardAndOrderCard(twoFactorUser);
+        step("And I Order a new security card");
+        motUI.authentication.securityCard.signInWithoutSecurityCard(twoFactorUser);
+        motUI.authentication.securityCard.orderSecurityCardWithHomeAddress(twoFactorUser);
 
         step("Then the card deactivation message should be displayed");
         assertThat(motUI.authentication.securityCard.isExistingCardDeactivationMessageDisplayed(), is(true));
     }
 
     @Test(testName = "2fa", groups = {"BVT"} )
-    public void validationSummaryIsDisplayedForIncorrectCustomAddress()
-            throws IOException {
+    public void validationSummaryIsDisplayedForIncorrectCustomAddress() throws IOException {
 
         step("GIVEN I am a 2fa authenticated user");
         User twoFactorUser = userData.createTester(siteData.createSite().getId());
@@ -109,20 +107,17 @@ public class OrderSecurityCardTests extends DslTest {
         motUI.authentication.securityCard.signInWithoutSecurityCard(twoFactorUser);
 
         step("WHEN I order a card with invalid address");
-        motUI.authentication.securityCard.orderSecurityCardWithInvalidAddress(twoFactorUser, "", "", "ng1 6lp");
 
         step("THEN I should remain in enter address page");
-        assertThat(motUI.authentication.securityCard.isValidationSummaryDisplayed(), is(true));
+        assertThat(motUI.authentication.securityCard.orderSecurityCardWithInvalidAddress(twoFactorUser, "", "", "ng1 6lp")
+            .isValidationSummaryDisplayed(), is(true));
     }
 
     @Test(testName = "2fa", groups = {"BVT"})
     public void orderNewSecurityCardWithVTSAddress() throws IOException {
-
         step("GIVEN I am a 2fa authenticated user");
         User twoFactorUser = userData.createTester(siteData.createSite().getId());
         motUI.authentication.securityCard.activate2faCard(twoFactorUser).logOut(twoFactorUser);
-
-        step("And I complete the sign in journey");
         motUI.authentication.securityCard.signInWithoutSecurityCard(twoFactorUser);
 
         step("WHEN I order a card with valid VTS address");
@@ -138,8 +133,6 @@ public class OrderSecurityCardTests extends DslTest {
         step("GIVEN I am a 2fa authenticated user");
         User twoFactorUser = userData.createTester(siteData.createSite().getId());
         motUI.authentication.securityCard.activate2faCard(twoFactorUser).logOut(twoFactorUser);
-
-        step("And I complete the sign in journey without a card");
         motUI.authentication.securityCard.signInWithoutSecurityCard(twoFactorUser);
 
         step("WHEN I order a card with valid Home address");
