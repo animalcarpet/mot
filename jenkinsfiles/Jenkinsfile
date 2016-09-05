@@ -85,12 +85,13 @@ def run_behat(tags){
     sh '''
     cd ..
     WORKSPACE=`pwd`
-    sed -i 's/mot-api/mot-api:8080/g' $WORKSPACE/mot/mot-behat/config/api.yml
+    cd $WORKSPACE/mot/mot-behat/config/
+    consul-template -consul localhost:8500 -template "api.yml.ctmpl:api.yml" -once
     export APPLICATION_CONFIG_PATH=$WORKSPACE/app/config
     echo $APPLICATION_CONFIG_PATH
     export TEST_APPLICATION_CONFIG_PATH=$WORKSPACE/app/config
     echo $TEST_APPLICATION_CONFIG_PATH
-    cd mot/mot-behat
+    cd $WORKSPACE/mot/mot-behat
     bin/behat --format=junit --out=build --format=pretty --colors --out=std --tags="'''+tags+'''"
     '''
 }
@@ -279,7 +280,10 @@ wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
         sed -i "s/'localhost',/'mysql',/g" mot-testsupport/config/autoload/global.php
         sed -i "s/'password',/'fb14insecure1',/g" mot-testsupport/config/autoload/global.php
         sh '''
-        run_behat("${BEHAT_TAGS}")
+        parallel(
+          'behat': { run_behat("${BEHAT_TAGS}") },
+          'behat_tqi': { run_behat("${BEHAT_TAGS_TQI}") }
+        )
 
         stage 'Selenium BVT tests'
         sh 'set +x; echo -e "\033[34mSelenium BVT tests\033[0m"'
