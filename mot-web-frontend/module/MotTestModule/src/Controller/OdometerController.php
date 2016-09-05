@@ -90,7 +90,7 @@ class OdometerController extends AbstractDvsaMotTestController
         return $this->createViewModel('mot-test/index.twig', [
             'motTest' => $motTest,
             'vehicle' => $motTest->getVehicle(),
-            'vehicleMakeAndModel' => ucwords(strtolower($motTest->getVehicle()->getMakeAndModel())),
+            'vehicleMakeAndModel' => ucwords($motTest->getVehicle()->getMakeAndModel()),
             'vehicleFirstUsedDate' => DateTime::createFromFormat('Y-m-d', $motTest->getVehicle()->getFirstUsedDate())->format('j M Y'),
             'isDemo' => $isDemo,
         ]);

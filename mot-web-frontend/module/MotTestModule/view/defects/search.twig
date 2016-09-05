@@ -1,6 +1,6 @@
 <header class="content-header">
     <ul class="content-header__tertiary-list">
-        <li id="vehicleMakeModel" class="content-header__list-item--primary">{{ vehicleMakeAndModel|escape }}</li>
+        <li id="vehicleMakeModel" class="content-header__list-item--primary">{{ vehicleMakeAndModel|upper }}</li>
         <li id="vehicleRegistration" class="content-header__list-item">{{ vehicle.registration|escape }}</li>
         <li id="firstUsedDate" class="content-header__list-item">First used {{ vehicleFirstUsedDate|escape }}</li>
     </ul>
