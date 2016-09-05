@@ -19,7 +19,7 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
 
     public static final String PATH = "/mot-test";
 
-    private static final String PAGE_TITLE = "MOT Test results";
+    private static final String PAGE_TITLE = "MOT test results";
 
     @FindBy(id = "vehicleMakeModel") private WebElement vehicleMakeModel;
     @FindBy(id = "vehicleRegistration") private WebElement vehicleRegistration;

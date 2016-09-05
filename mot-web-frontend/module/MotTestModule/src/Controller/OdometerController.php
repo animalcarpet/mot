@@ -85,7 +85,7 @@ class OdometerController extends AbstractDvsaMotTestController
 
         $breadcrumbs = $this->getBreadcrumbs($isDemo, $isReinspection);
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
-        $this->layout()->setVariable('pageTitle', 'Odometer Reading');
+        $this->layout()->setVariable('pageTitle', 'Odometer reading');
 
         return $this->createViewModel('mot-test/index.twig', [
             'motTest' => $motTest,

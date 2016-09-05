@@ -104,7 +104,7 @@ class MotTestResultsController extends AbstractAuthActionController
 
         $this->layout('layout/layout-govuk.phtml');
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => [$breadcrumb => '']]);
-        $this->layout()->setVariable('pageTitle', 'MOT Test results');
+        $this->layout()->setVariable('pageTitle', 'MOT test results');
 
         $submissionStatus = isset($motTest->getPendingDetails()['currentSubmissionStatus'])
             ? $motTest->getPendingDetails()['currentSubmissionStatus'] : null;
