@@ -16,7 +16,7 @@ import uk.gov.dvsa.ui.pages.braketest.BrakeTestResultsPage;
 
 public class OdometerReadingPage extends Page {
 
-    private static final String PAGE_TITLE = "Odometer Reading";
+    private static final String PAGE_TITLE = "Odometer reading";
 
     @FindBy(id = "odometer") private WebElement odometerReadingTextBox;
     @FindBy(id = "unit") private WebElement odometerUnitDropdown;
