@@ -98,7 +98,6 @@ public class AcceptNominationTests extends DslTest {
         motApi.nominations.nominateSiteRole(nominee, siteData.createSite().getId(), TradeRoles.SITE_MANAGER);
 
         step("When I accept the nomination without activating a 2fa card");
-        motUI.authentication.securityCard.orderSecurityCardWithHomeAddress(nominee);
         String message = motUI.nominations.viewMostRecent(nominee).acceptNomination().getConfirmationText();
 
         step("Then I am given the site manager role");

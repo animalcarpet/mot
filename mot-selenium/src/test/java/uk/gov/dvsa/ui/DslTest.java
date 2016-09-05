@@ -76,11 +76,10 @@ public abstract class DslTest {
             WebDriverConfigurator cachedDriver = webDriverConfigurator.get();
 
             // Take screenshot on test failure
-            if (cachedDriver != null && result.getStatus() == ITestResult.FAILURE && cachedDriver.isErrorScreenshotEnabled()) {
+            if (cachedDriver != null && result.getStatus() == ITestResult.FAILURE && Configurator.isErrorScreenshotEnabled()) {
                 driver.takeScreenShot(result.getTestClass().getName().replace("uk.gov.dvsa.ui", "")
                                 + "." + result.getName() + "_" + screenshotDateFormat.format(new Date())
-                                + ".png", cachedDriver.getErrorScreenshotPath() + "/" + cachedDriver.getBuildNumber());
-                Logger.LogInfo("Page Source: \n" + driver.getPageSource());
+                                + ".png", Configurator.getErrorScreenshotPath() + "/" + Configurator.getBuildNumber());
             }
 
             if (null != cachedDriver) {

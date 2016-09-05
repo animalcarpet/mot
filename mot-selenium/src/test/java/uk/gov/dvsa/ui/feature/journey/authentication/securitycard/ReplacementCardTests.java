@@ -16,7 +16,8 @@ public class ReplacementCardTests extends DslTest {
         step("Given Bob has ordered a replacement card");
         User bob = userData.createTester(siteData.createSite().getId());
         motUI.authentication.securityCard.activate2faCard(bob).logOut(bob);
-        motUI.authentication.securityCard.signInWithoutSecurityCardAndOrderCard(bob);
+        motUI.authentication.securityCard.signInWithoutSecurityCard(bob);
+        motUI.authentication.securityCard.orderSecurityCardWithHomeAddress(bob);
 
         step("When I view my profile");
         motUI.profile.viewYourProfile(bob).activateCardLink();
