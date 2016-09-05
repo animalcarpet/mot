@@ -43,7 +43,7 @@ public class TestResultEntryPageTests extends DslTest {
         String vehicleFirstUseString = formatter.print(vehicleFirstUse);
 
         assertThat("Vehicle make and model is correct", testResultEntryPage.getVehicleMakeModel()
-                .equals(WordUtils.capitalizeFully(vehicle.getMake() + ", " + vehicle.getModel())));
+                .equals(vehicle.getMake() + ", " + vehicle.getModel()));
 
         assertThat("Vehicle registration is correct", testResultEntryPage.getVehicleRegistration()
                 .equals(vehicle.getDvsaRegistration()));
