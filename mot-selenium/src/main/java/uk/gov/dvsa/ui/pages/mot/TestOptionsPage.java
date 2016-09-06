@@ -14,7 +14,6 @@ public class TestOptionsPage extends OptionsPage {
 
     @FindBy(id = "sign-out") private WebElement signOut;
     @FindBy(id = "return_to_home") private WebElement returnToHome;
-    @FindBy(id = "print-inspection-sheet") private WebElement printInspectionSheet;
 
     public TestOptionsPage(MotAppDriver driver) {
         super(driver, PAGE_TITLE);
@@ -25,9 +24,4 @@ public class TestOptionsPage extends OptionsPage {
     }
 
 
-    public MotInspectionSheetPage clickPrintInspectionSheet() {
-        printInspectionSheet.click();
-
-        return new MotInspectionSheetPage(driver);
-    }
 }

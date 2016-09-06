@@ -7,14 +7,17 @@ import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.HomePage;
 import uk.gov.dvsa.ui.pages.Page;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 public abstract class OptionsPage extends Page {
     private String page_title = "";
 
     @FindBy(id = "sign-out") private WebElement signOut;
     @FindBy(id = "return_to_home") private WebElement returnToHome;
+    @FindBy(id = "print-inspection-sheet") private WebElement printInspectionSheet;
 
     public OptionsPage(MotAppDriver driver, String page_title) {
         super(driver);
@@ -41,4 +44,11 @@ public abstract class OptionsPage extends Page {
         return new HomePage(driver);
     }
 
+    public boolean printInspectionSheetIsDisplayed() {
+        return printInspectionSheet.isDisplayed();
+    }
+
+    public String getPrintInspectionSheetLink() throws MalformedURLException {
+        return new URL(printInspectionSheet.getAttribute("href")).getPath();
+    }
 }

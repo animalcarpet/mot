@@ -1,5 +1,7 @@
 package uk.gov.dvsa.ui.feature.journey.mot;
 
+import com.jayway.restassured.response.Response;
+import org.apache.http.HttpStatus;
 import org.joda.time.DateTime;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -187,9 +189,23 @@ public class ConductMotTests extends DslTest {
     }
 
     @Test(groups = {"BVT"})
-    public void printInspectionSheetSuccessfully() throws IOException {
-        TestOptionsPage page = vehicleReinspectionWorkflow().startMotTestAsATester(tester, vehicle);
-        page.clickPrintInspectionSheet();
+    public void printInspectionSheetSuccessfully() throws IOException, URISyntaxException {
+        // GIVEN I start a new MOT test
+        TestOptionsPage testStartedPage = vehicleReinspectionWorkflow().startMotTestAsATester(tester, vehicle);
+
+        // THEN I can see vehicle inspection sheet download link
+        assertThat(testStartedPage.printInspectionSheetIsDisplayed(), is(true));
+
+        // AND WHEN I click on Vehicle inspection sheet link
+        Response pdfResponse = frontendData.downloadFileFromFrontend(
+            testStartedPage.getPrintInspectionSheetLink(),
+            pageNavigator.getCurrentTokenCookie(),
+            pageNavigator.getCurrentSessionCookie()
+        );
+
+        // THEN the PDF is successfully generated
+        assertThat(HttpStatus.SC_OK, is(pdfResponse.getStatusCode()));
+        assertThat("application/pdf", is(pdfResponse.getContentType()));
     }
 
     @Test (testName = "OldRFRTest", groups = {"Regression"})

@@ -3,6 +3,7 @@ package uk.gov.dvsa.domain.api.client;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
 import org.json.JSONObject;
+import org.openqa.selenium.Cookie;
 
 import static com.jayway.restassured.RestAssured.with;
 
@@ -74,6 +75,10 @@ public class MotClient {
         return getWithoutToken(path);
     }
 
+    public Response downloadFile(String path, Cookie sessionCookie, Cookie tokenCookie) {
+        return getFrontendRequest(path, sessionCookie, tokenCookie);
+    }
+
     private Response postRequestWithoutToken(String request, String path) {
         return with()
                 .header("Content-Type", "application/json")
@@ -94,5 +99,12 @@ public class MotClient {
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
                 .get(endpointUrl + path);
+    }
+
+    private Response getFrontendRequest(String path, Cookie sessionCookie, Cookie tokenCookie) {
+        return with()
+            .cookie(sessionCookie.getName(), sessionCookie.getValue())
+            .cookie(tokenCookie.getName(), tokenCookie.getValue())
+            .get(endpointUrl + path);
     }
 }

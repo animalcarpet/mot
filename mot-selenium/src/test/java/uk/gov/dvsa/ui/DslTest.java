@@ -12,8 +12,6 @@ import uk.gov.dvsa.framework.config.Configurator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.framework.config.webdriver.WebDriverConfigurator;
 import uk.gov.dvsa.framework.listeners.TestListener;
-import uk.gov.dvsa.helper.Utilities;
-import uk.gov.dvsa.module.userprofile.AnnualAssessmentCertificates;
 import uk.gov.dvsa.shared.MotApi;
 import uk.gov.dvsa.shared.MotUI;
 import uk.gov.dvsa.helper.Utilities.Logger;
@@ -28,6 +26,7 @@ public abstract class DslTest {
     protected AeData aeData = new AeData();
     protected SiteData siteData = new SiteData();
     protected UserData userData = new UserData();
+    protected FrontendData frontendData = new FrontendData();
     protected QualificationDetailsData qualificationDetailsData = new QualificationDetailsData();
     protected AnnualAssessmentCertificatesData annualAssessmentCertificatesData = new AnnualAssessmentCertificatesData();
     protected VehicleData vehicleData = new VehicleData();
