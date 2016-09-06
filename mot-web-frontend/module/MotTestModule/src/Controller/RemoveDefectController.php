@@ -10,9 +10,9 @@ namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyContextProvider;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Defect;
-use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Exception\ObservedDefectNotFoundException;
-use Dvsa\Mot\Frontend\MotTestModule\ViewModel\ObservedDefect;
-use Dvsa\Mot\Frontend\MotTestModule\ViewModel\ObservedDefectCollection;
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Exception\IdentifiedDefectNotFoundException;
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefect;
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefectCollection;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
@@ -64,7 +64,7 @@ class RemoveDefectController extends AbstractDvsaMotTestController
     public function removeAction()
     {
         $motTestNumber = (int) $this->params()->fromRoute('motTestNumber');
-        $observedDefectId = (int) $this->params()->fromRoute('defectItemId');
+        $identifiedDefectId = (int) $this->params()->fromRoute('defectItemId');
         /** @var MotTestDto $motTest */
         $motTest = null;
         $isReinspection = false;
@@ -82,28 +82,28 @@ class RemoveDefectController extends AbstractDvsaMotTestController
         }
 
         try {
-            $observedDefect = $this->getObservedDefect($observedDefectId, $motTest);
-        } catch (ObservedDefectNotFoundException $e) {
+            $identifiedDefect = $this->getIdentifiedDefect($identifiedDefectId, $motTest);
+        } catch (IdentifiedDefectNotFoundException $e) {
             return $this->redirect()->toUrl($backUrl);
         }
 
         /*
          * If we're making a POST request to this URL, i.e., we've clicked
          * on the remove <defectType> button, redirect to the screen from
-         * which the user clicked "Remove" on the list of ObservedDefects.
+         * which the user clicked "Remove" on the list of IdentifiedDefects.
          */
         if ($this->getRequest()->isPost()) {
             try {
-                $this->disassociateObservedDefectFromMotTest($observedDefectId, $motTestNumber);
+                $this->disassociateIdentifiedDefectFromMotTest($identifiedDefectId, $motTestNumber);
 
             /*
              * Add success message to the flash messenger on successful removal
-             * of an ObservedDefect from an MOT test.
+             * of an IdentifiedDefect from an MOT test.
              */
             $this->addSuccessMessage(sprintf(
                 '<strong>This %s has been removed:</strong><br> %s',
-                $observedDefect->getDefectType(),
-                $observedDefect->getName()
+                $identifiedDefect->getDefectType(),
+                $identifiedDefect->getName()
             ));
 
                 return $this->redirect()->toUrl($backUrl);
@@ -113,18 +113,18 @@ class RemoveDefectController extends AbstractDvsaMotTestController
                  */
                 $this->addErrorMessage(sprintf(
                     'The %s could not be removed. Please try again.',
-                    $observedDefect->getDefectType()
+                    $identifiedDefect->getDefectType()
                 ));
             }
         }
 
-        $breadcrumbs = $this->getBreadcrumbs($isDemoTest, $isReinspection, $observedDefect->getDefectType());
+        $breadcrumbs = $this->getBreadcrumbs($isDemoTest, $isReinspection, $identifiedDefect->getDefectType());
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
-        $this->enableGdsLayout('Remove ' . $observedDefect->getDefectType(), '');
+        $this->enableGdsLayout('Remove '. $identifiedDefect->getDefectType(), '');
 
         return $this->createViewModel('defects/remove-defect.twig', [
             'motTestNumber' => $motTestNumber,
-            'observedDefect' => $observedDefect,
+            'identifiedDefect' => $identifiedDefect,
             'context' => $this->defectsJourneyContextProvider->getContextForBackUrlText(),
         ]);
     }
@@ -145,37 +145,37 @@ class RemoveDefectController extends AbstractDvsaMotTestController
     }
 
     /**
-     * Get a specified ObservedDefect. Also fetch the defect breadcrumb (which
+     * Get a specified IdentifiedDefect. Also fetch the defect breadcrumb (which
      * is displayed above the defect name on the Remove Defect form).
      *
-     * @param int        $observedDefectId
+     * @param int        $identifiedDefectId
      * @param MotTestDto $motTest
      *
-     * @return ObservedDefect
+     * @return IdentifiedDefect
      */
-    private function getObservedDefect($observedDefectId, MotTestDto $motTest)
+    private function getIdentifiedDefect($identifiedDefectId, MotTestDto $motTest)
     {
-        $observedDefect = ObservedDefectCollection::fromMotApiData($motTest)->getDefectById($observedDefectId);
+        $identifiedDefect = IdentifiedDefectCollection::fromMotApiData($motTest)->getDefectById($identifiedDefectId);
 
-        if (true !== $observedDefect->isManualAdvisory()) {
+        if (true !== $identifiedDefect->isManualAdvisory()) {
             $breadcrumb = Defect::fromApi($this->restClient->get(
-                MotTestUrlBuilder::reasonForRejection($motTest->getMotTestNumber(), $observedDefect->getDefectId())
+                MotTestUrlBuilder::reasonForRejection($motTest->getMotTestNumber(), $identifiedDefect->getDefectId())
             )['data'])->getDefectBreadcrumb();
-            $observedDefect->setBreadcrumb($breadcrumb);
+            $identifiedDefect->setBreadcrumb($breadcrumb);
         }
 
-        return $observedDefect;
+        return $identifiedDefect;
     }
 
     /**
-     * Remove the ObservedDefect from the MOT test.
+     * Remove the IdentifiedDefect from the MOT test.
      *
-     * @param int $observedDefectId
+     * @param int $identifiedDefectId
      * @param int $motTestNumber
      */
-    private function disassociateObservedDefectFromMotTest($observedDefectId, $motTestNumber)
+    private function disassociateIdentifiedDefectFromMotTest($identifiedDefectId, $motTestNumber)
     {
-        $this->getRestClient()->delete(MotTestUrlBuilder::reasonForRejection($motTestNumber, $observedDefectId));
+        $this->getRestClient()->delete(MotTestUrlBuilder::reasonForRejection($motTestNumber, $identifiedDefectId));
     }
 
     /**

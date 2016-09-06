@@ -18,19 +18,19 @@
     <div class="defect-summary__total">
         <h2 class="defect-summary__total-heading">Defects</h2>
         <ul>
-            <li><span class="badge--alert">{{ observedDefects.numberOfFailures }}</span> Failures</li>
-            <li><span class="badge--info">{{ observedDefects.numberOfPrs }}</span> PRS</li>
-            <li><span class="badge--warn">{{ observedDefects.numberOfAdvisories }}</span> Advisories</li>
+            <li><span class="badge--alert">{{ identifiedDefects.numberOfFailures }}</span> Failures</li>
+            <li><span class="badge--info">{{ identifiedDefects.numberOfPrs }}</span> PRS</li>
+            <li><span class="badge--warn">{{ identifiedDefects.numberOfAdvisories }}</span> Advisories</li>
         </ul>
         {# "Show/Hide defects button only appears when there are defects to be shown. #}
-        {% if observedDefects.hasFailuresPrsOrAdvisories %}
+        {% if identifiedDefects.hasFailuresPrsOrAdvisories %}
         <span class="defect-summary__toggle">
             <a href="#" data-action="showHideToggle" data-open-text="Hide defects" data-target="rfrList" id="toggleRFRList" class="toggle-switch">Show defects</a>
         </span>
         {% endif %}
     </div>
     <div id="rfrList" class="js-hidden">
-        {% include '/defects/observed-defects.twig' with {'observedDefects': observedDefects, 'motTestNumber': motTest.motTestNumber} %}
+        {% include '/defects/identified-defects.twig' with {'identifiedDefects': identifiedDefects, 'motTestNumber': motTest.motTestNumber} %}
     </div>
 </div>
 

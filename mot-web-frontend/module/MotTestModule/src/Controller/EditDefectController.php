@@ -10,7 +10,7 @@ namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 use Dvsa\Mot\Frontend\MotTestModule\Exception\DefectTypeNotFoundException;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyContextProvider;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
-use Dvsa\Mot\Frontend\MotTestModule\ViewModel\ObservedDefectCollection;
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefectCollection;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Exception\UnauthorisedException;
@@ -78,20 +78,20 @@ class EditDefectController extends AbstractDvsaMotTestController
         $title = '';
         $errorMessages = [];
         $type = '';
-        $observedDefect = null;
+        $identifiedDefect = null;
 
         $backUrl = $this->defectsJourneyUrlGenerator->goBack();
 
         try {
             $motTest = $this->getMotTestFromApi($motTestNumber);
 
-            $observedDefect = ObservedDefectCollection::fromMotApiData($motTest)->getDefectById($defectId);
+            $identifiedDefect = IdentifiedDefectCollection::fromMotApiData($motTest)->getDefectById($defectId);
 
-            $type = $observedDefect->getDefectType();
+            $type = $identifiedDefect->getDefectType();
 
             $title = $this->createTitle($type);
             $this->enableGdsLayout($title, '');
-            $this->layout()->setVariable('pageTertiaryTitle', $observedDefect->getName());
+            $this->layout()->setVariable('pageTertiaryTitle', $identifiedDefect->getName());
 
             $request = $this->getRequest();
             if ($request->isPost()) {
@@ -117,7 +117,7 @@ class EditDefectController extends AbstractDvsaMotTestController
                 $this->addSuccessMessage(sprintf(
                     '<strong>This %s has been edited:</strong><br> %s',
                     $type,
-                    $observedDefect->isManualAdvisory() ? $comment : $observedDefect->getName()
+                    $identifiedDefect->isManualAdvisory() ? $comment : $identifiedDefect->getName()
                 ));
 
                 return $this->redirect()->toUrl($backUrl);
@@ -142,7 +142,7 @@ class EditDefectController extends AbstractDvsaMotTestController
         return $this->createViewModel('defects/edit-defect.twig', [
             'type' => $type,
             'errorMessages' => $errorMessages,
-            'observedDefect' => $observedDefect,
+            'identifiedDefect' => $identifiedDefect,
             'context' => $this->defectsJourneyContextProvider->getContextForBackUrlText(),
         ]);
     }

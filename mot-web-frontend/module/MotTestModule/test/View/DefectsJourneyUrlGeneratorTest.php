@@ -238,18 +238,18 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param $observedDefectId
+     * @param $identifiedDefectId
      * @param $currentUrl
      * @param $expectedUrl
      * @throws RouteNotAllowedInContextException
      *
      * @dataProvider testToRemoveDefectProvider
      */
-    public function testToRemoveDefect($observedDefectId, $currentUrl, $expectedUrl, $addQueryString = false)
+    public function testToRemoveDefect($identifiedDefectId, $currentUrl, $expectedUrl, $addQueryString = false)
     {
         $defectsJourneyUrlGenerator = $this->createUrlGenerator($currentUrl, $addQueryString);
 
-        $this->assertEquals($expectedUrl, $defectsJourneyUrlGenerator->toRemoveDefect($observedDefectId));
+        $this->assertEquals($expectedUrl, $defectsJourneyUrlGenerator->toRemoveDefect($identifiedDefectId));
     }
 
     /**
@@ -265,18 +265,18 @@ class DefectsJourneyUrlGeneratorTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param $observedDefectId
+     * @param $identifiedDefectId
      * @param $currentUrl
      * @param bool $addQueryString
      * @throws RouteNotAllowedInContextException
      * @dataProvider testToRemoveDefectWithNoContextProvider
      */
-    public function testToRemoveDefectWithNoContext($observedDefectId, $currentUrl, $addQueryString = false)
+    public function testToRemoveDefectWithNoContext($identifiedDefectId, $currentUrl, $addQueryString = false)
     {
         $defectsJourneyUrlGenerator = $this->createUrlGenerator($currentUrl, $addQueryString);
 
         $this->setExpectedException(RouteNotAllowedInContextException::class);
-        $defectsJourneyUrlGenerator->toRemoveDefect($observedDefectId);
+        $defectsJourneyUrlGenerator->toRemoveDefect($identifiedDefectId);
     }
 
     /**

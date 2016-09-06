@@ -12,7 +12,7 @@ use Core\Controller\AbstractAuthActionController;
 use DateTime;
 use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\MotTestResults;
-use Dvsa\Mot\Frontend\MotTestModule\ViewModel\ObservedDefectCollection;
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefectCollection;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Dto\Common\MotTestDto;
@@ -114,7 +114,7 @@ class MotTestResultsController extends AbstractAuthActionController
         $motTestResults = new MotTestResults($motTest);
         $vehicleMakeAndModel = ucwords(strtolower($motTest->getVehicle()->getMakeAndModel()));
 
-        $observedDefects = ObservedDefectCollection::fromMotApiData($motTest);
+        $identifiedDefects = IdentifiedDefectCollection::fromMotApiData($motTest);
         $isRetest = $motTest->getTestType()->getCode() === MotTestTypeCode::RE_TEST;
 
         return $this->createViewModel('mot-test/test-results-entry.twig', [
@@ -126,7 +126,7 @@ class MotTestResultsController extends AbstractAuthActionController
             'vehicleMakeAndModel' => $vehicleMakeAndModel,
             'vehicleFirstUsedDate' => $vehicleFirstUsedDate,
             'shouldDisableSubmitButton' => $submissionStatus == 'INCOMPLETE',
-            'observedDefects' => $observedDefects,
+            'identifiedDefects' => $identifiedDefects,
             'isRetest' => $isRetest,
         ]);
     }

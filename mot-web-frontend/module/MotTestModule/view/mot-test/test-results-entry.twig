@@ -50,7 +50,7 @@
 </div>
 <div class="defect-summary">
     <div id="rfrList" class="">
-        {% include '/defects/observed-defects.twig' with {'observedDefects': observedDefects, 'motTestNumber': motTest.motTestNumber} %}
+        {% include '/defects/identified-defects.twig' with {'identifiedDefects': identifiedDefects, 'motTest': motTest} %}
     </div>
 </div>
 <div class="action-panel">
