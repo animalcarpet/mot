@@ -2,14 +2,14 @@
 
 namespace DvsaMotTestTest\ViewModel;
 
-use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Exception\ObservedDefectNotFoundException;
-use Dvsa\Mot\Frontend\MotTestModule\ViewModel\ObservedDefectCollection;
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Exception\IdentifiedDefectNotFoundException;
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefectCollection;
 use DvsaCommon\Dto\Common\MotTestDto;
 
 /**
- * Class ObservedDefectCollectionTest.
+ * Class IdentifiedDefectCollectionTest.
  */
-class ObservedDefectCollectionTest extends \PHPUnit_Framework_TestCase
+class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider creationDataProvider
@@ -23,7 +23,7 @@ class ObservedDefectCollectionTest extends \PHPUnit_Framework_TestCase
     {
         $motTestMock = $this->createMotTestDto($reasonsForRejection);
 
-        $testCollection = ObservedDefectCollection::fromMotApiData($motTestMock);
+        $testCollection = IdentifiedDefectCollection::fromMotApiData($motTestMock);
 
         $loopIndex = 0;
         if ($hasFailures) {
@@ -145,9 +145,9 @@ class ObservedDefectCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetDefectByIdThrowsExceptionOnNonExistentDefect()
     {
-        $this->setExpectedException(ObservedDefectNotFoundException::class);
+        $this->setExpectedException(IdentifiedDefectNotFoundException::class);
         $motTestMock = $this->createMotTestDto($this->getTestData(true, false, false));
-        $testCollection = ObservedDefectCollection::fromMotApiData($motTestMock);
+        $testCollection = IdentifiedDefectCollection::fromMotApiData($motTestMock);
 
         $testCollection->getDefectById(9999);
     }

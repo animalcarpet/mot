@@ -10,7 +10,7 @@ namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 use DateTime;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Defect;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\DefectCollection;
-use Dvsa\Mot\Frontend\MotTestModule\ViewModel\ObservedDefectCollection;
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefectCollection;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
@@ -71,7 +71,7 @@ class SearchDefectsController extends AbstractDvsaMotTestController
             $this->addErrorMessages($e->getDisplayMessages());
         }
 
-        $observedDefects = ObservedDefectCollection::fromMotApiData($motTest);
+        $identifiedDefects = IdentifiedDefectCollection::fromMotApiData($motTest);
         $vehicleFirstUsedDate = DateTime::createFromFormat('Y-m-d',
             $motTest->getVehicle()->getFirstUsedDate())->format('j M Y');
         $vehicleMakeAndModel = ucwords(strtolower($motTest->getVehicle()->getMakeAndModel()));
@@ -96,7 +96,7 @@ class SearchDefectsController extends AbstractDvsaMotTestController
 
         return $this->createViewModel('defects/search.twig', [
             'motTestNumber' => $motTestNumber,
-            'observedDefects' => $observedDefects,
+            'identifiedDefects' => $identifiedDefects,
             'vehicle' => $motTest->getVehicle(),
             'vehicleMakeAndModel' => $vehicleMakeAndModel,
             'vehicleFirstUsedDate' => $vehicleFirstUsedDate,

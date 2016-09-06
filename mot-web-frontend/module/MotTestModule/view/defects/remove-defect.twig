@@ -12,15 +12,15 @@
     <table class="key-value-list">
         <tbody>
         <tr>
-            <th class="key-value-list__key">{{ observedDefect.defectType[:1]|upper ~ observedDefect.defectType[1:] }}</th>
+            <th class="key-value-list__key">{{ identifiedDefect.defectType[:1]|upper ~ identifiedDefect.defectType[1:] }}</th>
             <td class="key-value-list__value">
-                {% if observedDefect.isManualAdvisory %}
-                    {{  observedDefect.userComment }}
+                {% if identifiedDefect.isManualAdvisory %}
+                    {{  identifiedDefect.userComment }}
                 {% else %}
-                    <span class="key-value-list__meta">{{ observedDefect.breadcrumb }}</span>
-                    {{ observedDefect.name }}
+                    <span class="key-value-list__meta">{{ identifiedDefect.breadcrumb }}</span>
+                    {{ identifiedDefect.name }}
                 {% endif %}
-                {% if observedDefect.dangerous %}
+                {% if identifiedDefect.dangerous %}
                     <div class="defect__is-dangerous">Dangerous</div>
                 {% endif %}
             </td>
@@ -28,13 +28,13 @@
         <tr>
             <th class="key-value-list__key">Location</th>
             <td class="key-value-list__value">
-                {{ observedDefect.locationString|default('n/a') }}
+                {{ identifiedDefect.locationString|default('n/a') }}
             </td>
         </tr>
-        {% if not observedDefect.isManualAdvisory %}
+        {% if not identifiedDefect.isManualAdvisory %}
         <tr>
             <th class="key-value-list__key">Additional information</th>
-            <td class="key-value-list__value">{{ observedDefect.userComment|default('None recorded') }}</td>
+            <td class="key-value-list__value">{{ identifiedDefect.userComment|default('None recorded') }}</td>
         </tr>
         {% endif %}
         </tbody>
@@ -43,7 +43,7 @@
     <form method="post">
         {{ csrfToken('removeDefect') }}
         <nav class="content-navigation">
-            <button type="submit" class="button-warning">Remove {{ observedDefect.defectType }}</button>
+            <button type="submit" class="button-warning">Remove {{ identifiedDefect.defectType }}</button>
             <ul class="content-navigation__secondary">
                 <li>
                     <a href="{{ defectJourneyUrl().goBack() }}" class="back-to-open-list">Cancel and return to {{ context }}</a>

@@ -10,7 +10,7 @@ namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 use Dvsa\Mot\Frontend\MotTestModule\Exception\DefectTypeNotFoundException;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyContextProvider;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
-use Dvsa\Mot\Frontend\MotTestModule\ViewModel\ObservedDefect;
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefect;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
@@ -67,7 +67,7 @@ class AddManualAdvisoryController extends AbstractDvsaMotTestController
         $motTestNumber = $this->params()->fromRoute('motTestNumber');
         $categoryId = null;
         $defectId = null;
-        $type = ObservedDefect::ADVISORY;
+        $type = IdentifiedDefect::ADVISORY;
 
         $title = self::CONTENT_HEADER_TITLE;
         $this->enableGdsLayout($title, '');

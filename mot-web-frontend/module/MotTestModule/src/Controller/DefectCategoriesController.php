@@ -11,7 +11,7 @@ use DateTime;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsContentBreadcrumbsBuilder;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Defect;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\DefectCollection;
-use Dvsa\Mot\Frontend\MotTestModule\ViewModel\ObservedDefectCollection;
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefectCollection;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\ComponentCategoryCollection;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Constants\Role;
@@ -126,14 +126,14 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
         $breadcrumbs = $this->getBreadcrumbs($isDemo, $isReinspection);
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
 
-        $observedDefects = ObservedDefectCollection::fromMotApiData($motTest);
+        $identifiedDefects = IdentifiedDefectCollection::fromMotApiData($motTest);
 
         return $this->createViewModel('defects/categories.twig', [
             'motTest' => $motTest,
             'vehicle' => $motTest->getVehicle(),
             'vehicleMakeAndModel' => ucwords(strtolower($motTest->getVehicle()->getMakeAndModel())),
             'vehicleFirstUsedDate' => $vehicleFirstUsedDate,
-            'observedDefects' => $observedDefects,
+            'identifiedDefects' => $identifiedDefects,
             'defectCategories' => $defectCategories,
             'browseColumns' => $defectCategories->getColumnCountForHtml(),
             'isRetest' => $isRetest,
@@ -171,7 +171,7 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
 
         $defects = $this->addInspectionManualReferenceUrls($category->getComponentCategory()->getDefectsCollection(), $vehicleClassCode);
         
-        $observedDefects = ObservedDefectCollection::fromMotApiData($motTest);
+        $identifiedDefects = IdentifiedDefectCollection::fromMotApiData($motTest);
 
         $breadcrumbs = $this->getBreadcrumbs($isDemo, $isReinspection);
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
@@ -189,8 +189,8 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
             'vehicleFirstUsedDate' => $vehicleFirstUsedDate,
             'defects' => $defects->getDefects(),
             'contentBreadcrumbs' => $contentBreadcrumbs,
-            'observedDefects' => $observedDefects,
             'isRetest' => $isRetest,
+            'identifiedDefects' => $identifiedDefects,
         ]);
     }
 

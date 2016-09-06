@@ -9,12 +9,12 @@ namespace Dvsa\Mot\Frontend\MotTestModule\ViewModel;
 
 /**
  * A defect that has been observed on a vehicle during a test, as opposed to a
- * potential defect. Once a defect has been added to a vehicle, it becomes an
- * ObservedDefect.
- *
+ * potential defect. Once a defect has been added to a vehicle, it becomes an 
+ * IdentifiedDefect.
+ * 
  * @see Defect
  */
-class ObservedDefect
+class IdentifiedDefect
 {
     const FAILURE = 'failure';
     const PRS = 'PRS';
@@ -71,17 +71,17 @@ class ObservedDefect
      * This is the ID of the Defect. This is what's used as a foreign key in
      * the various database tables to get all the Defect's information.
      *
-     * This is NOT the ID of this specific ObservedDefect.
+     * This is NOT the ID of this specific IdentifiedDefect.
      *
      * @var int
      *
      * @see Defect The collection of information to which this property refers.
-     * @see ObservedDefect::$id The unique ID of this exact ObservedDefect.
+     * @see IdentifiedDefect::$id The unique ID of this exact IdentifiedDefect.
      */
     private $defectId;
 
     /**
-     * The ID of this ObservedDefect in the database. This is because it's
+     * The ID of this IdentifiedDefect in the database. This is because it's
      * possible to add two defects that are identical, so to differentiate
      * between them we need to use the primary key from the database, i.e.,
      * the row ID.
@@ -114,7 +114,7 @@ class ObservedDefect
     private $onOriginalTest;
 
     /**
-     * ObservedDefect constructor.
+     * IdentifiedDefect constructor.
      *
      * @param string $defectType
      * @param string $lateralLocation
@@ -247,7 +247,7 @@ class ObservedDefect
      * The location displayed on the remove defect screen.
      * e.g, 'Nearside, front, lower'.
      *
-     * If no location has been recorded for this ObservedDefect, return 'n/a'.
+     * If no location has been recorded for this IdentifiedDefect, return 'n/a'.
      *
      * @return string
      */

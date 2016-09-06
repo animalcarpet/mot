@@ -14,51 +14,51 @@
         <div class="form-group">
             <label for="locationLateral" class="form-label">Lateral</label>
             <select name="locationLateral" id="locationLateral" class="form-control-select">
-                <option value="n/a" {% if observedDefect.lateralLocation == "n/a" %} selected {% endif %}>n/a</option>
-                <option value="nearside" {% if observedDefect.lateralLocation == "nearside" %} selected {% endif %}>Nearside</option>
-                <option value="central" {% if observedDefect.lateralLocation == "central" %} selected {% endif %}>Central</option>
-                <option value="offside" {% if observedDefect.lateralLocation == "offside" %} selected {% endif %}>Offside</option>
+                <option value="n/a" {% if identifiedDefect.lateralLocation == "n/a" %} selected {% endif %}>n/a</option>
+                <option value="nearside" {% if identifiedDefect.lateralLocation == "nearside" %} selected {% endif %}>Nearside</option>
+                <option value="central" {% if identifiedDefect.lateralLocation == "central" %} selected {% endif %}>Central</option>
+                <option value="offside" {% if identifiedDefect.lateralLocation == "offside" %} selected {% endif %}>Offside</option>
             </select>
         </div>
         <div class="form-group">
             <label for="locationLongitudinal" class="form-label">Longitudinal</label>
             <select name="locationLongitudinal" id="locationLongitudinal" class="form-control-select">
-                <option value="n/a" {% if observedDefect.longitudinalLocation == "n/a" %} selected {% endif %}>n/a</option>
-                <option value="front" {% if observedDefect.longitudinalLocation == "front" %} selected {% endif %}>Front</option>
-                <option value="rear" {% if observedDefect.longitudinalLocation == "rear" %} selected {% endif %}>Rear</option>
+                <option value="n/a" {% if identifiedDefect.longitudinalLocation == "n/a" %} selected {% endif %}>n/a</option>
+                <option value="front" {% if identifiedDefect.longitudinalLocation == "front" %} selected {% endif %}>Front</option>
+                <option value="rear" {% if identifiedDefect.longitudinalLocation == "rear" %} selected {% endif %}>Rear</option>
             </select>
         </div>
         <div class="form-group">
             <label for="locationVertical" class="form-label">Vertical</label>
             <select name="locationVertical" id="locationVertical" class="form-control-select">
-                <option value="n/a" {% if observedDefect.verticalLocation == "n/a" %} selected {% endif %}>n/a</option>
-                <option value="upper" {% if observedDefect.verticalLocation == "upper" %} selected {% endif %}>Upper</option>
-                <option value="lower" {% if observedDefect.verticalLocation == "lower" %} selected {% endif %}>Lower</option>
-                <option value="inner" {% if observedDefect.verticalLocation == "inner" %} selected {% endif %}>Inner</option>
-                <option value="outer" {% if observedDefect.verticalLocation == "outer" %} selected {% endif %}>Outer</option>
+                <option value="n/a" {% if identifiedDefect.verticalLocation == "n/a" %} selected {% endif %}>n/a</option>
+                <option value="upper" {% if identifiedDefect.verticalLocation == "upper" %} selected {% endif %}>Upper</option>
+                <option value="lower" {% if identifiedDefect.verticalLocation == "lower" %} selected {% endif %}>Lower</option>
+                <option value="inner" {% if identifiedDefect.verticalLocation == "inner" %} selected {% endif %}>Inner</option>
+                <option value="outer" {% if identifiedDefect.verticalLocation == "outer" %} selected {% endif %}>Outer</option>
             </select>
         </div>
     </fieldset>
 
     <div class="form-group {% if errorMessages is not empty %} has-error {% endif %}">
-        {% if observedDefect.isManualAdvisory %}
+        {% if identifiedDefect.isManualAdvisory %}
             <h3 class=" heading-medium">Manual advisory description</h3>
             <label for="comment" class="form-label">Give brief details of the defect</label>
         {% else %}
-            <h3 class=" heading-medium">Additional information {{ observedDefect.comment }}</h3>
+            <h3 class=" heading-medium">Additional information {{ identifiedDefect.comment }}</h3>
             <label for="comment" class="form-label">Add any further comments if required</label>
         {% endif %}
         {% if errorMessages is not empty %}
             <span class="validation-message">{{ errorMessages.displayMessage }}</span>
         {% endif %}
 
-        <textarea type="text" name="comment" id="comment" class="form-control">{{ observedDefect.userComment }}</textarea>
+        <textarea type="text" name="comment" id="comment" class="form-control">{{ identifiedDefect.userComment }}</textarea>
     </div>
 
     <div class="form-group">
         <label class="block-label" for="failureDangerous">
             <input type="checkbox" name="failureDangerous" id="failureDangerous"
-                    {% if observedDefect.dangerous %} checked {% endif %}>This defect is dangerous
+                    {% if identifiedDefect.dangerous %} checked {% endif %}>This defect is dangerous
         </label>
     </div>
 

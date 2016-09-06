@@ -3,7 +3,7 @@
 namespace Dvsa\Mot\Frontend\MotTestModule\View;
 
 use Dvsa\Mot\Frontend\MotTestModule\Exception\RouteNotAllowedInContextException;
-use Dvsa\Mot\Frontend\MotTestModule\ViewModel\ObservedDefect;
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefect;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\Router\RouteStackInterface as Router;
@@ -14,7 +14,7 @@ class DefectsJourneyUrlGenerator
     const CATEGORY_ID_PARAM = 'categoryId';
     const DEFECT_ID_PARAM = 'defectId';
     const DEFECT_TYPE_PARAM = 'type';
-    const OBSERVED_DEFECT_ID_PARAM = 'defectItemId';
+    const IDENTIFIED_DEFECT_ID_PARAM = 'defectItemId';
 
     /**
      * @var Router
@@ -173,19 +173,19 @@ class DefectsJourneyUrlGenerator
     }
 
     /**
-     * @param int $observedDefectId - id of defect that was already added to specified motTest
+     * @param int $identifiedDefectId - id of defect that was already added to specified motTest
      *
      * @throws RouteNotAllowedInContextException
      *
      * @return string
      */
-    public function toEditDefect($observedDefectId)
+    public function toEditDefect($identifiedDefectId)
     {
         $context = $this->contextProvider->getContext();
         $params = [
             self::MOT_TEST_ID_PARAM => $this->getParamFromRoute(self::MOT_TEST_ID_PARAM),
             self::CATEGORY_ID_PARAM => $this->getParamFromRoute(self::CATEGORY_ID_PARAM),
-            self::OBSERVED_DEFECT_ID_PARAM => $observedDefectId,
+            self::IDENTIFIED_DEFECT_ID_PARAM => $identifiedDefectId,
         ];
         $options = [
             'query' => $this->request->getQuery()->toArray(),
@@ -236,19 +236,19 @@ class DefectsJourneyUrlGenerator
     }
 
     /**
-     * @param int $observedDefectId Id of a defect attached to mot test
+     * @param int $identifiedDefectId Id of a defect attached to mot test
      *
      * @throws RouteNotAllowedInContextException
      *
      * @return string
      */
-    public function toRemoveDefect($observedDefectId)
+    public function toRemoveDefect($identifiedDefectId)
     {
         $context = $this->contextProvider->getContext();
         $params = [
             self::MOT_TEST_ID_PARAM => $this->getParamFromRoute(self::MOT_TEST_ID_PARAM),
             self::CATEGORY_ID_PARAM => $this->getParamFromRoute(self::CATEGORY_ID_PARAM),
-            self::OBSERVED_DEFECT_ID_PARAM => $observedDefectId,
+            self::IDENTIFIED_DEFECT_ID_PARAM => $identifiedDefectId,
         ];
         $options = [
             'query' => $this->request->getQuery()->toArray(),
@@ -390,6 +390,6 @@ class DefectsJourneyUrlGenerator
      */
     private function isManualAdvisory($defectId, $defectType)
     {
-        return !$defectId && ObservedDefect::ADVISORY === $defectType;
+        return !$defectId && IdentifiedDefect::ADVISORY === $defectType;
     }
 }

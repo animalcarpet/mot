@@ -7,20 +7,20 @@
 
 namespace Dvsa\Mot\Frontend\MotTestModule\ViewModel;
 
-use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Exception\ObservedDefectNotFoundException;
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Exception\IdentifiedDefectNotFoundException;
 use DvsaCommon\Dto\Common\MotTestDto;
 
 /**
- * Contains the information required for the list of observed defects in an MOT
+ * Contains the information required for the list of identified defects in an MOT
  * test.
  *
- * An observed defect is a defect that has been observed on a vehicle in the
+ * An identified defect is a defect that has been identified on a vehicle in the
  * process of a tester carrying out an MOT test, as opposed to a Defect, which
  * is not associated with a vehicle.
  *
- * @see ObservedDefect
+ * @see IdentifiedDefect
  */
-class ObservedDefectCollection
+class IdentifiedDefectCollection
 {
     const FAILURE = 'failure';
     const PRS = 'PRS';
@@ -31,26 +31,26 @@ class ObservedDefectCollection
     const ADVISORY_KEY = 'ADVISORY';
 
     /**
-     * @var ObservedDefect[]
+     * @var IdentifiedDefect[]
      */
     private $failures;
 
     /**
-     * @var ObservedDefect[]
+     * @var IdentifiedDefect[]
      */
     private $prs;
 
     /**
-     * @var ObservedDefect[]
+     * @var IdentifiedDefect[]
      */
     private $advisories;
 
     /**
-     * ObservedDefectCollection constructor.
+     * IdentifiedDefectCollection constructor.
      *
-     * @param ObservedDefect[] $failures
-     * @param ObservedDefect[] $prs
-     * @param ObservedDefect[] $advisories
+     * @param IdentifiedDefect[] $failures
+     * @param IdentifiedDefect[] $prs
+     * @param IdentifiedDefect[] $advisories
      */
     private function __construct(array $failures, array $prs, array $advisories)
     {
@@ -62,7 +62,7 @@ class ObservedDefectCollection
     /**
      * @param MotTestDto $motTestData
      *
-     * @return ObservedDefectCollection
+     * @return IdentifiedDefectCollection
      */
     public static function fromMotApiData(MotTestDto $motTestData)
     {
@@ -83,7 +83,7 @@ class ObservedDefectCollection
         $advisories = [];
 
         foreach ($failuresFromApi as $failure) {
-            $observedDefect = new ObservedDefect(
+            $identifiedDefect = new IdentifiedDefect(
                 self::FAILURE,
                 $failure['locationLateral'],
                 $failure['locationLongitudinal'],
@@ -96,11 +96,11 @@ class ObservedDefectCollection
                 $failure['onOriginalTest']
             );
 
-            array_push($failures, $observedDefect);
+            array_push($failures, $identifiedDefect);
         }
 
         foreach ($prsFromApi as $loopPrs) {
-            $observedDefect = new ObservedDefect(
+            $identifiedDefect = new IdentifiedDefect(
                 self::PRS,
                 $loopPrs['locationLateral'],
                 $loopPrs['locationLongitudinal'],
@@ -113,7 +113,7 @@ class ObservedDefectCollection
                 $loopPrs['onOriginalTest']
             );
 
-            array_push($prs, $observedDefect);
+            array_push($prs, $identifiedDefect);
         }
 
         foreach ($advisoriesFromApi as $advisory) {
@@ -122,7 +122,7 @@ class ObservedDefectCollection
             $defectName .= array_key_exists('failureText', $advisory) ? $advisory['failureText'] : '';
             $defectName = trim($defectName);
 
-            $observedDefect = new ObservedDefect(
+            $identifiedDefect = new IdentifiedDefect(
                 self::ADVISORY,
                 $advisory['locationLateral'],
                 $advisory['locationLongitudinal'],
@@ -135,14 +135,14 @@ class ObservedDefectCollection
                 $advisory['onOriginalTest']
             );
 
-            array_push($advisories, $observedDefect);
+            array_push($advisories, $identifiedDefect);
         }
 
         return new self($failures, $prs, $advisories);
     }
 
     /**
-     * @return ObservedDefect[]
+     * @return IdentifiedDefect[]
      */
     public function getFailures()
     {
@@ -150,7 +150,7 @@ class ObservedDefectCollection
     }
 
     /**
-     * @return ObservedDefect[]
+     * @return IdentifiedDefect[]
      */
     public function getPrs()
     {
@@ -158,7 +158,7 @@ class ObservedDefectCollection
     }
 
     /**
-     * @return ObservedDefect[]
+     * @return IdentifiedDefect[]
      */
     public function getAdvisories()
     {
@@ -199,15 +199,15 @@ class ObservedDefectCollection
 
     /**
      * Get a unique defect associated with a test. N.B. this is the row id
-     * which uniquely associates an ObservedDefect with a test. This is NOT
+     * which uniquely associates an IdentifiedDefect with a test. This is NOT
      * the id of a Defect (i.e., a potential defect, or one that is yet to
      * be added to a test.
      *
      * @param int $id
      *
-     * @return ObservedDefect
+     * @return IdentifiedDefect
      *
-     * @see ObservedDefect
+     * @see IdentifiedDefect
      * @see Defect
      */
     public function getDefectById($id)
@@ -218,10 +218,10 @@ class ObservedDefectCollection
          * This is only ever going to return one value as we're comparing
          * the primary keys of elements.
          */
-        $defect = array_filter($defects, function (ObservedDefect $e) use ($id) {return $e->getId() === $id;});
+        $defect = array_filter($defects, function (IdentifiedDefect $e) use ($id) {return $e->getId() === $id;});
 
         if (empty($defect)) {
-            throw new ObservedDefectNotFoundException($id);
+            throw new IdentifiedDefectNotFoundException($id);
         }
 
         /*

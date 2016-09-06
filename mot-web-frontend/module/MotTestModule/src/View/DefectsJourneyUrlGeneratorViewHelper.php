@@ -76,23 +76,23 @@ class DefectsJourneyUrlGeneratorViewHelper extends AbstractHelper
     }
 
     /**
-     * @param int|string $observedDefectId
+     * @param int|string $identifiedDefectId
      * @return string
      * @throws RouteNotAllowedInContextException
      */
-    public function toEditDefect($observedDefectId)
+    public function toEditDefect($identifiedDefectId)
     {
-        return $this->defectsJourneyUrlGenerator->toEditDefect($observedDefectId);
+        return $this->defectsJourneyUrlGenerator->toEditDefect($identifiedDefectId);
     }
 
     /**
-     * @param int|string $observedDefectId
+     * @param int|string $identifiedDefectId
      * @return string
      * @throws RouteNotAllowedInContextException
      */
-    public function toRemoveDefect($observedDefectId)
+    public function toRemoveDefect($identifiedDefectId)
     {
-        return $this->defectsJourneyUrlGenerator->toRemoveDefect($observedDefectId);
+        return $this->defectsJourneyUrlGenerator->toRemoveDefect($identifiedDefectId);
     }
 
     /**
