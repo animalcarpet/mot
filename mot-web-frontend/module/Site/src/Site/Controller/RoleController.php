@@ -3,6 +3,7 @@
 namespace Site\Controller;
 
 use Core\Controller\AbstractAuthActionController;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\Security\RolesMapDto;
 use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
@@ -165,6 +166,7 @@ class RoleController extends AbstractAuthActionController
         $mapperFactory = $this->getMapperFactory();
         $nominee = $mapperFactory->Person->getById($nomineeId);
         $roleCodeNameMap = $this->getCatalogService()->getSiteBusinessRoles();
+        $featureToggles   = $this->getFeatureToggles();
 
         if ($this->getRequest()->isPost()) {
             try {
@@ -184,13 +186,15 @@ class RoleController extends AbstractAuthActionController
             }
         }
 
+        $twoFactorOn = $featureToggles->isEnabled(FeatureToggle::TWO_FA);
         $this->layout('layout/layout-govuk.phtml');
 
         return new ViewModel(
             [
-                'nominee' => $nominee,
-                'vehicleTestingStationId' => $vehicleTestingStationId,
-                'roleName' => $roleCodeNameMap[$roleCode],
+                'nominee'                   => $nominee,
+                'vehicleTestingStationId'   => $vehicleTestingStationId,
+                'roleName'                  => $roleCodeNameMap[$roleCode],
+                'twoFactorEnabled'          => $twoFactorOn
             ]
         );
     }
