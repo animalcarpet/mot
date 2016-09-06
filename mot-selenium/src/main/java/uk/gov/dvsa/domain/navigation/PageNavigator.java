@@ -278,5 +278,15 @@ public class PageNavigator {
         }
     }
 
+    private Cookie getCookieByName(String cookieName) {
+        return driver.manage().getCookieNamed(cookieName);
+    }
 
+    public Cookie getCurrentTokenCookie() {
+        return getCookieByName(CookieService.TOKEN_COOKIE_NAME);
+    }
+
+    public Cookie getCurrentSessionCookie() {
+        return getCookieByName(CookieService.SESSION_COOKIE_NAME);
+    }
 }

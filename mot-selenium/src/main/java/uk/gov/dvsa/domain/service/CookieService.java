@@ -7,8 +7,11 @@ import java.io.IOException;
 
 public class CookieService {
 
+    public static final String TOKEN_COOKIE_NAME = "iPlanetDirectoryPro";
+    public static final String SESSION_COOKIE_NAME = "PHPSESSID";
+
     public static Cookie generateOpenAmLoginCookie(User user) throws IOException {
         String token = new AuthService().createSessionTokenForUser(user);
-        return new Cookie("iPlanetDirectoryPro", token, Configurator.domain(), "/", null);
+        return new Cookie(TOKEN_COOKIE_NAME, token, Configurator.domain(), "/", null);
     }
 }
