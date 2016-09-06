@@ -124,6 +124,26 @@ class CardOrderAddressActionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('security-card-order/review', $actionResult->getRouteName());
     }
 
+    public function testPostWithCSVHyperLinkCharactersAreRemoved()
+    {
+        $this->setUpProtection();
+        $this->mockIsAllowedOnStep(true);
+        $this->mockGetSecurityCardOrderAddresses([]);
+        $this->mockIsPost(true, $this->getValidAddressDataWithHyperlinkOperators());
+
+        $this->sessionService
+            ->expects($this->once())
+            ->method('saveToGuid')
+            ->with(self::USER_ID, $this->getPostAddressDataWithHyperlinkOperatorsRemoved());
+
+
+        /** @var RedirectToRoute $actionResult */
+        $actionResult = $this->buildAction()->execute($this->request, self::USER_ID);
+
+        $this->assertInstanceOf(RedirectToRoute::class, $actionResult);
+        $this->assertEquals('security-card-order/review', $actionResult->getRouteName());
+    }
+
     private function mockIsPost($isPost, $postData) {
         if ($isPost) {
             $params = XMock::of(ParametersInterface::class);
@@ -189,6 +209,37 @@ class CardOrderAddressActionTest extends \PHPUnit_Framework_TestCase
             'townOrCity' => 'Northolt',
             'postcode' => 'ng1 6lp',
             'addressChoice' => $addressChoiceCustom
+        ];
+
+        return $data;
+    }
+
+    private function getValidAddressDataWithHyperlinkOperators()
+    {
+        $data = [
+            'address1' => '=HYPERLINK("http://www.google.com)',
+            'address2' => '@HYPERLINK("http://www.google.com)',
+            'address3' => '+HYPERLINK("http://www.google.com)',
+            'townOrCity' => '=HYPERLINK("http://www.google.com)',
+            'postcode' => 'NG1 6LP',
+            'addressChoice' => 'addressChoiceCustom',
+        ];
+
+        return $data;
+    }
+
+    private function getPostAddressDataWithHyperlinkOperatorsRemoved()
+    {
+        $data = [
+            'addressStep' => [
+                'address1' => ' HYPERLINK("http://www.google.com)',
+                'address2' => ' HYPERLINK("http://www.google.com)',
+                'address3' => ' HYPERLINK("http://www.google.com)',
+                'townOrCity' => ' HYPERLINK("http://www.google.com)',
+                'postcode' => 'NG1 6LP',
+                'addressChoice' => 'addressChoiceCustom',
+                'vtsName' => '',
+            ]
         ];
 
         return $data;
