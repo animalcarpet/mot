@@ -70,6 +70,7 @@ class CardOrderAddressAction
             $form->setData($postData);
 
             if ($form->isValid()) {
+                $postData = str_replace(['=', '@', '+'], ' ', $postData);
                 $this->savePostDataToSession($postData, $userId);
                 $this->stepService->updateStepStatus($userId, OrderSecurityCardStepService::REVIEW_STEP, true);
                 return new RedirectToRoute('security-card-order/review', ['userId' => $userId]);
