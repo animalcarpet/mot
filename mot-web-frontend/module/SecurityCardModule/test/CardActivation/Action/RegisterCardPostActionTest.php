@@ -7,6 +7,7 @@ use Core\Action\ActionResult;
 use Core\Action\NotFoundActionResult;
 use Core\Action\RedirectToRoute;
 use Core\Service\MotFrontendIdentityProvider;
+use Dvsa\Mot\ApiClient\Exception\ResourceConflictException;
 use Dvsa\Mot\ApiClient\Exception\ResourceNotFoundException;
 use Dvsa\Mot\ApiClient\Exception\ResourceValidationException;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
@@ -79,6 +80,20 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->subTitle, $result->layout()->getPageSubTitle());
         $this->assertEquals($this->skipCtaTemplate, $result->getViewModel()->getSkipCtaTemplate());
         $this->assertEquals($this->breadcrumbs, $result->layout()->getBreadcrumbs());
+    }
+
+    public function testWhenFormInvalid_shouldAddGoogleAnalyticsMessages()
+    {
+        $this->withCanSeePage(true);
+        $this->request->setPost(new Parameters());
+        /** @var ActionResult $result */
+        $result = $this->action()->execute($this->request);
+
+        $this->assertInstanceOf(ActionResult::class, $result);
+        /** @var RegisterCardViewModel $vm */
+        $vm = $result->getViewModel();
+        $this->assertFalse($vm->getForm()->isValid());
+        $this->assertNotEmpty($vm->getGtmData());
     }
 
     public function testWhenFormInvalid_shouldClearPin()
@@ -176,6 +191,18 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("Enter a valid serial number",
             $result->getViewModel()->getForm()->getSerialNumberField()->getMessages()[0]
         );
+        $this->assertTrue($result->getViewModel()->isInvalidSerialNumber());
+    }
+
+    public function testWhenActivationFailsOnCardAlreadyRegistered_shouldSetFlagOnViewModel()
+    {
+        $this->withCanSeePage(true);
+
+        $this->withFailingActivationCall(ResourceConflictException::class);
+        /** @var ActionResult $result */
+        $result = $this->action()->execute($this->request);
+
+        $this->assertTrue($result->getViewModel()->isCardAlreadyRegistered());
     }
 
     private function withCanSeePage($val)
