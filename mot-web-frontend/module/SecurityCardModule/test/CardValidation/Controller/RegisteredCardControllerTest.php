@@ -23,6 +23,8 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
     const PIN = 123456;
     const LOGIN_WITH_2FA_TEMPLATE = '2fa/registered-card/login-2fa';
     const INVALID_PIN_ERROR_MESSAGE = 'Enter a valid PIN number';
+    const GTM_USER_LOGIN_FAILED = 'user-login-failed';
+    const WRONG_PIN = 'wrong-pin';
 
     /** @var AuthenticationService $authenticationService */
     private $authenticationService;
@@ -114,6 +116,10 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
         $this->assertPinInputIsCleared($form);
         $this->assertContains(self::INVALID_PIN_ERROR_MESSAGE, $form->getPinField()->getMessages());
         $this->assertEquals(self::LOGIN_WITH_2FA_TEMPLATE, $vm->getTemplate());
+
+        $gtmData = $vm->getVariable("gtmData");
+        $this->assertEquals(self::GTM_USER_LOGIN_FAILED, $gtmData['event']);
+        $this->assertEquals(self::WRONG_PIN, $gtmData['reason']);
     }
 
     public function testOnPostLoginAction_when2FALoginApplicableToUser_and_2FAFeatureToggleOn_and_inValidForm_shouldShowLoginWith2FA()

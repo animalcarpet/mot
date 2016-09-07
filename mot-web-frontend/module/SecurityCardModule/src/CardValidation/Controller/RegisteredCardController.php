@@ -88,22 +88,19 @@ class RegisteredCardController extends AbstractDvsaActionController
 
     public function onPost2FALoginAction()
     {
-        $request = $this->getRequest();
         $gtmCallback = new GtmSecurityCardPinValidationCallback();
         $form = new SecurityCardValidationForm($gtmCallback);
-        $form->setData($request->getPost()->toArray());
+        $form->setData($this->getRequest()->getPost()->toArray());
 
         if (!$form->isValid()) {
             return $this->setUpViewData($form)->setVariable('gtmData', $gtmCallback->toGtmData());
         }
-
-        $isPinValid = $this->registeredCardService->validatePin($form->getPinField()->getValue());
-
-        if ($isPinValid) {
+        if ($this->registeredCardService->validatePin($form->getPinField()->getValue())) {
             return $this->redirect()->toRoute(UserHomeController::ROUTE);
         } else {
             $form->setCustomError($form->getPinField(), 'Enter a valid PIN number');
-            return $this->setUpViewData($form);
+            return $this->setUpViewData($form)
+                ->setVariable('gtmData', ['event' => 'user-login-failed', 'reason' => 'wrong-pin']);
         }
     }
 
