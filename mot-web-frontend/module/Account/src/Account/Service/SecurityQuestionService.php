@@ -18,10 +18,10 @@ use Account\Validator\ClaimValidator;
  */
 class SecurityQuestionService
 {
-    const NUMBER_ATTEMPT_SEVERAL = 'This is not the correct answer, you have %s more tries';
-    const NUMBER_ATTEMPT_ONE = 'This is not the correct answer, you have %s more try';
+    const NUMBER_ATTEMPT_SEVERAL = 'Your answer is not correct, you have %s more tries';
+    const NUMBER_ATTEMPT_ONE = 'Your answer is not correct, you have %s more try';
 
-    const NO_VALUE_ENTER = 'You have not entered a value';
+    const NO_VALUE_ENTER = 'You must enter an answer';
 
     /** @var MapperFactory $mapper */
     private $mapper;
@@ -278,7 +278,7 @@ class SecurityQuestionService
      */
     public function getSuccessMessage()
     {
-        return ['Question one ', 'correct'];
+        return ['First security question - your answer was ', 'correct'];
     }
 
     /**
@@ -289,9 +289,9 @@ class SecurityQuestionService
     public function getErrorMessage()
     {
         if ($this->questionNumber == 1) {
-            return ['Question one ', 'incorrect'];
+            return ['First security question - your answer is ', 'not correct'];
         }
-        return ['Question two ', 'incorrect'];
+        return ['Second security question - your answer is ', 'not correct'];
     }
 
     /**

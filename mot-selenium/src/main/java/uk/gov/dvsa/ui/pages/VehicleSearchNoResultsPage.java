@@ -21,7 +21,7 @@ public class VehicleSearchNoResultsPage extends AbstractVehicleSearchResultsPage
     }
 
     public boolean isUnableToProvideRegOrVINLinkDisplayed() {
-        return unableToProvideRegSection.getText().contains("Unable to provide a registration mark or full VIN");
+        return unableToProvideRegSection.getText().contains("Can't provide the registration mark or VIN?");
     }
 
     public VehicleSearchNoResultsPage clickUnableToProvideRegOrVIN() {

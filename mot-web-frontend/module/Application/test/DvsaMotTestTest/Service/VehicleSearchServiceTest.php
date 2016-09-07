@@ -63,7 +63,7 @@ class VehicleSearchServiceTest extends \PHPUnit_Framework_TestCase
         // No VIN or VRM
         $searchResultMessage = $this->service->getSearchResultMessage(null, null, null);
         $this->assertEquals(
-            'You must enter the registration mark and VIN to search for a vehicle.',
+            'Enter the registration mark and Vehicle Identification Number (VIN) to search for a vehicle.',
             $searchResultMessage->getAdditionalMessage()
         );
 

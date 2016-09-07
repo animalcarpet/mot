@@ -39,8 +39,8 @@ class VehicleSearchController extends AbstractDvsaMotTestController
 {
     const CONTINGENCY_FORM_NOT_RECORDED = 'The contingency test form has not been filled in.';
     const PARTIAL_VIN_NO_REG_ERROR = 'Please complete the registration number field.';
-    const NO_VIN_AND_NO_REG_ERROR = 'You must enter the registration mark and VIN to search for a vehicle.';
-    const VIN_REQUIRED_ERROR = 'You must enter a VIN to perform the search';
+    const NO_VIN_AND_NO_REG_ERROR = 'Enter the registration mark and Vehicle Identification Number (VIN) to search for a vehicle.';
+    const VIN_REQUIRED_ERROR = 'Enter a VIN to perform the search';
     const MOT_TEST_NUMBER_PARAM = 'motTestNumberOriginal';
 
     const SEARCH_RESULT_NO_MATCH = 'NO-MATCH';

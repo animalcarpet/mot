@@ -6,11 +6,13 @@ $errorMessages  = $this->layout()->flashMessenger->getErrorMessages();
 
 <?php echo $this->partial('partial/gds/general/system-message', ['messages' => $errorMessages, 'type' => 'failure']); ?>
 
-<div class="lede">
+<p class="lede">You can reset your account if you have forgotten your security answers and password.</p>
+
+<div>
     <?php echo $this->partial('partial/gds/general/contactHelpdesk', ['config' => $viewModel['helpdesk']]); ?>
 </div>
 
-<p>You will need to provide your personal details to validate your identity, including the email address you may have used to create the account. If you have changed or forgotten this email address, please inform the advisor when you contact them.</p>
+<p>You will need to prove your identity by answering some questions about yourself.</p>
 
 <?php if ($isLoggedIn === false): ?>
     <?php echo $this->partial(

@@ -5,6 +5,8 @@ $label = $this->label ?: '';
 $value = $this->value;
 $type = (empty($this->type) ? 'text' : $this->type);
 $help = $this->help;
+$labelVisuallyHidden = $this->labelVisuallyHidden;
+$errorOutsideLabel = $this->errorOutsideLabel;
 
 $tabIndex  = $this->tabIndex;
 
@@ -24,7 +26,7 @@ $cssClass = join(
 ?>
 <div class="form-group <?php echo $this->escapeHtmlAttr($cssClass); ?>">
     <label for="<?php echo $this->escapeHtmlAttr($id); ?>"
-           class="form-label">
+           class="form-label <?php echo $labelVisuallyHidden ? 'visuallyhidden' : ''; ?>">
 
         <?php if (!empty($label)) :
             echo $this->escapeHtml($label);
@@ -34,10 +36,14 @@ $cssClass = join(
             <span class="form-hint"><?php echo $this->escapeHtml($help); ?></span>
         <?php endif; ?>
 
-        <?php if (!empty($errorMessage)): ?>
+        <?php if (!empty($errorMessage) && !$errorOutsideLabel): ?>
             <span class="validation-message"><?php echo $this->escapeHtml($errorMessage); ?></span>
         <?php endif; ?>
     </label>
+
+    <?php if (!empty($errorMessage) && $errorOutsideLabel): ?>
+         <span class="validation-message"><?php echo $this->escapeHtml($errorMessage); ?></span>
+     <?php endif; ?>
 
     <?php echo $this->partial(
         'partial/gds/form/control-text',

@@ -71,14 +71,14 @@ class SecurityQuestionServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(self::FIRST_QUESTION, $this->service->getQuestionNumber());
         $this->assertSame(self::PERSON_ID, $this->service->getUserId());
         $this->assertSame(PasswordResetController::STEP_2, $this->service->getStep());
-        $this->assertSame(['Question one ', 'correct'], $this->service->getSuccessMessage());
-        $this->assertSame(['Question one ', 'incorrect'], $this->service->getErrorMessage());
+        $this->assertSame(['First security question - your answer was ', 'correct'], $this->service->getSuccessMessage());
+        $this->assertSame(['First security question - your answer is ', 'not correct'], $this->service->getErrorMessage());
         $this->assertFalse($this->service->getQuestionSuccess());
 
         $this->service->setUserAndQuestion(self::PERSON_ID, self::SECOND_QUESTION);
         $this->assertSame(self::SECOND_QUESTION, $this->service->getQuestionNumber());
         $this->assertSame(PasswordResetController::STEP_3, $this->service->getStep());
-        $this->assertSame(['Question two ', 'incorrect'], $this->service->getErrorMessage());
+        $this->assertSame(['Second security question - your answer is ', 'not correct'], $this->service->getErrorMessage());
         $this->assertFalse($this->service->getQuestionSuccess());
     }
 

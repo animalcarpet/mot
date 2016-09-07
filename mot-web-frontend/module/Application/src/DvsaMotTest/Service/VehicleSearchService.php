@@ -156,7 +156,7 @@ class VehicleSearchService
                     $numberOfFoundVehicles,
                     $vehiclesString
                 ),
-                sprintf("You must enter the registration mark and VIN to search for a vehicle.")
+                sprintf("Enter the registration mark and Vehicle Identification Number (VIN) to search for a vehicle.")
             );
         }
 
@@ -176,7 +176,7 @@ class VehicleSearchService
         if ($vrmGiven && $vinGiven && !$partialVin) {
             return new VehicleSearchResultMessage(
                 sprintf(
-                    "<strong>%s</strong> %s found with registration <strong>%s</strong> and a VIN <strong>matching %s</strong>.",
+                    "<strong>%s</strong> %s found with registration <strong>%s</strong> and a VIN matching <strong>%s</strong>.",
                     $numberOfFoundVehicles,
                     $vehiclesString,
                     $vrm,
@@ -201,7 +201,7 @@ class VehicleSearchService
         if (!$vrmGiven && $partialVin) {
             return new VehicleSearchResultMessage(
                 sprintf(
-                    "<strong>%s</strong> %s found <strong>without a registration</strong> and a VIN <strong>ending</strong> in <strong>%s</strong>.",
+                    "<strong>%s</strong> %s found <strong>without a registration</strong> and a VIN ending in <strong>%s</strong>.",
                     $numberOfFoundVehicles,
                     $vehiclesString,
                     $vin
@@ -213,7 +213,7 @@ class VehicleSearchService
         if (!$vrmGiven && $vinGiven && !$partialVin) {
             return new VehicleSearchResultMessage(
                 sprintf(
-                    "<strong>%s</strong> %s found <strong>without a registration</strong> and a VIN <strong>matching %s</strong>.",
+                    "<strong>%s</strong> %s found <strong>without a registration</strong> and a VIN matching <strong>%s</strong>.",
                     $numberOfFoundVehicles,
                     $vehiclesString,
                     $vin

@@ -174,7 +174,7 @@ public class CreateNewVehicleTests extends DslTest {
                 {"Registration", "Registration mark"},
                 {"Vin","Full VIN or chassis number"},
                 {"Make","Manufacturer -"},
-                {"Date","you must enter a date"},
+                {"Date","enter a date"},
                 {"Transmission","Transmission - "}
         };
     }
@@ -182,20 +182,20 @@ public class CreateNewVehicleTests extends DslTest {
     @DataProvider
     private Object[][] missingAddStepTwoVehicleData() {
         return new Object[][] {
-            {"Fuel","Fuel Type - you must choose a fuel type"},
-            {"Model", "Model - you must choose a model"},
-            {"Class", "Vehicle Class - you must choose a class"},
-            {"Cylinder","Cylinder Capacity - you must enter a cylinder capacity"},
-            {"Primary","Colour - you must choose a primary colour"}
+            {"Fuel","Fuel Type - choose a fuel type"},
+            {"Model", "Model - choose a model"},
+            {"Class", "Vehicle Class - choose a class"},
+            {"Cylinder","Cylinder Capacity - enter a cylinder capacity"},
+            {"Primary","Colour - choose a primary colour"}
             };
     }
     @DataProvider
     private Object [][] invalidDates(){
         return new Object [][] {
             {getFutureDate(1), "Approximate date of first use - must not be in the future"},
-            {"2015-01-32","Approximate date of first use - must be a valid date"},
-            {"2015-00-01","Approximate date of first use - must be a valid date"},
-            {"00-01-01","Approximate date of first use - must be a valid date"}
+            {"2015-01-32","Approximate date of first use - enter a valid date"},
+            {"2015-00-01","Approximate date of first use - enter a valid date"},
+            {"00-01-01","Approximate date of first use - enter a valid date"}
             };
         }
 

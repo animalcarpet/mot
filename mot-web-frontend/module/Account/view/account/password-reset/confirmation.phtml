@@ -7,40 +7,18 @@
 
 $viewModel = $this->viewModel;
 
-$dtF = new DateTime("@" . $viewModel->getCfgExpireTime());
-$interval = $dtF->diff(new DateTime("@0"));
-
-$parts = [
-    'd' => '%a day',
-    'h' => '%h hour',
-    'i' => '%i minute',
-    's' => '%s second',
-];
-
-$message = [];
-foreach ($parts as $part => $format) {
-    $val = $interval->{$part};
-
-    if ($val) {
-        $message[] = $interval->format($format . ($val != 1 ? 's' : ''));
-    }
-}
-
-$message = 'You will need to use the link in the email provided within ' . join(' ', $message) . ', after which the link will expire.';
 $errorMessages  = $this->layout()->flashMessenger->getErrorMessages();
 
+$this->layout()->setVariable('pageSubTitle', '');
 echo $this->partial('partial/gds/general/system-message', ['messages' => $errorMessages, 'type' => 'failure']);
 ?>
 
-<p class="lede">We've sent you an email containing a link allowing you to change your password.</p>
-<p>If you haven't received the email within 15 minutes then please check your spam folder.</p>
-<p>
-    If you are still having problems -
-    <?php echo lcfirst(trim($this->partial('partial/gds/general/contactHelpdesk', ['config' => $viewModel->getConfig()['helpdesk']]))); ?>
-</p>
+<p class="lede">We have sent you an email with a link to reset your password.</p>
+<p>The link to reset your password will expire in 1 hour 30 minutes.</p>
+<p>If you do not receive an email after 15 minutes and you have checked your spam folder, then: </p>
+<p><?php echo lcfirst(trim($this->partial('partial/gds/general/contactHelpdesk', ['config' => $viewModel->getConfig()['helpdesk']]))); ?></p>
 
 <?php
-echo $this->partial('partial/gds/general/message', ['message' => $message]);
 
 echo $this->partial(
     'partial/gds/form/control-navigation-secondary',

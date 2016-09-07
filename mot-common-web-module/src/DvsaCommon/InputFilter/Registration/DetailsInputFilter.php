@@ -31,7 +31,7 @@ class DetailsInputFilter extends InputFilter
 
     /** First name */
     const FIELD_FIRST_NAME = 'firstName';
-    const MSG_FIRST_NAME_EMPTY = 'you must enter a first name';
+    const MSG_FIRST_NAME_EMPTY = 'enter a first name';
     const MSG_NAME_MAX = 'must be %d, or less, characters long'; # common for all the name related fields
     const MSG_NAME_NO_PATTERN_MATCH = 'must only contain letters, spaces, hyphens and apostrophes';
 
@@ -40,21 +40,21 @@ class DetailsInputFilter extends InputFilter
 
     /** Last name */
     const FIELD_LAST_NAME = 'lastName';
-    const MSG_LAST_NAME_EMPTY = 'you must enter a last name';
+    const MSG_LAST_NAME_EMPTY = 'enter a last name';
 
     /** Phone */
     const FIELD_PHONE = 'phone';
     const MSG_PHONE_MAX = 'must be %d characters or less';
-    const MSG_PHONE_INVALID = 'you must enter a telephone number';
+    const MSG_PHONE_INVALID = 'enter a telephone number';
 
     /** Email address */
     const FIELD_EMAIL = 'emailAddress';
     const MSG_EMAIL_MAX = 'must be %d, or less, characters long';
-    const MSG_EMAIL_INVALID = 'you must enter a valid email address';
+    const MSG_EMAIL_INVALID = 'enter a valid email address';
 
     /** Email confirmation */
     const FIELD_EMAIL_CONFIRM = 'confirmEmailAddress';
-    const MSG_EMAIL_CONFIRM_EMPTY = 'you must confirm your email address';
+    const MSG_EMAIL_CONFIRM_EMPTY = 'confirm your email address';
     const MSG_EMAIL_CONFIRM_DIFFER = 'the email addresses you have entered don\'t match';
 
     public function init()

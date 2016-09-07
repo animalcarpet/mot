@@ -8,9 +8,7 @@ use Account\ViewModel\PasswordResetFormModel;
 
 ?>
 
-<div class="lede">
-    <p>First we need your user account so that we may retrieve your security questions...</p>
-</div>
+<p class="lede">You can reset your password by answering your chosen security questions.</p>
 
 <?php
 $errorMessages = $this->layout()->flashMessenger->getErrorMessages();
@@ -25,8 +23,14 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $errorM
     <fieldset>
         <?php
         echo $this->partial(
-            'partial/gds/form/control-legend', ['id' => 'userAccount', 'text' => 'User account required']
+           'partial/gds/form/control-legend', [
+                'id' => 'userAccount',
+	            'text' => 'User ID',
+                'altLegendClass' => 'heading-medium',
+             ]
         );
+
+        echo '<p>Tell us your user ID so that we can find your security questions.</p>';
 
         echo $this->partial(
             'partial/gds/form/control-text-group',
@@ -35,7 +39,9 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $errorM
                 'errorMessage'  => $viewModel->getError(PasswordResetFormModel::FIELD_USERNAME),
                 'label'         => 'User ID',
                 'value'         => $viewModel->getUsername(),
-                'autoCompleteOff' => true
+                'autoCompleteOff' => true,
+                'labelVisuallyHidden' => true,
+                'errorOutsideLabel' => true,
             ]
         );
         ?>
@@ -45,9 +51,9 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $errorM
         'partial/gds/form/control-navigation',
         [
             'id'            => 'submitUserId',
-            'value'         => 'Submit user ID',
+            'value'         => 'Continue',
             'navigation'    => [
-                'Sign in' => '/',
+                'Cancel and return to sign in' => '/',
             ]
         ]
     ); ?>

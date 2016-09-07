@@ -13,9 +13,9 @@
 
 <div class="row">
     <div class="col-sm-12">
-        <h1>Confirm new vehicle record</h1>
-
+        <h1>Review new vehicle record</h1>
         <h2>Vehicle record summary</h2>
+        <p style="font-size:22px">Check that the new vehicle record is correct before you save it and start the MOT test.</p>
     </div>
 </div>
 
@@ -74,7 +74,7 @@ echo $this->partial('infoMessages', array('getFromFlash' => true));
             ?>
 
             <nav class="module-content-navigation">
-                <input type="submit" class="button" value="Start MOT test" id="confirm_test_result">
+                <input type="submit" class="button" value="Save new record and start MOT test" id="confirm_test_result">
                 <ul class="content-navigation_secondary">
                     <li>
                         <input id="back-link" type="submit" class="btn btn-link" value="Back" name="back">

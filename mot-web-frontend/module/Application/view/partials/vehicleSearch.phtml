@@ -45,7 +45,7 @@ if ($this->form->has('contingency')) {
     <?php endif; ?>
 <?php else: ?>
     <div class="text">
-        <p class="lede">You must enter both the registration mark and VIN.</p>
+        <p class="lede">Enter the registration mark and Vehicle Identification Number (VIN) to search for a vehicle.</p>
     </div>
 <?php endif; ?>
 
@@ -147,33 +147,20 @@ if ($this->form->has('contingency')) {
             <div class="form-group">
                 <details>
                     <summary role="button" aria-controls="details-content-0" tabindex="0" aria-expanded="false"><span
-                            class="summary">Unable to provide a registration mark or full VIN</span></summary>
+                            class="summary">Can't provide the registration mark or VIN?</span></summary>
                     <div class="panel-indent" id="details-content-0" aria-hidden="true">
                         <div class="text">
-                            <p>
-                                If the vehicle doesn't have a registration mark or VIN it can still be found using the
-                                information you have available.
-                            </p>
-                            <h4 class="heading-small">If registration mark is missing</h4>
+                            <p>If a vehicle has a registration mark and VIN, you must enter both to find it.</p>
 
-                            <p>
-                                You must enter the VIN.
-                            </p>
+                            <p>However, you can look up vehicles that have just a VIN, or just a registration mark.</p>
 
-                            <p>
-                                You will only get results where the vehicle matches the VIN but has no registration mark
-                                recorded.
-                            </p>
-                            <h4 class="heading-small">If VIN is missing or cannot be found</h4>
+                            <h4 class="heading-small">VIN is missing</h4>
 
-                            <p>
-                                You must enter the registration mark.
-                            </p>
+                            <p>Search by entering the registration mark. You will see results where the vehicle has no VIN recorded.</p>
 
-                            <p>
-                                You will only get results where the vehicle matches the registration mark but has no VIN
-                                recorded.
-                            </p>
+                            <h4 class="heading-small">Registration mark is missing</h4>
+
+                            <p>Search by entering the VIN. You will see results where the vehicle has no registration mark recorded.</p>
                         </div>
                     </div>
                 </details>
@@ -196,9 +183,7 @@ if ($this->form->has('contingency')) {
     <nav class="content-navigation">
         <ul class="content-navigation__secondary">
             <li>
-                <a id="cancel_vehicle_search"
-                   href="<?php echo $this->url(\Dashboard\Controller\UserHomeController::ROUTE); ?>">Cancel and return
-                    Home</a>
+                <a id="cancel_vehicle_search" href="<?php echo $this->url(\Dashboard\Controller\UserHomeController::ROUTE); ?>">Cancel and return home</a>
             </li>
         </ul>
     </nav>
@@ -206,12 +191,13 @@ if ($this->form->has('contingency')) {
 <?php if ($showCreateButton): ?>
     <div class="message--important">
         <p id="new-vehicle-record-info">
-            If you're unable to find a vehicle you can
+            If you can't find a vehicle you can
             <a id="new-vehicle-record-link" href="<?php echo $this->url(
                 'vehicle-step',
                 [],
                 ['query' => ['reg' => $registrationElement->getValue()]]
             ); ?>">create a new vehicle record</a>.
         </p>
+        <p>Check that you have searched with the correct VIN and registration number before you do this.</p>
     </div>
 <?php endif; ?>
