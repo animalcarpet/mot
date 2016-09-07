@@ -90,8 +90,7 @@ module.exports = function (grunt, config) {
         [
             'apache:restart:all', // reset DB requires a clean class cache, hence reset happens twice
             'shell:composer',
-            'shell:config_reload',
-            'sshexec:fix_db_configs',
+            'build:config-reload',
             'sshexec:mysql_proc_fix',
             'sshexec:reset_database',
             'amazon:cache:clear:national-statistics',

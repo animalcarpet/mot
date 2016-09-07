@@ -65,6 +65,10 @@ module.exports = function(grunt, config) {
             command: function () {
                 return 'curl -s ' + grunt.config.get('url.testsupport') + '/testsupport/clear-statistics-amazon-cache';
             }
+        },
+        fix_testsupport_config: {
+            command:'sed "s/warden:8080/dev2.motdev.org.uk:9095/" ' +
+                'mot-testsupport/config/autoload/global.php.dist > mot-testsupport/config/autoload/global.php'
         }
     });
 };
