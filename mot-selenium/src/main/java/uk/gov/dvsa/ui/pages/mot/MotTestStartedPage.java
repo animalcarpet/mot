@@ -14,9 +14,9 @@ public class MotTestStartedPage extends Page {
     @FindBy(id = "sign-out") private WebElement signOut;
     @FindBy(id = "return_to_home") private WebElement returnToHome;
     @FindBy(className = "col-lg-12") private WebElement startedBanner;
-    @FindBy(css = "body > div:nth-child(7) > div.row.contents > div > p:nth-child(2) > strong:nth-child(1)")
+    @FindBy(id = "vehicle-make-and-model")
     private WebElement modelDetail;
-    @FindBy(css = "body > div:nth-child(7) > div.row.contents > div > p:nth-child(2) > strong:nth-child(2)")
+    @FindBy(id = "vehicle-registration-mark")
     private WebElement vrm;
 
     public MotTestStartedPage(MotAppDriver driver) {

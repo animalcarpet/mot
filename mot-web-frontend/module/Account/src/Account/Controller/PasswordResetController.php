@@ -30,18 +30,16 @@ class PasswordResetController extends AbstractAuthActionController
     const CFG_PASSWORD_RESET = 'password_reset';
     const CFG_PASSWORD_RESET_EXPIRE_TIME = 'expireTime';
 
-    const PAGE_TITLE = 'Forgotten password';
+    const PAGE_TITLE = 'Forgotten your password';
     const PAGE_SUBTITLE = 'MOT testing service';
-    const PAGE_TITLE_CONFIRMATION = 'Success!';
-    const PAGE_TITLE_FAILURE = 'Forgotten security question(s)';
+    const PAGE_TITLE_CONFIRMATION = 'Security questions answered correctly';
+    const PAGE_TITLE_FAILURE = 'Forgotten your answers to security questions';
     const PAGE_TITLE_EMAIL_NOT_FOUND = 'Email address not found';
-    const PAGE_TITLE_PASSWORD_RESET = 'Reset your password';
+    const PAGE_TITLE_PASSWORD_RESET = 'Create a new password';
 
     const STEP_1 = 'Step 1 of 3';
     const STEP_2 = 'Step 2 of 3';
     const STEP_3 = 'Step 3 of 3';
-    const STEP_4 = 'User authenticated and email sent';
-    const STEP_FAIL = 'Call Helpdesk';
 
     const QUESTION_1 = 1;
 
@@ -53,7 +51,7 @@ class PasswordResetController extends AbstractAuthActionController
 
     const TEXT_LINK_EXPIRED = 'The password reset link has expired.';
     const TEXT_LINK_BEEN_USED = 'The password reset link has already been used.';
-    const TEXT_YOU_HAVE_ARRIVED_HERE = 'You have arrived here after entering/following a link to reset your password';
+    const TEXT_YOU_HAVE_ARRIVED_HERE = 'Now choose a new password to replace your forgotten one';
     const TEXT_YOU_MUST_CHANGE_PWORD = 'Your password has expired. Change it now.';
 
     /** @var PasswordResetService */
@@ -199,8 +197,7 @@ class PasswordResetController extends AbstractAuthActionController
 
         return $this->initViewModelInformation(
             self::PAGE_TITLE_FAILURE,
-            self::PAGE_SUBTITLE,
-            self::STEP_FAIL
+            self::PAGE_SUBTITLE
         );
     }
 
@@ -223,7 +220,7 @@ class PasswordResetController extends AbstractAuthActionController
         $this->view->setCfgExpireTime($this->config[self::CFG_PASSWORD_RESET][self::CFG_PASSWORD_RESET_EXPIRE_TIME]);
         $this->view->setConfig($this->config);
 
-        return $this->initViewModelInformation(self::PAGE_TITLE_CONFIRMATION, self::PAGE_SUBTITLE, self::STEP_4);
+        return $this->initViewModelInformation(self::PAGE_TITLE_CONFIRMATION, self::PAGE_SUBTITLE);
     }
 
     public function changePasswordAction()

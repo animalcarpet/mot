@@ -33,7 +33,7 @@ class CreateVehicleStepOneForm extends Form
                     'name' => 'submit',
                     'attributes' => [
                         'type' => 'submit',
-                        'value' => 'Submit',
+                        'value' => 'Continue',
                         'id' => 'submit-button',
                         'class' => 'btn btn-primary'
                     ]

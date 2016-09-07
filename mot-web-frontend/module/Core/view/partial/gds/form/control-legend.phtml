@@ -1,6 +1,7 @@
 <?php
 $id = isset($id) ? $id : '';
+$altLegendClass = $this->altLegendClass;
 ?>
-<legend class="form-title heading-large" id="<?php echo $this->escapeHtmlAttr($id); ?>">
+<legend class="<?php echo $altLegendClass ? $altLegendClass : 'form-title heading-large' ?>" id="<?php echo $this->escapeHtmlAttr($id); ?>">
     <?php echo $this->escapeHtml($text); ?>
 </legend>

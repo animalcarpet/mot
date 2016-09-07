@@ -23,11 +23,11 @@ abstract class SecurityQuestionAbstractInputFilter extends InputFilter
     const LIMIT_ANSWER_MAX = 70;
 
     /** Select a question to answer*/
-    const MSG_QUESTION_EMPTY = 'you must choose a question';
-    const MSG_QUESTION_NOT_NUMERIC = 'you must choose a valid question';
+    const MSG_QUESTION_EMPTY = 'choose a question';
+    const MSG_QUESTION_NOT_NUMERIC = 'choose a valid question';
 
     /** Your answer*/
-    const MSG_ANSWER_EMPTY = 'you must enter a memorable answer';
+    const MSG_ANSWER_EMPTY = 'enter a memorable answer';
     const MSG_ANSWER_MAX = 'must be %d, or less, characters long';
 
     public function init()

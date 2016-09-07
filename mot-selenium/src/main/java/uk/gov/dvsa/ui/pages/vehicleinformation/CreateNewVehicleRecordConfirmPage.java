@@ -11,7 +11,7 @@ import uk.gov.dvsa.ui.pages.mot.MotTestStartedPage;
 import uk.gov.dvsa.ui.pages.mot.StartTestConfirmationPage;
 
 public class CreateNewVehicleRecordConfirmPage extends Page {
-    private static final String PAGE_TITLE = "Confirm new vehicle record";
+    private static final String PAGE_TITLE = "Review new vehicle record";
     public static final String PATH = "/vehicle-step/confirm";
 
     @FindBy(id = "registrationNumber") private WebElement registrationNumber;

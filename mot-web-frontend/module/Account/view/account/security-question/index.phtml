@@ -12,7 +12,7 @@ $questionNumber = $viewModel->getQuestionNumber();
 $personId = $viewModel->getUserId();
 
 $formAction         = AccountUrlBuilderWeb::forgottenPasswordSecurityQuestion($personId, $questionNumber);
-$legendTitle        = 'Security question ' . ($questionNumber == 1 ? 'one' : 'two');
+$legendTitle        = ($questionNumber == 1 ? 'First ' : 'Second ') . ' security question ';
 $labelText          = $question->getText();
 $inputId            = 'question' . $questionNumber;
 
@@ -21,6 +21,17 @@ $successMessages    = $this->layout()->flashMessenger->getSuccessMessages();
 
 echo $this->partial('partial/gds/general/system-message', ['messages' => $successMessages, 'type' => 'success']);
 echo $this->partial('partial/gds/general/system-message', ['messages' => $errorMessages, 'type' => 'failure']);
+
+$this->layout()->setVariable('pageSubTitle', 'Forgotten your password');
+
+if ($questionNumber == 1):
+    $this->layout()->setVariable('pageTitle', 'First security question');
+elseif ($questionNumber == 2):
+    $this->layout()->setVariable('pageTitle', 'Second security question');
+else:
+    $this->layout()->setVariable('pageTitle', 'Security question');
+endif;
+
 ?>
 
 <?php if ($questionNumber == 1): ?>
@@ -51,22 +62,20 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $errorM
         ?>
     </fieldset>
 
-    <a href="<?php echo $this->escapeHtmlAttr(AccountUrlBuilderWeb::forgottenPasswordNotAuthenticated()); ?>" class="key-value-list__action">Forgotten security question</a>
+    <a href="<?php echo $this->escapeHtmlAttr(AccountUrlBuilderWeb::forgottenPasswordNotAuthenticated()); ?>" class="key-value-list__action">Forgotten the answer to your security question?</a>
 
     <?php echo $this->partial(
         'partial/gds/form/control-navigation',
         [
             'id'            => 'submitSecurityQuestion',
-            'value'         => 'Submit answer',
+            'value'         => 'Continue',
         ]
     ); ?>
     <?php echo $this->partial(
         'partial/gds/general/message',
         [
             'message'       => [
-                ['type' => 'normal', 'm' => 'Both security questions must be '],
-                ['type' => 'bold', 'm' => 'answered correctly '],
-                ['type' => 'normal', 'm' => 'before your password can be changed'],
+                ['type' => 'normal', 'm' => 'You must answer both of your security questions correctly before you can reset your password'],
             ]
         ]
     ); ?>

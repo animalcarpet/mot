@@ -12,7 +12,6 @@ use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationSessionService;
 use Core\Service\StepService;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\DetailsStep;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
-use DvsaCommon\UrlBuilder\AccountUrlBuilderWeb;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -121,7 +120,6 @@ class CompletedController extends RegistrationBaseController
         $this->session->destroy();
 
         return new ViewModel([
-            'signInUrl' => AccountUrlBuilderWeb::signIn(),
             'email'     => $emailAddress,
             'helpdesk'  => $this->helpdeskConfig,
         ]);

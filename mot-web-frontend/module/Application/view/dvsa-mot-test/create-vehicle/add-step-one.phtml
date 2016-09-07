@@ -22,6 +22,8 @@ use DvsaCommon\Utility\ArrayUtils;
 <div class="row">
     <div class="col-sm-12">
         <h1>Create a new vehicle record</h1>
+        <p style="font-size:22px;">You will need information on the vehicle’s identification and specification to create a new record.</p>
+        <p>Your new record will be checked by the DVLA and DVSA. Make sure you have the correct details and you can’t find the vehicle in the <a href="<?php echo $this->url('vehicle-search'); ?>">vehicle search</a>.</p>
     </div>
 </div>
 
@@ -176,7 +178,7 @@ use DvsaCommon\Utility\ArrayUtils;
             <?php echo $this->formElement($this->form->get('submit')); ?>
             <ul class="content-navigation_secondary">
                 <li>
-                    <a id="cancel-link" href="<?php echo $this->url('vehicle-step', ['action' => 'cancel']) ?> ">Cancel and return to vehicle search</a>
+                    <a id="cancel-link" href="<?php echo $this->url('vehicle-step', ['action' => 'cancel']) ?> ">Cancel and return to find a vehicle</a>
                 </li>
             </ul>
         </nav>

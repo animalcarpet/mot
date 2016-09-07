@@ -36,7 +36,7 @@ class CreateVehicleStepTwoForm extends Form
                     'name'       => 'submit',
                     'attributes' => [
                         'type'  => 'submit',
-                        'value' => 'Continue to summary',
+                        'value' => 'Review new vehicle record',
                         'id'    => 'submit-button',
                         'class' => 'btn btn-primary'
                     ]

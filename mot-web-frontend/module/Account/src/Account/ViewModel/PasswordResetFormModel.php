@@ -14,7 +14,7 @@ class PasswordResetFormModel extends AbstractFormModel
 {
     const FIELD_USERNAME            = 'username';
 
-    const USER_NOT_FOUND            = 'The user ID entered does not match our records';
+    const USER_NOT_FOUND            = 'This user ID does not match our records';
     const USER_REQUIRED             = 'User Id is required';
 
     /** @var string $username */

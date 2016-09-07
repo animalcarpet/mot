@@ -18,8 +18,8 @@ use Zend\View\Model\ViewModel;
  */
 class SecurityQuestionController extends AbstractSecurityQuestionController
 {
-    const PAGE_TITLE    = 'Forgotten Password';
-    const PAGE_SUBTITLE = 'MOT Testing Service';
+    const PAGE_TITLE    = 'Forgotten your password';
+    const PAGE_SUBTITLE = 'MOT testing service';
 
     /**
      * This action is the end point to enter the question answer for the help desk.

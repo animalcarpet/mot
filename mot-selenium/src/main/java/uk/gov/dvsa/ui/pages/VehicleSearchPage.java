@@ -11,21 +11,25 @@ public class VehicleSearchPage extends AbstractVehicleSearchPage {
     public static final String TRAINING_TEST_PATH = "/training-test-vehicle-search";
 
     @FindBy(xpath = "//span[contains(@class, 'summary')]") private WebElement unableToProvideRegSection;
-    @FindBy(xpath = "//h4[contains(., 'If registration mark is missing')]") private WebElement registrationMissingHeader;
-    @FindBy(xpath = "//h4[contains(., 'If VIN is missing or cannot be found')]") private WebElement vinMissingHeader;
+    @FindBy(xpath = "//h4[contains(., 'Registration mark is missing')]") private WebElement registrationMissingHeader;
+    @FindBy(xpath = "//h4[contains(., 'VIN is missing')]") private WebElement vinMissingHeader;
 
     public VehicleSearchPage(MotAppDriver driver) {
         super(driver);
     }
 
     public boolean isBasePageContentCorrect() {
+        Boolean a = super.isBasePageContentCorrect();
+        Boolean b = this.isUnableToProvideRegOrVINLinkDisplayed();
+        Boolean c = this.isSearchSectionDisplayed();
+
         return super.isBasePageContentCorrect()
                 && this.isUnableToProvideRegOrVINLinkDisplayed()
                 && this.isSearchSectionDisplayed();
     }
 
     public boolean isUnableToProvideRegOrVINLinkDisplayed() {
-        return unableToProvideRegSection.getText().contains("Unable to provide a registration mark or full VIN");
+        return unableToProvideRegSection.getText().contains("Can't provide the registration mark or VIN?");
     }
 
     public VehicleSearchPage clickUnableToProvideRegOrVIN() {

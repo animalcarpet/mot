@@ -28,7 +28,7 @@ class AddressInputFilter extends InputFilter
 
     /** Address line 1 */
     const FIELD_ADDRESS_1 = 'address1';
-    const MSG_ADDRESS_EMPTY = 'you must enter address line 1';
+    const MSG_ADDRESS_EMPTY = 'enter address line 1';
     const MSG_ADDRESS_MAX = 'must be %d, or less, characters long';
 
     /** Address line 2, optional with the same maximum limit as line one */
@@ -39,13 +39,13 @@ class AddressInputFilter extends InputFilter
 
     /** Town or city */
     const FIELD_TOWN_OR_CITY = 'townOrCity';
-    const MSG_TOWN_OR_CITY_EMPTY = 'you must enter a town or city';
+    const MSG_TOWN_OR_CITY_EMPTY = 'enter a town or city';
     const MSG_TOWN_NO_PATTERN_MATCH = "must begin with a letter and only contain letters, spaces and the symbols -.,'";
     const TOWN_MATCH_PATTERN = "/^\\pL[\\pL -.,']*$/u";
 
     /** Postcode */
     const FIELD_POSTCODE = 'postcode';
-    const MSG_POSTCODE_EMPTY = 'you must enter a valid postcode';
+    const MSG_POSTCODE_EMPTY = 'enter a valid postcode';
     const MSG_POSTCODE_MAX = 'must be %d, or less, characters long';
     const POSTCODE_MATCH_PATTERN = '/^(([a-z]{2}([0-9]{1,2}|[0-9][a-z]))|([a-z]([0-9]{1,2}|[0-9][a-z])))\s?[0-9][abd-hjlnp-uw-z]{2}$/i';
 

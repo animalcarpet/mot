@@ -9,15 +9,15 @@ $testString = ($presenter->isMotTest())? 'test' : 'retest';
 
 
 ?>
-<h2>MOT <?php echo $testString; ?> successfully started</h2>
-<p>You have successfully started an MOT <?php echo $testString; ?> for a <strong><?php echo $this->escapeHtml($presenter->displayVehicleMakeAndModel()); ?></strong>, registration mark <strong><?php echo $this->escapeHtml($presenter->displayVehicleRegistrationNumber()); ?></strong></p>
+
+<p>You have successfully started an MOT <?php echo $testString; ?> for a <strong><span id="vehicle-make-and-model"><?php echo $this->escapeHtml($presenter->displayVehicleMakeAndModel()); ?></span></strong>, registration mark <strong><span id="vehicle-registration-mark"><?php echo $this->escapeHtml($presenter->displayVehicleRegistrationNumber()); ?></span></strong></p>
 <p><?php echo ucfirst($testString); ?> started <strong><?php echo $this->escapeHtml($presenter->displayMotTestStartedDate()); ?></strong></p>
-<p>You can view an inspection sheet for this vehicle:
+<p>You can download and print an inspection sheet for this vehicle:
     <a target="_blank" id="print-inspection-sheet" href="<?php echo $this->url(MotTestRouteList::MOT_CHECKLIST_PDF, ['motTestNumber' => $presenter->getMotTestNumber()])?>">
         Vehicle inspection sheet (PDF, 505KB)
     </a>
 </p>
-<p>You should now sign out and inspect the vehicle</p>
+<p>Now sign out and inspect the vehicle.</p>
 <form action="<?php echo $this->url(LogoutController::ROUTE_LOGOUT); ?>" method="GET" role="form" novalidate>
     <div class="form-group">
         <?php echo $this->partial('partial/forms/submitElement.phtml', ['id' => 'sign-out', 'label' => 'Sign out']); ?>
@@ -26,7 +26,7 @@ $testString = ($presenter->isMotTest())? 'test' : 'retest';
 <nav class="module-content-navigation">
     <ul class="content-navigation_secondary">
         <li>
-            <a href="<?php echo $this->url(UserHomeController::ROUTE); ?>" id="return_to_home">Return to home</a>
+            <a href="<?php echo $this->url(UserHomeController::ROUTE); ?>" id="return_to_home">Continue to home</a>
         </li>
     </ul>
 </nav>
