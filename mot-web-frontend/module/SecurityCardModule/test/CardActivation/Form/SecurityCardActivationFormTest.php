@@ -3,6 +3,9 @@
 namespace Dvsa\Mot\Frontend\SecurityCardModuleTest\Form;
 
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Form\SecurityCardActivationForm;
+use Dvsa\Mot\Frontend\SecurityCardModule\Validator\SecurityCardPinValidationCallback;
+use Dvsa\Mot\Frontend\SecurityCardModule\Validator\SecurityCardSerialNumberValidationCallback;
+use DvsaCommonTest\TestUtils\XMock;
 
 class SecurityCardActivationFormTest extends \PHPUnit_Framework_TestCase
 {
@@ -57,6 +60,23 @@ class SecurityCardActivationFormTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $messages);
     }
 
+    /**
+     * @dataProvider dataProvider_invalidSerialNumber
+     */
+    public function test_invalidSerialNumber_shouldInvokeCallback($invalidSerialNumber)
+    {
+        $pinValidationCallback = XMock::of(SecurityCardPinValidationCallback::class);
+        $serialNumberValidationCallback = XMock::of(SecurityCardSerialNumberValidationCallback::class);
+        $serialNumberValidationCallback->expects($this->once())
+            ->method('onInvalidFormat');
+
+        $form = new SecurityCardActivationForm($pinValidationCallback, $serialNumberValidationCallback);
+        $data = ['serial_number' => $invalidSerialNumber, 'pin' => '123456'];
+
+        $form->setData($data);
+        $form->isValid();
+    }
+
     public function test_givenCorrectBindData_formShouldBeValid()
     {
         $form = new SecurityCardActivationForm();
@@ -76,6 +96,5 @@ class SecurityCardActivationFormTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('serial_number', $form->getMessages());
         $this->assertArrayHasKey('pin', $form->getMessages());
-
     }
 }

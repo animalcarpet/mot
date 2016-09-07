@@ -2,13 +2,14 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Form;
 
+use Dvsa\Mot\Frontend\SecurityCardModule\Validator\SecurityCardPinValidationCallback;
 use Dvsa\Mot\Frontend\SecurityCardModule\Validator\SecurityCardPinValidator;
+use Dvsa\Mot\Frontend\SecurityCardModule\Validator\SecurityCardSerialNumberValidationCallback;
 use Dvsa\Mot\Frontend\SecurityCardModule\Validator\SecurityCardSerialNumberValidator;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
+use Zend\InputFilter\Input;
 use Zend\InputFilter\InputFilter;
-use Zend\Validator\NotEmpty;
-use Zend\Validator\StringLength;
 
 class SecurityCardActivationForm extends Form
 {
@@ -16,8 +17,10 @@ class SecurityCardActivationForm extends Form
     const SERIAL_NUMBER = 'serial_number';
     const PIN = 'pin';
 
-    public function __construct()
-    {
+    public function __construct(
+        SecurityCardPinValidationCallback $pinValidationCallback = null,
+        SecurityCardSerialNumberValidationCallback $serialNumberValidationCallback = null
+    ) {
         parent::__construct();
         $this->add((new Text())
             ->setName(self::SERIAL_NUMBER)
@@ -45,29 +48,31 @@ class SecurityCardActivationForm extends Form
         $filter = new InputFilter();
 
 
-        $filter->add([
-            'name' => self::SERIAL_NUMBER,
-            'required' => true,
-            'validators' => [
-                [
-                    'name' => SecurityCardSerialNumberValidator::class
-                ]
-            ],
-            'continue_if_empty' => true,
-            'allow_empty' => true
-        ]);
+//        $filter->add([
+//            'name' => self::SERIAL_NUMBER,
+//            'required' => true,
+//            'validators' => [
+//                [
+//                    'name' => SecurityCardSerialNumberValidator::class
+//                ]
+//            ],
+//            'continue_if_empty' => true,
+//            'allow_empty' => true
+//        ]);
 
-        $filter->add([
-            'name' => self::PIN,
-            'required' => false,
-            'validators' => [
-                [
-                    'name' => SecurityCardPinValidator::class
-                ]
-            ],
-            'continue_if_empty' => true,
-            'allow_empty' => true
-        ]);
+        $serialNumberInput = new Input(self::SERIAL_NUMBER);
+        $serialNumberInput
+            ->setRequired(true)
+            ->setContinueIfEmpty(true);
+        $serialNumberInput->getValidatorChain()
+            ->attach((new SecurityCardSerialNumberValidator())->setValidationCallback($serialNumberValidationCallback));
+        $filter->add($serialNumberInput);
+
+        $pinInput = new Input(self::PIN);
+        $pinInput->setContinueIfEmpty(true);
+        $pinInput->getValidatorChain()
+            ->attach((new SecurityCardPinValidator())->setValidationCallback($pinValidationCallback));
+        $filter->add($pinInput);
 
 
         $this->setInputFilter($filter);
@@ -84,7 +89,6 @@ class SecurityCardActivationForm extends Form
      */
     public function setCustomError($field, $error)
     {
-
         $field->setMessages([$error]);
     }
 

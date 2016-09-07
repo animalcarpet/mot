@@ -5,9 +5,12 @@ namespace Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Action;
 use Application\Model\RoleSummaryCollection;
 use Core\Action\RedirectToRoute;
 use Core\Service\MotFrontendIdentityProviderInterface;
+use Dvsa\Mot\ApiClient\Exception\ResourceConflictException;
 use Dvsa\Mot\ApiClient\Exception\ResourceNotFoundException;
 use Dvsa\Mot\ApiClient\Exception\ResourceValidationException;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Form\SecurityCardActivationForm;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Model\GtmSecurityCardPinValidationCallback;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Model\GtmSecurityCardSerialNumberValidationCallback;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardService;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardViewStrategy;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\ViewModel\RegisterCardViewModel;
@@ -48,7 +51,9 @@ class RegisterCardPostAction extends RegisterCardAction implements AutoWireableI
     public function doExecute(Request $request)
     {
         $result = $this->defaultActionResult();
-        $form = new SecurityCardActivationForm();
+        $gtmPinCallback = new GtmSecurityCardPinValidationCallback();
+        $gtmSerialNumberCallback = new GtmSecurityCardSerialNumberValidationCallback();
+        $form = new SecurityCardActivationForm($gtmPinCallback, $gtmSerialNumberCallback);
         $postData = $request->getPost()->toArray();
         $form->setData($postData);
         /** @var RegisterCardViewModel $viewModel */
@@ -68,11 +73,15 @@ class RegisterCardPostAction extends RegisterCardAction implements AutoWireableI
 
             } catch (ResourceNotFoundException $e) {
                 $form->setCustomError($form->getSerialNumberField(), "Enter a valid serial number");
+                $viewModel->setInvalidSerialNumber(true);
+            } catch (ResourceConflictException $e) {
+                $viewModel->setCardAlreadyRegistered(true);
             } catch (ResourceValidationException $e) {
                 $viewModel->setPinMismatch(true);
             }
         } else {
             $form->clearPin();
+            $viewModel->setGtmData(array_merge($gtmPinCallback->toGtmData(), $gtmSerialNumberCallback->toGtmData()));
         }
 
         return $result;

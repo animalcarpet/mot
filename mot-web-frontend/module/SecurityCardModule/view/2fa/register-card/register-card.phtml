@@ -1,10 +1,35 @@
 <?php
 
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\ViewModel\RegisterCardViewModel;
+
+/**
+ * @var RegisterCardViewModel $viewModel
+ */
+
 $this->layout('layout/layout-govuk.phtml');
 $this->layout()->setVariable('pageTitle', 'Activate your security card');
 
-/** @var RegisterCardViewModel $viewModel */
+$gtmData = $viewModel->getGtmData();
+if (!empty($gtmData)) {
+    foreach ($gtmData as $gtmDatum) {
+        $this->gtmDataLayer($gtmDatum);
+    }
+}
+
+$gtmTitle = 'User - Activate Security Card';
+
+if ($viewModel->isInvalidSerialNumber()) {
+    $this->gtmDataLayer(['event' => 'activate-card-fail', 'reason' => 'invalid-serial-number', 'title' => $gtmTitle]);
+}
+
+if ($viewModel->isPinMismatch()) {
+    $this->gtmDataLayer(['event' => 'activate-card-fail', 'reason' => 'wrong-serial-number-or-pin', 'title' => $gtmTitle]);
+}
+
+if ($viewModel->isCardAlreadyRegistered()) {
+    $this->gtmDataLayer(['event' => 'activate-card-fail', 'reason' => 'already-activated-serial-number', 'title' => $gtmTitle]);
+}
+
 ?>
 
 <div class="grid-row">
@@ -31,7 +56,7 @@ $this->layout()->setVariable('pageTitle', 'Activate your security card');
         <div class="">
             <?php echo $this->partial('zendFormErrorMessages', ['form' => $viewModel->getForm()]); ?>
             <?php
-            if ($viewModel->isPinMismatch()) :?>
+            if ($viewModel->isPinMismatch() || $viewModel->isCardAlreadyRegistered()) :?>
                 <div class="message--failure">
                     <p>The was a problem with your serial number or PIN.</p>
 

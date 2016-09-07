@@ -11,8 +11,17 @@ class RegisterCardViewModel
      */
     private $form;
 
+    /** @var array */
+    private $gtmData = [];
+
     /** @var bool */
     private $pinMismatch = false;
+
+    /** @var bool */
+    private $invalidSerialNumber = false;
+
+    /** @var bool */
+    private $cardAlreadyRegistered = false;
 
     private $skipCtaTemplate;
 
@@ -38,6 +47,26 @@ class RegisterCardViewModel
         $this->form = $form;
         return $this;
     }
+
+    /**
+     * @return array
+     */
+    public function getGtmData()
+    {
+        return $this->gtmData;
+    }
+
+    /**
+     * @param array $gtmData
+     * @return RegisterCardViewModel
+     */
+    public function setGtmData(array $gtmData)
+    {
+        $this->gtmData = $gtmData;
+
+        return $this;
+    }
+
     /**
      * @return boolean
      */
@@ -53,6 +82,44 @@ class RegisterCardViewModel
     public function setPinMismatch($pinMismatch)
     {
         $this->pinMismatch = $pinMismatch;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isInvalidSerialNumber()
+    {
+        return $this->invalidSerialNumber;
+    }
+
+    /**
+     * @param boolean $invalidSerialNumber
+     * @return RegisterCardViewModel
+     */
+    public function setInvalidSerialNumber($invalidSerialNumber)
+    {
+        $this->invalidSerialNumber = $invalidSerialNumber;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isCardAlreadyRegistered()
+    {
+        return $this->cardAlreadyRegistered;
+    }
+
+    /**
+     * @param boolean $cardAlreadyRegistered
+     * @return RegisterCardViewModel
+     */
+    public function setCardAlreadyRegistered($cardAlreadyRegistered)
+    {
+        $this->cardAlreadyRegistered = $cardAlreadyRegistered;
+
         return $this;
     }
 

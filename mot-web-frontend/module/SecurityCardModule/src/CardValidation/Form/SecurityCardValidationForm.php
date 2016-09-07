@@ -13,7 +13,7 @@ class SecurityCardValidationForm extends Form
 {
     const PIN = 'pin';
 
-    public function __construct(SecurityCardPinValidationCallback $validationCallback = null)
+    public function __construct(SecurityCardPinValidationCallback $pinValidationCallback = null)
     {
         parent::__construct();
 
@@ -34,7 +34,7 @@ class SecurityCardValidationForm extends Form
 
         $pinInput = new Input(self::PIN);
         $pinInput->setContinueIfEmpty(true)->getValidatorChain()
-            ->attach((new SecurityCardPinValidator())->setValidationCallback($validationCallback));
+            ->attach((new SecurityCardPinValidator())->setValidationCallback($pinValidationCallback));
         $filter->add($pinInput);
 
 
