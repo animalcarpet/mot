@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 upgrade_files=()
 
-readonly DB_VERSION=2.05.0
+readonly DB_VERSION=2.06.0
 readonly MYSQL_DB_NAME=mot2
 readonly MYSQL_HOST=mysql
 readonly MYSQL_USER=motdbuser
