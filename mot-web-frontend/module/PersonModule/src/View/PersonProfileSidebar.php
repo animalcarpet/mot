@@ -203,9 +203,13 @@ class PersonProfileSidebar extends GeneralSidebar
             $accountSecurityBox->addLink(new GeneralSidebarLink('reset-pin', 'Reset your PIN', $resetPinUrl));
         }
 
-        if (($this->isTwoFactorAuthEnabled && $this->personProfileGuard->isExpectedToRegisterForTwoFactorAuth())
+        if (($this->isTwoFactorAuthEnabled &&
+                $this->personProfileGuard->isExpectedToRegisterForTwoFactorAuth())
             ||
-            ($this->hasSecurityCardOrders && $this->hasDeactivated2FaCard && $this->isAuthenticatedWithLostAndForgotten))
+            ($this->isTwoFactorAuthEnabled &&
+                $this->hasSecurityCardOrders &&
+                $this->hasDeactivated2FaCard &&
+                $this->isAuthenticatedWithLostAndForgotten))
         {
             $accountSecurityBox->addLink(
                 new GeneralSidebarLink('register-card', 'Activate your security card', '/register-card'));
