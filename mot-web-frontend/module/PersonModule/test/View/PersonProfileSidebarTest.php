@@ -181,7 +181,7 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
 
         $sidebar = $this
             ->withIsExpectedToRegisterForTwoFactorAuth(false)
-            ->withTwoFactorAuthEnabled(false)
+            ->withTwoFactorAuthEnabled(true)
             ->withFullyAuthorisedTester()
             ->createPersonProfileSidebar();
 

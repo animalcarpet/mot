@@ -429,10 +429,11 @@ class PersonProfileController extends AbstractAuthActionController
             $this->securityCardGuard->isEligibleForNewTwoFaCardAfterMtessSubmission($this->getIdentity(), $testerAuthorisation) ||
             $this->securityCardGuard->isEligibleForReplacementTwoFaCard($this->getIdentity());
 
-        $hasSecurityCardOrders = $this->securityCardGuard->hasSecurityCardOrders($this->getIdentity());
-        $hasDeactivated2FaCard = $this->securityCardGuard->hasInactiveTwoFaCard($this->getIdentity());
+        $hasSecurityCardOrders = $twoFactorAuthEnabled
+            && $this->securityCardGuard->hasSecurityCardOrders($this->getIdentity());
+        $hasDeactivated2FaCard = $twoFactorAuthEnabled
+            && $this->securityCardGuard->hasInactiveTwoFaCard($this->getIdentity());
         $isAuthenticatedWithLostAndForgotten = $this->getIdentity()->isAuthenticatedWithLostForgotten();
-
 
         return new PersonProfileSidebar(
             $targetPersonId,
