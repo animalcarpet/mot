@@ -26,6 +26,14 @@ fi
 
 # For each upgrade script, run the script, log any errors
 for upgrade_file in ${upgrade_files[@]}; do
+
+  # Don't allow script to continue if sql file does not exist, as this leads to problems.
+  if [ ! -f ${upgrade_file} ] || [ ! -s ${upgrade_file} ]
+  then
+    echo "${upgrade_file} does not exist or is empty - please check list of files. "  | tee -a /tmp/dbupgrade.log
+    exit 1
+  fi
+
   # Get the list of previously applied upgrade scripts.
   previously_run_files=$(mysql -h ${MYSQL_HOST} -u ${MYSQL_USER} -p${MYSQL_ADMIN_PASSWORD} ${MYSQL_DB_NAME} -N -e "SELECT script_name FROM db_upgrade;" \
     | awk '{print $0}')
