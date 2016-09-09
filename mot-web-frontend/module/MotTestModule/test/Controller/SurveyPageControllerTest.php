@@ -5,6 +5,7 @@ namespace Dvsa\Mot\Frontend\MotTestModuleTest\Controller;
 use Application\Service\LoggedInUserManager;
 use Core\Service\MotEventManager;
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
+use Dvsa\Mot\Frontend\GoogleAnalyticsModule\ControllerPlugin\DataLayerPlugin;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\SurveyPageController;
 use Dvsa\Mot\Frontend\MotTestModule\Service\SurveyService;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
@@ -14,6 +15,7 @@ use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaFeature\FeatureToggles;
 use Zend\EventManager\EventManager;
+use Zend\Mvc\Controller\PluginManager;
 use Zend\Session\Container;
 
 /**
@@ -38,6 +40,11 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
      * @var Container|\PHPUnit_Framework_MockObject_MockObject
      */
     private $sessionManager;
+    
+    /**
+     * @var DataLayerPlugin|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $dataLayerPlugin;
 
     protected function setUp()
     {
@@ -62,7 +69,14 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
                 $this->surveyService
             )
         );
+
+        $this->dataLayerPlugin = $this->getMockBuilder(DataLayerPlugin::class)
+            ->disableOriginalConstructor()
+            ->setMethods([])
+            ->getMock();
+
         $this->getController()->setServiceLocator($this->serviceManager);
+        $this->getController()->getPluginManager()->setService("gtmDataLayer", $this->dataLayerPlugin);
 
         $this->loggedInUserManagerMock = XMock::of(
             LoggedInUserManager::class,

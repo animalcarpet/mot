@@ -79,6 +79,13 @@ class SurveyPageController extends AbstractAuthActionController
             return $this->notFoundAction();
         }
 
+        $token = $this->params()->fromRoute(self::TOKEN_KEY);
+
+        $this->gtmDataLayer([
+            'event' => 'submit-GDSsurvey',
+            'token' => $token,
+            'title' => 'GDS Survey - Submitted'
+        ]);
         $this->layout('layout/layout-govuk.phtml');
 
         return $this->createViewModel('survey-page/thanks.phtml', []);
@@ -168,6 +175,12 @@ class SurveyPageController extends AbstractAuthActionController
         if (!$this->surveyService->isTokenValid($token)) {
             return $this->redirect()->toRoute('login');
         }
+
+        $this->gtmDataLayer([
+            'event' => 'view-GDSsurvey',
+            'token' => $token,
+            'title' => 'GDS Survey - Viewed'
+        ]);
 
         return $this->createViewModel(
             'survey-page/index.phtml', [
