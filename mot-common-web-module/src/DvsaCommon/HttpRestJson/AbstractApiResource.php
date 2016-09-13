@@ -19,15 +19,20 @@ class AbstractApiResource
 
     protected function getSingle($returnedDtoClass, $url, $params = [])
     {
-        $data = $this->httpClient->getWithParamsReturnDto($url, $params)['data'];
+        $response = $this->httpClient->getWithParamsReturnDto($url, $params);
 
-        return $this->deserializer->deserialize($data, $returnedDtoClass);
+        return $this->deserializer->deserialize($this->extractDataFromResponse($response), $returnedDtoClass);
     }
 
     protected function getMany($returnedDtoClass, $url)
     {
         $response = $this->httpClient->get($url);
 
-        return $this->deserializer->deserializeArray($response['data'], $returnedDtoClass);
+        return $this->deserializer->deserializeArray($this->extractDataFromResponse($response), $returnedDtoClass);
+    }
+
+    protected function extractDataFromResponse($response)
+    {
+        return $response['data'];
     }
 }

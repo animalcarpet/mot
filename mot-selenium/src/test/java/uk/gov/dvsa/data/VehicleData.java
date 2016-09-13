@@ -31,6 +31,14 @@ public class VehicleData extends VehicleService {
     protected Vehicle createVehicle(User user, VehicleClass vehicleClass) throws IOException {
         return createVehicle(
                 user,
+                vehicleClass,
+                generateCarRegistration()
+        );
+    }
+
+    protected Vehicle createVehicle(User user, VehicleClass vehicleClass, String registration) throws IOException {
+        return createVehicle(
+                user,
                 DEFAULT_PIN,
                 Colour.Blue.getId().toString(),
                 CountryOfRegistration.Great_Britain.getRegistrationId(),
@@ -39,7 +47,7 @@ public class VehicleData extends VehicleService {
                 Integer.toString(FuelTypes.Petrol.getId()),
                 Integer.toString(VehicleDetails.MERCEDES_300_D.getMakeId()),
                 Integer.toString(VehicleDetails.MERCEDES_300_D.getModelId()),
-                generateCarRegistration(),
+                registration,
                 Colour.Grey.getId().toString(),
                 getRandomVin(),
                 vehicleClass.getId(),
@@ -55,6 +63,10 @@ public class VehicleData extends VehicleService {
 
     public Vehicle getNewVehicle(User user, VehicleClass vehicleClass) throws IOException {
         return createVehicle(user, vehicleClass);
+    }
+
+    public Vehicle getNewVehicle(User user, String registration) throws IOException {
+        return createVehicle(user, VehicleClass.four, registration);
     }
 
     public DvlaVehicle getNewDvlaVehicle(User user) throws IOException {

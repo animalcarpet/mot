@@ -1,5 +1,6 @@
 package uk.gov.dvsa.ui.views;
 
+import org.joda.time.format.DateTimeFormat;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.gov.dvsa.domain.model.Site;
@@ -7,7 +8,7 @@ import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.vehicle.DvlaVehicle;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.ui.DslTest;
-import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationResultsPage;
+import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationPage;
 import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationSearchPage;
 
 import java.io.IOException;
@@ -29,20 +30,50 @@ public class VehicleInformationViewTests extends DslTest {
 
     @Test (groups = {"Regression"})
     public void viewVehicleInformationSuccessfully() throws IOException, URISyntaxException {
-        User areaOffice1User = new User("areaOffice1User", "Password1");
+        User areaOffice1User = userData.createAreaOfficeOne("ao1");
+        String vehicleManufactureDate = DateTimeFormat.forPattern("yyyy-MM-dd")
+                .parseDateTime(vehicle.getManufactureDate())
+                .toString("d MMMM yyyy");
+        String vehicleColors = vehicle.getColour() + " and " + vehicle.getColourSecondary();
+        String vehicleMakeModel = vehicle.getMake() + ", " + vehicle.getModel();
+
+        //Given There are 2 vehicles with the same registration
+        vehicleData.getNewVehicle(tester, vehicle.getDvsaRegistration());
+
+        //And i am on the Vehicle Information Page as an AreaOffice1User
+        VehicleInformationSearchPage vehicleInformationSearchPage =
+                pageNavigator.navigateToPage(areaOffice1User, VehicleInformationSearchPage.PATH, VehicleInformationSearchPage.class);
+
+        //When I search for a vehicle and open vehicle information page
+        VehicleInformationPage vehicleInformationPage = vehicleInformationSearchPage
+                .searchVehicleByRegistration(vehicle.getDvsaRegistration())
+                .clickVehicleDetailsLink();
+
+        //Then vehicle information will be correct
+        assertThat(vehicleInformationPage.getPageHeaderTertiaryRegistration(), is(vehicle.getDvsaRegistration()));
+        assertThat(vehicleInformationPage.getPageHeaderTertiaryVin(), is(vehicle.getVin()));
+        assertThat(vehicleInformationPage.getPageHeaderTitle(), is(vehicleMakeModel));
+        assertThat(vehicleInformationPage.getManufactureDate(), is(vehicleManufactureDate));
+        assertThat(vehicleInformationPage.getColour(), is(vehicleColors));
+        assertThat(vehicleInformationPage.getMakeModel(), is(vehicleMakeModel));
+    }
+
+    @Test (groups = {"Regression"})
+    public void redirectToVehicleInformationIfFoundOnlyOneResult() throws IOException, URISyntaxException {
+        User areaOffice1User = userData.createAreaOfficeOne("ao1");
 
         //Given i am on the Vehicle Information Page as an AreaOffice1User
         VehicleInformationSearchPage vehicleInformationSearchPage =
                 pageNavigator.navigateToPage(areaOffice1User, VehicleInformationSearchPage.PATH, VehicleInformationSearchPage.class);
 
         //When I search for a vehicle
-        VehicleInformationResultsPage vehicleInformationResultsPage = vehicleInformationSearchPage
-                .searchAndFindVehicleByRegistrationSuccessfully(vehicle.getDvsaRegistration());
+        VehicleInformationPage vehicleInformationPage = vehicleInformationSearchPage
+            .findVehicleAndRedirectToVehicleInformationPage(vehicle.getDvsaRegistration());
 
-        //Then i should be able to view that vehicles information
-        vehicleInformationResultsPage
-                .clickVehicleDetailsLink()
-                .verifyVehicleRegistrationAndVin(vehicle);
+        //Then I should be able to view that vehicles information
+
+        assertThat("The registration is as expected", vehicleInformationPage.getRegistrationNumber(), is(vehicle.getDvsaRegistration()));
+        assertThat("The Vin is as expected",vehicleInformationPage. getVinNumber(), is(vehicle.getVin()));
     }
 
     @Test(groups = {"Regression"}, description = "BL-46")

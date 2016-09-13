@@ -2,18 +2,22 @@
 
 namespace Vehicle\Controller;
 
+use Application\Service\CatalogService;
 use Core\Controller\AbstractAuthActionController;
-use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\InternalSearchVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
+use DvsaClient\Mapper\VehicleExpiryMapper;
+use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
+use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\VehicleUrlBuilderWeb;
+use GuzzleHttp\Exception\ClientException;
+use Vehicle\Helper\VehicleViewModelBuilder;
 use Vehicle\Service\VehicleSearchService;
-use Zend\Stdlib\Parameters;
-use Zend\Stdlib\ParametersInterface;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -22,27 +26,39 @@ use Zend\View\Model\ViewModel;
  * This class is responsible for coordinating the different search methods to user so they can quickly locate an
  * existing VTS station, vehicle or other entity.
  */
-class VehicleController extends AbstractAuthActionController
+class VehicleController extends AbstractAuthActionController implements AutoWireableInterface
 {
-    const BACK_TO_DETAIL             = 'detail';
-    const BACK_TO_RESULT             = 'result';
-    const BACK_TO_SEARCH             = 'search';
+    const BACK_TO_DETAIL = 'detail';
+    const BACK_TO_RESULT = 'result';
+    const BACK_TO_SEARCH = 'search';
+    const PARAM_BACK_TO = 'backTo';
+    const SEARCH_RETUREND_ONE_RESULT = "oneResult";
     const ERR_MSG_INVALID_VEHICLE_ID = 'No Vehicle Id provided';
-    const FORM_ERROR                 = 'Unable to find Vehicle';
-    const NO_RESULT_FOUND            = 'Search term(s) not found...';
-    const COLOUR_NOT_STATED          = 'Not Stated';
+    const FORM_ERROR = 'Unable to find Vehicle';
+    const NO_RESULT_FOUND = 'Search term(s) not found...';
 
-    /**
-     * @var \DvsaCommon\Obfuscate\ParamObfuscator
-     */
     protected $paramObfuscator;
+    private $vehicleService;
+    private $vehicleTableBuilder;
+    private $catalogService;
+    private $authorisationService;
+    private $vehicleExpiryMapper;
 
-    /**
-     * @param \DvsaCommon\Obfuscate\ParamObfuscator $paramObfuscator
-     */
-    public function __construct(ParamObfuscator $paramObfuscator)
+    public function __construct(
+        ParamObfuscator $paramObfuscator,
+        VehicleService $vehicleService,
+        CatalogService $catalogService,
+        MotAuthorisationServiceInterface $authorisationService,
+        VehicleViewModelBuilder $vehicleTableBuilder,
+        VehicleExpiryMapper $vehicleExpiryMapper
+    )
     {
         $this->paramObfuscator = $paramObfuscator;
+        $this->vehicleService = $vehicleService;
+        $this->catalogService = $catalogService;
+        $this->authorisationService = $authorisationService;
+        $this->vehicleTableBuilder = $vehicleTableBuilder;
+        $this->vehicleExpiryMapper = $vehicleExpiryMapper;
     }
 
     /**
@@ -55,81 +71,37 @@ class VehicleController extends AbstractAuthActionController
      */
     public function indexAction()
     {
-        if (!$this->getAuthorizationService()->isGranted(PermissionInSystem::FULL_VEHICLE_MOT_TEST_HISTORY_VIEW)) {
-            return $this->redirect()->toUrl(PersonUrlBuilderWeb::home());
-        }
+        $this->authorisationService->assertGranted(PermissionInSystem::FULL_VEHICLE_MOT_TEST_HISTORY_VIEW);
 
-        $obfuscatedVehicleId = (string) $this->params('id');
-        $vehicleId = (int) $this->paramObfuscator->deobfuscateEntry(
-            ParamObfuscator::ENTRY_VEHICLE_ID, $obfuscatedVehicleId, false
-        );
-        if ((int) $vehicleId == 0) {
-            throw new \Exception(self::ERR_MSG_INVALID_VEHICLE_ID);
+        $obfuscatedVehicleId = (string)$this->params('id');
+        $vehicleId = (int)$this->paramObfuscator->deobfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, $obfuscatedVehicleId);
+
+        if ($vehicleId == 0) {
+            return $this->notFoundAction();
         }
 
         $vehicle = null;
         try {
             /** @var VehicleService $vehicleService */
-            $vehicleService = $this->getServiceLocator()->get(VehicleService::class);
-            $vehicle = $vehicleService->getDvsaVehicleById($vehicleId);
+            $vehicle = $this->vehicleService->getDvsaVehicleById($vehicleId);
+            $expiryDateForVehicle = $this->vehicleExpiryMapper->getExpiryForVehicle($vehicleId);
         } catch (ValidationException $e) {
-            $this->addErrorMessages(self::FORM_ERROR);
+            return $this->notFoundAction();
+        } catch (ClientException $e) {
+            return $this->notFoundAction();
         }
 
-        $searchData = $this->getRequest()->getQuery();
+        $this->layout('layout/layout-govuk.phtml');
 
-        //  --  view model  --
-        return new ViewModel(
-            [
-                'vehicle' => $vehicle,
-                'colourNames' => $this->getVehicleColourNames($vehicle),
-                'urls'    => [
-                    'back'    => $this->getUrlToBack($searchData),
-                    'history' => $this->getUrlToHistory($obfuscatedVehicleId, $searchData),
-                ],
+        $vehicleTableBuilder = $this->vehicleTableBuilder
+            ->setVehicle($vehicle)
+            ->setSearchData($this->getRequest()->getQuery())
+            ->setObfuscatedVehicleId($obfuscatedVehicleId)
+            ->setExpiryDateInformation($expiryDateForVehicle);
+
+        return new ViewModel([
+                'viewModel' => $vehicleTableBuilder->getViewModel()
             ]
-        );
-    }
-
-    /**
-     * @param \Zend\Stdlib\ParametersInterface $searchData
-     *
-     * @return string
-     */
-    protected function getUrlToBack(ParametersInterface $searchData)
-    {
-        if ($searchData->count()) {
-            $backTo = $searchData->get('backTo');
-
-            $searchData->set('backTo', null);
-
-            if ($backTo == self::BACK_TO_SEARCH) {
-                $url = VehicleUrlBuilderWeb::search();
-            } else {
-                $url = VehicleUrlBuilderWeb::searchResult();
-            }
-
-            return $url->toString() . '?' . htmlspecialchars(http_build_query($searchData));
-        }
-
-        return VehicleUrlBuilderWeb::search()->toString();
-    }
-
-    /**
-     * @param obfuscatedVehicleId
-     * @param \Zend\Stdlib\Parameters $searchData
-     *
-     * @return string
-     */
-    protected function getUrlToHistory($obfuscatedVehicleId, Parameters $searchData)
-    {
-        $searchData->set('backTo', VehicleController::BACK_TO_DETAIL);
-
-        return VehicleUrlBuilderWeb::historyMotTests($obfuscatedVehicleId)->toString() . '?' .
-        htmlspecialchars(
-            http_build_query(
-                $searchData->toArray()
-            )
         );
     }
 
@@ -147,7 +119,7 @@ class VehicleController extends AbstractAuthActionController
         }
 
         /** @var \Zend\Http\Request $request */
-        $request      = $this->getRequest();
+        $request = $this->getRequest();
         $searchParams = $request->isPost() ? $request->getPost() : $request->getQuery();
 
         return new ViewModel(
@@ -174,7 +146,7 @@ class VehicleController extends AbstractAuthActionController
 
         /** @var \Zend\Http\Request $request */
         $request = $this->getRequest();
-        $form    = $request->isPost() ? $request->getPost() : $request->getQuery();
+        $form = $request->isPost() ? $request->getPost() : $request->getQuery();
         if (!isset($form)) {
             return $this->redirect()->toUrl(VehicleUrlBuilderWeb::search());
         }
@@ -189,6 +161,26 @@ class VehicleController extends AbstractAuthActionController
             return $this->redirect()->toUrl(VehicleUrlBuilderWeb::search());
         }
 
+        $results = $vehicleSearchService->getVehicleResults();
+        if ($results->getCount() === 1) {
+            /** @var InternalSearchVehicle $vehicle */
+            $vehicle = $results->getItem(0);
+
+            return $this->redirect()->toRoute(
+                "vehicle/detail",
+                [
+                    "id" => $this->paramObfuscator->obfuscate($vehicle->getId()),
+                ],
+                [
+                    "query" => [
+                        "backTo" => self::BACK_TO_SEARCH,
+                        "type" => $form[VehicleSearchService::VEHICLE_TYPE_TERM],
+                        "search" => $form[VehicleSearchService::VEHICLE_SEARCH_TERM],
+                    ]
+                ]
+            );
+        }
+        
         return $vehicleSearchService->checkVehicleResults();
     }
 
@@ -200,15 +192,5 @@ class VehicleController extends AbstractAuthActionController
     public function addErrorMessagesFromService($errors)
     {
         $this->addErrorMessages($errors);
-    }
-
-    private function getVehicleColourNames(DvsaVehicle $vehicle)
-    {
-        $colourNames = (self::COLOUR_NOT_STATED == $vehicle->getColourSecondary()) ?
-            $vehicle->getColour() :
-            join(' and ', [$vehicle->getColour(), $vehicle->getColourSecondary()]);
-
-
-        return $colourNames;
     }
 }

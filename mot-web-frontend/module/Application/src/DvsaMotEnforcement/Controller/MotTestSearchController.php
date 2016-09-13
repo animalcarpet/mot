@@ -41,7 +41,7 @@ class MotTestSearchController extends AbstractAuthActionController
     const SEARCH_TYPE_TEST_NUMBER = 'testNumber';
 
 
-    const NO_RESULT_FOUND_FOR_VEHICLE = 'No results found for this vehicle';
+    const NO_RESULT_FOUND_FOR_VEHICLE = 'This vehicle has no test history.';
 
     /** @var \DvsaCommon\Obfuscate\ParamObfuscator */
     protected $paramObfuscator;
@@ -400,6 +400,9 @@ class MotTestSearchController extends AbstractAuthActionController
             unset($searchData['backTo']);
         }
 
+        if (($searchData instanceof ParametersInterface) && $searchData->get("oneResult")) {
+            $searchData->set("backTo", VehicleController::BACK_TO_SEARCH);
+        }
         $searchData = ($searchData && $searchData->count() ? '?' . http_build_query($searchData) : '');
 
         switch ($backTo) {
@@ -428,6 +431,18 @@ class MotTestSearchController extends AbstractAuthActionController
         }
 
         switch ($backTo) {
+            case (VehicleController::BACK_TO_DETAIL && $searchData->get("oneResult")):
+                return $this->redirect()->toUrl(
+                    VehicleUrlBuilderWeb::vehicle($obfuscatedVehicleId)
+                        ->queryParams(
+                            [
+                                'backTo' => VehicleController::BACK_TO_SEARCH,
+                                'type'   => $searchData['type'],
+                                'search' => $searchData['search'],
+                            ]
+                        )
+                );
+
             case VehicleController::BACK_TO_DETAIL:
                 return $this->redirect()->toUrl(
                     VehicleUrlBuilderWeb::vehicle($obfuscatedVehicleId)
@@ -445,6 +460,16 @@ class MotTestSearchController extends AbstractAuthActionController
                         [
                             'type'   => $searchData['type'],
                             'search' => $searchData['search'],
+                        ]
+                    )
+                );
+            case VehicleController::BACK_TO_SEARCH:
+                return $this->redirect()->toUrl(
+                    VehicleUrlBuilderWeb::searchResult()->queryParams(
+                        [
+                            'type'   => $searchData['type'],
+                            'search' => $searchData['search'],
+                            'backTo' => VehicleController::BACK_TO_SEARCH
                         ]
                     )
                 );

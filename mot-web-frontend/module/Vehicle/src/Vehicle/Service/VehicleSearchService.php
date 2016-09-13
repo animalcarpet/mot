@@ -2,6 +2,8 @@
 
 namespace Vehicle\Service;
 
+use Dvsa\Mot\ApiClient\Resource\Collection;
+use Dvsa\Mot\ApiClient\Resource\Item\InternalSearchVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\UrlBuilder\VehicleUrlBuilder;
@@ -24,6 +26,7 @@ class VehicleSearchService
     protected $controller;
     /* @var \DvsaCommon\HttpRestJson\Client */
     protected $restClient;
+    /** @var  Collection */
     protected $apiResults;
     protected $postData   = [];
     protected $searchData = [];
@@ -54,6 +57,9 @@ class VehicleSearchService
         ];
     }
 
+    /**
+     * @return Collection
+     */
     public function getVehicleResults()
     {
         $vehicleService = $this->controller->getServiceLocator()->get(VehicleService::class);
@@ -65,6 +71,8 @@ class VehicleSearchService
         }
 
         $this->apiResults = $vehicleCollection;
+
+        return $this->apiResults;
     }
 
     public function checkVehicleResults()
@@ -77,6 +85,22 @@ class VehicleSearchService
 
             return $this->controller->redirect()->toUrl(
                 VehicleUrlBuilderWeb::search()->queryParams($this->searchData)
+            );
+        } elseif ($totalCount == 1) {
+            /** @var InternalSearchVehicle $vehicle */
+            $vehicle = $data->getItem(0);
+            return $this->controller->redirect()->toRoute(
+                "vehicle/detail",
+                [
+                    "id" => $this->paramObfuscator->obfuscate($vehicle->getId()),
+                ],
+                [
+                    "query" => [
+                        "backTo" => VehicleController::BACK_TO_SEARCH,
+                        "type" => $this->postData[VehicleSearchService::VEHICLE_TYPE_TERM],
+                        "search" => $this->postData[VehicleSearchService::VEHICLE_SEARCH_TERM],
+                    ]
+                ]
             );
         }
 
