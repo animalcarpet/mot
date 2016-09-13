@@ -2,6 +2,7 @@
 namespace DvsaMotTest\Controller;
 
 use Core\Controller\AbstractAuthActionController;
+use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
@@ -78,6 +79,10 @@ abstract class AbstractDvsaMotTestController extends AbstractAuthActionControlle
         return $name;
     }
 
+    /**
+     * @param $motTestNumber
+     * @return MotTestDto | null
+     */
     protected function getMotTestFromApi($motTestNumber)
     {
         $apiUrl = MotTestUrlBuilder::motTest($motTestNumber)->toString();
@@ -122,6 +127,10 @@ abstract class AbstractDvsaMotTestController extends AbstractAuthActionControlle
         return $data;
     }
 
+    /**
+     * @param null $motTestNumber
+     * @return MotTestDto | null
+     */
     public function tryGetMotTestOrAddErrorMessages($motTestNumber = null)
     {
         if ($motTestNumber === null) {

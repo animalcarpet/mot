@@ -38,9 +38,11 @@ class MotTestOptionsService
         $this->readMotTestAssertion->assertGranted($motTest);
 
         $vehicle = $motTest->getVehicle();
+        $id = $vehicle->getId();
 
         return (new MotTestOptionsDto())
                 ->setMotTestStartedDate(DateTimeApiFormat::dateTime($motTest->getStartedDate()))
+                ->setVehicleId($vehicle->getId())
                 ->setVehicleMake($vehicle->getMakeName())
                 ->setVehicleModel($vehicle->getModelName())
                 ->setVehicleRegistrationNumber($vehicle->getRegistration())

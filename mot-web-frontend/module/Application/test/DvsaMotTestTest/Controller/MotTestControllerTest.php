@@ -5,6 +5,8 @@ namespace DvsaMotTestTest\Controller;
 use Application\Helper\PrgHelper;
 use Core\Service\MotEventManager;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
+use Dvsa\Mot\Frontend\GoogleAnalyticsModule\ControllerPlugin\DataLayerPlugin;
+use Dvsa\Mot\Frontend\GoogleAnalyticsModule\TagManager\DataLayer;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaCommon\Auth\MotIdentityProvider;
 use DvsaCommon\Auth\PermissionAtSite;
@@ -64,6 +66,9 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
             $this->authServiceMock,
             $this->motEventManagerMock
         );
+
+        $dataLayerPlugin = new DataLayerPlugin(new DataLayer());
+        $this->getController()->getPluginManager()->setService('gtmDataLayer', $dataLayerPlugin);
 
         $serviceManager = Bootstrap::getServiceManager();
         $this->controller->setServiceLocator($serviceManager);

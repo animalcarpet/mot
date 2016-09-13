@@ -11,6 +11,7 @@ class MotTestOptionsDtoTest extends \PHPUnit_Framework_TestCase
         $expected = [
             'startedDate' => 'not relevant',
             'vehicle'     => [
+                'id'                        => 1,
                 'make'                      => 'not relevant',
                 'model'                     => 'not relevant',
                 'vehicleRegistrationNumber' => 'not relevant',

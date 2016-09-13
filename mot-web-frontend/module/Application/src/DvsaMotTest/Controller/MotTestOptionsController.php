@@ -2,6 +2,8 @@
 
 namespace DvsaMotTest\Controller;
 
+use DvsaClient\Mapper\VehicleExpiryMapper;
+use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Dto\MotTesting\MotTestOptionsDto;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
@@ -23,10 +25,14 @@ class MotTestOptionsController extends AbstractDvsaMotTestController implements 
     const PAGE_SUB_TITLE_TEST = 'MOT testing';
 
     protected $motChecklistPdfService;
+    private $vehicleExpiryMapper;
 
-    public function __construct(MotChecklistPdfService $motChecklistPdfService)
-    {
+    public function __construct(
+        MotChecklistPdfService $motChecklistPdfService,
+        VehicleExpiryMapper $vehicleExpiryMapper
+    ) {
         $this->motChecklistPdfService = $motChecklistPdfService;
+        $this->vehicleExpiryMapper = $vehicleExpiryMapper;
     }
 
     public function motTestOptionsAction()
@@ -53,6 +59,7 @@ class MotTestOptionsController extends AbstractDvsaMotTestController implements 
         } else {
             $this->layout()->setVariable('pageSubTitle', self::PAGE_SUB_TITLE_TEST);
         }
+        $this->addMotTestLateInfoToGtmDataLayer($dto->getVehicleId());
 
         $viewModel = new ViewModel(['presenter' => $presenter]);
         $viewModel->setTemplate(self::TEMPLATE_MOT_TEST_OPTIONS);
@@ -75,4 +82,21 @@ class MotTestOptionsController extends AbstractDvsaMotTestController implements 
         return $this->getResponse();
     }
 
+    private function addMotTestLateInfoToGtmDataLayer($vehicleId)
+    {
+        $gtmData = [];
+
+        $today = new \DateTime();
+        $expiryDate = $this->vehicleExpiryMapper->getExpiryForVehicle($vehicleId)->getExpiryDate();
+        $gtmData['expiryDate'] = DateTimeDisplayFormat::dateTime($expiryDate);
+
+        $gtmData['testLate'] = $today > $expiryDate;
+
+        if($gtmData['testLate']) {
+            $late = $today->diff($expiryDate);
+            $gtmData['testLateInDays'] = $late->days;
+        }
+
+        $this->gtmDataLayer($gtmData);
+    }
 }

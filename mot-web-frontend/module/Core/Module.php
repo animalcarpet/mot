@@ -2,6 +2,7 @@
 
 namespace Core;
 
+use Core\Service\LazyMotFrontendAuthorisationService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
 use Dvsa\Mot\Frontend\GoogleAnalyticsModule\TagManager\DataLayer;
 use Zend\Console\Request as ConsoleRequest;
@@ -58,13 +59,13 @@ class Module implements BootstrapListenerInterface, ConfigProviderInterface, Dep
             return;
         }
 
-        $this->appendUserIdToGoogleTagManager($e->getApplication()->getServiceManager());
+        $this->appendUserIdAndRolesToGoogleTagManager($e->getApplication()->getServiceManager());
     }
 
     /**
      * @param ServiceManager $serviceManager
      */
-    private function appendUserIdToGoogleTagManager(ServiceManager $serviceManager)
+    private function appendUserIdAndRolesToGoogleTagManager(ServiceManager $serviceManager)
     {
         /** @var MotFrontendIdentityInterface $identity */
         $identity = $serviceManager->get('MotIdentityProvider')->getIdentity();
@@ -75,5 +76,9 @@ class Module implements BootstrapListenerInterface, ConfigProviderInterface, Dep
         $hashedUserId = hash('sha1', $identity->getUserId() . '.' . $identity->getUsername());
         $dataLayer = $serviceManager->get(DataLayer::class);
         $dataLayer->add(['userId' => $hashedUserId]);
+
+        /** @var LazyMotFrontendAuthorisationService $authorisationService */
+        $authorisationService = $serviceManager->get('AuthorisationService');
+        $dataLayer->add(['roles' => $authorisationService->getAllRoles()]);
     }
 }
