@@ -10,7 +10,6 @@ namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 use Core\Authorisation\Assertion\WebPerformMotTestAssertion;
 use Core\Controller\AbstractAuthActionController;
 use DateTime;
-use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\MotTestResults;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefectCollection;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;

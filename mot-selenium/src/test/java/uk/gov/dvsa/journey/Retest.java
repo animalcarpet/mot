@@ -5,6 +5,7 @@ import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.helper.AssertionHelper;
+import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.VehicleSearchPage;
 import uk.gov.dvsa.ui.pages.VehicleSearchResultsPage;
 import uk.gov.dvsa.ui.pages.mot.retest.ReTestCompletePage;
@@ -51,6 +52,9 @@ public class Retest {
         successful = testCompletePage.verifyBackToHomeDisplayed();
     }
 
+    public <T extends Page> T startRetest(Vehicle vehicle, User tester) throws IOException, URISyntaxException {
+        return (T) pageNavigator.gotoReTestResultsEntryPage(tester, vehicle);
+    }
 
     public void searchForVehicle(User user, Vehicle vehicle) throws IOException, URISyntaxException {
         VehicleSearchResultsPage searchPage = pageNavigator.navigateToPage(user,VehicleSearchPage.PATH, VehicleSearchPage.class).searchVehicle(vehicle);

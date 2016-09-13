@@ -36,7 +36,6 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
     @FindBy(id = "odometer_submit") private WebElement odometerSubmit;
     @FindBy(id = "unit") private WebElement odometerUnit;
     @FindBy(xpath = "//*[@id='rfrList']//a[contains(., 'Edit')]") private WebElement editDefectLink;
-    @FindBy(id = "rfrList") private WebElement rfrList;
     @FindBy(id = "brakeTestResultsNotice") private WebElement brakeTestResultsNotice;
 
     public TestResultsEntryNewPage(MotAppDriver driver) {
@@ -125,28 +124,6 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
         return new EditDefectPage(driver, defect.getAddOrRemovalType());
     }
 
-    private void processTestCancellation(CancelTestReason reason) {
-        cancelTest.click();
-
-        ReasonToCancelTestPage cancelTestPage = new ReasonToCancelTestPage(driver);
-        cancelTestPage.enterReason(reason);
-        cancelTestPage.clickConfirmAndCancelTest();
-    }
-
-    private TestResultsEntryNewPage addDefaultBrakeTestValues(String outcome) {
-        addBrakeTest.click();
-
-        BrakeTestConfigurationPage brakeTestConfigurationPage =
-                PageLocator.getBrakeTestConfigurationPage(driver);
-
-        BrakeTestResultsPage brakeTestResultsPage =
-                brakeTestConfigurationPage.fillAllFieldsWithValidDataAndSubmit();
-
-        brakeTestResultsPage.completeBrakeEffortField(outcome);
-
-        return this;
-    }
-
     public boolean isOdometerReadingUpdateSuccessMessageDisplayed(){
         return validationMessage.getText().equals("The odometer reading has been updated");
     }
@@ -188,10 +165,6 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
         return brakeTestResultsNotice.getText().contains("Pass");
     }
 
-    private void setOdometerUnit(OdometerUnit unit) {
-        new Select(odometerUnit).selectByValue(unit.getValue());
-    }
-
     public TestResultsEntryPageInterface completeTestDetailsWithPassValues() {
         addOdometerReading(1001);
         completeBrakeTestWithPassValues();
@@ -202,11 +175,6 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
     public SearchForADefectPage clickSearchForADefectButton() {
         searchForDefect.click();
         return new SearchForADefectPage(driver);
-    }
-
-    private BrakeTestConfigurationPage clickAddBrakeTest() {
-        addBrakeTest.click();
-        return PageLocator.getBrakeTestConfigurationPage(driver);
     }
 
     public BrakeTestResultsPage completeTestWithFloorBrakeTestsWithLockBoxes(){
@@ -235,5 +203,41 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
             brakeTestConfigurationPage.fillAllFieldsWithValidDataForGroupAAndSubmit(BrakeTestType.ROLLER);
 
         return brakeTestResultsPage.completeBrakeEffortGroupAPlateRollerField();
+    }
+
+    public TestResultsEntryNewPage clickRepaired(String defect, Class clazz) {
+        repairDefect(defect, clazz);
+        return this;
+    }
+
+    private void setOdometerUnit(OdometerUnit unit) {
+        new Select(odometerUnit).selectByValue(unit.getValue());
+    }
+
+    private BrakeTestConfigurationPage clickAddBrakeTest() {
+        addBrakeTest.click();
+        return PageLocator.getBrakeTestConfigurationPage(driver);
+    }
+
+    private void processTestCancellation(CancelTestReason reason) {
+        cancelTest.click();
+
+        ReasonToCancelTestPage cancelTestPage = new ReasonToCancelTestPage(driver);
+        cancelTestPage.enterReason(reason);
+        cancelTestPage.clickConfirmAndCancelTest();
+    }
+
+    private TestResultsEntryNewPage addDefaultBrakeTestValues(String outcome) {
+        addBrakeTest.click();
+
+        BrakeTestConfigurationPage brakeTestConfigurationPage =
+                PageLocator.getBrakeTestConfigurationPage(driver);
+
+        BrakeTestResultsPage brakeTestResultsPage =
+                brakeTestConfigurationPage.fillAllFieldsWithValidDataAndSubmit();
+
+        brakeTestResultsPage.completeBrakeEffortField(outcome);
+
+        return this;
     }
 }

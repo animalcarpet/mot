@@ -29,6 +29,7 @@ class DefectsJourneyContextProvider
     const ADD_MANUAL_ADVISORY_ROUTE = 'add-manual-advisory';
     const EDIT_DEFECT_ROUTE = 'edit-defect';
     const REMOVE_DEFECT_ROUTE = 'remove-defect';
+    const REPAIR_DEFECT_ROUTE = 'repair-defect';
 
     /**
      * @var Request

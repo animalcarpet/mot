@@ -12,6 +12,7 @@ use Dvsa\Mot\Frontend\MotTestModule\Controller\OdometerController;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\DefectCategoriesController;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\EditDefectController;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\RemoveDefectController;
+use Dvsa\Mot\Frontend\MotTestModule\Controller\RepairDefectController;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\SearchDefectsController;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\SurveyPageController;
 use Dvsa\Mot\Frontend\MotTestModule\Module;
@@ -81,6 +82,19 @@ return [
                             ],
                         ],
                     ],
+                    DefectsJourneyContextProvider::REPAIR_DEFECT_ROUTE => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/:defectItemId/repair',
+                            'constraints' => [
+                                'defectItemId' => '[0-9]+',
+                            ],
+                            'defaults' => [
+                                'controller' => RepairDefectController::class,
+                                'action'     => 'repair',
+                            ],
+                        ],
+                    ],
                     DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE => [
                         'type' => 'literal',
                         'options' => [
@@ -126,6 +140,20 @@ return [
                                     'defaults' => [
                                         'controller' => RemoveDefectController::class,
                                         'action'     => 'remove',
+                                    ],
+                                ],
+                            ],
+                            DefectsJourneyContextProvider::REPAIR_DEFECT_ROUTE => [
+                                'type' => 'segment',
+                                'options' => [
+                                    'route' => '/:defectItemId/repair',
+                                    'verb' => 'post',
+                                    'constraints' => [
+                                        'defectItemId' => '[0-9]+',
+                                    ],
+                                    'defaults' => [
+                                        'controller' => RepairDefectController::class,
+                                        'action'     => 'repair',
                                     ],
                                 ],
                             ],
@@ -194,6 +222,20 @@ return [
                                             ],
                                         ],
                                     ],
+                                    DefectsJourneyContextProvider::REPAIR_DEFECT_ROUTE => [
+                                        'type' => 'segment',
+                                        'options' => [
+                                            'route' => '/:defectItemId/repair',
+                                            'verb' => 'post',
+                                            'constraints' => [
+                                                'defectItemId' => '[0-9]+',
+                                            ],
+                                            'defaults' => [
+                                                'controller' => RepairDefectController::class,
+                                                'action'     => 'repair',
+                                            ],
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],
@@ -257,6 +299,20 @@ return [
                                     'defaults' => [
                                         'controller' => RemoveDefectController::class,
                                         'action'     => 'remove',
+                                    ],
+                                ],
+                            ],
+                            DefectsJourneyContextProvider::REPAIR_DEFECT_ROUTE => [
+                                'type' => 'segment',
+                                'options' => [
+                                    'route' => '/:defectItemId/repair',
+                                    'verb' => 'post',
+                                    'constraints' => [
+                                        'defectItemId' => '[0-9]+',
+                                    ],
+                                    'defaults' => [
+                                        'controller' => RepairDefectController::class,
+                                        'action'     => 'repair',
                                     ],
                                 ],
                             ],

@@ -13,11 +13,14 @@ import uk.gov.dvsa.domain.model.mot.TestOutcome;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.domain.model.vehicle.VehicleClass;
 import uk.gov.dvsa.helper.ConfigHelper;
+import uk.gov.dvsa.helper.ReasonForRejection;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.mot.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
@@ -245,4 +248,24 @@ public class ConductMotTests extends DslTest {
         assertThat(testResultsEntryNewPage.isClickReviewTestButtonPresent(), is(true));
     }
 
+    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-3478"},
+            description = "Verifies that user is able to repair defect from new test results screen")
+    public void repairDefectDuringRetestSuccessfully() throws IOException, URISyntaxException {
+        List<ReasonForRejection> reasonForRejectionsList = new ArrayList<>();
+        reasonForRejectionsList.add(ReasonForRejection.HORN_CONTROL_MISSING);
+        String defectName = "Horn control missing";
+
+        //Given I have a vehicle with a failed MOT test
+        motApi.createTestWithRfr(tester, site.getId(), vehicle, TestOutcome.FAILED, 12345, DateTime.now(), reasonForRejectionsList);
+
+        //And fault has been fixed
+
+        //When I conduct a retest on the vehicle and click repaired on defect
+        TestResultsEntryNewPage testResultsEntryNewPage = motUI.retest.startRetest(vehicle, tester);
+        testResultsEntryNewPage.clickRepaired(defectName, TestResultsEntryNewPage.class);
+
+        //Then the defect shouldn't be displayed
+        assertThat(testResultsEntryNewPage.isDefectRepairedSuccessMessageDisplayed(defectName) &&
+                testResultsEntryNewPage.isDefectRemovedFromRfrList(defectName), is(true));
+    }
 }

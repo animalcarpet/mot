@@ -298,6 +298,69 @@ class DefectsJourneyUrlGenerator
     }
 
     /**
+     * @param int $identifiedDefectId Id of a defect attached to mot test
+     *
+     * @throws RouteNotAllowedInContextException
+     *
+     * @return string
+     */
+    public function toRepairDefect($identifiedDefectId)
+    {
+        $context = $this->contextProvider->getContext();
+        $route = '';
+        $params = [
+            self::MOT_TEST_ID_PARAM => $this->getParamFromRoute(self::MOT_TEST_ID_PARAM),
+            self::CATEGORY_ID_PARAM => $this->getParamFromRoute(self::CATEGORY_ID_PARAM),
+            self::IDENTIFIED_DEFECT_ID_PARAM => $identifiedDefectId,
+        ];
+        $options = [
+            'query' => $this->request->getQuery()->toArray(),
+        ];
+
+        switch ($context) {
+            case DefectsJourneyContextProvider::SEARCH_CONTEXT: {
+                $route = sprintf('%s/%s/%s',
+                    DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE,
+                    DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE,
+                    DefectsJourneyContextProvider::REPAIR_DEFECT_ROUTE
+                );
+                break;
+            }
+            case DefectsJourneyContextProvider::BROWSE_CATEGORIES_ROOT_CONTEXT: {
+                $route = sprintf('%s/%s/%s',
+                    DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE,
+                    DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE,
+                    DefectsJourneyContextProvider::REPAIR_DEFECT_ROUTE
+                );
+                break;
+            }
+            case DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT: {
+                $route = sprintf('%s/%s/%s/%s',
+                    DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE,
+                    DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE,
+                    DefectsJourneyContextProvider::CATEGORY_ROUTE,
+                    DefectsJourneyContextProvider::REPAIR_DEFECT_ROUTE
+                );
+                break;
+            }
+            case DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT: {
+                $route = sprintf('%s/%s',
+                    DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE,
+                    DefectsJourneyContextProvider::REPAIR_DEFECT_ROUTE
+                );
+                break;
+            }
+            case DefectsJourneyContextProvider::NO_CONTEXT: {
+                throw new RouteNotAllowedInContextException();
+            }
+        }
+
+        $route = rtrim($route, '/');
+
+        return $this->generateUrlFromRoute($route, $params, $options);
+    }
+
+    /**
      * get "back" url from add/add manual advisory/edit/remove defect actions.
      */
     public function goBack()
@@ -374,7 +437,7 @@ class DefectsJourneyUrlGenerator
     {
         $match = $this->router->match($this->request);
         if (!$match instanceof RouteMatch) {
-            return null;
+            return;
         }
 
         $params = $match->getParams();
