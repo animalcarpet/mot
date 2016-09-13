@@ -1,5 +1,6 @@
 package uk.gov.dvsa.ui.pages.vehicleinformation;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
@@ -12,9 +13,17 @@ import static org.hamcrest.core.Is.is;
 
 public class VehicleInformationPage extends Page {
 
-    private static final String PAGE_TITLE = "Vehicle Details";
+    private static final String PAGE_TYPE = "Vehicle";
 
-    @FindBy(id = "regNr") private WebElement registrationNumber;
+    @FindBy(className = "content-header__type") private WebElement pageHeaderType;
+
+    @FindBy(className = "content-header__title") private WebElement pageHeaderTitle;
+    @FindBy(xpath = "//li[@class='content-header__list-item'][1]") private WebElement pageHeaderTertiaryRegistration;
+    @FindBy(xpath = "//li[@class='content-header__list-item'][2]") private WebElement pageHeaderTertiaryVin;
+    @FindBy(id = "manufacture-date") private WebElement manufactureDate;
+    @FindBy(id = "colour") private WebElement colour;
+    @FindBy(id = "make-and-model") private WebElement makeModel;
+    @FindBy(id = "registration-mark") private WebElement registrationNumber;
     @FindBy (id = "vin") private WebElement vinNumber;
 
     public VehicleInformationPage(MotAppDriver driver) {
@@ -24,11 +33,35 @@ public class VehicleInformationPage extends Page {
 
     @Override
     public boolean selfVerify() {
-        return PageInteractionHelper.verifyTitle(getTitle(), PAGE_TITLE);
+        return PageInteractionHelper.verifyTitle(pageHeaderType.getText(), PAGE_TYPE);
+    }
+
+    public String getColour() {
+        return colour.getText();
+    }
+
+    public String getMakeModel() {
+        return makeModel.getText();
+    }
+
+    public String getManufactureDate() {
+        return manufactureDate.getText();
     }
 
     public String getRegistrationNumber() {
         return registrationNumber.getText();
+    }
+
+    public String getPageHeaderTitle() {
+        return pageHeaderTitle.getText();
+    }
+
+    public String getPageHeaderTertiaryRegistration() {
+        return pageHeaderTertiaryRegistration.getText();
+    }
+
+    public String getPageHeaderTertiaryVin() {
+        return pageHeaderTertiaryVin.getText();
     }
 
     public String getVinNumber() {

@@ -2,7 +2,10 @@
 
 namespace VehicleTest\Controller;
 
+use Application\Service\CatalogService;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
+use DvsaClient\Mapper\VehicleExpiryMapper;
+use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Obfuscate\EncryptionKey;
 use DvsaCommon\Obfuscate\ParamEncoder;
@@ -11,8 +14,10 @@ use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\UrlBuilder\VehicleUrlBuilderWeb;
 use DvsaCommonTest\Bootstrap;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
+use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTestTest\Controller\AbstractDvsaMotTestTestCase;
 use Vehicle\Controller\VehicleController;
+use Vehicle\Helper\VehicleViewModelBuilder;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -38,17 +43,19 @@ class VehicleControllerTest extends AbstractDvsaMotTestTestCase
 
         $serviceManager->setService(
             VehicleService::class,
-            new VehicleService('to be token'
-//                $this->getMockHttpClientFactory([
-//                    'colour' => 'Black',
-//                    'colourSecondary' => 'Not Stated',
-//                ])
-            )
+            new VehicleService('to be token')
         );
 
         $this->setServiceManager($serviceManager);
         $paramObfuscator = $this->createParamObfuscatorMock(self::$obfuscationMap);
-        $this->setController(new VehicleController($paramObfuscator));
+        $this->setController(
+            new VehicleController($paramObfuscator,
+            XMock::of(VehicleService::class),
+            XMock::of(CatalogService::class),
+            XMock::of(MotAuthorisationServiceInterface::class),
+            XMock::of(VehicleViewModelBuilder::class),
+            XMock::of(VehicleExpiryMapper::class)
+        ));
         $this->getController()->setServiceLocator($serviceManager);
         $this->createHttpRequestForController('Vehicle');
 

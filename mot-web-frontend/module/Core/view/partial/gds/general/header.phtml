@@ -1,3 +1,11 @@
+<?php
+use Core\ViewModel\Header\HeaderTertiaryList;
+
+/** @var string $type */
+/** @var string $title */
+/** @var string $progress */
+/** @var string|HeaderTertiaryList $tretiary */
+?>
 <header class="content-header">
     <h1>
         <span class="content-header__type"><?php echo $this->escapeHtml($type); ?></span>
@@ -6,9 +14,15 @@
             <span class="content-header__progress"><?php echo $this->escapeHtml($progress); ?></span>
         <?php endif; ?>
     </h1>
-    <?php if (isset($tertiary)): ?>
+    <?php if (isset($tertiary) && is_string($tertiary)): ?>
         <h2>
             <span class="content-header__tertiary"><?php echo $this->escapeHtml($tertiary); ?></span>
         </h2>
+    <?php elseif (isset($tertiary) && $tertiary instanceof HeaderTertiaryList): ?>
+        <ul class="content-header__tertiary-list">
+            <?php foreach ($tertiary->getRows() as $rowContent): ?>
+                <li class="content-header__list-item"><?php echo $rowContent; ?></li>
+            <?php endforeach; ?>
+        </ul>
     <?php endif; ?>
 </header>

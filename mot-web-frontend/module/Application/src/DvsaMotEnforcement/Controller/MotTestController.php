@@ -101,6 +101,7 @@ class MotTestController extends AbstractDvsaMotTestController
             'month2'     => $this->params()->fromQuery('month2'),
             'year2'      => $this->params()->fromQuery('year2'),
             'backTo'     => $this->params()->fromQuery('backTo'),
+            'oneResult'  => $this->params()->fromQuery('oneResult', false),
         ];
 
         return new ViewModel(

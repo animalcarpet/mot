@@ -23,7 +23,7 @@ class DtoReflector implements DtoReflectorInterface
         }
 
         if (!is_subclass_of($dtoClass, ReflectiveDtoInterface::class)) {
-            throw new \InvalidArgumentException("'$dtoClass' should extend '" . ReflectiveDtoInterface::class . "'");
+            throw new \InvalidArgumentException("'$dtoClass' should implement '" . ReflectiveDtoInterface::class . "'");
         }
 
         $classReflection = new \ReflectionClass($dtoClass);

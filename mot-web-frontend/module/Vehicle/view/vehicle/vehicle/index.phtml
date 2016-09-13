@@ -1,156 +1,40 @@
 <?php
-
-use DvsaCommon\Date\DateTimeDisplayFormat;
-use DvsaCommon\Utility\ArrayUtils;
-use Vehicle\Controller\VehicleController;
-
-$title = 'Vehicle Details';
-$this->headTitle($title);
-
-echo $this->partial('partials/enforcement/title', array('title' => $title));
-
-/** @var DvsaCommon\Dto\Vehicle\VehicleDto $vehicle */
-$vehicle = $this->vehicle;
-$vehicleId = $vehicle->getId();
-
-echo $this->partial('infoMessages', ['getFromFlash' => true]);
-echo $this->partial('errorMessages', array('getFromFlash' => true, 'isShowHidden' => true));
-
+    /** @var \Vehicle\ViewModel\VehicleViewModel $viewModel */
+    $this->headTitle('Vehicle Details');
+    $this->layout()->setVariable('sidebar', $viewModel->getSidebar());
+    $this->layout()->setVariable('breadcrumbs', $viewModel->getBreadcrumbs());
 ?>
 
-<div class="row content">
-    <div class="col-lg-12">
+<?php
+    echo $this->partial('partial/gds/general/header', [
+        'title' => $viewModel->getPageTitle(),
+        'type' => $viewModel->getPageSecondaryTitle(),
+        'tertiary' => $viewModel->getPageTertiaryTitle(),
+    ]);
 
-        <div class="row vehicle-summary">
-            <div class="col-sm-4">
-                <?php
-                //  --  col 1   --
-                echo $this->partial(
-                    'dldtdd', [
-                        'dlCssClass' => 'vertical dl-large',
-                        'items'      => [
-                            ['Registration number', $vehicle->getRegistration(), 'id' => 'regNr'],
-                            ['VIN/Chassis number', $vehicle->getVin(), 'id' => 'vin'],
-                        ],
-                    ]
-                );
-                ?>
-            </div>
+    echo $this->partial('partial/gds/general/system-message', [
+        'messages' => $this->layout()->flashMessenger->getErrorMessages(),
+        'type' => 'failure'
+    ]);
+?>
 
-            <div class="col-sm-4">
-                <?php
-                //  --  col 2   --
-                echo $this->partial(
-                    'dldtdd', [
-                        'dlCssClass' => 'vertical',
-                        'items'      => [
-                            ['Make', $vehicle->getMake(), 'id' => 'make'],
-                            ['Model', $vehicle->getModel(), 'id' => 'model'],
-                            ['Body Type', $vehicle->getBodyType(), 'id' => 'bodyType'],
-                        ],
-                    ]
-                );
-                ?>
-            </div>
+<h3 class="summary-heading">Vehicle specification</h3>
+<?php
+    echo $this->partial('partial/gds/gds-table/gds-summary-table', [
+        'table' => $viewModel->getVehicleSpecificationGdsTable(),
+    ]);
+?>
 
-            <div class="col-sm-4">
-                <?php
-                //  --  col 3   --
-                echo $this->partial(
-                    'dldtdd', [
-                        'dlCssClass' => 'vertical',
-                        'items'      => [
-                            ['Fuel type', $vehicle->getFuelType(), 'id' => 'fuel'],
-                            ['Transmission type', $vehicle->getTransmissionType(), 'id' => 'transmission'],
-                            ['Cylinder capacity', $vehicle->getCylinderCapacity(), 'id' => 'cylinder'],
-                            ['Colour', $colourNames, 'id' => 'color'],
-                        ],
-                    ]
-                );
-                ?>
-            </div>
-        </div>
-
-        <hr class="hr-thin">
-
-        <div class="row vehicle-summary">
-            <div class="col-sm-4">
-                <?php
-                //  --  col 1   --
-                echo $this->partial(
-                    'dldtdd', [
-                        'dlCssClass' => 'vertical',
-                        'items'      => [
-                            [
-                                'Details created',
-                                DateTimeDisplayFormat::textDate($vehicle->getAmendedOn()) ?: null,
-                                'id' => 'created',
-                            ],
-                            [
-                                'Declared new',
-                                $vehicle->getIsNewAtFirstReg() ? 'Yes' : 'No',
-                                'id' => 'declaredNew',
-                            ],
-                            [
-                                'MOT test history',
-                                //  url should not be escaped, because it already escaped in controller
-                                '<a href="' . ArrayUtils::tryGet($this->urls, 'history', '') . '">' .
-                                    'View' .
-                                '</a>',
-                                'id'     => 'historyLink',
-                                'escape' => false,
-                            ],
-                        ],
-                    ]
-                );
-                ?>
-            </div>
-
-            <div class="col-sm-4">
-                <?php
-                //  --  col 2   --
-                echo $this->partial(
-                    'dldtdd', [
-                        'dlCssClass' => 'vertical',
-                        'items'      => [
-                            [
-                                'Manufacture date',
-                                DateTimeDisplayFormat::textDate($vehicle->getManufactureDate()) ?: null,
-                                'id' => 'dateOfMake'
-                            ],
-                            [
-                                'First registration date',
-                                DateTimeDisplayFormat::textDate($vehicle->getFirstRegistrationDate()) ?: null,
-                                'id' => 'dateOfReg'
-                            ],
-                            [
-                                'First use date',
-                                DateTimeDisplayFormat::textDate($vehicle->getFirstUsedDate()) ?: null,
-                                'id' => 'firstUseDate',
-                            ],
-                        ],
-                    ]
-                );
-                ?>
-            </div>
-
-            <div class="col-sm-4">
-
-            </div>
-        </div>
-    </div>
-</div>
-
-<hr class="hr-thin">
-
-<div class="row form-group">
-    <div class="col-lg-12 btn-bar">
-        <a href="<?php echo $this->url(\Dashboard\Controller\UserHomeController::ROUTE); ?>"
-           id="returnDashboard" class="btn btn-primary">
-            Return to Homepage
-        </a>
-    </div>
-</div>
-<a href="<?php echo ArrayUtils::tryGet($this->urls, 'back', ''); ?>">
-    Go back
-</a>
+<h3 class="summary-heading">Vehicle registration</h3>
+<?php
+    echo $this->partial('partial/gds/gds-table/gds-summary-table', [
+        'table' => $viewModel->getVehicleRegistrationGdsTable(),
+    ]);
+?>
+<nav class="content-navigation">
+    <ul class="content-navigation__secondary">
+        <li>
+            <a href="<?php echo $viewModel->getBackUrl(); ?>"><?php echo $viewModel->getBackLinkText(); ?></a>
+        </li>
+    </ul>
+</nav>

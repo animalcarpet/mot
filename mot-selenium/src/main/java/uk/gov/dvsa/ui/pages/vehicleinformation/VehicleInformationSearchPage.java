@@ -26,9 +26,15 @@ public class VehicleInformationSearchPage extends Page {
         return PageInteractionHelper.verifyTitle(getTitle(), PAGE_TITLE);
     }
 
-    public VehicleInformationResultsPage searchAndFindVehicleByRegistrationSuccessfully(String registration) {
+    public VehicleInformationResultsPage searchVehicleByRegistration(String registration) {
         FormDataHelper.enterText(vehicleSearchInput, registration);
         searchButton.click();
         return new VehicleInformationResultsPage(driver);
+    }
+
+    public VehicleInformationPage findVehicleAndRedirectToVehicleInformationPage(String registration) {
+        FormDataHelper.enterText(vehicleSearchInput, registration);
+        searchButton.click();
+        return new VehicleInformationPage(driver);
     }
 }
