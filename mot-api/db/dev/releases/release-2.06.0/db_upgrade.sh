@@ -9,6 +9,7 @@ readonly MYSQL_ADMIN_PASSWORD=password
 
 # Add files here in intended run order for release.
 upgrade_files+=('2016-08-22-BL-2841-notify-user-when-new-card-ordered-via-notification-STORY.sql');
+upgrade_files+=('2016-09-07-BL-3021-additional-security-questions-STORY.sql');
 
 # Necessary for first deployment.
 $(mysql -h ${MYSQL_HOST} -u ${MYSQL_USER} -p${MYSQL_ADMIN_PASSWORD} ${MYSQL_DB_NAME} -e "CREATE TABLE IF NOT EXISTS db_upgrade (
