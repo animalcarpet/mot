@@ -14,6 +14,14 @@
     {% endfor %}
 {% endif %}
 
+{% if flashMessenger().hasErrorMessages() %}
+    {% for message in flashMessenger().getErrorMessages() %}
+        <div class="message--failure" id="validation-message--failure">
+            <p>{{ message|raw }}</p>
+        </div>
+    {% endfor %}
+{% endif %}
+
 <div class="action-panel">
     <div class="clear-float">
         <div class="action-panel__container">

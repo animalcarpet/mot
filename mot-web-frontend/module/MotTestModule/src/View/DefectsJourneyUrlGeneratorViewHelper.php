@@ -96,6 +96,16 @@ class DefectsJourneyUrlGeneratorViewHelper extends AbstractHelper
     }
 
     /**
+     * @param int|string $identifiedDefectId
+     * @return string
+     * @throws RouteNotAllowedInContextException
+     */
+    public function toRepairDefect($identifiedDefectId)
+    {
+        return $this->defectsJourneyUrlGenerator->toRepairDefect($identifiedDefectId);
+    }
+
+    /**
      * get "back" url from add/add manual advisory/edit/remove defect actions
      *
      * @return string

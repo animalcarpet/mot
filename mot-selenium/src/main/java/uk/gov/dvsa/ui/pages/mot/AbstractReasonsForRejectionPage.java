@@ -1,15 +1,13 @@
 package uk.gov.dvsa.ui.pages.mot;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.model.mot.Defect;
+import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.helper.PageInteractionHelper;
-
-import java.util.concurrent.TimeUnit;
+import uk.gov.dvsa.ui.pages.Page;
 
 public abstract class AbstractReasonsForRejectionPage extends Page {
 
@@ -19,6 +17,8 @@ public abstract class AbstractReasonsForRejectionPage extends Page {
     @FindBy(xpath = "//*[@id='rfrList']//a[contains(., 'Remove')]") protected WebElement removeDefectLink;
     @FindBy(xpath = "//*[@id='rfrList']//a[contains(., 'Edit')]") protected WebElement editDefectLink;
     @FindBy(id="rfrList") private WebElement rfrList;
+    protected String defectSelector = "//*[contains(text(), '%s')]/ancestor::li[contains(@class, 'defect')]";
+    protected String repairedButton = defectSelector + "//*[@id='repair-button']";
 
     public AbstractReasonsForRejectionPage(MotAppDriver driver) {
         super(driver);
@@ -33,6 +33,11 @@ public abstract class AbstractReasonsForRejectionPage extends Page {
     public EditDefectPage navigateToEditDefectPage(Defect defect) {
         editDefectLink.click();
         return new EditDefectPage(driver, defect.getAddOrRemovalType());
+    }
+
+    public <T extends Page> T repairDefect(String defect, Class<T> clazz) {
+        driver.findElement(By.xpath(String.format(repairedButton, defect))).click();
+        return MotPageFactory.newPage(driver, clazz);
     }
 
     public boolean isDefectInReasonsForRejection(Defect defect) {
@@ -54,6 +59,16 @@ public abstract class AbstractReasonsForRejectionPage extends Page {
                 String.format("This %s has been added:\n%s", defect.getAddOrRemovalType(), defect.getDescription()));
     }
 
+    public boolean isDefectRepairedSuccessMessageDisplayed(String defectName) {
+        return validationMessage.getText().equals(
+                String.format("The failure %s has been removed", defectName));
+    }
+
+    public boolean isAdvisoryRepairedSuccessMessageDisplayed(String defectName) {
+        return validationMessage.getText().equals(
+                String.format("The advisory %s has been removed", defectName));
+    }
+
     public boolean isManualAdvisoryDefectFailureMessageDisplayed() {
         return validationSummary.getText().contains(
                 "Manual advisory description - you must give a description"
@@ -67,6 +82,10 @@ public abstract class AbstractReasonsForRejectionPage extends Page {
 
     public boolean isDefectDangerous(Defect defect) {
         return isDangerousShownForDefect(defect) && defect.getIsDangerous();
+    }
+
+    public boolean isDefectRemovedFromRfrList(String defectName) {
+        return !PageInteractionHelper.isElementDisplayed(By.xpath(String.format(defectSelector, defectName)));
     }
 
     private boolean isDangerousShownForDefect(Defect defect) {

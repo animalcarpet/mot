@@ -14,6 +14,14 @@
     {% endfor %}
 {% endif %}
 
+{% if flashMessenger().hasErrorMessages() %}
+    {% for message in flashMessenger().getErrorMessages() %}
+        <div class="message--failure" id="validation-message--failure">
+            <p>{{ message|raw }}</p>
+        </div>
+    {% endfor %}
+{% endif %}
+
 <div class="defect-summary">
     <div class="defect-summary__total">
         <h2 class="defect-summary__total-heading">Defects</h2>

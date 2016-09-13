@@ -14,6 +14,7 @@ import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.ConfigHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.*;
+import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardPage;
 import uk.gov.dvsa.ui.pages.dvsa.ManageRolesPage;
 import uk.gov.dvsa.ui.pages.dvsa.UserSearchPage;
 import uk.gov.dvsa.ui.pages.dvsa.UserSearchResultsPage;
@@ -23,7 +24,6 @@ import uk.gov.dvsa.ui.pages.mot.certificates.DuplicateReplacementCertificateTest
 import uk.gov.dvsa.ui.pages.mot.retest.ConfirmVehicleRetestPage;
 import uk.gov.dvsa.ui.pages.mot.retest.ReTestResultsEntryPage;
 import uk.gov.dvsa.ui.pages.profile.ProfilePage;
-import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardPage;
 import uk.gov.dvsa.ui.pages.userregistration.CreateAnAccountPage;
 import uk.gov.dvsa.ui.pages.vehicleinformation.CreateNewVehicleRecordIdentificationPage;
 import uk.gov.dvsa.ui.pages.vts.SearchForAVtsPage;
@@ -116,12 +116,15 @@ public class PageNavigator {
         return gotoTestResultsEntryNewPage(user, vehicle).clickSearchForADefectButton();
     }
 
-    public ReTestResultsEntryPage gotoReTestResultsEntryPage(User user, Vehicle vehicle) throws URISyntaxException, IOException {
+    public <T extends Page>T gotoReTestResultsEntryPage(User user, Vehicle vehicle) throws URISyntaxException, IOException {
         injectOpenAmCookieAndNavigateToPath(user, VehicleSearchPage.PATH);
 
         navigateToPath(searchForVehicleForRetest(vehicle).startRetest().getMotTestPath());
 
-        return new ReTestResultsEntryPage(driver);
+        if (ConfigHelper.isTestResultEntryImprovementsEnabled()) {
+            return (T) new TestResultsEntryNewPage(driver);
+        }
+        return (T) new ReTestResultsEntryPage(driver);
     }
 
     private ConfirmVehicleRetestPage searchForVehicleForRetest(Vehicle vehicle) throws URISyntaxException {

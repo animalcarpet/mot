@@ -36,7 +36,7 @@ class SearchDefectsControllerTest extends AbstractFrontendControllerTestCase
             ->method('getCode')
             ->willReturn(MotTestTypeCode::NORMAL_TEST);
         $this->motTestMock
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getTestType')
             ->willReturn($motTestTypeMock);
         $vehicleClassMock = $this->getMockBuilder(VehicleClassDto::class)->getMock();

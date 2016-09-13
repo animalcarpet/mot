@@ -13,6 +13,7 @@ use Dvsa\Mot\Frontend\MotTestModule\ViewModel\DefectCollection;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefectCollection;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Dto\Common\MotTestDto;
+use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
@@ -93,6 +94,7 @@ class SearchDefectsController extends AbstractDvsaMotTestController
         }
 
         $hasResults = !empty($defects);
+        $isRetest = $motTest->getTestType()->getCode() === MotTestTypeCode::RE_TEST;
 
         return $this->createViewModel('defects/search.twig', [
             'motTestNumber' => $motTestNumber,
@@ -104,6 +106,7 @@ class SearchDefectsController extends AbstractDvsaMotTestController
             'hasResults' => $hasResults,
             'page' => $page,
             'paginator' => $paginator,
+            'isRetest' => $isRetest,
         ]);
     }
 

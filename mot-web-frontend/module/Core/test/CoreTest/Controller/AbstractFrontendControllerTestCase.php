@@ -496,6 +496,11 @@ abstract class AbstractFrontendControllerTestCase extends PHPUnit_Framework_Test
         return $this->getFlashMessengerMockForManyCalls('addErrorMessage', $errorMessage);
     }
 
+    public function getFlashMessengerMockForAddSuccessMessage($successMessage)
+    {
+        return $this->getFlashMessengerMockForOneCall('addSuccessMessage', $successMessage);
+    }
+
     public function getFlashMessengerMockForAddErrorMessage($errorMessage)
     {
         return $this->getFlashMessengerMockForOneCall('addErrorMessage', $errorMessage);
