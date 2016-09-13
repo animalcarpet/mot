@@ -10,6 +10,8 @@ class MotTestOptionsDto
 {
     /** @var string */
     private $motTestStartedDate;
+    /** @var int */
+    private $vehicleId;
     /** @var string */
     private $vehicleMake;
     /** @var string */
@@ -31,6 +33,7 @@ class MotTestOptionsDto
         $vehicle = ArrayUtils::get($data, 'vehicle');
 
         $dto = (new MotTestOptionsDto())->setMotTestStartedDate(ArrayUtils::get($data, 'startedDate'))
+            ->setVehicleId(ArrayUtils::get($vehicle, 'id'))
             ->setVehicleMake(ArrayUtils::get($vehicle, 'make'))
             ->setVehicleModel(ArrayUtils::get($vehicle, 'model'))
             ->setVehicleRegistrationNumber(
@@ -55,6 +58,7 @@ class MotTestOptionsDto
         return [
             'startedDate' => $this->motTestStartedDate,
             'vehicle' => [
+                'id' => $this->vehicleId,
                 'make' => $this->vehicleMake,
                 'model' => $this->vehicleModel,
                 'vehicleRegistrationNumber' => $this->vehicleRegistrationNumber
@@ -160,6 +164,24 @@ class MotTestOptionsDto
     public function setMotTestTypeDto($motTestTypeDto)
     {
         $this->motTestTypeDto = $motTestTypeDto;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVehicleId()
+    {
+        return $this->vehicleId;
+    }
+
+    /**
+     * @param int $vehicleId
+     * @return MotTestOptionsDto
+     */
+    public function setVehicleId($vehicleId)
+    {
+        $this->vehicleId = $vehicleId;
         return $this;
     }
 

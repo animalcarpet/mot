@@ -75,7 +75,7 @@ class MotTestController extends AbstractDvsaMotTestController
 
     public function indexAction()
     {
-        $motTestNumber = (int) $this->params('motTestNumber', 0);
+        $motTestNumber = $this->params('motTestNumber', 0);
 
         if (true === $this->isFeatureEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)) {
             return $this->forward()->dispatch(
@@ -107,6 +107,8 @@ class MotTestController extends AbstractDvsaMotTestController
 
             $apiUrl = MotTestUrlBuilder::odometerReadingNotices($motTestNumber)->toString();
             $readingNotices = $this->getRestClient()->get($apiUrl);
+
+            $this->addTestNumberAndTypeToGtmDataLayer($motTestNumber, $testType->getId());
         } catch (ValidationException $e) {
             $this->addErrorMessages($e->getDisplayMessages());
         }
@@ -616,10 +618,11 @@ class MotTestController extends AbstractDvsaMotTestController
     {
         $motTestNumber = $this->params()->fromRoute('motTestNumber', 0);
 
-        /*
+        /**
          * @var MotTestDto
          */
         $motDetails = $this->tryGetMotTestOrAddErrorMessages();
+        $this->addTestNumberAndTypeToGtmDataLayer($motTestNumber, $motDetails->getTestType()->getId());
 
         $params = [
             'motDetails'    => $motDetails,
@@ -934,5 +937,17 @@ class MotTestController extends AbstractDvsaMotTestController
         $viewModel->setVariables($variables);
 
         return $viewModel;
+    }
+
+    /**
+     * @param string $motTestNumber
+     * @param int $testTypeId
+     */
+    private function addTestNumberAndTypeToGtmDataLayer($motTestNumber, $testTypeId)
+    {
+        $this->gtmDataLayer([
+            'testId'   => $motTestNumber,
+            'testType' => $testTypeId,
+        ]);
     }
 }

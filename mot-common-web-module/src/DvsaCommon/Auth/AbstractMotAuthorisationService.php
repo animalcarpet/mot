@@ -165,6 +165,11 @@ abstract class AbstractMotAuthorisationService
         return $results;
     }
 
+    public function getAllRoles()
+    {
+        return $this->getPersonAuthorization()->getAllRoles();
+    }
+
     /**
      * Returns true if the current user is a trade user
      * @return bool
