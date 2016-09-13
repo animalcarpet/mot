@@ -6,6 +6,7 @@ use Core\Action\RedirectToRoute;
 use Core\Action\RedirectToUrl;
 use Core\Service\LazyMotFrontendAuthorisationService;
 use Dashboard\Controller\UserHomeController;
+use Dvsa\Mot\ApiClient\Exception\ResourceNotFoundException;
 use Dvsa\Mot\ApiClient\Resource\Collection;
 use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\WebLoginResult;
@@ -13,6 +14,7 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Controller\RegisterCardI
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Controller\RegisteredCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\Controller\NewUserOrderCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\Controller\RegisterCardInformationNewUserController;
+use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\LostOrForgottenCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
@@ -58,6 +60,9 @@ class SuccessLoginResultRoutingService implements AutoWireableInterface
             $userId = $this->authenticationService->getIdentity()->getUserId();
 
             if ($this->authenticationService->getIdentity()->isSecondFactorRequired()) {
+                if ($this->userOrderedReplacementCard($token)) {
+                    return new RedirectToRoute(LostOrForgottenCardController::START_ALREADY_ORDERED_ROUTE);
+                }
                 return new RedirectToRoute(RegisteredCardController::ROUTE);
             }
             if ($this->authorisationService->isTradeUser()) {
@@ -96,6 +101,24 @@ class SuccessLoginResultRoutingService implements AutoWireableInterface
         $orders = $this->authorisationServiceClient->getSecurityCardOrders($identity->getUsername(), null, null,
             $token);
         return $orders->getCount() > 0;
+    }
+
+    /**
+     * @return boolean
+     */
+    private function userOrderedReplacementCard($token)
+    {
+        $identity = $this->authenticationService->getIdentity();
+
+        try {
+            $securityCard = $this->authorisationServiceClient->getSecurityCardForUser($identity->getUsername(), $token);
+        } catch (ResourceNotFoundException $exception){
+            return false;
+        }
+
+        $hasOrderedACard = $this->userHasAlreadyOrderedACard($token);
+
+        return $hasOrderedACard && !$securityCard->isActive();
     }
 
     /**

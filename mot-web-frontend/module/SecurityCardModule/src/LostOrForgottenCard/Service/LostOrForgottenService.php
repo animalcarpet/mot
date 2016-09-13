@@ -2,6 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Service;
 
+use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\LostOrForgottenCardController;
 use DvsaClient\Mapper\UserAdminMapper;
 use DvsaCommon\HttpRestJson\Exception\NotFoundException;
 
@@ -115,4 +116,17 @@ class LostOrForgottenService
         $this->sessionService->clear();
     }
 
+    public function isEnteringThroughAlreadyOrdered()
+    {
+        $steps = $this->sessionService->load(LostOrForgottenSessionService::UNIQUE_KEY);
+
+        return key_exists(LostOrForgottenCardController::START_ALREADY_ORDERED_ROUTE, $steps);
+    }
+
+    public function isEnteringThroughSecurityQuestionOne()
+    {
+        $steps = $this->sessionService->load(LostOrForgottenSessionService::UNIQUE_KEY);
+
+        return key_exists(LostOrForgottenCardController::LOGIN_SESSION_ROUTE, $steps);
+    }
 }

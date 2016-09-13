@@ -2,6 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Factory\Controller;
 
+use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Service\AlreadyOrderedCardCookieService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
 use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\LostOrForgottenCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
@@ -35,12 +36,15 @@ class LostOrForgottenCardControllerFactory implements FactoryInterface
         /** @var SecurityCardService $securityCardService */
         $securityCardService = $serviceLocator->get(SecurityCardService::class);
 
+        $alreadyOrderedCardCookieService = new AlreadyOrderedCardCookieService($identityProvider);
+
         return new LostOrForgottenCardController(
             $request,
             $identityProvider->getIdentity(),
             $twoFaFeatureToggle,
             $securityQuestionService,
-            $securityCardService
+            $securityCardService,
+            $alreadyOrderedCardCookieService
         );
     }
 }

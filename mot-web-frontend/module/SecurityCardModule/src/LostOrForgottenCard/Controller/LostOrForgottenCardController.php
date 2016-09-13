@@ -5,6 +5,7 @@ namespace Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller;
 use Core\Controller\AbstractDvsaActionController;
 use Dashboard\Controller\UserHomeController;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
+use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Service\AlreadyOrderedCardCookieService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
 use Dvsa\Mot\ApiClient\Resource\Item\SecurityCard;
 use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Form\LostOrForgottenSecurityQuestionForm;
@@ -16,7 +17,9 @@ use Zend\View\Model\ViewModel;
 
 class LostOrForgottenCardController extends AbstractDvsaActionController
 {
+    const LOGIN_SESSION_ROUTE = 'login';
     const START_ROUTE = 'lost-or-forgotten-card';
+    const START_ALREADY_ORDERED_ROUTE = 'lost-or-forgotten-card/already-ordered';
     const QUESTION_ONE_ROUTE = 'lost-or-forgotten-card/question-one';
     const QUESTION_TWO_ROUTE = 'lost-or-forgotten-card/question-two';
     const CONFIRMATION_ROUTE = 'lost-or-forgotten-card/confirmation';
@@ -28,6 +31,9 @@ class LostOrForgottenCardController extends AbstractDvsaActionController
 
     const STEP_INVALID = false;
     const STEP_VALID = true;
+
+    const BACK_TEXT = 'Back';
+    const RETURN_TO_SIGN_IN_TEXT = 'Cancel and return to sign in';
 
     /**
      * @var SecurityCardService
@@ -54,18 +60,25 @@ class LostOrForgottenCardController extends AbstractDvsaActionController
      */
     private $lostAndForgottenService;
 
+    /**
+     * @var AlreadyOrderedCardCookieService $alreadyOrderedCardCookieService
+     */
+    private $alreadyOrderedCardCookieService;
+
     public function __construct(
         Request $request,
         Identity $identity,
         TwoFaFeatureToggle $twoFaFeatureToggle,
         LostOrForgottenService $lostAndForgottenService,
-        SecurityCardService $securityCardService
+        SecurityCardService $securityCardService,
+        AlreadyOrderedCardCookieService $alreadyOrderedCardCookieService
     ) {
         $this->request = $request;
         $this->identity = $identity;
         $this->twoFaFeatureToggle = $twoFaFeatureToggle;
         $this->lostAndForgottenService = $lostAndForgottenService;
         $this->securityCardService = $securityCardService;
+        $this->alreadyOrderedCardCookieService = $alreadyOrderedCardCookieService;
     }
 
     /**
@@ -78,7 +91,7 @@ class LostOrForgottenCardController extends AbstractDvsaActionController
         $identityNotRegisteredFor2fa = !$this->identity->isSecondFactorRequired();
         $alreadyAuthenticated = $this->identity->isAuthenticatedWith2FA();
 
-        if ($featureToggleNotEnabled || $identityNotRegisteredFor2fa || $alreadyAuthenticated) {
+        if ($featureToggleNotEnabled || $identityNotRegisteredFor2fa) {
             return $this->redirect()->toRoute(UserHomeController::ROUTE);
         }
 
@@ -97,6 +110,26 @@ class LostOrForgottenCardController extends AbstractDvsaActionController
         return $viewModel;
     }
 
+    public function startAlreadyOrderedAction()
+    {
+        if (!$this->lostAndForgottenService->isEnteringThroughAlreadyOrdered() &&
+            $this->alreadyOrderedCardCookieService->hasSeenOrderLandingPage($this->getRequest())
+        ) {
+            $this->loadStepsIntoSessionQuestionOne();
+            $this->lostAndForgottenService->updateStepStatus(self::LOGIN_SESSION_ROUTE, self::STEP_VALID);
+            return $this->redirect()->toRoute(self::QUESTION_ONE_ROUTE);
+        }
+
+        $this->loadStepsIntoSessionAlreadyOrdered();
+        $this->lostAndForgottenService->updateStepStatus(self::START_ALREADY_ORDERED_ROUTE, self::STEP_VALID);
+
+        $this->alreadyOrderedCardCookieService->addAlreadyOrderedCardCookie($this->getResponse());
+        $viewModel = new ViewModel([]);
+        $viewModel->setTemplate('2fa/lost-forgotten/start-already-ordered');
+
+        return $viewModel;
+    }
+
     public function securityQuestionOneAction()
     {
         if(!$this->lostAndForgottenService->isAllowedOnStep(self::QUESTION_ONE_ROUTE)) {
@@ -107,6 +140,17 @@ class LostOrForgottenCardController extends AbstractDvsaActionController
         $form = new LostOrForgottenSecurityQuestionForm($question->getText());
         $viewModel = new ViewModel([]);
         $viewModel->setTemplate('2fa/lost-forgotten/security-question-one');
+
+        if ($this->lostAndForgottenService->isEnteringThroughAlreadyOrdered()) {
+            $viewModel->setVariable('backRoute', self::START_ALREADY_ORDERED_ROUTE);
+            $viewModel->setVariable('backText', self::BACK_TEXT);
+        } else if ($this->lostAndForgottenService->isEnteringThroughSecurityQuestionOne()) {
+            $viewModel->setVariable('backRoute', 'logout');
+            $viewModel->setVariable('backText', self::RETURN_TO_SIGN_IN_TEXT);
+        } else {
+            $viewModel->setVariable('backRoute', self::START_ROUTE);
+            $viewModel->setVariable('backText', self::BACK_TEXT);
+        }
 
         if ($this->request->isPost()) {
             $form->setData($this->request->getPost()->toArray());
@@ -128,6 +172,7 @@ class LostOrForgottenCardController extends AbstractDvsaActionController
                 $form->setCustomError($form->getAnswerField(), self::MSG_INCORRECT_ANSWER);
             }
         }
+
         $viewModel->setVariable('form', $form);
         return $viewModel;
     }
@@ -185,6 +230,28 @@ class LostOrForgottenCardController extends AbstractDvsaActionController
     private function loadStepsIntoSession() {
         $stepArray = [
             self::START_ROUTE => self::STEP_INVALID,
+            self::QUESTION_ONE_ROUTE => self::STEP_INVALID,
+            self::QUESTION_TWO_ROUTE => self::STEP_INVALID,
+            self::CONFIRMATION_ROUTE => self::STEP_INVALID,
+        ];
+
+        $this->lostAndForgottenService->saveSteps($stepArray);
+    }
+
+    private function loadStepsIntoSessionAlreadyOrdered() {
+        $stepArray = [
+            self::START_ALREADY_ORDERED_ROUTE => self::STEP_INVALID,
+            self::QUESTION_ONE_ROUTE => self::STEP_INVALID,
+            self::QUESTION_TWO_ROUTE => self::STEP_INVALID,
+            self::CONFIRMATION_ROUTE => self::STEP_INVALID,
+        ];
+
+        $this->lostAndForgottenService->saveSteps($stepArray);
+    }
+
+    private function loadStepsIntoSessionQuestionOne() {
+        $stepArray = [
+            self::LOGIN_SESSION_ROUTE => self::STEP_VALID,
             self::QUESTION_ONE_ROUTE => self::STEP_INVALID,
             self::QUESTION_TWO_ROUTE => self::STEP_INVALID,
             self::CONFIRMATION_ROUTE => self::STEP_INVALID,

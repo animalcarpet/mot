@@ -49,6 +49,7 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardEven
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Factory\Service\OrderSecurityCardEventServiceFactory;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardNotificationService;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Factory\Service\OrderSecurityCardNotificationServiceFactory;
+use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Service\AlreadyOrderedCardCookieService;
 
 return [
     'factories' => [
@@ -76,6 +77,7 @@ return [
         CardOrderReviewAction::class => CardOrderReviewActionFactory::class,
         CardOrderProtection::class => CardOrderProtectionFactory::class,
         OrderSecurityCardEventService::class => OrderSecurityCardEventServiceFactory::class,
-        OrderSecurityCardNotificationService::class => OrderSecurityCardNotificationServiceFactory::class
+        OrderSecurityCardNotificationService::class => OrderSecurityCardNotificationServiceFactory::class,
+        AlreadyOrderedCardCookieService::class => AlreadyOrderedCardCookieService::class,
     ]
 ];

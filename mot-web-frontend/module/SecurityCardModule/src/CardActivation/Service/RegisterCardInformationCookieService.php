@@ -32,11 +32,9 @@ class RegisterCardInformationCookieService
      */
     public function addRegisterCardInformationCookie(Response $response)
     {
-
         $secure = true;
         $path = '/' . RegisterCardInformationController::REGISTER_CARD_INFORMATION_ROUTE . '/' .
             $this->identityProvider->getIdentity()->getUserId();
-
 
         $expires   = new \DateTime("tomorrow", new DateTimeZone('Europe/London'));
         $value = 1;
