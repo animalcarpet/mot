@@ -26,7 +26,7 @@ $this->layout()->setVariables([
         <input type="submit" id="submit" value="Continue" class="button">
         <ul class="content-navigation__secondary">
             <li>
-                <a href="<?php echo $this->url('lost-or-forgotten-card'); ?>">Back</a>
+                <a href="<?php echo $this->url($backRoute); ?>"><?php echo $backText ?></a>
             </li>
         </ul>
     </nav>

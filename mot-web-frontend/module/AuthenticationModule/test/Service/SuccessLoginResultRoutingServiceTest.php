@@ -8,6 +8,7 @@ use Core\Action\RedirectToUrl;
 use Core\Service\LazyMotFrontendAuthorisationService;
 use Dashboard\Controller\UserHomeController;
 use Dvsa\Mot\ApiClient\Resource\Collection;
+use Dvsa\Mot\ApiClient\Resource\Item\SecurityCard;
 use Dvsa\Mot\ApiClient\Resource\Item\SecurityCardOrder;
 use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
@@ -18,6 +19,7 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Controller\RegisterCardI
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Controller\RegisteredCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\Controller\NewUserOrderCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\Controller\RegisterCardInformationNewUserController;
+use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\LostOrForgottenCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommonTest\TestUtils\XMock;
@@ -71,12 +73,29 @@ class SuccessLoginResultRoutingServiceTest extends \PHPUnit_Framework_TestCase
         $this->with2Fa(true);
         $this->withDvsaUser(false);
         $this->with2FaAuthenticationPermission(true);
+        $this->withCardOrdered(true);
+        $this->withSecurityCardActive(true);
         $this->withIdentity($this->identity(true));
 
         /** @var RedirectToRoute $action */
         $action = $this->sut()->route($this->loginResult(), new Request());
 
         $this->assertEquals($action->getRouteName(), RegisteredCardController::ROUTE);
+    }
+
+    public function test_when2FaOn_andUserHasActivatedThenOrderedNewCard_shouldRedirectToAlreadyOrderedCardPage()
+    {
+        $this->with2Fa(true);
+        $this->withDvsaUser(false);
+        $this->with2FaAuthenticationPermission(true);
+        $this->withCardOrdered(true);
+        $this->withSecurityCardActive(false);
+        $this->withIdentity($this->identity(true));
+
+        /** @var RedirectToRoute $action */
+        $action = $this->sut()->route($this->loginResult(), new Request());
+
+        $this->assertEquals($action->getRouteName(), LostOrForgottenCardController::START_ALREADY_ORDERED_ROUTE);
     }
 
     public function test_whenSecondFactorIsNotRequired_andUserHasTradeRole_shouldRedirectToAccountSecurityChangeInfoPage(
@@ -203,5 +222,14 @@ class SuccessLoginResultRoutingServiceTest extends \PHPUnit_Framework_TestCase
         $order = new \stdClass();
         $this->authorisationServiceClient->expects($this->once())->method('getSecurityCardOrders')
             ->willReturn(new Collection(($hasOrdered) ? [$order] : [], SecurityCardOrder::class));
+    }
+
+    private function withSecurityCardActive($isActive)
+    {
+        $securityCard = new SecurityCard((object)['active' => $isActive]);
+        $this->authorisationServiceClient
+            ->expects($this->once())
+            ->method('getSecurityCardForUser')
+            ->willReturn($securityCard);
     }
 }

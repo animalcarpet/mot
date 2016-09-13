@@ -199,6 +199,16 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes'  => [
+                    'already-ordered' => [
+                        'type'    => 'segment',
+                        'options' => [
+                            'route'    => '/already-ordered',
+                            'defaults' => [
+                                'controller' => LostOrForgottenCardController::class,
+                                'action'     => 'startAlreadyOrdered'
+                            ],
+                        ],
+                    ],
                     'question-one' => [
                         'type'    => 'segment',
                         'options' => [

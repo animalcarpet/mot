@@ -25,4 +25,23 @@ public class LostOrForgottenCardTests extends DslTest {
         step("Then I should see the homepage");
         assertThat("The User is on the Home Page", motUI.isLoginSuccessful(), is(true));
     }
+
+    @Test(testName = "2fa", groups = {"BVT"})
+    public void userCanSignInWithSecurityQuestionsAfterOrderingNewSecurityCard() throws IOException {
+        User twoFactorUser = userData.createTester(siteData.createSite().getId());
+
+        step("Given I am a 2FA active user who has ordered a new card");
+        motUI.authentication.securityCard.activate2faCard(twoFactorUser).logOut(twoFactorUser);
+        motUI.authentication.securityCard.signInWithoutSecurityCardAndOrderCard(twoFactorUser);
+
+        step("When I login I should be presented with the Already Ordered card landing page");
+        motUI.logout(twoFactorUser);
+        motUI.loginExpecting2faAlreadyOrderedPage(twoFactorUser);
+
+        step("When I complete the sign in journey");
+        motUI.authentication.securityCard.signInExpectingAlreadyOrderedCardLostAndForgotten(twoFactorUser);
+
+        step("Then I should see the homepage");
+        assertThat("The User is on the Home Page", motUI.isLoginSuccessful(), is(true));
+    }
 }

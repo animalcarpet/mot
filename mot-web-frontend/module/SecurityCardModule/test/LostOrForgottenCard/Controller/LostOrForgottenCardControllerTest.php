@@ -5,6 +5,7 @@ namespace Dvsa\Mot\Frontend\SecurityCardModuleTest\LostOrForgottenCard\Controlle
 use CoreTest\Controller\AbstractLightWebControllerTest;
 use Dashboard\Controller\UserHomeController;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
+use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Service\AlreadyOrderedCardCookieService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
 use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\LostOrForgottenCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Service\LostOrForgottenService;
@@ -44,10 +45,29 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
         LostOrForgottenCardController::CONFIRMATION_ROUTE => false,
     ];
 
+    private $alreadyOrderedStepArray = [
+        LostOrForgottenCardController::START_ALREADY_ORDERED_ROUTE => false,
+        LostOrForgottenCardController::QUESTION_ONE_ROUTE => false,
+        LostOrForgottenCardController::QUESTION_TWO_ROUTE => false,
+        LostOrForgottenCardController::CONFIRMATION_ROUTE => false,
+    ];
+
+    private $questionOneStepArray = [
+        LostOrForgottenCardController::LOGIN_SESSION_ROUTE => true,
+        LostOrForgottenCardController::QUESTION_ONE_ROUTE => false,
+        LostOrForgottenCardController::QUESTION_TWO_ROUTE => false,
+        LostOrForgottenCardController::CONFIRMATION_ROUTE => false,
+    ];
+
     /**
      * @var LostOrForgottenService $lostAndForgottenService
      */
     private $lostAndForgottenService;
+
+    /**
+     * @var AlreadyOrderedCardCookieService $alreadyOrderedCardCookieService
+     */
+    private $alreadyOrderedCardCookieService;
 
     public function setUp()
     {
@@ -57,6 +77,7 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
         $this->identity = XMock::of(Identity::class);
         $this->lostAndForgottenService = XMock::of(LostOrForgottenService::class);
         $this->securityCardService = XMock::of(SecurityCardService::class);
+        $this->alreadyOrderedCardCookieService = XMock::of(AlreadyOrderedCardCookieService::class);
     }
 
     public function testOnDispatch_when2faFeatureToggleIsOff_shouldRedirectToHome()
@@ -133,6 +154,43 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
         $controller->startAction();
     }
 
+    public function testStartAlreadyOrderedActionLoadsStepsIntoSession()
+    {
+        $this
+            ->withHasFeatureToggle(true)
+            ->withTwoFactorRegisteredIdentity(true);
+
+        $controller = $this->buildController();
+
+        $this->lostAndForgottenService
+            ->expects($this->once())
+            ->method('saveSteps')
+            ->with($this->alreadyOrderedStepArray);
+
+        $this->expectNoRedirect();
+        $controller->startAlreadyOrderedAction();
+    }
+
+    public function testStartAlreadyOrderedActionRedirectsToQuestionOneWhenUserHasOrderedCardAndSeenPage()
+    {
+        $this
+            ->withHasFeatureToggle(true)
+            ->withTwoFactorRegisteredIdentity(true);
+
+        $this->isEnteringThroughAlreadyOrdered(false);
+        $this->withCookie(true);
+
+        $this->lostAndForgottenService
+            ->expects($this->once())
+            ->method('saveSteps')
+            ->with($this->questionOneStepArray);
+
+        $controller = $this->buildController();
+
+        $this->expectRedirect(LostOrForgottenCardController::QUESTION_ONE_ROUTE);
+        $controller->startAlreadyOrderedAction();
+    }
+
     public function testQuestionOneActionWithNotAllowedOnStep()
     {
         $this
@@ -163,6 +221,68 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
         $controller->securityQuestionOneAction();
     }
 
+    public function testQuestionOneActionIfEnteringThroughAlreadyOrderedAndHasCookie_viewVariablesCorrect()
+    {
+        $this
+            ->withHasFeatureToggle(true)
+            ->withTwoFactorRegisteredIdentity(true)
+            ->withIsAllowedOnStep(LostOrForgottenCardController::QUESTION_ONE_ROUTE, true)
+            ->withQuestion();
+
+        $this->isEnteringThroughAlreadyOrdered(true);
+
+        $this->request
+            ->setMethod(Request::METHOD_GET);
+
+        $controller = $this->buildController();
+
+        $this->expectNoRedirect();
+        $viewModel = $controller->securityQuestionOneAction();
+        $this->assertSame(LostOrForgottenCardController::START_ALREADY_ORDERED_ROUTE, $viewModel->getVariable('backRoute'));
+        $this->assertSame(LostOrForgottenCardController::BACK_TEXT, $viewModel->getVariable('backText'));
+    }
+
+    public function testQuestionOneActionIfEnteringThroughQuestionOne_viewVariablesCorrect()
+    {
+        $this
+            ->withHasFeatureToggle(true)
+            ->withTwoFactorRegisteredIdentity(true)
+            ->withIsAllowedOnStep(LostOrForgottenCardController::QUESTION_ONE_ROUTE, true)
+            ->withQuestion();
+
+        $this->isEnteringThroughQuestionOne(true);
+
+        $this->request
+            ->setMethod(Request::METHOD_GET);
+
+        $controller = $this->buildController();
+
+        $this->expectNoRedirect();
+        $viewModel = $controller->securityQuestionOneAction();
+        $this->assertSame('logout', $viewModel->getVariable('backRoute'));
+        $this->assertSame(LostOrForgottenCardController::RETURN_TO_SIGN_IN_TEXT, $viewModel->getVariable('backText'));
+    }
+
+    public function testQuestionOneActionIfNotEnteringThroughAlreadyOrdered_viewVariablesCorrect()
+    {
+        $this
+            ->withHasFeatureToggle(true)
+            ->withTwoFactorRegisteredIdentity(true)
+            ->withIsAllowedOnStep(LostOrForgottenCardController::QUESTION_ONE_ROUTE, true)
+            ->withQuestion();
+
+        $this->isEnteringThroughAlreadyOrdered(false);
+
+        $this->request
+            ->setMethod(Request::METHOD_GET);
+
+        $controller = $this->buildController();
+
+        $this->expectNoRedirect();
+        $viewModel = $controller->securityQuestionOneAction();
+        $this->assertSame(LostOrForgottenCardController::START_ROUTE, $viewModel->getVariable('backRoute'));
+        $this->assertSame(LostOrForgottenCardController::BACK_TEXT, $viewModel->getVariable('backText'));
+    }
 
     public function testQuestionTwoActionWithNotAllowedOnStep()
     {
@@ -366,7 +486,8 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
             $this->identity,
             $this->twoFaFeatureToggle,
             $this->lostAndForgottenService,
-            $this->securityCardService
+            $this->securityCardService,
+            $this->alreadyOrderedCardCookieService
         );
 
         $serviceLocator = new ServiceManager();
@@ -436,4 +557,29 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
 
         return $this;
     }
+
+    private function isEnteringThroughAlreadyOrdered($isEnteringThroughAlreadyOrdered)
+    {
+        $this->lostAndForgottenService
+            ->expects($this->once())
+            ->method('isEnteringThroughAlreadyOrdered')
+            ->willReturn($isEnteringThroughAlreadyOrdered);
+    }
+
+    private function isEnteringThroughQuestionOne($isEnteringThroughQuestionOne)
+    {
+        $this->lostAndForgottenService
+            ->expects($this->once())
+            ->method('isEnteringThroughSecurityQuestionOne')
+            ->willReturn($isEnteringThroughQuestionOne);
+    }
+
+    private function withCookie($hasCookie)
+    {
+        $this->alreadyOrderedCardCookieService
+            ->expects($this->once())
+            ->method('hasSeenOrderLandingPage')
+            ->willReturn($hasCookie);
+    }
 }
+

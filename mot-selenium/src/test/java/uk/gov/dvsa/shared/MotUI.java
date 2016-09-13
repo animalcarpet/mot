@@ -12,6 +12,8 @@ import uk.gov.dvsa.ui.interfaces.TwoFactorPromptPage;
 import uk.gov.dvsa.ui.pages.HomePage;
 import uk.gov.dvsa.ui.pages.authentication.securitycard.ActivateYourCardPromptPage;
 import uk.gov.dvsa.ui.pages.authentication.securitycard.OrderYourCardPromptPage;
+import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostForgottenCardAlreadyOrderedPage;
+import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostForgottenCardQuestionOnePage;
 import uk.gov.dvsa.ui.pages.events.EventsHistoryPage;
 import uk.gov.dvsa.ui.pages.events.HistoryType;
 import uk.gov.dvsa.ui.pages.login.LoginPage;
@@ -120,5 +122,17 @@ public class MotUI {
         LoginPage loginPage = pageNavigator.goToLoginPage();
         pageNavigator.getDriver().setUser(user);
         return loginPage.login(user.getUsername(), user.getPassword(), ActivateYourCardPromptPage.class);
+    }
+
+    public LostForgottenCardAlreadyOrderedPage loginExpecting2faAlreadyOrderedPage(User user) throws IOException {
+        LoginPage loginPage = pageNavigator.goToLoginPage();
+        pageNavigator.getDriver().setUser(user);
+        return loginPage.login(user.getUsername(), user.getPassword(), LostForgottenCardAlreadyOrderedPage.class);
+    }
+
+    public LostForgottenCardQuestionOnePage loginExpecting2faSecurityQuestionOnePage(User user) throws IOException {
+        LoginPage loginPage = pageNavigator.goToLoginPage();
+        pageNavigator.getDriver().setUser(user);
+        return loginPage.login(user.getUsername(), user.getPassword(), LostForgottenCardQuestionOnePage.class);
     }
 }
