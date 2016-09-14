@@ -125,9 +125,11 @@ public class MotSurveyTests extends DslTest {
     }
 
     @Test(testName = "WIP", groups = {"Regression", "BL-1531"},
-            description = "Verifies that a user can download a survey report",
-            enabled = false)
+            description = "Verifies that a user can download a survey report")
     public void userCanDownloadReport() throws IOException, URISyntaxException {
+        //make sure that survey report has been generated
+        motApi.generateGdsSurveyReport(schemeUser);
+
         // Given I am on the Survey Reports page as a scheme user
         GenerateSurveyReportsPage generateSurveyReportsPage =
                 pageNavigator.navigateToPage(schemeUser, GenerateSurveyReportsPage.PATH, GenerateSurveyReportsPage.class);

@@ -95,14 +95,6 @@ class SurveyContext implements Context
     }
 
     /**
-     * @Given the next normal MOT test should display the survey
-     */
-    public function createMotTestEntries()
-    {
-        $this->testSupportHelper->getGdsSurveyService()->generateMotTestsToDisplaySurveyOnNextTest();
-    }
-
-    /**
      * @Given a survey token has been generated
      */
     public function generateSurveyToken()

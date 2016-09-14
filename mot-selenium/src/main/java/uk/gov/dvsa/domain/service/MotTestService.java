@@ -18,7 +18,7 @@ import java.util.List;
 
 public class MotTestService extends Service {
     private static final String CREATE_MOT_TEST_PATH = "/testsupport/mottest";
-    private static final String CREATE_100_MOT_TESTS_PATH = "/testsupport/onehundredmottests";
+    private static final String GENERATE_SURVEY_REPORT = "/testsupport/survey/reports/generate";
     private AuthService authService = new AuthService();
 
     protected MotTestService() {
@@ -52,10 +52,9 @@ public class MotTestService extends Service {
         return ServiceResponse.createResponse(response, MotTest.class);
     }
 
-    protected void createOneHundredMotTests(User user) throws IOException {
-        JSONObject requestJSON = createHTTPRequestJSON(user);
+    protected void generateSurveyReport(User user) throws IOException  {
         String token = authService.createSessionTokenForUser(user);
-        Response response = motClient.post(requestJSON, CREATE_100_MOT_TESTS_PATH, token);
+        Response response = motClient.post("", GENERATE_SURVEY_REPORT, token);
 
         ServiceResponse.checkResponseSanity(response);
     }
