@@ -5,7 +5,6 @@ namespace Application;
 use Application\Data\ApiCurrentMotTest;
 use Application\Data\ApiPersonalDetails;
 use Application\Data\ApiUserSiteCount;
-use Application\Factory\ApplicationLoggerFactory;
 use Application\Factory\ApplicationSessionFactory;
 use Application\Factory\ApplicationWideCacheFactory;
 use Application\Factory\AuthAdapterFactory;
@@ -17,16 +16,15 @@ use Application\Factory\Data\BrakeTestResultsResourceFactory;
 use Application\Factory\Data\TesterInProgressTestNumberResourceFactory;
 use Application\Factory\FileTemplateFactory;
 use Application\Factory\LoggedInUserManagerFactory;
-use Application\Factory\LoggerFactory;
 use Application\Factory\MotSessionFactory;
 use Application\Factory\Service\CatalogServiceFactory;
 use Application\Factory\ZendAuthenticationServiceFactory;
 use Application\Listener\ChangeTempPasswordListener;
 use Application\Listener\ClaimAccountListener;
+use Application\Listener\ExpiredPasswordListener;
 use Application\Listener\Factory\ChangeTempPasswordListenerFactory;
 use Application\Listener\Factory\ClaimAccountListenerFactory;
 use Application\Listener\Factory\ExpiredPasswordListenerFactory;
-use Application\Listener\ExpiredPasswordListener;
 use Application\Listener\WebListenerEventsPriorities;
 use Application\Navigation\Breadcrumbs\BreadcrumbsBuilder;
 use Application\Navigation\Breadcrumbs\Factory\BreadcrumbsBuilderFactory;
@@ -52,16 +50,16 @@ use DvsaMotTest\Factory\BrakeTestConfigurationContainerFactory;
 use DvsaMotTest\Factory\LocationSelectContainerFactory;
 use DvsaMotTest\Factory\Model\VehicleSearchResultFactory;
 use DvsaMotTest\Factory\Service\AuthorisedClassesServiceFactory;
-use DvsaMotTest\Factory\Service\SurveyServiceFactory;
-use DvsaMotTest\Factory\Service\VehicleSearchServiceFactory;
+use DvsaMotTest\Factory\Service\CertificatePrintingServiceFactory;
 use DvsaMotTest\Factory\Service\MotTestCertificatesServiceFactory;
+use DvsaMotTest\Factory\Service\VehicleSearchServiceFactory;
 use DvsaMotTest\Mapper\BrakeTestConfigurationClass1And2Mapper;
 use DvsaMotTest\Mapper\BrakeTestConfigurationClass3AndAboveMapper;
 use DvsaMotTest\Model\BrakeTestConfigurationClass1And2Helper;
 use DvsaMotTest\Model\BrakeTestConfigurationClass3AndAboveHelper;
 use DvsaMotTest\Model\VehicleSearchResult;
 use DvsaMotTest\Service\AuthorisedClassesService;
-use DvsaMotTest\Service\SurveyService;
+use DvsaMotTest\Service\CertificatePrintingService;
 use DvsaMotTest\Service\VehicleSearchService;
 use Zend\Authentication\AuthenticationService;
 use Zend\EventManager\EventInterface;
@@ -72,12 +70,7 @@ use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
-use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
-use Zend\Session\Config\SessionConfig;
-use Zend\Session\SessionManager;
-use DvsaMotTest\Service\CertificatePrintingService;
-use DvsaMotTest\Factory\Service\CertificatePrintingServiceFactory;
 
 /**
  * Class Module.
@@ -212,12 +205,11 @@ class Module implements
                 SimpleResolver::class                     => SimpleResolverFactory::class,
                 SiteNameResolver::class                   => SiteNameResolverFactory::class,
                 OrganisationNameBySiteResolver::class     => OrganisationNameBySiteResolverFactory::class,
-                SurveyService::class                      => SurveyServiceFactory::class,
                 'AuthorisationHelper'                     => AuthorisationHelperFactory::class,
                 OrganisationNameBySiteResolver::class     => OrganisationNameBySiteResolverFactory::class,
             ],
             'aliases'    => [
-                AuthenticationService::class => 'ZendAuthenticationService'
+                AuthenticationService::class => 'ZendAuthenticationService',
             ],
             'invokables' => [
                 BrakeTestConfigurationClass1And2Helper::class     => BrakeTestConfigurationClass1And2Helper::class,

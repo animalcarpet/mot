@@ -1,22 +1,22 @@
 <?php
-
 /**
  * This file is part of the DVSA MOT Frontend project.
  *
  * @link https://gitlab.motdev.org.uk/mot/mot
  */
+
 namespace DvsaMotTestTest\Factory\Listener;
 
 use Core\Service\MotEventManager;
 use Dvsa\Mot\Frontend\AuthenticationModule\Event\SuccessfulSignOutEvent;
 use Dvsa\Mot\Frontend\MotTestModule\Listener\MotEvents;
 use Dvsa\Mot\Frontend\MotTestModule\Listener\SatisfactionSurveyListener;
+use Dvsa\Mot\Frontend\MotTestModule\Service\SurveyService;
+use DvsaApplicationLogger\Log\Logger;
 use DvsaCommon\Dto\Common\MotTestDto;
-use DvsaMotTest\Service\SurveyService;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use PHPUnit_Framework_TestCase;
 use Zend\EventManager\Event;
-use Zend\Http\Headers;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Mvc\Router\Http\TreeRouteStack;
 use Zend\Mvc\Router\RouteStackInterface;
@@ -44,30 +44,39 @@ class SatisfactionSurveyListenerTest extends PHPUnit_Framework_TestCase
     private $routerMock;
 
     /**
-     * @var SatisfactionSurveyListener|MockObj
+     * @var Logger
      */
-    private $listener;
+    private $logger;
 
     public function setUp()
     {
-        $this->surveyServiceMock = $this->getMockBuilder(SurveyService::class)
+        $this->surveyServiceMock = $this
+            ->getMockBuilder(SurveyService::class)
             ->disableOriginalConstructor()
             ->setMethods(['surveyShouldDisplay', 'generateToken'])
             ->getMock();
 
-        $this->eventManagerMock = $this->getMockBuilder(MotEventManager::class)
+        $this->eventManagerMock = $this
+            ->getMockBuilder(MotEventManager::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->eventMock = $this->getMockBuilder(Event::class)
+        $this->eventMock = $this
+            ->getMockBuilder(Event::class)
             ->disableOriginalConstructor()
             ->setMethods(['getParam'])
             ->getMock();
 
-        $this->routerMock= $this->getMockBuilder(TreeRouteStack::class)
+        $this->routerMock = $this
+            ->getMockBuilder(TreeRouteStack::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->routerMock->setRoutes(require __DIR__.'/../View/Fixtures/routes.php');
+        $this->routerMock->setRoutes(require __DIR__ . '/../View/Fixtures/routes.php');
+
+        $this->logger = $this
+            ->getMockBuilder(Logger::class)
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 
     public function testTokenIsGeneratedWithSurveyEnabled()
@@ -84,19 +93,23 @@ class SatisfactionSurveyListenerTest extends PHPUnit_Framework_TestCase
             ->setMethods(['getTestType', 'getTester', 'getCode', 'getId'])
             ->getMock();
 
-        $motDetailsMock->expects($this->once())
+        $motDetailsMock
+            ->expects($this->once())
             ->method('getTestType')
             ->willReturnSelf();
 
-        $motDetailsMock->expects($this->once())
+        $motDetailsMock
+            ->expects($this->once())
             ->method('getCode')
             ->willReturn('testCode');
 
-        $motDetailsMock->expects($this->once())
+        $motDetailsMock
+            ->expects($this->once())
             ->method('getTester')
             ->willReturnSelf();
 
-        $motDetailsMock->expects($this->once())
+        $motDetailsMock
+            ->expects($this->any())
             ->method('getId')
             ->willReturn('testId');
 
@@ -112,13 +125,9 @@ class SatisfactionSurveyListenerTest extends PHPUnit_Framework_TestCase
                 $this->returnValueMap($valueMap)
             );
 
-        $this->listener = new SatisfactionSurveyListener(
-            $this->surveyServiceMock,
-            $this->eventManagerMock,
-            $this->routerMock
-        );
-
-        $this->listener->generateSurveyTokenIfEligible($this->eventMock);
+        $listener = new SatisfactionSurveyListener($this->surveyServiceMock, $this->eventManagerMock,
+            $this->routerMock, $this->logger);
+        $listener->generateSurveyTokenIfEligible($this->eventMock);
     }
 
     public function testTokenIsNotGeneratedWhenSurveyShouldNotBeDisplayed()
@@ -144,7 +153,7 @@ class SatisfactionSurveyListenerTest extends PHPUnit_Framework_TestCase
             ->method('getTester')
             ->willReturnSelf();
 
-        $motDetailsMock->expects($this->once())
+        $motDetailsMock->expects($this->any())
             ->method('getId')
             ->willReturn('testId');
 
@@ -152,38 +161,29 @@ class SatisfactionSurveyListenerTest extends PHPUnit_Framework_TestCase
             ->method('getParam')
             ->willReturn($motDetailsMock);
 
-        $this->listener = new SatisfactionSurveyListener(
-            $this->surveyServiceMock,
-            $this->eventManagerMock,
-            $this->routerMock
-        );
-
-        $this->listener->generateSurveyTokenIfEligible($this->eventMock);
+        $this->createSatisfactionSurveyListener()->generateSurveyTokenIfEligible($this->eventMock);
     }
 
     public function testAttachingToEvents()
     {
-        $this->listener = new SatisfactionSurveyListener(
-            $this->surveyServiceMock,
-            $this->eventManagerMock,
-            $this->routerMock
-        );
+        $listener = new SatisfactionSurveyListener($this->surveyServiceMock, $this->eventManagerMock,
+            $this->routerMock, $this->logger);
 
         $this->eventManagerMock
             ->expects($this->at(0))
             ->method('attach')
-            ->with(MotEvents::MOT_TEST_COMPLETED, [$this->listener, 'generateSurveyTokenIfEligible']);
+            ->with(MotEvents::MOT_TEST_COMPLETED, [$listener, 'generateSurveyTokenIfEligible']);
         $this->eventManagerMock
             ->expects($this->at(1))
             ->method('attach')
-            ->with(SuccessfulSignOutEvent::NAME, [$this->listener, 'displaySurveyOnSignOut']);
+            ->with(SuccessfulSignOutEvent::NAME, [$listener, 'displaySurveyOnSignOut']);
 
-        $this->listener->attach();
+        $listener->attach();
     }
 
     public function testDisplaySurveyOnSignOutNullToken()
     {
-        $event = new Event;
+        $event = new Event();
         $response = new Response();
 
         $event->setParams([
@@ -193,20 +193,14 @@ class SatisfactionSurveyListenerTest extends PHPUnit_Framework_TestCase
 
         $this->routerMock->method('assemble')->willReturn('asd');
 
-        $this->listener = new SatisfactionSurveyListener(
-            $this->surveyServiceMock,
-            $this->eventManagerMock,
-            $this->routerMock
-        );
-
-        $this->listener->displaySurveyOnSignOut($event);
+        $this->createSatisfactionSurveyListener()->displaySurveyOnSignOut($event);
 
         $this->assertEquals('303', $event->getParam('response')->getStatusCode());
     }
 
     public function testDisplaySurveyOnSignOutToken()
     {
-        $event = new Event;
+        $event = new Event();
         $response = new Response();
 
         $event->setParams([
@@ -216,14 +210,17 @@ class SatisfactionSurveyListenerTest extends PHPUnit_Framework_TestCase
 
         $this->routerMock->method('assemble')->willReturn('asd');
 
-        $this->listener = new SatisfactionSurveyListener(
-            $this->surveyServiceMock,
-            $this->eventManagerMock,
-            $this->routerMock
-        );
-
-        $this->listener->displaySurveyOnSignOut($event);
+        $this->createSatisfactionSurveyListener()->displaySurveyOnSignOut($event);
 
         $this->assertEquals('303', $event->getParam('response')->getStatusCode());
+    }
+
+    /**
+     * @return SatisfactionSurveyListener
+     */
+    private function createSatisfactionSurveyListener()
+    {
+        return new SatisfactionSurveyListener($this->surveyServiceMock, $this->eventManagerMock, $this->routerMock,
+            $this->logger);
     }
 }

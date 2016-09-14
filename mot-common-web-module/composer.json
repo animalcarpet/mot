@@ -27,6 +27,10 @@
         "phpunit/phpunit-mock-objects": "2.3.*",
         "whatthejeff/nyancat-phpunit-resultprinter": "~1.2"
     },
+    "scripts": {
+      "test": "./vendor/bin/phpunit",
+      "test-coverage": "./vendor/bin/phpunit --coverage-clover build/code-coverage/clover/clover.xml --coverage-html build/code-coverage/html/"
+    },
     "config" : {
       "github-oauth" : {
         "github.com" : "c413da7d946413edba2adadd44beb7a5075a52aa"

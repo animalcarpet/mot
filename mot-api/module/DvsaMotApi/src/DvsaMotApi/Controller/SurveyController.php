@@ -1,16 +1,23 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link http://gitlab.clb.npm/mot/mot
+ */
 
 namespace DvsaMotApi\Controller;
 
 use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
+use DvsaCommonApi\Service\Exception\BadRequestException;
+use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaMotApi\Service\SurveyService;
 use Zend\Json\Json;
 use Zend\View\Model\JsonModel;
 
 /**
- * Class SurveyController.
+ * SurveyController handles GDS Satisfaction Survey related requests such as submitting a survey and generating reports.
  */
 class SurveyController extends AbstractDvsaRestfulController
 {
@@ -27,6 +34,52 @@ class SurveyController extends AbstractDvsaRestfulController
     public function __construct(SurveyService $surveyService)
     {
         $this->surveyService = $surveyService;
+    }
+
+    /**
+     * Flag that a specific Survey has been presented to the user.
+     */
+    public function markSurveyAsPresentedAction()
+    {
+        if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
+            return $this->notFoundAction();
+        }
+
+        $data = Json::decode($this->request->getContent(), Json::TYPE_ARRAY);
+
+        if (!array_key_exists('token', $data)) {
+            throw new BadRequestException('Survey token not provided', BadRequestException::ERROR_CODE_INVALID_SURVEY_TOKEN);
+        }
+
+        $this->surveyService->markSurveyAsPresented($data['token']);
+
+        return ApiResponse::jsonOk();
+    }
+
+    /**
+     * Has a Survey, identified by $token, been presented to the user?
+     */
+    public function hasBeenPresentedAction()
+    {
+        if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
+            return $this->notFoundAction();
+        }
+
+        $data = Json::decode($this->request->getContent(), Json::TYPE_ARRAY);
+
+        if (!array_key_exists('token', $data)) {
+            throw new BadRequestException('Survey token not provided', BadRequestException::ERROR_CODE_INVALID_SURVEY_TOKEN);
+        }
+
+        try {
+            $hasBeenPresented = $this->surveyService->hasBeenPresented($data['token']);
+
+            return ApiResponse::jsonOk($hasBeenPresented);
+        } catch (BadRequestException $e) {
+        } catch (NotFoundException $e) {
+        }
+
+        return ApiResponse::jsonOk(true);
     }
 
     /**
@@ -98,12 +151,12 @@ class SurveyController extends AbstractDvsaRestfulController
         }
 
         $data = Json::decode($this->request->getContent(), Json::TYPE_ARRAY);
-        if (!isset($data['motTestTypeCode']) || !isset($data['testerId'])) {
+        if (!isset($data['motTestId']) || !isset($data['motTestTypeCode']) || !isset($data['testerId'])) {
             return ApiResponse::jsonOk(false);
         }
 
         return ApiResponse::jsonOk(
-            $this->surveyService->shouldDisplaySurvey($data['motTestTypeCode'], $data['testerId'])
+            $this->surveyService->shouldDisplaySurvey($data['motTestId'], $data['motTestTypeCode'], $data['testerId'])
         );
     }
 

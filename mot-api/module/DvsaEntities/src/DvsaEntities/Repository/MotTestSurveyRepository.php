@@ -1,29 +1,37 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaEntities\Repository;
 
 use DvsaCommonApi\Service\Exception\NotFoundException;
-use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestSurvey;
 
 interface MotTestSurveyRepository
 {
     /**
      * @param string $token
+     *
      * @return MotTestSurvey
      */
-    public function findByToken($token);
+    public function findOneByToken($token);
 
     /**
      * @param int|string $userId
-     * @return string
+     *
      * @throws NotFoundException
+     *
+     * @return string
      */
     public function getLastUserSurveyDate($userId);
 
     /**
-     * @return MotTest
+     * Returns the MOT Test ID.
+     *
+     * @return int
      */
-    public function getLastUserSurveyTest();
-
+    public function getLastSurveyMotTestId();
 }

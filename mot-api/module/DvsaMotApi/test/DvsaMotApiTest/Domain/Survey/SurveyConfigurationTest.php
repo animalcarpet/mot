@@ -16,6 +16,7 @@ class SurveyConfigurationTest extends PHPUnit_Framework_TestCase
     {
         $config = [];
         $surveyConfiguration = new SurveyConfiguration($config);
+        $this->assertEquals(SurveyConfiguration::DEFAULT__DB_AUTO_INCREMENT_INCREMENT, $surveyConfiguration->getDbAutoIncrementIncrement());
         $this->assertEquals(SurveyConfiguration::DEFAULT__NUMBER_OF_TESTS_BETWEEN_SURVEYS, $surveyConfiguration->getNumberOfTestsBetweenSurveys());
         $this->assertEquals(SurveyConfiguration::DEFAULT__TIME_BEFORE_SURVEY_REDISPLAYED, $surveyConfiguration->getTimeBeforeSurveyRedisplayed());
     }
@@ -23,11 +24,13 @@ class SurveyConfigurationTest extends PHPUnit_Framework_TestCase
     public function testConfigIsPreserved()
     {
         $config = [
+            SurveyConfiguration::KEY__DB_AUTO_INCREMENT_INCREMENT => 2,
             SurveyConfiguration::KEY__NUMBER_OF_TESTS_BETWEEN_SURVEYS => 1,
             SurveyConfiguration::KEY__TIME_BEFORE_SURVEY_REDISPLAYED => '1 day',
         ];
 
         $surveyConfiguration = new SurveyConfiguration($config);
+        $this->assertEquals(2, $surveyConfiguration->getDbAutoIncrementIncrement());
         $this->assertEquals(1, $surveyConfiguration->getNumberOfTestsBetweenSurveys());
         $this->assertEquals('1 day', $surveyConfiguration->getTimeBeforeSurveyRedisplayed());
     }
@@ -35,10 +38,12 @@ class SurveyConfigurationTest extends PHPUnit_Framework_TestCase
     public function testStringsAreCastedToIntForNumberOfTestsBetweenSurveyEntries()
     {
         $config = [
+            SurveyConfiguration::KEY__DB_AUTO_INCREMENT_INCREMENT => '2',
             SurveyConfiguration::KEY__NUMBER_OF_TESTS_BETWEEN_SURVEYS => '10',
         ];
 
         $surveyConfiguration = new SurveyConfiguration($config);
+        $this->assertEquals(2, $surveyConfiguration->getDbAutoIncrementIncrement());
         $this->assertEquals(10, $surveyConfiguration->getNumberOfTestsBetweenSurveys());
     }
 }

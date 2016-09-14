@@ -5,12 +5,14 @@ namespace DvsaMotTestTest\Controller;
 use Application\Helper\PrgHelper;
 use Core\Service\MotEventManager;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
+use Dvsa\Mot\Frontend\MotTestModule\Service\SurveyService;
 use Dvsa\Mot\Frontend\GoogleAnalyticsModule\ControllerPlugin\DataLayerPlugin;
 use Dvsa\Mot\Frontend\GoogleAnalyticsModule\TagManager\DataLayer;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaCommon\Auth\MotIdentityProvider;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Dto\Common\MotTestDto;
@@ -29,12 +31,10 @@ use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTest\Controller\MotTestController;
-use DvsaMotTest\Service\SurveyService;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Mvc\Controller\Plugin\Forward;
 use Zend\Session\Container;
-use DvsaCommon\Constants\FeatureToggle;
 
 /**
  * Class MotTestControllerTest.
@@ -779,7 +779,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
                 "odometerReading" => [
                     'value'      => 1234,
                     'unit'       => OdometerUnit::KILOMETERS,
-                    'resultType' => OdometerReadingResultType::OK
+                    'resultType' => OdometerReadingResultType::OK,
                 ],
                 'vehicle'         => [
                     'id'           => 1,
@@ -792,7 +792,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
                         ],
                         'model' => [
                             'name' => 'S80 GTX',
-                        ]
+                        ],
                     ],
                     'fuel_type'    => [
                         'id' => 'X',

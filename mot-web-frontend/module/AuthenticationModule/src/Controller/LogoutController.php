@@ -11,7 +11,7 @@ use Core\Controller\AbstractAuthActionController;
 use Core\Service\SessionService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Event\SuccessfulSignOutEvent;
 use Dvsa\Mot\Frontend\AuthenticationModule\Service\WebLogoutService;
-use DvsaMotTest\Service\SurveyService;
+use Dvsa\Mot\Frontend\MotTestModule\Service\SurveyService;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Http\PhpEnvironment\Response;
 

@@ -1,6 +1,9 @@
 <?php
 
+use DvsaCommon\Validator\UsernameValidator;
+use DvsaEntities\Entity\Person;
 use DvsaMotApi\Controller\ContingencyTestController;
+use DvsaMotApi\Controller\DemoTestAssessmentController;
 use DvsaMotApi\Controller\IdentityDataController;
 use DvsaMotApi\Controller\MotTestController;
 use DvsaMotApi\Controller\MotTestOptionsController;
@@ -11,11 +14,8 @@ use DvsaMotApi\Controller\ReasonForRejectionController;
 use DvsaMotApi\Controller\ReplacementCertificateDraftController;
 use DvsaMotApi\Controller\RetestController;
 use DvsaMotApi\Controller\SurveyController;
-use DvsaMotApi\Controller\TestItemCategoryNameController;
 use DvsaMotApi\Controller\TesterMotTestLogController;
-use DvsaEntities\Entity\Person;
-use DvsaCommon\Validator\UsernameValidator;
-use DvsaMotApi\Controller\DemoTestAssessmentController;
+use DvsaMotApi\Controller\TestItemCategoryNameController;
 
 return [
     'controllers' => include 'controllers.config.php',
@@ -622,6 +622,28 @@ return [
                                         'action' => 'validateToken',
                                     ],
                                 ],
+                            ],
+                        ],
+                    ],
+                    'has-been-presented' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/has-been-presented',
+                            'verb' => 'post',
+                            'defaults' => [
+                                'controller' => SurveyController::class,
+                                'action'     => 'hasBeenPresented',
+                            ],
+                        ],
+                    ],
+                    'mark-presented' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => '/mark-presented',
+                            'verb' => 'post',
+                            'defaults' => [
+                                'controller' => SurveyController::class,
+                                'action'     => 'markSurveyAsPresented',
                             ],
                         ],
                     ],

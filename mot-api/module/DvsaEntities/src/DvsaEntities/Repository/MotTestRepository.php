@@ -24,7 +24,6 @@ use DvsaEntities\DqlBuilder\SearchParam\MotTestSearchParam;
 use DvsaEntities\Entity\Make;
 use DvsaEntities\Entity\Model;
 use DvsaEntities\Entity\MotTest;
-use DvsaEntities\Entity\MotTestSurvey;
 use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Site;
@@ -399,22 +398,22 @@ class MotTestRepository extends AbstractMutableRepository
         $minDate = min($dates);
 
         $qb = $this
-            ->createQueryBuilder("t")
-            ->select(["t", "v", "o", "p", "vts"])
-            ->innerJoin("t.tester", "p")
-            ->innerJoin("t.vehicle", "v")
-            ->innerJoin("t.vehicleTestingStation", "vts")
-            ->innerJoin("t.motTestType", "tt")
-            ->innerJoin("t.status", "ts")
-            ->leftJoin("t.odometerReading", "o")
-            ->where("vts.siteNumber = :siteNumber")
-            ->setParameter("siteNumber", $siteNumber)
-            ->orderBy("t.startedDate", "DESC")
-            ->addOrderBy("v.id", "DESC")
-            ->andWhere("t.startedDate >= :minDate")
-            ->andWhere("tt.code IN (:testTypes)")
-            ->setParameter("testTypes", $this->getMotTestHistoryTestTypes())
-            ->setParameter("minDate", $minDate);
+            ->createQueryBuilder('t')
+            ->select(['t', 'v', 'o', 'p', 'vts'])
+            ->innerJoin('t.tester', 'p')
+            ->innerJoin('t.vehicle', 'v')
+            ->innerJoin('t.vehicleTestingStation', 'vts')
+            ->innerJoin('t.motTestType', 'tt')
+            ->innerJoin('t.status', 'ts')
+            ->leftJoin('t.odometerReading', 'o')
+            ->where('vts.siteNumber = :siteNumber')
+            ->setParameter('siteNumber', $siteNumber)
+            ->orderBy('t.startedDate', 'DESC')
+            ->addOrderBy('v.id', 'DESC')
+            ->andWhere('t.startedDate >= :minDate')
+            ->andWhere('tt.code IN (:testTypes)')
+            ->setParameter('testTypes', $this->getMotTestHistoryTestTypes())
+            ->setParameter('minDate', $minDate);
 
         return $qb->getQuery()->getResult();
     }
@@ -673,7 +672,7 @@ class MotTestRepository extends AbstractMutableRepository
             return $result[0]['number'];
         }
 
-        throw new NotFoundException('MOT test with status ' . $status . ' for vehicle ' . $vehicleId);
+        throw new NotFoundException('MOT test with status '.$status.' for vehicle '.$vehicleId);
     }
 
     /**
@@ -906,9 +905,9 @@ class MotTestRepository extends AbstractMutableRepository
         //fiter out organisation_site_statuses
         $whereParams = [];
         foreach (static::$testLogOrganisationSiteStatuses as $key => $val) {
-            $whereParams[] = ':' . $key;
+            $whereParams[] = ':'.$key;
         }
-        $sql .= ' AND oss.code NOT IN (' . implode(', ', $whereParams) . ')';
+        $sql .= ' AND oss.code NOT IN ('.implode(', ', $whereParams).')';
 
         //  ----  prepare statement and bind params   ----
         $em = $this->getEntityManager();
@@ -1045,24 +1044,24 @@ class MotTestRepository extends AbstractMutableRepository
         if (!empty($statuses)) {
             $query = [];
             foreach ($statuses as $key => $item) {
-                $query[] = ':STATUS' . $key;
+                $query[] = ':STATUS'.$key;
 
-                $qb->setParameter('STATUS' . $key, $item);
+                $qb->setParameter('STATUS'.$key, $item);
             }
 
-            $qb->andwhere('ts.name IN (' . implode(',', $query) . ')');
+            $qb->andwhere('ts.name IN ('.implode(',', $query).')');
         }
 
         $testType = $searchParam->getTestType();
         if (!empty($testType)) {
             $query = [];
             foreach ($testType as $key => $item) {
-                $query[] = ':TEST_TYPE' . $key;
+                $query[] = ':TEST_TYPE'.$key;
 
-                $qb->setParameter('TEST_TYPE' . $key, $item);
+                $qb->setParameter('TEST_TYPE'.$key, $item);
             }
 
-            $qb->andwhere('tt.code IN (' . implode(',', $query) . ')');
+            $qb->andwhere('tt.code IN ('.implode(',', $query).')');
         }
 
         if ($searchParam->getDateFrom() || $searchParam->getDateTo()) {
@@ -1092,7 +1091,7 @@ class MotTestRepository extends AbstractMutableRepository
             }
 
             foreach ($orderBy as $order) {
-                $qb->orderBy($order . ' ' . $searchParam->getSortDirection());
+                $qb->orderBy($order.' '.$searchParam->getSortDirection());
             }
         }
 
@@ -1307,31 +1306,47 @@ class MotTestRepository extends AbstractMutableRepository
     }
 
     /**
+     * @param int $lastSurveyMotTestId
+     *
      * @return int
      */
-    public function getNormalMotTestCountSinceLastSurvey()
+    public function getNormalMotTestCountSinceLastSurvey($lastSurveyMotTestId)
     {
         $qb = $this->_em->createQueryBuilder();
-
-        /** @var MotTestSurveyRepository $motTestSurveyRepository */
-        $motTestSurveyRepository = $this->_em->getRepository(MotTestSurvey::class);
-
-        /** @var MotTest $lastSurveyMotTest */
-        $lastSurveyMotTest = $motTestSurveyRepository->getLastUserSurveyTest();
-        $lastTestId = $lastSurveyMotTest->getId();
 
         $qb->select('COUNT(mt.id)')
             ->from(MotTest::class, 'mt')
             ->join('mt.motTestType', 't')
             ->where('t.code = :testTypeCode')
-            ->andWhere('mt.id > :previousTest');
+            ->andWhere('mt.id > :lastSurveyMotTestId');
 
         $qb->setParameter('testTypeCode', MotTestTypeCode::NORMAL_TEST);
-        $qb->setParameter('previousTest', $lastTestId);
+        $qb->setParameter('lastSurveyMotTestId', $lastSurveyMotTestId);
 
         $count = (int) $qb->getQuery()->getSingleScalarResult();
 
         return $count;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLastMotTestId()
+    {
+        $result = $this
+            ->getEntityManager()
+            ->createQueryBuilder()
+            ->select('MAX(mt.id)')
+            ->from($this->getEntityName(), 'mt')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        if (!$result) {
+            return 0;
+        }
+
+        return (int) $result;
     }
 
     /**
@@ -1449,16 +1464,16 @@ class MotTestRepository extends AbstractMutableRepository
         //  --  add test type where clause --
         $whereParams = [];
         foreach (static::$testLogTestTypes as $key => $val) {
-            $whereParams[] = ':' . $key;
+            $whereParams[] = ':'.$key;
         }
-        $sql .= ' AND tt.code IN (' . implode(', ', $whereParams) . ')';
+        $sql .= ' AND tt.code IN ('.implode(', ', $whereParams).')';
 
         //  --  add test status where clause --
         $whereParams = [];
         foreach (static::$testLogTestStatuses as $key => $val) {
-            $whereParams[] = ':' . $key;
+            $whereParams[] = ':'.$key;
         }
-        $sql .= ' AND ts.name IN (' . implode(', ', $whereParams) . ')';
+        $sql .= ' AND ts.name IN ('.implode(', ', $whereParams).')';
 
         return $sql;
     }

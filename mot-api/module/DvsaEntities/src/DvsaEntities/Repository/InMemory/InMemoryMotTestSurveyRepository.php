@@ -34,7 +34,7 @@ class InMemoryMotTestSurveyRepository extends EntityRepository implements MotTes
      *
      * @return MotTestSurvey
      */
-    public function findByToken($token)
+    public function findOneByToken($token)
     {
         foreach ($this->entityStore as $entity) {
             if ($entity->getToken() === $token) {
@@ -71,11 +71,11 @@ class InMemoryMotTestSurveyRepository extends EntityRepository implements MotTes
     }
 
     /**
-     * @return MotTest
+     * @return int
      */
-    public function getLastUserSurveyTest()
+    public function getLastSurveyMotTestId()
     {
-        $this->getLastUserMotTestSurvey()->getMotTest();
+        $this->getLastUserMotTestSurvey()->getMotTest()->getId();
     }
 
     /**

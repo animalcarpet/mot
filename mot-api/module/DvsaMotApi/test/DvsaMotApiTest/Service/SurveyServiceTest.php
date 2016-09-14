@@ -7,8 +7,11 @@
 
 namespace DvsaMotApiTest\Service;
 
+use DateTime;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use DvsaCommon\Enum\MotTestTypeCode;
+use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestSurvey;
@@ -17,39 +20,64 @@ use DvsaEntities\Repository\Doctrine\DoctrineMotTestSurveyRepository;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\MotTestSurveyRepository;
 use DvsaMotApi\Domain\Survey\SurveyConfiguration;
+use DvsaMotApi\Domain\Survey\SurveyToken;
 use DvsaMotApi\Service\S3\FileStorageInterface;
 use DvsaMotApi\Service\S3\S3CsvStore;
 use DvsaMotApi\Service\SurveyService;
+use InvalidArgumentException;
+use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit_Framework_TestCase;
 use Zend\Authentication\AuthenticationService;
 
-class SurveyServiceTest extends \PHPUnit_Framework_TestCase
+class SurveyServiceTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @var EntityManager|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private $entityManagerMock;
+    const TOKEN = '123e4567-e89b-12d3-a456-426655440000';
 
-    /** @var FileStorageInterface|\PHPUnit_Framework_MockObject_MockObject $fileStorageMock */
+    /**
+     * @var EntityManager|PHPUnit_Framework_MockObject_MockObject
+     */
+    private $entityManager;
+
+    /**
+     * @var FileStorageInterface|PHPUnit_Framework_MockObject_MockObject
+     */
     private $fileStorageMock;
 
     private $surveyResults;
 
-    /** @var MotTestRepository|\PHPUnit_Framework_MockObject_MockObject */
-    private $motRepositoryMock;
+    /**
+     * @var MotTestRepository|PHPUnit_Framework_MockObject_MockObject
+     */
+    private $motRepository;
 
-    /** @var MotTestSurveyRepository|\PHPUnit_Framework_MockObject_MockObject */
-    private $motTestSurveyRepositoryMock;
+    /**
+     * @var MotTestSurveyRepository|PHPUnit_Framework_MockObject_MockObject
+     */
+    private $motTestSurveyRepository;
 
-    /** @var AuthenticationService|\PHPUnit_Framework_MockObject_MockObject */
+    /**
+     * @var AuthenticationService|PHPUnit_Framework_MockObject_MockObject
+     */
     private $authenticationServiceMock;
 
-    /** @var MotTest|\PHPUnit_Framework_MockObject_MockObject */
+    /**
+     * @var MotTest|PHPUnit_Framework_MockObject_MockObject
+     */
     private $motTestMock;
 
-    /** @var MotTestSurvey|\PHPUnit_Framework_MockObject_MockObject */
+    /**
+     * @var MotTestSurvey|PHPUnit_Framework_MockObject_MockObject
+     */
     private $motTestSurveyMock;
 
-    /** @var Survey|\PHPUnit_Framework_MockObject_MockObject */
+    /**
+     * @var EntityRepository|PHPUnit_Framework_MockObject_MockObject
+     */
+    private $surveyRepository;
+
+    /**
+     * @var Survey|PHPUnit_Framework_MockObject_MockObject
+     */
     private $surveyMock;
 
     /**
@@ -59,7 +87,7 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->entityManagerMock = $this->getMockBuilder(EntityManager::class)
+        $this->entityManager = $this->getMockBuilder(EntityManager::class)
             ->disableOriginalConstructor()
             ->setMethods(
                 [
@@ -77,39 +105,110 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->surveyConfig = new SurveyConfiguration([
+            'dbAutoIncrementIncrement' => 2,
             'numberOfTestsBetweenSurveys' => 1,
             'timeBeforeSurveyRedisplayed' => '1 second',
         ]);
 
-        $this->motRepositoryMock = $this->getMockBuilder(MotTestRepository::class)
+        $this->motRepository = $this
+            ->getMockBuilder(MotTestRepository::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getNormalMotTestCountSinceLastSurvey'])
+            ->setMethods(['getNormalMotTestCountSinceLastSurvey', 'findOneBy'])
             ->getMock();
 
-        $this->motTestSurveyRepositoryMock = $this->getMockBuilder(DoctrineMotTestSurveyRepository::class)
+        $this->motTestSurveyRepository = $this
+            ->getMockBuilder(DoctrineMotTestSurveyRepository::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getLastUserSurveyDate', 'findByToken', 'findOneBy'])
+            ->setMethods(['getLastSurveyMotTestId', 'getLastUserSurveyDate', 'findOneByToken'])
             ->getMock();
 
-        $this->authenticationServiceMock = $this->getMockBuilder(AuthenticationService::class)
+        $this->authenticationServiceMock = $this
+            ->getMockBuilder(AuthenticationService::class)
             ->disableOriginalConstructor()
             ->setMethods(['getIdentity', 'getUserId'])
             ->getMock();
 
-        $this->motTestMock = $this->getMockBuilder(MotTest::class)
+        $this->motTestMock = $this
+            ->getMockBuilder(MotTest::class)
             ->disableOriginalConstructor()
             ->setMethods(['getTester', 'getId'])
             ->getMock();
 
-        $this->motTestSurveyMock = $this->getMockBuilder(MotTestSurvey::class)
+        $this->motTestSurveyMock = $this
+            ->getMockBuilder(MotTestSurvey::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getSurvey', 'getMotTest'])
+            ->setMethods(['hasBeenPresented', 'hasBeenSubmitted', 'getMotTest'])
             ->getMock();
 
-        $this->surveyMock = $this->getMockBuilder(Survey::class)
+        $this->surveyRepository = $this
+            ->getMockBuilder(EntityRepository::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['findBy'])
+            ->getMock();
+
+        $this->surveyMock = $this
+            ->getMockBuilder(Survey::class)
             ->disableOriginalConstructor()
             ->setMethods(['getRating'])
             ->getMock();
+    }
+
+    public function testMarkSurveyAsBeenPresentedWithMissingTokenThrowsBadRequest()
+    {
+        $this->setExpectedException(BadRequestException::class);
+
+        $surveyService = $this->createSurveyService();
+        $surveyService->markSurveyAsPresented([]);
+    }
+
+    public function testMarkSurveyAsBeenPresentedWithInvalidTokenThrowsBadRequest()
+    {
+        $this->setExpectedException(BadRequestException::class);
+
+        $surveyService = $this->createSurveyService();
+        $surveyService->markSurveyAsPresented('not-a-token');
+    }
+
+    public function testMarkSurveyAsBeenPresentedWithTokenMissingFromDbThrowsException()
+    {
+        $this->setExpectedException(NotFoundException::class);
+
+        $this
+            ->motTestSurveyRepository
+            ->expects($this->once())
+            ->method('findOneByToken')
+            ->willReturn(null);
+
+        $this
+            ->entityManager
+            ->expects($this->once())
+            ->method('getRepository')
+            ->will($this->returnValueMap([
+                [MotTestSurvey::class, $this->motTestSurveyRepository],
+            ]));
+
+        $surveyService = $this->createSurveyService();
+        $surveyService->markSurveyAsPresented(self::TOKEN);
+    }
+
+    public function testMarkSurveyAsBeenPresented()
+    {
+        $this
+            ->motTestSurveyRepository
+            ->expects($this->once())
+            ->method('findOneByToken')
+            ->willReturn($this->motTestSurveyMock);
+
+        $this
+            ->entityManager
+            ->expects($this->once())
+            ->method('getRepository')
+            ->will($this->returnValueMap([
+                [MotTestSurvey::class, $this->motTestSurveyRepository],
+            ]));
+
+        $surveyService = $this->createSurveyService();
+        $surveyService->markSurveyAsPresented(self::TOKEN);
     }
 
     /**
@@ -124,6 +223,7 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
             [3],
             [4],
             [5],
+            [6],
         ];
     }
 
@@ -135,35 +235,35 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
     public function testCreateSurveyResult($satisfactionRating)
     {
         $validSurveyValues = [null, 1, 2, 3, 4, 5];
+        if (!in_array($satisfactionRating, $validSurveyValues)) {
+            $this->setExpectedException(InvalidArgumentException::class);
+        }
 
-        $this->entityManagerMock->expects($this->any())
+        $this
+            ->entityManager->expects($this->any())
             ->method('getRepository')
-            ->will(
-                $this->returnValueMap(
-                    [
-                        [MotTest::class, $this->motRepositoryMock],
-                        [MotTestSurvey::class, $this->motTestSurveyRepositoryMock],
-                    ]
-                )
-            );
+            ->will($this->returnValueMap([
+                [MotTest::class, $this->motRepository],
+                [MotTestSurvey::class, $this->motTestSurveyRepository],
+            ]));
 
-        $this->motTestSurveyRepositoryMock->expects($this->once())
-           ->method('findByToken')
-           ->willReturn($this->motTestSurveyMock);
-
-        $this->motTestSurveyRepositoryMock->expects($this->once())
-            ->method('findOneBy')
+        $this->motTestSurveyRepository
+            ->expects($this->atLeastOnce())
+            ->method('findOneByToken')
             ->willReturn($this->motTestSurveyMock);
 
-        $this->motTestSurveyMock->expects($this->once())
+        $this->motTestSurveyMock
+            ->expects($this->once())
             ->method('getMotTest')
             ->willReturn($this->motTestMock);
 
-        $this->motTestSurveyMock->expects($this->any())
-            ->method('getSurvey')
-            ->willReturn(null);
+        $this->motTestSurveyMock
+            ->expects($this->any())
+            ->method('hasBeenPresented')
+            ->willReturn(false);
 
-        $this->surveyMock->expects($this->any())
+        $this->surveyMock
+            ->expects($this->any())
             ->method('getRating')
             ->willReturn($satisfactionRating);
 
@@ -174,11 +274,105 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
         }
 
         $surveyResult = $service->createSurveyResult([
-            'token' => 'testToken',
+            'token' => self::TOKEN,
             'satisfaction_rating' => $satisfactionRating,
         ]);
 
         $this->assertEquals($satisfactionRating, $surveyResult['satisfaction_rating']);
+    }
+
+    public function testCreateSurveyResultWithMissingMotTestThrowsException()
+    {
+        $this->setExpectedException(NotFoundException::class);
+
+        $satisfactionRating = 1;
+
+        $this
+            ->entityManager->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnValueMap([
+                [MotTest::class, $this->motRepository],
+                [MotTestSurvey::class, $this->motTestSurveyRepository],
+            ]));
+
+        $this->motTestSurveyRepository
+            ->expects($this->atLeastOnce())
+            ->method('findOneByToken')
+            ->willReturn($this->motTestSurveyMock);
+
+        $this->motTestSurveyMock
+            ->expects($this->once())
+            ->method('getMotTest')
+            ->willReturn(null);
+
+        $this->motTestSurveyMock
+            ->expects($this->any())
+            ->method('hasBeenPresented')
+            ->willReturn(false);
+
+        $this->surveyMock
+            ->expects($this->any())
+            ->method('getRating')
+            ->willReturn($satisfactionRating);
+
+        $service = $this->createSurveyService();
+
+        $surveyResult = $service->createSurveyResult([
+            'token' => self::TOKEN,
+            'satisfaction_rating' => $satisfactionRating,
+        ]);
+    }
+
+    public function testCreateSurveyResultWithMissingTokenThrowsException()
+    {
+        $this->setExpectedException(BadRequestException::class);
+
+        $service = $this->createSurveyService();
+
+        $surveyResult = $service->createSurveyResult([
+            'satisfaction_rating' => 1,
+        ]);
+    }
+
+    public function testCreateSurveyResultWithMissingSatisfactionRatingThrowsException()
+    {
+        $this->setExpectedException(BadRequestException::class);
+
+        $service = $this->createSurveyService();
+
+        $surveyResult = $service->createSurveyResult([
+            'token' => self::TOKEN,
+        ]);
+    }
+
+    public function testCreateSurveyResultWithInvalidTokenThrowsException()
+    {
+        $this->setExpectedException(BadRequestException::class);
+
+        $service = $this->createSurveyService();
+
+        $surveyResult = $service->createSurveyResult([
+            'token' => 'not-a-token',
+            'satisfaction_rating' => 1,
+        ]);
+    }
+
+    public function testGetSurveyResultSatisfactionRatingsCount()
+    {
+        $this
+            ->surveyRepository
+            ->expects($this->atLeastOnce())
+            ->method('findBy')
+            ->willReturn(666);
+
+        $this
+            ->entityManager->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnValueMap([
+                [Survey::class, $this->surveyRepository],
+            ]));
+
+        $this->assertEquals(666, $this->createSurveyService()->getSurveyResultSatisfactionRatingsCount(5));
     }
 
     /**
@@ -243,20 +437,26 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testShouldDisplaySurveyWithNoSurveysCompleted()
     {
-        $this->setupQueryBuilderMockMethods(0);
+        $notFoundException = $this->getMockBuilder(NotFoundException::class)->disableOriginalConstructor()->getMock();
 
-        $this->entityManagerMock
+        $this
+            ->motTestSurveyRepository
             ->expects($this->atLeastOnce())
-            ->method('getSingleScalarResult')
-            ->willReturn(0);
+            ->method('getLastSurveyMotTestId')
+            ->willThrowException($notFoundException);
 
-        $this->motRepositoryMock->expects($this->any())
-            ->method('getNormalMotTestCountSinceLastSurvey')
-            ->willReturn(0);
+        $this
+            ->entityManager
+            ->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnValueMap([
+                [MotTestSurvey::class, $this->motTestSurveyRepository],
+            ]));
 
-        $service = $this->createSurveyService();
+        $motTestId = 1;
+        $testerId = 105;
 
-        $result = $service->shouldDisplaySurvey(MotTestTypeCode::NORMAL_TEST, 1);
+        $result = $this->createSurveyService()->shouldDisplaySurvey($motTestId, MotTestTypeCode::NORMAL_TEST, $testerId);
 
         $this->assertTrue($result);
     }
@@ -266,9 +466,46 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testShouldDisplaySurveyWithReTest()
     {
+        $motTestId = 1;
+        $testerId = 105;
+
+        $result = $this->createSurveyService()->shouldDisplaySurvey($motTestId, MotTestTypeCode::RE_TEST, $testerId);
+
+        $this->assertFalse($result);
+    }
+
+    /**
+     * @group display_survey_page
+     */
+    public function testShouldNotDisplaySurveyWithOneCompletedSurveyOutsideExclusionPeriod()
+    {
+        $motTestId = 2;
+        $testerId = 105;
+
+        $this->motTestSurveyRepository
+            ->expects($this->atLeastOnce())
+            ->method('getLastSurveyMotTestId')
+            ->willReturn(1);
+
+        $this->motTestSurveyRepository
+            ->expects($this->never())
+            ->method('getLastUserSurveyDate');
+
+        $this->motRepository
+            ->expects($this->never())
+            ->method('getNormalMotTestCountSinceLastSurvey');
+
+        $this->entityManager
+            ->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnValueMap([
+                [MotTest::class, $this->motRepository],
+                [MotTestSurvey::class, $this->motTestSurveyRepository],
+            ]));
+
         $service = $this->createSurveyService();
 
-        $result = $service->shouldDisplaySurvey(MotTestTypeCode::RE_TEST, 1);
+        $result = $service->shouldDisplaySurvey($motTestId, MotTestTypeCode::NORMAL_TEST, $testerId);
 
         $this->assertFalse($result);
     }
@@ -278,30 +515,35 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testShouldDisplaySurveyWithOneCompletedSurveyOutsideExclusionPeriod()
     {
-        $this->setupQueryBuilderMockMethods(1);
+        $motTestId = 3;
+        $testerId = 105;
 
-        $this->motRepositoryMock->expects($this->atLeastOnce())
+        $this->motTestSurveyRepository
+            ->expects($this->atLeastOnce())
+            ->method('getLastSurveyMotTestId')
+            ->willReturn(1);
+
+        $this->motTestSurveyRepository
+            ->expects($this->atLeastOnce())
+            ->method('getLastUserSurveyDate')
+            ->willReturn((new DateTime('1 year ago'))->format('Y-m-d'));
+
+        $this->motRepository
+            ->expects($this->atLeastOnce())
             ->method('getNormalMotTestCountSinceLastSurvey')
             ->willReturn(1);
 
-        $this->motTestSurveyRepositoryMock->expects($this->atLeastOnce())
-            ->method('getLastUserSurveyDate')
-            ->willReturn('2015-04-20');
-
-        $valueMap = [
-            [MotTest::class, $this->motRepositoryMock],
-            [MotTestSurvey::class, $this->motTestSurveyRepositoryMock],
-        ];
-
-        // repository mocked method
-        $this->entityManagerMock
+        $this->entityManager
             ->expects($this->any())
             ->method('getRepository')
-            ->will($this->returnValueMap($valueMap));
+            ->will($this->returnValueMap([
+                [MotTest::class, $this->motRepository],
+                [MotTestSurvey::class, $this->motTestSurveyRepository],
+            ]));
 
         $service = $this->createSurveyService();
 
-        $result = $service->shouldDisplaySurvey(MotTestTypeCode::NORMAL_TEST, 1);
+        $result = $service->shouldDisplaySurvey($motTestId, MotTestTypeCode::NORMAL_TEST, $testerId);
 
         $this->assertTrue($result);
     }
@@ -311,31 +553,30 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testShouldDisplaySurveyWithOneCompletedSurveyInsideExclusionPeriod()
     {
-        $this->setupQueryBuilderMockMethods(1);
+        $motTestId = 3;
+        $testerId = 105;
 
-        $this->motRepositoryMock->expects($this->atLeastOnce())
-            ->method('getNormalMotTestCountSinceLastSurvey')
+        $this->motTestSurveyRepository
+            ->expects($this->atLeastOnce())
+            ->method('getLastSurveyMotTestId')
             ->willReturn(1);
 
-        $this->motTestSurveyRepositoryMock->expects($this->atLeastOnce())
+        $this->motTestSurveyRepository
+            ->expects($this->any())
             ->method('getLastUserSurveyDate')
             ->willReturn(date('Y-m-d', time()));
 
-        // repository mocked method
-        $valueMap = [
-            [MotTest::class, $this->motRepositoryMock],
-            [MotTestSurvey::class, $this->motTestSurveyRepositoryMock],
-        ];
-
-        // repository mocked method
-        $this->entityManagerMock
+        $this->entityManager
             ->expects($this->any())
             ->method('getRepository')
-            ->will($this->returnValueMap($valueMap));
+            ->will($this->returnValueMap([
+                [MotTest::class, $this->motRepository],
+                [MotTestSurvey::class, $this->motTestSurveyRepository],
+            ]));
 
         $service = $this->createSurveyService();
 
-        $result = $service->shouldDisplaySurvey(MotTestTypeCode::NORMAL_TEST, 1);
+        $result = $service->shouldDisplaySurvey($motTestId, MotTestTypeCode::NORMAL_TEST, $testerId);
 
         $this->assertFalse($result);
     }
@@ -345,78 +586,88 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testShouldDisplaySurveyWithSurveysCompletedByOtherUsers()
     {
-        $this->setupQueryBuilderMockMethods(5);
+        $motTestId = 3;
+        $testerId = 105;
 
-        $this->motRepositoryMock->expects($this->atLeastOnce())
+        $this->motRepository->expects($this->atLeastOnce())
             ->method('getNormalMotTestCountSinceLastSurvey')
             ->willReturn(1);
 
-        $this->motTestSurveyRepositoryMock->expects($this->atLeastOnce())
+        $this->motTestSurveyRepository
+            ->expects($this->atLeastOnce())
             ->method('getLastUserSurveyDate')
             ->willThrowException(new NotFoundException(MotTestSurvey::class));
 
-        // repository mocked method
-        $valueMap = [
-            [MotTest::class, $this->motRepositoryMock],
-            [MotTestSurvey::class, $this->motTestSurveyRepositoryMock],
-        ];
-
-        // repository mocked method
-        $this->entityManagerMock
+        $this->entityManager
             ->expects($this->any())
             ->method('getRepository')
-            ->will($this->returnValueMap($valueMap));
+            ->will($this->returnValueMap([
+                [MotTest::class, $this->motRepository],
+                [MotTestSurvey::class, $this->motTestSurveyRepository],
+            ]));
 
-        $service = $this->createSurveyService();
-
-        $result = $service->shouldDisplaySurvey(MotTestTypeCode::NORMAL_TEST, 1);
+        $result = $this->createSurveyService()->shouldDisplaySurvey($motTestId, MotTestTypeCode::NORMAL_TEST, $testerId);
 
         $this->assertTrue($result);
     }
 
+    public function testCreationOfSessionToken()
+    {
+        $this
+            ->motRepository
+            ->expects($this->once())
+            ->method('findOneBy')
+            ->willReturn($this->motTestMock);
+
+        $this
+            ->entityManager
+            ->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnValueMap([
+                [MotTest::class, $this->motRepository],
+            ]));
+
+        $service = $this->createSurveyService();
+
+        $motTestNumber = 123456789;
+        $token = $service->createSessionToken($motTestNumber);
+        $this->assertInternalType('string', $token);
+        $this->assertTrue(SurveyToken::isValid($token));
+    }
+
     /**
-     * @param $tokenExistsInDb
-     * @param $tokenUsed
-     * @param $shouldValidate
+     * @param bool $tokenExistsInDb
+     * @param bool $tokenUsed
+     * @param bool $validUuid
+     * @param bool $shouldValidate
      *
      * @dataProvider sessionTokenIsValidProvider
      */
-    public function testSessionTokenIsValid($tokenExistsInDb, $tokenUsed, $shouldValidate)
+    public function testSessionTokenIsValid($tokenExistsInDb, $tokenUsed, $validUuid, $shouldValidate)
     {
-        $this->entityManagerMock->expects($this->any())
+        $this
+            ->motTestSurveyMock
+            ->expects($this->any())
+            ->method('hasBeenSubmitted')
+            ->willReturn($tokenUsed);
+
+        $this
+            ->motTestSurveyRepository
+            ->expects($this->any())
+            ->method('findOneByToken')
+            ->willReturn($tokenExistsInDb ? $this->motTestSurveyMock : null);
+
+        $this
+            ->entityManager
+            ->expects($this->any())
             ->method('getRepository')
-            ->will(
-                $this->returnValueMap(
-                    [
-                        [MotTest::class, $this->motRepositoryMock],
-                        [MotTestSurvey::class, $this->motTestSurveyRepositoryMock],
-                    ]
-                )
-            );
-
-        if ($tokenUsed) {
-            $this->motTestSurveyMock->expects($this->any())
-                ->method('getSurvey')
-                ->willReturn($this->surveyMock);
-        } else {
-            $this->motTestSurveyMock->expects($this->any())
-                ->method('getSurvey')
-                ->willReturn(null);
-        }
-
-        if ($tokenExistsInDb) {
-            $this->motTestSurveyRepositoryMock->expects($this->once())
-                ->method('findOneBy')
-                ->willReturn($this->motTestSurveyMock);
-        } else {
-            $this->motTestSurveyRepositoryMock->expects($this->once())
-                ->method('findOneBy')
-                ->willReturn(null);
-        }
+            ->will($this->returnValueMap([
+                [MotTestSurvey::class, $this->motTestSurveyRepository],
+            ]));
 
         $surveyService = $this->createSurveyService();
 
-        $result = $surveyService->sessionTokenIsValid('someToken');
+        $result = $surveyService->sessionTokenIsValid($validUuid ? self::TOKEN : 'not-a-valid-uuid');
 
         $this->assertEquals($result, $shouldValidate);
     }
@@ -427,9 +678,9 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
     public function sessionTokenIsValidProvider()
     {
         return [
-            [true, false, true],
-            [true, true, false],
-            [false, false, false],
+            [true, false, true, true],
+            [true, true, true, false],
+            [true, true, false, false],
         ];
     }
 
@@ -456,61 +707,10 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
     private function createSurveyService()
     {
         return new SurveyService(
-            $this->entityManagerMock,
+            $this->entityManager,
             $this->authenticationServiceMock,
             $this->fileStorageMock,
             $this->surveyConfig
         );
-    }
-
-    /**
-     * @param int $numberOfCompletedTests
-     */
-    private function setupQueryBuilderMockMethods($numberOfCompletedTests)
-    {
-        $this->entityManagerMock
-            ->expects($this->atLeastOnce())
-            ->method('createQueryBuilder')
-            ->willReturn($this->entityManagerMock);
-
-        $this->entityManagerMock
-            ->expects($this->atLeastOnce())
-            ->method('select')
-            ->willReturn($this->entityManagerMock);
-
-        $this->entityManagerMock
-            ->expects($this->atLeastOnce())
-            ->method('from')
-            ->willReturn($this->entityManagerMock);
-
-        $this->entityManagerMock
-            ->expects($this->atLeastOnce())
-            ->method('getQuery')
-            ->willReturn($this->entityManagerMock);
-
-        $this->entityManagerMock
-            ->expects($this->any())
-            ->method('where')
-            ->willReturn($this->entityManagerMock);
-
-        $this->entityManagerMock
-            ->expects($this->any())
-            ->method('orWhere')
-            ->willReturn($this->entityManagerMock);
-
-        $this->entityManagerMock
-            ->expects($this->any())
-            ->method('orderBy')
-            ->willReturn($this->entityManagerMock);
-
-        $this->entityManagerMock
-            ->expects($this->any())
-            ->method('setParameter')
-            ->willReturn($this->entityManagerMock);
-
-        $this->entityManagerMock
-            ->expects($this->any())
-            ->method('getSingleScalarResult')
-            ->willReturn($numberOfCompletedTests);
     }
 }

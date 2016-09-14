@@ -68,7 +68,9 @@
   "scripts": {
     "post-install-cmd": [
       "cd .. && ln -fs mot-api/vendor/dvsa/scripts/jenkins Jenkins_Scripts"
-    ]
+    ],
+    "test": "./vendor/bin/phpunit",
+    "test-coverage": "./vendor/bin/phpunit --coverage-clover build/code-coverage/clover/clover.xml --coverage-html build/code-coverage/html/"
   },
   "repositories": [
     {
