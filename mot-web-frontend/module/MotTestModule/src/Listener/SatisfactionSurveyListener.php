@@ -8,13 +8,19 @@
 namespace Dvsa\Mot\Frontend\MotTestModule\Listener;
 
 use Dvsa\Mot\Frontend\AuthenticationModule\Event\SuccessfulSignOutEvent;
+use Dvsa\Mot\Frontend\MotTestModule\Service\SurveyService;
+use DvsaApplicationLogger\Log\Logger;
 use DvsaCommon\Dto\Common\MotTestDto;
-use DvsaMotTest\Service\SurveyService;
+use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
+use OutOfBoundsException;
 use Zend\EventManager\Event;
 use Zend\EventManager\EventManager;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Mvc\Router\RouteStackInterface as Router;
 
+/**
+ * Listener for GDS Satisfaction Survey related events.
+ */
 class SatisfactionSurveyListener
 {
     /**
@@ -33,15 +39,21 @@ class SatisfactionSurveyListener
     private $router;
 
     /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
      * @param SurveyService $surveyService
      * @param EventManager  $eventManager
      * @param Router        $router
      */
-    public function __construct(SurveyService $surveyService, EventManager $eventManager, Router $router)
+    public function __construct(SurveyService $surveyService, EventManager $eventManager, Router $router, Logger $logger)
     {
         $this->surveyService = $surveyService;
         $this->eventManager = $eventManager;
         $this->router = $router;
+        $this->logger = $logger;
     }
 
     public function attach()
@@ -58,12 +70,19 @@ class SatisfactionSurveyListener
         /** @var MotTestDto $motDetails */
         $motDetails = $event->getParam('motDetails');
 
+        $motTestId = $motDetails->getId();
         $motTestTypeCode = $motDetails->getTestType()->getCode();
         $testerId = $motDetails->getTester()->getId();
 
-        if ($this->surveyService->surveyShouldDisplay($motTestTypeCode, $testerId)) {
-            $motTestNumber = $event->getParam('motTestNumber');
-            $this->surveyService->generateToken($motTestNumber);
+        try {
+            if ($this->surveyService->surveyShouldDisplay($motTestId, $motTestTypeCode, $testerId)) {
+                $motTestNumber = $event->getParam('motTestNumber');
+                $this->surveyService->generateToken($motTestNumber);
+            }
+        } catch (GeneralRestException $e) {
+            $this->logger->err(sprintf('[GDS Satisfaction Survey] %s', $e->getMessage()));
+        } catch (OutOfBoundsException $e) {
+            $this->logger->err(sprintf('[GDS Satisfaction Survey] %s', $e->getMessage()));
         }
     }
 
@@ -78,24 +97,13 @@ class SatisfactionSurveyListener
         $response = $event->getParam('response');
         $response->setStatusCode(303);
 
-        // token is empty array when not present in url
-        if (is_null($token) || (is_array($token) && empty($token))) {
-            $response->getHeaders()->addHeaders(
-                [
-                    'Location' => $this->generateUrlFromRoute('login'),
-                    'Content-Type' => 'application/json',
-                ]
-            );
+        if (!$token) {
+            $response->getHeaders()->addHeaders(['Location' => $this->generateUrlFromRoute('login')]);
 
             return $response;
         }
 
-        $response->getHeaders()->addHeaders(
-            [
-                'Location' => $this->generateUrlFromRoute('survey', ['token' => $token]),
-                'Content-Type' => 'application/json',
-            ]
-        );
+        $response->getHeaders()->addHeaders(['Location' => $this->generateUrlFromRoute('survey', ['token' => $token])]);
 
         return $response;
     }

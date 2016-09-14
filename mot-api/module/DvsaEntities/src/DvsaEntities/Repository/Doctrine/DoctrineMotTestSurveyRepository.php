@@ -22,7 +22,7 @@ class DoctrineMotTestSurveyRepository extends EntityRepository implements MotTes
      *
      * @return MotTestSurvey|null|object
      */
-    public function findByToken($token)
+    public function findOneByToken($token)
     {
         return $this->findOneBy(['token' => $token]);
     }
@@ -58,23 +58,23 @@ class DoctrineMotTestSurveyRepository extends EntityRepository implements MotTes
     /**
      * @throws NotFoundException
      *
-     * @return MotTest
+     * @return int
      */
-    public function getLastUserSurveyTest()
+    public function getLastSurveyMotTestId()
     {
-        $queryBuilder = $this->_em->createQueryBuilder();
+        $result = $this
+            ->getEntityManager()
+            ->createQueryBuilder()
+            ->select('MAX(mts.motTest)')
+            ->from(MotTestSurvey::class, 'mts')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleScalarResult();
 
-        $queryBuilder->select('mt')
-            ->from(MotTestSurvey::class, 'sr')
-            ->join(MotTest::class, 'mt', Join::INNER_JOIN, 'sr.motTest = mt.id')
-            ->orderBy('sr.id', 'DESC');
-
-        $queryResults = $queryBuilder->getQuery()->getResult();
-
-        if (!empty($queryResults)) {
-            return $queryResults[0];
-        } else {
+        if (!$result) {
             throw new NotFoundException(MotTestSurvey::class);
         }
+
+        return (int) $result;
     }
 }

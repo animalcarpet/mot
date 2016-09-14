@@ -65,6 +65,7 @@ mot-behat/bin/templatemap_generator.php
 
 coverage
 *dist.bak
+/mot-api/build
 
 # Selenium
 /mot-selenium/allure-results

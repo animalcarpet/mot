@@ -4,14 +4,14 @@
  *
  * @link https://gitlab.motdev.org.uk/mot/mot
  */
+
 namespace DvsaMotTestTest\Factory\Listener;
 
 use Core\Service\MotEventManager;
-use DvsaFeature\FeatureToggles;
-use DvsaMotTest\Service\SurveyService;
 use Dvsa\Mot\Frontend\MotTestModule\Factory\Listener\SatisfactionSurveyListenerFactory;
-use PHPUnit_Framework_MockObject_MockObject as MockObj;
-use Zend\Mvc\Router\Http\TreeRouteStack;
+use Dvsa\Mot\Frontend\MotTestModule\Service\SurveyService;
+use DvsaApplicationLogger\Log\Logger;
+use DvsaFeature\FeatureToggles;
 use Zend\Mvc\Router\RouteStackInterface;
 use Zend\ServiceManager\ServiceManager;
 
@@ -21,15 +21,18 @@ class SatisfactionSurveyListenerFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $serviceManager = new ServiceManager();
 
-        $motEventManagerMock = $this->getMockBuilder(MotEventManager::class)
+        $motEventManagerMock = $this
+            ->getMockBuilder(MotEventManager::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $surveyServiceMock = $this->getMockBuilder(SurveyService::class)
+        $surveyServiceMock = $this
+            ->getMockBuilder(SurveyService::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $featureToggleMock = $this->getMockBuilder(FeatureToggles::class)
+        $featureToggleMock = $this
+            ->getMockBuilder(FeatureToggles::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -37,10 +40,16 @@ class SatisfactionSurveyListenerFactoryTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $logger = $this
+            ->getMockBuilder(Logger::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $serviceManager->setService(MotEventManager::class, $motEventManagerMock);
         $serviceManager->setService(SurveyService::class, $surveyServiceMock);
         $serviceManager->setService('Feature\FeatureToggles', $featureToggleMock);
         $serviceManager->setService('Router', $routerMock);
+        $serviceManager->setService('Application\Logger', $logger);
 
         $listenerFactory = new SatisfactionSurveyListenerFactory();
         $listenerFactory->createService($serviceManager);

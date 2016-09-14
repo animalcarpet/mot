@@ -9,20 +9,12 @@ namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
-use Ramsey\Uuid\Uuid;
+use DvsaMotApi\Domain\Survey\SurveyToken;
 
 /**
  * Class MotTestSurvey.
  *
- * @ORM\Table(
- *     name="mot_test_survey",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(
- *              name="token_UNIQUE",
- *              columns={"token"}
- *         )
- *      }
- * )
+ * @ORM\Table(name="mot_test_survey", uniqueConstraints={@ORM\UniqueConstraint(name="token_UNIQUE", columns={"token"})})
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\Doctrine\DoctrineMotTestSurveyRepository")
  */
 class MotTestSurvey extends Entity
@@ -44,23 +36,23 @@ class MotTestSurvey extends Entity
      * @var MotTest
      *
      * @ORM\ManyToOne(targetEntity="DvsaEntities\Entity\MotTest", cascade={"persist"})
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="mot_test_id", referencedColumnName="id")
-     * })
+     * @ORM\JoinColumn(name="mot_test_id", referencedColumnName="id")
      */
     private $motTest;
 
     /**
-     * The survey results.
+     * @var bool
      *
-     * @var Survey|null
-     *
-     * @ORM\ManyToOne(targetEntity="DvsaEntities\Entity\Survey", cascade={"persist"})
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="survey_id", referencedColumnName="id")
-     * })
+     * @ORM\Column(name="has_been_presented", type="boolean", nullable=false, options={"default":false})
      */
-    private $survey;
+    private $hasBeenPresented = false;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="has_been_submitted", type="boolean", nullable=false, options={"default":false})
+     */
+    private $hasBeenSubmitted = false;
 
     /**
      * MotTestSurvey constructor.
@@ -69,9 +61,8 @@ class MotTestSurvey extends Entity
      */
     public function __construct(MotTest $motTest)
     {
-        $this->token = Uuid::uuid1()->toString();
+        $this->token = (new SurveyToken())->toString();
         $this->motTest = $motTest;
-        $this->survey = null;
     }
 
     /**
@@ -83,26 +74,42 @@ class MotTestSurvey extends Entity
     }
 
     /**
-     * @return Survey
-     */
-    public function getSurvey()
-    {
-        return $this->survey;
-    }
-
-    /**
-     * @param Survey $survey
-     */
-    public function setSurvey(Survey $survey)
-    {
-        $this->survey = $survey;
-    }
-
-    /**
      * @return string
      */
     public function getToken()
     {
         return $this->token;
+    }
+
+    /**
+     * @param bool $hasBeenPresented
+     */
+    public function setHasBeenPresented($hasBeenPresented)
+    {
+        $this->hasBeenPresented = (bool) $hasBeenPresented;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasBeenPresented()
+    {
+        return (bool) $this->hasBeenPresented;
+    }
+
+    /**
+     * @param bool $hasBeenSubmitted
+     */
+    public function setHasBeenSubmitted($hasBeenSubmitted)
+    {
+        $this->hasBeenSubmitted = (bool) $hasBeenSubmitted;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasBeenSubmitted()
+    {
+        return (bool) $this->hasBeenSubmitted;
     }
 }

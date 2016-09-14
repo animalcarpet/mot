@@ -9,7 +9,8 @@ namespace Dvsa\Mot\Frontend\MotTestModule\Factory\Listener;
 
 use Core\Service\MotEventManager;
 use Dvsa\Mot\Frontend\MotTestModule\Listener\SatisfactionSurveyListener;
-use DvsaMotTest\Service\SurveyService;
+use Dvsa\Mot\Frontend\MotTestModule\Service\SurveyService;
+use DvsaApplicationLogger\Log\Logger;
 use Zend\Mvc\Router\RouteStackInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -32,6 +33,9 @@ class SatisfactionSurveyListenerFactory implements FactoryInterface
         /** @var RouteStackInterface $router */
         $router = $serviceLocator->get('Router');
 
-        return new SatisfactionSurveyListener($surveyService, $eventManager, $router);
+        /** @var Logger $logger */
+        $logger = $serviceLocator->get('Application\Logger');
+
+        return new SatisfactionSurveyListener($surveyService, $eventManager, $router, $logger);
     }
 }

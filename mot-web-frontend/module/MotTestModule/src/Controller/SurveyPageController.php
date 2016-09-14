@@ -84,7 +84,7 @@ class SurveyPageController extends AbstractAuthActionController
         $this->gtmDataLayer([
             'event' => 'submit-GDSsurvey',
             'token' => $token,
-            'title' => 'GDS Survey - Submitted'
+            'title' => 'GDS Survey - Submitted',
         ]);
         $this->layout('layout/layout-govuk.phtml');
 
@@ -158,11 +158,7 @@ class SurveyPageController extends AbstractAuthActionController
                 return $this->notFoundAction();
             }
 
-            $surveyData = [
-                'token'               => $token,
-                'satisfaction_rating' => $satisfactionRating,
-            ];
-
+            $surveyData = ['token' => $token, 'satisfaction_rating' => $satisfactionRating,];
             $this->surveyService->submitSurveyResult($surveyData);
 
             return $this->redirect()->toRoute('survey/thanks', ['token' => $token]);
@@ -176,16 +172,22 @@ class SurveyPageController extends AbstractAuthActionController
             return $this->redirect()->toRoute('login');
         }
 
+        if (true === $this->surveyService->hasBeenPresented($token)) {
+            return $this->redirect()->toRoute('login');
+        }
+
         $this->gtmDataLayer([
             'event' => 'view-GDSsurvey',
             'token' => $token,
-            'title' => 'GDS Survey - Viewed'
+            'title' => 'GDS Survey - Viewed',
         ]);
+
+        $this->surveyService->markSurveyAsPresented($token);
 
         return $this->createViewModel(
             'survey-page/index.phtml', [
                 'token' => $token,
-                'ratings' => new SurveyRating()
+                'ratings' => new SurveyRating(),
         ]);
     }
 

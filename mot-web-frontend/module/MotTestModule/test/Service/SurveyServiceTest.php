@@ -1,22 +1,39 @@
 <?php
+/**
+ * This file is part of the DVSA MOT Frontend project.
+ *
+ * @link http://gitlab.clb.npm/mot/mot
+ */
 
-namespace Dvsa\Mot\Frontend\MotTestModuletest\Service;
+namespace Dvsa\Mot\Frontend\MotTestModuleTest\Service;
 
+use Core\Service\SessionService;
 use Dvsa\Mot\Frontend\MotTestModule\Service\SurveyService;
 use DvsaCommon\HttpRestJson\Client;
+use PHPUnit_Framework_MockObject_MockObject;
 
 class SurveyServiceTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Client|\PHPUnit_Framework_MockObject_MockObject
+     * @var Client|PHPUnit_Framework_MockObject_MockObject
      */
     private $clientMock;
+
+    /**
+     * @var SessionService|PHPUnit_Framework_MockObject_MockObject
+     */
+    private $sessionService;
 
     const API_URL = 'survey';
 
     public function setUp()
     {
         $this->clientMock = $this->getMockBuilder(Client::class)->getMock();
+
+        $this->sessionService = $this
+            ->getMockBuilder(SessionService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 
     /**
@@ -120,7 +137,7 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
         $this->clientMock
             ->expects($this->once())
             ->method('post')
-            ->with(SurveyService::API_URL.SurveyService::TOKEN_VALIDATION_ENDPOINT, ['token' => $token])
+            ->with(SurveyService::TOKEN_VALIDATION_ENDPOINT, ['token' => $token])
             ->willReturn(['data' => 'false']);
 
         $this->assertEquals('false', $service->isTokenValid($token));
@@ -133,7 +150,7 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
         $this->clientMock
             ->expects($this->once())
             ->method('post')
-            ->with(SurveyService::API_URL.SurveyService::TOKEN_VALIDATION_ENDPOINT, ['token' => $token])
+            ->with(SurveyService::TOKEN_VALIDATION_ENDPOINT, ['token' => $token])
             ->willReturn(['data' => 'true']);
 
         $this->assertEquals('true', $service->isTokenValid($token));
@@ -144,6 +161,6 @@ class SurveyServiceTest extends \PHPUnit_Framework_TestCase
      */
     private function createService()
     {
-        return new SurveyService($this->clientMock);
+        return new SurveyService($this->clientMock, $this->sessionService);
     }
 }

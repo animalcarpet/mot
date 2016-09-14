@@ -12,8 +12,10 @@ namespace DvsaMotApi\Domain\Survey;
  */
 class SurveyConfiguration
 {
+    const KEY__DB_AUTO_INCREMENT_INCREMENT = 'dbAutoIncrementIncrement';
     const KEY__NUMBER_OF_TESTS_BETWEEN_SURVEYS = 'numberOfTestsBetweenSurveys';
     const KEY__TIME_BEFORE_SURVEY_REDISPLAYED = 'timeBeforeSurveyRedisplayed';
+    const DEFAULT__DB_AUTO_INCREMENT_INCREMENT = 1;
     const DEFAULT__NUMBER_OF_TESTS_BETWEEN_SURVEYS = 10000;
     const DEFAULT__TIME_BEFORE_SURVEY_REDISPLAYED = '3 months';
 
@@ -28,6 +30,11 @@ class SurveyConfiguration
     private $timeBeforeSurveyRedisplayed;
 
     /**
+     * @var int
+     */
+    private $dbAutoIncrementIncrement;
+
+    /**
      * SurveyConfiguration constructor.
      *
      * @param array $config
@@ -39,6 +46,17 @@ class SurveyConfiguration
 
         $this->timeBeforeSurveyRedisplayed = isset($config[self::KEY__TIME_BEFORE_SURVEY_REDISPLAYED]) ?
             $config[self::KEY__TIME_BEFORE_SURVEY_REDISPLAYED] : self::DEFAULT__TIME_BEFORE_SURVEY_REDISPLAYED;
+
+        $this->dbAutoIncrementIncrement = isset($config[self::KEY__DB_AUTO_INCREMENT_INCREMENT]) ?
+            $config[self::KEY__DB_AUTO_INCREMENT_INCREMENT] : self::DEFAULT__DB_AUTO_INCREMENT_INCREMENT;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDbAutoIncrementIncrement()
+    {
+        return $this->dbAutoIncrementIncrement;
     }
 
     /**
