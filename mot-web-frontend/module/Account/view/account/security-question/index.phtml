@@ -47,7 +47,7 @@ endif;
     <?php echo $prgHelper->getHtml(); ?>
     <fieldset>
         <?php
-        echo $this->partial('partial/gds/form/control-legend', ['id' => 'legendQuestion', 'text' => $legendTitle]);
+        echo $this->partial('partial/gds/form/control-legend', ['id' => 'legendQuestion', 'text' => $legendTitle, 'altLegendClass' => 'visuallyhidden']);
 
         echo $this->partial(
             'partial/gds/form/control-text-group',
