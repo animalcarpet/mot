@@ -52,7 +52,7 @@ public class MotApi extends MotTestService{
         return createTest(user, siteId, vehicle, TestOutcome.PASSED, 123456, DateTime.now());
     }
 
-    public void createOneHundredTests(User user) throws IOException {
-        createOneHundredMotTests(user);
+    public void generateGdsSurveyReport(User user) throws IOException {
+        generateSurveyReport(user);
     }
 }

@@ -234,8 +234,6 @@ Feature: MOT Test
       | class |
       | 4     |
 
-  # this test depends on feature toggle (survey_page)to be true - @wip to be removed after BL-3224
-  @wip
   @survey
   Scenario Outline: Tester submits a survey response
     Given I am logged in as a Tester
@@ -251,8 +249,6 @@ Feature: MOT Test
       | 4        |
       | 5        |
 
-  # this test depends on feature toggle (survey_page) to be true - @wip  to be removed after BL-3224
-  @wip
   @survey
   @survey_report
   Scenario Outline: Scheme user or scheme manager wants to generate a survey report
@@ -265,24 +261,18 @@ Feature: MOT Test
     | 1 | 2 | 3 | 4 | 5 |
     | 1 | 2 | 3 | 4 | 5 |
 
-  # this test depends on feature toggle (survey_page) to be true - @wip to be removed after BL-3224
-  @wip
   @survey
   Scenario: Survey will not be displayed if user has completed survey too recently
     Given A survey has been completed
-    And the next normal MOT test should display the survey
     And I start an MOT Test
     And the Tester adds an Odometer Reading
     When the Tester adds a Class 3-7 Plate Brake Test
     And the Tester Passes the Mot Test
     Then the survey will not be displayed to the user
 
-  # this test depends on feature toggle (survey_page) to be true - @wip to be removed after BL-3224
-  @wip
   @survey
   Scenario: Survey will not be displayed if user completes a non-normal MOT test
     Given A survey has been completed
-    And the next normal MOT test should display the survey
     And I am logged in as a Tester
     And I start a Demo MOT Test
     And the Tester adds an Odometer Reading
@@ -290,8 +280,6 @@ Feature: MOT Test
     And the Tester Passes the Mot Test
     Then the survey will not be displayed to the user
 
-  # this test depends on feature toggle (survey_page) to be true - @wip to be removed after BL-3224
-  @wip
   @survey
   Scenario: Tester should be redirected HTTP status 400 if submitting a survey with an invalid token
     Given I am logged in as a Tester
@@ -299,8 +287,6 @@ Feature: MOT Test
     When I submit a survey response using an invalid token
     Then a BadRequestException will be thrown
 
-  # this test depends on feature toggle (survey_page) to be true - @wip to be removed after BL-3224
-  @wip
   @survey
   Scenario: Tester should be redirected HTTP status 400 if submitting a survey with a null token
     Given I am logged in as a Tester
@@ -308,8 +294,6 @@ Feature: MOT Test
     When I submit a survey response with a null token
     Then a BadRequestException will be thrown
 
-  # this test depends on feature toggle (survey_page) to be true - @wip to be removed after BL-3224
-  @wip
   @survey
   Scenario: Tester should be redirected HTTP status 400 if submitting a survey with a duplicate token
     Given I am logged in as a Tester

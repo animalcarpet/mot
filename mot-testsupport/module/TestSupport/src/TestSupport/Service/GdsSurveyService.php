@@ -31,16 +31,6 @@ class GdsSurveyService
     }
 
     /**
-     * Generate 1 fewer test than is required to display the GDS survey upon completion of a normal MOT test
-     */
-    public function generateMotTestsToDisplaySurveyOnNextTest()
-    {
-        $dbConnection = $this->entityManager->getConnection();
-        $storedProcedure = $dbConnection->prepare("CALL generate_mot_tests_for_survey()");
-        $storedProcedure->execute();
-    }
-
-    /**
      * Return the number of surveys completed
      * @return int
      */

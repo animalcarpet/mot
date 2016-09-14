@@ -53,7 +53,6 @@ return [
             Controller\SiteRoleNominationController::class => Controller\SiteRoleNominationController::class,
             Controller\OrganisationRoleNominationController::class => Controller\OrganisationRoleNominationController::class,
             Controller\AnnualAssessmentCertificateController::class => Controller\AnnualAssessmentCertificateController::class,
-            Controller\OneHundredMotTestsController::class => Controller\OneHundredMotTestsController::class,
             GdsSurveyController::class => GdsSurveyController::class,
         ],
     ],
@@ -200,15 +199,6 @@ return [
                             ],
                             'defaults'    => [
                                 'controller' => Controller\TestSupportMotTestController::class
-                            ],
-                        ],
-                    ],
-                    'oneHundredMotTestsSub'         => [
-                        'type'    => 'Segment',
-                        'options' => [
-                            'route'       => '/onehundredmottests',
-                            'defaults'    => [
-                                'controller' => Controller\OneHundredMotTestsController::class
                             ],
                         ],
                     ],
