@@ -97,11 +97,10 @@ public class ProfilePageViewTests extends DslTest {
     }
 
     @Test(testName = "NewProfile", groups = {"BVT", "BL-448"},
-            description = "Verifies that authorised user can see qualification section on user profile",
-            dataProvider = "anyUserForQualification")
-    public void anyUserCanSeeQualificationsSection(User user) throws IOException, URISyntaxException {
+            description = "Verifies that authorised user can see qualification section on user profile")
+    public void anyUserCanSeeQualificationsSection() throws IOException, URISyntaxException {
 
-        //Given I'm on the Trade user New Profile Details page as authorised DVSA user
+        //Given I'm on the Trade user New Profile Details page as area office user
         motUI.profile.dvsaViewUserProfile(userData.createAreaOfficeOne("Ao1"), tester);
 
         //Then Qualification section should be displayed
@@ -109,11 +108,10 @@ public class ProfilePageViewTests extends DslTest {
     }
 
     @Test(testName = "NewProfile", groups = {"BVT", "BL-448"},
-            description = "Verifies that user can see account security section on own user profile",
-            dataProvider = "anyUserForAccountSecurity")
-    public void anyUserCanSeeAccountSecuritySectionOnOwnProfile(User user) throws IOException, URISyntaxException {
+            description = "Verifies that user can see account security section on own user profile")
+    public void anyUserCanSeeAccountSecuritySectionOnOwnProfile() throws IOException, URISyntaxException {
 
-        //Given I'm on the New Profile Details page as logged user
+        //Given I'm on the New Profile Details page as a tester
         motUI.profile.viewYourProfile(userData.createTester(site.getId()));
 
         //Then Account security section should be displayed
@@ -121,11 +119,10 @@ public class ProfilePageViewTests extends DslTest {
     }
 
     @Test(testName = "NewProfile", groups = {"BVT", "BL-448"},
-            description = "Verifies that csco user can see account management section on other user profile",
-            dataProvider = "anyUserForAccountManagement")
+            description = "Verifies that csco user can see account management section on other user profile")
     public void cscoUserCanSeeAccountManagementSectionOnAnyProfile() throws IOException, URISyntaxException {
 
-        //Given I'm on the New Profile Details page as logged user
+        //Given I'm on the New Profile Details page as a csco
         motUI.profile.dvsaViewUserProfile(
                 userData.createCustomerServiceOfficer(false), userData.createUserAsAreaOfficeTwo("ao2")
         );
