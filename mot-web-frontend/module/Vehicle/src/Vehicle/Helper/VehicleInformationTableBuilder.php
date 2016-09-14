@@ -15,6 +15,7 @@ use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 class VehicleInformationTableBuilder implements AutoWireableInterface
 {
     const EMPTY_VALUE_TEXT = 'Unknown';
+    const COLOUR_NOT_STATED = 'Not Stated';
 
     protected static $unknownCountriesCodes = [
         CountryOfRegistrationCode::NON_EU,
@@ -148,7 +149,7 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
      */
     private function getVehicleColourNames()
     {
-        if (ColoursContainer::NOT_STATED_TEXT == $this->vehicle->getColourSecondary()) {
+        if (self::COLOUR_NOT_STATED == $this->vehicle->getColourSecondary()) {
             return $this->vehicle->getColour();
         } else {
             return $this->vehicle->getColour() . ' and ' . $this->vehicle->getColourSecondary();
