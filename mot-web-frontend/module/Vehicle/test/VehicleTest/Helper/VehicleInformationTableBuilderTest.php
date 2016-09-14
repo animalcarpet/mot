@@ -59,7 +59,7 @@ class VehicleInformationTableBuilderTest extends \PHPUnit_Framework_TestCase
         $vehicle = $this->getVehicle();
         $vehicle->model = null;
         $vehicle->cylinderCapacity = null;
-        $vehicle->colourSecondary = ColoursContainer::NOT_STATED_TEXT;
+        $vehicle->colourSecondary = 'Not Stated';
         $vehicle->weight = null;
 
         $this->tableGenerator->setVehicle(new DvsaVehicle($vehicle));
