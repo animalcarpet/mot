@@ -2,16 +2,8 @@ package uk.gov.dvsa.data;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.joda.time.DateTime;
-
 import uk.gov.dvsa.domain.model.User;
-import uk.gov.dvsa.domain.model.vehicle.Colour;
-import uk.gov.dvsa.domain.model.vehicle.CountryOfRegistration;
-import uk.gov.dvsa.domain.model.vehicle.DefaultVehicleDataRandomizer;
-import uk.gov.dvsa.domain.model.vehicle.DvlaVehicle;
-import uk.gov.dvsa.domain.model.vehicle.FuelTypes;
-import uk.gov.dvsa.domain.model.vehicle.Vehicle;
-import uk.gov.dvsa.domain.model.vehicle.VehicleClass;
-import uk.gov.dvsa.domain.model.vehicle.VehicleDetails;
+import uk.gov.dvsa.domain.model.vehicle.*;
 import uk.gov.dvsa.domain.service.VehicleService;
 
 import java.io.IOException;
@@ -37,6 +29,14 @@ public class VehicleData extends VehicleService {
     }
 
     protected Vehicle createVehicle(User user, VehicleClass vehicleClass, String registration) throws IOException {
+        String makeId, modelId;
+        if (vehicleClass.getId().equals("1") || vehicleClass.getId().equals("2")) {
+            makeId = Integer.toString(VehicleDetails.KAWASAKI_ZRX1100.getMakeId());
+            modelId = Integer.toString(VehicleDetails.KAWASAKI_ZRX1100.getModelId());
+        } else {
+            makeId = Integer.toString(VehicleDetails.MERCEDES_300_D.getMakeId());
+            modelId = Integer.toString(VehicleDetails.MERCEDES_300_D.getModelId());
+        }
         return createVehicle(
                 user,
                 DEFAULT_PIN,
@@ -45,8 +45,8 @@ public class VehicleData extends VehicleService {
                 DEFAULT_CC,
                 getDateMinusYears(5),
                 Integer.toString(FuelTypes.Petrol.getId()),
-                Integer.toString(VehicleDetails.MERCEDES_300_D.getMakeId()),
-                Integer.toString(VehicleDetails.MERCEDES_300_D.getModelId()),
+                makeId,
+                modelId,
                 registration,
                 Colour.Grey.getId().toString(),
                 getRandomVin(),

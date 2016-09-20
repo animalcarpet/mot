@@ -3,10 +3,8 @@ package uk.gov.dvsa.ui.pages.mot;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
-import uk.gov.dvsa.ui.pages.Page;
 
 public class DefectCategoriesPage extends AbstractDefectsBasketPage {
 
@@ -29,13 +27,18 @@ public class DefectCategoriesPage extends AbstractDefectsBasketPage {
         for (String value : defectCategories) {
             listContainer.findElement(By.linkText(value)).click();
         }
-
         return new DefectsPage(driver);
+    }
+
+    public boolean isCategoryDisplayed(String categoryToCheck, String... defectCategories) {
+        for (String value : defectCategories) {
+            listContainer.findElement(By.linkText(value)).click();
+        }
+        return PageInteractionHelper.isElementDisplayed(By.linkText(categoryToCheck));
     }
 
     public AddAManualAdvisoryPage navigateToAddManualAdvisory() {
         addManualAdvisory.click();
-
         return new AddAManualAdvisoryPage(driver);
     }
 }

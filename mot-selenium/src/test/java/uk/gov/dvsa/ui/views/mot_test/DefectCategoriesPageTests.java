@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
+import uk.gov.dvsa.domain.model.vehicle.VehicleClass;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.mot.DefectCategoriesPage;
 import uk.gov.dvsa.ui.pages.mot.DefectsPage;
@@ -13,12 +14,13 @@ import uk.gov.dvsa.ui.pages.mot.TestResultsEntryNewPage;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 
 public class DefectCategoriesPageTests extends DslTest {
     private User tester;
     private Vehicle vehicle;
+    private Vehicle motorcycle;
     private User veUser;
 
     @BeforeMethod(alwaysRun = true)
@@ -26,6 +28,7 @@ public class DefectCategoriesPageTests extends DslTest {
         Site site = siteData.createSite();
         tester = userData.createTester(site.getId());
         vehicle = vehicleData.getNewVehicle(tester);
+        motorcycle = vehicleData.getNewVehicle(tester, VehicleClass.one);
         veUser = userData.createVehicleExaminer("VehicleExaminer", false);
     }
 
@@ -66,5 +69,29 @@ public class DefectCategoriesPageTests extends DslTest {
         // Then I should able to browse through the category tree and see "Item not tested" entries
         defectCategoriesPage.navigateToDefectCategory("Items not tested", "Brake performance");
 
+    }
+
+    @Test(testName = "TestResultEntryImprovements", groups = {"Regression", "BL-3565"})
+    public void testCategoryWithNoRfrNotDisplayedForVehicle() throws IOException, URISyntaxException {
+        // Given I am on the test results entry screen as a tester
+        TestResultsEntryNewPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);
+
+        // When I click the "Add a defect" button
+        DefectCategoriesPage defectCategoriesPage = testResultsEntryPage.clickAddDefectButton();
+
+        // Then I should not be able to see an empty category
+        assertThat(defectCategoriesPage.isCategoryDisplayed("Windows (old)", "Drivers view of the road"), is(false));
+    }
+
+    @Test(testName = "TestResultEntryImprovements", groups = {"Regression", "BL-3565"})
+    public void testCategoryWithNoRfrNotDisplayedForMotorcycle() throws IOException, URISyntaxException {
+        // Given I am on the test results entry screen as a tester
+        TestResultsEntryNewPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, motorcycle);
+
+        // When I click the "Add a defect" button
+        DefectCategoriesPage defectCategoriesPage = testResultsEntryPage.clickAddDefectButton();
+
+        // Then I should not be able to see an empty category
+        assertThat(defectCategoriesPage.isCategoryDisplayed("Headlamp aim (old)", "Motorcycle lighting and signalling"), is(false));
     }
 }
