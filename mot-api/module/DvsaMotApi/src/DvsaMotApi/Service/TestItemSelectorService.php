@@ -27,8 +27,8 @@ class TestItemSelectorService extends AbstractService
     const SEARCH_MAX_COUNT = 10;
     const RECURSION_MAX_LEVEL = 100;
 
-    const VE_ROLE_FLAG = "v";
-    const TESTER_ROLE_FLAG = "t";
+    const VE_ROLE_FLAG = 'v';
+    const TESTER_ROLE_FLAG = 't';
 
     protected $objectHydrator;
     protected $authService;
@@ -104,7 +104,7 @@ class TestItemSelectorService extends AbstractService
         $json = [];
         foreach ($array as $key => $value) {
             $json [] = [
-                'name'  => $key,
+                'name' => $key,
                 'items' => $value,
             ];
         }
@@ -130,10 +130,10 @@ class TestItemSelectorService extends AbstractService
         $reasonsForRejection = []
     ) {
         return [
-            'testItemSelector'        => $this->extractTestItem($testItemSelector),
+            'testItemSelector' => $this->extractTestItem($testItemSelector),
             'parentTestItemSelectors' => $this->extractTestItemSelectors($parentTestItemSelectors),
-            'testItemSelectors'       => $this->extractTestItemSelectors($testItemSelectors),
-            'reasonsForRejection'     => $this->extractReasonsForRejection($reasonsForRejection),
+            'testItemSelectors' => $this->extractTestItemSelectors($testItemSelectors),
+            'reasonsForRejection' => $this->extractReasonsForRejection($reasonsForRejection),
         ];
     }
 
@@ -145,10 +145,10 @@ class TestItemSelectorService extends AbstractService
     protected function extractTestItem($testItem)
     {
         if (!$this->isCurrentRfrApplicableToRole($testItem)) {
-            return null;
+            return;
         }
 
-        $result =  $this->objectHydrator->extract($testItem);
+        $result = $this->objectHydrator->extract($testItem);
         foreach ($testItem->getDescriptions() as $description) {
             if ($description->getLanguage()->getCode() === LanguageTypeCode::ENGLISH) {
                 $result['name'] = $description->getName();
@@ -245,12 +245,8 @@ class TestItemSelectorService extends AbstractService
 
         if ($this->featureToggles->isEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)) {
             foreach ($testItemSelectors as $key => $value) {
-                if (empty($this->testItemCategoryRepository->findByParentIdAndVehicleClass(
-                        $value->getId(), $vehicleClass))
-                    &&
-                    empty($this->rfrRepository->findByIdAndVehicleClassForUserRole(
-                        $value->getId(), $vehicleClass, $role))
-                ) {
+                if ($this->isOldSelector($value) ||
+                    $this->hasNoTestItemSelectorsOrReasonsForRejection($value, $vehicleClass, $role)) {
                     unset($testItemSelectors[$key]);
                 }
             }
@@ -281,9 +277,9 @@ class TestItemSelectorService extends AbstractService
                 $currentTestItemSelector->getParentTestItemSelectorId()
             );
             $parents[] = $currentTestItemSelector;
-            $iterations++;
+            ++$iterations;
             if ($iterations > self::RECURSION_MAX_LEVEL) {
-                throw new \LogicException("Recursion level exceeded: " . self::RECURSION_MAX_LEVEL);
+                throw new \LogicException('Recursion level exceeded: '.self::RECURSION_MAX_LEVEL);
             }
         }
 
@@ -293,8 +289,8 @@ class TestItemSelectorService extends AbstractService
     /**
      * @param $vehicleClass
      * @param string $searchString
-     * @param int $start
-     * @param int $end
+     * @param int    $start
+     * @param int    $end
      *
      * @return array
      */
@@ -325,8 +321,8 @@ class TestItemSelectorService extends AbstractService
             }
 
             return [
-                'searchDetails'        => [
-                    'count'   => count($reasonsForRejection),
+                'searchDetails' => [
+                    'count' => count($reasonsForRejection),
                     'hasMore' => $hasMore,
                 ],
                 'reasonsForRejection' => $this->extractReasonsForRejection($reasonsForRejection),
@@ -375,7 +371,7 @@ class TestItemSelectorService extends AbstractService
     public function getReasonForRejectionById($rfrId)
     {
         if ($this->shouldHideRfr($rfrId)) {
-            return null;
+            return;
         }
 
         $reasonForRejection = $this->entityManager->getRepository(ReasonForRejection::class)
@@ -423,5 +419,32 @@ class TestItemSelectorService extends AbstractService
     private function shouldHideRfr($rfrId)
     {
         return in_array($rfrId, $this->disabledRfrs);
+    }
+
+    /**
+     * @param TestItemSelector $selector
+     * @param $vehicleClass
+     * @param $role
+     *
+     * @return bool
+     */
+    private function hasNoTestItemSelectorsOrReasonsForRejection(TestItemSelector $selector, $vehicleClass, $role)
+    {
+        return empty($this->testItemCategoryRepository->findByParentIdAndVehicleClass(
+                $selector->getId(), $vehicleClass))
+            &&
+            empty($this->rfrRepository->findByIdAndVehicleClassForUserRole(
+                $selector->getId(), $vehicleClass, $role))
+        ;
+    }
+
+    /**
+     * @param TestItemSelector $selector
+     * 
+     * @return bool
+     */
+    private function isOldSelector(TestItemSelector $selector)
+    {
+        return strpos($selector->getDescriptions()->getValues()[0]->getName(), '(old)') !== false;
     }
 }
