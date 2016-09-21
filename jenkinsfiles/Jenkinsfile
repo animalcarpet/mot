@@ -224,23 +224,18 @@ wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
 
     stage 'Build Puppet/Hiera RPMs'
     sh 'set +x; echo -e "\033[34mBuild Puppet/Hiera RPMs\033[0m"'
-    withEnv(['PATH=$PATH:~/.rbenv/shims']) {
+    withEnv(['PATH=$PATH:/opt/ruby22/bin/']) {
         dir('hieradata') {
             sh "echo \"  :datadir:\" >> code/hiera.yaml"
             sh """
-            ~/.rbenv/bin/rbenv global 2.1.2
-            gem install --no-ri --no-rdoc bundler rake puppet-lint puppet hiera
+            sudo gem install -f --no-ri --no-rdoc bundler rake puppet-lint puppet hiera
             bash -x build ${FB}
             """
         }
         dir('puppet-code') {
-            sh """
-            ~/.rbenv/bin/rbenv global 2.1.2
-            bash -x build ${FB}
-            """
+            sh "bash -x build ${FB}"
         }
     }
-
     stage 'Upload RPMs to YUM repo'
     sh 'set +x; echo -e "\033[34mUpload RPMs to YUM repo\033[0m"'
     sh '''
