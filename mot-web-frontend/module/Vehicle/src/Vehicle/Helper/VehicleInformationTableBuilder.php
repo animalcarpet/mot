@@ -64,7 +64,6 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
         $table = new GdsTable();
         $this->addRowToTable($table, 'Make and model', $this->getMakeAndModel());
         $this->addRowToTable($table, 'Engine', $this->getEngineInfo());
-        $this->addRowToTable($table, 'Transmission', $this->vehicle->getTransmissionType());
         $this->addRowToTable($table, 'Colour', $this->getVehicleColourNames());
         $this->addRowToTable($table, 'Brake test weight', $this->getVehicleBrakeWeight());
         $this->addRowToTable($table, 'MOT test class', $this->vehicle->getVehicleClass());
