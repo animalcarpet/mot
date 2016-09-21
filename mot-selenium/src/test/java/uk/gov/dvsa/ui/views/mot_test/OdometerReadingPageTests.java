@@ -53,7 +53,7 @@ public class OdometerReadingPageTests extends DslTest {
         testResultsEntryPage = odometerReadingPage.addOdometerReading(1000, OdometerUnit.KILOMETRES, true);
 
         // Then I should navigate back to the MOT Test Result page and see a success message
-        assertThat(testResultsEntryPage.getOdometerReading(), Is.is("1,000 km"));
+        assert(testResultsEntryPage.getOdometerReading().contains("1,000 km"));
     }
 
     @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1947"})
