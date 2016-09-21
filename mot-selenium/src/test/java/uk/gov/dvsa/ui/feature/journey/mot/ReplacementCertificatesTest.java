@@ -42,7 +42,7 @@ public class ReplacementCertificatesTest extends DslTest {
         assertThat(motUI.certificate.isReprintButtonDisplayed(), is(true));
     }
 
-    @Test(testName = "OldRFRTest", groups = {"BVT"})
+    @Test(groups = {"BVT"})
     public void editedAndIssuedByDvsaUser() throws IOException, URISyntaxException {
 
         //Given I have a PASSED Mot

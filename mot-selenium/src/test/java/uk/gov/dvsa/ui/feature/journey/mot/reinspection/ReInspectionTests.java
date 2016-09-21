@@ -37,7 +37,7 @@ public class ReInspectionTests extends DslTest {
         tester = userData.createTester(testSite.getId());
     }
 
-    @Test(testName = "OldRFRTest", groups = {"BVT"}, description = "VM-9858, Journey 5")
+    @Test(groups = {"BVT"}, description = "VM-9858, Journey 5")
     public void veConductsVehicleReInspectionAndRecordsTheResultOfTheDvsaTest() throws IOException {
 
         //Given a vehicle failed Mot

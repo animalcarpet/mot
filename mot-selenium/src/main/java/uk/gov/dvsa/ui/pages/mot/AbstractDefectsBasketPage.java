@@ -40,4 +40,8 @@ public abstract class AbstractDefectsBasketPage extends AbstractReasonsForReject
         this.toggleShowDefectBasketLink();
         return super.isDefectDangerous(defect);
     }
+
+    public String getValidationSummaryText() {
+        return validationSummary.getText();
+    }
 }

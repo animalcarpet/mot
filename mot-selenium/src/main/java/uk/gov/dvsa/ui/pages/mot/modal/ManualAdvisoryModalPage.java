@@ -35,6 +35,8 @@ public class ManualAdvisoryModalPage extends Page {
 
     private static final String PAGE_TITLE = "Manual Advisory";
 
+    private static final String PROFANITY_MESSAGE = "Profanity has been detected in the description of RFR";
+
     public ManualAdvisoryModalPage(MotAppDriver driver) {
         super(driver);
         selfVerify();
@@ -69,5 +71,9 @@ public class ManualAdvisoryModalPage extends Page {
 
     public String getValidationMessage() {
         return driver.findElement(errorMessages).getText();
+    }
+
+    public boolean isProfanityWarningDisplayed() {
+        return driver.findElement(errorMessages).getText().contains(PROFANITY_MESSAGE);
     }
 }

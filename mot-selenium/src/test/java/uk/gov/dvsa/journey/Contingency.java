@@ -79,10 +79,15 @@ public class Contingency {
         ConfirmVehicleRetestPage retestPage =
                 vehicleSearchPage.searchVehicle(vehicle).selectVehicle(ConfirmVehicleRetestPage.class);
 
-        ReTestResultsEntryPage resultsEntryPage = retestPage.startContigencyRetest();
-        resultsEntryPage.completeTestDetailsWithPassValues();
-
-        ReTestSummaryPage summaryPage = resultsEntryPage.clickReviewTestButton();
+        ReTestSummaryPage summaryPage;
+        if (ConfigHelper.isTestResultEntryImprovementsEnabled()) {
+            TestResultsEntryNewPage resultsEntryPage = retestPage.startContigencyRetest(TestResultsEntryNewPage.class);
+            resultsEntryPage.completeTestDetailsWithPassValues();
+            summaryPage = resultsEntryPage.clickReviewTestButton(true);
+        } else {
+            ReTestResultsEntryPage resultsEntryPage = retestPage.startContigencyRetest(ReTestResultsEntryPage.class);
+            summaryPage = resultsEntryPage.completeTestDetailsWithPassValues().clickReviewTestButton();
+        }
 
         if (summaryPage.isDeclarationTextDisplayed()) {
             assertThat(summaryPage.getDeclarationText(), equalToIgnoringCase(DECLARATION_STATEMENT));

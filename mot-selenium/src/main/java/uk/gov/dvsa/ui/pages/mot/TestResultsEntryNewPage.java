@@ -7,12 +7,15 @@ import uk.gov.dvsa.domain.model.mot.BrakeTestType;
 import uk.gov.dvsa.domain.model.mot.CancelTestReason;
 import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.domain.model.mot.OdometerUnit;
+import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
+import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.PageLocator;
 import uk.gov.dvsa.ui.pages.braketest.BrakeTestConfigurationPage;
 import uk.gov.dvsa.ui.pages.braketest.BrakeTestResultsPage;
+import uk.gov.dvsa.ui.pages.mot.retest.ReTestSummaryPage;
 
 public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage implements
     TestResultsEntryPageInterface, TestResultsEntryGroupAPageInterface {
@@ -78,8 +81,16 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
     }
 
     public TestSummaryPage clickReviewTestButton() {
+        return clickReviewTestButton(false);
+    }
+
+    public <T extends Page> T clickReviewTestButton(boolean isRetest) {
         reviewTest.click();
-        return new TestSummaryPage(driver);
+
+        if (isRetest) {
+            return (T) new ReTestSummaryPage(driver);
+        }
+        return (T) new TestSummaryPage(driver);
     }
 
     public boolean searchForDefectIsDisplayed() {
@@ -225,6 +236,11 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
         ReasonToCancelTestPage cancelTestPage = new ReasonToCancelTestPage(driver);
         cancelTestPage.enterReason(reason);
         cancelTestPage.clickConfirmAndCancelTest();
+    }
+
+    public ReasonToCancelTestPage clickCancelTest(){
+        cancelTest.click();
+        return new ReasonToCancelTestPage(driver);
     }
 
     private TestResultsEntryNewPage addDefaultBrakeTestValues(String outcome) {

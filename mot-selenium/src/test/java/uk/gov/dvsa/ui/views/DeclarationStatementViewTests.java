@@ -31,7 +31,7 @@ public class DeclarationStatementViewTests extends DslTest {
         vehicle = vehicleData.getNewVehicle(tester);
     }
 
-    @Test (testName = "OldRFRTest", groups = {"BVT"})
+    @Test (groups = {"BVT"})
     public void displayStatementAtTestSummaryPage() throws IOException, URISyntaxException {
 
         //Given I complete a normal test as a tester
@@ -57,7 +57,7 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.normalTest.isDeclarationStatementFor2FaDisplayed(), is(true));
     }
 
-    @Test (testName = "OldRFRTest", groups = {"BVT"})
+    @Test (groups = {"BVT"})
     public void displayStatementAtReTestSummaryPage() throws IOException, URISyntaxException {
 
         //Given I have a vehicle with a failed MOT test
@@ -71,7 +71,7 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.retest.isDeclarationStatementDisplayed(), is(true));
     }
 
-    @Test (testName = "OldRFRTest", groups = {"BVT"})
+    @Test (groups = {"BVT"})
     public void displayStatementAtChangeVehicleDetailsSummary() throws IOException, URISyntaxException {
         User nonTwoFactorTester = userData.createTester(site.getId());
 
@@ -101,7 +101,7 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.normalTest.isDeclarationStatementFor2FaDisplayed(), is(true));
     }
 
-    @Test (testName = "OldRFRTest", groups = {"Regression"})
+    @Test (groups = {"Regression"})
     public void statementShouldNotBeDisplayedForTrainingTest() throws IOException, URISyntaxException {
 
         //Given I am on the review Page of training test
@@ -111,7 +111,7 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(false));
     }
 
-    @Test (testName = "OldRFRTest", groups = {"BVT"})
+    @Test (groups = {"BVT"})
     public void displayStatementWhenAbortingTest() throws IOException, URISyntaxException {
 
         //Given I have an in progress Mot Test
@@ -149,7 +149,7 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(false));
     }
 
-    @Test (testName = "OldRFRTest", groups = {"Regression"})
+    @Test (groups = {"Regression"})
     public void displayStatementAtContingencySummaryPage() throws IOException, URISyntaxException {
 
         //Given I start a contingency test

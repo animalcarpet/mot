@@ -76,12 +76,15 @@ public class PageNavigator {
                 dvlaVehicle.getRegistration(), dvlaVehicle.getVin(), true)).selectVehicle(StartTestConfirmationPage.class);
     }
 
-    public TestResultsEntryPage gotoTestResultsEntryPage(User user, Vehicle vehicle) throws URISyntaxException, IOException {
+    public TestResultsEntryGroupAPageInterface gotoTestResultsEntryPage(User user, Vehicle vehicle) throws URISyntaxException, IOException {
         injectOpenAmCookieAndNavigateToPath(user, VehicleSearchPage.PATH);
 
         navigateToPath(PageLocator.getVehicleSearchPage(driver).searchVehicle(vehicle).selectVehicle(
                 StartTestConfirmationPage.class).clickStartMotTest().getMotTestPath());
 
+        if (ConfigHelper.isTestResultEntryImprovementsEnabled()) {
+            return new TestResultsEntryNewPage(driver);
+        }
         return new TestResultsEntryPage(driver);
     }
 
@@ -155,12 +158,15 @@ public class PageNavigator {
         return new CreateAnAccountPage(driver);
     }
 
-    public TestResultsEntryPage gotoTrainingTestResultsEntryPage(User user, Vehicle vehicle) throws IOException, URISyntaxException {
+    public TestResultsEntryGroupAPageInterface gotoTrainingTestResultsEntryPage(User user, Vehicle vehicle) throws IOException, URISyntaxException {
         injectOpenAmCookieAndNavigateToPath(user, VehicleSearchPage.TRAINING_TEST_PATH);
 
         navigateToPath(new VehicleSearchPage(driver).searchVehicle(vehicle).selectVehicle(
                 StartTestConfirmationPage.class).clickStartMotTest().getMotTestPath());
 
+        if (ConfigHelper.isTestResultEntryImprovementsEnabled()) {
+            return new TestResultsEntryNewPage(driver);
+        }
         return new TestResultsEntryPage(driver);
     }
 

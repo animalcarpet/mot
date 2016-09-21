@@ -26,10 +26,6 @@ public class FeatureToggleAnnotationTransformer implements IAnnotationTransforme
             iTestAnnotation.setEnabled(ConfigHelper.isTestResultEntryImprovementsEnabled());
         }
 
-        if (iTestAnnotation.getTestName().equals("OldRFRTest")) {
-            iTestAnnotation.setEnabled(!ConfigHelper.isTestResultEntryImprovementsEnabled());
-        }
-
         if(iTestAnnotation.getTestName().equals("2fa")){
             iTestAnnotation.setEnabled(ConfigHelper.is2faEnabled());
         }
