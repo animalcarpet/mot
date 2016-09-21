@@ -18,6 +18,7 @@ use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Dto\Vehicle\VehicleCreatedDto;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\WeightSourceCode;
+use DvsaCommon\Model\FuelTypeAndCylinderCapacity;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaEntities\Entity\DvlaVehicle;
@@ -392,7 +393,6 @@ class VehicleService
             ->setMakeInFull($dvlaVehicle->getMakeInFull())
             ->setBodyTypeId($bodyType->getId())
             ->setFuelTypeId($fuelTypeId)
-            ->setCylinderCapacity($dvlaVehicle->getCylinderCapacity())
             ->setVehicleClassId($vehicleClass->getId())
             ->setColourId($colourId)
             ->setSecondaryColourId($secondaryColourId)
@@ -400,6 +400,10 @@ class VehicleService
             ->setFirstUsedDate($dvlaVehicle->getFirstUsedDate())
             ->setFirstRegistrationDate($dvlaVehicle->getFirstRegistrationDate())
             ->setIsNewAtFirstReg((bool)$dvlaVehicle->isVehicleNewAtFirstRegistration());
+
+        if (FuelTypeAndCylinderCapacity::isCylinderCapacityCompulsoryForFuelType($fuelTypeId)) {
+            $dvlaVehicleRequest->setCylinderCapacity($dvlaVehicle->getCylinderCapacity());
+        }
 
         if (!is_null($dvlaVehicle->getVin())) {
             $dvlaVehicleRequest->setVin($dvlaVehicle->getVin());
