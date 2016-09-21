@@ -228,7 +228,7 @@ wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
         dir('hieradata') {
             sh "echo \"  :datadir:\" >> code/hiera.yaml"
             sh """
-            sudo gem install -f --no-ri --no-rdoc bundler rake puppet-lint puppet hiera
+            sudo /opt/ruby22/bin/gem install -f --no-ri --no-rdoc bundler rake puppet-lint puppet hiera
             bash -x build ${FB}
             """
         }
