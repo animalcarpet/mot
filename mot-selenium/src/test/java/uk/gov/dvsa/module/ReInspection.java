@@ -54,7 +54,7 @@ public class ReInspection {
         enforcementTestSummaryPage.selectInspectionType(appealType);
         enforcementTestSummaryPage.enterComplaintReference(RandomDataGenerator.generateRandomString());
 
-        TestResultsEntryReInspectionPage reInspectionPage = enforcementTestSummaryPage.startReInspection();
+        TestResultsEntryGroupAPageInterface reInspectionPage = enforcementTestSummaryPage.startReInspection();
         reInspectionPage.completeTestDetailsWithPassValues();
 
         return reInspectionPage.clickReviewTestButton();

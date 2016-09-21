@@ -42,10 +42,10 @@ public class ConductMotTests extends DslTest {
     }
 
 
-    @Test(testName = "OldRFRTest", groups = {"BVT"})
+    @Test(groups = {"BVT"})
     public void passTestSuccessfullyWithNoRFR() throws IOException, URISyntaxException {
         //Given I am on the Test Results Entry Page
-        TestResultsEntryPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester,vehicle);
+        TestResultsEntryGroupAPageInterface testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester,vehicle);
 
         //When I complete all test details with passing data
         testResultsEntryPage.completeTestDetailsWithPassValues();
@@ -118,11 +118,11 @@ public class ConductMotTests extends DslTest {
         testResultsEntryPage.clickReviewTestButton().finishTest();
     }
 
-    @Test(testName = "OldRFRTest", groups = {"BVT"} )
+    @Test(groups = {"BVT"} )
     public void startAndAbandonTest() throws URISyntaxException, IOException {
 
         //Given I start a test and I am on the Test Results Page
-        TestResultsEntryPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester, vehicle);
+        TestResultsEntryGroupAPageInterface testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester, vehicle);
 
         //When I Abandon the test with a reason
         TestAbandonedPage testAbandonedPage =
@@ -137,7 +137,8 @@ public class ConductMotTests extends DslTest {
         //Given I am a 2FA activated user and I am on the Test Results Page
         User twoFactorUser = userData.createTester(site.getId());
         motUI.authentication.registerAndSignInTwoFactorUser(twoFactorUser);
-        TestResultsEntryPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(twoFactorUser, vehicle);
+        //Todo fix 2FA tests
+        TestResultsEntryPage testResultsEntryPage = (TestResultsEntryPage) pageNavigator.gotoTestResultsEntryPage(twoFactorUser, vehicle);
 
         //When I abandon the test with a reason
         TestAbandonedPage testAbandonedPage =
@@ -147,11 +148,11 @@ public class ConductMotTests extends DslTest {
         assertThat(testAbandonedPage.isVT30messageDisplayed(), is(true));
     }
 
-    @Test(testName = "OldRFRTest", groups = {"BVT"} )
+    @Test(groups = {"BVT"} )
     public void startAndAbortTestAsTester() throws URISyntaxException, IOException {
 
         //Given I start a test and I am on the Test Results Page
-        TestResultsEntryPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester, vehicle);
+        TestResultsEntryGroupAPageInterface testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester, vehicle);
 
         //When I Abort the test with a reason
         TestAbortedPage testAbortedPage = testResultsEntryPage.abortMotTest(CancelTestReason.TEST_EQUIPMENT_ISSUE);
@@ -160,7 +161,7 @@ public class ConductMotTests extends DslTest {
         assertThat(testAbortedPage.isVT30messageDisplayed(), is(true));
     }
 
-    @Test(testName = "OldRFRTest", groups = {"BVT"} )
+    @Test(groups = {"BVT"} )
     public void startAndAbortTestAsVE() throws URISyntaxException, IOException {
         User vehicleExaminer = userData.createVehicleExaminer("Default-VE", false);
 
@@ -176,7 +177,7 @@ public class ConductMotTests extends DslTest {
         assertThat(motUI.normalTest.getTestStatus(), equalToIgnoringCase("Aborted by VE"));
     }
 
-    @Test(testName = "OldRFRTest", groups = {"BVT"})
+    @Test(groups = {"BVT"})
     public void conductRetestSuccessfully() throws IOException, URISyntaxException {
 
         //Given I have a vehicle with a failed MOT test
@@ -211,7 +212,7 @@ public class ConductMotTests extends DslTest {
         assertThat("application/pdf", is(pdfResponse.getContentType()));
     }
 
-    @Test (testName = "OldRFRTest", groups = {"Regression"})
+    @Test (groups = {"Regression"})
     public void printDocumentButtonShouldNotBeDisplayedForDemoTest() throws IOException, URISyntaxException {
 
         // GIVEN I conducted a demo test as a new user
@@ -224,28 +225,16 @@ public class ConductMotTests extends DslTest {
         assertThat(testCompletePage.isPrintDocumentButtonDisplayed(), is(false));
     }
 
-    @Test(testName = "OldRFRTest", groups = {"BVT", "BL-1935"}, description = "Verifies that user is able to see test results entry (old) page")
-    public void motTestSummaryPageWithTestResultEntryImprovementsToggleOff() throws IOException, URISyntaxException {
+    @Test(groups = {"BVT", "BL-1935"}, description = "Verifies that user is able to see test results entry page")
+    public void motTestSummaryPage() throws IOException, URISyntaxException {
         // GIVEN I complete an mot test using testResultsEntryPage and see the test summary page
         TestSummaryPage testSummaryPage = pageNavigator.getTestSummaryPage(tester, vehicle);
 
         // WHEN I click the back to results entry link
-        TestResultsEntryPageInterface testResultsEntryOldPage = testSummaryPage.clickBackToResultsEntryLink();
+        TestResultsEntryPageInterface testResultsEntryPage = testSummaryPage.clickBackToResultsEntryLink();
 
         //THEN I should be returned to testResultsEntryPage containing a review test button
-        assertThat(testResultsEntryOldPage.isClickReviewTestButtonPresent(), is(true));
-    }
-
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1935"}, description = "Verifies that user is able to see test results entry new page")
-    public void motTestSummaryPageWithTestResultEntryImprovementsToggleOn() throws IOException, URISyntaxException {
-        // GIVEN I complete an mot test using testResultsEntryNewPage and see the test summary page
-        TestSummaryPage testSummaryPage = pageNavigator.getTestSummaryPage(tester, vehicle);
-
-        // WHEN I click the back to results entry link
-        TestResultsEntryPageInterface testResultsEntryNewPage = testSummaryPage.clickBackToResultsEntryLink();
-
-        //THEN I should be returned to testResultsEntryNewPage containing a review test button
-        assertThat(testResultsEntryNewPage.isClickReviewTestButtonPresent(), is(true));
+        assertThat(testResultsEntryPage.isClickReviewTestButtonPresent(), is(true));
     }
 
     @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-3478"},

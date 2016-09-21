@@ -2,6 +2,7 @@ package uk.gov.dvsa.ui.pages.mot.retest;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
@@ -33,10 +34,9 @@ public class ConfirmVehicleRetestPage extends Page{
         return new ReTestOptionsPage(driver);
     }
 
-    public ReTestResultsEntryPage startContigencyRetest(){
+    public <T extends Page> T startContigencyRetest(Class<T> clazz){
         startRetestButton.click();
-
-        return new ReTestResultsEntryPage(driver);
+        return MotPageFactory.newPage(driver, clazz);
     }
 
     public String getVIN() {

@@ -10,6 +10,8 @@ public class AddAManualAdvisoryPage extends DefectsPage {
 
     private static final String PAGE_TITLE = "Add a manual advisory";
 
+    private static final String PROFANITY_MESSAGE = "Additional information – must not include any swearwords";
+
     @FindBy(id = "comment") private WebElement defectDescription;
 
     public AddAManualAdvisoryPage(MotAppDriver driver) {
@@ -31,5 +33,9 @@ public class AddAManualAdvisoryPage extends DefectsPage {
         addDefect.click();
 
         return this;
+    }
+
+    public boolean isProfanityWarningDisplayed() {
+        return validationSummary.getText().contains(PROFANITY_MESSAGE);
     }
 }

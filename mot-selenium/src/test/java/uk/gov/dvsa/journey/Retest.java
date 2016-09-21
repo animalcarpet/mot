@@ -5,9 +5,11 @@ import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.helper.AssertionHelper;
+import uk.gov.dvsa.helper.ConfigHelper;
 import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.VehicleSearchPage;
 import uk.gov.dvsa.ui.pages.VehicleSearchResultsPage;
+import uk.gov.dvsa.ui.pages.mot.TestResultsEntryNewPage;
 import uk.gov.dvsa.ui.pages.mot.retest.ReTestCompletePage;
 import uk.gov.dvsa.ui.pages.mot.retest.ReTestResultsEntryPage;
 import uk.gov.dvsa.ui.pages.mot.retest.ReTestSummaryPage;
@@ -37,10 +39,15 @@ public class Retest {
     }
 
     public void conductRetestPass(Vehicle vehicle, User tester) throws IOException, URISyntaxException {
-        ReTestResultsEntryPage resultsEntryPage = pageNavigator.gotoReTestResultsEntryPage(tester, vehicle);
-        resultsEntryPage.completeTestDetailsWithPassValues();
-
-        ReTestSummaryPage summaryPage = resultsEntryPage.clickReviewTestButton();
+        ReTestSummaryPage summaryPage;
+        if (ConfigHelper.isTestResultEntryImprovementsEnabled()) {
+            TestResultsEntryNewPage resultsEntryPage = pageNavigator.gotoReTestResultsEntryPage(tester, vehicle);
+            resultsEntryPage.completeTestDetailsWithPassValues();
+            summaryPage = resultsEntryPage.clickReviewTestButton(true);
+        } else {
+            ReTestResultsEntryPage resultsEntryPage = pageNavigator.gotoReTestResultsEntryPage(tester, vehicle);
+            summaryPage = resultsEntryPage.completeTestDetailsWithPassValues().clickReviewTestButton();
+        }
 
         if (summaryPage.isDeclarationTextDisplayed()) {
             assertThat(summaryPage.getDeclarationText(), equalToIgnoringCase(DECLARATION_STATEMENT));

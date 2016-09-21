@@ -23,7 +23,7 @@ public class ReInspectionAppealTests extends DslTest {
         testSite = siteData.createSite();
     }
 
-    @Test(testName = "OldRFRTest", groups = {"Regression"})
+    @Test(groups = {"Regression"})
     public void statutoryAppealDisciplinaryActionReportIssuedFor30andGreaterTotalScore() throws IOException {
 
         //Given I have a Failed MOT
@@ -42,7 +42,7 @@ public class ReInspectionAppealTests extends DslTest {
         assertThat("Disciplinary action is selected", outcome, equalTo("Disciplinary action report"));
     }
 
-    @Test(testName = "OldRFRTest", groups = {"Regression"})
+    @Test(groups = {"Regression"})
     public void statutoryAppealAdvisoryWarningLetterIssuedForBetween10and25TotalScore() throws IOException {
         //Given I have a Failed MOT
         User tester = userData.createTester(testSite.getId());
@@ -59,7 +59,7 @@ public class ReInspectionAppealTests extends DslTest {
         assertThat("Advisory warning is selected", outcome, equalTo("Advisory warning letter"));
     }
 
-    @Test(testName = "OldRFRTest", groups = {"Regression"})
+    @Test(groups = {"Regression"})
     public void invertedAppealAdvisoryWarningLetterIssuedForBetween10and25TotalScore() throws IOException {
         //Given I have a Failed MOT
         User tester = userData.createTester(testSite.getId());
@@ -76,7 +76,7 @@ public class ReInspectionAppealTests extends DslTest {
         assertThat("Advisory warning is selected", outcome, equalTo("Advisory warning letter"));
     }
 
-    @Test(testName = "OldRFRTest", groups = {"Regression"})
+    @Test(groups = {"Regression"})
     public void expiryDateIsDisplayedForStatutoryAppealMotTest() throws IOException {
         //Given I have a Failed MOT
         String motTestId = motApi.createFailedTest(userData.createTester(testSite.getId()),
@@ -90,7 +90,7 @@ public class ReInspectionAppealTests extends DslTest {
                         .isExpiryDateDisplayed(), is(true));
     }
 
-    @Test(testName = "OldRFRTest", groups = {"Regression"})
+    @Test(groups = {"Regression"})
     public void expiryDateIsDisplayedForInvertedAppealMotTest() throws IOException {
         //Given I have a Failed MOT
         String motTestId = motApi.createFailedTest(userData.createTester(testSite.getId()),

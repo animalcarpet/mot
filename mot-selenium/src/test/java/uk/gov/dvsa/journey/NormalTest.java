@@ -5,11 +5,13 @@ import uk.gov.dvsa.data.UserData;
 import uk.gov.dvsa.data.VehicleData;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.CancelTestReason;
+import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.domain.model.mot.ReasonForVehicleRefusal;
 import uk.gov.dvsa.domain.model.vehicle.DvlaVehicle;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
+import uk.gov.dvsa.helper.ConfigHelper;
 import uk.gov.dvsa.ui.pages.VehicleSearchPage;
 import uk.gov.dvsa.ui.pages.mot.*;
 import uk.gov.dvsa.ui.pages.mot.modal.ManualAdvisoryModalPage;
@@ -29,7 +31,7 @@ public class NormalTest {
     private PageNavigator pageNavigator = null;
     private MotAppDriver driver;
     private String testStatus;
-    private TestResultsEntryPage testResultsEntryPage;
+    private TestResultsEntryGroupAPageInterface testResultsEntryPage;
     private StartTestConfirmationPage confirmationPage;
     private EnforcementTestSummaryPage enforcementSummaryPage;
     private boolean declarationSuccessful = false;
@@ -58,7 +60,7 @@ public class NormalTest {
     }
 
     public TestSummaryPage conductTestPass(User tester, Vehicle vehicle) throws IOException, URISyntaxException {
-        TestResultsEntryPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester, vehicle);
+        TestResultsEntryGroupAPageInterface testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester, vehicle);
         testResultsEntryPage.completeTestDetailsWithPassValues();
         TestSummaryPage testSummaryPage = testResultsEntryPage.clickReviewTestButton();
 
@@ -105,8 +107,11 @@ public class NormalTest {
     }
 
     public String startTest(User tester) throws IOException, URISyntaxException {
-        testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(
-                tester, new VehicleData().getNewVehicle(tester));
+        if (!ConfigHelper.isTestResultEntryImprovementsEnabled()) {
+            testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester, new VehicleData().getNewVehicle(tester));
+        } else {
+            testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, new VehicleData().getNewVehicle(tester));
+        }
 
         return setMotId();
     }
@@ -153,7 +158,7 @@ public class NormalTest {
     }
 
     public TestSummaryPage conductTrainingTest(User tester, Vehicle vehicle) throws IOException, URISyntaxException {
-        TestResultsEntryPage testResultsEntryPage = pageNavigator.gotoTrainingTestResultsEntryPage(tester, vehicle);
+        TestResultsEntryGroupAPageInterface testResultsEntryPage = pageNavigator.gotoTrainingTestResultsEntryPage(tester, vehicle);
         testResultsEntryPage.completeTestDetailsWithPassValues();
         TestSummaryPage testSummaryPage = testResultsEntryPage.clickReviewTestButton();
 
@@ -209,9 +214,18 @@ public class NormalTest {
         return testStatus;
     }
 
-    public String addManualAdvisoryWithProfaneDescription(String description) {
-        ManualAdvisoryModalPage advisoryModalPage = testResultsEntryPage.clickAddFRFButton().addManualAdvisory();
-        return advisoryModalPage.addAdvisoryWithProfaneDescription(description).getValidationMessage();
+    public boolean addManualAdvisoryWithProfaneDescriptionReturnsWarning(String description) {
+        if (!ConfigHelper.isTestResultEntryImprovementsEnabled()) {
+            ManualAdvisoryModalPage advisoryModalPage = ((TestResultsEntryPage) testResultsEntryPage).clickAddFRFButton().addManualAdvisory();
+            return advisoryModalPage.addAdvisoryWithProfaneDescription(description).isProfanityWarningDisplayed();
+        } else {
+            Defect.DefectBuilder builder = new Defect.DefectBuilder();
+            builder.setDescription(description);
+            Defect defect = builder.build();
+
+            return ((TestResultsEntryNewPage) testResultsEntryPage).clickSearchForADefectButton().navigateToAddAManualAdvisory()
+                    .fillDefectDescription(defect).clickAddDefectButtonExpectingFailure().isProfanityWarningDisplayed();
+        }
     }
 
     public String getVehicleWeight() {
