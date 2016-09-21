@@ -47,11 +47,10 @@ class VehicleInformationTableBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertRowContentEquals($table->getRow(0), 'RENAULT, CLIO');
         $this->assertRowContentEquals($table->getRow(1), 'Petrol, 1,700 cc');
-        $this->assertRowContentEquals($table->getRow(2), 'Automatic');
-        $this->assertRowContentEquals($table->getRow(3), 'Grey and Black');
-        $this->assertRowContentEquals($table->getRow(4), '12,467 Kg');
-        $this->assertRowContentEquals($table->getRow(5), '4');
-        $this->assertRowContentEquals($table->getRow(6), '6 September 2016');
+        $this->assertRowContentEquals($table->getRow(2), 'Grey and Black');
+        $this->assertRowContentEquals($table->getRow(3), '12,467 Kg');
+        $this->assertRowContentEquals($table->getRow(4), '4');
+        $this->assertRowContentEquals($table->getRow(5), '6 September 2016');
     }
 
     public function testSpecificationTableWithLessData()
@@ -68,11 +67,10 @@ class VehicleInformationTableBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertRowContentEquals($table->getRow(0), 'RENAULT');
         $this->assertRowContentEquals($table->getRow(1), 'Petrol');
-        $this->assertRowContentEquals($table->getRow(2), 'Automatic');
-        $this->assertRowContentEquals($table->getRow(3), 'Grey');
-        $this->assertRowContentEquals($table->getRow(4), VehicleInformationTableBuilder::EMPTY_VALUE_TEXT);
-        $this->assertRowContentEquals($table->getRow(5), '4');
-        $this->assertRowContentEquals($table->getRow(6), VehicleInformationTableBuilder::EMPTY_VALUE_TEXT);
+        $this->assertRowContentEquals($table->getRow(2), 'Grey');
+        $this->assertRowContentEquals($table->getRow(3), VehicleInformationTableBuilder::EMPTY_VALUE_TEXT);
+        $this->assertRowContentEquals($table->getRow(4), '4');
+        $this->assertRowContentEquals($table->getRow(5), VehicleInformationTableBuilder::EMPTY_VALUE_TEXT);
     }
 
 
