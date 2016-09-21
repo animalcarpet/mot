@@ -116,6 +116,8 @@ class MotTestResultsController extends AbstractAuthActionController
         $identifiedDefects = IdentifiedDefectCollection::fromMotApiData($motTest);
         $isRetest = $motTest->getTestType()->getCode() === MotTestTypeCode::RE_TEST;
 
+        $this->addTestNumberAndTypeToGtmDataLayer($motTest->getMotTestNumber(), $motTest->getTestType()->getId());
+
         return $this->createViewModel('mot-test/test-results-entry.twig', [
             'isDemo' => $isDemo,
             'motTest' => $motTest,
@@ -202,5 +204,17 @@ class MotTestResultsController extends AbstractAuthActionController
         $container->persistConfig(['route' => $route, 'params' => ['motTestNumber' => $motTestNumber]]);
 
         return $this->redirect()->toRoute('location-select');
+    }
+
+    /**
+     * @param string $motTestNumber
+     * @param int $testTypeId
+     */
+    private function addTestNumberAndTypeToGtmDataLayer($motTestNumber, $testTypeId)
+    {
+        $this->gtmDataLayer([
+            'testId'   => $motTestNumber,
+            'testType' => $testTypeId,
+        ]);
     }
 }
