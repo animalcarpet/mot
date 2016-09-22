@@ -30,7 +30,6 @@ class ClaimAccountServiceTest extends \PHPUnit_Framework_TestCase
     use TestCaseTrait;
 
     const USER_ID = 9999;
-    const EMAIL = 'unit_emailAddress';
     const PASSWORD = 'unit_Password';
     const QUESTION_1_ID = 8101;
     const QUESTION_2_ID = 8102;
@@ -140,7 +139,7 @@ class ClaimAccountServiceTest extends \PHPUnit_Framework_TestCase
     {
         $sampleData = $this->getSampleData();
 
-        $postData = array_slice($sampleData, 3, 4);
+        $postData = array_slice($sampleData, 3, 2);
         $postData['submitted_step'] = 'firstStep';
         $mockPost = new Parameters($postData);
 
@@ -158,10 +157,7 @@ class ClaimAccountServiceTest extends \PHPUnit_Framework_TestCase
                 'user_id' => self::USER_ID,
                 'is_tester' => false,
                 'username' => 'tester1',
-                'email' => null,
                 'firstStep' => [
-                    'email' => self::EMAIL,
-                    'email-confirm' => self::EMAIL,
                     'password' => self::PASSWORD,
                     'password-confirm' => self::PASSWORD,
                     'submitted_step' => 'firstStep',
@@ -310,11 +306,6 @@ class ClaimAccountServiceTest extends \PHPUnit_Framework_TestCase
 
         $expect = [
             'personId' => self::USER_ID,
-
-            'email' => self::EMAIL,
-            'emailConfirmation' => self::EMAIL,
-            'emailOptOut' => false,
-
             'password' => self::PASSWORD,
             'passwordConfirmation' => self::PASSWORD,
 
@@ -382,8 +373,6 @@ class ClaimAccountServiceTest extends \PHPUnit_Framework_TestCase
             'user_id'                  => self::USER_ID,
             'is_tester'                => false,
             'username'                 => 'tester1',
-            'email'                    => self::EMAIL,
-            'email-confirm'            => self::EMAIL,
             'password'                 => self::PASSWORD,
             'password-confirm'         => self::PASSWORD,
             'security-question-one-id' => self::QUESTION_1_ID,
@@ -400,14 +389,12 @@ class ClaimAccountServiceTest extends \PHPUnit_Framework_TestCase
             'is_tester' => true,
             'username' => 'tester1',
             'pin' => '908986',
-            'confirmEmailAndPassword' => [
-                'email'            => self::EMAIL,
-                'confirm_email'    => self::EMAIL,
+            'confirmPassword' => [
                 'username' => 'tester1',
                 'password'         => self::PASSWORD,
                 'confirm_password' => self::PASSWORD,
                 '_csrf_token' => 'F590F72E-D9FB-82FD-493E-D661EC0CF06E',
-                'submitted_step' => 'confirmEmailAndPassword',
+                'submitted_step' => 'confirmPassword',
                 'btSubmitForm' => ''
             ],
             'setSecurityQuestion' => [

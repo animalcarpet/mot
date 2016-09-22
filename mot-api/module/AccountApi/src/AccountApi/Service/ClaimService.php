@@ -166,24 +166,6 @@ class ClaimService extends AbstractService
             throw new OpenAmChangePasswordException($e->getMessage());
         }
 
-        // Persist the email.
-        if (isset($data['email']) && !is_null($data['email'])) {
-            $personContact = ArrayUtils::firstOrNull($person->getContacts());
-            $personContact = $personContact ?: $this->createEmptyPersonContact($person);
-
-            $email = ArrayUtils::firstOrNull($personContact->getDetails()->getEmails());
-
-            if (is_null($email)) {
-                $email = new Email();
-                $personContact->getDetails()->addEmail($email);
-            }
-
-            $email->setEmail($data['email']);
-            $email->setIsPrimary(true);
-
-            $person->addContact($personContact);
-        }
-
         $person = $this->saveSecurityQuestions($person, $data, $securityQuestions);
         $person->setAccountClaimRequired(false);
         //prevents situation when user is asked to reset password right after setting new during account claim
@@ -301,12 +283,6 @@ class ClaimService extends AbstractService
     {
         $claimData = new ClaimStartDto();
         $claimData->setPin($this->generatePin());
-        $claimData->setEmail(
-            $this->personRepository->findPersonEmail(
-                $this->getUserId(),
-                PersonContactTypeEnum::fromName(PersonContactTypeEnum::PERSONAL)
-            )
-        );
 
         return $claimData;
     }

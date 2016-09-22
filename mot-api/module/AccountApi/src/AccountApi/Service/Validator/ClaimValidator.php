@@ -17,7 +17,6 @@ class ClaimValidator extends AbstractValidator
      * @var array
      */
     private $requiredFields = [
-        'emailOptOut',
         'password',
         'passwordConfirmation',
         'securityQuestionOneId',
@@ -42,8 +41,6 @@ class ClaimValidator extends AbstractValidator
      */
     protected $securityQuestionService;
 
-    const ERROR_EMAIL_INCORRECT_FORMAT = "Incorrect email address format";
-    const ERROR_EMAIL_CONFIRMATION = "Emails do not match";
     const ERROR_PASSWORD_CONFIRMATION = "Passwords do not match";
     const ERROR_PIN_INCORRECT_FORMAT = "PIN - must be a 6 digit number";
     const ERROR_SECURITY_QUESTION_NOT_EXIST = "Security Question - The security question received does not exist";
@@ -61,23 +58,6 @@ class ClaimValidator extends AbstractValidator
 
     public function validate($data = [])
     {
-        $isEmailRequired = true;
-        if (isset($data['emailOptOut']) && $data['emailOptOut'] === true) {
-            $isEmailRequired = false;
-        }
-
-        if ($isEmailRequired && isset($data['email'])) {
-            if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-                $this->errors->add(self::ERROR_EMAIL_INCORRECT_FORMAT, 'email');
-            }
-
-            if (array_key_exists('emailConfirmation', $data)) {
-                if (trim(mb_strtoupper($data['email'])) !== trim(mb_strtoupper($data['emailConfirmation']))) {
-                    $this->errors->add(self::ERROR_EMAIL_CONFIRMATION, 'emailConfirmation');
-                }
-            }
-        }
-
         RequiredFieldException::CheckIfRequiredFieldsNotEmpty($this->requiredFields, $data);
 
         if ($data['password'] !== $data['passwordConfirmation']) {

@@ -67,7 +67,7 @@ class ClaimController extends AbstractDvsaRestfulController
              * Web Frontend.
              */
             $errors           = [
-                'step'              => 'confirmEmailAndPassword',
+                'step'              => 'confirmPassword',
                 'displayMessage'    => $displayMessage,
             ];
 

@@ -23,7 +23,7 @@ class ClaimController extends AbstractAuthActionController
 {
     const SERVICE_NAME = 'MOT testing service';
 
-    const STEP_1_NAME = 'confirmEmailAndPassword';
+    const STEP_1_NAME = 'confirmPassword';
     const STEP_2_NAME = 'setSecurityQuestion';
     const STEP_3_NAME = 'review';
     const STEP_4_NAME = 'success';
@@ -57,7 +57,7 @@ class ClaimController extends AbstractAuthActionController
         $this->redirectToStep(self::STEP_1_NAME);
     }
 
-    public function confirmEmailAndPasswordAction()
+    public function confirmPasswordAction()
     {
         /** @var \Zend\Http\Request $request */
         $request = $this->getRequest();
@@ -73,10 +73,7 @@ class ClaimController extends AbstractAuthActionController
         }
 
         $stepData = $this->getStepData(self::STEP_1_NAME);
-        if (!array_key_exists('email', $stepData)) {
-            $stepData['email'] = $stepData['confirm_email'] = $this->claimAccountService->getPresetEmail();
-        }
-
+        
         $stepData['messages'] = $this->claimValidator->getMessages();
         $stepData['summaryMessages'] = $this->getSummaryMessages();
         if ($this->flashMessenger()->hasErrorMessages()) {
@@ -147,7 +144,7 @@ class ClaimController extends AbstractAuthActionController
                     if (is_array($apiMessage)
                         && isset($apiMessage['displayMessage'])
                         && isset($apiMessage['step'])
-                        && ('confirmEmailAndPassword' == $apiMessage['step'])) {
+                        && ('confirmPassword' == $apiMessage['step'])) {
                         $this->flashMessenger()->addErrorMessage($apiMessage['displayMessage']);
                     }
 

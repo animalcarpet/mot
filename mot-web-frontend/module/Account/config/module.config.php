@@ -24,18 +24,18 @@ return [
                             'route'    => '/claim',
                             'defaults' => [
                                 'controller' => ClaimAccountControllerFactory::class,
-                                'action'     => 'confirmEmailAndPassword',
+                                'action'     => 'confirmPassword',
                             ],
                         ],
                         'may_terminate' => true,
                         'child_routes' => [
-                            'confirmEmailAndPassword' => [
+                            'confirmPassword' => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/confirm-email-and-password',
                                     'defaults' => [
                                         'controller' => ClaimAccountControllerFactory::class,
-                                        'action'     => 'confirmEmailAndPassword',
+                                        'action'     => 'confirmPassword',
                                     ],
                                 ],
                                 'may_terminate' => true

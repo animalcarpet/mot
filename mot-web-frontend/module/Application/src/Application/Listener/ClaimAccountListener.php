@@ -32,7 +32,7 @@ class ClaimAccountListener
 
     private $claimAccountRoutes = [
         'account/claim',
-        'account/claim/confirmEmailAndPassword',
+        'account/claim/confirmPassword',
         'account/claim/setSecurityQuestion',
         'account/claim/success',
         'account/claim/review',

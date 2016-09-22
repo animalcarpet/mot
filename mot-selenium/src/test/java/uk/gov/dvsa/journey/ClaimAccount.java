@@ -4,14 +4,14 @@ import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.ui.pages.HomePage;
 import uk.gov.dvsa.ui.pages.accountclaim.AccountClaimConfirmationPage;
-import uk.gov.dvsa.ui.pages.accountclaim.AccountClaimPage;
+import uk.gov.dvsa.ui.pages.accountclaim.AccountClaimPasswordPage;
 import uk.gov.dvsa.ui.pages.accountclaim.AccountClaimReviewPage;
+import uk.gov.dvsa.ui.pages.accountclaim.AccountClaimSecurityQuestionsPage;
 import uk.gov.dvsa.ui.pages.accountclaim.TwoFaAccountClaimConfirmationPage;
 import uk.gov.dvsa.ui.pages.login.LoginPage;
 
 import java.io.IOException;
 
-import static uk.gov.dvsa.helper.RandomDataGenerator.generateEmail;
 import static uk.gov.dvsa.helper.RandomDataGenerator.generatePassword;
 import static uk.gov.dvsa.helper.RandomDataGenerator.generateRandomString;
 
@@ -60,16 +60,15 @@ public class ClaimAccount {
     private AccountClaimReviewPage takeUserToReviewPage(User user) throws IOException {
 
         //Given I am on the AccountClaim page to my claim my account
-        AccountClaimPage accountClaimPage = pageNavigator.navigateToPage(user, AccountClaimPage.PATH, AccountClaimPage.class);
+        AccountClaimPasswordPage accountClaimPage = pageNavigator.navigateToPage(user, AccountClaimPasswordPage.PATH, AccountClaimPasswordPage.class);
 
         //When I Enter a valid Email Address and a compliant Password
-        accountClaimPage.enterEmailAndPassword(generateEmail(7), generatePassword(8));
-
-        accountClaimPage.clickContinueButton();
+        accountClaimPage.enterPassword(generatePassword(8));
+        AccountClaimSecurityQuestionsPage securityQuestionsPage = accountClaimPage.clickContinueButton();
 
         //And I set my security answers
-        accountClaimPage.setSecurityQuestionsAndAnswers(generateRandomString(), generateRandomString());
+        securityQuestionsPage.setSecurityQuestionsAndAnswers(generateRandomString(), generateRandomString());
 
-        return accountClaimPage.clickContinueToAccountReview();
+        return securityQuestionsPage.clickContinueToAccountReview();
     }
 }

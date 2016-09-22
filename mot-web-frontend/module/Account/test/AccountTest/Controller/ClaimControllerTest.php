@@ -169,10 +169,10 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                 ],
             ],
 
-            // confirmEmailAndPassword: get: access action
+            // confirmPassword: get: access action
             [
                 'method' => 'get',
-                'action' => 'confirmEmailAndPassword',
+                'action' => 'confirmPassword',
                 'params' => [],
                 'mocks'  => [],
                 'expect' => [
@@ -180,10 +180,10 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                 ],
             ],
 
-            // confirmEmailAndPassword: post: validation failed
+            // confirmPassword: post: validation failed
             [
                 'method' => 'post',
-                'action' => 'confirmEmailAndPassword',
+                'action' => 'confirmPassword',
                 'params' => [
                     'post' => $postData,
                 ],
@@ -200,10 +200,10 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
                 ],
             ],
 
-            // confirmEmailAndPassword: post: validation success
+            // confirmPassword: post: validation success
             [
                 'method' => 'post',
-                'action' => 'confirmEmailAndPassword',
+                'action' => 'confirmPassword',
                 'params' => [
                     'post' => $postData,
                 ],
