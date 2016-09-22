@@ -23,10 +23,6 @@ class ClaimAccountService
     const KEY_NAME_IS_TESTER = 'is_tester';
     const KEY_NAME_USERNAME = 'username';
     const KEY_NAME_PIN = 'pin';
-    /**
-     * Holder for user email migrated from previous version of MOT.
-     */
-    const KEY_NAME_EMAIL = 'email';
 
     /** @var \Zend\Session\Container */
     protected $sessionContainer;
@@ -89,8 +85,7 @@ class ClaimAccountService
             ->saveOnSession(self::KEY_NAME_USER_ID, $this->identity->getUserId())
             ->saveOnSession(self::KEY_NAME_IS_TESTER, $this->authService->isTester())
             ->saveOnSession(self::KEY_NAME_USERNAME, $this->identity->getUsername())
-            ->saveOnSession(self::KEY_NAME_PIN, $claimData->getPin())
-            ->saveOnSession(self::KEY_NAME_EMAIL, $claimData->getEmail());
+            ->saveOnSession(self::KEY_NAME_PIN, $claimData->getPin());
     }
 
     public function saveOnSession($key, $value, $overwrite = true)
@@ -194,10 +189,6 @@ class ClaimAccountService
         return [
             'personId'              => $data['user_id'],
 
-            'email'                 => $step1Data['email'],
-            'emailConfirmation'     => $step1Data['confirm_email'],
-            'emailOptOut'           => isset($step1Data['email_opt_out']),
-
             'password'              => $step1Data['password'],
             'passwordConfirmation'  => $step1Data['confirm_password'],
 
@@ -208,12 +199,6 @@ class ClaimAccountService
             'securityAnswerTwo'     => $step2Data['answer_b'],
         ];
     }
-
-    public function getPresetEmail()
-    {
-        return $this->getSession()->{self::KEY_NAME_EMAIL};
-    }
-
 
     private function fetchClaimData()
     {

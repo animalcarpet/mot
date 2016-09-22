@@ -2,7 +2,6 @@
 
 namespace Account\ViewModel;
 
-use DvsaCommon\Dto\Security\SecurityQuestionDto;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
@@ -11,22 +10,16 @@ use DvsaCommon\Utility\ArrayUtils;
  */
 class ReviewViewModel
 {
-    const FIELD_EMAIL = 'email';
     const FIELD_PASSWORD = 'password';
     const FIELD_SECURITY_QUESTIONS = 'securityQuestions';
     const FIELD_SECURITY_QUESTION_A = 'question_a';
     const FIELD_SECURITY_QUESTION_B = 'question_b';
     const FIELD_SECURITY_ANSWER_A = 'answer_a';
     const FIELD_SECURITY_ANSWER_B = 'answer_b';
-    const FIELD_CONFIRM_EMAIL_PASSWORD = 'confirmEmailAndPassword';
+    const FIELD_CONFIRM_PASSWORD = 'confirmPassword';
     const FIELD_SET_SECURITY_QUESTIONS = 'setSecurityQuestion';
     const FIELD_SECURITY_QUESTION_GROUP_A = 'groupA';
     const FIELD_SECURITY_QUESTION_GROUP_B = 'groupB';
-
-    const DEFAULT_EMAIL = 'Not provided';
-
-    /** @var string  */
-    private $email;
 
     /** @var string */
     private $password;
@@ -49,10 +42,9 @@ class ReviewViewModel
     public function setData(array $data) {
         $this->setSecurityQuestions(ArrayUtils::tryGet($data, self::FIELD_SECURITY_QUESTIONS));
 
-        if (isset($data[self::FIELD_CONFIRM_EMAIL_PASSWORD])) {
-            $confirmEmailPassword = $data[self::FIELD_CONFIRM_EMAIL_PASSWORD];
+        if (isset($data[self::FIELD_CONFIRM_PASSWORD])) {
+            $confirmEmailPassword = $data[self::FIELD_CONFIRM_PASSWORD];
             $this->setPassword(ArrayUtils::tryGet($confirmEmailPassword, self::FIELD_PASSWORD));
-            $this->setEmail(ArrayUtils::tryGet($confirmEmailPassword, self::FIELD_EMAIL));
         }
 
         if (isset($data[self::FIELD_SET_SECURITY_QUESTIONS])) {
@@ -88,27 +80,6 @@ class ReviewViewModel
     public function setPassword($password)
     {
         $this->password = $password;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEmail()
-    {
-        if (empty($this->email)) {
-            return self::DEFAULT_EMAIL;
-        }
-
-        return $this->email;
-    }
-
-    /**
-     * @param string $email
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
         return $this;
     }
 

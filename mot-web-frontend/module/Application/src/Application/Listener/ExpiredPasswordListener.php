@@ -128,7 +128,7 @@ class ExpiredPasswordListener
             'login-2fa',
             'forgotten-password/update-password',
             'account/claim',
-            'account/claim/confirmEmailAndPassword',
+            'account/claim/confirmPassword',
             'account/claim/setSecurityQuestion',
             'account/claim/displayPin',
             'account/claim/review',

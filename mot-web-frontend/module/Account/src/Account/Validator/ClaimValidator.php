@@ -16,18 +16,9 @@ use Zend\Validator\Regex;
  */
 class ClaimValidator
 {
-    const MAX_EMAIL_LENGTH = 255;
     const MIN_PASSWORD_LENGTH = 8;
     const MAX_PASSWORD_LENGTH = 32;
     const MAX_ANSWER = 70;
-
-    const ERR_MSG_EMAIL_EMPTY = 'You must enter an email address';
-    const ERR_MSG_EMAIL_INVALID = 'You must enter a valid email address';
-    const ERR_MSG_EMAIL_LONG = 'Email address must be less than %s characters long';
-    const ERR_MSG_EMAIL_OPTED_OUT = 'You have provided an email address and chosen not supply an email address. To continue, either, deselect \'I don\'t want to supply an email address\' or remove your email address';
-
-    const ERR_MSG_EMAIL_CONFIRM = 'You must confirm your email address';
-    const ERR_MSG_EMAIL_CONFIRM_MATCH = 'The email addresses you have entered don\'t match';
 
     const ERR_MSG_PASSWORD_EMPTY = 'You must enter a password';
     const ERR_MSG_PASSWORD_LENGTH_TOO_SHORT = 'Password must be %s, or more, characters long';
@@ -53,7 +44,7 @@ class ClaimValidator
     {
         switch ($stepName) {
             case ClaimController::STEP_1_NAME:
-                $validationResult = $this->validateConfirmEmailAndPassword($data, $forceToResetFlag);
+                $validationResult = $this->validatePassword($data, $forceToResetFlag);
                 break;
             case ClaimController::STEP_2_NAME:
                 $validationResult = $this->validateSetSecurityQuestion($data, $forceToResetFlag);
@@ -68,7 +59,7 @@ class ClaimValidator
         return $validationResult;
     }
 
-    public function validateConfirmEmailAndPassword($data, $forceToResetFlag = false)
+    public function validatePassword($data, $forceToResetFlag = false)
     {
         $this->setIsValid($forceToResetFlag);
 
@@ -126,64 +117,6 @@ class ClaimValidator
     private function getFirstStepInputFilter($data)
     {
         $filter = new InputFilter();
-
-        if (isset($data['email_opt_out'])) {
-            if (!empty($data['email']) || !empty($data['confirm_email'])) {
-                $this->addMessages(['email_opt_out' => [self::ERR_MSG_EMAIL_OPTED_OUT]]);
-            }
-        } else {
-            $filter->add(
-                [
-                    'name' => 'email',
-                    'required' => true,
-                    'validators' => [
-                        [
-                            'name' => 'email_address',
-                            'options' => [
-                                'message' => self::ERR_MSG_EMAIL_INVALID
-                            ]
-                        ],
-                        [
-                            'name' => 'not_empty',
-                            'options' => [
-                                'message' => self::ERR_MSG_EMAIL_EMPTY
-                            ]
-                        ],
-                        [
-                            'name' => 'string_length',
-                            'options' => [
-                                'max' => self::MAX_EMAIL_LENGTH,
-                                'message' => sprintf(self::ERR_MSG_EMAIL_LONG, self::MAX_EMAIL_LENGTH)
-                            ],
-                        ],
-                    ],
-                ]
-            );
-
-            if (!empty($data['email']) || !empty($data['confirm_email'])) {
-                $filter->add(
-                    [
-                        'name' => 'confirm_email',
-                        'required' => true,
-                        'validators' => [
-                            [
-                                'name' => 'not_empty',
-                                'options' => [
-                                    'message' => self::ERR_MSG_EMAIL_CONFIRM
-                                ]
-                            ],
-                            [
-                                'name' => 'identical',
-                                'options' => [
-                                    'token' => 'email',
-                                    'message' => self::ERR_MSG_EMAIL_CONFIRM_MATCH
-                                ]
-                            ],
-                        ],
-                    ]
-                );
-            }
-        }
 
         $filter->add(
             [

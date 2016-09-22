@@ -9,33 +9,12 @@ use DvsaCommon\Dto\AbstractDataTransferObject;
  */
 class ClaimStartDto extends AbstractDataTransferObject
 {
-    /**
-     * @var string users preset email
-     */
-    private $email;
 
     /**
      * @var int 6 digit pin generated for account
      */
     private $pin;
 
-    /**
-     * @return string
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
-     * @param string $email
-     * @return $this
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-        return $this;
-    }
 
     /**
      * @return int

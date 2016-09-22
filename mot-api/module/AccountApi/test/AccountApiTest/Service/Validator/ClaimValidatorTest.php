@@ -63,33 +63,6 @@ class ClaimValidatorTest extends AbstractServiceTestCase
         $this->validator->validate($params);
     }
 
-    public function testNotValidEmailThrowException()
-    {
-        $this->setExpectedException('Exception');
-
-        $params = array_merge(
-            $this->params(),
-            ['email' => 'test2', 'emailConfirmation' => 'test2']
-        );
-
-        $this->validator->validate($params);
-    }
-
-    public function testEmailNotMatchingThrowException()
-    {
-        $this->setExpectedException('Exception');
-
-        $params = array_merge(
-            $this->params(),
-            [
-                'email'             => 'claimvalidatortest@' . EmailAddressValidator::TEST_DOMAIN,
-                'emailConfirmation' => 'claimvalidatortest1@' . EmailAddressValidator::TEST_DOMAIN
-            ]
-        );
-
-        $this->validator->validate($params);
-    }
-
     public function testValidParametersPassValidation()
     {
         $params = $this->params();
@@ -217,22 +190,7 @@ class ClaimValidatorTest extends AbstractServiceTestCase
         $validator->validateSecurityQuestions($params);
     }
 
-    /**
-     * @expectedException \DvsaCommonApi\Service\Exception\RequiredFieldException
-     */
-    public function testEmailOptOutParameterIsMandatory()
-    {
-        // GIVEN I have params from post
-        $params = $this->params();
 
-        // AND they miss 'emailOptOut' property
-        unset($params['emailOptOut']);
-
-        // WHEN I validate them
-        $this->validator->validate($params);
-
-        // I get an exception
-    }
 
     /**
      * @param int $id

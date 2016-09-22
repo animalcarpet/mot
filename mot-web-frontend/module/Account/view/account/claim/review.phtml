@@ -25,7 +25,7 @@ $helpdeskName = (isset($this->helpdeskCfg['name']) ? $this->helpdeskCfg['name'] 
     <?php echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => $messages]); ?>
 
     <?php if ($this->isStepOneInvalid) : ?>
-        <a href="<?php echo $this->url('account/claim/confirmEmailAndPassword'); ?>">Correct invalid entry on step 1</a>
+        <a href="<?php echo $this->url('account/claim/confirmPassword'); ?>">Correct invalid entry on step 1</a>
     <?php endif; ?>
 
     <br>
@@ -65,10 +65,6 @@ $helpdeskName = (isset($this->helpdeskCfg['name']) ? $this->helpdeskCfg['name'] 
         <div class="col-lg-12">
             <h2>Summary details</h2>
             <table>
-                <tr>
-                    <td>Email address</td>
-                    <td><?php echo $this->escapeHtml($reviewViewModel->getEmail()); ?></td>
-                </tr>
                 <tr>
                     <td>Password</td>
                     <td><strong class="text-obscured"><?php echo $reviewViewModel->getHiddenPassword(); ?></strong></td>

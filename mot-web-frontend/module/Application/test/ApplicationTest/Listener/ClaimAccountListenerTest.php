@@ -158,7 +158,7 @@ class ClaimAccountListenerTest extends PHPUnit_Framework_TestCase
             ['login'],
             ['logout'],
             ['account/claim'],
-            ['account/claim/confirmEmailAndPassword'],
+            ['account/claim/confirmPassword'],
             ['account/claim/setSecurityQuestion'],
             ['account/claim/generatePin'],
             ['account/claim/reset'],

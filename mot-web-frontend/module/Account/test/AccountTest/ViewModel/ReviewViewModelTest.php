@@ -8,8 +8,6 @@ use DvsaCommon\Validator\EmailAddressValidator;
 class ReviewViewModelTest extends \PHPUnit_Framework_TestCase
 {
 
-    const NO_EMAIL_PROVIDED_MESSAGE = 'Not provided';
-
     /** @var  ReviewViewModel */
     private $model;
 
@@ -18,24 +16,13 @@ class ReviewViewModelTest extends \PHPUnit_Framework_TestCase
         $this->model = new ReviewViewModel();
     }
 
-    public function testSetDataWithNoEmailWillReturnNotProvided()
-    {
-        $testData = $this->getTestData();
-        $testData['confirmEmailAndPassword'] = '';
-
-        $this->model->setData($testData);
-
-        $this->assertEquals(self::NO_EMAIL_PROVIDED_MESSAGE, $this->model->getEmail());
-    }
-
     public function testSetDataWillReturnDtoWithGettersMatchingArray()
     {
         $testData = $this->getTestData();
 
         $this->model->setData($testData);
 
-        $this->assertEquals($this->model->getEmail(), $testData['confirmEmailAndPassword']['email']);
-        $this->assertEquals($this->model->getPassword(), $testData['confirmEmailAndPassword']['password']);
+        $this->assertEquals($this->model->getPassword(), $testData['confirmPassword']['password']);
         $this->assertEquals($this->model->getSecurityQuestions(), $testData['securityQuestions']);
         $this->assertEquals($this->model->getAnswerA(), $testData['setSecurityQuestion']['answer_a']);
         $this->assertEquals($this->model->getAnswerB(), $testData['setSecurityQuestion']['answer_b']);
@@ -63,7 +50,7 @@ class ReviewViewModelTest extends \PHPUnit_Framework_TestCase
 
         $this->model->setData($testData);
 
-        $passwordChar = str_repeat('•', strlen($testData['confirmEmailAndPassword']['password']));
+        $passwordChar = str_repeat('•', strlen($testData['confirmPassword']['password']));
         $encryptedPasswordChar = $this->model->getHiddenPassword();
 
         $this->assertEquals($passwordChar, $encryptedPasswordChar);
@@ -89,10 +76,8 @@ class ReviewViewModelTest extends \PHPUnit_Framework_TestCase
     private function getTestData()
     {
         return [
-            'email' => 'reviewviewmodeltest@' . EmailAddressValidator::TEST_DOMAIN,
-            'confirmEmailAndPassword' => [
+            'confirmPassword' => [
                 'password' => 'Password1',
-                'email' => 'reviewviewmodeltest2@' . EmailAddressValidator::TEST_DOMAIN
             ],
             'setSecurityQuestion' => [
                 'question_a' => '1',
