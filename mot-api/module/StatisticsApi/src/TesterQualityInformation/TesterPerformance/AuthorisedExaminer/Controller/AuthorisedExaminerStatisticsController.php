@@ -28,10 +28,6 @@ class AuthorisedExaminerStatisticsController extends AbstractDvsaRestfulControll
      */
     public function get($aeId)
     {
-        if (!$this->isFeatureEnabled(FeatureToggle::TEST_QUALITY_INFORMATION)) {
-            return ApiResponse::jsonOk();
-        }
-
         $sitePerformanceDtos = $this->authorisedExaminerStatisticsService->getListForPage(
             (int)$aeId,
             abs((int)$this->params()->fromQuery('page', static::DEFAULT_PAGE)),

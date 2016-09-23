@@ -20,10 +20,6 @@ class TesterComponentStatisticsController extends AbstractDvsaRestfulController 
 
     public function get($testerId)
     {
-        if (!$this->isFeatureEnabled(FeatureToggle::TEST_QUALITY_INFORMATION)) {
-            return ApiResponse::jsonOk();
-        }
-
         $testerId = (int) $testerId;
         $group = $this->params()->fromRoute('group');
         $year = (int)$this->params()->fromRoute("year");

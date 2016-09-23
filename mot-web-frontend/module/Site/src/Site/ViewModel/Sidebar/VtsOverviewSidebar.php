@@ -197,10 +197,6 @@ class VtsOverviewSidebar extends GeneralSidebar
 
     private function canAccessTestQualityInformation()
     {
-        if ($this->featureToggles->isDisabled(FeatureToggle::TEST_QUALITY_INFORMATION)) {
-            return false;
-        }
-
         return $this->viewVtsTestQualityAssertion->isGranted($this->vtsId);
     }
 

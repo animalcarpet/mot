@@ -20,7 +20,4 @@ public class ConfigHelper {
     public static boolean isTestResultEntryImprovementsEnabled() {
         return service.getToggleValue("test_result_entry_improvements");
     }
-    public static boolean isTestQualityInformationEnabled() {
-        return service.getToggleValue("test_quality_information");
-    }
 }

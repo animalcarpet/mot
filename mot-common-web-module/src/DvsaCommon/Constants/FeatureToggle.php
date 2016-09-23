@@ -14,5 +14,4 @@ class FeatureToggle
     const TWO_FA_HARD_STOP = '2fa.hardstop.enabled';
     const SURVEY_PAGE = 'survey_page';
     const TEST_RESULT_ENTRY_IMPROVEMENTS = 'test_result_entry_improvements';
-    const TEST_QUALITY_INFORMATION = 'test_quality_information';
 }

@@ -226,7 +226,7 @@ class AuthorisedExaminerController extends AbstractDvsaMotTestController
      */
     private function getAuthorisationForView($orgId)
     {
-        return new AuthorisedExaminerViewAuthorisation($this->auth, $this->identity, $orgId, $this->getFeatureToggles());
+        return new AuthorisedExaminerViewAuthorisation($this->auth, $this->identity, $orgId);
     }
 
     /**

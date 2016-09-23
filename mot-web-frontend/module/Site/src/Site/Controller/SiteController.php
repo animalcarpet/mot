@@ -795,8 +795,6 @@ class SiteController extends AbstractAuthActionController
 
     public function testQualityAction()
     {
-        $this->assertFeatureEnabled(FeatureToggle::TEST_QUALITY_INFORMATION);
-
         $id = $this->params('id');
         $month = $this->params('month');
         $year = $this->params('year');
@@ -809,8 +807,6 @@ class SiteController extends AbstractAuthActionController
 
     public function userTestQualityAction()
     {
-        $this->assertFeatureEnabled(FeatureToggle::TEST_QUALITY_INFORMATION);
-
         $isReturnToAETQI = (bool)$this->params()->fromQuery('returnToAETQI');
 
         $group = $this->params('group');
@@ -855,8 +851,6 @@ class SiteController extends AbstractAuthActionController
 
     public function testQualityCsvAction()
     {
-        $this->assertFeatureEnabled(FeatureToggle::TEST_QUALITY_INFORMATION);
-
         $id = $this->params('id');
         $group = $this->params('group');
         $month = $this->params('month');
@@ -869,8 +863,6 @@ class SiteController extends AbstractAuthActionController
 
     public function userTestQualityCsvAction()
     {
-        $this->assertFeatureEnabled(FeatureToggle::TEST_QUALITY_INFORMATION);
-
         $siteId = $this->params('id');
         $userId = $this->params('userId');
         $group = $this->params('group');

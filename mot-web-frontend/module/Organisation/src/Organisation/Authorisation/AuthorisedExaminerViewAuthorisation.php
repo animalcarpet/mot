@@ -26,25 +26,20 @@ class AuthorisedExaminerViewAuthorisation
     private $removePositionAssertion;
     /** @var OrganisationPositionDto[] */
     private $positions;
-    /** @var FeatureToggles */
-    private $featureToggles;
 
     /**
      * @param MotAuthorisationServiceInterface $authorisationService
      * @param MotIdentityProviderInterface $identityProvider
      * @param int $authorisedExaminerId
-     * @param FeatureToggles $featureToggles
      */
     public function __construct(
         MotAuthorisationServiceInterface $authorisationService,
         MotIdentityProviderInterface $identityProvider,
-        $authorisedExaminerId,
-        FeatureToggles $featureToggles
+        $authorisedExaminerId
     ) {
         $this->authorisationService = $authorisationService;
         $this->authorisedExaminerId = $authorisedExaminerId;
         $this->identityProvider = $identityProvider;
-        $this->featureToggles = $featureToggles;
 
         $this->removePositionAssertion = new RemovePositionAtAeAssertion($authorisationService, $identityProvider);
     }
@@ -246,9 +241,10 @@ class AuthorisedExaminerViewAuthorisation
 
     public function canViewAETestQualityInformation()
     {
-        return
-            $this->authorisationService->isGrantedAtOrganisation(PermissionAtOrganisation::AE_VIEW_TEST_QUALITY, $this->authorisedExaminerId)
-            && $this->featureToggles->isEnabled(FeatureToggle::TEST_QUALITY_INFORMATION);
+        return $this->authorisationService->isGrantedAtOrganisation(
+            PermissionAtOrganisation::AE_VIEW_TEST_QUALITY,
+            $this->authorisedExaminerId
+        );
     }
 
     public function canSetupDirectDebit()

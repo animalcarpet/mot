@@ -41,7 +41,6 @@ class TestQualityInformationController extends AbstractDvsaMotTestController imp
         $organisationId = $this->params('id');
         $page = $this->getRequest()->getQuery('pageNumber') !== null ? $this->getRequest()->getQuery('pageNumber') : '1';
 
-        $this->assertFeatureEnabled(FeatureToggle::TEST_QUALITY_INFORMATION);
         $this->authService->assertGrantedAtOrganisation(PermissionAtOrganisation::AE_VIEW_TEST_QUALITY, $organisationId);
 
         return $this->applyActionResult(
