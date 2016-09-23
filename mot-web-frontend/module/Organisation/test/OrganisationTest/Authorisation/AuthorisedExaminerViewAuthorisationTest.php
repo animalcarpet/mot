@@ -36,18 +36,13 @@ class AuthorisedExaminerViewAuthorisationTest extends \PHPUnit_Framework_TestCas
      * @var MotIdentityProviderInterface|MockObject
      */
     private $identityMock;
-    /**
-     * @var FeatureToggles|MockObject
-     */
-    protected $featureToggleMock;
 
     public function setUp()
     {
         $this->authMock = XMock::of(MotFrontendAuthorisationServiceInterface::class);
         $this->identityMock = XMock::of(MotIdentityProviderInterface::class);
-        $this->featureToggleMock = XMock::of(FeatureToggles::class);
 
-        $this->auth = new AuthorisedExaminerViewAuthorisation($this->authMock, $this->identityMock, self::ID, $this->featureToggleMock);
+        $this->auth = new AuthorisedExaminerViewAuthorisation($this->authMock, $this->identityMock, self::ID);
     }
 
     public function testCanViewAuthorisedExaminerPrincipals()
@@ -83,20 +78,14 @@ class AuthorisedExaminerViewAuthorisationTest extends \PHPUnit_Framework_TestCas
     /**
      * @dataProvider dataProviderPermissions
      * @param $permissionAtOrganisation
-     * @param $featureToggle
      * @param $expected
      */
-    public function testCanViewAETestQualityInformation($permissionAtOrganisation, $featureToggle, $expected)
+    public function testCanViewAETestQualityInformation($permissionAtOrganisation, $expected)
     {
         $this->authMock->expects($this->any())
             ->method('isGrantedAtOrganisation')
             ->with(PermissionAtOrganisation::AE_VIEW_TEST_QUALITY, self::ID)
             ->willReturn($permissionAtOrganisation);
-
-        $this->featureToggleMock->expects($this->any())
-            ->method('isEnabled')
-            ->with(FeatureToggle::TEST_QUALITY_INFORMATION)
-            ->willReturn($featureToggle);
 
         $this->assertEquals($this->auth->canViewAETestQualityInformation(), $expected);
     }
@@ -106,22 +95,10 @@ class AuthorisedExaminerViewAuthorisationTest extends \PHPUnit_Framework_TestCas
         return [
             [
                 'permissionAtOrganisation' => true,
-                'featureToggle'            => true,
                 'expected'                 => true,
             ],
             [
                 'permissionAtOrganisation' => false,
-                'featureToggle'            => true,
-                'expected'                 => false,
-            ],
-            [
-                'permissionAtOrganisation' => true,
-                'featureToggle'            => false,
-                'expected'                 => false,
-            ],
-            [
-                'permissionAtOrganisation' => false,
-                'featureToggle'            => false,
                 'expected'                 => false,
             ],
         ];

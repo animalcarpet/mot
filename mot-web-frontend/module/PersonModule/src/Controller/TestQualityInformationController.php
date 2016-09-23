@@ -71,8 +71,6 @@ class TestQualityInformationController extends AbstractDvsaActionController impl
         $month = (int)$this->params()->fromRoute('month');
         $year = (int)$this->params()->fromRoute('year');
 
-        $this->assertFeatureEnabled(FeatureToggle::TEST_QUALITY_INFORMATION);
-
         return $this->applyActionResult(
             $this->testQualityAction->execute(
                 $targetPersonId,

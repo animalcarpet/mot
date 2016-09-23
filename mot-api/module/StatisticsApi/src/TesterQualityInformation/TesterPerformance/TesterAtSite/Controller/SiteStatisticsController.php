@@ -19,10 +19,6 @@ class SiteStatisticsController extends AbstractDvsaRestfulController implements 
 
     public function get($siteId)
     {
-        if (!$this->isFeatureEnabled(FeatureToggle::TEST_QUALITY_INFORMATION)) {
-            return ApiResponse::jsonOk();
-        }
-
         $year = (int)$this->params()->fromRoute("year");
         $month = (int)$this->params()->fromRoute("month");
 

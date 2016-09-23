@@ -25,7 +25,7 @@ public class OrganisationTestQualityViewTest extends DslTest {
         site = siteData.createNewSite(ae.getId(), "TestQuality Site");
         areaoffice1 = userData.createAreaOfficeOne("AO1");
     }
-    @Test(testName = "TestQualityInformation", groups = {"Regression"}, description = "Verifies that user can view Test Quality for AE with correct navigation")
+    @Test(groups = {"Regression"}, description = "Verifies that user can view Test Quality for AE with correct navigation")
     public void viewAETestQuality() throws IOException, URISyntaxException {
         //Given that I'm logged in as AO1, I go to Remove site from AE page
         AuthorisedExaminerViewPage aeViewPage = pageNavigator

@@ -19,13 +19,6 @@ class NationalStatisticsController extends AbstractDvsaRestfulController impleme
 
     public function getList()
     {
-        /**
-         * do not throw exception when cron hits this endpoint
-         */
-        if (!$this->isFeatureEnabled(FeatureToggle::TEST_QUALITY_INFORMATION)) {
-            return ApiResponse::jsonOk();
-        }
-
         $year = (int)$this->params()->fromRoute("year");
         $month = (int)$this->params()->fromRoute("month");
 

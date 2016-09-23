@@ -18,10 +18,6 @@ class TesterMultiSiteStatisticsController extends AbstractDvsaRestfulController 
 
     public function get($testerId)
     {
-        if (!$this->isFeatureEnabled(FeatureToggle::TEST_QUALITY_INFORMATION)) {
-            return ApiResponse::jsonOk();
-        }
-
         $testerId = (int)$testerId;
 
         $year = (int)$this->params()->fromRoute("year");

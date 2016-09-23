@@ -33,9 +33,5 @@ public class FeatureToggleAnnotationTransformer implements IAnnotationTransforme
         if(iTestAnnotation.getTestName().equals("non-2fa")){
             iTestAnnotation.setEnabled(!ConfigHelper.is2faEnabled());
         }
-
-        if (iTestAnnotation.getTestName().equals("TestQualityInformation")) {
-            iTestAnnotation.setEnabled(ConfigHelper.isTestQualityInformationEnabled());
-        }
     }
 }

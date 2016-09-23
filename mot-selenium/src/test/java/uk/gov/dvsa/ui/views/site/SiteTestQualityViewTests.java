@@ -30,7 +30,7 @@ public class SiteTestQualityViewTests extends DslTest {
         tester = userData.createTester(site.getId());
     }
 
-    @Test(testName = "TestQualityInformation", groups = {"Regression"},
+    @Test(groups = {"Regression"},
         description = "Verifies that tester can view Test Quality for site")
     public void viewSiteTestQuality() throws IOException, URISyntaxException {
         //National stats calculations are cached
@@ -56,7 +56,7 @@ public class SiteTestQualityViewTests extends DslTest {
         assertThat("Return link is displayed", siteTestQualityPage.isReturnLinkDisplayed(), is(true));
     }
 
-    @Test(testName = "TestQualityInformation", groups = {"Regression"},
+    @Test(groups = {"Regression"},
         description = "Verifies that tester can view Test Quality for site with a link to 12 months ago and correct data")
     public void checkDataForTwelveMonthsAgo() throws IOException, URISyntaxException {
         //National stats calculations are cached

@@ -34,7 +34,7 @@ public class UserTestQualityViewTest extends DslTest {
         tester = userData.createTester(site.getId());
     }
 
-    @Test(testName = "TestQualityInformation", groups = {"Regression"}, description = "Verifies that tester can view Test Quality for site")
+    @Test(groups = {"Regression"}, description = "Verifies that tester can view Test Quality for site")
     public void viewUserTestQualityForGroupA() throws IOException, URISyntaxException {
         //National stats calculations are cached
         siteData.clearAllCachedStatistics();
@@ -58,7 +58,7 @@ public class UserTestQualityViewTest extends DslTest {
         assertThat("Correct average is displayed", userTestQualityPage.testerAverageEquals("Motorcycle lighting and signalling", 100), is(true));
     }
 
-    @Test(testName = "TestQualityInformation", groups = {"Regression"}, description = "Verifies that tester can view Test Quality for site")
+    @Test(groups = {"Regression"}, description = "Verifies that tester can view Test Quality for site")
     public void viewUserTestQualityForGroupB() throws IOException, URISyntaxException {
         //National stats calculations are cached
         siteData.clearAllCachedStatistics();
