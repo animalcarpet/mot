@@ -9,14 +9,14 @@ use DvsaEntities\Repository\ConfigurationRepository;
 use DvsaMotApi\Service\Validator\Odometer\OdometerReadingDeltaAnomalyChecker;
 
 /**
- * Class OdometerReadingDeltaAnomalyCheckerTest.
+ * Class OdometerReadingDeltaAnomalyCheckerTest
  */
 class OdometerReadingDeltaAnomalyCheckerTest extends \PHPUnit_Framework_TestCase
 {
     private $configurationRepository;
 
     /**
-     * @var OdometerReadingDeltaAnomalyChecker
+     * @var OdometerReadingDeltaAnomalyChecker $checker
      */
     private $checker;
 
@@ -42,14 +42,14 @@ class OdometerReadingDeltaAnomalyCheckerTest extends \PHPUnit_Framework_TestCase
         $result = $this->checker->check($reading, $prevReading);
         $this->assertTrue(
             $result->messageWithTextExists(OdometerReadingDeltaAnomalyChecker::CURRENT_EQ_PREVIOUS),
-            'The message about previous and current readings equal is expected!'
+            "The message about previous and current readings equal is expected!"
         );
     }
 
     public function testCheck_givenReadingIsOK_and_currReadingLowerThanPrevious_shouldProduceAppropriateMessage()
     {
         $prevValue = 123;
-        $currValue = $prevValue - 2;
+        $currValue = $prevValue - 1;
         $reading = OdometerReading::create()
             ->setValue($currValue)->setUnit(OdometerUnit::KILOMETERS)
             ->setResultType(OdometerReadingResultType::OK);
@@ -62,7 +62,7 @@ class OdometerReadingDeltaAnomalyCheckerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue(
             $result->messageWithTextExists(OdometerReadingDeltaAnomalyChecker::CURRENT_LOWER_THAN_PREVIOUS),
-            'The message about current reading lower than previous is expected!'
+            "The message about current reading lower than previous is expected!"
         );
     }
 
@@ -79,14 +79,14 @@ class OdometerReadingDeltaAnomalyCheckerTest extends \PHPUnit_Framework_TestCase
             ->setValue($prevValue)->setUnit(OdometerUnit::KILOMETERS)
             ->setResultType(OdometerReadingResultType::OK);
 
-        $this->configurationRepository->expects($this->any())->method('getParam')
+        $this->configurationRepository->expects($this->any())->method("getParam")
             ->will($this->returnValue($muchHigherLimit));
 
         $result = $this->checker->check($reading, $prevReading);
 
         $this->assertTrue(
             $result->messageWithTextExists(OdometerReadingDeltaAnomalyChecker::VALUE_SIGNIFICANTLY_HIGHER),
-            'The message about current reading being significantly higher than previous is expected!'
+            "The message about current reading being significantly higher than previous is expected!"
         );
     }
 
@@ -100,7 +100,7 @@ class OdometerReadingDeltaAnomalyCheckerTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->checker->check($reading, $prevReading);
 
-        $this->assertTrue($result->isEmpty(), 'No message expected when there is no odometer');
+        $this->assertTrue($result->isEmpty(), "No message expected when there is no odometer");
     }
 
     public function testCheck_givenOdometerIsNotReadable_shouldExpectNoMessage()
@@ -113,7 +113,7 @@ class OdometerReadingDeltaAnomalyCheckerTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->checker->check($reading, $prevReading);
 
-        $this->assertTrue($result->isEmpty(), 'No message expected when odometer could not be read');
+        $this->assertTrue($result->isEmpty(), "No message expected when odometer could not be read");
     }
 
     public function testCheck_givenReadingIsOK_prevCurrReadingsDeltaIsNotProvided_shouldExpectNoMessage()
@@ -125,6 +125,6 @@ class OdometerReadingDeltaAnomalyCheckerTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->checker->check($reading, $prevReading);
 
-        $this->assertTrue($result->isEmpty(), 'No message expected when delta not captured');
+        $this->assertTrue($result->isEmpty(), "No message expected when delta not captured");
     }
 }

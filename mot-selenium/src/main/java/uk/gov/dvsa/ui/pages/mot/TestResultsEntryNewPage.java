@@ -28,7 +28,6 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
     @FindBy(id = "vehicleRegistration") private WebElement vehicleRegistration;
     @FindBy(id = "firstUsedDate") private WebElement firstUsedDate;
     @FindBy(id = "odometerReading") private WebElement odometerReading;
-    @FindBy(id = "odometerNotice") private WebElement odometerNotice;
     @FindBy(id = "odometer") private WebElement odometerField;
     @FindBy(id = "addDefectButton") private WebElement addDefect;
     @FindBy(id = "searchForDefect") private WebElement searchForDefect;
@@ -256,9 +255,5 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
         brakeTestResultsPage.completeBrakeEffortField(outcome);
 
         return this;
-    }
-
-    public String getOdometerNoticeText() {
-        return odometerNotice.getText();
     }
 }

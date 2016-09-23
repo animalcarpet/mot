@@ -35,9 +35,6 @@
                     {{ odometerReading.getDisplayValue }}
                 {% endif %}
             </h3>
-            {% if odometerReading.hasNotice %}
-                <span id="odometerNotice" class="action-panel__meta">{{ odometerReading.getNotice }}</span>
-            {% endif %}
         </div>
         <div class="action-panel__container--last">
             <a href="{{ url('odometer', {tID : motTest.motTestNumber}) }}" id="addOdometerReadingButton" class="button">
