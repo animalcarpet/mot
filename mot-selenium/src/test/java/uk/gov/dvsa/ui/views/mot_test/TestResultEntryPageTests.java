@@ -1,11 +1,11 @@
 package uk.gov.dvsa.ui.views.mot_test;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.hamcrest.core.Is;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
@@ -18,7 +18,6 @@ import uk.gov.dvsa.ui.pages.mot.TestResultsEntryNewPage;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TestResultEntryPageTests extends DslTest {
@@ -92,40 +91,5 @@ public class TestResultEntryPageTests extends DslTest {
 
         //Then the test process should be cancelled and a VT30 Certificate generated message is displayed
         assertThat(testAbortedPage.isVT30messageDisplayed(), Is.is(true));
-    }
-
-    @Test(testName = "TestResultEntryImprovements",
-            groups = {"Regression", "BL-3395"},
-            dataProvider = "getOdometerReadingsAndNotice")
-    public void testOdometerReadingNotices(int initialReading,
-                                           int secondReading,
-                                           String notice) throws URISyntaxException, IOException {
-        // Given I start a test and I am on the Test Results Page and I enter an odometer reading
-        TestResultsEntryNewPage testResultsEntryPage = pageNavigator
-                .gotoTestResultsEntryNewPage(tester, vehicle)
-                .addOdometerReading(initialReading);
-
-        // When I complete the test
-        testResultsEntryPage
-                .completeBrakeTestWithPassValues()
-                .clickReviewTestButton()
-                .finishTest();
-
-        // And I test the same vehicle again and enter an odometer reading that will trigger a notice
-        testResultsEntryPage = pageNavigator
-                .gotoTestResultsEntryNewPage(tester, vehicle)
-                .addOdometerReading(secondReading);
-
-        // Then I will see the relevant notice on the test results entry page
-        assertThat(testResultsEntryPage.getOdometerNoticeText(), Is.is(notice));
-    }
-
-    @DataProvider(name = "getOdometerReadingsAndNotice")
-    public Object[][] getOdometerReadingsAndNotice() throws IOException {
-        return new Object[][] {
-                {1000, 1000, "This is the same as the last test"},
-                {1000, 100, "This is lower than the last test"},
-                {1000, 999999, "This is significantly higher than the last test"}
-        };
     }
 }
