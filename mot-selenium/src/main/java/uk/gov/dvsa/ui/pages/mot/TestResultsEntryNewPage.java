@@ -28,6 +28,7 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
     @FindBy(id = "vehicleRegistration") private WebElement vehicleRegistration;
     @FindBy(id = "firstUsedDate") private WebElement firstUsedDate;
     @FindBy(id = "odometerReading") private WebElement odometerReading;
+    @FindBy(id = "odometerNotice") private WebElement odometerNotice;
     @FindBy(id = "odometer") private WebElement odometerField;
     @FindBy(id = "addDefectButton") private WebElement addDefect;
     @FindBy(id = "searchForDefect") private WebElement searchForDefect;
@@ -113,6 +114,12 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
 
     public TestAbandonedPage abandonMotTest(CancelTestReason reason){
         processTestCancellation(reason);
+
+        return new TestAbandonedPage(driver);
+    }
+
+    public TestAbandonedPage abandonMotTest2FaActiveUser(CancelTestReason reason){
+        processTestCancellation2faActiveUser(reason);
 
         return new TestAbandonedPage(driver);
     }
@@ -231,10 +238,14 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
     }
 
     private void processTestCancellation(CancelTestReason reason) {
-        cancelTest.click();
-
-        ReasonToCancelTestPage cancelTestPage = new ReasonToCancelTestPage(driver);
+        ReasonToCancelTestPage cancelTestPage = clickCancelTest();
         cancelTestPage.enterReason(reason);
+        cancelTestPage.clickConfirmAndCancelTest();
+    }
+
+    private void processTestCancellation2faActiveUser(CancelTestReason reason) {
+        ReasonToCancelTestPage cancelTestPage = clickCancelTest();
+        cancelTestPage.enterReason2FaActiveUser(reason);
         cancelTestPage.clickConfirmAndCancelTest();
     }
 
@@ -255,5 +266,9 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
         brakeTestResultsPage.completeBrakeEffortField(outcome);
 
         return this;
+    }
+
+    public String getOdometerNoticeText() {
+        return odometerNotice.getText();
     }
 }

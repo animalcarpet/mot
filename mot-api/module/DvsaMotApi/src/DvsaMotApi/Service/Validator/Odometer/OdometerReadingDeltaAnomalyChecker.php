@@ -5,22 +5,20 @@ namespace DvsaMotApi\Service\Validator\Odometer;
 use Api\Check\CheckMessage;
 use Api\Check\CheckResult;
 use DvsaCommon\Constants\OdometerReadingResultType;
+use DvsaCommon\Constants\OdometerUnit;
 use DvsaEntities\Entity\OdometerReading;
 use DvsaEntities\Repository\ConfigurationRepository;
 
 /**
- * Class OdometerReadingDeltaAnomalyChecker
- *
- * @package DvsaMotApi\Service\Validator\Odometer
+ * Class OdometerReadingDeltaAnomalyChecker.
  */
 class OdometerReadingDeltaAnomalyChecker
 {
+    const CURRENT_LOWER_THAN_PREVIOUS = 'This is lower than the last test';
+    const VALUE_SIGNIFICANTLY_HIGHER = 'This is significantly higher than the last test';
+    const CURRENT_EQ_PREVIOUS = 'This is the same as the last test';
+    const CONFIG_PARAM_ODOMETER_DELTA_SIGNIFICANTLY_HIGH = 'odometerDeltaSignificantValue';
 
-    const CURRENT_LOWER_THAN_PREVIOUS = "This is lower than the last test";
-    const VALUE_SIGNIFICANTLY_HIGHER = "This is significantly higher than the last test";
-    const CURRENT_EQ_PREVIOUS = "This is the same as the last test";
-
-    const CONFIG_PARAM_ODOMETER_DELTA_SIGNIFICANTLY_HIGH = "odometerDeltaSignificantValue";
     /**
      * @var ConfigurationRepository
      */
@@ -63,7 +61,7 @@ class OdometerReadingDeltaAnomalyChecker
     }
 
     /**
-     * Checks if the delta is much higher than a limit (configuration value)
+     * Checks if the delta is much higher than a limit (configuration value).
      *
      * @param $delta
      *
@@ -71,7 +69,7 @@ class OdometerReadingDeltaAnomalyChecker
      */
     private function isMuchHigherThanLastOne($delta)
     {
-        $limit = (int)$this->configurationRepository->getValue(self::CONFIG_PARAM_ODOMETER_DELTA_SIGNIFICANTLY_HIGH);
+        $limit = (int) $this->configurationRepository->getValue(self::CONFIG_PARAM_ODOMETER_DELTA_SIGNIFICANTLY_HIGH);
 
         return $delta >= $limit;
     }
@@ -84,13 +82,31 @@ class OdometerReadingDeltaAnomalyChecker
      */
     private function calculateDeltaSinceLastReading(OdometerReading $currentReading, OdometerReading $previousReading)
     {
-        if ($currentReading->getResultType() === OdometerReadingResultType::OK
-            && $previousReading->getResultType() === OdometerReadingResultType::OK
-            && $previousReading->getUnit() === $currentReading->getUnit()
-        ) {
-            return $currentReading->getValue() - $previousReading->getValue();
+        if ($currentReading->getValue() == 0 || $previousReading->getValue() == 0) {
+            return;
         }
 
-        return null;
+        if ($currentReading->getResultType() === OdometerReadingResultType::OK
+            && $previousReading->getResultType() === OdometerReadingResultType::OK
+        ) {
+            return intval(($this->normaliseReadingToKilometres($currentReading)
+                - $this->normaliseReadingToKilometres($previousReading)) / 1.6);
+        }
+
+        return;
+    }
+
+    /**
+     * @param OdometerReading $reading
+     *
+     * @return int
+     */
+    private function normaliseReadingToKilometres(OdometerReading $reading)
+    {
+        if ($reading->getUnit() === OdometerUnit::MILES) {
+            return $reading->getValue() * 1.6;
+        }
+
+        return $reading->getValue();
     }
 }
