@@ -167,6 +167,37 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider generatedFailuresDataProvider
+     * @param int $failures
+     */
+    public function testGetGeneratedFailures($failures)
+    {
+        $motTestMock = $this->getMockBuilder(MotTestDto::class)->getMock();
+        $motTestMock->expects($this->atLeast(3))
+            ->method('getReasonsForRejection')
+            ->willReturn($this->getGeneratedFailures($failures));
+
+        $testCollection = IdentifiedDefectCollection::fromMotApiData($motTestMock);
+
+        $this->assertEquals($failures, $testCollection->getNumberOfGeneratedFailures());
+        if ($failures > 0) {
+            $this->assertNotEmpty($testCollection->getGeneratedFailures());
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function generatedFailuresDataProvider()
+    {
+        return [
+            [0],
+            [1],
+            [2],
+        ];
+    }
+
+    /**
      * @param $reasonsForRejection
      *
      * @return MotTestDto|\PHPUnit_Framework_MockObject_MockObject
@@ -270,6 +301,42 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
             ];
         }
 
+        return $testData;
+    }
+
+    /**
+     * @param int $failures
+     *
+     * @return array
+     */
+    private function getGeneratedFailures($failures)
+    {
+        $testData = ['FAIL'];
+
+        for ($i = 0; $i < $failures; $i++) {
+
+            $testData['FAIL'][] = [
+                'type' => 'FAIL',
+                'locationLateral' => null,
+                'locationLongitudinal' => null,
+                'locationVertical' => null,
+                'comment' => null,
+                'failureDangerous' => false,
+                'generated' => true,
+                'customDescription' => null,
+                'onOriginalTest' => false,
+                'id' => 1,
+                'rfrId' => 8460,
+                'name' => 'Body condition',
+                'nameCy' => '',
+                'testItemSelectorDescription' => 'Body',
+                'failureText' => 'or chassis has excessive corrosion seriously affecting its strength within 30cm of the body mountings',
+                'testItemSelectorDescriptionCy' => null,
+                'failureTextCy' => 'mae\'r siasi wedi rhydu gormod, sy\'n effeithio\'n ddifrifol ar ei gryfder o fewn 30cm i fowntinau\'r corff',
+                'testItemSelectorId' => 5696,
+                'inspectionManualReference' => '6.1.B.2',
+            ];
+        }
         return $testData;
     }
 }

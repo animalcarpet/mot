@@ -41,6 +41,16 @@ public class DefectsTestsDataProvider {
         return defect;
     }
 
+    public static Defect buildDefect(String defectName, String addOrRemoveName, boolean isDangerous, String... pathToDefect) {
+        Defect.DefectBuilder builder = new Defect.DefectBuilder();
+        builder.setCategoryPath(pathToDefect);
+        builder.setDefectName(defectName);
+        builder.setDefectType(Defect.DefectType.Failure);
+        builder.setAddOrRemoveName(addOrRemoveName);
+        builder.setIsDangerous(isDangerous);
+        return builder.build();
+    }
+
     private static Defect buildFailureDefect(Defect.DefectBuilder builder) {
         builder.setCategoryPath(new String[] {"Drivers view of the road", "Windscreen"});
         builder.setDefectName("is of a temporary type");

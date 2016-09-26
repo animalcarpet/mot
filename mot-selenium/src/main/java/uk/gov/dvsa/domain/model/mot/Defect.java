@@ -2,7 +2,7 @@ package uk.gov.dvsa.domain.model.mot;
 
 public class Defect {
 
-    public enum DefectType {Failure, PRS, Advisory};
+    public enum DefectType {Failure, PRS, Advisory}
 
     private String[] categoryPath;
     private String defectName;

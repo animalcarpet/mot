@@ -41,14 +41,11 @@ public class ReInspectionTests extends DslTest {
     public void veConductsVehicleReInspectionAndRecordsTheResultOfTheDvsaTest() throws IOException {
 
         //Given a vehicle failed Mot
-        String motTestId = motApi.createTest(
-                tester,
-                testSite.getId(), vehicleData.getNewVehicle(tester), TestOutcome.FAILED, 123456,
-                DateTime.now()).getMotTestNumber();
+        String motTestId = motApi.createTest(tester, testSite.getId(), vehicleData.getNewVehicle(tester), TestOutcome.FAILED, 123456,
+                                                DateTime.now()).getMotTestNumber();
 
         //When I conduct a re-inspection as VE
-        String message =
-                motUI.reInspection.targetedReInspection(userData.createVehicleExaminer("ft-Enf-", false), motTestId);
+        String message = motUI.reInspection.getReInspectionAssessmentMessage(userData.createVehicleExaminer("ft-Enf-", false), motTestId);
 
         //Then I should be able to record the assessment successfully
         assertThat("Assessment is recorded successfully", message, containsString("the test differences have been saved"));
