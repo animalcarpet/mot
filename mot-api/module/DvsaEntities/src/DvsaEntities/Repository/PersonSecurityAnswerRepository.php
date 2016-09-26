@@ -1,10 +1,7 @@
 <?php
 namespace DvsaEntities\Repository;
 
-use Doctrine\ORM\EntityRepository;
-use DvsaEntities\Entity\SecurityQuestion;
-
-class PersonSecurityAnswerRepository extends EntityRepository
+class PersonSecurityAnswerRepository extends AbstractMutableRepository
 {
     /**
      * @return PersonSecurityAnswer[]

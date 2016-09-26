@@ -1,4 +1,8 @@
-
+<?php
+    if (empty($defaultValue)) {
+        $defaultValue = 'Please select';
+    }
+?>
 <select
     id="<?php echo $this->escapeHtmlAttr($this->id); ?>"
     name="<?php echo $this->escapeHtmlAttr($this->name); ?>"
@@ -6,7 +10,7 @@
         <?php echo !empty($inputModifier) ? 'form-control-' . $this->escapeHtmlAttr($inputModifier) : ''; ?>">
 
     <option value="">
-        <?php echo $this->escapeHtml('Please select'); ?>
+        <?php echo $this->escapeHtml($defaultValue); ?>
     </option>
 
     <?php foreach($options as $key => $value): ?>

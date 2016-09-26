@@ -814,6 +814,17 @@ class Person extends Entity
         return $this;
     }
 
+    public function replaceSecurityAnswers(array $newSecurityAnswers)
+    {
+        $this->personSecurityAnswers->clear();
+
+        foreach ($newSecurityAnswers as $newSecurityAnswer) {
+            $this->addSecurityAnswer($newSecurityAnswer);
+        }
+
+        return $this;
+    }
+
     public function getSecurityAnswers()
     {
         return $this->personSecurityAnswers;

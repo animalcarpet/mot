@@ -7,11 +7,13 @@ use AccountApi\Factory\Service\Validator\ClaimValidatorFactory;
 use AccountApi\Factory\Service\OpenAmIdentityServiceFactory;
 use AccountApi\Factory\Service\TokenServiceFactory;
 use AccountApi\Factory\Service\SecurityQuestionServiceFactory;
+use AccountApi\Factory\Service\Validator\PersonSecurityAnswerValidatorFactory;
 use AccountApi\Service\ClaimService;
 use AccountApi\Service\SecurityQuestionService;
 use AccountApi\Service\TokenService;
 use AccountApi\Service\Validator\ClaimValidator;
 use AccountApi\Service\OpenAmIdentityService;
+use AccountApi\Service\Validator\PersonSecurityAnswerValidator;
 use Zend\ModuleManager\ModuleManagerInterface;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
@@ -42,6 +44,7 @@ class Module
                 OpenAmIdentityService::class => OpenAmIdentityServiceFactory::class,
                 TokenService::class => TokenServiceFactory::class,
                 SecurityQuestionService::class => SecurityQuestionServiceFactory::class,
+                PersonSecurityAnswerValidator::class => PersonSecurityAnswerValidatorFactory::class
             ]
         ];
     }

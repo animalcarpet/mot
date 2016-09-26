@@ -2,7 +2,6 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service;
 
-use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\UrlBuilder\NotificationUrlBuilder;

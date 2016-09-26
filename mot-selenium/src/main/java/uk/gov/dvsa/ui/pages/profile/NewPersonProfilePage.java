@@ -5,13 +5,14 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
+import uk.gov.dvsa.helper.Utilities;
 import uk.gov.dvsa.ui.pages.ChangeEmailDetailsPage;
 import uk.gov.dvsa.ui.pages.ChangeTelephoneDetailsPage;
+import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardPage;
 import uk.gov.dvsa.ui.pages.dvsa.RolesAndAssociationsPage;
 import uk.gov.dvsa.ui.pages.profile.annualassessmentcertificates.AnnualAssessmentCertificatesIndexPage;
 import uk.gov.dvsa.ui.pages.profile.qualificationdetails.QualificationDetailsPage;
-import uk.gov.dvsa.ui.pages.profile.testqualityinformation.AggregatedTestQualityPage;
-import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardPage;
+import uk.gov.dvsa.ui.pages.profile.security.ChangeSecurityQuestionsPasswordPage;
 import uk.gov.dvsa.ui.pages.profile.testqualityinformation.AggregatedTestQualityPage;
 
 public class NewPersonProfilePage extends ProfilePage {
@@ -41,6 +42,7 @@ public class NewPersonProfilePage extends ProfilePage {
     private By securityCardPanel = By.id("security-card");
     @FindBy(id = "annual-assessment-certificates") WebElement annualAssessmentCertificates;
     @FindBy(id = "test-quality-information") private WebElement testQualityInformationLink;
+    @FindBy(id = "change-security-questions") private WebElement changeSecurityQuestionsLink;
 
     private static String DVSA_ROLES = "dvsa_roles";
     private static String QUALIFICATION_STATUS = "qualification_status";
@@ -190,5 +192,18 @@ public class NewPersonProfilePage extends ProfilePage {
     public AggregatedTestQualityPage clickTestQualityInformationLink() {
         testQualityInformationLink.click();
         return new AggregatedTestQualityPage(driver);
+    }
+
+    public Boolean isChangeSecurityQuestionsLinkDisplayed() {
+        return PageInteractionHelper.isElementDisplayed(changeSecurityQuestionsLink);
+    }
+
+    public ChangeSecurityQuestionsPasswordPage clickChangeSecurityQuestionsLink() {
+        if(!PageInteractionHelper.isElementDisplayed(changeSecurityQuestionsLink)) {
+            Utilities.Logger.LogInfo("Security Questions link not found");
+        } else {
+            changeSecurityQuestionsLink.click();
+        }
+        return new ChangeSecurityQuestionsPasswordPage(driver);
     }
 }

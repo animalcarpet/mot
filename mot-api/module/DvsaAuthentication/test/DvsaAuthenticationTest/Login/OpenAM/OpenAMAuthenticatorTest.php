@@ -148,6 +148,33 @@ class OpenAMAuthenticatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($identity, $result->getIdentity());
     }
 
+    /**
+     * @dataProvider dataProvider_usernamePasswordEmptyCombinations
+     */
+    public function testValidateCredentials_givenUsernameOrPasswordEmpty_shouldBeInvalid($username, $password)
+    {
+        $this->assertFalse($this->create()->validateCredentials($username, $password));
+    }
+
+    public function testValidateCredentials_givenOpenAMException_shouldBeInvalid()
+    {
+        $this->openAMClient
+            ->expects($this->once())
+            ->method('validateCredentials')
+            ->willThrowException(new OpenAMClientException('bang'));
+
+        $this->assertFalse($this->create()->validateCredentials('username', 'password'));
+    }
+
+    public function testValidateCredentials_givenValidCredentials_shouldBeValid()
+    {
+        $this->openAMClient
+            ->expects($this->once())
+            ->method('validateCredentials')
+            ->willReturn(true);
+
+        $this->assertTrue($this->create()->validateCredentials('username', 'password'));
+    }
 
     public function create()
     {

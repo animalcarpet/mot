@@ -18,6 +18,7 @@ parameters:
           Dvsa\Mot\Behat\Support\Api\ReplacementCertificate: dvsa.replacement_certificate
           Dvsa\Mot\Behat\Support\Api\Rest: dvsa.rest
           Dvsa\Mot\Behat\Support\Api\SecurityPin: dvsa.security_pin
+          Dvsa\Mot\Behat\Support\Api\SecurityQuestionsChange: dvsa.security_questions_change
           Dvsa\Mot\Behat\Support\Api\Session: dvsa.session
           Dvsa\Mot\Behat\Support\Api\SlotPurchase: dvsa.slot_purchase
           Dvsa\Mot\Behat\Support\Api\SlotReport: dvsa.slot_report

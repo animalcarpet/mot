@@ -176,7 +176,7 @@ class VtsContext implements Context
      */
     public function thereIsASiteAssociatedWithAuthorisedExaminer($siteName, $aeName)
     {
-        $this->createSiteAssociatedWithAe($siteName, $aeName);
+        $this->siteData->create(['name' => $siteName, 'aename' => $aeName]);
     }
 
     /**

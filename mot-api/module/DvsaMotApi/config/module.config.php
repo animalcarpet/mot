@@ -15,6 +15,7 @@ use DvsaMotApi\Controller\ReasonForRejectionController;
 use DvsaMotApi\Controller\ReplacementCertificateDraftController;
 use DvsaMotApi\Controller\RetestController;
 use DvsaMotApi\Controller\SurveyController;
+use DvsaMotApi\Controller\SessionConfirmationController;
 use DvsaMotApi\Controller\TesterMotTestLogController;
 use DvsaMotApi\Controller\TestItemCategoryNameController;
 
@@ -123,6 +124,18 @@ return [
                     ],
                     'defaults'    => [
                         'controller' => 'DvsaMotApi\Controller\Session',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes'  => [
+                    'confirmation' => [
+                        'type'    => 'Segment',
+                        'options' => [
+                            'route'    => '/confirmation',
+                            'defaults' => [
+                                'controller' => SessionConfirmationController::class
+                            ],
+                        ],
                     ],
                 ],
             ],

@@ -14,11 +14,11 @@ import uk.gov.dvsa.ui.pages.authentication.securitycard.ActivateYourCardPromptPa
 import uk.gov.dvsa.ui.pages.authentication.securitycard.OrderYourCardPromptPage;
 import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostForgottenCardAlreadyOrderedPage;
 import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostForgottenCardQuestionOnePage;
+import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardInformationPage;
+import uk.gov.dvsa.ui.pages.authentication.twofactorauth.TwoFactorPinEntryPage;
 import uk.gov.dvsa.ui.pages.events.EventsHistoryPage;
 import uk.gov.dvsa.ui.pages.events.HistoryType;
 import uk.gov.dvsa.ui.pages.login.LoginPage;
-import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardInformationPage;
-import uk.gov.dvsa.ui.pages.authentication.twofactorauth.TwoFactorPinEntryPage;
 
 import java.io.IOException;
 
@@ -73,7 +73,7 @@ public class MotUI {
     public void login(final User user) throws IOException {
         LoginPage loginPage = pageNavigator.goToLoginPage();
         pageNavigator.getDriver().setUser(user);
-        homepage = loginPage.login(user.getUsername(), user.getPassword(), HomePage.class);
+        loginPage.login(user.getUsername(), user.getPassword(), HomePage.class);
     }
 
     public LoginPage loginWithCustomCredentials(final User user, String username, String password) throws IOException {

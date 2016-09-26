@@ -11,7 +11,7 @@ import uk.gov.dvsa.ui.pages.dvsa.UserSearchResultsPage;
 import uk.gov.dvsa.ui.pages.events.EventsHistoryPage;
 import uk.gov.dvsa.ui.pages.profile.annualassessmentcertificates.AnnualAssessmentCertificatesIndexPage;
 import uk.gov.dvsa.ui.pages.profile.qualificationdetails.QualificationDetailsPage;
-import uk.gov.dvsa.ui.pages.profile.testqualityinformation.AggregatedTestQualityPage;
+import uk.gov.dvsa.ui.pages.profile.security.ChangeSecurityQuestionsPasswordPage;
 import uk.gov.dvsa.ui.pages.profile.testqualityinformation.AggregatedTestQualityPage;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardPage;
 
@@ -165,8 +165,15 @@ public abstract class ProfilePage extends Page {
         throw new UnsupportedOperationException("Operation not supported for: " + this.toString());
     }
 
-    public EventsHistoryPage clickEventHistoryLink(){
-    throw new UnsupportedOperationException("Operation not supported for: " + this.toString());
+    public EventsHistoryPage clickEventHistoryLink() {
+        throw new UnsupportedOperationException("Operation not supported for: " + this.toString());
     }
 
+    public Boolean isChangeSecurityQuestionsLinkDisplayed() {
+        throw new UnsupportedOperationException("Operation not supported for: " + this.toString());
+    }
+
+    public ChangeSecurityQuestionsPasswordPage clickChangeSecurityQuestionsLink() {
+        throw new UnsupportedOperationException("Operation not supported for: " + this.toString());
+    }
 }

@@ -5,6 +5,7 @@ use AccountApi\Controller\SecurityQuestionController;
 use AccountApi\Factory\Controller\SecurityQuestionControllerFactory;
 use AccountApi\Service\SecurityQuestionService;
 use Doctrine\ORM\EntityManager;
+use Dvsa\Mot\Api\RegistrationModule\Service\PersonSecurityAnswerRecorder;
 use DvsaCommonTest\TestUtils\XMock;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
@@ -21,6 +22,9 @@ class SecurityQuestionControllerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $service = XMock::of(SecurityQuestionService::class);
         $serviceManager->setService(SecurityQuestionService::class, $service);
+
+        $personSecurityAnswerRecorder = XMock::of(PersonSecurityAnswerRecorder::class);
+        $serviceManager->setService(PersonSecurityAnswerRecorder::class, $personSecurityAnswerRecorder);
 
         $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
         $plugins->expects($this->any())

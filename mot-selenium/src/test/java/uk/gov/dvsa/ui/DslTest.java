@@ -22,6 +22,7 @@ import java.util.Date;
 @Listeners(TestListener.class)
 public abstract class DslTest {
 
+    protected String message;
     private MotAppDriver driver = null;
     protected AeData aeData = new AeData();
     protected SiteData siteData = new SiteData();

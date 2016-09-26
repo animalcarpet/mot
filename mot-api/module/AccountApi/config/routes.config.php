@@ -94,6 +94,19 @@ return [
         ],
         'may_terminate' => true,
         'child_routes'  => [
+            'update' => [
+                'type'    => 'Segment',
+                'options' => [
+                    'route'    => '/:id',
+                    'constraints' => [
+                        'uid' => '[0-9]+',
+                    ],
+                    'verb' => 'put',
+                    'defaults' => [
+                        'controller' => SecurityQuestionControllerFactory::class,
+                    ],
+                ],
+            ],
             'check' => [
                 'type'    => 'Segment',
                 'options' => [
