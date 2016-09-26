@@ -2,6 +2,8 @@
 
 namespace TestSupport\Helper;
 
+use Zend\Math\Rand;
+
 /**
  * Generates usernames, email addresses etc. Designed to be instantiated once per data-creation request.
  */
@@ -18,7 +20,7 @@ class DataGeneratorHelper
 
     private function __construct()
     {
-        $this->differentiator = uniqid("", true);
+        $this->differentiator = Rand::getString(20, "abcdefghijklmnopqrstuvwxyz1234567890", true);
     }
 
     /**
