@@ -5,6 +5,7 @@ namespace TestSupport\Service;
 use TestSupport\Helper\TestDataResponseHelper;
 use Doctrine\ORM\EntityManager;
 use Exception;
+use Zend\Math\Rand;
 
 class TwoFactorAuthCardService
 {
@@ -59,6 +60,7 @@ jA0EAwMCZIsq2TVkHiZgyUZvaApIr4zLJu52omoor/JIGIc211J3fm41+jYVvD6j
 
     private function getRandomisedSerialNumber()
     {
-        return substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 4) . rand(10000000, 99999999);
+
+        return Rand::getString(4, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", true) . Rand::getInteger(10000000, 99999999, true);
     }
 }
