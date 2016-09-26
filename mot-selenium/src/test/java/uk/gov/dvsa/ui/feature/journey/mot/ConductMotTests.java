@@ -59,7 +59,7 @@ public class ConductMotTests extends DslTest {
         assertThat(testCompletePage.verifyBackToHomeLinkDisplayed(), is(true));
     }
 
-    @Test(testName = "2fa", groups = {"BVT", "Regression"}, description = "Two Factor Authenticated users " +
+    @Test(testName = "2fa", groups = {"BVT"}, description = "Two Factor Authenticated users " +
             "should not be required to enter one time password")
     public void oneTimePasswordBoxNotDisplayedForTwoFactorAuthTester() throws IOException, URISyntaxException {
 
@@ -132,13 +132,12 @@ public class ConductMotTests extends DslTest {
         assertThat(testAbandonedPage.isVT30messageDisplayed(), is(true));
     }
 
-    @Test(testName = "2fa", groups = {"BVT", "Regression"} )
+    @Test(testName = "2fa", groups = {"BVT"} )
     public void startAndAbandonTest2FaActiveUser() throws URISyntaxException, IOException {
         //Given I am a 2FA activated user and I am on the Test Results Page
         User twoFactorUser = userData.createTester(site.getId());
         motUI.authentication.registerAndSignInTwoFactorUser(twoFactorUser);
-        //Todo fix 2FA tests
-        TestResultsEntryPage testResultsEntryPage = (TestResultsEntryPage) pageNavigator.gotoTestResultsEntryPage(twoFactorUser, vehicle);
+        TestResultsEntryGroupAPageInterface testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(twoFactorUser, vehicle);
 
         //When I abandon the test with a reason
         TestAbandonedPage testAbandonedPage =

@@ -13,5 +13,6 @@ public interface TestResultsEntryPageInterface {
     public TestAbandonedPage abandonMotTest(CancelTestReason reason);
     public TestAbortedPage abortMotTest(CancelTestReason reason);
     public ReasonToCancelTestPage clickCancelTest();
+    public TestAbandonedPage abandonMotTest2FaActiveUser(CancelTestReason reason);
 
 }

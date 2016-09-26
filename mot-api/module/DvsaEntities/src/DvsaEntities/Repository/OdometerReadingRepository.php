@@ -71,13 +71,12 @@ class OdometerReadingRepository extends AbstractMutableRepository
               mot_test mt1
             JOIN mot_test_type tt1 ON (mt1.mot_test_type_id = tt1.id)
             JOIN mot_test mt2
-            JOIN mot_test_status ts1 ON (mt1.status_id = ts1.id)
             WHERE
               mt1.vehicle_id = mt2.vehicle_id
               AND mt2.number = :motTestNumber
               AND mt1.number <> mt2.number
-              AND tt1.code = :testType
-              AND ts1.name = :status
+              AND (tt1.code = :testTypeNormal
+                OR tt1.code = :testTypeRetest)
               AND mt1.started_date < mt2.started_date
             ORDER BY
               mt1.issued_date DESC LIMIT 1
@@ -87,7 +86,8 @@ class OdometerReadingRepository extends AbstractMutableRepository
         )
             ->setParameter("motTestNumber", $motTestNumber)
             ->setParameter("status", MotTestStatusName::PASSED)
-            ->setParameter("testType", MotTestTypeCode::NORMAL_TEST);
+            ->setParameter("testTypeNormal", MotTestTypeCode::NORMAL_TEST)
+            ->setParameter("testTypeRetest", MotTestTypeCode::RE_TEST);
 
         $resultArray = $query->getResult();
 

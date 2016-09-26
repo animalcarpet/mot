@@ -1,0 +1,28 @@
+diff --git a/mot-api/module/DvsaEntities/src/DvsaEntities/Repository/OdometerReadingRepository.php b/mot-api/module/DvsaEntities/src/DvsaEntities/Repository/OdometerReadingRepository.php
+index 2b89565..027140c 100644
+--- a/mot-api/module/DvsaEntities/src/DvsaEntities/Repository/OdometerReadingRepository.php
++++ b/mot-api/module/DvsaEntities/src/DvsaEntities/Repository/OdometerReadingRepository.php
+@@ -75,8 +75,8 @@ class OdometerReadingRepository extends AbstractMutableRepository
+               mt1.vehicle_id = mt2.vehicle_id
+               AND mt2.number = :motTestNumber
+               AND mt1.number <> mt2.number
+-              AND tt1.code = :testTypeNormal
+-              OR tt1.code = :testTypeRetest
++              AND (tt1.code = :testTypeNormal
++                OR tt1.code = :testTypeRetest)
+               AND mt1.started_date < mt2.started_date
+             ORDER BY
+               mt1.issued_date DESC LIMIT 1
+diff --git a/mot-api/module/DvsaMotApi/src/DvsaMotApi/Service/Validator/Odometer/OdometerReadingDeltaAnomalyChecker.php b/mot-api/module/DvsaMotApi/src/DvsaMotApi/Service/Validator/Odometer/OdometerReadingDeltaAnomalyChecker.php
+index 2a1ab8b..7e3381e 100644
+--- a/mot-api/module/DvsaMotApi/src/DvsaMotApi/Service/Validator/Odometer/OdometerReadingDeltaAnomalyChecker.php
++++ b/mot-api/module/DvsaMotApi/src/DvsaMotApi/Service/Validator/Odometer/OdometerReadingDeltaAnomalyChecker.php
+@@ -82,7 +82,7 @@ class OdometerReadingDeltaAnomalyChecker
+      */
+     private function calculateDeltaSinceLastReading(OdometerReading $currentReading, OdometerReading $previousReading)
+     {
+-        if ($currentReading->getValue() == 0 || $previousReading->getValue() == 0) {
++        if ($previousReading->getValue() == 0) {
+             return;
+         }
+ 
