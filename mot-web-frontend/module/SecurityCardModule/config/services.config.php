@@ -21,6 +21,8 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Factory\Listener\CardPin
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Factory\Service\RegisteredCardServiceFactory;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Listener\CardPinValidationListener;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\RegisteredCardService;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\AlreadyLoggedInTodayWithLostForgottenCardCookieService;
+use Dvsa\Mot\Frontend\SecurityCardModule\Factory\Service\AlreadyLoggedInTodayWithLostForgottenCardCookieServiceFactory;
 use Dvsa\Mot\Frontend\SecurityCardModule\Factory\Service\SecurityCardServiceFactory;
 use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
@@ -55,6 +57,7 @@ return [
     'factories' => [
         RegisteredCardService::class       => RegisteredCardServiceFactory::class,
         RegisterCardService::class         => RegisterCardServiceFactory::class,
+        AlreadyLoggedInTodayWithLostForgottenCardCookieService::class => AlreadyLoggedInTodayWithLostForgottenCardCookieServiceFactory::class,
         RegisterCardInformationCookieService::class => RegisterCardInformationCookieServiceFactory::class,
         OrderSecurityCardStepService::class => OrderSecurityCardStepServiceFactory::class,
         OrderNewSecurityCardSessionService::class => OrderNewSecurityCardSessionFactory::class,

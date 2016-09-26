@@ -11,11 +11,11 @@ import uk.gov.dvsa.ui.pages.authentication.securitycard.ReviewSecurityCardAddres
 import uk.gov.dvsa.ui.pages.authentication.securitycard.card_order_report.CardOrderReportListPage;
 import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostForgottenCardAlreadyOrderedPage;
 import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostForgottenCardConfirmationPage;
+import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostForgottenCardQuestionOnePage;
 import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostForgottenCardSignInPage;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardPage;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardSuccessPage;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.TwoFactorPinEntryPage;
-import uk.gov.dvsa.ui.pages.nominations.AlreadyOrderedCardPage;
 
 import java.io.IOException;
 
@@ -40,7 +40,11 @@ public class SecurityCard {
         signInWithoutSecurityCard(user).continueToHome();
     }
 
-    public void signInExpectingAlreadyOrderedCardLostAndForgotten(User user) throws IOException {
+  public void signInExpectingFirstQuestionLostAndForgottenNoCard(User user) throws IOException {
+            signInWithoutSecurityCard(user).continueToHome();
+    }
+
+    public void signInExpectingFirstQuestionLostAndForgottenCardOrdered(User user) throws IOException {
         signInWithoutSecurityCardAfterOrder(user).continueToHome();
     }
 
@@ -120,10 +124,10 @@ public class SecurityCard {
     }
 
     public LostForgottenCardConfirmationPage signInWithoutSecurityCardAfterOrder(User user) throws IOException {
-       LostForgottenCardAlreadyOrderedPage alreadyOrderedPage =
-               pageNavigator.navigateToPage(user, LostForgottenCardAlreadyOrderedPage.PATH, LostForgottenCardAlreadyOrderedPage.class);
+       LostForgottenCardQuestionOnePage questionOnePage =
+               pageNavigator.navigateToPage(user, LostForgottenCardAlreadyOrderedPage.PATH, LostForgottenCardQuestionOnePage.class);
 
-        return alreadyOrderedPage.continueToSecurityQuestionOnePage()
+        return questionOnePage
                 .enterAnswer("Blah")
                 .continueToQuestionTwoPage()
                 .enterAnswer("Blah")

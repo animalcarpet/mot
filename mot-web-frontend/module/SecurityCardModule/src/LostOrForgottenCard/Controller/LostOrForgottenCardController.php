@@ -5,6 +5,7 @@ namespace Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller;
 use Core\Controller\AbstractDvsaActionController;
 use Dashboard\Controller\UserHomeController;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\AlreadyLoggedInTodayWithLostForgottenCardCookieService;
 use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Service\AlreadyOrderedCardCookieService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
 use Dvsa\Mot\ApiClient\Resource\Item\SecurityCard;
@@ -12,6 +13,7 @@ use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Form\LostOrForgotte
 use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Service\LostOrForgottenService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
 
@@ -23,62 +25,53 @@ class LostOrForgottenCardController extends AbstractDvsaActionController
     const QUESTION_ONE_ROUTE = 'lost-or-forgotten-card/question-one';
     const QUESTION_TWO_ROUTE = 'lost-or-forgotten-card/question-two';
     const CONFIRMATION_ROUTE = 'lost-or-forgotten-card/confirmation';
-
     const QUESTION_ONE = 0;
     const QUESTION_TWO = 1;
-
     const MSG_INCORRECT_ANSWER = 'This is not the correct answer';
-
     const STEP_INVALID = false;
     const STEP_VALID = true;
-
     const BACK_TEXT = 'Back';
     const RETURN_TO_SIGN_IN_TEXT = 'Cancel and return to sign in';
 
-    /**
-     * @var SecurityCardService
-     */
+    /** @var SecurityCardService $securityCardService */
     protected $securityCardService;
 
-    /**
-     * @var array
-     */
+    /** @var array $questionOneSuccessMessage */
     private $questionOneSuccessMessage = ['First security question - your answer was ', 'correct.'];
 
-    /**
-     * @var Identity
-     */
+    /** @var Identity $identity */
     private $identity;
 
-    /**
-     * @var TwoFaFeatureToggle
-     */
+    /** @var TwoFaFeatureToggle $twoFaFeatureToggle */
     private $twoFaFeatureToggle;
 
-    /**
-     * @var LostOrForgottenService $lostAndForgottenService
-     */
+    /** @var LostOrForgottenService $lostAndForgottenService */
     private $lostAndForgottenService;
 
-    /**
-     * @var AlreadyOrderedCardCookieService $alreadyOrderedCardCookieService
-     */
+    /** @var AlreadyOrderedCardCookieService $alreadyOrderedCardCookieService */
     private $alreadyOrderedCardCookieService;
+
+    /** @var AlreadyLoggedInTodayWithLostForgottenCardCookieService $pinEntryCookieService */
+    private $pinEntryCookieService;
 
     public function __construct(
         Request $request,
+        Response $response,
         Identity $identity,
         TwoFaFeatureToggle $twoFaFeatureToggle,
         LostOrForgottenService $lostAndForgottenService,
         SecurityCardService $securityCardService,
-        AlreadyOrderedCardCookieService $alreadyOrderedCardCookieService
+        AlreadyOrderedCardCookieService $alreadyOrderedCardCookieService,
+        AlreadyLoggedInTodayWithLostForgottenCardCookieService $cookieService
     ) {
         $this->request = $request;
+        $this->response = $response;
         $this->identity = $identity;
         $this->twoFaFeatureToggle = $twoFaFeatureToggle;
         $this->lostAndForgottenService = $lostAndForgottenService;
         $this->securityCardService = $securityCardService;
         $this->alreadyOrderedCardCookieService = $alreadyOrderedCardCookieService;
+        $this->pinEntryCookieService = $cookieService;
     }
 
     /**
@@ -100,6 +93,15 @@ class LostOrForgottenCardController extends AbstractDvsaActionController
 
     public function startAction()
     {
+        $hasLoggedInTodayViaLostForgottenCard
+            = $this->pinEntryCookieService->hasLoggedInTodayWithLostForgottenCardJourney($this->request);
+        if ($hasLoggedInTodayViaLostForgottenCard)
+        {
+            $this->loadStepsIntoSessionQuestionOne();
+            $this->lostAndForgottenService->updateStepStatus(self::LOGIN_SESSION_ROUTE, self::STEP_VALID);
+            return $this->redirect()->toRoute(self::QUESTION_ONE_ROUTE);
+        }
+
         $this->loadStepsIntoSession();
         $this->lostAndForgottenService->updateStepStatus(self::START_ROUTE, self::STEP_VALID);
         $showCardOrderLink = $this->identity->isSecondFactorRequired() && $this->currentIdentityHasActiveSecurityCard();
@@ -112,9 +114,17 @@ class LostOrForgottenCardController extends AbstractDvsaActionController
 
     public function startAlreadyOrderedAction()
     {
-        if (!$this->lostAndForgottenService->isEnteringThroughAlreadyOrdered() &&
-            $this->alreadyOrderedCardCookieService->hasSeenOrderLandingPage($this->getRequest())
-        ) {
+        $hasLoggedInTodayViaLostForgottenCard
+            = $this->pinEntryCookieService->hasLoggedInTodayWithLostForgottenCardJourney($this->request);
+
+        $isEnteringThroughAlreadyOrdered = $this->lostAndForgottenService->isEnteringThroughAlreadyOrdered();
+
+        $hasSeenOrderLandingPage = $this->alreadyOrderedCardCookieService->hasSeenOrderLandingPage($this->getRequest());
+
+        $preventOrderLandingPage = !$isEnteringThroughAlreadyOrdered && $hasSeenOrderLandingPage;
+
+        if ($preventOrderLandingPage || ($hasSeenOrderLandingPage && $hasLoggedInTodayViaLostForgottenCard))
+        {
             $this->loadStepsIntoSessionQuestionOne();
             $this->lostAndForgottenService->updateStepStatus(self::LOGIN_SESSION_ROUTE, self::STEP_VALID);
             return $this->redirect()->toRoute(self::QUESTION_ONE_ROUTE);
@@ -216,6 +226,8 @@ class LostOrForgottenCardController extends AbstractDvsaActionController
         if(!$this->lostAndForgottenService->isAllowedOnStep(self::CONFIRMATION_ROUTE)) {
             return $this->redirect()->toRoute(self::QUESTION_TWO_ROUTE);
         }
+
+        $this->pinEntryCookieService->addLoggedInViaLostForgottenCardCookie($this->response);
 
         $this->lostAndForgottenService->clearSession();
         $viewModel = new ViewModel([]);
