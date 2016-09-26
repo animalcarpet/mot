@@ -10,8 +10,8 @@ namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 use Core\Authorisation\Assertion\WebPerformMotTestAssertion;
 use Core\Controller\AbstractAuthActionController;
 use DateTime;
-use Dvsa\Mot\Frontend\MotTestModule\ViewModel\MotTestResults;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefectCollection;
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\MotTestResults;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Dto\Common\MotTestDto;
@@ -54,7 +54,7 @@ class MotTestResultsController extends AbstractAuthActionController
     }
 
     /**
-     * @return ViewModel
+     * @return ViewModel|Response
      */
     public function indexAction()
     {

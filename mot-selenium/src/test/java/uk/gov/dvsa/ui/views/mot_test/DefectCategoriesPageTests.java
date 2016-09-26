@@ -68,7 +68,6 @@ public class DefectCategoriesPageTests extends DslTest {
 
         // Then I should able to browse through the category tree and see "Item not tested" entries
         defectCategoriesPage.navigateToDefectCategory("Items not tested", "Brake performance");
-
     }
 
     @Test(testName = "TestResultEntryImprovements", groups = {"Regression", "BL-3565"})

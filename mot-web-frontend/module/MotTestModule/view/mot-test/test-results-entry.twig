@@ -22,6 +22,7 @@
     {% endfor %}
 {% endif %}
 
+{# Odometer section #}
 <div class="action-panel">
     <div class="clear-float">
         <div class="action-panel__container">
@@ -47,6 +48,7 @@
     </div>
 </div>
 
+{# Defects section #}
 <div class="action-panel">
     <div class="clear-float">
         <div class="action-panel__container">
@@ -64,43 +66,49 @@
         {% include '/defects/identified-defects.twig' with {'identifiedDefects': identifiedDefects, 'motTest': motTest} %}
     </div>
 </div>
+
+{# Brake test section #}
 <div class="action-panel">
     <div class="clear-float">
         <div class="action-panel__container">
             <h3 class="action-panel__heading">Brake test</h3>
             <h4 class="action-panel__sub-heading"></h4>
         </div>
-        {% if motTestResults.isBrakeTestRecorded %}
         <div class="action-panel__container">
             <h3 id="brakeTestResultsNotice" class="action-panel__value">{{ motTestResults.brakeTestOutcome }}</h3>
         </div>
-        {% endif %}
         <div class="action-panel__container--last">
-        {% if motTestResults.isBrakeTestRecorded %}
-            <a href="{{ url('mot-test/brake-test-configuration', {'motTestNumber': motTest.motTestNumber}) }}"
-               id="addBrakeTestButton" class="button">Edit brake test</a>
-            <span class="action-panel__secondary-action">or
-                <a href="{{ url('mot-test/brake-test-summary', {'motTestNumber': motTest.motTestNumber}) }}">
-                    view brake test results</a>
-            </span>
-        {% else %}
-            <a href="{{ url('mot-test/brake-test-configuration', {'motTestNumber': motTest.motTestNumber}) }}"
-               id="addBrakeTestButton" class="button">Add brake test</a>
+        {% if not motTestResults.isBrakePerformanceNotTested %}
+            {% if motTestResults.hasBrakeTestResult %}
+                <a href="{{ url('mot-test/brake-test-configuration', {'motTestNumber': motTest.motTestNumber}) }}"
+                   id="addBrakeTestButton" class="button">Edit brake test</a>
+                <span class="action-panel__secondary-action">or
+                    <a href="{{ url('mot-test/brake-test-summary', {'motTestNumber': motTest.motTestNumber}) }}">
+                        view brake test results</a>
+                </span>
+            {% else %}
+                <a href="{{ url('mot-test/brake-test-configuration', {'motTestNumber': motTest.motTestNumber}) }}"
+                   id="addBrakeTestButton" class="button">Add brake test</a>
+            {% endif %}
         {% endif %}
         </div>
     </div>
 </div>
+<div class="defect-summary">
+    <div id="rfrList" class="">
+        {% include '/defects/special-process-failures.twig' with {'identifiedDefects': identifiedDefects} %}
+    </div>
+</div>
+
 <nav class="content-navigation">
-    <form action="{% if shouldDisableSubmitButton %}
-                    #
-                  {% else %}
-                    {{ url('mot-test/test-summary', {'motTestNumber' : motTest.motTestNumber}) }}
-                  {% endif %}" method="get">
+    <form action="{% if shouldDisableSubmitButton %}#{% else %}{{ url('mot-test/test-summary', {'motTestNumber' : motTest.motTestNumber}) }}{% endif %}" method="get">
         <input id="reviewTest" type="submit" class="button" value="Review test" {% if shouldDisableSubmitButton %} disabled {% endif %}>
     </form>
-    {% if not isDemo %}<ul class="content-navigation__secondary">
+    {% if not isDemo %}
+    <ul class="content-navigation__secondary">
         <li>
             <a href="{{ url('mot-test/cancel', {'motTestNumber' : motTest.motTestNumber}) }}" id="cancelTest">Cancel test</a>
         </li>
-    </ul>{% endif %}
+    </ul>
+    {% endif %}
 </nav>

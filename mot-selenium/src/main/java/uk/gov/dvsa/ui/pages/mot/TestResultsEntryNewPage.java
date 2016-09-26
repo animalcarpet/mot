@@ -7,7 +7,6 @@ import uk.gov.dvsa.domain.model.mot.BrakeTestType;
 import uk.gov.dvsa.domain.model.mot.CancelTestReason;
 import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.domain.model.mot.OdometerUnit;
-import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
@@ -226,6 +225,10 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
     public TestResultsEntryNewPage clickRepaired(String defect, Class clazz) {
         repairDefect(defect, clazz);
         return this;
+    }
+
+    public boolean isAddBrakeTestButtonDisplayed() {
+        return PageInteractionHelper.isElementDisplayed(addBrakeTest);
     }
 
     private void setOdometerUnit(OdometerUnit unit) {
