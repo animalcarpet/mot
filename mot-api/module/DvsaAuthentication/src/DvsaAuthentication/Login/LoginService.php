@@ -3,6 +3,7 @@
 namespace DvsaAuthentication\Login;
 
 use DvsaAuthentication\IdentityFactory;
+use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Dto\Authn\AuthenticationResponseDto;
 use PersonApi\Service\PasswordExpiryService;
 use Zend\Authentication\Result;
@@ -18,14 +19,21 @@ class LoginService
 
     private $mapper;
 
+    /**
+     * @var MotIdentityProviderInterface
+     */
+    private $identityProvider;
+
     public function __construct(
         UsernamePasswordAuthenticator $authenticator,
         PasswordExpiryService $passwordExpiryService,
-        AuthenticationResponseMapper $mapper
+        AuthenticationResponseMapper $mapper,
+        MotIdentityProviderInterface $identityProvider
     ) {
         $this->authenticator = $authenticator;
         $this->passwordExpiryService = $passwordExpiryService;
         $this->mapper = $mapper;
+        $this->identityProvider = $identityProvider;
     }
 
     /**
@@ -41,6 +49,11 @@ class LoginService
         return $identityData;
     }
 
+    public function confirmPassword($password)
+    {
+        $identity = $this->identityProvider->getIdentity();
 
+        return $this->authenticator->validateCredentials($identity->getUsername(), $password);
+    }
 }
 

@@ -3,6 +3,7 @@
 namespace AccountApi\Controller;
 
 use AccountApi\Service\SecurityQuestionService;
+use Dvsa\Mot\Api\RegistrationModule\Service\PersonSecurityAnswerRecorder;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 
@@ -28,6 +29,18 @@ class SecurityQuestionController extends AbstractDvsaRestfulController
     public function getList()
     {
         return ApiResponse::jsonOk($this->securityQuestionService->getAll());
+    }
+
+    /**
+     * @param int $userId
+     * @param array $data
+     * @return \Zend\View\Model\JsonModel
+     */
+    public function update($userId, $data)
+    {
+        $this->securityQuestionService->updateAnswersForUser($userId, $data);
+
+        return ApiResponse::jsonOk($data);
     }
 
     /**

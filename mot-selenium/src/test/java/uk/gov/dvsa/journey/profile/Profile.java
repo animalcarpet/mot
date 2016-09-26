@@ -13,11 +13,9 @@ import uk.gov.dvsa.ui.pages.changedriverlicence.RemoveDriverLicencePage;
 import uk.gov.dvsa.ui.pages.changedriverlicence.ReviewDrivingLicencePage;
 import uk.gov.dvsa.ui.pages.dvsa.UserSearchProfilePage;
 import uk.gov.dvsa.ui.pages.exception.PageInstanceNotFoundException;
-import uk.gov.dvsa.ui.pages.profile.NewPersonProfilePage;
-import uk.gov.dvsa.ui.pages.profile.NewUserProfilePage;
-import uk.gov.dvsa.ui.pages.profile.PersonProfilePage;
-import uk.gov.dvsa.ui.pages.profile.ProfilePage;
+import uk.gov.dvsa.ui.pages.profile.*;
 import uk.gov.dvsa.ui.pages.profile.qualificationdetails.QualificationDetailsPage;
+import uk.gov.dvsa.ui.pages.profile.security.ChangeSecurityQuestionsPasswordPage;
 import uk.gov.dvsa.ui.pages.vts.VehicleTestingStationPage;
 
 import java.io.IOException;
@@ -117,6 +115,12 @@ public class Profile {
                 String.format(ChangeDrivingLicencePage.PATH, dvsaUserBeingHacked.getId()), ChangeDrivingLicencePage.class);
     }
 
+    public ChangeSecurityQuestionsPasswordPage securityQuestionsPasswordPage(User user) {
+
+        return new ChangeSecurityQuestionsPasswordPage(pageNavigator.getDriver());
+
+    }
+
     public String changeDOBwithInvalidValues(String day, String month, String year) {
         return new ChangeDOB(profilePage).changeDOBwithInvalidValues(day, month, year);
     }
@@ -190,5 +194,9 @@ public class Profile {
         }
 
         return annualAssessmentCertificates;
+    }
+
+    public String changeSecurityQuestionsAndAnswer(User user) {
+        return new ChangeSecurityQuestions(profilePage).change(user.getPassword());
     }
 }

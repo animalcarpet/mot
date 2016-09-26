@@ -2,14 +2,25 @@
 
 namespace AccountApiTest\Service;
 
+use AccountApi\Crypt\SecurityAnswerHashFunction;
+use AccountApi\Service\Validator\PersonSecurityAnswerValidator;
+use Doctrine\DBAL\Driver\Connection;
+use Doctrine\ORM\EntityManager;
+use Dvsa\Mot\Api\RegistrationModule\Service\PersonSecurityAnswerRecorder;
 use DvsaCommon\Dto\Security\SecurityQuestionDto;
 use DvsaCommon\Obfuscate\ParamObfuscator;
+use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonTest\Bootstrap;
+use DvsaCommonTest\TestUtils\MethodSpy;
+use DvsaEntities\Entity\Person;
+use DvsaEntities\Entity\PersonSecurityAnswer;
 use DvsaEntities\Entity\SecurityQuestion;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use AccountApi\Mapper\SecurityQuestionMapper;
 use AccountApi\Service\SecurityQuestionService;
+use DvsaEntities\Repository\PersonRepository;
+use DvsaEntities\Repository\PersonSecurityAnswerRepository;
 use DvsaEntities\Repository\SecurityQuestionRepository;
 use Zend\ServiceManager\ServiceManager;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
@@ -31,6 +42,12 @@ class SecurityQuestionServiceTest extends AbstractServiceTestCase
     protected $mockSqRepo;
     /** @var  ParamObfuscator|MockObj */
     private $mockParamObfuscator;
+    /** @var PersonSecurityAnswerRecorder */
+    private $personSecurityAnswerRecorder;
+    /** @var PersonSecurityAnswerValidator */
+    private $mockPersonSecurityAnswerValidator;
+    /** @var PersonRepository */
+    private $mockPersonRepo;
 
     /** @var  SecurityQuestionService */
     protected $service;
@@ -43,7 +60,7 @@ class SecurityQuestionServiceTest extends AbstractServiceTestCase
         //  --  mock repo   --
         $this->mockSqRepo = XMock::of(
             SecurityQuestionRepository::class,
-            ['isAnswerCorrect', 'findAll', 'findQuestionByQuestionNumber']
+            ['isAnswerCorrect', 'find', 'findAll', 'findQuestionByQuestionNumber']
         );
         $this->serviceManager->setService(SecurityQuestionRepository::class, $this->mockSqRepo);
 
@@ -52,16 +69,37 @@ class SecurityQuestionServiceTest extends AbstractServiceTestCase
         $this->mockMethod(
             $this->mockEntityManager, 'getRepository', $this->any(), $this->mockSqRepo, SecurityQuestion::class
         );
+        $this->mockMethod(
+            $this->mockEntityManager, 'getConnection', $this->any(), XMock::of(Connection::class)
+        );
 
         //  --  mock obfuscator --
         $this->mockParamObfuscator = XMock::of(ParamObfuscator::class);
         $this->serviceManager->setService(ParamObfuscator::class, $this->mockParamObfuscator);
 
+        // -- PersonSecurityAnswerRecorder --
+        $this->personSecurityAnswerRecorder = new PersonSecurityAnswerRecorder($this->mockSqRepo, new SecurityAnswerHashFunction());
+
+        // -- mock person security answer repo
+        $mockPersonSecurityAnswerRepo = XMock::of(PersonSecurityAnswerRepository::class);
+
+        // -- mock person security answer validator
+        $this->mockPersonSecurityAnswerValidator = XMock::of(PersonSecurityAnswerValidator::class);
+
+        //  --  mock person repo   --
+        $this->mockPersonRepo = XMock::of(PersonRepository::class);
+        $this->serviceManager->setService(Person::class, $this->mockPersonRepo);
+
         //  --
         $this->service = new SecurityQuestionService(
             $this->mockSqRepo,
             new SecurityQuestionMapper(),
-            $this->mockParamObfuscator
+            $this->personSecurityAnswerRecorder,
+            $this->mockPersonRepo,
+            $mockPersonSecurityAnswerRepo,
+            $this->mockPersonSecurityAnswerValidator,
+            $this->mockParamObfuscator,
+            $this->mockEntityManager
         );
     }
 
@@ -146,5 +184,64 @@ class SecurityQuestionServiceTest extends AbstractServiceTestCase
     public function testFindQuestionByNumberThrowsException()
     {
         $this->service->findQuestionByQuestionNumber('invalid', 'invalid');
+    }
+
+    /**
+     * @expectedException \Exception
+     */
+    public function testUpdateAnswersForUserThrowsExceptionIfInvalidData()
+    {
+        $this->mockPersonSecurityAnswerValidator
+            ->expects($this->any())
+            ->method('validate')
+            ->will($this->throwException(new BadRequestException('Validation failure', 0)));
+
+        $this->service->updateAnswersForUser(1, ["not even an array"]);
+    }
+
+    public function testUpdateAnswersForUserCallsPersonRepository()
+    {
+        $person = new Person();
+        $this->mockPersonRepo
+            ->expects($this->any())
+            ->method('find')
+            ->willReturn($person);
+
+        $securityQuestion = new SecurityQuestion();
+        $this->mockSqRepo
+            ->expects($this->any())
+            ->method('find')
+            ->willReturn($securityQuestion);
+
+        $savePersonSpy = new MethodSpy($this->mockEntityManager, 'persist');
+
+        //
+
+        $data = [
+            ["questionId" => 1, "answer" => "answer to question 1"],
+            ["questionId" => 2, "answer" => "answer to question 2"]
+        ];
+
+        $this->service->updateAnswersForUser(1, $data);
+
+        //
+
+        /** @var Person $updatedPerson */
+        $updatedPerson = $savePersonSpy->paramsForInvocation(0)[0];
+        $answers = $updatedPerson->getSecurityAnswers();
+
+        $this->assertSecurityAnswerMatchesExpected($answers[0], $securityQuestion, 'answer to question 1');
+        $this->assertSecurityAnswerMatchesExpected($answers[1], $securityQuestion, 'answer to question 2');
+    }
+
+    private function assertSecurityAnswerMatchesExpected(
+        PersonSecurityAnswer $actualAnswer,
+        SecurityQuestion $expectedQuestion,
+        $expectedAnswer
+    ) {
+        $hashFunction = new SecurityAnswerHashFunction();
+
+        $this->assertEquals($expectedQuestion, $actualAnswer->getSecurityQuestion());
+        $this->assertTrue($hashFunction->verify($expectedAnswer, $actualAnswer->getAnswer()));
     }
 }

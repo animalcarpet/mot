@@ -2,6 +2,7 @@
 
 namespace AccountApiTest\Crypt;
 
+use Dvsa\Mot\Api\RegistrationModule\Service\PersonSecurityAnswerRecorder;
 use DvsaCommon\Crypt\Hash\BCryptHashFunction;
 use DvsaCommon\Dto\Security\SecurityQuestionDto;
 use DvsaCommon\Utility\DtoHydrator;
@@ -18,6 +19,8 @@ class SecurityQuestionControllerTest extends AbstractMotApiControllerTestCase
 {
     private $securityServiceMock;
 
+    private $personSecurityAnswerRecorderMock;
+
     public function setUp()
     {
         $this->securityServiceMock = XMock::of(
@@ -25,7 +28,11 @@ class SecurityQuestionControllerTest extends AbstractMotApiControllerTestCase
             ['getAll', 'isAnswerCorrect', 'findQuestionByQuestionNumber']
         );
 
-        $this->setController(new SecurityQuestionController($this->securityServiceMock));
+        $this->personSecurityAnswerRecorderMock = XMock::of(PersonSecurityAnswerRecorder::class);
+
+        $this->setController(
+            new SecurityQuestionController($this->securityServiceMock, $this->personSecurityAnswerRecorderMock)
+        );
 
         parent::setUp();
 

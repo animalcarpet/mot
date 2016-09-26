@@ -4,7 +4,6 @@ namespace Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Factory\Service;
 
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderNewSecurityCardSessionService;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardStepService;
-use Zend\InputFilter\InputFilter;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

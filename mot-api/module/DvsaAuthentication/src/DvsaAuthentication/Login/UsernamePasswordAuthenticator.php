@@ -15,4 +15,11 @@ interface UsernamePasswordAuthenticator
      * @return AuthenticationResponse
      */
     public function authenticate($username, $password);
+
+    /**
+     * @param $username
+     * @param $password
+     * @return boolean
+     */
+    public function validateCredentials($username, $password);
 }

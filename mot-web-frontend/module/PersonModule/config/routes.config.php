@@ -28,6 +28,11 @@ use UserAdmin\Controller\ChangeQualificationStatusController;
 use UserAdmin\Factory\Controller\ResetAccountClaimByPostControllerFactory;
 use UserAdmin\Factory\Controller\PersonRoleControllerFactory;
 use Dvsa\Mot\Frontend\PersonModule\Controller\ChangeDateOfBirthController;
+use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionsController;
+use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionOneController;
+use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionTwoController;
+use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionsReviewController;
+use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionsConfirmationController;
 
 return [
     'router' => [
@@ -43,6 +48,54 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'change-security-questions' => [
+                        'type'          => 'segment',
+                        'options'       => [
+                            'route'    => '/change-security-questions',
+                            'defaults' => [
+                                'controller' => ChangeSecurityQuestionsController::class,
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes'  => [
+                            'question-one' => [
+                                'type'    => 'segment',
+                                'options' => [
+                                    'route'    => '/question-one',
+                                    'defaults' => [
+                                        'controller' => ChangeSecurityQuestionOneController::class,
+                                    ],
+                                ],
+                            ],
+                            'question-two' => [
+                                'type'    => 'segment',
+                                'options' => [
+                                    'route'    => '/question-two',
+                                    'defaults' => [
+                                        'controller' => ChangeSecurityQuestionTwoController::class,
+                                    ],
+                                ],
+                            ],
+                            'review' => [
+                                'type'    => 'segment',
+                                'options' => [
+                                    'route'    => '/review',
+                                    'defaults' => [
+                                        'controller' => ChangeSecurityQuestionsReviewController::class,
+                                    ],
+                                ],
+                            ],
+                            'confirmation' => [
+                                'type'    => 'segment',
+                                'options' => [
+                                    'route'    => '/confirmation',
+                                    'defaults' => [
+                                        'controller' => ChangeSecurityQuestionsConfirmationController::class,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                     'address' => [
                         'type' => 'Segment',
                         'options' => [

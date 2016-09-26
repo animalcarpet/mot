@@ -5,9 +5,11 @@ namespace AccountApiTest\Service;
 use AccountApi\Service\ClaimService;
 use AccountApi\Service\OpenAmIdentityService;
 use AccountApi\Service\Validator\ClaimValidator;
+use AccountApi\Service\Validator\PersonSecurityAnswerValidator;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Dvsa\Mot\Api\RegistrationModule\Service\PersonSecurityAnswerRecorder;
 use DvsaAuthentication\Identity;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Date\DateTimeHolder;
@@ -20,6 +22,7 @@ use DvsaEntities\Entity\PersonContactType;
 use DvsaEntities\Entity\PersonSecurityAnswer;
 use DvsaEntities\Entity\SecurityQuestion;
 use DvsaEntities\Repository\PersonRepository;
+use DvsaEntities\Repository\PersonSecurityAnswerRepository;
 use DvsaEntities\Repository\SecurityQuestionRepository;
 use DvsaEventApi\Service\EventService;
 use AccountApi\Mapper\SecurityQuestionMapper;
@@ -81,7 +84,12 @@ class ClaimServiceTest extends AbstractServiceTestCase
         $this->mockSecurityQuestionService = new SecurityQuestionService(
             $this->mockSecurityQuestionRepository,
             new SecurityQuestionMapper(),
-            $this->mockParamObfuscator
+            XMock::of(PersonSecurityAnswerRecorder::class),
+            $this->mockPersonRepository,
+            XMock::of(PersonSecurityAnswerRepository::class),
+            XMock::of(PersonSecurityAnswerValidator::class),
+            $this->mockParamObfuscator,
+            $this->mockEntityManager
         );
 
         $this->mockIdentityService = $this->getMock(MotIdentityProviderInterface::class);

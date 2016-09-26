@@ -32,9 +32,11 @@ default:
                 - NotificationsContext
                 - OdometerReadingContext
                 - PasswordContext
+                - PasswordConfirmationContext
                 - PersonContext
                 - ReplacementCertificateContext
                 - SecurityPinContext
+                - SecurityQuestionsContext
                 - SessionContext
                 - SlotsAdjustTransactionContext
                 - SlotsDirectDebitContext

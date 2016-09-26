@@ -74,6 +74,21 @@ class OpenAMAuthenticator implements UsernamePasswordAuthenticator
         return new AuthenticationSuccess($resolvedIdentity);
     }
 
+    public function validateCredentials($username, $password)
+    {
+        if (false === $this->checkCredentials($username, $password)) {
+            return false;
+        }
+
+        $realm = $this->openAMOptions->getRealm();
+        $loginDetails = new OpenAMLoginDetails($username, $password, $realm);
+
+        try {
+            return $this->openAMClient->validateCredentials($loginDetails);
+        } catch (OpenAMClientException $ex) {
+            return false;
+        }
+    }
 
     private function translateExceptionToAuthenticationResult(OpenAMClientException $ex, $username)
     {

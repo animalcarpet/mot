@@ -20,57 +20,33 @@ public class NewUserProfilePage extends ProfilePage {
     private static final String PAGE_TITLE = "User profile";
     public static final String PATH = "/user-admin/user/%s";
 
-    @FindBy(id = "manage-roles")
-    private WebElement selectManageRolesLink;
-    @FindBy(css = "#display-name a")
-    private WebElement changeNameLink;
-    @FindBy(id = "roles-and-associations")
-    private WebElement roleAndAssociationLink;
-    @FindBy(id = "drivingLicence")
-    private WebElement drivingLicence;
-    @FindBy(id = "account_management")
-    private WebElement accountManagement;
-    @FindBy(id = "qualification_status")
-    private WebElement qualificationStatus;
-    @FindBy(id = "dvsa_roles")
-    private WebElement dvsaRoles;
-    @FindBy(id = "change-group-a-qualification")
-    private WebElement groupA_qualification;
-    @FindBy(id = "change-group-b-qualification")
-    private WebElement groupB_qualification;
-    @FindBy(id = "personal_details")
-    private WebElement personalDetailsTable;
-    @FindBy(id = "dateOfBirth")
-    private WebElement dateOfBirth;
-    @FindBy(id = "qualification-details")
-    private WebElement qualificationDetails;
-    @FindBy(css = "#drivingLicence a")
-    protected WebElement changeDrivingLicenceLink;
-    @FindBy(css = "#email-address a")
-    protected WebElement changeEmailLink;
-    @FindBy(css = "#telephone-number a")
-    protected WebElement changeTelephoneLink;
-    @FindBy(css = "#telephone-number")
-    protected WebElement userTelephone;
-    @FindBy(css = "#date-of-birth a")
-    protected WebElement changeDOBLink;
-    @FindBy(css = "#email-address")
-    private WebElement userEmail;
-    @FindBy(css = "#drivingLicence span")
-    protected WebElement personDrivingLicenceRegion;
-    @FindBy(xpath = "(//*[@class='content-navigation__secondary']//a)[1]")
-    protected WebElement cancelAndReturnToSearchResults;
-    @FindBy(css = "#full-address a")
-    private WebElement changeAddressLink;
+    @FindBy(id = "manage-roles") private WebElement selectManageRolesLink;
+    @FindBy(css = "#display-name a") private WebElement changeNameLink;
+    @FindBy(id = "roles-and-associations") private WebElement roleAndAssociationLink;
+    @FindBy(id = "drivingLicence") private WebElement drivingLicence;
+    @FindBy(id = "account_management") private WebElement accountManagement;
+    @FindBy(id = "qualification_status") private WebElement qualificationStatus;
+    @FindBy(id = "dvsa_roles") private WebElement dvsaRoles;
+    @FindBy(id = "change-group-a-qualification") private WebElement groupA_qualification;
+    @FindBy(id = "change-group-b-qualification") private WebElement groupB_qualification;
+    @FindBy(id = "personal_details") private WebElement personalDetailsTable;
+    @FindBy(id = "dateOfBirth") private WebElement dateOfBirth;
+    @FindBy(id = "qualification-details") private WebElement qualificationDetails;
+    @FindBy(css = "#drivingLicence a") protected WebElement changeDrivingLicenceLink;
+    @FindBy(css = "#email-address a") protected WebElement changeEmailLink;
+    @FindBy(css = "#telephone-number a") protected WebElement changeTelephoneLink;
+    @FindBy(css = "#telephone-number") protected WebElement userTelephone;
+    @FindBy(css = "#date-of-birth a") protected WebElement changeDOBLink;
+    @FindBy(css = "#email-address") private WebElement userEmail;
+    @FindBy(css = "#drivingLicence span") protected WebElement personDrivingLicenceRegion;
+    @FindBy(xpath = "(//*[@class='content-navigation__secondary']//a)[1]") protected WebElement cancelAndReturnToSearchResults;
+    @FindBy(css = "#full-address a") private WebElement changeAddressLink;
     private By messageSuccessSelector = By.id("validation-message--success");
-    @FindBy(id = "security-card-order")
-    private WebElement orderSecurityCardLink;
-    @FindBy(id = "management-order-card")
-    private WebElement cscoOrderSecurityCardLink;
-    @FindBy(id = "event-history")
-    private WebElement eventHistoryLink;
-    @FindBy(id = "test-quality-information")
-    private WebElement testQualityInformationLink;
+    @FindBy(id = "security-card-order") private WebElement orderSecurityCardLink;
+    @FindBy(id = "management-order-card") private WebElement cscoOrderSecurityCardLink;
+    @FindBy(id = "event-history") private WebElement eventHistoryLink;
+    @FindBy(id = "test-quality-information") private WebElement testQualityInformationLink;
+    @FindBy(id = "change-security-questions") private WebElement changeSecurityQuestionsLink;
 
     private By securityCardPanel = By.id("security-card");
 
@@ -245,5 +221,9 @@ public class NewUserProfilePage extends ProfilePage {
             eventHistoryLink.click();
         }
         return new EventsHistoryPage(driver);
+    }
+
+    public Boolean isChangeSecurityQuestionsLinkDisplayed() {
+        return PageInteractionHelper.isElementDisplayed(changeSecurityQuestionsLink);
     }
 }

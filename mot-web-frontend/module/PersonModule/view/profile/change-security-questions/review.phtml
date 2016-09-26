@@ -1,0 +1,50 @@
+<?php
+use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionOneController;
+use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionTwoController;
+use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionsReviewController;
+$this->layout('layout/layout-govuk.phtml');
+?>
+<div class="row contents">
+    <div class="col-lg-12">
+        <div>
+            <p>
+                Check that these details are correct before you save your changes.
+            </p>
+        </div>
+        <h3 class="heading-medium">Your account security</h3>
+        <table class="table-summary__key" id="security_details">
+            <tbody>
+            <tr>
+                <th class="table-summary__key">
+                    First security question
+                </th>
+                <td class="table-summary__value" id="question-one">
+                    <strong><?php echo $this->escapeHtml($viewModel->getQuestionOneText()); ?> <br/> &#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;</strong>
+                    <a href="<?php echo $this->escapeHtml($this->url(ChangeSecurityQuestionOneController::ROUTE)); ?>" class="table-summary__action">Change</a>        </td>
+            </tr>
+            <tr>
+                <th class="table-summary__key">
+                    Second security question
+                </th>
+                <td class="table-summary__value" id="question-two">
+                    <strong><?php echo $this->escapeHtml($viewModel->getQuestionTwoText()); ?>  <br/> &#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;</strong>
+                    <a href="<?php echo $this->escapeHtml($this->url(ChangeSecurityQuestionTwoController::ROUTE)); ?>" class="table-summary__action">Change</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <nav class="content-navigation">
+            <form action='<?php $this->url(ChangeSecurityQuestionsReviewController::ROUTE); ?>' method="POST">
+                <?php echo $this->csrfToken(); ?>
+                <input type="submit" id="orderConfirmation" class="button" value="Save Changes"/>
+            </form>
+            <ul class="content-navigation__secondary">
+                <li>
+                    <a href="<?php echo $this->escapeHtml($this->url(ChangeSecurityQuestionTwoController::ROUTE)); ?>">Back</a>
+                </li>
+            </ul>
+        </nav>
+
+    </div>
+</div>

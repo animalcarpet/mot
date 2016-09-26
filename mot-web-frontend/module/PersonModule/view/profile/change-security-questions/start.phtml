@@ -1,0 +1,45 @@
+<?php
+use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionsController;
+$this->layout('layout/layout-govuk.phtml');
+$form = $viewModel->getForm();
+?>
+<?php echo $this->partial('zendFormErrorMessages', ['form' => $form]); ?>
+<div class="lede">
+    <p>
+        Keep your security questions up-to-date so you can access your account if you forget your password.
+    </p>
+</div>
+<div>
+    <p>
+        For security, enter your password again to continue.
+    </p>
+</div>
+<form method="POST">
+    <?php echo $this->csrfToken(); ?>
+    <div class="form-group">
+        <?php
+
+        echo $this->partial(
+            'partial/gds/form/control',
+            [
+                'element' => $form->getPassword()
+            ]
+        );
+        ?>
+    </div>
+    <nav class="content-navigation">
+            <?php echo $this->partial(
+                'partial/gds/form/control-navigation',
+                [
+                    'id' => 'submitPasswordConfirmation',
+                    'value' => 'Continue',
+                ]
+            ); ?>
+        <ul class="content-navigation__secondary">
+            <li>
+                <a href="<?php echo $this->personProfileUrl()->toPersonProfile(); ?>" id="backLink">Back</a>
+            </li>
+        </ul>
+    </nav>
+</form>
+

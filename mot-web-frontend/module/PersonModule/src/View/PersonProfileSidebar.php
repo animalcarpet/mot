@@ -191,12 +191,15 @@ class PersonProfileSidebar extends GeneralSidebar
 
         $changePasswordUrl = ($this->newProfileEnabled ? self::NEW_USER_PROFILE_URL
                 : self::OLD_USER_PROFILE_URL) . 'change-password';
+        $changeSecurityQuestionsUrl = ($this->newProfileEnabled ? self::NEW_USER_PROFILE_URL
+                : self::OLD_USER_PROFILE_URL) . 'change-security-questions';
         $resetPinUrl = $this->newProfileEnabled ? self::NEW_USER_PROFILE_URL . 'security-question'
             : PersonUrlBuilderWeb::securityQuestions();
 
         $accountSecurityBox = new GeneralSidebarLinkList('Account security');
         $accountSecurityBox->setId('account_security');
         $accountSecurityBox->addLink(new GeneralSidebarLink('change-password', 'Change your password', $changePasswordUrl));
+        $accountSecurityBox->addLink(new GeneralSidebarLink('change-security-questions', 'Change your security questions', $changeSecurityQuestionsUrl));
 
         if (!$this->hideResetPin)
         {

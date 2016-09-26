@@ -138,10 +138,11 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
         $sidebarLinks = $sidebar->getSidebarItems()[1];
         $linkTexts = $this->getTextFromSidebarLinks($sidebarLinks);
 
-        $this->assertCount(2, $sidebarLinks->getLinks());
+        $this->assertCount(3, $sidebarLinks->getLinks());
 
         $this->assertContains('Change your password', $linkTexts);
         $this->assertContains('Reset your PIN', $linkTexts);
+        $this->assertContains('Change your security questions', $linkTexts);
     }
 
     public function testSideBarDoesContainTwoFactorLinks()
@@ -156,11 +157,12 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
         $sidebarLinks = $sidebar->getSidebarItems()[1];
         $linkTexts = $this->getTextFromSidebarLinks($sidebarLinks);
 
-        $this->assertCount(3, $sidebarLinks->getLinks());
+        $this->assertCount(4, $sidebarLinks->getLinks());
 
         $this->assertContains('Change your password', $linkTexts);
         $this->assertContains('Reset your PIN', $linkTexts);
         $this->assertContains('Activate your security card', $linkTexts);
+        $this->assertContains('Change your security questions', $linkTexts);
     }
 
     /**
@@ -190,10 +192,10 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
         $linkTexts = $this->getTextFromSidebarLinks($sidebarLinks);
 
         if ($expectActivateLink) {
-            $this->assertCount(3, $sidebarLinks->getLinks());
+            $this->assertCount(4, $sidebarLinks->getLinks());
             $this->assertContains('Activate your security card', $linkTexts);
         } else {
-            $this->assertCount(2, $sidebarLinks->getLinks());
+            $this->assertCount(3, $sidebarLinks->getLinks());
             $this->assertNotContains('Activate your security card', $linkTexts);
         }
     }
@@ -223,7 +225,7 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
         $sidebarLinks = $sidebar->getSidebarItems()[1];
         $linkTexts = $this->getTextFromSidebarLinks($sidebarLinks);
 
-        $this->assertCount(2, $sidebarLinks->getLinks());
+        $this->assertCount(3, $sidebarLinks->getLinks());
 
         $this->assertContains('Change your password', $linkTexts);
         $this->assertContains('Reset your PIN', $linkTexts);
@@ -241,7 +243,7 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
         $sidebarLinks = $sidebar->getSidebarItems()[1];
         $linkTexts = $this->getTextFromSidebarLinks($sidebarLinks);
 
-        $this->assertCount(2, $sidebarLinks->getLinks());
+        $this->assertCount(3, $sidebarLinks->getLinks());
 
         $this->assertNotContains('Order a security card', $linkTexts);
     }

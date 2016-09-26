@@ -4,12 +4,15 @@ namespace Dvsa\Mot\Behat\Support\Api;
 
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Support\Request;
+use Dvsa\Mot\Behat\Support\Response;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use Exception;
 
 class Session extends MotApi
 {
     const PATH = 'session';
+
+    const PATH_CONFIRMATION = 'session/confirmation';
 
     /**
      * @param string $username
@@ -49,6 +52,28 @@ class Session extends MotApi
             'POST',
             self::PATH,
             ['Content-Type' => 'application/json'],
+            $body
+        ));
+    }
+
+    /**
+     * @param string $accessToken
+     * @param string $password
+     * @return Response
+     */
+    public function confirmSession($accessToken, $password)
+    {
+        $body = json_encode([
+            'password' => $password,
+        ]);
+
+        return $this->client->request(new Request(
+            'POST',
+            self::PATH_CONFIRMATION,
+            [
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json'
+            ],
             $body
         ));
     }

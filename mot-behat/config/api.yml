@@ -7,6 +7,10 @@ services:
         arguments:
             - @dvsa.http_client
 
+    dvsa.security_questions_change:
+        class: Dvsa\Mot\Behat\Support\Api\SecurityQuestionsChange
+        parent: dvsa.api
+
     dvsa.security_pin:
         class: Dvsa\Mot\Behat\Support\Api\SecurityPin
         parent: dvsa.api
