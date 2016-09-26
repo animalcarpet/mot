@@ -7,6 +7,7 @@ use Doctrine\ORM\Query\ResultSetMapping;
 use DvsaCommon\Enum\LanguageTypeCode;
 use DvsaEntities\Entity\ReasonForRejectionDescription;
 use DvsaEntities\Entity\ReasonForRejection;
+use DvsaEntities\Entity\TestItemSelector;
 
 /**
  * A repository for Reasons For Rejection related functionality
@@ -136,6 +137,9 @@ class RfrRepository
                     rfr.is_prs_fail,
                     rfr.can_be_dangerous,
                     rfr.audience,
+                    tis.id testItemSelect_id,
+                    tis.parent_test_item_category_id,
+                    tis.section_test_item_category_id,
                     rfl.id as rfl_id,
                     rfl.name,
                     rfl.advisory_text,
@@ -146,6 +150,7 @@ class RfrRepository
                 JOIN vehicle_class vclass ON vc.vehicle_class_id = vclass.id
                 JOIN rfr_language_content_map rfl on rfl.rfr_id = rfr.id
                 JOIN language_type lang on rfl.language_type_id = lang.id
+                JOIN test_item_category tis on rfr.test_item_category_id = tis.id
                 WHERE vclass.code = :vehicleClass
                     AND (rfr.audience = :role OR rfr.audience = \'b\')
                     AND (
@@ -197,6 +202,9 @@ class RfrRepository
         $rsm->addFieldResult('rfl', 'name', 'name');
         $rsm->addFieldResult('rfl', 'advisory_text', 'advisoryText');
         $rsm->addFieldResult('rfl', 'inspection_manual_description', 'inspectionManualDescription');
+
+        $rsm->addJoinedEntityResult(TestItemSelector::class, 'tis', 'rfr', 'testItemSelector');
+        $rsm->addFieldResult('tis', 'testItemSelect_id', 'id');
 
         return $rsm;
     }

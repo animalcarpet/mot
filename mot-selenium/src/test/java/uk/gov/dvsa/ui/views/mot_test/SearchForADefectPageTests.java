@@ -96,7 +96,7 @@ public class SearchForADefectPageTests extends DslTest {
 
         // Then the search summary should contain the search string 10mm, the count 2 and expected result should appear
         assertThat("Search summary should contain search string", searchForADefectPage.checkSearchResultsCorrect(
-                "10mm", "2", "Has damage to an area in excess of a 10mm circle within zone 'A'"), is(true));
+                "10mm", "2", "Windscreen has damage to an area in excess of a 10mm circle within zone 'A'"), is(true));
     }
 
     @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-3075"},

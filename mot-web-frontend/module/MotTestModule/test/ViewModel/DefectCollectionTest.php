@@ -15,9 +15,6 @@ class DefectCollectionTest extends \PHPUnit_Framework_TestCase
     {
         $testCollection = DefectCollection::fromDataFromApi($rawData);
 
-        $defectBreadcrumbParts = explode('>', $rawData['reasonsForRejection'][1]['testItemSelectorName']);
-        $defectCategoryName = end($defectBreadcrumbParts);
-
         $this->assertEquals(
             $rawData['reasonsForRejection'][1]['rfrId'],
             $testCollection->getDefects()[0]->getDefectId()
@@ -29,12 +26,12 @@ class DefectCollectionTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            $defectCategoryName.' '.$rawData['reasonsForRejection'][1]['description'],
+            $rawData['reasonsForRejection'][1]['description'],
             $testCollection->getDefects()[0]->getDescription()
         );
 
         $this->assertEquals(
-            $defectCategoryName.' '.$rawData['reasonsForRejection'][1]['advisoryText'],
+            $rawData['reasonsForRejection'][1]['advisoryText'],
             $testCollection->getDefects()[0]->getAdvisoryText()
         );
 

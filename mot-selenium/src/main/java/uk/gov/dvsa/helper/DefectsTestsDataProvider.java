@@ -20,7 +20,7 @@ public class DefectsTestsDataProvider {
     public static Object[][] getAdvisoryDefect() throws IOException {
         Object[][] defect = new Object[1][1];
 
-        defect[0][0] = buildAdvisoryDefect(new Defect.DefectBuilder(), true);
+        defect[0][0] = buildAdvisoryDefect(new Defect.DefectBuilder(), false);
 
         return defect;
     }

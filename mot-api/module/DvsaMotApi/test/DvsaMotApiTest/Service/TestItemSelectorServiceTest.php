@@ -2,6 +2,7 @@
 namespace DvsaMotApiTest\Service;
 
 use DvsaCommon\Constants\FeatureToggle;
+use DvsaCommon\Formatting\DefectSentenceCaseConverter;
 use DvsaCommonTest\TestUtils\MockHandler;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\ReasonForRejection;
@@ -27,6 +28,11 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
     private $mockRfrRepository;
 
     /**
+     * @var DefectSentenceCaseConverter
+     */
+    private $defectSentenceCaseConverter;
+
+    /**
      * @var FeatureToggles
      */
     private $featureTogglesMock;
@@ -41,18 +47,20 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
         $this->mockRfrRepository = $this->getMockWithDisabledConstructor(RfrRepository::class);
 
         $this->withFeatureToggles([FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS => false]);
+
+        $this->defectSentenceCaseConverter = $this
+            ->getMockBuilder(DefectSentenceCaseConverter::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['formatTisDescriptionsForDefectCategories'])
+            ->getMock();
     }
 
     public function testGetTestItemSelectorsDataByClass()
     {
-        //given
-        $testItemSelectorId = 0;
+        $testItemSelectorId = TestItemSelectorService::ROOT_SELECTOR_ID;
 
         $expectedTisHydratorData = $this->getTestArrayWithId($testItemSelectorId);
-
-        $expectedData = $this->getExpectedData(
-            $expectedTisHydratorData, [$expectedTisHydratorData], [], []
-        );
+        $expectedData = $this->getExpectedData($expectedTisHydratorData, [$expectedTisHydratorData], [], []);
 
         $mockEntityManager = $this->getMockEntityManager();
 
@@ -277,12 +285,9 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
         ];
     }
 
-    protected function getTisServiceWithMocks(
-        $mockEntityManager,
-        $mockHydrator,
-        $mockAuthService = null,
-        $disabledRfrs = []
-    ) {
+    protected function getTisServiceWithMocks($mockEntityManager, $mockHydrator, $mockAuthService = null,
+                                              $disabledRfrs = [])
+    {
         $mockAuthService = $mockAuthService ?: $this->getMockAuthorizationService();
 
         return new TestItemSelectorService(
@@ -292,7 +297,8 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
             $mockAuthService,
             $this->mockTestItemCategoryRepository,
             $disabledRfrs,
-            $this->featureTogglesMock
+            $this->featureTogglesMock,
+            $this->defectSentenceCaseConverter
         );
     }
 

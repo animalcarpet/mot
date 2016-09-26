@@ -7,6 +7,7 @@ use DvsaMotApi\Controller\DemoTestAssessmentController;
 use DvsaMotApi\Controller\IdentityDataController;
 use DvsaMotApi\Controller\MotTestController;
 use DvsaMotApi\Controller\MotTestOptionsController;
+use DvsaMotApi\Controller\MotTestReasonForRejectionController;
 use DvsaMotApi\Controller\MotTestSearchController;
 use DvsaMotApi\Controller\MotTestShortSummaryController;
 use DvsaMotApi\Controller\MotTestStatusController;
@@ -267,7 +268,7 @@ return [
                                 'motTestRfrId' => '[0-9]+',
                             ],
                             'defaults'    => [
-                                'controller' => 'DvsaMotApi\Controller\MotTestReasonForRejection',
+                                'controller' => MotTestReasonForRejectionController::class,
                             ],
                         ],
                     ],

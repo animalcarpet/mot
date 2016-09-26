@@ -2,6 +2,7 @@
 
 namespace DvsaMotApiTest\Service\Mapper;
 
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Enum\PhoneContactTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
@@ -54,10 +55,11 @@ use DvsaEntities\Entity\TestItemCategoryDescription;
 use DvsaEntities\Entity\TestItemSelector;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
+use DvsaCommon\Formatting\DefectSentenceCaseConverter;
+use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Service\Mapper\MotTestMapper;
 use DvsaMotApi\Service\MotTestDateHelperService;
 use DvsaMotApiTest\Service\MotTestServiceTest;
-use PHPUnit_Framework_Assert;
 use VehicleApi\Service\VehicleSearchService;
 
 /**
@@ -65,7 +67,6 @@ use VehicleApi\Service\VehicleSearchService;
  */
 class MotTestMapperTest extends AbstractServiceTestCase
 {
-
     const MOCK_BRAKE_TEST_RESULT_SERVICE = 'mockBrakeTestResultService';
     const MOCK_VEHICLE_SERVICE = 'mockVehicleService';
     const MOCK_HYDRATOR = 'mockHydrator';
@@ -73,6 +74,7 @@ class MotTestMapperTest extends AbstractServiceTestCase
     const MOCK_STATUS_SERVICE = 'mockStatusService';
     const MOCK_DATE_SERVICE = 'mockDateService';
     const MOCK_PARAMOBFUSCATOR = 'paramObfuscator';
+    const MOCK_DEFECT_SENTENCE_CASE_CONVERTER = 'mockDefectSentenceCaseConverterService';
 
     public function testMotTestMappedCorrectlyToDto()
     {
@@ -148,8 +150,6 @@ class MotTestMapperTest extends AbstractServiceTestCase
         $vtsData = ['id' => 3, 'address' => 'Johns Garage', 'authorisedExaminer' => 42, 'comments' => [], 'primaryTelephone' => null];
         $brakeTestData = ['id' => 3, 'generalPass' => 'true'];
 
-        // ---- Setup expected data array   ----
-        //  --  vehicle --
         $vehicleDto = (new VehicleDto())
             ->setVehicleClass(
                 (new VehicleClassDto())
@@ -167,7 +167,6 @@ class MotTestMapperTest extends AbstractServiceTestCase
             ->setTransmissionType(new VehicleParamDto())
             ->setIsNewAtFirstReg($vehicle->isNewAtFirstReg());
 
-        //  --  other   --
         $expectedData = (new MotTestDto())
             ->setStatus(MotTestStatusName::ACTIVE)
             ->setMotTestNumber($motTestNumber)
@@ -239,6 +238,15 @@ class MotTestMapperTest extends AbstractServiceTestCase
             ->with($motTest)
             ->will($this->returnValue('INCOMPLETE'));
 
+        $resultFromDefectSentenceCaseConverter = [
+            'failureText'                 => 'adversely affected by the operation of another lamp',
+            'testItemSelectorDescription' => 'aaa'
+        ];
+
+        $mocks[self::MOCK_DEFECT_SENTENCE_CASE_CONVERTER]->expects($this->any())
+            ->method('formatRfrDescriptionsForTestResultsAndBasket')
+            ->will($this->returnValue($resultFromDefectSentenceCaseConverter));
+
         //when
         $motTestMapper = $this->constructMotTestMapperWithMocks($mocks);
         $this->mockClassField($motTestMapper, 'dateTimeHolder', $dateHolder);
@@ -307,6 +315,8 @@ class MotTestMapperTest extends AbstractServiceTestCase
 
         $mockParamObfuscator = $this->getMockWithDisabledConstructor(ParamObfuscator::class);
 
+        $defectSentenceCaseConverter = $this->getMockWithDisabledConstructor(DefectSentenceCaseConverter::class);
+
         return [
             self::MOCK_BRAKE_TEST_RESULT_SERVICE  => $mockBrakeTestResultService,
             self::MOCK_VEHICLE_SERVICE            => $mockVehicleSearchService,
@@ -314,7 +324,8 @@ class MotTestMapperTest extends AbstractServiceTestCase
             self::MOCK_CERTIFICATE_EXPIRY_SERVICE => $mockCertificateExpiryService,
             self::MOCK_STATUS_SERVICE             => $motTestStatusService,
             self::MOCK_DATE_SERVICE               => $motTestDateService,
-            self::MOCK_PARAMOBFUSCATOR            => $mockParamObfuscator
+            self::MOCK_PARAMOBFUSCATOR            => $mockParamObfuscator,
+            self::MOCK_DEFECT_SENTENCE_CASE_CONVERTER => $defectSentenceCaseConverter
         ];
     }
 
@@ -327,7 +338,8 @@ class MotTestMapperTest extends AbstractServiceTestCase
             $mocks[self::MOCK_CERTIFICATE_EXPIRY_SERVICE],
             $mocks[self::MOCK_STATUS_SERVICE],
             $mocks[self::MOCK_DATE_SERVICE],
-            $mocks[self::MOCK_PARAMOBFUSCATOR]
+            $mocks[self::MOCK_PARAMOBFUSCATOR],
+            $mocks[self::MOCK_DEFECT_SENTENCE_CASE_CONVERTER]
         );
     }
 
@@ -493,8 +505,6 @@ class MotTestMapperTest extends AbstractServiceTestCase
 
         $modelDetail = new ModelDetail();
         $modelDetail->setVehicleClass($vehicleClass);
-
-
 
         $countryOfRegistration = (new CountryOfRegistration())->setName('COR');
 

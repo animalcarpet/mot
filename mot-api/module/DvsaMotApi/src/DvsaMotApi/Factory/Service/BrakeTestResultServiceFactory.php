@@ -26,19 +26,27 @@ class BrakeTestResultServiceFactory implements FactoryInterface
         $brakeTestTypeRepository = $em->getRepository(BrakeTestType::class);
         $weightSourceRepository = $em->getRepository(WeightSource::class);
 
+        $brakeTestResultValidator = $serviceLocator->get('BrakeTestResultValidator');
+        $brakeTestConfigurationValidator = $serviceLocator->get('BrakeTestConfigurationValidator');
+        $objectHydrator = $serviceLocator->get('Hydrator');
+        $authService = $serviceLocator->get('DvsaAuthorisationService');
+        $motTestValidator = $serviceLocator->get('MotTestValidator');
+        $motTestReasonForRejectionService = $serviceLocator->get(MotTestReasonForRejectionService::class);
+        $performMotTestAssertion = $serviceLocator->get(ApiPerformMotTestAssertion::class);
+
         return new BrakeTestResultService(
             $em,
-            $serviceLocator->get('BrakeTestResultValidator'),
-            $serviceLocator->get('BrakeTestConfigurationValidator'),
-            $serviceLocator->get('Hydrator'),
+            $brakeTestResultValidator,
+            $brakeTestConfigurationValidator,
+            $objectHydrator,
             new BrakeTestResultClass3AndAboveCalculator(),
             new BrakeTestResultClass1And2Calculator(),
             new BrakeTestResultClass3AndAboveMapper($brakeTestTypeRepository, $weightSourceRepository),
             new BrakeTestResultClass12Mapper($brakeTestTypeRepository),
-            $serviceLocator->get('DvsaAuthorisationService'),
-            $serviceLocator->get('MotTestValidator'),
-            $serviceLocator->get(MotTestReasonForRejectionService::class),
-            $serviceLocator->get(ApiPerformMotTestAssertion::class)
+            $authService,
+            $motTestValidator,
+            $motTestReasonForRejectionService,
+            $performMotTestAssertion
         );
     }
 }

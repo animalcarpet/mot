@@ -2,26 +2,21 @@
 
 namespace DvsaCommon;
 
-use DvsaApplicationLogger\TokenService\TokenServiceInterface;
+use DvsaCommon\Factory\Formatting\DefectSentenceCaseConverterFactory;
 use DvsaCommon\Factory\HttpRestJson\ClientFactory;
 use DvsaCommon\Factory\Validator\UsernameValidatorFactory;
+use DvsaCommon\Formatting\DefectSentenceCaseConverter;
 use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\Obfuscate\Factory\ParamEncrypterFactory;
 use DvsaCommon\Obfuscate\Factory\ParamObfuscatorFactory;
 use DvsaCommon\Obfuscate\ParamEncrypter;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\Validator\UsernameValidator;
-use Zend\Http\Header\GenericHeader;
-use Zend\Http\Header\SetCookie;
-use Zend\Http\PhpEnvironment\Request;
 use Zend\Loader\ClassMapAutoloader;
 use Zend\Loader\StandardAutoloader;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
-use Zend\Mvc\Controller\Plugin\FlashMessenger;
-use Zend\Mvc\ModuleRouteListener;
-use Zend\Mvc\MvcEvent;
 
 /**
  * DvsaCommon Module.
@@ -42,7 +37,7 @@ class Module implements
             ],
             StandardAutoloader::class => [
                 'namespaces' => [__NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                ]
+                ],
             ],
         ];
     }
@@ -66,6 +61,7 @@ class Module implements
                 ParamEncrypter::class => ParamEncrypterFactory::class,
                 ParamObfuscator::class => ParamObfuscatorFactory::class,
                 UsernameValidator::class => UsernameValidatorFactory::class,
+                DefectSentenceCaseConverter::class => DefectSentenceCaseConverterFactory::class,
             ],
         ];
     }

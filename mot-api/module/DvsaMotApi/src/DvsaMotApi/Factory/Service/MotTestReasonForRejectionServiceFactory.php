@@ -20,13 +20,14 @@ class MotTestReasonForRejectionServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new MotTestReasonForRejectionService(
-            $serviceLocator->get(EntityManager::class),
-            $serviceLocator->get('DvsaAuthorisationService'),
-            $serviceLocator->get('MotTestValidator'),
-            $serviceLocator->get('TestItemSelectorService'),
-            $serviceLocator->get(ApiPerformMotTestAssertion::class),
-            $serviceLocator->get('Feature\FeatureToggles')
-        );
+        $entityManager = $serviceLocator->get(EntityManager::class);
+        $authService = $serviceLocator->get('DvsaAuthorisationService');
+        $motTestValidator = $serviceLocator->get('MotTestValidator');
+        $motTestItemSelectorService = $serviceLocator->get('TestItemSelectorService');
+        $performMotTestAssertion = $serviceLocator->get(ApiPerformMotTestAssertion::class);
+        $featureToggles = $serviceLocator->get('Feature\FeatureToggles');
+
+        return new MotTestReasonForRejectionService($entityManager, $authService, $motTestValidator,
+            $motTestItemSelectorService, $performMotTestAssertion, $featureToggles);
     }
 }

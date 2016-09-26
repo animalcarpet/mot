@@ -82,6 +82,8 @@ use DvsaMotApi\Service\Validator\MotTestStatusChangeValidator;
 use DvsaMotApi\Service\Validator\ReplacementCertificateDraftChangeValidator;
 use DvsaMotApi\Service\Validator\RetestEligibility\RetestEligibilityValidator;
 use DvsaMotApi\Service\VehicleHistoryService;
+use DvsaCommon\Formatting\DefectSentenceCaseConverter;
+use DvsaCommon\Factory\Formatting\DefectSentenceCaseConverterFactory;
 
 return [
     'invokables' => [
@@ -150,5 +152,6 @@ return [
         MotConfig::class                                    => MotConfigFactory::class,
         ReplacementCertificateDraftChangeValidator::class   => ReplacementCertificateDraftChangeValidatorFactory::class,
         S3CsvStore::class                                   => S3CsvStoreFactory::class,
+        DefectSentenceCaseConverter::class                  => DefectSentenceCaseConverterFactory::class,
     ],
 ];

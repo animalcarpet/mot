@@ -87,7 +87,7 @@ class ComponentCategoryCollection
             }
             $newColumn = new ComponentCategoryColumn(
                 $currentColumn,
-                DefectSentenceCaseConverter::convert($name)
+                $name
             );
             array_push($columns, $newColumn);
         }

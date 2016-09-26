@@ -68,7 +68,7 @@ class EnforcementSiteAssessmentService extends AbstractService
      * @param SiteService                      $vehicleTestingStationService
      * @param AuthorisedExaminerService        $authorisedExaminerService
      * @param DataCatalogService               $catalogService
-     * @param UserService                      $userService
+     * @param UserService                      $user
      */
     public function __construct(
         EntityManager $entityManager,
@@ -78,7 +78,7 @@ class EnforcementSiteAssessmentService extends AbstractService
         SiteService $vehicleTestingStationService,
         AuthorisedExaminerService $authorisedExaminerService,
         DataCatalogService $catalogService,
-        UserService $userService
+        UserService $user
     ) {
         parent::__construct($entityManager);
         $this->objectHydrator = $objectHydrator;
@@ -88,7 +88,7 @@ class EnforcementSiteAssessmentService extends AbstractService
         $this->vehicleTestingStationService = $vehicleTestingStationService;
         $this->authorisedExaminerService = $authorisedExaminerService;
         $this->catalogService = $catalogService;
-        $this->userService = $userService;
+        $this->userService = $user;
     }
 
     /**
