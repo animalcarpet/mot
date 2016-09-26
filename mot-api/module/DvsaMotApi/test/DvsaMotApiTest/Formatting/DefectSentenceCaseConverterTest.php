@@ -1,22 +1,22 @@
 <?php
 
-namespace DvsaCommonTest\Formatting;
+namespace DvsaMotApiTest\Formatting;
 
-use DvsaCommon\Formatting\DefectSentenceCaseConverter;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\LanguageTypeCode;
+use DvsaCommon\Enum\ReasonForRejectionTypeName;
+use DvsaCommon\Formatting\DefectSentenceCaseConverter;
+use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Language;
 use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Entity\ReasonForRejectionDescription;
-use DvsaEntities\Entity\TestItemSelector;
 use DvsaEntities\Entity\TestItemCategoryDescription;
-use DvsaCommon\Enum\ReasonForRejectionTypeName;
-use DvsaCommonTest\TestUtils\XMock;
-use DvsaCommon\Constants\FeatureToggle;
+use DvsaEntities\Entity\TestItemSelector;
 use DvsaFeature\FeatureToggles;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class DefectSentenceCaseConverterTest
+ * Class DefectSentenceCaseConverterTest.
  */
 class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
 {
@@ -131,7 +131,6 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
         $expectedString = 'Anti-lock braking system category';
 
         $this->assertConversionForAddADefect($stringToCovert, $expectedString);
-
     }
 
     public function testSrsIsCapitalised()
@@ -289,10 +288,10 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     {
         $this->setTestItemCategoryDescription($stringToConvert);
         $actualResult = $this->defectSentenceCaseConverterService->formatRfrDescriptionsForAddADefect($this->reasonForRejection);
-        $expectedResult = Array (
+        $expectedResult = [
             'description' => $expectedString,
-            'advisoryText' => $expectedString
-        );
+            'advisoryText' => $expectedString,
+        ];
 
         $this->assertEquals($expectedResult, $actualResult);
     }
@@ -302,10 +301,10 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
         $this->setTestItemCategoryDescription($stringToConvert);
         $defectDescriptions = [];
         $actualResult = $this->defectSentenceCaseConverterService->formatTisDescriptionsForDefectCategories($defectDescriptions, $this->testItemSelector);
-        $expectedResult = Array (
+        $expectedResult = [
             'description' => $expectedString,
-            'name' => ''
-        );
+            'name' => '',
+        ];
 
         $this->assertEquals($expectedResult, $actualResult);
     }
@@ -316,10 +315,10 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
         $this->setReasonForRejectionAdvisoryText($advisoryText);
 
         $actualResult = $this->defectSentenceCaseConverterService->formatRfrDescriptionsForTestResultsAndBasket($this->reasonForRejection, ReasonForRejectionTypeName::ADVISORY);
-        $expectedResult = Array (
+        $expectedResult = [
             'testItemSelectorDescription' => $expectedCategoryDescription,
-            'failureText' => $expectedAdvisoryText
-        );
+            'failureText' => $expectedAdvisoryText,
+        ];
 
         $this->assertEquals($expectedResult, $actualResult);
     }
@@ -330,10 +329,10 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
         $this->setReasonForRejectionName($name);
 
         $actualResult = $this->defectSentenceCaseConverterService->formatRfrDescriptionsForTestResultsAndBasket($this->reasonForRejection, ReasonForRejectionTypeName::PRS);
-        $expectedResult = Array (
+        $expectedResult = [
             'testItemSelectorDescription' => $expectedCategoryDescription,
-            'failureText' => $expectedAdvisoryText
-        );
+            'failureText' => $expectedAdvisoryText,
+        ];
 
         $this->assertEquals($expectedResult, $actualResult);
     }
@@ -342,11 +341,11 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     {
         $this->setTestItemCategoryDescription($stringToConvert);
         $actualResult = $this->defectSentenceCaseConverterService->formatRfrDescriptionsForDefectsAndSearchForADefect($this->reasonForRejection);
-        $expectedResult = Array (
+        $expectedResult = [
             'description' => $expectedString,
             'advisoryText' => $expectedString,
-            'inspectionManualDescription' => null
-        );
+            'inspectionManualDescription' => null,
+        ];
 
         $this->assertEquals($expectedResult, $actualResult);
     }
