@@ -45,7 +45,8 @@ class RegisterCardInformationCookieService
             $expires,
             $path,
             null,
-            $secure
+            $secure,
+            true
         );
 
         $response->getHeaders()->addHeader($cookie);

@@ -6,17 +6,20 @@ use CoreTest\Controller\AbstractLightWebControllerTest;
 use Dashboard\Controller\UserHomeController;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Controller\RegisteredCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Form\SecurityCardValidationForm;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\AlreadyLoggedInTodayWithLostForgottenCardCookieService;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\RegisteredCardService;
+use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\LostOrForgottenCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
+use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Zend\View\Model\ViewModel;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaFeature\FeatureToggles;
 use Zend\Authentication\AuthenticationService;
 use Zend\Di\ServiceLocator;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\Parameters;
-use Zend\Stdlib\ResponseInterface as Response;
 
 class RegisteredCardControllerTest extends AbstractLightWebControllerTest
 {
@@ -29,29 +32,41 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
     /** @var AuthenticationService $authenticationService */
     private $authenticationService;
 
-    /** @var  RegisteredCardService $registeredCardService */
+    /** @var RegisteredCardService $registeredCardService */
     private $registeredCardService;
 
+    /** @var TwoFaFeatureToggle $featureToggle */
     private $featureToggle;
 
-    /**
-     * @var ServiceManager $serviceManager
-     */
+    /** @var AlreadyLoggedInTodayWithLostForgottenCardCookieService $pinEntryCookieService */
+    private $pinEntryCookieService;
+
+    /** @var ServiceManager $serviceManager */
     protected $serviceManager;
 
+    /** @var Request $request */
     private $request;
 
+    /** @var Response $response */
+    private $response;
+
+    /** @var SecurityCardValidationForm $form */
     private $form;
+
+    /** @var Identity */
+    private $identity;
 
     public function setUp()
     {
         parent::setUp();
-
         $this->authenticationService = XMock::of(AuthenticationService::class);
         $this->registeredCardService = XMock::of(RegisteredCardService::class);
-        $this->featureToggle         = XMock::of(TwoFaFeatureToggle::class);
-        $this->form                  = XMock::of(SecurityCardValidationForm::class);
-        $this->request               = new Request();
+        $this->featureToggle = XMock::of(TwoFaFeatureToggle::class);
+        $this->form = XMock::of(SecurityCardValidationForm::class);
+        $this->request = new Request();
+        $this->response = new Response();
+        $this->pinEntryCookieService = XMock::of(AlreadyLoggedInTodayWithLostForgottenCardCookieService::class);
+        $this->identity = XMock::of(Identity::class);
     }
 
     public function testOn2FALoginAction_when2FALoginNotApplicableToUser_and_2FAFeatureToggleOff_shouldRedirectToUserHome()
@@ -85,6 +100,17 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
         $vm = $this->buildController()->login2FAAction();
         $this->assertEquals($expectedTemplate, $vm->getTemplate());
         $this->assertEquals(200, $this->getController()->getResponse()->getStatusCode());
+    }
+
+    public function testOnGetLoginAction_whenAlreadyLoggedInTodayViaLostForgottenCard_shouldRedirectToLostForgotten()
+    {
+        $this
+            ->withIs2FALoginApplicableToCurrentUser(true)
+            ->withHasFeatureToggle(true)
+            ->withAlreadyLoggedInTodayViaLostForgotten(true);
+
+        $this->expectRedirect(LostOrForgottenCardController::START_ROUTE);
+        $this->buildController()->login2FAAction();
     }
 
     public function testOnPostLoginAction_when2FALoginApplicableToUser_and_2FAFeatureToggleOn_and_valid2FAPIN_and_validForm_shouldRedirectToUserHome()
@@ -149,6 +175,21 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
         return $this;
     }
 
+    /**
+     * @param boolean $alreadyUsedLostForgotten
+     * @return $this
+     */
+    private function withAlreadyLoggedInTodayViaLostForgotten($alreadyUsedLostForgotten)
+    {
+        $this
+            ->pinEntryCookieService
+            ->expects($this->any())
+            ->method('hasLoggedInTodayWithLostForgottenCardJourney')
+            ->willReturn($alreadyUsedLostForgotten);
+
+        return $this;
+    }
+
     private function withSuccessfulPinValidation($isValidPin)
     {
         $this
@@ -190,6 +231,10 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
         return $this;
     }
 
+    /**
+     * @param boolean $isFeatureToggleEnabled
+     * @return $this
+     */
     private function withHasFeatureToggle($isFeatureToggleEnabled)
     {
         $this->featureToggle
@@ -211,7 +256,10 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
             $this->registeredCardService,
             $this->authenticationService,
             $this->request,
-            $this->featureToggle
+            $this->response,
+            $this->featureToggle,
+            $this->pinEntryCookieService,
+            $this->identity
         );
 
         $serviceLocator = new ServiceManager;

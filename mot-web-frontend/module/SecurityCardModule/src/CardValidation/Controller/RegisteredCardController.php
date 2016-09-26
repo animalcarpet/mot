@@ -6,8 +6,11 @@ use Core\Controller\AbstractDvsaActionController;
 use Dashboard\Controller\UserHomeController;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Form\SecurityCardValidationForm;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Model\GtmSecurityCardPinValidationCallback;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\AlreadyLoggedInTodayWithLostForgottenCardCookieService;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\RegisteredCardService;
+use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\LostOrForgottenCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
+use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Zend\Authentication\AuthenticationService;
 use Zend\Authentication\Result;
 use Zend\Http\Request;
@@ -34,17 +37,29 @@ class RegisteredCardController extends AbstractDvsaActionController
     /** @var  TwoFaFeatureToggle */
     private $twoFaFeatureToggle;
 
+    /** @var AlreadyLoggedInTodayWithLostForgottenCardCookieService */
+    private $cookieService;
+
+    /** @var Identity $identity */
+    private $identity;
+
     public function __construct
     (
         RegisteredCardService $registeredCardService,
         AuthenticationService $authenticationService,
         Request $request,
-        TwoFaFeatureToggle $twoFaFeatureToggle
+        Response $response,
+        TwoFaFeatureToggle $twoFaFeatureToggle,
+        AlreadyLoggedInTodayWithLostForgottenCardCookieService $cookieService,
+        Identity $identity
     ) {
         $this->registeredCardService = $registeredCardService;
         $this->authenticationService = $authenticationService;
         $this->request = $request;
+        $this->response = $response;
         $this->twoFaFeatureToggle = $twoFaFeatureToggle;
+        $this->cookieService = $cookieService;
+        $this->identity = $identity;
     }
 
     /**
@@ -63,6 +78,9 @@ class RegisteredCardController extends AbstractDvsaActionController
         if ($request->isPost()) {
             $response = $this->onPost2FALoginAction();
         } else {
+            if ($this->cookieService->hasLoggedInTodayWithLostForgottenCardJourney($this->request)) {
+                return $this->redirect()->toRoute(LostOrForgottenCardController::START_ROUTE);
+            }
             $response = $this->onGet2FALoginAction();
         }
 

@@ -5,6 +5,7 @@ namespace Dvsa\Mot\Frontend\SecurityCardModuleTest\LostOrForgottenCard\Controlle
 use CoreTest\Controller\AbstractLightWebControllerTest;
 use Dashboard\Controller\UserHomeController;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\AlreadyLoggedInTodayWithLostForgottenCardCookieService;
 use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Service\AlreadyOrderedCardCookieService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
 use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\LostOrForgottenCardController;
@@ -15,6 +16,7 @@ use DvsaCommon\Dto\Security\SecurityQuestionDto;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaFeature\FeatureToggles;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\ServiceManager\ServiceManager;
@@ -29,11 +31,17 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
     /** @var Request */
     private $request;
 
+    /** @var Response */
+    private $response;
+
     /** @var Identity */
     private $identity;
 
     /** @var TwoFaFeatureToggle */
     private $twoFaFeatureToggle;
+
+    /** @var AlreadyLoggedInTodayWithLostForgottenCardCookieService */
+    private $pinEntryCookieService;
 
     /** @var SecurityCardService */
     protected $securityCardService;
@@ -74,10 +82,12 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
         parent::setUp();
 
         $this->request = new Request();
+        $this->response = new Response();
         $this->identity = XMock::of(Identity::class);
         $this->lostAndForgottenService = XMock::of(LostOrForgottenService::class);
         $this->securityCardService = XMock::of(SecurityCardService::class);
         $this->alreadyOrderedCardCookieService = XMock::of(AlreadyOrderedCardCookieService::class);
+        $this->pinEntryCookieService = XMock::of(AlreadyLoggedInTodayWithLostForgottenCardCookieService::class);
     }
 
     public function testOnDispatch_when2faFeatureToggleIsOff_shouldRedirectToHome()
@@ -154,6 +164,56 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
         $controller->startAction();
     }
 
+    /**
+     * Checks the conditions under which user should be directed to question one of the security questions
+     * @dataProvider redirectionAlreadyOrderedDataProvider
+     * @param $hasLoggedInTodayViaLostForgottenCard
+     * @param $isEnteringThroughAlreadyOrdered
+     * @param $hasSeenOrderLandingPage
+     * @param $redirectionToQuestionOne
+     */
+    public function testStartAction_whenAlreadyLoggedInTodayViaLostForgottenCard_redirectsToQuestionOne(
+        $hasLoggedInTodayViaLostForgottenCard, $isEnteringThroughAlreadyOrdered, $hasSeenOrderLandingPage,
+        $redirectionToQuestionOne)
+    {
+        $this
+            ->withHasFeatureToggle(true)
+            ->withTwoFactorRegisteredIdentity(true)
+            ->isEnteringThroughAlreadyOrdered($isEnteringThroughAlreadyOrdered)
+            ->withAlreadyOrderedCardCookie($hasSeenOrderLandingPage)
+            ->withPinEntryCookie($hasLoggedInTodayViaLostForgottenCard);
+
+        $controller = $this->buildController();
+
+        if ($redirectionToQuestionOne)
+        {
+            $this->expectRedirect(LostOrForgottenCardController::QUESTION_ONE_ROUTE);
+        } else {
+            $this->expectNoRedirect();
+        }
+
+        $controller->startAlreadyOrderedAction();
+    }
+
+    /**
+     * @return array
+     */
+    public function redirectionAlreadyOrderedDataProvider()
+    {
+        // hasLoggedInTodayViaLostForgottenCard, isEnteringThroughAlreadyOrdered, hasSeenOrderLandingPage,
+        // redirectionToQuestionOne
+        return [
+            [true, true, true, true],
+            [true, true, false, false],
+            [true, false, true, true],
+            [true, false, false, false],
+            [false, true, true, false],
+            [false, true, false, false],
+            [false, false, true, true],
+            [false, false, false, false],
+        ];
+    }
+
     public function testStartAlreadyOrderedActionLoadsStepsIntoSession()
     {
         $this
@@ -178,7 +238,7 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
             ->withTwoFactorRegisteredIdentity(true);
 
         $this->isEnteringThroughAlreadyOrdered(false);
-        $this->withCookie(true);
+        $this->withAlreadyOrderedCardCookie(true);
 
         $this->lostAndForgottenService
             ->expects($this->once())
@@ -483,11 +543,13 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
     {
         $controller = new LostOrForgottenCardController(
             $this->request,
+            $this->response,
             $this->identity,
             $this->twoFaFeatureToggle,
             $this->lostAndForgottenService,
             $this->securityCardService,
-            $this->alreadyOrderedCardCookieService
+            $this->alreadyOrderedCardCookieService,
+            $this->pinEntryCookieService
         );
 
         $serviceLocator = new ServiceManager();
@@ -564,6 +626,8 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
             ->expects($this->once())
             ->method('isEnteringThroughAlreadyOrdered')
             ->willReturn($isEnteringThroughAlreadyOrdered);
+
+        return $this;
     }
 
     private function isEnteringThroughQuestionOne($isEnteringThroughQuestionOne)
@@ -572,14 +636,29 @@ class LostOrForgottenCardControllerTest extends AbstractLightWebControllerTest
             ->expects($this->once())
             ->method('isEnteringThroughSecurityQuestionOne')
             ->willReturn($isEnteringThroughQuestionOne);
+
+        return $this;
     }
 
-    private function withCookie($hasCookie)
+    private function withAlreadyOrderedCardCookie($hasCookie)
     {
         $this->alreadyOrderedCardCookieService
             ->expects($this->once())
             ->method('hasSeenOrderLandingPage')
             ->willReturn($hasCookie);
+
+        return $this;
+    }
+
+    private function withPinEntryCookie($hasLoggedInTodayViaLostForgottenCard)
+    {
+        $this->pinEntryCookieService
+            ->expects($this->once())
+            ->method('hasLoggedInTodayWithLostForgottenCardJourney')
+            ->with($this->request)
+            ->willReturn($hasLoggedInTodayViaLostForgottenCard);
+
+        return $this;
     }
 }
 

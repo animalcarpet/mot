@@ -1,8 +1,7 @@
 <?php
 
-namespace Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Service;
+namespace Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service;
 
-use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\LostOrForgottenCardController;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use Zend\Http\Header\SetCookie;
 use Zend\Http\Request;
@@ -10,10 +9,11 @@ use Zend\Http\Response;
 use Zend\Mvc\Controller\Plugin\Identity;
 use DateTimeZone;
 
-class AlreadyOrderedCardCookieService
+class AlreadyLoggedInTodayWithLostForgottenCardCookieService
 {
-    const COOKIE_NAME = '_hasSeenOrderedCardLandingPage';
+    const COOKIE_NAME = '_hasLoggedInWithLostForgottenCardJourney';
 
+    /** @var MotIdentityProviderInterface $identityProvider*/
     private $identityProvider;
 
     public function __construct(MotIdentityProviderInterface $identityProvider)
@@ -24,38 +24,32 @@ class AlreadyOrderedCardCookieService
     /**
      * @param Response $response
      */
-    public function addAlreadyOrderedCardCookie(Response $response)
+    public function addLoggedInViaLostForgottenCardCookie(Response $response)
     {
-        $secure = true;
-        $path = '/' . LostOrForgottenCardController::START_ROUTE;
-
-        $expires   = new \DateTime("tomorrow", new DateTimeZone('Europe/London'));
         $userId = $this->identityProvider->getIdentity()->getUserId();
-
         $cookie = new SetCookie(
             self::COOKIE_NAME . $userId,
             $userId,
-            $expires,
-            $path,
+            new \DateTime("tomorrow", new DateTimeZone('Europe/London')),
+            '/',
             null,
-            $secure,
+            true,
             true
         );
-
         $response->getHeaders()->addHeader($cookie);
     }
 
     /**
-     * Verifies if user has already seen the Order landing page
+     * Verifies if user has already seen the card information page
      * @param Request $request
      * @return bool
      */
-    public function hasSeenOrderLandingPage(Request $request)
+    public function hasLoggedInTodayWithLostForgottenCardJourney(Request $request)
     {
         /** @var array $cookies */
         $cookies = $request->getCookie();
         $userId = $this->identityProvider->getIdentity()->getUserId();
-
         return isset($cookies[self::COOKIE_NAME . $userId]);
     }
+
 }
