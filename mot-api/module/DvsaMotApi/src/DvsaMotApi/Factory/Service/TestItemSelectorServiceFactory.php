@@ -8,7 +8,7 @@ use DvsaEntities\Repository\TestItemCategoryRepository;
 use DvsaMotApi\Service\TestItemSelectorService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-
+use DvsaCommon\Formatting\DefectSentenceCaseConverter;
 /**
  * Class TestItemSelectorServiceFactory.
  */
@@ -23,7 +23,8 @@ class TestItemSelectorServiceFactory implements FactoryInterface
             $serviceLocator->get('DvsaAuthorisationService'),
             $serviceLocator->get(TestItemCategoryRepository::class),
             $serviceLocator->get(MotConfig::class)->withDefault([])->get('disabled_rfrs'),
-            $serviceLocator->get('Feature\FeatureToggles')
+            $serviceLocator->get('Feature\FeatureToggles'),
+            $serviceLocator->get(DefectSentenceCaseConverter::class)
         );
     }
 }

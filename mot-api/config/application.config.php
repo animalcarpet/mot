@@ -1,13 +1,13 @@
 <?php
 
-$env = getenv('APPLICATION_ENV') ? : 'production';
-$mods = require_once('modules.list.php');
+$env = getenv('APPLICATION_ENV') ?: 'production';
+$mods = require_once 'modules.list.php';
 
 # The ability to load config files from a system controlled location (puppet)
 # If the APPLICATION_CONFIG_PATH is set then this location is used to read
 # the configs for the application. If this location is not set then the config
 # files are loaded from the standard locaiton within the source tree.
-$path = getenv('APPLICATION_CONFIG_PATH') ? : 'config/autoload';
+$path = getenv('APPLICATION_CONFIG_PATH') ?: 'config/autoload';
 
 if ($env === 'development') {
     $mods[] = 'Noiselabs\ZfDebugModule';
@@ -35,7 +35,7 @@ return [
         // provided by modules themselves. Paths may use GLOB_BRACE notation.
         'config_glob_paths' => [
             'config/static/*.php',
-            sprintf('%s/{,*.}{global,local,%s,vagrant}.php', $path, $env)
+            sprintf('%s/{,*.}{global,local,%s,vagrant}.php', $path, $env),
         ],
 
         // Indicates if the configuration cache should be used or not.

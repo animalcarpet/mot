@@ -91,7 +91,7 @@ class AddDefectController extends AbstractDvsaMotTestController
              */
             $type === self::DEFECT_TYPE_ADVISORY ?
                 $defectDetail = $defect->getAdvisoryText() : $defectDetail = $defect->getDescription();
-            $defectDetailWithAcronymsExpanded = ucfirst(trim(DefectSentenceCaseConverter::convertWithFirstOccurrenceOfAcronymsExpanded($defectDetail)));
+            $defectDetailWithAcronymsExpanded = $defectDetail;
 
             $this->enableGdsLayout($title, '');
             $this->layout()->setVariable('pageTertiaryTitle', $defectDetailWithAcronymsExpanded);

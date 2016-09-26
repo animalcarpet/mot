@@ -106,7 +106,7 @@ class Defect
         $defectId = $data->getId();
         $parentCategoryId = $data->getParentCategoryId();
         $description = $data->getDescription();
-        $defectBreadcrumb = DefectSentenceCaseConverter::convert($data->getDefectBreadcrumb());
+        $defectBreadcrumb = $data->getDefectBreadcrumb();
         $advisoryText = $data->getAdvisoryText();
         $inspectionManualReference = $data->getInspectionManualReference();
         $isAdvisory = $data->isAdvisory();

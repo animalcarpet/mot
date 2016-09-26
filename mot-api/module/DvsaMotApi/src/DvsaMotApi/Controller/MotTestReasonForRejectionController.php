@@ -1,10 +1,13 @@
 <?php
+
 namespace DvsaMotApi\Controller;
 
 use DvsaCommon\Dto\MotTesting\DefectDto;
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Service\Exception\BadRequestException;
+use DvsaCommonApi\Service\Exception\NotFoundException;
+use DvsaCommon\Formatting\DefectSentenceCaseConverter;
 use DvsaMotApi\Service\MotTestReasonForRejectionService;
 use Zend\View\Model\JsonModel;
 
@@ -15,9 +18,20 @@ class MotTestReasonForRejectionController extends AbstractDvsaRestfulController
 {
     const RFR_ID = "motTestRfrId";
 
-    public function __construct()
+    /**
+     * @var DefectSentenceCaseConverter
+     */
+    private $defectSentenceCaseConverter;
+
+    /**
+     * MotTestReasonForRejectionController constructor.
+     *
+     * @param DefectSentenceCaseConverter $defectSentenceCaseConverter
+     */
+    public function __construct(DefectSentenceCaseConverter $defectSentenceCaseConverter)
     {
         $this->setIdentifierName(self::RFR_ID);
+        $this->defectSentenceCaseConverter = $defectSentenceCaseConverter;
     }
 
     /**
@@ -28,7 +42,7 @@ class MotTestReasonForRejectionController extends AbstractDvsaRestfulController
      * @return JsonModel
      *
      * @throws BadRequestException
-     * @throws \DvsaCommonApi\Service\Exception\NotFoundException
+     * @throws NotFoundException
      */
     public function get($motTestRfrId)
     {
@@ -36,7 +50,7 @@ class MotTestReasonForRejectionController extends AbstractDvsaRestfulController
 
         try {
             $reasonForRejection = $service->getDefect($motTestRfrId);
-            $result = DefectDto::fromEntity($reasonForRejection);
+            $result = DefectDto::fromEntity($reasonForRejection, $this->defectSentenceCaseConverter);
         } catch (BadRequestException $e) {
             throw new BadRequestException($e->getErrors(), BadRequestException::ERROR_CODE_INVALID_DATA);
         }

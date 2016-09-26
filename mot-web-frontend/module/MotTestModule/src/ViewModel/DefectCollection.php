@@ -8,6 +8,7 @@
 namespace Dvsa\Mot\Frontend\MotTestModule\ViewModel;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use DvsaMotApi\Helper\DefectDescriptionsHelper;
 
 /**
  * A collection of Defect instances belonging to the same category.
@@ -55,16 +56,14 @@ class DefectCollection extends ArrayCollection
 
         foreach ($defectsFromApi as $defectFromApi) {
 
-            $defectHeadingStartWithAcronymsExpanded = self::formatLastBreadcrumb($defectFromApi['testItemSelectorName']);
-
             $defect = new Defect(
                 $defectFromApi['rfrId'],
                 $defectFromApi['testItemSelectorId'],
-                $defectHeadingStartWithAcronymsExpanded.' '.$defectFromApi['description'],
+                $defectFromApi['description'],
                 '',
                 !self::isDefectInNonComponentAdvisoriesCategory(
                     $defectFromApi['testItemSelectorId']
-                ) ? $defectHeadingStartWithAcronymsExpanded.' '.$defectFromApi['advisoryText']
+                ) ? $defectFromApi['advisoryText']
                   : '',
                 !self::isDefectInNonComponentAdvisoriesCategory(
                     $componentCategoriesFromApi['testItemSelector']['name']
@@ -92,17 +91,14 @@ class DefectCollection extends ArrayCollection
 
         foreach ($searchResults['data']['reasonsForRejection'] as $searchResult) {
 
-            $defectHeadingStartWithAcronymsExpanded = self::formatLastBreadcrumb($searchResult['testItemSelectorName']);
-            $defectDescriptionWithAcronymsExpanded = self::formatDescription($searchResult['description']);
-
             $defect = new Defect(
                 $searchResult['rfrId'],
                 $searchResult['testItemSelectorId'],
-                $defectDescriptionWithAcronymsExpanded,
+                $searchResult['description'],
                 $searchResult['testItemSelectorName'],
                 !self::isDefectInNonComponentAdvisoriesCategory(
                     $searchResult['testItemSelectorId']
-                ) ? $defectHeadingStartWithAcronymsExpanded.' '.$searchResult['advisoryText']
+                ) ? $searchResult['advisoryText']
                     : '',
                 !self::isDefectInNonComponentAdvisoriesCategory(
                     $searchResult['testItemSelector']
@@ -117,30 +113,6 @@ class DefectCollection extends ArrayCollection
         }
 
         return new self($defects);
-    }
-
-    /**
-     * @param string $breadcrumbs
-     *
-     * @return string
-     */
-    private static function formatLastBreadcrumb($breadcrumbs)
-    {
-        $defectBreadcrumbParts = explode('>', $breadcrumbs);
-        $lastBreadcrumb = end($defectBreadcrumbParts);
-        $lastBreadcrumbWithAcronymExpanded = DefectSentenceCaseConverter::convertWithFirstOccurrenceOfAcronymsExpanded($lastBreadcrumb);
-        return ucfirst(trim($lastBreadcrumbWithAcronymExpanded, " "));
-    }
-
-    /**
-     * @param string $description
-     *
-     * @return string
-     */
-    private static function formatDescription($description)
-    {
-        $descriptionWithAcronymsExpanded = DefectSentenceCaseConverter::convertWithFirstOccurrenceOfAcronymsExpanded($description);
-        return ucfirst(trim($descriptionWithAcronymsExpanded, " "));
     }
 
     /**

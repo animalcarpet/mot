@@ -3,7 +3,6 @@ namespace DvsaEntities\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Query\ResultSetMapping;
 use DvsaCommon\Constants\ReasonForRejection as ReasonForRejectionConstants;
 use DvsaCommon\Utility\ArrayUtils;
 
@@ -16,7 +15,6 @@ use DvsaCommon\Utility\ArrayUtils;
  */
 class ReasonForRejection
 {
-
     /**
      * @var integer
      *

@@ -7,8 +7,7 @@ use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Vehicle\FuelTypeDto;
-use DvsaCommon\Enum\LanguageTypeCode;
-use DvsaCommon\Enum\ReasonForRejectionTypeName;
+use DvsaCommon\Formatting\DefectSentenceCaseConverter;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\Utility\AddressUtils;
 use DvsaCommonApi\Service\Mapper\ColourMapper;
@@ -19,7 +18,6 @@ use DvsaCommonApi\Service\Mapper\ReasonForCancelMapper;
 use DvsaCommonApi\Service\Mapper\VehicleClassMapper;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestReasonForRejection;
-use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Entity\Vehicle;
 use DvsaMotApi\Service\BrakeTestResultService;
 use DvsaMotApi\Service\CertificateExpiryService;
@@ -32,21 +30,33 @@ use VehicleApi\Service\Mapper\VehicleMapper;
 use VehicleApi\Service\VehicleSearchService;
 
 /**
- * Class MotTestMapper
+ * Class MotTestMapper.
  */
 class MotTestMapper
 {
-
-    protected $objectHydrator;
-    protected $brakeTestResultService;
-    protected $vehicleSearchService;
-
     private $dateTimeHolder;
     private $certificateExpiryService;
     private $motTestStatusService;
     private $motTestDateService;
     private $paramObfuscator;
+    private $defectSentenceCaseConverter;
 
+    protected $objectHydrator;
+    protected $brakeTestResultService;
+    protected $vehicleSearchService;
+
+    /**
+     * MotTestMapper constructor.
+     *
+     * @param DoctrineObject              $objectHydrator
+     * @param BrakeTestResultService      $brakeTestResultService
+     * @param VehicleSearchService        $vehicleService
+     * @param CertificateExpiryService    $certificateExpiryService
+     * @param MotTestStatusService        $motTestStatusService
+     * @param MotTestDateHelperService    $motTestDateService
+     * @param ParamObfuscator             $paramObfuscator
+     * @param DefectSentenceCaseConverter $defectSentenceCaseConverter
+     */
     public function __construct(
         DoctrineObject $objectHydrator,
         BrakeTestResultService $brakeTestResultService,
@@ -54,7 +64,8 @@ class MotTestMapper
         CertificateExpiryService $certificateExpiryService,
         MotTestStatusService $motTestStatusService,
         MotTestDateHelperService $motTestDateService,
-        ParamObfuscator $paramObfuscator
+        ParamObfuscator $paramObfuscator,
+        DefectSentenceCaseConverter $defectSentenceCaseConverter
     ) {
         $this->objectHydrator = $objectHydrator;
         $this->brakeTestResultService = $brakeTestResultService;
@@ -64,14 +75,16 @@ class MotTestMapper
         $this->motTestStatusService = $motTestStatusService;
         $this->motTestDateService = $motTestDateService;
         $this->paramObfuscator = $paramObfuscator;
+        $this->defectSentenceCaseConverter = $defectSentenceCaseConverter;
     }
 
     /**
      * @param MotTest $motTest
      * @param bool    $extractOriginalMotTest
      *
-     * @return MotTestDto
      * @throws \Exception
+     *
+     * @return MotTestDto
      */
     public function mapMotTest(MotTest $motTest, $extractOriginalMotTest = true)
     {
@@ -168,36 +181,13 @@ class MotTestMapper
         return $result;
     }
 
-    private function getMotReasonsForRejectionStringsGroupedByType($motRfrs, $short = false)
-    {
-        $motRfrsGroupedByTypes = [];
-
-        /**
-         * @var \DvsaEntities\Entity\MotTestReasonForRejection $motRfr
-         */
-        foreach ($motRfrs as $motRfr) {
-            if (!array_key_exists($motRfr->getType(), $motRfrsGroupedByTypes)) {
-                $motRfrsGroupedByTypes[$motRfr->getType()] = [];
-            }
-            if ($short) {
-                $motRfrsGroupedByTypes[$motRfr->getType()][] = $motRfr->getEnglishName();
-            } else {
-                $currentRfr = $this->hydrateTestRfr($motRfr);
-                $motRfrsGroupedByTypes[$motRfr->getType()][] = $currentRfr;
-            }
-        }
-
-        return $motRfrsGroupedByTypes;
-    }
-
-
-
     /**
      * @param MotTest $motTest
      * @param bool    $extractOriginalMotTest
      *
-     * @return MotTestDto
      * @throws \Exception
+     *
+     * @return MotTestDto
      */
     public function mapMotTestMinimal(MotTest $motTest, $extractOriginalMotTest = true)
     {
@@ -318,7 +308,7 @@ class MotTestMapper
                             null,
                             $this->motTestStatusService->getMotTestPendingStatus($motTest)
                         )
-                    )
+                    ),
                 ]
             );
         }
@@ -345,8 +335,31 @@ class MotTestMapper
         return $result;
     }
 
+    private function getMotReasonsForRejectionStringsGroupedByType($motRfrs, $short = false)
+    {
+        $motRfrsGroupedByTypes = [];
+
+        /**
+         * @var \DvsaEntities\Entity\MotTestReasonForRejection
+         */
+        foreach ($motRfrs as $motRfr) {
+            if (!array_key_exists($motRfr->getType(), $motRfrsGroupedByTypes)) {
+                $motRfrsGroupedByTypes[$motRfr->getType()] = [];
+            }
+            if ($short) {
+                $motRfrsGroupedByTypes[$motRfr->getType()][] = $motRfr->getEnglishName();
+            } else {
+                $currentRfr = $this->hydrateTestRfr($motRfr);
+                $motRfrsGroupedByTypes[$motRfr->getType()][] = $currentRfr;
+            }
+        }
+
+        return $motRfrsGroupedByTypes;
+    }
+
     /**
      * @param MotTestReasonForRejection $motTestRfr
+     *
      * @return array
      */
     private function hydrateTestRfr($motTestRfr)
@@ -367,74 +380,18 @@ class MotTestMapper
             $hydratedTestRfr['failureTextCy'] = '';
         } else {
             $hydratedTestRfr['rfrId'] = $rfrEntity->getRfrId();
-            $hydratedTestRfr += $this->fetchLocalizedRrfNames($rfrEntity);
-            $hydratedTestRfr += $this->fetchLocalizedRfrDescriptions($rfrEntity, $motTestRfr->getType());
             $hydratedTestRfr['testItemSelectorId'] = $rfrEntity->getTestItemSelector()->getId();
             $hydratedTestRfr['inspectionManualReference'] = $rfrEntity->getInspectionManualReference();
+            /** @var array $formattedDescriptions */
+            $formattedDescriptions = $this->defectSentenceCaseConverter->formatRfrDescriptionsForTestResultsAndBasket($rfrEntity, $motTestRfr->getType());
+            if (!empty($formattedDescriptions['testItemSelectorDescription'])) {
+                $hydratedTestRfr['testItemSelectorDescription'] = $formattedDescriptions['testItemSelectorDescription'];
+            }
+            if (!empty($formattedDescriptions['failureText'])) {
+                $hydratedTestRfr['failureText'] = $formattedDescriptions['failureText'];
+            }
         }
 
         return $hydratedTestRfr;
-    }
-
-    /**
-     * @param ReasonForRejection $rfr
-     * @return array
-     */
-    private function fetchLocalizedRrfNames($rfr)
-    {
-        $rfrNames = [];
-
-        foreach ($rfr->getTestItemSelector()->getDescriptions() as $rfrCategoryDescription) {
-            if ($rfrCategoryDescription->getLanguage()->getCode() === LanguageTypeCode::ENGLISH) {
-                $rfrNames['name'] = $rfrCategoryDescription->getName();
-            } elseif ($rfrCategoryDescription->getLanguage()->getCode() === LanguageTypeCode::WELSH) {
-                $rfrNames['nameCy'] = $rfrCategoryDescription->getName();
-            }
-        }
-        return $rfrNames;
-    }
-
-    /**
-     * @param ReasonForRejection $rfr
-     * @param string $type
-     *
-     * @return array
-     */
-    private function fetchLocalizedRfrDescriptions($rfr, $type)
-    {
-        $descriptions = [];
-
-        foreach ($rfr->getDescriptions() as $rfrDescription) {
-            if ($rfrDescription->getLanguage()->getCode() === LanguageTypeCode::ENGLISH) {
-                $testItem = $rfr->getTestItemSelector();
-                $testItemSelectorDescription = '';
-                foreach ($testItem->getDescriptions() as $testItemDescription) {
-                    if ($testItemDescription->getLanguage()->getCode() === LanguageTypeCode::ENGLISH) {
-                        $testItemSelectorDescription = $testItemDescription->getDescription();
-                    }
-                }
-                $descriptions['testItemSelectorDescription'] = $testItemSelectorDescription;
-                if ($type === ReasonForRejectionTypeName::ADVISORY) {
-                    $descriptions['failureText'] = $rfrDescription->getAdvisoryText();
-                } else {
-                    $descriptions['failureText'] = $rfrDescription->getName();
-                }
-            } elseif ($rfrDescription->getLanguage()->getCode() === LanguageTypeCode::WELSH) {
-                $testItem = $rfr->getTestItemSelector();
-                $testItemSelectorDescription = '';
-                foreach ($testItem->getDescriptions() as $testItemDescription) {
-                    if ($testItemDescription->getLanguage()->getCode() === LanguageTypeCode::WELSH) {
-                        $testItemSelectorDescription = $testItemDescription->getDescription();
-                    }
-                }
-                $descriptions['testItemSelectorDescriptionCy'] = $testItemSelectorDescription;
-                if ($type === ReasonForRejectionTypeName::ADVISORY) {
-                    $descriptions['failureTextCy'] = $rfrDescription->getAdvisoryText();
-                } else {
-                    $descriptions['failureTextCy'] = $rfrDescription->getName();
-                }
-            }
-        }
-        return $descriptions;
     }
 }

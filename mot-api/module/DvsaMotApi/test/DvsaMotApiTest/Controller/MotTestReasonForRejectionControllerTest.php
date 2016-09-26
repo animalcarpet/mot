@@ -1,14 +1,13 @@
 <?php
 namespace DvsaMotApiTest\Controller;
 
-use DvsaCommon\Constants\Role;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
+use DvsaCommon\Formatting\DefectSentenceCaseConverter;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
+use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Controller\MotTestReasonForRejectionController;
 use DvsaMotApi\Service\MotTestReasonForRejectionService;
 use DvsaMotApiTest\Service\MotTestServiceTest;
-use Zend\Http\Request;
-use Zend\Http\Response;
 
 /**
  * Class MotTestReasonForRejectionControllerTest
@@ -17,7 +16,15 @@ class MotTestReasonForRejectionControllerTest extends AbstractMotApiControllerTe
 {
     protected function setUp()
     {
-        $this->controller = new MotTestReasonForRejectionController();
+        $featureToggles = $this
+            ->getMockBuilder(FeatureToggles::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $featureToggles
+            ->method('isEnabled')
+            ->willReturn(true);
+        $defectSentenceCaseConverter = new DefectSentenceCaseConverter($featureToggles);
+        $this->controller = new MotTestReasonForRejectionController($defectSentenceCaseConverter);
         parent::setUp();
     }
 

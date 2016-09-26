@@ -7,6 +7,7 @@ use DvsaMotApi\Controller\DemoTestAssessmentController;
 use DvsaMotApi\Controller\IdentityDataController;
 use DvsaMotApi\Controller\MotTestController;
 use DvsaMotApi\Controller\MotTestOptionsController;
+use DvsaMotApi\Controller\MotTestReasonForRejectionController;
 use DvsaMotApi\Controller\MotTestSearchController;
 use DvsaMotApi\Controller\MotTestShortSummaryController;
 use DvsaMotApi\Controller\MotTestStatusController;
@@ -19,6 +20,7 @@ use DvsaMotApi\Controller\TestItemCategoryNameController;
 use DvsaMotApi\Factory\Controller\CertificatePrintingControllerFactory;
 use DvsaMotApi\Factory\Controller\ContingencyTestControllerFactory;
 use DvsaMotApi\Factory\Controller\DemoTestAssessmentControllerFactory;
+use DvsaMotApi\Factory\Controller\MotTestReasonForRejectionControllerFactory;
 use DvsaMotApi\Factory\Controller\MotTestStatusControllerFactory;
 use DvsaMotApi\Factory\Controller\ReplacementCertificateDraftControllerFactory;
 use DvsaMotApi\Factory\Controller\SurveyControllerFactory;
@@ -47,7 +49,6 @@ return [
         'DvsaMotApi\Controller\MotTestCompare'                          => \DvsaMotApi\Controller\MotTestCompareController::class,
         MotTestSearchController::class                                  => MotTestSearchController::class,
         'DvsaMotApi\Controller\EnforcementMotTestResult'                => \DvsaMotApi\Controller\EnforcementMotTestResultController::class,
-        'DvsaMotApi\Controller\MotTestReasonForRejection'               => \DvsaMotApi\Controller\MotTestReasonForRejectionController::class,
         'DvsaMotApi\Controller\MotTestBrakeTestResult'                  => \DvsaMotApi\Controller\MotTestBrakeTestResultController::class,
         'DvsaMotApi\Controller\MotTestBrakeTestConfigurationValidation' => \DvsaMotApi\Controller\MotTestBrakeTestConfigurationValidationController::class,
         'DvsaMotApi\Controller\CertChangeDiffTesterReason'              => \DvsaMotApi\Controller\CertChangeDiffTesterReasonController::class,
@@ -62,6 +63,7 @@ return [
         CertificatePrintingController::class         => CertificatePrintingControllerFactory::class,
         'DvsaMotApi\Controller\Tester'               => TesterControllerFactory::class,
         'DvsaMotApi\Controller\User'                 => UserControllerFactory::class,
+        MotTestReasonForRejectionController::class   => MotTestReasonForRejectionControllerFactory::class,
         MotTestStatusController::class               => MotTestStatusControllerFactory::class,
         DemoTestAssessmentController::class          => DemoTestAssessmentControllerFactory::class,
         TesterMotTestLogController::class            => TesterMotTestLogControllerFactory::class,

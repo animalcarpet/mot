@@ -135,7 +135,6 @@ class IdentifiedDefectCollection
             $defectName = array_key_exists('testItemSelectorDescription', $advisory)
                 ? sprintf('%s ', $advisory['testItemSelectorDescription']) : '';
             $defectName .= array_key_exists('failureText', $advisory) ? $advisory['failureText'] : '';
-            $defectName = trim($defectName);
 
             $identifiedDefect = new IdentifiedDefect(
                 self::ADVISORY,
