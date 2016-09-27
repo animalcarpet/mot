@@ -13,7 +13,7 @@
     "dvsa/dvsa-logger": "~1.1",
     "dvsa/dvsa-application-logger": "~1.3.0",
     "soflomo/purifier": "0.1.1",
-    "slot-purchase/backend-api": "^4.0.2",
+    "slot-purchase/backend-api": "^4.0.3",
     "danielstjules/stringy": "~2.0",
     "aws/aws-sdk-php": "^3.9",
     "mot/api-client-php": "6.3.0",
