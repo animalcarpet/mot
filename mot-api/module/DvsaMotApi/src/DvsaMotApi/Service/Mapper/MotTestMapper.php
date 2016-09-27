@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApi\Service\Mapper;
 
@@ -34,15 +39,49 @@ use VehicleApi\Service\VehicleSearchService;
  */
 class MotTestMapper
 {
+    /**
+     * @var DateTimeHolder
+     */
     private $dateTimeHolder;
+
+    /**
+     * @var CertificateExpiryService
+     */
     private $certificateExpiryService;
+
+    /**
+     * @var MotTestStatusService
+     */
     private $motTestStatusService;
+
+    /**
+     * @var MotTestDateHelperService
+     */
     private $motTestDateService;
+
+    /**
+     * @var ParamObfuscator
+     */
     private $paramObfuscator;
+
+    /**
+     * @var DefectSentenceCaseConverter
+     */
     private $defectSentenceCaseConverter;
 
+    /**
+     * @var DoctrineObject
+     */
     protected $objectHydrator;
+
+    /**
+     * @var BrakeTestResultService
+     */
     protected $brakeTestResultService;
+
+    /**
+     * @var VehicleSearchService
+     */
     protected $vehicleSearchService;
 
     /**
@@ -57,16 +96,11 @@ class MotTestMapper
      * @param ParamObfuscator             $paramObfuscator
      * @param DefectSentenceCaseConverter $defectSentenceCaseConverter
      */
-    public function __construct(
-        DoctrineObject $objectHydrator,
-        BrakeTestResultService $brakeTestResultService,
-        VehicleSearchService $vehicleService,
-        CertificateExpiryService $certificateExpiryService,
-        MotTestStatusService $motTestStatusService,
-        MotTestDateHelperService $motTestDateService,
-        ParamObfuscator $paramObfuscator,
-        DefectSentenceCaseConverter $defectSentenceCaseConverter
-    ) {
+    public function __construct(DoctrineObject $objectHydrator, BrakeTestResultService $brakeTestResultService,
+                                VehicleSearchService $vehicleService, CertificateExpiryService $certificateExpiryService,
+                                MotTestStatusService $motTestStatusService, MotTestDateHelperService $motTestDateService,
+                                ParamObfuscator $paramObfuscator, DefectSentenceCaseConverter $defectSentenceCaseConverter)
+    {
         $this->objectHydrator = $objectHydrator;
         $this->brakeTestResultService = $brakeTestResultService;
         $this->vehicleSearchService = $vehicleService;
@@ -191,6 +225,7 @@ class MotTestMapper
      */
     public function mapMotTestMinimal(MotTest $motTest, $extractOriginalMotTest = true)
     {
+        /** @var MotTestDto $result */
         $result = (new MotTestDto())
             ->setComplaintRef($motTest->getComplaintRef())
             ->setCountryOfRegistration(
@@ -296,21 +331,12 @@ class MotTestMapper
         $result->setBrakeTestCount($motTest->getBrakeTestCount());
 
         if ($motTest->isActive()) {
-            $result->setPendingDetails(
-                [
-                    'currentSubmissionStatus' => $this->motTestStatusService->getMotTestPendingStatus($motTest),
-
-                    'issuedDate' => DateTimeApiFormat::date($this->motTestDateService->getIssuedDate($motTest)),
-
-                    'expiryDate' => DateTimeApiFormat::date(
-                        $this->motTestDateService->getExpiryDate(
-                            $motTest,
-                            null,
-                            $this->motTestStatusService->getMotTestPendingStatus($motTest)
-                        )
-                    ),
-                ]
-            );
+            $result->setPendingDetails([
+                'currentSubmissionStatus' => $this->motTestStatusService->getMotTestPendingStatus($motTest),
+                'issuedDate' => DateTimeApiFormat::date($this->motTestDateService->getIssuedDate($motTest)),
+                'expiryDate' => DateTimeApiFormat::date($this->motTestDateService->getExpiryDate($motTest, null,
+                    $this->motTestStatusService->getMotTestPendingStatus($motTest))),
+            ]);
         }
 
         $result->setStartedDate(DateTimeApiFormat::dateTime($motTest->getStartedDate()));
@@ -335,13 +361,16 @@ class MotTestMapper
         return $result;
     }
 
+    /**
+     * @param MotTestReasonForRejection[] $motRfrs
+     * @param bool                        $short
+     *
+     * @return array
+     */
     private function getMotReasonsForRejectionStringsGroupedByType($motRfrs, $short = false)
     {
         $motRfrsGroupedByTypes = [];
 
-        /**
-         * @var \DvsaEntities\Entity\MotTestReasonForRejection
-         */
         foreach ($motRfrs as $motRfr) {
             if (!array_key_exists($motRfr->getType(), $motRfrsGroupedByTypes)) {
                 $motRfrsGroupedByTypes[$motRfr->getType()] = [];
@@ -362,10 +391,10 @@ class MotTestMapper
      *
      * @return array
      */
-    private function hydrateTestRfr($motTestRfr)
+    private function hydrateTestRfr(MotTestReasonForRejection $motTestRfr)
     {
         $hydratedTestRfr = $this->objectHydrator->extract($motTestRfr);
-
+        $hydratedTestRfr['markedAsRepaired'] = $motTestRfr->isMarkedAsRepaired();
         unset($hydratedTestRfr['motTest']);
         unset($hydratedTestRfr['motTestId']);
         ExtractionHelper::unsetAuditColumns($hydratedTestRfr);

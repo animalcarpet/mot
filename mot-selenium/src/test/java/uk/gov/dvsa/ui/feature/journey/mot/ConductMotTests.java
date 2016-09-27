@@ -3,6 +3,7 @@ package uk.gov.dvsa.ui.feature.journey.mot;
 import com.jayway.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.joda.time.DateTime;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.gov.dvsa.domain.model.AeDetails;
@@ -32,6 +33,14 @@ public class ConductMotTests extends DslTest {
     private AeDetails aeDetails;
     private User tester;
     private Vehicle vehicle;
+    private List<ReasonForRejection> reasonForRejectionsList;
+    private String defectName = "Horn control missing";
+
+    @BeforeClass(alwaysRun = true)
+    private void setupRfrList() {
+        reasonForRejectionsList = new ArrayList<>();
+        reasonForRejectionsList.add(ReasonForRejection.HORN_CONTROL_MISSING);
+    }
 
     @BeforeMethod(alwaysRun = true)
     private void setupTestData() throws IOException {
@@ -239,21 +248,50 @@ public class ConductMotTests extends DslTest {
     @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-3478"},
             description = "Verifies that user is able to repair defect from new test results screen")
     public void repairDefectDuringRetestSuccessfully() throws IOException, URISyntaxException {
-        List<ReasonForRejection> reasonForRejectionsList = new ArrayList<>();
-        reasonForRejectionsList.add(ReasonForRejection.HORN_CONTROL_MISSING);
-        String defectName = "Horn control missing";
-
         //Given I have a vehicle with a failed MOT test
         motApi.createTestWithRfr(tester, site.getId(), vehicle, TestOutcome.FAILED, 12345, DateTime.now(), reasonForRejectionsList);
 
         //And fault has been fixed
 
         //When I conduct a retest on the vehicle and click repaired on defect
-        TestResultsEntryNewPage testResultsEntryNewPage = motUI.retest.startRetest(vehicle, tester);
-        testResultsEntryNewPage.clickRepaired(defectName, TestResultsEntryNewPage.class);
+        TestResultsEntryNewPage testResultsEntryNewPage = ((TestResultsEntryNewPage)motUI.retest.startRetest(vehicle, tester))
+                .clickRepaired(defectName, TestResultsEntryNewPage.class);
 
         //Then the defect shouldn't be displayed
         assertThat(testResultsEntryNewPage.isDefectRepairedSuccessMessageDisplayed(defectName) &&
-                testResultsEntryNewPage.isDefectRemovedFromRfrList(defectName), is(true));
+                testResultsEntryNewPage.isUndoLinkDisplayed(), is(true));
+    }
+
+    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1423"},
+            description = "Verifies that user is able to repair defect from new test results screen and undo repair status")
+    public void undoRepairDefectDuringRetestSuccessfully() throws IOException, URISyntaxException {
+        //Given I have a vehicle with a failed MOT test
+        motApi.createTestWithRfr(tester, site.getId(), vehicle, TestOutcome.FAILED, 12345, DateTime.now(), reasonForRejectionsList);
+
+        //And fault has been fixed
+
+        //When I conduct a retest on the vehicle click repaired on defect and click on undo link
+        TestResultsEntryNewPage testResultsEntryNewPage = ((TestResultsEntryNewPage)motUI.retest.startRetest(vehicle, tester))
+                .clickRepaired(defectName, TestResultsEntryNewPage.class)
+                .clickUndoRepaired(TestResultsEntryNewPage.class);
+
+        //Then the Mark as repaired button should be displayed
+        assertThat(testResultsEntryNewPage.isMarkAsRepairedButtonDisplayed(defectName), is(true));
+    }
+
+    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1423"},
+            description = "Verifies that user is not able to see defect on a summary page after repairing it")
+    public void statusOfRepairedDefectDuringRetestOnSummaryPage() throws IOException, URISyntaxException {
+        //Given I have a vehicle with a failed MOT test
+        motApi.createTestWithRfr(tester, site.getId(), vehicle, TestOutcome.FAILED, 12345, DateTime.now(), reasonForRejectionsList);
+
+        //And fault has been fixed
+
+        //When I conduct a retest on the vehicle click repaired on defect and click review test button
+        TestSummaryPage testSummaryPage = ((TestResultsEntryNewPage)motUI.retest.startRetest(vehicle, tester))
+                .completeTestDetailsWithPassValues(defectName);
+
+        //Then the defect should not be displayed
+        assertThat(testSummaryPage.isDefectDisplayed(defectName), is(false));
     }
 }

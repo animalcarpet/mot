@@ -423,17 +423,18 @@ class MotTestRepository extends AbstractMutableRepository
      *
      * @param $motTestNumber
      *
-     * @throws \DvsaCommonApi\Service\Exception\NotFoundException
+     * @throws NotFoundException
      *
      * @return MotTest
      */
     public function getMotTestByNumber($motTestNumber)
     {
         $result = $this->createQueryBuilder('mt')
-            ->addSelect(['rfr', 'vts', 'dsbtc3a', 'dpbtc3a'])
+            ->addSelect(['rfr', 'rfrMarkedAsRepaired', 'vts', 'dsbtc3a', 'dpbtc3a'])
             ->innerJoin('mt.motTestType', 'tt')
             ->innerJoin('mt.status', 's')
             ->leftJoin('mt.motTestReasonForRejections', 'rfr')
+            ->leftJoin('rfr.markedAsRepaired', 'rfrMarkedAsRepaired')
             ->leftJoin('mt.vehicleTestingStation', 'vts')
             ->leftJoin('vts.defaultServiceBrakeTestClass3AndAbove', 'dsbtc3a')
             ->leftJoin('vts.defaultParkingBrakeTestClass3AndAbove', 'dpbtc3a')
@@ -563,7 +564,7 @@ class MotTestRepository extends AbstractMutableRepository
      * @param string $status
      * @param string $issuedDate
      *
-     * @return \DvsaEntities\Entity\MotTest
+     * @return MotTest
      */
     public function getLatestMotTestByVehicleIdAndResult(
         $vehicleId,
@@ -604,7 +605,7 @@ class MotTestRepository extends AbstractMutableRepository
      * @param string $issuedDate
      * @param array  $excludeCodes
      *
-     * @return \DvsaEntities\Entity\MotTest
+     * @return MotTest
      */
     public function findLatestMotTestByVrmAndResult(
         $vrm,
@@ -672,7 +673,7 @@ class MotTestRepository extends AbstractMutableRepository
             return $result[0]['number'];
         }
 
-        throw new NotFoundException('MOT test with status '.$status.' for vehicle '.$vehicleId);
+        throw new NotFoundException('MOT test with status ' . $status . ' for vehicle ' . $vehicleId);
     }
 
     /**
@@ -687,12 +688,13 @@ class MotTestRepository extends AbstractMutableRepository
     {
         $qb = $this
             ->createQueryBuilder('mt')
-            ->addSelect('v, vt, t, rfr')
+            ->addSelect('v, vt, t, rfr', 'rfrMarkedAsRepaired')
             ->innerJoin('mt.vehicle', 'v')
             ->innerJoin('mt.vehicleTestingStation', 'vt')
             ->innerJoin('mt.tester', 't')
             ->innerJoin('mt.motTestType', 'tt')
             ->leftJoin('mt.motTestReasonForRejections', 'rfr')
+            ->leftJoin('rfr.markedAsRepaired', 'rfrMarkedAsRepaired')
             ->where('mt.vehicle = :vehicleId')
             ->orderBy('mt.startedDate', 'DESC')
             ->setParameter('vehicleId', $vehicleId)
@@ -706,7 +708,7 @@ class MotTestRepository extends AbstractMutableRepository
      *
      * @param $id
      *
-     * @throws \DvsaCommonApi\Service\Exception\NotFoundException
+     * @throws NotFoundException
      *
      * @return null|MotTest
      */
@@ -905,9 +907,9 @@ class MotTestRepository extends AbstractMutableRepository
         //fiter out organisation_site_statuses
         $whereParams = [];
         foreach (static::$testLogOrganisationSiteStatuses as $key => $val) {
-            $whereParams[] = ':'.$key;
+            $whereParams[] = ':' . $key;
         }
-        $sql .= ' AND oss.code NOT IN ('.implode(', ', $whereParams).')';
+        $sql .= ' AND oss.code NOT IN (' . implode(', ', $whereParams) . ')';
 
         //  ----  prepare statement and bind params   ----
         $em = $this->getEntityManager();
@@ -1044,24 +1046,24 @@ class MotTestRepository extends AbstractMutableRepository
         if (!empty($statuses)) {
             $query = [];
             foreach ($statuses as $key => $item) {
-                $query[] = ':STATUS'.$key;
+                $query[] = ':STATUS' . $key;
 
-                $qb->setParameter('STATUS'.$key, $item);
+                $qb->setParameter('STATUS' . $key, $item);
             }
 
-            $qb->andwhere('ts.name IN ('.implode(',', $query).')');
+            $qb->andwhere('ts.name IN (' . implode(',', $query) . ')');
         }
 
         $testType = $searchParam->getTestType();
         if (!empty($testType)) {
             $query = [];
             foreach ($testType as $key => $item) {
-                $query[] = ':TEST_TYPE'.$key;
+                $query[] = ':TEST_TYPE' . $key;
 
-                $qb->setParameter('TEST_TYPE'.$key, $item);
+                $qb->setParameter('TEST_TYPE' . $key, $item);
             }
 
-            $qb->andwhere('tt.code IN ('.implode(',', $query).')');
+            $qb->andwhere('tt.code IN (' . implode(',', $query) . ')');
         }
 
         if ($searchParam->getDateFrom() || $searchParam->getDateTo()) {
@@ -1091,7 +1093,7 @@ class MotTestRepository extends AbstractMutableRepository
             }
 
             foreach ($orderBy as $order) {
-                $qb->orderBy($order.' '.$searchParam->getSortDirection());
+                $qb->orderBy($order . ' ' . $searchParam->getSortDirection());
             }
         }
 
@@ -1464,16 +1466,16 @@ class MotTestRepository extends AbstractMutableRepository
         //  --  add test type where clause --
         $whereParams = [];
         foreach (static::$testLogTestTypes as $key => $val) {
-            $whereParams[] = ':'.$key;
+            $whereParams[] = ':' . $key;
         }
-        $sql .= ' AND tt.code IN ('.implode(', ', $whereParams).')';
+        $sql .= ' AND tt.code IN (' . implode(', ', $whereParams) . ')';
 
         //  --  add test status where clause --
         $whereParams = [];
         foreach (static::$testLogTestStatuses as $key => $val) {
-            $whereParams[] = ':'.$key;
+            $whereParams[] = ':' . $key;
         }
-        $sql .= ' AND ts.name IN ('.implode(', ', $whereParams).')';
+        $sql .= ' AND ts.name IN (' . implode(', ', $whereParams) . ')';
 
         return $sql;
     }

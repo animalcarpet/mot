@@ -2,7 +2,6 @@
 
 namespace DvsaMotApiTest\Service\Mapper;
 
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Enum\PhoneContactTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
@@ -56,14 +55,13 @@ use DvsaEntities\Entity\TestItemSelector;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
 use DvsaCommon\Formatting\DefectSentenceCaseConverter;
-use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Service\Mapper\MotTestMapper;
 use DvsaMotApi\Service\MotTestDateHelperService;
 use DvsaMotApiTest\Service\MotTestServiceTest;
 use VehicleApi\Service\VehicleSearchService;
 
 /**
- * Class MotTestMapperTest
+ * Class MotTestMapperTest.
  */
 class MotTestMapperTest extends AbstractServiceTestCase
 {
@@ -182,17 +180,18 @@ class MotTestMapperTest extends AbstractServiceTestCase
 
         // TODO add mock for new entities
         $expectedRfr1 = [
-            'rfrId'                       => 1,
-            'name'                        => 'Rear Stop lamp',
-            'failureText'                 => 'adversely affected by the operation of another lamp',
-            'inspectionManualReference'   => '1.2.1f',
-            'testItemSelectorId'          => 12,
-            'testItemSelectorDescription' => 'aaa'
+            'rfrId' => 1,
+            'name' => 'Rear Stop lamp',
+            'failureText' => 'adversely affected by the operation of another lamp',
+            'inspectionManualReference' => '1.2.1f',
+            'testItemSelectorId' => 12,
+            'testItemSelectorDescription' => 'aaa',
+            'markedAsRepaired' => false,
         ];
 
         $expectedData->setReasonsForRejection(
             [
-                'ADVISORY' => [$expectedRfr1]
+                'ADVISORY' => [$expectedRfr1],
             ]
         );
 
@@ -205,8 +204,8 @@ class MotTestMapperTest extends AbstractServiceTestCase
             ->setPendingDetails(
                 [
                     'currentSubmissionStatus' => 'INCOMPLETE',
-                    'issuedDate'              => null,
-                    'expiryDate'              => null,
+                    'issuedDate' => null,
+                    'expiryDate' => null,
                 ]
             )
             ->setVehicleClass((new VehicleClassDto())->setCode('4'))
@@ -239,8 +238,8 @@ class MotTestMapperTest extends AbstractServiceTestCase
             ->will($this->returnValue('INCOMPLETE'));
 
         $resultFromDefectSentenceCaseConverter = [
-            'failureText'                 => 'adversely affected by the operation of another lamp',
-            'testItemSelectorDescription' => 'aaa'
+            'failureText' => 'adversely affected by the operation of another lamp',
+            'testItemSelectorDescription' => 'aaa',
         ];
 
         $mocks[self::MOCK_DEFECT_SENTENCE_CASE_CONVERTER]->expects($this->any())
@@ -318,14 +317,14 @@ class MotTestMapperTest extends AbstractServiceTestCase
         $defectSentenceCaseConverter = $this->getMockWithDisabledConstructor(DefectSentenceCaseConverter::class);
 
         return [
-            self::MOCK_BRAKE_TEST_RESULT_SERVICE  => $mockBrakeTestResultService,
-            self::MOCK_VEHICLE_SERVICE            => $mockVehicleSearchService,
-            self::MOCK_HYDRATOR                   => $mockHydrator,
+            self::MOCK_BRAKE_TEST_RESULT_SERVICE => $mockBrakeTestResultService,
+            self::MOCK_VEHICLE_SERVICE => $mockVehicleSearchService,
+            self::MOCK_HYDRATOR => $mockHydrator,
             self::MOCK_CERTIFICATE_EXPIRY_SERVICE => $mockCertificateExpiryService,
-            self::MOCK_STATUS_SERVICE             => $motTestStatusService,
-            self::MOCK_DATE_SERVICE               => $motTestDateService,
-            self::MOCK_PARAMOBFUSCATOR            => $mockParamObfuscator,
-            self::MOCK_DEFECT_SENTENCE_CASE_CONVERTER => $defectSentenceCaseConverter
+            self::MOCK_STATUS_SERVICE => $motTestStatusService,
+            self::MOCK_DATE_SERVICE => $motTestDateService,
+            self::MOCK_PARAMOBFUSCATOR => $mockParamObfuscator,
+            self::MOCK_DEFECT_SENTENCE_CASE_CONVERTER => $defectSentenceCaseConverter,
         ];
     }
 
@@ -354,7 +353,7 @@ class MotTestMapperTest extends AbstractServiceTestCase
         $rfrDescriptions = [
             (new ReasonForRejectionDescription())
                 ->setLanguage((new Language())->setCode('EN'))
-                ->setName('adversely affected by the operation of another lamp')
+                ->setName('adversely affected by the operation of another lamp'),
         ];
         $rfr->setDescriptions($rfrDescriptions);
 
@@ -364,12 +363,13 @@ class MotTestMapperTest extends AbstractServiceTestCase
             [
                 (new TestItemCategoryDescription())
                     ->setLanguage((new Language())->setCode('EN'))
-                    ->setName('Rear lamp')
+                    ->setName('Rear lamp'),
             ]
         );
         $rfr->setTestItemSelector($rfrCategory);
 
         $motTestRfr->setReasonForRejection($rfr);
+
         return $motTestRfr;
     }
 
@@ -378,7 +378,7 @@ class MotTestMapperTest extends AbstractServiceTestCase
         $status = XMock::of(MotTestStatus::class);
         $status
             ->expects($this->any())
-            ->method("getName")
+            ->method('getName')
             ->willReturn(MotTestStatusName::ACTIVE);
 
         return $status;
@@ -423,7 +423,6 @@ class MotTestMapperTest extends AbstractServiceTestCase
 
             $this->assertNull($defaultParkingBrakeTestClass3AndAbove);
         }
-
     }
 
     public function getMotTests()
@@ -463,12 +462,12 @@ class MotTestMapperTest extends AbstractServiceTestCase
     {
         $address = new Address();
         $address
-            ->setAddressLine1("address line 1")
-            ->setAddressLine2("address line 2")
-            ->setAddressLine3("address line 3")
-            ->setCountry("England")
-            ->setPostcode("postcode")
-            ->setTown("London")
+            ->setAddressLine1('address line 1')
+            ->setAddressLine2('address line 2')
+            ->setAddressLine3('address line 3')
+            ->setCountry('England')
+            ->setPostcode('postcode')
+            ->setTown('London')
         ;
 
         $phoneContactType = new PhoneContactType();
@@ -477,7 +476,7 @@ class MotTestMapperTest extends AbstractServiceTestCase
         $phone = new Phone();
         $phone
             ->setContactType($phoneContactType)
-            ->setNumber("658 876 678")
+            ->setNumber('658 876 678')
             ->setIsPrimary(true)
         ;
 

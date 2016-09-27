@@ -9,9 +9,9 @@ namespace Dvsa\Mot\Frontend\MotTestModule\ViewModel;
 
 /**
  * A defect that has been observed on a vehicle during a test, as opposed to a
- * potential defect. Once a defect has been added to a vehicle, it becomes an 
+ * potential defect. Once a defect has been added to a vehicle, it becomes an
  * IdentifiedDefect.
- * 
+ *
  * @see Defect
  */
 class IdentifiedDefect
@@ -75,8 +75,8 @@ class IdentifiedDefect
      *
      * @var int
      *
-     * @see Defect The collection of information to which this property refers.
-     * @see IdentifiedDefect::$id The unique ID of this exact IdentifiedDefect.
+     * @see Defect The collection of information to which this property refers
+     * @see IdentifiedDefect::$id The unique ID of this exact IdentifiedDefect
      */
     private $defectId;
 
@@ -102,7 +102,7 @@ class IdentifiedDefect
      * @var string
      *
      * @uses DefectDto::$defectBreadcrumb Where the data for this property is
-     *                                    fetched from.
+     *                                    fetched from
      */
     private $breadcrumb = '';
 
@@ -112,6 +112,16 @@ class IdentifiedDefect
      * @var bool
      */
     private $onOriginalTest;
+
+    /**
+     * @var bool
+     */
+    private $generated;
+
+    /**
+     * @var bool
+     */
+    private $markedAsRepaired;
 
     /**
      * IdentifiedDefect constructor.
@@ -126,19 +136,11 @@ class IdentifiedDefect
      * @param int    $id
      * @param int    $defectId
      * @param bool   $onOriginalTest
+     * @param bool   $generated
+     * @param bool   $markedAsRepaired
      */
-    public function __construct(
-        $defectType,
-        $lateralLocation,
-        $longitudinalLocation,
-        $verticalLocation,
-        $userComment,
-        $dangerous,
-        $name,
-        $id,
-        $defectId,
-        $onOriginalTest
-    ) {
+    public function __construct($defectType, $lateralLocation, $longitudinalLocation, $verticalLocation, $userComment, $dangerous, $name, $id, $defectId, $onOriginalTest, $generated, $markedAsRepaired)
+    {
         $this->defectType = $defectType;
         $this->lateralLocation = $lateralLocation;
         $this->longitudinalLocation = $longitudinalLocation;
@@ -148,7 +150,9 @@ class IdentifiedDefect
         $this->name = $name;
         $this->id = $id;
         $this->defectId = $defectId;
-        $this->onOriginalTest = $onOriginalTest;
+        $this->onOriginalTest = (bool) $onOriginalTest;
+        $this->generated = (bool) $generated;
+        $this->markedAsRepaired = $markedAsRepaired;
     }
 
     /**
@@ -257,12 +261,8 @@ class IdentifiedDefect
             return 'n/a';
         }
 
-        return ucfirst(
-            implode(
-                ', ',
-                array_filter([$this->lateralLocation, $this->longitudinalLocation, $this->verticalLocation])
-            )
-        );
+        return ucfirst(implode(', ', array_filter([$this->lateralLocation, $this->longitudinalLocation,
+                    $this->verticalLocation, ])));
     }
 
     /**
@@ -274,7 +274,7 @@ class IdentifiedDefect
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isOnOriginalTest()
     {
@@ -294,10 +294,36 @@ class IdentifiedDefect
     }
 
     /**
-     * @param boolean $onOriginalTest
+     * @param bool $onOriginalTest
      */
     public function setOnOriginalTest($onOriginalTest)
     {
         $this->onOriginalTest = $onOriginalTest;
+    }
+
+    /**
+     * @param bool $isRetest
+     *
+     * @return bool
+     */
+    public function isRepairable($isRetest)
+    {
+        return $isRetest && !$this->generated && $this->onOriginalTest;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRemovable()
+    {
+        return !$this->generated;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMarkedAsRepaired()
+    {
+        return $this->markedAsRepaired;
     }
 }

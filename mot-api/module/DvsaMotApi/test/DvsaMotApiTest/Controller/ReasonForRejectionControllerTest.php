@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApiTest\Controller;
 
 use DvsaCommon\Dto\Common\MotTestDto;
@@ -9,6 +10,7 @@ use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotApi\Controller\ReasonForRejectionController;
 use DvsaMotApi\Service\TestItemSelectorService;
+use DvsaMotApiTest\Test\ReasonForRejectionBuilder;
 use Zend\Stdlib\Parameters;
 
 /**
@@ -30,7 +32,7 @@ class ReasonForRejectionControllerTest extends AbstractMotApiControllerTestCase
 
         $dtoHydrator = new DtoHydrator();
 
-        $searchString = "stop lamp";
+        $searchString = 'stop lamp';
         $startIndex = 0;
         $endIndex = 25;
 
@@ -39,13 +41,21 @@ class ReasonForRejectionControllerTest extends AbstractMotApiControllerTestCase
         );
 
         $expectedRfrs = ['rfrId' => 1];
-        $expectedData = ['data' => ($expectedRfrs + ['motTest' => (new MotTestDto())->setVehicle($vehicle)])];
+        $expectedData = ['data' => (
+            $expectedRfrs + ['motTest' => (new MotTestDto())
+                ->setVehicle($vehicle)
+                ->setReasonsForRejection(ReasonForRejectionBuilder::create()),
+            ]),
+        ];
 
         //  --  define mock for other services  --
         $mockMotTestService = $this->getMockMotTestService();
         $mockMotTestService->expects($this->any())
             ->method('getMotTestData')
-            ->willReturn((new MotTestDto())->setVehicle($vehicle));
+            ->willReturn((new MotTestDto())
+                ->setVehicle($vehicle)
+                ->setReasonsForRejection(ReasonForRejectionBuilder::create())
+            );
 
         //  --  define mock for tested service  --
         $mockTestItemSelectorService = $this->getMockItemSelectorService();
@@ -60,7 +70,7 @@ class ReasonForRejectionControllerTest extends AbstractMotApiControllerTestCase
                 [
                     ReasonForRejectionController::QUERY_PARAM_SEARCH => $searchString,
                     ReasonForRejectionController::QUERY_PARAM_SEARCH_START_INDEX => $startIndex,
-                    ReasonForRejectionController::QUERY_PARAM_SEARCH_END_INDEX => $endIndex
+                    ReasonForRejectionController::QUERY_PARAM_SEARCH_END_INDEX => $endIndex,
                 ]
             )
         );

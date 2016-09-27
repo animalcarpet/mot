@@ -58,17 +58,19 @@ public class PageInteractionHelper {
         );
     }
 
-    public static boolean verifyTitle(String actual, String expected1, String expected2) {
-        if(actual.contains(expected1) || actual.contains(expected2)){
-            return true;
+    public static boolean verifyTitle(String actual, String... expected) {
+        StringBuilder builder = new StringBuilder();
+
+        for (String value : expected) {
+            if (actual.contains(value)) {
+                return true;
+            }
+            builder.append(value).append(" ");
         }
 
         throw new PageInstanceNotFoundException(
-                "Page verification failed for this page. "
-                        + String.format("%s or %s ", expected1, expected2)
-                        + String.format("\n but found %s page", actual)
-        );
-    }
+                String.format("Page verification failed for this page. Expected: %s \nbut found %s page", builder.toString(), actual));
+        }
 
     /**
      * Used for temporarily turning off implicit driver waits, should be followed by turning them back on after the

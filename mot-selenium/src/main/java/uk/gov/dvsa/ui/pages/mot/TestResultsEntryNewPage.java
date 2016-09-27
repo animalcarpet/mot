@@ -189,6 +189,12 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
         return this;
     }
 
+    public TestSummaryPage completeTestDetailsWithPassValues(String defectName) {
+        completeTestDetailsWithPassValues();
+        clickRepaired(defectName, this.getClass());
+        return clickReviewTestButton();
+    }
+
     public SearchForADefectPage clickSearchForADefectButton() {
         searchForDefect.click();
         return new SearchForADefectPage(driver);
@@ -229,6 +235,10 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
 
     public boolean isAddBrakeTestButtonDisplayed() {
         return PageInteractionHelper.isElementDisplayed(addBrakeTest);
+    }
+
+    public <T extends Page>T clickUndoRepaired(Class clazz) {
+        return (T) undoRepairDefect(clazz);
     }
 
     private void setOdometerUnit(OdometerUnit unit) {

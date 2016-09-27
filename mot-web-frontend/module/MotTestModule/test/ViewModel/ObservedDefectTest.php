@@ -9,7 +9,7 @@ namespace Dvsa\Mot\Frontend\MotTestModuleTest\ViewModel;
 
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefect;
 
-class IdentifiedDefectTest extends \PHPUnit_Framework_TestCase
+class ObservedDefectTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider manualAdvisoryProvider
@@ -21,7 +21,9 @@ class IdentifiedDefectTest extends \PHPUnit_Framework_TestCase
     public function testIsManualAdvisory($defectType, $defectId, $result)
     {
         $identifiedDefect = new IdentifiedDefect($defectType, 'lateralLocation', 'longitudinalLocation',
-            'verticalLocation', 'userComment', false, 'name', 1, $defectId, false);
+            'verticalLocation', 'userComment', false, 'name', 1, $defectId, false, false, false);
+
+        $temp = '';
 
         $this->assertEquals($result, $identifiedDefect->isManualAdvisory());
     }
@@ -29,7 +31,7 @@ class IdentifiedDefectTest extends \PHPUnit_Framework_TestCase
     public function testGetLocationStringWithLocation()
     {
         $identifiedDefect = new IdentifiedDefect(IdentifiedDefect::ADVISORY, 'lateralLocation', 'longitudinalLocation',
-            'verticalLocation', 'userComment', false, 'name', 1, 1, false);
+            'verticalLocation', 'userComment', false, 'name', 1, 1, false, false, false);
 
         $this->assertEquals(
             'LateralLocation, longitudinalLocation, verticalLocation',
@@ -40,7 +42,7 @@ class IdentifiedDefectTest extends \PHPUnit_Framework_TestCase
     public function testGetLocationStringWithoutLocation()
     {
         $identifiedDefect = new IdentifiedDefect(IdentifiedDefect::ADVISORY, '', '',
-            '', 'userComment', false, 'name', 1, 1, false);
+            '', 'userComment', false, 'name', 1, 1, false, false, false);
 
         $this->assertEquals(
             'n/a',
@@ -51,7 +53,7 @@ class IdentifiedDefectTest extends \PHPUnit_Framework_TestCase
     public function testSetOnOriginalTest()
     {
         $identifiedDefect = new IdentifiedDefect(IdentifiedDefect::ADVISORY, 'lateralLocation', 'longitudinalLocation',
-            'verticalLocation', 'userComment', false, 'name', 1, 1, false);
+            'verticalLocation', 'userComment', false, 'name', 1, 1, false, false, false);
         $identifiedDefect->setOnOriginalTest(true);
 
         $this->assertEquals(true, $identifiedDefect->isOnOriginalTest());
@@ -60,7 +62,7 @@ class IdentifiedDefectTest extends \PHPUnit_Framework_TestCase
     public function testSetBreadcrumb()
     {
         $identifiedDefect = new IdentifiedDefect(IdentifiedDefect::ADVISORY, '', '',
-            '', 'userComment', false, 'name', 1, 1, false);
+            '', 'userComment', false, 'name', 1, 1, false, false, false);
 
         $identifiedDefect->setBreadcrumb('breadcrumb');
 

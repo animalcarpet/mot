@@ -17,6 +17,7 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaDocument\Service\Document\DocumentService;
 use DvsaMotApi\Service\CertificateCreationService;
 use DvsaMotApi\Service\MotTestService;
+use DvsaMotApiTest\Test\ReasonForRejectionBuilder;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
@@ -88,7 +89,8 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             )
             ->setPrimaryColour((new ColourDto())->setName('Primary'))
             ->setSecondaryColour((new ColourDto())->setName('Secondary'))
-            ->setCountryOfRegistration((new CountryDto())->setName('UK'));
+            ->setCountryOfRegistration((new CountryDto())->setName('UK'))
+            ->setReasonsForRejection(ReasonForRejectionBuilder::create());
 
         $additionalData = [
             'TestStationAddress'    => []
@@ -148,7 +150,8 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             )
             ->setPrimaryColour((new ColourDto())->setName('Primary'))
             ->setSecondaryColour((new ColourDto())->setName('Secondary'))
-            ->setCountryOfRegistration((new CountryDto())->setName('UK'));
+            ->setCountryOfRegistration((new CountryDto())->setName('UK'))
+            ->setReasonsForRejection(ReasonForRejectionBuilder::create());
 
         $additionalData = [
             'TestStationAddress'    => []
@@ -201,7 +204,8 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->setPrimaryColour((new ColourDto())->setName('Primary'))
             ->setSecondaryColour((new ColourDto())->setName('Secondary'))
             ->setCountryOfRegistration((new CountryDto())->setName('UK'))
-            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4));
+            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4))
+            ->setReasonsForRejection([ 0=> ['markedAsRepaired' => true]]);
 
         $additionalData = [
             'TestStationAddress'    => []
@@ -266,7 +270,8 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->setPrimaryColour((new ColourDto())->setName('Primary'))
             ->setSecondaryColour((new ColourDto())->setName('Secondary'))
             ->setCountryOfRegistration((new CountryDto())->setName('UK'))
-            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4));
+            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4))
+            ->setReasonsForRejection(ReasonForRejectionBuilder::create());
 
         $expectedPrsTestData = (new MotTestDto())
             ->setId($prsTestId)
@@ -294,7 +299,8 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->setPrimaryColour((new ColourDto())->setName('Primary'))
             ->setSecondaryColour((new ColourDto())->setName('Secondary'))
             ->setCountryOfRegistration((new CountryDto())->setName('UK'))
-            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4));
+            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4))
+            ->setReasonsForRejection(ReasonForRejectionBuilder::create());
 
         $this->mockMotService->expects($this->once())
             ->method('getMotTestData')
@@ -354,7 +360,8 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->setPrimaryColour((new ColourDto())->setName('Primary'))
             ->setSecondaryColour((new ColourDto())->setName('Secondary'))
             ->setCountryOfRegistration((new CountryDto())->setName('UK'))
-            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4));
+            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4))
+            ->setReasonsForRejection(ReasonForRejectionBuilder::create());
 
         $additionalData = [
             'vehicleTestingStation' => [
@@ -408,7 +415,8 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->setPrimaryColour((new ColourDto())->setName('Primary'))
             ->setSecondaryColour((new ColourDto())->setName('Secondary'))
             ->setCountryOfRegistration((new CountryDto())->setName('UK'))
-            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4));
+            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4))
+            ->setReasonsForRejection(ReasonForRejectionBuilder::create());
 
         $additionalData = [
             'vehicleTestingStation' => [
@@ -482,7 +490,8 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->setPrimaryColour((new ColourDto())->setName('Primary'))
             ->setSecondaryColour((new ColourDto())->setName('Secondary'))
             ->setCountryOfRegistration((new CountryDto())->setName('UK'))
-            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4));
+            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4))
+            ->setReasonsForRejection(ReasonForRejectionBuilder::create());
 
         $additionalData = [
             'TestStationAddress'    => []

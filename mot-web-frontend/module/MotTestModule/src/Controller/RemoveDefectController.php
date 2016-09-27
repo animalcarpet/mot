@@ -64,7 +64,7 @@ class RemoveDefectController extends AbstractDvsaMotTestController
     public function removeAction()
     {
         $motTestNumber = (int) $this->params()->fromRoute('motTestNumber');
-        $identifiedDefectId = (int) $this->params()->fromRoute('defectItemId');
+        $identifiedDefectId = (int) $this->params()->fromRoute('identifiedDefectId');
         /** @var MotTestDto $motTest */
         $motTest = null;
         $isReinspection = false;
@@ -120,7 +120,7 @@ class RemoveDefectController extends AbstractDvsaMotTestController
 
         $breadcrumbs = $this->getBreadcrumbs($isDemoTest, $isReinspection, $identifiedDefect->getDefectType());
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
-        $this->enableGdsLayout('Remove '. $identifiedDefect->getDefectType(), '');
+        $this->enableGdsLayout('Remove ' . $identifiedDefect->getDefectType(), '');
 
         return $this->createViewModel('defects/remove-defect.twig', [
             'motTestNumber' => $motTestNumber,

@@ -27,7 +27,7 @@ use PHPUnit_Framework_MockObject_MockObject as MockObj;
  */
 class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
 {
-    const MOT_TEST_NUMBER = "123456789012";
+    const MOT_TEST_NUMBER = '123456789012';
 
     /**
      * @var TestItemSelectorService|MockObj
@@ -159,7 +159,7 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
 
         $this->setExpectedException(
             NotFoundException::class,
-            'Reason for Rejection ' . $rfrId . ' not found'
+            'Reason for Rejection '.$rfrId.' not found'
         );
 
         $service = $this->createService();
@@ -179,7 +179,7 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
 
         $this->setExpectedException(
             NotFoundException::class,
-            'Reason for Rejection entry not found'
+            sprintf('Unable to fetch an MotTestReasonForRejection with ID "%s"', $rfrId)
         );
 
         $service = $this->createService();
@@ -227,7 +227,7 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
 
         $this->setExpectedException(
             BadRequestException::class,
-            'This Reason for Rejection type cannot be deleted'
+            'This Reason for Rejection type cannot be removed or repaired'
         );
 
         $service = $this->createService();

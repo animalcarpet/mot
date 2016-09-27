@@ -3,7 +3,7 @@
 namespace DvsaCommon\UrlBuilder;
 
 /**
- * Build url related to Mot Test
+ * Build url related to Mot Test.
  */
 class MotTestUrlBuilder extends AbstractUrlBuilder
 {
@@ -24,6 +24,8 @@ class MotTestUrlBuilder extends AbstractUrlBuilder
 
     // Get a single reason for rejection from the database, as a DefectDto, using its id.
     const REASONS_FOR_REJECTION = '/reasons-for-rejection[/:motTestRfrId]';
+    const MARK_DEFECT_AS_REPAIRED = '/reasons-for-rejection/:motTestRfrId/mark-as-repaired';
+    const UNDO_MARK_DEFECT_AS_REPAIRED = '/reasons-for-rejection/:motTestRfrId/undo-mark-as-repaired';
 
     const ODOMETER_READING = '/odometer-reading';
     const ODOMETER_READING_MODIFY_CHECK = '/modify-check';
@@ -33,24 +35,26 @@ class MotTestUrlBuilder extends AbstractUrlBuilder
 
     protected $routesStructure
         = [
-            self::MOTTEST   => [
-                self::MOT_TEST_STATUS       => '',
-                self::FIND_MOT_TEST_NUMBER  => '',
+            self::MOTTEST => [
+                self::MOT_TEST_STATUS => '',
+                self::FIND_MOT_TEST_NUMBER => '',
                 self::MOT_TEST_RFR_API_PATH_FORMAT => '',
                 self::TEST_ITEM_SELECTOR_API_PATH_FORMAT => '',
                 self::TEST_ITEM_SELECTOR_RFR_SEARCH_API_PATH_FORMAT => '',
                 self::REASONS_FOR_REJECTION => '',
-                self::ODOMETER_READING      => [
+                self::MARK_DEFECT_AS_REPAIRED => '',
+                self::UNDO_MARK_DEFECT_AS_REPAIRED => '',
+                self::ODOMETER_READING => [
                     self::ODOMETER_READING_MODIFY_CHECK => '',
-                    self::ODOMETER_READING_NOTICES      => '',
+                    self::ODOMETER_READING_NOTICES => '',
                 ],
-                self::MINIMAL               => '',
+                self::MINIMAL => '',
             ],
             self::MOT_VALIDATE_RETEST => '',
-            self::SEARCH    => '',
-            self::RETEST    => '',
+            self::SEARCH => '',
+            self::RETEST => '',
             self::DEMO_TEST => '',
-            self::REFUSAL   => '',
+            self::REFUSAL => '',
         ];
 
     /**
@@ -62,7 +66,7 @@ class MotTestUrlBuilder extends AbstractUrlBuilder
             ->appendRoutesAndParams(self::MOTTEST);
 
         if ($motTestNr !== null) {
-            $url->routeParam('motTestNumber', (int)$motTestNr);
+            $url->routeParam('motTestNumber', (int) $motTestNr);
         }
 
         return $url;
@@ -76,7 +80,7 @@ class MotTestUrlBuilder extends AbstractUrlBuilder
         $url = self::of()
             ->appendRoutesAndParams(self::MOT_VALIDATE_RETEST);
 
-            $url->routeParam('motTestNumber', (int)$motTestNr);
+        $url->routeParam('motTestNumber', (int) $motTestNr);
 
         return $url;
     }
@@ -134,6 +138,32 @@ class MotTestUrlBuilder extends AbstractUrlBuilder
             ->routeParam('motTestRfrId', $rfrId);
     }
 
+    /**
+     * @param int $motTestNumber
+     * @param int $defectId
+     *
+     * @return $this
+     */
+    public static function markDefectAsRepaired($motTestNumber, $defectId)
+    {
+        return self::motTest($motTestNumber)
+            ->appendRoutesAndParams(self::MARK_DEFECT_AS_REPAIRED)
+            ->routeParam('motTestRfrId', $defectId);
+    }
+
+    /**
+     * @param int $motTestNumber
+     * @param int $defectId
+     *
+     * @return $this
+     */
+    public static function undoMarkDefectAsRepaired($motTestNumber, $defectId)
+    {
+        return self::motTest($motTestNumber)
+            ->appendRoutesAndParams(self::UNDO_MARK_DEFECT_AS_REPAIRED)
+            ->routeParam('motTestRfrId', $defectId);
+    }
+
     public static function odometerReading($motTestNr)
     {
         return self::motTest($motTestNr)->appendRoutesAndParams(self::ODOMETER_READING);
@@ -154,7 +184,7 @@ class MotTestUrlBuilder extends AbstractUrlBuilder
         return self::findMotTestNumber(
             [
                 'motTestId' => $motTestId,
-                'v5c'       => $v5c,
+                'v5c' => $v5c,
             ]
         );
     }
@@ -163,7 +193,7 @@ class MotTestUrlBuilder extends AbstractUrlBuilder
     {
         return self::findMotTestNumber(
             [
-                'motTestId'     => $motTestId,
+                'motTestId' => $motTestId,
                 'motTestNumber' => $motTestNumber,
             ]
         );

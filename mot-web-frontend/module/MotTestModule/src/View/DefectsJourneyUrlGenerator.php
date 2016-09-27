@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT Frontend project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace Dvsa\Mot\Frontend\MotTestModule\View;
 
@@ -14,7 +19,7 @@ class DefectsJourneyUrlGenerator
     const CATEGORY_ID_PARAM = 'categoryId';
     const DEFECT_ID_PARAM = 'defectId';
     const DEFECT_TYPE_PARAM = 'type';
-    const IDENTIFIED_DEFECT_ID_PARAM = 'defectItemId';
+    const IDENTIFIED_DEFECT_ID_PARAM = 'identifiedDefectId';
 
     /**
      * @var Router
@@ -173,7 +178,7 @@ class DefectsJourneyUrlGenerator
     }
 
     /**
-     * @param int $identifiedDefectId - id of defect that was already added to specified motTest
+     * @param int $identifiedDefectId Id of a defect that was already added to a specified MOT Test.
      *
      * @throws RouteNotAllowedInContextException
      *
@@ -250,9 +255,8 @@ class DefectsJourneyUrlGenerator
             self::CATEGORY_ID_PARAM => $this->getParamFromRoute(self::CATEGORY_ID_PARAM),
             self::IDENTIFIED_DEFECT_ID_PARAM => $identifiedDefectId,
         ];
-        $options = [
-            'query' => $this->request->getQuery()->toArray(),
-        ];
+        $options = ['query' => $this->request->getQuery()->toArray()];
+        $route = '';
 
         switch ($context) {
             case DefectsJourneyContextProvider::SEARCH_CONTEXT: {
@@ -313,9 +317,7 @@ class DefectsJourneyUrlGenerator
             self::CATEGORY_ID_PARAM => $this->getParamFromRoute(self::CATEGORY_ID_PARAM),
             self::IDENTIFIED_DEFECT_ID_PARAM => $identifiedDefectId,
         ];
-        $options = [
-            'query' => $this->request->getQuery()->toArray(),
-        ];
+        $options = ['query' => $this->request->getQuery()->toArray()];
 
         switch ($context) {
             case DefectsJourneyContextProvider::SEARCH_CONTEXT: {
@@ -347,6 +349,67 @@ class DefectsJourneyUrlGenerator
                 $route = sprintf('%s/%s',
                     DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE,
                     DefectsJourneyContextProvider::REPAIR_DEFECT_ROUTE
+                );
+                break;
+            }
+            case DefectsJourneyContextProvider::NO_CONTEXT: {
+                throw new RouteNotAllowedInContextException();
+            }
+        }
+
+        $route = rtrim($route, '/');
+
+        return $this->generateUrlFromRoute($route, $params, $options);
+    }
+
+    /**
+     * @param int $identifiedDefectId Id of a defect attached to mot test
+     *
+     * @throws RouteNotAllowedInContextException
+     *
+     * @return string
+     */
+    public function toUndoRepairDefect($identifiedDefectId)
+    {
+        $context = $this->contextProvider->getContext();
+        $route = '';
+        $params = [
+            self::MOT_TEST_ID_PARAM => $this->getParamFromRoute(self::MOT_TEST_ID_PARAM),
+            self::CATEGORY_ID_PARAM => $this->getParamFromRoute(self::CATEGORY_ID_PARAM),
+            self::IDENTIFIED_DEFECT_ID_PARAM => $identifiedDefectId,
+        ];
+        $options = ['query' => $this->request->getQuery()->toArray()];
+
+        switch ($context) {
+            case DefectsJourneyContextProvider::SEARCH_CONTEXT: {
+                $route = sprintf('%s/%s/%s',
+                    DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE,
+                    DefectsJourneyContextProvider::SEARCH_PARENT_ROUTE,
+                    DefectsJourneyContextProvider::UNDO_REPAIR_DEFECT_ROUTE
+                );
+                break;
+            }
+            case DefectsJourneyContextProvider::BROWSE_CATEGORIES_ROOT_CONTEXT: {
+                $route = sprintf('%s/%s/%s',
+                    DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE,
+                    DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE,
+                    DefectsJourneyContextProvider::UNDO_REPAIR_DEFECT_ROUTE
+                );
+                break;
+            }
+            case DefectsJourneyContextProvider::BROWSE_CATEGORIES_CONTEXT: {
+                $route = sprintf('%s/%s/%s/%s',
+                    DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE,
+                    DefectsJourneyContextProvider::BROWSE_CATEGORIES_PARENT_ROUTE,
+                    DefectsJourneyContextProvider::CATEGORY_ROUTE,
+                    DefectsJourneyContextProvider::UNDO_REPAIR_DEFECT_ROUTE
+                );
+                break;
+            }
+            case DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT: {
+                $route = sprintf('%s/%s',
+                    DefectsJourneyContextProvider::DEFECTS_TOP_LEVEL_ROUTE,
+                    DefectsJourneyContextProvider::UNDO_REPAIR_DEFECT_ROUTE
                 );
                 break;
             }

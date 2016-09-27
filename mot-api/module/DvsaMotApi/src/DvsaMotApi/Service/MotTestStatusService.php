@@ -1,4 +1,10 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
+
 namespace DvsaMotApi\Service;
 
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
@@ -10,20 +16,34 @@ use DvsaEntities\Entity\MotTest;
 
 class MotTestStatusService
 {
-    private static $brakePerformanceNotTestedRfrs
-        = [
-            ReasonForRejection::CLASS_12_BRAKE_PERFORMANCE_NOT_TESTED_RFR_ID,
-            ReasonForRejection::CLASS_3457_BRAKE_PERFORMANCE_NOT_TESTED_RFR_ID
-        ];
+    /**
+     * @var array
+     */
+    private static $brakePerformanceNotTestedRfrs = [
+        ReasonForRejection::CLASS_12_BRAKE_PERFORMANCE_NOT_TESTED_RFR_ID,
+        ReasonForRejection::CLASS_3457_BRAKE_PERFORMANCE_NOT_TESTED_RFR_ID,
+    ];
 
-    /** @var MotAuthorisationServiceInterface */
+    /**
+     * @var MotAuthorisationServiceInterface
+     */
     private $authorisationService;
 
+    /**
+     * MotTestStatusService constructor.
+     *
+     * @param MotAuthorisationServiceInterface $authorisationService
+     */
     public function __construct(MotAuthorisationServiceInterface $authorisationService)
     {
         $this->authorisationService = $authorisationService;
     }
 
+    /**
+     * @param MotTest $motTest
+     *
+     * @return bool
+     */
     public function isIncomplete(MotTest $motTest)
     {
         $hasOdometerReading = $motTest->getOdometerReading() != null;
@@ -31,8 +51,7 @@ class MotTestStatusService
         $canTestWithoutBrakeTests = $this->authorisationService->isGranted(PermissionInSystem::TEST_WITHOUT_BRAKE_TESTS);
         $hasBrakePerformanceNotTestedRfr = $this->hasBrakePerformanceNotTestedRfr($motTest);
 
-        $hasOriginalBrakeTestPassing
-            = $motTest->getMotTestType()->getCode() === MotTestTypeCode::RE_TEST
+        $hasOriginalBrakeTestPassing = $motTest->getMotTestType()->getCode() === MotTestTypeCode::RE_TEST
             && $motTest->getMotTestIdOriginal()->getBrakeTestGeneralPass();
 
         $isBrakeTestOk = $hasBrakeTestResult || $hasBrakePerformanceNotTestedRfr || $canTestWithoutBrakeTests
@@ -41,6 +60,11 @@ class MotTestStatusService
         return !$hasOdometerReading || !$isBrakeTestOk;
     }
 
+    /**
+     * @param MotTest $motTest
+     *
+     * @return bool
+     */
     public function hasBrakePerformanceNotTestedRfr(MotTest $motTest)
     {
         $motRfrs = $motTest->getMotTestReasonForRejections();
@@ -56,6 +80,11 @@ class MotTestStatusService
         return false;
     }
 
+    /**
+     * @param MotTest $motTest
+     *
+     * @return string
+     */
     public function getMotTestPendingStatus(MotTest $motTest)
     {
         if ($this->isIncomplete($motTest)) {

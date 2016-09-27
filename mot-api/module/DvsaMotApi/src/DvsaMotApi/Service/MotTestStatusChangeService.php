@@ -1,15 +1,20 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApi\Service;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
+use DvsaAuthentication\Service\Exception\OtpException;
 use DvsaAuthentication\Service\OtpService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\Assertion\AbandonVehicleTestAssertion;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
-use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Auth\PermissionAtSite;
+use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\Network;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Date\DateUtils;
@@ -17,6 +22,7 @@ use DvsaCommon\Date\Time;
 use DvsaCommon\Domain\MotTestType as MotTestTypeConst;
 use DvsaCommon\Enum\EnfRetestModeId;
 use DvsaCommon\Enum\MotTestStatusName;
+use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\OrganisationBusinessRoleCode;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
@@ -28,7 +34,6 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
 use DvsaCommonApi\Filter\XssFilter;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
-use DvsaAuthentication\Service\Exception\OtpException;
 use DvsaCommonApi\Service\Exception\RequiredFieldException;
 use DvsaCommonApi\Transaction\TransactionAwareInterface;
 use DvsaCommonApi\Transaction\TransactionAwareTrait;
@@ -51,9 +56,7 @@ use DvsaMotApi\Service\Validator\MotTestValidator;
 use OrganisationApi\Service\OrganisationService;
 
 /**
- * Class MotTestStatusChangeService
- *
- * @package DvsaMotApi\Service
+ * Class MotTestStatusChangeService.
  */
 class MotTestStatusChangeService implements TransactionAwareInterface
 {
@@ -69,94 +72,154 @@ class MotTestStatusChangeService implements TransactionAwareInterface
     const FIELD_REASON_FOR_ABORT = 'reasonForAbort';
     const FIELD_CLIENT_IP = 'clientIp';
 
-    private static $MOT_STATUS_REQUIRE_OTP
-        = [
-            MotTestStatusName::FAILED,
-            MotTestStatusName::PASSED,
-            MotTestStatusName::ABANDONED
-        ];
+    /**
+     * @var array
+     */
+    private static $MOT_STATUS_REQUIRE_OTP = [
+        MotTestStatusName::FAILED,
+        MotTestStatusName::PASSED,
+        MotTestStatusName::ABANDONED,
+    ];
 
-    private static $ABORT_STATUSES
-        = [
-            MotTestStatusName::ABORTED,
-            MotTestStatusName::ABORTED_VE
-        ];
+    /**
+     * @var array
+     */
+    private static $ABORT_STATUSES = [
+        MotTestStatusName::ABORTED,
+        MotTestStatusName::ABORTED_VE,
+    ];
 
+    /**
+     * @var array
+     */
     private static $MOT_STATUS_REQUIRING_SLOT_RETURN
         = [
-            MotTestStatusName::FAILED,
-            MotTestStatusName::ABORTED,
-            MotTestStatusName::ABORTED_VE,
-            MotTestStatusName::ABANDONED
-        ];
+        MotTestStatusName::FAILED,
+        MotTestStatusName::ABORTED,
+        MotTestStatusName::ABORTED_VE,
+        MotTestStatusName::ABANDONED,
+    ];
 
-    private static $MOT_TEST_COMPLETED_STATUSES
-        = [
-            MotTestStatusName::FAILED,
-            MotTestStatusName::PASSED,
-        ];
+    /**
+     * @var array
+     */
+    private static $MOT_TEST_COMPLETED_STATUSES = [
+        MotTestStatusName::FAILED,
+        MotTestStatusName::PASSED,
+    ];
 
-    private static $VEHICLE_WEIGHT_FROM_VSI_VEHICLE_CLASSES
-        = [
-            VehicleClassCode::CLASS_3,
-            VehicleClassCode::CLASS_4,
-        ];
+    /**
+     * @var array
+     */
+    private static $VEHICLE_WEIGHT_FROM_VSI_VEHICLE_CLASSES = [
+        VehicleClassCode::CLASS_3,
+        VehicleClassCode::CLASS_4,
+    ];
 
-    private static $VEHICLE_WEIGHT_FROM_DGW_VEHICLE_CLASSES
-        = [
-            VehicleClassCode::CLASS_5,
-            VehicleClassCode::CLASS_7,
-        ];
+    /**
+     * @var array
+     */
+    private static $VEHICLE_WEIGHT_FROM_DGW_VEHICLE_CLASSES = [
+        VehicleClassCode::CLASS_5,
+        VehicleClassCode::CLASS_7,
+    ];
 
-    /** @var MotTestMapper $motTestMapper */
+    /**
+     * @var MotTestMapper
+     */
     protected $motTestMapper;
-    /** @var  MotTestDateHelperService */
+
+    /**
+     * @var MotTestDateHelperService
+     */
     protected $motTestDateHelper;
-    /** @var \Doctrine\ORM\EntityManager */
+
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
-    /** @var AuthorisationServiceInterface $authService */
+
+    /**
+     * @var AuthorisationServiceInterface
+     */
     private $authService;
-    /** @var MotTestValidator $motTestValidator */
+
+    /**
+     * @var MotTestValidator
+     */
     private $motTestValidator;
-    /** @var MotTestStatusChangeValidator $motTestStatusChangeValidator */
+
+    /**
+     * @var MotTestStatusChangeValidator
+     */
     private $motTestStatusChangeValidator;
-    /** @var DateTimeHolder $dateTimeHolder */
+
+    /**
+     * @var DateTimeHolder
+     */
     private $dateTimeHolder;
-    /** @var OtpService $otpService */
+
+    /**
+     * @var OtpService
+     */
     private $otpService;
-    /** @var MotTestReasonForCancelRepository */
+
+    /**
+     * @var MotTestReasonForCancelRepository
+     */
     private $reasonForCancelRepository;
-    /** @var  MotTestRepository $motTestRepository */
+
+    /**
+     * @var MotTestRepository
+     */
     private $motTestRepository;
-    /** @var  OrganisationService $organisationService */
+
+    /**
+     * @var OrganisationService
+     */
     private $organisationService;
-    /** @var  EnforcementFullPartialRetestRepository $fullPartialRetestRepository */
+
+    /**
+     * @var EnforcementFullPartialRetestRepository
+     */
     private $fullPartialRetestRepository;
-    /** @var  TestingOutsideOpeningHoursNotificationService $outsideHoursNotificationService */
+
+    /**
+     * @var TestingOutsideOpeningHoursNotificationService
+     */
     private $outsideHoursNotificationService;
-    /** @var MotIdentityProviderInterface */
+
+    /**
+     * @var MotIdentityProviderInterface
+     */
     private $motIdentityProvider;
-    /** @var ApiPerformMotTestAssertion */
+
+    /**
+     * @var ApiPerformMotTestAssertion
+     */
     private $performMotTestAssertion;
-    /** @var \DvsaCommonApi\Filter\XssFilter */
+
+    /**
+     * @var XssFilter
+     */
     protected $xssFilter;
 
     /**
-     * @param \DvsaAuthorisation\Service\AuthorisationServiceInterface $authService
-     * @param \DvsaMotApi\Service\Validator\MotTestValidator $motTestValidator
-     * @param \DvsaMotApi\Service\Validator\MotTestStatusChangeValidator $motTestStatusChangeValidator
-     * @param \dvsaAuthentication\Service\OtpService $otpService
-     * @param \OrganisationApi\Service\OrganisationService $organisationService
-     * @param \DvsaMotApi\Service\Mapper\MotTestMapper $motTestMapper
-     * @param \DvsaEntities\Repository\MotTestRepository $motTestRepository
-     * @param \DvsaEntities\Repository\MotTestReasonForCancelRepository $reasonForCancelRepository
-     * @param \DvsaEntities\Repository\EnforcementFullPartialRetestRepository $fullPartialRetestRepository
-     * @param \DvsaMotApi\Service\TestingOutsideOpeningHoursNotificationService $outsideHoursNotificationService
-     * @param \DvsaMotApi\Service\MotTestDateHelperService $motTestDateHelper
-     * @param \Doctrine\ORM\EntityManager $entityManager
-     * @param \DvsaCommon\Auth\MotIdentityProviderInterface $motIdentityProvider
-     * @param \DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion $performMotTestAssertion
-     * @param \DvsaCommonApi\Filter\XssFilter $xssFilter
+     * @param AuthorisationServiceInterface                 $authService
+     * @param MotTestValidator                              $motTestValidator
+     * @param MotTestStatusChangeValidator                  $motTestStatusChangeValidator
+     * @param OtpService                                    $otpService
+     * @param OrganisationService                           $organisationService
+     * @param MotTestMapper                                 $motTestMapper
+     * @param MotTestRepository                             $motTestRepository
+     * @param MotTestReasonForCancelRepository              $reasonForCancelRepository
+     * @param EnforcementFullPartialRetestRepository        $fullPartialRetestRepository
+     * @param TestingOutsideOpeningHoursNotificationService $outsideHoursNotificationService
+     * @param MotTestDateHelperService                      $motTestDateHelper
+     * @param EntityManager                                 $entityManager
+     * @param MotIdentityProviderInterface                  $motIdentityProvider
+     * @param ApiPerformMotTestAssertion                    $performMotTestAssertion
+     * @param XssFilter                                     $xssFilter
      */
     public function __construct(
         AuthorisationServiceInterface $authService,
@@ -194,17 +257,18 @@ class MotTestStatusChangeService implements TransactionAwareInterface
     }
 
     /**
-     * Update MOT test status
+     * Update MOT test status.
      *
      * @param string $motTestNumber
      * @param array  $data
      *
-     * @return array containing (1) array mot test data
-     *                          (2) whether a slot should be returned to the owning organisation
      * @throws ForbiddenException
      * @throws OtpException
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      * @throws \Exception
+     *
+     * @return array containing (1) array mot test data
+     *               (2) whether a slot should be returned to the owning organisation
      */
     public function updateStatus($motTestNumber, $data)
     {
@@ -353,9 +417,15 @@ class MotTestStatusChangeService implements TransactionAwareInterface
 
         $motTest->setMotTestReasonForCancel($reasonForCancel);
 
+        // ReasonsForRejection that were flagged as "repaired" should now be permanently removed.
+        $this->removeMotTestReasonsForRejectionMarkedForRepair($motTest);
         $this->setMotTestCompletedDate($motTest);
     }
 
+    /**
+     * @param MotTest $motTest
+     * @param $data
+     */
     private function onAbortedByVe(MotTest $motTest, $data)
     {
         $this->authService->assertGranted(PermissionInSystem::VE_MOT_TEST_ABORT);
@@ -363,6 +433,9 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         $reasonForAbort = $data[self::FIELD_REASON_FOR_ABORT];
         $this->motTestStatusChangeValidator->checkMotTestCanBeAbortedByVe($motTest);
         $motTest->setReasonForTerminationComment($reasonForAbort);
+
+        // ReasonsForRejection that were flagged as "repaired" should now be permanently removed.
+        $this->removeMotTestReasonsForRejectionMarkedForRepair($motTest);
         $this->setMotTestCompletedDate($motTest);
     }
 
@@ -376,6 +449,8 @@ class MotTestStatusChangeService implements TransactionAwareInterface
     {
         $isTestPassed = ($newStatus === MotTestStatusName::PASSED);
 
+         // ReasonsForRejection that were flagged as "repaired" should now be permanently removed.
+        $this->removeMotTestReasonsForRejectionMarkedForRepair($motTest);
         $this->setMotTestCompletedDate($motTest);
 
         //  --  create ReasonForRejection RRS MOT test clone    --
@@ -409,7 +484,7 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         // -- vehicle weight --
         if ($this->shouldAmendVehicleWeight($motTest)) {
             $brakeTestVehicleWeight = $motTest->getBrakeTestResultClass3AndAbove()->getVehicleWeight();
-            if(!$motTest->getMotTestType()->getIsDemo()) {
+            if (!$motTest->getMotTestType()->getIsDemo()) {
                 $motTest->getVehicle()->setWeight($brakeTestVehicleWeight);
             }
         }
@@ -430,8 +505,8 @@ class MotTestStatusChangeService implements TransactionAwareInterface
 
     private function copyAdvisoryRfrItems(MotTest $sourceMotTest, MotTest &$targetMotTest)
     {
-        /**
-         * @var MotTestReasonForRejection $rfr
+        /*
+         * @var MotTestReasonForRejection
          */
         foreach ($sourceMotTest->getMotTestReasonForRejections() as $rfr) {
             if ($rfr->getType() === ReasonForRejectionTypeName::ADVISORY) {
@@ -484,7 +559,7 @@ class MotTestStatusChangeService implements TransactionAwareInterface
     }
 
     /**
-     * notify only when performed by a qualifier tester (excl. VE, demo tests, and so on)
+     * notify only when performed by a qualifier tester (excl. VE, demo tests, and so on).
      *
      * @param MotTest $motTest
      */
@@ -515,7 +590,7 @@ class MotTestStatusChangeService implements TransactionAwareInterface
             );
             if (!$roleMap) {
                 $org = $motTest->getVehicleTestingStation()->getOrganisation();
-                /** @var \DvsaEntities\Entity\OrganisationBusinessRoleMap $orgPosRepository */
+                /* @var \DvsaEntities\Entity\OrganisationBusinessRoleMap $orgPosRepository */
                 $orgBusRoleMapRepository = $this->entityManager->getRepository(
                     \DvsaEntities\Entity\OrganisationBusinessRoleMap::class
                 );
@@ -535,6 +610,10 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         }
     }
 
+    /**
+     * @param MotTest $motTest
+     * @param $data
+     */
     private function onFullPartialRetest(MotTest $motTest, $data)
     {
         $username = $this->motIdentityProvider->getIdentity()->getUsername();
@@ -561,13 +640,12 @@ class MotTestStatusChangeService implements TransactionAwareInterface
     }
 
     /**
-     * Help function to create and populate a Comment
+     * Help function to create and populate a Comment.
      *
      * @param string $input
      * @param string $user
      *
-     * @return \DvsaEntities\Entity\Comment|null
-     *
+     * @return Comment|null
      */
     private function createComment($input, $user)
     {
@@ -583,6 +661,12 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         return $comment;
     }
 
+    /**
+     * @param MotTest $motTest
+     * @param $newStatus
+     *
+     * @throws \Exception
+     */
     private function returnSlotIfApplicable(MotTest $motTest, $newStatus)
     {
         if ($motTest->getMotTestType()->getIsDemo()) {
@@ -619,7 +703,7 @@ class MotTestStatusChangeService implements TransactionAwareInterface
     }
 
     /**
-     * @param \DvsaCommon\Date\DateTimeHolder $dateTimeHolder
+     * @param DateTimeHolder $dateTimeHolder
      *
      * @return $this
      */
@@ -630,6 +714,11 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         return $this;
     }
 
+    /**
+     * @param $motTest
+     *
+     * @throws UnauthorisedException
+     */
     private function assertUserOwnsTheMotTest($motTest)
     {
         if ($this->motIdentityProvider->getIdentity()->getUserId() !== $motTest->getTester()->getId()
@@ -641,8 +730,8 @@ class MotTestStatusChangeService implements TransactionAwareInterface
     }
 
     /**
-     * @param \DvsaEntities\Entity\MotTest $motTest
-     * @param string                       $newStatus
+     * @param MotTest $motTest
+     * @param string  $newStatus
      *
      * @throws UnauthorisedException
      */
@@ -656,7 +745,7 @@ class MotTestStatusChangeService implements TransactionAwareInterface
             $newStatus,
             [
                 MotTestStatusName::FAILED,
-                MotTestStatusName::PASSED
+                MotTestStatusName::PASSED,
             ]
         )
         ) {
@@ -680,6 +769,7 @@ class MotTestStatusChangeService implements TransactionAwareInterface
 
     /**
      * @param string $name
+     *
      * @return MotTestStatus
      */
     private function getMotTestStatus($name)
@@ -707,5 +797,24 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         }
 
         return $motTest->getStartedDate();
+    }
+
+    /**
+     * @param MotTest $motTest
+     */
+    private function removeMotTestReasonsForRejectionMarkedForRepair(MotTest $motTest)
+    {
+        if (!$motTest->getMotTestType() || $motTest->getMotTestType()->getCode() !== MotTestTypeCode::RE_TEST) {
+            return;
+        }
+
+        foreach ($motTest->getMotTestReasonForRejections() as $motTestReasonForRejection) {
+            if ($motTestReasonForRejection->isMarkedAsRepaired()) {
+                $markedAsRepaired = $motTestReasonForRejection->getMarkedAsRepaired();
+                $motTestReasonForRejection->undoMarkedAsRepaired();
+                $this->entityManager->remove($markedAsRepaired);
+                $this->entityManager->remove($motTestReasonForRejection);
+            }
+        }
     }
 }

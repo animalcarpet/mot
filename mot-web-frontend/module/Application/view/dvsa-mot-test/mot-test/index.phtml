@@ -29,7 +29,7 @@ $pendingDetails = $motTest->getPendingDetails();
 $testActive = isset($pendingDetails);
 
 $rfrsGroupedByType = $motTest->getReasonsForRejection();
-$rfrTypesCount = count($motTest->getReasonsForRejection());
+$rfrTypesCount = count($rfrsGroupedByType);
 $testerBrakePerformanceNotTested = $motTest->getTesterBrakePerformanceNotTested();
 
 //  --  title and header    --

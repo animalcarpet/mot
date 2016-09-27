@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApi\Service;
 
@@ -8,8 +13,8 @@ use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaAuthentication\Service\OtpService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
-use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Auth\PermissionAtSite;
+use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\Role;
 use DvsaCommon\Dto\MotTesting\ContingencyTestDto;
 use DvsaCommon\Enum\MotTestTypeCode;
@@ -95,7 +100,7 @@ class MotTestCreationHelper
     }
 
     /**
-     * @param \DvsaEntities\Entity\Person                      $tester
+     * @param \DvsaEntities\Entity\Person $tester
      * @param $vehicleId
      * @param $vtsId
      * @param $primaryColourCode
@@ -309,7 +314,6 @@ class MotTestCreationHelper
                 $vehicle->getId(),
                 $updateDvsaVehicleUnderTestRequest
             );
-
         }
 
         $this->entityManager->persist($motTest);
@@ -367,7 +371,7 @@ class MotTestCreationHelper
 
     private function checkTesterIsAllowedToTestClass($vehicleClassCode)
     {
-        if($this->testerService->verifyTesterAllowedToTestClass($vehicleClassCode) == false) {
+        if ($this->testerService->verifyTesterAllowedToTestClass($vehicleClassCode) == false) {
             throw new ForbiddenException(self::ERROR_MSG_OVERDUE_SPECIAL_NOTICES);
         }
     }

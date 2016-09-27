@@ -8,6 +8,7 @@
 namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
+use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use Zend\Http\Response;
@@ -37,30 +38,44 @@ class RepairDefectController extends AbstractDvsaMotTestController
      */
     public function repairAction()
     {
-        $motTestNumber = (int) $this->params('motTestNumber', 0);
-        $identifiedDefectId = (int) $this->getRequest()->getPost('defectId', 0);
+        $motTestNumber = (int) $this->params()->fromRoute('motTestNumber');
+        $identifiedDefectId = (int) $this->params('identifiedDefectId');
         $identifiedDefectType = $this->getRequest()->getPost('defectType', 'defect');
         $identifiedDefectText = $this->getRequest()->getPost('defectText', '');
 
         try {
-            $apiUrl = MotTestUrlBuilder::reasonForRejection($motTestNumber, $identifiedDefectId)->toString();
-            $this->getRestClient()->delete($apiUrl);
+            $apiUrl = MotTestUrlBuilder::markDefectAsRepaired($motTestNumber, $identifiedDefectId)->toString();
+            $this->getRestClient()->post($apiUrl);
 
-            $this->addSuccessMessage(
-                sprintf(
-                    'The %s <strong>%s</strong> has been removed',
-                    $identifiedDefectType,
-                    $identifiedDefectText
-                )
-            );
-        } catch (\Exception $e) {
-            $this->addErrorMessage(
-                sprintf(
-                    'The %s <strong>%s</strong> has not been removed. Try again',
-                    $identifiedDefectType,
-                    $identifiedDefectText
-                )
-            );
+            $this->addSuccessMessage(sprintf('The %s <strong>%s</strong> has been repaired', $identifiedDefectType,
+                $identifiedDefectText));
+        } catch (GeneralRestException $e) {
+            $this->addErrorMessage(sprintf('The %s <strong>%s</strong> has not been repaired. Try again.',
+                $identifiedDefectType, $identifiedDefectText));
+        }
+
+        return $this->redirect()->toUrl($this->defectsJourneyUrlGenerator->goBack());
+    }
+
+    /**
+     * @return Response
+     */
+    public function undoRepairAction()
+    {
+        $motTestNumber = (int) $this->params()->fromRoute('motTestNumber');
+        $identifiedDefectId = (int) $this->params('identifiedDefectId');
+        $identifiedDefectType = $this->getRequest()->getPost('defectType', 'defect');
+        $identifiedDefectText = $this->getRequest()->getPost('defectText', '');
+
+        try {
+            $apiUrl = MotTestUrlBuilder::undoMarkDefectAsRepaired($motTestNumber, $identifiedDefectId)->toString();
+            $this->getRestClient()->post($apiUrl);
+
+            $this->addSuccessMessage(sprintf('The %s <strong>%s</strong> has been added', $identifiedDefectType,
+                    $identifiedDefectText));
+        } catch (GeneralRestException $e) {
+            $this->addErrorMessage(sprintf('The %s <strong>%s</strong> has not been added. Try again.',
+                    $identifiedDefectType, $identifiedDefectText));
         }
 
         return $this->redirect()->toUrl($this->defectsJourneyUrlGenerator->goBack());
