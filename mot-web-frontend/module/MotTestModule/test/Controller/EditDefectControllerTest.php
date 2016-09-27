@@ -84,7 +84,7 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
 
         $routeParams = [
             'motTestNumber' => $motTestNumber,
-            'defectItemId' => $defectId,
+            'identifiedDefectId' => $defectId,
         ];
 
         $motTestTypeMock = $this->getMockBuilder(MotTestTypeDto::class)->getMock();
@@ -110,7 +110,7 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
             ->with(MotTestUrlBuilder::motTest($motTestNumber)->toString())
             ->willReturn(['data' => $motTestMock]);
 
-        $this->getResultForAction2("get", "edit", $routeParams);
+        $this->getResultForAction2('get', 'edit', $routeParams);
         $this->assertResponseStatus(self::HTTP_OK_CODE);
     }
 
@@ -127,15 +127,15 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
 
         $routeParams = [
             'motTestNumber' => $motTestNumber,
-            'defectItemId' => $defectId,
+            'identifiedDefectId' => $defectId,
         ];
 
         $postParams = [
             'id' => $defectId,
-            'locationLateral' => "n/a",
-            'locationLongitudinal' => "n/a",
-            'locationVertical' => "n/a",
-            'comment' => "This is broken",
+            'locationLateral' => 'n/a',
+            'locationLongitudinal' => 'n/a',
+            'locationVertical' => 'n/a',
+            'comment' => 'This is broken',
             'failureDangerous' => true,
         ];
 
@@ -154,7 +154,7 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
             ->with(MotTestUrlBuilder::motTest($motTestNumber)->toString())
             ->willReturn(['data' => $motTestMock]);
 
-        $this->getResultForAction2("post", "edit", $routeParams, [], $postParams);
+        $this->getResultForAction2('post', 'edit', $routeParams, [], $postParams);
         $this->assertResponseStatus(self::HTTP_REDIRECT_CODE);
     }
 
@@ -173,7 +173,7 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
 
         $defectId = 1;
 
-        for ($i = 0; $i < $failures; $i++) {
+        for ($i = 0; $i < $failures; ++$i) {
             $rfr = [];
             $rfr['type'] = ReasonForRejectionTypeName::FAIL;
             $rfr['locationLateral'] = '';
@@ -186,13 +186,15 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
             $rfr['id'] = $defectId;
             $rfr['rfrId'] = '';
             $rfr['onOriginalTest'] = '';
+            $rfr['generated'] = false;
+            $rfr['markedAsRepaired'] = false;
 
             $failArray[] = $rfr;
 
-            $defectId++;
+            ++$defectId;
         }
 
-        for ($i = 0; $i < $prs; $i++) {
+        for ($i = 0; $i < $prs; ++$i) {
             $rfr = [];
             $rfr['type'] = ReasonForRejectionTypeName::PRS;
             $rfr['locationLateral'] = '';
@@ -205,13 +207,15 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
             $rfr['id'] = $defectId;
             $rfr['rfrId'] = '';
             $rfr['onOriginalTest'] = '';
+            $rfr['generated'] = false;
+            $rfr['markedAsRepaired'] = false;
 
             $prsArray[] = $rfr;
 
-            $defectId++;
+            ++$defectId;
         }
 
-        for ($i = 0; $i < $advisories; $i++) {
+        for ($i = 0; $i < $advisories; ++$i) {
             $rfr = [];
             $rfr['type'] = ReasonForRejectionTypeName::ADVISORY;
             $rfr['locationLateral'] = '';
@@ -224,10 +228,12 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
             $rfr['id'] = $defectId;
             $rfr['rfrId'] = '';
             $rfr['onOriginalTest'] = '';
+            $rfr['generated'] = false;
+            $rfr['markedAsRepaired'] = false;
 
             $advisoryArray[] = $rfr;
 
-            $defectId++;
+            ++$defectId;
         }
 
         return $this->reasonsForRejection = [

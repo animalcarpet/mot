@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT Frontend project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace Dvsa\Mot\Frontend\MotTestModule\View;
 
@@ -30,6 +35,7 @@ class DefectsJourneyContextProvider
     const EDIT_DEFECT_ROUTE = 'edit-defect';
     const REMOVE_DEFECT_ROUTE = 'remove-defect';
     const REPAIR_DEFECT_ROUTE = 'repair-defect';
+    const UNDO_REPAIR_DEFECT_ROUTE = 'undo-repair-defect';
 
     /**
      * @var Request

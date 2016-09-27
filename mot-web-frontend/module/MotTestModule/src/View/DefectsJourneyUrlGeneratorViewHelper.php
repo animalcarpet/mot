@@ -1,9 +1,14 @@
 <?php
+/**
+ * This file is part of the DVSA MOT Frontend project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace Dvsa\Mot\Frontend\MotTestModule\View;
 
-use Zend\View\Helper\AbstractHelper;
 use Dvsa\Mot\Frontend\MotTestModule\Exception\RouteNotAllowedInContextException;
+use Zend\View\Helper\AbstractHelper;
 
 /**
  * Makes the DefectsJourneyUrlGenerator service available in the view layer.
@@ -14,6 +19,7 @@ class DefectsJourneyUrlGeneratorViewHelper extends AbstractHelper
      * @var DefectsJourneyUrlGenerator
      */
     private $defectsJourneyUrlGenerator;
+
     /**
      * @var DefectsJourneyContextProvider
      */
@@ -22,13 +28,11 @@ class DefectsJourneyUrlGeneratorViewHelper extends AbstractHelper
     /**
      * DefectsJourneyUrlGeneratorViewHelper constructor.
      *
-     * @param DefectsJourneyUrlGenerator $defectsJourneyUrlGenerator
+     * @param DefectsJourneyUrlGenerator    $defectsJourneyUrlGenerator
      * @param DefectsJourneyContextProvider $contextProvider
      */
-    public function __construct(
-        DefectsJourneyUrlGenerator $defectsJourneyUrlGenerator,
-        DefectsJourneyContextProvider $contextProvider
-    )
+    public function __construct(DefectsJourneyUrlGenerator $defectsJourneyUrlGenerator,
+                                DefectsJourneyContextProvider $contextProvider)
     {
         $this->defectsJourneyUrlGenerator = $defectsJourneyUrlGenerator;
         $this->contextProvider = $contextProvider;
@@ -43,7 +47,7 @@ class DefectsJourneyUrlGeneratorViewHelper extends AbstractHelper
     }
 
     /**
-     * Get defects journey context for current location
+     * Get defects journey context for current location.
      *
      * @return string
      */
@@ -53,13 +57,14 @@ class DefectsJourneyUrlGeneratorViewHelper extends AbstractHelper
     }
 
     /**
-     * Get url to addDefect action
+     * Get url to addDefect action.
      *
      * @param int|string $defectId
-     * @param string $defectType
-     * @return string
+     * @param string     $defectType
      *
      * @throws RouteNotAllowedInContextException
+     *
+     * @return string
      */
     public function toAddDefect($defectId, $defectType)
     {
@@ -67,8 +72,9 @@ class DefectsJourneyUrlGeneratorViewHelper extends AbstractHelper
     }
 
     /**
-     * @return string
      * @throws RouteNotAllowedInContextException
+     *
+     * @return string
      */
     public function toAddManualAdvisory()
     {
@@ -77,8 +83,10 @@ class DefectsJourneyUrlGeneratorViewHelper extends AbstractHelper
 
     /**
      * @param int|string $identifiedDefectId
-     * @return string
+     *
      * @throws RouteNotAllowedInContextException
+     *
+     * @return string
      */
     public function toEditDefect($identifiedDefectId)
     {
@@ -87,8 +95,10 @@ class DefectsJourneyUrlGeneratorViewHelper extends AbstractHelper
 
     /**
      * @param int|string $identifiedDefectId
-     * @return string
+     *
      * @throws RouteNotAllowedInContextException
+     *
+     * @return string
      */
     public function toRemoveDefect($identifiedDefectId)
     {
@@ -97,8 +107,10 @@ class DefectsJourneyUrlGeneratorViewHelper extends AbstractHelper
 
     /**
      * @param int|string $identifiedDefectId
-     * @return string
+     *
      * @throws RouteNotAllowedInContextException
+     *
+     * @return string
      */
     public function toRepairDefect($identifiedDefectId)
     {
@@ -106,10 +118,23 @@ class DefectsJourneyUrlGeneratorViewHelper extends AbstractHelper
     }
 
     /**
-     * get "back" url from add/add manual advisory/edit/remove defect actions
+     * @param int|string $identifiedDefectId
+     *
+     * @throws RouteNotAllowedInContextException
      *
      * @return string
+     */
+    public function toUndoRepairDefect($identifiedDefectId)
+    {
+        return $this->defectsJourneyUrlGenerator->toUndoRepairDefect($identifiedDefectId);
+    }
+
+    /**
+     * get "back" url from add/add manual advisory/edit/remove defect actions.
+     *
      * @throws RouteNotAllowedInContextException
+     *
+     * @return string
      */
     public function goBack()
     {

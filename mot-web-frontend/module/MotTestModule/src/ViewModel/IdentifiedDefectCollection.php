@@ -104,7 +104,9 @@ class IdentifiedDefectCollection
                 $failure['testItemSelectorDescription'].' '.$failure['failureText'],
                 $failure['id'],
                 $failure['rfrId'],
-                $failure['onOriginalTest']
+                $failure['onOriginalTest'],
+                $failure['generated'],
+                $failure['markedAsRepaired']
             );
 
             if (isset($failure['generated']) && $failure['generated']) {
@@ -125,7 +127,9 @@ class IdentifiedDefectCollection
                 $loopPrs['testItemSelectorDescription'].' '.$loopPrs['failureText'],
                 $loopPrs['id'],
                 $loopPrs['rfrId'],
-                $loopPrs['onOriginalTest']
+                $loopPrs['onOriginalTest'],
+                $loopPrs['generated'],
+                $loopPrs['markedAsRepaired']
             );
 
             array_push($prs, $identifiedDefect);
@@ -146,7 +150,9 @@ class IdentifiedDefectCollection
                 $defectName,
                 $advisory['id'],
                 $advisory['rfrId'],
-                $advisory['onOriginalTest']
+                $advisory['onOriginalTest'],
+                $advisory['generated'],
+                $advisory['markedAsRepaired']
             );
 
             array_push($advisories, $identifiedDefect);

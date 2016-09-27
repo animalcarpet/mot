@@ -15,6 +15,7 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonApi\Service\Exception\RequiredFieldException;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestReasonForRejection;
+use DvsaEntities\Entity\MotTestReasonForRejectionMarkedAsRepaired;
 use DvsaEntities\Entity\ReasonForRejection;
 use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Service\Validator\MotTestValidator;
@@ -29,16 +30,24 @@ class MotTestReasonForRejectionService extends AbstractService
     const LONGITUDINAL_LOCATION_FIELD = 'locationLongitudinal';
     const COMMENT_FIELD = 'comment';
 
-    /** @var MotTestValidator $motTestValidator */
+    /**
+     * @var MotTestValidator
+     */
     protected $motTestValidator;
 
-    /** @var AuthorisationServiceInterface $authService */
+    /**
+     * @var AuthorisationServiceInterface
+     */
     protected $authService;
 
-    /** @var TestItemSelectorService $testItemSelectorService */
+    /**
+     * @var TestItemSelectorService
+     */
     protected $testItemSelectorService;
 
-    /** @var ApiPerformMotTestAssertion $performMotTestAssertion  */
+    /**
+     * @var ApiPerformMotTestAssertion
+     */
     private $performMotTestAssertion;
 
     /**
@@ -76,7 +85,7 @@ class MotTestReasonForRejectionService extends AbstractService
     /**
      * @param int $defectId
      *
-     * @throws NotFoundException If the ReasonForRejection entity is not found in the database.
+     * @throws NotFoundException If the ReasonForRejection entity is not found in the database
      *
      * @return ReasonForRejection
      */
@@ -89,12 +98,18 @@ class MotTestReasonForRejectionService extends AbstractService
             ->find($defectId);
 
         if (!$defect) {
-            throw new NotFoundException("Defect", $defectId);
+            throw new NotFoundException('Defect', $defectId);
         }
 
         return $defect;
     }
 
+    /**
+     * @param MotTest $motTest
+     * @param $data
+     *
+     * @return int
+     */
     public function addReasonForRejection(MotTest $motTest, $data)
     {
         $this->performMotTestAssertion->assertGranted($motTest);
@@ -116,6 +131,12 @@ class MotTestReasonForRejectionService extends AbstractService
         return $rfr->getId();
     }
 
+    /**
+     * @param $motTestRfrId
+     * @param $data
+     *
+     * @return bool|null
+     */
     public function editReasonForRejection($motTestRfrId, $data)
     {
         /** @var MotTestReasonForRejection $rfr */
@@ -209,43 +230,146 @@ class MotTestReasonForRejectionService extends AbstractService
         return $motTestRfr;
     }
 
+    /**
+     * @param int $motTestNumber
+     * @param int $motTestRfrId
+     *
+     * @throws BadRequestException
+     * @throws NotFoundException
+     */
     public function deleteReasonForRejectionById($motTestNumber, $motTestRfrId)
     {
         /** @var MotTestReasonForRejection $rfrToDelete */
         $rfrToDelete = $this->entityManager->find(MotTestReasonForRejection::class, $motTestRfrId);
-        if (!$rfrToDelete) {
-            throw new NotFoundException('Reason for Rejection entry');
+        if (!$rfrToDelete instanceof MotTestReasonForRejection) {
+            throw new NotFoundException(sprintf('Unable to fetch an MotTestReasonForRejection with ID "%s"',
+                $motTestRfrId));
         }
+        $this->assertRfrCanBeRemovedOrRepaired($motTestNumber, $rfrToDelete);
 
-        $this->performMotTestAssertion->assertGranted($rfrToDelete->getMotTest());
-        $this->motTestValidator->assertCanBeUpdated($rfrToDelete->getMotTest());
-
-        $motTest = $rfrToDelete->getMotTest();
-
-        if (!$this->isTrainingTest($motTest)) {
-            $this->checkPermissionsForRfr($rfrToDelete);
-        }
-
-        if ($rfrToDelete->getMotTest()->getNumber() !== (string) $motTestNumber) {
-            throw new NotFoundException('Match for Reason for Rejection on Selected Mot Test');
-        }
-
-        if ($rfrToDelete->getCanBeDeleted()) {
-            $this->removeReasonForRejection($rfrToDelete);
-        } else {
-            throw new BadRequestException(
-                'This Reason for Rejection type cannot be deleted', BadRequestException::ERROR_CODE_INVALID_DATA
-            );
-        }
-
+        $this->removeReasonForRejection($rfrToDelete);
         $this->entityManager->flush();
     }
 
+    /**
+     * @param $rfrToDelete
+     */
     public function removeReasonForRejection($rfrToDelete)
     {
         $this->entityManager->remove($rfrToDelete);
     }
 
+    /**
+     * @param int $motTestNumber
+     * @param int $motTestRfrId
+     *
+     * @throws BadRequestException
+     * @throws NotFoundException
+     */
+    public function markReasonForRejectionAsRepaired($motTestNumber, $motTestRfrId)
+    {
+        foreach (['motTestNumber' => $motTestNumber, 'motTestRfrId' => $motTestRfrId] as $name => $value) {
+            if (!is_int($value) || $value <= 0) {
+                throw new BadRequestException(sprintf('Field "%s" is not valid: "%s"', $name, $value),
+                    BadRequestException::ERROR_CODE_INVALID_DATA);
+            }
+
+            unset($name, $value);
+        }
+
+        /** @var MotTestReasonForRejection $motTestRfr */
+        $motTestRfr = $this->entityManager->getRepository(MotTestReasonForRejection::class)->find($motTestRfrId);
+        if (!$motTestRfr instanceof MotTestReasonForRejection) {
+            throw new NotFoundException('MotTestReasonForRejection', sprintf('id: %d'.$motTestRfrId));
+        }
+        $this->assertRfrCanBeRemovedOrRepaired($motTestNumber, $motTestRfr);
+
+        $this->createReasonForRejectionMarkedAsRepairedRecord($motTestRfr);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param int $motTestNumber
+     * @param int $motTestRfrId
+     *
+     * @throws BadRequestException
+     * @throws NotFoundException
+     */
+    public function undoMarkReasonForRejectionAsRepaired($motTestNumber, $motTestRfrId)
+    {
+        foreach (['motTestNumber' => $motTestNumber, 'motTestRfrId' => $motTestRfrId] as $name => $value) {
+            if (!is_int($value) || $value <= 0) {
+                throw new BadRequestException(sprintf('Field "%s" is not valid: "%s"', $name, $value),
+                    BadRequestException::ERROR_CODE_INVALID_DATA);
+            }
+            unset($name, $value);
+        }
+
+        /** @var MotTestReasonForRejection $motTestRfr */
+        $motTestRfr = $this->entityManager->getRepository(MotTestReasonForRejection::class)->find($motTestRfrId);
+        if (!$motTestRfr instanceof MotTestReasonForRejection) {
+            throw new NotFoundException(sprintf('Unable to fetch an MotTestReasonForRejection with ID "%s"',
+                $motTestRfrId));
+        }
+        $this->assertRfrCanBeRemovedOrRepaired($motTestNumber, $motTestRfr);
+
+        $this->removeReasonForRejectionMarkedAsRepairedRecord($motTestRfr);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param MotTestReasonForRejection $rfrToRepair
+     */
+    public function createReasonForRejectionMarkedAsRepairedRecord($rfrToRepair)
+    {
+        $motTestRfrMarkedAsRepaired = new MotTestReasonForRejectionMarkedAsRepaired($rfrToRepair);
+
+        $this->entityManager->persist($motTestRfrMarkedAsRepaired);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param MotTestReasonForRejection $motTestRfr
+     *
+     * @internal param int $motTestRfrId
+     */
+    private function removeReasonForRejectionMarkedAsRepairedRecord(MotTestReasonForRejection $motTestRfr)
+    {
+        $motTestRfr->undoMarkedAsRepaired();
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param int                       $motTestNumber
+     * @param MotTestReasonForRejection $motTestRfr
+     *
+     * @throws BadRequestException
+     * @throws NotFoundException
+     */
+    private function assertRfrCanBeRemovedOrRepaired($motTestNumber, MotTestReasonForRejection $motTestRfr)
+    {
+        $this->performMotTestAssertion->assertGranted($motTestRfr->getMotTest());
+        $this->motTestValidator->assertCanBeUpdated($motTestRfr->getMotTest());
+
+        $motTest = $motTestRfr->getMotTest();
+
+        if (!$this->isTrainingTest($motTest)) {
+            $this->checkPermissionsForRfr($motTestRfr);
+        }
+
+        if (!$motTestRfr->getCanBeDeleted()) {
+            throw new BadRequestException('This Reason for Rejection type cannot be removed or repaired',
+                BadRequestException::ERROR_CODE_INVALID_DATA);
+        }
+
+        if ($motTestRfr->getMotTest()->getNumber() !== (string) $motTestNumber) {
+            throw new NotFoundException('Match for Reason for Rejection on Selected Mot Test');
+        }
+    }
+
+    /**
+     * @param MotTestReasonForRejection $motTestRfr
+     */
     private function checkPermissionsForRfr(MotTestReasonForRejection $motTestRfr)
     {
         // Added null check until null check is resolved in createRfrFromData
@@ -262,6 +386,11 @@ class MotTestReasonForRejectionService extends AbstractService
         }
     }
 
+    /**
+     * @param MotTest $motTest
+     *
+     * @return bool
+     */
     private function isTrainingTest(MotTest $motTest)
     {
         $testTypeCode = $motTest->getMotTestType()->getCode();

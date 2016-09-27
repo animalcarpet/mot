@@ -69,7 +69,7 @@ class EditDefectController extends AbstractDvsaMotTestController
     public function editAction()
     {
         $motTestNumber = (int) $this->params()->fromRoute('motTestNumber');
-        $defectId = (int) $this->params()->fromRoute('defectItemId');
+        $defectId = (int) $this->params()->fromRoute('identifiedDefectId');
 
         $isReinspection = null;
         $isDemoTest = null;

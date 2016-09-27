@@ -168,6 +168,7 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider generatedFailuresDataProvider
+     *
      * @param int $failures
      */
     public function testGetGeneratedFailures($failures)
@@ -245,6 +246,7 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
                     'failureTextCy' => 'mae\'r siasi wedi rhydu gormod, sy\'n effeithio\'n ddifrifol ar ei gryfder o fewn 30cm i fowntinau\'r corff',
                     'testItemSelectorId' => 5696,
                     'inspectionManualReference' => '6.1.B.2',
+                    'markedAsRepaired' => false,
                 ],
             ];
         }
@@ -271,6 +273,7 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
                     'failureTextCy' => 'mae\'r siasi wedi\'i drwsio\'n annigonol sy\'n effeithio\'n ddifrifol ar ei gryfder o fewn 30cm i fowntinau\'r corff',
                     'testItemSelectorId' => 5696,
                     'inspectionManualReference' => '6.1.B.2',
+                    'markedAsRepaired' => false,
                 ],
             ];
         }
@@ -297,6 +300,7 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
                     'failureTextCy' => 'mae\'r siasi wedi\'i drwsio\'n annigonol sy\'n effeithio\'n ddifrifol ar ei gryfder o fewn 30cm i fowntinau\'r corff',
                     'testItemSelectorId' => 5696,
                     'inspectionManualReference' => '6.1.B.2',
+                    'markedAsRepaired' => false,
                 ],
             ];
         }
@@ -313,8 +317,7 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
     {
         $testData = ['FAIL'];
 
-        for ($i = 0; $i < $failures; $i++) {
-
+        for ($i = 0; $i < $failures; ++$i) {
             $testData['FAIL'][] = [
                 'type' => 'FAIL',
                 'locationLateral' => null,
@@ -335,8 +338,10 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
                 'failureTextCy' => 'mae\'r siasi wedi rhydu gormod, sy\'n effeithio\'n ddifrifol ar ei gryfder o fewn 30cm i fowntinau\'r corff',
                 'testItemSelectorId' => 5696,
                 'inspectionManualReference' => '6.1.B.2',
+                'markedAsRepaired' => false,
             ];
         }
+
         return $testData;
     }
 }

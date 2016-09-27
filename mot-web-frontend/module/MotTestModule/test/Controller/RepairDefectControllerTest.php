@@ -10,7 +10,6 @@ namespace Dvsa\Mot\Frontend\MotTestModuleTest\Controller;
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\RepairDefectController;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
-use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommonTest\Bootstrap;
 
 class RepairDefectControllerTest extends AbstractFrontendControllerTestCase
@@ -52,49 +51,8 @@ class RepairDefectControllerTest extends AbstractFrontendControllerTestCase
             'defectId' => $identifiedDefectId,
         ];
 
-        $restClientMock = $this->getRestClientMockForServiceManager();
-        $restClientMock
-            ->expects($this->once())
-            ->method('delete')
-            ->with(MotTestUrlBuilder::reasonForRejection($motTestNumber, $identifiedDefectId)->toString())
-            ->willReturn(self::HTTP_OK_CODE);
-
         $this->getFlashMessengerMockForAddSuccessMessage(sprintf(
-            'The %s <strong>%s</strong> has been removed',
-            $identifiedDefectType,
-            $identifiedDefectText));
-
-        $this->getResultForAction2('post', 'repair', $routeParams, [], $postParams);
-
-        $this->assertResponseStatus(self::HTTP_REDIRECT_CODE);
-    }
-
-    public function testUnsuccessfulRepairShowsErrorMessage()
-    {
-        $motTestNumber = 1;
-        $identifiedDefectId = 2;
-        $identifiedDefectType = 'failure';
-        $identifiedDefectText = 'Engine made of cheese';
-
-        $routeParams = [
-            'motTestNumber' => $motTestNumber,
-        ];
-
-        $postParams = [
-            'defectType' => $identifiedDefectType,
-            'defectText' => $identifiedDefectText,
-            'defectId' => $identifiedDefectId,
-        ];
-
-        $restClientMock = $this->getRestClientMockForServiceManager();
-        $restClientMock
-            ->expects($this->once())
-            ->method('delete')
-            ->with(MotTestUrlBuilder::reasonForRejection($motTestNumber, $identifiedDefectId)->toString())
-            ->willThrowException(new \Exception());
-
-        $this->getFlashMessengerMockForAddErrorMessage(sprintf(
-            'The %s <strong>%s</strong> has not been removed. Try again',
+            'The %s <strong>%s</strong> has been repaired',
             $identifiedDefectType,
             $identifiedDefectText));
 

@@ -62,9 +62,9 @@ return [
             'edit-defect' => [
                 'type' => 'segment',
                 'options' => [
-                    'route' => '/:defectItemId/edit',
+                    'route' => '/:identifiedDefectId/edit',
                     'constraints' => [
-                        'defectItemId' => '[0-9]+',
+                        'identifiedDefectId' => '[0-9]+',
                     ],
                     'defaults' => [
                         'controller' => EditDefectController::class,
@@ -75,9 +75,9 @@ return [
             'remove-defect' => [
                 'type' => 'segment',
                 'options' => [
-                    'route' => '/:defectItemId/remove',
+                    'route' => '/:identifiedDefectId/remove',
                     'constraints' => [
-                        'defectItemId' => '[0-9]+',
+                        'identifiedDefectId' => '[0-9]+',
                     ],
                     'defaults' => [
                         'controller' => RemoveDefectController::class,
@@ -138,9 +138,9 @@ return [
                             'edit-defect' => [
                                 'type' => 'segment',
                                 'options' => [
-                                    'route' => '/:defectItemId/edit',
+                                    'route' => '/:identifiedDefectId/edit',
                                     'constraints' => [
-                                        'defectItemId' => '[0-9]+',
+                                        'identifiedDefectId' => '[0-9]+',
                                     ],
                                     'defaults' => [
                                         'controller' => EditDefectController::class,
@@ -151,9 +151,9 @@ return [
                             'remove-defect' => [
                                 'type' => 'segment',
                                 'options' => [
-                                    'route' => '/:defectItemId/remove',
+                                    'route' => '/:identifiedDefectId/remove',
                                     'constraints' => [
-                                        'defectItemId' => '[0-9]+',
+                                        'identifiedDefectId' => '[0-9]+',
                                     ],
                                     'defaults' => [
                                         'controller' => RemoveDefectController::class,
@@ -204,9 +204,9 @@ return [
                     'edit-defect' => [
                         'type' => 'segment',
                         'options' => [
-                            'route' => '/:defectItemId/edit',
+                            'route' => '/:identifiedDefectId/edit',
                             'constraints' => [
-                                'defectItemId' => '[0-9]+',
+                                'identifiedDefectId' => '[0-9]+',
                             ],
                             'defaults' => [
                                 'controller' => EditDefectController::class,
@@ -217,9 +217,9 @@ return [
                     'remove-defect' => [
                         'type' => 'segment',
                         'options' => [
-                            'route' => '/:defectItemId/remove',
+                            'route' => '/:identifiedDefectId/remove',
                             'constraints' => [
-                                'defectItemId' => '[0-9]+',
+                                'identifiedDefectId' => '[0-9]+',
                             ],
                             'defaults' => [
                                 'controller' => RemoveDefectController::class,

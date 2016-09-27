@@ -759,6 +759,26 @@ class MotTestDto extends AbstractDataTransferObject
     }
 
     /**
+     * @return array
+     */
+    public function getReasonsForRejectionExcludingRepairedDefects()
+    {
+        $reasonsForRejection = $this->reasonsForRejection;
+
+        // Defects that are flagged as "markedAsRepaired" are removed from the ReasonsForRejection list
+        foreach (array_keys($reasonsForRejection) as $type) {
+            foreach (array_keys($reasonsForRejection[$type]) as $k) {
+                if (isset($reasonsForRejection[$type][$k]['markedAsRepaired'])
+                    && true === $reasonsForRejection[$type][$k]['markedAsRepaired']) {
+                    unset($reasonsForRejection[$type][$k]);
+                }
+            }
+        }
+
+        return $reasonsForRejection;
+    }
+
+    /**
      * @param array $reasonsForRejection
      *
      * @return MotTestDto

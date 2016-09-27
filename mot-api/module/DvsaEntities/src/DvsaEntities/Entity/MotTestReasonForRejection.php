@@ -113,6 +113,14 @@ class MotTestReasonForRejection extends Entity
     private $onOriginalTest;
 
     /**
+     * @var MotTestReasonForRejectionMarkedAsRepaired
+     *
+     * @ORM\OneToOne(targetEntity="MotTestReasonForRejectionMarkedAsRepaired", mappedBy="motTestRfr",
+     *      orphanRemoval=true, cascade={"remove"}, fetch="EXTRA_LAZY")
+     */
+    private $markedAsRepaired;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -123,13 +131,37 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
+     * @return MotTestReasonForRejectionMarkedAsRepaired
+     */
+    public function getMarkedAsRepaired()
+    {
+        return $this->markedAsRepaired;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMarkedAsRepaired()
+    {
+        return (null !== $this->getMarkedAsRepaired());
+    }
+
+    /**
+     * Removes the association with MotTestReasonForRejectionMarkedAsRepaired.
+     */
+    public function undoMarkedAsRepaired()
+    {
+        $this->markedAsRepaired = null;
+    }
+
+    /**
      * Set MotTest.
      *
-     * @param \DvsaEntities\Entity\MotTest $motTest
+     * @param MotTest $motTest
      *
      * @return MotTestReasonForRejection
      */
-    public function setMotTest(\DvsaEntities\Entity\MotTest $motTest = null)
+    public function setMotTest(MotTest $motTest = null)
     {
         $this->motTest = $motTest;
 
@@ -139,7 +171,7 @@ class MotTestReasonForRejection extends Entity
     /**
      * Get MotTest.
      *
-     * @return \DvsaEntities\Entity\MotTest
+     * @return MotTest
      */
     public function getMotTest()
     {

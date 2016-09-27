@@ -1,11 +1,18 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApi\Factory\Service;
 
 use Doctrine\ORM\EntityManager;
 use DvsaAuthentication\Service\OtpService;
-use DvsaEntities\Entity\EnforcementFullPartialRetest;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
+use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
+use DvsaCommonApi\Filter\XssFilter;
+use DvsaEntities\Entity\EnforcementFullPartialRetest;
 use DvsaEntities\Entity\MotTestReasonForCancel;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaMotApi\Service\MotTestDateHelperService;
@@ -15,8 +22,6 @@ use DvsaMotApi\Service\Validator\MotTestStatusChangeValidator;
 use OrganisationApi\Service\OrganisationService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
-use DvsaCommonApi\Filter\XssFilter;
 
 /**
  * Class MotTestStatusChangeServiceFactory.
@@ -25,6 +30,7 @@ class MotTestStatusChangeServiceFactory implements FactoryInterface
 {
     /**
      * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     *
      * @return \DvsaMotApi\Service\MotTestStatusChangeService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

@@ -15,15 +15,11 @@ public class TestSummaryPage extends Page {
 
     public static String PATH = "/mot-test/%s/test-summary";
     private static final String PAGE_TITLE = "MOT test summary";
-    private static final String PAGE_TITLE_REINSPECTION = "MOT testing\n" +
-            "MOT reinspection summary";
+    private static final String PAGE_TITLE_REINSPECTION = "MOT testing\nMOT reinspection summary";
+    private static final String PAGE_TITLE_RE_TEST = "MOT testing\nMOT re-test summary";
     private static final By SITE_ID_INPUT_LOCATOR = By.id("siteidentry");
     private static final String FAIL_MSG = "Fail";
     private static final String VALID_PIN = "123456";
-
-    private WebElement siteIdInput() {
-        return driver.findElement(SITE_ID_INPUT_LOCATOR);
-    }
 
     @FindBy(id = "confirm_test_result") private WebElement finishTestButton;
     @FindBy(id = "oneTimePassword") private WebElement pinInputField;
@@ -34,6 +30,8 @@ public class TestSummaryPage extends Page {
     private By siteIdTextBox = By.id("siteidentry");
     private By expiryDate = By.id("expiryDate");
     private By declarationElement = By.id("declarationStatement");
+    private String defect = "//*[@class='col-lg-12']//li[contains(text(),'%s')]";
+
 
     public TestSummaryPage(MotAppDriver driver) {
         super(driver);
@@ -42,7 +40,7 @@ public class TestSummaryPage extends Page {
 
     @Override
     protected boolean selfVerify() {
-        return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE, PAGE_TITLE_REINSPECTION);
+        return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE, PAGE_TITLE_REINSPECTION, PAGE_TITLE_RE_TEST);
     }
 
     public TestCompletePage finishTest(){
@@ -107,12 +105,20 @@ public class TestSummaryPage extends Page {
         return PageInteractionHelper.isElementDisplayed(driver.findElement(expiryDate));
     }
 
+    public boolean isDefectDisplayed(String defectName) {
+        return PageInteractionHelper.isElementDisplayed(By.xpath(String.format(defect, defectName)));
+    }
+
     public TestResultsEntryPageInterface clickBackToResultsEntryLink() {
         backToResultsEntryLink.click();
         if(ConfigHelper.isTestResultEntryImprovementsEnabled()) {
             return new TestResultsEntryNewPage(driver);
         }
         return new TestResultsEntryPage(driver);
+    }
+
+    private WebElement siteIdInput() {
+        return driver.findElement(SITE_ID_INPUT_LOCATOR);
     }
 }
 

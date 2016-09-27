@@ -1,18 +1,24 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApi\Controller;
 
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\MotTesting\DefectDto;
-use DvsaCommonApi\Model\ApiResponse;
+use DvsaCommon\Formatting\DefectSentenceCaseConverter;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
+use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\NotFoundException;
-use DvsaCommon\Formatting\DefectSentenceCaseConverter;
 use DvsaMotApi\Service\MotTestReasonForRejectionService;
 use Zend\View\Model\JsonModel;
 
 /**
- * Class MotTestReasonForRejectionController
+ * Class MotTestReasonForRejectionController.
  */
 class MotTestReasonForRejectionController extends AbstractDvsaRestfulController
 {
@@ -39,10 +45,10 @@ class MotTestReasonForRejectionController extends AbstractDvsaRestfulController
      *
      * @param mixed $motTestRfrId
      *
-     * @return JsonModel
-     *
      * @throws BadRequestException
      * @throws NotFoundException
+     *
+     * @return JsonModel
      */
     public function get($motTestRfrId)
     {
@@ -58,6 +64,11 @@ class MotTestReasonForRejectionController extends AbstractDvsaRestfulController
         return ApiResponse::jsonOk($result);
     }
 
+    /**
+     * @param mixed $data
+     *
+     * @return JsonModel
+     */
     public function create($data)
     {
         $service = $this->getRfrService();
@@ -71,11 +82,16 @@ class MotTestReasonForRejectionController extends AbstractDvsaRestfulController
             $motTest = $this->getMotTestService()->getMotTest($motTestNumber);
 
             $result = $service->addReasonForRejection($motTest, $data);
-            
+
             return ApiResponse::jsonOk($result);
         }
     }
 
+    /**
+     * @param mixed $id
+     *
+     * @return JsonModel
+     */
     public function delete($id)
     {
         $motTestNumber = $this->params()->fromRoute('motTestNumber', null);
@@ -86,6 +102,45 @@ class MotTestReasonForRejectionController extends AbstractDvsaRestfulController
         return ApiResponse::jsonOk("successfully deleted Reason for Rejection");
     }
 
+    /**
+     * @return JsonModel|array
+     */
+    public function markAsRepairedAction()
+    {
+        if (true !== $this->isFeatureEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)) {
+            return $this->notFoundAction();
+        }
+
+        $motTestNumber = (int) $this->params()->fromRoute('motTestNumber');
+        $motTestRfrId = (int) $this->params()->fromRoute('motTestRfrId');
+
+        $this->getRfrService()->markReasonForRejectionAsRepaired($motTestNumber, $motTestRfrId);
+
+        return ApiResponse::jsonOk();
+    }
+
+    /**
+     * @return JsonModel|array
+     */
+    public function undoMarkAsRepairedAction()
+    {
+        if (true !== $this->isFeatureEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)) {
+            return $this->notFoundAction();
+        }
+
+        $motTestNumber = (int) $this->params()->fromRoute('motTestNumber');
+        $motTestRfrId = (int) $this->params()->fromRoute('motTestRfrId');
+
+        $this->getRfrService()->undoMarkReasonForRejectionAsRepaired($motTestNumber, $motTestRfrId);
+
+        return ApiResponse::jsonOk();
+    }
+
+    /**
+     * @param mixed $data
+     *
+     * @return JsonModel
+     */
     public function deleteList($data)
     {
         $motTestNumber = $this->params()->fromRoute('motTestNumber', null);

@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApiTest\Controller;
 
 use DvsaCommon\Dto\Common\MotTestDto;
@@ -10,6 +11,7 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotApi\Controller\TestItemSelectorController;
 use DvsaMotApi\Service\TestItemSelectorService;
+use DvsaMotApiTest\Test\ReasonForRejectionBuilder;
 use SebastianBergmann\Exporter\Exception;
 use Zend\Stdlib\Parameters;
 
@@ -38,7 +40,7 @@ class TestItemSelectorControllerTest extends AbstractMotApiControllerTestCase
     }
 
     /**
-     * Test access for specified action and parameters
+     * Test access for specified action and parameters.
      *
      * @param string $method        HTTP request type (get, post, put)
      * @param string $action        Route action
@@ -52,7 +54,7 @@ class TestItemSelectorControllerTest extends AbstractMotApiControllerTestCase
     public function testCanAccessed(
         $method,
         $action,
-        $params = [],
+        $params,
         $serviceMethod,
         $serviceReturn,
         $expectResult
@@ -81,6 +83,7 @@ class TestItemSelectorControllerTest extends AbstractMotApiControllerTestCase
                                         ->setCode('1')
                                 )
                         )
+                        ->setReasonsForRejection(ReasonForRejectionBuilder::create())
             );
 
         //  --  define request and check  --
@@ -114,41 +117,43 @@ class TestItemSelectorControllerTest extends AbstractMotApiControllerTestCase
 
         return [
             [
-                'method'        => 'get',
-                'action'        => null,
-                'params'        => [
+                'method' => 'get',
+                'action' => null,
+                'params' => [
                     'motTestNumber' => self::MOT_TEST_NUMBER,
-                    'tisId'         => self::TEST_ITEM_SELECTOR_ID,
+                    'tisId' => self::TEST_ITEM_SELECTOR_ID,
                 ],
                 'serviceMethod' => 'getTestItemSelectorsData',
                 'serviceReturn' => ['someData' => ''],
 
-                'expectResult'  => [
+                'expectResult' => [
                     'statusCode' => self::HTTP_OK_CODE,
-                    'result'     => [
+                    'result' => [
                         'data' => $hydrator->dtoToJson(
                             [
-                                'motTest'  => (new MotTestDto())->setVehicle($vehicle),
+                                'motTest' => (new MotTestDto())
+                                    ->setVehicle($vehicle)
+                                    ->setReasonsForRejection(ReasonForRejectionBuilder::create()),
                                 'someData' => '',
                             ]
-                        )
+                        ),
                     ],
                 ],
             ],
             [
-                'method'        => 'get',
-                'action'        => null,
-                'params'        => [
+                'method' => 'get',
+                'action' => null,
+                'params' => [
                     'motTestNumber' => self::MOT_TEST_NUMBER,
-                    'tisId'         => self::TEST_ITEM_SELECTOR_ID,
+                    'tisId' => self::TEST_ITEM_SELECTOR_ID,
                 ],
                 'serviceMethod' => 'getTestItemSelectorsData',
                 'serviceReturn' => new NotFoundException('Test Item Selector', self::TEST_ITEM_SELECTOR_INVAILD_ID),
 
-                'expectResult'  => [
-                    'statusCode'    => self::HTTP_ERR_400,
+                'expectResult' => [
+                    'statusCode' => self::HTTP_ERR_400,
                     'exceptionCode' => NotFoundException::ERROR_CODE_NOT_FOUND,
-                    'exceptionMsg'  => 'Test Item Selector ' . self::TEST_ITEM_SELECTOR_INVAILD_ID . ' not found'
+                    'exceptionMsg' => 'Test Item Selector '.self::TEST_ITEM_SELECTOR_INVAILD_ID.' not found',
                 ],
             ],
         ];

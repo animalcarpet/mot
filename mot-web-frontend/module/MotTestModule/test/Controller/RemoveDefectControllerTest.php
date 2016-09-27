@@ -96,7 +96,7 @@ class RemoveDefectControllerTest extends AbstractFrontendControllerTestCase
 
         $routeParams = [
             'motTestNumber' => $motTestNumber,
-            'defectItemId' => $defectId,
+            'identifiedDefectId' => $defectId,
         ];
 
         $this->getResultForAction2('get', 'remove', $routeParams);
@@ -129,7 +129,7 @@ class RemoveDefectControllerTest extends AbstractFrontendControllerTestCase
 
         $routeParams = [
             'motTestNumber' => $motTestNumber,
-            'defectItemId' => $defectId,
+            'identifiedDefectId' => $defectId,
         ];
 
         $this->getResultForAction2('post', 'remove', $routeParams);
@@ -187,6 +187,8 @@ class RemoveDefectControllerTest extends AbstractFrontendControllerTestCase
             $rfr['id'] = $defectId;
             $rfr['rfrId'] = '';
             $rfr['onOriginalTest'] = '';
+            $rfr['generated'] = false;
+            $rfr['markedAsRepaired'] = false;
 
             $failArray[] = $rfr;
             ++$defectId;
@@ -205,6 +207,8 @@ class RemoveDefectControllerTest extends AbstractFrontendControllerTestCase
             $rfr['id'] = $defectId;
             $rfr['rfrId'] = '';
             $rfr['onOriginalTest'] = '';
+            $rfr['generated'] = false;
+            $rfr['markedAsRepaired'] = false;
 
             $prsArray[] = $rfr;
 
@@ -224,6 +228,8 @@ class RemoveDefectControllerTest extends AbstractFrontendControllerTestCase
             $rfr['id'] = $defectId;
             $rfr['rfrId'] = '';
             $rfr['onOriginalTest'] = '';
+            $rfr['generated'] = false;
+            $rfr['markedAsRepaired'] = false;
 
             $advisoryArray[] = $rfr;
             ++$defectId;

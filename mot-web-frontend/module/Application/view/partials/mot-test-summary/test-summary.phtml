@@ -10,7 +10,7 @@ $site = $motTest->getVehicleTestingStation();
 
 /** @var string $motTestType */
 $motTestType = $motTest->getTestType()->getCode();
-$reasonsForRejection = $motTest->getReasonsForRejection();
+$reasonsForRejection = $motTest->getReasonsForRejectionExcludingRepairedDefects();
 $fails = @$reasonsForRejection['FAIL'];
 $prses = @$reasonsForRejection['PRS'];
 $advisories = @$reasonsForRejection['ADVISORY'];

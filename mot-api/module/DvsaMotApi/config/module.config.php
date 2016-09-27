@@ -14,8 +14,8 @@ use DvsaMotApi\Controller\MotTestStatusController;
 use DvsaMotApi\Controller\ReasonForRejectionController;
 use DvsaMotApi\Controller\ReplacementCertificateDraftController;
 use DvsaMotApi\Controller\RetestController;
-use DvsaMotApi\Controller\SurveyController;
 use DvsaMotApi\Controller\SessionConfirmationController;
+use DvsaMotApi\Controller\SurveyController;
 use DvsaMotApi\Controller\TesterMotTestLogController;
 use DvsaMotApi\Controller\TestItemCategoryNameController;
 
@@ -133,7 +133,7 @@ return [
                         'options' => [
                             'route'    => '/confirmation',
                             'defaults' => [
-                                'controller' => SessionConfirmationController::class
+                                'controller' => SessionConfirmationController::class,
                             ],
                         ],
                     ],
@@ -282,6 +282,35 @@ return [
                             ],
                             'defaults'    => [
                                 'controller' => MotTestReasonForRejectionController::class,
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes'  => [
+                            'marked-as-repaired'   => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'       => '/mark-as-repaired',
+                                    'constraints' => [
+                                        'motTestRfrId' => '[0-9]+',
+                                    ],
+                                    'defaults'    => [
+                                        'controller' => MotTestReasonForRejectionController::class,
+                                        'action' => 'markAsRepaired',
+                                    ],
+                                ],
+                            ],
+                            'undo-marked-as-repaired'   => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'       => '/undo-mark-as-repaired',
+                                    'constraints' => [
+                                        'motTestRfrId' => '[0-9]+',
+                                    ],
+                                    'defaults'    => [
+                                        'controller' => MotTestReasonForRejectionController::class,
+                                        'action' => 'undoMarkAsRepaired',
+                                    ],
+                                ],
                             ],
                         ],
                     ],

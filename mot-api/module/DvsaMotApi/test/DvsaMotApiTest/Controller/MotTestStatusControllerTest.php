@@ -15,18 +15,19 @@ use DvsaMotApi\Controller\MotTestStatusController;
 use DvsaMotApi\Service\CertificateCreationService;
 use DvsaMotApi\Service\MotTestStatusChangeNotificationService;
 use DvsaMotApi\Service\MotTestStatusChangeService;
+use DvsaMotApiTest\Test\ReasonForRejectionBuilder;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
- * Mot Test Status Controller Test
+ * Mot Test Status Controller Test.
  */
 class MotTestStatusControllerTest extends AbstractMotApiControllerTestCase
 {
-    /** @var  MotTestStatusChangeService|MockObj */
+    /** @var MotTestStatusChangeService|MockObj */
     private $mockStatusChangeSrv;
-    /** @var  CertificateCreationService|MockObj */
+    /** @var CertificateCreationService|MockObj */
     private $mockCertCreationSrv;
-    /** @var  MotTestStatusChangeNotificationService|MockObj */
+    /** @var MotTestStatusChangeNotificationService|MockObj */
     private $mockStatusChangeNotificationSrv;
 
     protected function setUp()
@@ -50,7 +51,7 @@ class MotTestStatusControllerTest extends AbstractMotApiControllerTestCase
 
         $this->mockValidAuthorization([SiteBusinessRoleCode::TESTER]);
 
-        $motTestNumber = "1";
+        $motTestNumber = '1';
         $data = ['status' => 'PASSED'];
         $status = $data['status'];
 
@@ -61,7 +62,8 @@ class MotTestStatusControllerTest extends AbstractMotApiControllerTestCase
             ->setIssuedDate('2014-01-01')
             ->setTester((new PersonDto())->setDisplayName('Testy McTest'))
             ->setVehicleClass((new VehicleClassDto())->setCode(4))
-            ->setTestType((new MotTestTypeDto())->setCode('EN'));
+            ->setTestType((new MotTestTypeDto())->setCode('EN'))
+            ->setReasonsForRejection(ReasonForRejectionBuilder::create());
 
         $expectedData = ['data' => $expectedMotTestData];
 
@@ -70,7 +72,7 @@ class MotTestStatusControllerTest extends AbstractMotApiControllerTestCase
         );
 
         $this->mockMethod(
-            $this->mockCertCreationSrv, 'create', $this->once(), $expectedMotTestData, ["1", $expectedMotTestData]
+            $this->mockCertCreationSrv, 'create', $this->once(), $expectedMotTestData, ['1', $expectedMotTestData]
         );
 
         $result = $this->getResultForAction(

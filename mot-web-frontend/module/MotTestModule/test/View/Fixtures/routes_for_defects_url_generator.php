@@ -68,9 +68,9 @@ return [
             DefectsJourneyContextProvider::EDIT_DEFECT_ROUTE => [
                 'type' => 'segment',
                 'options' => [
-                    'route' => '/:defectItemId/edit',
+                    'route' => '/:identifiedDefectId/edit',
                     'constraints' => [
-                        'defectItemId' => '[0-9]+',
+                        'identifiedDefectId' => '[0-9]+',
                     ],
                     'defaults' => [
                         'controller' => EditDefectController::class,
@@ -81,9 +81,9 @@ return [
             DefectsJourneyContextProvider::REMOVE_DEFECT_ROUTE => [
                 'type' => 'segment',
                 'options' => [
-                    'route' => '/:defectItemId/remove',
+                    'route' => '/:identifiedDefectId/remove',
                     'constraints' => [
-                        'defectItemId' => '[0-9]+',
+                        'identifiedDefectId' => '[0-9]+',
                     ],
                     'defaults' => [
                         'controller' => RemoveDefectController::class,
@@ -116,9 +116,9 @@ return [
                     DefectsJourneyContextProvider::EDIT_DEFECT_ROUTE => [
                         'type' => 'segment',
                         'options' => [
-                            'route' => '/:defectItemId/edit',
+                            'route' => '/:identifiedDefectId/edit',
                             'constraints' => [
-                                'defectItemId' => '[0-9]+',
+                                'identifiedDefectId' => '[0-9]+',
                             ],
                             'defaults' => [
                                 'controller' => EditDefectController::class,
@@ -129,9 +129,9 @@ return [
                     DefectsJourneyContextProvider::REMOVE_DEFECT_ROUTE => [
                         'type' => 'segment',
                         'options' => [
-                            'route' => '/:defectItemId/remove',
+                            'route' => '/:identifiedDefectId/remove',
                             'constraints' => [
-                                'defectItemId' => '[0-9]+',
+                                'identifiedDefectId' => '[0-9]+',
                             ],
                             'defaults' => [
                                 'controller' => RemoveDefectController::class,
@@ -181,9 +181,9 @@ return [
                             DefectsJourneyContextProvider::EDIT_DEFECT_ROUTE => [
                                 'type' => 'segment',
                                 'options' => [
-                                    'route' => '/:defectItemId/edit',
+                                    'route' => '/:identifiedDefectId/edit',
                                     'constraints' => [
-                                        'defectItemId' => '[0-9]+',
+                                        'identifiedDefectId' => '[0-9]+',
                                     ],
                                     'defaults' => [
                                         'controller' => EditDefectController::class,
@@ -194,9 +194,9 @@ return [
                             DefectsJourneyContextProvider::REMOVE_DEFECT_ROUTE => [
                                 'type' => 'segment',
                                 'options' => [
-                                    'route' => '/:defectItemId/remove',
+                                    'route' => '/:identifiedDefectId/remove',
                                     'constraints' => [
-                                        'defectItemId' => '[0-9]+',
+                                        'identifiedDefectId' => '[0-9]+',
                                     ],
                                     'defaults' => [
                                         'controller' => RemoveDefectController::class,
@@ -247,9 +247,9 @@ return [
                     DefectsJourneyContextProvider::EDIT_DEFECT_ROUTE => [
                         'type' => 'segment',
                         'options' => [
-                            'route' => '/:defectItemId/edit',
+                            'route' => '/:identifiedDefectId/edit',
                             'constraints' => [
-                                'defectItemId' => '[0-9]+',
+                                'identifiedDefectId' => '[0-9]+',
                             ],
                             'defaults' => [
                                 'controller' => EditDefectController::class,
@@ -260,9 +260,9 @@ return [
                     DefectsJourneyContextProvider::REMOVE_DEFECT_ROUTE => [
                         'type' => 'segment',
                         'options' => [
-                            'route' => '/:defectItemId/remove',
+                            'route' => '/:identifiedDefectId/remove',
                             'constraints' => [
-                                'defectItemId' => '[0-9]+',
+                                'identifiedDefectId' => '[0-9]+',
                             ],
                             'defaults' => [
                                 'controller' => RemoveDefectController::class,

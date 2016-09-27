@@ -16,9 +16,10 @@ public abstract class AbstractReasonsForRejectionPage extends Page {
     @FindBy(xpath = ".//*[@id='rfrList']//*[@class='defect__title']") protected WebElement reasonForRejectionTitle;
     @FindBy(xpath = "//*[@id='rfrList']//a[contains(., 'Remove')]") protected WebElement removeDefectLink;
     @FindBy(xpath = "//*[@id='rfrList']//a[contains(., 'Edit')]") protected WebElement editDefectLink;
+    @FindBy(xpath = "//*[@id='rfrList']//*[@value='Undo']") protected WebElement undoLink;
     @FindBy(id="rfrList") private WebElement rfrList;
     protected String defectSelector = "//*[contains(text(), '%s')]/ancestor::li[contains(@class, 'defect')]";
-    protected String repairedButton = defectSelector + "//*[@id='repair-button']";
+    protected String repairedButton = defectSelector + "//*[@value='Mark as repaired']";
 
     public AbstractReasonsForRejectionPage(MotAppDriver driver) {
         super(driver);
@@ -37,6 +38,11 @@ public abstract class AbstractReasonsForRejectionPage extends Page {
 
     public <T extends Page> T repairDefect(String defect, Class<T> clazz) {
         driver.findElement(By.xpath(String.format(repairedButton, defect))).click();
+        return MotPageFactory.newPage(driver, clazz);
+    }
+
+    public <T extends Page> T undoRepairDefect(Class<T> clazz) {
+        undoLink.click();
         return MotPageFactory.newPage(driver, clazz);
     }
 
@@ -61,7 +67,7 @@ public abstract class AbstractReasonsForRejectionPage extends Page {
 
     public boolean isDefectRepairedSuccessMessageDisplayed(String defectName) {
         return validationMessage.getText().equals(
-                String.format("The failure %s has been removed", defectName));
+                String.format("The failure %s has been repaired", defectName));
     }
 
     public boolean isAdvisoryRepairedSuccessMessageDisplayed(String defectName) {
@@ -84,8 +90,12 @@ public abstract class AbstractReasonsForRejectionPage extends Page {
         return isDangerousShownForDefect(defect) && defect.getIsDangerous();
     }
 
-    public boolean isDefectRemovedFromRfrList(String defectName) {
-        return !PageInteractionHelper.isElementDisplayed(By.xpath(String.format(defectSelector, defectName)));
+    public boolean isUndoLinkDisplayed() {
+        return PageInteractionHelper.isElementDisplayed(undoLink);
+    }
+
+    public boolean isMarkAsRepairedButtonDisplayed(String defect) {
+        return PageInteractionHelper.isElementDisplayed(By.xpath(String.format(repairedButton, defect)));
     }
 
     private boolean isDangerousShownForDefect(Defect defect) {
