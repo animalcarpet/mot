@@ -413,11 +413,10 @@ class MotTestMapper
             $hydratedTestRfr['inspectionManualReference'] = $rfrEntity->getInspectionManualReference();
             /** @var array $formattedDescriptions */
             $formattedDescriptions = $this->defectSentenceCaseConverter->formatRfrDescriptionsForTestResultsAndBasket($rfrEntity, $motTestRfr->getType());
-            if (!empty($formattedDescriptions['testItemSelectorDescription'])) {
-                $hydratedTestRfr['testItemSelectorDescription'] = $formattedDescriptions['testItemSelectorDescription'];
-            }
-            if (!empty($formattedDescriptions['failureText'])) {
-                $hydratedTestRfr['failureText'] = $formattedDescriptions['failureText'];
+            foreach (['testItemSelectorDescription', 'failureText', 'name', 'nameCy'] as $field) {
+                if (!empty($formattedDescriptions[$field])) {
+                    $hydratedTestRfr[$field] = $formattedDescriptions[$field];
+                }
             }
         }
 

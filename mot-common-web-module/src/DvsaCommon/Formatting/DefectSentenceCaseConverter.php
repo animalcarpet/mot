@@ -3,9 +3,9 @@
 namespace DvsaCommon\Formatting;
 
 use DvsaCommon\Constants\FeatureToggle;
-use DvsaEntities\Entity\ReasonForRejection;
 use DvsaCommon\Enum\LanguageTypeCode;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
+use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Entity\TestItemSelector;
 use DvsaFeature\FeatureToggles;
 
@@ -29,9 +29,14 @@ class DefectSentenceCaseConverter
         'abs' => 'anti-lock braking system',
         'rbt' => 'roller brake tester',
         'srs' => 'supplementary restraint system',
-        'vin' => 'vehicle identification number'
+        'vin' => 'vehicle identification number',
     ];
 
+    /**
+     * DefectSentenceCaseConverter constructor.
+     *
+     * @param FeatureToggles $featureToggles
+     */
     public function __construct(FeatureToggles $featureToggles)
     {
         $this->featureToggles = $featureToggles;
@@ -39,11 +44,11 @@ class DefectSentenceCaseConverter
 
     /**
      * @param ReasonForRejection $rfr
-     * @param string $type
+     * @param string             $type
      *
      * @return array
      */
-    public function formatRfrDescriptionsForTestResultsAndBasket($rfr, $type)
+    public function formatRfrDescriptionsForTestResultsAndBasket(ReasonForRejection $rfr, $type)
     {
         $descriptions = [];
 
@@ -76,7 +81,7 @@ class DefectSentenceCaseConverter
                 }
 
                 // Format text
-                if ($this->isTestResultEntryImprovemenetsEnabled()){
+                if ($this->isTestResultEntryImprovemenetsEnabled()) {
                     $descriptions['testItemSelectorDescription'] = self::toFirstLetterUpper(self::toFirstOccurrenceOfEachAcronymExpanded(strtolower($descriptions['testItemSelectorDescription'])));
                     $descriptions['failureText'] = self::toFirstOccurrenceOfEachAcronymExpanded($descriptions['failureText'], $descriptions['testItemSelectorDescription']);
                     if ($descriptions['testItemSelectorDescription'] === '') {
@@ -84,6 +89,8 @@ class DefectSentenceCaseConverter
                     }
                 }
             }
+
+            $descriptions += $this->fetchLocalizedRrfNames($rfr);
         }
 
         return $descriptions;
@@ -121,7 +128,7 @@ class DefectSentenceCaseConverter
         $concatenatedAdvisoryText = $categoryDescription . ' ' . $advisoryText;
 
         // Format text
-        if ($this->isTestResultEntryImprovemenetsEnabled()){
+        if ($this->isTestResultEntryImprovemenetsEnabled()) {
             $descriptions['description'] = self::toFirstLetterUpper(self::toFirstOccurrenceOfEachAcronymExpanded(
                 $concatenatedDescription));
             $descriptions['advisoryText'] = self::toFirstLetterUpper(self::toFirstOccurrenceOfEachAcronymExpanded(
@@ -162,7 +169,7 @@ class DefectSentenceCaseConverter
     }
 
     /**
-     * @param array $defectDescriptions
+     * @param array            $defectDescriptions
      * @param TestItemSelector $testItemSelector
      *
      * @return array
@@ -180,7 +187,9 @@ class DefectSentenceCaseConverter
                         $defectDescriptions['description'] = $description->getDescription();
 
                         // Format text
-                        $defectDescriptions['name'] = self::toFirstLetterUpper(self::toAcronymsInUpperCase($defectDescriptions['name']));
+                        if ($this->isTestResultEntryImprovemenetsEnabled()) {
+                            $defectDescriptions['name'] = self::toFirstLetterUpper(self::toAcronymsInUpperCase($defectDescriptions['name']));
+                        }
                     }
                 }
             }
@@ -205,7 +214,9 @@ class DefectSentenceCaseConverter
      */
     private function toFirstOccurrenceOfEachAcronymExpanded($description, $category = null)
     {
-        if (empty($description)) { return $description; }
+        if (empty($description)) {
+            return $description;
+        }
         $acronymsExpanded = self::expandFirstOccurrenceOfEachAcronym($description, $category);
         $remainingAcronymsToUpper = self::toAcronymsInUpperCase($acronymsExpanded);
 
@@ -219,7 +230,9 @@ class DefectSentenceCaseConverter
      */
     private function toAcronymsInUpperCase($description)
     {
-        if (empty($description)) { return $description; }
+        if (empty($description)) {
+            return $description;
+        }
         $words = $wordsArray = preg_split('/ /', $description);
         $acronymsInUpper = "";
         foreach ($words as $word) {
@@ -252,14 +265,20 @@ class DefectSentenceCaseConverter
      */
     private function buildDescriptionOrAdvisoryText($category, $descriptionOrAdvisoryText)
     {
-        if (null === $category) {$category = "";}
-        if (null === $descriptionOrAdvisoryText) {$descriptionOrAdvisoryText = "";}
-        $descriptionOrAdvisoryText = $category . " " . $descriptionOrAdvisoryText;
+        if (null === $category) {
+            $category = "";
+        }
+        if (null === $descriptionOrAdvisoryText) {
+            $descriptionOrAdvisoryText = "";
+        }
+
+        if (true !== $this->isTestResultEntryImprovemenetsEnabled()) {
+            return $descriptionOrAdvisoryText;
+        }
 
         // Format text
-        if ($this->isTestResultEntryImprovemenetsEnabled()){
-            $descriptionOrAdvisoryText = self::toFirstLetterUpper(self::toFirstOccurrenceOfEachAcronymExpanded($descriptionOrAdvisoryText));
-        }
+        $descriptionOrAdvisoryText = $category . " " . $descriptionOrAdvisoryText;
+        $descriptionOrAdvisoryText = self::toFirstOccurrenceOfEachAcronymExpanded($descriptionOrAdvisoryText);
 
         return self::toFirstLetterUpper($descriptionOrAdvisoryText);
     }
@@ -318,6 +337,7 @@ class DefectSentenceCaseConverter
             }
             $result .= ($words[$i]) . ' ';
         }
+
         return trim($result);
     }
 
@@ -344,6 +364,27 @@ class DefectSentenceCaseConverter
                 }
             }
         }
+
         return $categoryDescriptionInEnglish;
+    }
+
+    /**
+     * @param \DvsaEntities\Entity\ReasonForRejection $rfr
+     *
+     * @return array
+     */
+    private function fetchLocalizedRrfNames(ReasonForRejection $rfr)
+    {
+        $rfrNames = [];
+
+        foreach ($rfr->getTestItemSelector()->getDescriptions() as $rfrCategoryDescription) {
+            if ($rfrCategoryDescription->getLanguage()->getCode() === LanguageTypeCode::ENGLISH) {
+                $rfrNames['name'] = $rfrCategoryDescription->getName();
+            } elseif ($rfrCategoryDescription->getLanguage()->getCode() === LanguageTypeCode::WELSH) {
+                $rfrNames['nameCy'] = $rfrCategoryDescription->getName();
+            }
+        }
+
+        return $rfrNames;
     }
 }

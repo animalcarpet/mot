@@ -254,10 +254,19 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testAcronymsNotFormattedIfToggleOffInSearch()
     {
         $this->enableTestResultEntryImprovements(false);
-        $stringToCovert = 'Vehicle identification number Vehicle identification number';
-        $expectedString = 'Vehicle identification number Vehicle identification number ';
+        $stringToConvert = 'Abs';
+        $expectedString = 'Abs';
 
-        $this->assertConversionForSearchForADefect($stringToCovert, $expectedString);
+        $this->setReasonForRejectionName($stringToConvert);
+        $this->setTestItemCategoryDescription($stringToConvert);
+        $actualResult = $this->defectSentenceCaseConverterService->formatRfrDescriptionsForDefectsAndSearchForADefect($this->reasonForRejection);
+        $expectedResult = [
+            'description' => $expectedString,
+            'advisoryText' => null,
+            'inspectionManualDescription' => null,
+        ];
+
+        $this->assertEquals($expectedResult, $actualResult);
     }
 
     private function setTestItemCategoryDescription($description)
@@ -318,6 +327,7 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
         $expectedResult = [
             'testItemSelectorDescription' => $expectedCategoryDescription,
             'failureText' => $expectedAdvisoryText,
+            'name' => null
         ];
 
         $this->assertEquals($expectedResult, $actualResult);
@@ -332,6 +342,7 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
         $expectedResult = [
             'testItemSelectorDescription' => $expectedCategoryDescription,
             'failureText' => $expectedAdvisoryText,
+            'name' => null,
         ];
 
         $this->assertEquals($expectedResult, $actualResult);
