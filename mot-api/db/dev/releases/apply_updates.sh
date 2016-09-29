@@ -12,6 +12,8 @@ MyHOST=${3-"localhost"}
 
 for UPDATE_DIR in ./*/; do
     echo "$(date) Running DB upgrade for $UPDATE_DIR"
+    cd $UPDATE_DIR
     ./db_upgrade.sh $MyUSER $MyPASS $MyHOST
+    cd ..
 done
 
