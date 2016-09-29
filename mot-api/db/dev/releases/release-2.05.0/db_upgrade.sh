@@ -3,9 +3,10 @@ upgrade_files=()
 
 readonly DB_VERSION=2.05.0
 readonly MYSQL_DB_NAME=mot2
-readonly MYSQL_HOST=mysql
-readonly MYSQL_USER=motdbuser
-readonly MYSQL_ADMIN_PASSWORD=password
+
+MYSQL_USER=${1-"motdbuser"}
+MYSQL_ADMIN_PASSWORD=${2-"password"}
+MYSQL_HOST=${3-"mysql"}
 
 # Add files here in intended run order for release.
 upgrade_files+=('2016-03-10-BL-1634-2fa-schema-STORY.sql');
