@@ -211,6 +211,7 @@ wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
       'api-check': { check_sonar("mot-api") },
       'frontend-check': { check_sonar("mot-web-frontend") }
     )
+
     stage 'Build MOT RPMs'
     sh 'echo -e "\033[34mBuild MOT RPMs\033[0m"'
     sh "env WORKSPACE=`pwd` bash -x buildscripts/code/rpm_mot-api-jenkins2.sh ${FB}"
@@ -248,6 +249,12 @@ wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
         push_rpm_2_yum_repo("${FB}",'*.rpm')
     }
     clean_repo("${FB}")
+
+    stage "Reset DB"
+    sh """
+    cd $WORKSPACE/mot/mot-api/db
+    ./reset_db_with_test_data.sh ${FB}_admin password mysql motdbuser
+    """
 
     stage 'Deploy'
     sh 'set +x; echo -e "\033[34mDeploy\033[0m"'
