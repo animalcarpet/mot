@@ -10,9 +10,6 @@ import uk.gov.dvsa.domain.model.vehicle.TransmissionType;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 
 
-import uk.gov.dvsa.domain.model.vehicle.Make;
-import uk.gov.dvsa.domain.model.vehicle.TransmissionType;
-import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
@@ -58,7 +55,7 @@ public class CreateNewVehicleRecordIdentificationPage extends Page {
     }
 
     public void selectCountryOfRegistration(Vehicle vehicle) {
-        if (! vehicle.getCountryOfRegistration().equals("")) {
+        if (! vehicle.getCountryOfRegistrationId().equals("")) {
             Select selectCountryOfRegistration = new Select(registrationCountry);
             selectCountryOfRegistration.selectByIndex(1);
         }

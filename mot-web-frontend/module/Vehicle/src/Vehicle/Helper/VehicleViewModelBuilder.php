@@ -34,7 +34,7 @@ class VehicleViewModelBuilder implements AutoWireableInterface
     public function __construct(
         Url $url,
         VehicleInformationTableBuilder $vehicleTableBuilder,
-        VehiclePageTitleBulder $vehiclePageTitleBulder,
+        VehiclePageTitleBuilder $vehiclePageTitleBulder,
         VehicleSidebarBuilder $vehicleSidebarBuilder
     )
     {
@@ -91,6 +91,7 @@ class VehicleViewModelBuilder implements AutoWireableInterface
     {
         $this->vehicleTableBuilder->setExpiryDateInformation($this->expiryDateInformation);
         $this->vehicleTableBuilder->setVehicle($this->vehicle);
+        $this->vehicleTableBuilder->setVehicleObfuscatedId($this->obfuscatedVehicleId);
         $this->vehicleSidebarBuilder->setSearchData($this->searchData);
         $this->vehicleSidebarBuilder->setObfuscatedVehicleId($this->obfuscatedVehicleId);
         $this->vehiclePageTitleBulder->setVehicle($this->vehicle);

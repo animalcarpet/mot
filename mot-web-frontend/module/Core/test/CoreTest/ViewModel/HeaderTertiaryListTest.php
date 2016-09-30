@@ -15,14 +15,17 @@ class HeaderTertiaryListTest extends \PHPUnit_Framework_TestCase
     public function testHeaderTertiary()
     {
         $header = new HeaderTertiaryList();
-        $header->addRow(self::FIRST_ROW);
-        $header->addRow(self::SECOND_ROW);
-        $header->addRow(self::THIRD_ROW);
+        $header->addElement(self::FIRST_ROW)->bold();
+        $header->addElement(self::SECOND_ROW);
+        $header->addElement(self::THIRD_ROW);
 
-        $rows = $header->getRows();
-        $this->assertCount(3, $rows);
-        $this->assertEquals($rows[0], self::FIRST_ROW);
-        $this->assertEquals($rows[1], self::SECOND_ROW);
-        $this->assertEquals($rows[2], self::THIRD_ROW);
+        $elements = $header->getElements();
+        $this->assertCount(3, $elements);
+        $this->assertEquals($elements[0]->getText(), self::FIRST_ROW);
+        $this->assertTrue($elements[0]->isBold());
+        $this->assertEquals($elements[1]->getText(), self::SECOND_ROW);
+        $this->assertFalse($elements[1]->isBold());
+        $this->assertEquals($elements[2]->getText(), self::THIRD_ROW);
+        $this->assertFalse($elements[2]->isBold());
     }
 }

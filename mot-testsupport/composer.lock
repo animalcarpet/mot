@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b63175ef40a76bab5b72c0a0abe2e653",
-    "content-hash": "4cb5328d0b1a371dd477b9579095b42f",
+    "hash": "6c0140c93df435f540dbbbca10b1b51b",
+    "content-hash": "bc6ca3e6499f110eb65116ba07da5e1d",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -801,6 +801,12 @@
                 "url": "git@gitlab.motdev.org.uk:mot/featuretoggle.git",
                 "reference": "2ca85b84d5b20959a5f4fe899fd989f92602403f"
             },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/dvsa-feature-toggle-v1.1.1-fac088.tar",
+                "reference": "2ca85b84d5b20959a5f4fe899fd989f92602403f",
+                "shasum": "69299c57dad3466801f58cfd6027c480900f6b0c"
+            },
             "require": {
                 "php": ">=5.3.3",
                 "zendframework/zendframework": "~2.3"
@@ -995,17 +1001,17 @@
         },
         {
             "name": "mot/api-client-php",
-            "version": "6.0.0",
+            "version": "6.4.0",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/api-client-php.git",
-                "reference": "ebfc1e96a40448b001530bb3e31fcaff969058bc"
+                "reference": "b82f5d1e5a5309d340eb1b9224fc188e8c022ffa"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-6.0.0-5b423f.tar",
-                "reference": "ebfc1e96a40448b001530bb3e31fcaff969058bc",
-                "shasum": "e9843adea2841f677f2c3dd68c6b2fcb307b8298"
+                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-6.4.0-afff18.tar",
+                "reference": "b82f5d1e5a5309d340eb1b9224fc188e8c022ffa",
+                "shasum": "cfd15e96630086b3a96d3a314ecbccdbf9595d4d"
             },
             "require": {
                 "guzzlehttp/guzzle": "~6.1",
@@ -1062,7 +1068,7 @@
                     "email": "a.bahman@kainos.com"
                 }
             ],
-            "time": "2016-08-19 10:04:59"
+            "time": "2016-09-27 08:17:44"
         },
         {
             "name": "mtdowling/jmespath.php",

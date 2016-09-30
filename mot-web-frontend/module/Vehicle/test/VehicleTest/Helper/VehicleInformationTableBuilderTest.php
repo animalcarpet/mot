@@ -6,10 +6,15 @@ use Application\Service\CatalogService;
 use Core\ViewModel\Gds\Table\GdsRow;
 use Core\ViewModel\Gds\Table\GdsTable;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Dto\Vehicle\VehicleExpiryDto;
+use DvsaCommon\Enum\CountryOfRegistrationCode;
+use DvsaCommon\Obfuscate\ParamObfuscator;
+use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\XMock;
 use Vehicle\Helper\ColoursContainer;
 use Vehicle\Helper\VehicleInformationTableBuilder;
+use Zend\View\Helper\Url;
 
 class VehicleInformationTableBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,21 +25,36 @@ class VehicleInformationTableBuilderTest extends \PHPUnit_Framework_TestCase
 
     /** @var  VehicleInformationTableBuilder */
     private $tableGenerator;
+    /** @var  CatalogService | \PHPUnit_Framework_MockObject_MockObject */
+    private $catalogService;
+    /** @var  MotAuthorisationServiceInterface | \PHPUnit_Framework_MockObject_MockObject */
+    private $authorisationService;
+    /** @var  Url | \PHPUnit_Framework_MockObject_MockObject */
+    private $urlHelper;
 
     public function setUp()
     {
-        $catalogService = XMock::of(CatalogService::class);
-        $catalogService->expects($this->any())->method('getCountriesOfRegistrationByCode')->willReturn([
-            'BE' => 'B (BE) - Belgium',
-            'XUKN' => 'Not Known',
+        $this->catalogService = XMock::of(CatalogService::class);
+
+        $this->catalogService->expects($this->any())->method('getCountriesOfRegistration')->willReturn([
+            1 => 'B (BE) - Belgium',
+            36 => 'Not Known'
         ]);
-        $this->tableGenerator = new VehicleInformationTableBuilder($catalogService);
+
+        $this->authorisationService = new AuthorisationServiceMock();
+
+        $this->urlHelper = XMock::of(Url::class);
+
+        $this->tableGenerator = new VehicleInformationTableBuilder(
+            $this->catalogService,
+            $this->authorisationService,
+            $this->urlHelper
+        );
     }
 
     private function assertRowContentEquals(GdsRow $gdsRow, $expectedContent){
         $this->assertEquals($expectedContent, $gdsRow->getValue()->getContent());
     }
-
 
     public function testSpecificationTableGeneration()
     {
@@ -85,7 +105,7 @@ class VehicleInformationTableBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertRowContentEquals($table->getRow(0), self::REGISTRATION);
         $this->assertRowContentEquals($table->getRow(1), self::VIN);
-        $this->assertRowContentEquals($table->getRow(2), 'BE');
+        $this->assertRowContentEquals($table->getRow(2), 'B (BE) - Belgium');
         $this->assertRowContentEquals($table->getRow(3), 'Yes');
         $this->assertRowContentEquals($table->getRow(4), '2 January 2004');
         $this->assertRowContentEquals($table->getRow(5), '3 January 2004');
@@ -97,7 +117,7 @@ class VehicleInformationTableBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $vehicle = $this->getVehicle();
         $vehicle->isNewAtFirstReg = false;
-        $vehicle->countryOfRegistration = 'Not Known';
+        $vehicle->countryOfRegistrationId = 36;
         $vehicle->amendedOn = null;
 
         $this->tableGenerator->setVehicle(new DvsaVehicle($vehicle));
@@ -123,7 +143,7 @@ class VehicleInformationTableBuilderTest extends \PHPUnit_Framework_TestCase
             'model' => self::MODEL_NAME,
             'colour' => 'Grey',
             'colourSecondary' => 'Black',
-            'countryOfRegistration' => 'B (BE) - Belgium',
+            'countryOfRegistrationId' => 1,
             'fuelType' => 'Petrol',
             'vehicleClass' => '4',
             'bodyType' => '2 Door Saloon',

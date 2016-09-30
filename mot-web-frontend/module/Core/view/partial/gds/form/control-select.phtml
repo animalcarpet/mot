@@ -15,7 +15,7 @@
 
     <?php foreach($options as $key => $value): ?>
         <option value="<?php echo $this->escapeHtmlAttr($key); ?>"
-            <?php echo ((string) $key === $this->value ? 'selected' : ''); ?>
+            <?php echo ((string) $key === (string)$this->value ? 'selected' : ''); ?>
             ><?php echo $this->escapeHtml($value); ?>
         </option>
     <?php endforeach; ?>

@@ -8,4 +8,5 @@ class VehicleRouteList
     const VEHICLE_MOT_HISTORY = 'vehicle/detail/history';
     const VEHICLE_SEARCH = 'vehicle/search';
     const VEHICLE_SEARCH_RESULTS = 'vehicle/result';
+    const VEHICLE_CHANGE_CLASS = 'vehicle/detail/change/class';
 }

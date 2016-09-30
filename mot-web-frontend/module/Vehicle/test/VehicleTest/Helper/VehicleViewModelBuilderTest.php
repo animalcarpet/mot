@@ -10,7 +10,7 @@ use DvsaCommon\Dto\Vehicle\VehicleExpiryDto;
 use DvsaCommonTest\TestUtils\XMock;
 use Vehicle\Controller\VehicleController;
 use Vehicle\Helper\VehicleInformationTableBuilder;
-use Vehicle\Helper\VehiclePageTitleBulder;
+use Vehicle\Helper\VehiclePageTitleBuilder;
 use Vehicle\Helper\VehicleSidebarBuilder;
 use Vehicle\Helper\VehicleViewModelBuilder;
 use Vehicle\ViewModel\Sidebar\VehicleSidebar;
@@ -33,7 +33,7 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
         $helper = new VehicleViewModelBuilder(
             $url,
             XMock::of(VehicleInformationTableBuilder::class),
-            XMock::of(VehiclePageTitleBulder::class),
+            XMock::of(VehiclePageTitleBuilder::class),
             XMock::of(VehicleSidebarBuilder::class)
         );
 
@@ -50,10 +50,19 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
         $backUrl = 'backUrl';
         $url->expects($this->any())->method('__invoke')->willReturn($backUrl);
 
+        /** @var VehicleInformationTableBuilder | \PHPUnit_Framework_MockObject_MockObject $vehicleInformationTableBuilder */
+        $vehicleInformationTableBuilder = XMock::of(VehicleInformationTableBuilder::class);
+        $vehicleInformationTableBuilder->expects($this->once())
+            ->method('getVehicleSpecificationGdsTable')
+            ->willReturn(new GdsTable());
+        $vehicleInformationTableBuilder->expects($this->once())
+            ->method('getVehicleRegistrationGdsTable')
+            ->willReturn(new GdsTable());
+
         $helper = new VehicleViewModelBuilder(
             $url,
-            new VehicleInformationTableBuilder($catalogService),
-            new VehiclePageTitleBulder,
+            $vehicleInformationTableBuilder,
+            new VehiclePageTitleBuilder,
             new VehicleSidebarBuilder(XMock::of(Url::class))
         );
 

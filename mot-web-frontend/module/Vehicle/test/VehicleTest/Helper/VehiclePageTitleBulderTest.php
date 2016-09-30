@@ -6,7 +6,7 @@ namespace VehicleTest\Helper;
 
 use Core\ViewModel\Header\HeaderTertiaryList;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
-use Vehicle\Helper\VehiclePageTitleBulder;
+use Vehicle\Helper\VehiclePageTitleBuilder;
 
 class VehiclePageTitleBulderTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,7 +21,7 @@ class VehiclePageTitleBulderTest extends \PHPUnit_Framework_TestCase
      */
     public function testPageTile(DvsaVehicle $dvlaVehicle, $title, $secondTitle, $thirdTitle)
     {
-        $helper = new VehiclePageTitleBulder();
+        $helper = new VehiclePageTitleBuilder();
         $helper->setVehicle($dvlaVehicle);
 
         $primaryTitle = $helper->getPageTitle();
@@ -41,8 +41,8 @@ class VehiclePageTitleBulderTest extends \PHPUnit_Framework_TestCase
         $vehicleWithoutModel->model = null;
 
         $tertiaryTitle = new HeaderTertiaryList();
-        $tertiaryTitle->addRow(self::REGISTRATION);
-        $tertiaryTitle->addRow(self::VIN);
+        $tertiaryTitle->addElement(self::REGISTRATION);
+        $tertiaryTitle->addElement(self::VIN);
 
         return [
             [new DvsaVehicle($vehicleWithModel), $vehicleWithModel->make . ', ' . $vehicleWithModel->model, self::PAGE_SUBTITLE, $tertiaryTitle],

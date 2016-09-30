@@ -1,0 +1,17 @@
+<?php
+use Vehicle\UpdateVehicleProperty\Form\UpdateClassForm;
+use Vehicle\UpdateVehicleProperty\ViewModel\UpdateVehiclePropertyViewModel;
+
+/** @var UpdateVehiclePropertyViewModel $viewModel */
+/** @var UpdateClassForm $form */
+$form = $viewModel->getForm();
+?>
+<fieldset>
+    <?php echo $this->partial(
+        'partial/gds/form/control',
+        [
+            'element' => $form->getClassElement()
+        ]
+    );
+    ?>
+</fieldset>
