@@ -251,10 +251,9 @@ wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
     clean_repo("${FB}")
 
     stage "Reset DB"
-    sh """
-    cd $WORKSPACE/mot/mot-api/db
-    ./reset_db_with_test_data.sh ${FB}_admin password mysql motdbuser
-    """
+    dir('mot/mot-api/db') {
+      sh "./reset_db_with_test_data.sh ${FB}_admin password mysql motdbuser"
+    }
 
     stage 'Deploy'
     sh 'set +x; echo -e "\033[34mDeploy\033[0m"'
