@@ -19,10 +19,6 @@ public class DetailsPage extends Page {
 
     @FindBy(id = "phone") private WebElement telephoneNumber;
 
-    @FindBy(id = "emailAddress") private WebElement emailAddress;
-
-    @FindBy(id = "confirmEmailAddress") private WebElement verifyEmailAddress;
-
     @FindBy(id = "continue") private WebElement continueToNextPage;
 
     public DetailsPage(MotAppDriver driver) {
@@ -35,27 +31,16 @@ public class DetailsPage extends Page {
         return PageInteractionHelper.verifyTitle(getTitle(), PAGE_TITLE);
     }
 
-    public AddressPage enterDetailsAndSubmitExpectingAddressPage(String name, String surname, String email) {
-        FormDataHelper.enterText(firstName, name);
-        FormDataHelper.enterText(lastName, surname);
-        FormDataHelper.enterText(emailAddress, email);
-        FormDataHelper.enterText(verifyEmailAddress, email);
-        continueToNextPage.click();
-        return new AddressPage(driver);
-    }
-
     public AddressPage clickContinue() {
         continueToNextPage.click();
         return new AddressPage(driver);
     }
 
-    public DetailsPage enterYourDetails(String email, String name, String surname, String telephone)
+    public DetailsPage enterYourDetails(String name, String surname, String telephone)
     {
         FormDataHelper.enterText(firstName, name);
         FormDataHelper.enterText(lastName, surname);
-        FormDataHelper.enterText(emailAddress, email);
         FormDataHelper.enterText(telephoneNumber, telephone);
-        FormDataHelper.enterText(verifyEmailAddress, email);
 
         return this;
     }

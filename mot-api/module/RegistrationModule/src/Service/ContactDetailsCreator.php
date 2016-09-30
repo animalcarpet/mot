@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use DvsaCommon\Constants\PersonContactType as PersonContactTypeConstant;
 use DvsaCommon\InputFilter\Registration\AddressInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
+use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaEntities\Entity\Address;
 use DvsaEntities\Entity\ContactDetail;
 use DvsaEntities\Entity\Email;
@@ -128,7 +129,7 @@ class ContactDetailsCreator extends AbstractPersistableService
     private function populateCompulsoryFields()
     {
         $this->email
-            ->setEmail($this->data[$this->getDetailsStepName()][DetailsInputFilter::FIELD_EMAIL]);
+            ->setEmail($this->data[$this->getEmailStepName()][EmailInputFilter::FIELD_EMAIL]);
 
         $this->address
             ->setAddressLine1($this->data[$this->getAddressStepName()][AddressInputFilter::FIELD_ADDRESS_1])

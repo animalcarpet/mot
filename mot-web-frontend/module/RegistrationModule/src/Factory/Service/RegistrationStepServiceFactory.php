@@ -11,11 +11,13 @@ use Dvsa\Mot\Frontend\RegistrationModule\Step\AddressStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\CompletedStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\CreateAccountStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\DetailsStep;
+use Dvsa\Mot\Frontend\RegistrationModule\Step\EmailStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\PasswordStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionOneStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionTwoStep;
 use DvsaCommon\InputFilter\Registration\AddressInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
+use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
 use DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter;
 use DvsaCommon\InputFilter\Registration\SecurityQuestionSecondInputFilter;
@@ -46,6 +48,7 @@ class RegistrationStepServiceFactory extends StepServiceFactory
     {
         $steps = [
             new CreateAccountStep($sessionService, new InputFilter()),
+            new EmailStep($sessionService, new EmailInputFilter()),
             new DetailsStep($sessionService, new DetailsInputFilter()),
             new AddressStep($sessionService, new AddressInputFilter()),
             new SecurityQuestionOneStep($sessionService, new SecurityQuestionFirstInputFilter()),

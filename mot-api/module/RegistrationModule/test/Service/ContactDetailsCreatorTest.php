@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use DvsaCommon\InputFilter\Registration\AddressInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
+use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\PersonContact;
@@ -88,8 +89,10 @@ class ContactDetailsCreatorTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 [
+                    ValidatorKeyConverter::inputFilterToStep(EmailInputFilter::class) => [
+                        EmailInputFilter::FIELD_EMAIL => 'x',
+                    ],
                     ValidatorKeyConverter::inputFilterToStep(DetailsInputFilter::class) => [
-                        DetailsInputFilter::FIELD_EMAIL => 'x',
                         DetailsInputFilter::FIELD_PHONE => '1',
                     ],
                     ValidatorKeyConverter::inputFilterToStep(AddressInputFilter::class) => [

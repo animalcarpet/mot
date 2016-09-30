@@ -11,6 +11,7 @@ use Core\Service\StepService;
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegisterUserService;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\AccountSummaryStep;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
+use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -51,7 +52,7 @@ class SummaryController extends RegistrationBaseController
      */
     public function indexAction()
     {
-        $email = $this->stepService->getById(AccountSummaryStep::STEP_ID)->toArray()[DetailsInputFilter::FIELD_EMAIL];
+        $email = $this->stepService->getById(AccountSummaryStep::STEP_ID)->toArray()[EmailInputFilter::FIELD_EMAIL];
 
         $isEmailDuplicated = $this->registerUserService->isEmailDuplicated($email);
 

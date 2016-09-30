@@ -26,9 +26,9 @@ public class CreateAnAccountPage extends Page {
         return PageInteractionHelper.verifyTitle(getTitle(), PAGE_TITLE);
     }
 
-    public DetailsPage details() {
+    public EmailPage email() {
         continueToNextPage.click();
-        return new DetailsPage(driver);
+        return new EmailPage(driver);
     }
 
     public boolean isContinueButtonDisplayed(){

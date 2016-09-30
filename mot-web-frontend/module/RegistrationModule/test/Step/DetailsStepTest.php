@@ -68,8 +68,6 @@ class DetailsStepTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($step->getMiddleName(), $fixture['middleName']);
         $this->assertEquals($step->getLastName(), $fixture['lastName']);
         $this->assertEquals($step->getPhone(), $fixture['phone']);
-        $this->assertEquals($step->getEmailAddress(), $fixture['emailAddress']);
-        $this->assertEquals($step->getConfirmEmailAddress(), $fixture['confirmEmailAddress']);
     }
 
     /**
@@ -86,8 +84,6 @@ class DetailsStepTest extends \PHPUnit_Framework_TestCase
         $step->setMiddleName('middleName');
         $step->setLastName('lastName');
         $step->setPhone('phone');
-        $step->setEmailAddress('emailAddress');
-        $step->setConfirmEmailAddress('confirmEmailAddress');
 
         $values = $step->toArray();
 
@@ -95,8 +91,6 @@ class DetailsStepTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('middleName', $values['middleName']);
         $this->assertEquals('lastName', $values['lastName']);
         $this->assertEquals('phone', $values['phone']);
-        $this->assertEquals('emailAddress', $values['emailAddress']);
-        $this->assertEquals('confirmEmailAddress', $values['confirmEmailAddress']);
     }
 
     /**
@@ -113,15 +107,11 @@ class DetailsStepTest extends \PHPUnit_Framework_TestCase
         $step->setMiddleName('middleName');
         $step->setLastName('lastName');
         $step->setPhone('phone');
-        $step->setEmailAddress('emailAddress');
-        $step->setConfirmEmailAddress('confirmEmailAddress');
 
         $this->assertEquals('firstName', $step->getFirstName());
         $this->assertEquals('middleName', $step->getMiddleName());
         $this->assertEquals('lastName', $step->getLastName());
         $this->assertEquals('phone', $step->getPhone());
-        $this->assertEquals('emailAddress', $step->getEmailAddress());
-        $this->assertEquals('confirmEmailAddress', $step->getConfirmEmailAddress());
     }
 
     /**
@@ -134,8 +124,6 @@ class DetailsStepTest extends \PHPUnit_Framework_TestCase
             'middleName'            => __METHOD__ . '_middleName',
             'lastName'              => __METHOD__ . '_lastName',
             'phone'                 => __METHOD__ . '_phone',
-            'emailAddress'          => __METHOD__ . '_emailAddress',
-            'confirmEmailAddress'   => __METHOD__ . '_confirmEmailAddress',
         ];
 
         return $fixture;

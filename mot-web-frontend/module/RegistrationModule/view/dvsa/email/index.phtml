@@ -1,0 +1,73 @@
+<?php
+use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
+
+?>
+
+<div class="text">
+    <p class="lede">Your user ID will be sent here.</p>
+</div>
+
+<?php echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => $errorsSummary]); ?>
+
+<form action="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->emailStep()); ?>"
+      method="POST" autocomplete="off" novalidate="">
+    <?php echo $this->csrfToken(); ?>
+
+    <fieldset>
+        <?php
+        $classFormGroup =  $emailAddressHasError ? 'has-error' : '';
+        echo $this->partial(
+            'partial/forms/inputBox.phtml', [
+                'id'    => 'emailAddress',
+                'label' => 'Email address',
+                'labelId' => 'email-address',
+                'type'  => 'text',
+                'classFormGroup' => $classFormGroup,
+                'errors' => $errors['emailAddress'],
+                'classLabel' => 'form-label',
+                'value' => $emailAddress ? : '',
+                'optional' => false,
+                'cssClass' => 'form-control-1-3',
+            ]
+        );
+
+        $classFormGroup =  $confirmEmailAddressHasError ? 'has-error' : '';
+        echo $this->partial(
+            'partial/forms/inputBox.phtml', [
+                'id'    => 'confirmEmailAddress',
+                'label' => 'Re-type your email address',
+                'labelId' => 'Re-type-your-email-address',
+                'type'  => 'text',
+                'classFormGroup' => $classFormGroup,
+                'errors' => $errors['confirmEmailAddress'],
+                'classLabel' => 'form-label',
+                'value' => $confirmEmailAddress ? : '',
+                'optional' => false,
+                'cssClass' => 'form-control-1-3',
+            ]
+        ); ?>
+
+    </fieldset>
+
+    <nav class="content-navigation">
+        <?php
+        echo $this->partial(
+            'submitElement',
+            [
+                'label' => 'Continue',
+                'id' => 'continue',
+                'name' => 'action',
+                'value' => 'Continue',
+                'cssClass' => 'button'
+            ]
+        );
+        ?>
+
+        <ul class="content-navigation__secondary">
+            <li>
+                <a href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->createStep()); ?>"
+                   id="back">Back</a>
+            </li>
+        </ul>
+    </nav>
+</form>

@@ -10,10 +10,10 @@ namespace Dvsa\Mot\Api\RegistrationModule\Validator;
 use Dvsa\Mot\Api\RegistrationModule\Service\ValidatorKeyConverter;
 use DvsaCommon\InputFilter\Registration\AddressInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
+use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
 use DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter;
 use DvsaCommon\InputFilter\Registration\SecurityQuestionSecondInputFilter;
-use DvsaCommon\Validator\EmailAddressValidator;
 use Zend\InputFilter\InputFilterInterface;
 
 /**
@@ -26,12 +26,14 @@ class RegistrationValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $emailInputFilter = new EmailInputFilter();
         $detailsInputFilter = new DetailsInputFilter();
         $addressInputFilter = new AddressInputFilter();
         $passwordInputFilter = new PasswordInputFilter();
         $securityQuestionFirstInputFilter = new SecurityQuestionFirstInputFilter();
         $securityQuestionSecondInputFilter = new SecurityQuestionSecondInputFilter();
 
+        $emailInputFilter->init();
         $detailsInputFilter->init();
         $addressInputFilter->init();
         $passwordInputFilter->init();
@@ -39,6 +41,7 @@ class RegistrationValidatorTest extends \PHPUnit_Framework_TestCase
         $securityQuestionSecondInputFilter->init();
 
         $this->subject = new RegistrationValidator(
+            $emailInputFilter,
             $detailsInputFilter,
             $addressInputFilter,
             $passwordInputFilter,
@@ -71,6 +74,7 @@ class RegistrationValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertContainsOnlyInstancesOf(InputFilterInterface::class, $validatorInputFilters);
 
         foreach ([
+                     EmailInputFilter::class,
                      DetailsInputFilter::class,
                      AddressInputFilter::class,
                      PasswordInputFilter::class,
@@ -135,12 +139,14 @@ class RegistrationValidatorTest extends \PHPUnit_Framework_TestCase
     public function dpValidRegistrationData()
     {
         $data = [
+            EmailInputFilter::class => [
+                EmailInputFilter::FIELD_EMAIL => 'test@test.com',
+                EmailInputFilter::FIELD_EMAIL_CONFIRM => 'test@test.com',
+            ],
             DetailsInputFilter::class => [
                 DetailsInputFilter::FIELD_FIRST_NAME    => 'Joe',
                 DetailsInputFilter::FIELD_LAST_NAME     => 'Brown',
                 DetailsInputFilter::FIELD_PHONE         => '123123123',
-                DetailsInputFilter::FIELD_EMAIL         => 'registrationvalidatortest@' . EmailAddressValidator::TEST_DOMAIN,
-                DetailsInputFilter::FIELD_EMAIL_CONFIRM => 'registrationvalidatortest@' . EmailAddressValidator::TEST_DOMAIN,
             ],
             AddressInputFilter::class => [
                 AddressInputFilter::FIELD_ADDRESS_1    => 'Center',
@@ -170,6 +176,7 @@ class RegistrationValidatorTest extends \PHPUnit_Framework_TestCase
     public function dpInvalidRegistrationData()
     {
         $data = [
+            EmailInputFilter::class                  => [],
             DetailsInputFilter::class                => [],
             AddressInputFilter::class                => [],
             PasswordInputFilter::class               => [],

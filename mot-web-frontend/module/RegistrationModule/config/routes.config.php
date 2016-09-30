@@ -14,12 +14,14 @@ use Dvsa\Mot\Frontend\RegistrationModule\Controller\PasswordController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\SecurityQuestionOneController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\SecurityQuestionTwoController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\SummaryController;
+use Dvsa\Mot\Frontend\RegistrationModule\Controller\EmailController;
 
 /*
  * The Registration module is a multi-page from and the following routes are sorted in the same order as the user journey,
  * and not alphabetically.
  *
  * http://mot-web-frontend.mot.gov.uk/account/register/create-an-account
+ * http://mot-web-frontend.mot.gov.uk/account/register/email
  * http://mot-web-frontend.mot.gov.uk/account/register/details
  * http://mot-web-frontend.mot.gov.uk/account/register/address
  * http://mot-web-frontend.mot.gov.uk/account/register/security-question/one
@@ -48,6 +50,15 @@ return [
                             'route'    => '/create-an-account[/]',
                             'defaults' => [
                                 'controller' => CreateAccountController::class,
+                            ],
+                        ],
+                    ],
+                    'email' => [
+                        'type'    => 'segment',
+                        'options' => [
+                            'route'    => '/email[/]',
+                            'defaults' => [
+                                'controller' => EmailController::class,
                             ],
                         ],
                     ],

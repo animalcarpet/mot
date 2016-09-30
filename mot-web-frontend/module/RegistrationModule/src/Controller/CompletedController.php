@@ -11,7 +11,9 @@ use Dvsa\Mot\Frontend\RegistrationModule\Service\RegisterUserService;
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationSessionService;
 use Core\Service\StepService;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\DetailsStep;
+use Dvsa\Mot\Frontend\RegistrationModule\Step\EmailStep;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
+use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -113,8 +115,8 @@ class CompletedController extends RegistrationBaseController
 
         $values = $this->session->toArray();
 
-        $emailAddress = (isset($values[DetailsStep::STEP_ID][DetailsInputFilter::FIELD_EMAIL]))
-            ? $values[DetailsStep::STEP_ID][DetailsInputFilter::FIELD_EMAIL]
+        $emailAddress = (isset($values[EmailStep::STEP_ID][EmailInputFilter::FIELD_EMAIL]))
+            ? $values[EmailStep::STEP_ID][EmailInputFilter::FIELD_EMAIL]
             : null;
 
         $this->session->destroy();

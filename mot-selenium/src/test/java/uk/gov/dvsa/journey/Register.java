@@ -40,8 +40,11 @@ public class Register {
     }
 
     private SummaryPage enterDetails(String name, String surname, String emailAddress, String telephone) throws IOException {
-        DetailsPage detailsPage = createAnAccount().details();
-        detailsPage.enterYourDetails(emailAddress, name, surname, telephone);
+        EmailPage emailPage = createAnAccount().email();
+        emailPage.enterYourDetails(emailAddress, emailAddress);
+
+        DetailsPage detailsPage = emailPage.clickContinue();
+        detailsPage.enterYourDetails(name, surname, telephone);
 
         AddressPage addressPage = detailsPage.clickContinue();
         addressPage.enterAddress();

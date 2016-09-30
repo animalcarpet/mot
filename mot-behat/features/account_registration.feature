@@ -3,12 +3,15 @@ Feature:
   I want to be able to confirm my account details after completing the registration steps
   So that I can use the MOT system
 
-  @VM-11722
+  @VM-11722 @user-registration
   Scenario Outline: A user registers the account successfully
     Given I am an unregistered user
+    And For the "email" step I input:
+      | emailAddress   | confirmEmailAddress   |
+      | <emailAddress> | <confirmEmailAddress> |
     And For the "details" step I input:
-      | firstName   | middleName   | lastName   | phone   | emailAddress   | confirmEmailAddress   |
-      | <firstName> | <middleName> | <lastName> | <phone> | <emailAddress> | <confirmEmailAddress> |
+      | firstName   | middleName   | lastName   | phone   |
+      | <firstName> | <middleName> | <lastName> | <phone> |
     And For the "address" step I input:
       | address1   | address2   | address3   | townOrCity | postcode |
       | <address1> | <address2> | <address3> | town       | PO57 0DE |
@@ -28,12 +31,15 @@ Feature:
     | Jane      | May        | Smith            | 123456234     | fakemail@dvsa.test  | fakemail@dvsa.test  | 12 address street    | address two |               |
     | Jane      | May        | Smith            | 23453456      | fakemail@dvsa.test  | fakemail@dvsa.test  | 12 address street    |             |               |
 
-  @VM-11722 @negative
+  @VM-11722 @negative @user-registration
   Scenario Outline: A user attempts to register an account but supplies invalid or insufficient details
     Given I am an unregistered user
+    And For the "email" step I input:
+      | emailAddress   | confirmEmailAddress   |
+      | <emailAddress> | <confirmEmailAddress> |
     And For the "details" step I input:
-      | firstName   | middleName   | lastName   | phone   | emailAddress   | confirmEmailAddress   |
-      | <firstName> | <middleName> | <lastName> | <phone> | <emailAddress> | <confirmEmailAddress> |
+      | firstName   | middleName   | lastName   | phone   |
+      | <firstName> | <middleName> | <lastName> | <phone> |
     And For the "address" step I input:
       | address1   | address2   | address3   | townOrCity | postcode |
       | <address1> | <address2> | <address3> | town       | PO57 0DE |

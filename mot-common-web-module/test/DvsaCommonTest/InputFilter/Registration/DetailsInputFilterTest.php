@@ -61,14 +61,10 @@ class DetailsInputFilterTest extends \PHPUnit_Framework_TestCase
                     'Joe',
                     'Light',
                     'Brown',
-                    '123123123',
-                    'detailsinputfiltertest@' . EmailAddressValidator::TEST_DOMAIN,
-                    'detailsinputfiltertest@' . EmailAddressValidator::TEST_DOMAIN
+                    '123123123'
                 ),
                 'isValid' => true,
                 'errorMessages' => $this->prepareMessages(
-                    [],
-                    [],
                     [],
                     [],
                     [],
@@ -78,8 +74,6 @@ class DetailsInputFilterTest extends \PHPUnit_Framework_TestCase
             [
                 // Test Empty Data Set
                 'data' => $this->prepareData(
-                    '',
-                    '',
                     '',
                     '',
                     '',
@@ -98,13 +92,6 @@ class DetailsInputFilterTest extends \PHPUnit_Framework_TestCase
                     ],
                     [
                         NotEmpty::IS_EMPTY => DetailsInputFilter::MSG_PHONE_INVALID,
-                    ],
-                    [
-                        EmailAddressValidator::INVALID_FORMAT => DetailsInputFilter::MSG_EMAIL_INVALID,
-                        NotEmpty::IS_EMPTY => DetailsInputFilter::MSG_EMAIL_INVALID,
-                    ],
-                    [
-                        NotEmpty::IS_EMPTY => DetailsInputFilter::MSG_EMAIL_CONFIRM_EMPTY,
                     ]
                 ),
             ],
@@ -114,37 +101,14 @@ class DetailsInputFilterTest extends \PHPUnit_Framework_TestCase
                     'J0£',
                     'L1ght',
                     'Br0wn',
-                    '123123123',
-                    'detailsinputfiltertest@' . EmailAddressValidator::TEST_DOMAIN,
-                    'detailsinputfiltertest@' . EmailAddressValidator::TEST_DOMAIN
+                    '123123123'
                 ),
                 'isValid' => false,
                 'errorMessages' => $this->prepareMessages(
                     [Regex::NOT_MATCH => DetailsInputFilter::MSG_NAME_NO_PATTERN_MATCH],
                     [Regex::NOT_MATCH => DetailsInputFilter::MSG_NAME_NO_PATTERN_MATCH],
                     [Regex::NOT_MATCH => DetailsInputFilter::MSG_NAME_NO_PATTERN_MATCH],
-                    [],
-                    [],
                     []
-                ),
-            ],
-            [
-                'data' => $this->prepareData(
-                    'Joe',
-                    'light',
-                    'Brown',
-                    '123123123',
-                    'detailsinputfiltertest@' . EmailAddressValidator::TEST_DOMAIN,
-                    'detailsinputfiltertestdifferent@' . EmailAddressValidator::TEST_DOMAIN
-                ),
-                'isValid' => false,
-                'errorMessages' => $this->prepareMessages(
-                    [],
-                    [],
-                    [],
-                    [],
-                    [],
-                    [Identical::NOT_SAME => DetailsInputFilter::MSG_EMAIL_CONFIRM_DIFFER,]
                 ),
             ],
         ];
@@ -154,25 +118,19 @@ class DetailsInputFilterTest extends \PHPUnit_Framework_TestCase
      * @param string $firstName
      * @param string $middleName
      * @param string $lastName
-     * @param string $email
-     * @param string $emailConfirm
      * @return array
      */
     public function prepareData(
         $firstName,
         $middleName,
         $lastName,
-        $phone,
-        $email,
-        $emailConfirm
+        $phone
     ) {
         return [
             DetailsInputFilter::FIELD_FIRST_NAME => $firstName,
             DetailsInputFilter::FIELD_MIDDLE_NAME => $middleName,
             DetailsInputFilter::FIELD_LAST_NAME => $lastName,
             DetailsInputFilter::FIELD_PHONE => $phone,
-            DetailsInputFilter::FIELD_EMAIL => $email,
-            DetailsInputFilter::FIELD_EMAIL_CONFIRM => $emailConfirm,
         ];
     }
 
@@ -180,17 +138,13 @@ class DetailsInputFilterTest extends \PHPUnit_Framework_TestCase
      * @param string[] $firstNameMessages
      * @param string[] $middleNameMessages
      * @param string[] $lastNameMessages
-     * @param string[] $emailMessages
-     * @param string[] $emailConfirmMessages
      * @return array
      */
     public function prepareMessages(
         $firstNameMessages = [],
         $middleNameMessages = [],
         $lastNameMessages = [],
-        $phoneMessages = [],
-        $emailMessages = [],
-        $emailConfirmMessages = []
+        $phoneMessages = []
     ) {
         $messages = [];
 
@@ -206,13 +160,6 @@ class DetailsInputFilterTest extends \PHPUnit_Framework_TestCase
         if (!empty($phoneMessages)) {
             $messages[DetailsInputFilter::FIELD_PHONE] = $phoneMessages;
         }
-        if (!empty($emailMessages)) {
-            $messages[DetailsInputFilter::FIELD_EMAIL] = $emailMessages;
-        }
-        if (!empty($emailConfirmMessages)) {
-            $messages[DetailsInputFilter::FIELD_EMAIL_CONFIRM] = $emailConfirmMessages;
-        }
-
         return $messages;
     }
 }
