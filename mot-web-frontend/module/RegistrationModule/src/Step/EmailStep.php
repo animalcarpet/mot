@@ -1,30 +1,25 @@
 <?php
-/**
- * This file is part of the DVSA MOT Frontend project.
- *
- * @link http://gitlab.clb.npm/mot/mot
- */
 
 namespace Dvsa\Mot\Frontend\RegistrationModule\Step;
 
-use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
+use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 
-class PasswordStep extends AbstractRegistrationStep
+class EmailStep extends AbstractRegistrationStep
 {
     /**
      * const used for the session key, available via getId().
      */
-    const STEP_ID = "PASSWORD";
+    const STEP_ID = "EMAIL";
 
     /**
      * @var string
      */
-    private $password;
+    private $emailAddress;
 
     /**
      * @var string
      */
-    private $passwordConfirm;
+    private $confirmEmailAddress;
 
     /**
      * @return string
@@ -37,7 +32,7 @@ class PasswordStep extends AbstractRegistrationStep
     /**
      * Load the steps data from the session storage.
      *
-     * @return $this
+     * @return array
      */
     public function load()
     {
@@ -54,9 +49,9 @@ class PasswordStep extends AbstractRegistrationStep
      */
     public function readFromArray(array $values)
     {
-        if (count($values)) {
-            $this->setPassword($values[PasswordInputFilter::FIELD_PASSWORD]);
-            $this->setPasswordConfirm($values[PasswordInputFilter::FIELD_PASSWORD_CONFIRM]);
+        if (is_array($values) && count($values)) {
+            $this->setEmailAddress($values[EmailInputFilter::FIELD_EMAIL]);
+            $this->setConfirmEmailAddress($values[EmailInputFilter::FIELD_EMAIL_CONFIRM]);
         }
     }
 
@@ -68,8 +63,8 @@ class PasswordStep extends AbstractRegistrationStep
     public function toArray()
     {
         return [
-            PasswordInputFilter::FIELD_PASSWORD         => $this->getPassword(),
-            PasswordInputFilter::FIELD_PASSWORD_CONFIRM => $this->getPasswordConfirm(),
+            EmailInputFilter::FIELD_EMAIL          => $this->getEmailAddress(),
+            EmailInputFilter::FIELD_EMAIL_CONFIRM  => $this->getConfirmEmailAddress(),
         ];
     }
 
@@ -78,7 +73,10 @@ class PasswordStep extends AbstractRegistrationStep
      */
     protected function getCleanFilterWhiteList()
     {
-        return [];
+        return [
+            EmailInputFilter::FIELD_EMAIL,
+            EmailInputFilter::FIELD_EMAIL_CONFIRM,
+        ];
     }
 
     /**
@@ -88,38 +86,38 @@ class PasswordStep extends AbstractRegistrationStep
      */
     public function route()
     {
-        return 'account-register/password';
+        return 'account-register/email';
     }
 
     /**
      * @return string
      */
-    public function getPassword()
+    public function getEmailAddress()
     {
-        return $this->password;
+        return $this->emailAddress;
     }
 
     /**
-     * @param string $password
+     * @param string $emailAddress
      */
-    public function setPassword($password)
+    public function setEmailAddress($emailAddress)
     {
-        $this->password = $password;
+        $this->emailAddress = $emailAddress;
     }
 
     /**
      * @return string
      */
-    public function getPasswordConfirm()
+    public function getConfirmEmailAddress()
     {
-        return $this->passwordConfirm;
+        return $this->confirmEmailAddress;
     }
 
     /**
-     * @param string $passwordConfirm
+     * @param string $confirmEmailAddress
      */
-    public function setPasswordConfirm($passwordConfirm)
+    public function setConfirmEmailAddress($confirmEmailAddress)
     {
-        $this->passwordConfirm = $passwordConfirm;
+        $this->confirmEmailAddress = $confirmEmailAddress;
     }
 }

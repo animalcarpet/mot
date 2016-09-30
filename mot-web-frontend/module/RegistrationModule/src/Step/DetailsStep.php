@@ -37,16 +37,6 @@ class DetailsStep extends AbstractRegistrationStep
     private $phone;
 
     /**
-     * @var string
-     */
-    private $emailAddress;
-
-    /**
-     * @var string
-     */
-    private $confirmEmailAddress;
-
-    /**
      * @return string
      */
     public function getId()
@@ -79,8 +69,6 @@ class DetailsStep extends AbstractRegistrationStep
             $this->setMiddleName($values[DetailsInputFilter::FIELD_MIDDLE_NAME]);
             $this->setLastName($values[DetailsInputFilter::FIELD_LAST_NAME]);
             $this->setPhone($values[DetailsInputFilter::FIELD_PHONE]);
-            $this->setEmailAddress($values[DetailsInputFilter::FIELD_EMAIL]);
-            $this->setConfirmEmailAddress($values[DetailsInputFilter::FIELD_EMAIL_CONFIRM]);
         }
     }
 
@@ -96,8 +84,6 @@ class DetailsStep extends AbstractRegistrationStep
             DetailsInputFilter::FIELD_MIDDLE_NAME    => $this->getMiddleName(),
             DetailsInputFilter::FIELD_LAST_NAME      => $this->getLastName(),
             DetailsInputFilter::FIELD_PHONE          => $this->getPhone(),
-            DetailsInputFilter::FIELD_EMAIL          => $this->getEmailAddress(),
-            DetailsInputFilter::FIELD_EMAIL_CONFIRM  => $this->getConfirmEmailAddress(),
         ];
     }
 
@@ -111,8 +97,6 @@ class DetailsStep extends AbstractRegistrationStep
             DetailsInputFilter::FIELD_MIDDLE_NAME,
             DetailsInputFilter::FIELD_LAST_NAME,
             DetailsInputFilter::FIELD_PHONE,
-            DetailsInputFilter::FIELD_EMAIL,
-            DetailsInputFilter::FIELD_EMAIL_CONFIRM,
         ];
     }
 
@@ -124,20 +108,6 @@ class DetailsStep extends AbstractRegistrationStep
     public function route()
     {
         return 'account-register/details';
-    }
-
-    /**
-     * describes the steps progress in the registration process.
-     *
-     * Step 1 of 6
-     * Step 2 of 6
-     * etc
-     *
-     * @return string|null
-     */
-    public function getProgress()
-    {
-        return "Step 1 of 6";
     }
 
     /**
@@ -191,22 +161,6 @@ class DetailsStep extends AbstractRegistrationStep
     /**
      * @return string
      */
-    public function getEmailAddress()
-    {
-        return $this->emailAddress;
-    }
-
-    /**
-     * @param string $emailAddress
-     */
-    public function setEmailAddress($emailAddress)
-    {
-        $this->emailAddress = $emailAddress;
-    }
-
-    /**
-     * @return string
-     */
     public function getPhone()
     {
         return $this->phone;
@@ -218,21 +172,5 @@ class DetailsStep extends AbstractRegistrationStep
     public function setPhone($phone)
     {
         $this->phone = $phone;
-    }
-
-    /**
-     * @return string
-     */
-    public function getConfirmEmailAddress()
-    {
-        return $this->confirmEmailAddress;
-    }
-
-    /**
-     * @param string $confirmEmailAddress
-     */
-    public function setConfirmEmailAddress($confirmEmailAddress)
-    {
-        $this->confirmEmailAddress = $confirmEmailAddress;
     }
 }

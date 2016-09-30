@@ -63,8 +63,6 @@ class DetailsInputFilter extends InputFilter
         $this->initValidatorsForNames(self::FIELD_MIDDLE_NAME);
         $this->initValidatorsForNames(self::FIELD_LAST_NAME, true, self::MSG_LAST_NAME_EMPTY);
         $this->initValidatorPhone();
-        $this->initValidatorEmail();
-        $this->initValidatorEmailConfirm();
     }
 
     /**
@@ -128,69 +126,6 @@ class DetailsInputFilter extends InputFilter
                         'name'    => NotEmpty::class,
                         'options' => [
                             'message' => self::MSG_PHONE_INVALID,
-                        ],
-                    ],
-                ],
-            ]
-        );
-    }
-
-    /**
-     * Adding validators for the email address field/input.
-     */
-    private function initValidatorEmail()
-    {
-        $this->add(
-            [
-                'name'       => self::FIELD_EMAIL,
-                'required'   => true,
-                'validators' => [
-                    [
-                        'name'    => EmailAddressValidator::class,
-                        'options' => [
-                            'allow'   => Hostname::ALLOW_ALL,
-                            'message' => self::MSG_EMAIL_INVALID,
-                        ],
-                    ],
-                    [
-                        'name'    => StringLength::class,
-                        'options' => [
-                            'max'     => self::LIMIT_EMAIL_MAX,
-                            'message' => sprintf(self::MSG_EMAIL_MAX, self::LIMIT_EMAIL_MAX),
-                        ],
-                    ],
-                    [
-                        'name'    => NotEmpty::class,
-                        'options' => [
-                            'message' => self::MSG_EMAIL_INVALID,
-                        ],
-                    ],
-                ],
-            ]
-        );
-    }
-
-    /**
-     * Adding validators for the email address confirmation field/input.
-     */
-    private function initValidatorEmailConfirm()
-    {
-        $this->add(
-            [
-                'name'       => self::FIELD_EMAIL_CONFIRM,
-                'required'   => true,
-                'validators' => [
-                    [
-                        'name'    => Identical::class,
-                        'options' => [
-                            'token'   => self::FIELD_EMAIL,
-                            'message' => self::MSG_EMAIL_CONFIRM_DIFFER,
-                        ],
-                    ],
-                    [
-                        'name'    => NotEmpty::class,
-                        'options' => [
-                            'message' => self::MSG_EMAIL_CONFIRM_EMPTY,
                         ],
                     ],
                 ],

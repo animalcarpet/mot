@@ -23,6 +23,8 @@ use Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller\PasswordControllerFa
 use Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller\SecurityQuestionOneControllerFactory;
 use Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller\SecurityQuestionTwoControllerFactory;
 use Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller\SummaryControllerFactory;
+use Dvsa\Mot\Frontend\RegistrationModule\Controller\EmailController;
+use Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller\EmailControllerFactory;
 
 return [
     'factories' => [
@@ -35,5 +37,6 @@ return [
         SecurityQuestionOneController::class    => SecurityQuestionOneControllerFactory::class,
         SecurityQuestionTwoController::class    => SecurityQuestionTwoControllerFactory::class,
         SummaryController::class                => SummaryControllerFactory::class,
+        EmailController::class                  => EmailControllerFactory::class,
     ],
 ];

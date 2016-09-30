@@ -103,20 +103,6 @@ class SecurityQuestionTwoStep extends AbstractRegistrationStep
     }
 
     /**
-     * describes the steps progress in the registration process.
-     *
-     * Step 1 of 6
-     * Step 2 of 6
-     * etc
-     *
-     * @return string|null
-     */
-    public function getProgress()
-    {
-        return "Step 4 of 6";
-    }
-
-    /**
      * @return string
      */
     public function getQuestion()

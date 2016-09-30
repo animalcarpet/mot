@@ -12,6 +12,7 @@ class RegistrationUrlBuilderWeb extends AbstractUrlBuilder
     const MAIN = '/account/register';
     const ADDRESS = '/address';
     const CREATE = '/create-an-account';
+    const EMAIL = '/email';
     const DETAILS = '/details';
     const SUMMARY = '/summary';
     const PASSWORD = '/password';
@@ -27,6 +28,7 @@ class RegistrationUrlBuilderWeb extends AbstractUrlBuilder
     protected $routesStructure = [
         self::MAIN => [
             self::CREATE => '',
+            self::EMAIL => '',
             self::ADDRESS => '',
             self::DETAILS => '',
             self::SUMMARY => '',
@@ -61,6 +63,15 @@ class RegistrationUrlBuilderWeb extends AbstractUrlBuilder
     {
         return $this->register()
             ->appendRoutesAndParams(self::PASSWORD);
+    }
+
+    /**
+     * @return $this
+     */
+    public function emailStep()
+    {
+        return $this->register()
+            ->appendRoutesAndParams(self::EMAIL);
     }
 
     /**

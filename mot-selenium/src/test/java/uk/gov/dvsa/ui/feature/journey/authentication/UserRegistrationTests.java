@@ -40,9 +40,6 @@ public class UserRegistrationTests extends DslTest {
         //When I continue to enter my details
         motUI.register.completeDetailsWithDefaultValues(email, telephone);
 
-        //Then my account is created successfully
-        //motUI.register.createAnAccount();
-
         //When I re-enter my details and use the same email as before
         motUI.register.completeDetailsWithCustomValues(name, surname, email, telephone);
 

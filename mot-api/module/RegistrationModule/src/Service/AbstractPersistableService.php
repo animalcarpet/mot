@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManager;
 use DvsaApplicationLogger\Log\Logger;
 use DvsaCommon\InputFilter\Registration\AddressInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
+use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
 use DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter;
 use DvsaCommon\InputFilter\Registration\SecurityQuestionSecondInputFilter;
@@ -72,6 +73,14 @@ class AbstractPersistableService implements TransactionAwareInterface
     protected function getDetailsStepName()
     {
         return ValidatorKeyConverter::inputFilterToStep(DetailsInputFilter::class);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getEmailStepName()
+    {
+        return ValidatorKeyConverter::inputFilterToStep(EmailInputFilter::class);
     }
 
     /**

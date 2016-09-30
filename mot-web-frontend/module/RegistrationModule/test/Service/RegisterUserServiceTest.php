@@ -5,6 +5,7 @@ namespace Dvsa\Mot\Frontend\RegistrationModuleTest\Service;
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegisterUserService;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\AddressStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\DetailsStep;
+use Dvsa\Mot\Frontend\RegistrationModule\Step\EmailStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\PasswordStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionOneStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionTwoStep;
@@ -12,6 +13,7 @@ use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use DvsaCommon\InputFilter\Registration\AddressInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
+use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
 use DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter;
 use DvsaCommon\InputFilter\Registration\SecurityQuestionSecondInputFilter;
@@ -101,13 +103,15 @@ class RegisterUserServiceTest extends \PHPUnit_Framework_TestCase
     private function registrationData()
     {
         return [
+            EmailStep::STEP_ID => [
+                EmailInputFilter::FIELD_EMAIL         => 'registeruserservicetest@' . EmailAddressValidator::TEST_DOMAIN,
+                EmailInputFilter::FIELD_EMAIL_CONFIRM => 'registeruserservicetest@' . EmailAddressValidator::TEST_DOMAIN,
+            ],
             DetailsStep::STEP_ID => [
                 DetailsInputFilter::FIELD_FIRST_NAME    => 'Fred',
                 DetailsInputFilter::FIELD_MIDDLE_NAME   => '',
                 DetailsInputFilter::FIELD_LAST_NAME     => 'Flintstone',
                 DetailsInputFilter::FIELD_PHONE         => '123123123',
-                DetailsInputFilter::FIELD_EMAIL         => 'registeruserservicetest@' . EmailAddressValidator::TEST_DOMAIN,
-                DetailsInputFilter::FIELD_EMAIL_CONFIRM => 'registeruserservicetest@' . EmailAddressValidator::TEST_DOMAIN,
             ],
             AddressStep::STEP_ID => [
                 AddressInputFilter::FIELD_ADDRESS_1    => '1 Bedrock Way',

@@ -85,45 +85,6 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
 
     </fieldset>
 
-    <fieldset>
-        <legend class="form-title heading-large" id="email">Your email address</legend>
-
-        <?php
-        $classFormGroup =  $emailAddressHasError ? 'has-error' : '';
-        echo $this->partial(
-            'partial/forms/inputBox.phtml', [
-                'id'    => 'emailAddress',
-                'label' => 'Email address',
-                'labelId' => 'email-address',
-                'type'  => 'text',
-                'classFormGroup' => $classFormGroup,
-                'errors' => $errors['emailAddress'],
-                'classLabel' => 'form-label',
-                'value' => $emailAddress ? : '',
-                'optional' => false,
-                'cssClass' => 'form-control-1-3',
-                'formHintText' => 'Your User ID will be sent to this address',
-            ]
-        );
-
-        $classFormGroup =  $confirmEmailAddressHasError ? 'has-error' : '';
-        echo $this->partial(
-            'partial/forms/inputBox.phtml', [
-                'id'    => 'confirmEmailAddress',
-                'label' => 'Re-type your email address',
-                'labelId' => 'Re-type-your-email-address',
-                'type'  => 'text',
-                'classFormGroup' => $classFormGroup,
-                'errors' => $errors['confirmEmailAddress'],
-                'classLabel' => 'form-label',
-                'value' => $confirmEmailAddress ? : '',
-                'optional' => false,
-                'cssClass' => 'form-control-1-3',
-            ]
-        ); ?>
-
-    </fieldset>
-
     <nav class="content-navigation">
         <?php
         echo $this->partial(
@@ -140,7 +101,7 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
 
         <ul class="content-navigation__secondary">
             <li>
-                <a href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->createStep()); ?>"
+                <a href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->emailStep()); ?>"
                    id="back">Back</a>
             </li>
         </ul>

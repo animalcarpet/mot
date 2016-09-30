@@ -10,6 +10,7 @@ namespace Dvsa\Mot\Api\RegistrationModule\Validator;
 use Dvsa\Mot\Api\RegistrationModule\Service\ValidatorKeyConverter;
 use DvsaCommon\InputFilter\Registration\AddressInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
+use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
 use DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter;
 use DvsaCommon\InputFilter\Registration\SecurityQuestionSecondInputFilter;
@@ -30,19 +31,23 @@ class RegistrationValidator
     private $inputFilters;
 
     /**
-     * @param DetailsInputFilter                $detailsInputFilter
-     * @param AddressInputFilter                $addressInputFilter
-     * @param PasswordInputFilter               $passwordInputFilter
-     * @param SecurityQuestionFirstInputFilter  $securityQuestionFirstInputFilter
+     * RegistrationValidator constructor.
+     * @param EmailInputFilter $emailInputFilter
+     * @param DetailsInputFilter $detailsInputFilter
+     * @param AddressInputFilter $addressInputFilter
+     * @param PasswordInputFilter $passwordInputFilter
+     * @param SecurityQuestionFirstInputFilter $securityQuestionFirstInputFilter
      * @param SecurityQuestionSecondInputFilter $securityQuestionSecondInputFilter
      */
     public function __construct(
+        EmailInputFilter $emailInputFilter,
         DetailsInputFilter $detailsInputFilter,
         AddressInputFilter $addressInputFilter,
         PasswordInputFilter $passwordInputFilter,
         SecurityQuestionFirstInputFilter $securityQuestionFirstInputFilter,
         SecurityQuestionSecondInputFilter $securityQuestionSecondInputFilter
     ) {
+        $this->attach($emailInputFilter);
         $this->attach($detailsInputFilter);
         $this->attach($addressInputFilter);
         $this->attach($passwordInputFilter);

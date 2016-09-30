@@ -14,6 +14,17 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
     <tbody>
     <tr>
         <th scope="col" class="key-value-list__key">
+            Email address
+        </th>
+        <td id="emailAddress" scope="col" class="key-value-list__value">
+            <?php echo $this->escapeHtmlAttr($emailAddress) ?>
+        </td>
+        <td scope="col" class="key-value-list__item-action">
+            <a id="change-email" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->emailStep());?>">Change<span class="visuallyhidden"> email address</span></a>
+        </td>
+    </tr>
+    <tr>
+        <th scope="col" class="key-value-list__key">
             Name
         </th>
         <td id="displayName" scope="col" class="key-value-list__value">
@@ -32,17 +43,6 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
         </td>
         <td scope="col" class="key-value-list__item-action">
             <a id="change-phone" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->detailsStep());?>">Change<span class="visuallyhidden"> telephone number</span></a>
-        </td>
-    </tr>
-    <tr>
-        <th scope="col" class="key-value-list__key">
-            Email address
-        </th>
-        <td id="emailAddress" scope="col" class="key-value-list__value">
-            <?php echo $this->escapeHtmlAttr($emailAddress) ?>
-        </td>
-        <td scope="col" class="key-value-list__item-action">
-            <a id="change-email" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->detailsStep());?>">Change<span class="visuallyhidden"> email address</span></a>
         </td>
     </tr>
     <tr>

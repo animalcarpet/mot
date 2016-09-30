@@ -9,6 +9,7 @@ namespace Dvsa\Mot\Frontend\RegistrationModule\Service;
 
 use Dvsa\Mot\Frontend\RegistrationModule\Step\AddressStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\DetailsStep;
+use Dvsa\Mot\Frontend\RegistrationModule\Step\EmailStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\PasswordStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionOneStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionTwoStep;
@@ -16,6 +17,7 @@ use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use DvsaCommon\InputFilter\Registration\AddressInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
+use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
 use DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter;
 use DvsaCommon\InputFilter\Registration\SecurityQuestionSecondInputFilter;
@@ -26,6 +28,7 @@ class RegisterUserService
     /**
      * @todo These are shared with API so make common?
      */
+    const STEP_EMAIL = 'stepEmail';
     const STEP_DETAILS = 'stepDetails';
     const STEP_ADDRESS = 'stepAddress';
     const STEP_PASSWORD = 'stepPassword';
@@ -98,14 +101,18 @@ class RegisterUserService
      */
     private function prepareDataForApi(array $sessionData)
     {
+        $emailData = $this->dataExists($sessionData, EmailStep::STEP_ID);
+        $array[self::STEP_EMAIL] = [
+            EmailInputFilter::FIELD_EMAIL         => $this->dataExists($emailData, EmailInputFilter::FIELD_EMAIL),
+            EmailInputFilter::FIELD_EMAIL_CONFIRM => $this->dataExists($emailData, EmailInputFilter::FIELD_EMAIL_CONFIRM),
+        ];
+
         $detailsData = $this->dataExists($sessionData, DetailsStep::STEP_ID);
         $array[self::STEP_DETAILS] = [
             DetailsInputFilter::FIELD_FIRST_NAME    => $this->dataExists($detailsData, DetailsInputFilter::FIELD_FIRST_NAME),
             DetailsInputFilter::FIELD_MIDDLE_NAME   => $this->dataExists($detailsData, DetailsInputFilter::FIELD_MIDDLE_NAME),
             DetailsInputFilter::FIELD_LAST_NAME     => $this->dataExists($detailsData, DetailsInputFilter::FIELD_LAST_NAME),
             DetailsInputFilter::FIELD_PHONE         => $this->dataExists($detailsData, DetailsInputFilter::FIELD_PHONE),
-            DetailsInputFilter::FIELD_EMAIL         => $this->dataExists($detailsData, DetailsInputFilter::FIELD_EMAIL),
-            DetailsInputFilter::FIELD_EMAIL_CONFIRM => $this->dataExists($detailsData, DetailsInputFilter::FIELD_EMAIL_CONFIRM),
         ];
 
         $addressData = $this->dataExists($sessionData, AddressStep::STEP_ID);

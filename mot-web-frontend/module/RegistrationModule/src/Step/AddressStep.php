@@ -93,20 +93,6 @@ class AddressStep extends AbstractRegistrationStep
     }
 
     /**
-     * describes the steps progress in the registration process.
-     *
-     * Step 1 of 6
-     * Step 2 of 6
-     * etc
-     *
-     * @return string|null
-     */
-    public function getProgress()
-    {
-        return "Step 2 of 6";
-    }
-
-    /**
      * @param array $values
      *
      * @return mixed

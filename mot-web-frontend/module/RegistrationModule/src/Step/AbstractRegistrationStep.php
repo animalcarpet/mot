@@ -11,6 +11,7 @@ use Core\Step\AbstractStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationSessionService;
 use DvsaCommon\InputFilter\Registration\AddressInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
+use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter;
 use DvsaCommon\InputFilter\Registration\SecurityQuestionSecondInputFilter;
 use Zend\InputFilter\InputFilter;
@@ -29,27 +30,13 @@ abstract class AbstractRegistrationStep extends AbstractStep
     }
 
     /**
-     * describes the steps progress in the registration process.
-     *
-     * Step 1 of 6
-     * Step 2 of 6
-     * etc
-     *
-     * @return string|null
-     */
-    public function getProgress()
-    {
-        return;
-    }
-
-    /**
      * @return array
      */
     protected function getFieldNameMapping()
     {
         $fieldNameMapping = [
             DetailsInputFilter::FIELD_PHONE => 'Telephone number',
-            DetailsInputFilter::FIELD_EMAIL_CONFIRM => 'Re-type your email address',
+            EmailInputFilter::FIELD_EMAIL_CONFIRM => 'Re-type your email address',
             AddressInputFilter::FIELD_ADDRESS_1 => 'Address line 1',
             AddressInputFilter::FIELD_ADDRESS_2 => 'Address line 2',
             AddressInputFilter::FIELD_ADDRESS_3 => 'Address line 3',
