@@ -1,0 +1,32 @@
+<?php
+use Vehicle\UpdateVehicleProperty\ViewModel\UpdateVehiclePropertyViewModel;
+
+/**
+ * @var UpdateVehiclePropertyViewModel $viewModel
+ */
+
+$this->layout()->setVariable('pageTertiaryTitle', $viewModel->getPageTertiaryTitle());
+
+echo $this->partial('zendFormErrorMessages', ['form' => $viewModel->getForm()]);
+echo $this->partial('errorMessages', array('getFromFlash' => true));
+?>
+
+<form novalidate="" autocomplete="off" method="POST" action="<?php echo $viewModel->getFormActionUrl(); ?>">
+    <?php
+        echo $this->csrfToken();
+        echo $this->partial(
+            $viewModel->getPartial(), [
+                'viewModel' => $viewModel,
+            ]
+        );
+    ?>
+
+    <nav class="content-navigation">
+        <input type="submit" class="button" value="<?php echo $viewModel->getSubmitButtonText() ?>" id="submitUpdate">
+        <ul class="content-navigation__secondary">
+            <li>
+                <a href="<?php echo $viewModel->getBackUrl(); ?>">Cancel and return to vehicle</a>
+            </li>
+        </ul>
+    </nav>
+</form>

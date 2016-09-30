@@ -339,7 +339,7 @@ public class NormalTest {
 
         switch(property) {
             case "Country":
-                vehicle.setCountryOfRegistration("");
+                vehicle.setCountryOfRegistrationId("");
                 break;
             case "Registration":
                 vehicle.setRegistration("");

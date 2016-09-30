@@ -1,0 +1,19 @@
+<?php
+use Vehicle\UpdateVehicleProperty\Form\CountryOfRegistrationForm;
+use Vehicle\UpdateVehicleProperty\ViewModel\UpdateVehiclePropertyViewModel;
+
+/**
+ * @var UpdateVehiclePropertyViewModel $viewModel
+ */
+
+/** @var CountryOfRegistrationForm $form */
+$form = $viewModel->getForm();
+?>
+<fieldset>
+    <?php echo $this->partial(
+        'partial/gds/form/control',
+        [
+            'element' => $form->getCountryOfRegistrationElement()
+        ]
+    );?>
+</fieldset>

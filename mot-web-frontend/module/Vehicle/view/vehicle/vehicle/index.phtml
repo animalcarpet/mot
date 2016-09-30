@@ -16,6 +16,10 @@
         'messages' => $this->layout()->flashMessenger->getErrorMessages(),
         'type' => 'failure'
     ]);
+    echo $this->partial('partial/gds/general/system-message', [
+        'messages' => $this->layout()->flashMessenger->getSuccessMessages(),
+        'type' => 'success'
+    ]);
 ?>
 
 <h3 class="summary-heading">Vehicle specification</h3>

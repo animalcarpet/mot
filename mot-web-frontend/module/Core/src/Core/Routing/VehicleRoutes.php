@@ -64,4 +64,9 @@ class VehicleRoutes extends AbstractRoutes
             ]
         );
     }
+
+    public function changeClass($vehicleId)
+    {
+        return $this->url(VehicleRouteList::VEHICLE_CHANGE_CLASS,['id' => $vehicleId]);
+    }
 }

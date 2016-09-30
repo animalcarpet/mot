@@ -6,7 +6,7 @@ use Core\ViewModel\Header\HeaderTertiaryList;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 
-class VehiclePageTitleBulder implements AutoWireableInterface
+class VehiclePageTitleBuilder implements AutoWireableInterface
 {
     /**
      * @var DvsaVehicle
@@ -15,7 +15,7 @@ class VehiclePageTitleBulder implements AutoWireableInterface
 
     /**
      * @param DvsaVehicle $vehicle
-     * @return VehiclePageTitleBulder
+     * @return VehiclePageTitleBuilder
      */
     public function setVehicle($vehicle)
     {
@@ -49,8 +49,8 @@ class VehiclePageTitleBulder implements AutoWireableInterface
     public function getPageTertiaryTitle()
     {
         $header = new HeaderTertiaryList();
-        $header->addRow($this->vehicle->getRegistration());
-        $header->addRow($this->vehicle->getVin());
+        $header->addElement($this->vehicle->getRegistration());
+        $header->addElement($this->vehicle->getVin());
 
         return $header;
     }

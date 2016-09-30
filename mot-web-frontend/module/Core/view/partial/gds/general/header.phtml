@@ -14,15 +14,19 @@ use Core\ViewModel\Header\HeaderTertiaryList;
             <span class="content-header__progress"><?php echo $this->escapeHtml($progress); ?></span>
         <?php endif; ?>
     </h1>
-    <?php if (isset($tertiary) && is_string($tertiary)): ?>
-        <h2>
-            <span class="content-header__tertiary"><?php echo $this->escapeHtml($tertiary); ?></span>
-        </h2>
-    <?php elseif (isset($tertiary) && $tertiary instanceof HeaderTertiaryList): ?>
-        <ul class="content-header__tertiary-list">
-            <?php foreach ($tertiary->getRows() as $rowContent): ?>
-                <li class="content-header__list-item"><?php echo $rowContent; ?></li>
-            <?php endforeach; ?>
-        </ul>
+    <?php if (isset($tertiary)): ?>
+        <?php if (is_string($tertiary)): ?>
+            <h2>
+                <span class="content-header__tertiary"><?php echo $this->escapeHtml($tertiary); ?></span>
+            </h2>
+        <?php elseif ($tertiary instanceof HeaderTertiaryList): ?>
+            <ul class="content-header__tertiary-list">
+                <?php foreach ($tertiary->getElements() as $element): ?>
+                    <li class="<?php echo $element->isBold() ? "content-header__list-item--primary": "content-header__list-item" ?>">
+                        <?php echo $element->getText(); ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
     <?php endif; ?>
 </header>

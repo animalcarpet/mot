@@ -4,20 +4,23 @@ namespace Core\ViewModel\Header;
 
 class HeaderTertiaryList
 {
+    /** @var HeaderTertiaryListElementInterface[]  */
     protected $rows = [];
 
     /**
-     * @param string $rowContent
+     * @param string $text
+     *
+     * @return HeaderTertiaryListElementFlowInterface
      */
-    public function addRow($rowContent)
+    public function addElement($text)
     {
-        $this->rows[] = $rowContent;
+        $element = new HeaderTertiaryListElement($text);
+        $this->rows[] = $element;
+
+        return $element;
     }
 
-    /**
-     * @return array
-     */
-    public function getRows()
+    public function getElements()
     {
         return $this->rows;
     }

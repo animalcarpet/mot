@@ -9,7 +9,7 @@ public class Vehicle {
     private String bodyType;
     private String colour;
     private String colourSecondary;
-    private String countryOfRegistration;
+    private String countryOfRegistrationId;
     private String cylinderCapacity;
     private String emptyVinReason;
     private String emptyVrmReason;
@@ -255,17 +255,17 @@ public class Vehicle {
         return this;
     }
 
-    public String getCountryOfRegistration() {
-        return countryOfRegistration;
+    public String getCountryOfRegistrationId() {
+        return countryOfRegistrationId;
     }
 
-    public Vehicle setCountryOfRegistration(String countryOfRegistration) {
-        this.countryOfRegistration = countryOfRegistration;
+    public Vehicle setCountryOfRegistrationId(String countryOfRegistrationId) {
+        this.countryOfRegistrationId = countryOfRegistrationId;
         return this;
     }
 
     public static Vehicle getVehicle(String colour,
-                                     String countryOfRegistration,
+                                     String countryOfRegistrationId,
                                      String cylinderCapacity,
                                      String dvsaRegistration,
                                      String dvlaRegistration,
@@ -284,7 +284,7 @@ public class Vehicle {
 
         Vehicle vehicle = new Vehicle();
         vehicle.setColour(colour)
-                .setCountryOfRegistration(countryOfRegistration)
+                .setCountryOfRegistrationId(countryOfRegistrationId)
                 .setCylinderCapacity(cylinderCapacity)
                 .setDvsaRegistration(dvsaRegistration)
                 .setDvlaRegistration(dvlaRegistration)
@@ -308,7 +308,7 @@ public class Vehicle {
         String randomRegistrationNumber = RandomStringUtils.randomAlphabetic(7);
         return getVehicle(
                 Colour.Blue.getName(),
-                CountryOfRegistration.Great_Britain.getCountry(),
+                CountryOfRegistration.Great_Britain.getRegistrationId(),
                 "1700",
                 randomRegistrationNumber,
                 randomRegistrationNumber,
@@ -357,7 +357,7 @@ public class Vehicle {
                 ", dateOfFirstUse='" + firstUsedDate + '\'' +
                 ", fuelType='" + fuelType + '\'' +
                 ", vehicleClass='" + vehicleClass + '\'' +
-                ", countryOfRegistration='" + countryOfRegistration + '\'' +
+                ", countryOfRegistration='" + countryOfRegistrationId + '\'' +
                 ", cylinderCapacity='" + cylinderCapacity + '\'' +
                 ", transmissionType='" + transmissionType + '\'' +
                 ", bodyType='" + bodyType + '\'' +

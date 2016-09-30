@@ -3,14 +3,18 @@
 namespace Vehicle\Helper;
 
 use Application\Service\CatalogService;
+use Core\Routing\VehicleRoutes;
 use Core\ViewModel\Gds\Table\GdsRow;
 use Core\ViewModel\Gds\Table\GdsTable;
 use DateTime;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use DvsaCommon\Auth\MotAuthorisationServiceInterface;
+use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Dto\Vehicle\VehicleExpiryDto;
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Enum\CountryOfRegistrationCode;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
+use Zend\View\Helper\Url;
 
 class VehicleInformationTableBuilder implements AutoWireableInterface
 {
@@ -18,9 +22,9 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
     const COLOUR_NOT_STATED = 'Not Stated';
 
     protected static $unknownCountriesCodes = [
-        CountryOfRegistrationCode::NON_EU,
-        CountryOfRegistrationCode::NOT_APPLICABLE,
-        CountryOfRegistrationCode::NOT_KNOWN,
+        CountryOfRegistrationCode::NON_EU => "Non Eu",
+        CountryOfRegistrationCode::NOT_APPLICABLE => "Not Known",
+        CountryOfRegistrationCode::NOT_KNOWN => "Not Applicable",
     ];
 
     private $catalogService;
@@ -28,12 +32,23 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
     /** @var DvsaVehicle */
     private $vehicle;
 
+    private $vehicleObfuscatedId;
+
     /** @var \DvsaCommon\Dto\Vehicle\VehicleExpiryDto */
     private $expiryDateInformation;
 
-    public function __construct(CatalogService $catalogService)
+    private $authorisationService;
+    private $urlHelper;
+
+    public function __construct(
+        CatalogService $catalogService,
+        MotAuthorisationServiceInterface $authorisationService,
+        Url $urlHelper
+    )
     {
         $this->catalogService = $catalogService;
+        $this->authorisationService = $authorisationService;
+        $this->urlHelper = $urlHelper;
     }
 
     /**
@@ -43,6 +58,14 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
     public function setVehicle($vehicle)
     {
         $this->vehicle = $vehicle;
+
+        return $this;
+    }
+
+    public function setVehicleObfuscatedId($vehicleObfuscatedId)
+    {
+        $this->vehicleObfuscatedId = $vehicleObfuscatedId;
+
         return $this;
     }
 
@@ -53,6 +76,7 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
     public function setExpiryDateInformation($expiryDateInformation)
     {
         $this->expiryDateInformation = $expiryDateInformation;
+
         return $this;
     }
 
@@ -62,11 +86,18 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
     public function getVehicleSpecificationGdsTable()
     {
         $table = new GdsTable();
+
         $this->addRowToTable($table, 'Make and model', $this->getMakeAndModel());
         $this->addRowToTable($table, 'Engine', $this->getEngineInfo());
         $this->addRowToTable($table, 'Colour', $this->getVehicleColourNames());
         $this->addRowToTable($table, 'Brake test weight', $this->getVehicleBrakeWeight());
-        $this->addRowToTable($table, 'MOT test class', $this->vehicle->getVehicleClass());
+        $classRow = $this->addRowToTable($table, 'MOT test class', $this->vehicle->getVehicleClass());
+        if ($this->canUserEditVehicle()) {
+            $classRow->addActionLink(
+                'Change',
+                VehicleRoutes::of($this->urlHelper)->changeClass($this->vehicleObfuscatedId)
+            );
+        }
         $this->addRowToTable($table, 'MOT expiry date', $this->getExpiryDate());
 
         return $table;
@@ -77,10 +108,15 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
      */
     public function getVehicleRegistrationGdsTable()
     {
+        $changeCountryLink = $this->urlHelper->__invoke('vehicle/detail/change/country-of-registration',
+            ['id' => $this->vehicleObfuscatedId]
+        );
+
         $table = new GdsTable();
         $this->addRowToTable($table, 'Registration mark', $this->vehicle->getRegistration());
         $this->addRowToTable($table, 'VIN', $this->vehicle->getVin());
-        $this->addRowToTable($table, 'Country of registration', $this->getCountryCodeByName($this->vehicle->getCountryOfRegistration()));
+        $this->addRowToTable($table, 'Country of registration', $this->getCountryCodeById($this->vehicle->getCountryOfRegistrationId()))
+            ->addActionLink('Change', $changeCountryLink);
         $this->addRowToTable($table, 'Declared new', $this->vehicle->getIsNewAtFirstReg() ? "Yes" : "No");
         $this->addRowToTable($table, 'Manufacture date', $this->dateFormat($this->vehicle->getManufactureDate()));
         $this->addRowToTable($table, 'First registered', $this->dateFormat($this->vehicle->getFirstRegistrationDate()));
@@ -110,20 +146,15 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
     }
 
     /**
-     * @param string $countryName
+     * @param int $countryId
      * @return string|null
      */
-    private function getCountryCodeByName($countryName)
+    private function getCountryCodeById($countryId)
     {
-        $countries = $this->catalogService->getCountriesOfRegistrationByCode();
-        $countryCode = array_search($countryName, $countries);
+        $countries = $this->catalogService->getCountriesOfRegistration();
 
-        if (!empty($countryCode)) {
-            if (in_array($countryCode, self::$unknownCountriesCodes)) {
-                return $countryName;
-            }
-
-            return $countryCode;
+        if (array_key_exists($countryId, $countries)) {
+            return $countries[$countryId];
         }
 
         return null;
@@ -137,6 +168,7 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
     {
         if (!empty($date)) {
             $dateObj = $date instanceof DateTime ? $date : new DateTime($date);
+
             return DateTimeDisplayFormat::date($dateObj);
         } else {
             return null;
@@ -188,6 +220,7 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
         if (!is_null($vehicleWeight)) {
             $vehicleWeight = number_format($vehicleWeight) . ' Kg';
         }
+
         return $vehicleWeight;
     }
 
@@ -202,5 +235,10 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
         return !is_null($cylinderCapacity)
             ? $fuelType . ', ' . number_format($cylinderCapacity) . ' cc'
             : $fuelType;
+    }
+
+    private function canUserEditVehicle()
+    {
+        return $this->authorisationService->isGranted(PermissionInSystem::VEHICLE_UPDATE);
     }
 }
