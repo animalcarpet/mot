@@ -11,9 +11,10 @@ MyPASS=${2-"password"}
 MyHOST=${3-"localhost"}
 
 for UPDATE_DIR in ./*/; do
+  if [ -e "$UPDATE_DIR/db_upgrade.sh" ]; then
     echo "$(date) Running DB upgrade for $UPDATE_DIR"
     cd $UPDATE_DIR
     ./db_upgrade.sh $MyUSER $MyPASS $MyHOST
     cd ..
+  fi
 done
-
