@@ -61,7 +61,7 @@ if($authError) {
                 <summary role="button" aria-controls="details-content-3" aria-expanded="false" tabindex="0">
                     <span class="summary">Lost, forgotten or damaged security card</span>
                 </summary>
-                <div class="panel panel-indent" id="details-content-3" aria-hidden="true" style="display: none;">
+                <div class="panel panel-indent" id="details-content-3" aria-hidden="true" >
                     <p>Sign in with your user ID and password. You’ll then see an option to sign in without your card and order a new one if you need to.</p>
                 </div>
             </details>
@@ -70,7 +70,7 @@ if($authError) {
             <summary role="button" aria-controls="details-content-0" aria-expanded="false" tabindex="0">
                 <span class="summary" id="do-not-have-account-section">Don't have an account</span>
             </summary>
-            <div class="panel panel-indent" id="details-content-0" aria-hidden="true" style="display: none;">
+            <div class="panel panel-indent" id="details-content-0" aria-hidden="true">
                 <p><a id="create-an-account" href="<?php echo $this->url('account-register') ?>">Create a new account</a> for the MOT testing service. Only do this if you don’t already have one.</p>
             </div>
         </details>
