@@ -30,5 +30,9 @@ echo $(date) Loading anonymised data set
 mysql -u $MyUSER -p$MyPASS -h $MyHOST -D mot2 -f < ./dev/populate/mot2_data_10k.sql
 
 # load subsequent DB updates from the releases folder
-cd dev/releases/
-./apply_updates.sh $MyUSER $MyPASS $MyHOST
+for UPDATE_DIR in ./dev/releases/*/; do
+    for UPDATE in $UPDATE_DIR/*.sql; do
+        echo "$(date) Loading schema or data update $UPDATE"
+        mysql -u $MyUSER -p$MyPASS -h $MyHOST -D mot2 -f < $UPDATE
+    done
+done
