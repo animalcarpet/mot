@@ -225,7 +225,7 @@ wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
 
     stage 'Build Puppet/Hiera RPMs'
     sh 'set +x; echo -e "\033[34mBuild Puppet/Hiera RPMs\033[0m"'
-    withEnv(['PATH=$PATH:/opt/ruby22/bin/']) {
+    withEnv(['PATH=/opt/ruby22/bin/:$PATH']) {
         dir('hieradata') {
             sh "echo \"  :datadir:\" >> code/hiera.yaml"
             sh """
