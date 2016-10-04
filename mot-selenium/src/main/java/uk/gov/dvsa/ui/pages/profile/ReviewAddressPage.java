@@ -9,7 +9,7 @@ import uk.gov.dvsa.ui.pages.Page;
 
 public class ReviewAddressPage extends Page {
 
-    private static final String PAGE_TITLE = "Review address";
+    private static final String PAGE_TITLE = "Review address change";
 
     @FindBy (id = "submitAddress") private WebElement changeAddressButton;
     @FindBy (css = ".content-navigation__secondary a") private WebElement backLink;

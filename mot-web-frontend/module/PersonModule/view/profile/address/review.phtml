@@ -13,7 +13,7 @@
 ?>
 
 <div class="lede">
-    <p>Please check the address below is correct.</p>
+    <p>Check that the address is correct.</p>
 </div>
 
 <table class="key-value-list">
@@ -28,11 +28,11 @@
             <td scope="col" class="key-value-list__value">
                 <?php
                 echo $this->escapeHtml($firstLine) . '<br>';
-                echo ($secondLine != '') ? $this->escapeHtml($secondLine) . '<br>' : '<br>';
-                echo ($thirdLine != '') ? $this->escapeHtml($thirdLine) . '<br>' : '<br>';
-                echo ($townOrCity != '') ? $this->escapeHtml($townOrCity) . '<br>' : '<br>';
-                echo ($country != '') ? $this->escapeHtml($country) . '<br>' : '<br>';
-                echo ($postcode != '') ? $this->escapeHtml($postcode) . '<br>' : '<br>';
+                echo ($secondLine != '') ? $this->escapeHtml($secondLine) . '<br>' : '';
+                echo ($thirdLine != '') ? $this->escapeHtml($thirdLine) . '<br>' : '';
+                echo ($townOrCity != '') ? $this->escapeHtml($townOrCity) . '<br>' : '';
+                echo ($country != '') ? $this->escapeHtml($country) . '<br>' : '';
+                echo ($postcode != '') ? $this->escapeHtml($postcode) . '<br>' : '';
                 ?>
             </td>
         </tr>
