@@ -15,7 +15,7 @@ public class ChangeAddressPage extends Page {
     @FindBy (id = "firstLine") private WebElement firstLineInput;
     @FindBy (id = "townOrCity") private WebElement townInput;
     @FindBy (id = "postcode") private WebElement postcodeInput;
-    @FindBy (id = "reviewAddress") private WebElement reviewAddressButton;
+    @FindBy (id = "continue") private WebElement continueButton;
     @FindBy (id = "cancel-and-return") private WebElement cancelAndReturnLink;
     @FindBy (css = ".validation-message") private WebElement fieldValidationMessage;
     @FindBy (css = ".validation-summary") private WebElement pageValidationMessage;
@@ -54,7 +54,7 @@ public class ChangeAddressPage extends Page {
     }
 
     public <T extends Page>T clickReviewAddress(Class<T> clazz) {
-        reviewAddressButton.click();
+        continueButton.click();
         return MotPageFactory.newPage(driver, clazz);
     }
 

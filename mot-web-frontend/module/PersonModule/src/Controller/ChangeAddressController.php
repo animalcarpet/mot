@@ -237,7 +237,7 @@ class ChangeAddressController extends AbstractDvsaMotTestController
             return $this->redirect()->toUrl($this->personProfileUrl->toPersonProfile());
         }
         $this->layout('layout/layout-govuk.phtml');
-        $this->layout()->setVariable('pageTitle', 'Review address');
+        $this->layout()->setVariable('pageTitle', 'Review address change');
         $this->layout()->setVariable('pageSubTitle',
             $personProfileGuard->isViewingOwnProfile()
                 ? 'Your profile'
