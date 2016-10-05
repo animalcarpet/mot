@@ -38,7 +38,7 @@
         {% endif %}
     </div>
     <div id="rfrList" class="js-hidden">
-        {% include '/defects/identified-defects.twig' with {'identifiedDefects': identifiedDefects, 'motTestNumber': motTest.motTestNumber} %}
+        {% include '/defects/identified-defects.twig' with {'identifiedDefects': identifiedDefects, 'motTestNumber': motTestNumber} %}
     </div>
 </div>
 
@@ -54,7 +54,7 @@
     </fieldset>
     {% if searchTerm != '' %}
         <p class="search-bar__results">
-            Your search for <strong>"{{ searchTerm }}"</strong> returned <strong>{{ paginator.pages.totalItemCount }}</strong> defect{% if numberOfResults != 1 %}s{% endif %}.
+            Your search for <strong>"{{ searchTerm }}"</strong> returned <strong>{{ paginator.pages.totalItemCount }}</strong> defect{% if paginator.pages.totalItemCount != 1 %}s{% endif %}.
         </p>
         {% if paginator.pages.totalItemCount == 0 %}
             Try again with a different search term.
