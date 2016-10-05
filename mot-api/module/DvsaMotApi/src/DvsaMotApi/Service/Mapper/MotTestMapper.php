@@ -152,7 +152,7 @@ class MotTestMapper
         $rfrs = $motTest->getMotTestReasonForRejections();
         $result->setReasonsForRejection($this->getMotReasonsForRejectionStringsGroupedByType($rfrs));
         $result->setTesterBrakePerformanceNotTested(
-            $this->motTestStatusService->hasBrakePerformanceNotTestedRfr($motTest)
+            $this->motTestStatusService->hasUnrepairedBrakePerformanceNotTestedRfr($motTest)
         );
 
         if ($motTest->getMotTestReasonForCancel()) {
