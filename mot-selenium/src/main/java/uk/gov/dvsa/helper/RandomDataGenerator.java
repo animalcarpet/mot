@@ -2,6 +2,8 @@ package uk.gov.dvsa.helper;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class RandomDataGenerator {
@@ -23,13 +25,27 @@ public class RandomDataGenerator {
 
     public static String generateRandomPostcode(boolean withWhitespace) {
         StringBuilder postcodeBuilder = new StringBuilder();
-        postcodeBuilder.append(RandomStringUtils.randomAlphabetic(2).toUpperCase())
+        postcodeBuilder.append(getRandomPostcodeAreaCode())
                 .append(RandomStringUtils.randomNumeric(1))
                 .append((withWhitespace) ? ' ' : "")
                 .append(RandomStringUtils.randomNumeric(1))
                 .append(generateRandomString(2, postcodeIncode, 0));
 
         return postcodeBuilder.toString();
+    }
+
+    private static String getRandomPostcodeAreaCode() {
+        String[] areaCodes = {"AB", "AL", "B", "BA", "BB", "BD", "BH", "BL", "BN",
+                "BR", "BS", "BT", "CA", "CB", "CF", "CH", "CM", "CO", "CR", "CT", "CV", "CW", "DA",
+                "DD", "DE", "DG", "DH", "DL", "DN", "DT", "DY", "E", "EC", "EH", "EN", "EX", "FK",
+                "FY", "G", "GL", "GY", "GU", "HA", "HD", "HG", "HP", "HR", "HS", "HU", "HX", "IG",
+                "IM", "IP", "IV", "JE", "KA", "KT", "KW", "KY", "L", "LA", "LD", "LE", "LL", "LN",
+                "LS", "LU", "M", "ME", "MK", "ML", "N", "NE", "NG", "NN", "NP", "NR", "NW", "OL",
+                "OX", "PA", "PE", "PH", "PL", "PO", "PR", "RG", "RH", "RM", "S", "SA", "SE", "SG",
+                "SK", "SL", "SM", "SN", "SO", "SP", "SR", "SS", "ST", "SW", "SY", "TA", "TD", "TF",
+                "TN", "TQ", "TR", "TS", "TW", "UB", "W", "WA", "WC", "WD", "WF", "WN", "WR", "WS",
+                "WV", "YO", "ZE"};
+        return areaCodes[new Random().nextInt(areaCodes.length)];
     }
 
     public static String generateRandomString() {

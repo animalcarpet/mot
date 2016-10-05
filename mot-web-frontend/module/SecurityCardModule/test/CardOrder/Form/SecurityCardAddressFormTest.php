@@ -7,6 +7,9 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Step\AddressStep;
 
 class SecurityCardAddressFormTest extends \PHPUnit_Framework_TestCase
 {
+    const INVALID_HOME_POSTCODE = 'HT1 0EW';
+    const VALID_HOME_POSTCODE = 'BT9 6FT';
+
     /**
      * @dataProvider dataProviderCustom_Valid
      */
@@ -20,7 +23,7 @@ class SecurityCardAddressFormTest extends \PHPUnit_Framework_TestCase
 
     public function test_validAddressChoice_shouldNotProduceErrorMessage()
     {
-        $form = new SecurityCardAddressForm($this->getAddressValues());
+        $form = new SecurityCardAddressForm($this->getAddressValues(self::VALID_HOME_POSTCODE));
 
         $addressData = [
             'address1' => 'Home',
@@ -34,6 +37,42 @@ class SecurityCardAddressFormTest extends \PHPUnit_Framework_TestCase
         $form->setData($addressData);
         $this->assertTrue($form->isValid());
         $this->assertEmpty($form->getMessages());
+    }
+
+    public function test_invalidPostcodeForHomeAddress_shouldProduceErrorMessage()
+    {
+        $form = new SecurityCardAddressForm($this->getAddressValues(self::INVALID_HOME_POSTCODE));
+
+        $addressData = [
+            'address1' => 'Home',
+            'address2' => '',
+            'address3' => '',
+            'townOrCity' => 'Town',
+            'postcode' => self::INVALID_HOME_POSTCODE,
+            'addressChoice' => '0'
+        ];
+
+        $form->setData($addressData);
+        $this->assertFalse($form->isValid());
+        $this->assertEquals(
+            SecurityCardAddressForm::MSG_INVALID_HOME_POSTCODE, $form->getMessages()['addressChoice'][0]);
+    }
+
+    public function test_validPostcodeForHomeAddress_shouldNotProduceErrorMessage()
+    {
+        $form = new SecurityCardAddressForm($this->getAddressValues(self::VALID_HOME_POSTCODE));
+
+        $addressData = [
+            'address1' => 'Home',
+            'address2' => '',
+            'address3' => '',
+            'townOrCity' => 'Town',
+            'postcode' => self::VALID_HOME_POSTCODE,
+            'addressChoice' => '0'
+        ];
+
+        $form->setData($addressData);
+        $this->assertTrue($form->isValid());
     }
 
     public function test_emptyAddressChoice_shouldProduceErrorMessage()
@@ -192,7 +231,7 @@ class SecurityCardAddressFormTest extends \PHPUnit_Framework_TestCase
 
     public function testRadioButtonValuesArePopulatedCorrectlyWithAddressData()
     {
-        $form = new SecurityCardAddressForm($this->getAddressValues());
+        $form = new SecurityCardAddressForm($this->getAddressValues(self::VALID_HOME_POSTCODE));
 
         $addressRadioValues = $form->getAddressRadios()->getValueOptions();
 
@@ -224,7 +263,7 @@ class SecurityCardAddressFormTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    private function getAddressValues()
+    private function getAddressValues($homeAddressPostcode)
     {
         return [
             [
@@ -233,7 +272,7 @@ class SecurityCardAddressFormTest extends \PHPUnit_Framework_TestCase
                 'addressLine2' => "Home Address Line 2",
                 'addressLine3' => "Home Address Line 3",
                 'town' => "Home Town",
-                'postcode' => "BT9 6FT",
+                'postcode' => $homeAddressPostcode,
                 'addressString' => 'Home Address Line 1, Home Address Line 2, Home Address Line 3, Home Town, BT9 6FT',
             ],
             [

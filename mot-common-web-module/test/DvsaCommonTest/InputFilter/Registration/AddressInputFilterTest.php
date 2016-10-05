@@ -10,6 +10,7 @@ namespace DvsaCommonTest\InputFilter\Registration;
 use DvsaCommon\Factory\InputFilter\Registration\AddressInputFilterFactory;
 use DvsaCommon\InputFilter\Registration\AddressInputFilter;
 use DvsaCommonTest\Bootstrap;
+use Zend\I18n\Validator\PostCode;
 use Zend\Validator\NotEmpty;
 use Zend\Validator\StringLength;
 use Zend\Validator\Regex;
@@ -67,7 +68,7 @@ class AddressInputFilterTest extends \PHPUnit_Framework_TestCase
                     [],
                     [],
                     [
-                        Regex::NOT_MATCH => AddressInputFilter::MSG_POSTCODE_EMPTY,
+                        PostCode::NO_MATCH => AddressInputFilter::MSG_POSTCODE_EMPTY,
                     ]
                 ),
             ],
@@ -87,7 +88,7 @@ class AddressInputFilterTest extends \PHPUnit_Framework_TestCase
                     [],
                     [],
                     [
-                        Regex::NOT_MATCH => AddressInputFilter::MSG_POSTCODE_EMPTY,
+                        PostCode::NO_MATCH => AddressInputFilter::MSG_POSTCODE_EMPTY,
                     ]
                 ),
             ],
@@ -108,7 +109,7 @@ class AddressInputFilterTest extends \PHPUnit_Framework_TestCase
                     ],
                     [
                         NotEmpty::IS_EMPTY => AddressInputFilter::MSG_POSTCODE_EMPTY,
-                        Regex::NOT_MATCH => AddressInputFilter::MSG_POSTCODE_EMPTY,
+                        PostCode::NO_MATCH => AddressInputFilter::MSG_POSTCODE_EMPTY,
                     ]
                 ),
             ],

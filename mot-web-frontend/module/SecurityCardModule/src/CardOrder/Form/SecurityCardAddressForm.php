@@ -20,17 +20,21 @@ class SecurityCardAddressForm extends Form
     const ADDRESS_RADIOS = 'addressChoice';
     const ADDRESS_MAX_LENGTH = 50;
     const CUSTOM_ADDRESS_VALUE = 'addressChoiceCustom';
-
+    const HOME_ADDRESS_VALUE = '0';
+    const HOME_ADDRESS_INDEX = 0;
+    const HOME_NAME_VALUE = "Home";
     const NAME_FIELD_KEY = 'name';
-
     const ADDRESS_LINE_1_INVALID_MESSAGE = 'Please enter the first line of your address';
     const EXCEEDING_50_CHARACTERS_MESSAGE = 'must be 50, or less, characters long';
     const TOWN_INVALID_MESSAGE = 'Please enter the town or city';
-
     const MSG_POST_CODE_IS_EMPTY = "Please enter your postcode";
     const MSG_INVALID_POST_CODE = "Please enter a valid postcode";
-
     const MSG_INVALID_ADDRESS_CHOICE = "Select an existing address or enter a new one";
+    const MSG_INVALID_HOME_POSTCODE = "This address doesn’t have a valid postcode. <br>
+            Either enter your address manually below, or change your home address from your profile.";
+
+    private $homeAddress;
+    private $hasHomeAddress;
 
     public function __construct($homeAndSites)
     {
@@ -86,6 +90,8 @@ class SecurityCardAddressForm extends Form
             ->setAttribute('divModifier', 'form-group')
             ->setAttribute('autoCompleteOff', true)
         );
+
+        $this->homeAddress = $this->getHomeAddress($homeAndSites);
     }
 
     public function isValid()
@@ -94,6 +100,9 @@ class SecurityCardAddressForm extends Form
         $fieldsValid = true;
         $addressRadios = $this->getAddressRadios();
 
+        $postcodeValidator = new PostCode();
+        $postcodeValidator->setLocale('en_GB');
+
         if ($addressRadios->getValue() === self::CUSTOM_ADDRESS_VALUE) {
             $addressLine1 = $this->getAddressLine1();
             $addressLine2 = $this->getAddressLine2();
@@ -101,9 +110,6 @@ class SecurityCardAddressForm extends Form
             $town = $this->getTown();
             $postcode = $this->getPostcode();
             $postcode->setValue(strtoupper($postcode->getValue()));
-
-            $postcodeValidator = new PostCode();
-            $postcodeValidator->setLocale('en_GB');
 
             if ($addressLine1->getValue() == '') {
                 $this->setCustomError($addressLine1, self::ADDRESS_LINE_1_INVALID_MESSAGE);
@@ -146,9 +152,14 @@ class SecurityCardAddressForm extends Form
             $this->showLabelOnError(self::ADDRESS_LINE_3, 'Address Line 3');
             $this->showLabelOnError(self::TOWN, 'Town');
             $this->showLabelOnError(self::POSTCODE, 'Postcode');
+        } else if ($addressRadios->getValue() === self::HOME_ADDRESS_VALUE) {
+            $postcode = $this->homeAddress['postcode'];
+            if (!$postcodeValidator->isValid($postcode)) {
+                $this->setCustomError($addressRadios, self::MSG_INVALID_HOME_POSTCODE);
+                $fieldsValid = false;
+            }
         } else if ($addressRadios->getValue() == '') {
-            $this->setCustomError($addressRadios, "Address Choice");
-            $this->showLabelOnError(self::ADDRESS_RADIOS, self::MSG_INVALID_ADDRESS_CHOICE);
+            $this->setCustomError($addressRadios, self::MSG_INVALID_ADDRESS_CHOICE);
             $fieldsValid = false;
         }
 
@@ -226,11 +237,21 @@ class SecurityCardAddressForm extends Form
         array_push($addresses, array(
             'value' => self::CUSTOM_ADDRESS_VALUE,
             'name' => 'addressChoice',
-            'title' => 'Enter new Address',
+            'title' => 'Enter new address',
             'ariaContainer' => 'customAddressContainer',
             'id' => self::CUSTOM_ADDRESS_VALUE,
         ));
 
         return $addresses;
+    }
+
+    private function getHomeAddress($homeAndSites)
+    {
+        if (isset($homeAndSites[self::HOME_ADDRESS_INDEX]) &&
+            isset($homeAndSites[self::HOME_ADDRESS_INDEX][self::NAME_FIELD_KEY]) &&
+            $homeAndSites[self::HOME_ADDRESS_INDEX][self::NAME_FIELD_KEY] == self::HOME_NAME_VALUE)
+        {
+            return $homeAndSites[self::HOME_ADDRESS_INDEX];
+        }
     }
 }

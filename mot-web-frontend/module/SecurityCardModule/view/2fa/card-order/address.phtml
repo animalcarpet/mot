@@ -11,7 +11,7 @@ $form = $viewModel->getForm();
         <?php if($form->getAddressRadios()->getMessages()) : ?>
             <div id="validationBox">
                 <div id="validationErrors" class="validation-summary">
-                    <ol>Select an existing address or enter a new one</ol>
+                    <ol><?php echo $form->getAddressRadios()->getMessages()[0]; ?></ol>
                 </div>
             </div>
         <?php endif; ?>
