@@ -4,6 +4,8 @@ namespace Dvsa\Mot\Frontend\PersonModule\Model;
 use Core\Action\AbstractRedirectActionResult;
 use Core\Action\RedirectToRoute;
 use Dashboard\Model\PersonalDetails;
+use Dvsa\Mot\ApiClient\Exception\ResourceNotFoundException;
+use Dvsa\Mot\ApiClient\Request\Validator\Exception;
 use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\CertificatesBreadcrumbs;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
@@ -200,13 +202,21 @@ class QualificationDetailsAddProcess extends QualificationDetailsAbstractProcess
         $personId = $this->context->getLoggedInPersonId();
         $personalDetailsData = $this->personalDetailsService->getPersonalDetailsData($personId);
         $personalDetails = new PersonalDetails($personalDetailsData);
-        $testerAuthorisation = $this->personProfileGuardBuilder->getTesterAuthorisation($personId);
-        $securityCardOrders = $this->authorisationService->getSecurityCardOrders($personalDetails->getUsername());
 
-        if ($securityCardOrders->getCount() === 0 &&
-            ($testerAuthorisation->getGroupAStatus()->getCode() == AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED ||
-            $testerAuthorisation->getGroupBStatus()->getCode() == AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED)) {
-            return true;
+        try {
+            if ($this->authorisationService->getSecurityCardForUser($personalDetails->getUsername())) {
+                return false;
+            }
+        } catch (ResourceNotFoundException $exception) {
+            $testerAuthorisation = $this->personProfileGuardBuilder->getTesterAuthorisation($personId);
+            $securityCardOrders = $this->authorisationService->getSecurityCardOrders($personalDetails->getUsername());
+
+            if ($securityCardOrders->getCount() === 0 &&
+                ($testerAuthorisation->getGroupAStatus()->getCode() == AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED ||
+                    $testerAuthorisation->getGroupBStatus()->getCode() == AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED)
+            ) {
+                return true;
+            }
         }
 
         return false;

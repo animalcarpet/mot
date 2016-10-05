@@ -1,6 +1,7 @@
 <?php
 use Application\Data\ApiPersonalDetails;
 use Core\TwoStepForm\FormContextInterface;
+use Dvsa\Mot\ApiClient\Exception\ResourceNotFoundException;
 use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\CertificatesBreadcrumbs;
 use Dvsa\Mot\Frontend\PersonModule\Controller\QualificationDetailsController;
 use Dvsa\Mot\Frontend\PersonModule\Form\QualificationDetailsForm;
@@ -182,6 +183,8 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
 
     public function testConfirmationViewModelVariablesArePopulatedCorrectly()
     {
+        $this->mockThrowResourceNotFoundException();
+
         $this->authClientMock
             ->expects($this->once())
             ->method('getSecurityCardOrders')
@@ -204,6 +207,8 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
 
     public function testConfirmationShowSecurityCardOrdersUrlWhenNoOrdersPresent()
     {
+        $this->mockThrowResourceNotFoundException();
+
         $this->authClientMock
             ->expects($this->once())
             ->method('getSecurityCardOrders')
@@ -221,8 +226,23 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($actual[QualificationDetailsAddProcess::CAN_ORDER_CARD_VIEW_VARIABLE]);
     }
 
+    public function testConfirmationDoesntShowSecurityCardOrdersUrlWhenCurrentlyHaveACard()
+    {
+        $this->authClientMock
+            ->expects($this->once())
+            ->method('getSecurityCardForUser')
+            ->with(self::USERNAME)
+            ->willReturn(true);
+
+        $actual = $this->sut->populateConfirmationPageVariables();
+
+        $this->assertFalse($actual[QualificationDetailsAddProcess::CAN_ORDER_CARD_VIEW_VARIABLE]);
+    }
+
     public function testConfirmationHideSecurityCardOrdersUrlWhenOrdersPresent()
     {
+        $this->mockThrowResourceNotFoundException();
+
         $this->authClientMock
             ->expects($this->once())
             ->method('getSecurityCardOrders')
@@ -242,6 +262,8 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
 
     public function testConfirmationHideSecurityCardOrdersUrlWhenNotDemoTestNeededWithOrders()
     {
+        $this->mockThrowResourceNotFoundException();
+
         $this->authClientMock
             ->expects($this->once())
             ->method('getSecurityCardOrders')
@@ -334,5 +356,14 @@ class QualificationDetailsAddProcessTest extends \PHPUnit_Framework_TestCase
             "postcode" => "L1 1PQ",
             "town" => "Liverpool"
         ];
+    }
+
+    private function mockThrowResourceNotFoundException()
+    {
+        return $this->authClientMock
+            ->expects($this->once())
+            ->method('getSecurityCardForUser')
+            ->with(self::USERNAME)
+            ->will($this->throwException(new ResourceNotFoundException()));
     }
 }

@@ -90,7 +90,7 @@ class SecurityCardGuard
             $this->isDemoTestNeededStatus($testerAuthorisation->getGroupAStatus()) ||
             $this->isDemoTestNeededStatus($testerAuthorisation->getGroupBStatus());
 
-        return $demoTestNeeded && $this->hasNoSecurityCardOrders($identity);
+        return $demoTestNeeded && $this->hasNoSecurityCardOrders($identity) && !$this->hasActiveTwoFaCard($identity);
     }
 
     public function isEligibleForNewTwoFaCardAfterNomination(MotFrontendIdentityInterface $identity)
