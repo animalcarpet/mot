@@ -145,6 +145,46 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Change your security questions', $linkTexts);
     }
 
+    public function testSideBarDoesNotContainOrderLink_whenGroupADemoTestIsNeeded()
+    {
+        $sidebar = $this
+            ->withTwoFactorAuthEnabled(true)
+            ->withIsExpectedToRegisterForTwoFactorAuth(true)
+            ->withUserThatCanOrderASecurityCard(false)
+            ->withGroupADemoTestNeeded()
+            ->createPersonProfileSidebar();
+
+        $sidebarLinks = $sidebar->getSidebarItems()[1];
+        $linkTexts = $this->getTextFromSidebarLinks($sidebarLinks);
+
+        $this->assertCount(4, $sidebarLinks->getLinks());
+
+        $this->assertContains('Change your password', $linkTexts);
+        $this->assertContains('Reset your PIN', $linkTexts);
+        $this->assertContains('Activate your security card', $linkTexts);
+        $this->assertContains('Change your security questions', $linkTexts);
+    }
+
+    public function testSideBarDoesNotContainOrderLink_whenGroupBDemoTestIsNeeded()
+    {
+        $sidebar = $this
+            ->withTwoFactorAuthEnabled(true)
+            ->withIsExpectedToRegisterForTwoFactorAuth(true)
+            ->withUserThatCanOrderASecurityCard(false)
+            ->withGroupBDemoTestNeeded()
+            ->createPersonProfileSidebar();
+
+        $sidebarLinks = $sidebar->getSidebarItems()[1];
+        $linkTexts = $this->getTextFromSidebarLinks($sidebarLinks);
+
+        $this->assertCount(4, $sidebarLinks->getLinks());
+
+        $this->assertContains('Change your password', $linkTexts);
+        $this->assertContains('Reset your PIN', $linkTexts);
+        $this->assertContains('Activate your security card', $linkTexts);
+        $this->assertContains('Change your security questions', $linkTexts);
+    }
+
     public function testSideBarDoesContainTwoFactorLinks()
     {
         $sidebar = $this
