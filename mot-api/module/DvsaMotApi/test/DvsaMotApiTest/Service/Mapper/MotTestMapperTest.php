@@ -228,7 +228,7 @@ class MotTestMapperTest extends AbstractServiceTestCase
             ->will($this->returnValue($brakeTestData));
 
         $mocks[self::MOCK_STATUS_SERVICE]->expects($this->once())
-            ->method('hasBrakePerformanceNotTestedRfr')
+            ->method('hasUnrepairedBrakePerformanceNotTestedRfr')
             ->with($motTest)
             ->will($this->returnValue(false));
 

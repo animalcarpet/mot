@@ -49,12 +49,12 @@ class MotTestStatusService
         $hasOdometerReading = $motTest->getOdometerReading() != null;
         $hasBrakeTestResult = $motTest->hasBrakeTestResults();
         $canTestWithoutBrakeTests = $this->authorisationService->isGranted(PermissionInSystem::TEST_WITHOUT_BRAKE_TESTS);
-        $hasBrakePerformanceNotTestedRfr = $this->hasBrakePerformanceNotTestedRfr($motTest);
+        $hasUnrepairedBrakePerformanceNotTestedRfr = $this->hasUnrepairedBrakePerformanceNotTestedRfr($motTest);
 
         $hasOriginalBrakeTestPassing = $motTest->getMotTestType()->getCode() === MotTestTypeCode::RE_TEST
             && $motTest->getMotTestIdOriginal()->getBrakeTestGeneralPass();
 
-        $isBrakeTestOk = $hasBrakeTestResult || $hasBrakePerformanceNotTestedRfr || $canTestWithoutBrakeTests
+        $isBrakeTestOk = $hasBrakeTestResult || $hasUnrepairedBrakePerformanceNotTestedRfr || $canTestWithoutBrakeTests
             || $hasOriginalBrakeTestPassing;
 
         return !$hasOdometerReading || !$isBrakeTestOk;
@@ -65,14 +65,14 @@ class MotTestStatusService
      *
      * @return bool
      */
-    public function hasBrakePerformanceNotTestedRfr(MotTest $motTest)
+    public function hasUnrepairedBrakePerformanceNotTestedRfr(MotTest $motTest)
     {
         $motRfrs = $motTest->getMotTestReasonForRejections();
         foreach ($motRfrs as $rfr) {
             if ($rfr->getReasonForRejection() === null) {
                 continue; // TODO solve 'Manual Advisory' Test RFRs which doesn't have linked RFR
             }
-            if (in_array($rfr->getReasonForRejection()->getRfrId(), self::$brakePerformanceNotTestedRfrs)) {
+            if (in_array($rfr->getReasonForRejection()->getRfrId(), self::$brakePerformanceNotTestedRfrs) && !$rfr->isMarkedAsRepaired()) {
                 return true;
             }
         }

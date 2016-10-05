@@ -88,10 +88,28 @@ class MotTestStatusServiceTest extends \DvsaCommonApiTest\Service\AbstractServic
         $motTest = $this->getMotTest(
             [
                 'odometerReading'                 => true,
-                'hasBrakePerformanceNotTestedRfr' => true
+                'hasUnrepairedBrakePerformanceNotTestedRfrNotMarkedAsRepaired' => true
             ]
         );
         $expectedResult = false;
+
+        //when
+        $result = $this->sut->isIncomplete($motTest);
+
+        //then
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    public function testIsIncompleteWhenBrakePerformanceNotTestedRfrIsMarkedAsRepairedShouldReturnTrue()
+    {
+        //given
+        $motTest = $this->getMotTest(
+            [
+                'odometerReading'                 => true,
+                'hasUnrepairedBrakePerformanceNotTestedRfrMarkedAsRepaired' => true
+            ]
+        );
+        $expectedResult = true;
 
         //when
         $result = $this->sut->isIncomplete($motTest);
@@ -134,11 +152,43 @@ class MotTestStatusServiceTest extends \DvsaCommonApiTest\Service\AbstractServic
             $motTest->setBrakeTestResultClass12(new BrakeTestResultClass12());
         }
 
-        if (!empty($options['hasBrakePerformanceNotTestedRfr'])) {
+        if (!empty($options['hasUnrepairedBrakePerformanceNotTestedRfrNotMarkedAsRepaired'])) {
             $brakePerformanceNotTestedRfr = new ReasonForRejection();
             $brakePerformanceNotTestedRfr->setRfrId(ReasonForRejectionConstants::CLASS_12_BRAKE_PERFORMANCE_NOT_TESTED_RFR_ID);
-            $brakePerformanceNotTestedTestRfr = new MotTestReasonForRejection();
-            $brakePerformanceNotTestedTestRfr->setReasonForRejection($brakePerformanceNotTestedRfr);
+
+            $brakePerformanceNotTestedTestRfr = $this
+                ->getMockBuilder(MotTestReasonForRejection::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+
+            $brakePerformanceNotTestedTestRfr
+                ->method('getReasonForRejection')
+                ->willReturn($brakePerformanceNotTestedRfr);
+
+            $brakePerformanceNotTestedTestRfr
+                ->method('isMarkedAsRepaired')
+                ->willReturn(false);
+
+            $motTest->addMotTestReasonForRejection($brakePerformanceNotTestedTestRfr);
+        }
+
+        if (!empty($options['hasUnrepairedBrakePerformanceNotTestedRfrMarkedAsRepaired'])) {
+            $brakePerformanceNotTestedRfr = new ReasonForRejection();
+            $brakePerformanceNotTestedRfr->setRfrId(ReasonForRejectionConstants::CLASS_12_BRAKE_PERFORMANCE_NOT_TESTED_RFR_ID);
+
+            $brakePerformanceNotTestedTestRfr = $this
+                ->getMockBuilder(MotTestReasonForRejection::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+
+            $brakePerformanceNotTestedTestRfr
+                ->method('getReasonForRejection')
+                ->willReturn($brakePerformanceNotTestedRfr);
+
+            $brakePerformanceNotTestedTestRfr
+                ->method('isMarkedAsRepaired')
+                ->willReturn(true);
+
             $motTest->addMotTestReasonForRejection($brakePerformanceNotTestedTestRfr);
         }
 
