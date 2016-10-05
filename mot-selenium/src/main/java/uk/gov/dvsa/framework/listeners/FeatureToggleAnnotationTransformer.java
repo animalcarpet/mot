@@ -18,10 +18,6 @@ public class FeatureToggleAnnotationTransformer implements IAnnotationTransforme
             iTestAnnotation.setEnabled(!ConfigHelper.isNewPersonProfileEnabled());
         }
 
-        if (iTestAnnotation.getTestName().equals("Survey")) {
-            iTestAnnotation.setEnabled(ConfigHelper.isSurveyPageEnabled());
-        }
-
         if (iTestAnnotation.getTestName().equals("TestResultEntryImprovements")) {
             iTestAnnotation.setEnabled(ConfigHelper.isTestResultEntryImprovementsEnabled());
         }

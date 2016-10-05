@@ -10,10 +10,8 @@ use Dvsa\Mot\Frontend\MotTestModule\Controller\SurveyPageController;
 use Dvsa\Mot\Frontend\MotTestModule\Service\SurveyService;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaFeature\FeatureToggles;
 use Zend\EventManager\EventManager;
 use Zend\Mvc\Controller\PluginManager;
 use Zend\Session\Container;
@@ -94,7 +92,6 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
     {
         $this->setupAuthenticationServiceForIdentity(StubIdentityAdapter::asSchemauser());
         $this->setupAuthorizationService([PermissionInSystem::GENERATE_SATISFACTION_SURVEY_REPORT]);
-        $this->withFeatureToggles([FeatureToggle::SURVEY_PAGE => true]);
 
         $this->getResponseForAction('reports');
 
@@ -122,10 +119,9 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
      *
      * @param string $token
      * @param int    $satisfactionRating
-     * @param bool   $featureToggleValue
      * @param bool   $shouldRedirect
      */
-    public function testRedirectToThanksPage($token, $satisfactionRating, $featureToggleValue, $shouldRedirect)
+    public function testRedirectToThanksPage($token, $satisfactionRating, $shouldRedirect)
     {
         $this->setParams(['token' => $token]);
         $this->setPostAndPostParams(
@@ -134,8 +130,6 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
                 SurveyPageController::TOKEN_KEY => $token
             ]
         );
-
-        $this->withFeatureToggles([FeatureToggle::SURVEY_PAGE => $featureToggleValue]);
 
         $this->getResponseForAction('index');
 
@@ -154,16 +148,14 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
     public function testRedirectToThanksPageDataProvider()
     {
         return [
-            ['survey', 1, true, true],
-            [null, 2, true, false],
-            ['testToken', 20, true, true],
-            ['testToken', 3, false, false]
+            ['survey', 1, true],
+            [null, 2, false],
+            ['testToken', 20, true]
         ];
     }
 
     public function testRedirectToLoginWithNoToken()
     {
-        $this->withFeatureToggles([FeatureToggle::SURVEY_PAGE => true]);
         $this->getResponseForAction('index', ['token' => null]);
 
         $this->assertResponseStatus(self::HTTP_REDIRECT_CODE);
@@ -171,7 +163,6 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
 
     public function testRedirectToLoginWithInvalidToken()
     {
-        $this->withFeatureToggles([FeatureToggle::SURVEY_PAGE => true]);
         $this->surveyService->method('isTokenValid')->willReturn(false);
         $this->getResponseForAction('index', ['token' => 'invalid']);
 
@@ -180,7 +171,6 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
 
     public function test200WithNoPostAndValidToken()
     {
-        $this->withFeatureToggles([FeatureToggle::SURVEY_PAGE => true]);
         $this->surveyService->method('isTokenValid')->willReturn(true);
         $this->getResponseForAction('index', ['token' => 'valid']);
 
@@ -190,7 +180,6 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
     public function testGetReportsWithData()
     {
         ob_start();
-        $this->withFeatureToggles([FeatureToggle::SURVEY_PAGE => true]);
         $this->setupAuthenticationServiceForIdentity(StubIdentityAdapter::asSchemauser());
         $this->setupAuthorizationService([PermissionInSystem::GENERATE_SATISFACTION_SURVEY_REPORT]);
 
@@ -210,7 +199,6 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
 
     public function testGetReportsWithNoData()
     {
-        $this->withFeatureToggles([FeatureToggle::SURVEY_PAGE => true]);
         $this->setupAuthenticationServiceForIdentity(StubIdentityAdapter::asSchemauser());
         $this->setupAuthorizationService([PermissionInSystem::GENERATE_SATISFACTION_SURVEY_REPORT]);
 
@@ -232,13 +220,11 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
      * @group survey_page_controller_tests
      *
      * @param $referer
-     * @param $featureToggleValue
      * @param $expectedResponse
      */
-    public function testThanksAction($referer, $featureToggleValue, $expectedResponse)
+    public function testThanksAction($referer, $expectedResponse)
     {
         $_SERVER['HTTP_REFERER'] = $referer;
-        $this->withFeatureToggles([FeatureToggle::SURVEY_PAGE => $featureToggleValue]);
 
         $this->getResponseForAction('thanks');
 
@@ -248,75 +234,39 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
     public function testThanksActionDataProvider()
     {
         return [
-            ['survey', true, self::HTTP_OK_CODE],
-            ['survey', false, self::HTTP_ERR_404],
-            ['asnmfp', false, self::HTTP_ERR_404],
-            ['asddsd', true, self::HTTP_ERR_404],
+            ['survey', self::HTTP_OK_CODE],
+            ['asnmfp', self::HTTP_ERR_404],
         ];
     }
 
     /**
-     * @dataProvider testDownloadReportCsvActionDataProvider
      * @group survey_page_controller_tests
-     *
-     * @param $featureToggleValue
      */
-    public function testCanDownloadReportCsvActionWithPermission($featureToggleValue)
+    public function testCanDownloadReportCsvActionWithPermission()
     {
         $this->setupAuthenticationServiceForIdentity(StubIdentityAdapter::asSchemauser());
         $this->setupAuthorizationService([PermissionInSystem::GENERATE_SATISFACTION_SURVEY_REPORT]);
 
         $this->setParams(['month' => '2016-04']);
-        $this->withFeatureToggles([FeatureToggle::SURVEY_PAGE => $featureToggleValue]);
 
         $this->getResponseForAction('downloadReportCsv');
 
-        if ($featureToggleValue) {
-            $this->assertResponseStatus(self::HTTP_OK_CODE);
-        } else {
-            $this->assertResponseStatus(self::HTTP_ERR_404);
-        }
+        $this->assertResponseStatus(self::HTTP_OK_CODE);
     }
 
     /**
-     * @dataProvider testDownloadReportCsvActionDataProvider
      * @group survey_page_controller_tests
      * @expectedException \DvsaCommon\Exception\UnauthorisedException
-     *
-     * @param $featureToggleValue
      */
-    public function testCannotDownloadReportCsvActionWithoutPermission($featureToggleValue)
+    public function testCannotDownloadReportCsvActionWithoutPermission()
     {
         $this->setupAuthenticationServiceForIdentity(StubIdentityAdapter::asSchemauser());
         $this->setupAuthorizationService([]);
 
         $this->setParams(['month' => '2016-04']);
-        $this->withFeatureToggles([FeatureToggle::SURVEY_PAGE => $featureToggleValue]);
 
         $this->getResponseForAction('downloadReportCsv');
 
-        $this->assertResponseStatus(self::HTTP_ERR_404);
-    }
-
-    /**
-     * @return array
-     */
-    public function testDownloadReportCsvActionDataProvider()
-    {
-        return [
-            [true],
-            [false],
-        ];
-    }
-
-    public function test404OnReportsActionWithoutFeatureToggle()
-    {
-        $this->withFeatureToggles([FeatureToggle::SURVEY_PAGE => false]);
-
-        $this->setupAuthenticationServiceForIdentity(StubIdentityAdapter::asSchemauser());
-        $this->setupAuthorizationService([PermissionInSystem::GENERATE_SATISFACTION_SURVEY_REPORT]);
-
-        $this->getResponseForAction('reports');
         $this->assertResponseStatus(self::HTTP_ERR_404);
     }
 

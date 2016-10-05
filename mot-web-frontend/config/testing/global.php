@@ -112,7 +112,6 @@ return [
         'infinity.contingency'           => true,
         'new_person_profile'             => true,
         '2fa.enabled'                    => false,
-        'survey_page'                    => false,
     ],
     'baseUrl' => 'https://dev.motdev.org.uk',
     // URL to DVSA REST API with slash (/) at the end

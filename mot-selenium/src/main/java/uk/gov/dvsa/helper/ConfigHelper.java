@@ -9,10 +9,6 @@ public class ConfigHelper {
         return service.getToggleValue("new_person_profile");
     }
 
-    public static boolean isSurveyPageEnabled() {
-        return service.getToggleValue("survey_page");
-    }
-
     public static boolean is2faEnabled() {
         return service.getToggleValue("2fa.enabled");
     }

@@ -78,8 +78,6 @@ class LogoutControllerTest extends AbstractFrontendControllerTestCase
 
     public function testRedirectWithSurveyToggledOff()
     {
-        $this->withFeatureToggles([FeatureToggle::SURVEY_PAGE => false]);
-
         $this->getResultForAction('logout');
 
         $this->assertRedirectLocation2('/login');
@@ -87,8 +85,6 @@ class LogoutControllerTest extends AbstractFrontendControllerTestCase
 
     public function testRedirectWithSurveyToggledOn()
     {
-        $this->withFeatureToggles([FeatureToggle::SURVEY_PAGE => true]);
-
         $this->getResultForAction('logout');
 
         $this->assertRedirectLocation2('/login');
@@ -96,8 +92,6 @@ class LogoutControllerTest extends AbstractFrontendControllerTestCase
 
     public function testSurveyEventIsFiredWhenSurveyShouldBeDisplayed()
     {
-        $this->withFeatureToggles([FeatureToggle::SURVEY_PAGE => true]);
-
         $this->sessionManager->expects($this->any())
             ->method('offsetGet')
             ->will($this->returnValue('testToken'));
