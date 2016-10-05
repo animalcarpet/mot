@@ -7,6 +7,7 @@
 
 namespace DvsaCommon\InputFilter\Registration;
 
+use Zend\I18n\Validator\PostCode;
 use Zend\InputFilter\InputFilter;
 use Zend\Validator\NotEmpty;
 use Zend\Validator\StringLength;
@@ -47,7 +48,6 @@ class AddressInputFilter extends InputFilter
     const FIELD_POSTCODE = 'postcode';
     const MSG_POSTCODE_EMPTY = 'enter a valid postcode';
     const MSG_POSTCODE_MAX = 'must be %d, or less, characters long';
-    const POSTCODE_MATCH_PATTERN = '/^(([a-z]{2}([0-9]{1,2}|[0-9][a-z]))|([a-z]([0-9]{1,2}|[0-9][a-z])))\s?[0-9][abd-hjlnp-uw-z]{2}$/i';
 
     public function init()
     {
@@ -159,9 +159,9 @@ class AddressInputFilter extends InputFilter
                         ],
                     ],
                     [
-                        'name' => Regex::class,
+                        'name' => PostCode::class,
                         'options' => [
-                            'pattern' => self::POSTCODE_MATCH_PATTERN,
+                            'locale' => 'en_GB',
                             'message' => self::MSG_POSTCODE_EMPTY,
                         ],
                     ],
