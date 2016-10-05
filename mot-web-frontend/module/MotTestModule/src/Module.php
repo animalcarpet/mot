@@ -129,12 +129,6 @@ class Module implements ConfigProviderInterface, ControllerProviderInterface, Se
      */
     private function registerSatisfactionSurveyListener(ServiceLocatorInterface $serviceManager)
     {
-        /** @var FeatureToggles $featureToggles */
-        $featureToggles = $serviceManager->get('Feature\FeatureToggles');
-        if (true !== $featureToggles->isEnabled(FeatureToggle::SURVEY_PAGE)) {
-            return;
-        }
-
         /** @var SatisfactionSurveyListener $satisfactionSurveyListener */
         $satisfactionSurveyListener = $serviceManager->get(SatisfactionSurveyListener::class);
         $satisfactionSurveyListener->attach();

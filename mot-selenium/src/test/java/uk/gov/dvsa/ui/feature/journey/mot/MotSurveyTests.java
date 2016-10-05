@@ -45,7 +45,7 @@ public class MotSurveyTests extends DslTest {
         siteManager = userData.createSiteManager(site.getId(), false);
     }
 
-    @Test(testName = "Survey", groups = {"Regression", "BL-1529"},
+    @Test(groups = {"Regression", "BL-1529"},
             description = "Verifies that user can navigate back from survey page to login page")
     public void backwardNavigationFromSurveyPageToLoginPage() throws IOException, URISyntaxException {
         // Given I am on the Test Complete Page as a tester
@@ -61,7 +61,7 @@ public class MotSurveyTests extends DslTest {
 
     }
 
-    @Test(testName = "Survey", groups = {"Regression", "BL-1529"},
+    @Test(groups = {"Regression", "BL-1529"},
             description = "Verifies that user is redirected to login page after submitting empty survey")
     public void userRedirectedToThankYouPageOnSubmissionOfEmptySurvey() throws IOException, URISyntaxException {
         // Given I am on the Test Complete Page as a tester
@@ -80,7 +80,7 @@ public class MotSurveyTests extends DslTest {
 
     }
 
-    @Test(testName = "Survey", groups = {"Regression", "BL-1529"},
+    @Test(groups = {"Regression", "BL-1529"},
             description = "Verifies that user is able to submit feedback")
     public void userRedirectedToThankYouPageOnSubmissionOfCompletedSurvey() throws IOException, URISyntaxException {
         // Given I am on the Test Complete Page as a tester
@@ -99,7 +99,7 @@ public class MotSurveyTests extends DslTest {
 
     }
 
-    @Test(testName = "Survey", groups = {"Regression", "BL-1531"},
+    @Test(groups = {"Regression", "BL-1531"},
             description = "Verifies that a valid user can navigate back from Survey Reports page to Home page")
     public void backwardNavigationFromSurveyReportsPageToHomePage() throws IOException, URISyntaxException {
         // Given I am on the Survey Reports page as a scheme user
@@ -113,7 +113,7 @@ public class MotSurveyTests extends DslTest {
 
     }
 
-    @Test(testName = "Survey", groups = {"Regression", "BL-1531"},
+    @Test(groups = {"Regression", "BL-1531"},
             description = "Verifies that an invalid user cannot navigate to the Survey Reports page",
             dataProvider = "invalidUserProvider")
     public void testNonValidUserCannotNavigateToSurveyReportsPage(User user) throws IOException, URISyntaxException {

@@ -7,7 +7,6 @@
 
 namespace DvsaMotApi\Controller;
 
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Service\Exception\BadRequestException;
@@ -41,10 +40,6 @@ class SurveyController extends AbstractDvsaRestfulController
      */
     public function markSurveyAsPresentedAction()
     {
-        if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
-            return $this->notFoundAction();
-        }
-
         $data = Json::decode($this->request->getContent(), Json::TYPE_ARRAY);
 
         if (!array_key_exists('token', $data)) {
@@ -61,10 +56,6 @@ class SurveyController extends AbstractDvsaRestfulController
      */
     public function hasBeenPresentedAction()
     {
-        if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
-            return $this->notFoundAction();
-        }
-
         $data = Json::decode($this->request->getContent(), Json::TYPE_ARRAY);
 
         if (!array_key_exists('token', $data)) {
@@ -89,10 +80,6 @@ class SurveyController extends AbstractDvsaRestfulController
      */
     public function create($data)
     {
-        if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
-            return $this->notFoundAction();
-        }
-
         $response = $this->surveyService->createSurveyResult($data);
 
         return ApiResponse::jsonOk($response);
@@ -103,10 +90,6 @@ class SurveyController extends AbstractDvsaRestfulController
      */
     public function generateReportsAction()
     {
-        if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
-            return $this->notFoundAction();
-        }
-
         $ratingCounts = [];
         $total = 0;
 
@@ -128,10 +111,6 @@ class SurveyController extends AbstractDvsaRestfulController
      */
     public function getReportsAction()
     {
-        if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
-            return $this->notFoundAction();
-        }
-
         $response = $this->surveyService->getSurveyReports();
 
         return ApiResponse::jsonOk(
@@ -146,10 +125,6 @@ class SurveyController extends AbstractDvsaRestfulController
      */
     public function shouldDisplaySurveyAction()
     {
-        if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
-            return $this->notFoundAction();
-        }
-
         $data = Json::decode($this->request->getContent(), Json::TYPE_ARRAY);
         if (!isset($data['motTestId']) || !isset($data['motTestTypeCode']) || !isset($data['testerId'])) {
             return ApiResponse::jsonOk(false);
@@ -165,10 +140,6 @@ class SurveyController extends AbstractDvsaRestfulController
      */
     public function createSessionTokenAction()
     {
-        if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
-            return $this->notFoundAction();
-        }
-
         $data = Json::decode($this->request->getContent(), Json::TYPE_ARRAY);
 
         return ApiResponse::jsonOk($this->surveyService->createSessionToken($data['motTestNumber']));
@@ -179,10 +150,6 @@ class SurveyController extends AbstractDvsaRestfulController
      */
     public function validateTokenAction()
     {
-        if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
-            return $this->notFoundAction();
-        }
-
         $data = Json::decode($this->request->getContent(), Json::TYPE_ARRAY);
         if (!isset($data['token'])) {
             return ApiResponse::jsonError(false);

@@ -55,10 +55,6 @@ class SurveyPageController extends AbstractAuthActionController
      */
     public function indexAction()
     {
-        if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
-            return $this->notFoundAction();
-        }
-
         // Token will be null unless set when event is triggered.
         $token = $this->params()->fromRoute(self::TOKEN_KEY);
 
@@ -70,10 +66,6 @@ class SurveyPageController extends AbstractAuthActionController
      */
     public function thanksAction()
     {
-        if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
-            return $this->notFoundAction();
-        }
-
         $ref = $_SERVER['HTTP_REFERER'];
         if (strpos($ref, 'survey') === false) {
             return $this->notFoundAction();
@@ -97,9 +89,6 @@ class SurveyPageController extends AbstractAuthActionController
     public function reportsAction()
     {
         $this->assertGranted(PermissionInSystem::GENERATE_SATISFACTION_SURVEY_REPORT);
-        if (!$this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
-            return $this->notFoundAction();
-        }
 
         $this->layout('layout/layout-govuk.phtml');
         $this->reports = $this->surveyService->getSurveyReports();
@@ -113,9 +102,6 @@ class SurveyPageController extends AbstractAuthActionController
     public function downloadReportCsvAction()
     {
         $this->assertGranted(PermissionInSystem::GENERATE_SATISFACTION_SURVEY_REPORT);
-        if (true !== $this->isFeatureEnabled(FeatureToggle::SURVEY_PAGE)) {
-            return $this->notFoundAction();
-        }
 
         $reportMonth = $this->params()->fromRoute('month');
 
