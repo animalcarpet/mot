@@ -2,30 +2,75 @@
 
 namespace Vehicle\UpdateVehicleProperty\Process;
 
+use Application\Service\CatalogService;
 use Core\Action\AbstractRedirectActionResult;
+use Core\Action\RedirectToRoute;
+use Core\Routing\VehicleRouteList;
+use Core\Routing\VehicleRoutes;
 use Core\TwoStepForm\FormContextInterface;
 use Core\TwoStepForm\SingleStepProcessInterface;
+use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
+use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
+use Vehicle\UpdateVehicleProperty\Context\UpdateVehicleContext;
+use Vehicle\UpdateVehicleProperty\Form\InputFilter\UpdateEngineInputFilter;
+use Vehicle\UpdateVehicleProperty\Form\UpdateEngineForm;
+use Vehicle\UpdateVehicleProperty\ViewModel\Builder\VehicleEditBreadcrumbsBuilder;
+use Vehicle\UpdateVehicleProperty\ViewModel\Builder\VehicleTertiaryTitleBuilder;
+use Vehicle\UpdateVehicleProperty\ViewModel\UpdateVehiclePropertyViewModel;
 use Zend\Form\Form;
+use Zend\View\Helper\Url;
 
 class UpdateEngineProcess implements SingleStepProcessInterface, AutoWireableInterface
 {
+    protected $pageSubTitle = 'Vehicle';
+    protected $templatePartial = 'partials/edit-engine';
+    protected $editStepMessage = 'Change engine specification';
+    protected $submitButtonText = 'Change engine specification';
+    protected $successfullEditMessage = 'The engine specification has been changed successfully';
+
+    /** @var  FormContextInterface| UpdateVehicleContext */
+    private $context;
+    private $url;
+    private $catalogService;
+    private $vehicleService;
+    private $vehicleEditBreadcrumbsBuilder;
+    private $vehicleTertiaryTitleBuilder;
+
+    public function __construct(
+        Url $url,
+        CatalogService $catalogService,
+        VehicleService $vehicleService,
+        VehicleTertiaryTitleBuilder $vehicleTertiaryTitleBuilder,
+        VehicleEditBreadcrumbsBuilder $vehicleEditBreadcrumbsBuilder
+    )
+    {
+        $this->url = $url;
+        $this->catalogService = $catalogService;
+        $this->vehicleService = $vehicleService;
+        $this->vehicleEditBreadcrumbsBuilder = $vehicleEditBreadcrumbsBuilder;
+        $this->vehicleTertiaryTitleBuilder = $vehicleTertiaryTitleBuilder;
+    }
 
     public function setContext(FormContextInterface $context)
     {
-        // TODO: Implement setContext() method.
+        $this->context = $context;
+        return $this;
     }
 
     /**
      * Will make a call to API to update the data from the form
      *
      * @param $formData
-     * @return
      */
     public function update($formData)
     {
-        // TODO: Implement update() method.
+        $request = new UpdateDvsaVehicleRequest();
+        $request->setFuelTypeCode($formData[UpdateEngineForm::FIELD_FUEL_TYPE]);
+        $request->setCylinderCapacity($formData[UpdateEngineForm::FIELD_CAPACITY]);
+        $this->vehicleService->updateDvsaVehicle($this->context->getVehicleId(), $request);
     }
 
     /**
@@ -35,7 +80,13 @@ class UpdateEngineProcess implements SingleStepProcessInterface, AutoWireableInt
      */
     public function getPrePopulatedData()
     {
-        // TODO: Implement getPrePopulatedData() method.
+        $vehicle = $this->context->getVehicle();
+        $fuelType = $vehicle->getFuelTypeCode();
+
+        return [
+            UpdateEngineForm::FIELD_FUEL_TYPE => $fuelType ? $fuelType->code : null,
+            UpdateEngineForm::FIELD_CAPACITY => $vehicle->getCylinderCapacity(),
+        ];
     }
 
     /**
@@ -45,7 +96,7 @@ class UpdateEngineProcess implements SingleStepProcessInterface, AutoWireableInt
      */
     public function getSubmitButtonText()
     {
-        // TODO: Implement getSubmitButtonText() method.
+        return $this->submitButtonText;
     }
 
     /**
@@ -57,7 +108,10 @@ class UpdateEngineProcess implements SingleStepProcessInterface, AutoWireableInt
      */
     public function getBreadcrumbs(MotAuthorisationServiceInterface $authorisationService)
     {
-        // TODO: Implement getBreadcrumbs() method.
+        return $this->vehicleEditBreadcrumbsBuilder->getVehicleEditBreadcrumbs(
+            $this->getEditStepPageTitle(),
+            $this->context->getObfuscatedVehicleId()
+        );
     }
 
     /**
@@ -67,7 +121,13 @@ class UpdateEngineProcess implements SingleStepProcessInterface, AutoWireableInt
      */
     public function createEmptyForm()
     {
-        // TODO: Implement createEmptyForm() method.
+        $fuelTypes = $this->catalogService->getFuelTypes();
+        $updateEngineInputFilter = new UpdateEngineInputFilter($fuelTypes);
+        $updateEngineForm = new UpdateEngineForm($fuelTypes);
+
+        return $updateEngineForm
+            ->setEngineCapacityValidator($updateEngineInputFilter->getEngineCapacityValidator())
+            ->setInputFilter($updateEngineInputFilter->getInputFilter());
     }
 
     /**
@@ -77,7 +137,7 @@ class UpdateEngineProcess implements SingleStepProcessInterface, AutoWireableInt
      */
     public function getSuccessfulEditMessage()
     {
-        // TODO: Implement getSuccessfulEditMessage() method.
+        return $this->successfullEditMessage;
     }
 
     /**
@@ -87,7 +147,7 @@ class UpdateEngineProcess implements SingleStepProcessInterface, AutoWireableInt
      */
     public function getEditStepPageTitle()
     {
-        // TODO: Implement getEditStepPageTitle() method.
+        return $this->editStepMessage;
     }
 
     /**
@@ -97,16 +157,23 @@ class UpdateEngineProcess implements SingleStepProcessInterface, AutoWireableInt
      */
     public function getPageSubTitle()
     {
-        // TODO: Implement getPageSubTitle() method.
+        return $this->pageSubTitle;
     }
 
     /**
      * @param $form
-     * @return Object Anything you want to pass to the view file
+     * @return UpdateVehiclePropertyViewModel Anything you want to pass to the view file
      */
     public function buildEditStepViewModel($form)
     {
-        // TODO: Implement buildEditStepViewModel() method.
+        $updateVehiclePropertyViewModel = new UpdateVehiclePropertyViewModel();
+        return $updateVehiclePropertyViewModel
+            ->setForm($form)
+            ->setSubmitButtonText($this->getSubmitButtonText())
+            ->setPartial($this->templatePartial)
+            ->setBackUrl(VehicleRoutes::of($this->url)->vehicleDetails($this->context->getObfuscatedVehicleId(), []))
+            ->setFormActionUrl(VehicleRoutes::of($this->url)->vehicleEditEngine($this->context->getObfuscatedVehicleId()))
+            ->setPageTertiaryTitle($this->vehicleTertiaryTitleBuilder->getTertiaryTitleForVehicle($this->context->getVehicle()));
     }
 
     /**
@@ -114,7 +181,7 @@ class UpdateEngineProcess implements SingleStepProcessInterface, AutoWireableInt
      */
     public function redirectToStartPage()
     {
-        // TODO: Implement redirectToStartPage() method.
+        return new RedirectToRoute(VehicleRouteList::VEHICLE_DETAIL, ['id' => $this->context->getObfuscatedVehicleId()]);
     }
 
     /**
@@ -125,11 +192,11 @@ class UpdateEngineProcess implements SingleStepProcessInterface, AutoWireableInt
      */
     public function isAuthorised(MotAuthorisationServiceInterface $authorisationService)
     {
-        // TODO: Implement isAuthorised() method.
+        return $authorisationService->isGranted(PermissionInSystem::VEHICLE_UPDATE);
     }
 
     public function getEditPageLede()
     {
-        // TODO: Implement getEditPageLede() method.
+        return null;
     }
 }
