@@ -77,6 +77,10 @@ public class Vehicle {
         return this;
     }
 
+    public String getColorsWithSeparator(String separator) {
+        return colour + separator + colourSecondary;
+    }
+
     public String getCylinderCapacity() {
         return cylinderCapacity;
     }
@@ -189,8 +193,8 @@ public class Vehicle {
         return this;
     }
 
-    public String getMakeModel() {
-        return make + " " + model;
+    public String getMakeModelWithSeparator(String separator) {
+        return make + separator + model;
     }
 
     public String getMakeOther() {
@@ -361,7 +365,7 @@ public class Vehicle {
                 ", makeOther='" + makeOther + '\'' +
                 ", model='" + model + '\'' +
                 ", modelOther='" + modelOther + '\'' +
-                ", makeModel='" + getMakeModel() + '\'' +
+                ", makeModel='" + getMakeModelWithSeparator(" ") + '\'' +
                 ", colour='" + colour + '\'' +
                 ", secondaryColour='" + colourSecondary + '\'' +
                 ", dateOfFirstUse='" + firstUsedDate + '\'' +

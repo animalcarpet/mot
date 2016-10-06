@@ -2,11 +2,13 @@ package uk.gov.dvsa.shared;
 
 import uk.gov.dvsa.domain.model.AeDetails;
 import uk.gov.dvsa.domain.model.User;
+import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.journey.*;
 import uk.gov.dvsa.journey.authentication.Authentication;
 import uk.gov.dvsa.journey.profile.Profile;
+import uk.gov.dvsa.journey.vehicleInformation.VehicleInformation;
 import uk.gov.dvsa.module.ReInspection;
 import uk.gov.dvsa.ui.interfaces.TwoFactorPromptPage;
 import uk.gov.dvsa.ui.pages.HomePage;
@@ -19,6 +21,8 @@ import uk.gov.dvsa.ui.pages.authentication.twofactorauth.TwoFactorPinEntryPage;
 import uk.gov.dvsa.ui.pages.events.EventsHistoryPage;
 import uk.gov.dvsa.ui.pages.events.HistoryType;
 import uk.gov.dvsa.ui.pages.login.LoginPage;
+import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationPage;
+import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationSearchPage;
 
 import java.io.IOException;
 
@@ -46,6 +50,7 @@ public class MotUI {
     public final ReInspection reInspection;
     public final ClaimAccount claimAccount;
     public final Nominations nominations;
+    public final VehicleInformation vehicleInformation;
 
     public MotUI(MotAppDriver driver) {
         pageNavigator.setDriver(driver);
@@ -68,6 +73,7 @@ public class MotUI {
         organisation = new Organisation(pageNavigator);
         claimAccount = new ClaimAccount(pageNavigator);
         nominations = new Nominations(pageNavigator);
+        vehicleInformation = new VehicleInformation();
     }
 
     public void login(final User user) throws IOException {
@@ -106,6 +112,13 @@ public class MotUI {
         String path = String.format(EventsHistoryPage.PATH, historyType.toString(), aeDetails.getIdAsString());
         EventsHistoryPage eventsHistoryPage = pageNavigator.navigateToPage(user, path, EventsHistoryPage.class);
         eventHistory.setHistoryPage(eventsHistoryPage, aeDetails);
+    }
+
+    public void showVehicleInformationFor(User user, Vehicle vehicle) throws IOException {
+        VehicleInformationPage vehicleInformationPage =
+                pageNavigator.navigateToPage(user, VehicleInformationSearchPage.PATH, VehicleInformationSearchPage.class)
+                .findVehicleAndRedirectToVehicleInformationPage(vehicle.getDvsaRegistration());
+        vehicleInformation.setVehicleInformationPage(vehicleInformationPage);
     }
 
     public boolean verifyLoginPageIsDisplayed() {

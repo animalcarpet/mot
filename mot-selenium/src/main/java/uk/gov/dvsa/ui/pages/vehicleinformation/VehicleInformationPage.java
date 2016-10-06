@@ -25,6 +25,12 @@ public class VehicleInformationPage extends Page {
     @FindBy(id = "make-and-model") private WebElement makeModel;
     @FindBy(id = "registration-mark") private WebElement registrationNumber;
     @FindBy (id = "vin") private WebElement vinNumber;
+    @FindBy (id = "engine") private WebElement engine;
+    @FindBy(id = "engine-change") private WebElement changeEngineLink;
+    @FindBy(id = "mot-test-class-change") private WebElement changeMotTestClassLink;
+    @FindBy(id = "mot-test-class") private WebElement motTestClass;
+    @FindBy(id = "country-of-registration") private WebElement countryOfRegistration;
+    @FindBy(id = "country-of-registration-change") private WebElement changeCountryOfRegistrationLink;
 
     public VehicleInformationPage(MotAppDriver driver) {
         super(driver);
@@ -56,6 +62,10 @@ public class VehicleInformationPage extends Page {
         return pageHeaderTitle.getText();
     }
 
+    public String getEngine() {
+        return engine.getText();
+    }
+
     public String getPageHeaderTertiaryRegistration() {
         return pageHeaderTertiaryRegistration.getText();
     }
@@ -73,5 +83,28 @@ public class VehicleInformationPage extends Page {
                 is(vehicle.getDvsaRegistration()));
         assertThat("The Vin is as expected", getVinNumber(),
                 is(vehicle.getVin()));
+    }
+
+    public ChangeEnginePage clickChangeEngineLink() {
+        changeEngineLink.click();
+        return new ChangeEnginePage(driver);
+    }
+
+    public ChangeMotTestClassPage clickChangeMotTestClassLink() {
+        changeMotTestClassLink.click();
+        return new ChangeMotTestClassPage(driver);
+    }
+
+    public String getMotTestClass() {
+        return motTestClass.getText();
+    }
+
+    public String getCountryOfRegistration() {
+        return countryOfRegistration.getText();
+    }
+
+    public ChangeCountryOfRegistrationPage clickChangeCountryOfRegistrationLink() {
+        changeCountryOfRegistrationLink.click();
+        return new ChangeCountryOfRegistrationPage(driver);
     }
 }
