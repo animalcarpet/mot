@@ -5,8 +5,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
-import uk.gov.dvsa.domain.model.vehicle.DvlaVehicle;
-import uk.gov.dvsa.domain.model.vehicle.Vehicle;
+import uk.gov.dvsa.domain.model.vehicle.*;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationPage;
 import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationSearchPage;
@@ -20,23 +19,18 @@ import static org.hamcrest.Matchers.is;
 public class VehicleInformationViewTests extends DslTest {
     private User tester;
     private Vehicle vehicle;
+    private User areaOffice1User;
 
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws IOException {
         Site site = siteData.createSite();
         tester = userData.createTester(site.getId());
         vehicle = vehicleData.getNewVehicle(tester);
+        areaOffice1User = userData.createAreaOfficeOne("ao1");
     }
 
     @Test (groups = {"Regression"})
     public void viewVehicleInformationSuccessfully() throws IOException, URISyntaxException {
-        User areaOffice1User = userData.createAreaOfficeOne("ao1");
-        String vehicleManufactureDate = DateTimeFormat.forPattern("yyyy-MM-dd")
-                .parseDateTime(vehicle.getManufactureDate())
-                .toString("d MMMM yyyy");
-        String vehicleColors = vehicle.getColour() + " and " + vehicle.getColourSecondary();
-        String vehicleMakeModel = vehicle.getMake() + ", " + vehicle.getModel();
-
         //Given There are 2 vehicles with the same registration
         vehicleData.getNewVehicle(tester, vehicle.getDvsaRegistration());
 
@@ -52,16 +46,14 @@ public class VehicleInformationViewTests extends DslTest {
         //Then vehicle information will be correct
         assertThat(vehicleInformationPage.getPageHeaderTertiaryRegistration(), is(vehicle.getDvsaRegistration()));
         assertThat(vehicleInformationPage.getPageHeaderTertiaryVin(), is(vehicle.getVin()));
-        assertThat(vehicleInformationPage.getPageHeaderTitle(), is(vehicleMakeModel));
-        assertThat(vehicleInformationPage.getManufactureDate(), is(vehicleManufactureDate));
-        assertThat(vehicleInformationPage.getColour(), is(vehicleColors));
-        assertThat(vehicleInformationPage.getMakeModel(), is(vehicleMakeModel));
+        assertThat(vehicleInformationPage.getPageHeaderTitle(), is(vehicle.getMakeModelWithSeparator(", ")));
+        assertThat(vehicleInformationPage.getManufactureDate(), is(getManufactureDateForVehicle(vehicle.getManufactureDate())));
+        assertThat(vehicleInformationPage.getColour(), is(vehicle.getColorsWithSeparator(" and ")));
+        assertThat(vehicleInformationPage.getMakeModel(), is(vehicle.getMakeModelWithSeparator(", ")));
     }
 
     @Test (groups = {"Regression"})
     public void redirectToVehicleInformationIfFoundOnlyOneResult() throws IOException, URISyntaxException {
-        User areaOffice1User = userData.createAreaOfficeOne("ao1");
-
         //Given i am on the Vehicle Information Page as an AreaOffice1User
         VehicleInformationSearchPage vehicleInformationSearchPage =
                 pageNavigator.navigateToPage(areaOffice1User, VehicleInformationSearchPage.PATH, VehicleInformationSearchPage.class);
@@ -73,7 +65,7 @@ public class VehicleInformationViewTests extends DslTest {
         //Then I should be able to view that vehicles information
 
         assertThat("The registration is as expected", vehicleInformationPage.getRegistrationNumber(), is(vehicle.getDvsaRegistration()));
-        assertThat("The Vin is as expected",vehicleInformationPage. getVinNumber(), is(vehicle.getVin()));
+        assertThat("The Vin is as expected",vehicleInformationPage.getVinNumber(), is(vehicle.getVin()));
     }
 
     @Test(groups = {"Regression"}, description = "BL-46")
@@ -114,5 +106,47 @@ public class VehicleInformationViewTests extends DslTest {
         //Then I should find the vehicle
         assertThat(motUI.normalTest.getVin(), is(dvlaVehicle.getVin()));
         assertThat(motUI.normalTest.getRegistration(), is(dvlaVehicle.getRegistration()));
+    }
+
+    @Test(groups = {"Regression"})
+    public void vehicleEditEngineCorrectByAreaOffice() throws  IOException, URISyntaxException {
+        //And i am on the Vehicle Information Page as an AreaOffice1User
+        motUI.showVehicleInformationFor(areaOffice1User, vehicle);
+
+        //When I change Engine
+        motUI.vehicleInformation.changeEngine(FuelTypes.Gas, "234");
+
+        //Then Engine will be changed
+        assertThat(motUI.vehicleInformation.getEngine(), is("Gas, 234 cc"));
+    }
+
+    @Test(groups = {"Regression"})
+    public void vehicleEditMotTestClassCorrectByAreaOffice() throws  IOException, URISyntaxException {
+        //And i am on the Vehicle Information Page as an AreaOffice1User
+        motUI.showVehicleInformationFor(areaOffice1User, vehicleData.getNewVehicle(tester));
+
+        //When I change Mot Test Class
+        motUI.vehicleInformation.changeMotTestClass(VehicleClass.two);
+
+        //Then Mot Test Class will be changed
+        assertThat(motUI.vehicleInformation.getMotTestClass(), is("2"));
+    }
+
+    @Test(groups = {"Regression"})
+    public void vehicleEditCountryOfRegistrationCorrectByAreaOffice() throws  IOException, URISyntaxException {
+        //And i am on the Vehicle Information Page as an AreaOffice1User
+        motUI.showVehicleInformationFor(areaOffice1User, vehicle);
+
+        //When I change Country of Registration
+        motUI.vehicleInformation.changeCountryOfRegistration(CountryOfRegistration.Czech_Republic);
+
+        //Then Country of Registration will be changed
+        assertThat(motUI.vehicleInformation.getCountryOfRegistration(), is(CountryOfRegistration.Czech_Republic.getCountry()));
+    }
+
+    private String getManufactureDateForVehicle(String manufactureDate) {
+        return DateTimeFormat.forPattern("yyyy-MM-dd")
+                .parseDateTime(manufactureDate)
+                .toString("d MMMM yyyy");
     }
 }
