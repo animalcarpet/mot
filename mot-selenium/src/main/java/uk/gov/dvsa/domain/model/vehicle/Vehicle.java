@@ -16,6 +16,7 @@ public class Vehicle {
     private String firstRegistrationDate;
     private String firstUsedDate;
     private String fuelType;
+    private FuelType fuelTypeCode;
     private String id;
     private String isNewAtFirstReg;
     private String make;
@@ -149,6 +150,15 @@ public class Vehicle {
 
     public Vehicle setFuelType(String fuelType) {
         this.fuelType = fuelType;
+        return this;
+    }
+
+    public FuelType getFuelTypeCode() {
+        return fuelTypeCode;
+    }
+
+    public Vehicle setFuelTypeCode(FuelType fuelTypeCode) {
+        this.fuelTypeCode = fuelTypeCode;
         return this;
     }
 

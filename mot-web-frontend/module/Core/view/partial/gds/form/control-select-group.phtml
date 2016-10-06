@@ -5,6 +5,8 @@ $label = $this->label;
 $value = $this->value;
 $options = $this->options;
 $optional= $this->optional;
+$dataTarget = $this->dataTarget;
+$dataTargetValue = $this->dataTargetValue;
 $type = (empty($this->type) ? 'text' : $this->type);
 
 $inputModifier  = isset($inputModifier) ? $inputModifier : '';
@@ -43,6 +45,8 @@ $cssClass = join(
             'value'         => $value,
             'optional'      => $optional,
             'options'       => $options,
+            'dataTarget'    => $dataTarget,
+            'dataTargetValue'=> $dataTargetValue,
             'inputModifier' => $inputModifier,
         ]
     ); ?>

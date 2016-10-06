@@ -1,0 +1,36 @@
+<?php
+use Vehicle\UpdateVehicleProperty\Form\UpdateEngineForm;
+use Vehicle\UpdateVehicleProperty\ViewModel\UpdateVehiclePropertyViewModel;
+
+/** @var UpdateVehiclePropertyViewModel $viewModel */
+/** @var UpdateEngineForm $form */
+
+$form = $viewModel->getForm();
+?>
+
+<fieldset>
+    <?php echo $this->partial(
+        'partial/gds/form/control',
+        [
+            'element' => $form->getEngineTypeElement(),
+        ]
+    );?>
+
+    <div id="div-cylinder-capacity" aria-hidden="false">
+        <?php echo $this->partial(
+            'partial/gds/form/control',
+            [
+                'element' => $form->getEngineCapacityElement()
+            ]
+        );?>
+    </div>
+</fieldset>
+
+<?php echo $this->headScript()->appendFile('/assets/javascripts/vendor/jquery-1.11.0.min.js'); ?>
+<?php echo $this->headScript()->appendFile('/assets/javascripts/dvsa.js'); ?>
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        DVSASelectToggle.init();
+    });
+</script>

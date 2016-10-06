@@ -4,6 +4,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use Zend\Form\Element\Radio;
 use Zend\Form\Element\Select;
 
+/** @var \Zend\Form\Element $element */
 $errorMessages = $element->getMessages();
 $errorMessage = ArrayUtils::firstOrNull($errorMessages);
 $params = [
@@ -12,6 +13,8 @@ $params = [
     "value" => $element->getValue(),
     "errorMessage" => $errorMessage,
     "help" => $element->getAttribute("help"),
+    "dataTarget" => $element->getAttribute("data-target"),
+    "dataTargetValue" => $element->getAttribute("data-target-value"),
     "info" => $info,
 ];
 $params = array_merge($params, $element->getAttributes());

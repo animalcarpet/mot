@@ -3,11 +3,18 @@
         $defaultValue = 'Please select';
     }
 ?>
+<?php
+    $dataTarget = $this->dataTarget ? sprintf('data-target="%s"', $this->escapeHtmlAttr($this->dataTarget)) : '';
+    $dataTargetValue = $this->dataTargetValue ? sprintf('data-target-value="%s"', $this->escapeHtmlAttr($this->dataTargetValue)) : '';
+?>
 <select
     id="<?php echo $this->escapeHtmlAttr($this->id); ?>"
     name="<?php echo $this->escapeHtmlAttr($this->name); ?>"
     class="form-control
-        <?php echo !empty($inputModifier) ? 'form-control-' . $this->escapeHtmlAttr($inputModifier) : ''; ?>">
+        <?php echo !empty($inputModifier) ? 'form-control-' . $this->escapeHtmlAttr($inputModifier) : ''; ?>"
+    <?php echo $dataTarget ?>
+    <?php echo $dataTargetValue ?>
+    >
 
     <option value="">
         <?php echo $this->escapeHtml($defaultValue); ?>

@@ -5,6 +5,7 @@ $label = $this->label ?: '';
 $value = $this->value;
 $type = (empty($this->type) ? 'text' : $this->type);
 $help = $this->help;
+$dataTarget = $this->dataTarget;
 $labelVisuallyHidden = $this->labelVisuallyHidden;
 $errorOutsideLabel = $this->errorOutsideLabel;
 
@@ -24,7 +25,7 @@ $cssClass = join(
 );
 
 ?>
-<div class="form-group <?php echo $this->escapeHtmlAttr($cssClass); ?>">
+<div class="form-group <?php echo $this->escapeHtmlAttr($cssClass); ?>" <?php echo $dataTarget ? sprintf('id="%s"', $dataTarget) : '' ?> >
     <label for="<?php echo $this->escapeHtmlAttr($id); ?>"
            class="form-label <?php echo $labelVisuallyHidden ? 'visuallyhidden' : ''; ?>">
 
