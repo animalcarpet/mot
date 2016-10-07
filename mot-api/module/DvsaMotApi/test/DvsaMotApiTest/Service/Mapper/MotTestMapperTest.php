@@ -54,7 +54,7 @@ use DvsaEntities\Entity\TestItemCategoryDescription;
 use DvsaEntities\Entity\TestItemSelector;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
-use DvsaCommon\Formatting\DefectSentenceCaseConverter;
+use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
 use DvsaMotApi\Service\Mapper\MotTestMapper;
 use DvsaMotApi\Service\MotTestDateHelperService;
 use DvsaMotApiTest\Service\MotTestServiceTest;

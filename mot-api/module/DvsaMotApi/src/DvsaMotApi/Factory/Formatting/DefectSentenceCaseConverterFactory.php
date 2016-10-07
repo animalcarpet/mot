@@ -1,8 +1,8 @@
 <?php
 
-namespace DvsaCommon\Factory\Formatting;
+namespace DvsaMotApi\Factory\Formatting;
 
-use DvsaCommon\Formatting\DefectSentenceCaseConverter;
+use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
 use DvsaFeature\FeatureToggles;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;

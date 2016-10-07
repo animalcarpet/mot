@@ -5,9 +5,10 @@ namespace DvsaMotApiTest\Formatting;
 use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\LanguageTypeCode;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
-use DvsaCommon\Formatting\DefectSentenceCaseConverter;
+use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Language;
+use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Entity\ReasonForRejectionDescription;
 use DvsaEntities\Entity\TestItemCategoryDescription;
@@ -20,6 +21,9 @@ use PHPUnit_Framework_TestCase;
  */
 class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
 {
+    /** @var MotTestReasonForRejection */
+    private $motTestReasonForRejection;
+
     /** @var ReasonForRejection */
     private $reasonForRejection;
 
@@ -43,12 +47,16 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
 
     public function setup()
     {
+        // Create mocks
         $this->featureToggles = XMock::of(FeatureToggles::class);
-
-        $this->defectSentenceCaseConverterService = new DefectSentenceCaseConverter($this->featureToggles);
 
         $this->language = $this
             ->getMockBuilder(Language::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->motTestReasonForRejection = $this
+            ->getMockBuilder(MotTestReasonForRejection::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -71,6 +79,12 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
             ->getMockBuilder(ReasonForRejectionDescription::class)
             ->disableOriginalConstructor()
             ->getMock();
+
+        // Mock methods
+        $this
+            ->motTestReasonForRejection
+            ->method('getReasonForRejection')
+            ->willReturn($this->reasonForRejection);
 
         $this
             ->reasonForRejection
@@ -113,15 +127,8 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
             ->reasonForRejection
             ->method('getDescriptions')
             ->willReturn($rfrDescriptions);
-    }
 
-    public function testConversionOfStringWithAcronymAtStart()
-    {
-        $this->enableTestResultEntryImprovements(true);
-        $stringToCovert = 'TEST that a string with an acronym at the start is converted correctly';
-        $expectedString = 'TEST that a string with an acronym at the start is converted correctly';
-
-        $this->assertConversionForAddADefect($stringToCovert, $expectedString);
+        $this->defectSentenceCaseConverterService = new DefectSentenceCaseConverter($this->featureToggles);
     }
 
     public function testAbsIsCapitalised()
@@ -196,75 +203,233 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
         $this->assertConversionForDefectCategories($stringToCovert, $expectedString);
     }
 
-    public function testAcronymsNotExpandedIfExpandedFormAlreadyPresentAsUsedInResultsBasketAsAdvisory()
+    public function testAddADefectWithToggleOn()
     {
         $this->enableTestResultEntryImprovements(true);
-        $categoryDescription = 'Abs';
-        $advisoryText = 'warning lamp indicates an ABS fault';
-        $expectedCategoryDescription = 'Anti-lock braking system';
-        $expectedAdvisoryText = 'warning lamp indicates an ABS fault';
 
-        $this->assertConversionForTestResultsWithAnAdvisoryDefect($categoryDescription, $advisoryText, $expectedCategoryDescription, $expectedAdvisoryText);
-    }
-
-    public function testAcronymsNotExpandedIfExpandedFormAlreadyPresentAsUsedInResultsBasketAsPrs()
-    {
-        $this->enableTestResultEntryImprovements(true);
-        $categoryDescription = 'Abs';
-        $name = 'warning lamp indicates an ABS fault';
-        $expectedCategoryDescription = 'Anti-lock braking system';
-        $expectedAdvisoryText = 'warning lamp indicates an ABS fault';
-
-        $this->assertConversionForTestResultsWithAPrsDefect($categoryDescription, $name, $expectedCategoryDescription, $expectedAdvisoryText);
-    }
-
-    public function testToggleOffBehaviourForAcronymsInResultsBasket()
-    {
-        $this->enableTestResultEntryImprovements(false);
-        $categoryDescription = 'Abs';
-        $name = 'warning lamp indicates an ABS fault';
-        $expectedCategoryDescription = 'Abs';
-        $expectedAdvisoryText = 'warning lamp indicates an ABS fault';
-
-        $this->assertConversionForTestResultsWithAPrsDefect($categoryDescription, $name, $expectedCategoryDescription, $expectedAdvisoryText);
-    }
-
-    public function testToggleOffBehaviourForInconsistentlyNamedDefectsInResultsBasket()
-    {
-        $this->enableTestResultEntryImprovements(false);
-        $categoryDescription = 'Child Seat';
-        $name = 'fitted not allowing full inspection of adult belt';
-        $expectedCategoryDescription = 'Child Seat';
-        $expectedAdvisoryText = 'fitted not allowing full inspection of adult belt';
-
-        $this->assertConversionForTestResultsWithAPrsDefect($categoryDescription, $name, $expectedCategoryDescription, $expectedAdvisoryText);
-    }
-
-    public function testToggleOffBehaviourForExpandedAcronymsInResultsBasket()
-    {
-        $this->enableTestResultEntryImprovements(false);
-        $categoryDescription = 'Vehicle Identification Number';
-        $name = 'not permanently displayed ';
-        $expectedCategoryDescription = 'Vehicle Identification Number';
-        $expectedAdvisoryText = 'not permanently displayed ';
-
-        $this->assertConversionForTestResultsWithAPrsDefect($categoryDescription, $name, $expectedCategoryDescription, $expectedAdvisoryText);
-    }
-
-    public function testAcronymsNotFormattedIfToggleOffInSearch()
-    {
-        $this->enableTestResultEntryImprovements(false);
-        $stringToConvert = 'Abs';
-        $expectedString = 'Abs';
-
-        $this->setReasonForRejectionName($stringToConvert);
-        $this->setTestItemCategoryDescription($stringToConvert);
-        $actualResult = $this->defectSentenceCaseConverterService->formatRfrDescriptionsForDefectsAndSearchForADefect($this->reasonForRejection);
+        $this->setTestItemCategoryDescriptionName('Category name');
+        $this->setTestItemCategoryDescription('Category description');
+        $this->setReasonForRejectionName('Defect name');
+        $this->setReasonForRejectionAdvisoryText('Defect advisory text');
         $expectedResult = [
-            'description' => $expectedString,
-            'advisoryText' => null,
-            'inspectionManualDescription' => null,
+            'description' => 'Category description defect name',
+            'advisoryText' => 'Category description defect advisory text',
         ];
+        $actualResult = $this->defectSentenceCaseConverterService->getDefectDetailsForAddADefect($this->reasonForRejection);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function testAddADefectWithToggleOff()
+    {
+        $this->enableTestResultEntryImprovements(false);
+
+        $this->setTestItemCategoryDescriptionName('Category name');
+        $this->setTestItemCategoryDescription('Category description');
+        $this->setReasonForRejectionName('Defect name');
+        $this->setReasonForRejectionAdvisoryText('Defect advisory text');
+        $expectedResult = [
+            'description' => 'Category description Defect name',
+            'advisoryText' => 'Category description Defect advisory text',
+        ];
+        $actualResult = $this->defectSentenceCaseConverterService->getDefectDetailsForAddADefect($this->reasonForRejection);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function testListAndSearchWithToggleOn()
+    {
+        $this->enableTestResultEntryImprovements(true);
+
+        $this->setTestItemCategoryDescriptionName('Category name');
+        $this->setTestItemCategoryDescription('Category description');
+        $this->setReasonForRejectionName('Defect name');
+        $this->setReasonForRejectionAdvisoryText('Defect advisory text');
+        $this->setReasonForRejectionInspectionManualDescription('Inspection manual description');
+        $expectedResult = [
+            'description' => 'Category description defect name',
+            'advisoryText' => 'Category description defect advisory text',
+            'inspectionManualDescription' => 'Inspection manual description',
+        ];
+        $actualResult = $this->defectSentenceCaseConverterService->getDefectDetailsForListAndSearch($this->reasonForRejection);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function testListAndSearchWithToggleOff()
+    {
+        $this->enableTestResultEntryImprovements(false);
+
+        $this->setTestItemCategoryDescriptionName('Category name');
+        $this->setTestItemCategoryDescription('Category description');
+        $this->setReasonForRejectionName('Defect name');
+        $this->setReasonForRejectionAdvisoryText('Defect advisory text');
+        $this->setReasonForRejectionInspectionManualDescription('Inspection manual description');
+        $expectedResult = [
+            'description' => 'Defect name',
+            'advisoryText' => 'Defect advisory text',
+            'inspectionManualDescription' => 'Inspection manual description',
+        ];
+        $actualResult = $this->defectSentenceCaseConverterService->getDefectDetailsForListAndSearch($this->reasonForRejection);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function testTestResultsAndBasketWithToggleOn()
+    {
+        $this->enableTestResultEntryImprovements(true);
+
+        $this->setTestItemCategoryDescriptionName('Category name');
+        $this->setTestItemCategoryDescription('Category description');
+        $this->setReasonForRejectionName('Defect name');
+        $this->setReasonForRejectionAdvisoryText('Defect advisory text');
+        $this->setReasonForRejectionInspectionManualDescription('Inspection manual description');
+        $expectedResult = [
+            'name' => 'Category name',
+            'testItemSelectorDescription' => 'Category description',
+            'failureText' => 'defect name',
+        ];
+        $actualResult = $this->defectSentenceCaseConverterService->getDefectDetailsForTestResultsAndBasket($this->motTestReasonForRejection);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function testTestResultsAndBasketWithToggleOff()
+    {
+        $this->enableTestResultEntryImprovements(false);
+
+        $this->setTestItemCategoryDescriptionName('Category name');
+        $this->setTestItemCategoryDescription('Category description');
+        $this->setReasonForRejectionName('Defect name');
+        $this->setReasonForRejectionAdvisoryText('Defect advisory text');
+        $this->setReasonForRejectionInspectionManualDescription('Inspection manual description');
+        $expectedResult = [
+            'name' => 'Category name',
+            'testItemSelectorDescription' => 'Category description',
+            'failureText' => 'Defect name',
+        ];
+        $actualResult = $this->defectSentenceCaseConverterService->getDefectDetailsForTestResultsAndBasket($this->motTestReasonForRejection);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function testAcronymsInTestResultsAndBasketWithToggelOff()
+    {
+        $this->enableTestResultEntryImprovements(false);
+        $this->setDefectType(ReasonForRejectionTypeName::FAIL);
+        $this->setTestItemCategoryDescription('Vehicle Identification Number');
+        $this->setReasonForRejectionName('not permanently displayed');
+        $this->setTestItemCategoryDescriptionName('Vehicle Identification Number (Bold text shown in the basket)');
+        $expectedResult = [
+            'testItemSelectorDescription' => 'Vehicle Identification Number',
+            'failureText' => 'not permanently displayed',
+            'name' => 'Vehicle Identification Number (Bold text shown in the basket)',
+        ];
+        $actualResult = $this->defectSentenceCaseConverterService->getDefectDetailsForTestResultsAndBasket($this->motTestReasonForRejection);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function testAcronymsNotChangedInResultsBasketWithToggleOff()
+    {
+        $this->enableTestResultEntryImprovements(false);
+        $this->setDefectType(ReasonForRejectionTypeName::ADVISORY);
+        $this->setTestItemCategoryDescription('Abs');
+        $this->setReasonForRejectionAdvisoryText('warning lamp indicates an ABS fault');
+        $this->setTestItemCategoryDescriptionName('Abs');
+        $expectedResult = [
+            'testItemSelectorDescription' => 'Abs',
+            'failureText' => 'warning lamp indicates an ABS fault',
+            'name' => 'Abs',
+        ];
+        $actualResult = $this->defectSentenceCaseConverterService->getDefectDetailsForTestResultsAndBasket($this->motTestReasonForRejection);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function testInconsistentlyNamedDefectsInTestResultsAndBasketWithToggleOff()
+    {
+        $this->enableTestResultEntryImprovements(false);
+        $this->setDefectType(ReasonForRejectionTypeName::PRS);
+        $this->setTestItemCategoryDescription('Child Seat');
+        $this->setReasonForRejectionName('fitted not allowing full inspection of adult belt');
+        $this->setTestItemCategoryDescriptionName('Non-component advisories');
+        $expectedResult = [
+            'testItemSelectorDescription' => 'Child Seat',
+            'failureText' => 'fitted not allowing full inspection of adult belt',
+            'name' => 'Non-component advisories',
+        ];
+        $actualResult = $this->defectSentenceCaseConverterService->getDefectDetailsForTestResultsAndBasket($this->motTestReasonForRejection);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function testAcronymsExpandedInResultsBasketWithToggleOnAndAdvisory()
+    {
+        $this->enableTestResultEntryImprovements(true);
+        $this->setDefectType(ReasonForRejectionTypeName::ADVISORY);
+        $this->setTestItemCategoryDescription('Abs');
+        $this->setReasonForRejectionAdvisoryText('warning lamp indicates an ABS fault (advisory text)');
+        $this->setTestItemCategoryDescriptionName('Abs');
+        $expectedResult = [
+            'testItemSelectorDescription' => 'Anti-lock braking system',
+            'failureText' => 'warning lamp indicates an ABS fault (advisory text)',
+            'name' => 'Abs',
+        ];
+        $actualResult = $this->defectSentenceCaseConverterService->getDefectDetailsForTestResultsAndBasket($this->motTestReasonForRejection);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function testAcronymsExpandedInResultsBasketWithToggleOnAndPrs()
+    {
+        $this->enableTestResultEntryImprovements(true);
+        $this->setDefectType(ReasonForRejectionTypeName::PRS);
+        $this->setTestItemCategoryDescription('Abs');
+        $this->setReasonForRejectionName('warning lamp indicates an ABS fault (PRS text)');
+        $this->setTestItemCategoryDescriptionName('Abs');
+        $expectedResult = [
+            'testItemSelectorDescription' => 'Anti-lock braking system',
+            'failureText' => 'warning lamp indicates an ABS fault (PRS text)',
+            'name' => 'Abs',
+        ];
+        $actualResult = $this->defectSentenceCaseConverterService->getDefectDetailsForTestResultsAndBasket($this->motTestReasonForRejection);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function testDefectCategoriesWithToggleOn()
+    {
+        $this->enableTestResultEntryImprovements(true);
+
+        $this->setTestItemCategoryDescriptionName('category name');
+        $this->setTestItemCategoryDescription('Category description');
+        $this->setReasonForRejectionName('Defect name');
+        $this->setReasonForRejectionAdvisoryText('Defect advisory text');
+        $this->setReasonForRejectionInspectionManualDescription('Inspection manual description');
+        $expectedResult = [
+            'name' => 'Category name',
+            'description' => 'Category description',
+        ];
+        $actualResult = $this->defectSentenceCaseConverterService->getDetailsForDefectCategories($this->testItemSelector);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function testDefectCategoriesWithToggleOff()
+    {
+        $this->enableTestResultEntryImprovements(false);
+
+        $this->setTestItemCategoryDescriptionName('category name');
+        $this->setTestItemCategoryDescription('Category description');
+        $this->setReasonForRejectionName('Defect name');
+        $this->setReasonForRejectionAdvisoryText('Defect advisory text');
+        $this->setReasonForRejectionInspectionManualDescription('Inspection manual description');
+        $expectedResult = [
+            'name' => 'category name',
+            'description' => 'Category description',
+        ];
+        $actualResult = $this->defectSentenceCaseConverterService->getDetailsForDefectCategories($this->testItemSelector);
 
         $this->assertEquals($expectedResult, $actualResult);
     }
@@ -285,6 +450,14 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
             ->willReturn($advisoryText);
     }
 
+    private function setReasonForRejectionInspectionManualDescription($inspectionManualDescription)
+    {
+        $this
+            ->reasonForRejectionDescription
+            ->method('getInspectionManualDescription')
+            ->willReturn($inspectionManualDescription);
+    }
+
     private function setReasonForRejectionName($name)
     {
         $this
@@ -296,69 +469,25 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     private function assertConversionForAddADefect($stringToConvert, $expectedString)
     {
         $this->setTestItemCategoryDescription($stringToConvert);
-        $actualResult = $this->defectSentenceCaseConverterService->formatRfrDescriptionsForAddADefect($this->reasonForRejection);
-        $expectedResult = [
-            'description' => $expectedString,
-            'advisoryText' => $expectedString,
-        ];
+        $actualResult = $this->defectSentenceCaseConverterService->getDefectDetailsForAddADefect($this->reasonForRejection);
 
-        $this->assertEquals($expectedResult, $actualResult);
+        $this->assertEquals($expectedString, $actualResult['description']);
     }
 
     private function assertConversionForDefectCategories($stringToConvert, $expectedString)
     {
         $this->setTestItemCategoryDescription($stringToConvert);
-        $defectDescriptions = [];
-        $actualResult = $this->defectSentenceCaseConverterService->formatTisDescriptionsForDefectCategories($defectDescriptions, $this->testItemSelector);
-        $expectedResult = [
-            'description' => $expectedString,
-            'name' => '',
-        ];
+        $actualResult = $this->defectSentenceCaseConverterService->getDetailsForDefectCategories($this->testItemSelector);
 
-        $this->assertEquals($expectedResult, $actualResult);
-    }
-
-    private function assertConversionForTestResultsWithAnAdvisoryDefect($categoryDescription, $advisoryText, $expectedCategoryDescription, $expectedAdvisoryText)
-    {
-        $this->setTestItemCategoryDescription($categoryDescription);
-        $this->setReasonForRejectionAdvisoryText($advisoryText);
-
-        $actualResult = $this->defectSentenceCaseConverterService->formatRfrDescriptionsForTestResultsAndBasket($this->reasonForRejection, ReasonForRejectionTypeName::ADVISORY);
-        $expectedResult = [
-            'testItemSelectorDescription' => $expectedCategoryDescription,
-            'failureText' => $expectedAdvisoryText,
-            'name' => null
-        ];
-
-        $this->assertEquals($expectedResult, $actualResult);
-    }
-
-    private function assertConversionForTestResultsWithAPrsDefect($categoryDescription, $name, $expectedCategoryDescription, $expectedAdvisoryText)
-    {
-        $this->setTestItemCategoryDescription($categoryDescription);
-        $this->setReasonForRejectionName($name);
-
-        $actualResult = $this->defectSentenceCaseConverterService->formatRfrDescriptionsForTestResultsAndBasket($this->reasonForRejection, ReasonForRejectionTypeName::PRS);
-        $expectedResult = [
-            'testItemSelectorDescription' => $expectedCategoryDescription,
-            'failureText' => $expectedAdvisoryText,
-            'name' => null,
-        ];
-
-        $this->assertEquals($expectedResult, $actualResult);
+        $this->assertEquals($expectedString, $actualResult['description']);
     }
 
     private function assertConversionForSearchForADefect($stringToConvert, $expectedString)
     {
         $this->setTestItemCategoryDescription($stringToConvert);
-        $actualResult = $this->defectSentenceCaseConverterService->formatRfrDescriptionsForDefectsAndSearchForADefect($this->reasonForRejection);
-        $expectedResult = [
-            'description' => $expectedString,
-            'advisoryText' => $expectedString,
-            'inspectionManualDescription' => null,
-        ];
+        $actualResult = $this->defectSentenceCaseConverterService->getDefectDetailsForListAndSearch($this->reasonForRejection);
 
-        $this->assertEquals($expectedResult, $actualResult);
+        $this->assertEquals($expectedString, $actualResult['description']);
     }
 
     private function enableTestResultEntryImprovements($boolean)
@@ -368,5 +497,21 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
             ->method('isEnabled')
             ->with(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)
             ->willReturn($boolean);
+    }
+
+    private function setDefectType($type)
+    {
+        $this
+            ->motTestReasonForRejection
+            ->method('getType')
+            ->willReturn($type);
+    }
+
+    private function setTestItemCategoryDescriptionName($name)
+    {
+        $this
+            ->testItemCategoryDescription
+            ->method('getName')
+            ->willReturn($name);
     }
 }

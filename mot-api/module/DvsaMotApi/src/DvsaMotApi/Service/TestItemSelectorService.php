@@ -8,7 +8,7 @@ use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Constants\ReasonForRejection as ReasonForRejectionConstants;
-use DvsaCommon\Formatting\DefectSentenceCaseConverter;
+use DvsaCommon\Enum\LanguageTypeCode;
 use DvsaCommonApi\Service\AbstractService;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\MotTest;
@@ -17,6 +17,7 @@ use DvsaEntities\Entity\TestItemSelector;
 use DvsaEntities\Repository\RfrRepository;
 use DvsaEntities\Repository\TestItemCategoryRepository;
 use DvsaFeature\FeatureToggles;
+use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
 
 /**
  * Class TestItemSelectorService.
@@ -53,7 +54,7 @@ class TestItemSelectorService extends AbstractService
         RfrRepository $rfrRepository,
         AuthorisationServiceInterface $authService,
         TestItemCategoryRepository $testItemCategoryRepository,
-        array $disabledRfrs = [],
+        array $disabledRfrs,
         FeatureToggles $featureToggles,
         DefectSentenceCaseConverter $defectSentenceCaseConverter
     ) {
@@ -150,22 +151,22 @@ class TestItemSelectorService extends AbstractService
     }
 
     /**
-     * @param $testItem TestItemSelector
+     * @param TestItemSelector $defectCategory
      *
      * @return array|null
      */
-    protected function extractTestItem($testItem)
+    protected function extractTestItem(TestItemSelector $defectCategory)
     {
-        if (!$this->isCurrentRfrApplicableToRole($testItem)) {
+        if (!$this->isCurrentRfrApplicableToRole($defectCategory)) {
             return;
         }
-        $testItemDescriptions = $this->objectHydrator->extract($testItem);
-        $formatted = $this->defectSentenceCaseConverter->formatTisDescriptionsForDefectCategories($testItemDescriptions, $testItem);
-
-        if (!empty($formatted)){
-            return $formatted;
+        $hydratedCategoryDetails = $this->objectHydrator->extract($defectCategory);
+        $categoryDetails = $this->defectSentenceCaseConverter->getDetailsForDefectCategories($defectCategory);
+        if (!empty($categoryDetails['name'])) {
+            $hydratedCategoryDetails['name'] = $categoryDetails['name'];
         }
-        return $testItemDescriptions;
+
+        return $hydratedCategoryDetails;
     }
 
     protected function extractTestItemSelectors($testItemSelectors)
@@ -207,12 +208,15 @@ class TestItemSelectorService extends AbstractService
      *
      * @return array
      */
-    protected function extractReasonForRejection($testItemRfr)
+    protected function extractReasonForRejection(ReasonForRejection $testItemRfr)
     {
         $testItemRfrData = $this->objectHydrator->extract($testItemRfr);
 
         unset($testItemRfrData['descriptions']);
-        $testItemRfrData += $this->defectSentenceCaseConverter->formatRfrDescriptionsForDefectsAndSearchForADefect($testItemRfr);
+        $defectDetails = $this->defectSentenceCaseConverter->getDefectDetailsForListAndSearch($testItemRfr);
+        if (!empty($defectDetails)) {
+            $testItemRfrData = array_merge($testItemRfrData, $defectDetails);
+        }
 
         return $testItemRfrData;
     }
@@ -434,23 +438,28 @@ class TestItemSelectorService extends AbstractService
 
     /**
      * @param string $prependString
-     * @param String $description
-     * @return String
+     * @param string $description
+     *
+     * @return string
      */
     private function prepend($prependString, $description)
     {
-        if (empty($prependString) || empty($description)) { return $description; }
-        return $prependString . " " . $description;
+        if (empty($prependString) || empty($description)) {
+            return $description;
+        }
+
+        return $prependString.' '.$description;
     }
 
     /**
      * @param ReasonForRejection $rfr
+     *
      * @return array
      */
-    private function getCategoryDescriptionsFromTestItemSelector($rfr)
+    private function getCategoryDescriptionsFromTestItemSelector(ReasonForRejection $rfr)
     {
-        $categoryDescriptionInEnglish = "";
-        $categoryDescriptionInWelsh = "";
+        $categoryDescriptionInEnglish = '';
+        $categoryDescriptionInWelsh = '';
         foreach ($rfr->getTestItemSelector()->getDescriptions() as $description) {
             $languageCode = $description->getLanguage()->getCode();
             if ($languageCode === LanguageTypeCode::ENGLISH || $languageCode === null) {
@@ -459,13 +468,15 @@ class TestItemSelectorService extends AbstractService
                 $categoryDescriptionInWelsh = $description->getDescription();
             }
         }
+
         return array($categoryDescriptionInEnglish, $categoryDescriptionInWelsh);
     }
 
     /**
-     * @param String $categoryDescription
-     * @param String $descriptionOrAdvisoryText
-     * @return String
+     * @param string $categoryDescription
+     * @param string $descriptionOrAdvisoryText
+     *
+     * @return string
      */
     private function buildDescriptionOrAdvisoryText($categoryDescription, $descriptionOrAdvisoryText)
     {

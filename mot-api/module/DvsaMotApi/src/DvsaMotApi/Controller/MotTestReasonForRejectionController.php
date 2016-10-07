@@ -8,12 +8,12 @@
 namespace DvsaMotApi\Controller;
 
 use DvsaCommon\Constants\FeatureToggle;
-use DvsaCommon\Dto\MotTesting\DefectDto;
-use DvsaCommon\Formatting\DefectSentenceCaseConverter;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\NotFoundException;
+use DvsaMotApi\Dto\Builders\DefectDtoBuilder;
+use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
 use DvsaMotApi\Service\MotTestReasonForRejectionService;
 use Zend\View\Model\JsonModel;
 
@@ -22,7 +22,7 @@ use Zend\View\Model\JsonModel;
  */
 class MotTestReasonForRejectionController extends AbstractDvsaRestfulController
 {
-    const RFR_ID = "motTestRfrId";
+    const RFR_ID = 'motTestRfrId';
 
     /**
      * @var DefectSentenceCaseConverter
@@ -56,12 +56,13 @@ class MotTestReasonForRejectionController extends AbstractDvsaRestfulController
 
         try {
             $reasonForRejection = $service->getDefect($motTestRfrId);
-            $result = DefectDto::fromEntity($reasonForRejection, $this->defectSentenceCaseConverter);
+            $defectDtoBuilder = new DefectDtoBuilder($this->defectSentenceCaseConverter);
+            $defectDto = $defectDtoBuilder->fromEntity($reasonForRejection);
         } catch (BadRequestException $e) {
             throw new BadRequestException($e->getErrors(), BadRequestException::ERROR_CODE_INVALID_DATA);
         }
 
-        return ApiResponse::jsonOk($result);
+        return ApiResponse::jsonOk($defectDto);
     }
 
     /**
@@ -76,7 +77,7 @@ class MotTestReasonForRejectionController extends AbstractDvsaRestfulController
         if (isset($data['id'])) {
             $service->editReasonForRejection($data['id'], $data);
 
-            return ApiResponse::jsonOk("successfully updated Reason for Rejection");
+            return ApiResponse::jsonOk('successfully updated Reason for Rejection');
         } else {
             $motTestNumber = $this->params()->fromRoute('motTestNumber', null);
             $motTest = $this->getMotTestService()->getMotTest($motTestNumber);
@@ -99,7 +100,7 @@ class MotTestReasonForRejectionController extends AbstractDvsaRestfulController
 
         $this->getRfrService()->deleteReasonForRejectionById($motTestNumber, $motTestRfrId);
 
-        return ApiResponse::jsonOk("successfully deleted Reason for Rejection");
+        return ApiResponse::jsonOk('successfully deleted Reason for Rejection');
     }
 
     /**
@@ -148,7 +149,7 @@ class MotTestReasonForRejectionController extends AbstractDvsaRestfulController
 
         $this->getRfrService()->deleteReasonForRejectionById($motTestNumber, $motTestRfrId);
 
-        return ApiResponse::jsonOk("successfully deleted Reason for Rejection");
+        return ApiResponse::jsonOk('successfully deleted Reason for Rejection');
     }
 
     /**

@@ -4,10 +4,9 @@
  *
  * @link https://gitlab.motdev.org.uk/mot/mot
  */
+
 namespace DvsaCommon\Dto\MotTesting;
 
-use DvsaEntities\Entity\ReasonForRejection;
-use DvsaCommon\Formatting\DefectSentenceCaseConverter;
 use JsonSerializable;
 
 class DefectDto implements JsonSerializable
@@ -58,30 +57,6 @@ class DefectDto implements JsonSerializable
      * @var bool
      */
     private $failure;
-
-    /**
-     * @param ReasonForRejection $reasonForRejection
-     * @param DefectSentenceCaseConverter $defectSentenceCaseConverter
-     *
-     * @return DefectDto
-     */
-    public static function fromEntity(ReasonForRejection $reasonForRejection,
-                                      DefectSentenceCaseConverter $defectSentenceCaseConverter)
-    {
-        $defectDto = new self();
-        $defectDto->setId($reasonForRejection->getRfrId());
-        $defectDto->setParentCategoryId($reasonForRejection->getTestItemSelector()->getId());
-        $defectDto->setDefectBreadcrumb($reasonForRejection->getTestItemSelectorName());
-        $descriptions = $defectSentenceCaseConverter->formatRfrDescriptionsForAddADefect($reasonForRejection);
-        $defectDto->setDescription($descriptions['description']);
-        $defectDto->setAdvisoryText($descriptions['advisoryText']);
-        $defectDto->setInspectionManualReference($reasonForRejection->getInspectionManualReference());
-        $defectDto->setAdvisory($reasonForRejection->getIsAdvisory());
-        $defectDto->setPrs($reasonForRejection->getIsPrsFail());
-        $defectDto->setFailure(!$reasonForRejection->getIsAdvisory() && !$reasonForRejection->getIsPrsFail());
-
-        return $defectDto;
-    }
 
     /**
      * {@inheritdoc}
