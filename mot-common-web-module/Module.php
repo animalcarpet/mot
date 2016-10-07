@@ -2,10 +2,8 @@
 
 namespace DvsaCommon;
 
-use DvsaCommon\Factory\Formatting\DefectSentenceCaseConverterFactory;
 use DvsaCommon\Factory\HttpRestJson\ClientFactory;
 use DvsaCommon\Factory\Validator\UsernameValidatorFactory;
-use DvsaCommon\Formatting\DefectSentenceCaseConverter;
 use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\Obfuscate\Factory\ParamEncrypterFactory;
 use DvsaCommon\Obfuscate\Factory\ParamObfuscatorFactory;
@@ -33,10 +31,10 @@ class Module implements
     {
         return [
             ClassMapAutoloader::class => [
-                __DIR__ . '/autoload_classmap.php',
+                __DIR__.'/autoload_classmap.php',
             ],
             StandardAutoloader::class => [
-                'namespaces' => [__NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
+                'namespaces' => [__NAMESPACE__ => __DIR__.'/src/'.__NAMESPACE__,
                 ],
             ],
         ];
@@ -47,7 +45,7 @@ class Module implements
      */
     public function getConfig()
     {
-        return include __DIR__ . '/config/module.config.php';
+        return include __DIR__.'/config/module.config.php';
     }
 
     /**
@@ -61,7 +59,6 @@ class Module implements
                 ParamEncrypter::class => ParamEncrypterFactory::class,
                 ParamObfuscator::class => ParamObfuscatorFactory::class,
                 UsernameValidator::class => UsernameValidatorFactory::class,
-                DefectSentenceCaseConverter::class => DefectSentenceCaseConverterFactory::class,
             ],
         ];
     }

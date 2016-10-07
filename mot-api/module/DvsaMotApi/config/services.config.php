@@ -8,6 +8,7 @@ use DvsaEntities\Repository\TestItemCategoryRepository;
 use DvsaMotApi\Factory\S3CsvStoreFactory;
 use DvsaMotApi\Factory\CertificateReplacementRepositoryFactory;
 use DvsaMotApi\Factory\ConfigurationRepositoryFactory;
+use DvsaMotApi\Factory\Formatting\DefectSentenceCaseConverterFactory;
 use DvsaMotApi\Factory\Helper\RoleEventHelperFactory;
 use DvsaMotApi\Factory\Helper\RoleNotificationHelperFactory;
 use DvsaMotApi\Factory\Helper\TesterQualificationStatusChangeEventHelperFactory;
@@ -60,6 +61,7 @@ use DvsaMotApi\Factory\Service\VehicleServiceFactory;
 use DvsaMotApi\Factory\Service\SurveyServiceFactory;
 use DvsaMotApi\Factory\TestItemCategoryRepositoryFactory;
 use DvsaMotApi\Factory\VehicleRepositoryFactory;
+use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
 use DvsaMotApi\Helper\RoleEventHelper;
 use DvsaMotApi\Helper\RoleNotificationHelper;
 use DvsaMotApi\Helper\TesterQualificationStatusChangeEventHelper;
@@ -82,8 +84,6 @@ use DvsaMotApi\Service\Validator\MotTestStatusChangeValidator;
 use DvsaMotApi\Service\Validator\ReplacementCertificateDraftChangeValidator;
 use DvsaMotApi\Service\Validator\RetestEligibility\RetestEligibilityValidator;
 use DvsaMotApi\Service\VehicleHistoryService;
-use DvsaCommon\Formatting\DefectSentenceCaseConverter;
-use DvsaCommon\Factory\Formatting\DefectSentenceCaseConverterFactory;
 
 return [
     'invokables' => [

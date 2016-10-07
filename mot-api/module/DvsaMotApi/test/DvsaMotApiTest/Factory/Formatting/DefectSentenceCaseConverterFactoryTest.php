@@ -2,8 +2,8 @@
 
 namespace DvsaCommonTest\Factory\Formatting;
 
-use DvsaCommon\Factory\Formatting\DefectSentenceCaseConverterFactory;
-use DvsaCommon\Formatting\DefectSentenceCaseConverter;
+use DvsaMotApi\Factory\Formatting\DefectSentenceCaseConverterFactory;
+use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
 use DvsaFeature\FeatureToggles;
 use Zend\ServiceManager\ServiceManager;
 

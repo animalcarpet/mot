@@ -5,10 +5,11 @@ namespace DvsaMotApi\Factory\Service;
 use Doctrine\ORM\EntityManager;
 use DvsaCommon\Configuration\MotConfig;
 use DvsaEntities\Repository\TestItemCategoryRepository;
+use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
 use DvsaMotApi\Service\TestItemSelectorService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use DvsaCommon\Formatting\DefectSentenceCaseConverter;
+
 /**
  * Class TestItemSelectorServiceFactory.
  */

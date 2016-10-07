@@ -5,6 +5,7 @@ namespace DvsaMotApi\Factory\Service\Mapper;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\Utility\Hydrator;
+use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
 use DvsaMotApi\Service\BrakeTestResultService;
 use DvsaMotApi\Service\CertificateExpiryService;
 use DvsaMotApi\Service\Mapper\MotTestMapper;
@@ -13,10 +14,9 @@ use DvsaMotApi\Service\MotTestStatusService;
 use VehicleApi\Service\VehicleSearchService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use DvsaCommon\Formatting\DefectSentenceCaseConverter;
 
 /**
- * Create an instance of MotTestMapper
+ * Create an instance of MotTestMapper.
  *
  * @package DvsaMotApi\Factory\Service\Mapper
  */

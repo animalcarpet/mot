@@ -1,8 +1,8 @@
 <?php
+
 namespace DvsaMotApiTest\Service;
 
 use DvsaCommon\Constants\FeatureToggle;
-use DvsaCommon\Formatting\DefectSentenceCaseConverter;
 use DvsaCommonTest\TestUtils\MockHandler;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\ReasonForRejection;
@@ -12,6 +12,7 @@ use DvsaEntities\Entity\VehicleClass;
 use DvsaEntities\Repository\RfrRepository;
 use DvsaEntities\Repository\TestItemCategoryRepository;
 use DvsaFeature\FeatureToggles;
+use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
 use DvsaMotApi\Service\TestItemSelectorService;
 
 /**
@@ -22,7 +23,7 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
     private $testMotTestNumber = '17';
     private $vehicleClass = '4';
     private $testItemSelector;
-    private $determinedRole = "v";
+    private $determinedRole = 'v';
 
     private $mockTestItemCategoryRepository;
     private $mockRfrRepository;
@@ -51,7 +52,6 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
         $this->defectSentenceCaseConverter = $this
             ->getMockBuilder(DefectSentenceCaseConverter::class)
             ->disableOriginalConstructor()
-            ->setMethods(['formatTisDescriptionsForDefectCategories'])
             ->getMock();
     }
 
@@ -183,7 +183,7 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
     public function testSearchReasonsForRejection()
     {
         //given
-        $searchString = "stop lamp";
+        $searchString = 'stop lamp';
 
         $reasonForRejection = (new ReasonForRejection())
             ->setDescriptions([]);
@@ -191,7 +191,7 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
         $expectedHydratedRfr = $this->getTestArrayWithId(1);
         $expectedHydratedRfrData = [$expectedHydratedRfr];
         $expectedData = [
-            'searchDetails'        => ['count' => count($expectedReasonsForRejection), 'hasMore' => false],
+            'searchDetails' => ['count' => count($expectedReasonsForRejection), 'hasMore' => false],
             'reasonsForRejection' => $expectedHydratedRfrData,
         ];
 
@@ -221,7 +221,7 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
 
     public function testSearchReasonsForRejectionDoNotReturnsDisabledRfrs()
     {
-        $searchString = "stop lamp";
+        $searchString = 'stop lamp';
         $diabledRfrId = 123;
 
         $reasonForRejection = (new ReasonForRejection())
@@ -232,7 +232,7 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
         $expectedHydratedRfr = $this->getTestArrayWithId(1);
 
         $expectedData = [
-            'searchDetails'        => ['count' => 1, 'hasMore' => false],
+            'searchDetails' => ['count' => 1, 'hasMore' => false],
             'reasonsForRejection' => [],
         ];
 
@@ -278,10 +278,10 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
     protected function getExpectedData($tis, $tises, $tisRfrs, $parentTises)
     {
         return [
-            'testItemSelector'        => $tis,
+            'testItemSelector' => $tis,
             'parentTestItemSelectors' => $parentTises,
-            'testItemSelectors'       => $tises,
-            'reasonsForRejection'    => $tisRfrs,
+            'testItemSelectors' => $tises,
+            'reasonsForRejection' => $tisRfrs,
         ];
     }
 

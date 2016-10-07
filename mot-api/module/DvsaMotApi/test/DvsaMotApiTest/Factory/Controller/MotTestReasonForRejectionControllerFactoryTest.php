@@ -2,7 +2,7 @@
 
 namespace DvsaMotApiTest\Factory\Controller;
 
-use DvsaCommon\Formatting\DefectSentenceCaseConverter;
+use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
 use DvsaCommonTest\TestUtils\ServiceFactoryTestHelper;
 use DvsaMotApi\Controller\MotTestReasonForRejectionController;
 use DvsaMotApi\Factory\Controller\MotTestReasonForRejectionControllerFactory;

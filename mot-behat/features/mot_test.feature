@@ -300,3 +300,13 @@ Feature: MOT Test
     And I have passed an MOT test
     When I submit a survey response with a duplicate token
     Then a BadRequestException will be thrown
+
+  @defect
+  Scenario: As a Tester performing a normal MOT test I can add and edit reasons for rejection defects
+    Given I am logged in as a Tester
+    When I start an Mot Test with a Class 3 Vehicle
+    Then I can search for Rfr
+    And I can list child test items selector
+    And I can add PRS to test
+    And I can add a Failure to test
+    And I can edit previously added Rfr

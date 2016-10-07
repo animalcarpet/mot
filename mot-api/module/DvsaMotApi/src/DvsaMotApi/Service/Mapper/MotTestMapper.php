@@ -12,7 +12,6 @@ use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Vehicle\FuelTypeDto;
-use DvsaCommon\Formatting\DefectSentenceCaseConverter;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\Utility\AddressUtils;
 use DvsaCommonApi\Service\Mapper\ColourMapper;
@@ -24,6 +23,7 @@ use DvsaCommonApi\Service\Mapper\VehicleClassMapper;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\Vehicle;
+use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
 use DvsaMotApi\Service\BrakeTestResultService;
 use DvsaMotApi\Service\CertificateExpiryService;
 use DvsaMotApi\Service\Helper\ExtractionHelper;
@@ -412,7 +412,7 @@ class MotTestMapper
             $hydratedTestRfr['testItemSelectorId'] = $rfrEntity->getTestItemSelector()->getId();
             $hydratedTestRfr['inspectionManualReference'] = $rfrEntity->getInspectionManualReference();
             /** @var array $formattedDescriptions */
-            $formattedDescriptions = $this->defectSentenceCaseConverter->formatRfrDescriptionsForTestResultsAndBasket($rfrEntity, $motTestRfr->getType());
+            $formattedDescriptions = $this->defectSentenceCaseConverter->getDefectDetailsForTestResultsAndBasket($motTestRfr);
             foreach (['testItemSelectorDescription', 'failureText', 'name', 'nameCy'] as $field) {
                 if (!empty($formattedDescriptions[$field])) {
                     $hydratedTestRfr[$field] = $formattedDescriptions[$field];
