@@ -1,0 +1,2539 @@
+dn: dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: domain
+objectClass: top
+dc: mot
+entryUUID: eaa76e51-1847-3ddf-8a52-67eac37ffbe5
+
+dn: ou=admins,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: organizationalUnit
+objectClass: top
+ou: admins
+entryUUID: 6782b0ac-7e4b-4f22-8525-ce4677407d95
+createTimestamp: 20161005152558Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+
+dn: uid=openam,ou=admins,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: top
+uid: openam
+cn: openam
+sn: openam
+userPassword: {SSHA}tPuCnEaId9DY8lOBFWbmXeO1iK3CmCjsvpcezA==
+ds-privilege-name: subentry-write
+ds-privilege-name: update-schema
+entryUUID: 6bed01b3-1c97-42f2-aef2-66254ef02ba5
+createTimestamp: 20161005152558Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152558.575Z
+
+dn: cn=MOT Password Policy,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: extensibleObject
+objectClass: collectiveAttributeSubEntry
+objectClass: subentry
+objectClass: top
+cn: MOT Password Policy
+add: ds-pwp-password-policy-dn
+ds-pwp-password-policy-dn;collective: cn=DVSA MOT Users Policy,cn=Password Policies,cn=config
+subtreeSpecification: { specificationFilter "(objectclass=motUser)" }
+entryUUID: 1bd0bab2-8966-4ec6-99e3-ff54b89a2e82
+createTimestamp: 20161005152622Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+
+dn: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: organizationalUnit
+objectClass: top
+ou: people
+entryUUID: e1428e15-ce50-467a-91bf-964611e5d19d
+createTimestamp: 20161005152817Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+
+dn: ou=groups,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: organizationalUnit
+objectClass: top
+ou: groups
+entryUUID: 2dc9aac7-c95a-4ec4-92b6-73127d1d391a
+createTimestamp: 20161005152819Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+
+dn: uid=unknown,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: unknown
+cn: null unknown_family_name
+sn: unknown_family_name
+userPassword: {SSHA512}EIGOv9B4+C+lfpru/o2ReQ2jgiiivLP9kisfG8iw9FgFcHuvso64DYIUWiqovCeOH3FB1okx7uIRvmwQosnN66SUy9jW4x73
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 621228d0-3e67-4e82-836b-a551ee7bf5cb
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.117Z
+
+dn: uid=etl user,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: etl user
+cn: null root_family_name
+sn: root_family_name
+userPassword: {SSHA512}z2ZJ6/QWMC9TiTvlnzHd5+m6oaEDyo9PUkUhettroIyNWumXPJnXGvM6KOb3XmCyDLJz3EuYXJ0HljcqDqhlt1cdoEcsol4h
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: af8f52a5-4632-4e53-9bc1-81cb1c13fccb
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.117Z
+
+dn: uid=static data,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: static data
+cn: null static_data_family_name
+sn: static_data_family_name
+userPassword: {SSHA512}OiT7EAc7ccxIIIjE5dceiasbMn/TInHU30AUZmdb7mkpHamIb4SuKpKP9uuJBJMfi1ppAnnUXKIpCWa9SpD05P0qZ+mwK60e
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: a77e4cda-7114-4e64-9984-1cd5380d08c0
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.317Z
+
+dn: uid=dvla-import,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: dvla-import
+cn: 123456 dvla_middle
+sn: dvla_middle
+userPassword: {SSHA512}F98tzF5gPlTI/pdfgSc7FLm/iys4qobU+K1dQPBH2sMdW/8nve+u00ac6T8OUH7w8b/gFIUyH/+MWLuc7QiEH0OEDW2OefZR
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: a177e989-d62b-483f-981b-c613b8337479
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.317Z
+
+dn: uid=cron-job,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: cron-job
+cn: 123456 cron_middle
+sn: cron_middle
+userPassword: {SSHA512}g1VK+QmF0vbp9o21FGlqi3bKF43A1fsBQPyVNq3wAYWtvAvRPyyZasvFnuHOxyYxv3v8L+F2c6ErrhNMqcGmmfJwenQxplNr
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 52db585c-af4c-4b95-a816-afab9e65ba00
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.317Z
+
+dn: uid=dvla-openinterface,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: dvla-openinterface
+cn: 123456 oi_middle
+sn: oi_middle
+userPassword: {SSHA512}8MCXjTbPpSC0TTRaEFFhjC+BRcU6SLHowqgu14feg4KjLlflpQ7VBsjisDepMJxEyU42z9xrh9GjcLWjJ44FrD6mkJPEYcCT
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: d5afdba0-8ea7-4cac-a55b-cdc80baf6be6
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.317Z
+
+dn: uid=inactivetester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: inactivetester
+cn: Philip Fry
+sn: Fry
+userPassword: {SSHA512}tW86QLvoVwgzYvllZVEUkWV2n+7/miCb4qrpVvaw72op5cFdRJ6dU7gje1wKGsl5xzeFHrdVVPuRQcfLLLgDXH5k5vNmxgDs
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 76009582-a0dd-4a28-a7f1-4cfca8e2caab
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.317Z
+
+dn: uid=noslotstester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: noslotstester
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}ElbKnI7h8IhsbeIA1kUGmlt/OnYk+jx4uvpwOYfEf4ZD0yA4CKKHrFFSRi/msntro8fvbqVYHUF81nsitKdP/fzy7gqif/s1
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: d62bf676-f794-4f9b-bfc4-4752c855dd65
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.317Z
+
+dn: uid=warningslotstester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: warningslotstester
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}OWDQ3c5snkMGcenGx3Si9zBq2SFT8/wV/wi8jJF6+gz98fn1ryOQoq5zjTFU+XvFNlb9kB1+aMQqcgh2pG5qgLdasIjid+qN
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 05ddca25-c767-4d19-9407-a67508fd24ac
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.317Z
+
+dn: uid=QCUser,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: QCUser
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}Z801iCCw/wPZ8O/sBajNW36PTOdjA/QW1gZvwd4fcmyvv4EtZVN7J9ju2Hz1I9l6oGIDp7g9lltgO0+My5qlK0ev1KP4r6TJ
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 58c68133-4bbe-4c25-8e30-3cdb5a030f36
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.317Z
+
+dn: uid=tester1,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: tester1
+cn: Bob Arctor Tester1
+sn: Arctor Tester1
+userPassword: {SSHA512}MtZqFJySuWXGyWkzDUmWCvXbKoJKiAFkkmwm4lHiFTZWnhskZuCfzhtssWIowK6n8u5xc8nnDKyqql78UVsA2VLtNcTz177c
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 8dab7b98-1268-4685-9240-cf01884dffd7
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.317Z
+
+dn: uid=manyvtstesterhasslots,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: manyvtstesterhasslots
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}qUCRnHVWRAsiBr9VhxL/eMCuB47IA2UtmX2PdJH1Jl2fPHgUpD+syNmXQ9mWIHyvrBf4wPAYzES/SSb7W9vNyySI6B7fhS7g
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 0036d7b2-0a81-4750-b1ff-21203872637c
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.317Z
+
+dn: uid=manyvtstesternoslots,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: manyvtstesternoslots
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}RlnX/5mRmhIY0vEE1HDfh3aLreo1S3SPrF5olkhslg4KzqtUYp80pWhiC3yjzJx7pZE4MENTL+00LfMTr5xllWy8c3gXzorb
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 0fbad391-6376-4c46-b7e3-a734c28ff115
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.317Z
+
+dn: uid=manyvtstesterwarningslots,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: manyvtstesterwarningslots
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}9jnoKY2F+sAKzg7q6PexlxmVqW0e1Ct3jm9QOyBw8KY3NLJfwCChXMAYby9EmeXdeIM9FKKtu37wkdY2bbMdzzW04tZVWoq/
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 7dd24bbb-e332-4295-9592-a900734ffa77
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.317Z
+
+dn: uid=manyvtsinactivetester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: manyvtsinactivetester
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}9IG0qe4DnBYBwY0LGK6TiytjFKOpKeP9IABgJzl17h3BDPKKXqwBfJg+MjJeSrDFB6+Q7nJWgTvw94+vKkX0s4cIUDiuN40e
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 7c745725-1fa1-42e6-b9a0-08f270686cea
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.518Z
+
+dn: uid=novtstester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: novtstester
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}L8FG6HAYp51C/vTX3pWru6Uw5pJQlTDPHCwdH0U0+DMO7PUm7zmpe0kMBIbjKca5Oks2+lNAQ8kOCmCZN6RirF1HqtoMQfos
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 0a442405-0e5e-42a0-859d-505d88d282ad
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.518Z
+
+dn: uid=vtsAdmin1,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: vtsAdmin1
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}ziYBcRdFlMupKDIUvUILp3sOFU8biCwh6n/8PD5AxwrkkxL+E4i7izbfpN4gn4UjaBCCMj0yw/pgLKZ63KYqeNJoZuDwmmQO
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 906c7608-fec1-4c2b-b162-06bc9f1ff4e2
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.518Z
+
+dn: uid=catATester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: catATester
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}dA04w3A4I6YrtNZl0RZ7znAxdxB9K60lzbbzzQSI1algGXwog98CdaTItokqev3IhczQV6yBzxB2NItbW7aC4KmcgSd+9kxv
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 3665a125-28d0-497a-8c63-0d1a7a68824f
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.518Z
+
+dn: uid=catBTester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: catBTester
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}myDIkB88kyJYVmBhXAjZ9kUpDG5AZdp+tQE6Ws37+8OCgRqnDaKyIP/VhgOoFftpdPgJYxaB1a5u9NhuFFWSz6wh4jQglXCB
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: cede3370-6f89-4c29-b54a-3f6bd67484df
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.518Z
+
+dn: uid=assessor,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: assessor
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}+XxoOo8g+J/7CrgVK0XxaKUrHrx1hGMdbwBdEuSkpDUybIDzrnGdGJ1vDIlpPCo74Rkq8GlqQ47uYrpakXOT7236dDBEG6Lp
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 79746168-92ec-4142-a9bc-00b44f5e9b47
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.518Z
+
+dn: uid=assessorlm,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: assessorlm
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}Hx3I1eS2Fh90lGXh9ybQcGjGD35oWjCc1KkrWGxvBCXb2pgeqXhgzbtIIAYQjPqbvrAT5OmQuu5ED3uZ0Zk6AmrfyJ0BeB8w
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: de47d0b8-ae6b-4a9d-b965-d0679b1ef5ba
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.518Z
+
+dn: uid=ae,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ae
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}cng+5X3dwK5g6cAek+97iuXsyzqMWus1CJ5EUxtB4Z+aVPybQ3AW3cSZi0u+rB0AoXnLPwkFOb+9QSo0T0dAEK7UzN2oUOZy
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 4e9a9654-7655-4ab2-a649-83acad396a2d
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.518Z
+
+dn: uid=ae2,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ae2
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}mS9G31uqQhcczhe587EWABVQfGWlfwuOyzpDovvy2uJqbnZ1wFTCqSIf8IHgkQFZhATGhG+voX3peo97MaiIA1jZ75iJynM3
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 03bb9b16-0035-4af9-833c-9fcd504ba35b
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.518Z
+
+dn: uid=Tester2,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: Tester2
+cn: Bob Arctor Tester2
+sn: Arctor Tester2
+userPassword: {SSHA512}gHDQDyFus1xPB60H4xZBFqP9s0Ts8BlI0A1tJAmEkfCzh0t1WfeOrmAqJmb3xU4hVwlhV3XsxaWuCc+Xfa1EXL9Rd894Chzp
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 1251fed3-fb22-4d78-9815-85a9b802bb56
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.518Z
+
+dn: uid=Tester3,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: Tester3
+cn: Bob Arctor Tester3
+sn: Arctor Tester3
+userPassword: {SSHA512}ao90zOONOi6RS+MBkO/C/Qvv9qLSCEddOxCsxr5UlLvSbE4HGKq2Cnh02TwjcpU8NrmYC6uICC5ThTSZ1gyr9/6g8SPUoJQZ
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: f80afb45-6c4b-4276-8540-dd7e567f6ed1
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.518Z
+
+dn: uid=Tester4,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: Tester4
+cn: Bob Arctor Tester4
+sn: Arctor Tester4
+userPassword: {SSHA512}drqQtmoV41ashW/GUBADfCDDazepVeTeUJQEV0bykgFWeNX0Kjm1UZctZ1elLlkbhaWAIG+Zm4m6YYKILAKBvS71cvYdKn+b
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: c3c67bb5-a6ad-4496-80c8-ec1e9c76b974
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.518Z
+
+dn: uid=Tester5,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: Tester5
+cn: Bob Arctor Tester5
+sn: Arctor Tester5
+userPassword: {SSHA512}uONxMWFFgw/DXJWAwudb4Fs1eaVrj21Veoi1qQ+ifqMeh4JkpYsP9eFUYmZZ3EGeHjiabIpFHFNvZRlIoIS5KKMhGzlb//bh
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 0f6df929-bda8-4c12-9719-3694dcf895cb
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.518Z
+
+dn: uid=Tester6,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: Tester6
+cn: Bob Arctor Tester6
+sn: Arctor Tester6
+userPassword: {SSHA512}LzosKvfhQzu9rpEU1WVnkOvyuamsciZlN6Hry0IPZeEasylvTUy7sjy3I/3kWvHH2QIE5NTKi8hurqa+pDANreCUfrXrtt6A
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: ded48f3c-3e2f-427a-beb1-bb80d5a3f79d
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.718Z
+
+dn: uid=dmUser,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: dmUser
+cn: Bob Arctor dmUser
+sn: Arctor dmUser
+userPassword: {SSHA512}pqLmBI0KUgVFD/MQr5vV8g7pKVjB0tWkQNQutid787pgrF+w+K8+m1+69EUYy7jLkf1pJLPhXZdCNHjFmotaORaUqlRlvd0g
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 2e35b222-171c-4105-9566-8862350ed2be
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.718Z
+
+dn: uid=manyvtstester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: manyvtstester
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}4NUmWBIta9VbjszVU0Vy4UO9904fdeDyjR5zfFXBMwSgkSJQBaM8oSwYOsOZ8Yl0U1y6eL5/Ng5UQgjNIX3EW3r88Da5R2nZ
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 097c9ff0-8484-4562-aec8-a26703a687b9
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.718Z
+
+dn: uid=testerAppAccepted,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: testerAppAccepted
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}stKBzArKXSIP39T2uziwldZ5vWDUpuEW+wM9+OhJ6HchsqjpFdhUbTHbNu2Nsa+1/8t48vtQ5H8xIRhOcrraEqtqI6y9mtDr
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: e18c2afb-00de-49c8-99a6-4ffd1816524e
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.718Z
+
+dn: uid=areaadmin,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: areaadmin
+cn: John Wayne Areaadmin
+sn: Wayne Areaadmin
+userPassword: {SSHA512}cNSyvEOfCV2OBS+/e424T2/A0aWtytvcCa9TVS7jbBQBAT2bSQMdD4fUb1+y/RgvW6hE1CoLeA+wA7bx0p+xdwLj3La08d25
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: d1d1dcc5-5b0c-4ba2-8c66-314a1c17cc0f
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.718Z
+
+dn: uid=schememgt,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: schememgt
+cn: Jon Snow schememgt
+sn: Snow schememgt
+userPassword: {SSHA512}sp/DMnMS0kA57FBhb5zbG2wiwOfdSLLBQuRi3eMF8D2q9sKqRBHGMucrsLsxVdsbOoF8cqLY7EZ4ooIQkfQsIYR5JmykfIJ9
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 1d18e05a-ec8b-403e-aa17-7735d7276040
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.718Z
+
+dn: uid=schemeuser,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: schemeuser
+cn: Bob Arctor schemeuser
+sn: Arctor schemeuser
+userPassword: {SSHA512}xVXZkHClbOsqCrgxFHAzcXi9G0GCLdzIfuoTUcYxQNuFLT+2qFSKySzlzD4xGsABNKGPhip0/tH0/gk9DKbbTsYWzDtw0NwK
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: a1ab082a-3249-494a-8ecd-2868d96b2c2c
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.718Z
+
+dn: uid=aedm,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: aedm
+cn: Mallory Archer (aedm)
+sn: Archer (aedm)
+userPassword: {SSHA512}l8rxNXQ/vrzfNJlHvE0NlBRO6v41iKo7bTMSWjdbhNVLMJukmxugukSSdpG8rN2BUM+olvNaNqyPf7cpoTazvhHfbZIJBqoq
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: baaa0105-c8fe-48c4-be07-952f89a966dc
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.718Z
+
+dn: uid=aed1,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: aed1
+cn: Pam Poovey
+sn: Poovey
+userPassword: {SSHA512}T0H06U5u8qEmCrHo64jxG94U30cgPXuONbEKND1QzAaCH/r7cES0+BnkTkwUDavNmxnqL2ZbwVakF+Q6nkTyNnwDp9c/ey8P
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 09588a51-4b80-4112-b8bd-de540af4d007
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.718Z
+
+dn: uid=aed2,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: aed2
+cn: Cheryl Tunt
+sn: Tunt
+userPassword: {SSHA512}gUsN/cNAFSMBNJwOMB5tYvm5rqzdrcqTWI/hGOSZm5oA2tIdb8luntr4qi1cdRznb7ztbjYDR8i4ywk7T+V2ctlwgDX3/s5Z
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: be5831ff-0849-41b9-b5e8-5cf12ea166f8
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.718Z
+
+dn: uid=demotestuser,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: demotestuser
+cn: Demo User
+sn: User
+userPassword: {SSHA512}3inX3zvPrS2W0ihIi/yD37Jm6xG1vDCNv2KLjQFdQbLc2jpQycNHq9sZzxJuhpFASCyNbOlwlx5BKBDxSP/0uar2C6zG+5Jo
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 425b41e4-987a-4b1b-be87-a9d24a67a9dd
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.718Z
+
+dn: uid=site-manager,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: site-manager
+cn: Lana Kane (site-manager)
+sn: Kane (site-manager)
+userPassword: {SSHA512}CgAm+YiFEJ26VN9Yc/3KSS9u41coOJSWwEyIXHs2UUNlnMzFoaqxuTdc7hT9fTfQFK0yK1KSR0snlpzF8GxOsXmwqKpOP0Ll
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 1e31bf8b-67d3-4f39-b6e3-ab9ad4346c9b
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.718Z
+
+dn: uid=Tester7,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: Tester7
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}RfHr66vwIT7YQXaFqr1b3YFdRQNvK6roLcamVnF4J0oQDY8GhzEl7bdG/5OZp294aLFWFBUBY3oudhdAll4ZqUfGq9PMGRKJ
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: fea6835e-1983-4440-ac0b-c55ec8af3293
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.918Z
+
+dn: uid=Tester8,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: Tester8
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}Vn/0wowbSIhnXIIxBGw6XrVX+en/bDVkeRGsykgIYsHm/iYljsiBHM0Kq3VxjdGZzXvoiwIdZJFKJius5w0c0+2M96i1EJ2f
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 3208e2a8-62d6-4051-8d59-f8c553d140b1
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.918Z
+
+dn: uid=Tester9,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: Tester9
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}tAMXcnn4aO1YBYoITts7U7h5vViyho5Y3khF97IHdIRGCAODx3wzN5CuHawMl6eyWtKCesQ8iBx4IaEEv0BhsqK9dyNVEJhQ
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: a36ceafe-422d-40f9-ba9c-ca10a128feea
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.918Z
+
+dn: uid=Tester10,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: Tester10
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}904LdoaUAUVQ3VcocRF7MDF62QVOv+z25ImpuR8hwr8G3GtHYgAvOEEiGQIP+9zAHHo6yXTPmIgaCVsVzClJig5023XOO4Cn
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 2417cb9d-34b9-4ba6-9b23-bd30ecf39a0a
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.918Z
+
+dn: uid=Tester11,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: Tester11
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}axLWhASmetKYaP+P741sBP7fFtCgvz34JZeYi3YIfU40uKHPptyb4mNaEdSgwcqIILUKk+8UC+awSaSBnhx424P0xrzv/1Bg
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: e29f5806-020a-4ed4-b1b6-90ca1c3a06c7
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.918Z
+
+dn: uid=vts-tester-1,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: vts-tester-1
+cn: Brock Samson
+sn: Samson
+userPassword: {SSHA512}JALdT0UcXjHQeipa3tcBWJpoX5ACRJ+8DimJfc/XjKVOxEF/dV5qnxVDzHz3PS4XDkhouC7imcTNwsA1zK1n8lt4WEmsNBpO
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: a1e847b5-86a2-473a-8f63-0a179126ab15
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.918Z
+
+dn: uid=vts-tester-2,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: vts-tester-2
+cn: Henry Venture
+sn: Venture
+userPassword: {SSHA512}t5439CNhf+QyT8caF4TYAT9xsbRsG3KZtyqmKX9JtEops2BxWOMZpLYqNwxlzwuqN5RnCdPYCuloFr02214OcY90V1NLsu4g
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 65e16f75-e108-4d60-a80b-f9761e72681e
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.918Z
+
+dn: uid=aedm-2,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: aedm-2
+cn: Thaddeus Venture
+sn: Venture
+userPassword: {SSHA512}SDTdsqh9ke+5ogPJl36TKjjCYBEap+J/8rzk8Lahi3cgHuRZZriPs0XZmGYqWM0fRAAy6fSXOW0IoiFz9mIuK/uOdmWBGn/A
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 706abefa-e382-4d84-abf8-376355b69b4c
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.918Z
+
+dn: uid=site-manager-2,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: site-manager-2
+cn: Hunter Gathers
+sn: Gathers
+userPassword: {SSHA512}9dnXQunjR1PN9xmrCQIbq4xAwD6dWRsxoxOjUoYV5tutiOn3vdSLmkFITYReSzdI4flCyoNGJi5B8DycB3+az/DQcSkOgz0b
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 7405e8a3-c800-46f7-9d4c-9bec0a8871a3
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.918Z
+
+dn: uid=site-admin-1,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: site-admin-1
+cn: Roger Venture
+sn: Venture
+userPassword: {SSHA512}pH9mzpBVzp89kRMBWG74nH1ZH8duIg2/301bvpHiTB38iYXpUIn8lzvD/5rOSE4jtNBNtsZo4RM4SGbiMh0cmAIqRxKbflSN
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 400034bb-d7e8-49a2-bc8a-d2c3257dc5c4
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.918Z
+
+dn: uid=aed-3,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: aed-3
+cn: Jonas Venture
+sn: Venture
+userPassword: {SSHA512}ieXJB3USLBGHe2HlUCF9PIOCLfBh8742+TZ6sqWEpRrs2M5G+LRqZnwE+PFHpcnTdMfxw/vY59KCrbkbFSbk2jUUvE/pgd6s
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: c7d784ed-ae34-4d06-86f7-a7d76989db1d
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.918Z
+
+dn: uid=null,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: null
+cn: Peter White
+sn: White
+userPassword: {SSHA512}uU5+FEHPLQHSl42zijxNJ6PplAitlbUkE+fZ6cZMQEdFHIVZRItYgr5OfcwajIV2t1DaCbpJwUfs/laGCcym6fOyM46RJv7h
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: ae87b664-1c28-4840-a991-d2bd1d61a3a8
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.918Z
+
+dn: uid=areaoffice1user,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: areaoffice1user
+cn: John Wayne Areaoffice1User
+sn: Wayne Areaoffice1User
+userPassword: {SSHA512}/znorHKh4phCo3uwH+aQKDFMjGpyL+zq3jF0bnY0y5JXTMww4B5kzHlqlLkdAWVRMlh1FMU9zmhjxe/laVJ3W4WpWo25PZjD
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 743311b6-9da7-43ac-92f1-335b158518c7
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.918Z
+
+dn: uid=ut-inactivetester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ut-inactivetester
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}EFNrpeGq2QDXRgiTzRWX1Z6su19Ip3bElW0LRJvdN5Sa0YmWEt3DzNQk3m3Ifu9UhJnHWEQjoEwHn8GXhjXkdrsdkP0FCgiZ
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 597ce01b-fd9f-4a19-8112-6573682bea3a
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.918Z
+
+dn: uid=ut-noslotstester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ut-noslotstester
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}WoAST7NWicURhpYLMN+4OM5x0sbR9DKcDxZ55rnNe45CYEFaiaCZZTzEgXivznBdfc6KEK+fA7zCcJA1xnQ1M6pq2aLcqd4b
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 0fece428-0326-44bc-ae1f-d25d046137d2
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.918Z
+
+dn: uid=ut-warningslotstester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ut-warningslotstester
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}CEgXXYADUljpgC4rUvhQv7A3fFupRBJocJRpdIyoW6PdgiZwyd1HagjepGq4FYccy7BsXqPdoA6MTJoeOWnG6Z3y0MoH2wlj
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 006f9e2b-1131-4b21-9dd8-dea04f51f656
+createTimestamp: 20161005152820Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152820.918Z
+
+dn: uid=ut-qc,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ut-qc
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}G7MR2IiMKISLBsJyef1PBO4HzJj0NiaMpRrOJH+icH8Kg2tZOlKacCmwr9GRiPkKmVXuHZqD2wV0J1i7I0miO8zjPLAsd+in
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: acc248f8-ed29-4e12-97a2-ad1daca811c2
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.118Z
+
+dn: uid=ut-tester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ut-tester
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}tZR7n3MbOi8fu+Q5fXxXGlrU2o79Mcsr7dGmjzFgUuKNRI7UX05ny6m6atuTPa1Rfy1mvj4yCfnLhywmuisyfy3D8huJ/peT
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 5dba27eb-e757-46c4-a08f-3a19178af49c
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.118Z
+
+dn: uid=ut-UPPERCASE,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ut-UPPERCASE
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}uqWAxOqLIFGpENm778dNRUz9eDJVXGXbz+vEq+FJDrXHp5MgfS9KbOYhHaJfnRoV7AKzMfwAZVFhzi1Px4uLXVm2M4p2j5lZ
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: df5645e3-5afd-4f6a-a81e-cd605bf34e1b
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.118Z
+
+dn: uid=ut-manyvtstesterhasslots,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ut-manyvtstesterhasslots
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}6sViDRgHTVo6fGVo/XN0bFXziFDr6FbSY5dnHHUEx2F5zevYqPr5T7BJ6HS8QNYW6G0zcrha+/H1KlSJSSqUHxWCZVRT03IJ
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: f407b0ec-a67d-486c-bd15-c2885908afbf
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.118Z
+
+dn: uid=ut-manyvtstesternoslots,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ut-manyvtstesternoslots
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}OR6ZXZOpNk/eAWaA8S4giOio5inS2UzBPW8V/YBgGWvKvCby6re4NYZ5HJ3NYkMkTaLaPhyMzx/yNhU7Bfdy3YGPQHqTMBys
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 5d911e69-8dce-402f-b260-6f71bc4fe59d
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.118Z
+
+dn: uid=ut-manyvtstesterwarningslots,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ut-manyvtstesterwarningslots
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}vYIDj+zTu61DqCkl7RbVNnTRQlxCfdCzPxW8sFgcJ/hTfqBEVMUuHNi9I6RVXM3pF3VxqL6HTvYIhedvFJxiN/2fn3HxyjPv
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: b761dc89-1437-46a8-9666-f45ef7b0aa42
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.118Z
+
+dn: uid=ut-manyvtsinactivetester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ut-manyvtsinactivetester
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}MEcYNh+HJIQ3zAHCXduo2YLmeB/0LIRalbVpU0VJOhc604cJGZzg0nnITWFocLgBj3/9CaKaTnosrJitVJ+7vT640zsk1taa
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: d363f81b-7810-4b0b-ac30-c0f01063aae8
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.118Z
+
+dn: uid=ut-novtstester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ut-novtstester
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}CAYeSYKVQ6qRPJKAFvH25krulo9wdo2UiuevQcTMSsk37FKVD3YGXuQziaBULnBlruV2ukDhTjPu3Sk8CaGeCzBFuquDTMvU
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 58c4985f-2033-4cee-9c13-a0d888930820
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.118Z
+
+dn: uid=ut-vtsadmin,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ut-vtsadmin
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}2FZS9IWWhUeZqwayUjsX6636Bv6uWJN8V98sr8JJq7HTtNgzbZl4wd0jTaQb/WAM1oNWDdDEzKME772NhUTuiZQhH+R9imog
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 0507b3ea-11f7-423d-b85f-0fc8d177c9a5
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.118Z
+
+dn: uid=ut-cata,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ut-cata
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}O8FQbC6TNdyfNnrdaKyL7EC64j5VJ5213xXP5F7E0UT4b/twth+BNnPjbdUeWWJZaxJTGS4c8/CIsof/ihK6S34BZT3RcHmg
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 48b3ec70-84d3-4dcb-b68a-985ed7d4b48a
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.118Z
+
+dn: uid=ut-catb,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ut-catb
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}O6KUY7rIAQi0lcLNEaGTXW1ormDVSXDgFfL2PVElj8xe7Iek047lHczmsap01IiYapNEgxRDntgP3hTjgl81FRpxaK/h0pBb
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 21dd2686-3a16-4515-a355-36967680ea73
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.118Z
+
+dn: uid=ut-assessor,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ut-assessor
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}MZ317Wglm/s7tkqXnHYvORDsKLnEX4ODgKa76XwntjSoB+zuGRn0xyXyQtMxaT0kCxqWDwKK+g6cYpH1eqavE2MWilCi6418
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 06a05b0e-6d47-4d58-b786-50bd1991102e
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.118Z
+
+dn: uid=ut-assessorlm,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ut-assessorlm
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}iRwPE1rcTmVhIqamKftOWJNQIkSgPs6NbHVqmF+0iOwKbfgU1cTWfF7G9wrmKlP77mUTXH1yAndauSI4uf0s1bjR0Jjwqm8h
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 1ef7569f-4571-429a-8c7b-08654fdcb43c
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.118Z
+
+dn: uid=ut-norole,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ut-norole
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}GLT9uHgDqsWmoMwpM0cEnizpyFwyBOpIR8z3FlPW6PVA4tqMYLs7NfIEbblN4t/Pp4jr33dvWZEgncMj3eXrtmi/6iZNtiz/
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 5ebcd638-e8e5-4e99-8cb0-05521f1f8226
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.118Z
+
+dn: uid=ut-ae,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ut-ae
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}WkY0IdPPEYKy9jHWYDcXGyW0SFb3zO1P8iQKuVdzAyG/X7H4jHejxFNMThWqC0pzEmgEOLGQSfP7Im9c182/TbGMwpJdQ20D
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 119bd72d-4e08-48a7-9e91-aa2ae02f2c21
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.319Z
+
+dn: uid=Public,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: Public
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}taLsYadwhW/MXYbdh8qb0PcgDYNYk0i5s68R1MGsXWtq/AWauSJdOIkM92u2yka6yOVP6ulCL3DG0exTrZuRCMkcjbiQTxrn
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 36b12d5c-4277-4a3c-bd4b-d61231b791d9
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.319Z
+
+dn: uid=ft-inactivetester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-inactivetester
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}O3EwPIZGRhDfrN1u3t+yaTKVLre9S04BhXJH522wl2YJqJnNxetRkeTLgxKo9GBmVstY3Ju20pJS4WycoUT6reOusBrjd/S4
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: d9e093a4-0749-4040-a8bf-1d2c712abbf9
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.319Z
+
+dn: uid=ft-noslotstester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-noslotstester
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}61zOx9zSDWI+V6tlWvpnj2qqj4SqBioilYENXszrbI1AQT3TB+C7o/64JUj0Ec5Yce86pu7Bs3IwLIoYRkrdQ1ekS5OgpGv1
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 8d426418-0c1d-40d4-92a7-75467532a437
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.319Z
+
+dn: uid=ft-warningslotstester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-warningslotstester
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}fzPx5Mkup3tHqEwjrycmrxtCRebaVBfmKhURocDzUJeBpE7Egn3w29xj4fF22KwQgOqJPx9KSBDzFIksOKc/rk0+1Sp5MDa/
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 57e68a69-2bf2-4755-a383-25dff7e2de9a
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.319Z
+
+dn: uid=ft-qc,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-qc
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}6Dyz8tvWynL928D5JwNRfLUJ+hOnlRwril6zQze04uO+zpp/xUG9Za2+CO3kJSBMoYW/sG4/czMZXc/RGoRvYZ88cFGA9yIF
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 098368cc-35c6-4aea-bc87-8ddc7b6b0085
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.319Z
+
+dn: uid=ft-tester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-tester
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}P5/4lu8BHel/7QCfetdUHmk976oLWqH/JtaFdbVEhjZD/RXlC88iHvmItgGu5/eVr8vuCOY6f9GHaN4/uFuCf9LDXmzDIQOZ
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: c0ffa5f4-09c3-4bd7-93c7-cba50168d122
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.319Z
+
+dn: uid=ft-UPPERCASE,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-UPPERCASE
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}bg0XTbNpbQA/3tV3+vbKjl+rd1YKmpTfQqrvTKPPY1Qk6ImS0ppPTOaGCVduQgvo5SwQi2U4mbTcS8GAM0PXnExmQ2+WVoR4
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 070903d3-504c-4a29-b278-4a07a0fbaee7
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.319Z
+
+dn: uid=ft-manyvtstesterhasslots,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-manyvtstesterhasslots
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}CbWZudeEuskQ1PDLN4cREsvLRx9/qI/ygQZilUUW2VZbkMjYkRVPdGMALrHl3QHFJV8sdfjaX/IMaXpO0yqDaTwtRjzMoJza
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 44e1d393-e652-48de-b32b-ba1357f8dc1a
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.319Z
+
+dn: uid=ft-manyvtstesternoslots,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-manyvtstesternoslots
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}tKZAXRimw7WZJqCV5+kKjDgHbGUsg1mL6vw2Xog9i54/YUktCJQtOIbZmQLQGEbg8RSDKdk/M79HyCKCBgCksMkXGjN6eYEt
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 2a953a6e-86fc-4173-ac9b-efa752f7030d
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.319Z
+
+dn: uid=ft-manyvtstesterwarningslots,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-manyvtstesterwarningslots
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}97iYEZub0+Ykw4V8lTzyw7hbYnwp2UyOFs+h4lvTvItWLJ6h4fHoqzECyNt9vKpeohKhvJyByYZmrHhFeGPi5YJLEhHyfRKA
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: cee4d404-799b-45bf-b628-286b722c396b
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.319Z
+
+dn: uid=ft-manyvtsinactivetester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-manyvtsinactivetester
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}TzyVenuRAyvkLPd9ciyxbhb6R3Z8e+mqleWaCsRwLBHmjY4ERCJYT13kzXnHNKCEqmbBS/Kdmwiytu9n7VyC3Cov8zYRF0ZA
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 65a91a75-5b51-45db-aa54-d4c735be525c
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.319Z
+
+dn: uid=ft-novtstester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-novtstester
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}/2bUr0Vha6XquwkfCjD2FLTP687GttTMwiXzDPUPTm9aY2i0X39Xt6SDp13+3MsV/LddVxhzL1u658/n/JiwyE1xXhghG6+L
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 9cde9ca2-9be6-46ec-a0b6-2376c3ae6764
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.319Z
+
+dn: uid=ft-vtsadmin,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-vtsadmin
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}FyMEoG3ZmE2LGJO6boNSXtgGxc3Q/l8ntc4Y3xJmuYhJ7X+qw30uzMjABb1w9eIM4Yic6UlmXjKAi7f/QONJwEyeX4jaCOsh
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 27c68b12-2e29-44d3-b1ed-52b45c79b0f3
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.519Z
+
+dn: uid=ft-cata,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-cata
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}XoR9E7Wz14HlmfQdhL9btqtndrVB2h4h/Yd+klb1GGh2tCK1Qz2v5NQcsTXqZa+jmumLs5V9TTtFQXQFe/pHKLj1TTxDMVKk
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 12bb5162-3b47-46d4-8ce5-a801353662ca
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.519Z
+
+dn: uid=ft-catb,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-catb
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}mXoDsLXvH3O7lj4oo4bMIOya22CLS0++Co662TiU+D0x8yYWaRUGBjrsqA/Y1IatB2wsaon7UylYXmB8qrWfzzq1fkGHz+ey
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: f08a4f66-ac59-43ac-b873-8e4dd16d9834
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.519Z
+
+dn: uid=ft-assessor,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-assessor
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}7/WlPgJ+X1TZI8Icco1o0eu5S5rOQyLX2q6MnBln4qzcI1scWe+KFPdyV5o7JXOeDrd82CUoYI9a9O3eGBLyAVefbvP3+K0k
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 87f0d3bb-9016-4d9e-997a-9e13ae343571
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.519Z
+
+dn: uid=ft-assessorlm,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-assessorlm
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}CZY7YqVaiLPOP/sz6UyROP2f1MGo/NZ0ZpAsOw6Ofgpe7pzrdvB+ZVT1pZPRc9b8aRZqOmWJsmDStyLNRNG5VdIuipbPTD+6
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 5d8ecc87-2ccd-4a0d-9df0-27b67a01d154
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.519Z
+
+dn: uid=ft-norole,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-norole
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}20RdmuqiM2MuKqOXdUsDX22704IlsWfVs0PMnVgcxJ7gDxouTbqk5WEWi+rx2kbu3h/cJMG7NVZBUdCxjUDNlHs7KFWAqmF7
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 1aacfb0c-edf1-491d-93d9-283d9c375f61
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.519Z
+
+dn: uid=ft-ae,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-ae
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}sqmM+6R5hWdOFpqG8VzuL1XAw0b9IpwncBadGAYfgMfuzg8yq1cF9hWj05ZFn71R6GcTqllO9C4EI7RSzVOsJajjAx2Cxt3k
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 19a1fab5-ad01-4155-826c-83550ee6091b
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.519Z
+
+dn: uid=ft-Enf-tester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-Enf-tester
+cn: Bob Arctor Enf-tester
+sn: Arctor Enf-tester
+userPassword: {SSHA512}5XCoaF01ZRWxGW2rc9tee9poelKZUGWywSED03Bsb6jNihWDsY0Kk2PlMAsSzyRQoSHHeaLUisOUSF3/WV60sLPl93n/iCfM
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 80498cd7-111d-4282-b254-17d23dd57aac
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.519Z
+
+dn: uid=tester1-user,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: tester1-user
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}sg057z29bYJJ5iIJWjz8Mfjk+xZpvfbgPaAA9uqruMEj8T1qwSaqvCa0M0OY4WCTPlS/P5stFyWzRwN1fh0Y6ClHUTbdhmtx
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 780a4a2f-b3df-425d-8e46-2fa27db81318
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.519Z
+
+dn: uid=tester2-user,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: tester2-user
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}cBSBFEkelVb50YcMWbNXNkxiEOd4DoXz2HMjv9RMCtsB709LwvAhHSN48MsOWbCWrx0RfLC8IQw7oqhVj4wGGpTDmYXk7PvS
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 0fc6d74f-38fb-4b43-9f91-0abefe9f02c0
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.519Z
+
+dn: uid=non-tester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: non-tester
+cn: Motilal Schwarzenegger
+sn: Schwarzenegger
+userPassword: {SSHA512}jYaUjGfRfei8aHYnptW6EAwumDouekdkSGbjmqMMUoUCWDXYfHfpoNken1IHvvlucGRFrsbgBHxXHj73W42LiAMTrxUfrjhd
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 9b868313-3561-410e-bf0a-1d1f4460b4a1
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.519Z
+
+dn: uid=ft-aedm,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-aedm
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}wYZHa7JNDKoZPb5Br8bbx9/WjNxH7MS9obhxqUNCXNVjVki/+NBHOTS1HQGzEJ37GlqF7AMW2zuSSPca1M26db04LDKiAYYu
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 340c7230-3c61-4b97-9246-d596f374e51f
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.519Z
+
+dn: uid=ft-ae-delegate,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-ae-delegate
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}Qh5aagyM+BKg9OQYVf3/Me2qGoiibsejTBiqg5WMISsHWMaOoNdhdSuA85sZT+pjKkyFuNYlAhofB/D800Nq+8TEKYNbCRy0
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 4def6352-2081-4f30-834d-50679638e5bc
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.719Z
+
+dn: uid=ft-ae-principal,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-ae-principal
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}XYKkEu4ptNLiw8WldJvAVgTaoo2UL1K5wZNbA2zsDj1tI17sNemJ55hsotzrqCYeuAYsiEsT+hQO17c0o39UgRXXg+qiKmJ2
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: b3fbd689-42c5-4fff-ae03-eb70a6cf1ea4
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.719Z
+
+dn: uid=tester-expiry-cron-job,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: tester-expiry-cron-job
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}RIRsOV4I8s8wyQhN2RZERkz9g8XgzdVULTpuAopioBxk9ZqxqVzEqzH+pnq8EOhQeG6xLxw7Kgvt8E5xMrGhMcHR7diQAmgI
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 2c2464f8-e287-4b46-9c81-5b2a6a919228
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.719Z
+
+dn: uid=inactivetester_demo_not_req,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: inactivetester_demo_not_req
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}LTQ5Y6CtpI8dh4xWPxheb04WfBIC96AqG6cgNdc3uo0HCDYRa+Yz9g/6QuHMmtoLbE+QSlINax9WUvZkzhZv3VaPl5d5Q3kX
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 31a6b130-98c8-4352-858a-9e9a7efaa2be
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.719Z
+
+dn: uid=inactivetester_demo_req,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: inactivetester_demo_req
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}BFGVlOqZ9IBObi+nkXauBXwJ5suj+3tP7KWt0Opxei30H5BDYOfh0dy0tyuAEOB3cLe5idilOx6ZGH2InP30XTi1DID2/bXe
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: f077b92e-5364-43e4-8c7d-87cfe3c51a65
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.719Z
+
+dn: uid=inactivetester_refresher_req,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: inactivetester_refresher_req
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}vNCAb1ueDbSC0qTzjtvKyk3G+cBAXBn+jLsfIF9JrNzwR9lpvAjUaE4FiuncU/gI9LHKI1czM2Uziz1ZTVbO0c/lYB1cL4+L
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: ba3ffba2-a132-4169-9ec9-24110889076d
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.719Z
+
+dn: uid=inactivetester_initial_tr_req,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: inactivetester_initial_tr_req
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}YTTy/pV0Tg0VDL6qTEE91MU4PMIRqzlMPg+Lr7CeFEh03hrEenhKLMGGuzi5hXG8ThLPNdRc+g5SMEkNWhiZZLg8AoSauHlk
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 0dd2b656-5085-4846-8576-2b1f98324a88
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.719Z
+
+dn: uid=inactivetester_demo_not_req2,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: inactivetester_demo_not_req2
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}pMea5/ons0hbUR4duumCtwhdtixiPTM7qf7Gv1AbrC9Ju1bouIum3NsoapRQJaap1DILu7bpkIIKu56ftcUbvmUvBAfTa+aE
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: bebe536a-6a35-4951-a4a1-6daf919eb076
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.719Z
+
+dn: uid=ft-simon,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-simon
+cn: Simon Smith
+sn: Smith
+userPassword: {SSHA512}6tvlmdnrkbb/bNZPYdkOm+kpr9yXpSJpuylypSpI9L9nj7qCs8RtJ4mS2OB6MEJAB5W4JxWoWU933cDqCB5z2MG2F3MsfFNN
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: bc3e00c7-1a5e-4769-aa7d-d505276efbcc
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.719Z
+
+dn: uid=ft-Enf-tester-2,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-Enf-tester-2
+cn: Enforcement Team
+sn: Team
+userPassword: {SSHA512}Hz5dn9Ch7+j+46HA65El41vzD8XfeJshJnJEQrZCpEkMxMLgrAh62K2vK7uP4rWz9Vg5Di1qRiiNTwjyt1BJL9oa0Tysmn1q
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: c33dc034-af57-4aa4-88a3-746527e25c7e
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.719Z
+
+dn: uid=fit-initial-training,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: fit-initial-training
+cn: Fit Training
+sn: Training
+userPassword: {SSHA512}t8L8wM53FtODegFWOyx1W4FMBMY3wOgDX7tcIpiQoc6DOXFCweSnjeaHm3KuPwSwK7Y6nvcR86POlmpfFkHiNabneFMXPDF7
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: e933f979-1ab7-4693-afbf-1135f9404c2e
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.719Z
+
+dn: uid=tester-dashboard-rpt,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: tester-dashboard-rpt
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}5mJH6ohInU2ozZJb4d2BIgmWMP3flk6c1Iuj9kEcAG5NQpuu6jJBWvmWJ+KpkH4wcBqSnkfTnlqzTMsDwKx8tVEK7IAyN0eQ
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 8fe0e3bb-e1f9-463c-9bfa-ec14af895e56
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.719Z
+
+dn: uid=ft-enf-tester-3,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-enf-tester-3
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}ixFH/fpJQ0ioCGtK0ZWfBLCiXHTsNCL6qiab3Hm3Scl6Z05yNF4HFprd5YzXbmAUvT8q+9Ub77eIKwlAxJR6cLroqMPS77u9
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: b85fa4f4-92b0-4634-b7fe-b1222e2f61b7
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.919Z
+
+dn: uid=ft-enf-tester-4,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-enf-tester-4
+cn: Bob Arctor
+sn: Arctor
+userPassword: {SSHA512}Vp6HqfLR+SeQK2wFNC6yhDMhVipHaOf7wriHLHyVs8N2cLOGz+Nyih/9GRdvRJ2Fsr56puq3mIbFfAhv15U9dhEBdU2e6grw
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 1744b484-7394-4880-bf42-d3d0184dcce6
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.919Z
+
+dn: uid=ft-colin-tester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-colin-tester
+cn: Colin Haselden
+sn: Haselden
+userPassword: {SSHA512}Ps2a3ryeDYs4YHsYum5LutwVtvpE9Y+UYTHCad3MPaNHH6BoSALTFRnQxTqaxjU3ioYndSrsmZ4ssMpMR/351atVQ5d2vo+v
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 5b7f18e9-50c6-4902-b01f-db4fd554dbeb
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.919Z
+
+dn: uid=ft-martin-tester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-martin-tester
+cn: Martin Garlick
+sn: Garlick
+userPassword: {SSHA512}o9omS/ACUxfqk9OaBQxvBykckT5om2acDEAk6ZwZWhs4qAVt56Idh2ysinpRYFDpsLr2xgr31UJuA+D8V/KiJYkpCQHOM6N+
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 93560ff3-60e5-4f7c-bcb2-d028e9179b2e
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.919Z
+
+dn: uid=ft-grant-tester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-grant-tester
+cn: Grant Thunder
+sn: Thunder
+userPassword: {SSHA512}btAco9tXhB4lbn5U3dovKr7LByTx/93mhfRCSAUQrtQcDs2CLYu6mC8lf+C8Cw+dc7RqYgrl5/USnkrr/Mqrmihs2DiPz5KI
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 8ce65ffe-c1c8-4fd6-b61e-fdb7b0836cb9
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.919Z
+
+dn: uid=ft-bruce-tester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-bruce-tester
+cn: Bruce Fullerton
+sn: Fullerton
+userPassword: {SSHA512}qSwILRhYmVLqKUDhEIe2eX1iwQjLhDRtdSAUYO40SJQFuVBZ71m9hacPSLWGue8RVtlxwPb8U/ZTZ+k/wkm43pM3yMg0VkE1
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 759c4889-7877-40ec-8eb8-7a487495d9e9
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.919Z
+
+dn: uid=ft-ian-tester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-ian-tester
+cn: Ian Marsh
+sn: Marsh
+userPassword: {SSHA512}rDHslHsKxfWzHCYcdiIUoph4T3nUxbdFhGl+k7MhxTl0Q+uUK1EBKo7kCr91/biU98YZ4U+LaICWv/EP5GEMBcoBeYU21ae9
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 73516886-f8ee-4bdc-aefc-daa768ba1851
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.919Z
+
+dn: uid=ft-colin-ve,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-colin-ve
+cn: Colin Haseldon
+sn: Haseldon
+userPassword: {SSHA512}0WPS1gsfFvdIXFLMOfCQ9SXa7vnQ2aCUo9b8VTwQN7CwaLBpUxNN5Mc1ItCBqANYS/sTMOimOD+j6sfiZRwHTfwq16kQxIxi
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 14cd639a-0e08-425e-be74-d33758713a90
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.919Z
+
+dn: uid=ft-martin-ve,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-martin-ve
+cn: Martin Garlick
+sn: Garlick
+userPassword: {SSHA512}opJIqatTaAwK3bq91CYkoYtdOUKZFZW3ORwfLXlK7snKs+BSM40KJPAzjX2t+TSkx6tFNT/tHPXOwgWdZ2RlMDB0cZBfozbk
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: df224523-51f3-43ae-bfb0-c094533b6703
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.919Z
+
+dn: uid=ft-grant-ve,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-grant-ve
+cn: Grant Thunder
+sn: Thunder
+userPassword: {SSHA512}zBGAG/CnD0xphI5Z1HZR8rj74gsbALzP5fErviWpYsE9OuEU6ntbp/uG6zsrIuSKPAKQGWQ1Vfopnphuj0bez0Q27nPhdxIj
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 6fe3c722-c239-4854-b8bb-a0efae4d988d
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.919Z
+
+dn: uid=ft-bruce-ve,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-bruce-ve
+cn: Bruce Fullerton
+sn: Fullerton
+userPassword: {SSHA512}J1LPnQWOO+XKkTorTH3bCw5H4xl9Xuu/ozHarpAUXpZfED+F5J0X8ReHjIwSZxfhRvCBLCV9VJEnc2nt2vhSimz3AARuaNaM
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: c6e21821-c1a1-46c1-8eb6-1fef1db0050d
+createTimestamp: 20161005152821Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152821.919Z
+
+dn: uid=ft-ian-ve,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: ft-ian-ve
+cn: Ian Marsh
+sn: Marsh
+userPassword: {SSHA512}ikp4TlAMVjnIjvLg/IGsZ38w2OAfL02J88sqSmh6EphDq7T98Rt3XDOo5SDEhnBUO4n9Mh4uIqOZOPotmwvmYKHNF0sY8cv+
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 3535189b-8831-4204-96cd-ea8ff9015294
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.120Z
+
+dn: uid=DVSA2015,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: DVSA2015
+cn: Chris Price
+sn: Price
+userPassword: {SSHA512}OBWlaLFW0EetvNx06mlt4VwdBwaaGiE20QWpHbBXGMVwh99D+00bl/6tM+wuerADuOJh4lhEgAikJS66DBfoEJ3mzIgQWwp5
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: aab16b8a-5023-4fb3-a4ff-e7ecf6129724
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.120Z
+
+dn: uid=testerAtVts1,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: testerAtVts1
+cn: Ali Bahman
+sn: Bahman
+userPassword: {SSHA512}eErJfyTsKRoMoaY9WQRssxspYZbAk0sFA30sab/1V2MSphit4zjho539vZ0L6NEsXN6cYcXjo56MhBKNrwZ86UkioyQPyMyR
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 7c957675-d568-48e6-a60b-4ac977f83bb6
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.120Z
+
+dn: uid=siteAdminAtVts1,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: siteAdminAtVts1
+cn: Guarav Malhotra
+sn: Malhotra
+userPassword: {SSHA512}Vpk8+ggjeb2CAdbb6tvaCYpvgIhkcKEgN3PkJFuk9EfI0EElDLQ9BOltZ6WFWjYbWnl/bilmDPA9R+rONOoa7dz6pYdI8bqd
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: b8530809-3a94-469c-871a-7d5542e3281c
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.120Z
+
+dn: uid=siteManagerAtVts1,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: siteManagerAtVts1
+cn: John Doe
+sn: Doe
+userPassword: {SSHA512}3JqehQ+BeyjRECf2IlNmyZkxE2R2TxC/wNV2gDrt17oYUURpBYDWh+6Pj9+D4+VNwhLk+5M98dAVxaLo3lYxJPGNrNo4DaED
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: cbe31c1f-26d7-430c-8e94-b0cc706659c0
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.120Z
+
+dn: uid=testerAtVts2,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: testerAtVts2
+cn: Fayaz Mohammed
+sn: Mohammed
+userPassword: {SSHA512}dkhKahqhsXAd9M7doEi8e0k5/8zrdIaDVQZMHAU/OQOHjxrHQPyAs8ZiDkimgFdJw4Yk4StqOvb+g1p0Lw9x/FuML6LI9CIM
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 03d276c0-b99c-4ff2-ba4e-a0037c094315
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.120Z
+
+dn: uid=siteAdminAtVts2,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: siteAdminAtVts2
+cn: Rafal Kondratowicz
+sn: Kondratowicz
+userPassword: {SSHA512}/RsEs99dpa9CsJU3EdyfOpNNOgt8v+IUXYF5hb89A2Ye5LWG4qZxRMU8yXQlZIiYCzeE/zhZysGC2gn9HJzqopCywu6Z59WC
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 956d5592-8330-4b56-8470-b5c9ca63b00b
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.120Z
+
+dn: uid=siteManagerAtVts2,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: siteManagerAtVts2
+cn: Maciej Szajna
+sn: Szajna
+userPassword: {SSHA512}zDXhVDVU41GhztajxOvck8RMIxabZWR/HMo7kTd3cwujkDeZmgxgMTQTcxg8AnMJtwC7MfKckoN5a3MBRg9sJ8tBV7WCCInu
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 327db789-3182-406b-be6e-c499ddaed40c
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.120Z
+
+dn: uid=anotherTesterAtVts1,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: anotherTesterAtVts1
+cn: Tom Carrington
+sn: Carrington
+userPassword: {SSHA512}1zKWkJ3YKjs/LqRsYvIIAzK0hyB6JQUubelatAy+h9osc/Qacf1fkIutHm9VcX2aHF9ifsKulzGmdxhL4BzywWhSV093JslT
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 1e062e59-b30f-478a-9885-99bd654f36b1
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.120Z
+
+dn: uid=anotherTesterAtVts2,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: anotherTesterAtVts2
+cn: Phil Shean
+sn: Shean
+userPassword: {SSHA512}ZFTiLKWcG0ypYAfWsp2c649Tq3SM4INgajJ3/7Nt5psVhXQ8p5bXQWYq/KPM3Gu3xPDKe4pmljiNVmwTQglSFv7RjQ59c5Pq
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 8ce9d8e8-3ba1-40f3-b5a7-109a6b187b5c
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.120Z
+
+dn: uid=aedmAtVts1,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: aedmAtVts1
+cn: Bethan Mackintosh
+sn: Mackintosh
+userPassword: {SSHA512}l37Dwl5mBeHiv1J1/3VvxXwLriQ2ntmrYSIThyh8Q1nAw/2lU37LL3JgECzmD2YX4jJKOcu2iCvCNYTu0v43mEYkF1FRunOK
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: d58caa8c-17e7-4c8c-87eb-836ec3c42239
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.120Z
+
+dn: uid=aedmAtVts2,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: aedmAtVts2
+cn: Lucy Winstone
+sn: Winstone
+userPassword: {SSHA512}GVPgmy8V4Bb9UHse9RXcvhOSnu+CiAeN8KxVu+KdkIRVjA822Lw5+cLR3Z8BFd9Gz/grEwqNHMEYYW1NaDNX3s67l4jsRI0p
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 17376a67-bf93-4fe7-a733-17e36db5ff5a
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.320Z
+
+dn: uid=aedAtVts1,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: aedAtVts1
+cn: Christopher Price
+sn: Price
+userPassword: {SSHA512}TVy7GZhP+MdlINSd5pWIyU5Tel2o3jN1NKbMNsoJNUkoqMUYgiXCTh3Ogr7svqKpRRo8ZwMv7wSabIQ5SHKb9QcoNO0QSa65
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 3cc6c89e-89ee-4ef2-9d2b-3c124ba9f808
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.320Z
+
+dn: uid=aedAtVts2,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: aedAtVts2
+cn: Mark Smithson
+sn: Smithson
+userPassword: {SSHA512}P1LS9UoF7HCBoZJZe8yalT7lr3WdLul3eIsui//RjINeR3AITONa85EpQ4zQchkKUK6VJla+J2Z/SCt+wEo8NTwY14B7JdEM
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 5af29c7d-a97f-4eb6-8904-65f93c3cfead
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.320Z
+
+dn: uid=csco,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: csco
+cn: Johny Bravo
+sn: Bravo
+userPassword: {SSHA512}nnqkLv4YBF766d+1t6fdoeBabA2d9ADKz9ZhAgP1Qk1fW23mo5IM0fiQw3PjYDKVOC9RjEoRjRAiSZw9Q8babF4/Ylx7Ua6u
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: f6ea854c-bca7-461d-bbc5-2e93c54b077f
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.320Z
+
+dn: uid=do,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: do
+cn: Johny Bravo
+sn: Bravo
+userPassword: {SSHA512}qnN5hAwe8fZU/lTjAHGOEN+1vpbvMwgJTS5ec6AYdq4zz6+M4z9zy87hMVuBompNeZxeP4fOrRWyamqYRqCzb9vqXWDsaf/S
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 76cd823d-4f0e-4edf-9383-6621e83b06e5
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.320Z
+
+dn: uid=new-inactive,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: new-inactive
+cn: Chris Price
+sn: Price
+userPassword: {SSHA512}6fwtikrw1rb6mU3aGX+kHnZ7zvhqqqx3ntafr9l/cu/gdquNtdyA7FnmetqtJ0f0ZrMAtotGdwO6YCjqwV7ijtUO/nvwkW1Y
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: e50785c6-9a48-44bd-9d98-0d74c8d36146
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.320Z
+
+dn: uid=rbac-no-roles-user,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: rbac-no-roles-user
+cn: Philip Fry
+sn: Fry
+userPassword: {SSHA512}a2lFOqwfGyXgl/3alsGUBp2KMRXNaDNABPpsUhBmAXFoklWs5wK2h1nhYYqKYUIaBuTrtZWdzDuu6nN18P40Pm+UKs/iOuqe
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: c12827e6-130f-48ad-81e5-116f0507dab2
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.320Z
+
+dn: uid=vts-11-site-manager,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: vts-11-site-manager
+cn: Philip Fry
+sn: Fry
+userPassword: {SSHA512}jDMKpC0ATDXJ0NfmeTS9ZMpVfK8GQq89KyVZNRM1Xvz0eQx2nX0s6OeqvTQkmdgoZ85SKSqC13Q2MjjVkk2t+BFr0ntQppTX
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 68dc1c28-f95f-4f5b-bc13-33862ad5233c
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.320Z
+
+dn: uid=qualifiedNoSiteTester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: qualifiedNoSiteTester
+cn: Philip Fry
+sn: Fry
+userPassword: {SSHA512}FtasHveGwJBXKn8xuxWdEIvI0WSRjRjectobsdgq9R3IRKKEpqbaBixaHoTKWX79rl/3rbo0SL+OHy0Pa0qDVNBL5nn95Xv0
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 50022bc8-b3bb-4818-9957-1e3041e23ccc
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.320Z
+
+dn: uid=odsnTester,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: odsnTester
+cn: Philip Fry
+sn: Fry
+userPassword: {SSHA512}DkDCyR9Zsp1V6nS+GZ4Xz47JRyNhuupKH7mydo2Gh2maY/Q2CrnibGI9Nc8yPbZCrOmlanT9rqEFq+lWsS4MzlnWcA87EZ0v
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 599cab1a-896f-4130-9dde-769e666fe930
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.320Z
+
+dn: uid=manyvts,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: manyvts
+cn: Dima G ManyVts
+sn: G ManyVts
+userPassword: {SSHA512}9RJWnzIDTrPckr0uSpvjWrgAJ+y/GuWWqbpn22B/qUSlivn247r7KwCZOk1E6m3PbCtwl+tnyvRksPbLtg4slxTBl6UmrIi3
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 7b099a43-a15e-4653-944c-8bc82370b929
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.320Z
+
+dn: uid=testNameCertif1,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: testNameCertif1
+cn: Christian-Sebastian Heathcote-Drummond-Willoughby
+sn: Heathcote-Drummond-Willoughby
+userPassword: {SSHA512}PrU+CIF3HOZvROlmr01lzb2Dez3vT3fkUXnCnT2qUa0HfRxfeGwNCN8hoAyNtcWD9KYUfWvsEBaqervjnDZ2R1nSVXp9JG5s
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: a1b3c68d-2512-4f20-b850-aca56708fdec
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.320Z
+
+dn: uid=testNameCertif2,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: testNameCertif2
+cn: Steve MarshPriceThunderFullerton
+sn: MarshPriceThunderFullerton
+userPassword: {SSHA512}6rsqWs0Vlvd9OG3NXd2RJGWp70EKV9nAVC1+JLTBV7ANQH3pFaoHgZ+jHF856ePteBOTGuGnJbUHTEdadE8amOxOOg8rob51
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 0c9147d8-431a-49d1-8bbf-97851d19c712
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.320Z
+
+dn: uid=testNameCertif3,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: testNameCertif3
+cn:: IFJvdHN0ZWlu
+sn: Rotstein
+userPassword: {SSHA512}yq+utbazlRWJOaYFk/aZFFzQwo7a9OuI5b1Z3du1L2ox5RqwfeHmtwc+6C2zN+AJDDRkRMN40Q5/BClGC2BCWiIKWgLHfPs7
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 6cebf502-216f-42e7-be57-6010f7a6a6f9
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.320Z
+
+dn: uid=testNameCertif4,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: testNameCertif4
+cn: ShanmukhaSrinivas Gunda
+sn: Gunda
+userPassword: {SSHA512}4c/cHOt932XcY5+G3uasSg41qk3ELODVFFWBWWOx2eIj3SuZDvGPHROJjpxWViU2/jfIJpyoX9Qf4NcYrM03Yk5eTNmNcPuM
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 784a2625-ac5c-4ab3-9fc5-d0fbe4ce2c48
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.320Z
+
+dn: uid=testNameCertif5,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: testNameCertif5
+cn: Shreyashwini Gunda
+sn: Gunda
+userPassword: {SSHA512}uzI1TMwnTixJTpWqzj8sjMmJ3GWf1MQHOdjkRR0eWpyRGwopSiVOdWMMndTSubuNxTAJxDTMx9AkUeKa4WwvQHSYfZyhBKPg
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 2accb19b-8f05-42d9-8fe7-05f558da9bba
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.520Z
+
+dn: uid=testNameCertif6,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: testNameCertif6
+cn: Aruna Sankaranarayanan
+sn: Sankaranarayanan
+userPassword: {SSHA512}goZb7AA2LrE2ouJ99XblV/af6r/4Vt9Xov337OY9U68D3SdCoQ1NYLQjrjIqASn2FrjaOtsrNQUBNkBi8FxW/1TgbYWYG3nr
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 64108447-4d4b-493a-8109-496d49a0d0a0
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.520Z
+
+dn: uid=testNameCertif7,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: testNameCertif7
+cn: Llanfairpwllgwyngyll wllllantysiliogogogoch
+sn: wllllantysiliogogogoch
+userPassword: {SSHA512}PoPZCTlRS0FkOZT9NYxshT+q16c18xB+11D1dKByXryTcxoUucZrDFqtveJCjMqES3E7JdrMm0TgXLuSKBTYDT/uKoWfsnMa
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 54d81f81-a5f0-4daf-9892-c98412dabfc4
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.520Z
+
+dn: uid=testNameCertif8,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: testNameCertif8
+cn: Janice Keihanaikukauakahihuliheekahaunaele
+sn: Keihanaikukauakahihuliheekahaunaele
+userPassword: {SSHA512}hgOrRrUxuH17EfwGGmjV6gnjsOsr48+IlCypQ4ac5q3M2rXfF7mHgeVCU5fGM1HD+GuPMK/ZfhuVwiQn4ZrBvGMCUka0BMBk
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 9ccd9226-c595-457f-abe6-44ceec0e51a4
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.520Z
+
+dn: uid=testNameCertif9,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: testNameCertif9
+cn: Antoinette Caroline Isabella
+sn: Caroline Isabella
+userPassword: {SSHA512}0CqHGqgie9etKUg32/zKtnniUDHLsBbzyGFnkPHgHzd0l5bus+N98J/ZWYxtwiu5Y3GVvMffF1I/30L4OiVmUGcd4yrSdmXC
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 091c1dfa-6b2a-46a8-bc54-e3cb1c658b95
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.520Z
+
+dn: uid=financeuser,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: financeuser
+cn: Bob Bob
+sn: Bob
+userPassword: {SSHA512}c2MbYcFrW/LmBXxfEO8UU6JMm4mUG+KMZ/EhoO/qcZWubiWb/kjcJK4S+Ez3f+lGZfD28PFGMsQ4tctX4otl/4+A1dT7210m
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 313d7278-237f-4747-ae16-af6280ca782a
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.520Z
+
+dn: uid=areaoffice2user,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: areaoffice2user
+cn: Jake Wayne AO2
+sn: Wayne AO2
+userPassword: {SSHA512}UzT6KHVXc3DACdn59qMHCyKNkNHRSLWHHW7XXlLJ7iB32cwxE01SmO3yp80xoKux6XJhyDvh75Ke8goeo6k0nceLHamBCx6W
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 8422abd0-626d-404e-877f-919453c44aa1
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.520Z
+
+dn: uid=vm10519user,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: vm10519user
+cn: Vm10519 User
+sn: User
+userPassword: {SSHA512}LK1YhZgIrMKhe5R4XmXZNKPqB5KWzHhJ63XKx3Jl2OgNen69G72FSRkkBKU+H5+fK6bX/BpX8zB1HriFyy3YID46PYQLQUbP
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 0b6d8a40-52f0-49c0-b4ce-f48e1144a4c1
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.520Z
+
+dn: uid=vm10619user,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: vm10619user
+cn: Vm10619 User
+sn: User
+userPassword: {SSHA512}C9LD6E9hcNFPBgHVZXlSdOtxol7KTneDvV9QEuTG/jO1XUEu0Ncd3Zku8wvQLYq7pDFwvkEZ1VcX9ynWBbSSlnlSQZUZnWVU
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 162a1c7e-d60f-4b2f-9330-bf7d37368994
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.520Z
+
+dn: uid=dvlaManager,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: dvlaManager
+cn: DVLA MANAGER
+sn: MANAGER
+userPassword: {SSHA512}xJf7KhsaJVNs0Xok3broXWKTMv6pf13q5HIOhFY/plPY6RVfz6gqHlgCrCOvBScjNOYWmPjMzH4jmxLdiuFDXAvttpscLrs1
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 2a00cecc-6368-4f67-9c00-f7bf00c33f14
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.520Z
+
+dn: uid=cscm,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: cscm
+cn: John Rambo
+sn: Rambo
+userPassword: {SSHA512}enVMjPPGidCy35gomXohClyTOeQFY+nK9UK3jR11pnn/OUMaXc+TNO+qWZ9InFnjcGvYpMxKz46Y+foGwIKY7FPNPiFhfSk1
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: 2641151f-8f86-4f7a-bacb-6a24ee46bc3a
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.520Z
+
+dn: uid=refactoring_etl_user,ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: motUser
+objectClass: top
+uid: refactoring_etl_user
+cn: null ETLUser
+sn: ETLUser
+userPassword: {SSHA512}I3DvhSvTtLrHQEONNHlTTZTrEFSEmfZH4xbZ70LCu4Du0hnl64XhCgp49mixaYKquYB5SQB3dbrumtn8Ddkap+w5cChUgOh+
+ou: ou=people,dc=mot,dc=dvsa,dc=gov,dc=uk
+entryUUID: d18205ad-2b69-4c7e-8ca8-1ee04dd2cd30
+createTimestamp: 20161005152822Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+pwdChangedTime: 20161005152822.520Z
+
