@@ -9,22 +9,25 @@ use Zend\View\Helper\Url;
 class VehicleEditBreadcrumbsBuilderTest extends \PHPUnit_Framework_TestCase
 {
     const VEHICLE_ID = 'obfuscatedVehId';
-    const QUERY_PARAM_VALUE = 'value';
     const PAGE_TITLE = 'title';
 
     public function testBreadcrumbsGeneration()
     {
         $urlHelperPlugin = XMock::of(Url::class);
-        $urlHelperPlugin->expects($this->once())->method('__invoke')->willReturnCallback(function($route, $params, $queryParams){
+        $urlHelperPlugin->expects($this->at(0))->method('__invoke')->willReturnCallback(function($route, $params, $queryParams){
+            $this->assertEquals('vehicle/search', $route);
+        });
+
+        $urlHelperPlugin->expects($this->at(1))->method('__invoke')->willReturnCallback(function($route, $params, $queryParams){
             $this->assertEquals($params['id'], self::VEHICLE_ID);
             $this->assertEquals('vehicle/detail', $route);
-            $this->assertContains(self::QUERY_PARAM_VALUE, $queryParams['query']);
         });
 
         $builder = new VehicleEditBreadcrumbsBuilder($urlHelperPlugin);
-        $breadcrumbs = $builder->getVehicleEditBreadcrumbs(self::PAGE_TITLE, self::VEHICLE_ID, ['param' => self::QUERY_PARAM_VALUE]);
+        $breadcrumbs = $builder->getVehicleEditBreadcrumbs(self::PAGE_TITLE, self::VEHICLE_ID);
 
-
-        $this->assertEquals(self::PAGE_TITLE, array_keys($breadcrumbs)[1]);
+        $this->assertEquals('Vehicle search', array_keys($breadcrumbs)[0]);
+        $this->assertEquals('Vehicle', array_keys($breadcrumbs)[1]);
+        $this->assertEquals(self::PAGE_TITLE, array_keys($breadcrumbs)[2]);
     }
 }

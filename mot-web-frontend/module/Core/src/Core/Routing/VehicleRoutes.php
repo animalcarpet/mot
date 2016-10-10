@@ -30,15 +30,9 @@ class VehicleRoutes extends AbstractRoutes
         );
     }
 
-    public function vehicleSearch($searchParams)
+    public function vehicleSearch()
     {
-        return $this->url(
-            VehicleRouteList::VEHICLE_SEARCH,
-            [],
-            [
-                'query' => $searchParams,
-            ]
-        );
+        return $this->url(VehicleRouteList::VEHICLE_SEARCH);
     }
 
     public function vehicleSearchResults($searchParams)
@@ -52,17 +46,9 @@ class VehicleRoutes extends AbstractRoutes
         );
     }
 
-    public function vehicleDetails($vehicleId, $searchParams)
+    public function vehicleDetails($vehicleId)
     {
-        return $this->url(
-            VehicleRouteList::VEHICLE_DETAIL,
-            [
-                'id' => $vehicleId,
-            ],
-            [
-                'query' => $searchParams,
-            ]
-        );
+        return $this->url(VehicleRouteList::VEHICLE_DETAIL, ['id' => $vehicleId]);
     }
 
     public function vehicleEditEngine($vehicleId)

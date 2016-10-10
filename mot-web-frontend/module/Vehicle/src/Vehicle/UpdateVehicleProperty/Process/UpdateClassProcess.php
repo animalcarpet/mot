@@ -153,8 +153,7 @@ class UpdateClassProcess implements SingleStepProcessInterface, AutoWireableInte
             ->setPageTertiaryTitle($this->tertiaryTitleBuilder->getTertiaryTitleForVehicle($this->getVehicle()))
             ->setSubmitButtonText($this->getSubmitButtonText())
             ->setPartial('/vehicle/update-vehicle-property/partials/edit-class')
-            ->setBackUrl(VehicleRoutes::of($this->urlHelper)->vehicleDetails($this->context->getObfuscatedVehicleId(),
-                []))
+            ->setBackUrl(VehicleRoutes::of($this->urlHelper)->vehicleDetails($this->context->getObfuscatedVehicleId()))
             ->setFormActionUrl(VehicleRoutes::of($this->urlHelper)->changeClass($this->context->getObfuscatedVehicleId()));
     }
 

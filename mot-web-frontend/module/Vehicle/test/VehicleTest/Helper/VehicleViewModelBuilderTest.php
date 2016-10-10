@@ -21,12 +21,12 @@ use Zend\View\Helper\Url;
 class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @dataProvider dataProviderTestUrlGeneration
+     * @dataProvider dataProviderTestBackUrlGeneration
      */
-    public function testUrlGeneration($searchData, $urlToReturn)
+    public function testBackLink($searchData, $urlToReturn)
     {
         $url = XMock::of(Url::class);
-        $url->expects($this->once())->method('__invoke')->willReturnCallback(function ($route, $params, $params2) use ($urlToReturn) {
+        $url->expects($this->at(0))->method('__invoke')->willReturnCallback(function ($route, $params, $params2) use ($urlToReturn) {
             $this->assertEquals($urlToReturn, $route);
         });
 
@@ -39,6 +39,28 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
 
         $searchData = new Parameters($searchData);
         $helper->setSearchData($searchData);
+        $vm = $helper->getViewModel();
+    }
+
+    public function testBreadcrumbs()
+    {
+        $url = XMock::of(Url::class);
+        $urlToReturn = '';
+        $url->expects($this->at(1))->method('__invoke')->willReturnCallback(function ($route, $params, $params2) use ($urlToReturn) {
+            $this->assertEquals('vehicle/search', $route);
+        });
+
+        $params = new Parameters([]);
+
+        $helper = new VehicleViewModelBuilder(
+            $url,
+            XMock::of(VehicleInformationTableBuilder::class),
+            XMock::of(VehiclePageTitleBuilder::class),
+            XMock::of(VehicleSidebarBuilder::class)
+        );
+
+        $helper->setSearchData($params);
+
         $vm = $helper->getViewModel();
     }
 
@@ -84,10 +106,11 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(GdsTable::class, $vm->getVehicleSpecificationGdsTable());
     }
 
-    public function dataProviderTestUrlGeneration()
+    public function dataProviderTestBackUrlGeneration()
     {
         return [
             [[VehicleController::PARAM_BACK_TO => VehicleController::BACK_TO_SEARCH], 'vehicle/search'],
+            [[VehicleController::PARAM_BACK_TO => 'somethingUserEntered'], 'vehicle/search'],
             [[], 'vehicle/search'],
             [[VehicleController::PARAM_BACK_TO => VehicleController::BACK_TO_RESULT], 'vehicle/result'],
         ];
