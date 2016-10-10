@@ -10,6 +10,7 @@ namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 use Dvsa\Mot\Frontend\MotTestModule\Exception\DefectTypeNotFoundException;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyContextProvider;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
+use Dvsa\Mot\Frontend\MotTestModule\View\FlashMessageBuilder;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefectCollection;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Dto\Common\MotTestDto;
@@ -114,8 +115,7 @@ class EditDefectController extends AbstractDvsaMotTestController
                 ];
 
                 $this->getRestClient()->postJson($apiPath, $data);
-                $this->addSuccessMessage(sprintf(
-                    '<strong>This %s has been edited:</strong><br> %s',
+                $this->addSuccessMessage(FlashMessageBuilder::defectEditedSuccessfully(
                     $type,
                     $identifiedDefect->isManualAdvisory() ? $comment : $identifiedDefect->getName()
                 ));
