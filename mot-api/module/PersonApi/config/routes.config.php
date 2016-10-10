@@ -31,6 +31,7 @@ use PersonApi\Controller\UpdatePersonDateOfBirthController;
 use PersonApi\Controller\EditTelephoneController;
 use PersonApi\Controller\MotTestingCertificateController;
 use PersonApi\Controller\MotTestingCertificateValidateController;
+use PersonApi\Controller\PersonEmailController;
 
 return [
     'routes' => [
@@ -91,6 +92,18 @@ return [
             ],
             'may_terminate' => true,
             'child_routes'  => [
+                'email-duplication' => [
+                    'type' => 'segment',
+                    'verb' => 'get',
+                    'options' => [
+                        'route' => '/email/is-duplicate',
+                        'defaults' => [
+                            'controller' => PersonEmailController::class,
+                            'action' => 'duplicateEmail',
+                        ],
+                    ],
+                    'may_terminate' => true,
+                ],
                 'password' => [
                     'type' => 'segment',
                     'options' => [

@@ -3,9 +3,11 @@
 namespace UserAdmin;
 
 use UserAdmin\Factory\Service\HelpdeskAccountAdminServiceFactory;
+use UserAdmin\Factory\Service\IsEmailDuplicateServiceFactory;
 use UserAdmin\Factory\Service\PersonRoleManagementServiceFactory;
 use UserAdmin\Factory\UserAdminSessionManagerFactory;
 use UserAdmin\Service\HelpdeskAccountAdminService;
+use UserAdmin\Service\IsEmailDuplicateService;
 use UserAdmin\Service\UserAdminSessionManager;
 use UserAdmin\Service\PersonRoleManagementService;
 use UserAdmin\Service\UserAdminSessionService;
@@ -33,6 +35,7 @@ class Module
                 HelpdeskAccountAdminService::class => HelpdeskAccountAdminServiceFactory::class,
                 PersonRoleManagementService::class => PersonRoleManagementServiceFactory::class,
                 UserAdminSessionService::class => UserAdminSessionServiceFactory::class,
+                IsEmailDuplicateService::class => IsEmailDuplicateServiceFactory::class,
             ],
         ];
     }

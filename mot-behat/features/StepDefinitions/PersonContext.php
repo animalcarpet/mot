@@ -3,6 +3,7 @@
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode as Table;
+use Dvsa\Mot\Behat\Support\Api\EmailDuplicate;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Datasource\Authentication;
 use Dvsa\Mot\Behat\Datasource\Random;
@@ -183,6 +184,12 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
 
     private $siteData;
 
+    /** @var  EmailDuplicate */
+    private $emailDuplication;
+
+    /** @var  Response */
+    private $isEmailDuplicatedResponse;
+
     /**
      * @param TestSupportHelper $testSupportHelper
      * @param CustomerService $customerService
@@ -192,6 +199,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      * @param Vts $vts
      * @param AuthorisedExaminer $authorisedExaminer
      * @param Notification $notification
+     * @param EmailDuplicate $emailDuplication
      */
     public function __construct(
         TestSupportHelper $testSupportHelper,
@@ -203,7 +211,8 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
         AuthorisedExaminer $authorisedExaminer,
         Notification $notification,
         AuthorisedExaminerData $authorisedExaminerData,
-        SiteData $siteData
+        SiteData $siteData,
+        EmailDuplicate $emailDuplication
     ) {
         $this->testSupportHelper = $testSupportHelper;
         $this->customerService = $customerService;
@@ -215,6 +224,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
         $this->notification = $notification;
         $this->authorisedExaminerData = $authorisedExaminerData;
         $this->siteData = $siteData;
+        $this->emailDuplication = $emailDuplication;
     }
 
     /**
@@ -1743,5 +1753,58 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
         $siteRoles = $roles["sites"][$siteId]["roles"];
 
         PHPUnit::assertTrue(in_array($role, $siteRoles), "Site role '$role' should be pending");
+    }
+
+    /**
+     * @When I update my email to one that is already in use.
+     */
+    public function iTryToUpdateMyEmailToAnAlreadyInUseEmail()
+    {
+        $this->createTester([
+            'emailAddress' => 'testduplicated@emailserviceprovider.com',
+        ]);
+
+        $this->isEmailDuplicatedResponse = $this->emailDuplication->checkIsDuplicate(
+            $this->sessionContext->getCurrentAccessToken(),
+            'testduplicated@emailserviceprovider.com'
+        );
+    }
+
+    /**
+     * @Then I should receive an a response with true as the email is in use.
+     */
+    public function emailIsDuplicated()
+    {
+        PHPUnit::assertSame(true, $this->isEmailDuplicatedResponse->getBody()['data']['isDuplicate']);
+    }
+
+    /**
+     * @When I update my email that is not already in use.
+     */
+    public function iTryToUpdateMyEmailToANewEmail()
+    {
+        $this->isEmailDuplicatedResponse = $this->emailDuplication->checkIsDuplicate(
+            $this->sessionContext->getCurrentAccessToken(),
+            'thisemailbetternotbeinuse@emailserviceprovider.com'
+        );
+    }
+
+    /**
+     * @When I update my email that is not already in use while not logged in.
+     */
+    public function iTryToUpdateMyEmailToANewEmailWhenNotLoggedIn()
+    {
+        $this->isEmailDuplicatedResponse = $this->emailDuplication->checkIsDuplicate(
+            '',
+            'thisemailbetternotbeinuse@emailserviceprovider.com'
+        );
+    }
+
+    /**
+     * @Then I should receive an a response with false as the email is not in use.
+     */
+    public function emailIsNotDuplicated()
+    {
+        PHPUnit::assertSame(false, $this->isEmailDuplicatedResponse->getBody()['data']['isDuplicate']);
     }
 }

@@ -7,31 +7,37 @@
 
 namespace UserAdmin\Controller;
 
+use Core\Action\ActionResult;
+use Core\Controller\AbstractDvsaActionController;
 use Dvsa\Mot\Frontend\PersonModule\Controller\PersonProfileController;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use Dvsa\Mot\Frontend\PersonModule\View\PersonProfileUrlGenerator;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
+use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Constants\Role;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\UserAdminUrlBuilderWeb;
-use DvsaCommon\Validator\EmailAddressValidator;
-use DvsaMotTest\Controller\AbstractDvsaMotTestController;
+use DvsaFeature\FeatureToggles;
+use UserAdmin\Form\ChangeEmailForm;
 use UserAdmin\Presenter\UserProfilePresenter;
 use UserAdmin\Service\HelpdeskAccountAdminService;
+use UserAdmin\Service\IsEmailDuplicateService;
+use UserAdmin\ViewModel\ChangeEmailViewModel;
 use UserAdmin\ViewModel\UserProfile\TesterAuthorisationViewModel;
-use Zend\Validator\EmailAddress;
-use Zend\View\Model\ViewModel;
+use Zend\Http\Request;
 
 /**
  * EmailAddress Controller.
  */
-class EmailAddressController extends AbstractDvsaMotTestController
+class EmailAddressController extends AbstractDvsaActionController
 {
+    const CHANGE_EMAIL_TEMPLATE = "user-admin/email-address/form.phtml";
+
     const PAGE_TITLE          = 'Change email address';
     const PAGE_SUBTITLE_YOUR_PROFILE = 'Your profile';
     const PAGE_SUBTITLE_INDEX = 'User profile';
@@ -41,15 +47,20 @@ class EmailAddressController extends AbstractDvsaMotTestController
     const MSG_EMAIL_CHANGED_SUCCESS = 'Email address has been changed successfully.';
     const MSG_EMAIL_CHANGED_FAILURE = 'Email address could not be changed. Please try again.';
 
-    /**
-     * @var HelpdeskAccountAdminService
-     */
-    private $userAccountAdminService;
+    const MSG_DUPLICATE_EMAIL_ERROR = 'Email address - This email address is already in use. Each account must have a different email address.';
+    const MSG_BLANK_EMAIL_ERROR = 'Enter your email address';
+    const MSG_INVALID_EMAIL_ERROR = 'Enter a valid email address';
+    const MSG_EMAILS_DONT_MATCH_ERROR = 'The email addresses must be the same';
 
     /**
      * @var MotAuthorisationServiceInterface
      */
     private $authorisationService;
+
+    /**
+     * @var HelpdeskAccountAdminService
+     */
+    private $userAccountAdminService;
 
     /**
      * @var TesterGroupAuthorisationMapper
@@ -71,15 +82,30 @@ class EmailAddressController extends AbstractDvsaMotTestController
      */
     private $contextProvider;
 
+    /** @var  IsEmailDuplicateService */
+    private $duplicateEmailService;
+
+    /** @var  FeatureToggles */
+    private $featureToggles;
+
+    /** @var Request  */
+    protected $request;
+
+    /** @var MotIdentityProviderInterface */
+    private $identityProvider;
+
     /**
      * EmailAddressController constructor.
-     *
      * @param MotAuthorisationServiceInterface $authorisationService
      * @param HelpdeskAccountAdminService $userAccountAdminService
      * @param TesterGroupAuthorisationMapper $testerGroupAuthorisationMapper
      * @param MapperFactory $mapperFactory
      * @param PersonProfileUrlGenerator $personProfileUrlGenerator
      * @param ContextProvider $contextProvider
+     * @param IsEmailDuplicateService $duplicateEmailService
+     * @param FeatureToggles $featureToggles
+     * @param Request $request
+     * @param MotIdentityProviderInterface $identityProvider
      */
     public function __construct(
         MotAuthorisationServiceInterface $authorisationService,
@@ -87,7 +113,11 @@ class EmailAddressController extends AbstractDvsaMotTestController
         TesterGroupAuthorisationMapper $testerGroupAuthorisationMapper,
         MapperFactory $mapperFactory,
         PersonProfileUrlGenerator $personProfileUrlGenerator,
-        ContextProvider $contextProvider
+        ContextProvider $contextProvider,
+        IsEmailDuplicateService $duplicateEmailService,
+        FeatureToggles $featureToggles,
+        Request $request,
+        MotIdentityProviderInterface $identityProvider
     ) {
         $this->userAccountAdminService = $userAccountAdminService;
         $this->authorisationService = $authorisationService;
@@ -95,16 +125,15 @@ class EmailAddressController extends AbstractDvsaMotTestController
         $this->mapperFactory = $mapperFactory;
         $this->personProfileUrlGenerator = $personProfileUrlGenerator;
         $this->contextProvider = $contextProvider;
+        $this->duplicateEmailService = $duplicateEmailService;
+        $this->featureToggles = $featureToggles;
+        $this->request = $request;
+        $this->identityProvider = $identityProvider;
     }
 
-    /**
-     * @throws UnauthorisedException
-     *
-     * @return \Zend\Http\Response|\Zend\View\Model\ViewModel
-     */
     public function indexAction()
     {
-        $isNewPersonProfileEnabled = $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE);
+        $isNewPersonProfileEnabled = $this->featureToggles->isEnabled(FeatureToggle::NEW_PERSON_PROFILE);
         $personId = $this->getPersonId();
 
         if (true === $isNewPersonProfileEnabled) {
@@ -117,64 +146,65 @@ class EmailAddressController extends AbstractDvsaMotTestController
             $this->authorisationService->assertGranted(PermissionInSystem::PROFILE_EDIT_OTHERS_EMAIL_ADDRESS);
         }
 
+        $result = new ActionResult();
+        $viewModel = new ChangeEmailViewModel();
+        $result->layout()->setPageTitle(self::PAGE_TITLE);
+        $result->layout()->setPageSubTitle(self::PAGE_SUBTITLE_YOUR_PROFILE);
+        $result->setTemplate(self::CHANGE_EMAIL_TEMPLATE);
+
         $presenter = $this->createPresenter($personId);
-        $email = $emailConfirm = $presenter->displayEmail();
 
-        if ($this->getRequest()->isPost()) {
-            $params = $this->getRequest()->getPost()->toArray();
+        if ($presenter) {
+            $currentEmail = $presenter->displayEmail();
+        }
 
-            if (true === ($validated = $this->validate($params['email'], $params['emailConfirm']))) {
-                try {
-                    $validated = $this->callApi($personId, $params['email']);
-                    $this->flashMessenger()->addSuccessMessage(self::MSG_EMAIL_CHANGED_SUCCESS);
-                } catch (\Exception $e) {
-                    $this->flashMessenger()->addErrorMessage(self::MSG_EMAIL_CHANGED_FAILURE);
-                }
-            };
+        $form = new ChangeEmailForm($currentEmail);
 
-            if ($validated) {
-                $url = (true === $isNewPersonProfileEnabled)
-                    ? $this->personProfileUrlGenerator->toPersonProfile()
-                    : UserAdminUrlBuilderWeb::of()->UserProfile($personId);
+        if ($this->request->isPost()) {
 
-                return $this->redirect()->toUrl($url);
-            }
-
-            $email        = $params['email'];
+            $params = $this->request->getPost()->toArray();
+            $email = $params['email'];
             $emailConfirm = $params['emailConfirm'];
-        }
-        $viewModel = $this->createViewModel($personId, self::PAGE_TITLE, $presenter, false, $email, $emailConfirm);
-        $viewModel->setTemplate(UserProfilePresenter::CHANGE_EMAIL_TEMPLATE);
 
-        return $viewModel;
-    }
+            $form->getEmail()->setValue($email);
+            $form->getEmailConfirm()->setValue($emailConfirm);
 
-    /**
-     * @param string $email
-     * @param string $emailConfirm
-     *
-     * @return bool
-     */
-    private function validate($email, $emailConfirm)
-    {
-        $validator = new EmailAddressValidator();
-        $hasErrors = false;
-        if (strlen($email) > self::MAX_EMAIL_LENGTH) {
-            $this->addErrorMessageForKey('email', "must be " . self::MAX_EMAIL_LENGTH . " characters or less");
-            $hasErrors = true;
-        }
+            if ($form->isValid()) {
 
-        if ($email != $emailConfirm) {
-            $this->addErrorMessageForKey('emailConfirm', "the email addresses you have entered don't match");
-            $hasErrors = true;
-        }
+                if ($this->duplicateEmailService->isEmailDuplicate($email)) {
+                    $this->addErrorMessageForKey('duplicateEmailValidation', self::MSG_DUPLICATE_EMAIL_ERROR);
+                } else {
+                    try {
+                        $validated = $this->callApi($personId, $params['email']);
+                        $this->flashMessenger()->addSuccessMessage(self::MSG_EMAIL_CHANGED_SUCCESS);
+                    } catch (\Exception $e) {
+                        $this->flashMessenger()->addErrorMessage(self::MSG_EMAIL_CHANGED_FAILURE);
+                    }
 
-        if (!$validator->isValid($email)) {
-            $this->addErrorMessageForKey('email', "must be a valid email address");
-            $hasErrors = true;
+                    if ($validated) {
+                        $url = (true === $isNewPersonProfileEnabled)
+                            ? $this->personProfileUrlGenerator->toPersonProfile()
+                            : UserAdminUrlBuilderWeb::of()->UserProfile($personId);
+
+                        return $this->redirect()->toUrl($url);
+                    }
+                }
+            }
         }
 
-        return !$hasErrors;
+        $viewModel->setIsViewingOwnProfile($this->contextProvider->getContext() === ContextProvider::YOUR_PROFILE_CONTEXT);
+
+        $viewModel->setNewProfileEnabled($this->featureToggles->isEnabled(FeatureToggle::NEW_PERSON_PROFILE));
+
+        $viewModel->setForm($form);
+
+        $result->setViewModel($viewModel);
+
+        $breadcrumbs = $this->getBreadcrumbs($personId, $presenter, false);
+
+        $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
+
+        return $this->applyActionResult($result);
     }
 
     /**
@@ -211,56 +241,6 @@ class EmailAddressController extends AbstractDvsaMotTestController
     }
 
     /**
-     * Create the view model with all the information needed.
-     *
-     * @param $personId
-     * @param $pageTitle
-     * @param \UserAdmin\Presenter\UserProfilePresenter $presenter
-     * @param bool                                      $isProfile
-     * @param $emailValue
-     * @param $emailConfirmValue
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
-    private function createViewModel($personId, $pageTitle, UserProfilePresenter $presenter, $isProfile = false,
-                                     $emailValue, $emailConfirmValue)
-    {
-        $newProfileEnabled = $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE);
-
-        if ($newProfileEnabled) {
-            $this->layout()->setVariable(
-                'pageSubTitle',
-                $this->contextProvider->getContext() === ContextProvider::YOUR_PROFILE_CONTEXT
-                    ? self::PAGE_SUBTITLE_YOUR_PROFILE
-                    : self::PAGE_SUBTITLE_INDEX);
-        } else {
-            $this->layout()->setVariable('pageSubTitle', self::PAGE_SUBTITLE_INDEX . ' - ' . $presenter->displayFullName());
-        }
-
-        $this->layout()->setVariable('pageTitle', $pageTitle);
-        $breadcrumbs = $this->getBreadcrumbs($personId, $presenter, $isProfile);
-        $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
-        $this->layout('layout/layout-govuk.phtml');
-
-        $resultViewModel = new ViewModel(
-            [
-                'presenter' => $presenter,
-                'searchResultsUrl' => $this->buildUrlWithCurrentSearchQuery(
-                    UserAdminUrlBuilderWeb::of()->userResults()
-                ),
-                'searchQueryParams' => $this->getRequest()->getQuery()->toArray(),
-                'emailAddressUrl' => $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ? $uri = $this->getRequest()->getUri() : UserAdminUrlBuilderWeb::emailChange($personId),
-                'emailValue'      => $emailValue,
-                'emailConfirmValue'      => $emailConfirmValue,
-                'newProfileEnabled' => $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE),
-                'isViewingOwnProfile' => $this->contextProvider->getContext() === ContextProvider::YOUR_PROFILE_CONTEXT,
-            ]
-        );
-
-        return $resultViewModel;
-    }
-
-    /**
      * @return int
      */
     private function getPersonId()
@@ -268,7 +248,7 @@ class EmailAddressController extends AbstractDvsaMotTestController
         $context = $this->contextProvider->getContext();
 
         return $context === ContextProvider::YOUR_PROFILE_CONTEXT ?
-            $this->getIdentity()->getUserId() : (int) $this->params()->fromRoute('id', null);
+            $this->identityProvider->getIdentity()->getUserId() : (int) $this->params()->fromRoute('id', null);
     }
 
     /**
@@ -280,7 +260,7 @@ class EmailAddressController extends AbstractDvsaMotTestController
      */
     private function buildUrlWithCurrentSearchQuery($url)
     {
-        $params = $this->getRequest()->getQuery()->toArray();
+        $params = $this->request->getQuery()->toArray();
         if (empty($params)) {
             return $url;
         }
@@ -308,11 +288,11 @@ class EmailAddressController extends AbstractDvsaMotTestController
      */
     private function getBreadcrumbs($personId, UserProfilePresenter $presenter, $isProfile)
     {
-        if (true !== $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE)) {
+        if (true !== $this->featureToggles->isEnabled(FeatureToggle::NEW_PERSON_PROFILE)) {
             return [
                 'User search' => $this->buildUrlWithCurrentSearchQuery(UserAdminUrlBuilderWeb::of()->userSearch()),
                 $presenter->displayTitleAndFullName() => $isProfile === false ? $this->buildUrlWithCurrentSearchQuery(
-                    UserAdminUrlBuilderWeb::of()->UserProfile($personId)
+                    UserAdminUrlBuilderWeb::of()->userProfile($personId)
                 ) : '',
                  'Change email address' => '',
             ];

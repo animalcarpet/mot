@@ -6,8 +6,8 @@ import org.testng.annotations.Test;
 import uk.gov.dvsa.domain.model.AeDetails;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
-import uk.gov.dvsa.helper.RandomDataGenerator;
 import uk.gov.dvsa.helper.ContactDetailsHelper;
+import uk.gov.dvsa.helper.RandomDataGenerator;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.profile.ProfilePage;
 
@@ -15,12 +15,13 @@ import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.core.Is.is;
 
 public class ChangePersonEmailTests extends DslTest {
 
-    private static final String EMAIL_MUST_BE_VALID_MESSAGE = "must be a valid email address";
-    private static final String EMAIL_MUST_MATCH_MESSAGE = "the email addresses you have entered don't match";
+    private static final String EMAIL_MUST_BE_VALID_MESSAGE = "Enter a valid email address";
+    private static final String EMAIL_MUST_MATCH_MESSAGE = "The email addresses must be the same";
 
     private User areaOffice1User;
     private User vehicleExaminerUser;
@@ -121,6 +122,20 @@ public class ChangePersonEmailTests extends DslTest {
 
         // Then the error validation message should be displayed
         assertThat(validationMessage, containsString(expectedvalidationMessage));
+    }
+
+    @Test(groups = {"BVT"})
+    public void userCannotChangeEmailAddressIfItIsAlreadyInUse() throws IOException {
+        step("Given there is a user in the system with email tester1@email.com");
+        userData.createUserWithCustomData("emailAddress", "tester1@email.com");
+
+        step("When I log in to update my email to tester1@email.com");
+        motUI.profile.viewYourProfile(tester);
+        String validationMessage = motUI.profile.changeEmailWithInvalidInputs("tester1@email.com","tester1@email.com");
+
+        step("Then I am receive a validation message advising that this email is already in use");
+        assertThat(validationMessage, equalToIgnoringCase
+            ("Email address - This email address is already in use. Each account must have a different email address."));
     }
 
     @DataProvider

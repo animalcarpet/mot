@@ -10,6 +10,10 @@ services:
     dvsa.security_questions_change:
         class: Dvsa\Mot\Behat\Support\Api\SecurityQuestionsChange
         parent: dvsa.api
+
+    dvsa.email_duplicate:
+        class: Dvsa\Mot\Behat\Support\Api\EmailDuplicate
+        parent: dvsa.api
         
     dvsa.security_pin:
         class: Dvsa\Mot\Behat\Support\Api\SecurityPin

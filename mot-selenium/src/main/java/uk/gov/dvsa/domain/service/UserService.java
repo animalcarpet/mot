@@ -10,6 +10,7 @@ import uk.gov.dvsa.framework.config.webdriver.WebDriverConfigurator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class UserService extends Service {
     private static final String CREATE_TESTER_PATH = "/testsupport/tester";
@@ -38,6 +39,11 @@ public class UserService extends Service {
         return userResponse(motClient.createUser("{}", CREATE_USER_PATH));
     }
 
+    protected User createUserWithCustomValues(Map<String, String> valuesMap) throws IOException {
+        String request = jsonHandler.convertToString(valuesMap);
+        return userResponse(motClient.createUser(request, CREATE_USER_PATH));
+    }
+
     protected User createUserAsTester(int siteId) throws IOException {
         return createUserAsTester(siteId, false);
     }
@@ -48,7 +54,6 @@ public class UserService extends Service {
 
         return createUserAsTester(siteIdList, accountClaimRequired, null);
     }
-
 
     protected User createUserAsTester(List<Integer> siteIdList, boolean accountClaimRequired, TestGroup testGroup) throws IOException {
         String userRequest =
