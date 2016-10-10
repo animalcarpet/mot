@@ -4,6 +4,7 @@ namespace DvsaMotTest\Controller;
 
 use Application\Service\ContingencySessionManager;
 use Core\Authorisation\Assertion\WebPerformMotTestAssertion;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\Enum\MotTestStatusName;
@@ -41,6 +42,9 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
 
     const ROUTE_MOT_TEST_BRAKE_TEST_RESULTS = 'mot-test/brake-test-results';
     const ROUTE_MOT_TEST_BRAKE_TEST_SUMMARY = 'mot-test/brake-test-summary';
+
+    const BREAKS_PERFORMANCE_CATEGORY_ID_CLASS_1_AND_2 = 120;
+    const BREAKS_PERFORMANCE_CATEGORY_ID = 5430;
 
     public function configureBrakeTestAction()
     {
@@ -301,13 +305,18 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
         $showAxleTwoParkingBrakeImbalance = $showParkingBrakeImbalance
             && !empty($motTest->getBrakeTestResult()['parkingBrakeSecondaryImbalance']);
 
+        $brakeRfrId = $this->getBreaksPerfomanceCategoryId($motTest);
+        $breakPerformanceDefectsUrl = $this->getBreaksPerformanceDefectsUrl($brakeRfrId, $motTestNumber);
+
+
         return new ViewModel(
             [
                 'isMotContingency'                 => $this->getContingencySessionManager()->isMotContingency(),
                 'motTest'                          => $motTest,
                 'showParkingBrakeImbalance'        => $showParkingBrakeImbalance,
                 'showAxleTwoParkingBrakeImbalance' => $showAxleTwoParkingBrakeImbalance,
-                'motTestTitleViewModel' => (new MotTestTitleModel())
+                'motTestTitleViewModel' => (new MotTestTitleModel()),
+                'breakPerformanceDefectsUrl' => $breakPerformanceDefectsUrl
             ]
         );
     }
@@ -415,5 +424,54 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
     private function getContingencySessionManager()
     {
         return $this->serviceLocator->get(ContingencySessionManager::class);
+    }
+
+    /**
+     * Generate url for breaks perfomance defects category
+     *
+     * @param $brakeRfrId
+     * @param $motTestNumber
+     * @return string
+     */
+    private function getBreaksPerformanceDefectsUrl($brakeRfrId, $motTestNumber)
+    {
+        $isNewDefectsFfEnabled = $this->getFeatureToggles()->isEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS);
+
+        // new defects / RFRs category view
+        if ($isNewDefectsFfEnabled === true) {
+            return $this->url()->fromRoute(
+                'mot-test-defects/categories/category',
+                [
+                    'categoryId' => $brakeRfrId,
+                    'motTestNumber' => $motTestNumber,
+                ]
+            );
+        }
+
+        return $this->url()->fromRoute(
+            'mot-test/test-item-selector',
+            [
+                'tis-id' => $brakeRfrId,
+                'motTestNumber' => $motTestNumber,
+            ]
+        );
+    }
+
+    /**
+     * Determinate the defects category id based on vechile class
+     *
+     * @param MotTestDto $motTest
+     * @return int
+     */
+    private function getBreaksPerfomanceCategoryId(MotTestDto $motTest)
+    {
+        $vehicle = $motTest->getVehicle();
+        $vehicleClass = $vehicle->getClassCode();
+
+        if (in_array($vehicleClass, [VehicleClassCode::CLASS_1, VehicleClassCode::CLASS_2])) {
+            return self::BREAKS_PERFORMANCE_CATEGORY_ID_CLASS_1_AND_2;
+        }
+
+        return self::BREAKS_PERFORMANCE_CATEGORY_ID;
     }
 }
