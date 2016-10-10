@@ -21,13 +21,13 @@ class VehicleEditBreadcrumbsBuilder implements AutoWireableInterface
     /**
      * @param string $stepTitle
      * @param string $obfucatedVehicleId
-     * @param array $searchParams
      * @return array
      */
-    public function getVehicleEditBreadcrumbs($stepTitle, $obfucatedVehicleId, $searchParams = [])
+    public function getVehicleEditBreadcrumbs($stepTitle, $obfucatedVehicleId)
     {
         return [
-            'Vehicle' => VehicleRoutes::of($this->url)->vehicleDetails($obfucatedVehicleId, $searchParams),
+            'Vehicle search' => VehicleRoutes::of($this->url)->vehicleSearch(),
+            'Vehicle' => VehicleRoutes::of($this->url)->vehicleDetails($obfucatedVehicleId),
             $stepTitle => null,
         ];
     }

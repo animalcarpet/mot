@@ -103,8 +103,8 @@ class VehicleViewModelBuilder implements AutoWireableInterface
             ->setPageSecondaryTitle($this->vehiclePageTitleBulder->getPageSecondaryTitle())
             ->setPageTertiaryTitle($this->vehiclePageTitleBulder->getPageTertiaryTitle())
             ->setSidebar($this->vehicleSidebarBuilder->getSidebar())
-            ->setBreadcrumbs($this->getBreadcrumbs())
             ->setBackUrl($this->getUrlToBack())
+            ->setBreadcrumbs($this->getBreadcrumbs())
             ->setBackLinkText($this->getBackLinkText());
     }
 
@@ -117,7 +117,7 @@ class VehicleViewModelBuilder implements AutoWireableInterface
         $searchData->set(VehicleController::PARAM_BACK_TO, null);
 
         if ($this->shouldGoBackToSearch()) {
-            return VehicleRoutes::of($this->url)->vehicleSearch($searchData->toArray());
+            return VehicleRoutes::of($this->url)->vehicleSearch();
         } else {
             return VehicleRoutes::of($this->url)->vehicleSearchResults($searchData->toArray());
         }
@@ -128,8 +128,11 @@ class VehicleViewModelBuilder implements AutoWireableInterface
      */
     private function shouldGoBackToSearch()
     {
+        $backToParamValue = $this->searchData->get(VehicleController::PARAM_BACK_TO);
+
         return $this->searchData->count() === 0
-            || $this->searchData->get(VehicleController::PARAM_BACK_TO) == VehicleController::BACK_TO_SEARCH;
+            || $backToParamValue == VehicleController::BACK_TO_SEARCH
+            || $backToParamValue != VehicleController::BACK_TO_RESULT;
     }
 
     /**
@@ -149,6 +152,11 @@ class VehicleViewModelBuilder implements AutoWireableInterface
      */
     private function getBreadcrumbs()
     {
-        return ['breadcrumbs' => ['Vehicle' => null]];
+        return [
+            'breadcrumbs' => [
+                'Vehicle search' => VehicleRoutes::of($this->url)->vehicleSearch(),
+                'Vehicle' => null,
+            ]
+        ];
     }
 }
