@@ -3,6 +3,7 @@
 use PersonApi\Factory\Helper\PersonDetailsChangeNotificationHelperFactory;
 use PersonApi\Factory\Service\BasePersonServiceFactory;
 use PersonApi\Factory\Service\DashboardServiceFactory;
+use PersonApi\Factory\Service\DuplicateEmailCheckerServiceFactory;
 use PersonApi\Factory\Service\LicenceDetailsServiceFactory;
 use PersonApi\Factory\Service\PasswordExpiryNotificationServiceFactory;
 use PersonApi\Factory\Service\PasswordExpiryServiceFactory;
@@ -24,6 +25,7 @@ use PersonApi\Factory\Validator\BasePersonValidatorFactory;
 use PersonApi\Helper\PersonDetailsChangeNotificationHelper;
 use PersonApi\Service\BasePersonService;
 use PersonApi\Service\DashboardService;
+use PersonApi\Service\DuplicateEmailCheckerService;
 use PersonApi\Service\LicenceDetailsService;
 use PersonApi\Service\PasswordExpiryNotificationService;
 use PersonApi\Service\PasswordExpiryService;
@@ -66,7 +68,8 @@ return [
         PersonNameService::class                         => PersonNameServiceFactory::class,
         PersonDateOfBirthService::class                  => PersonDateOfBirthServiceFactory::class,
         TelephoneService::class                          => TelephoneServiceFactory::class,
-        PersonDetailsChangeNotificationHelper::class     => PersonDetailsChangeNotificationHelperFactory::class
+        PersonDetailsChangeNotificationHelper::class     => PersonDetailsChangeNotificationHelperFactory::class,
+        DuplicateEmailCheckerService::class              => DuplicateEmailCheckerServiceFactory::class,
     ],
     'invokables' => [
         PersonGenerator::class          => PersonGenerator::class,

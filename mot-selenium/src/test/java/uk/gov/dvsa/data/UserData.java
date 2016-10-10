@@ -4,6 +4,8 @@ import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.service.UserService;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserData extends UserService{
 
@@ -76,5 +78,11 @@ public class UserData extends UserService{
 
     public User createDvlaOfficer(String diff) throws IOException {
         return createDvlaOfficerUser(diff);
+    }
+
+    public User createUserWithCustomData(String key, String value) throws IOException {
+        Map<String, String> customDataMap = new HashMap<>();
+        customDataMap.put(key, value);
+        return createUserWithCustomValues(customDataMap);
     }
 }

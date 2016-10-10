@@ -39,6 +39,7 @@ return [
             'url' => 'http://openam.mot.gov.uk:8080/secure/',
         ],
         'whitelist' => [
+            'PersonApi\Controller\PersonEmailController',
             'DvsaMotApi\Controller\Session',
             'AccountApi\Factory\Controller\ValidateUsernameControllerFactory',
             'AccountApi\Factory\Controller\PasswordResetControllerFactory',

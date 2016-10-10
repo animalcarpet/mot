@@ -9,6 +9,7 @@ parameters:
           Dvsa\Mot\Behat\Support\Api\CustomerService: dvsa.customer_service
           Dvsa\Mot\Behat\Support\Api\DemoTest: dvsa.demo_test
           Dvsa\Mot\Behat\Support\Api\DirectDebit: dvsa.direct_debit
+          Dvsa\Mot\Behat\Support\Api\EmailDuplicate: dvsa.email_duplicate
           Dvsa\Mot\Behat\Support\Api\Event: dvsa.event
           Dvsa\Mot\Behat\Support\Api\MotTest: dvsa.mot_test
           Dvsa\Mot\Behat\Support\Api\Notification: dvsa.notification

@@ -12,6 +12,7 @@ use PersonApi\Controller\PersonByLoginController;
 use PersonApi\Controller\PersonContactController;
 use PersonApi\Controller\PersonController;
 use PersonApi\Controller\PersonCurrentMotTestController;
+use PersonApi\Controller\PersonEmailController;
 use PersonApi\Controller\PersonEventController;
 use PersonApi\Controller\PersonPendingRoleController;
 use PersonApi\Controller\PersonProfileRestrictedController;
@@ -38,6 +39,7 @@ use PersonApi\Factory\Controller\PersonByLoginControllerFactory;
 use PersonApi\Factory\Controller\PersonContactControllerFactory;
 use PersonApi\Factory\Controller\PersonControllerFactory;
 use PersonApi\Factory\Controller\PersonCurrentMotTestControllerFactory;
+use PersonApi\Factory\Controller\PersonEmailControllerFactory;
 use PersonApi\Factory\Controller\PersonEventControllerFactory;
 use PersonApi\Factory\Controller\PersonPendingRoleControllerFactory;
 use PersonApi\Factory\Controller\PersonProfileRestrictedControllerFactory;
@@ -81,5 +83,6 @@ return [
         UpdateAddressController::class             => UpdateAddressControllerFactory::class,
         UpdatePersonNameController::class          => UpdatePersonNameControllerFactory::class,
         UpdatePersonDateOfBirthController::class   => UpdatePersonDateOfBirthControllerFactory::class,
+        PersonEmailController::class               => PersonEmailControllerFactory::class,
     ],
 ];

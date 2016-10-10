@@ -22,6 +22,7 @@ return [
             'adapter'                     => 'Zend\Http\Client\Adapter\Socket',
         ],
         'whitelist' => [
+            'PersonApi\Controller\PersonEmailController',
             'Dvsa\Mot\Api\RegistrationModule\Controller\RegistrationController',
             'DvsaMotApi\Controller\Session',
             'AccountApi\Factory\Controller\ValidateUsernameControllerFactory',
