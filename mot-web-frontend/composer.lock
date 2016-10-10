@@ -4,8 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b37a3cd142bc47445fd2ce55c0a5a47b",
-    "content-hash": "d71142b55e178e6457ae2656c2205b0c",
+    "content-hash": "104c07c7fdf16bee69c4e5b3ee8ba8e8",
     "packages": [
         {
             "name": "cpms/client",
@@ -1717,17 +1716,17 @@
         },
         {
             "name": "mot/api-client-php",
-            "version": "6.5.0",
+            "version": "6.6.0",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/api-client-php.git",
-                "reference": "436b32949da5e287f35606f22dbe068ac90f5810"
+                "reference": "4fed4d5607e78667eece8e9c31f9698ac87d8afa"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-6.5.0-6ad4d1.tar",
-                "reference": "436b32949da5e287f35606f22dbe068ac90f5810",
-                "shasum": "08236dce7ed6aadee4dcb890df918399a96ab84c"
+                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-6.6.0-ba1f80.tar",
+                "reference": "4fed4d5607e78667eece8e9c31f9698ac87d8afa",
+                "shasum": "49c3fcb340bdf080a6d3ab0f94f0a07f4f923026"
             },
             "require": {
                 "guzzlehttp/guzzle": "~6.1",
@@ -1784,7 +1783,7 @@
                     "email": "a.bahman@kainos.com"
                 }
             ],
-            "time": "2016-10-05 14:42:12"
+            "time": "2016-10-10 12:08:02"
         },
         {
             "name": "noiselabs/zf-debug-utils",

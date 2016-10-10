@@ -1,0 +1,20 @@
+<?php
+use Vehicle\UpdateVehicleProperty\Form\FirstUsedDateForm;
+use Vehicle\UpdateVehicleProperty\ViewModel\UpdateVehiclePropertyViewModel;
+
+/** @var UpdateVehiclePropertyViewModel $viewModel */
+/** @var FirstUsedDateForm $form */
+$form = $viewModel->getForm();
+?>
+<fieldset>
+    <?php echo $this->partial(
+        'partial/gds/form/control-dob-group',
+        [
+            'groupLabel' => 'Date of first use',
+            'dayElement' => $form->getDayElement(),
+            'monthElement' => $form->getMonthElement(),
+            'yearElement' => $form->getYearElement()
+        ]
+    );
+    ?>
+</fieldset>

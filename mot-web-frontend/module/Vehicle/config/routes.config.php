@@ -77,6 +77,16 @@ return [
                                     ],
                                 ],
                             ],
+                            'first-used-date' => [
+                                'type' => 'segment',
+                                'options' => [
+                                    'route' => '/first-used-date',
+                                    'defaults' => [
+                                        'controller' => UpdateVehiclePropertyController::class,
+                                        'action' => 'editFirstUsedDate',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                 ],

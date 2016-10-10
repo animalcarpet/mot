@@ -123,9 +123,21 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
         $this->addRowToTable($table, 'Declared new', $this->vehicle->getIsNewAtFirstReg() ? "Yes" : "No");
         $this->addRowToTable($table, 'Manufacture date', $this->dateFormat($this->vehicle->getManufactureDate()));
         $this->addRowToTable($table, 'First registered', $this->dateFormat($this->vehicle->getFirstRegistrationDate()));
-        $this->addRowToTable($table, 'First used', $this->dateFormat($this->vehicle->getFirstUsedDate()));
+        $table = $this->getFirstUsedDateRow($table);
         $this->addRowToTable($table, 'Details created', $this->dateFormat($this->vehicle->getAmendedOn()));
 
+        return $table;
+    }
+
+    private function getFirstUsedDateRow(GdsTable $table)
+    {
+        $firstDateUsedRow = $this->addRowToTable($table, 'First used', $this->dateFormat($this->vehicle->getFirstUsedDate()));
+        if ($this->canUserEditVehicleExtendedProperties()) {
+            $firstDateUsedRow->addActionLink(
+                'Change',
+                VehicleRoutes::of($this->urlHelper)->changeFirstUsedDate($this->vehicleObfuscatedId)
+            );
+        }
         return $table;
     }
 
@@ -243,5 +255,10 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
     private function canUserEditVehicle()
     {
         return $this->authorisationService->isGranted(PermissionInSystem::VEHICLE_UPDATE);
+    }
+
+    private function canUserEditVehicleExtendedProperties()
+    {
+        return $this->authorisationService->isGranted(PermissionInSystem::VEHICLE_CHANGE_PROPERTY_EXPANDED);
     }
 }
