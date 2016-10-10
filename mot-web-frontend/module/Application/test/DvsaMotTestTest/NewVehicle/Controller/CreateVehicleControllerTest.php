@@ -185,7 +185,7 @@ class CreateVehicleControllerTest extends AbstractLightWebControllerTest
      */
     public function testConfirm_givenSubmittedConfirmation_shouldRedirect($isMotContingency, $expectedRoute)
     {
-        $this->markTestSkipped('BL-1164 is parked to investigate lifint vehicle\'s entity relationship. talk to Ali');
+        $this->markTestSkipped('BL-1164 is parked to investigate lifting vehicle\'s entity relationship. Talk to Ali');
         $this->request->setMethod('post');
         $this->setDefaultDataToWizard();
 
