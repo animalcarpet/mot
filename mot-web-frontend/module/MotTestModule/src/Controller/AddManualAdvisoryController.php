@@ -10,6 +10,7 @@ namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 use Dvsa\Mot\Frontend\MotTestModule\Exception\DefectTypeNotFoundException;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyContextProvider;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
+use Dvsa\Mot\Frontend\MotTestModule\View\FlashMessageBuilder;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefect;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Dto\Common\MotTestDto;
@@ -110,8 +111,7 @@ class AddManualAdvisoryController extends AbstractDvsaMotTestController
 
                 $motTestDefectId = $this->getRestClient()->post($apiPath, $data);
                 if (!empty($motTestDefectId)) {
-                    $this->addSuccessMessage(sprintf('<strong>This advisory has been added:</strong><br> %s',
-                        $defectDetail));
+                    $this->addSuccessMessage(FlashMessageBuilder::manualAdvisoryAddedSuccessfully($defectDetail));
 
                     return $this->redirect()->toUrl($this->defectsJourneyUrlGenerator->goBack());
                 }

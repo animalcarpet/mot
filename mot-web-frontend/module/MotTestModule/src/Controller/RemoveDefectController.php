@@ -9,6 +9,7 @@ namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyContextProvider;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
+use Dvsa\Mot\Frontend\MotTestModule\View\FlashMessageBuilder;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Defect;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Exception\IdentifiedDefectNotFoundException;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefect;
@@ -100,8 +101,7 @@ class RemoveDefectController extends AbstractDvsaMotTestController
              * Add success message to the flash messenger on successful removal
              * of an IdentifiedDefect from an MOT test.
              */
-            $this->addSuccessMessage(sprintf(
-                '<strong>This %s has been removed:</strong><br> %s',
+            $this->addSuccessMessage(FlashMessageBuilder::defectRemovedSuccessfully(
                 $identifiedDefect->getDefectType(),
                 $identifiedDefect->getName()
             ));

@@ -8,6 +8,7 @@
 namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
+use Dvsa\Mot\Frontend\MotTestModule\View\FlashMessageBuilder;
 use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
@@ -47,11 +48,11 @@ class RepairDefectController extends AbstractDvsaMotTestController
             $apiUrl = MotTestUrlBuilder::markDefectAsRepaired($motTestNumber, $identifiedDefectId)->toString();
             $this->getRestClient()->post($apiUrl);
 
-            $this->addSuccessMessage(sprintf('The %s <strong>%s</strong> has been repaired', $identifiedDefectType,
-                $identifiedDefectText));
+            $this->addSuccessMessage(FlashMessageBuilder::defectRepairedSuccessfully($identifiedDefectType, $identifiedDefectText));
+
         } catch (GeneralRestException $e) {
-            $this->addErrorMessage(sprintf('The %s <strong>%s</strong> has not been repaired. Try again.',
-                $identifiedDefectType, $identifiedDefectText));
+            $this->addErrorMessage(FlashMessageBuilder::defectRepairedUnsuccessfully($identifiedDefectType, $identifiedDefectText));
+
         }
 
         return $this->redirect()->toUrl($this->defectsJourneyUrlGenerator->goBack());
@@ -71,11 +72,10 @@ class RepairDefectController extends AbstractDvsaMotTestController
             $apiUrl = MotTestUrlBuilder::undoMarkDefectAsRepaired($motTestNumber, $identifiedDefectId)->toString();
             $this->getRestClient()->post($apiUrl);
 
-            $this->addSuccessMessage(sprintf('The %s <strong>%s</strong> has been added', $identifiedDefectType,
-                    $identifiedDefectText));
+            $this->addSuccessMessage(FlashMessageBuilder::undoDefectRepairSuccessfully($identifiedDefectType, $identifiedDefectText));
+
         } catch (GeneralRestException $e) {
-            $this->addErrorMessage(sprintf('The %s <strong>%s</strong> has not been added. Try again.',
-                    $identifiedDefectType, $identifiedDefectText));
+            $this->addErrorMessage(FlashMessageBuilder::undoDefectRepairUnsuccessfully($identifiedDefectType, $identifiedDefectText));
         }
 
         return $this->redirect()->toUrl($this->defectsJourneyUrlGenerator->goBack());
