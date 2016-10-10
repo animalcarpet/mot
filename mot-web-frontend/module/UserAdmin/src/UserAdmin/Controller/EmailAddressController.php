@@ -40,6 +40,7 @@ class EmailAddressController extends AbstractDvsaActionController
 
     const PAGE_TITLE          = 'Change email address';
     const PAGE_SUBTITLE_YOUR_PROFILE = 'Your profile';
+    const PAGE_SUBTITLE_USER_PROFILE = 'User profile';
     const PAGE_SUBTITLE_INDEX = 'User profile';
 
     const MAX_EMAIL_LENGTH = 255;
@@ -149,7 +150,11 @@ class EmailAddressController extends AbstractDvsaActionController
         $result = new ActionResult();
         $viewModel = new ChangeEmailViewModel();
         $result->layout()->setPageTitle(self::PAGE_TITLE);
-        $result->layout()->setPageSubTitle(self::PAGE_SUBTITLE_YOUR_PROFILE);
+        if ($this->contextProvider->getContext() === ContextProvider::YOUR_PROFILE_CONTEXT) {
+            $result->layout()->setPageSubTitle(self::PAGE_SUBTITLE_YOUR_PROFILE);
+        } elseif ($this->contextProvider->getContext() === ContextProvider::USER_SEARCH_CONTEXT) {
+            $result->layout()->setPageSubTitle(self::PAGE_SUBTITLE_USER_PROFILE);
+        }
         $result->setTemplate(self::CHANGE_EMAIL_TEMPLATE);
 
         $presenter = $this->createPresenter($personId);
