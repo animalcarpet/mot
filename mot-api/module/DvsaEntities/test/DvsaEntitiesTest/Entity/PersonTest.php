@@ -40,68 +40,6 @@ class PersonTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($p->isTester());
     }
 
-    public function testGetOrganisations()
-    {
-        //  @TODO   Please describe reason why you skip this test
-        $this->markTestSkipped();
-
-        $org1 = (new Organisation())->setId(1);
-        $org2 = (new Organisation())->setId(2);
-        $org3 = (new Organisation())->setId(3);
-
-        $orgPos1 = (new OrganisationBusinessRoleMap(new Person(), $org1));
-        $orgPos1->accept();
-        $orgPos2 = (new OrganisationBusinessRoleMap(new Person(), $org2));
-        $orgPos2->accept();
-        $orgPos3 = (new OrganisationBusinessRoleMap(new Person(), $org3));
-        $orgPos3->accept();
-
-        $testCollection = [$orgPos1, $orgPos2, $orgPos1, $orgPos3, $orgPos2, $orgPos1];
-        $expectCollection = [$org1, $org2, $org3];
-
-        $person = new Person();
-
-        XMock::mockClassField($person, 'organisationPositions', new ArrayCollection($testCollection));
-
-        $actualResult = $person->findOrganisations();
-        $this->assertCount(3, $actualResult);
-
-        foreach ($expectCollection as $item) {
-            $this->assertContains($item, $actualResult);
-        }
-    }
-
-    public function testGetSites()
-    {
-        //  @TODO   Please describe reason why you skip this test
-        $this->markTestSkipped();
-
-        $site1 = (new Site())->setId(1);
-        $site2 = (new Site())->setId(2);
-        $site3 = (new Site())->setId(3);
-
-        $sitePos1 = new SiteBusinessRoleMap();
-        $sitePos1->accept();
-        $sitePos2 = new SiteBusinessRoleMap();
-        $sitePos2->accept();
-        $sitePos3 = new SiteBusinessRoleMap();
-        $sitePos3->accept();
-
-        $testCollection = [$sitePos1, $sitePos2, $sitePos1, $sitePos3, $sitePos2, $sitePos1];
-        $expectCollection = [$site1, $site2, $site3];
-
-        $person = new Person();
-
-        XMock::mockClassField($person, 'sitePositions', new ArrayCollection($testCollection));
-
-        $actualResult = $person->findSites();
-        $this->assertCount(3, $actualResult);
-
-        foreach ($expectCollection as $item) {
-            $this->assertContains($item, $actualResult);
-        }
-    }
-
     private function authorisationForStatus($status)
     {
         return (new AuthorisationForTestingMot())

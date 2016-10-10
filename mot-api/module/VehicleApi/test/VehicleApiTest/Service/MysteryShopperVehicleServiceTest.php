@@ -106,11 +106,6 @@ class MysteryShopperVehicleServiceTest extends AbstractServiceTestCase
         );
     }
 
-    public function testOptIn()
-    {
-        $this->markTestSkipped('will be next step');
-    }
-
     public function testOptOut()
     {
         $id = 1;

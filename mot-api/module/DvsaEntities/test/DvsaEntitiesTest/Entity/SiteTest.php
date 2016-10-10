@@ -36,54 +36,6 @@ class SiteTest extends PHPUnit_Framework_TestCase
 {
     use TestCaseTrait;
 
-    public function testSettersAndGetters()
-    {
-        $this->markTestSkipped();
-        $type = 4;
-        $site = new Site();
-        $dualLang = true;
-        $facilities = [new SiteFacility()];
-        $enfSiteAssessment = new EnforcementSiteAssessment();
-        $latitude = 'latitude';
-        $longitude = 'longitude';
-        $name = 'name';
-        $authorisedExaminer = new AuthorisationForAuthorisedExaminer();
-        $org = new Organisation();
-        $org->setAuthorisedExaminer($authorisedExaminer);
-        $sitePositions = [new SiteBusinessRoleMap()];
-        $scottishBankHoliday = true;
-        $tests = [new MotTest()];
-
-        $site->setType($type)
-            ->setDualLanguage($dualLang)
-            ->setFacilities($facilities)
-            ->setLastSiteAssessment($enfSiteAssessment)
-            ->setLatitude($latitude)
-            ->setLongitude($longitude)
-            ->setName($name)
-            ->setOrganisation($org)
-            ->setPositions($sitePositions)
-            ->setScottishBankHoliday($scottishBankHoliday)
-            ->setTests($tests);
-
-        $site->setReinspectionSiteNumber();
-
-        $this->assertEquals($type, $site->getType());
-        $this->assertEquals($authorisedExaminer, $site->getAuthorisedExaminer());
-        $this->assertEquals($dualLang, $site->getDualLanguage());
-        $this->assertEquals($facilities, $site->getFacilities());
-        $this->assertEquals($enfSiteAssessment, $site->getLastSiteAssessment());
-        $this->assertEquals($latitude, $site->getLatitude());
-        $this->assertEquals($longitude, $site->getLongitude());
-        $this->assertEquals($name, $site->getName());
-        $this->assertEquals($org, $site->getOrganisation());
-        $this->assertEquals($sitePositions, $site->getPositions());
-        $this->assertEquals($scottishBankHoliday, $site->getScottishBankHoliday());
-        $this->isTrue($site->isVehicleTestingStation());
-        $this->assertNotNull($site->getSiteNumber());
-        $site->getEquipments();
-    }
-
     public function testContacts()
     {
         $addressId = 5;
@@ -130,17 +82,6 @@ class SiteTest extends PHPUnit_Framework_TestCase
         $site->setType($siteType);
         $site->setName($name);
         $this->assertEquals($name, $site->getName());
-    }
-
-    public function testHasAuthForVehicleClass()
-    {
-        $this->markTestSkipped();
-        $site = new Site;
-        $auth1 = self::newAuthForTesting();
-
-        $site->addAuthorisationsForTestingMotAtSite($auth1);
-
-        $this->assertTrue($site->hasAuthForVehicleClass(self::newAuthForTesting()->getVehicleClass()));
     }
 
     public function testSetContactDetailsOverridesOldCorrespondenceContact()
@@ -233,23 +174,6 @@ class SiteTest extends PHPUnit_Framework_TestCase
         $authorisationForTestingMotAtSite->setStatus($status);
 
         return $authorisationForTestingMotAtSite;
-    }
-
-    public function testGetApprovedVehicleClasses()
-    {
-        $this->markTestSkipped();
-        $site = new Site();
-
-        $approvedClass2 = self::newAuthForTesting(2);
-        $approvedClass4 = self::newAuthForTesting(4);
-
-        $site->addAuthorisationsForTestingMotAtSite($approvedClass2);
-        $site->addAuthorisationsForTestingMotAtSite($approvedClass4);
-
-        $this->assertEquals(
-            [$approvedClass2->getVehicleClass(), $approvedClass4->getVehicleClass()],
-            $site->getApprovedVehicleClasses()
-        );
     }
 
     public function testGetActiveAssociationWithAe()
