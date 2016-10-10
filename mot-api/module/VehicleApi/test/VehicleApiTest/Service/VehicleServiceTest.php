@@ -334,7 +334,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
             ->expects($this->once())
             ->method('save');
 
-        $this->markTestSkipped('BL-1164 is parked to investigate lifint vehicle\'s entity relationship. talk to Ali');
+        $this->markTestSkipped('BL-1164 is parked to investigate lifting vehicle\'s entity relationship. Talk to Ali');
         $v = $this->createService()->createVtrAndV5CFromDvlaVehicle(self::VEHICLE_ID_ENC, $vehicleClassCode);
 
         $wsc = null;
@@ -458,7 +458,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
 
     public function testCreateVtrAndV5CfromDvlaVehicleGivenDvlaVehicleShouldCountWeightBasedOnGrossWeight()
     {
-        $this->markTestSkipped('BL-1164 is parked to investigate lifint vehicle\'s entity relationship. talk to Ali');
+        $this->markTestSkipped('BL-1164 is parked to investigate lifting vehicle\'s entity relationship. Talk to Ali');
         $grossWeight = 3200;
 
         $dvlaVehicle = VOF::dvlaVehicle();
@@ -513,7 +513,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
 
     public function testCreateVtrAndV5CfromDvlaVehicleGivenDvlaVehicleShouldCreateLinkBetweenDvlaAndVtr()
     {
-        $this->markTestSkipped('BL-1164 is parked to investigate lifint vehicle\'s entity relationship. talk to Ali');
+        $this->markTestSkipped('BL-1164 is parked to investigate lifting vehicle\'s entity relationship. Talk to Ali');
 
         $dvlaVehicle = VOF::dvlaVehicle();
         $vehicleClassCode = VehicleClassCode::CLASS_4;
@@ -613,7 +613,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
 
         $vehicleId = $this->paramObfuscator->obfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, $dvlaVehicle->getId());
 
-        $this->markTestSkipped('BL-1164 is parked to investigate lifint vehicle\'s entity relationship. talk to Ali');
+        $this->markTestSkipped('BL-1164 is parked to investigate lifting vehicle\'s entity relationship. Talk to Ali');
         $this->createService()->createVtrAndV5CFromDvlaVehicle($vehicleId, $vehicleClassCode);
 
         /** @var Vehicle $v */
@@ -697,7 +697,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
             ->method('save');
 
         $vehicleId = $this->paramObfuscator->obfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, $dvlaVehicle->getId());
-        $this->markTestSkipped('BL-1164 is parked to investigate lifint vehicle\'s entity relationship. talk to Ali');
+        $this->markTestSkipped('BL-1164 is parked to investigate lifting vehicle\'s entity relationship. Talk to Ali');
         $this->createService()->createVtrAndV5CFromDvlaVehicle($vehicleId, $vehicleClassCode);
 
         /** @var Vehicle $v */
@@ -761,7 +761,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
             ->method('save')
             ->with($dvlaCapture());
 
-        $this->markTestSkipped('BL-1164 is parked to investigate lifint vehicle\'s entity relationship. talk to Ali');
+        $this->markTestSkipped('BL-1164 is parked to investigate lifting vehicle\'s entity relationship. Talk to Ali');
         $this->createService()->createVtrAndV5CFromDvlaVehicle(self::VEHICLE_ID_ENC, $vehicleClassCode);
 
         /** @var DvlaVehicle $savedDvla */
@@ -809,7 +809,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
             ->method('save')
             ->with($dvlaCapture());
 
-        $this->markTestSkipped('BL-1164 is parked to investigate lifint vehicle\'s entity relationship. talk to Ali');
+        $this->markTestSkipped('BL-1164 is parked to investigate lifting vehicle\'s entity relationship. Talk to Ali');
         $this->createService()->createVtrAndV5CFromDvlaVehicle(self::VEHICLE_ID_ENC, $vehicleClassCode);
 
         /** @var DvlaVehicle $savedDvla */
@@ -862,7 +862,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
             ->method('save')
             ->with($dvlaCapture());
 
-        $this->markTestSkipped('BL-1164 is parked to investigate lifint vehicle\'s entity relationship. talk to Ali');
+        $this->markTestSkipped('BL-1164 is parked to investigate lifting vehicle\'s entity relationship. Talk to Ali');
         $this->createService()->createVtrAndV5CFromDvlaVehicle(self::VEHICLE_ID_ENC, $vehicleClassCode);
 
         /** @var DvlaVehicle $savedDvla */
@@ -914,7 +914,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
             ->method('save')
             ->with($dvlaCapture());
 
-        $this->markTestSkipped('BL-1164 is parked to investigate lifint vehicle\'s entity relationship. talk to Ali');
+        $this->markTestSkipped('BL-1164 is parked to investigate lifting vehicle\'s entity relationship. Talk to Ali');
         $this->createService()->createVtrAndV5CFromDvlaVehicle(self::VEHICLE_ID_ENC, $vehicleClassCode);
 
         /** @var DvlaVehicle $savedDvla */

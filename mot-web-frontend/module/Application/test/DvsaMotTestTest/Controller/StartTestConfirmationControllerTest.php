@@ -305,7 +305,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
      */
     public function testAccess($method, $action, $permissions, $mock, $expect)
     {
-        $this->markTestSkipped('BL-1164 is parked to investigate lifint vehicle\'s entity relationship. talk to Ali');
+        $this->markTestSkipped('BL-1164 is parked to investigate lifting vehicle\'s entity relationship. Talk to Ali');
         $user = ['permissions' => $permissions];
 
         $params = [

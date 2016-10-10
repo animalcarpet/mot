@@ -61,7 +61,7 @@ class RefuseToTestControllerTest extends AbstractDvsaMotTestTestCase
 
     public function testRefuseToTestReasonActionWithPostAndRestException()
     {
-        $this->markTestSkipped('BL-1164 is parked to investigate lifint vehicle\'s entity relationship. talk to Ali');
+        $this->markTestSkipped('BL-1164 is parked to investigate lifting vehicle\'s entity relationship. Talk to Ali');
         $this->mockAuthServiceAsserts();
         $this->getRestClientMockThrowingException('post', 'Some Error');
 
