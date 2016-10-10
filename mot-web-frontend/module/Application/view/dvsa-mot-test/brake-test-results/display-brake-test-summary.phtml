@@ -57,24 +57,7 @@ echo $this->partial(
         <div class="col-lg-8">
             <div class="info-notice">
                 <p>Other brake performance related defects like 'grab' or 'judder' can be added as a
-                    <?php
-                    $vehicleClass = $vehicle->getClassCode();
-
-                    // FIXME Move this to the model
-                    if (in_array($vehicleClass, [VehicleClassCode::CLASS_1, VehicleClassCode::CLASS_2])) {
-                        $brakeRfrId = 120;
-                    } else {
-                        $brakeRfrId = 5430;
-                    }
-                    ?>
-                    <a href="<?php
-                    echo $this->url(
-                        'mot-test/test-item-selector',
-                        [
-                            'tis-id'        => $brakeRfrId,
-                            'motTestNumber' => $motTestNumber,
-                        ]
-                    ); ?>">Reason for Rejection</a>
+                    <a href="<?php echo $breakPerformanceDefectsUrl ?>">Reason for Rejection</a>
                 </p>
             </div>
         </div>
