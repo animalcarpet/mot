@@ -10,6 +10,7 @@ MYSQL_HOST=${3-"mysql"}
 
 # Add files here in intended run order for release.
 upgrade_files+=('2016-09-26-BL-3366-update-vehicle-properties-premissions-STORY.sql');
+upgrade_files+=('2016-09-26-BL-3604-update-vehicle-properties-by-not-tester-user-permissions-STORY.sql');
 
 # Necessary for first deployment.
 $(mysql -h ${MYSQL_HOST} -u ${MYSQL_USER} -p${MYSQL_ADMIN_PASSWORD} ${MYSQL_DB_NAME} -e "CREATE TABLE IF NOT EXISTS db_upgrade (

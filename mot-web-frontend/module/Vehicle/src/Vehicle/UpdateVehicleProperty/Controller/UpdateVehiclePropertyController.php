@@ -7,22 +7,26 @@ use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use Vehicle\UpdateVehicleProperty\Action\UpdateCountryAction;
 use Vehicle\UpdateVehicleProperty\Action\UpdateEngineAction;
 use Vehicle\UpdateVehicleProperty\Action\UpdateClassAction;
+use Vehicle\UpdateVehicleProperty\Action\UpdateFirstUsedDateAction;
 
 class UpdateVehiclePropertyController extends AbstractAuthActionController implements AutoWireableInterface
 {
     private $updateCountryAction;
     private $updateClassAction;
     private $updateEngineAction;
+    private $updateFirstUsedDateAction;
 
     public function __construct(
         UpdateEngineAction $updateEngineAction,
         UpdateCountryAction $updateCountryAction,
-        UpdateClassAction $updateClassAction
+        UpdateClassAction $updateClassAction,
+        UpdateFirstUsedDateAction $updateFirstUsedDateAction
     )
     {
         $this->updateEngineAction = $updateEngineAction;
         $this->updateCountryAction = $updateCountryAction;
         $this->updateClassAction = $updateClassAction;
+        $this->updateFirstUsedDateAction = $updateFirstUsedDateAction;
     }
 
     public function editEngineAction()
@@ -54,6 +58,17 @@ class UpdateVehiclePropertyController extends AbstractAuthActionController imple
         $formData = $this->getFormData();
 
         $actionResult = $this->updateClassAction->execute($isPost, $vehicleId, $formData);
+
+        return $this->applyActionResult($actionResult);
+    }
+
+    public function editFirstUsedDateAction()
+    {
+        $isPost = $this->requestIsPost();
+        $vehicleId = $this->getVehicleId();
+        $formData = $this->getFormData();
+
+        $actionResult = $this->updateFirstUsedDateAction->execute($isPost, $vehicleId, $formData);
 
         return $this->applyActionResult($actionResult);
     }

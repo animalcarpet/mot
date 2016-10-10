@@ -60,4 +60,10 @@ class VehicleRoutes extends AbstractRoutes
     {
         return $this->url(VehicleRouteList::VEHICLE_CHANGE_CLASS,['id' => $vehicleId]);
     }
+
+
+    public function changeFirstUsedDate($vehicleId)
+    {
+        return $this->url(VehicleRouteList::VEHICLE_CHANGE_FIRST_USED_DATE,['id' => $vehicleId]);
+    }
 }
