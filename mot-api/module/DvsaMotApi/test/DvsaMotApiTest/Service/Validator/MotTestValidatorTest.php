@@ -88,56 +88,6 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
         parent::setUp();
     }
 
-    public function testValidateNewMotTest()
-    {
-        $vtsRole = $this->newAuthForTesting();
-
-        $vehicleTestingStation = $this->getTestVts($vtsRole);
-
-        $nominatedTester = new Person();
-        $nominatedTester->addVehicleTestingStation($vehicleTestingStation);
-        $this->addAuthsForClasses($nominatedTester, ['4']);
-
-        $vehicle = new Vehicle();
-        $vehicle->setVehicleClass(new VehicleClass(VehicleClassCode::CLASS_4));
-
-        $motTest = $this->setupMotTest($nominatedTester, $vehicle, $vehicleTestingStation);
-        $this->motTestValidator->validateNewMotTest($motTest);
-    }
-
-    /**
-     * @expectedException        \DvsaCommonApi\Service\Exception\BadRequestException
-     * @expectedExceptionMessage Nominated Tester not found
-     */
-    public function testValidateNewMotTestThrowsNotFoundErrorForNullNominatedTester()
-    {
-        $this->markTestSkipped("SDM User -> Person + Contact details");
-        $motTest = $this->setupMotTest(null, new Vehicle(), new Site());
-        $this->motTestValidator->validateNewMotTest($motTest);
-    }
-
-    /**
-     * @expectedException        \DvsaCommonApi\Service\Exception\BadRequestException
-     * @expectedExceptionMessage Vehicle not found
-     */
-    public function testValidateNewMotTestThrowsNotFoundErrorForNullVehicle()
-    {
-        $this->markTestSkipped("SDM User -> Person + Contact details");
-        $motTest = $this->setupMotTest(new Person(), null, new Site());
-        $this->motTestValidator->validateNewMotTest($motTest);
-    }
-
-    /**
-     * @expectedException        \DvsaCommonApi\Service\Exception\BadRequestException
-     * @expectedExceptionMessage Vehicle Testing Station not found
-     */
-    public function testValidateNewMotTestThrowsNotFoundErrorForNullVts()
-    {
-        $this->markTestSkipped("SDM User -> Person + Contact details");
-        $motTest = $this->setupMotTest(new Person(), new Vehicle(), null);
-        $this->motTestValidator->validateNewMotTest($motTest);
-    }
-
     /**
      * @expectedException        \DvsaCommonApi\Service\Exception\RequiredFieldException
      * @expectedExceptionMessage A required field is missing
@@ -155,55 +105,6 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
     public function testValidateNewMotTestThrowsRequiredFieldExceptionForNullSecondaryColour()
     {
         $motTest = $this->setupMotTest(new Person(), new Vehicle(), new Site(), true, 'B', true, null);
-        $this->motTestValidator->validateNewMotTest($motTest);
-    }
-
-    /**
-     * @expectedException        \DvsaCommonApi\Service\Exception\RequiredFieldException
-     * @expectedExceptionMessage A required field is missing
-     */
-    public function testValidateNewMotTestThrowsRequiredFieldExceptionForNullHasRegistration()
-    {
-        $this->markTestSkipped('RBAC issue');
-        $motTest = $this->setupMotTest(new Person(), new Vehicle(), new Site(), 1, 'Blue', null);
-        $this->motTestValidator->validateNewMotTest($motTest);
-    }
-
-    /**
-     * @expectedException        \DvsaCommonApi\Service\Exception\ForbiddenException
-     * @expectedExceptionMessage You are not authorised to test a class 4 vehicle
-     */
-    public function testValidateNewMotTestThrowsForbiddenExceptionForNominatedTesterWithoutVehicleClassRole()
-    {
-        $vehicleTestingStation = $this->getTestVts();
-
-        $nominatedTester = new Person();
-        $nominatedTester->addVehicleTestingStation($vehicleTestingStation);
-        $this->addAuthsForClasses($nominatedTester, ['1']);
-
-        $vehicle = new Vehicle();
-        $vehicle->setVehicleClass(new VehicleClass(VehicleClassCode::CLASS_4));
-
-        $motTest = $this->setupMotTest($nominatedTester, $vehicle, $vehicleTestingStation);
-        $this->motTestValidator->validateNewMotTest($motTest);
-    }
-
-    /**
-     * @expectedException        \DvsaCommonApi\Service\Exception\ForbiddenException
-     * @expectedExceptionMessage Your Site is not authorised to test class 4 vehicles
-     */
-    public function testValidateNewMotTestThrowsForbiddenExceptionForVtsWithoutVehicleClassRole()
-    {
-        $vehicleTestingStation = $this->getTestVts($this->newAuthForTesting('1'));
-
-        $nominatedTester = new Person();
-        $nominatedTester->addVehicleTestingStation($vehicleTestingStation);
-        $this->addAuthsForClasses($nominatedTester, ['4']);
-
-        $vehicle = new Vehicle();
-        $vehicle->setVehicleClass(new VehicleClass(VehicleClassCode::CLASS_4));
-
-        $motTest = $this->setupMotTest($nominatedTester, $vehicle, $vehicleTestingStation);
         $this->motTestValidator->validateNewMotTest($motTest);
     }
 
@@ -388,32 +289,6 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
         $this->motTestValidator->assertCanBeUpdated($motTest);
     }
 
-    /**
-     * Test is not slots and user is attempting an MOT test that does not consume slots, then exception not thrown
-     */
-    public function testHasNotSlotsTestDoesNotConsumeSlots()
-    {
-        $vtsRole = $this->newAuthForTesting();
-
-        $vehicleTestingStation = $this->getTestVts($vtsRole, 1, 0);
-
-        $motTest = $this->setupMotTest(new Person(), new Vehicle(), $vehicleTestingStation, false);
-
-        XMock::invokeMethod($this->motTestValidator, 'checkMotTestTesterHasSlotsToPerformMotTest'. [$motTest]);
-    }
-
-    /**
-     * Tests if has slots and and user is attempting an MOT test that does consume slots, then exception not thrown
-     */
-    public function testHasSlotsTestDoesNotConsumeSlots()
-    {
-        $vehicleTestingStation = $this->getTestVts();
-
-        $motTest = $this->setupMotTest(new Person, new Vehicle(), $vehicleTestingStation, true);
-
-        XMock::invokeMethod($this->motTestValidator, 'checkMotTestTesterHasSlotsToPerformMotTest'. [$motTest]);
-    }
-
     public function testNewMotTestNotThrowsBadRequestExceptionNotLinkedToVtsForVehicleExaminer()
     {
         $this->setIsVehicleExaminer(true);
@@ -426,19 +301,6 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
         $this->motTestValidator->validateNewMotTest($motTest);
     }
 
-    public function testNewMotTestNotThrowsForbiddenExceptionWithoutVehicleClassRoleForVehicleExaminer()
-    {
-        $site = $this->getTestVts();
-
-        $vehicle = new Vehicle();
-        $vehicle->setVehicleClass(new VehicleClass(VehicleClassCode::CLASS_4));
-
-        $motTest = $this->setupMotTest(new Person(), $vehicle, $site, false);
-
-        $this->setIsVehicleExaminer(true);
-
-        $this->motTestValidator->validateNewMotTest($motTest);
-    }
 
     /**
      * @expectedException        \DvsaCommonApi\Service\Exception\ForbiddenException
@@ -481,20 +343,6 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
     {
         $this->censorServiceMock->expects($this->any())
             ->method('containsProfanity')->with($textUnderTest)->will($this->returnValue($result));
-    }
-
-    protected function getTestVts(AuthorisationForTestingMotAtSite $role = null, $id = 1, $slots = 10)
-    {
-        $this->markTestSkipped();
-        if (!$role) {
-            $role = $this->newAuthForTesting();
-        }
-        return (new Site())
-            ->setId($id)
-            ->addAuthorisationsForTestingMotAtSite($role)
-            ->setOrganisation(
-                (new Organisation())->setSlotBalance($slots)
-            );
     }
 
     protected function getMockWithDisabledConstructor($mockClass)

@@ -169,25 +169,6 @@ class SpecialNoticeServiceTest extends AbstractServiceTestCase
         );
     }
 
-    public function testMarkAcknowledgedWhenSpecialNoticeFoundShouldMarkAcknowledged()
-    {
-        $this->markTestSkipped();
-        //given
-        $testId                      = 123234;
-        $unacknowledgedSpecialNotice = $this->createTestSpecialNotice();
-        $unacknowledgedSpecialNotice->setIsAcknowledged(false);
-        $unacknowledgedSpecialNotice->setId($testId);
-        $this->entityManager->expects($this->once())
-            ->method('find')
-            ->will($this->returnValue($unacknowledgedSpecialNotice));
-
-        //when
-        $this->sut->markAcknowledged($testId);
-
-        //then
-        $this->assertEquals(true, $unacknowledgedSpecialNotice->getIsAcknowledged());
-    }
-
     public function testSpecialNoticeSummaryForUserWhenNoNoticesPresentShouldReturnZeroCountAndNullDeadline()
     {
         //given

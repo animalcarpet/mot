@@ -349,26 +349,6 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
         $this->createService()->updateStatus($motTestId, $data, 'whatever');
     }
 
-    public function testUpdateStatusGivenAbortRequestForReinspectionShouldNotReturnSlot()
-    {
-        $this->markTestSkipped();
-        $motTestId = 1;
-        $reasonForCancelId = 3;
-        $data = [
-            motTestStatusChangeService::FIELD_STATUS => MotTestStatusName::ABORTED,
-            motTestStatusChangeService::FIELD_REASON_FOR_CANCEL => $reasonForCancelId
-        ];
-        $reasonForCancel = $this->reasonForCancel($reasonForCancelId, false);
-        $motTest = MotTestObjectsFactory::createTest(MotTestTypeCode::TARGETED_REINSPECTION);
-        $motTest->setId($motTestId);
-
-        $this->reasonForCancelResolvesTo($reasonForCancel);
-        $this->motTestResolvesTo($motTest);
-        $this->verifySlotNotReturned();
-
-        $this->createService()->updateStatus($motTestId, $data, 'whatever');
-    }
-
     public function testUpdateStatusGivenAbandonRequestShouldSetAbandonedStatusWithCorrectCommentAndReason()
     {
         $testDate = new \DateTime('2012-09-30');

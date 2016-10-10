@@ -73,53 +73,6 @@ class MotTestControllerTest extends AbstractMotApiControllerTestCase
         $this->assertResponseStatusAndResult(self::HTTP_OK_CODE, $expectedData, $result);
     }
 
-    public function testCreateGivenDvlaVehicleAsInputShouldCopyItToVtrAndCreateTestForTheVtr()
-    {
-        return $this->markTestSkipped('Test needs to be moved into MotTestServiceTest');
-        /*
-        $this->mockValidAuthorization([Role::TESTER, 'TESTER-CLASS-4']);
-
-        $person = new Person();
-        $person->setId(5);
-
-        $motTest = new MotTest();
-        $vtrVehicleId = 99999;
-        $createdVtr = VehicleObjectsFactory::vehicle($vtrVehicleId);
-        $dvlaVehicleId = 3;
-        $vehicleClassId = 5;
-
-        $this->request->setMethod('post');
-        $this->request->getPost()->set('vehicleTestingStationId', '1')
-            ->set('dvlaVehicleId', $dvlaVehicleId)
-            ->set('primaryColour', 'Blue')
-            ->set('fuelTypeId', 4)
-            ->set('vehicleClassId', $vehicleClassId)
-            ->set('hasRegistration', true);
-
-        $expectedData = ['data' => ['id' => null]];
-        $mockServiceManagerClass = $this->getMockServiceManagerClass('VehicleService', VehicleService::class);
-        $mockServiceManagerClass
-            ->expects($this->any())->method('createVtrAndV5CFromDvlaVehicle')
-            ->with($dvlaVehicleId, $vehicleClassId)->will($this->returnValue($createdVtr));
-        $mockServiceManagerClass
-            ->expects($this->once())->method('logDvlaVehicleImportChanges')
-            ->with(5, $createdVtr, $vehicleClassId, 'Blue', null, 4);
-
-        $mockMotTestService = $this->getMockMotTestService();
-        $mockMotTestService->expects($this->once())
-            ->method('createMotTest')
-            ->with($person, $vtrVehicleId, 1, 'Blue', null, 4, $vehicleClassId, true)
-            ->will($this->returnValue($motTest));
-
-        $result = $this->controller->dispatch($this->request);
-        $response = $this->controller->getResponse();
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertInstanceOf(\Zend\View\Model\JsonModel::class, $result);
-        $this->assertEquals($expectedData, $result->getVariables());
-        */
-    }
-
     /**
      * @expectedException     \DvsaCommonApi\Service\Exception\ForbiddenException
      * @expectedExceptionCode 403

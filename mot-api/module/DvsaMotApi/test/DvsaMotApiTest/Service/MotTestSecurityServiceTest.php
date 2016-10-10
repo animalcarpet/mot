@@ -107,42 +107,6 @@ class MotTestSecurityServiceTest extends AbstractServiceTestCase
         return $identity;
     }
 
-    /**
-     * @dataProvider testerAssignedToVtsDataProvider
-     */
-    public function testIsTesterAssignedToVts($vtsId, $expectedResult)
-    {
-        $this->markTestSkipped('Come back to this once the RBAC refactor is complete.');
-        //given
-        MockHandler::of($this->testerServiceMock)
-            ->next('getTesterByUserId')
-            ->will($this->returnValue($this->getTestTesterWithVts()));
-        //when
-        $result = $this->service->isCurrentTesterAssignedToVts($vtsId);
-        //then
-        $this->assertSame($expectedResult, $result);
-    }
-
-    /**
-     * @dataProvider testerAssignedToMotTestDataProvider
-     */
-    public function testIsTesterAssignedToMotTest($motTestTesterId, $currentTesterId, $expectedResult)
-    {
-        $this->markTestSkipped('Come back to this once the RBAC refactor is complete.');
-        //given
-        $motTest = new MotTest();
-        $tester = new Person();
-        $motTest->setTester($tester->setId($motTestTesterId));
-
-        MockHandler::of($this->testerServiceMock)
-            ->next('getTesterByUserId')
-            ->will($this->returnValue($this->getTestTesterWithVts($currentTesterId)));
-        //when
-        $result = $this->service->isCurrentTesterAssignedToMotTest($motTest);
-        //then
-        $this->assertSame($expectedResult, $result);
-    }
-
     protected function getTestTesterWithVts($testerId = 3)
     {
         $tester = new Person();
