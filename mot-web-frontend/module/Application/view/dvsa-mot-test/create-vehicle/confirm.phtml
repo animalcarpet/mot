@@ -50,7 +50,7 @@ echo $this->partial('infoMessages', array('getFromFlash' => true));
         <?php if (!$this->canTestWithoutOtp()): ?>
             <h2>Authenticate and start MOT test</h2>
         <?php endif ?>
-        <form method="post" action="">
+        <form method="post" action="" class="prevent-double-click-form" name="create-vehicle-confirm-form" data-submit-button-id="confirm_test_result">
             <?php echo $this->csrfToken() ?>
             <?php
             echo $this->partial(
@@ -85,3 +85,11 @@ echo $this->partial('infoMessages', array('getFromFlash' => true));
 
     </div>
 </div>
+
+<?php echo $this->headScript()->appendFile('/assets/javascripts/dvsa.js'); ?>
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        DoubleClickPrevention.start();
+    });
+</script>
