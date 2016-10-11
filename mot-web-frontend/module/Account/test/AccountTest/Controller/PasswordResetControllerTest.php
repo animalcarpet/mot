@@ -49,6 +49,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
     protected function setUp()
     {
         $serviceManager = Bootstrap::getServiceManager();
+        $serviceManager = clone $serviceManager;
         $serviceManager->setAllowOverride(true);
         $this->setServiceManager($serviceManager);
 
@@ -74,6 +75,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
         );
 
         $this->getController()->setServiceLocator($serviceManager);
+        $serviceManager->setService('config', ['helpdesk'=> [ 'name' => 'DVSA Helpdesk', 'phoneNumber' => '0330 123 5654']]);
 
         $this->createHttpRequestForController('Reset');
 
