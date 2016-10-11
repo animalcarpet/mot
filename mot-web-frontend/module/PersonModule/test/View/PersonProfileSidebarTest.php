@@ -206,23 +206,21 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param bool $canOrderSecurityCard
      * @param bool $hasSecurityCardOrders
      * @param bool $hasDeactivated2FaCard
      * @param bool $isAuthenticatedWithLostAndForgotten
      * @param bool $expectActivateLink
+     * @param bool $expectCardOrderLink
      *
      * @dataProvider truthMatrixActivateCardLinkProvider
      */
-    public function testSideBarContainsActivateLinkOnDeactivationFor2FaUser(
-                        $hasSecurityCardOrders, $hasDeactivated2FaCard, $isAuthenticatedWithLostAndForgotten,
-                        $expectActivateLink)
+    public function testSideBarHidesShowsActivateAndOrderLinkCorrently(
+                $canOrderSecurityCard, $isExpectedToRegisterForTwoFactorAuth, $expectActivateLink, $expectCardOrderLink)
     {
-        $this->hasSecurityCardOrders = $hasSecurityCardOrders;
-        $this->hasDeactivated2FaCard = $hasDeactivated2FaCard;
-        $this->isAuthenticatedWithLostAndForgotten = $isAuthenticatedWithLostAndForgotten;
-
         $sidebar = $this
-            ->withIsExpectedToRegisterForTwoFactorAuth(false)
+            ->withUserThatCanOrderASecurityCard($canOrderSecurityCard)
+            ->withIsExpectedToRegisterForTwoFactorAuth($isExpectedToRegisterForTwoFactorAuth)
             ->withTwoFactorAuthEnabled(true)
             ->withFullyAuthorisedTester()
             ->createPersonProfileSidebar();
@@ -232,11 +230,15 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
         $linkTexts = $this->getTextFromSidebarLinks($sidebarLinks);
 
         if ($expectActivateLink) {
-            $this->assertCount(4, $sidebarLinks->getLinks());
             $this->assertContains('Activate your security card', $linkTexts);
         } else {
-            $this->assertCount(3, $sidebarLinks->getLinks());
             $this->assertNotContains('Activate your security card', $linkTexts);
+        }
+
+        if ($expectCardOrderLink) {
+            $this->assertContains('Order a security card', $linkTexts);
+        } else {
+            $this->assertNotContains('Order a security card', $linkTexts);
         }
     }
 
@@ -246,10 +248,11 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
     public function truthMatrixActivateCardLinkProvider()
     {
         return [
-            [true, true, true, true],
-            [true, true, false, false],
-            [true, false, true, false],
             [false, true, true, false],
+            [false, false, false, false],
+            [false, false, false, false],
+            [false, false, false, false],
+            [true, true, false, true],
         ];
     }
 

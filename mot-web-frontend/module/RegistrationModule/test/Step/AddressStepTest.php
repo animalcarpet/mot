@@ -68,7 +68,7 @@ class AddressStepTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($step->getAddress2(), $fixture['address2']);
         $this->assertEquals($step->getAddress3(), $fixture['address3']);
         $this->assertEquals($step->gettownOrCity(), $fixture['townOrCity']);
-        $this->assertEquals($step->getpostcode(), $fixture['postcode']);
+        $this->assertEquals($step->getpostcode(), strtoupper($fixture['postcode']));
     }
 
     /**

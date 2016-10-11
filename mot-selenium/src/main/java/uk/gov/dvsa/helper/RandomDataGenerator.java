@@ -10,7 +10,7 @@ public class RandomDataGenerator {
 
     private static final String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String numbers = "1234567890";
-    private static final String postcodeIncode = "ABDEFGHJLNPQRSTUWXYZ";
+    private static final String postcodeIncode = "abdefghjlnpqrstuwxyzABDEFGHJLNPQRSTUWXYZ";
 
     private static String generateRandomString(int length, String characterSet, long seed) {
         Random random = new Random(seed);
@@ -44,7 +44,17 @@ public class RandomDataGenerator {
                 "OX", "PA", "PE", "PH", "PL", "PO", "PR", "RG", "RH", "RM", "S", "SA", "SE", "SG",
                 "SK", "SL", "SM", "SN", "SO", "SP", "SR", "SS", "ST", "SW", "SY", "TA", "TD", "TF",
                 "TN", "TQ", "TR", "TS", "TW", "UB", "W", "WA", "WC", "WD", "WF", "WN", "WR", "WS",
-                "WV", "YO", "ZE"};
+                "WV", "YO", "ZE",
+                "ab", "al", "b", "ba", "bb", "bd", "bh", "bl", "bn",
+                "br", "bs", "bt", "ca", "cb", "cf", "ch", "cm", "co", "cr", "ct", "cv", "cw", "da",
+                "dd", "de", "dg", "dh", "dl", "dn", "dt", "dy", "e", "ec", "eh", "en", "ex", "fk",
+                "fy", "g", "gl", "gy", "gu", "ha", "hd", "hg", "hp", "hr", "hs", "hu", "hx", "ig",
+                "im", "ip", "iv", "je", "ka", "kt", "kw", "ky", "l", "la", "ld", "le", "ll", "ln",
+                "ls", "lu", "m", "me", "mk", "ml", "n", "ne", "ng", "nn", "np", "nr", "nw", "ol",
+                "ox", "pa", "pe", "ph", "pl", "po", "pr", "rg", "rh", "rm", "s", "sa", "se", "sg",
+                "sk", "sl", "sm", "sn", "so", "sp", "sr", "ss", "st", "sw", "sy", "ta", "td", "tf",
+                "tn", "tq", "tr", "ts", "tw", "ub", "w", "wa", "wc", "wd", "wf", "wn", "wr", "ws",
+                "wv", "yo", "ze"};
         return areaCodes[new Random().nextInt(areaCodes.length)];
     }
 
