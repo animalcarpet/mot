@@ -19,6 +19,9 @@ class AlreadyLoggedInTodayWithLostForgottenCardCookieServiceTest extends \PHPUni
     /** @var MotIdentityProviderInterface $identityProvider*/
     private $motIdentityProvider;
 
+    const COOKIE_DATE = '2016-10-05 14:39:42';
+    const ACTIVATION_DATE = '2016-10-05 14:40:42';
+
     public function setUp()
     {
         $this->motIdentityProvider =  XMock::of(MotIdentityProviderInterface::class);
@@ -102,6 +105,32 @@ class AlreadyLoggedInTodayWithLostForgottenCardCookieServiceTest extends \PHPUni
         $this->assertEquals(AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME . self::USER_ID, $setCookieHeader->getName());
         $this->assertEquals($userPath, $setCookieHeader->getPath());
         $this->assertEquals(true, $setCookieHeader->isSecure());
+    }
+
+    public function testActivationOccouredAfterCookieWithNewerActivation()
+    {
+        $this->withIdentity(self::USER_ID);
+        $request = new Request();
+        $request->setMethod('POST');
+        $request->setPost(new Parameters([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME . self::USER_ID => self::COOKIE_DATE]));
+        $request->getHeaders()->addHeader(new Cookie([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME . self::USER_ID => self::COOKIE_DATE]));
+
+        $activationDate =  new \DateTime(self::ACTIVATION_DATE, new \DateTimeZone('Europe/London'));
+
+        $this->assertTrue($this->createService()->hasActivationOccouredAfterCookie($request, $activationDate));
+    }
+
+    public function testActivationDidNotOccourAfterCookie()
+    {
+        $this->withIdentity(self::USER_ID);
+        $request = new Request();
+        $request->setMethod('POST');
+        $request->setPost(new Parameters([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME . self::USER_ID => self::ACTIVATION_DATE]));
+        $request->getHeaders()->addHeader(new Cookie([AlreadyLoggedInTodayWithLostForgottenCardCookieService::COOKIE_NAME . self::USER_ID => self::ACTIVATION_DATE]));
+
+        $activationDate =  new \DateTime(self::COOKIE_DATE, new \DateTimeZone('Europe/London'));
+
+        $this->assertFalse($this->createService()->hasActivationOccouredAfterCookie($request, $activationDate));
     }
 
     private function withIdentity($userId)

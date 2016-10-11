@@ -4,6 +4,7 @@ namespace Dvsa\Mot\Frontend\SecurityCardModuleTest\CardValidation\Controller;
 
 use CoreTest\Controller\AbstractLightWebControllerTest;
 use Dashboard\Controller\UserHomeController;
+use Dvsa\Mot\ApiClient\Resource\Item\SecurityCard;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Controller\RegisteredCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Form\SecurityCardValidationForm;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\AlreadyLoggedInTodayWithLostForgottenCardCookieService;
@@ -24,6 +25,7 @@ use Zend\Stdlib\Parameters;
 class RegisteredCardControllerTest extends AbstractLightWebControllerTest
 {
     const PIN = 123456;
+    const ACTIVATION_DATE = '2016-10-05 15:39:42';
     const LOGIN_WITH_2FA_TEMPLATE = '2fa/registered-card/login-2fa';
     const INVALID_PIN_ERROR_MESSAGE = 'Enter a valid PIN number';
     const GTM_USER_LOGIN_FAILED = 'user-login-failed';
@@ -107,7 +109,9 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
         $this
             ->withIs2FALoginApplicableToCurrentUser(true)
             ->withHasFeatureToggle(true)
-            ->withAlreadyLoggedInTodayViaLostForgotten(true);
+            ->withAlreadyLoggedInTodayViaLostForgotten(true)
+            ->withRegisteredSecurityCard()
+            ->withActivationOccouringAfterCookie(true);
 
         $this->expectRedirect(LostOrForgottenCardController::START_ROUTE);
         $this->buildController()->login2FAAction();
@@ -248,6 +252,27 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
     private function assertPinInputIsCleared(SecurityCardValidationForm $form)
     {
         $this->assertEmpty($form->getPinField()->getValue());
+    }
+
+    private function withActivationOccouringAfterCookie($hasActivationOccoured)
+    {
+        $this->pinEntryCookieService
+            ->expects($this->once())
+            ->method('hasLoggedInTodayWithLostForgottenCardJourney')
+            ->willReturn($hasActivationOccoured);
+
+        return $this;
+    }
+
+    private function withRegisteredSecurityCard()
+    {
+        $securityCard = new SecurityCard((object) ['activationDate' => self::ACTIVATION_DATE]);
+        $this->registeredCardService
+            ->expects($this->once())
+            ->method('getLastRegisteredCard')
+            ->willReturn($securityCard);
+
+        return $this;
     }
 
     private function buildController()
