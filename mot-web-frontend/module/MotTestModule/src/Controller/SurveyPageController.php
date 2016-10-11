@@ -8,11 +8,12 @@
 namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 
 use Core\Controller\AbstractAuthActionController;
-use DateTime;
 use Dvsa\Mot\Frontend\MotTestModule\Model\SurveyRating;
 use Dvsa\Mot\Frontend\MotTestModule\Service\SurveyService;
+use DvsaApplicationLogger\Log\Logger;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
+use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
+use OutOfBoundsException;
 use Zend\Http\Headers;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\View\Model\ViewModel;
@@ -31,23 +32,20 @@ class SurveyPageController extends AbstractAuthActionController
     private $surveyService;
 
     /**
-     * @var array
+     * @var Logger
      */
-    private $reports;
-
-    /**
-     * @var
-     */
-    protected $csvHandle;
+    private $logger;
 
     /**
      * SurveyPageController constructor.
      *
      * @param SurveyService $surveyService
+     * @param Logger        $logger
      */
-    public function __construct(SurveyService $surveyService)
+    public function __construct(SurveyService $surveyService, Logger $logger)
     {
         $this->surveyService = $surveyService;
+        $this->logger = $logger;
     }
 
     /**
@@ -91,9 +89,15 @@ class SurveyPageController extends AbstractAuthActionController
         $this->assertGranted(PermissionInSystem::GENERATE_SATISFACTION_SURVEY_REPORT);
 
         $this->layout('layout/layout-govuk.phtml');
-        $this->reports = $this->surveyService->getSurveyReports();
+        try {
+            $reports = $this->surveyService->getSurveyReports();
+        } catch (GeneralRestException $e) {
+            $this->logger->err(sprintf('[GDS Satisfaction Survey] Failed to get survey reports. GeneralRestException: "%s"',
+                $e->getMessage()));
+            $reports = [];
+        }
 
-        return $this->createViewModel('survey-reports/reports.phtml', ['reports' => $this->reports]);
+        return $this->createViewModel('survey-reports/reports.twig', ['reports' => $reports]);
     }
 
     /**
@@ -103,28 +107,32 @@ class SurveyPageController extends AbstractAuthActionController
     {
         $this->assertGranted(PermissionInSystem::GENERATE_SATISFACTION_SURVEY_REPORT);
 
+        $reportYear = $this->params()->fromRoute('year');
         $reportMonth = $this->params()->fromRoute('month');
 
-        $headers = (new Headers())->addHeaders(
-            [
-                'Content-Type' => 'text/csv; charset=utf-8',
-                'Content-Disposition' => 'attachment; filename="' . $reportMonth . '.csv"',
-                'Accept-Ranges' => 'bytes',
-                'Cache-Control' => 'no-cache, no-store, max-age=0, must-revalidate',
-                'Pragma' => 'no-cache',
-            ]
-        );
+        $csvData = $this->getCsvDataForYearAndMonth($reportYear, $reportMonth);
+        if (!$csvData) {
+            return $this->redirect()->toRoute('survey-reports');
+        }
 
-        $this->response = new Response();
-        $this->response->setHeaders($headers);
-        $this->response->sendHeaders();
+        $headers = (new Headers())->addHeaders([
+            'Content-Type' => 'text/csv; charset=utf-8',
+            'Content-Disposition' => 'attachment; filename="' . $reportYear . '-' . $reportMonth . '.csv"',
+            'Accept-Ranges' => 'bytes',
+            'Cache-Control' => 'no-cache, no-store, max-age=0, must-revalidate',
+            'Pragma' => 'no-cache',
+        ]);
 
-        $this->csvHandle = fopen('php://output', 'w');
-        fputs($this->csvHandle, $this->getCsvDataForMonth($reportMonth));
+        $response = new Response();
+        $response->setHeaders($headers);
+        $response->sendHeaders();
+
+        $csvHandle = fopen('php://output', 'w');
+        fputs($csvHandle, $csvData);
         flush();
-        fclose($this->csvHandle);
+        fclose($csvHandle);
 
-        return $this->response;
+        return $response;
     }
 
     /**
@@ -144,7 +152,7 @@ class SurveyPageController extends AbstractAuthActionController
                 return $this->notFoundAction();
             }
 
-            $surveyData = ['token' => $token, 'satisfaction_rating' => $satisfactionRating,];
+            $surveyData = ['token' => $token, 'satisfaction_rating' => $satisfactionRating];
             $this->surveyService->submitSurveyResult($surveyData);
 
             return $this->redirect()->toRoute('survey/thanks', ['token' => $token]);
@@ -193,34 +201,28 @@ class SurveyPageController extends AbstractAuthActionController
     }
 
     /**
-     * @param $month
+     * @param string $year
+     * @param string $month
      *
-     * @return string
+     * @return string|null
      */
-    private function getCsvDataForMonth($month)
+    private function getCsvDataForYearAndMonth($year, $month)
     {
-        $this->reports = $this->surveyService->getSurveyReports();
+        try {
+            $reports = $this->surveyService->getSurveyReports();
+        } catch (GeneralRestException $e) {
+            $this->logger->err(sprintf('[GDS Satisfaction Survey] Failed to get survey reports. GeneralRestException: "%s"',
+                $e->getMessage()));
 
-        if (empty($this->reports)) {
-            return '';
+            return null;
         }
 
-        foreach ($this->reports['data'] as $report) {
-            if (strtolower($this->getMonthNameFromReportMonth($report['month'])) == strtolower($month)) {
-                return $report['csv'];
-            }
+        try {
+            $report = $reports->getReport($year, $month);
+
+            return $report->getCsvData();
+        } catch (OutOfBoundsException $e) {
+            return null;
         }
-    }
-
-    /**
-     * @param $reportMonth
-     *
-     * @return string
-     */
-    private function getMonthNameFromReportMonth($reportMonth)
-    {
-        $date = DateTime::createFromFormat('Y-m', $reportMonth);
-
-        return $date->format('F');
     }
 }

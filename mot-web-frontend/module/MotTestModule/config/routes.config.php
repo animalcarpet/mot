@@ -8,9 +8,9 @@
 use Dvsa\Mot\Frontend\MotTestModule\Controller\AddDefectController;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\AddManualAdvisoryController;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\ContingencyTestController;
-use Dvsa\Mot\Frontend\MotTestModule\Controller\OdometerController;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\DefectCategoriesController;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\EditDefectController;
+use Dvsa\Mot\Frontend\MotTestModule\Controller\OdometerController;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\RemoveDefectController;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\RepairDefectController;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\SearchDefectsController;
@@ -409,10 +409,14 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
-                    'downloadCsv' => [
+                    'download-csv' => [
                         'type' => 'segment',
                         'options' => [
-                            'route' => '/download/:month',
+                            'route' => '/download/:year/:month',
+                            'constraints' => [
+                                'year' => '[0-9]{4}',
+                                'month' => '(0[1-9]|1[0-2])',
+                            ],
                             'defaults' => [
                                 'controller' => SurveyPageController::class,
                                 'action' => 'downloadReportCsv',

@@ -44,6 +44,18 @@ class SurveyReport
      */
     private $veryDissatisfiedRatings;
 
+    /**
+     * SurveyReport constructor.
+     *
+     * @param $timeStamp
+     * @param $period
+     * @param $slug
+     * @param $verySatisfiedRatings
+     * @param $satisfiedRatings
+     * @param $neitherSatisfiedNorDissatisfiedRatings
+     * @param $dissatisfiedRatings
+     * @param $veryDissatisfiedRatings
+     */
     public function __construct(
         $timeStamp,
         $period,
@@ -59,7 +71,7 @@ class SurveyReport
         $this->slug = $slug;
         $this->verySatisfiedRatings = $verySatisfiedRatings;
         $this->satisfiedRatings = $satisfiedRatings;
-        $this->neitherSatisfiedNorDissatisfiedRatings =$neitherSatisfiedNorDissatisfiedRatings;
+        $this->neitherSatisfiedNorDissatisfiedRatings = $neitherSatisfiedNorDissatisfiedRatings;
         $this->dissatisfiedRatings = $dissatisfiedRatings;
         $this->verySatisfiedRatings = $veryDissatisfiedRatings;
     }

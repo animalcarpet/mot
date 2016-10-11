@@ -7,6 +7,7 @@
 
 namespace DvsaMotApi\Controller;
 
+use DateTime;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Service\Exception\BadRequestException;
@@ -90,20 +91,12 @@ class SurveyController extends AbstractDvsaRestfulController
      */
     public function generateReportsAction()
     {
-        $ratingCounts = [];
-        $total = 0;
+        $year = $this->params()->fromQuery('year', (new DateTime())->format('Y'));
+        $month = $this->params()->fromQuery('month', (new DateTime('-1 month'))->format('m'));
 
-        foreach (range(1, 5) as $rating) {
-            $count = count($this->surveyService->getSurveyResultSatisfactionRatingsCount($rating));
-            $total += $count;
-            $ratingCounts['rating_' . $rating] = $count;
-        }
+        $data = $this->surveyService->generateSurveyReports($year, $month);
 
-        $ratingCounts['total'] = $total;
-
-        $this->surveyService->generateSurveyReports($ratingCounts);
-
-        return ApiResponse::jsonOk($ratingCounts);
+        return ApiResponse::jsonOk($data);
     }
 
     /**
@@ -113,9 +106,7 @@ class SurveyController extends AbstractDvsaRestfulController
     {
         $response = $this->surveyService->getSurveyReports();
 
-        return ApiResponse::jsonOk(
-            $response
-        );
+        return ApiResponse::jsonOk($response);
     }
 
     /**

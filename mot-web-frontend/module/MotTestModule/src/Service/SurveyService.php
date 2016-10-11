@@ -8,7 +8,7 @@
 namespace Dvsa\Mot\Frontend\MotTestModule\Service;
 
 use Core\Service\SessionService;
-use DvsaCommon\Dto\AbstractDataTransferObject;
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Survey\DownloadableSurveyReports;
 use DvsaCommon\HttpRestJson\Client as HttpClient;
 use OutOfBoundsException;
 use Zend\EventManager\EventManagerInterface;
@@ -114,13 +114,13 @@ class SurveyService
     }
 
     /**
-     * @return AbstractDataTransferObject
+     * @return DownloadableSurveyReports
      */
     public function getSurveyReports()
     {
         $result = $this->httpClient->get(self::REPORT_ENDPOINT);
 
-        return $result;
+        return DownloadableSurveyReports::fromApi($result);
     }
 
     /**

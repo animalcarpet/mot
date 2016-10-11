@@ -7,6 +7,7 @@
 
 namespace DvsaMotApi\Service;
 
+use Aws\S3\Exception\S3Exception;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use DvsaCommon\Enum\MotTestTypeCode;
@@ -286,26 +287,57 @@ class SurveyService
     }
 
     /**
-     * @param array $surveyData
+     * @param string $year
+     * @param string $month
      *
-     * @return \Aws\Result
+     * @return array
      */
-    public function generateSurveyReports($surveyData)
+    public function generateSurveyReports($year, $month)
     {
-        $timeStamp = new DateTime();
-        $row['timestamp'] = $timeStamp->format('Y-m-d-H-i-s');
-        $row['period'] = 'month';
-        $row['slug'] = 'https://mot-testing.i-env.net/';
-        $row['rating_1'] = $surveyData['rating_1'];
-        $row['rating_2'] = $surveyData['rating_2'];
-        $row['rating_3'] = $surveyData['rating_3'];
-        $row['rating_4'] = $surveyData['rating_4'];
-        $row['rating_5'] = $surveyData['rating_5'];
-        $row['total'] = $surveyData['total'];
+        $date = sprintf('%s-%s', $year, $month);
 
-        $result = $this->surveyStore->putFile(self::$CSV_COLUMNS, $row, $timeStamp->format('Y-m'));
+        $result = $this
+            ->entityManager
+            ->createQuery(sprintf(
+                'SELECT COUNT(s.rating) AS ratingCount, s.rating FROM %s s INDEX BY s.rating WHERE s.createdOn LIKE ' .
+                ':date GROUP BY s.rating', Survey::class))
+            ->setParameter('date', $date . '%')
+            ->getArrayResult();
 
-        return $result;
+        $total = 0;
+        $ratingCounts = [];
+
+        foreach (range(1, 5) as $rating) {
+            $ratingCount = isset($result[$rating]['ratingCount']) ? $result[$rating]['ratingCount'] : 0;
+            $total += $ratingCount;
+            $ratingCounts['rating_' . $rating] = (string) $ratingCount;
+        }
+
+        $ratingCounts['total'] = $total;
+
+        $row = [
+            'timestamp' => $date,
+            'period' => 'month',
+            'slug' => 'https://mot-testing.i-env.net/',
+            'rating_1' => $ratingCounts['rating_1'],
+            'rating_2' => $ratingCounts['rating_2'],
+            'rating_3' => $ratingCounts['rating_3'],
+            'rating_4' => $ratingCounts['rating_4'],
+            'rating_5' => $ratingCounts['rating_5'],
+            'total' => $ratingCounts['total'],
+        ];
+
+        $data = ['filename' => sprintf('%s.csv', $date), 'content' => $row];
+
+        try {
+            $this->surveyStore->putFile(self::$CSV_COLUMNS, $row, $data['filename']);
+            $data['success'] = true;
+        } catch (S3Exception $e) {
+            $data['success'] = false;
+            $data['error'] = $e->getMessage();
+        }
+
+        return $data;
     }
 
     /**
@@ -319,11 +351,14 @@ class SurveyService
         $reportData = [];
 
         foreach ($files as $file) {
-            $reportData['month'] = $this->surveyStore->stripRootFolderFromKey($file['Key']);
+            $pathinfo = pathinfo($file['Key']);
+            $reportData['month'] = $pathinfo['filename'];
             $reportData['size'] = $file['Size'];
             $reportData['csv'] = (string) $this->surveyStore->getFile($file['Key']);
-            array_push($reportAggregate, $reportData);
+            $reportAggregate[$reportData['month']] = $reportData;
         }
+
+        krsort($reportAggregate);
 
         return $reportAggregate;
     }
