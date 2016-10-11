@@ -39,13 +39,34 @@ public class LostOrForgottenCardTests extends DslTest {
         step("Then I am presented with the Already Ordered card landing page");
         motUI.loginExpecting2faAlreadyOrderedPage(twoFactorUser);
 
-        step("And I am able to complete the sign in journey");
+        step("Then I am able to complete the sign in journey");
         motUI.authentication.securityCard.signInExpectingFirstQuestionLostAndForgottenCardOrdered(twoFactorUser);
 
         assertThat("The User is on the Home Page", motUI.isLoginSuccessful(), is(true));
-
-
     }
+
+    @Test(testName = "2fa", groups = {"BVT"})
+    public void userWithReplacementCardOrderedAndActivatedDirectedTo2FAPinEntryPage() throws IOException {
+        User twoFactorUser = userData.createTester(siteData.createSite().getId());
+
+        step("Given I am logged out after ordering a card via lost/forgotten journey");
+        motUI.authentication.securityCard.activate2faCard(twoFactorUser).logOut(twoFactorUser);
+        motUI.authentication.securityCard.signInWithoutSecurityCardAndOrderCard(twoFactorUser);
+        motUI.logout(twoFactorUser);
+
+        step("When I activate my card");
+        motUI.loginExpecting2faAlreadyOrderedPage(twoFactorUser);
+        motUI.authentication.securityCard.signInExpectingFirstQuestionLostAndForgottenCardOrdered(twoFactorUser);
+        motUI.authentication.securityCard.activate2faCard(twoFactorUser);
+        motUI.logout(twoFactorUser);
+
+        step("Then I am able to complete the sign in journey by entering my security card pin");
+        motUI.loginExpectingPinEntryPage(twoFactorUser);
+        motUI.authentication.enterPinAndSubmit(twoFactorUser.getTwoFactorPin());
+
+        assertThat("The User is on the Home Page", motUI.isLoginSuccessful(), is(true));
+    }
+
     @Test(testName = "2fa", groups = {"BVT"})
     public void userDirectedToSecurityQuestionsOnSubsequentDailyLoginsAfterUsingLostForgottenJourney() throws IOException {
         User twoFactorUser = userData.createTester(siteData.createSite().getId());

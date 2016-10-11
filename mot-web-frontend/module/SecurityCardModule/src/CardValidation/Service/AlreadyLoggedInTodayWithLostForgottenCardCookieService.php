@@ -27,9 +27,10 @@ class AlreadyLoggedInTodayWithLostForgottenCardCookieService
     public function addLoggedInViaLostForgottenCardCookie(Response $response)
     {
         $userId = $this->identityProvider->getIdentity()->getUserId();
+        $creationTime = new \DateTime("now", new DateTimeZone('Europe/London'));
         $cookie = new SetCookie(
             self::COOKIE_NAME . $userId,
-            $userId,
+            $creationTime->format('Y-m-d H:i:s'),
             new \DateTime("tomorrow", new DateTimeZone('Europe/London')),
             '/',
             null,
@@ -52,4 +53,13 @@ class AlreadyLoggedInTodayWithLostForgottenCardCookieService
         return isset($cookies[self::COOKIE_NAME . $userId]);
     }
 
+    public function hasActivationOccouredAfterCookie(Request $request, \DateTime $activationDateTime)
+    {
+        $cookies = $request->getCookie();
+        $userId = $this->identityProvider->getIdentity()->getUserId();
+        $cookieTime = $cookies[self::COOKIE_NAME . $userId];
+        $cookieDateTime = new \DateTime($cookieTime, new DateTimeZone('Europe/London'));
+
+        return $activationDateTime > $cookieDateTime;
+    }
 }

@@ -72,6 +72,16 @@ class RegisteredCardService
         }
     }
 
+    public function getLastRegisteredCard()
+    {
+        try {
+            $username = $this->authenticationService->getIdentity()->getUsername();
+            return $this->authorisationServiceClient->getSecurityCardForUser($username);
+        } catch (ResourceNotFoundException $error) {
+            return false;
+        }
+    }
+
     public function is2FALoginApplicableToCurrentUser()
     {
         $identity = $this->authenticationService->getIdentity();

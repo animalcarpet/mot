@@ -4,6 +4,8 @@ namespace Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Controller;
 
 use Core\Controller\AbstractDvsaActionController;
 use Dashboard\Controller\UserHomeController;
+use DateTimeZone;
+use Dvsa\Mot\ApiClient\Resource\Item\SecurityCard;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Form\SecurityCardValidationForm;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Model\GtmSecurityCardPinValidationCallback;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\AlreadyLoggedInTodayWithLostForgottenCardCookieService;
@@ -79,7 +81,14 @@ class RegisteredCardController extends AbstractDvsaActionController
             $response = $this->onPost2FALoginAction();
         } else {
             if ($this->cookieService->hasLoggedInTodayWithLostForgottenCardJourney($this->request)) {
-                return $this->redirect()->toRoute(LostOrForgottenCardController::START_ROUTE);
+                /** @var SecurityCard $registeredCard */
+                $registeredCard = $this->registeredCardService->getLastRegisteredCard();
+                if ($registeredCard &&
+                    !$this->cookieService->hasActivationOccouredAfterCookie(
+                        $this->request,
+                        new \DateTime($registeredCard->getActivationDate(), new DateTimeZone('Europe/London')))) {
+                    return $this->redirect()->toRoute(LostOrForgottenCardController::START_ROUTE);
+                }
             }
             $response = $this->onGet2FALoginAction();
         }
