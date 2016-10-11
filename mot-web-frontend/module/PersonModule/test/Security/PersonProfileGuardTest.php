@@ -1350,7 +1350,7 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
             ->withDvsaRole(false)
             ->createPersonProfileGuard();
 
-        $this->assertTrue($guard->isExpectedToRegisterForTwoFactorAuth());
+        $this->assertTrue($guard->isExpectedToRegisterForTwoFactorAuth(false, false, false));
     }
 
     public function testNotExpectedToRegisterForTwoFactorAuthIfUserHasPermissionAndHasRegistered()
@@ -1361,26 +1361,28 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
             ->withSecondFactorRequiredForIdentity()
             ->createPersonProfileGuard();
 
-        $this->assertFalse($guard->isExpectedToRegisterForTwoFactorAuth());
+        $this->assertFalse($guard->isExpectedToRegisterForTwoFactorAuth(false, false, false));
     }
 
     public function testNotExpectedToRegisterForTwoFactorAuthIfUserHasNoPermission()
     {
         $guard = $this
+            ->withSecondFactorRequiredForIdentity()
             ->withDvsaRole(false)
             ->createPersonProfileGuard();
 
-        $this->assertFalse($guard->isExpectedToRegisterForTwoFactorAuth());
+        $this->assertFalse($guard->isExpectedToRegisterForTwoFactorAuth(false, false, false));
     }
 
     public function testNotExpectedToRegisterForTwoFactorAuthIfUserIsDvsa()
     {
         $guard = $this
+            ->withSecondFactorRequiredForIdentity()
             ->withPermissions(PermissionInSystem::AUTHENTICATE_WITH_2FA)
             ->withDvsaRole(true)
             ->createPersonProfileGuard();
 
-        $this->assertFalse($guard->isExpectedToRegisterForTwoFactorAuth());
+        $this->assertFalse($guard->isExpectedToRegisterForTwoFactorAuth(false, false, false));
     }
 
     public function testUserWithAppropriatePermissionCanViewOtherUsersSecurityCard()

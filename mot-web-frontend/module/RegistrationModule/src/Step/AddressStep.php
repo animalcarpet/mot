@@ -104,7 +104,7 @@ class AddressStep extends AbstractRegistrationStep
             $this->setAddress2($values[AddressInputFilter::FIELD_ADDRESS_2]);
             $this->setAddress3($values[AddressInputFilter::FIELD_ADDRESS_3]);
             $this->setTownOrCity($values[AddressInputFilter::FIELD_TOWN_OR_CITY]);
-            $this->setPostcode($values[AddressInputFilter::FIELD_POSTCODE]);
+            $this->setPostcode(strtoupper($values[AddressInputFilter::FIELD_POSTCODE]));
         }
     }
 

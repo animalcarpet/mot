@@ -419,11 +419,14 @@ class PersonProfileGuard
     /**
      * @return bool
      */
-    public function isExpectedToRegisterForTwoFactorAuth()
+    public function isExpectedToRegisterForTwoFactorAuth($hasACardOrder, $hasADeactivatedCard, $isAuthenticatedWithLostAndForgotten)
     {
-        return $this->authorisationService->isGranted(PermissionInSystem::AUTHENTICATE_WITH_2FA)
-                && !$this->authorisationService->isDvsa()
-                && !$this->identityProvider->getIdentity()->isSecondFactorRequired();
+        $hasActiveCard = $this->identityProvider->getIdentity()->isSecondFactorRequired();
+        $hasAuthWith2FaPermission = $this->authorisationService->isGranted(PermissionInSystem::AUTHENTICATE_WITH_2FA);
+        $isDvsa = $this->authorisationService->isDvsa();
+        return ($hasAuthWith2FaPermission && !$isDvsa && !$hasActiveCard) ||
+                (!$hasActiveCard && $hasACardOrder) ||
+                ($hasACardOrder && $hasADeactivatedCard && $isAuthenticatedWithLostAndForgotten);
     }
 
     /**
