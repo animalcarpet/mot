@@ -1,0 +1,25 @@
+<header class="content-header">
+    <h1 id="generate-survey-reports-page-title">
+        <span class="content-header__title">Satisfaction survey data</span>
+    </h1>
+</header>
+
+<div id="satisfaction-survey-data-container" class="text">
+
+    <p class="lede">You can download satisfaction survey data for each month below as an Excel spreadsheet.</p>
+
+    {% for year, reportsPerYear in reports %}
+        <h3 class="heading-medium">{{ year }}</h3>
+        <ul class="list-bullet">
+            {% for month, report in reportsPerYear %}
+                <li><a href="{{ url('survey-reports/download-csv', {'year': year, 'month': month}) }}">{{ report.getFormattedDate('F') }}</a> ({{ report.getSizeInKilobytes() }}KB)</li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+
+    <nav class="content-navigation">
+        <ul class="content-navigation__secondary">
+            <li><a id="back-to-home-link" href="{{ url('user-home') }}">Return home</a></li>
+        </ul>
+    </nav>
+</div>

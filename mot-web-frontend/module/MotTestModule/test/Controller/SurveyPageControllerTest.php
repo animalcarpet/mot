@@ -5,20 +5,22 @@ namespace Dvsa\Mot\Frontend\MotTestModuleTest\Controller;
 use Application\Service\LoggedInUserManager;
 use Core\Service\MotEventManager;
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
+use DateTimeImmutable;
 use Dvsa\Mot\Frontend\GoogleAnalyticsModule\ControllerPlugin\DataLayerPlugin;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\SurveyPageController;
 use Dvsa\Mot\Frontend\MotTestModule\Service\SurveyService;
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Survey\DownloadableSurveyReport;
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Survey\DownloadableSurveyReports;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
+use DvsaApplicationLogger\Log\Logger;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
 use Zend\EventManager\EventManager;
-use Zend\Mvc\Controller\PluginManager;
 use Zend\Session\Container;
 
 /**
- * Class SurveyPageControllerTest
- * @package Dvsa\Mot\Frontend\MotTestModuleTest\Controller
+ * Class SurveyPageControllerTest.
  */
 class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
 {
@@ -38,14 +40,21 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
      * @var Container|\PHPUnit_Framework_MockObject_MockObject
      */
     private $sessionManager;
-    
+
     /**
      * @var DataLayerPlugin|\PHPUnit_Framework_MockObject_MockObject
      */
     private $dataLayerPlugin;
 
+    /**
+     * @var DateTimeImmutable
+     */
+    private $datetime;
+
     protected function setUp()
     {
+        $this->datetime = new DateTimeImmutable();
+
         Bootstrap::setupServiceManager();
         $this->serviceManager = Bootstrap::getServiceManager();
         $this->serviceManager->setAllowOverride(true);
@@ -62,11 +71,12 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
             ->setMethods([])
             ->getMock();
 
-        $this->setController(
-            new SurveyPageController(
-                $this->surveyService
-            )
-        );
+        $logger = $this
+            ->getMockBuilder(Logger::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->setController(new SurveyPageController($this->surveyService, $logger));
 
         $this->dataLayerPlugin = $this->getMockBuilder(DataLayerPlugin::class)
             ->disableOriginalConstructor()
@@ -127,7 +137,7 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
         $this->setPostAndPostParams(
             [
                 SurveyPageController::SATISFACTION_RATING => $satisfactionRating,
-                SurveyPageController::TOKEN_KEY => $token
+                SurveyPageController::TOKEN_KEY => $token,
             ]
         );
 
@@ -150,7 +160,7 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
         return [
             ['survey', 1, true],
             [null, 2, false],
-            ['testToken', 20, true]
+            ['testToken', 20, true],
         ];
     }
 
@@ -179,20 +189,13 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
 
     public function testGetReportsWithData()
     {
-        ob_start();
         $this->setupAuthenticationServiceForIdentity(StubIdentityAdapter::asSchemauser());
         $this->setupAuthorizationService([PermissionInSystem::GENERATE_SATISFACTION_SURVEY_REPORT]);
 
-        $this->surveyService->method('getSurveyReports')->willReturn([
-            'data' => [
-                [
-                    'month' => '2016-05',
-                    'csv' => 'really cool csv string',
-                ]
-            ]
+        ob_start();
+        $this->getResponseForAction('downloadReportCsv', [
+            'year' => $this->datetime->format('Y'), 'month' => $this->datetime->format('m'),
         ]);
-
-        $this->getResponseForAction('downloadReportCsv', ['month' => 'May']);
         $this->assertResponseStatus(self::HTTP_OK_CODE);
         ob_end_clean();
     }
@@ -202,17 +205,14 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
         $this->setupAuthenticationServiceForIdentity(StubIdentityAdapter::asSchemauser());
         $this->setupAuthorizationService([PermissionInSystem::GENERATE_SATISFACTION_SURVEY_REPORT]);
 
-        $this->surveyService->method('getSurveyReports')->willReturn([
-            'data' => [
-                [
-                    'month' => '2016-06',
-                    'csv' => 'really cool csv string',
-                ]
-            ]
+        ob_start();
+        $this->getResponseForAction('downloadReportCsv', [
+            'year' => $this->datetime->format('Y'), 'month' => $this->datetime->format('m'),
         ]);
+        ob_end_clean();
 
         $this->getResponseForAction('downloadReportCsv', ['month' => 'May']);
-        $this->assertResponseStatus(self::HTTP_OK_CODE);
+        $this->assertResponseStatus(302);
     }
 
     /**
@@ -247,9 +247,11 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
         $this->setupAuthenticationServiceForIdentity(StubIdentityAdapter::asSchemauser());
         $this->setupAuthorizationService([PermissionInSystem::GENERATE_SATISFACTION_SURVEY_REPORT]);
 
-        $this->setParams(['month' => '2016-04']);
+        $this->setParams(['year' => $this->datetime->format('Y'), 'month' => $this->datetime->format('m')]);
 
+        ob_start();
         $this->getResponseForAction('downloadReportCsv');
+        ob_end_clean();
 
         $this->assertResponseStatus(self::HTTP_OK_CODE);
     }
@@ -279,6 +281,19 @@ class SurveyPageControllerTest extends AbstractFrontendControllerTestCase
             ->getMockBuilder(SurveyService::class)
             ->disableOriginalConstructor()
             ->getMock();
+
+        $reports = [
+            $this->datetime->format('Y') => [
+                $this->datetime->format('m') => (new DownloadableSurveyReport($this->datetime, 666, 'some,csv,data')),
+            ],
+        ];
+
+        $surveyReports = new DownloadableSurveyReports($reports);
+
+        $surveyService
+            ->expects($this->any())
+            ->method('getSurveyReports')
+            ->willReturn($surveyReports);
 
         return $surveyService;
     }
