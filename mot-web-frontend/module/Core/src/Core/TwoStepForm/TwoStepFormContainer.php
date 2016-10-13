@@ -17,7 +17,7 @@ class TwoStepFormContainer implements AutoWireableInterface
 {
     const SESSION_CONTAINER_KEY = "FORM_SESSION_CONTAINER";
 
-    private $container;
+    protected $container;
 
     public function __construct()
     {
@@ -49,7 +49,7 @@ class TwoStepFormContainer implements AutoWireableInterface
         return $this->container->offsetGet($offset);
     }
 
-    private function toOffset($sessionKey, $formUuid)
+    protected function toOffset($sessionKey, $formUuid)
     {
         return "$sessionKey/$formUuid";
     }

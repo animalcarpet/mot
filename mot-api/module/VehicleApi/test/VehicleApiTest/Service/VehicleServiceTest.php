@@ -52,6 +52,7 @@ use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use VehicleApi\Service\VehicleService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use DvsaAuthentication\Identity;
+
 /**
  * it test functionality of class VehicleService
  *
@@ -79,7 +80,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
 
     /** @var DvlaVehicleImportChangesRepository|MockObj */
     private $mockDvlaVehicleImportChangesRepository;
-    
+
     /** @var EntityRepository */
     private $mockDvlaMakeModelMapRepository;
 
@@ -125,10 +126,10 @@ class VehicleServiceTest extends AbstractServiceTestCase
         $this->mockMotTestService = XMock::of(MotTestService::class);
         $this->motIdentityProviderInterface = XMock::of(MotIdentityProviderInterface::class);
         $this->motIdentityProviderInterface->expects($this->any())->method('getIdentity')
-                                                          ->willReturn(XMock::of(Identity::class));
+            ->willReturn(XMock::of(Identity::class));
         $this->mockNewVehicleService = XMock::of(NewVehicleService::class);
         $this->mockNewVehicleService->expects($this->any())
-            ->method('createDvlaVehicle')
+            ->method('createVehicleFromDvla')
             ->willReturn($this->getNewDvlaVehicleData());
         $this->mockNewVehicleService->expects($this->any())
             ->method('createDvsaVehicle')
@@ -258,7 +259,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
 
         $this->mockNewVehicleService
             ->expects($this->any())
-            ->method('createDvlaVehicle')
+            ->method('createVehicleFromDvla')
             ->with($vtrCapture());
 
         $this->mockVehicleV5CRepository
@@ -351,105 +352,105 @@ class VehicleServiceTest extends AbstractServiceTestCase
         return [
             [
                 [
-                    "vehicleClassCode" => VehicleClassCode::CLASS_1,
-                    "vehicleClassId" => VehicleClassId::CLASS_1,
-                    "weightSourceCode" => null,
+                    "vehicleClassCode"    => VehicleClassCode::CLASS_1,
+                    "vehicleClassId"      => VehicleClassId::CLASS_1,
+                    "weightSourceCode"    => null,
                     "massInServiceWeight" => 2000,
-                    "unladenWeight" => 2500,
+                    "unladenWeight"       => 2500,
                     "designedGrossWeight" => 3000
                 ],
                 [
-                    "weight" => 0,
+                    "weight"           => 0,
                     "weightSourceCode" => null
                 ]
             ],
 
             [
                 [
-                    "vehicleClassCode" => VehicleClassCode::CLASS_2,
-                    "vehicleClassId" => VehicleClassId::CLASS_2,
-                    "weightSourceCode" => WeightSourceCode::DGW,
+                    "vehicleClassCode"    => VehicleClassCode::CLASS_2,
+                    "vehicleClassId"      => VehicleClassId::CLASS_2,
+                    "weightSourceCode"    => WeightSourceCode::DGW,
                     "massInServiceWeight" => 2000,
-                    "unladenWeight" => 2500,
+                    "unladenWeight"       => 2500,
                     "designedGrossWeight" => 3000
                 ],
                 [
-                    "weight" => 0,
+                    "weight"           => 0,
                     "weightSourceCode" => null
                 ]
             ],
 
             [
                 [
-                    "vehicleClassCode" => VehicleClassCode::CLASS_3,
-                    "vehicleClassId" => VehicleClassId::CLASS_3,
-                    "weightSourceCode" => WeightSourceCode::MISW,
+                    "vehicleClassCode"    => VehicleClassCode::CLASS_3,
+                    "vehicleClassId"      => VehicleClassId::CLASS_3,
+                    "weightSourceCode"    => WeightSourceCode::MISW,
                     "massInServiceWeight" => 2000,
-                    "unladenWeight" => 2500,
+                    "unladenWeight"       => 2500,
                     "designedGrossWeight" => 3000
                 ],
                 [
-                    "weight" => 2000,
+                    "weight"           => 2000,
                     "weightSourceCode" => WeightSourceCode::MISW
                 ]
             ],
 
             [
                 [
-                    "vehicleClassCode" => VehicleClassCode::CLASS_4,
-                    "vehicleClassId" => VehicleClassId::CLASS_4,
-                    "weightSourceCode" => WeightSourceCode::DGW,
+                    "vehicleClassCode"    => VehicleClassCode::CLASS_4,
+                    "vehicleClassId"      => VehicleClassId::CLASS_4,
+                    "weightSourceCode"    => WeightSourceCode::DGW,
                     "massInServiceWeight" => 0,
-                    "unladenWeight" => 2500,
+                    "unladenWeight"       => 2500,
                     "designedGrossWeight" => 3000
                 ],
                 [
-                    "weight" => 0,
+                    "weight"           => 0,
                     "weightSourceCode" => null
                 ]
             ],
 
             [
                 [
-                    "vehicleClassCode" => VehicleClassCode::CLASS_5,
-                    "vehicleClassId" => VehicleClassId::CLASS_5,
-                    "weightSourceCode" => WeightSourceCode::DGW,
+                    "vehicleClassCode"    => VehicleClassCode::CLASS_5,
+                    "vehicleClassId"      => VehicleClassId::CLASS_5,
+                    "weightSourceCode"    => WeightSourceCode::DGW,
                     "massInServiceWeight" => 2000,
-                    "unladenWeight" => 2500,
+                    "unladenWeight"       => 2500,
                     "designedGrossWeight" => 3000
                 ],
                 [
-                    "weight" => 3000,
+                    "weight"           => 3000,
                     "weightSourceCode" => WeightSourceCode::DGW
                 ]
             ],
 
             [
                 [
-                    "vehicleClassCode" => VehicleClassCode::CLASS_7,
-                    "vehicleClassId" => VehicleClassId::CLASS_7,
-                    "weightSourceCode" => WeightSourceCode::DGW,
+                    "vehicleClassCode"    => VehicleClassCode::CLASS_7,
+                    "vehicleClassId"      => VehicleClassId::CLASS_7,
+                    "weightSourceCode"    => WeightSourceCode::DGW,
                     "massInServiceWeight" => 2000,
-                    "unladenWeight" => 2500,
+                    "unladenWeight"       => 2500,
                     "designedGrossWeight" => 3000
                 ],
                 [
-                    "weight" => 3000,
+                    "weight"           => 3000,
                     "weightSourceCode" => WeightSourceCode::DGW
                 ]
             ],
 
             [
                 [
-                    "vehicleClassCode" => VehicleClassCode::CLASS_7,
-                    "vehicleClassId" => VehicleClassId::CLASS_7,
-                    "weightSourceCode" => WeightSourceCode::DGW,
+                    "vehicleClassCode"    => VehicleClassCode::CLASS_7,
+                    "vehicleClassId"      => VehicleClassId::CLASS_7,
+                    "weightSourceCode"    => WeightSourceCode::DGW,
                     "massInServiceWeight" => 2000,
-                    "unladenWeight" => 2500,
+                    "unladenWeight"       => 2500,
                     "designedGrossWeight" => 0
                 ],
                 [
-                    "weight" => 0,
+                    "weight"           => 0,
                     "weightSourceCode" => null
                 ]
             ],
@@ -638,8 +639,9 @@ class VehicleServiceTest extends AbstractServiceTestCase
     /**
      * @dataProvider invalidDvlaBodyTypeCodeProvider
      */
-    public function test_createVtrAndV5CfromDvlaVehicle_whenDvlaBodyTypeIsInvalid_createVehicleWithDefaultBodyType($invalidDvlaBodyType)
-    {
+    public function test_createVtrAndV5CfromDvlaVehicle_whenDvlaBodyTypeIsInvalid_createVehicleWithDefaultBodyType(
+        $invalidDvlaBodyType
+    ) {
         $dvlaVehicle = VOF::dvlaVehicle();
         $dvlaVehicle->setV5DocumentNumber(null);
         $dvlaVehicle->setBodyType($invalidDvlaBodyType);
@@ -1195,24 +1197,24 @@ class VehicleServiceTest extends AbstractServiceTestCase
     private static function dataCreateVehicle()
     {
         return [
-            'vin' => VOF::EXAMPLE_VIN,
-            'registrationNumber' => VOF::EXAMPLE_VRM,
-            'cylinderCapacity' => 1234,
-            'manufactureDate' => '1990-12-12',
+            'vin'                   => VOF::EXAMPLE_VIN,
+            'registrationNumber'    => VOF::EXAMPLE_VRM,
+            'cylinderCapacity'      => 1234,
+            'manufactureDate'       => '1990-12-12',
             'firstRegistrationDate' => '1990-12-23',
-            'dateOfFirstUse' => '2000-12-12',
-            'make' => 1,
-            'makeOther' => '',
-            'model' => 2,
-            'modelOther' => '',
-            'modelType' => 3,
-            'colour' => 'R',
-            'fuelTypeId' => FuelTypeId::PETROL,
-            'testClass' => VehicleClassCode::CLASS_4,
+            'dateOfFirstUse'        => '2000-12-12',
+            'make'                  => 1,
+            'makeOther'             => '',
+            'model'                 => 2,
+            'modelOther'            => '',
+            'modelType'             => 3,
+            'colour'                => 'R',
+            'fuelTypeId'            => FuelTypeId::PETROL,
+            'testClass'             => VehicleClassCode::CLASS_4,
             'countryOfRegistration' => 9,
-            'transmissionType' => 10,
-            'secondaryColour' => 'G',
-            'vtsId' => 1
+            'transmissionType'      => 10,
+            'secondaryColour'       => 'G',
+            'vtsId'                 => 1
         ];
     }
 
@@ -1251,26 +1253,32 @@ class VehicleServiceTest extends AbstractServiceTestCase
         $dvlaVehicleData = json_decode(
             json_encode(
                 [
-                    'id' => 2,
-                    'amendedOn' => '2016-02-03',
-                    'registration' => 'DII4454',
-                    'vin' => '1M7GDM9AXKP042777',
-                    'emptyVrmReason' => null,
-                    'emptyVinReason' => null,
-                    'make' => 'PORSCHE',
-                    'model' => 'BOXSTER',
-                    'colour' => 'Red',
-                    'colourSecondary' => 'Not Stated',
-                    'fuelTypeId' => FuelTypeId::PETROL,
-                    'vehicleClass' => '4',
-                    'bodyType' => '2 Door Saloon',
-                    'cylinderCapacity' => 1700,
-                    'transmissionType' => 'Automatic',
+                    'id'                    => 2,
+                    'amendedOn'             => '2016-02-03',
+                    'registration'          => 'DII4454',
+                    'vin'                   => '1M7GDM9AXKP042777',
+                    'emptyVrmReason'        => null,
+                    'emptyVinReason'        => null,
+                    'make'                  => [
+                        'id'   => 5,
+                        'name' => 'PORSCHE',
+                    ],
+                    'model'                 => [
+                        'id'   => 6,
+                        'name' => 'BOXSTER',
+                    ],
+                    'colour'                => 'Red',
+                    'colourSecondary'       => 'Not Stated',
+                    'fuelTypeId'            => FuelTypeId::PETROL,
+                    'vehicleClass'          => '4',
+                    'bodyType'              => '2 Door Saloon',
+                    'cylinderCapacity'      => 1700,
+                    'transmissionType'      => 'Automatic',
                     'firstRegistrationDate' => '2001-03-02',
-                    'firstUsedDate' => '2001-03-02',
-                    'manufactureDate' => '2001-03-02',
-                    'isNewAtFirstReg' => false,
-                    'weight' => null
+                    'firstUsedDate'         => '2001-03-02',
+                    'manufactureDate'       => '2001-03-02',
+                    'isNewAtFirstReg'       => false,
+                    'weight'                => null
                 ]
             )
         );
@@ -1285,26 +1293,32 @@ class VehicleServiceTest extends AbstractServiceTestCase
         $dvsaVehicleData = json_decode(
             json_encode(
                 [
-                    'id' => 2,
-                    'amendedOn' => '2016-02-03',
-                    'registration' => 'DII4454',
-                    'vin' => '1M7GDM9AXKP042777',
-                    'emptyVrmReason' => null,
-                    'emptyVinReason' => null,
-                    'make' => 'PORSCHE',
-                    'model' => 'BOXSTER',
-                    'colour' => 'Red',
-                    'colourSecondary' => 'Not Stated',
-                    'fuelTypeId' => FuelTypeId::PETROL,
-                    'vehicleClass' => '4',
-                    'bodyType' => '2 Door Saloon',
-                    'cylinderCapacity' => 1700,
-                    'transmissionType' => 'Automatic',
+                    'id'                    => 2,
+                    'amendedOn'             => '2016-02-03',
+                    'registration'          => 'DII4454',
+                    'vin'                   => '1M7GDM9AXKP042777',
+                    'emptyVrmReason'        => null,
+                    'emptyVinReason'        => null,
+                    'make'                  => [
+                        'id'   => 5,
+                        'name' => 'PORSCHE',
+                    ],
+                    'model'                 => [
+                        'id'   => 6,
+                        'name' => 'BOXSTER',
+                    ],
+                    'colour'                => 'Red',
+                    'colourSecondary'       => 'Not Stated',
+                    'fuelTypeId'            => FuelTypeId::PETROL,
+                    'vehicleClass'          => '4',
+                    'bodyType'              => '2 Door Saloon',
+                    'cylinderCapacity'      => 1700,
+                    'transmissionType'      => 'Automatic',
                     'firstRegistrationDate' => '2001-03-02',
-                    'firstUsedDate' => '2001-03-02',
-                    'manufactureDate' => '2001-03-02',
-                    'isNewAtFirstReg' => false,
-                    'weight' => null
+                    'firstUsedDate'         => '2001-03-02',
+                    'manufactureDate'       => '2001-03-02',
+                    'isNewAtFirstReg'       => false,
+                    'weight'                => null
                 ]
             )
         );

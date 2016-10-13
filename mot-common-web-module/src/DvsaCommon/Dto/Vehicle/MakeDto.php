@@ -3,13 +3,14 @@
 namespace DvsaCommon\Dto\Vehicle;
 
 use DvsaCommon\Dto\AbstractDataTransferObject;
+use DvsaCommon\DtoSerialization\ReflectiveDtoInterface;
 
 /**
  * Class MakeDto
  *
  * @package DvsaCommon\Dto\Vehicle
  */
-class MakeDto extends AbstractDataTransferObject
+class MakeDto extends AbstractDataTransferObject implements ReflectiveDtoInterface
 {
     /** @var int */
     private $id;

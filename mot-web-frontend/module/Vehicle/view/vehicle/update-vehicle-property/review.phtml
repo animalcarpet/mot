@@ -1,0 +1,31 @@
+<?php
+
+use Vehicle\UpdateVehicleProperty\ViewModel\ReviewVehiclePropertyViewModel;
+
+/**
+ * @var ReviewVehiclePropertyViewModel $viewModel
+ */
+$this->layout()->setVariable('pageTertiaryTitle', $viewModel->getPageTertiaryTitle());
+
+echo $this->partial('errorMessages', array('getFromFlash' => true));
+
+echo $this->partial(
+    'partial/gds/gds-table/gds-key-value-table',
+    [
+        'table' => $viewModel->getSummary(),
+    ]
+);
+?>
+
+<form novalidate="" autocomplete="off" method="POST" action="<?php echo $viewModel->getFormActionUrl() ?>">
+    <?php echo $this->csrfToken(); ?>
+
+    <nav class="content-navigation">
+        <input type="submit" class="button" value="<?php echo $viewModel->getSubmitButtonText() ?>" id="submitUpdate">
+        <ul class="content-navigation__secondary">
+            <li>
+                <a href="<?php echo $viewModel->getCancelUrl() ?>"><?php echo $viewModel->getCancelLinkLabel() ?></a>
+            </li>
+        </ul>
+    </nav>
+</form>

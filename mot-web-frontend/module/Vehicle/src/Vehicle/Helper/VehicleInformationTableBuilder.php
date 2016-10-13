@@ -87,7 +87,10 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
     {
         $table = new GdsTable();
 
-        $this->addRowToTable($table, 'Make and model', $this->getMakeAndModel());
+        $makeAndModelRow = $this->addRowToTable($table, 'Make and model', $this->getMakeAndModel());
+        if($this->canUserEditVehicle()){
+            $makeAndModelRow->addActionLink('Change', VehicleRoutes::of($this->urlHelper)->changeMake($this->vehicleObfuscatedId));
+        }
         $engineRow = $this->addRowToTable($table, 'Engine', $this->getEngineInfo());
         if($this->canUserEditVehicle()){
             $engineRow->addActionLink('Change', VehicleRoutes::of($this->urlHelper)->vehicleEditEngine($this->vehicleObfuscatedId));
@@ -221,8 +224,8 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
     private function getMakeAndModel()
     {
         return $this->vehicle->getModel()
-            ? $this->vehicle->getMake() . ', ' . $this->vehicle->getModel()
-            : $this->vehicle->getMake();
+            ? $this->vehicle->getMake()->getName() . ', ' . $this->vehicle->getModel()->getName()
+            : $this->vehicle->getMake()->getName();
     }
 
     /**

@@ -1,13 +1,11 @@
 package uk.gov.dvsa.ui.pages.vehicleinformation;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.model.vehicle.Colour;
 import uk.gov.dvsa.domain.model.vehicle.FuelTypes;
-import uk.gov.dvsa.domain.model.vehicle.Model;
+import uk.gov.dvsa.domain.model.vehicle.ModelEnum;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.FormDataHelper;
@@ -54,7 +52,7 @@ public class CreateNewVehicleRecordSpecificationPage extends Page {
         if(! vehicle.getModel().equals("")){
             FormDataHelper.selectFromDropDownByValue(
                     model,
-                    Model.findByName(vehicle.getModel()).getId().toString()
+                    ModelEnum.findByName(vehicle.getModel()).getId().toString()
             );
         }
 

@@ -1,0 +1,35 @@
+<?php
+use Vehicle\UpdateVehicleProperty\Form\OtherModelForm;
+use Vehicle\UpdateVehicleProperty\Form\ModelForm;
+use Vehicle\UpdateVehicleProperty\ViewModel\UpdateVehiclePropertyViewModel;
+
+/**
+ * @var UpdateVehiclePropertyViewModel $viewModel
+ */
+
+/** @var OtherModelForm $form */
+$form = $viewModel->getForm();
+?>
+<fieldset>
+    <div id="<?php echo ModelForm::DATA_TARGET_ID ?>"  aria-hidden="false">
+        <label for="<?php echo $form->getOtherModelElement()->getAttribute("id") ?>" class="form-label">
+            Enter vehicle model
+        </label>
+
+        <?php echo $this->partial(
+            'partial/gds/form/control',
+            [
+                'element' => $form->getOtherModelElement()
+            ]
+        );?>
+    </div>
+</fieldset>
+
+<?php echo $this->headScript()->appendFile('/assets/javascripts/vendor/jquery-1.11.0.min.js'); ?>
+<?php echo $this->headScript()->appendFile('/assets/javascripts/dvsa.js'); ?>
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        DVSASelectToggle.init();
+    });
+</script>

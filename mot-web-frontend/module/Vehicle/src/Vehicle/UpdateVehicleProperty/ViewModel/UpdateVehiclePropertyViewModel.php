@@ -27,6 +27,11 @@ class UpdateVehiclePropertyViewModel
     /**
      * @var string
      */
+    private $backLinkLabel = "Cancel and return to vehicle";
+
+    /**
+     * @var string
+     */
     private $formActionUrl;
 
     /**
@@ -64,6 +69,14 @@ class UpdateVehiclePropertyViewModel
     public function getBackUrl()
     {
         return $this->backUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBackLinkLabel()
+    {
+        return $this->backLinkLabel;
     }
 
     /**
@@ -111,6 +124,16 @@ class UpdateVehiclePropertyViewModel
     public function setBackUrl($backUrl)
     {
         $this->backUrl = $backUrl;
+        return $this;
+    }
+
+    /**
+     * @param string $backLinkLabel
+     * @return UpdateVehiclePropertyViewModel
+     */
+    public function setBackLinkLabel($backLinkLabel)
+    {
+        $this->backLinkLabel = $backLinkLabel;
         return $this;
     }
 

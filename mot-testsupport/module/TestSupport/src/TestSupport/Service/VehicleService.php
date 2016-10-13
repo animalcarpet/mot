@@ -4,7 +4,6 @@ namespace TestSupport\Service;
 
 use Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
 use Dvsa\Mot\ApiClient\Request\CreateDvsaVehicleRequest;
-use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\Connection;
 use DvsaCommon\Utility\ArrayUtils;

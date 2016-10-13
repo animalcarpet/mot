@@ -40,6 +40,21 @@ if (!isset($table) || !$table instanceof GdsTable) {
             ?>>
                 <?php echo $escape ? $this->escapeHtml($value) : $value; ?>
             </td>
+            <?php if (!empty($row->hasActionLink())):
+                echo '<td class="key-value-list__item-action">';
+
+                foreach ($row->getActionLinks() as $actionLink):
+                    $id = ($actionLink->getHtmlId())? $actionLink->getHtmlId() : 'change';
+                    echo '<a href="' . $actionLink->getUrl() . '" title="'. $actionLink->getTooltip() . '"' .($row->getHtmlId() ? (' id="' . $this->escapeHtmlAttr($row->getHtmlId()) . '-'. $id .'"') : '')
+                        . '>'. $actionLink->getText() .'<span class="visuallyhidden"> ' .  $this->escapeHtml($row->getLabel()->getContent()) . '</span>
+                        </a>&nbsp';
+                endforeach;
+
+                echo '</td>';
+
+                endif;
+            ?>
+
         </tr>
     <?php endforeach; ?>
     </tbody>

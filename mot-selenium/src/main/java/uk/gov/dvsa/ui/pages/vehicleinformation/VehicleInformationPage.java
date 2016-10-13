@@ -23,6 +23,7 @@ public class VehicleInformationPage extends Page {
     @FindBy(id = "manufacture-date") private WebElement manufactureDate;
     @FindBy(id = "colour") private WebElement colour;
     @FindBy(id = "make-and-model") private WebElement makeModel;
+    @FindBy(id = "make-and-model-change") private WebElement changeMakeAndModelLink;
     @FindBy(id = "registration-mark") private WebElement registrationNumber;
     @FindBy (id = "vin") private WebElement vinNumber;
     @FindBy (id = "engine") private WebElement engine;
@@ -106,5 +107,10 @@ public class VehicleInformationPage extends Page {
     public ChangeCountryOfRegistrationPage clickChangeCountryOfRegistrationLink() {
         changeCountryOfRegistrationLink.click();
         return new ChangeCountryOfRegistrationPage(driver);
+    }
+
+    public ChangeMakePage clickChangeMakeAndModelLink() {
+        changeMakeAndModelLink.click();
+        return new ChangeMakePage(driver);
     }
 }

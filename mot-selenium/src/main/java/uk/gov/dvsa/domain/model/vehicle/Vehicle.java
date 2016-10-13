@@ -19,11 +19,9 @@ public class Vehicle {
     private FuelType fuelTypeCode;
     private String id;
     private String isNewAtFirstReg;
-    private String make;
-    private String makeOther;
+    private Make make;
     private String manufactureDate;
-    private String model;
-    private String modelOther;
+    private Model model;
     private String registrationDvsa;
     private String registrationDvla;
     private String transmissionType;
@@ -185,25 +183,16 @@ public class Vehicle {
     }
 
     public String getMake() {
-        return make;
+        return make.getName();
     }
 
-    public Vehicle setMake(String make) {
+    public Vehicle setMake(Make make) {
         this.make = make;
         return this;
     }
 
     public String getMakeModelWithSeparator(String separator) {
-        return make + separator + model;
-    }
-
-    public String getMakeOther() {
-        return makeOther;
-    }
-
-    public Vehicle setMakeOther(String makeOther) {
-        this.makeOther = makeOther;
-        return this;
+        return make.getName() + separator + model.getName();
     }
 
     public String getManufactureDate() {
@@ -216,20 +205,11 @@ public class Vehicle {
     }
 
     public String getModel() {
-        return model;
+        return model.getName();
     }
 
-    public Vehicle setModel(String model) {
+    public Vehicle setModel(Model model) {
         this.model = model;
-        return this;
-    }
-
-    public String getModelOther() {
-        return modelOther;
-    }
-
-    public Vehicle setModelOther(String modelOther) {
-        this.modelOther = modelOther;
         return this;
     }
 
@@ -286,9 +266,7 @@ public class Vehicle {
                                      String firstUsedDate,
                                      String fuelType,
                                      String make,
-                                     String makeOder,
                                      String model,
-                                     String modelOther,
                                      String secondaryColour,
                                      String transmissionType,
                                      String vin,
@@ -297,6 +275,7 @@ public class Vehicle {
     ) {
 
         Vehicle vehicle = new Vehicle();
+
         vehicle.setColour(colour)
                 .setCountryOfRegistrationId(countryOfRegistrationId)
                 .setCylinderCapacity(cylinderCapacity)
@@ -304,10 +283,8 @@ public class Vehicle {
                 .setDvlaRegistration(dvlaRegistration)
                 .setFirstUsedDate(firstUsedDate)
                 .setFuelType(fuelType)
-                .setMake(make)
-                .setMakeOther(makeOder)
-                .setModel(model)
-                .setModelOther(modelOther)
+                .setMake(new Make(make))
+                .setModel(new Model(model))
                 .setColourSecondary(secondaryColour)
                 .setTransmissionType(transmissionType)
                 .setVin(vin)
@@ -328,10 +305,8 @@ public class Vehicle {
                 randomRegistrationNumber,
                 new DateTime().minusYears(1).toString(),
                 FuelTypes.Diesel.getName(),
-                Make.BMW.getName(),
-                "",
-                Model.BMW_ALPINA.getName(),
-                "",
+                MakeEnum.BMW.getName(),
+                ModelEnum.BMW_ALPINA.getName(),
                 Colour.Black.getName(),
                 TransmissionType.Manual.getName(),
                 RandomStringUtils.randomAlphabetic(17),
@@ -344,8 +319,7 @@ public class Vehicle {
         return getVehicle(
                 " ", " ", " ",
                 " ", " ", " ",
-                "Fake name", "Fake make", "", "Fake model",
-                "",
+                "Fake name", "Fake make", "Fake model",
                 Colour.Black.getName(),
                 "FakeFuel",
                 " ",
@@ -362,16 +336,14 @@ public class Vehicle {
                 ", vehicleId='" + id + '\'' +
                 ", vin='" + vin + '\'' +
                 ", make='" + make + '\'' +
-                ", makeOther='" + makeOther + '\'' +
                 ", model='" + model + '\'' +
-                ", modelOther='" + modelOther + '\'' +
                 ", makeModel='" + getMakeModelWithSeparator(" ") + '\'' +
                 ", colour='" + colour + '\'' +
                 ", secondaryColour='" + colourSecondary + '\'' +
                 ", dateOfFirstUse='" + firstUsedDate + '\'' +
                 ", fuelType='" + fuelType + '\'' +
                 ", vehicleClass='" + vehicleClass + '\'' +
-                ", countryOfRegistration='" + countryOfRegistrationId + '\'' +
+                ", countryOfRegistrationId='" + countryOfRegistrationId + '\'' +
                 ", cylinderCapacity='" + cylinderCapacity + '\'' +
                 ", transmissionType='" + transmissionType + '\'' +
                 ", bodyType='" + bodyType + '\'' +

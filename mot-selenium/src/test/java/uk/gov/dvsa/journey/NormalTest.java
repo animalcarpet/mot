@@ -8,6 +8,8 @@ import uk.gov.dvsa.domain.model.mot.CancelTestReason;
 import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.domain.model.mot.ReasonForVehicleRefusal;
 import uk.gov.dvsa.domain.model.vehicle.DvlaVehicle;
+import uk.gov.dvsa.domain.model.vehicle.Make;
+import uk.gov.dvsa.domain.model.vehicle.Model;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
@@ -348,7 +350,7 @@ public class NormalTest {
                 vehicle.setVin("");
                 break;
             case "Make":
-                vehicle.setMake("");
+                vehicle.setMake(new Make(""));
                 break;
             case "Date":
                 vehicle.setFirstUsedDate("");
@@ -360,7 +362,7 @@ public class NormalTest {
                 vehicle.setFuelType("");
                 break;
             case "Model":
-                vehicle.setModel("");
+                vehicle.setModel(new Model(""));
                 break;
             case "Class":
                 vehicle.setVehicleClass("");

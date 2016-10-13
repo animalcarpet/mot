@@ -125,8 +125,14 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
             'vin' => '18M234WET2523',
             'emptyVrmReason' => NULL,
             'emptyVinReason' => NULL,
-            'make' => 'Renault',
-            'model' => 'Clio',
+            'make' => [
+                'id' => 5,
+                'name' => 'Renault',
+            ],
+            'model' => [
+                'id' => 6,
+                'name' => 'Clio',
+            ],
             'colour' => 'Grey',
             'colourSecondary' => 'Not Stated',
             'countryOfRegistration' => 'GB, UK, ENG, CYM, SCO (UK) - Great Britain',

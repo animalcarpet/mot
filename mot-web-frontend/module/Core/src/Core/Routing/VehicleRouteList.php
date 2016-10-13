@@ -11,4 +11,5 @@ class VehicleRouteList
     const VEHICLE_CHANGE_ENGINE = 'vehicle/detail/change/engine';
     const VEHICLE_CHANGE_CLASS = 'vehicle/detail/change/class';
     const VEHICLE_CHANGE_FIRST_USED_DATE = 'vehicle/detail/change/first-used-date';
+    const VEHICLE_CHANGE_MAKE_AND_MODEL = 'vehicle/detail/change/make-and-model';
 }
