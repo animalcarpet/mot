@@ -1,8 +1,6 @@
 package uk.gov.dvsa.journey.vehicleInformation;
 
-import uk.gov.dvsa.domain.model.vehicle.CountryOfRegistration;
-import uk.gov.dvsa.domain.model.vehicle.FuelTypes;
-import uk.gov.dvsa.domain.model.vehicle.VehicleClass;
+import uk.gov.dvsa.domain.model.vehicle.*;
 import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationPage;
 
 public class VehicleInformation {
@@ -47,5 +45,19 @@ public class VehicleInformation {
                 .clickChangeCountryOfRegistrationLink()
                 .selectCountryOfRegistration(countryOfRegistration)
                 .submit();
+    }
+
+    public VehicleInformationPage changeMakeAndModel(MakeEnum make, ModelEnum model) {
+        return vehicleInformationPage
+                .clickChangeMakeAndModelLink()
+                .selectMake(make)
+                .submit()
+                .selectModel(model)
+                .submit()
+                .submit();
+    }
+
+    public String getMakeAndModel() {
+        return vehicleInformationPage.getMakeModel();
     }
 }

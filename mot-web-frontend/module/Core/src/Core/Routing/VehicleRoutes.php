@@ -2,6 +2,8 @@
 
 namespace Core\Routing;
 
+use Vehicle\UpdateVehicleProperty\Form\Wizard\Step\UpdateMakeStep;
+use Vehicle\UpdateVehicleProperty\Form\Wizard\Step\UpdateModelStep;
 use Zend\Mvc\Controller\AbstractController;
 use Zend\View\Helper\Url;
 use Zend\View\Renderer\PhpRenderer;
@@ -61,9 +63,18 @@ class VehicleRoutes extends AbstractRoutes
         return $this->url(VehicleRouteList::VEHICLE_CHANGE_CLASS,['id' => $vehicleId]);
     }
 
-
     public function changeFirstUsedDate($vehicleId)
     {
         return $this->url(VehicleRouteList::VEHICLE_CHANGE_FIRST_USED_DATE,['id' => $vehicleId]);
+    }
+
+    public function changeMake($obfuscatedVehicleId)
+    {
+        return $this->url(VehicleRouteList::VEHICLE_CHANGE_MAKE_AND_MODEL,['id' => $obfuscatedVehicleId, "property" => UpdateMakeStep::NAME]);
+    }
+
+    public function changeModel($obfuscatedVehicleId)
+    {
+        return $this->url(VehicleRouteList::VEHICLE_CHANGE_MAKE_AND_MODEL,['id' => $obfuscatedVehicleId, "property" => UpdateModelStep::NAME]);
     }
 }

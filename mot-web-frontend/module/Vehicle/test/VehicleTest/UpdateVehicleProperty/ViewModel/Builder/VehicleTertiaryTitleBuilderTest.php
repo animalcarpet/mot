@@ -34,8 +34,14 @@ class VehicleTertiaryTitleBuilderTest extends \PHPUnit_Framework_TestCase
         return json_decode(json_encode([
             'registration' => self::REGISTRATION,
             'vin' => self::VIN,
-            'make' => self::MAKE_NAME,
-            'model' => self::MODEL_NAME,
+            'make' => [
+                'id' => 1,
+                'name' => self::MAKE_NAME,
+            ],
+            'model' => [
+                'id' => 2,
+                'name' => self::MODEL_NAME,
+            ],
         ]));
     }
 }

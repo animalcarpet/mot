@@ -39,8 +39,8 @@ class VehiclePageTitleBuilder implements AutoWireableInterface
     private function getMakeAndModel()
     {
         return $this->vehicle->getModel()
-            ? $this->vehicle->getMake() . ', ' . $this->vehicle->getModel()
-            : $this->vehicle->getMake();
+            ? $this->vehicle->getMake()->getName() . ', ' . $this->vehicle->getModel()->getName()
+            : $this->vehicle->getMake()->getName();
     }
 
     /**

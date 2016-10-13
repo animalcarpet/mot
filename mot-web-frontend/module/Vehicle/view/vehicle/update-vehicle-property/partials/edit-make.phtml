@@ -1,0 +1,41 @@
+<?php
+use Vehicle\UpdateVehicleProperty\Form\MakeForm;
+use Vehicle\UpdateVehicleProperty\ViewModel\UpdateVehiclePropertyViewModel;
+
+/**
+ * @var UpdateVehiclePropertyViewModel $viewModel
+ */
+
+/** @var MakeForm $form */
+$form = $viewModel->getForm();
+?>
+<fieldset>
+    <?php echo $this->partial(
+        'partial/gds/form/control',
+        [
+            'element' => $form->getMakeElement()
+        ]
+    );?>
+
+    <div id="<?php echo MakeForm::DATA_TARGET_ID ?>" class="panel-indent" aria-hidden="false">
+        <label for="<?php echo $form->getOtherMakeElement()->getAttribute("id") ?>" class="form-label">
+            <?php echo MakeForm::FIELD_OTHER_MAKE_LABEL ?>
+        </label>
+
+        <?php echo $this->partial(
+            'partial/gds/form/control',
+            [
+                'element' => $form->getOtherMakeElement()
+            ]
+        );?>
+    </div>
+</fieldset>
+
+<?php echo $this->headScript()->appendFile('/assets/javascripts/vendor/jquery-1.11.0.min.js'); ?>
+<?php echo $this->headScript()->appendFile('/assets/javascripts/dvsa.js'); ?>
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        DVSASelectToggle.init();
+    });
+</script>

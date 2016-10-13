@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
 
-import uk.gov.dvsa.domain.model.vehicle.Make;
+import uk.gov.dvsa.domain.model.vehicle.MakeEnum;
 import uk.gov.dvsa.domain.model.vehicle.TransmissionType;
 import uk.gov.dvsa.domain.model.vehicle.Vehicle;
 
@@ -104,7 +104,7 @@ public class CreateNewVehicleRecordIdentificationPage extends Page {
         if (! vehicle.getMake().equals("")) {
             FormDataHelper.selectFromDropDownByValue(
                     make,
-                    Make.findByName(vehicle.getMake()).getId().toString()
+                    MakeEnum.findByName(vehicle.getMake()).getId().toString()
             );
         }
     }

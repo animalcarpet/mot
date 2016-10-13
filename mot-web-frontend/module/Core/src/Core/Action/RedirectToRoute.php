@@ -2,6 +2,8 @@
 
 namespace Core\Action;
 
+use Zend\View\Helper\Url;
+
 class RedirectToRoute extends AbstractRedirectActionResult
 {
     private $routeName;
@@ -30,5 +32,10 @@ class RedirectToRoute extends AbstractRedirectActionResult
     public function getQueryParams()
     {
         return $this->queryParams;
+    }
+
+    public function toString(Url $url)
+    {
+        return $url->__invoke($this->getRouteName(), $this->getRouteParams(), ["query" => $this->getQueryParams()]);
     }
 }

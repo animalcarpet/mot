@@ -1,5 +1,6 @@
 package uk.gov.dvsa.ui.views;
 
+import org.apache.xpath.operations.Mod;
 import org.joda.time.format.DateTimeFormat;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -20,6 +21,7 @@ public class VehicleInformationViewTests extends DslTest {
     private User tester;
     private Vehicle vehicle;
     private User areaOffice1User;
+    private User vehicleExaminer;
 
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws IOException {
@@ -27,6 +29,7 @@ public class VehicleInformationViewTests extends DslTest {
         tester = userData.createTester(site.getId());
         vehicle = vehicleData.getNewVehicle(tester);
         areaOffice1User = userData.createAreaOfficeOne("ao1");
+        vehicleExaminer = userData.createVehicleExaminer("ve", false);
     }
 
     @Test (groups = {"Regression"})
@@ -142,6 +145,18 @@ public class VehicleInformationViewTests extends DslTest {
 
         //Then Country of Registration will be changed
         assertThat(motUI.vehicleInformation.getCountryOfRegistration(), is(CountryOfRegistration.Czech_Republic.getCountry()));
+    }
+
+    @Test(groups = {"Regression"})
+    public void vehicleEditMakeModelCorrectByAreaOffice() throws  IOException, URISyntaxException {
+        //And i am on the Vehicle Information Page as an VehicleExaminer
+        motUI.showVehicleInformationFor(vehicleExaminer, vehicle);
+
+        //When I change Make and Model
+        motUI.vehicleInformation.changeMakeAndModel(MakeEnum.SUBARU, ModelEnum.SUBARU_IMPREZA);
+
+        //Then Make and Model will be changed
+        assertThat(motUI.vehicleInformation.getMakeAndModel(), is(MakeEnum.SUBARU.getName()+", "+ModelEnum.SUBARU_IMPREZA.getName()));
     }
 
     private String getManufactureDateForVehicle(String manufactureDate) {

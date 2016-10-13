@@ -420,16 +420,16 @@ class VehicleService
             $dvlaVehicleRequest->setWeightSourceId($weightAndSource[self::KEY_WIGHT_SOURCE_ID]);
         }
 
-        $dvlaVehicle = $this->newVehicleService->createDvlaVehicle($dvlaVehicleRequest);
+        $dvlaVehicle = $this->newVehicleService->createVehicleFromDvla($dvlaVehicleRequest);
 
         return $dvlaVehicle;
     }
 
     /**
-     * @param DvsaVehicle $dvsaVehicle
+     * @param Vehicle $dvsaVehicle
      * @param string $oneTimePassword
      *
-     * @return VehicleFromDvsa
+     * @return DvsaVehicle
      */
     private function createDvsaVehicleUsingJavaService(
         Vehicle $dvsaVehicle,

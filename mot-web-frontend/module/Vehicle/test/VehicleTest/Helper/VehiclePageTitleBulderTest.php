@@ -6,6 +6,7 @@ namespace VehicleTest\Helper;
 
 use Core\ViewModel\Header\HeaderTertiaryList;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\Model;
 use Vehicle\Helper\VehiclePageTitleBuilder;
 
 class VehiclePageTitleBulderTest extends \PHPUnit_Framework_TestCase
@@ -45,8 +46,8 @@ class VehiclePageTitleBulderTest extends \PHPUnit_Framework_TestCase
         $tertiaryTitle->addElement(self::VIN);
 
         return [
-            [new DvsaVehicle($vehicleWithModel), $vehicleWithModel->make . ', ' . $vehicleWithModel->model, self::PAGE_SUBTITLE, $tertiaryTitle],
-            [new DvsaVehicle($vehicleWithoutModel), $vehicleWithModel->make, self::PAGE_SUBTITLE, $tertiaryTitle],
+            [new DvsaVehicle($vehicleWithModel), $vehicleWithModel->make->name . ', ' . $vehicleWithModel->model->name, self::PAGE_SUBTITLE, $tertiaryTitle],
+            [new DvsaVehicle($vehicleWithoutModel), $vehicleWithModel->make->name, self::PAGE_SUBTITLE, $tertiaryTitle],
         ];
     }
 
@@ -59,8 +60,14 @@ class VehiclePageTitleBulderTest extends \PHPUnit_Framework_TestCase
             'vin' => self::VIN,
             'emptyVrmReason' => NULL,
             'emptyVinReason' => NULL,
-            'make' => self::MAKE_NAME,
-            'model' => self::MODEL_NAME,
+            'make' => [
+                'id' => 5,
+                'name' => self::MAKE_NAME,
+            ],
+            'model' => [
+                'id' => 6,
+                'name' => self::MODEL_NAME,
+            ],
             'colour' => 'Grey',
             'colourSecondary' => 'Not Stated',
             'countryOfRegistration' => 'GB, UK, ENG, CYM, SCO (UK) - Great Britain',

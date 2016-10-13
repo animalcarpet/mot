@@ -1,4 +1,6 @@
 <?php
+use DvsaMotTest\View\ReplacementVehicleViewModel;
+/** @var ReplacementVehicleViewModel $vehicle */
 
 $title = 'Duplicate and replacement certificates';
 
@@ -16,7 +18,6 @@ if ($vehicle->displayMakeInputBox()) {
 
 $this->layout()->setVariable('pageTitle', $buttonAndPageTitle);
 ?>
-
 <div class="text">
     <p class="lede">
         We don't have details to match the make and model you need for the vehicle on this certificate.

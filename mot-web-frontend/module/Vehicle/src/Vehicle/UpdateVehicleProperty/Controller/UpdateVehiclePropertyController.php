@@ -8,6 +8,7 @@ use Vehicle\UpdateVehicleProperty\Action\UpdateCountryAction;
 use Vehicle\UpdateVehicleProperty\Action\UpdateEngineAction;
 use Vehicle\UpdateVehicleProperty\Action\UpdateClassAction;
 use Vehicle\UpdateVehicleProperty\Action\UpdateFirstUsedDateAction;
+use Vehicle\UpdateVehicleProperty\Action\UpdateMakeAndModelAction;
 
 class UpdateVehiclePropertyController extends AbstractAuthActionController implements AutoWireableInterface
 {
@@ -15,18 +16,21 @@ class UpdateVehiclePropertyController extends AbstractAuthActionController imple
     private $updateClassAction;
     private $updateEngineAction;
     private $updateFirstUsedDateAction;
+    private $updateMakeAndModelAction;
 
     public function __construct(
         UpdateEngineAction $updateEngineAction,
         UpdateCountryAction $updateCountryAction,
         UpdateClassAction $updateClassAction,
-        UpdateFirstUsedDateAction $updateFirstUsedDateAction
+        UpdateFirstUsedDateAction $updateFirstUsedDateAction,
+        UpdateMakeAndModelAction $updateMakeAndModelAction
     )
     {
         $this->updateEngineAction = $updateEngineAction;
         $this->updateCountryAction = $updateCountryAction;
         $this->updateClassAction = $updateClassAction;
         $this->updateFirstUsedDateAction = $updateFirstUsedDateAction;
+        $this->updateMakeAndModelAction = $updateMakeAndModelAction;
     }
 
     public function editEngineAction()
@@ -73,6 +77,19 @@ class UpdateVehiclePropertyController extends AbstractAuthActionController imple
         return $this->applyActionResult($actionResult);
     }
 
+    public function editMakeAndModelAction()
+    {
+        $isPost = $this->requestIsPost();
+        $vehicleId = $this->getVehicleId();
+        $formData = $this->getFormData();
+        $property = $this->getProperty();
+        $formUuid = $this->getFormUuid();
+
+        $actionResult = $this->updateMakeAndModelAction->execute($property, $vehicleId, $isPost, $formUuid, $formData);
+
+        return $this->applyActionResult($actionResult);
+    }
+
     /**
      * @return array
      */
@@ -87,6 +104,22 @@ class UpdateVehiclePropertyController extends AbstractAuthActionController imple
     private function getVehicleId()
     {
         return $this->params()->fromRoute('id');
+    }
+
+    /**
+     * @return string
+     */
+    private function getProperty()
+    {
+        return $this->params()->fromRoute('property');
+    }
+
+    /**
+     * @return string
+     */
+    private function getFormUuid()
+    {
+        return $this->params()->fromQuery("formUuid");
     }
 
     /**

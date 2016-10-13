@@ -3,6 +3,9 @@
 use DvsaMotEnforcement\Controller\MotTestSearchController as EnforcementMotTestSearchController;
 use Vehicle\Controller\VehicleController;
 use Vehicle\UpdateVehicleProperty\Controller\UpdateVehiclePropertyController;
+use Vehicle\UpdateVehicleProperty\Form\Wizard\Step\UpdateMakeStep;
+use Vehicle\UpdateVehicleProperty\Form\Wizard\Step\UpdateModelStep;
+use Vehicle\UpdateVehicleProperty\Form\Wizard\Step\ReviewMakeAndModelStep;
 
 return [
     'vehicle' => [
@@ -85,6 +88,19 @@ return [
                                         'controller' => UpdateVehiclePropertyController::class,
                                         'action' => 'editFirstUsedDate',
                                     ],
+                                ],
+                            ],
+                            'make-and-model' => [
+                                'type' => 'segment',
+                                'options' => [
+                                    'route' => '/:property',
+                                    'defaults' => [
+                                        'controller' => UpdateVehiclePropertyController::class,
+                                        'action' => 'editMakeAndModel',
+                                    ],
+                                    'constraints' => [
+                                        "property" => join("|", [UpdateMakeStep::NAME, UpdateModelStep::NAME, ReviewMakeAndModelStep::NAME])
+                                    ]
                                 ],
                             ],
                         ],

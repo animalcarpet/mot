@@ -139,8 +139,14 @@ class VehicleInformationTableBuilderTest extends \PHPUnit_Framework_TestCase
             'vin' => self::VIN,
             'emptyVrmReason' => NULL,
             'emptyVinReason' => NULL,
-            'make' => self::MAKE_NAME,
-            'model' => self::MODEL_NAME,
+            'make' => [
+                'id' => 5,
+                'name' => self::MAKE_NAME
+            ],
+            'model' => [
+                'id' => 6,
+                'name' => self::MODEL_NAME
+            ],
             'colour' => 'Grey',
             'colourSecondary' => 'Black',
             'countryOfRegistrationId' => 1,

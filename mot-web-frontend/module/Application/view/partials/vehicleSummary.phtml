@@ -1,4 +1,5 @@
 <?php
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
 
@@ -16,7 +17,8 @@ if ($vehicle instanceof VehicleDto) {
     $fuelType = $vehicle->getFuelType()->getName();
     $bodyType = $vehicle->getBodyType()->getName();
 } else {
-    $makeAndModel = $vehicle->getMake() . ' ' . $vehicle->getModel();
+    /** @var DvsaVehicle $vehicle */
+    $makeAndModel = $vehicle->getMake()->getName() . ' ' . $vehicle->getModel()->getName();
     $transmissionType = $vehicle->getTransmissionType();
     $fuelType = $vehicle->getFuelType();
     $bodyType = $vehicle->getBodyType();

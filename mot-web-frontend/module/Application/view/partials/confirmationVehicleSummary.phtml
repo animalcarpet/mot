@@ -12,15 +12,14 @@ $fuelTypes = ArrayUtils::tryGet($this->staticData, 'fuelTypes', []);
 /** @var \Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle|\Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle $vehicle */
 $vehicle = $this->vehicle;
 
-
 $vrm = $vehicle->getRegistration();
 $vin = $vehicle->getVin();
 $makeAndModel = implode(
     ', ',
     array_filter(
         [
-            $vehicle->getMake(),
-            $vehicle->getModel(),
+            $vehicle->getMakeName(),
+            $vehicle->getModelName(),
         ]
     )
 );
