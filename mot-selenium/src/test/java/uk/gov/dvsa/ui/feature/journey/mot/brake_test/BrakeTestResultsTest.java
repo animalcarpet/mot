@@ -2,7 +2,6 @@ package uk.gov.dvsa.ui.feature.journey.mot.brake_test;
 
 import org.joda.time.DateTime;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import uk.gov.dvsa.domain.model.AeDetails;
@@ -10,11 +9,10 @@ import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.domain.model.mot.TestOutcome;
-import uk.gov.dvsa.domain.model.vehicle.Vehicle;
+import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.helper.DefectsTestsDataProvider;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.mot.DefectsPage;
-import uk.gov.dvsa.ui.pages.mot.EditDefectPage;
 import uk.gov.dvsa.ui.pages.mot.TestResultsEntryGroupAPageInterface;
 import uk.gov.dvsa.ui.pages.mot.TestResultsEntryNewPage;
 
@@ -22,7 +20,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
 
 public class BrakeTestResultsTest extends DslTest {

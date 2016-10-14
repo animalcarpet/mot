@@ -5,8 +5,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.model.vehicle.Colour;
 import uk.gov.dvsa.domain.model.vehicle.FuelTypes;
-import uk.gov.dvsa.domain.model.vehicle.ModelEnum;
-import uk.gov.dvsa.domain.model.vehicle.Vehicle;
+import uk.gov.dvsa.domain.model.vehicle.Model;
+import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
@@ -49,10 +49,10 @@ public class CreateNewVehicleRecordSpecificationPage extends Page {
 
     public void enterVehicleDetails(Vehicle vehicle) {
 
-        if(! vehicle.getModel().equals("")){
+        if(vehicle.getModel().getName() != null){
             FormDataHelper.selectFromDropDownByValue(
                     model,
-                    ModelEnum.findByName(vehicle.getModel()).getId().toString()
+                    Model.findByName(vehicle.getModel().getName()).getId().toString()
             );
         }
 

@@ -8,9 +8,10 @@ import uk.gov.dvsa.domain.model.mot.CancelTestReason;
 import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.domain.model.mot.ReasonForVehicleRefusal;
 import uk.gov.dvsa.domain.model.vehicle.DvlaVehicle;
-import uk.gov.dvsa.domain.model.vehicle.Make;
-import uk.gov.dvsa.domain.model.vehicle.Model;
-import uk.gov.dvsa.domain.model.vehicle.Vehicle;
+import uk.gov.dvsa.domain.api.response.Make;
+import uk.gov.dvsa.domain.api.response.Model;
+import uk.gov.dvsa.domain.api.response.Vehicle;
+import uk.gov.dvsa.domain.model.vehicle.VehicleFactory;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.ConfigHelper;
@@ -257,7 +258,7 @@ public class NormalTest {
 
         MotTestStartedPage motTestStartedPage = createNewVehicleRecordConfirmPage.setOneTimePassword("123456").startTest();
 
-        if( motTestStartedPage.getModel().toLowerCase().contains(vehicle.getModel().toLowerCase())
+        if( motTestStartedPage.getModel().toLowerCase().contains(vehicle.getModel().getName().toLowerCase())
                 && motTestStartedPage.getVrm().toLowerCase().contains(vehicle.getDvsaRegistration().toLowerCase()) ) {
             return true;
         }else{
@@ -277,7 +278,7 @@ public class NormalTest {
     public CreateNewVehicleRecordSpecificationPage submitValidPageOneDetails(
         CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage) {
 
-        Vehicle vehicle = Vehicle.generateValidDetails();
+        Vehicle vehicle = VehicleFactory.generateValidDetails();
 
         createNewVehicleRecordIdentificationPage.enterDetails(vehicle);
         return createNewVehicleRecordIdentificationPage.submit();
@@ -286,7 +287,7 @@ public class NormalTest {
     public boolean submitInvalidPageOneDate(String date, String errorMsg,
              CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage) {
 
-        Vehicle vehicle = Vehicle.generateValidDetails();
+        Vehicle vehicle = VehicleFactory.generateValidDetails();
 
         vehicle.setFirstUsedDate(date);
         createNewVehicleRecordIdentificationPage.enterDetails(vehicle);
@@ -298,7 +299,7 @@ public class NormalTest {
     public boolean submitInvalidPageOneDetails(String property, String errorMsg,
              CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage) {
 
-        Vehicle vehicle = resetVehicleProperty(property, Vehicle.generateValidDetails());
+        Vehicle vehicle = resetVehicleProperty(property, VehicleFactory.generateValidDetails());
 
         createNewVehicleRecordIdentificationPage.enterDetails(vehicle);
         createNewVehicleRecordIdentificationPage.submit();
@@ -310,7 +311,7 @@ public class NormalTest {
         String property, String errorMsg,
             CreateNewVehicleRecordSpecificationPage createNewVehicleRecordSpecificationPage) {
 
-        Vehicle vehicle = resetVehicleProperty(property, Vehicle.generateValidDetails());
+        Vehicle vehicle = resetVehicleProperty(property, VehicleFactory.generateValidDetails());
 
         createNewVehicleRecordSpecificationPage.enterVehicleDetails(vehicle);
         createNewVehicleRecordSpecificationPage.submitInvalidFormDetails();
@@ -322,7 +323,7 @@ public class NormalTest {
             String reason, String prop, String errorMsg,
             CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage) throws Exception {
 
-        Vehicle vehicle = Vehicle.generateValidDetails();
+        Vehicle vehicle = VehicleFactory.generateValidDetails();
 
         if (prop == "vin") {
             vehicle.setEmptyVinReason(reason);
@@ -350,7 +351,7 @@ public class NormalTest {
                 vehicle.setVin("");
                 break;
             case "Make":
-                vehicle.setMake(new Make(""));
+                vehicle.setMake(new Make());
                 break;
             case "Date":
                 vehicle.setFirstUsedDate("");
@@ -362,7 +363,7 @@ public class NormalTest {
                 vehicle.setFuelType("");
                 break;
             case "Model":
-                vehicle.setModel(new Model(""));
+                vehicle.setModel(new Model());
                 break;
             case "Class":
                 vehicle.setVehicleClass("");

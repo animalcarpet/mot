@@ -2,7 +2,7 @@ package uk.gov.dvsa.journey;
 
 import org.openqa.selenium.NoSuchElementException;
 import uk.gov.dvsa.domain.model.User;
-import uk.gov.dvsa.domain.model.vehicle.Vehicle;
+import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.helper.AssertionHelper;
 import uk.gov.dvsa.helper.ConfigHelper;

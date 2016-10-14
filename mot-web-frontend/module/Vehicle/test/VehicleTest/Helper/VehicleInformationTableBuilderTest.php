@@ -12,6 +12,7 @@ use DvsaCommon\Enum\CountryOfRegistrationCode;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\XMock;
+use stdClass;
 use Vehicle\Helper\ColoursContainer;
 use Vehicle\Helper\VehicleInformationTableBuilder;
 use Zend\View\Helper\Url;
@@ -76,7 +77,12 @@ class VehicleInformationTableBuilderTest extends \PHPUnit_Framework_TestCase
     public function testSpecificationTableWithLessData()
     {
         $vehicle = $this->getVehicle();
-        $vehicle->model = null;
+
+        $model = new stdClass();
+        $model->name = null;
+        $model->id = null;
+        $vehicle->model = $model;
+
         $vehicle->cylinderCapacity = null;
         $vehicle->colourSecondary = 'Not Stated';
         $vehicle->weight = null;

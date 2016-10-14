@@ -2,9 +2,7 @@ package uk.gov.dvsa.ui.pages.vehicleinformation;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import uk.gov.dvsa.domain.model.vehicle.CountryOfRegistration;
 import uk.gov.dvsa.domain.model.vehicle.Model;
-import uk.gov.dvsa.domain.model.vehicle.ModelEnum;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
@@ -28,7 +26,7 @@ public class ChangeModelPage extends Page {
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
     }
 
-    public ChangeModelPage selectModel(ModelEnum model) {
+    public ChangeModelPage selectModel(Model model) {
         FormDataHelper.selectFromDropDownByValue(modelDropdown, model.getId().toString());
         return this;
     }

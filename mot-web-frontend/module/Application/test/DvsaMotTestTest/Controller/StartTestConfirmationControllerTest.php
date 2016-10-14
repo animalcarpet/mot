@@ -20,6 +20,7 @@ use DvsaCommon\UrlBuilder\VehicleUrlBuilder;
 use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonTest\Bootstrap;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
+use DvsaCommonTest\Builder\DvsaVehicleBuilder;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTest\Constants\VehicleSearchSource;
 use DvsaMotTest\Controller\StartTestConfirmationController;
@@ -40,6 +41,9 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
     const ACTION_INDEX = 'index';
     const ACTION_RETEST = 'retest';
 
+    /** @var  DvsaVehicleBuilder */
+    private $dvsaVehicleBuilder;
+
     /** VehicleMapper|@var MockObj */
     protected $mockVehicleMapper;
 
@@ -48,10 +52,11 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
 
     protected function setUp()
     {
+        $this->dvsaVehicleBuilder = new DvsaVehicleBuilder();
         $serviceManager = Bootstrap::getServiceManager();
         $serviceManager->setAllowOverride(true);
 
-        $dummyVehicleDetail = new Payload();
+        $dummyVehicleDetail = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
         $dummyVehicleDetail->colour = '2';
         $dummyVehicleDetail->id = '1';
         $dummyVehicle = new DvsaVehicle($dummyVehicleDetail);

@@ -223,7 +223,7 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
      */
     private function getMakeAndModel()
     {
-        return $this->vehicle->getModel()
+        return $this->vehicle->getModel()->getName()
             ? $this->vehicle->getMake()->getName() . ', ' . $this->vehicle->getModel()->getName()
             : $this->vehicle->getMake()->getName();
     }

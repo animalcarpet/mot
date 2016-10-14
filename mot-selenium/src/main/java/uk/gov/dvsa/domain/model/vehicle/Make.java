@@ -1,72 +1,53 @@
 package uk.gov.dvsa.domain.model.vehicle;
 
-public class Make {
-    private Long id;
-    private String name;
+import uk.gov.dvsa.ui.pages.exception.LookupNamingException;
 
-    public Make() {
-    }
+public enum Make {
+    BMW(100024,"18811","BMW"),
+    FORD(100062,"18837","FORD"),
+    FUSO(100065,"1883A","FUSO"),
+    HARLEY_DAVIDSON(100071,"18840","HARLEY DAVIDSON"),
+    HYUNDAI(100084,"1884D","HYUNDAI"),
+    INDIAN(100085,"1884E","INDIAN"),
+    KAWASAKI(100102,"1885F","KAWASAKI"),
+    MERCEDES(100133,"1887E","MERCEDES"),
+    PIAGGIO(100167,"188A0","PIAGGIO"),
+    PORSCHE(100169,"188A2","PORSCHE"),
+    RENAULT(100176,"188A9","RENAULT"),
+    SUBARU(100199,"188C0","SUBARU"),
+    SUZUKI(100201,"188C2","SUZUKI"),
+    VAUXHALL(100217,"188D2","VAUXHALL"),
+    VOLKSWAGEN(100220,"188D5","VOLKSWAGEN");
 
-    public Make(String name) {
-        this.name = name;
-    }
+    private int id;
+    private final String code;
+    private final String name;
 
-    public Long getId() {
-        return id;
-    }
-
-    public Make setId(Long id) {
-        this.id = id;
-        return this;
+    private Make(Integer makeId, String makeCode, String makeName) {
+        id = makeId;
+        code = makeCode;
+        name = makeName;
     }
 
     public String getName() {
         return name;
     }
 
-    public Make setName(String name) {
-        this.name = name;
-        return this;
+    public String getCode() {
+        return code;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        Make make = (Make) o;
-
-        if (id == null && make.id != null) {
-            return false;
-        }
-
-        if (id != null && make.id == null) {
-            return false;
-        }
-
-        if (id != null && make.id != null && !id.equals(make.id)) {
-            return false;
-        }
-        return name != null ? name.equals(make.name) : make.name == null;
-
+    public Integer getId() {
+        return id;
     }
 
-    @Override
-    public int hashCode() {
-        int result = id.intValue();
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        return result;
-    }
+    public static Make findByName(String name) {
+        for(Make make : values()){
+            if( make.getName().equals(name)){
+                return make;
+            }
+        }
 
-    @Override
-    public String toString() {
-        return "Make{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        throw new LookupNamingException("Make " + name + " not found");
     }
 }

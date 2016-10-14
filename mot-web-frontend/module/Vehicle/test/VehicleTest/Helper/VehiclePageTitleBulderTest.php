@@ -1,12 +1,10 @@
 <?php
-
-
 namespace VehicleTest\Helper;
-
 
 use Core\ViewModel\Header\HeaderTertiaryList;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\Model;
+use stdClass;
 use Vehicle\Helper\VehiclePageTitleBuilder;
 
 class VehiclePageTitleBulderTest extends \PHPUnit_Framework_TestCase
@@ -38,8 +36,7 @@ class VehiclePageTitleBulderTest extends \PHPUnit_Framework_TestCase
     public function dataProviderTestUrlGeneration()
     {
         $vehicleWithModel = $this->getVehicle();
-        $vehicleWithoutModel = $this->getVehicle();
-        $vehicleWithoutModel->model = null;
+        $vehicleWithoutModel = $this->getVehicleWithoutModel();
 
         $tertiaryTitle = new HeaderTertiaryList();
         $tertiaryTitle->addElement(self::REGISTRATION);
@@ -83,5 +80,16 @@ class VehiclePageTitleBulderTest extends \PHPUnit_Framework_TestCase
             'weight' => 12467,
             'version' => 2,
         ]));
+    }
+
+    private function getVehicleWithoutModel()
+    {
+        $vehicle = $this->getVehicle();
+        $model = new stdClass();
+        $model->id = null;
+        $model->name = null;
+        $vehicle->model = $model;
+
+        return $vehicle;
     }
 }

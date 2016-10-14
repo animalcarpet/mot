@@ -7,6 +7,7 @@ use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Enum\FuelTypeCode;
 use DvsaCommon\Model\FuelType;
+use DvsaCommonTest\Builder\DvsaVehicleBuilder;
 use DvsaCommonTest\TestUtils\XMock;
 use stdClass;
 use Vehicle\UpdateVehicleProperty\Context\UpdateVehicleContext;
@@ -23,6 +24,9 @@ class UpdateEngineProcessTest extends \PHPUnit_Framework_TestCase
     const VEHICLE_CAPACITY = '1223';
     const FUEL_TYPE = FuelTypeCode::DIESEL;
 
+    /** @var  DvsaVehicleBuilder */
+    private $dvsaVehicleBuilder;
+
     /** @var  CatalogService | \PHPUnit_Framework_MockObject_MockObject */
     protected $catalogService;
     /** @var  Url | \PHPUnit_Framework_MockObject_MockObject */
@@ -37,9 +41,10 @@ class UpdateEngineProcessTest extends \PHPUnit_Framework_TestCase
     /** @var UpdateEngineProcess */
     private $sut;
 
-
     public function setUp()
     {
+        $this->dvsaVehicleBuilder = new DvsaVehicleBuilder();
+
         $this->urlHelper = XMock::of(Url::class);
         $this->vehicleService = XMock::of(VehicleService::class);
         $this->breadcrumbsBuilder = XMock::of(VehicleEditBreadcrumbsBuilder::class);
@@ -96,7 +101,7 @@ class UpdateEngineProcessTest extends \PHPUnit_Framework_TestCase
 
     private function buildDvsaVehicle()
     {
-        $data = new \stdClass();
+        $data = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
         $data->id = self::VEHICLE_ID;
         $data->fuelTypeCode = new stdClass();
         $data->fuelTypeCode->code = self::FUEL_TYPE;
