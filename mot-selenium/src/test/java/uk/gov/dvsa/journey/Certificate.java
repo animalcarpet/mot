@@ -1,13 +1,12 @@
 package uk.gov.dvsa.journey;
 
 import uk.gov.dvsa.domain.model.User;
-import uk.gov.dvsa.domain.model.vehicle.Vehicle;
+import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.ui.pages.VehicleSearchPage;
 import uk.gov.dvsa.ui.pages.mot.MotTestHistoryPage;
 import uk.gov.dvsa.ui.pages.mot.MotTestSearchPage;
 import uk.gov.dvsa.ui.pages.mot.EnforcementTestSummaryPage;
-import uk.gov.dvsa.ui.pages.mot.StartTestConfirmationPage;
 import uk.gov.dvsa.ui.pages.mot.certificates.*;
 
 import java.io.IOException;

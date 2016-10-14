@@ -1,9 +1,8 @@
 package uk.gov.dvsa.ui.pages.vehicleinformation;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import uk.gov.dvsa.domain.model.vehicle.Vehicle;
+import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;

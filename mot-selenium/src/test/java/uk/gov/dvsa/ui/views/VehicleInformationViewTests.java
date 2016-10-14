@@ -1,9 +1,9 @@
 package uk.gov.dvsa.ui.views;
 
-import org.apache.xpath.operations.Mod;
 import org.joda.time.format.DateTimeFormat;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.vehicle.*;
@@ -153,10 +153,10 @@ public class VehicleInformationViewTests extends DslTest {
         motUI.showVehicleInformationFor(vehicleExaminer, vehicle);
 
         //When I change Make and Model
-        motUI.vehicleInformation.changeMakeAndModel(MakeEnum.SUBARU, ModelEnum.SUBARU_IMPREZA);
+        motUI.vehicleInformation.changeMakeAndModel(Make.SUBARU, Model.SUBARU_IMPREZA);
 
         //Then Make and Model will be changed
-        assertThat(motUI.vehicleInformation.getMakeAndModel(), is(MakeEnum.SUBARU.getName()+", "+ModelEnum.SUBARU_IMPREZA.getName()));
+        assertThat(motUI.vehicleInformation.getMakeAndModel(), is(Make.SUBARU.getName()+", "+ Model.SUBARU_IMPREZA.getName()));
     }
 
     private String getManufactureDateForVehicle(String manufactureDate) {

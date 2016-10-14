@@ -1,7 +1,6 @@
-package uk.gov.dvsa.domain.model.vehicle;
+package uk.gov.dvsa.domain.api.response;
 
-import org.apache.commons.lang3.RandomStringUtils;
-import org.joda.time.DateTime;
+import uk.gov.dvsa.domain.model.vehicle.FuelType;
 
 public class Vehicle {
 
@@ -182,8 +181,8 @@ public class Vehicle {
         return this;
     }
 
-    public String getMake() {
-        return make.getName();
+    public Make getMake() {
+        return make;
     }
 
     public Vehicle setMake(Make make) {
@@ -204,8 +203,8 @@ public class Vehicle {
         return this;
     }
 
-    public String getModel() {
-        return model.getName();
+    public Model getModel() {
+        return model;
     }
 
     public Vehicle setModel(Model model) {
@@ -258,20 +257,20 @@ public class Vehicle {
         return this;
     }
 
-    public static Vehicle getVehicle(String colour,
-                                     String countryOfRegistrationId,
-                                     String cylinderCapacity,
-                                     String dvsaRegistration,
-                                     String dvlaRegistration,
-                                     String firstUsedDate,
-                                     String fuelType,
-                                     String make,
-                                     String model,
-                                     String secondaryColour,
-                                     String transmissionType,
-                                     String vin,
-                                     String vehicleClass,
-                                     String weight
+    public static Vehicle createVehicle(String colour,
+                                        String countryOfRegistrationId,
+                                        String cylinderCapacity,
+                                        String dvsaRegistration,
+                                        String dvlaRegistration,
+                                        String firstUsedDate,
+                                        String fuelType,
+                                        String make,
+                                        String model,
+                                        String secondaryColour,
+                                        String transmissionType,
+                                        String vin,
+                                        String vehicleClass,
+                                        String weight
     ) {
 
         Vehicle vehicle = new Vehicle();
@@ -283,8 +282,8 @@ public class Vehicle {
                 .setDvlaRegistration(dvlaRegistration)
                 .setFirstUsedDate(firstUsedDate)
                 .setFuelType(fuelType)
-                .setMake(new Make(make))
-                .setModel(new Model(model))
+                .setMake(new Make().setName(make))
+                .setModel(new Model().setName(model))
                 .setColourSecondary(secondaryColour)
                 .setTransmissionType(transmissionType)
                 .setVin(vin)
@@ -292,40 +291,6 @@ public class Vehicle {
                 .setWeight(weight);
 
         return vehicle;
-    }
-
-    public static Vehicle generateValidDetails() {
-
-        String randomRegistrationNumber = RandomStringUtils.randomAlphabetic(7);
-        return getVehicle(
-                Colour.Blue.getName(),
-                CountryOfRegistration.Great_Britain.getRegistrationId(),
-                "1700",
-                randomRegistrationNumber,
-                randomRegistrationNumber,
-                new DateTime().minusYears(1).toString(),
-                FuelTypes.Diesel.getName(),
-                MakeEnum.BMW.getName(),
-                ModelEnum.BMW_ALPINA.getName(),
-                Colour.Black.getName(),
-                TransmissionType.Manual.getName(),
-                RandomStringUtils.randomAlphabetic(17),
-                VehicleClass.four.getId(),
-                "888"
-        );
-    }
-
-    public static Vehicle generateEmptyAndInvalidDetails() {
-        return getVehicle(
-                " ", " ", " ",
-                " ", " ", " ",
-                "Fake name", "Fake make", "Fake model",
-                Colour.Black.getName(),
-                "FakeFuel",
-                " ",
-                VehicleClass.four.getId(),
-                "888"
-        );
     }
 
     @Override

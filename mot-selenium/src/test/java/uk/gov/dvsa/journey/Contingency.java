@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.OdometerUnit;
-import uk.gov.dvsa.domain.model.vehicle.Vehicle;
+import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.helper.ConfigHelper;
 import uk.gov.dvsa.ui.pages.VehicleSearchPage;

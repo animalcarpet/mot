@@ -6,17 +6,20 @@ use Core\Catalog\CountryOfRegistration\CountryOfRegistrationCatalog;
 use CoreTest\Service\StubCatalogService;
 use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use DvsaCommonTest\Builder\DvsaVehicleBuilder;
 use DvsaCommonTest\TestUtils\MethodSpy;
 use DvsaCommonTest\TestUtils\XMock;
 use Vehicle\UpdateVehicleProperty\Context\UpdateVehicleContext;
 use Vehicle\UpdateVehicleProperty\Process\UpdateCountryOfRegistrationProcess;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use Vehicle\UpdateVehicleProperty\ViewModel\Builder\VehicleEditBreadcrumbsBuilder;
-use Vehicle\UpdateVehicleProperty\ViewModel\Builder\VehicleTertiaryTitleBuilder;
 use Zend\View\Helper\Url;
 
 class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var  DvsaVehicleBuilder */
+    private $dvsaVehicleBuilder;
+
     /** @var UpdateCountryOfRegistrationProcess */
     private $process;
 
@@ -33,6 +36,8 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $this->dvsaVehicleBuilder = new DvsaVehicleBuilder();
+
         $vehicleService = XMock::of(VehicleService::class);
         $this->vehicleServiceUpdateSpy = new MethodSpy($vehicleService, 'updateDvsaVehicle');
         $this->vehicleServiceGetSpy = new MethodSpy($vehicleService, 'getDvsaVehicleById');
@@ -44,8 +49,13 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
             XMock::of(VehicleEditBreadcrumbsBuilder::class)
         );
 
-        $vehicleStd = new \stdClass();
+        $vehicleStd = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
         $vehicleStd->id = 15;
+        $emptyResource = new \stdClass();
+        $emptyResource->id = null;
+        $emptyResource->name = null;
+        $vehicleStd->model = $emptyResource;
+        $vehicleStd->make = $emptyResource;
 
         $this->vehicle = new DvsaVehicle($vehicleStd);
 
@@ -77,7 +87,7 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
         // GIVEN the vehicle has a country of registration
         $countryId = 18;
 
-        $stdClass = new \stdClass();
+        $stdClass = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
         $stdClass->countryOfRegistrationId = $countryId;
 
         $vehicle = new DvsaVehicle($stdClass);

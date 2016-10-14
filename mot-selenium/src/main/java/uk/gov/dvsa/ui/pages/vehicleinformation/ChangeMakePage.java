@@ -3,7 +3,6 @@ package uk.gov.dvsa.ui.pages.vehicleinformation;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.domain.model.vehicle.Make;
-import uk.gov.dvsa.domain.model.vehicle.MakeEnum;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
@@ -27,7 +26,7 @@ public class ChangeMakePage extends Page {
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
     }
 
-    public ChangeMakePage selectMake(MakeEnum make) {
+    public ChangeMakePage selectMake(Make make) {
         FormDataHelper.selectFromDropDownByValue(makeDropdown, make.getId().toString());
         return this;
     }

@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.CancelTestReason;
-import uk.gov.dvsa.domain.model.vehicle.Vehicle;
+import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.mot.TestAbandonedPage;
 import uk.gov.dvsa.ui.pages.mot.TestAbortedPage;
@@ -44,7 +44,7 @@ public class TestResultEntryPageTests extends DslTest {
         String vehicleFirstUseString = formatter.print(vehicleFirstUse);
 
         assertThat("Vehicle make and model is correct", testResultEntryPage.getVehicleMakeModel()
-                .equals(vehicle.getMake() + ", " + vehicle.getModel()));
+                .equals(vehicle.getMake().getName() + ", " + vehicle.getModel().getName()));
 
         assertThat("Vehicle registration is correct", testResultEntryPage.getVehicleRegistration()
                 .equals(vehicle.getDvsaRegistration()));

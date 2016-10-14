@@ -47,7 +47,7 @@ public class VehicleInformation {
                 .submit();
     }
 
-    public VehicleInformationPage changeMakeAndModel(MakeEnum make, ModelEnum model) {
+    public VehicleInformationPage changeMakeAndModel(Make make, Model model) {
         return vehicleInformationPage
                 .clickChangeMakeAndModelLink()
                 .selectMake(make)

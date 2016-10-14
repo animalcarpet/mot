@@ -8,7 +8,7 @@ import uk.gov.dvsa.domain.model.AeDetails;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.TestOutcome;
-import uk.gov.dvsa.domain.model.vehicle.Vehicle;
+import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.ui.DslTest;
 
 import java.io.IOException;

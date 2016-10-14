@@ -5,7 +5,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import uk.gov.dvsa.domain.model.vehicle.Vehicle;
+import uk.gov.dvsa.domain.model.vehicle.VehicleFactory;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.vehicleinformation.CreateNewVehicleRecordIdentificationPage;
 import uk.gov.dvsa.ui.pages.vehicleinformation.CreateNewVehicleRecordSpecificationPage;
@@ -25,7 +25,7 @@ public class CreateNewVehicleTests extends DslTest {
 
         // Given that a tester creates a new DVSA vehicle
         Boolean result = motUI.normalTest.createNewDvsaVehicle(
-                userData.createTester(siteData.createSite().getId(), false), Vehicle.generateValidDetails());
+                userData.createTester(siteData.createSite().getId(), false), VehicleFactory.generateValidDetails());
 
         // Then a test is started for the newly created vehicle
         assertThat("Test has started", result, is(true));
@@ -39,7 +39,7 @@ public class CreateNewVehicleTests extends DslTest {
         // Given that a tester creates a new DVSA vehicle without a VIN
         Boolean result = motUI.normalTest.createNewDvsaVehicle(
                 userData.createTester(siteData.createSite().getId(), false),
-                Vehicle.generateValidDetails().setVin("").setEmptyVinReason("Missing"));
+                VehicleFactory.generateValidDetails().setVin("").setEmptyVinReason("Missing"));
 
         // Then a test is started for the newly created vehicle
         assertThat("Test has started", result, is(true));
@@ -54,7 +54,7 @@ public class CreateNewVehicleTests extends DslTest {
         // Given that a tester creates a new DVSA vehicle without a VRM
         Boolean result = motUI.normalTest.createNewDvsaVehicle(
                 userData.createTester(siteData.createSite().getId(), false),
-            Vehicle.generateValidDetails().setRegistration("").setEmptyVrmReason("Missing"));
+            VehicleFactory.generateValidDetails().setRegistration("").setEmptyVrmReason("Missing"));
 
         // Then a test is started for the newly created vehicle
         assertThat("Test has started", result, is(true));

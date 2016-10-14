@@ -2,6 +2,7 @@ package uk.gov.dvsa.data;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.joda.time.DateTime;
+import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.vehicle.*;
 import uk.gov.dvsa.domain.service.VehicleService;

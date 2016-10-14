@@ -4,6 +4,7 @@ namespace VehicleTest\UpdateVehicleProperty;
 
 use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use DvsaCommonTest\Builder\DvsaVehicleBuilder;
 use DvsaCommonTest\TestUtils\MethodSpy;
 use DvsaCommonTest\TestUtils\XMock;
 use Vehicle\UpdateVehicleProperty\Context\UpdateVehicleContext;
@@ -15,6 +16,9 @@ use Zend\View\Helper\Url;
 
 class UpdateFirstUsedDateProcessTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var  DvsaVehicleBuilder */
+    private $dvsaVehicleBuilder;
+
     /** @var UpdateFirstUsedDateProcess */
     private $process;
 
@@ -31,6 +35,8 @@ class UpdateFirstUsedDateProcessTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $this->dvsaVehicleBuilder = new DvsaVehicleBuilder();
+
         $vehicleService = XMock::of(VehicleService::class);
         $this->vehicleServiceUpdateSpy = new MethodSpy($vehicleService, 'updateDvsaVehicle');
         $this->vehicleServiceGetSpy = new MethodSpy($vehicleService, 'getDvsaVehicleById');
@@ -41,7 +47,7 @@ class UpdateFirstUsedDateProcessTest extends \PHPUnit_Framework_TestCase
             XMock::of(VehicleEditBreadcrumbsBuilder::class)
         );
 
-        $vehicleStd = new \stdClass();
+        $vehicleStd = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
         $vehicleStd->id = 15;
 
         $this->vehicle = new DvsaVehicle($vehicleStd);
@@ -76,7 +82,7 @@ class UpdateFirstUsedDateProcessTest extends \PHPUnit_Framework_TestCase
         // GIVEN the vehicle has a first used date
         $date = new \DateTime("02-10-2010");
 
-        $stdClass = new \stdClass();
+        $stdClass = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
         $stdClass->firstUsedDate = $date->format('Y-m-d');
 
         $vehicle = new DvsaVehicle($stdClass);

@@ -4,6 +4,7 @@ namespace VehicleTest\UpdateVehicleProperty\Process;
 use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
+use DvsaCommonTest\Builder\DvsaVehicleBuilder;
 use DvsaCommonTest\TestUtils\XMock;
 use Vehicle\UpdateVehicleProperty\Context\UpdateVehicleContext;
 use Vehicle\UpdateVehicleProperty\Form\UpdateClassForm;
@@ -18,6 +19,9 @@ class UpdateClassProcessTest extends \PHPUnit_Framework_TestCase
     const VEHICLE_CLASS = 3;
     const VEHICLE_ID = 1;
 
+    /** @var  DvsaVehicleBuilder */
+    private $dvsaVehicleBuilder;
+
     /** @var  Url | \PHPUnit_Framework_MockObject_MockObject */
     private $urlHelper;
     /** @var  VehicleService | \PHPUnit_Framework_MockObject_MockObject */
@@ -30,9 +34,10 @@ class UpdateClassProcessTest extends \PHPUnit_Framework_TestCase
     /** @var UpdateClassProcess */
     private $sut;
 
-
     public function setUp()
     {
+        $this->dvsaVehicleBuilder = new DvsaVehicleBuilder();
+
         $this->urlHelper = XMock::of(Url::class);
         $this->vehicleService = XMock::of(VehicleService::class);
         $this->breadcrumbsBuilder = XMock::of(VehicleEditBreadcrumbsBuilder::class);
@@ -81,7 +86,7 @@ class UpdateClassProcessTest extends \PHPUnit_Framework_TestCase
 
     private function buildDvsaVehicle()
     {
-        $data = new \stdClass();
+        $data = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
         $data->id = self::VEHICLE_ID;
         $data->vehicleClass = self::VEHICLE_CLASS;
 
