@@ -1,12 +1,11 @@
 package uk.gov.dvsa.ui.feature.journey.mot;
 
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.model.AeDetails;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
-import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.HomePage;
 import uk.gov.dvsa.ui.pages.mot.GenerateSurveyReportsPage;
@@ -28,9 +27,6 @@ public class MotSurveyTests extends DslTest {
     private User tester;
     private User schemeUser;
     private User areaOffice1User;
-    private User vehicleExaminerUser;
-    private User aedm;
-    private User siteManager;
 
     @BeforeMethod(alwaysRun = true)
     private void setupTestData() throws IOException {
@@ -40,9 +36,6 @@ public class MotSurveyTests extends DslTest {
         vehicle = vehicleData.getNewVehicle(tester);
         schemeUser = userData.createSchemeUser(false);
         areaOffice1User = userData.createAreaOfficeOne("AreaOfficerOne");
-        vehicleExaminerUser = userData.createVehicleExaminer("VehicleExaminer", false);
-        aedm = userData.createAedm(aeDetails.getId(), "Test", false);
-        siteManager = userData.createSiteManager(site.getId(), false);
     }
 
     @Test(groups = {"Regression", "BL-1529"},
@@ -62,7 +55,8 @@ public class MotSurveyTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-1529"},
-            description = "Verifies that user is redirected to login page after submitting empty survey")
+            description = "Verifies that user is redirected to login page after submitting empty survey",
+            priority = 1)
     public void userRedirectedToThankYouPageOnSubmissionOfEmptySurvey() throws IOException, URISyntaxException {
         // Given I am on the Test Complete Page as a tester
         TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle).finishTest();
@@ -81,7 +75,8 @@ public class MotSurveyTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-1529"},
-            description = "Verifies that user is able to submit feedback")
+            description = "Verifies that user is able to submit feedback",
+            priority = 2)
     public void userRedirectedToThankYouPageOnSubmissionOfCompletedSurvey() throws IOException, URISyntaxException {
         // Given I am on the Test Complete Page as a tester
         TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle).finishTest();
@@ -114,11 +109,10 @@ public class MotSurveyTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-1531"},
-            description = "Verifies that an invalid user cannot navigate to the Survey Reports page",
-            dataProvider = "invalidUserProvider")
-    public void testNonValidUserCannotNavigateToSurveyReportsPage(User user) throws IOException, URISyntaxException {
+            description = "Verifies that an invalid user cannot navigate to the Survey Reports page")
+    public void testNonValidUserCannotNavigateToSurveyReportsPage() throws IOException, URISyntaxException {
         // Given I am on the home page as an invalid user
-        HomePage homePage = pageNavigator.gotoHomePage(user);
+        HomePage homePage = pageNavigator.gotoHomePage(areaOffice1User);
 
         // Then the Generate Survey Reports link shouldn't be displayed
         assertThat(homePage.isGenerateSurveyReportsLinkDisplayed(), is(false));
@@ -139,16 +133,5 @@ public class MotSurveyTests extends DslTest {
 
         // Then the survey report should download
 
-    }
-
-    @DataProvider(name = "invalidUserProvider")
-    private Object[][] invalidUserProvider() {
-        return new Object[][]{
-                {areaOffice1User},
-                {vehicleExaminerUser},
-                {tester},
-                {aedm},
-                {siteManager}
-        };
     }
 }
