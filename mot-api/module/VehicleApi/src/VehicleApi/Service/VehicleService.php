@@ -231,7 +231,7 @@ class VehicleService
     /**
      * @param $dvlaVehicleId
      * @param $vehicleClassCode
-     * @return VehicleFromDvla
+     * @return DvsaVehicle
      */
     public function createVtrAndV5CFromDvlaVehicle($dvlaVehicleId, $vehicleClassCode)
     {
