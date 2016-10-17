@@ -70,7 +70,7 @@ public class EditSiteDetailsTests extends DslTest {
                         .clickConfirmationSubmitButton();
 
         //Then table contains changed classes
-        Assert.assertTrue(confirmTestFacilitiesPage.getClasses().equals(VehicleClass.three.getId()));
+        Assert.assertTrue(confirmTestFacilitiesPage.getClasses().equals(VehicleClass.three.getCode()));
 
         //When I confirm my site classes changes
         VehicleTestingStationPage finalVehicleTestingStationPage = confirmTestFacilitiesPage.clickSubmitButton();

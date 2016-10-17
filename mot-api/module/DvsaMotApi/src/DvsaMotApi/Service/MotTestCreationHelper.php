@@ -306,7 +306,7 @@ class MotTestCreationHelper
             $updateDvsaVehicleUnderTestRequest->setColourId($primaryColour->getId())
                 ->setSecondaryColourId($secondaryColour->getId())
                 ->setFuelTypeId($fuelType->getId())
-                ->setVehicleClassId($vehicleClass->getId())
+                ->setVehicleClassCode($vehicleClass->getCode())
 //              ->setCylinderCapacity($data['CylinderCapacity'])   @todo: API and UI need to consider CC according to the certain fuel type
                 ->setOneTimePassword($oneTimePassword);
 

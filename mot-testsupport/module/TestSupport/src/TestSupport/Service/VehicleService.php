@@ -95,7 +95,7 @@ class VehicleService
             -> setFirstUsedDate(new \DateTime($data['dateOfFirstUse']))
             -> setCylinderCapacity($data['cylinderCapacity'])
             -> setOneTimePassword($data['oneTimePassword'])
-            -> setVehicleClassId($data['testClass']);
+            -> setVehicleClassCode($data['testClass']);
 
         $vehicleId = $vehicleService->createDvsaVehicle($createDvsaVehicleRequest)->getId();
 

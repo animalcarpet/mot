@@ -9,6 +9,7 @@ use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Dto\Vehicle\VehicleExpiryDto;
 use DvsaCommon\Enum\CountryOfRegistrationCode;
+use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\XMock;
@@ -157,7 +158,7 @@ class VehicleInformationTableBuilderTest extends \PHPUnit_Framework_TestCase
             'colourSecondary' => 'Black',
             'countryOfRegistrationId' => 1,
             'fuelType' => 'Petrol',
-            'vehicleClass' => '4',
+            'vehicleClass' => ['code' => VehicleClassCode::CLASS_4, 'name'=> '4'],
             'bodyType' => '2 Door Saloon',
             'cylinderCapacity' => 1700,
             'transmissionType' => 'Automatic',

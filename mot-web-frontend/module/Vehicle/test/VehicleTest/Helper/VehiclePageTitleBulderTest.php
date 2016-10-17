@@ -3,8 +3,8 @@ namespace VehicleTest\Helper;
 
 use Core\ViewModel\Header\HeaderTertiaryList;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
-use Dvsa\Mot\ApiClient\Resource\Item\Model;
 use stdClass;
+use DvsaCommon\Enum\VehicleClassCode;
 use Vehicle\Helper\VehiclePageTitleBuilder;
 
 class VehiclePageTitleBulderTest extends \PHPUnit_Framework_TestCase
@@ -17,6 +17,10 @@ class VehiclePageTitleBulderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider dataProviderTestUrlGeneration
+     * @param DvsaVehicle $dvlaVehicle
+     * @param $title
+     * @param $secondTitle
+     * @param $thirdTitle
      */
     public function testPageTile(DvsaVehicle $dvlaVehicle, $title, $secondTitle, $thirdTitle)
     {
@@ -69,7 +73,7 @@ class VehiclePageTitleBulderTest extends \PHPUnit_Framework_TestCase
             'colourSecondary' => 'Not Stated',
             'countryOfRegistration' => 'GB, UK, ENG, CYM, SCO (UK) - Great Britain',
             'fuelType' => 'Petrol',
-            'vehicleClass' => '4',
+            'vehicleClass' => ['code' => VehicleClassCode::CLASS_4, 'name' => '4'],
             'bodyType' => '2 Door Saloon',
             'cylinderCapacity' => 1700,
             'transmissionType' => 'Automatic',

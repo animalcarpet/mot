@@ -97,7 +97,7 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
         }
         $this->addRowToTable($table, 'Colour', $this->getVehicleColourNames());
         $this->addRowToTable($table, 'Brake test weight', $this->getVehicleBrakeWeight());
-        $classRow = $this->addRowToTable($table, 'MOT test class', $this->vehicle->getVehicleClass());
+        $classRow = $this->addRowToTable($table, 'MOT test class', $this->vehicle->getVehicleClass()->getName());
         if ($this->canUserEditVehicle()) {
             $classRow->addActionLink(
                 'Change',

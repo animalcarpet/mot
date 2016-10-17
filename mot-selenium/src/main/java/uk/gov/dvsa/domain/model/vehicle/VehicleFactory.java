@@ -22,7 +22,7 @@ public class VehicleFactory {
                 Colour.Black.getName(),
                 TransmissionType.Manual.getName(),
                 RandomStringUtils.randomAlphabetic(17),
-                VehicleClass.four.getId(),
+                VehicleClass.four,
                 "888"
         );
     }
@@ -35,7 +35,7 @@ public class VehicleFactory {
                 Colour.Black.getName(),
                 "FakeFuel",
                 " ",
-                VehicleClass.four.getId(),
+                VehicleClass.four,
                 "888"
         );
     }

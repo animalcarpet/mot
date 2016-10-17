@@ -57,8 +57,8 @@ class UpdateClassProcess implements SingleStepProcessInterface, AutoWireableInte
     public function update($formData)
     {
         $request = new UpdateDvsaVehicleRequest();
-        $vehicleClassId = $formData[UpdateClassForm::FIELD_CLASS];
-        $request->setVehicleClassId($vehicleClassId);
+        $vehicleClassCode = $formData[UpdateClassForm::FIELD_CLASS];
+        $request->setVehicleClassCode($vehicleClassCode);
 
         $this->vehicleService->updateDvsaVehicle(
             $this->context->getVehicleId(),
@@ -75,7 +75,7 @@ class UpdateClassProcess implements SingleStepProcessInterface, AutoWireableInte
     {
         $vehicle = $this->getVehicle();
 
-        return [UpdateClassForm::FIELD_CLASS => $vehicle->getVehicleClass()];
+        return [UpdateClassForm::FIELD_CLASS => $vehicle->getVehicleClass()->getCode()];
     }
 
     /**

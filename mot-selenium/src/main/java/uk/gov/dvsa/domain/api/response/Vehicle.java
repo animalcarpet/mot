@@ -1,6 +1,7 @@
 package uk.gov.dvsa.domain.api.response;
 
 import uk.gov.dvsa.domain.model.vehicle.FuelType;
+import uk.gov.dvsa.domain.model.vehicle.VehicleClass;
 
 public class Vehicle {
 
@@ -24,7 +25,7 @@ public class Vehicle {
     private String registrationDvsa;
     private String registrationDvla;
     private String transmissionType;
-    private String vehicleClass;
+    private VehicleClass vehicleClass;
     private String version;
     private String vin;
     private String weight;
@@ -221,11 +222,11 @@ public class Vehicle {
         return this;
     }
 
-    public String getVehicleClass() {
+    public VehicleClass getVehicleClass() {
         return vehicleClass;
     }
 
-    public Vehicle setVehicleClass(String vehicleClass) {
+    public Vehicle setVehicleClass(VehicleClass vehicleClass) {
         this.vehicleClass = vehicleClass;
         return this;
     }
@@ -258,19 +259,19 @@ public class Vehicle {
     }
 
     public static Vehicle createVehicle(String colour,
-                                        String countryOfRegistrationId,
-                                        String cylinderCapacity,
-                                        String dvsaRegistration,
-                                        String dvlaRegistration,
-                                        String firstUsedDate,
-                                        String fuelType,
-                                        String make,
-                                        String model,
-                                        String secondaryColour,
-                                        String transmissionType,
-                                        String vin,
-                                        String vehicleClass,
-                                        String weight
+                                     String countryOfRegistrationId,
+                                     String cylinderCapacity,
+                                     String dvsaRegistration,
+                                     String dvlaRegistration,
+                                     String firstUsedDate,
+                                     String fuelType,
+                                     String make,
+                                     String model,
+                                     String secondaryColour,
+                                     String transmissionType,
+                                     String vin,
+                                     VehicleClass vehicleClass,
+                                     String weight
     ) {
 
         Vehicle vehicle = new Vehicle();

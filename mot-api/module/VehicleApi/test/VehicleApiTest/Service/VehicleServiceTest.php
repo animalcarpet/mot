@@ -1100,7 +1100,6 @@ class VehicleServiceTest extends AbstractServiceTestCase
         $countryOfRegistrationId = $inputData['countryOfRegistration'];
         $transTypeId = $inputData['transmissionType'];
         $vehicleClassCode = $inputData['testClass'];
-        $vehicleClassId = 4;
         $makeId = $inputData['make'];
         $modelId = $inputData['model'];
         $modelDetailId = $inputData['modelType'];
@@ -1163,7 +1162,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
         $expectedRequest->setFirstUsedDate(new \DateTime($inputData['dateOfFirstUse']));
         $expectedRequest->setMakeId($makeId);
         $expectedRequest->setModelId($modelId);
-        $expectedRequest->setVehicleClassId($vehicleClassCode);
+        $expectedRequest->setVehicleClassCode($vehicleClassCode);
         $expectedRequest->setFuelTypeId($fuelTypeId);
         $expectedRequest->setTransmissionTypeId($transTypeId);
         $expectedRequest->setOneTimePassword('123456');
@@ -1270,7 +1269,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
                     'colour'                => 'Red',
                     'colourSecondary'       => 'Not Stated',
                     'fuelTypeId'            => FuelTypeId::PETROL,
-                    'vehicleClass'          => '4',
+                    'vehicleClass' => ['code' => '4', 'name' => '4'],
                     'bodyType'              => '2 Door Saloon',
                     'cylinderCapacity'      => 1700,
                     'transmissionType'      => 'Automatic',
@@ -1310,7 +1309,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
                     'colour'                => 'Red',
                     'colourSecondary'       => 'Not Stated',
                     'fuelTypeId'            => FuelTypeId::PETROL,
-                    'vehicleClass'          => '4',
+                    'vehicleClass' => ['code' => '4', 'name' => '4'],
                     'bodyType'              => '2 Door Saloon',
                     'cylinderCapacity'      => 1700,
                     'transmissionType'      => 'Automatic',

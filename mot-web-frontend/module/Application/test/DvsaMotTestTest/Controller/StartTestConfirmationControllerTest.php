@@ -59,6 +59,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
         $dummyVehicleDetail = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
         $dummyVehicleDetail->colour = '2';
         $dummyVehicleDetail->id = '1';
+
         $dummyVehicle = new DvsaVehicle($dummyVehicleDetail);
         $mockVehicleService = $this->getMock(
             VehicleService::class,

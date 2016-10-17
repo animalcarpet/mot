@@ -28,7 +28,7 @@ public class ChangeMotTestClassPage extends Page {
     }
 
     public ChangeMotTestClassPage chooseClass(VehicleClass vehicleClass) {
-        clickElement(By.id("class"+vehicleClass.getId()));
+        clickElement(By.id("class"+vehicleClass.getCode()));
         return this;
     }
 

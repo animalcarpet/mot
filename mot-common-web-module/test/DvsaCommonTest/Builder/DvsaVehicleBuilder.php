@@ -12,6 +12,7 @@ class DvsaVehicleBuilder
         $emptyResource->id = null;
         $vehicle->make = $emptyResource;
         $vehicle->model = $emptyResource;
+        $vehicle->vehicleClass = null;
 
         return $vehicle;
     }

@@ -267,7 +267,7 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
             $targetVehicle->getColour() !== $selectedColourName ||
             $targetVehicle->getColourSecondary() !== $selectedSecondaryColourName ||
             $targetVehicle->getFuelType() !== $selectedFuelTypeName ||
-            $targetVehicle->getVehicleClass() !== $selectedVehicleClass
+            ($targetVehicle->getVehicleClass() && $targetVehicle->getVehicleClass()->getCode() !== $selectedVehicleClass)
         ) {
             return true;
         } else {

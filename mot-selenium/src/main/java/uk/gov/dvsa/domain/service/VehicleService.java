@@ -59,7 +59,7 @@ public class VehicleService extends Service {
             String registration,
             String secondaryColourId,
             String vin,
-            String vehicleClassId,
+            String vehicleClassCode,
             String transmissionTypeId
     ) throws IOException {
         Map<String, Map<String, String>> vehicleDataMap = prepareDvsaVehiclePayloadMap(
@@ -74,7 +74,7 @@ public class VehicleService extends Service {
                 registration,
                 secondaryColourId,
                 vin,
-                vehicleClassId,
+                vehicleClassCode,
                 transmissionTypeId
         );
 
@@ -98,7 +98,7 @@ public class VehicleService extends Service {
             String registration,
             String secondaryColourId,
             String vin,
-            String vehicleClassId,
+            String vehicleClassCode,
             String transmissionTypeId
     ) throws IOException {
 
@@ -113,7 +113,7 @@ public class VehicleService extends Service {
         vehicleDataMap.put("registration", registration);
         vehicleDataMap.put("secondaryColourId", secondaryColourId);
         vehicleDataMap.put("vin", vin);
-        vehicleDataMap.put("vehicleClassId", vehicleClassId);
+        vehicleDataMap.put("vehicleClassCode", vehicleClassCode);
         vehicleDataMap.put("transmissionTypeId", transmissionTypeId);
 
         Map<String, String> oneTimePasswordPinMap = new HashMap<>();
