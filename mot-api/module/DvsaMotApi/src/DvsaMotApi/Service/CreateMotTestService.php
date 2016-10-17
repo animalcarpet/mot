@@ -5,6 +5,7 @@ namespace DvsaMotApi\Service;
 use Doctrine\ORM\EntityManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use DvsaAuthentication\Service\OtpService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Dto\MotTesting\ContingencyTestDto;
@@ -226,7 +227,7 @@ class CreateMotTestService implements TransactionAwareInterface
             if (!$vehicleId) {
                 $vehicle = $this->vehicleService->createVtrAndV5CFromDvlaVehicle($dvlaVehicleId, $vehicleClassCode);
 
-                if (!$vehicle instanceof DvlaVehicle) {
+                if (!$vehicle instanceof DvsaVehicle) {
                     throw new \RuntimeException(
                         sprintf(
                             'We have failed to import a dvla vehicle, attempted id: %s and vehicle class code: %s',

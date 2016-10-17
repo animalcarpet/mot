@@ -48,7 +48,7 @@ echo $this->partial('errorMessages', ['getFromFlash' => true]);
                     <dt>VIN/Chassis</dt>
                     <dd id="vin"><?php echo $this->escapeHtml($vehicle->getVin()); ?></dd>
                     <dt>Make and Model</dt>
-                    <dd id="make-and-model"><?php echo $this->escapeHtml($vehicle->getMake()->getName() . ', ' . $vehicle->getModel()->getName()); ?></dd>
+                    <dd id="make-and-model"><?php echo $this->escapeHtml($vehicle->getMakeName() . ', ' . $vehicle->getModelName()); ?></dd>
                 </dl>
             </section>
         </div>
