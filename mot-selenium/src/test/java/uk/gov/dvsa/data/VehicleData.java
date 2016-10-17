@@ -31,7 +31,7 @@ public class VehicleData extends VehicleService {
 
     protected Vehicle createVehicle(User user, VehicleClass vehicleClass, String registration) throws IOException {
         String makeId, modelId;
-        if (vehicleClass.getId().equals("1") || vehicleClass.getId().equals("2")) {
+        if (vehicleClass == VehicleClass.one || vehicleClass == VehicleClass.two) {
             makeId = Integer.toString(VehicleDetails.KAWASAKI_ZRX1100.getMakeId());
             modelId = Integer.toString(VehicleDetails.KAWASAKI_ZRX1100.getModelId());
         } else {
@@ -51,7 +51,7 @@ public class VehicleData extends VehicleService {
                 registration,
                 Colour.Grey.getId().toString(),
                 getRandomVin(),
-                vehicleClass.getId(),
+                vehicleClass.getCode(),
                 DEFAULT_TRANSMISSION_TYPE_ID
         );
     }

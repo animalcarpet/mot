@@ -5,6 +5,7 @@ use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommonTest\Builder\DvsaVehicleBuilder;
+use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommonTest\TestUtils\XMock;
 use Vehicle\UpdateVehicleProperty\Context\UpdateVehicleContext;
 use Vehicle\UpdateVehicleProperty\Form\UpdateClassForm;
@@ -16,7 +17,7 @@ use Zend\View\Helper\Url;
 
 class UpdateClassProcessTest extends \PHPUnit_Framework_TestCase
 {
-    const VEHICLE_CLASS = 3;
+    const VEHICLE_CLASS = VehicleClassCode::CLASS_3;
     const VEHICLE_ID = 1;
 
     /** @var  DvsaVehicleBuilder */
@@ -60,7 +61,7 @@ class UpdateClassProcessTest extends \PHPUnit_Framework_TestCase
 
         $this->vehicleService->expects($this->once())
             ->method("updateDvsaVehicle")
-            ->with(self::VEHICLE_ID, (new UpdateDvsaVehicleRequest())->setVehicleClassId(self::VEHICLE_CLASS));
+            ->with(self::VEHICLE_ID, (new UpdateDvsaVehicleRequest())->setVehicleClassCode(self::VEHICLE_CLASS));
 
         $this->sut->update($formData);
     }
@@ -87,8 +88,12 @@ class UpdateClassProcessTest extends \PHPUnit_Framework_TestCase
     private function buildDvsaVehicle()
     {
         $data = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
+        $vehicleClassData = new \stdClass();
+        $vehicleClassData->code =  self::VEHICLE_CLASS;
+        $vehicleClassData->name =  self::VEHICLE_CLASS;
+        
         $data->id = self::VEHICLE_ID;
-        $data->vehicleClass = self::VEHICLE_CLASS;
+        $data->vehicleClass = $vehicleClassData;
 
         $vehicle = new DvsaVehicle($data);
 

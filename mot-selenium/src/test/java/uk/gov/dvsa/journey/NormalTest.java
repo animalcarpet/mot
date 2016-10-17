@@ -366,7 +366,7 @@ public class NormalTest {
                 vehicle.setModel(new Model());
                 break;
             case "Class":
-                vehicle.setVehicleClass("");
+                vehicle.setVehicleClass(null);
                 break;
             case "Cylinder":
                 vehicle.setCylinderCapacity("");

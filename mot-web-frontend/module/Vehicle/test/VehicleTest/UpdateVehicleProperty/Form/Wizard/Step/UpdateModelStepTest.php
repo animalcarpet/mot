@@ -159,6 +159,7 @@ class UpdateModelStepTest extends \PHPUnit_Framework_TestCase
         $std->model = $model;
         $std->registration = "reg123XSW";
         $std->vin = "VIN98798798";
+        $std->vehicleClass = null;
 
         return new DvsaVehicle($std);
     }

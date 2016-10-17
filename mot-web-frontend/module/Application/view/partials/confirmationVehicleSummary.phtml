@@ -118,14 +118,14 @@ $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
                                         'id'       => 'vehicle-class-select',
                                         'name'     => 'vehicleClassId',
                                         'options'  => $vehicleClasses,
-                                        'value'    => $vehicle->getVehicleClass(),
+                                        'value'    => $vehicle->getVehicleClass() ? $vehicle->getVehicleClass()->getCode() : "",
                                         'required' => true,
                                     ]
                                 );
                             } else {
-                                echo $vehicle->getVehicleClass();
+                                echo $vehicle->getVehicleClass()->getName();
                                 ?>
-                                    <input type="hidden" name="vehicleClassId" value="<?php echo $vehicle->getVehicleClass(); ?>" />
+                                    <input type="hidden" name="vehicleClassId" value="<?php echo $vehicle->getVehicleClass() ? $vehicle->getVehicleClass()->getCode() : ""; ?>" />
                                 <?php
                             }
                             ?>

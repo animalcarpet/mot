@@ -139,7 +139,7 @@ class VehicleObjectsFactory
                     'colour' => 'Red',
                     'colourSecondary' => 'Not Stated',
                     'fuelType' => 'Petrol',
-                    'vehicleClass' => '4',
+                    'vehicleClass' => [ 'code' => '4', 'name' => '4'],
                     'bodyType' => '2 Door Saloon',
                     'cylinderCapacity' => 1700,
                     'transmissionType' => 'Automatic',

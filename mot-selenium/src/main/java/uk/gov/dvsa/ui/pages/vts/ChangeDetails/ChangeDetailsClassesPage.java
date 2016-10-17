@@ -37,7 +37,7 @@ public class ChangeDetailsClassesPage extends Page {
     }
 
     public ChangeDetailsClassesPage chooseOption(VehicleClass className) {
-        FormDataHelper.selectInputBox(driver.findElement(By.cssSelector(String.format("input[value='%s']", className.getId()))));
+        FormDataHelper.selectInputBox(driver.findElement(By.cssSelector(String.format("input[value='%s']", className.getCode()))));
         return this;
     }
 

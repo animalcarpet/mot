@@ -303,7 +303,7 @@ class SummaryStep extends AbstractStep implements WizardStep
             ->setMakeId($makeId)
             ->setModelId($modelId)
             ->setSecondaryColourId($stepsData['secondaryColour'])
-            ->setVehicleClassId($stepsData['testClass'])
+            ->setVehicleClassCode($stepsData['testClass'])
             ->setTransmissionTypeId($stepsData['transmissionType']);
 
         if (in_array(
@@ -401,7 +401,7 @@ class SummaryStep extends AbstractStep implements WizardStep
             'primaryColour' => $primaryColour,
             'secondaryColour' => $secondaryColour,
             'fuelTypeId' => $fuelTypeId,
-            'vehicleClassCode' => $vehicle->getVehicleClass(),
+            'vehicleClassCode' => $vehicle->getVehicleClass()->getName(),
             'vehicleTestingStationId' => $vehicleTestingStationId,
             'hasRegistration' => $hasRegistration,
             'oneTimePassword' => $oneTimePassword,

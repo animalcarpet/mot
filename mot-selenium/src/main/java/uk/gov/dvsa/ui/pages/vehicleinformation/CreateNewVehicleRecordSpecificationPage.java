@@ -56,10 +56,10 @@ public class CreateNewVehicleRecordSpecificationPage extends Page {
             );
         }
 
-        if(! vehicle.getVehicleClass().equals("")){
+        if(vehicle.getVehicleClass() != null){
             FormDataHelper.selectFromDropDownByValue(
                     vehicleClass,
-                    vehicle.getVehicleClass()
+                    vehicle.getVehicleClass().getCode()
             );
         }
 

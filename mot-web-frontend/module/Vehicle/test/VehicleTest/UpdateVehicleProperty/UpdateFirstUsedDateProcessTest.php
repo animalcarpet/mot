@@ -49,6 +49,7 @@ class UpdateFirstUsedDateProcessTest extends \PHPUnit_Framework_TestCase
 
         $vehicleStd = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
         $vehicleStd->id = 15;
+        $vehicleStd->vehicleClass = new \stdClass();
 
         $this->vehicle = new DvsaVehicle($vehicleStd);
 
@@ -84,6 +85,7 @@ class UpdateFirstUsedDateProcessTest extends \PHPUnit_Framework_TestCase
 
         $stdClass = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
         $stdClass->firstUsedDate = $date->format('Y-m-d');
+        $stdClass->vehicleClass = new \stdClass();
 
         $vehicle = new DvsaVehicle($stdClass);
 

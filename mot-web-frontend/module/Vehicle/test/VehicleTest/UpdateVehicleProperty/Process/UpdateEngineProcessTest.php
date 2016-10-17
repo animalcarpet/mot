@@ -106,6 +106,7 @@ class UpdateEngineProcessTest extends \PHPUnit_Framework_TestCase
         $data->fuelTypeCode = new stdClass();
         $data->fuelTypeCode->code = self::FUEL_TYPE;
         $data->cylinderCapacity = self::VEHICLE_CAPACITY;
+        $data->vehicleClass = new stdClass();
 
         $vehicle = new DvsaVehicle($data);
 

@@ -7,6 +7,7 @@ use Core\ViewModel\Gds\Table\GdsTable;
 use Core\ViewModel\Header\HeaderTertiaryList;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use DvsaCommon\Dto\Vehicle\VehicleExpiryDto;
+use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommonTest\TestUtils\XMock;
 use Vehicle\Controller\VehicleController;
 use Vehicle\Helper\VehicleInformationTableBuilder;
@@ -137,7 +138,7 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
             'colourSecondary' => 'Not Stated',
             'countryOfRegistration' => 'GB, UK, ENG, CYM, SCO (UK) - Great Britain',
             'fuelType' => 'Petrol',
-            'vehicleClass' => '4',
+            'vehicleClass' => [ 'code' => VehicleClassCode::CLASS_4, 'name' => '4'],
             'bodyType' => '2 Door Saloon',
             'cylinderCapacity' => 1700,
             'transmissionType' => 'Automatic',
