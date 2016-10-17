@@ -54,6 +54,9 @@ class DefectSentenceCaseConverter
             'name' => '',
             'testItemSelectorDescription' => '',
             'failureText' => '',
+            'nameCy' => '',
+            'testItemSelectorDescriptionCy' => '',
+            'failureTextCy' => '',
         ];
 
         $defect = $motTestRfr->getReasonForRejection();
@@ -62,9 +65,13 @@ class DefectSentenceCaseConverter
         $defectDescriptions = $this->getDefectDetails($defect);
 
         $defectDetails['name'] = $categoryDetails['name'];
+        $defectDetails['nameCy'] = $categoryDetails['nameCy'];
         $defectDetails['testItemSelectorDescription'] = $categoryDetails['description'];
+        $defectDetails['testItemSelectorDescriptionCy'] = $categoryDetails['descriptionCy'];
         $defectDetails['failureText'] = ($defectType === ReasonForRejectionTypeName::ADVISORY)
             ? $defectDescriptions['advisoryText'] : $defectDescriptions['name'];
+        $defectDetails['failureTextCy'] = ($defectType === ReasonForRejectionTypeName::ADVISORY)
+            ? $defectDescriptions['advisoryTextCy'] : $defectDescriptions['nameCy'];
 
         if (true !== $this->isTestResultEntryImprovementsEnabled()) {
             return $defectDetails;
@@ -279,6 +286,8 @@ class DefectSentenceCaseConverter
         $categoryDetails = [
             'name' => '',
             'description' => '',
+            'nameCy' => '',
+            'descriptionCy' => '',
         ];
 
         if (null !== $category) {
@@ -286,9 +295,17 @@ class DefectSentenceCaseConverter
             if (null !== $descriptions) {
                 foreach ($category->getDescriptions() as $description) {
                     $language = $description->getLanguage();
-                    if ($language->getCode() === LanguageTypeCode::ENGLISH || $language->getCode() === null) {
+                    if (null === $language) {
                         $categoryDetails['name'] = $description->getName();
                         $categoryDetails['description'] = $description->getDescription();
+                        continue;
+                    }
+                    if ($language->getCode() === LanguageTypeCode::ENGLISH || null === $language->getCode()) {
+                        $categoryDetails['name'] = $description->getName();
+                        $categoryDetails['description'] = $description->getDescription();
+                    } else if ($language->getCode() === LanguageTypeCode::WELSH) {
+                        $categoryDetails['nameCy'] = $description->getName();
+                        $categoryDetails['descriptionCy'] = $description->getDescription();
                     }
                 }
             }
@@ -308,20 +325,29 @@ class DefectSentenceCaseConverter
             'name' => '',
             'advisoryText' => '',
             'inspectionManualDescription' => '',
+            'nameCy' => '',
+            'advisoryTextCy' => '',
+            'inspectionManualDescriptionCy' => '',
         ];
 
         $defectDescriptions = $defect->getDescriptions();
         if (null !== $defectDescriptions) {
             foreach ($defectDescriptions as $defectDescription) {
                 $defectLanguage = $defectDescription->getLanguage();
-                if ($defectLanguage === null) {
+                if (null === $defectLanguage) {
                     $defectDetails['name'] = $defectDescription->getName();
                     $defectDetails['advisoryText'] = $defectDescription->getAdvisoryText();
                     $defectDetails['inspectionManualDescription'] = $defectDescription->getInspectionManualDescription();
-                } elseif ($defectLanguage->getCode() === LanguageTypeCode::ENGLISH || $defectLanguage->getCode() === null) {
+                    continue;
+                }
+                if ($defectLanguage->getCode() === LanguageTypeCode::ENGLISH || null === $defectLanguage->getCode()) {
                     $defectDetails['name'] = $defectDescription->getName();
                     $defectDetails['advisoryText'] = $defectDescription->getAdvisoryText();
                     $defectDetails['inspectionManualDescription'] = $defectDescription->getInspectionManualDescription();
+                } else if ($defectLanguage->getCode() === LanguageTypeCode::WELSH) {
+                    $defectDetails['nameCy'] = $defectDescription->getName();
+                    $defectDetails['advisoryTextCy'] = $defectDescription->getAdvisoryText();
+                    $defectDetails['inspectionManualDescriptionCy'] = $defectDescription->getInspectionManualDescription();
                 }
             }
         }

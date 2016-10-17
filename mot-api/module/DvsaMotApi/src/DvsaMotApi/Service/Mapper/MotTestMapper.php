@@ -413,7 +413,7 @@ class MotTestMapper
             $hydratedTestRfr['inspectionManualReference'] = $rfrEntity->getInspectionManualReference();
             /** @var array $formattedDescriptions */
             $formattedDescriptions = $this->defectSentenceCaseConverter->getDefectDetailsForTestResultsAndBasket($motTestRfr);
-            foreach (['testItemSelectorDescription', 'failureText', 'name', 'nameCy'] as $field) {
+            foreach (['name', 'failureText', 'testItemSelectorDescription', 'nameCy', 'failureTextCy', 'testItemSelectorDescriptionCy'] as $field) {
                 if (!empty($formattedDescriptions[$field])) {
                     $hydratedTestRfr[$field] = $formattedDescriptions[$field];
                 }

@@ -96,21 +96,11 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
             ->method('getLanguage')
             ->willReturn($this->language);
 
-        $this
-            ->testItemCategoryDescription
-            ->method('getCode')
-            ->willReturn(LanguageTypeCode::ENGLISH);
-
         $categoryDescriptions[] = $this->testItemCategoryDescription;
         $this
             ->testItemSelector
             ->method('getDescriptions')
             ->willReturn($categoryDescriptions);
-
-        $this
-            ->language
-            ->method('getCode')
-            ->willReturn(LanguageTypeCode::ENGLISH);
 
         $this
             ->reasonForRejection
@@ -134,6 +124,7 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testAbsIsCapitalised()
     {
         $this->enableTestResultEntryImprovements(true);
+        $this->setLanguage(LanguageTypeCode::ENGLISH);
         $stringToCovert = 'Abs category';
         $expectedString = 'Anti-lock braking system category';
 
@@ -143,6 +134,7 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testSrsIsCapitalised()
     {
         $this->enableTestResultEntryImprovements(true);
+        $this->setLanguage(LanguageTypeCode::ENGLISH);
         $stringToCovert = 'Category for srs';
         $expectedString = 'Category for supplementary restraint system';
 
@@ -152,6 +144,7 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testWhitespaceWithAcronymExpansion()
     {
         $this->enableTestResultEntryImprovements(true);
+        $this->setLanguage(LanguageTypeCode::ENGLISH);
         $stringToCovert = ' HMRC SRS RAC  ';
         $expectedString = 'HMRC supplementary restraint system RAC';
 
@@ -161,6 +154,7 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testAcronymsExpandedOnlyOnce()
     {
         $this->enableTestResultEntryImprovements(true);
+        $this->setLanguage(LanguageTypeCode::ENGLISH);
         $stringToCovert = 'SRS SRS VIN VIN';
         $expectedString = 'Supplementary restraint system SRS vehicle identification number VIN';
 
@@ -170,6 +164,7 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testUpperCaseAcronymsInApostrophes()
     {
         $this->enableTestResultEntryImprovements(true);
+        $this->setLanguage(LanguageTypeCode::ENGLISH);
         $stringToCovert = 'Damage to zone \'A\'';
         $expectedString = 'Damage to zone \'A\'';
 
@@ -179,6 +174,7 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testAcronymsNotExpandedIfExpandedFormAlreadyPresentAsUsedInAddADefect()
     {
         $this->enableTestResultEntryImprovements(true);
+        $this->setLanguage(LanguageTypeCode::ENGLISH);
         $stringToCovert = 'Vehicle identification number VIN';
         $expectedString = 'Vehicle identification number VIN';
 
@@ -188,6 +184,7 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testAcronymsNotExpandedIfExpandedFormAlreadyPresentAsUsedInSearch()
     {
         $this->enableTestResultEntryImprovements(true);
+        $this->setLanguage(LanguageTypeCode::ENGLISH);
         $stringToCovert = 'Vehicle identification number VIN';
         $expectedString = 'Vehicle identification number VIN';
 
@@ -197,6 +194,7 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testAcronymsNotExpandedIfExpandedFormAlreadyPresentAsUsedInDefectCategories()
     {
         $this->enableTestResultEntryImprovements(true);
+        $this->setLanguage(LanguageTypeCode::ENGLISH);
         $stringToCovert = 'Vehicle identification number VIN';
         $expectedString = 'Vehicle identification number VIN';
 
@@ -206,6 +204,7 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testAddADefectWithToggleOn()
     {
         $this->enableTestResultEntryImprovements(true);
+        $this->setLanguage(LanguageTypeCode::ENGLISH);
 
         $this->setTestItemCategoryDescriptionName('Category name');
         $this->setTestItemCategoryDescription('Category description');
@@ -223,6 +222,7 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testAddADefectWithToggleOff()
     {
         $this->enableTestResultEntryImprovements(false);
+        $this->setLanguage(LanguageTypeCode::ENGLISH);
 
         $this->setTestItemCategoryDescriptionName('Category name');
         $this->setTestItemCategoryDescription('Category description');
@@ -240,6 +240,7 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testListAndSearchWithToggleOn()
     {
         $this->enableTestResultEntryImprovements(true);
+        $this->setLanguage(LanguageTypeCode::ENGLISH);
 
         $this->setTestItemCategoryDescriptionName('Category name');
         $this->setTestItemCategoryDescription('Category description');
@@ -259,6 +260,7 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testListAndSearchWithToggleOff()
     {
         $this->enableTestResultEntryImprovements(false);
+        $this->setLanguage(LanguageTypeCode::ENGLISH);
 
         $this->setTestItemCategoryDescriptionName('Category name');
         $this->setTestItemCategoryDescription('Category description');
@@ -278,6 +280,7 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testTestResultsAndBasketWithToggleOn()
     {
         $this->enableTestResultEntryImprovements(true);
+        $this->setLanguage(LanguageTypeCode::ENGLISH);
 
         $this->setTestItemCategoryDescriptionName('Category name');
         $this->setTestItemCategoryDescription('Category description');
@@ -286,8 +289,11 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
         $this->setReasonForRejectionInspectionManualDescription('Inspection manual description');
         $expectedResult = [
             'name' => 'Category name',
-            'testItemSelectorDescription' => 'Category description',
             'failureText' => 'defect name',
+            'testItemSelectorDescription' => 'Category description',
+            'nameCy' => '',
+            'failureTextCy' => '',
+            'testItemSelectorDescriptionCy' => '',
         ];
         $actualResult = $this->defectSentenceCaseConverterService->getDefectDetailsForTestResultsAndBasket($this->motTestReasonForRejection);
 
@@ -297,6 +303,7 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testTestResultsAndBasketWithToggleOff()
     {
         $this->enableTestResultEntryImprovements(false);
+        $this->setLanguage(LanguageTypeCode::ENGLISH);
 
         $this->setTestItemCategoryDescriptionName('Category name');
         $this->setTestItemCategoryDescription('Category description');
@@ -305,8 +312,11 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
         $this->setReasonForRejectionInspectionManualDescription('Inspection manual description');
         $expectedResult = [
             'name' => 'Category name',
-            'testItemSelectorDescription' => 'Category description',
             'failureText' => 'Defect name',
+            'testItemSelectorDescription' => 'Category description',
+            'nameCy' => '',
+            'failureTextCy' => '',
+            'testItemSelectorDescriptionCy' => '',
         ];
         $actualResult = $this->defectSentenceCaseConverterService->getDefectDetailsForTestResultsAndBasket($this->motTestReasonForRejection);
 
@@ -316,14 +326,18 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testAcronymsInTestResultsAndBasketWithToggelOff()
     {
         $this->enableTestResultEntryImprovements(false);
+        $this->setLanguage(LanguageTypeCode::ENGLISH);
         $this->setDefectType(ReasonForRejectionTypeName::FAIL);
         $this->setTestItemCategoryDescription('Vehicle Identification Number');
         $this->setReasonForRejectionName('not permanently displayed');
         $this->setTestItemCategoryDescriptionName('Vehicle Identification Number (Bold text shown in the basket)');
         $expectedResult = [
-            'testItemSelectorDescription' => 'Vehicle Identification Number',
-            'failureText' => 'not permanently displayed',
             'name' => 'Vehicle Identification Number (Bold text shown in the basket)',
+            'failureText' => 'not permanently displayed',
+            'testItemSelectorDescription' => 'Vehicle Identification Number',
+            'nameCy' => '',
+            'failureTextCy' => '',
+            'testItemSelectorDescriptionCy' => '',
         ];
         $actualResult = $this->defectSentenceCaseConverterService->getDefectDetailsForTestResultsAndBasket($this->motTestReasonForRejection);
 
@@ -333,14 +347,18 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testAcronymsNotChangedInResultsBasketWithToggleOff()
     {
         $this->enableTestResultEntryImprovements(false);
+        $this->setLanguage(LanguageTypeCode::ENGLISH);
         $this->setDefectType(ReasonForRejectionTypeName::ADVISORY);
         $this->setTestItemCategoryDescription('Abs');
         $this->setReasonForRejectionAdvisoryText('warning lamp indicates an ABS fault');
         $this->setTestItemCategoryDescriptionName('Abs');
         $expectedResult = [
-            'testItemSelectorDescription' => 'Abs',
-            'failureText' => 'warning lamp indicates an ABS fault',
             'name' => 'Abs',
+            'failureText' => 'warning lamp indicates an ABS fault',
+            'testItemSelectorDescription' => 'Abs',
+            'nameCy' => '',
+            'failureTextCy' => '',
+            'testItemSelectorDescriptionCy' => '',
         ];
         $actualResult = $this->defectSentenceCaseConverterService->getDefectDetailsForTestResultsAndBasket($this->motTestReasonForRejection);
 
@@ -350,14 +368,18 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testInconsistentlyNamedDefectsInTestResultsAndBasketWithToggleOff()
     {
         $this->enableTestResultEntryImprovements(false);
+        $this->setLanguage(LanguageTypeCode::ENGLISH);
         $this->setDefectType(ReasonForRejectionTypeName::PRS);
         $this->setTestItemCategoryDescription('Child Seat');
         $this->setReasonForRejectionName('fitted not allowing full inspection of adult belt');
         $this->setTestItemCategoryDescriptionName('Non-component advisories');
         $expectedResult = [
-            'testItemSelectorDescription' => 'Child Seat',
-            'failureText' => 'fitted not allowing full inspection of adult belt',
             'name' => 'Non-component advisories',
+            'failureText' => 'fitted not allowing full inspection of adult belt',
+            'testItemSelectorDescription' => 'Child Seat',
+            'nameCy' => '',
+            'failureTextCy' => '',
+            'testItemSelectorDescriptionCy' => '',
         ];
         $actualResult = $this->defectSentenceCaseConverterService->getDefectDetailsForTestResultsAndBasket($this->motTestReasonForRejection);
 
@@ -367,14 +389,18 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testAcronymsExpandedInResultsBasketWithToggleOnAndAdvisory()
     {
         $this->enableTestResultEntryImprovements(true);
+        $this->setLanguage(LanguageTypeCode::ENGLISH);
         $this->setDefectType(ReasonForRejectionTypeName::ADVISORY);
         $this->setTestItemCategoryDescription('Abs');
         $this->setReasonForRejectionAdvisoryText('warning lamp indicates an ABS fault (advisory text)');
         $this->setTestItemCategoryDescriptionName('Abs');
         $expectedResult = [
-            'testItemSelectorDescription' => 'Anti-lock braking system',
-            'failureText' => 'warning lamp indicates an ABS fault (advisory text)',
             'name' => 'Abs',
+            'failureText' => 'warning lamp indicates an ABS fault (advisory text)',
+            'testItemSelectorDescription' => 'Anti-lock braking system',
+            'nameCy' => '',
+            'failureTextCy' => '',
+            'testItemSelectorDescriptionCy' => '',
         ];
         $actualResult = $this->defectSentenceCaseConverterService->getDefectDetailsForTestResultsAndBasket($this->motTestReasonForRejection);
 
@@ -384,14 +410,18 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testAcronymsExpandedInResultsBasketWithToggleOnAndPrs()
     {
         $this->enableTestResultEntryImprovements(true);
+        $this->setLanguage(LanguageTypeCode::ENGLISH);
         $this->setDefectType(ReasonForRejectionTypeName::PRS);
         $this->setTestItemCategoryDescription('Abs');
         $this->setReasonForRejectionName('warning lamp indicates an ABS fault (PRS text)');
         $this->setTestItemCategoryDescriptionName('Abs');
         $expectedResult = [
-            'testItemSelectorDescription' => 'Anti-lock braking system',
-            'failureText' => 'warning lamp indicates an ABS fault (PRS text)',
             'name' => 'Abs',
+            'failureText' => 'warning lamp indicates an ABS fault (PRS text)',
+            'testItemSelectorDescription' => 'Anti-lock braking system',
+            'nameCy' => '',
+            'failureTextCy' => '',
+            'testItemSelectorDescriptionCy' => '',
         ];
         $actualResult = $this->defectSentenceCaseConverterService->getDefectDetailsForTestResultsAndBasket($this->motTestReasonForRejection);
 
@@ -401,6 +431,7 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testDefectCategoriesWithToggleOn()
     {
         $this->enableTestResultEntryImprovements(true);
+        $this->setLanguage(LanguageTypeCode::ENGLISH);
 
         $this->setTestItemCategoryDescriptionName('category name');
         $this->setTestItemCategoryDescription('Category description');
@@ -410,8 +441,49 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
         $expectedResult = [
             'name' => 'Category name',
             'description' => 'Category description',
+            'nameCy' => '',
+            'descriptionCy' => '',
         ];
         $actualResult = $this->defectSentenceCaseConverterService->getDetailsForDefectCategories($this->testItemSelector);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function testWelshDefectCategoriesWithToggleOn()
+    {
+        $this->enableTestResultEntryImprovements(true);
+        $this->setLanguage(LanguageTypeCode::WELSH);
+
+        $this->setTestItemCategoryDescriptionName('Welsh category name');
+        $this->setTestItemCategoryDescription('Welsh category description');
+        $expectedResult = [
+            'name' => '',
+            'description' => '',
+            'nameCy' => 'Welsh category name',
+            'descriptionCy' => 'Welsh category description',
+        ];
+        $actualResult = $this->defectSentenceCaseConverterService->getDetailsForDefectCategories($this->testItemSelector);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function testWelshDefectDetailsToggleOn()
+    {
+        $this->enableTestResultEntryImprovements(true);
+        $this->setLanguage(LanguageTypeCode::WELSH);
+        $this->setDefectType(ReasonForRejectionTypeName::ADVISORY);
+        $this->setTestItemCategoryDescription('Welsh category description');
+        $this->setReasonForRejectionAdvisoryText('Welsh advisory text');
+        $this->setTestItemCategoryDescriptionName('Welsh category name');
+        $expectedResult = [
+            'name' => '',
+            'failureText' => '',
+            'testItemSelectorDescription' => '',
+            'nameCy' => 'Welsh category name',
+            'failureTextCy' => 'Welsh advisory text',
+            'testItemSelectorDescriptionCy' => 'Welsh category description',
+        ];
+        $actualResult = $this->defectSentenceCaseConverterService->getDefectDetailsForTestResultsAndBasket($this->motTestReasonForRejection);
 
         $this->assertEquals($expectedResult, $actualResult);
     }
@@ -419,6 +491,7 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
     public function testDefectCategoriesWithToggleOff()
     {
         $this->enableTestResultEntryImprovements(false);
+        $this->setLanguage(LanguageTypeCode::ENGLISH);
 
         $this->setTestItemCategoryDescriptionName('category name');
         $this->setTestItemCategoryDescription('Category description');
@@ -428,6 +501,8 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
         $expectedResult = [
             'name' => 'category name',
             'description' => 'Category description',
+            'nameCy' => '',
+            'descriptionCy' => '',
         ];
         $actualResult = $this->defectSentenceCaseConverterService->getDetailsForDefectCategories($this->testItemSelector);
 
@@ -513,5 +588,18 @@ class DefectSentenceCaseConverterTest extends PHPUnit_Framework_TestCase
             ->testItemCategoryDescription
             ->method('getName')
             ->willReturn($name);
+    }
+
+    private function setLanguage($langaugeTypeCode)
+    {
+        $this
+            ->testItemCategoryDescription
+            ->method('getCode')
+            ->willReturn($langaugeTypeCode);
+
+        $this
+            ->language
+            ->method('getCode')
+            ->willReturn($langaugeTypeCode);
     }
 }
