@@ -81,10 +81,10 @@ class UpdateEngineProcess implements SingleStepProcessInterface, AutoWireableInt
     public function getPrePopulatedData()
     {
         $vehicle = $this->context->getVehicle();
-        $fuelType = $vehicle->getFuelTypeCode();
+        $fuelType = $vehicle->getFuelType();
 
         return [
-            UpdateEngineForm::FIELD_FUEL_TYPE => $fuelType ? $fuelType->code : null,
+            UpdateEngineForm::FIELD_FUEL_TYPE => $fuelType ? $fuelType->getCode() : null,
             UpdateEngineForm::FIELD_CAPACITY => $vehicle->getCylinderCapacity(),
         ];
     }

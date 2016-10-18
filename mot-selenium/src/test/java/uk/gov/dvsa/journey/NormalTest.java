@@ -11,6 +11,7 @@ import uk.gov.dvsa.domain.model.vehicle.DvlaVehicle;
 import uk.gov.dvsa.domain.api.response.Make;
 import uk.gov.dvsa.domain.api.response.Model;
 import uk.gov.dvsa.domain.api.response.Vehicle;
+import uk.gov.dvsa.domain.api.response.FuelType;
 import uk.gov.dvsa.domain.model.vehicle.VehicleFactory;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
@@ -360,7 +361,7 @@ public class NormalTest {
                 vehicle.setTransmissionType("");
                 break;
             case "Fuel":
-                vehicle.setFuelType("");
+                vehicle.setFuelType(new FuelType().setCode("").setName(""));
                 break;
             case "Model":
                 vehicle.setModel(new Model());

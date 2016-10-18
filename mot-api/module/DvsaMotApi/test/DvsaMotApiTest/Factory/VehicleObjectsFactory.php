@@ -4,6 +4,7 @@ namespace DvsaMotApiTest\Factory;
 
 use Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle as DvlaImportedVehicle;
 use DvsaCommon\Date\DateUtils;
+use DvsaCommon\Enum\FuelTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Enum\VehicleClassId;
 use DvsaEntities\Entity\BodyType;
@@ -138,8 +139,11 @@ class VehicleObjectsFactory
                     'model' => 'BOXSTER',
                     'colour' => 'Red',
                     'colourSecondary' => 'Not Stated',
-                    'fuelType' => 'Petrol',
                     'vehicleClass' => [ 'code' => '4', 'name' => '4'],
+                    'fuelType'              => [
+                        'code' => FuelTypeCode::PETROL,
+                        'name' => "Petrol",
+                    ],
                     'bodyType' => '2 Door Saloon',
                     'cylinderCapacity' => 1700,
                     'transmissionType' => 'Automatic',

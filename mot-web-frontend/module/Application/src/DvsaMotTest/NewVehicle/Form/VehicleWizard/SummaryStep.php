@@ -299,7 +299,7 @@ class SummaryStep extends AbstractStep implements WizardStep
             ->setColourId($stepsData['colour'])
             ->setCountryOfRegistrationId($stepsData['countryOfRegistration'])
             ->setFirstUsedDate(new \DateTime(vsprintf('%04d-%02d-%02d',array_reverse($stepsData['dateOfFirstUse']))))
-            ->setFuelTypeId($stepsData['fuelType'])
+            ->setFuelTypeCode($stepsData['fuelType'])
             ->setMakeId($makeId)
             ->setModelId($modelId)
             ->setSecondaryColourId($stepsData['secondaryColour'])
@@ -308,7 +308,7 @@ class SummaryStep extends AbstractStep implements WizardStep
 
         if (in_array(
             $stepsData['fuelType'],
-            FuelTypeAndCylinderCapacity::getAllFuelTypeIdsWithCompulsoryCylinderCapacity())
+            FuelTypeAndCylinderCapacity::getAllFuelTypeCodesWithCompulsoryCylinderCapacity())
         ) {
             $createVehicleRequest->setCylinderCapacity($stepsData['cylinderCapacity']);
         }
@@ -394,14 +394,14 @@ class SummaryStep extends AbstractStep implements WizardStep
 
         $primaryColour = $this->evalColourCodeEnumsBasedOnTheColourName($vehicle->getColour());
         $secondaryColour = $this->evalColourCodeEnumsBasedOnTheColourName($vehicle->getColourSecondary());
-        $fuelTypeId = $this->evalFuelTypeCodeEnumsBasedOnTheFuelName($vehicle->getFuelType());
+        $fuelTypeCode = $vehicle->getFuelType()->getCode();
 
         $data = [
             'vehicleId' => $vehicle->getId(),
             'primaryColour' => $primaryColour,
             'secondaryColour' => $secondaryColour,
-            'fuelTypeId' => $fuelTypeId,
             'vehicleClassCode' => $vehicle->getVehicleClass()->getName(),
+            'fuelTypeId' => $fuelTypeCode,
             'vehicleTestingStationId' => $vehicleTestingStationId,
             'hasRegistration' => $hasRegistration,
             'oneTimePassword' => $oneTimePassword,
@@ -447,16 +447,5 @@ class SummaryStep extends AbstractStep implements WizardStep
     private function evalColourCodeEnumsBasedOnTheColourName($colorName)
     {
         return $this->evalEnumByName(ColourCode::class, $colorName);
-    }
-
-    /**
-     * @TODO (ABN) Same as evalEnumByName()!!
-     *
-     * @param string $FuelTypeName
-     * @return string enum name from ColourCode
-     */
-    private function evalFuelTypeCodeEnumsBasedOnTheFuelName($FuelTypeName)
-    {
-        return $this->evalEnumByName(FuelTypeCode::class, $FuelTypeName);
     }
 }

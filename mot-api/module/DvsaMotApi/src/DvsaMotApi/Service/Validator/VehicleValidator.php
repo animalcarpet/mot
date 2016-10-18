@@ -33,7 +33,7 @@ class VehicleValidator extends AbstractValidator
             'colour',
             'secondaryColour',
             'dateOfFirstUse',
-            'fuelTypeId',
+            'fuelTypeCode',
             'testClass',
             'countryOfRegistration',
             'transmissionType',
@@ -50,7 +50,7 @@ class VehicleValidator extends AbstractValidator
         $requiredFields = self::$requiredFields;
 
         $isCylinderCapacityCompulsory = 
-            FuelTypeAndCylinderCapacity::isCylinderCapacityCompulsoryForFuelType($data['fuelTypeId']);
+            FuelTypeAndCylinderCapacity::isCylinderCapacityCompulsoryForFuelTypeCode($data['fuelTypeCode']);
 
         if ($isCylinderCapacityCompulsory) {
             $requiredFields[] = 'cylinderCapacity';

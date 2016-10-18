@@ -176,17 +176,13 @@ class VehicleCatalogService
     }
 
     /**
-     * @param integer $id
-     * @param bool    $refOnly
+     * @param integer $code
      *
      * @return \DvsaEntities\Entity\FuelType
      */
-    public function getFuelType($id, $refOnly = false)
+    public function getFuelType($code)
     {
-        return $refOnly
-            ? $this->fuelTypeRepository()->getReference($id)
-            :
-            $this->fuelTypeRepository()->get($id);
+        return $this->fuelTypeRepository()->getByCode($code);
     }
 
     /**

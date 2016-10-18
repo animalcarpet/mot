@@ -137,7 +137,7 @@ class VehicleService
         $this->transaction->begin();
 
         try {
-            $data["fuelType"] = $this->vehicleCatalog->getFuelType($data['fuelTypeId'])->getCode();
+            $data["fuelType"] = $data['fuelTypeCode'];
             $motTest = $this->startMotTest($data, $dvsaVehicleCreatedUsingJavaService->getId());
 
             $this->transaction->commit();
@@ -311,7 +311,7 @@ class VehicleService
         $modelDetail = new ModelDetail();
         $modelDetail
             ->setCylinderCapacity($data['cylinderCapacity'])
-            ->setFuelType($vehDic->getFuelType($data['fuelTypeId']))
+            ->setFuelType($vehDic->getFuelType($data['fuelTypeCode']))
             ->setModel($model)
             ->setTransmissionType($vehDic->getTransmissionType($data['transmissionType']))
             ->setVehicleClass($vehDic->getVehicleClassByCode($data['testClass']));
@@ -366,8 +366,8 @@ class VehicleService
         $vehicleClass = $this->vehicleCatalog->getVehicleClassByCode($vehicleClassCode);
 
         $fuelType = $this->vehicleCatalog->findFuelTypeByPropulsionCode($dvlaVehicle->getFuelType());
-        $fuelTypeId = $fuelType ? $fuelType->getId() : null;
-
+        $fuelTypeCode = $fuelType ? $fuelType->getCode() : null;
+        
         $bodyType = $this->vehicleCatalog->findBodyTypeByCode($dvlaVehicle->getBodyType());
         if (is_null($bodyType)) {
             $bodyType = $this->vehicleCatalog->findBodyTypeByCode(self::DEFAULT_BODY_TYPE_CODE);
@@ -392,8 +392,8 @@ class VehicleService
             ->setDvlaModelCode($dvlaVehicle->getModelCode())
             ->setMakeInFull($dvlaVehicle->getMakeInFull())
             ->setBodyTypeId($bodyType->getId())
-            ->setFuelTypeId($fuelTypeId)
             ->setVehicleClassCode($vehicleClass->getCode())
+            ->setFuelTypeCode($fuelTypeCode)
             ->setColourId($colourId)
             ->setSecondaryColourId($secondaryColourId)
             ->setCountryOfRegistrationId($countryOfRegistrationId)
@@ -401,7 +401,7 @@ class VehicleService
             ->setFirstRegistrationDate($dvlaVehicle->getFirstRegistrationDate())
             ->setIsNewAtFirstReg((bool)$dvlaVehicle->isVehicleNewAtFirstRegistration());
 
-        if (FuelTypeAndCylinderCapacity::isCylinderCapacityCompulsoryForFuelType($fuelTypeId)) {
+        if (FuelTypeAndCylinderCapacity::isCylinderCapacityCompulsoryForFuelTypeCode($fuelTypeCode)) {
             $dvlaVehicleRequest->setCylinderCapacity($dvlaVehicle->getCylinderCapacity());
         }
 
@@ -435,7 +435,7 @@ class VehicleService
         Vehicle $dvsaVehicle,
         $oneTimePassword
     ) {
-        $fuelTypeId = $dvsaVehicle->getModelDetail()->getFuelType() ? $dvsaVehicle->getModelDetail()->getFuelType()->getId() : null;
+        $fuelTypeCode = $dvsaVehicle->getModelDetail()->getFuelType() ? $dvsaVehicle->getModelDetail()->getFuelType()->getCode() : null;
 
         $dvsaVehicleRequest = new CreateDvsaVehicleRequest();
         $dvsaVehicleRequest
@@ -444,8 +444,8 @@ class VehicleService
             ->setVin($dvsaVehicle->getVin())
             ->setMakeId($dvsaVehicle->getModelDetail()->getModel()->getMake()->getId())
             ->setModelId($dvsaVehicle->getModelDetail()->getModel()->getId())
-            ->setFuelTypeId($fuelTypeId)
             ->setVehicleClassCode($dvsaVehicle->getModelDetail()->getVehicleClass()->getCode())
+            ->setFuelTypeCode($fuelTypeCode)
             ->setTransmissionTypeId($dvsaVehicle->getModelDetail()->getTransmissionType()->getId())
             ->setColourId($dvsaVehicle->getColour()->getId())
             ->setSecondaryColourId($dvsaVehicle->getSecondaryColour()->getId())

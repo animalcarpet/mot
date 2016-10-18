@@ -267,7 +267,7 @@ us access to an http client (`$this->client` property):
                 'vehicleTestingStationId' => '1',
                 'primaryColour' => 'L',
                 'secondaryColour' => 'L',
-                'fuelTypeId' => 'PE',
+                'fuelTypeCode' => 'PE',
                 'vehicleClassCode' => '4',
                 'hasRegistration' => '1',
                 'oneTimePassword' => Authentication::$oneTimePassword

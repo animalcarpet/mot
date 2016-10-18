@@ -1,7 +1,7 @@
 package uk.gov.dvsa.domain.api.response;
 
-import uk.gov.dvsa.domain.model.vehicle.FuelType;
 import uk.gov.dvsa.domain.model.vehicle.VehicleClass;
+import uk.gov.dvsa.domain.model.vehicle.FuelTypes;
 
 public class Vehicle {
 
@@ -15,8 +15,7 @@ public class Vehicle {
     private String emptyVrmReason;
     private String firstRegistrationDate;
     private String firstUsedDate;
-    private String fuelType;
-    private FuelType fuelTypeCode;
+    private FuelType fuelType;
     private String id;
     private String isNewAtFirstReg;
     private Make make;
@@ -146,21 +145,12 @@ public class Vehicle {
         return this;
     }
 
-    public String getFuelType() {
+    public FuelType getFuelType() {
         return fuelType;
     }
 
-    public Vehicle setFuelType(String fuelType) {
-        this.fuelType = fuelType;
-        return this;
-    }
-
-    public FuelType getFuelTypeCode() {
-        return fuelTypeCode;
-    }
-
-    public Vehicle setFuelTypeCode(FuelType fuelTypeCode) {
-        this.fuelTypeCode = fuelTypeCode;
+    public Vehicle setFuelType(FuelType fuelTypeCode) {
+        this.fuelType = fuelTypeCode;
         return this;
     }
 
@@ -282,9 +272,9 @@ public class Vehicle {
                 .setDvsaRegistration(dvsaRegistration)
                 .setDvlaRegistration(dvlaRegistration)
                 .setFirstUsedDate(firstUsedDate)
-                .setFuelType(fuelType)
                 .setMake(new Make().setName(make))
                 .setModel(new Model().setName(model))
+                .setFuelType(new FuelType().setName(fuelType).setCode(FuelTypes.findByName(fuelType).getCode()))
                 .setColourSecondary(secondaryColour)
                 .setTransmissionType(transmissionType)
                 .setVin(vin)
@@ -307,7 +297,7 @@ public class Vehicle {
                 ", colour='" + colour + '\'' +
                 ", secondaryColour='" + colourSecondary + '\'' +
                 ", dateOfFirstUse='" + firstUsedDate + '\'' +
-                ", fuelType='" + fuelType + '\'' +
+                ", fuelType='" + fuelType.toString() + '\'' +
                 ", vehicleClass='" + vehicleClass + '\'' +
                 ", countryOfRegistrationId='" + countryOfRegistrationId + '\'' +
                 ", cylinderCapacity='" + cylinderCapacity + '\'' +

@@ -78,7 +78,7 @@ class UpdateEngineProcessTest extends \PHPUnit_Framework_TestCase
         $this->sut->update($formData);
     }
 
-    public function testGetPrePopulatedDate()
+    public function testGetPrePopulatedData()
     {
         $data = $this->sut->getPrePopulatedData();
         $this->assertSame(self::VEHICLE_CAPACITY, $data[UpdateEngineForm::FIELD_CAPACITY]);
@@ -103,8 +103,9 @@ class UpdateEngineProcessTest extends \PHPUnit_Framework_TestCase
     {
         $data = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
         $data->id = self::VEHICLE_ID;
-        $data->fuelTypeCode = new stdClass();
-        $data->fuelTypeCode->code = self::FUEL_TYPE;
+        $fuelType = new stdClass();
+        $fuelType->code = self::FUEL_TYPE;
+        $data->fuelType = $fuelType;
         $data->cylinderCapacity = self::VEHICLE_CAPACITY;
         $data->vehicleClass = new stdClass();
 

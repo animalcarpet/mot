@@ -66,7 +66,7 @@ class VehicleService
             'colourId' => 13, //red
             'secondaryColourId' => 13, //red
             'cylinderCapacity' => 1300, //red
-            'fuelTypeId' => 1, //petrol
+            'fuelTypeCode' => "PE", //petrol
             'testClass' => 4,
             // Not required for a save but required for the API
             'registrationNumber' => 'ABCD123',
@@ -91,7 +91,7 @@ class VehicleService
             -> setCountryOfRegistrationId($data['countryOfRegistrationId'])
             -> setColourId($data['colourId'])
             -> setSecondaryColourId($data['secondaryColourId'])
-            -> setFuelTypeId($data['fuelTypeId'])
+            -> setFuelTypeCode($data['fuelTypeCode'])
             -> setFirstUsedDate(new \DateTime($data['dateOfFirstUse']))
             -> setCylinderCapacity($data['cylinderCapacity'])
             -> setOneTimePassword($data['oneTimePassword'])

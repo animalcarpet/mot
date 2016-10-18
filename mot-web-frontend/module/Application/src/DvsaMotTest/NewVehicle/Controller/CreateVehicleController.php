@@ -143,7 +143,7 @@ class CreateVehicleController extends AbstractDvsaMotTestController
         }
 
         $form->populateValues($step->getData());
-        $cylinderCapacityRequired = FuelTypeAndCylinderCapacity::getAllFuelTypeIdsWithCompulsoryCylinderCapacityAsString();
+        $cylinderCapacityRequired = FuelTypeAndCylinderCapacity::getAllFuelTypeCodesWithCompulsoryCylinderCapacityAsString();
 
         return (new ViewModel(
             [

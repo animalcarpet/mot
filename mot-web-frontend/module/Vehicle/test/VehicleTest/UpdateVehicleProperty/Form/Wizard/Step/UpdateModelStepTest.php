@@ -8,6 +8,7 @@ use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use DvsaCommon\ApiClient\Vehicle\Dictionary\Dto\ModelDto;
 use DvsaCommon\ApiClient\Vehicle\Dictionary\ModelApiResource;
 use DvsaCommonTest\TestUtils\XMock;
+use stdClass;
 use Vehicle\UpdateVehicleProperty\Form\MakeForm;
 use Vehicle\UpdateVehicleProperty\Form\ModelForm;
 use Vehicle\UpdateVehicleProperty\Form\OtherModelForm;
@@ -146,20 +147,25 @@ class UpdateModelStepTest extends \PHPUnit_Framework_TestCase
 
     private function createDvsaVehicle()
     {
-        $make = new \stdClass();
+        $make = new stdClass();
         $make->id = 1;
         $make->name = "Audi";
 
-        $model = new \stdClass();
+        $model = new stdClass();
         $model->id = 4;
         $model->name = "A4";
 
-        $std = new \stdClass();
+        $fuel = new stdClass();
+        $model->code = "PE";
+        $model->name = "Petrol";
+
+        $std = new stdClass();
         $std->make = $make;
         $std->model = $model;
         $std->registration = "reg123XSW";
         $std->vin = "VIN98798798";
         $std->vehicleClass = null;
+        $std->fuelType = $fuel;
 
         return new DvsaVehicle($std);
     }

@@ -139,6 +139,7 @@ $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
                     <dd>
                         <div class="form-group">
                             <?php
+                            $fuelTypeName = $vehicle->getFuelType() ? $vehicle->getFuelType()->getName() : "";
                             if (!$this->doNotShowDropDowns) {
                                 echo $this->partial(
                                     'selectElementSelectedByDisplayedValue',
@@ -146,13 +147,13 @@ $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
                                         'id'      => 'fuel-type-select',
                                         'name'    => 'fuelTypeId',
                                         'options' => $fuelTypes,
-                                        'value'   => $vehicle->getFuelType(),
+                                        'value'   => $fuelTypeName,
                                     ]
                                 );
                             } else {
-                                echo $vehicle->getFuelType();
+                                echo $fuelTypeName;
                                 ?>
-                                    <input type="hidden" name="fuelTypeId" value="<?php echo $vehicle->getFuelType(); ?>" />
+                                    <input type="hidden" name="fuelTypeId" value="<?php echo $fuelTypeName; ?>" />
                                 <?php
                             }
                             ?>

@@ -247,7 +247,7 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
      */
     private function getEngineInfo()
     {
-        $fuelType = $this->vehicle->getFuelType();
+        $fuelType = $this->vehicle->getFuelType()->getName();
         $cylinderCapacity = $this->vehicle->getCylinderCapacity();
 
         return !is_null($cylinderCapacity)

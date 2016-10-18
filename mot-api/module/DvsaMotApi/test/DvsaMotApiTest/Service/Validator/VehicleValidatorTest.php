@@ -2,6 +2,7 @@
 
 namespace DvsaMotApiTest\Service\Validator;
 
+use DvsaCommon\Enum\FuelTypeCode;
 use DvsaCommon\Enum\FuelTypeId;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Messages\Vehicle\CreateVehicleErrors;
@@ -27,7 +28,7 @@ class VehicleValidatorTest extends PHPUnit_Framework_TestCase
      */
     public function testValidateMissingRequiredFieldsThrowsException()
     {
-        $data = ['fuelTypeId' => FuelTypeId::ELECTRIC];
+        $data = ['fuelTypeCode' => FuelTypeId::ELECTRIC];
 
         $this->callValidator($data);
     }
@@ -220,7 +221,7 @@ class VehicleValidatorTest extends PHPUnit_Framework_TestCase
             'countryOfRegistration' => '5',
             'cylinderCapacity' => '60',
             'transmissionType' => '1',
-            'fuelTypeId' => FuelTypeId::DIESEL,
+            'fuelTypeCode' => FuelTypeCode::DIESEL,
             'vtsId' => 10,
         ];
     }

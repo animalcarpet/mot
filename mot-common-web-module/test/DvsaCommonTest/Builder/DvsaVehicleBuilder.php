@@ -13,6 +13,7 @@ class DvsaVehicleBuilder
         $vehicle->make = $emptyResource;
         $vehicle->model = $emptyResource;
         $vehicle->vehicleClass = null;
+        $vehicle->fuelType = $emptyResource;
 
         return $vehicle;
     }

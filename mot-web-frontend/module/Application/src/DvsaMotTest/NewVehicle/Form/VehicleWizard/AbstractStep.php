@@ -56,9 +56,9 @@ abstract class AbstractStep
         $colours = (new ColoursContainer($this->catalogService->getColoursWithIds(), true, true));
 
         $fuelTypes = [];
-        foreach ($this->catalogService->getFuelTypesWithId() as $id => $name) {
+        foreach ($this->catalogService->getFuelTypes() as $code => $name) {
             $fuelTypes[] = [
-                'id' => $id,
+                'id' => $code,
                 'name' => $name,
             ];
         }
