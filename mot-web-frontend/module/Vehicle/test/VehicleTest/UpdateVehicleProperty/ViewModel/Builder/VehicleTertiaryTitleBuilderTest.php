@@ -5,6 +5,7 @@ namespace VehicleTest\UpdateVehicleProperty\ViewModel\Builder;
 use Core\ViewModel\Header\HeaderTertiaryList;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use DvsaCommon\Enum\VehicleClassCode;
+use DvsaCommon\Enum\FuelTypeCode;
 use Vehicle\UpdateVehicleProperty\ViewModel\Builder\VehicleTertiaryTitleBuilder;
 
 class VehicleTertiaryTitleBuilderTest extends \PHPUnit_Framework_TestCase
@@ -44,6 +45,9 @@ class VehicleTertiaryTitleBuilderTest extends \PHPUnit_Framework_TestCase
                 'name' => self::MODEL_NAME,
             ],
             'vehicleClass' => ["code" => VehicleClassCode::CLASS_3, "name" => "3"],
+            'fuelType' => [
+                'code' => FuelTypeCode::PETROL
+            ],
         ]));
     }
 }

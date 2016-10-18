@@ -137,8 +137,11 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
             'colour' => 'Grey',
             'colourSecondary' => 'Not Stated',
             'countryOfRegistration' => 'GB, UK, ENG, CYM, SCO (UK) - Great Britain',
-            'fuelType' => 'Petrol',
             'vehicleClass' => [ 'code' => VehicleClassCode::CLASS_4, 'name' => '4'],
+            'fuelType' => [
+                'code' => 'PE',
+                'name' => 'Petrol',
+            ],
             'bodyType' => '2 Door Saloon',
             'cylinderCapacity' => 1700,
             'transmissionType' => 'Automatic',

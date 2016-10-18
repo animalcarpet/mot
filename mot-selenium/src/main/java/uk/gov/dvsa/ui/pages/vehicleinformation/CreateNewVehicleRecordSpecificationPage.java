@@ -63,10 +63,10 @@ public class CreateNewVehicleRecordSpecificationPage extends Page {
             );
         }
 
-        if(! vehicle.getFuelType().equals("")){
+        if(! vehicle.getFuelType().getName().equals("")){
             FormDataHelper.selectFromDropDownByValue(
                     fuelType,
-                    FuelTypes.findByName(vehicle.getFuelType()).getId().toString()
+                    vehicle.getFuelType().getCode()
             );
 
             FormDataHelper.enterText(

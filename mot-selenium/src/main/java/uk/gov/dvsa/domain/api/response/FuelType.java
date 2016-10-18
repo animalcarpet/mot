@@ -1,4 +1,4 @@
-package uk.gov.dvsa.domain.model.vehicle;
+package uk.gov.dvsa.domain.api.response;
 
 
 public class FuelType {
@@ -23,5 +23,13 @@ public class FuelType {
     public FuelType setName(String name) {
         this.name = name;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "FuelType{" +
+            ", code='" + code + '\'' +
+            ", name='" + name + '\'' +
+            '}';
     }
 }

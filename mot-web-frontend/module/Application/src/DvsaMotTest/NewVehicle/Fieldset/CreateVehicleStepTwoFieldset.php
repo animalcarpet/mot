@@ -234,7 +234,7 @@ class CreateVehicleStepTwoFieldset extends Fieldset implements InputFilterProvid
             ],
         ];
 
-        if (in_array($this->get('fuelType')->getValue(), FuelTypeAndCylinderCapacity::getAllFuelTypeIdsWithCompulsoryCylinderCapacity())) {
+        if (in_array($this->get('fuelType')->getValue(), FuelTypeAndCylinderCapacity::getAllFuelTypeCodesWithCompulsoryCylinderCapacity())) {
             $spec[] = [
                 'name' => 'cylinderCapacity',
                 'required' => true,

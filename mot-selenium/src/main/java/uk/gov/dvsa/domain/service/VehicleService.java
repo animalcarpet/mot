@@ -53,7 +53,7 @@ public class VehicleService extends Service {
             String countryOfRegistrationId,
             String cylinderCapacity,
             String firstUsedDate,
-            String fuelTypeId,
+            String fuelTypeCode,
             String makeId,
             String modelId,
             String registration,
@@ -68,7 +68,7 @@ public class VehicleService extends Service {
                 countryOfRegistrationId,
                 cylinderCapacity,
                 firstUsedDate,
-                fuelTypeId,
+                fuelTypeCode,
                 makeId,
                 modelId,
                 registration,
@@ -92,7 +92,7 @@ public class VehicleService extends Service {
             String countryOfRegistrationId,
             String cylinderCapacity,
             String firstUsedDate,
-            String fuelTypeId,
+            String fuelTypeCode,
             String makeId,
             String modelId,
             String registration,
@@ -107,7 +107,7 @@ public class VehicleService extends Service {
         vehicleDataMap.put("countryOfRegistrationId", countryOfRegistrationId);
         vehicleDataMap.put("cylinderCapacity", cylinderCapacity);
         vehicleDataMap.put("firstUsedDate", firstUsedDate);
-        vehicleDataMap.put("fuelTypeId", fuelTypeId);
+        vehicleDataMap.put("fuelTypeCode", fuelTypeCode);
         vehicleDataMap.put("makeId", makeId);
         vehicleDataMap.put("modelId", modelId);
         vehicleDataMap.put("registration", registration);

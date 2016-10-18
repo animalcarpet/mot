@@ -6,7 +6,9 @@ use Application\Helper\PrgHelper;
 use Application\Service\CatalogService;
 use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleUnderTestRequest;
 use Application\Service\ContingencySessionManager;
+use Dvsa\Mot\ApiClient\Resource\Item\AbstractVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use DvsaCommon\Auth\Assertion\RefuseToTestAssertion;
 use DvsaCommon\Auth\PermissionInSystem;
 use Core\Service\RemoteAddress;
@@ -14,7 +16,6 @@ use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Dto\Common\ColourDto;
 use DvsaCommon\Dto\MotTesting\ContingencyTestDto;
-use DvsaCommon\Dto\Vehicle\AbstractVehicleDto;
 use DvsaCommon\Dto\Vehicle\VehicleParamDto;
 use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
 use DvsaCommon\Enum\MotTestTypeCode;
@@ -60,7 +61,7 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
     /** @var string mot test type */
     protected $method;
     protected $eligibilityNotices;
-    /** @var AbstractVehicleDto */
+    /** @var  AbstractVehicle */
     protected $vehicleDetails;
     protected $inProgressTestExists;
 
@@ -260,13 +261,13 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
 
         $selectedColourName = $this->mapIdToName('colours', $this->request->getPost('colourId'));
         $selectedSecondaryColourName = $this->mapIdToName('colours', $this->request->getPost('secondaryColourId'));
-        $selectedFuelTypeName = $this->mapIdToName('fuelTypes', $this->request->getPost('fuelTypeId'));
+        $selectedFuelTypeCode = $this->mapIdToCode('fuelTypes', $this->request->getPost('fuelTypeId'));
         $selectedVehicleClass = $this->request->getPost('vehicleClassId');
 
         if (
             $targetVehicle->getColour() !== $selectedColourName ||
             $targetVehicle->getColourSecondary() !== $selectedSecondaryColourName ||
-            $targetVehicle->getFuelType() !== $selectedFuelTypeName ||
+            ($targetVehicle->getFuelType() && $targetVehicle->getFuelType()->getCode() !== $selectedFuelTypeCode) ||
             ($targetVehicle->getVehicleClass() && $targetVehicle->getVehicleClass()->getCode() !== $selectedVehicleClass)
         ) {
             return true;
@@ -524,6 +525,11 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         return ($this->vehicleSource === $type);
     }
 
+    /**
+     * @param bool $flush
+     * @param string $source
+     * @return DvlaVehicle|DvsaVehicle
+     */
     protected function getVehicleDetails($flush = false, $source = VehicleSearchSource::DVLA)
     {
         if ($flush || is_null($this->vehicleDetails)) {

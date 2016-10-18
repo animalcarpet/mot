@@ -45,7 +45,7 @@ public class VehicleData extends VehicleService {
                 CountryOfRegistration.Great_Britain.getRegistrationId(),
                 DEFAULT_CC,
                 getDateMinusYears(5),
-                Integer.toString(FuelTypes.Petrol.getId()),
+                FuelTypes.Petrol.getCode(),
                 makeId,
                 modelId,
                 registration,
@@ -59,8 +59,6 @@ public class VehicleData extends VehicleService {
     public Vehicle getNewVehicle(User user) throws IOException {
         return createVehicle(user);
     }
-
-
 
     public Vehicle getNewVehicle(User user, VehicleClass vehicleClass) throws IOException {
         return createVehicle(user, vehicleClass);

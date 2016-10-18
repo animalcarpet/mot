@@ -6,6 +6,7 @@ use Core\FormWizard\StepResult;
 use CoreTest\FormWizard\Fake\FakeStep;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use DvsaCommonTest\TestUtils\XMock;
+use stdClass;
 use Vehicle\UpdateVehicleProperty\Form\Wizard\Context;
 use Vehicle\UpdateVehicleProperty\Form\Wizard\Step\ReviewMakeAndModelStep;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
@@ -115,21 +116,26 @@ class ReviewMakeAndModelStepTest extends \PHPUnit_Framework_TestCase
 
     private function createDvsaVehicle()
     {
-        $make = new \stdClass();
+        $make = new stdClass();
         $make->id = 1;
         $make->name = "Audi";
 
-        $model = new \stdClass();
+        $model = new stdClass();
         $model->id = 2;
         $model->name = "A4";
 
-        $std = new \stdClass();
+        $fuel = new stdClass();
+        $model->code = "PE";
+        $model->name = "Petrol";
+
+        $std = new stdClass();
         $std->id = 283;
         $std->make = $make;
         $std->model = $model;
         $std->registration = "reg123XSW";
         $std->vin = "VIN98798798";
         $std->vehicleClass = null;
+        $std->fuelType = $fuel;
 
         return new DvsaVehicle($std);
     }

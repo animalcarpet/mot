@@ -19,10 +19,10 @@ use DvsaCommon\Dto\Vehicle\AbstractVehicleDto;
 use DvsaCommon\Dto\Vehicle\DvlaVehicleDto;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
+use DvsaCommon\Enum\FuelTypeCode;
 use DvsaCommon\Enum\WeightSourceCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Enum\VehicleClassId;
-use DvsaCommon\Enum\FuelTypeId;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaAuthentication\Service\Exception\OtpException;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
@@ -934,7 +934,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
         $vehicle = VOF::dvlaImportedVehicle();
         $primaryColourCode = 'A';
         $secondaryColourCode = 'B';
-        $fuelTypeCode = 'PE';
+        $fuelTypeCode = FuelTypeCode::PETROL;
         $vehicleClassCode = 22;
         $changesCapture = ArgCapture::create();
 
@@ -1093,7 +1093,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
         $inputData['oneTimePassword'] = self::OTP_VALID;
 
         $colourId = 1;
-        $fuelTypeId = 1;
+        $fuelTypeCode = FuelTypeCode::PETROL;
         $colourCode = $inputData['colour'];
         $secondaryColourId = 2;
         $secondaryColourCode = $inputData['secondaryColour'];
@@ -1163,7 +1163,7 @@ class VehicleServiceTest extends AbstractServiceTestCase
         $expectedRequest->setMakeId($makeId);
         $expectedRequest->setModelId($modelId);
         $expectedRequest->setVehicleClassCode($vehicleClassCode);
-        $expectedRequest->setFuelTypeId($fuelTypeId);
+        $expectedRequest->setFuelTypeCode($fuelTypeCode);
         $expectedRequest->setTransmissionTypeId($transTypeId);
         $expectedRequest->setOneTimePassword('123456');
 
@@ -1208,8 +1208,8 @@ class VehicleServiceTest extends AbstractServiceTestCase
             'modelOther'            => '',
             'modelType'             => 3,
             'colour'                => 'R',
-            'fuelTypeId'            => FuelTypeId::PETROL,
             'testClass'             => VehicleClassCode::CLASS_4,
+            'fuelTypeCode'          => FuelTypeCode::PETROL,
             'countryOfRegistration' => 9,
             'transmissionType'      => 10,
             'secondaryColour'       => 'G',
@@ -1268,11 +1268,14 @@ class VehicleServiceTest extends AbstractServiceTestCase
                     ],
                     'colour'                => 'Red',
                     'colourSecondary'       => 'Not Stated',
-                    'fuelTypeId'            => FuelTypeId::PETROL,
                     'vehicleClass' => ['code' => '4', 'name' => '4'],
                     'bodyType'              => '2 Door Saloon',
                     'cylinderCapacity'      => 1700,
                     'transmissionType'      => 'Automatic',
+                    'fuelType'              => [
+                        'code' => FuelTypeCode::PETROL,
+                        'name' => "Petrol",
+                    ],
                     'firstRegistrationDate' => '2001-03-02',
                     'firstUsedDate'         => '2001-03-02',
                     'manufactureDate'       => '2001-03-02',
@@ -1308,11 +1311,14 @@ class VehicleServiceTest extends AbstractServiceTestCase
                     ],
                     'colour'                => 'Red',
                     'colourSecondary'       => 'Not Stated',
-                    'fuelTypeId'            => FuelTypeId::PETROL,
                     'vehicleClass' => ['code' => '4', 'name' => '4'],
                     'bodyType'              => '2 Door Saloon',
                     'cylinderCapacity'      => 1700,
                     'transmissionType'      => 'Automatic',
+                    'fuelType'              => [
+                        'code' => FuelTypeCode::PETROL,
+                        'name' => "Petrol",
+                    ],
                     'firstRegistrationDate' => '2001-03-02',
                     'firstUsedDate'         => '2001-03-02',
                     'manufactureDate'       => '2001-03-02',

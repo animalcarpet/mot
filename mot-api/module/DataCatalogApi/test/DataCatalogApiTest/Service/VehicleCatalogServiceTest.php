@@ -97,14 +97,9 @@ class VehicleCatalogServiceTest extends \PHPUnit_Framework_TestCase
         $this->vcs->getModelDetailsByModel('make', 'model');
     }
 
-    public function testGetFuelType_refOnly()
-    {
-        $this->vcs->getFuelType(1, true);
-    }
-
     public function testGetFuelType()
     {
-        $this->vcs->getFuelType(1);
+        $this->vcs->getFuelType("PE");
     }
 
     public function testFindFuelTypeByPropulsionCode()
