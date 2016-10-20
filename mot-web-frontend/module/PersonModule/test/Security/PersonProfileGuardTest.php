@@ -11,6 +11,7 @@ use Core\Service\MotFrontendAuthorisationServiceInterface;
 use Dashboard\Model\PersonalDetails;
 use Dashboard\Service\TradeRolesAssociationsService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
+use Dvsa\Mot\Frontend\PersonModule\Controller\PersonProfileController;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuard;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
@@ -1422,6 +1423,46 @@ class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
             ->createPersonProfileGuard();
 
         $this->assertFalse($guard->canViewSecurityCard());
+    }
+
+    public function testCanSeeResetAccountByEmail_correctContextAndUserWithNoEmail_shouldReturnFalse()
+    {
+        $this->personalDetails
+            ->expects($this->once())
+            ->method('getEmail')
+            ->willReturn(null);
+
+        $guard = $this
+            ->withContext(ContextProvider::USER_SEARCH_CONTEXT)
+            ->withPermissions(PermissionInSystem::USER_ACCOUNT_RECLAIM)
+            ->createPersonProfileGuard();
+
+        $this->assertFalse($guard->canSeeResetAccountByEmailButton());
+    }
+
+    public function testCanSeeResetAccountByEmail_correctContextAndUserHasEmail_shouldReturnFalse()
+    {
+        $this->personalDetails
+            ->expects($this->once())
+            ->method('getEmail')
+            ->willReturn('dummy@email.com');
+
+        $guard = $this
+            ->withContext(ContextProvider::USER_SEARCH_CONTEXT)
+            ->withPermissions(PermissionInSystem::USER_ACCOUNT_RECLAIM)
+            ->createPersonProfileGuard();
+
+        $this->assertTrue($guard->canSeeResetAccountByEmailButton());
+    }
+
+    public function testCanSeeResetAccountByEmail_incorrectContext_shouldReturnTrue()
+    {
+        $guard = $this
+            ->withContext(ContextProvider::YOUR_PROFILE_CONTEXT)
+            ->withPermissions(PermissionInSystem::USER_ACCOUNT_RECLAIM)
+            ->createPersonProfileGuard();
+
+        $this->assertTrue($guard->canSeeResetAccountByEmailButton());
     }
 
     /**

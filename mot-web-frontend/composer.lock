@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9b92c79c4e9533afbb0462eeb0077ba5",
-    "content-hash": "ed7723c9ee984bcb49e79b2e8f3d7e41",
+    "hash": "0bb5a686a2f7a4adf5f77338832b614e",
+    "content-hash": "ad2f1eb4e17ae7f41de4a6a7704b60af",
     "packages": [
         {
             "name": "cpms/client",
@@ -906,8 +906,8 @@
                 "reference": "f13e8374396c01112bd3242c651744ea7e329bcc"
             },
             "require": {
-                "doctrine/doctrine-module": "0.8.0",
-                "doctrine/doctrine-orm-module": "0.8.0",
+                "doctrine/doctrine-module": "~0.8",
+                "doctrine/doctrine-orm-module": "~0.8",
                 "php": ">=5.3.3",
                 "zendframework/zendframework": "~2.3",
                 "zendframework/zendpdf": "2.0.2"
@@ -1144,17 +1144,17 @@
         },
         {
             "name": "dvsa/web-frontend-assets",
-            "version": "v0.9.4",
+            "version": "v0.9.6",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/web-frontend-assets.git",
-                "reference": "158e5a127423e1aaee0de2fc3ccbced416be26f8"
+                "reference": "18e8ad2c64b36c9bc36b53611f108aed69b19985"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/dvsa-web-frontend-assets-v0.9.4-efdf32.tar",
-                "reference": "158e5a127423e1aaee0de2fc3ccbced416be26f8",
-                "shasum": "8de57cdcc8291408acdc33bcfbb21744c653bdb0"
+                "url": "https://packages.motdev.org.uk//dist/dvsa-web-frontend-assets-v0.9.6-748da5.tar",
+                "reference": "18e8ad2c64b36c9bc36b53611f108aed69b19985",
+                "shasum": "904a5d9d39a28c92046b9ec7cf3435c25cbe16a4"
             },
             "type": "library",
             "authors": [
@@ -1163,7 +1163,7 @@
                     "email": ""
                 }
             ],
-            "time": "2016-10-06 10:49:19"
+            "time": "2016-10-18 11:20:52"
         },
         {
             "name": "erusev/parsedown",
