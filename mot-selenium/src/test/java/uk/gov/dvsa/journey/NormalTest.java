@@ -1,7 +1,5 @@
 package uk.gov.dvsa.journey;
 
-import uk.gov.dvsa.data.SiteData;
-import uk.gov.dvsa.data.UserData;
 import uk.gov.dvsa.data.VehicleData;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.CancelTestReason;
@@ -102,12 +100,6 @@ public class NormalTest {
         }
 
         declarationSuccessful = true;
-    }
-
-    public String startTest() throws IOException, URISyntaxException {
-        User tester = new UserData().createTester(new SiteData().createSite().getId());
-
-        return startTest(tester);
     }
 
     public String startTest(User tester) throws IOException, URISyntaxException {
@@ -379,5 +371,4 @@ public class NormalTest {
 
         return vehicle;
     }
-
 }

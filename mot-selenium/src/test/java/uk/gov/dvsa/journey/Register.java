@@ -16,7 +16,7 @@ public class Register {
         this.pageNavigator = pageNavigator;
     }
 
-    public CreateAnAccountPage createAnAccount() throws IOException
+    public CreateAnAccountPage createAccountPage() throws IOException
     {
         return pageNavigator.goToCreateAnAccountPage();
     }
@@ -40,7 +40,7 @@ public class Register {
     }
 
     private SummaryPage enterDetails(String name, String surname, String emailAddress, String telephone) throws IOException {
-        EmailPage emailPage = createAnAccount().email();
+        EmailPage emailPage = createAccountPage().email();
         emailPage.enterYourDetails(emailAddress, emailAddress);
 
         DetailsPage detailsPage = emailPage.clickContinue();

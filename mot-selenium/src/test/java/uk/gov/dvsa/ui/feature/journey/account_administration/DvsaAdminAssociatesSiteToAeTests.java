@@ -39,7 +39,7 @@ public class DvsaAdminAssociatesSiteToAeTests extends DslTest {
 
         //Given that I'm logged in as AO1, I go to Remove site from AE page
         AuthorisedExaminerViewPage authorisedExaminerViewPage = pageNavigator
-                .goToPageAsAuthorisedExaminer(userData.createAreaOfficeOne("AO1"),
+                .goToPageAsAuthorisedExaminer(motApi.user.createAreaOfficeOne("AO1"),
                         AedmAuthorisedExaminerViewPage.class,
                         AedmAuthorisedExaminerViewPage.PATH,
                         aeDetailsDefault.getId()
@@ -59,7 +59,7 @@ public class DvsaAdminAssociatesSiteToAeTests extends DslTest {
 
         //Given that I'm logged in as AO1, I go to Associate a site page
         AssociateASitePage associateASitePage = pageNavigator
-                .goToPageAsAuthorisedExaminer(userData.createAreaOfficeOne("AO1"),
+                .goToPageAsAuthorisedExaminer(motApi.user.createAreaOfficeOne("AO1"),
                         AssociateASitePage.class, AssociateASitePage.PATH,
                         aeDetailsNew.getId()
                 );

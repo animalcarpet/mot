@@ -29,7 +29,7 @@ public class ChangeDOBTests extends DslTest {
             dataProvider = "dvsaUserChangeDOBProvider")
     public void dvsaUserCanChangeDOBOnOtherPersonProfile(User user) throws IOException {
         // Given I am on the profile page of a user as DVSA
-        motUI.profile.dvsaViewUserProfile(user, userData.createTester(site.getId()));
+        motUI.profile.dvsaViewUserProfile(user, motApi.user.createTester(site.getId()));
 
         // When I change the Date of Birth
         motUI.profile.changeDateOfBirthTo("10 Apr 1980");
@@ -58,7 +58,7 @@ public class ChangeDOBTests extends DslTest {
     public void validationMessageDisplayedForInvalidInput(String day, String month, String year) throws IOException, URISyntaxException {
 
         // Given I'm on the New Person Profile page as logged user
-        motUI.profile.dvsaViewUserProfile(userData.createAreaOfficeOne("ao1"), userData.createTester(site.getId()));
+        motUI.profile.dvsaViewUserProfile(motApi.user.createAreaOfficeOne("ao1"), motApi.user.createTester(site.getId()));
 
         // When I am trying to change a date of birth for a person with invalid values
         String validationMessage = motUI.profile.changeDOBwithInvalidValues(day, month, year);
@@ -72,7 +72,7 @@ public class ChangeDOBTests extends DslTest {
             description = "Test that Authorised user can navigate to Change date of birth page and backward")
     public void dvsaUserCanNavigateToAndBackwardDOBPage() throws IOException {
         // Given I am on other person profile as an authorised user
-        motUI.profile.dvsaViewUserProfile(userData.createAreaOfficeOne("ao1"), userData.createTester(site.getId()));
+        motUI.profile.dvsaViewUserProfile(motApi.user.createAreaOfficeOne("ao1"), motApi.user.createTester(site.getId()));
 
         // When I am navigating to Change date of birth page and clicking on cancel and return link
         motUI.profile.page().clickChangeDOBLink().clickCancelAndReturnLink();
@@ -84,9 +84,9 @@ public class ChangeDOBTests extends DslTest {
     @DataProvider
     private Object[][] dvsaUserChangeDOBProvider() throws IOException {
         return new Object[][] {
-                {userData.createAreaOfficeOne("Ao1Test")},
-                {userData.createVehicleExaminer("vetest", false)},
-                {userData.createSchemeUser(false)}
+                {motApi.user.createAreaOfficeOne("Ao1Test")},
+                {motApi.user.createVehicleExaminer("vetest", false)},
+                {motApi.user.createSchemeUser(false)}
         };
     }
 
@@ -102,12 +102,12 @@ public class ChangeDOBTests extends DslTest {
     @DataProvider
     private Object[][] userCantSeeChangeDOBLinkProvider() throws IOException {
         return new Object[][] {
-                {userData.createUserAsAreaOfficeOneUser("areaOne")},
-                {userData.createVehicleExaminer("ve1", false)},
-                {userData.createSchemeUser(false)},
-                {userData.createAedm(false)},
-                {userData.createSiteManager(site.getId(), false)},
-                {userData.createTester(site.getId())}
+                {motApi.user.createUserAsAreaOfficeOneUser("areaOne")},
+                {motApi.user.createVehicleExaminer("ve1", false)},
+                {motApi.user.createSchemeUser(false)},
+                {motApi.user.createAedm(false)},
+                {motApi.user.createSiteManager(site.getId(), false)},
+                {motApi.user.createTester(site.getId())}
         };
     }
 }

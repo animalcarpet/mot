@@ -29,15 +29,15 @@ public class ContingencyMotTests extends DslTest {
     private void setup() throws IOException {
         aeDetails = aeData.createAeWithDefaultValues();
         site = siteData.createNewSite(aeDetails.getId(), "New_vts");
-        tester = userData.createTester(site.getId());
-        siteManager = userData.createSiteManager(site.getId(), true);
+        tester = motApi.user.createTester(site.getId());
+        siteManager = motApi.user.createSiteManager(site.getId(), true);
         vehicle = vehicleData.getNewVehicle(tester);
     }
 
     @Test(groups = {"BVT", "VM-4825,Sprint05,VM-9444"})
     public void recordContingencyTestSuccessfully() throws IOException, URISyntaxException {
         //Given I am the Record Contingency Page
-        motUI.contingency.testPage(userData.createTester(site.getId()));
+        motUI.contingency.testPage(motApi.user.createTester(site.getId()));
 
         //When I enter valid Contingency Test details
         motUI.contingency.recordTest(contingencyCode, DateTime.now().minusHours(1), vehicle);

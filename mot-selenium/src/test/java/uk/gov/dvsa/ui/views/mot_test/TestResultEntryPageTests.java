@@ -28,7 +28,7 @@ public class TestResultEntryPageTests extends DslTest {
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws IOException {
         Site site = siteData.createSite();
-        tester = userData.createTester(site.getId());
+        tester = motApi.user.createTester(site.getId());
         vehicle = vehicleData.getNewVehicle(tester);
     }
 

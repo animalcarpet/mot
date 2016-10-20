@@ -16,7 +16,7 @@ public class SiteStatusViewTest extends DslTest {
 
     @BeforeMethod(alwaysRun = true)
     private void setup() throws IOException {
-        areaOffice2User = userData.createUserAsAreaOfficeTwo("AE2");
+        areaOffice2User = motApi.user.createUserAsAreaOfficeTwo("AE2");
     }
 
     @Test(enabled = false, groups = {"BVT"}, description = "Verifies that Authorised user can update vts status")

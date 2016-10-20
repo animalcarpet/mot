@@ -31,7 +31,7 @@ public class UserTestQualityViewTest extends DslTest {
     private void setup() throws IOException {
         ae = aeData.createNewAe("TestQuality AE", 100);
         site = siteData.createNewSite(ae.getId(), "TestQuality Site");
-        tester = userData.createTester(site.getId());
+        tester = motApi.user.createTester(site.getId());
     }
 
     @Test(groups = {"Regression"}, description = "Verifies that tester can view Test Quality for site")

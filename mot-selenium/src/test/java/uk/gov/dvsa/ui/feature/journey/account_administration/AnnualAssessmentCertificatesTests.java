@@ -21,7 +21,7 @@ public class AnnualAssessmentCertificatesTests extends DslTest {
     )
     public void userCanAddHisAnnualAssessment() throws IOException {
         //When I'm on my profile page
-        newUser = userData.createUserWithoutRole();
+        newUser = motApi.user.createUserWithoutRole();
         ProfilePage page = motUI.profile.viewYourProfile(newUser);
         //And I add annual assessment certificate
         String certificateNumber = RandomDataGenerator.generateRandomNumber(15, 15);
@@ -39,7 +39,7 @@ public class AnnualAssessmentCertificatesTests extends DslTest {
     )
     public void userCanEditHisAnnualAssessment() throws IOException {
         //When I'm on my profile page
-        User user = userData.createUserWithoutRole();
+        User user = motApi.user.createUserWithoutRole();
         ProfilePage page = motUI.profile.viewYourProfile(user);
 
         //And I edit annual assessment certificate
@@ -69,7 +69,7 @@ public class AnnualAssessmentCertificatesTests extends DslTest {
             description = "test that user can remove his annual assessment certificate"
     )
     public void testerCanRemoveHisAnnualAssessment() throws IOException {
-        User user = userData.createUserWithoutRole();
+        User user = motApi.user.createUserWithoutRole();
         String certificateNumber = RandomDataGenerator.generateRandomNumber(15, 15);
         String date = "2016-05-02";
         String score = "27";

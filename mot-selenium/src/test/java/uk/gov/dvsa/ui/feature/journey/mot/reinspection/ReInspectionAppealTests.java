@@ -27,14 +27,14 @@ public class ReInspectionAppealTests extends DslTest {
     public void statutoryAppealDisciplinaryActionReportIssuedFor30andGreaterTotalScore() throws IOException {
 
         //Given I have a Failed MOT
-        User tester = userData.createTester(testSite.getId());
+        User tester = motApi.user.createTester(testSite.getId());
         String motTestId = motApi.createTest(
                 tester, testSite.getId(), vehicleData.getNewVehicle(tester), TestOutcome.FAILED, 123456, DateTime.now()
         ).getMotTestNumber();
 
         //When I conduct a Statutory appeal with total score of >=30
         String outcome = motUI.reInspection.statutoryAppeal(
-                userData.createVehicleExaminer("ft-Enf-", false), motTestId,
+                motApi.user.createVehicleExaminer("ft-Enf-", false), motTestId,
                 testSite.getSiteNumber(),
                 Comparison.RISK_OF_INJURY_MISSED);
 
@@ -45,13 +45,13 @@ public class ReInspectionAppealTests extends DslTest {
     @Test(groups = {"Regression"})
     public void statutoryAppealAdvisoryWarningLetterIssuedForBetween10and25TotalScore() throws IOException {
         //Given I have a Failed MOT
-        User tester = userData.createTester(testSite.getId());
+        User tester = motApi.user.createTester(testSite.getId());
         String motTestId = motApi.createTest(
                 tester, testSite.getId(), vehicleData.getNewVehicle(tester), TestOutcome.FAILED, 123456, DateTime.now()
         ).getMotTestNumber();
 
         //When I conduct a Statutory appeal with total score of >=20
-        String outcome = motUI.reInspection.statutoryAppeal(userData.createVehicleExaminer("ft-Enf-", false), motTestId,
+        String outcome = motUI.reInspection.statutoryAppeal(motApi.user.createVehicleExaminer("ft-Enf-", false), motTestId,
                 testSite.getSiteNumber(),
                 Comparison.SIGNIFICANTLY_WRONG);
 
@@ -62,13 +62,13 @@ public class ReInspectionAppealTests extends DslTest {
     @Test(groups = {"Regression"})
     public void invertedAppealAdvisoryWarningLetterIssuedForBetween10and25TotalScore() throws IOException {
         //Given I have a Failed MOT
-        User tester = userData.createTester(testSite.getId());
+        User tester = motApi.user.createTester(testSite.getId());
         String motTestId = motApi.createTest(
                 tester, testSite.getId(), vehicleData.getNewVehicle(tester), TestOutcome.FAILED, 123456, DateTime.now()
         ).getMotTestNumber();
 
         //When I conduct an Inverted appeal with total score of >=20
-        String outcome = motUI.reInspection.invertedAppeal(userData.createVehicleExaminer("ft-Enf-", false), motTestId,
+        String outcome = motUI.reInspection.invertedAppeal(motApi.user.createVehicleExaminer("ft-Enf-", false), motTestId,
                 testSite.getSiteNumber(),
                 Comparison.SIGNIFICANTLY_WRONG);
 
@@ -79,28 +79,26 @@ public class ReInspectionAppealTests extends DslTest {
     @Test(groups = {"Regression"})
     public void expiryDateIsDisplayedForStatutoryAppealMotTest() throws IOException {
         //Given I have a Failed MOT
-        String motTestId = motApi.createFailedTest(userData.createTester(testSite.getId()),
+        String motTestId = motApi.createFailedTest(motApi.user.createTester(testSite.getId()),
                 testSite.getId()).getMotTestNumber();
 
         //When I conduct a PASSED Re-Inspection
 
         //Then I should see expiry date on the test summary page.
-        assertThat("Expiry date is shown",
-                motUI.reInspection.statutoryAppealTestSummaryPage(userData.createVehicleExaminer("ft-Enf-", false), motTestId)
-                        .isExpiryDateDisplayed(), is(true));
+        assertThat("Expiry date is shown", motUI.reInspection.statutoryAppealTestSummaryPage(
+            motApi.user.createVehicleExaminer("ft-Enf-", false), motTestId).isExpiryDateDisplayed(), is(true));
     }
 
     @Test(groups = {"Regression"})
     public void expiryDateIsDisplayedForInvertedAppealMotTest() throws IOException {
         //Given I have a Failed MOT
-        String motTestId = motApi.createFailedTest(userData.createTester(testSite.getId()),
-                testSite.getId()).getMotTestNumber();
+        String motTestId =
+            motApi.createFailedTest(motApi.user.createTester(testSite.getId()), testSite.getId()).getMotTestNumber();
 
         //When I conduct a PASSED Re-Inspection
 
         //Then I should see expiry date on the test summary page.
-        assertThat("Expiry date is shown",
-                motUI.reInspection.invertedAppealTestSummaryPage(userData.createVehicleExaminer("ft-Enf-", false), motTestId)
-                        .isExpiryDateDisplayed(), is(true));
+        assertThat("Expiry date is shown", motUI.reInspection.invertedAppealTestSummaryPage(
+            motApi.user.createVehicleExaminer("ft-Enf-", false), motTestId).isExpiryDateDisplayed(), is(true));
     }
 }

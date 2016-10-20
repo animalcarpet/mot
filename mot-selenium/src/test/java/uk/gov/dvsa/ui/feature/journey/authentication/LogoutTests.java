@@ -15,7 +15,7 @@ public class LogoutTests extends DslTest {
     @Test(groups = {"BVT"})
     void authenticatedUserCanLogOut() throws IOException {
         //Given I am an Authenticated User
-        User validUser = userData.createAreaOfficeOne("dvsaUser");
+        User validUser = motApi.user.createAreaOfficeOne("dvsaUser");
         motUI.login(validUser);
 
         //When I logout using the link in the toolbar

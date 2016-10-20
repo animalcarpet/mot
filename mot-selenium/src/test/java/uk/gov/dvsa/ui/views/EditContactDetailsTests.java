@@ -29,8 +29,8 @@ public class EditContactDetailsTests extends DslTest {
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws IOException {
         site = siteData.createSite();
-        areaOfficeUser = userData.createUserAsAreaOfficeOneUser("dv");
-        siteManager = userData.createSiteManager(site.getId(), false);
+        areaOfficeUser = motApi.user.createUserAsAreaOfficeOneUser("dv");
+        siteManager = motApi.user.createSiteManager(site.getId(), false);
     }
 
     @Test(groups = {"Regression"})

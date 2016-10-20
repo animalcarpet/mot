@@ -26,8 +26,8 @@ public class DriverLicenseViewTests extends DslTest {
     public void dvsaUserSeesValidationErrorWithInvalidInput(String number, String country, String expectedMessage)
             throws IOException, URISyntaxException {
         //Given I am viewing a trade user profile as DVSA officer
-        motUI.profile.dvsaViewUserProfile(userData.createAreaOfficeOne("ao1"),
-                userData.createTester(siteData.createSite().getId()));
+        motUI.profile.dvsaViewUserProfile(motApi.user.createAreaOfficeOne("ao1"),
+                motApi.user.createTester(siteData.createSite().getId()));
 
         // And I submit incorrect driver licence information
         String validationMessage = motUI.profile.submitInvalidLicenseDetails(number, country).getValidationSummary();
@@ -41,7 +41,7 @@ public class DriverLicenseViewTests extends DslTest {
             dataProvider = "dvsaUserProvider")
     public void dvsaUserCanViewTradeUserLicenseDetails(User dvsaUser) throws IOException, URISyntaxException{
         //Given I am viewing a trade user profile as DVSA officer
-        motUI.profile.dvsaViewUserProfile(dvsaUser, userData.createTester(siteData.createSite().getId()));
+        motUI.profile.dvsaViewUserProfile(dvsaUser, motApi.user.createTester(siteData.createSite().getId()));
 
         //Then I expect the Driver License number to be displayed
         assertThat(motUI.profile.page().drivingLicenceIsDisplayed(), is(true));
@@ -62,7 +62,7 @@ public class DriverLicenseViewTests extends DslTest {
             description = "Authorised DVSA user can't see driver licence section on other DVSA user")
     public void dvsaUserCantSeeDriverLicenceForOtherDvsaUser() throws IOException, URISyntaxException {
         // Given that I'm on a DVSA user profile as authorised DVSA user
-        motUI.profile.dvsaViewUserProfile(userData.createAreaOfficeOne("Ao1"), userData.createAreaOfficeTwo("Ao2"));
+        motUI.profile.dvsaViewUserProfile(motApi.user.createAreaOfficeOne("Ao1"), motApi.user.createAreaOfficeTwo("Ao2"));
 
         // Then the driving licence number element is not displayed
         assertThat(motUI.profile.page().isDrivingLicenceInformationIsDisplayed(), is(false));
@@ -73,8 +73,8 @@ public class DriverLicenseViewTests extends DslTest {
             dataProvider = "validLicenceInputTestCases")
     public void dvsaUserCanChangeTradeUserLicenseDetails(String number, String country) throws IOException, URISyntaxException {
         //setup
-        final User areaOffice1user = userData.createAreaOfficeOne("ao1");
-        final User tester = userData.createTester(siteData.createSite().getId());
+        final User areaOffice1user = motApi.user.createAreaOfficeOne("ao1");
+        final User tester = motApi.user.createTester(siteData.createSite().getId());
 
         // Given that I am viewing user profile as authorised DVSA user
         motUI.profile.dvsaViewUserProfile(areaOffice1user, tester);
@@ -91,7 +91,7 @@ public class DriverLicenseViewTests extends DslTest {
             description = "Test that URL cannot be modified by DVSA user to change DVSA user driving licence")
     public void dvsaUserCannotModifyUrlToChangeOtherDvsaUserDrivingLicence() throws IOException {
         // Given I attempt to modify the ID fragment of the change driving licence page
-        motUI.profile.hackChangeLicenseUrl(userData.createAreaOfficeOne("ao1"), userData.createAreaOfficeTwo("ao2"));
+        motUI.profile.hackChangeLicenseUrl(motApi.user.createAreaOfficeOne("ao1"), motApi.user.createAreaOfficeTwo("ao2"));
 
         // Then the application will display an error page
     }
@@ -100,10 +100,10 @@ public class DriverLicenseViewTests extends DslTest {
             description = "Test that DVSA user can remove non-DVSA user driving licence")
     public void dvsaUserCanRemoveTradeUserDrivingLicence() throws IOException, URISyntaxException {
         //setup
-        final User tester = userData.createTester(siteData.createSite().getId());
+        final User tester = motApi.user.createTester(siteData.createSite().getId());
 
         // Given I am viewing a trade user profile as authorised DVSA user
-        motUI.profile.dvsaViewUserProfile(userData.createAreaOfficeOne("ao1"), tester);
+        motUI.profile.dvsaViewUserProfile(motApi.user.createAreaOfficeOne("ao1"), tester);
 
         // When I remove the driver license details
         motUI.profile.removeLicense();
@@ -114,10 +114,10 @@ public class DriverLicenseViewTests extends DslTest {
     @DataProvider
     private Object[][] dvsaUserProvider() throws IOException{
         return new Object[][] {
-                {userData.createAreaOfficeOne("AreaOfficerOne")},
-                {userData.createVehicleExaminer("VehicleExaminer", false)},
-                {userData.createCustomerServiceOfficer(false)},
-                {userData.createSchemeUser(false)}};
+                {motApi.user.createAreaOfficeOne("AreaOfficerOne")},
+                {motApi.user.createVehicleExaminer("VehicleExaminer", false)},
+                {motApi.user.createCustomerServiceOfficer(false)},
+                {motApi.user.createSchemeUser(false)}};
     }
 
     @DataProvider

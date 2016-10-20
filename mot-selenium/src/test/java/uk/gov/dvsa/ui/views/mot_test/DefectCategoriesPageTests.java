@@ -26,10 +26,10 @@ public class DefectCategoriesPageTests extends DslTest {
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws IOException {
         Site site = siteData.createSite();
-        tester = userData.createTester(site.getId());
+        tester = motApi.user.createTester(site.getId());
         vehicle = vehicleData.getNewVehicle(tester);
         motorcycle = vehicleData.getNewVehicle(tester, VehicleClass.one);
-        veUser = userData.createVehicleExaminer("VehicleExaminer", false);
+        veUser = motApi.user.createVehicleExaminer("VehicleExaminer", false);
     }
 
     @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1948"})

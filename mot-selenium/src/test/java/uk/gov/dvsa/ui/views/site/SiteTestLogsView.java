@@ -26,13 +26,13 @@ public class SiteTestLogsView extends DslTest {
     public Object[][] permittedUsers() throws IOException {
         AeDetails aeDetails = aeData.createAeWithDefaultValues();
         testSite = siteData.createNewSite(aeDetails.getId(), "My_Site");
-        tester = userData.createTester(testSite.getId());
+        tester = motApi.user.createTester(testSite.getId());
 
         return new Object[][]{
-                {userData.createAedm(aeDetails.getId(), "TestAe", false)},
-                {userData.createSiteAdmin(testSite.getId(), false)},
-                {userData.createAreaOfficeOne("permittedAE")},
-                {userData.createVehicleExaminer("permittedVE", false)}
+                {motApi.user.createAedm(aeDetails.getId(), "TestAe", false)},
+                {motApi.user.createSiteAdmin(testSite.getId(), false)},
+                {motApi.user.createAreaOfficeOne("permittedAE")},
+                {motApi.user.createVehicleExaminer("permittedVE", false)}
         };
     }
 
@@ -58,7 +58,7 @@ public class SiteTestLogsView extends DslTest {
 
         //Given I am a tester
         Site site = siteData.createSite();
-        User tester = userData.createTester(site.getId());
+        User tester = motApi.user.createTester(site.getId());
 
         //When I attempt to view the VTS Test Logs
         motUI.testLog.siteLogPage(tester, site.getId());
@@ -74,7 +74,7 @@ public class SiteTestLogsView extends DslTest {
         //Given I performed 2 Mot tests within 30 days
         AeDetails aeDetails = aeData.createAeWithDefaultValues();
         Site testSite = siteData.createNewSite(aeDetails.getId(), "My_Site");
-        User tester = userData.createTester(testSite.getId());
+        User tester = motApi.user.createTester(testSite.getId());
 
         DateTime firstTestDate = DateTime.now().withDayOfMonth(1);
         DateTime secondTestDate = DateTime.now().minusDays(30);
@@ -87,7 +87,7 @@ public class SiteTestLogsView extends DslTest {
 
 
         // When I go to the VTS Test Log page as <permitted user>
-        motUI.testLog.siteLogPage(userData.createAreaOfficeOne("AreaOfficer"), testSite.getId());
+        motUI.testLog.siteLogPage(motApi.user.createAreaOfficeOne("AreaOfficer"), testSite.getId());
 
         //When I search with a date range
         motUI.testLog.selectDateRange(firstTestDate, secondTestDate);

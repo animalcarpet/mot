@@ -28,7 +28,7 @@ public class GoogleTagManagerTests extends DslTest {
             description = "Checks that Google TagManager's dataLayer structure with userId property is displayed for logged in users")
     void googleTagManagerDataLayerIsRenderedWhileLoggedIn() throws IOException {
         // Given I am valid user
-        User validUser = userData.createTester(siteData.createSite().getId());
+        User validUser = motApi.user.createTester(siteData.createSite().getId());
 
         // When I login through the login page
         HomePage homePage = pageNavigator.gotoHomePage(validUser);

@@ -37,13 +37,13 @@ public class ChangePersonEmailTests extends DslTest {
     private void setup() throws IOException {
         aeDetails = aeData.createAeWithDefaultValues();
         testSite = siteData.createNewSite(aeDetails.getId(), "Test_Site");
-        areaOffice1User = userData.createAreaOfficeOne("AreaOfficerOne");
-        vehicleExaminerUser = userData.createVehicleExaminer("VehicleExaminer", false);
-        tester = userData.createTester(testSite.getId());
-        schemeManager = userData.createSchemeUser(false);
-        aedm = userData.createAedm(aeDetails.getId(), "Test", false);
-        siteManager = userData.createSiteManager(testSite.getId(), false);
-        csco = userData.createCustomerServiceOfficer(false);
+        areaOffice1User = motApi.user.createAreaOfficeOne("AreaOfficerOne");
+        vehicleExaminerUser = motApi.user.createVehicleExaminer("VehicleExaminer", false);
+        tester = motApi.user.createTester(testSite.getId());
+        schemeManager = motApi.user.createSchemeUser(false);
+        aedm = motApi.user.createAedm(aeDetails.getId(), "Test", false);
+        siteManager = motApi.user.createSiteManager(testSite.getId(), false);
+        csco = motApi.user.createCustomerServiceOfficer(false);
     }
 
     @Test(groups = {"Regression", "BL-270"},
@@ -51,7 +51,7 @@ public class ChangePersonEmailTests extends DslTest {
             description = "Test that Trade user can edit their email from their profile page")
     public void tradeUserCanEditTheirEmailAddress() throws Exception {
         //Given I am logged in as a Tester and I am on the My Profile Page
-        motUI.profile.viewYourProfile(userData.createTester(testSite.getId()));
+        motUI.profile.viewYourProfile(motApi.user.createTester(testSite.getId()));
 
         //When I edit my Email address
         ProfilePage profilePage = motUI.profile.changeYourEmailTo(ContactDetailsHelper.getEmail());
@@ -115,7 +115,7 @@ public class ChangePersonEmailTests extends DslTest {
             String expectedvalidationMessage) throws IOException {
 
         // Given I am on other person profile as an authorised user
-        motUI.profile.dvsaViewUserProfile(userData.createAreaOfficeOne("ValidAo1"), tester);
+        motUI.profile.dvsaViewUserProfile(motApi.user.createAreaOfficeOne("ValidAo1"), tester);
 
         // When I am trying to submit an an invalid email
         String validationMessage = motUI.profile.changeEmailWithInvalidInputs(email, confirmationEmail);
@@ -127,7 +127,7 @@ public class ChangePersonEmailTests extends DslTest {
     @Test(groups = {"BVT"})
     public void userCannotChangeEmailAddressIfItIsAlreadyInUse() throws IOException {
         step("Given there is a user in the system with email tester1@email.com");
-        userData.createUserWithCustomData("emailAddress", "tester1@email.com");
+        motApi.user.createUserWithCustomData("emailAddress", "tester1@email.com");
 
         step("When I log in to update my email to tester1@email.com");
         motUI.profile.viewYourProfile(tester);
@@ -159,9 +159,9 @@ public class ChangePersonEmailTests extends DslTest {
     @DataProvider
     private Object[][] dvsaUserChangeEmailProvider() throws IOException {
         return new Object[][] {
-                {userData.createAreaOfficeOne("Ao1")},
-                {userData.createVehicleExaminer("veguy", false)},
-                {userData.createSchemeUser(false)}
+                {motApi.user.createAreaOfficeOne("Ao1")},
+                {motApi.user.createVehicleExaminer("veguy", false)},
+                {motApi.user.createSchemeUser(false)}
         };
     }
 

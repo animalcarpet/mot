@@ -18,7 +18,7 @@ public class NominationsTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"})
     void non2faUserCanOrderCardViaNominationsNotificationLink() throws IOException {
         step("Given I have been nominated for a Site Manager role as non 2fa user");
-        User not2faActiveUser = userData.createUserWithoutRole();
+        User not2faActiveUser = motApi.user.createUserWithoutRole();
         motApi.nominations.nominateSiteRole(not2faActiveUser, siteData.createSite().getId(), TradeRoles.SITE_MANAGER);
 
         step("And I have not ordered a card");
@@ -33,7 +33,7 @@ public class NominationsTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"})
     void non2faUserCanActivateCardViaNominationNotificationsLink() throws IOException {
         step("Given I have been nominated for a Site Manager role as non 2fa user");
-        User orderedCardUser = userData.createUserWithoutRole();
+        User orderedCardUser = motApi.user.createUserWithoutRole();
         motApi.nominations.nominateSiteRole(orderedCardUser, siteData.createSite().getId(), TradeRoles.SITE_MANAGER);
 
         step("And I have ordered a card");
@@ -50,7 +50,7 @@ public class NominationsTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"})
     void non2faUserCannotOrderCardTwiceViaNotificationsLink() throws IOException {
         step("Given I have previously ordered a card as non 2fa user from notification");
-        User not2faActiveUser = userData.createUserWithoutRole();
+        User not2faActiveUser = motApi.user.createUserWithoutRole();
         motApi.nominations.nominateSiteRole(not2faActiveUser, siteData.createSite().getId(), TradeRoles.SITE_MANAGER);
         motUI.authentication.securityCard.orderSecurityCardWithHomeAddress(not2faActiveUser);
 
@@ -64,7 +64,7 @@ public class NominationsTests extends DslTest {
     @Test(testName ="2fa", groups = {"BVT"})
     void aedmNon2faUserNominatedWithNoCardDirectedToOrderACard() throws Exception {
         step("Given I am not 2fa and I am nominated for an AEDM role");
-        User not2faActiveUser = userData.createUserWithoutRole();
+        User not2faActiveUser = motApi.user.createUserWithoutRole();
         motApi.nominations.nominateOrganisationRoleWithRoleCode(not2faActiveUser, aeData.createAeWithDefaultValues().getId(), OrganisationBusinessRoleCodes.AEDM);
 
         step("When I am nominated, I am asked to order a card");
@@ -76,7 +76,7 @@ public class NominationsTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"})
     void aedmNon2faUserNominatedWithCardDirectedToActivateCard() throws Exception {
         step("Given I am not 2fa and I am nominated for an AEDM role");
-        User orderedCardUser = userData.createUserWithoutRole();
+        User orderedCardUser = motApi.user.createUserWithoutRole();
         motApi.nominations.nominateOrganisationRoleWithRoleCode(orderedCardUser, aeData.createAeWithDefaultValues().getId(), OrganisationBusinessRoleCodes.AEDM);
 
         step("When I have ordered a card");
@@ -90,7 +90,7 @@ public class NominationsTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"})
     void aedmNominationNotificationsAreSentAfterCardActivation() throws Exception {
         step("Given I am not 2fa and I am nominated for an AEDM role");
-        User orderedCardUser = userData.createUserWithoutRole();
+        User orderedCardUser = motApi.user.createUserWithoutRole();
         motApi.nominations.nominateOrganisationRoleWithRoleCode(orderedCardUser, aeData.createAeWithDefaultValues().getId(), OrganisationBusinessRoleCodes.AEDM);
 
         step("And I have ordered and activated a card");
@@ -105,7 +105,7 @@ public class NominationsTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"})
     void aedmNominationNotificationsAreSentWithoutOrderingACardForAnExistingTradeUser() throws Exception {
         step("Given I am a non-2fa trade user with a role");
-        User nominee = userData.createTester(siteData.createSite().getId(), false);
+        User nominee = motApi.user.createTester(siteData.createSite().getId(), false);
 
         step("When I have been nominated for an AEDM role");
         motApi.nominations.nominateOrganisationRoleWithRoleCode(nominee, aeData.createAeWithDefaultValues().getId(), OrganisationBusinessRoleCodes.AEDM);
@@ -118,7 +118,7 @@ public class NominationsTests extends DslTest {
     @Test(testName = "non-2fa", groups = {"BVT"})
     void aedmNominationNotificationsAreSentImmediatelyWhen2faFeatureIsDisabled() throws Exception {
         step("Given I am not 2fa and I am nominated for an AEDM role");
-        User user = userData.createUserWithoutRole();
+        User user = motApi.user.createUserWithoutRole();
         motApi.nominations.nominateOrganisationRoleWithRoleCode(user, aeData.createAeWithDefaultValues().getId(), OrganisationBusinessRoleCodes.AEDM);
 
         step("I receive a notification advising me that I have been assigned the role of AEDM");
@@ -129,11 +129,11 @@ public class NominationsTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"})
     public void tradeUserReceivesNotificationWhenCscoOrdersCardOnTheirBehalf() throws IOException {
         step("Given I have been nominated for a Site Manager role as non 2fa user");
-        User tradeUser = userData.createUserWithoutRole();
+        User tradeUser = motApi.user.createUserWithoutRole();
         motApi.nominations.nominateSiteRole(tradeUser, siteData.createSite().getId(), TradeRoles.SITE_MANAGER);
 
         step("When a CSCO orders a card on my behalf");
-        motUI.authentication.securityCard.orderCardForTradeUserAsCSCO(userData.createCSCO(), tradeUser);
+        motUI.authentication.securityCard.orderCardForTradeUserAsCSCO(motApi.user.createCSCO(), tradeUser);
 
         step("Then I receive an activate notification on my homepage");
         motUI.nominations.viewActivateCardNotification(tradeUser);

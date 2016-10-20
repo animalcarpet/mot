@@ -14,7 +14,7 @@ public class LostOrForgottenCardTests extends DslTest {
 
     @Test(testName = "2fa", groups = {"BVT"})
     public void iCanSignInWhenIForgetMySecurityCardAs2faUser() throws IOException {
-        User twoFactorUser = userData.createTester(siteData.createSite().getId());
+        User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
 
         step("Given I am a 2FA active and on the Security card PIN page");
         motUI.authentication.gotoTwoFactorPinEntryPage(twoFactorUser);
@@ -28,7 +28,7 @@ public class LostOrForgottenCardTests extends DslTest {
 
     @Test(testName = "2fa", groups = {"BVT"})
     public void userWithReplacementCardOrderedIsDirectedToAlreadyOrderedCardPage() throws IOException {
-        User twoFactorUser = userData.createTester(siteData.createSite().getId());
+        User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
 
         step("Given I am logged out after ordering a card via lost/forgotten journey");
         motUI.authentication.securityCard.activate2faCard(twoFactorUser).logOut(twoFactorUser);
@@ -47,7 +47,7 @@ public class LostOrForgottenCardTests extends DslTest {
 
     @Test(testName = "2fa", groups = {"BVT"})
     public void userWithReplacementCardOrderedAndActivatedDirectedTo2FAPinEntryPage() throws IOException {
-        User twoFactorUser = userData.createTester(siteData.createSite().getId());
+        User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
 
         step("Given I am logged out after ordering a card via lost/forgotten journey");
         motUI.authentication.securityCard.activate2faCard(twoFactorUser).logOut(twoFactorUser);
@@ -69,7 +69,7 @@ public class LostOrForgottenCardTests extends DslTest {
 
     @Test(testName = "2fa", groups = {"BVT"})
     public void userDirectedToSecurityQuestionsOnSubsequentDailyLoginsAfterUsingLostForgottenJourney() throws IOException {
-        User twoFactorUser = userData.createTester(siteData.createSite().getId());
+        User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
 
         step("Given I am 2FA active and logged in today using lost/forgotten journey");
         motUI.authentication.securityCard.activate2faCard(twoFactorUser).logOut(twoFactorUser);

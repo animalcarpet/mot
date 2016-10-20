@@ -15,7 +15,7 @@ public class AuthorisedExaminerPrincipalsTests extends DslTest {
     public void createAepSuccessfully() throws IOException, URISyntaxException {
         //Given I create an AEP
         String message = motUI.organisation.
-                createAuthorisedExaminerPrincipal(userData.createUserAsAreaOfficeOneUser("ao1"),
+                createAuthorisedExaminerPrincipal(motApi.user.createUserAsAreaOfficeOneUser("ao1"),
                 aeData.createAeWithDefaultValues().getIdAsString());
 
         //Then AEP should be created Successfully
@@ -26,7 +26,7 @@ public class AuthorisedExaminerPrincipalsTests extends DslTest {
     @Test(groups = {"Regression", "BL-21"})
     public void removeAepSuccessfully() throws IOException, URISyntaxException {
         //Given I create an AEP as an AreaOffice1User
-        motUI.organisation.createAuthorisedExaminerPrincipal(userData.createUserAsAreaOfficeOneUser("ao1"),
+        motUI.organisation.createAuthorisedExaminerPrincipal(motApi.user.createUserAsAreaOfficeOneUser("ao1"),
                         aeData.createAeWithDefaultValues().getIdAsString());
 
         //When I remove AEP from AE

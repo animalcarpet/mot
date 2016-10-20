@@ -27,14 +27,14 @@ public class PinBoxDisplayViewTests extends DslTest {
     private void setupTestData() throws IOException {
         aeDetails = aeData.createAeWithDefaultValues();
         site = siteData.createNewSite(aeDetails.getId(), "TestSite");
-        tester = userData.createTester(site.getId());
+        tester = motApi.user.createTester(site.getId());
         vehicle = vehicleData.getNewVehicle(tester);
     }
 
     @Test(groups = {"BVT", "Regression"})
     public void pinBoxDisplayedForNonTwoFactorUserWhenCreatingNewVehicle() throws IOException, URISyntaxException {
         //GIVEN I am logged in as a tester
-        User non2faTester = userData.createTester(site.getId());
+        User non2faTester = motApi.user.createTester(site.getId());
 
         //WHEN I attempt to create a new vehicle record
         CreateNewVehicleRecordConfirmPage createNewVehicleRecordConfirmPage = motUI.normalTest.createNewVehicleRecord(non2faTester, vehicle);
@@ -46,7 +46,7 @@ public class PinBoxDisplayViewTests extends DslTest {
     @Test (testName = "2fa", groups = {"BVT", "Regression"})
     public void pinBoxNotDisplayedForTwoFactorUserWhenCreatingNewVehicle() throws IOException, URISyntaxException{
         //GIVEN I am logged in as a tester authenticated by 2fa card
-        User twoFactorTester = userData.createTester(site.getId());
+        User twoFactorTester = motApi.user.createTester(site.getId());
         motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
 
         //WHEN I attempt to create a new vehicle record
@@ -59,7 +59,7 @@ public class PinBoxDisplayViewTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT", "Regression"})
     public void displayPinBoxAtChangeVehicleDetailsSummary() throws IOException, URISyntaxException {
 
-        User tester = userData.createTester(site.getId());
+        User tester = motApi.user.createTester(site.getId());
 
         vehicle = vehicleData.getNewVehicle(tester);
 
@@ -75,7 +75,7 @@ public class PinBoxDisplayViewTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT", "Regression"})
     public void doNotDisplayPinBoxFor2faTesterAtChangeVehicleDetailsSummary() throws IOException, URISyntaxException {
 
-        User twoFactorTester = userData.createTester(site.getId());
+        User twoFactorTester = motApi.user.createTester(site.getId());
         motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
 
         vehicle = vehicleData.getNewVehicle(tester);

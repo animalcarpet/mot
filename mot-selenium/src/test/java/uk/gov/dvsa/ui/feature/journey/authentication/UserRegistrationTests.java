@@ -22,7 +22,7 @@ public class UserRegistrationTests extends DslTest {
     public void createUserAccountSuccessfully() throws IOException {
 
         //Given I am on the Create Account Page
-        motUI.register.createAnAccount();
+        motUI.register.createAccountPage();
 
         //When I continue to enter my details
         motUI.register.completeDetailsWithDefaultValues(email, telephone);
@@ -35,7 +35,7 @@ public class UserRegistrationTests extends DslTest {
     public void checkForDuplicateEmail() throws IOException {
 
         //Given I am on the Create Account Page
-        motUI.register.createAnAccount();
+        motUI.register.createAccountPage();
 
         //When I continue to enter my details
         motUI.register.completeDetailsWithDefaultValues(email, telephone);

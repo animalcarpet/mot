@@ -33,7 +33,7 @@ public class QualificationDetailsTests extends DslTest {
     public void userCanAddNewQualificationDetails() throws IOException
     {
         step("Given I am on my profile page as user who has a new certificate");
-        User tester = userData.createUserWithoutRole();
+        User tester = motApi.user.createUserWithoutRole();
         motUI.profile.viewYourProfile(tester);
 
         step("And I add the details of the certificate");
@@ -52,7 +52,7 @@ public class QualificationDetailsTests extends DslTest {
     public void userCanAddNewQualificationDetails2faOff() throws IOException
     {
         step("Given I am on my profile page as user who has a new certificate");
-        User tester = userData.createUserWithoutRole();
+        User tester = motApi.user.createUserWithoutRole();
         motUI.profile.viewYourProfile(tester);
 
         step("And I add the details of the certificate");
@@ -67,7 +67,7 @@ public class QualificationDetailsTests extends DslTest {
     @Test(groups = {"BVT"})
     public void orderCardLinkNotDisplayedWhereUserNavigatesDirectlyToConfirmationPage() throws IOException {
         step("Given that a user navigates directly to confirmation page");
-        User tester = userData.createTester(testSite.getId());
+        User tester = motApi.user.createTester(testSite.getId());
         motUI.profile.viewYourProfile(tester);
         motUI.profile.qualificationDetails().confirmationPage(tester);
 
@@ -80,7 +80,7 @@ public class QualificationDetailsTests extends DslTest {
     public void userWithNoSecurityCardOrdersSeesOrderSectionOnConfirmation() throws IOException {
 
         step("Given I am a user who has a new certificate with no security card orders");
-        User tester = userData.createUserWithoutRole();
+        User tester = motApi.user.createUserWithoutRole();
 
         step("When I'm on my profile page");
         motUI.profile.viewYourProfile(tester);
@@ -100,7 +100,7 @@ public class QualificationDetailsTests extends DslTest {
     )
     public void userCanEditHisQualificationDetails() throws IOException {
         step("Given I am a user who already has added a certificate for step A");
-        User user = userData.createUserWithoutRole();
+        User user = motApi.user.createUserWithoutRole();
         qualificationDetailsData.createQualificationCertificateForGroupA(
                 user, "1234123412341234", "2016-04-01", testSite.getSiteNumber()
         );
@@ -123,13 +123,13 @@ public class QualificationDetailsTests extends DslTest {
     )
     public void dvsaUserCanEditQualificationDetailsOfAnotherUser() throws IOException {
         step("Given a user who already has added a certificate for step A");
-        User user = userData.createUserWithoutRole();
+        User user = motApi.user.createUserWithoutRole();
         qualificationDetailsData.createQualificationCertificateForGroupA(
                 user, "1234123412341234", "2016-04-01", testSite.getSiteNumber()
         );
 
         step("When I visit the user's page as a DVSA user");
-        User areaOffice1User = userData.createAreaOfficeOne("AreaOffice1");
+        User areaOffice1User = motApi.user.createAreaOfficeOne("AreaOffice1");
         motUI.profile.dvsaViewUserProfile(areaOffice1User, user);
 
         step("And I change the details of this certificate");
@@ -146,17 +146,17 @@ public class QualificationDetailsTests extends DslTest {
     )
     public void permittedUserCanViewDemoTestRequests() throws IOException {
         step("Given I add a new certificate for new user");
-        User userB = userData.createUserWithoutRole();
+        User userB = motApi.user.createUserWithoutRole();
         String certificateNumberB = RandomDataGenerator.generateRandomNumber(15, 12);
         qualificationDetailsData.createQualificationCertificateForGroupB(
             userB, certificateNumberB, "2016-04-05", testSite.getSiteNumber()
         );
-        motUI.profile.dvsaViewUserProfile(userData.createAreaOfficeOne("BAo1"), userB);
+        motUI.profile.dvsaViewUserProfile(motApi.user.createAreaOfficeOne("BAo1"), userB);
         motUI.profile.qualificationDetails().goToQualificationDetailsPage();
         int certificateAmount = motUI.profile.qualificationDetails().countUserCertificates();
 
         step("When I visit demo test requests page as a DVSA user");
-        User areaOffice1User = userData.createAreaOfficeOne("AreaOffice1");
+        User areaOffice1User = motApi.user.createAreaOfficeOne("AreaOffice1");
         motUI.demoTestRequests.visitDemoTestRequestsPage(areaOffice1User);
 
         step("Then I will be able to see the newly added certificates");
@@ -169,13 +169,13 @@ public class QualificationDetailsTests extends DslTest {
     )
     public void dvsaUserCanRemoveQualificationDetailsOfAnotherUser() throws IOException {
         step("Given a certificate for group B is added for user");
-        User user = userData.createUserWithoutRole();
+        User user = motApi.user.createUserWithoutRole();
         qualificationDetailsData.createQualificationCertificateForGroupB(
                 user, "9994123412341234", "2016-04-01", testSite.getSiteNumber()
         );
 
         step("When I visit user's page as a DVSA user");
-        motUI.profile.dvsaViewUserProfile(userData.createAreaOfficeOne("certAo1"), user);
+        motUI.profile.dvsaViewUserProfile(motApi.user.createAreaOfficeOne("certAo1"), user);
 
         step("And I remove certificate");
         String certificateNumber = RandomDataGenerator.generateRandomNumber(15, 12);

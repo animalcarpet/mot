@@ -14,7 +14,7 @@ public class ReplacementCardTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"})
     public void activateLinkIsDisplayedAfterReplacementCardOrder() throws IOException {
         step("Given Bob has ordered a replacement card");
-        User bob = userData.createTester(siteData.createSite().getId());
+        User bob = motApi.user.createTester(siteData.createSite().getId());
         motUI.authentication.securityCard.activate2faCard(bob).logOut(bob);
         motUI.authentication.securityCard.signInWithoutSecurityCard(bob);
         motUI.authentication.securityCard.orderSecurityCardWithHomeAddress(bob);

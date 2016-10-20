@@ -37,9 +37,9 @@ public class AEChangeDetailsTests extends DslTest {
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws IOException {
         aeDetails = aeData.createAeWithDefaultValues();
-        areaOfficeUser = userData.createUserAsAreaOfficeOneUser("dv");
+        areaOfficeUser = motApi.user.createUserAsAreaOfficeOneUser("dv");
         Site site = siteData.createNewSite(aeDetails.getId(), "default-site");
-        tester = userData.createTester(site.getId());
+        tester = motApi.user.createTester(site.getId());
         newName = ContactDetailsHelper.generateUniqueName();
         newTradingName = ContactDetailsHelper.generateUniqueName();
         newTown = ContactDetailsHelper.getCity();

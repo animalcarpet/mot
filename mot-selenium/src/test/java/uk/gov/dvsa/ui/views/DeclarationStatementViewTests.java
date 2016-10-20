@@ -20,14 +20,13 @@ import static org.hamcrest.core.Is.is;
 
 public class DeclarationStatementViewTests extends DslTest {
     private Site site;
-    private User tester;
     private Vehicle vehicle;
 
     @BeforeMethod(alwaysRun = true)
     private void setupTestData() throws IOException {
         AeDetails aeDetails = aeData.createAeWithDefaultValues();
         site = siteData.createNewSite(aeDetails.getId(), "TestSite");
-        tester = userData.createTester(site.getId());
+        User tester = motApi.user.createTester(site.getId());
         vehicle = vehicleData.getNewVehicle(tester);
     }
 
@@ -35,7 +34,7 @@ public class DeclarationStatementViewTests extends DslTest {
     public void displayStatementAtTestSummaryPage() throws IOException, URISyntaxException {
 
         //Given I complete a normal test as a tester
-        motUI.normalTest.conductTestPass(userData.createTester(site.getId()), vehicle);
+        motUI.normalTest.conductTestPass(motApi.user.createTester(site.getId()), vehicle);
 
         //And I am on the Test Summary Page
 
@@ -47,7 +46,7 @@ public class DeclarationStatementViewTests extends DslTest {
     public void display2faStatementAtTestSummaryPage() throws IOException, URISyntaxException {
 
         //Given I complete a normal test as a 2FA tester
-        User twoFactorTester = userData.createTester(site.getId());
+        User twoFactorTester = motApi.user.createTester(site.getId());
         motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
         motUI.normalTest.conductTestPass(twoFactorTester, vehicle);
 
@@ -61,7 +60,7 @@ public class DeclarationStatementViewTests extends DslTest {
     public void displayStatementAtReTestSummaryPage() throws IOException, URISyntaxException {
 
         //Given I have a vehicle with a failed MOT test
-        User tester = userData.createTester(site.getId());
+        User tester = motApi.user.createTester(site.getId());
         motApi.createTest(tester, site.getId(), vehicle, TestOutcome.FAILED, 12345, DateTime.now());
 
         //When I conduct a retest on the vehicle and view the summary page
@@ -73,7 +72,7 @@ public class DeclarationStatementViewTests extends DslTest {
 
     @Test (groups = {"BVT"})
     public void displayStatementAtChangeVehicleDetailsSummary() throws IOException, URISyntaxException {
-        User nonTwoFactorTester = userData.createTester(site.getId());
+        User nonTwoFactorTester = motApi.user.createTester(site.getId());
 
         //Given I change the vehicle details
         motUI.normalTest.changeVehicleDetails(nonTwoFactorTester, vehicle);
@@ -89,7 +88,7 @@ public class DeclarationStatementViewTests extends DslTest {
 
         //Given I am 2fa tester
         int siteId = siteData.createSite().getId();
-        User twoFactorTester = userData.createTester(siteId);
+        User twoFactorTester = motApi.user.createTester(siteId);
         motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
 
         //Given I change the vehicle details
@@ -105,7 +104,7 @@ public class DeclarationStatementViewTests extends DslTest {
     public void statementShouldNotBeDisplayedForTrainingTest() throws IOException, URISyntaxException {
 
         //Given I am on the review Page of training test
-        motUI.normalTest.conductTrainingTest(userData.createTester(site.getId()), vehicle);
+        motUI.normalTest.conductTrainingTest(motApi.user.createTester(site.getId()), vehicle);
 
         //Then I should NOT be presented with the declaration statement
         assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(false));
@@ -115,7 +114,7 @@ public class DeclarationStatementViewTests extends DslTest {
     public void displayStatementWhenAbortingTest() throws IOException, URISyntaxException {
 
         //Given I have an in progress Mot Test
-        motUI.normalTest.startTest();
+        motUI.normalTest.startTest(motApi.user.createTester(site.getId()));
 
         //When I cancel the Test with [INSPECTION MAY DANGEROUS] Reason
         motUI.normalTest.cancelTestWithReason(CancelTestReason.DANGEROUS_OR_CAUSE_DAMAGE);
@@ -128,7 +127,7 @@ public class DeclarationStatementViewTests extends DslTest {
     public void display2faStatementWhenAbortingTest() throws IOException, URISyntaxException {
 
         //Given I have an in progress Mot Test
-        User twoFactorTester = userData.createTester(site.getId());
+        User twoFactorTester = motApi.user.createTester(site.getId());
         motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
         motUI.normalTest.startTest(twoFactorTester);
 
@@ -143,7 +142,7 @@ public class DeclarationStatementViewTests extends DslTest {
     public void statementShouldNotBeDisplayedOnTestRefusal() throws IOException, URISyntaxException {
 
         //Given I refuse to test a vehicle
-        motUI.normalTest.refuseToTestVehicle(userData.createTester(site.getId()), vehicle, ReasonForVehicleRefusal.INSPECTION_MAY_BE_DANGEROUS);
+        motUI.normalTest.refuseToTestVehicle(motApi.user.createTester(site.getId()), vehicle, ReasonForVehicleRefusal.INSPECTION_MAY_BE_DANGEROUS);
 
         //Then I should Not be presented with the declaration statement
         assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(false));
@@ -153,7 +152,7 @@ public class DeclarationStatementViewTests extends DslTest {
     public void displayStatementAtContingencySummaryPage() throws IOException, URISyntaxException {
 
         //Given I start a contingency test
-        motUI.contingency.testPage(userData.createTester(site.getId()));
+        motUI.contingency.testPage(motApi.user.createTester(site.getId()));
 
         //When I complete a contingency test and view the summary page
         motUI.contingency.recordTest("12345A", DateTime.now().minusHours(1), vehicle);
@@ -166,7 +165,7 @@ public class DeclarationStatementViewTests extends DslTest {
     public void displayStatementAtCreateNewVehicleRecord() throws IOException, URISyntaxException {
 
         //When I create a new vehicle record within a test
-        motUI.normalTest.createNewVehicleRecord(userData.createTester(site.getId()), vehicle);
+        motUI.normalTest.createNewVehicleRecord(motApi.user.createTester(site.getId()), vehicle);
 
         //Then I should be presented with the declaration statement
         assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(true));
@@ -177,7 +176,7 @@ public class DeclarationStatementViewTests extends DslTest {
 
         //Given I am 2fa tester
         int siteId = siteData.createSite().getId();
-        User twoFactorTester = userData.createTester(siteId);
+        User twoFactorTester = motApi.user.createTester(siteId);
         motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
 
         //When I create a new vehicle record within a test
@@ -191,7 +190,7 @@ public class DeclarationStatementViewTests extends DslTest {
     public void replacementCertificateDeclarationStatement() throws IOException, URISyntaxException {
 
         //Given I have completed an Mot Test
-        User tester = userData.createTester(site.getId());
+        User tester = motApi.user.createTester(site.getId());
         String testId = motApi.createTest(tester, site.getId(), vehicle, TestOutcome.PASSED, 123456,
                 DateTime.now()).getMotTestNumber();
 
@@ -207,7 +206,7 @@ public class DeclarationStatementViewTests extends DslTest {
 
         //Given I have completed an Mot Test as 2fa user
         int siteId = siteData.createSite().getId();
-        User twoFactorTester = userData.createTester(siteId);
+        User twoFactorTester = motApi.user.createTester(siteId);
         motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
 
         String testId = motApi.createTest(twoFactorTester, siteId, vehicle, TestOutcome.PASSED, 123456,

@@ -1,6 +1,7 @@
 package uk.gov.dvsa.shared;
 
 import org.joda.time.DateTime;
+import uk.gov.dvsa.data.UserData;
 import uk.gov.dvsa.data.VehicleData;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.MotTest;
@@ -16,6 +17,8 @@ import java.util.List;
 
 public class MotApi extends MotTestService{
     private VehicleData vehicleData = new VehicleData();
+    public final UserData user = new UserData();
+
     public final NominationService nominations = new NominationService();
 
     public MotTest createTest(User requestor, int siteId, Vehicle vehicle, TestOutcome outcome,

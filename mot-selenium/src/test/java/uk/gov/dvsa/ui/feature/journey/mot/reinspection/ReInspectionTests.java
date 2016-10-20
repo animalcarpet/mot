@@ -31,10 +31,10 @@ public class ReInspectionTests extends DslTest {
 
     @BeforeMethod(alwaysRun = true)
     private void setup() throws IOException {
-        vehicleExaminer = userData.createVehicleExaminer("ft-Enf-", false);
+        vehicleExaminer = motApi.user.createVehicleExaminer("ft-Enf-", false);
         AeDetails aeDetails = aeData.createNewAe("VeReinspectionTest", 8);
         testSite = siteData.createNewSite(aeDetails.getId(), "Test_Site");
-        tester = userData.createTester(testSite.getId());
+        tester = motApi.user.createTester(testSite.getId());
     }
 
     @Test(groups = {"BVT"}, description = "VM-9858, Journey 5")
@@ -45,7 +45,7 @@ public class ReInspectionTests extends DslTest {
                                                 DateTime.now()).getMotTestNumber();
 
         //When I conduct a re-inspection as VE
-        String message = motUI.reInspection.getReInspectionAssessmentMessage(userData.createVehicleExaminer("ft-Enf-", false), motTestId);
+        String message = motUI.reInspection.getReInspectionAssessmentMessage(motApi.user.createVehicleExaminer("ft-Enf-", false), motTestId);
 
         //Then I should be able to record the assessment successfully
         assertThat("Assessment is recorded successfully", message, containsString("the test differences have been saved"));
@@ -102,7 +102,7 @@ public class ReInspectionTests extends DslTest {
     public void userWithVeAndA01RolesCanResumeReInspection() throws IOException {
 
         //Given I am a User with a AO1 and VE Role
-        User ao1PlusVe = userData.createAreaOfficeOne("AO1PlusVE");
+        User ao1PlusVe = motApi.user.createAreaOfficeOne("AO1PlusVE");
         Vehicle vehicle = vehicleData.getNewVehicle(tester);
         RoleManager.addSystemRole(ao1PlusVe, DvsaRoles.VEHICLE_EXAMINER);
 

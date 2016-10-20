@@ -32,10 +32,10 @@ public class DVSAManagingUserRolesTests extends DslTest {
     private void setup() throws IOException {
         aeDetails = aeData.createAeWithDefaultValues();
         site = siteData.createNewSite(aeDetails.getId(), "Test_Site");
-        areaOffice1User = userData.createAreaOfficeOne("AreaOfficer");
-        vehicleExaminer = userData.createVehicleExaminer("ft-Enf-", false);
-        csco = userData.createCustomerServiceOfficer(false);
-        tester = userData.createTester(site.getId());
+        areaOffice1User = motApi.user.createAreaOfficeOne("AreaOfficer");
+        vehicleExaminer = motApi.user.createVehicleExaminer("ft-Enf-", false);
+        csco = motApi.user.createCustomerServiceOfficer(false);
+        tester = motApi.user.createTester(site.getId());
     }
 
     @Test(groups = {"Regression"})
@@ -113,7 +113,7 @@ public class DVSAManagingUserRolesTests extends DslTest {
     public void dvsaUserCanSearchOnTown() throws IOException, URISyntaxException {
 
         //Given that I am on Search user page as a authorised DVSA user
-        pageNavigator.navigateToPage(userData.createAreaOfficeOne("Ao11"), UserSearchPage.PATH, UserSearchPage.class);
+        pageNavigator.navigateToPage(motApi.user.createAreaOfficeOne("Ao11"), UserSearchPage.PATH, UserSearchPage.class);
 
         //When I search for user by town
         motUI.searchUser.searchForUserByTown("Bristol");

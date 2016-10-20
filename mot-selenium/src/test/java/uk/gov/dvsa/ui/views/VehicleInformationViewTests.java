@@ -26,10 +26,10 @@ public class VehicleInformationViewTests extends DslTest {
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws IOException {
         Site site = siteData.createSite();
-        tester = userData.createTester(site.getId());
+        tester = motApi.user.createTester(site.getId());
         vehicle = vehicleData.getNewVehicle(tester);
-        areaOffice1User = userData.createAreaOfficeOne("ao1");
-        vehicleExaminer = userData.createVehicleExaminer("ve", false);
+        areaOffice1User = motApi.user.createAreaOfficeOne("ao1");
+        vehicleExaminer = motApi.user.createVehicleExaminer("ve", false);
     }
 
     @Test (groups = {"Regression"})
@@ -100,7 +100,7 @@ public class VehicleInformationViewTests extends DslTest {
     public void vehicleSearchReturnsVehicleOnlyInDvlaTable() throws IOException, URISyntaxException {
 
         //Given I have a vehicle in the DVLA table only
-        User tester = userData.createTester(siteData.createSite().getId());
+        User tester = motApi.user.createTester(siteData.createSite().getId());
         DvlaVehicle dvlaVehicle = vehicleData.getNewDvlaVehicle(tester);
 
         //When I search for that Vehicle

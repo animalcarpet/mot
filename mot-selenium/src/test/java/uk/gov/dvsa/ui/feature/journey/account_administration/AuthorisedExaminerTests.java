@@ -20,7 +20,7 @@ public class AuthorisedExaminerTests extends DslTest {
     @Test(groups = {"FeatureToggleCreateAe"}) public void createAuthorisedExaminerSuccessfully()
             throws IOException, URISyntaxException {
 
-        User areaOffice1User = userData.createAreaOfficeOne("AreaOfficer");
+        User areaOffice1User = motApi.user.createAreaOfficeOne("AreaOfficer");
 
         //Given I am on the Create AE screen as DVSA Admin user
         CreateAePage createAePage = pageNavigator.navigateToPage(areaOffice1User, CreateAePage.PATH, CreateAePage.class);
@@ -36,7 +36,7 @@ public class AuthorisedExaminerTests extends DslTest {
 
     @Test(groups = {"FeatureToggleCreateAe"}) public void verifyConfirmAeDetailsPage()
             throws IOException, URISyntaxException {
-        User areaOffice1User = userData.createAreaOfficeOne("AreaOfficer");
+        User areaOffice1User = motApi.user.createAreaOfficeOne("AreaOfficer");
 
         //Given I am on the Create AE screen as DVSA Admin user
         CreateAePage createAePage = pageNavigator.navigateToPage(areaOffice1User, CreateAePage.PATH, CreateAePage.class);
@@ -53,7 +53,7 @@ public class AuthorisedExaminerTests extends DslTest {
 
     @Test(groups = {"FeatureToggleCreateAe"}) public void verifyRegEmailAddressFields()
             throws IOException, URISyntaxException {
-        User areaOffice1User = userData.createAreaOfficeOne("AreaOfficer");
+        User areaOffice1User = motApi.user.createAreaOfficeOne("AreaOfficer");
 
         //Given I am on the Create AE screen as DVSA Admin user
         CreateAePage createAePage = pageNavigator.navigateToPage(areaOffice1User, CreateAePage.PATH, CreateAePage.class);
@@ -68,7 +68,7 @@ public class AuthorisedExaminerTests extends DslTest {
 
     @Test(groups = {"FeatureToggleCreateAe"}) public void verifyCorrEmailAddressFieldsEmpty()
             throws IOException, URISyntaxException {
-        User areaOffice1User = userData.createAreaOfficeOne("AreaOfficer");
+        User areaOffice1User = motApi.user.createAreaOfficeOne("AreaOfficer");
 
         //Given I am on the Create AE screen as DVSA Admin user
         CreateAePage createAePage = pageNavigator.navigateToPage(areaOffice1User, CreateAePage.PATH, CreateAePage.class);

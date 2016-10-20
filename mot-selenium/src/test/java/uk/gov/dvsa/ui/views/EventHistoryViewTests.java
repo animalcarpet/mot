@@ -20,7 +20,7 @@ public class EventHistoryViewTests extends DslTest {
         AeDetails aeDetails = aeData.createNewAe("Test AE", 1);
 
         step("When I view Test AE event history as Ao1");
-        motUI.showEventHistoryFor(HistoryType.AE, userData.createAreaOfficeOne("ao1"), aeDetails);
+        motUI.showEventHistoryFor(HistoryType.AE, motApi.user.createAreaOfficeOne("ao1"), aeDetails);
 
         step("Then I should see a Create event");
         motUI.eventHistory.containsEvent("DVSA Administrator Create AE");

@@ -30,10 +30,10 @@ public class SiteRagStatusTests extends DslTest {
 
     @BeforeClass(alwaysRun = true)
     private void setup() throws IOException {
-        areaOffice1User = userData.createAreaOfficeOne("AO1");
+        areaOffice1User = motApi.user.createAreaOfficeOne("AO1");
         bobBangers = siteData.createSite("BobBangers");
-        tester = userData.createTester(bobBangers.getId());
-        vehicleExaminer = userData.createVehicleExaminer("ft-Enf-", false);
+        tester = motApi.user.createTester(bobBangers.getId());
+        vehicleExaminer = motApi.user.createVehicleExaminer("ft-Enf-", false);
 
         assessmentActors.put("areaOffice1User", areaOffice1User);
         assessmentActors.put("vehicleExaminer", vehicleExaminer);
@@ -62,7 +62,7 @@ public class SiteRagStatusTests extends DslTest {
     void addSiteAssessmentScore(AssessmentInfo aInfo) throws IOException, URISyntaxException {
 
         //Given I am on the Enter Site Assessment Page as VE
-        motUI.site.gotoAssessment(userData.createVehicleExaminer("ve", false), String.valueOf(bobBangers.getId()));
+        motUI.site.gotoAssessment(motApi.user.createVehicleExaminer("ve", false), String.valueOf(bobBangers.getId()));
 
         //When I submit assessment
         motUI.site.submitAssessment(aInfo, DateTime.now());
@@ -78,7 +78,7 @@ public class SiteRagStatusTests extends DslTest {
     void verifyEventsCreated() throws IOException, URISyntaxException {
 
         //Given I have an assessment added to a VTS
-        motUI.site.gotoAssessment(userData.createVehicleExaminer("ve", false), String.valueOf(bobBangers.getId()));
+        motUI.site.gotoAssessment(motApi.user.createVehicleExaminer("ve", false), String.valueOf(bobBangers.getId()));
         motUI.site.submitAssessment(new AssessmentInfo("200.1", "Green", assessmentActors), DateTime.now());
 
         //When I check the Events history for the Vehicle Examiner

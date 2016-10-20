@@ -18,7 +18,7 @@ public class CpmsFinancialReportsTests extends DslTest {
     
     @BeforeClass(alwaysRun = true)
     private void setup() throws IOException {
-        financeUser = userData.createAFinanceUser("Finance", false);
+        financeUser = motApi.user.createAFinanceUser("Finance", false);
     }
     
     @Test (enabled = false, groups = {"Regression"}, description = "SPMS-272 User requests Slot Balance report")

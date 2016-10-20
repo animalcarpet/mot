@@ -29,13 +29,13 @@ public class ChangePersonNameTests extends DslTest {
     private void setup() throws IOException {
         aeDetails = aeData.createAeWithDefaultValues();
         testSite = siteData.createNewSite(aeDetails.getId(), "Test_Site");
-        areaOffice1User = userData.createAreaOfficeOne("AreaOfficerOne");
-        vehicleExaminerUser = userData.createVehicleExaminer("VehicleExaminer", false);
-        tester = userData.createTester(testSite.getId());
-        schemeManager = userData.createSchemeUser(false);
-        aedm = userData.createAedm(aeDetails.getId(), "Test", false);
-        siteManager = userData.createSiteManager(testSite.getId(), false);
-        csco = userData.createCustomerServiceOfficer(false);
+        areaOffice1User = motApi.user.createAreaOfficeOne("AreaOfficerOne");
+        vehicleExaminerUser = motApi.user.createVehicleExaminer("VehicleExaminer", false);
+        tester = motApi.user.createTester(testSite.getId());
+        schemeManager = motApi.user.createSchemeUser(false);
+        aedm = motApi.user.createAedm(aeDetails.getId(), "Test", false);
+        siteManager = motApi.user.createSiteManager(testSite.getId(), false);
+        csco = motApi.user.createCustomerServiceOfficer(false);
     }
 
     @Test(groups = {"BVT", "BL-59"},
@@ -70,7 +70,7 @@ public class ChangePersonNameTests extends DslTest {
             description = "Test that Authorised user should provide a first name in order to update user information")
     public void dvsaUserShouldProvideFirstName() throws IOException {
         // Given I am on other person profile as an authorised user
-        motUI.profile.dvsaViewUserProfile(userData.createAreaOfficeOne("ao1"), userData.createTester(testSite.getId()));
+        motUI.profile.dvsaViewUserProfile(motApi.user.createAreaOfficeOne("ao1"), motApi.user.createTester(testSite.getId()));
 
         // When I am trying to submit an empty name for a person
         motUI.profile.changeName().changePersonName("", "Test", false);
@@ -85,7 +85,7 @@ public class ChangePersonNameTests extends DslTest {
             description = "Test that Authorised user should provide a last name in order to update user information")
     public void dvsaUserShouldProvideLastName() throws IOException {
         // Given I am on other person profile as an authorised user
-        motUI.profile.dvsaViewUserProfile(userData.createVehicleExaminer("ved", false), tester);
+        motUI.profile.dvsaViewUserProfile(motApi.user.createVehicleExaminer("ved", false), tester);
 
         // When I am trying to submit an empty last name for a person
         motUI.profile.changeName().changePersonName("Test", "", false);
@@ -99,7 +99,7 @@ public class ChangePersonNameTests extends DslTest {
             description = "Test that Authorised user can navigate to Change name page and backward")
     public void dvsaUserCanNavigateToAndBackwardChangeNamePage() throws IOException {
         // Given I am on other person profile as an authorised user
-        motUI.profile.dvsaViewUserProfile(userData.createAreaOfficeOne("Ao1"), userData.createTester(testSite.getId()));
+        motUI.profile.dvsaViewUserProfile(motApi.user.createAreaOfficeOne("Ao1"), motApi.user.createTester(testSite.getId()));
 
         // When I am navigating to Change name page and clicking on cancel and return link
         motUI.profile.page().clickChangeNameLink().clickCancelAndReturnLink();
@@ -145,9 +145,9 @@ public class ChangePersonNameTests extends DslTest {
     @DataProvider
     private Object[][] dvsaUserFroOwnProfileProvider() throws IOException {
         return new Object[][] {
-                {userData.createAreaOfficeOne("ao")},
-                {userData.createVehicleExaminer("ve", false)},
-                {userData.createSchemeUser(false)}
+                {motApi.user.createAreaOfficeOne("ao")},
+                {motApi.user.createVehicleExaminer("ve", false)},
+                {motApi.user.createSchemeUser(false)}
         };
     }
 

@@ -23,7 +23,7 @@ public class BreadcrumbViewTests extends DslTest {
     private void setup() throws IOException {
         aeDetails = aeData.createAeWithDefaultValues();
         Site site = siteData.createNewSite(aeDetails.getId(), "default-site");
-        tester = userData.createTester(site.getId());
+        tester = motApi.user.createTester(site.getId());
     }
 
     @Test(groups = {"Regression"}, description = "Breadcrumb is visible in vehicle testing station")
