@@ -84,6 +84,7 @@ class PersonProfileSidebar extends GeneralSidebar
      * @param $hideResetPin
      * @param $isTwoFactorAuthEnabled
      * @param $canOrderSecurityCard
+     * @param $displayResetAccountByEmailButton
      */
     public function __construct(
         $personId,
@@ -98,7 +99,8 @@ class PersonProfileSidebar extends GeneralSidebar
         $canOrderSecurityCard,
         $hasSecurityCardOrders,
         $hasDeactivated2FaCard,
-        $isAuthenticatedWithLostAndForgotten
+        $isAuthenticatedWithLostAndForgotten,
+        $displayResetAccountByEmailButton
     ) {
         $this->personId = $personId;
         $this->personProfileGuard = $personProfileGuard;
@@ -116,7 +118,7 @@ class PersonProfileSidebar extends GeneralSidebar
 
         $this->setUpStatusBox();
         $this->setUpAccountSecurityBox();
-        $this->setUpAccountManagementBox();
+        $this->setUpAccountManagementBox($displayResetAccountByEmailButton);
         $this->setUpRelatedLinksSection();
         $this->setUpQualificationsAndAnnualAssessmentSection();
     }
@@ -223,7 +225,7 @@ class PersonProfileSidebar extends GeneralSidebar
         $this->addItem($accountSecurityBox);
     }
 
-    private function setUpAccountManagementBox()
+    private function setUpAccountManagementBox($displayResetByEmailButton = true)
     {
         if (!$this->personProfileGuard->canViewAccountManagement()) {
             return;
@@ -243,21 +245,32 @@ class PersonProfileSidebar extends GeneralSidebar
         $accountManagementBox->setId('account_management');
 
         if (true === $this->personProfileGuard->canResetAccount()) {
-            $accountManagementBox->addLink(
-                new GeneralSidebarLink(
-                    'reset-by-email',
-                    'Reset account by email',
-                    '/' . $userAdminUrl . $this->personId . '/claim-reset',
-                    'related-button--warning'
-                )
-            );
-            $accountManagementBox->addLink(
-                new GeneralSidebarLink(
-                    'reset-by-post',
-                    'Reset account by post',
-                    '/' . $userAdminUrl . $this->personId . '/password-reset', '', 'or '
-                )
-            );
+            if (true === $displayResetByEmailButton) {
+                $accountManagementBox->addLink(
+                    new GeneralSidebarLink(
+                        'reset-by-email',
+                        'Reset account by email',
+                        '/' . $userAdminUrl . $this->personId . '/claim-reset',
+                        'related-button--warning'
+                    )
+                );
+                $accountManagementBox->addLink(
+                    new GeneralSidebarLink(
+                        'reset-by-post',
+                        'Reset account by post',
+                        '/' . $userAdminUrl . $this->personId . '/password-reset', '', 'or '
+                    )
+                );
+            }
+            if (false === $displayResetByEmailButton) {
+                $accountManagementBox->addLink(
+                    new GeneralSidebarLink(
+                        'reset-by-post',
+                        'Reset account by post',
+                        '/' . $userAdminUrl . $this->personId . '/password-reset', ''
+                    )
+                );
+            }
         }
 
         if (true === $this->personProfileGuard->canSendUserIdByPost()) {

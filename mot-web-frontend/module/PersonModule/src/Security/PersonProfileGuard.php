@@ -429,6 +429,21 @@ class PersonProfileGuard
                 ($hasACardOrder && $hasADeactivatedCard && $isAuthenticatedWithLostAndForgotten);
     }
 
+    public function canSeeResetAccountByEmailButton()
+    {
+        $canSeeResetAccountByEmailButton = true;
+
+        if ($this->context === ContextProvider::USER_SEARCH_CONTEXT &&
+            $this->canResetAccount()) {
+            $email = $this->targetPersonDetails->getEmail();
+            if (strlen($email) === 0) {
+                $canSeeResetAccountByEmailButton = false;
+            }
+        }
+
+        return $canSeeResetAccountByEmailButton;
+    }
+
     /**
      * @return int
      */

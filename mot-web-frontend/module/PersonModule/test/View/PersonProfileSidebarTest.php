@@ -323,6 +323,37 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
         $this->assertNotContains('Order a security card', $linkTexts);
     }
 
+    public function testAccountManagementReclaimAccount_whenCanResetAccount_shouldContainBothLinks()
+    {
+        $sidebar = $this
+            ->withUserThatCanViewAccountManagement(true)
+            ->withUserThatCanResetAccount(true)
+            ->createPersonProfileSidebar(true);
+
+        /** @var GeneralSidebarLinkList $sidebarLinks */
+        $sidebarLinks = $sidebar->getSidebarItems()[2];
+        $linkTexts = $this->getTextFromSidebarLinks($sidebarLinks);
+
+        $this->assertSame(2, count($linkTexts));
+        $this->assertSame('Reset account by email', $linkTexts[0]);
+        $this->assertSame('Reset account by post', $linkTexts[1]);
+    }
+
+    public function testAccountManagementReclaimAccount_whenCannotResetByEmail_shouldOnlyContainByPostLink()
+    {
+        $sidebar = $this
+            ->withUserThatCanViewAccountManagement(true)
+            ->withUserThatCanResetAccount(true)
+            ->createPersonProfileSidebar(false);
+
+        /** @var GeneralSidebarLinkList $sidebarLinks */
+        $sidebarLinks = $sidebar->getSidebarItems()[2];
+        $linkTexts = $this->getTextFromSidebarLinks($sidebarLinks);
+
+        $this->assertSame(1, count($linkTexts));
+        $this->assertSame('Reset account by post', $linkTexts[0]);
+    }
+
     private function getTextFromSidebarLinks(GeneralSidebarLinkList $sidebarLinks)
     {
         $linkTexts = [];
@@ -331,6 +362,26 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
         }
 
         return $linkTexts;
+    }
+
+    private function withUserThatCanResetAccount($canResetAccount)
+    {
+        $this->personProfileGuardMock
+            ->expects($this->any())
+            ->method('canResetAccount')
+            ->willReturn($canResetAccount);
+
+        return $this;
+    }
+
+    private function withUserThatCanViewAccountManagement($canViewAccountManagement)
+    {
+        $this->personProfileGuardMock
+            ->expects($this->any())
+            ->method('canViewAccountManagement')
+            ->willReturn($canViewAccountManagement);
+
+        return $this;
     }
 
     /**
@@ -388,9 +439,10 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param $canDisplayResetAccountLink
      * @return PersonProfileSidebar
      */
-    private function createPersonProfileSidebar()
+    private function createPersonProfileSidebar($canDisplayResetAccountLink = true)
     {
         $hideResetPin = false;
 
@@ -412,7 +464,8 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
             $this->canOrderSecurityCard,
             $this->hasSecurityCardOrders,
             $this->hasDeactivated2FaCard,
-            $this->isAuthenticatedWithLostAndForgotten
+            $this->isAuthenticatedWithLostAndForgotten,
+            $canDisplayResetAccountLink
         );
     }
 }

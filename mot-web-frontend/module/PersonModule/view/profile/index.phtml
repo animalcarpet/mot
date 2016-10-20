@@ -16,6 +16,7 @@ use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
  * @var array                             $routeParams
  * @var string                            $context
  * @var string                            $userSearchResultUrl
+ * @var bool                              $displayResetAccountError
  */
 
 $motAuthorisations = $this->motAuthorisations;
@@ -37,6 +38,19 @@ $successMessages = $this->layout()->flashMessenger->getSuccessMessages();
 
 echo $this->partial('partial/gds/general/system-message', ['messages' => $successMessages, 'type' => 'success']);
 echo $this->partial('partial/gds/general/system-message', ['messages' => $errorMessages, 'type' => 'failure']);
+?>
+<?php if (true === $personProfileGuard->canChangeEmailAddress()) :
+    $emailUrl = $this->isFeatureEnabled('new_person_profile') ?
+        $this->url($routeName, $routeParams) . '/email/change' :
+        '/user-admin/user-profile/' . $personalDetails->getId() . '/email';
+endif ?>
+<?php if (!$displayResetAccountError) { ?>
+    <div class="banner--error">
+        <span class="banner__heading-large">This account needs an email</span>
+        <span>You must <a href="<?php echo $emailUrl ?>">add an email address</a> if you need to reset the account.</span>
+    </div>
+<?php }
+
 ?>
 <h3 class="summary-heading">Personal details</h3>
 <table class="table-summary" id="personal_details">
@@ -117,12 +131,9 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $errorM
             <?php echo !empty($personalDetails->getEmail()) ? $this->escapeHtml($personalDetails->getEmail())
                 : '<span class="table-summary__meta">Unknown</span>'; ?>
 
-            <?php if (true === $personProfileGuard->canChangeEmailAddress()) :
-                $emailUrl = $this->isFeatureEnabled('new_person_profile') ?
-                    $this->url($routeName, $routeParams) . '/email/change' :
-                    '/user-admin/user-profile/' . $personalDetails->getId() . '/email';
+            <?php
                 echo '<a href="' . $emailUrl . '" class="table-summary__action">Change<span class="visuallyhidden"> Email</span></a>';
-            endif ?>
+            ?>
         </td>
     </tr>
     <tr>

@@ -43,59 +43,37 @@ class PersonProfileController extends AbstractAuthActionController
     const ERR_PIN_UPDATE_FAIL = 'There was a problem updating your PIN.';
     const ERR_COMMON_API = 'Something went wrong.';
 
-    /**
-     * @var ApiPersonalDetails
-     */
+    /** @var ApiPersonalDetails */
     private $personalDetailsService;
 
-    /**
-     * @var ApiDashboardResource
-     */
+    /** @var ApiDashboardResource */
     private $dashboardResourceService;
 
-    /**
-     * @var CatalogService
-     */
+    /** @var CatalogService */
     private $catalogService;
 
-    /**
-     * @var UserAdminSessionManager
-     */
+    /** @var UserAdminSessionManager */
     private $userAdminSessionManager;
 
-    /**
-     * @var ViewTradeRolesAssertion
-     */
+    /** @var ViewTradeRolesAssertion */
     private $viewTradeRolesAssertion;
 
-    /**
-     * @var PersonProfileGuardBuilder
-     */
+    /** @var PersonProfileGuardBuilder */
     private $personProfileGuardBuilder;
 
-    /**
-     * @var MapperFactory
-     */
+    /** @var MapperFactory */
     private $mapperFactory;
 
-    /**
-     * @var ContextProvider
-     */
+    /** @var ContextProvider */
     private $contextProvider;
 
-    /**
-     * @var CanTestWithoutOtpService
-     */
+    /** @var CanTestWithoutOtpService */
     private $canTestWithoutOtpService;
 
-    /**
-     * @var SecurityCardService
-     */
+    /** @var SecurityCardService */
     private $securityCardService;
 
-    /**
-     * @var SecurityCardGuard
-     */
+    /** @var SecurityCardGuard */
     private $securityCardGuard;
 
     /**
@@ -158,6 +136,7 @@ class PersonProfileController extends AbstractAuthActionController
         $personId = $this->getPersonId();
         $context = $this->contextProvider->getContext();
         $personProfileGuard = $this->personProfileGuardBuilder->createPersonProfileGuard($personDetails, $context);
+
         $profileSidebar = $this->createProfileSidebar($personId, $personProfileGuard);
         $this->setSidebar($profileSidebar);
 
@@ -181,8 +160,8 @@ class PersonProfileController extends AbstractAuthActionController
             'routeParams' => $routeParams,
             'context' => $context,
             'userSearchResultUrl' => $this->getUserSearchResultUrl(),
-            'securityCard'              => $securityCard
-
+            'securityCard'              => $securityCard,
+            'displayResetAccountError' => $personProfileGuard->canSeeResetAccountByEmailButton()
         ]);
     }
 
@@ -448,7 +427,8 @@ class PersonProfileController extends AbstractAuthActionController
             $canOrderSecurityCard,
             $hasSecurityCardOrders,
             $hasDeactivated2FaCard,
-            $isAuthenticatedWithLostAndForgotten
+            $isAuthenticatedWithLostAndForgotten,
+            $personProfileGuard->canSeeResetAccountByEmailButton()
         );
     }
 
