@@ -33,7 +33,7 @@ public class BrakeTestResultsTest extends DslTest {
     private void setupTestData() throws IOException {
         aeDetails = aeData.createAeWithDefaultValues();
         site = siteData.createNewSite(aeDetails.getId(), "TestSite");
-        tester = userData.createTester(site.getId());
+        tester = motApi.user.createTester(site.getId());
         vehicle = vehicleData.getNewVehicle(tester);
     }
 
@@ -80,7 +80,7 @@ public class BrakeTestResultsTest extends DslTest {
 
         // When I conduct a re-inspection as VE
         TestResultsEntryGroupAPageInterface resultsEntryPage =
-                motUI.reInspection.startReInspection(userData.createVehicleExaminer("ft-Enf-", false), motTestId, "Targeted Reinspection");
+                motUI.reInspection.startReInspection(motApi.user.createVehicleExaminer("ft-Enf-", false), motTestId, "Targeted Reinspection");
 
         // When I navigate to Test results entry page with a brake test related defect
         TestResultsEntryNewPage resultsEntryNewPage = ((TestResultsEntryNewPage) resultsEntryPage).clickAddDefectButton()

@@ -32,10 +32,10 @@ public class MotSurveyTests extends DslTest {
     private void setupTestData() throws IOException {
         aeDetails = aeData.createAeWithDefaultValues();
         site = siteData.createNewSite(aeDetails.getId(), "TestSite");
-        tester = userData.createTester(site.getId());
+        tester = motApi.user.createTester(site.getId());
         vehicle = vehicleData.getNewVehicle(tester);
-        schemeUser = userData.createSchemeUser(false);
-        areaOffice1User = userData.createAreaOfficeOne("AreaOfficerOne");
+        schemeUser = motApi.user.createSchemeUser(false);
+        areaOffice1User = motApi.user.createAreaOfficeOne("AreaOfficerOne");
     }
 
     @Test(groups = {"Regression", "BL-1529"},
@@ -105,7 +105,6 @@ public class MotSurveyTests extends DslTest {
         generateSurveyReportsPage.clickBackHomeLink();
 
         // Then I should be redirected to the Home page
-
     }
 
     @Test(groups = {"Regression", "BL-1531"},
@@ -132,6 +131,5 @@ public class MotSurveyTests extends DslTest {
         generateSurveyReportsPage.clickFirstDownloadLink();
 
         // Then the survey report should download
-
     }
 }

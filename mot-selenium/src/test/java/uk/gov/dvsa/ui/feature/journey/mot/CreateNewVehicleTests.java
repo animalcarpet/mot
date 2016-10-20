@@ -25,7 +25,7 @@ public class CreateNewVehicleTests extends DslTest {
 
         // Given that a tester creates a new DVSA vehicle
         Boolean result = motUI.normalTest.createNewDvsaVehicle(
-                userData.createTester(siteData.createSite().getId(), false), VehicleFactory.generateValidDetails());
+                motApi.user.createTester(siteData.createSite().getId(), false), VehicleFactory.generateValidDetails());
 
         // Then a test is started for the newly created vehicle
         assertThat("Test has started", result, is(true));
@@ -38,7 +38,7 @@ public class CreateNewVehicleTests extends DslTest {
     public void canCreateNewValidVehicleWithoutVin() throws IOException, URISyntaxException{
         // Given that a tester creates a new DVSA vehicle without a VIN
         Boolean result = motUI.normalTest.createNewDvsaVehicle(
-                userData.createTester(siteData.createSite().getId(), false),
+                motApi.user.createTester(siteData.createSite().getId(), false),
                 VehicleFactory.generateValidDetails().setVin("").setEmptyVinReason("Missing"));
 
         // Then a test is started for the newly created vehicle
@@ -53,7 +53,7 @@ public class CreateNewVehicleTests extends DslTest {
 
         // Given that a tester creates a new DVSA vehicle without a VRM
         Boolean result = motUI.normalTest.createNewDvsaVehicle(
-                userData.createTester(siteData.createSite().getId(), false),
+                motApi.user.createTester(siteData.createSite().getId(), false),
             VehicleFactory.generateValidDetails().setRegistration("").setEmptyVrmReason("Missing"));
 
         // Then a test is started for the newly created vehicle
@@ -71,7 +71,7 @@ public class CreateNewVehicleTests extends DslTest {
         // Given that a tester is on the page vehicle-step/add-step-one
         CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage =
                 motUI.normalTest.gotoCreateNewVehicleRecordIdentificationPage(
-                        userData.createTester(siteData.createSite().getId(), false));
+                        motApi.user.createTester(siteData.createSite().getId(), false));
 
             // And they submit the form while missing a parameter
             boolean result = motUI.normalTest.submitInvalidPageOneDetails(
@@ -94,7 +94,7 @@ public class CreateNewVehicleTests extends DslTest {
         // Given that a tester is on the page vehicle-step/add-step-one
         CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage =
                 motUI.normalTest.gotoCreateNewVehicleRecordIdentificationPage(
-                        userData.createTester(siteData.createSite().getId(), false));
+                        motApi.user.createTester(siteData.createSite().getId(), false));
 
         // And they submit the form with valid details
         CreateNewVehicleRecordSpecificationPage createNewVehicleRecordSpecificationPage =
@@ -117,7 +117,7 @@ public class CreateNewVehicleTests extends DslTest {
         // Given that a tester is on the page vehicle-step/add-step-one
         CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage =
                 motUI.normalTest.gotoCreateNewVehicleRecordIdentificationPage(
-                        userData.createTester(siteData.createSite().getId(), false));
+                        motApi.user.createTester(siteData.createSite().getId(), false));
 
         // And they submit the form while missing a parameter
         boolean result = motUI.normalTest.submitInvalidPageOneDate(
@@ -135,7 +135,7 @@ public class CreateNewVehicleTests extends DslTest {
         // Given that a tester is on the page vehicle-step/add-step-one
         CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage =
                 motUI.normalTest.gotoCreateNewVehicleRecordIdentificationPage(
-                        userData.createTester(siteData.createSite().getId(), false));
+                        motApi.user.createTester(siteData.createSite().getId(), false));
 
         // And they submit the form with a VIN and missing VIN reason
         String errorMsg = "remove the VIN";
@@ -155,7 +155,7 @@ public class CreateNewVehicleTests extends DslTest {
         // Given that a tester is on the page vehicle-step/add-step-one
         CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage =
                 motUI.normalTest.gotoCreateNewVehicleRecordIdentificationPage(
-                        userData.createTester(siteData.createSite().getId(), false));
+                        motApi.user.createTester(siteData.createSite().getId(), false));
 
         // And they submit the form with a VRM and missing VRM reason
         String errorMsg = "remove the registration mark";

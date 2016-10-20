@@ -25,7 +25,7 @@ public class ClaimUserAccountTests extends DslTest {
     public void whenIClaimAccountAsUserIShouldSeePin() throws Exception {
 
         // Given I claim my account as non 2fa user
-        motUI.claimAccount.claimAsUser(userData.createTester(testSite.getId(), true));
+        motUI.claimAccount.claimAsUser(motApi.user.createTester(testSite.getId(), true));
 
         // Then I should see pin
         assertThat(motUI.claimAccount.isPinDisplayed(), is(true));
@@ -35,12 +35,12 @@ public class ClaimUserAccountTests extends DslTest {
     public void whenIClaimAccountAs2FaUserIShouldNotSeePin() throws Exception {
 
         // Given I am 2FA user
-        User twoFaUser = userData.createTester(testSite.getId());
+        User twoFaUser = motApi.user.createTester(testSite.getId());
         motUI.authentication.securityCard.activate2faCard(twoFaUser);
         motUI.logout(twoFaUser);
 
         // And I need to claim my account
-        userData.requireClaimAccount(twoFaUser);
+        motApi.user.requireClaimAccount(twoFaUser);
 
         // When I claim account
         motUI.claimAccount.claimAs2FaUser(twoFaUser);

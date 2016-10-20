@@ -23,7 +23,7 @@ public class OrganisationTestQualityViewTest extends DslTest {
     private void setup() throws IOException {
         ae = aeData.createNewAe("TestQuality AE", 100);
         site = siteData.createNewSite(ae.getId(), "TestQuality Site");
-        areaoffice1 = userData.createAreaOfficeOne("AO1");
+        areaoffice1 = motApi.user.createAreaOfficeOne("AO1");
     }
     @Test(groups = {"Regression"}, description = "Verifies that user can view Test Quality for AE with correct navigation")
     public void viewAETestQuality() throws IOException, URISyntaxException {

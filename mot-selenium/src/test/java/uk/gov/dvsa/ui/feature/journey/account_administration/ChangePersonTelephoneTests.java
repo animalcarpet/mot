@@ -32,13 +32,13 @@ public class ChangePersonTelephoneTests extends DslTest {
     private void setup() throws IOException {
         aeDetails = aeData.createAeWithDefaultValues();
         testSite = siteData.createNewSite(aeDetails.getId(), "Test_Site");
-        areaOffice1User = userData.createAreaOfficeOne("AreaOfficerOne");
-        vehicleExaminerUser = userData.createVehicleExaminer("VehicleExaminer", false);
-        tester = userData.createTester(testSite.getId());
-        schemeManager = userData.createSchemeUser(false);
-        aedm = userData.createAedm(aeDetails.getId(), "Test", false);
-        siteManager = userData.createSiteManager(testSite.getId(), false);
-        csco = userData.createCustomerServiceOfficer(false);
+        areaOffice1User = motApi.user.createAreaOfficeOne("AreaOfficerOne");
+        vehicleExaminerUser = motApi.user.createVehicleExaminer("VehicleExaminer", false);
+        tester = motApi.user.createTester(testSite.getId());
+        schemeManager = motApi.user.createSchemeUser(false);
+        aedm = motApi.user.createAedm(aeDetails.getId(), "Test", false);
+        siteManager = motApi.user.createSiteManager(testSite.getId(), false);
+        csco = motApi.user.createCustomerServiceOfficer(false);
     }
 
     @Test(groups = {"Regression", "BL-931"},
@@ -46,7 +46,7 @@ public class ChangePersonTelephoneTests extends DslTest {
             description = "Test that Trade users can edit their telephone from their profile page")
     public void tradeUserCanEditHisTelephone() throws Exception{
         // Given I am logged in as a Tester and I am on the My Profile Page
-        ProfilePage profilePage = motUI.profile.viewYourProfile(userData.createTester(testSite.getId()));
+        ProfilePage profilePage = motUI.profile.viewYourProfile(motApi.user.createTester(testSite.getId()));
 
         // When I edit my Telephone number
         motUI.profile.changeYourTelephoneTo("+44 (0) 1225 200 123");
@@ -104,7 +104,7 @@ public class ChangePersonTelephoneTests extends DslTest {
             description = "Test that Trade user cannot enter more than 24 Chars in the Telephone number")
     public void tradeUserShouldProvideValidTelephoneNumber() throws IOException {
         // Given I am logged in as a Tester and I am on the My Profile Page
-        motUI.profile.viewYourProfile(userData.createTester(testSite.getId()));
+        motUI.profile.viewYourProfile(motApi.user.createTester(testSite.getId()));
 
         // When I am trying to submit a telephone number greater than 24 Chars
         String validationMessage = motUI.profile.editTelephoneWithInvalidInput("A123456789B123456789C12345");
@@ -140,10 +140,10 @@ public class ChangePersonTelephoneTests extends DslTest {
     @DataProvider
     private Object[][] dvsaUserChangeTelephoneProvider() throws IOException {
         return new Object[][] {
-                {userData.createAreaOfficeOne("aoe")},
-                {userData.createVehicleExaminer("ves", false)},
-                {userData.createSchemeUser(false)},
-                {userData.createCustomerServiceOfficer(false)},
+                {motApi.user.createAreaOfficeOne("aoe")},
+                {motApi.user.createVehicleExaminer("ves", false)},
+                {motApi.user.createSchemeUser(false)},
+                {motApi.user.createCustomerServiceOfficer(false)},
         };
     }
 

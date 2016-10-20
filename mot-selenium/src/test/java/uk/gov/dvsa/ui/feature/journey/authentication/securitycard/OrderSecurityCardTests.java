@@ -20,7 +20,7 @@ public class OrderSecurityCardTests extends DslTest {
     public void orderNewSecurityCard() throws IOException {
 
         step("Given I am a 2fa authenticated user");
-        User twoFactorUser = userData.createTester(siteData.createSite().getId());
+        User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
         motUI.authentication.securityCard.activate2faCard(twoFactorUser).logOut(twoFactorUser);
 
         step("And I complete the sign in journey without a card");
@@ -38,7 +38,7 @@ public class OrderSecurityCardTests extends DslTest {
     public void cscoOrderCardForTradeUser() throws IOException {
         step("Given I order a card for a trade user as CSCO");
         String result = motUI.authentication.securityCard
-            .orderCardForTradeUserAsCSCO(userData.createCSCO(), userData.createUserWithoutRole());
+            .orderCardForTradeUserAsCSCO(motApi.user.createCSCO(), motApi.user.createUserWithoutRole());
 
         step("Then my card is ordered successfully");
         assertThat("Card Order was Successful", result, containsString("Your security card has been ordered"));
@@ -49,7 +49,7 @@ public class OrderSecurityCardTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"})
     public void orderSecurityCardPromptIsDisplayedForDemoTestUserWhoHasNotOrderedSecurityCard() throws IOException {
         step("Given I have a status of Demo Test Needed with no card ordered");
-        User demoTester = userData.createUserWithoutRole();
+        User demoTester = motApi.user.createUserWithoutRole();
         qualificationDetailsData.createQualificationCertificateForGroupA(
             demoTester, "1234123412341234", "2016-04-01", siteData.createSite().getSiteNumber());
 
@@ -66,7 +66,7 @@ public class OrderSecurityCardTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"})
     public void activateSecurityCardPromptIsDisplayedForDemoTestUserWhoHasOrderedSecurityCard() throws IOException {
         step("Given I have a status of Demo Test Needed with card ordered");
-        User demoTester = userData.createUserWithoutRole();
+        User demoTester = motApi.user.createUserWithoutRole();
         qualificationDetailsData.createQualificationCertificateForGroupA(
             demoTester, "1234123412341234", "2016-04-01", siteData.createSite().getSiteNumber()
         );
@@ -85,7 +85,7 @@ public class OrderSecurityCardTests extends DslTest {
     public void cardDeactivationMessageIsDisplayedForUserWithActiveCard() throws IOException {
 
         step("Given I am a 2fa authenticated user");
-        User twoFactorUser = userData.createTester(siteData.createSite().getId());
+        User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
         motUI.authentication.securityCard.activate2faCard(twoFactorUser).logOut(twoFactorUser);
 
         step("And I Order a new security card");
@@ -100,7 +100,7 @@ public class OrderSecurityCardTests extends DslTest {
     public void validationSummaryIsDisplayedForIncorrectCustomAddress() throws IOException {
 
         step("GIVEN I am a 2fa authenticated user");
-        User twoFactorUser = userData.createTester(siteData.createSite().getId());
+        User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
         motUI.authentication.securityCard.activate2faCard(twoFactorUser).logOut(twoFactorUser);
 
         step("And I complete the sign in journey");
@@ -116,7 +116,7 @@ public class OrderSecurityCardTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"})
     public void orderNewSecurityCardWithVTSAddress() throws IOException {
         step("GIVEN I am a 2fa authenticated user");
-        User twoFactorUser = userData.createTester(siteData.createSite().getId());
+        User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
         motUI.authentication.securityCard.activate2faCard(twoFactorUser).logOut(twoFactorUser);
         motUI.authentication.securityCard.signInWithoutSecurityCard(twoFactorUser);
 
@@ -131,7 +131,7 @@ public class OrderSecurityCardTests extends DslTest {
     public void orderNewSecurityCardWithHomeAddress() throws IOException {
 
         step("GIVEN I am a 2fa authenticated user");
-        User twoFactorUser = userData.createTester(siteData.createSite().getId());
+        User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
         motUI.authentication.securityCard.activate2faCard(twoFactorUser).logOut(twoFactorUser);
         motUI.authentication.securityCard.signInWithoutSecurityCard(twoFactorUser);
 
@@ -145,11 +145,11 @@ public class OrderSecurityCardTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"})
     public void userGetsOrderCardNotificationWhenOrderedByCSCO() throws IOException {
         step("Given I have been nominated as a Site manager");
-        User tradeUser = userData.createUserWithoutRole();
+        User tradeUser = motApi.user.createUserWithoutRole();
         motApi.nominations.nominateSiteRole(tradeUser, siteData.createSite().getId(), TradeRoles.SITE_MANAGER);
 
         step("When a CSCO orders a card on my behalf");
-        motUI.authentication.securityCard.orderCardForTradeUserAsCSCO(userData.createCSCO(), tradeUser);
+        motUI.authentication.securityCard.orderCardForTradeUserAsCSCO(motApi.user.createCSCO(), tradeUser);
 
         step("Then I should see an order security card success notification on my homepage");
         HomePage homePage = pageNavigator.gotoHomePage(tradeUser);
@@ -159,7 +159,7 @@ public class OrderSecurityCardTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"})
     public void userGetsOrderCardNotificationWhenOrderingACard() throws IOException {
         step("Given I have been nominated as a Site manager");
-        User tradeUser = userData.createUserWithoutRole();
+        User tradeUser = motApi.user.createUserWithoutRole();
         motApi.nominations.nominateSiteRole(tradeUser, siteData.createSite().getId(), TradeRoles.SITE_MANAGER);
 
         step("When I order a card");

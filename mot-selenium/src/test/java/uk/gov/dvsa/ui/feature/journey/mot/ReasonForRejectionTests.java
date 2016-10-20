@@ -14,7 +14,7 @@ public class ReasonForRejectionTests extends DslTest {
     @Test(groups = {"Regression", "VM-1581", "VM-1578", "VM-1579", "short-vehicle", "VM-1741"})
     public void rejectWithProfanityAddedToDescription() throws IOException, URISyntaxException {
         //Given I start an mot test
-        motUI.normalTest.startTest();
+        motUI.normalTest.startTest(motApi.user.createTester(siteData.createSite().getId()));
 
         //When I add a manual advisory with profanity description
 

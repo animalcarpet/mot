@@ -19,7 +19,7 @@ public class ProfilePageResetPinTests extends DslTest {
             description = "Test that a non-2fa user can reset their pin from profile")
     public void non2faUserCanResetPinViaProfile() throws IOException {
         // Given I am a trade user who has not activated 2FA
-        User tester = userData.createTester(siteData.createSite().getId());
+        User tester = motApi.user.createTester(siteData.createSite().getId());
         // When I navigate to my user profile
         motUI.profile.viewYourProfile(tester);
         // Then I should be able to reset my pin via the link
@@ -31,7 +31,7 @@ public class ProfilePageResetPinTests extends DslTest {
             description = "Test that a 2fa user can not reset their pin from profile")
     public void twoFaActiveUserCanNotResetPinViaProfile() throws IOException {
         // Given I am a user who has activated a 2FA card
-        User twoFactorUser = userData.createTester(siteData.createSite().getId());
+        User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
         motUI.authentication.registerAndSignInTwoFactorUser(twoFactorUser);
         //When I navigate to my user profile
         motUI.profile.viewYourProfile(twoFactorUser);

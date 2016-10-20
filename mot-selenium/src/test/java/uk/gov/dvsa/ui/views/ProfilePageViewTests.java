@@ -27,15 +27,15 @@ public class ProfilePageViewTests extends DslTest {
     private void setup() throws IOException {
         AeDetails aeDetails = aeData.createAeWithDefaultValues();
         site = siteData.createNewSite(aeDetails.getId(), "Test_Site");
-        tester = userData.createTester(site.getId());
-        areaOffice2User = userData.createAreaOfficeTwo(randomName);
+        tester = motApi.user.createTester(site.getId());
+        areaOffice2User = motApi.user.createAreaOfficeTwo(randomName);
     }
 
     @Test(groups = {"BVT"}, description = "VM-10334")
     public void testerQualificationStatusDisplayedOnProfilePage() throws IOException {
 
         //Given I'm on the Your Profile Details page
-        motUI.profile.viewYourProfile(userData.createTester(site.getId()));
+        motUI.profile.viewYourProfile(motApi.user.createTester(site.getId()));
 
         //Then I should be able to see the qualification status
         assertThat(motUI.profile.isTesterQualificationStatusDisplayed(), is(true));
@@ -47,7 +47,7 @@ public class ProfilePageViewTests extends DslTest {
     public void tradeUserCanViewHisOwnRolesAndAssociations() throws IOException, URISyntaxException {
 
         //Given I'm on the Your Profile Details page
-        motUI.profile.viewYourProfile(userData.createTester(site.getId()));
+        motUI.profile.viewYourProfile(motApi.user.createTester(site.getId()));
 
         //When I click on Roles and Associations link
         motUI.profile.page().clickRolesAndAssociationsLink();
@@ -101,7 +101,7 @@ public class ProfilePageViewTests extends DslTest {
     public void anyUserCanSeeQualificationsSection() throws IOException, URISyntaxException {
 
         //Given I'm on the Trade user New Profile Details page as area office user
-        motUI.profile.dvsaViewUserProfile(userData.createAreaOfficeOne("Ao1"), tester);
+        motUI.profile.dvsaViewUserProfile(motApi.user.createAreaOfficeOne("Ao1"), tester);
 
         //Then Qualification section should be displayed
         assertThat(motUI.profile.page().isQualificationStatusSectionIsDisplayed(), is(true));
@@ -112,7 +112,7 @@ public class ProfilePageViewTests extends DslTest {
     public void anyUserCanSeeAccountSecuritySectionOnOwnProfile() throws IOException, URISyntaxException {
 
         //Given I'm on the New Profile Details page as a tester
-        motUI.profile.viewYourProfile(userData.createTester(site.getId()));
+        motUI.profile.viewYourProfile(motApi.user.createTester(site.getId()));
 
         //Then Account security section should be displayed
         assertThat(motUI.profile.page().isAccountSecuritySectionDisplayed(), is(true));
@@ -124,7 +124,7 @@ public class ProfilePageViewTests extends DslTest {
 
         //Given I'm on the New Profile Details page as a csco
         motUI.profile.dvsaViewUserProfile(
-                userData.createCustomerServiceOfficer(false), userData.createUserAsAreaOfficeTwo("ao2")
+                motApi.user.createCustomerServiceOfficer(false), motApi.user.createUserAsAreaOfficeTwo("ao2")
         );
 
         //Then Account management section should be displayed
@@ -161,7 +161,7 @@ public class ProfilePageViewTests extends DslTest {
     public void registered2faTradeUserCanSeeSecurityCardPanelOnOwnProfile()  throws IOException, URISyntaxException {
 
         // Given I have registered for two factor authentication
-        User twoFactorTester = userData.createTester(site.getId());
+        User twoFactorTester = motApi.user.createTester(site.getId());
         motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
 
         // When I view my own profile
@@ -175,7 +175,7 @@ public class ProfilePageViewTests extends DslTest {
     public void notRegistered2faTradeUserCanNotSeeSecurityCardPanelOnOwnProfile()  throws IOException, URISyntaxException {
 
         // Given I have not registered for two factor authentication
-        User nonTwoFactorTester = userData.createTester(site.getId());
+        User nonTwoFactorTester = motApi.user.createTester(site.getId());
 
         // When I view my own profile
         motUI.profile.viewYourProfile(nonTwoFactorTester);
@@ -188,7 +188,7 @@ public class ProfilePageViewTests extends DslTest {
     public void dvsaCanSeeSecurityCardPanelOnRegistered2faTradeUserProfile(User dvsaUser)  throws IOException, URISyntaxException {
 
         step("Given a tester who has registered for two factor authentication");
-        User twoFactorTester = userData.createTester(site.getId());
+        User twoFactorTester = motApi.user.createTester(site.getId());
         motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
 
         step("When I log in as a DVSA user and view their profile page");
@@ -223,7 +223,7 @@ public class ProfilePageViewTests extends DslTest {
 
     @Test(testName = "2fa", groups = {"BVT", "BL-2354"})
     public void orderSecurityCardLinkShownToUserWhoGoneThroughLostForgottenJourney()  throws IOException {
-        User twoFactorTester = userData.createTester(site.getId());
+        User twoFactorTester = motApi.user.createTester(site.getId());
 
         step("Given that I am on the Security card PIN page");
             motUI.authentication.gotoTwoFactorPinEntryPage(twoFactorTester);
@@ -239,37 +239,37 @@ public class ProfilePageViewTests extends DslTest {
     @DataProvider(name = "dvsaUserForPersonalDetails")
     private Object[][] dvsaUserForPersonalDetails() throws IOException {
         return new Object[][]{
-                {userData.createSchemeUser(false), true},
-                {userData.createAreaOfficeOne("Ao1"), true},
-                {userData.createVehicleExaminer("veguy", false), true},
-                {userData.createCustomerServiceOfficer(false), false}};
+                {motApi.user.createSchemeUser(false), true},
+                {motApi.user.createAreaOfficeOne("Ao1"), true},
+                {motApi.user.createVehicleExaminer("veguy", false), true},
+                {motApi.user.createCustomerServiceOfficer(false), false}};
     }
 
     @DataProvider(name = "dvsaUserForContactDetails")
     private Object[][] dvsaUserForContactDetails() throws IOException {
         return new Object[][]{
-                {userData.createSchemeUser(false)},
-                {userData.createAreaOfficeOne("Ao1")},
-                {userData.createVehicleExaminer("veguy", false)},
-                {userData.createCustomerServiceOfficer(false)}};
+                {motApi.user.createSchemeUser(false)},
+                {motApi.user.createAreaOfficeOne("Ao1")},
+                {motApi.user.createVehicleExaminer("veguy", false)},
+                {motApi.user.createCustomerServiceOfficer(false)}};
     }
 
     @DataProvider(name = "dvsaUser")
     private Object[][] dvsaUserForChangeQualifications() throws IOException {
         return new Object[][]{
-                {userData.createSchemeUser(false)},
-                {userData.createAreaOfficeOne("Ao1")},
-                {userData.createVehicleExaminer("veguy", false)}};
+                {motApi.user.createSchemeUser(false)},
+                {motApi.user.createAreaOfficeOne("Ao1")},
+                {motApi.user.createVehicleExaminer("veguy", false)}};
     }
 
     @DataProvider(name = "dvsaUserForSecurityCard")
     private Object[][] dvsaUserForSecurityCard() throws IOException {
         return new Object[][]{
-                {userData.createSchemeUser(false)},
-                {userData.createSchemeManagerUser(false)},
-                {userData.createAreaOfficeOne("Ao1")},
-                {userData.createVehicleExaminer("veguy", false)},
-                {userData.createCustomerServiceOfficer(false)},
-                {userData.createCustomerServiceManager(false)}};
+                {motApi.user.createSchemeUser(false)},
+                {motApi.user.createSchemeManagerUser(false)},
+                {motApi.user.createAreaOfficeOne("Ao1")},
+                {motApi.user.createVehicleExaminer("veguy", false)},
+                {motApi.user.createCustomerServiceOfficer(false)},
+                {motApi.user.createCustomerServiceManager(false)}};
     }
 }

@@ -27,7 +27,7 @@ public class SiteTestQualityViewTests extends DslTest {
     private void setup() throws IOException {
         ae = aeData.createNewAe("TestQuality AE", 100);
         site = siteData.createSiteWithStartSiteOrgLinkDate(ae.getId(), "TestQuality Site", new DateTime(this.getFirstDayOfMonth(13)));
-        tester = userData.createTester(site.getId());
+        tester = motApi.user.createTester(site.getId());
     }
 
     @Test(groups = {"Regression"},

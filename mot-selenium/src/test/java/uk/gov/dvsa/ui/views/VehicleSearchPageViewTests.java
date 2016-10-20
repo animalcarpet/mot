@@ -31,7 +31,7 @@ public class VehicleSearchPageViewTests extends DslTest {
     private void setup() throws IOException {
         AeDetails aeDetails = aeData.createAeWithDefaultValues();
         site = siteData.createNewSite(aeDetails.getId(), "My_Site");
-        tester = userData.createTester(site.getId());
+        tester = motApi.user.createTester(site.getId());
         vehicle = vehicleData.getNewVehicle(tester);
     }
 

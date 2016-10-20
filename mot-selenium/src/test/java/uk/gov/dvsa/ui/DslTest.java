@@ -26,7 +26,6 @@ public abstract class DslTest {
     private MotAppDriver driver = null;
     protected AeData aeData = new AeData();
     protected SiteData siteData = new SiteData();
-    protected UserData userData = new UserData();
     protected FrontendData frontendData = new FrontendData();
     protected QualificationDetailsData qualificationDetailsData = new QualificationDetailsData();
     protected AnnualAssessmentCertificatesData annualAssessmentCertificatesData = new AnnualAssessmentCertificatesData();

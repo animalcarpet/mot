@@ -27,7 +27,7 @@ public class PerformTesterFunctionTests extends DslTest {
     private void setUp() throws IOException {
         aeDetails = aeData.createNewAe("My_Test_AE", 100);
         testSite = siteData.createNewSite(aeDetails.getId(), "Test_Site");
-        tester = userData.createTester(testSite.getId());
+        tester = motApi.user.createTester(testSite.getId());
     }
 
     //TODO Rewrite test according new person profile functionality

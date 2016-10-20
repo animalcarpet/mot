@@ -27,13 +27,13 @@ public class HelpDeskTests extends DslTest {
     public void setUp() throws IOException {
         aeDetails = aeData.createAeWithDefaultValues();
         testSite = siteData.createNewSite(aeDetails.getId(), "Test_Site");
-        tester = userData.createTester(testSite.getId());
+        tester = motApi.user.createTester(testSite.getId());
     }
 
     @Test (groups = {"Regression"})
     public void successfullyUpdateAUsersEmailAddress() throws IOException {
-        User csco = userData.createCustomerServiceOfficer(false);
-        User bob = userData.createAedm(false);
+        User csco = motApi.user.createCustomerServiceOfficer(false);
+        User bob = motApi.user.createAedm(false);
         String email = RandomDataGenerator.generateEmail(15);
 
         //Given that I am on Bob's profile page as a Customer Service Centre Operative
@@ -48,10 +48,10 @@ public class HelpDeskTests extends DslTest {
 
     @DataProvider(name = "createDvsaUser")
     private Object[][] createDvsaUser() throws IOException {
-        return new Object[][]{{userData.createVehicleExaminer(randomName, false)},
-                {userData.createCustomerServiceOfficer(false)},
-                {userData.createSchemeUser(false)},
-                {userData.createAreaOfficeOne(randomName)},
-                {userData.createAreaOfficeTwo(randomName)}};
+        return new Object[][]{{motApi.user.createVehicleExaminer(randomName, false)},
+                {motApi.user.createCustomerServiceOfficer(false)},
+                {motApi.user.createSchemeUser(false)},
+                {motApi.user.createAreaOfficeOne(randomName)},
+                {motApi.user.createAreaOfficeTwo(randomName)}};
     }
 }

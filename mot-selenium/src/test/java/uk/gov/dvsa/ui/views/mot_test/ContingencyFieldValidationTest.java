@@ -19,7 +19,7 @@ public class ContingencyFieldValidationTest extends DslTest {
 
     @BeforeMethod(alwaysRun = true)
     void setupUser() throws IOException, URISyntaxException {
-        tester = userData.createTester(siteData.createSite().getId());
+        tester = motApi.user.createTester(siteData.createSite().getId());
     }
 
     @Test(groups = {"BVT"})

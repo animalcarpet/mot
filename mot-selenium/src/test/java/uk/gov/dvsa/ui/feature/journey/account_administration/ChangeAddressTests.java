@@ -27,7 +27,7 @@ public class ChangeAddressTests extends DslTest {
             dataProvider = "dvsaUserChangeAddressProvider")
     public void dvsaUserCanChangeAddressOnOtherPersonProfile(User user) throws IOException {
         // Given I am on other person profile as an authorised user
-        motUI.profile.dvsaViewUserProfile(user, userData.createTester(testSite.getId()));
+        motUI.profile.dvsaViewUserProfile(user, motApi.user.createTester(testSite.getId()));
 
         // When I am changing an address for a person
         motUI.profile.changeAddress().changeAddress("1 Portland street", "Manchester", "m1 4wb", "USER_PROFILE");
@@ -56,7 +56,7 @@ public class ChangeAddressTests extends DslTest {
             description = "Test that authorised user can navigate through change address journey on other person profile")
     public void dvsaUserCanNavigateThroughChangeAddressJourneyOnOtherPersonProfile() throws IOException {
         // Given I am as authorised user on other person profile
-        motUI.profile.dvsaViewUserProfile(userData.createSchemeUser(false), userData.createTester(testSite.getId()));
+        motUI.profile.dvsaViewUserProfile(motApi.user.createSchemeUser(false), motApi.user.createTester(testSite.getId()));
 
         // When I am navigating to change address, review address and backward to person profile page
         motUI.profile.changeAddress()
@@ -73,7 +73,7 @@ public class ChangeAddressTests extends DslTest {
             description = "Test that user can navigate through change address journey on own person profile")
     public void userCanNavigateThroughChangeAddressJourneyOnOwnPersonProfile() throws IOException {
         // Given I am on own person profile
-        motUI.profile.viewYourProfile(userData.createAreaOfficeOne("Ao1"));
+        motUI.profile.viewYourProfile(motApi.user.createAreaOfficeOne("Ao1"));
 
         // When I am navigating to change address, review address and backward to person profile page
         motUI.profile.changeAddress()
@@ -90,7 +90,7 @@ public class ChangeAddressTests extends DslTest {
             description = "Test that user should provide correct address during change address journey on own person profile")
     public void userShouldProvideCorrectAddress() throws IOException {
         // Given I am on own person profile
-        motUI.profile.viewYourProfile(userData.createAreaOfficeOne("myAo1"));
+        motUI.profile.viewYourProfile(motApi.user.createAreaOfficeOne("myAo1"));
 
         // When I am trying to submit an address with incorrect address input
         motUI.profile.changeAddress().changeAddress("", "Manchester", "m1 4wb", "INVALID_INPUT");
@@ -104,7 +104,7 @@ public class ChangeAddressTests extends DslTest {
             description = "Test that user should provide correct town during change address journey on own person profile")
     public void userShouldProvideCorrectTown() throws IOException {
         // Given I am on own person profile
-        motUI.profile.viewYourProfile(userData.createCustomerServiceOfficer(false));
+        motUI.profile.viewYourProfile(motApi.user.createCustomerServiceOfficer(false));
 
         // When I am trying to submit an address with incorrect town input
         motUI.profile.changeAddress().changeAddress("1 Lane", "", "m1 4wb", "INVALID_INPUT");
@@ -118,7 +118,7 @@ public class ChangeAddressTests extends DslTest {
             description = "Test that user should provide correct postcode during change address journey on own person profile")
     public void userShouldProvideCorrectPostcode() throws IOException {
         // Given I am on own person profile
-        motUI.profile.viewYourProfile(userData.createSiteManager(testSite.getId(), false));
+        motUI.profile.viewYourProfile(motApi.user.createSiteManager(testSite.getId(), false));
 
         // When I am trying to submit an address with incorrect postcode input
         motUI.profile.changeAddress().changeAddress("1 Lane", "Manchester", "", "INVALID_INPUT");
@@ -132,7 +132,7 @@ public class ChangeAddressTests extends DslTest {
             description = "Test that user should provide correct values during change address journey on own person profile")
     public void userShouldProvideCorrectValues() throws IOException {
         // Given I am on own person profile
-        motUI.profile.viewYourProfile(userData.createAedm(false));
+        motUI.profile.viewYourProfile(motApi.user.createAedm(false));
 
         // When I am trying to submit an address with incorrect input
         motUI.profile.changeAddress().changeAddress("", "", "", "INVALID_INPUT");
@@ -144,23 +144,23 @@ public class ChangeAddressTests extends DslTest {
     @DataProvider
     private Object[][] dvsaUserChangeAddressProvider() throws IOException {
         return new Object[][] {
-                {userData.createAreaOfficeOne("Ao1")},
-                {userData.createVehicleExaminer("ve", false)},
-                {userData.createCustomerServiceOfficer(false)},
-                {userData.createSchemeUser(false)}
+                {motApi.user.createAreaOfficeOne("Ao1")},
+                {motApi.user.createVehicleExaminer("ve", false)},
+                {motApi.user.createCustomerServiceOfficer(false)},
+                {motApi.user.createSchemeUser(false)}
         };
     }
 
     @DataProvider
     private Object[][] userChangeOwnAddressProvider() throws IOException {
         return new Object[][] {
-                {userData.createAreaOfficeOne("Ao1")},
-                {userData.createVehicleExaminer("ve", false)},
-                {userData.createCustomerServiceOfficer(false)},
-                {userData.createTester(testSite.getId())},
-                {userData.createAedm(false)},
-                {userData.createSiteManager(testSite.getId(), false)},
-                {userData.createAedm(false)}
+                {motApi.user.createAreaOfficeOne("Ao1")},
+                {motApi.user.createVehicleExaminer("ve", false)},
+                {motApi.user.createCustomerServiceOfficer(false)},
+                {motApi.user.createTester(testSite.getId())},
+                {motApi.user.createAedm(false)},
+                {motApi.user.createSiteManager(testSite.getId(), false)},
+                {motApi.user.createAedm(false)}
         };
     }
 }

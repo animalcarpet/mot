@@ -17,7 +17,7 @@ public class ChangeSecurityQuestionsTests extends DslTest {
 
     @BeforeMethod(alwaysRun = true)
     private void createTradeUser() throws IOException {
-        tradeUser = userData.createTester(siteData.createSite().getId());
+        tradeUser = motApi.user.createTester(siteData.createSite().getId());
     }
 
     @Test(groups = "BVT")
@@ -31,7 +31,7 @@ public class ChangeSecurityQuestionsTests extends DslTest {
     @Test(groups = "BVT")
     void CscoCannotChangeSecurityQuestionForUser() throws IOException {
         step("Given I am viewing a trade user profile as CSCO");
-        User csco = userData.createCSCO();
+        User csco = motApi.user.createCSCO();
 
         step("Then I should not see the option to change security questions");
         assertThat("Change Security Question Link is Displayed" ,

@@ -91,7 +91,7 @@ public class AedmManagesMotAccountTests extends DslTest {
     @DataProvider(name = "createAedmSite")
     public Object[][] createAedmSite() throws IOException {
         AeDetails aeDetails = aeData.createAeWithDefaultValues();
-        User aedm = userData.createAedm(aeDetails.getId(), "My_AEDM", false);
+        User aedm = motApi.user.createAedm(aeDetails.getId(), "My_AEDM", false);
         Site site = siteData.createNewSite(aeDetails.getId(), "My_TestSite");
 
         return new Object[][]{{aedm, site}};
@@ -100,9 +100,9 @@ public class AedmManagesMotAccountTests extends DslTest {
     @DataProvider(name = "createAedmTester")
     public Object[][] createAedmTester() throws IOException {
         AeDetails aeDetails = aeData.createAeWithDefaultValues();
-        User aedm = userData.createAedm(aeDetails.getId(), "My_AEDM", false);
+        User aedm = motApi.user.createAedm(aeDetails.getId(), "My_AEDM", false);
         Site site = siteData.createNewSite(aeDetails.getId(), "My_TestSite");
-        User tester = userData.createTester(site.getId());
+        User tester = motApi.user.createTester(site.getId());
 
         return new Object[][]{{aedm, tester}};
     }
@@ -111,8 +111,8 @@ public class AedmManagesMotAccountTests extends DslTest {
     public Object[][] createAeAedmSiteAndTester() throws IOException {
         AeDetails aeDetails = aeData.createAeWithDefaultValues();
         Site testSite = siteData.createNewSite(aeDetails.getId(), "My_Site");
-        User aedm = userData.createAedm(aeDetails.getId(), "My_AEDM", false);
-        User tester = userData.createTester(testSite.getId());
+        User aedm = motApi.user.createAedm(aeDetails.getId(), "My_AEDM", false);
+        User tester = motApi.user.createTester(testSite.getId());
 
         return new Object[][]{{aedm, aeDetails, testSite, tester}};
     }

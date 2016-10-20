@@ -20,7 +20,7 @@ public class OpenAMLockoutWarningTests extends DslTest {
     public void authenticationFailedFor4Times() throws IOException, InterruptedException {
 
         // Given I have entered incorrect login details 3 times
-        final User user = userData.createTester(siteData.createSite().getId());
+        final User user = motApi.user.createTester(siteData.createSite().getId());
         motApi.createMultipleSession(user.getUsername(), "Wrong", warningAttempts);
 
         // When I try for the 4th time
@@ -35,7 +35,7 @@ public class OpenAMLockoutWarningTests extends DslTest {
     public void lockAccountAfterInvalidAttempts() throws IOException, InterruptedException {
 
         // Given I have entered incorrect login details 4 times
-        final User user = userData.createTester(siteData.createSite().getId());
+        final User user = motApi.user.createTester(siteData.createSite().getId());
         motApi.createMultipleSession(user.getUsername(), "Wrong", lockoutAttempts);
 
         // When I try the 5th time

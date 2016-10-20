@@ -19,7 +19,7 @@ public class SecurityCardOrderReportTests extends DslTest {
     public void catUserSeeReportLinksForLast7Days() throws IOException {
 
         step("Given I am Central Admin Team user");
-        User catUser = userData.createCentralAdminTeamUser();
+        User catUser = motApi.user.createCentralAdminTeamUser();
 
         step("When I visit security card order list");
         CardOrderReportListPage list = motUI.authentication.securityCard.goToSecurityCardOrderReportList(catUser);
@@ -32,7 +32,7 @@ public class SecurityCardOrderReportTests extends DslTest {
     public void catUserCanSeeTheLinkToReportListInHomePage() throws IOException {
 
         step("Given I am Central Admin Team user");
-        User catUser = userData.createCentralAdminTeamUser();
+        User catUser = motApi.user.createCentralAdminTeamUser();
 
         step("When I open the home page");
         HomePage page = pageNavigator.gotoHomePage(catUser);
@@ -44,8 +44,8 @@ public class SecurityCardOrderReportTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"})
     public void cscoCanViewSecurityCardOrderEventForATradeUser() throws IOException, URISyntaxException {
         step("Given I order a card for a trade user as CSCO");
-        User csco = userData.createCSCO();
-        User tradeUser = userData.createUserWithoutRole();
+        User csco = motApi.user.createCSCO();
+        User tradeUser = motApi.user.createUserWithoutRole();
         motUI.authentication.securityCard.orderCardForTradeUserAsCSCO(csco, tradeUser);
 
         step("When I view the event history for the Trade User");

@@ -30,7 +30,6 @@ import static org.hamcrest.core.Is.is;
 public class ConductMotTests extends DslTest {
 
     private Site site;
-    private AeDetails aeDetails;
     private User tester;
     private Vehicle vehicle;
     private List<ReasonForRejection> reasonForRejectionsList;
@@ -44,9 +43,9 @@ public class ConductMotTests extends DslTest {
 
     @BeforeMethod(alwaysRun = true)
     private void setupTestData() throws IOException {
-        aeDetails = aeData.createAeWithDefaultValues();
+        AeDetails aeDetails = aeData.createAeWithDefaultValues();
         site = siteData.createNewSite(aeDetails.getId(), "TestSite");
-        tester = userData.createTester(site.getId());
+        tester = motApi.user.createTester(site.getId());
         vehicle = vehicleData.getNewVehicle(tester);
     }
 
@@ -73,7 +72,7 @@ public class ConductMotTests extends DslTest {
     public void oneTimePasswordBoxNotDisplayedForTwoFactorAuthTester() throws IOException, URISyntaxException {
 
         //Given I am logged in as a tester authenticated by 2fa Card
-        User twoFactorTester = userData.createTester(site.getId());
+        User twoFactorTester = motApi.user.createTester(site.getId());
         motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
 
         //When I complete an mot test
@@ -144,7 +143,7 @@ public class ConductMotTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"} )
     public void startAndAbandonTest2FaActiveUser() throws URISyntaxException, IOException {
         //Given I am a 2FA activated user and I am on the Test Results Page
-        User twoFactorUser = userData.createTester(site.getId());
+        User twoFactorUser = motApi.user.createTester(site.getId());
         motUI.authentication.registerAndSignInTwoFactorUser(twoFactorUser);
         TestResultsEntryGroupAPageInterface testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(twoFactorUser, vehicle);
 
@@ -171,10 +170,10 @@ public class ConductMotTests extends DslTest {
 
     @Test(groups = {"BVT"} )
     public void startAndAbortTestAsVE() throws URISyntaxException, IOException {
-        User vehicleExaminer = userData.createVehicleExaminer("Default-VE", false);
+        User vehicleExaminer = motApi.user.createVehicleExaminer("Default-VE", false);
 
         //Given I start a test as Tester
-        String testId = motUI.normalTest.startTest();
+        String testId = motUI.normalTest.startTest(motApi.user.createTester(site.getId()));
 
         //When a Vehicle Examiner abort the test
         motUI.normalTest.viewTestAs(vehicleExaminer, testId);
@@ -224,7 +223,7 @@ public class ConductMotTests extends DslTest {
     public void printDocumentButtonShouldNotBeDisplayedForDemoTest() throws IOException, URISyntaxException {
 
         // GIVEN I conducted a demo test as a new user
-        TestSummaryPage summaryPage = motUI.normalTest.conductTrainingTest(userData.createUserWithoutRole(), vehicle);
+        TestSummaryPage summaryPage = motUI.normalTest.conductTrainingTest(motApi.user.createUserWithoutRole(), vehicle);
 
         // WHEN I complete it
         TestCompletePage testCompletePage = motUI.normalTest.finishTrainingTest(summaryPage);

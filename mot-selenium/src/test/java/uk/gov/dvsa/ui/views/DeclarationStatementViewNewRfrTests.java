@@ -25,7 +25,7 @@ public class DeclarationStatementViewNewRfrTests extends DslTest {
     private void setupTestData() throws IOException {
         AeDetails aeDetails = aeData.createAeWithDefaultValues();
         site = siteData.createNewSite(aeDetails.getId(), "TestSite");
-        tester = userData.createTester(site.getId());
+        tester = motApi.user.createTester(site.getId());
         vehicle = vehicleData.getNewVehicle(tester);
     }
 

@@ -13,7 +13,7 @@ public class DashBoardViewTests extends DslTest {
     @Test(groups = {"Regression", "VM_9444"})
     public void doesNotDisplayRetestLinkWhenEnteredHomePage() throws Exception {
 
-        pageNavigator.navigateToPage(userData.createTester(siteData.createSite().getId()), HomePage.PATH, HomePage.class);
+        pageNavigator.navigateToPage(motApi.user.createTester(siteData.createSite().getId()), HomePage.PATH, HomePage.class);
 
         boolean startMotRetestPossible = PageInteractionHelper.isElementPresent(By.id("action-start-mot-retest"));
         assertFalse(startMotRetestPossible);

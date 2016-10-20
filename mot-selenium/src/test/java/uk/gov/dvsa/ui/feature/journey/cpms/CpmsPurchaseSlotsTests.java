@@ -224,15 +224,15 @@ public class CpmsPurchaseSlotsTests extends DslTest {
     @DataProvider(name = "createAedmAndAe")
     public Object[][] createAedmAndAe() throws IOException {
         aeDetails = aeData.createAeWithDefaultValues();
-        aedm = userData.createAedm(aeDetails.getId(), "My_AEDM", false);
-        financeUser = userData.createAFinanceUser("Finance", false);
+        aedm = motApi.user.createAedm(aeDetails.getId(), "My_AEDM", false);
+        financeUser = motApi.user.createAFinanceUser("Finance", false);
         return new Object[][]{{aedm, aeDetails, financeUser}};
     }
     
     @DataProvider(name = "createFinanceUserAndAe")
     public Object[][] createFinanceUserAndAe() throws IOException {
         AeDetails aeDetails = aeData.createAeWithDefaultValues();
-        User financeUser = userData.createAFinanceUser("Finance", false);
+        User financeUser = motApi.user.createAFinanceUser("Finance", false);
         return new Object[][]{{financeUser, aeDetails}};
     }
 

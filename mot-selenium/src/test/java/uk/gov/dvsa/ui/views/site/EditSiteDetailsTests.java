@@ -34,7 +34,7 @@ public class EditSiteDetailsTests extends DslTest {
         onePersonTestLane = generateTestLaneNumber();
         twoPersonTestLane = generateTestLaneNumber();
         site = siteData.createSite();
-        areaOfficeUser = userData.createUserAsAreaOfficeOneUser("dv");
+        areaOfficeUser = motApi.user.createUserAsAreaOfficeOneUser("dv");
     }
 
     @Test(groups = {"Regression", "VM-10407"})

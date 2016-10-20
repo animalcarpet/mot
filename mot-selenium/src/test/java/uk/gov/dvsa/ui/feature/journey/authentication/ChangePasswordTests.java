@@ -21,7 +21,7 @@ public class ChangePasswordTests extends DslTest {
     private String errorMessageBase = "There was a problem with the information you entered:\n";
 
     @BeforeMethod(alwaysRun = true) public void setUp() throws IOException {
-        tester = userData.createTester(1);
+        tester = motApi.user.createTester(1);
     }
 
     @Test(groups = {"BVT"}, description = "VM-7668, Tester is changing password")

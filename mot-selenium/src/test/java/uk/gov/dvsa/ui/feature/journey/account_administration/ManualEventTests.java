@@ -24,7 +24,7 @@ public class ManualEventTests extends DslTest {
 
     @BeforeClass(alwaysRun = true)
     private void setupTestData() throws IOException {
-        dvsaUser = userData.createAreaOfficeOne("AreaOffice1User");
+        dvsaUser = motApi.user.createAreaOfficeOne("AreaOffice1User");
         ae = aeData.createNewAe("NewAuthorisedExaminer", 10);
         aeId = ae.getId();
     }

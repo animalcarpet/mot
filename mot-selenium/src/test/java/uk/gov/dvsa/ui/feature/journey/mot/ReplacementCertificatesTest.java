@@ -30,9 +30,9 @@ public class ReplacementCertificatesTest extends DslTest {
     public void issuedByUserRoleWithPrintCertificatePermission(User user) throws IOException, URISyntaxException {
 
         //Given I have a PASSED Mot
-        User tester = userData.createTester(site.getId());
+        User tester = motApi.user.createTester(site.getId());
         Vehicle vehicle = vehicleData.getNewVehicle(tester);
-        MotTest motTest = motApi.createTest(userData.createTester(site.getId()), site.getId(), vehicle,
+        MotTest motTest = motApi.createTest(motApi.user.createTester(site.getId()), site.getId(), vehicle,
                 TestOutcome.PASSED, 123456, DateTime.now());
 
         //When I attempt to reprint a duplicate certificate
@@ -46,12 +46,12 @@ public class ReplacementCertificatesTest extends DslTest {
     public void editedAndIssuedByDvsaUser() throws IOException, URISyntaxException {
 
         //Given I have a PASSED Mot
-        User tester = userData.createTester(site.getId());
+        User tester = motApi.user.createTester(site.getId());
         Vehicle vehicle = vehicleData.getNewVehicle(tester);
         MotTest motTest = motApi.createPassedTestForVehicle(tester, site.getId(), vehicle);
 
         //When I attempt to reprint a duplicate certificate
-        motUI.certificate.updateCertificate(userData.createAreaOfficeOne("Ao1"), vehicle,
+        motUI.certificate.updateCertificate(motApi.user.createAreaOfficeOne("Ao1"), vehicle,
                 motTest.getMotTestNumber()).setOdometerToNull();
 
         //That the edit is successful and Print button is displayed
@@ -62,7 +62,7 @@ public class ReplacementCertificatesTest extends DslTest {
     public void odometerCannotBeEditedAfter7DaysOfFromIssueDate() throws IOException, URISyntaxException {
 
         //Given I conducted an mot test 8 days ago as a tester
-        User tester = userData.createTester(site.getId());
+        User tester = motApi.user.createTester(site.getId());
         Vehicle vehicle = vehicleData.getNewVehicle(tester);
         MotTest motTest = motApi.createTest(tester, site.getId(), vehicle,
                 TestOutcome.PASSED, 12345, DateTime.now().minusDays(8));
@@ -78,12 +78,12 @@ public class ReplacementCertificatesTest extends DslTest {
     public void testVeCanReprintCertificate() throws IOException, URISyntaxException {
 
         //Given a Site has an mot test done
-        User tester = userData.createTester(site.getId());
+        User tester = motApi.user.createTester(site.getId());
         MotTest motTest = motApi.createPassedTest(tester, site.getId());
 
         //When I view the test as a Vehicle Examiner
         motUI.certificate.viewSummaryAsVehicleExaminer(
-                userData.createVehicleExaminer("Veprint", false), site.getSiteNumber(), motTest.getMotTestNumber());
+                motApi.user.createVehicleExaminer("Veprint", false), site.getSiteNumber(), motTest.getMotTestNumber());
 
         //Then I should see the option to print certificate
         assertThat(motUI.certificate.isReprintButtonDisplayed(), is(true));
@@ -94,7 +94,7 @@ public class ReplacementCertificatesTest extends DslTest {
 
         //Given I create a test as a 2FA user
         int siteId = siteData.createSite().getId();
-        User twoFactorTester = userData.createTester(siteId);
+        User twoFactorTester = motApi.user.createTester(siteId);
         motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
 
         Vehicle vehicle = vehicleData.getNewVehicle(twoFactorTester);
@@ -112,7 +112,7 @@ public class ReplacementCertificatesTest extends DslTest {
 
         //Given I create a test as a non 2fa tester
         int siteId = siteData.createSite().getId();
-        User tester = userData.createTester(siteId);
+        User tester = motApi.user.createTester(siteId);
 
         Vehicle vehicle = vehicleData.getNewVehicle(tester);
         String testId = motApi.createTest(tester, siteId, vehicle, TestOutcome.PASSED, 123456, DateTime.now()).getMotTestNumber();
@@ -128,8 +128,8 @@ public class ReplacementCertificatesTest extends DslTest {
     public Object[][] usersWhoCanPrintCertificate() throws IOException {
         return new Object[][]
                 {
-                        {userData.createCustomerServiceOfficer(false)},
-                        {userData.createDvlaOfficer("DVLA")}
+                        {motApi.user.createCustomerServiceOfficer(false)},
+                        {motApi.user.createDvlaOfficer("DVLA")}
                 };
     }
 }

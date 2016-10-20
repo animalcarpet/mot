@@ -103,7 +103,7 @@ public class TradeUserManagingRolesTests extends DslTest {
     private Object[][] dvsaTester() throws IOException {
         AeDetails aeDetails = aeData.createAeWithDefaultValues();
         Site site = siteData.createNewSite(aeDetails.getId(), "Test_Site");
-        User tester = userData.createTester(site.getId());
+        User tester = motApi.user.createTester(site.getId());
 
         return new Object[][]{{tester}};
     }
@@ -112,7 +112,7 @@ public class TradeUserManagingRolesTests extends DslTest {
     private Object[][] dvsaTesterAndVehicle() throws IOException {
         AeDetails aeDetails = aeData.createAeWithDefaultValues();
         Site site = siteData.createNewSite(aeDetails.getId(), "Test_Site");
-        User tester = userData.createTester(site.getId());
+        User tester = motApi.user.createTester(site.getId());
         Vehicle testVehicle = vehicleData.getNewVehicle(tester);
 
         return new Object[][]{{tester, testVehicle}};
@@ -122,8 +122,8 @@ public class TradeUserManagingRolesTests extends DslTest {
     private Object[][] dvsaTesterAndSiteAndAreaOfficer() throws IOException {
         AeDetails aeDetails = aeData.createAeWithDefaultValues();
         Site site = siteData.createNewSite(aeDetails.getId(), "Test_Site");
-        User tester = userData.createTester(site.getId());
-        User areaOffice1User = userData.createAreaOfficeOne("AreaOfficer");
+        User tester = motApi.user.createTester(site.getId());
+        User areaOffice1User = motApi.user.createAreaOfficeOne("AreaOfficer");
 
         return new Object[][]{{tester, site, areaOffice1User}};
     }
@@ -132,8 +132,8 @@ public class TradeUserManagingRolesTests extends DslTest {
     private Object[][] dvsaTesterAndSitemanager() throws IOException {
         AeDetails aeDetails = aeData.createAeWithDefaultValues();
         Site site = siteData.createNewSite(aeDetails.getId(), "Test_Site");
-        User tester = userData.createTester(site.getId());
-        User siteManager = userData.createSiteManager(site.getId(), false);
+        User tester = motApi.user.createTester(site.getId());
+        User siteManager = motApi.user.createSiteManager(site.getId(), false);
 
         return new Object[][]{{tester, siteManager}};
     }

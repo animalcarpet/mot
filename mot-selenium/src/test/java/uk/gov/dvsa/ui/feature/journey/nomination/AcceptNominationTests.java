@@ -21,7 +21,7 @@ public class AcceptNominationTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"})
     void userCannotAcceptNominationWith2faOn() throws IOException {
         step("Given I have been nominated for a Site Manager role as non 2fa user");
-        User not2faActiveUser = userData.createUserWithoutRole();
+        User not2faActiveUser = motApi.user.createUserWithoutRole();
         motApi.nominations.nominateSiteRole(not2faActiveUser, siteData.createSite().getId(), TradeRoles.SITE_MANAGER);
 
         step("When I viewMostRecent my notifications");
@@ -34,7 +34,7 @@ public class AcceptNominationTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"})
     void userCanAcceptSiteManagerNominationWith2faOn() throws IOException {
         step("Given I have been nominated for a Site Manager role as non 2fa user");
-        User user = userData.createUserWithoutRole();
+        User user = motApi.user.createUserWithoutRole();
         motApi.nominations.nominateSiteRole(user, siteData.createSite().getId(), TradeRoles.SITE_MANAGER);
 
         step("When I order and activate the card from Site Manager nomination notification");
@@ -51,7 +51,7 @@ public class AcceptNominationTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"})
     void userCanAcceptAedNominationWith2faOn() throws IOException {
         step("Given I have been nominated for a AED role as non 2fa user");
-        User user = userData.createUserWithoutRole();
+        User user = motApi.user.createUserWithoutRole();
         motApi.nominations.nominateOrganisationRoleWithRoleCode(user, aeData.createAeWithDefaultValues().getId(), OrganisationBusinessRoleCodes.AED);
 
         step("When I order and activate the card from AED nomination notification");
@@ -67,7 +67,7 @@ public class AcceptNominationTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"})
     void existingTradeUserCanAcceptSiteAdminNominationWithoutOrdering2faCard() throws IOException {
         step("Given I am a trade user nominated as a site admin as a non 2fa user");
-        User nominee = userData.createTester(siteData.createSite().getId(), false);
+        User nominee = motApi.user.createTester(siteData.createSite().getId(), false);
         motApi.nominations.nominateSiteRole(nominee, siteData.createSite().getId(), TradeRoles.SITE_ADMIN);
 
         step("When I accept the nomination without ordering or activating a 2fa card");
@@ -80,7 +80,7 @@ public class AcceptNominationTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"})
     void existingTradeUserCanAcceptAedNominationWithoutOrdering2faCard() throws IOException {
         step("Given I am trade user nominated for an AED role as a non 2fa user");
-        User nominee = userData.createTester(siteData.createSite().getId(), false);
+        User nominee = motApi.user.createTester(siteData.createSite().getId(), false);
         motApi.nominations.nominateOrganisationRoleWithRoleCode(nominee, aeData.createAeWithDefaultValues().getId(), OrganisationBusinessRoleCodes.AED);
 
         step("When I accept the nomination without ordering or activating a 2fa card");
@@ -94,7 +94,7 @@ public class AcceptNominationTests extends DslTest {
     @Test(testName = "2fa", groups = {"BVT"})
     void existingTradeUserCanAcceptSiteManagerNominationWithoutActivating2faCard() throws IOException {
         step("Given I am a trade user nominated as a site manager");
-        User nominee = userData.createTester(siteData.createSite().getId(), false);
+        User nominee = motApi.user.createTester(siteData.createSite().getId(), false);
         motApi.nominations.nominateSiteRole(nominee, siteData.createSite().getId(), TradeRoles.SITE_MANAGER);
 
         step("When I accept the nomination without activating a 2fa card");
@@ -107,7 +107,7 @@ public class AcceptNominationTests extends DslTest {
     @Test(groups = {"BVT"})
     void tradeUserAcceptTesterNomination() throws IOException {
         step("Given I am nominated as a tester");
-        User nominee = userData.createTester(siteData.createSite().getId());
+        User nominee = motApi.user.createTester(siteData.createSite().getId());
         motApi.nominations.nominateSiteRole(nominee,siteData.createSite().getId(), TradeRoles.TESTER);
 
         step("When I accept the nomination");
@@ -120,7 +120,7 @@ public class AcceptNominationTests extends DslTest {
     @Test(groups = {"BVT"})
     void tradeUserAcceptSiteAdminNomination() throws IOException {
         step("Given I nominated as a site manager");
-        User nominee = userData.createSiteAdmin(siteData.createSite().getId(), false);
+        User nominee = motApi.user.createSiteAdmin(siteData.createSite().getId(), false);
         motApi.nominations.nominateSiteRole(nominee,siteData.createSite().getId(), TradeRoles.SITE_ADMIN);
 
         step("When I accept the nomination");
@@ -133,7 +133,7 @@ public class AcceptNominationTests extends DslTest {
     @Test(groups = {"BVT"})
     void tradeUserAcceptSiteManagerNomination() throws IOException {
         step("Given I nominate a user as a site manager");
-        User nominee = userData.createSiteManager(siteData.createSite().getId(), false);
+        User nominee = motApi.user.createSiteManager(siteData.createSite().getId(), false);
         motApi.nominations.nominateSiteRole(nominee,siteData.createSite().getId(), TradeRoles.SITE_MANAGER);
         
         step("When I accept the nomination");
@@ -146,7 +146,7 @@ public class AcceptNominationTests extends DslTest {
     @Test(testName = "non-2fa", groups = {"BVT"})
     void userAcceptAedNominationWith2faOff() throws IOException {
         step("Given I nominate a user as an aed");
-        User nominee = userData.createUserWithoutRole();
+        User nominee = motApi.user.createUserWithoutRole();
         motApi.nominations.nominateOrganisationRoleWithRoleCode(nominee, aeData.createAeWithDefaultValues().getId(), OrganisationBusinessRoleCodes.AED);
 
         step("When I accept the nomination");

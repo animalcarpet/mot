@@ -34,12 +34,12 @@ public class AggregetedTestQualityViewTests extends DslTest {
     @BeforeClass(alwaysRun = true)
     private void setup() throws IOException {
         aeDetails = aeData.createAeWithDefaultValues();
-        ao1 = userData.createAreaOfficeOne("ao1");
-        ao2 = userData.createAreaOfficeOne("ao2");
+        ao1 = motApi.user.createAreaOfficeOne("ao1");
+        ao2 = motApi.user.createAreaOfficeOne("ao2");
         site = siteData.createNewSite(aeDetails.getId(), "default-site-tqi1");
-        tester = userData.createTester(site.getId());
-        tester2 = userData.createTester(site.getId());
-        tester3 = userData.createTester(site.getId());
+        tester = motApi.user.createTester(site.getId());
+        tester2 = motApi.user.createTester(site.getId());
+        tester3 = motApi.user.createTester(site.getId());
     }
 
     @Test(groups = {"Regression"}, description = "Verifies that user can see his own TQI page")

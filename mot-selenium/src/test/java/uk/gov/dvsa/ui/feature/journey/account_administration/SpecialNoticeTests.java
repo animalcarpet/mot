@@ -25,8 +25,8 @@ public class SpecialNoticeTests extends DslTest {
     private void setupTestData() throws IOException {
         AeDetails aeDetails = aeData.createAeWithDefaultValues();
         Site site = siteData.createNewSite(aeDetails.getId(), "SpecialNoticesInc");
-        schemeUser = userData.createSchemeUser(false);
-        recipient = userData.createTester(site.getId());
+        schemeUser = motApi.user.createSchemeUser(false);
+        recipient = motApi.user.createTester(site.getId());
         specialNoticeTitle = "Changes to Mot Testing";
     }
 

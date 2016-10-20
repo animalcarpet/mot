@@ -183,7 +183,7 @@ public class CpmsAdjustmentTests extends DslTest {
     @DataProvider(name = "createFinanceUserAndAe")
     public Object[][] createFinanceUserAndAe() throws IOException {
         AeDetails aeDetails = aeData.createAeWithDefaultValues();
-        User financeUser = userData.createAFinanceUser("Finance", false);
+        User financeUser = motApi.user.createAFinanceUser("Finance", false);
         return new Object[][]{{financeUser, aeDetails}};
     }
 }
