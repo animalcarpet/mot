@@ -11,6 +11,7 @@ use DvsaCommonTest\Bootstrap;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaCommonTest\TestUtils\XMock;
 use UserAdmin\Controller\UserSearchController;
+use UserAdmin\Service\DateOfBirthFilterService;
 use UserAdmin\Service\UserAdminSessionManager;
 use Zend\ServiceManager\ServiceManager;
 use DvsaCommon\Exception\UnauthorisedException;
@@ -25,6 +26,9 @@ class UserSearchControllerTest extends AbstractFrontendControllerTestCase
     /** @var ServiceManager */
     protected $serviceManager;
 
+    /** @var DateOfBirthFilterService $dateOfBirthFilterService */
+    private $dateOfBirthFilterService;
+
     public function setUp()
     {
         $appTestConfig = include getcwd() . '/test/test.config.php';
@@ -34,7 +38,9 @@ class UserSearchControllerTest extends AbstractFrontendControllerTestCase
         $this->serviceManager->setAllowOverride(true);
         $this->setServiceManager($this->serviceManager);
 
-        $this->setController(new UserSearchController());
+        $this->dateOfBirthFilterService = XMock::of(DateOfBirthFilterService::class);
+
+        $this->setController(new UserSearchController($this->dateOfBirthFilterService));
         $this->getController()->setServiceLocator($this->serviceManager);
 
         $sessionMock = XMock::of(UserAdminSessionManager::class, ['deleteUserAdminSession']);

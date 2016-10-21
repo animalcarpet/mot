@@ -22,6 +22,7 @@ use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\Enum\RoleCode;
 use DvsaCommon\Model\OrganisationBusinessRoleCode;
+use DvsaCommon\Model\TradeRole;
 use DvsaFeature\FeatureToggles;
 use InvalidArgumentException;
 use PersonApi\Dto\PersonDetails;
@@ -93,6 +94,14 @@ class PersonProfileGuard
         RoleCode::SCHEME_MANAGER,
     ];
 
+    private static $targetTradeRoles = [
+        OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
+        OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DELEGATE,
+        RoleCode::SITE_MANAGER,
+        RoleCode::SITE_ADMIN,
+        RoleCode::TESTER,
+    ];
+
     /**
      * PersonProfileGuard constructor.
      *
@@ -156,19 +165,23 @@ class PersonProfileGuard
     public function canViewDrivingLicence()
     {
         return ($this->authorisationService->isGranted(PermissionInSystem::VIEW_DRIVING_LICENCE)
-            && $this->targetPersonHasNoneOrAnyRoleOf([
-                OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
-                OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DELEGATE,
-                RoleCode::SITE_MANAGER,
-                RoleCode::SITE_ADMIN,
-                RoleCode::TESTER,
-            ]) || ($this->isViewingOwnProfile() && $this->loggedInPersonHasNoneOrAnyRoleOf([
-                   RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
-                   RoleCode::AUTHORISED_EXAMINER_DELEGATE,
-                   RoleCode::SITE_MANAGER,
-                   RoleCode::SITE_ADMIN,
-                   RoleCode::TESTER,
-       ])));
+            && $this->targetPersonHasNoneOrAnyRoleOf(self::$targetTradeRoles)
+            || ($this->isViewingOwnProfile() && $this->loggedInPersonHasNoneOrAnyRoleOf(TradeRole::getTradeRoles())));
+    }
+
+    /**
+     * View D.O.B.
+     *
+     * Rule: When SM, SU, AO1, AO2, VE, CSM, CSCO View AEDM, AED, SITE-M, SITE-A, TESTER, NO-ROLES.
+     *       OR When AEDM, AED, SITE-M, SITE-A, TESTER, NO-ROLES View 'Your profile'.
+     *
+     * @return bool
+     */
+    public function canViewDateOfBirth()
+    {
+        return ($this->authorisationService->isGranted(PermissionInSystem::VIEW_DATE_OF_BIRTH)
+            && $this->targetPersonHasNoneOrAnyRoleOf(self::$targetTradeRoles)
+            || ($this->isViewingOwnProfile() && $this->loggedInPersonHasNoneOrAnyRoleOf(TradeRole::getTradeRoles())));
     }
 
     /**
@@ -181,13 +194,7 @@ class PersonProfileGuard
     public function canChangeDrivingLicence()
     {
         return $this->authorisationService->isGranted(PermissionInSystem::ADD_EDIT_DRIVING_LICENCE)
-            && $this->targetPersonHasNoneOrAnyRoleOf([
-                OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
-                OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DELEGATE,
-                RoleCode::SITE_MANAGER,
-                RoleCode::SITE_ADMIN,
-                RoleCode::TESTER,
-        ]);
+        && $this->targetPersonHasNoneOrAnyRoleOf(self::$targetTradeRoles);
     }
 
     /**
@@ -200,7 +207,7 @@ class PersonProfileGuard
     public function canChangeEmailAddress()
     {
         return $this->isViewingOwnProfile()
-            || $this->authorisationService->isGranted(PermissionInSystem::PROFILE_EDIT_OTHERS_EMAIL_ADDRESS);
+        || $this->authorisationService->isGranted(PermissionInSystem::PROFILE_EDIT_OTHERS_EMAIL_ADDRESS);
     }
     /**
      * Change Telephone.
@@ -229,7 +236,7 @@ class PersonProfileGuard
     public function shouldDisplayGroupAStatus()
     {
         return null !== $this->testerAuthorisation->getGroupAStatus()->getCode()
-            && AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED != $this->testerAuthorisation->getGroupAStatus()->getCode();
+        && AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED != $this->testerAuthorisation->getGroupAStatus()->getCode();
     }
 
     /**
@@ -238,7 +245,7 @@ class PersonProfileGuard
     public function shouldDisplayGroupBStatus()
     {
         return null !== $this->testerAuthorisation->getGroupBStatus()->getCode()
-            && AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED != $this->testerAuthorisation->getGroupBStatus()->getCode();
+        && AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED != $this->testerAuthorisation->getGroupBStatus()->getCode();
     }
 
     /**
@@ -281,21 +288,9 @@ class PersonProfileGuard
     public function canViewTradeRoles()
     {
         return (
-            ($this->isViewingOwnProfile() && $this->loggedInPersonHasNoneOrAnyRoleOf([
-                RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
-                RoleCode::AUTHORISED_EXAMINER_DELEGATE,
-                RoleCode::SITE_MANAGER,
-                RoleCode::SITE_ADMIN,
-                RoleCode::TESTER,
-            ]))
+            ($this->isViewingOwnProfile() && $this->loggedInPersonHasNoneOrAnyRoleOf(TradeRole::getTradeRoles()))
             || ($this->authorisationService->isGranted(PermissionInSystem::VIEW_TRADE_ROLES_OF_ANY_USER)
-                && $this->targetPersonHasNoneOrAnyRoleOf([
-                    OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
-                    OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DELEGATE,
-                    RoleCode::SITE_MANAGER,
-                    RoleCode::SITE_ADMIN,
-                    RoleCode::TESTER,
-            ]))
+                && $this->targetPersonHasNoneOrAnyRoleOf(self::$targetTradeRoles))
         );
     }
 
@@ -307,19 +302,7 @@ class PersonProfileGuard
         return (
             !($this->authorisationService->isGranted(PermissionInSystem::MANAGE_DVSA_ROLES) && $this->isViewingHimself())
             && ($this->authorisationService->isGranted(PermissionInSystem::MANAGE_DVSA_ROLES)
-                && ($this->targetPersonHasNoneOrAnyRoleOf([
-                     RoleCode::SCHEME_MANAGER,
-                     RoleCode::SCHEME_USER,
-                     RoleCode::AREA_OFFICE_1,
-                     RoleCode::AREA_OFFICE_2,
-                     RoleCode::VEHICLE_EXAMINER,
-                     RoleCode::CUSTOMER_SERVICE_MANAGER,
-                     RoleCode::CUSTOMER_SERVICE_OPERATIVE,
-                     RoleCode::DVLA_MANAGER,
-                     RoleCode::DVLA_OPERATIVE,
-                     RoleCode::FINANCE,
-                     RoleCode::SCHEME_MANAGER,
-            ])))
+                && ($this->targetPersonHasNoneOrAnyRoleOf(self::$dvsaRoles)))
         );
     }
 
@@ -329,18 +312,13 @@ class PersonProfileGuard
     public function canChangeTesterQualificationStatus()
     {
         return $this->authorisationService->isGranted(PermissionInSystem::ALTER_TESTER_AUTHORISATION_STATUS)
-            && ($this->targetPersonHasNoneOrAnyRoleOf([
-                OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
-                OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DELEGATE,
-                RoleCode::SITE_MANAGER,
-                RoleCode::SITE_ADMIN,
-                RoleCode::TESTER,
-            ]) || (!in_array($this->testerAuthorisation->getGroupAStatus()->getCode(), [
+        && ($this->targetPersonHasNoneOrAnyRoleOf(self::$targetTradeRoles)
+            || (!in_array($this->testerAuthorisation->getGroupAStatus()->getCode(), [
                     AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED, null,
                 ])
                 && !in_array($this->testerAuthorisation->getGroupBStatus()->getCode(), [
                     AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED, null,
-            ])));
+                ])));
     }
 
     /**
@@ -379,8 +357,8 @@ class PersonProfileGuard
     public function canViewAccountManagement()
     {
         return $this->authorisationService->isGranted(PermissionInSystem::MANAGE_USER_ACCOUNTS)
-            && ($this->isViewingOwnProfile() && $this->context !== ContextProvider::YOUR_PROFILE_CONTEXT
-                || !$this->isViewingOwnProfile());
+        && ($this->isViewingOwnProfile() && $this->context !== ContextProvider::YOUR_PROFILE_CONTEXT
+            || !$this->isViewingOwnProfile());
     }
 
     /**
@@ -398,7 +376,7 @@ class PersonProfileGuard
     public function canChangeAddress()
     {
         return $this->authorisationService->isGranted(PermissionInSystem::EDIT_PERSON_ADDRESS)
-            || ($this->isViewingOwnProfile());
+        || ($this->isViewingOwnProfile());
     }
 
     /**
@@ -412,7 +390,7 @@ class PersonProfileGuard
         );
 
         return $this->twoFaFeatureToggle->isEnabled()
-            && ((!$isViewingOwnProfile && $canViewOtherUsersSecurityCard) ||
+        && ((!$isViewingOwnProfile && $canViewOtherUsersSecurityCard) ||
             ($isViewingOwnProfile && $this->identityProvider->getIdentity()->isSecondFactorRequired()));
     }
 
@@ -425,8 +403,8 @@ class PersonProfileGuard
         $hasAuthWith2FaPermission = $this->authorisationService->isGranted(PermissionInSystem::AUTHENTICATE_WITH_2FA);
         $isDvsa = $this->authorisationService->isDvsa();
         return ($hasAuthWith2FaPermission && !$isDvsa && !$hasActiveCard) ||
-                (!$hasActiveCard && $hasACardOrder) ||
-                ($hasACardOrder && $hasADeactivatedCard && $isAuthenticatedWithLostAndForgotten);
+        (!$hasActiveCard && $hasACardOrder) ||
+        ($hasACardOrder && $hasADeactivatedCard && $isAuthenticatedWithLostAndForgotten);
     }
 
     public function canSeeResetAccountByEmailButton()

@@ -16,6 +16,7 @@ use Dvsa\Mot\Frontend\PersonModule\Factory\Controller\PersonProfileControllerFac
 use Dashboard\Controller\UserTradeRolesController;
 use Dashboard\Factory\Controller\UserTradeRolesControllerFactory;
 use UserAdmin\Controller\EmailAddressController;
+use UserAdmin\Controller\UserSearchController;
 use UserAdmin\Factory\Controller\ChangeQualificationStatusControllerFactory;
 use UserAdmin\Controller\ChangeQualificationStatusController;
 use UserAdmin\Factory\Controller\EmailAddressControllerFactory;
@@ -33,10 +34,12 @@ use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecu
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Factory\Controller\ChangeSecurityQuestionsConfirmationControllerFactory;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionsReviewController;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Factory\Controller\ChangeSecurityQuestionsReviewControllerFactory;
+use UserAdmin\Factory\Controller\UserSearchControllerFactory;
 
 return [
     'factories' => [
         UserProfileControllerFactory::class => UserProfileController::class,
+        UserSearchController::class => UserSearchControllerFactory::class,
         PersonProfileController::class    => PersonProfileControllerFactory::class,
         UserTradeRolesController::class   => UserTradeRolesControllerFactory::class,
         ChangeQualificationStatusController::class => ChangeQualificationStatusControllerFactory::class,
