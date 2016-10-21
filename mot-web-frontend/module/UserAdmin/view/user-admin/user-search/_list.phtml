@@ -13,7 +13,9 @@ use DvsaCommon\UrlBuilder\UserAdminUrlBuilderWeb;
         <?php if ($userSearchExtended): ?>
             <th scope="col">Username</th>
         <?php endif; ?>
-        <th scope="col">Date of birth</th>
+
+            <th scope="col">Date of birth</th>
+
         <th scope="col">Address</th>
         <th scope="col">Postcode</th>
     </tr>
@@ -39,7 +41,9 @@ use DvsaCommon\UrlBuilder\UserAdminUrlBuilderWeb;
             <?php if ($userSearchExtended): ?>
                 <td data-element="result-user-username"><?php echo $this->escapeHtml($user->displayUsername()); ?></td>
             <?php endif; ?>
-            <td data-element="result-user-dob"><?php echo $this->escapeHtml($user->displayUserDateOfBirth()); ?></td>
+
+                <td data-element="result-user-dob"><?php echo $this->escapeHtml($user->displayUserDateOfBirth()); ?></td>
+
             <td data-element="result-user-address"><?php echo $this->escapeHtml($user->displayUserAddress()); ?></td>
             <td data-element="result-user-postcode"><?php echo $this->escapeHtml($user->displayPostcode()); ?></td>
         </tr>

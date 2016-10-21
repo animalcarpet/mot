@@ -6,9 +6,10 @@ use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Date\Exception\IncorrectDateFormatException;
 use DvsaCommon\Date\Exception\NonexistentDateException;
+use DvsaCommon\Dto\Person\SearchPersonResultDto;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
-use UserAdmin\Service\UserAdminSessionManager;
+use UserAdmin\Service\DateOfBirthFilterService;
 use UserAdmin\Traits\UserAdminServicesTrait;
 use UserAdmin\ViewModel\UserSearchViewModel;
 use Zend\Http\PhpEnvironment\Request;
@@ -25,11 +26,9 @@ class UserSearchController extends AbstractDvsaMotTestController
     const PAGE_TITLE_RESULTS = 'Search Results';
     const PAGE_SUBTITLE_INDEX = 'User management';
     const PAGE_SUBTITLE_RESULTS = 'User search';
-
     const ROUTE_USER_HOME = 'user-home';
     const ROUTE_USER_SEARCH = 'user_admin/user-search';
     const ROUTE_USER_SEARCH_RESULTS = 'user_admin/user-search-results';
-
     const PARAM_USERNAME = 'username';
     const PARAM_FIRSTNAME = 'firstName';
     const PARAM_LASTNAME = 'lastName';
@@ -40,16 +39,21 @@ class UserSearchController extends AbstractDvsaMotTestController
     const PARAM_DOB_DAY = 'dobDay';
     const PARAM_DOB_MONTH = 'dobMonth';
     const PARAM_DOB_YEAR = 'dobYear';
-
     const MESSAGE = 'Using more than one search criteria will improve your chances of finding a particular user. A good search uses last name, date of birth and postcode.';
-
     const EXCEPTION_VALIDATION_DOB_INVALID_DATE = 'The date of birth is an invalid date.';
     const EXCEPTION_VALIDATION_DOB_DATE_IN_FUTURE= 'The date of birth specified is in the future.';
     const EXCEPTION_VALIDATION_DOB_INCORRECT_FORMAT = 'The date of birth is not in the correct format.';
     const EXCEPTION_VALIDATION_NO_CRITERIA = 'You must enter information in at least one of the fields below to search for a user.';
-
     const ERROR_CODE_TOO_MANY_RESULTS = 22;
     const ERROR_CODE_TOO_FEW_RESULTS = 23;
+
+    /** @var DateOfBirthFilterService $dateOfBirthFilterService */
+    private $dateOfBirthFilterService;
+
+    public function __construct(DateOfBirthFilterService $dateOfBirthFilterService)
+    {
+        $this->dateOfBirthFilterService = $dateOfBirthFilterService;
+    }
 
     public function indexAction()
     {
@@ -98,6 +102,8 @@ class UserSearchController extends AbstractDvsaMotTestController
         } catch (ValidationException $e) {
             return $this->handleValidationException($e);
         }
+
+        $this->dateOfBirthFilterService->filterPersonalDetails($users);
 
         $viewModel = new UserSearchViewModel(
             $users,

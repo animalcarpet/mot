@@ -76,6 +76,7 @@ endif ?>
             <?php echo $this->escapeHtml($personalDetails->getUsername()); ?>
         </td>
     </tr>
+    <?php if (true === $personProfileGuard->canViewDateOfBirth()) : ?>
     <tr>
         <th class="table-summary__key">
             Date of birth
@@ -91,6 +92,7 @@ endif ?>
             } ?>
         </td>
     </tr>
+    <?php endif ?>
     <?php if (true === $personProfileGuard->canViewDrivingLicence()) : ?>
     <tr>
         <th class="table-summary__key">

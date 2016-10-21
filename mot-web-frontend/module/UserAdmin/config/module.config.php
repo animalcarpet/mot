@@ -8,6 +8,7 @@ use UserAdmin\Factory\Controller\ResetAccountClaimByPostControllerFactory;
 use UserAdmin\Factory\Controller\SecurityQuestionControllerFactory;
 use UserAdmin\Factory\Controller\ChangeQualificationStatusControllerFactory;
 use UserAdmin\Factory\Controller\UserProfileControllerFactory;
+use UserAdmin\Factory\Controller\UserSearchControllerFactory;
 use UserAdmin\Factory\Controller\EmailAddressControllerFactory;
 use UserAdmin\Factory\Controller\PersonRoleControllerFactory;
 use UserAdmin\Factory\Controller\RecordDemoTestControllerFactory;
@@ -24,6 +25,7 @@ return [
             SecurityQuestionControllerFactory::class => SecurityQuestionControllerFactory::class,
             ResetAccountClaimByPostControllerFactory::class => ResetAccountClaimByPostControllerFactory::class,
             UserProfileControllerFactory::class => UserProfileControllerFactory::class,
+            UserSearchControllerFactory::class => UserSearchControllerFactory::class,
             PersonRoleControllerFactory::class => PersonRoleControllerFactory::class,
             EmailAddressControllerFactory::class => EmailAddressControllerFactory::class,
             RecordDemoTestController::class => RecordDemoTestControllerFactory::class,
@@ -52,7 +54,7 @@ return [
                         'options' => [
                             'route' => '/search',
                             'defaults' => [
-                                'controller' => UserSearchController::class,
+                                'controller' => UserSearchControllerFactory::class,
                                 'action' => 'index'
                             ],
                         ],
@@ -87,7 +89,7 @@ return [
                         'options' => [
                             'route' => '/results',
                             'defaults' => [
-                                'controller' => UserSearchController::class,
+                                'controller' => UserSearchControllerFactory::class,
                                 'action' => 'results',
                             ],
                         ],
