@@ -29,6 +29,7 @@ public class Vehicle {
     private String version;
     private String vin;
     private String weight;
+    private boolean isIncognito;
 
     public String getVersion() {
         return version;
@@ -249,6 +250,15 @@ public class Vehicle {
         return this;
     }
 
+    public boolean getIsIncognito() {
+        return isIncognito;
+    }
+
+    public Vehicle setIsIncognito(boolean isIncognitio) {
+        this.isIncognito = isIncognitio;
+        return this;
+    }
+
     public static Vehicle createVehicle(String colour,
                                      String countryOfRegistrationId,
                                      String cylinderCapacity,
@@ -262,7 +272,8 @@ public class Vehicle {
                                      String transmissionType,
                                      String vin,
                                      VehicleClass vehicleClass,
-                                     String weight
+                                     String weight,
+                                        boolean isIncognito
     ) {
 
         Vehicle vehicle = new Vehicle();
@@ -280,7 +291,8 @@ public class Vehicle {
                 .setTransmissionType(transmissionType)
                 .setVin(vin)
                 .setVehicleClass(vehicleClass)
-                .setWeight(weight);
+                .setWeight(weight)
+                .setIsIncognito(isIncognito);
 
         return vehicle;
     }
@@ -294,6 +306,7 @@ public class Vehicle {
                 ", vin='" + vin + '\'' +
                 ", make='" + make + '\'' +
                 ", model='" + model + '\'' +
+                ", isIncognito='" + isIncognito + '\'' +
                 ", makeModel='" + getMakeModelWithSeparator(" ") + '\'' +
                 ", colour='" + colour.toString() + '\'' +
                 ", secondaryColour='" + colourSecondary.toString() + '\'' +
