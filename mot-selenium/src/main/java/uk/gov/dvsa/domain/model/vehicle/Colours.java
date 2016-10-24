@@ -2,7 +2,7 @@ package uk.gov.dvsa.domain.model.vehicle;
 
 import uk.gov.dvsa.ui.pages.exception.LookupNamingException;
 
-public enum Colour {
+public enum Colours {
     NoOtherColour(0, "", "No other colour"),
     Beige(1, "S", "Beige"),
     Black(2, "P", "Black"),
@@ -29,7 +29,7 @@ public enum Colour {
     private final String code;
     private final String name;
 
-    private Colour(Integer colourId, String colourCode, String colourName) {
+    private Colours(Integer colourId, String colourCode, String colourName) {
         id = colourId;
         code = colourCode;
         name = colourName;
@@ -47,10 +47,10 @@ public enum Colour {
         return id;
     }
 
-    public static Colour findByName(String name) {
-        for(Colour colour : values()){
-            if( colour.getName().equals(name)){
-                return colour;
+    public static Colours findByName(String name) {
+        for(Colours colours : values()){
+            if( colours.getName().equals(name)){
+                return colours;
             }
         }
 

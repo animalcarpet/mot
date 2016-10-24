@@ -12,6 +12,7 @@ use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Dto\Vehicle\VehicleExpiryDto;
 use DvsaCommon\Date\DateTimeDisplayFormat;
+use DvsaCommon\Enum\ColourCode;
 use DvsaCommon\Enum\CountryOfRegistrationCode;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use Zend\View\Helper\Url;
@@ -19,7 +20,6 @@ use Zend\View\Helper\Url;
 class VehicleInformationTableBuilder implements AutoWireableInterface
 {
     const EMPTY_VALUE_TEXT = 'Unknown';
-    const COLOUR_NOT_STATED = 'Not Stated';
 
     protected static $unknownCountriesCodes = [
         CountryOfRegistrationCode::NON_EU => "Non Eu",
@@ -87,26 +87,54 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
     {
         $table = new GdsTable();
 
-        $makeAndModelRow = $this->addRowToTable($table, 'Make and model', $this->getMakeAndModel());
-        if($this->canUserEditVehicle()){
-            $makeAndModelRow->addActionLink('Change', VehicleRoutes::of($this->urlHelper)->changeMake($this->vehicleObfuscatedId));
-        }
-        $engineRow = $this->addRowToTable($table, 'Engine', $this->getEngineInfo());
-        if($this->canUserEditVehicle()){
-            $engineRow->addActionLink('Change', VehicleRoutes::of($this->urlHelper)->vehicleEditEngine($this->vehicleObfuscatedId));
-        }
-        $this->addRowToTable($table, 'Colour', $this->getVehicleColourNames());
+        $this->addRowToTableWithChangeLink(
+            $table,
+            'Make and model',
+            $this->getMakeAndModel(),
+            VehicleRoutes::of($this->urlHelper)->changeMake($this->vehicleObfuscatedId)
+        );
+
+        $this->addRowToTableWithChangeLink(
+            $table,
+            'Engine',
+            $this->getEngineInfo(),
+            VehicleRoutes::of($this->urlHelper)->vehicleEditEngine($this->vehicleObfuscatedId)
+        );
+
+        $this->addRowToTableWithChangeLink(
+            $table,
+            'Colour',
+            $this->getVehicleColourNames(),
+            VehicleRoutes::of($this->urlHelper)->changeColour($this->vehicleObfuscatedId)
+        );
+
         $this->addRowToTable($table, 'Brake test weight', $this->getVehicleBrakeWeight());
-        $classRow = $this->addRowToTable($table, 'MOT test class', $this->vehicle->getVehicleClass()->getName());
-        if ($this->canUserEditVehicle()) {
-            $classRow->addActionLink(
-                'Change',
-                VehicleRoutes::of($this->urlHelper)->changeClass($this->vehicleObfuscatedId)
-            );
-        }
+
+        $this->addRowToTableWithChangeLink(
+            $table,
+            'MOT test class',
+            $this->vehicle->getVehicleClass()->getName(),
+            VehicleRoutes::of($this->urlHelper)->changeClass($this->vehicleObfuscatedId)
+        );
+
         $this->addRowToTable($table, 'MOT expiry date', $this->getExpiryDate());
 
         return $table;
+    }
+
+    private function addChangeLink(GdsRow $row, $url)
+    {
+        if ($this->canUserEditVehicle()) {
+            $row->addActionLink('Change', $url);
+        }
+    }
+
+    private function addRowToTableWithChangeLink(GdsTable $table, $label, $value, $changeUrl)
+    {
+        $row = $this->addRowToTable($table, $label, $value);
+        $this->addChangeLink($row, $changeUrl);
+
+        return $row;
     }
 
     /**
@@ -198,10 +226,14 @@ class VehicleInformationTableBuilder implements AutoWireableInterface
      */
     private function getVehicleColourNames()
     {
-        if (self::COLOUR_NOT_STATED == $this->vehicle->getColourSecondary()) {
-            return $this->vehicle->getColour();
+        $colourNotStated = in_array($this->vehicle->getColourSecondary()->getCode(),[
+            ColourCode::NOT_STATED, null
+        ]);
+
+        if ($colourNotStated) {
+            return $this->vehicle->getColour()->getName();
         } else {
-            return $this->vehicle->getColour() . ' and ' . $this->vehicle->getColourSecondary();
+            return $this->vehicle->getColour()->getName() . ' and ' . $this->vehicle->getColourSecondary()->getName();
         }
     }
 

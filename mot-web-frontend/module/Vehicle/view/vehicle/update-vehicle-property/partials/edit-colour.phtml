@@ -1,0 +1,24 @@
+<?php
+use Vehicle\UpdateVehicleProperty\Form\UpdateColourForm;
+use Vehicle\UpdateVehicleProperty\ViewModel\UpdateVehiclePropertyViewModel;
+
+/** @var UpdateVehiclePropertyViewModel $viewModel */
+/** @var UpdateColourForm $form */
+$form = $viewModel->getForm();
+?>
+<fieldset>
+    <?php echo $this->partial(
+        'partial/gds/form/control',
+        [
+            'element' => $form->getColourElement()
+        ]
+    );
+    ?>
+    <?php echo $this->partial(
+        'partial/gds/form/control',
+        [
+            'element' => $form->getSecondaryColourElement()
+        ]
+    );
+    ?>
+</fieldset>

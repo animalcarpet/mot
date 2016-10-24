@@ -53,7 +53,7 @@ abstract class AbstractStep
 
         $makes = $this->client->get(UrlBuilder::vehicleDictionary()->make()->toString());
         $catalogData = $this->catalogService->getData();
-        $colours = (new ColoursContainer($this->catalogService->getColoursWithIds(), true, true));
+        $colours = (new ColoursContainer($this->catalogService->getColours(), true, false));
 
         $fuelTypes = [];
         foreach ($this->catalogService->getFuelTypes() as $code => $name) {

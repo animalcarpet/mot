@@ -85,7 +85,16 @@ class VehicleInformationTableBuilderTest extends \PHPUnit_Framework_TestCase
         $vehicle->model = $model;
 
         $vehicle->cylinderCapacity = null;
-        $vehicle->colourSecondary = 'Not Stated';
+
+        $colour = new stdClass();
+        $colour->code = 'L';
+        $colour->name = 'Grey';
+        $vehicle->colour = $colour;
+
+        $colourSecondary = new stdClass();
+        $colourSecondary->code = 'W';
+        $colourSecondary->name = 'Not Stated';
+        $vehicle->colourSecondary = $colourSecondary;
         $vehicle->weight = null;
 
         $this->tableGenerator->setVehicle(new DvsaVehicle($vehicle));
@@ -154,8 +163,14 @@ class VehicleInformationTableBuilderTest extends \PHPUnit_Framework_TestCase
                 'id' => 6,
                 'name' => self::MODEL_NAME
             ],
-            'colour' => 'Grey',
-            'colourSecondary' => 'Black',
+            'colour' => [
+                'code' => 'L',
+                'name' => 'Grey',
+            ],
+            'colourSecondary' => [
+                'code' => 'P',
+                'name' => 'Black',
+            ],
             'countryOfRegistrationId' => 1,
             'vehicleClass' => ['code' => VehicleClassCode::CLASS_4, 'name'=> '4'],
             'fuelType' => [

@@ -48,6 +48,14 @@ class VehicleTertiaryTitleBuilderTest extends \PHPUnit_Framework_TestCase
             'fuelType' => [
                 'code' => FuelTypeCode::PETROL
             ],
+            'colour' => [
+                'code' => 'L',
+                'name' => 'Grey',
+            ],
+            'colourSecondary' => [
+                'code' => 'W',
+                'name' => 'Not Stated',
+            ],
         ]));
     }
 }

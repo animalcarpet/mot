@@ -10,7 +10,7 @@ public class VehicleFactory {
 
         String randomRegistrationNumber = RandomStringUtils.randomAlphabetic(7);
         return Vehicle.createVehicle(
-                Colour.Blue.getName(),
+                Colours.Blue.getName(),
                 CountryOfRegistration.Great_Britain.getRegistrationId(),
                 "1700",
                 randomRegistrationNumber,
@@ -19,7 +19,7 @@ public class VehicleFactory {
                 FuelTypes.Diesel.getName(),
                 Make.BMW.getName(),
                 Model.BMW_ALPINA.getName(),
-                Colour.Black.getName(),
+                Colours.Black.getName(),
                 TransmissionType.Manual.getName(),
                 RandomStringUtils.randomAlphabetic(17),
                 VehicleClass.four,
@@ -32,7 +32,7 @@ public class VehicleFactory {
                 " ", " ", " ",
                 " ", " ", " ",
                 "Fake name", "Fake make", "Fake model",
-                Colour.Black.getName(),
+                Colours.Black.getName(),
                 "FakeFuel",
                 " ",
                 VehicleClass.four,

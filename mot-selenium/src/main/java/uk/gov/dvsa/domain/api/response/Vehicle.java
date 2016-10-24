@@ -1,5 +1,6 @@
 package uk.gov.dvsa.domain.api.response;
 
+import uk.gov.dvsa.domain.model.vehicle.Colours;
 import uk.gov.dvsa.domain.model.vehicle.VehicleClass;
 import uk.gov.dvsa.domain.model.vehicle.FuelTypes;
 
@@ -7,8 +8,8 @@ public class Vehicle {
 
     private String amendedOn;
     private String bodyType;
-    private String colour;
-    private String colourSecondary;
+    private Colour colour;
+    private Colour colourSecondary;
     private String countryOfRegistrationId;
     private String cylinderCapacity;
     private String emptyVinReason;
@@ -56,26 +57,26 @@ public class Vehicle {
         return this;
     }
 
-    public String getColour() {
+    public Colour getColour() {
         return colour;
     }
 
-    public Vehicle setColour(String colour) {
+    public Vehicle setColour(Colour colour) {
         this.colour = colour;
         return this;
     }
 
-    public String getColourSecondary() {
+    public Colour getColourSecondary() {
         return colourSecondary;
     }
 
-    public Vehicle setColourSecondary(String colourSecondary) {
+    public Vehicle setColourSecondary(Colour colourSecondary) {
         this.colourSecondary = colourSecondary;
         return this;
     }
 
     public String getColorsWithSeparator(String separator) {
-        return colour + separator + colourSecondary;
+        return colour.getName() + separator + colourSecondary.getName();
     }
 
     public String getCylinderCapacity() {
@@ -266,7 +267,7 @@ public class Vehicle {
 
         Vehicle vehicle = new Vehicle();
 
-        vehicle.setColour(colour)
+        vehicle.setColour(new Colour().setName(colour).setCode(Colours.findByName(colour).getCode()))
                 .setCountryOfRegistrationId(countryOfRegistrationId)
                 .setCylinderCapacity(cylinderCapacity)
                 .setDvsaRegistration(dvsaRegistration)
@@ -275,7 +276,7 @@ public class Vehicle {
                 .setMake(new Make().setName(make))
                 .setModel(new Model().setName(model))
                 .setFuelType(new FuelType().setName(fuelType).setCode(FuelTypes.findByName(fuelType).getCode()))
-                .setColourSecondary(secondaryColour)
+                .setColourSecondary(new Colour().setName(secondaryColour).setCode(Colours.findByName(secondaryColour).getCode()))
                 .setTransmissionType(transmissionType)
                 .setVin(vin)
                 .setVehicleClass(vehicleClass)
@@ -294,8 +295,8 @@ public class Vehicle {
                 ", make='" + make + '\'' +
                 ", model='" + model + '\'' +
                 ", makeModel='" + getMakeModelWithSeparator(" ") + '\'' +
-                ", colour='" + colour + '\'' +
-                ", secondaryColour='" + colourSecondary + '\'' +
+                ", colour='" + colour.toString() + '\'' +
+                ", secondaryColour='" + colourSecondary.toString() + '\'' +
                 ", dateOfFirstUse='" + firstUsedDate + '\'' +
                 ", fuelType='" + fuelType.toString() + '\'' +
                 ", vehicleClass='" + vehicleClass + '\'' +

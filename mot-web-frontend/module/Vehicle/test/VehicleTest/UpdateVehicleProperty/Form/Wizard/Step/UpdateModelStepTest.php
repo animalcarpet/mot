@@ -159,6 +159,14 @@ class UpdateModelStepTest extends \PHPUnit_Framework_TestCase
         $model->code = "PE";
         $model->name = "Petrol";
 
+        $colour = new stdClass();
+        $colour->code = "L";
+        $colour->name = "Grey";
+
+        $secondaryColour = new stdClass();
+        $secondaryColour->code = "W";
+        $secondaryColour->name = "Not Stated";
+
         $std = new stdClass();
         $std->make = $make;
         $std->model = $model;
@@ -166,6 +174,8 @@ class UpdateModelStepTest extends \PHPUnit_Framework_TestCase
         $std->vin = "VIN98798798";
         $std->vehicleClass = null;
         $std->fuelType = $fuel;
+        $std->colour = $colour;
+        $std->colourSecondary = $secondaryColour;
 
         return new DvsaVehicle($std);
     }

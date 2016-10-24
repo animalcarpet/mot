@@ -77,4 +77,9 @@ class VehicleRoutes extends AbstractRoutes
     {
         return $this->url(VehicleRouteList::VEHICLE_CHANGE_MAKE_AND_MODEL,['id' => $obfuscatedVehicleId, "property" => UpdateModelStep::NAME]);
     }
+
+    public function changeColour($obfuscatedVehicleId)
+    {
+        return $this->url(VehicleRouteList::VEHICLE_CHANGE_COLOUR,['id' => $obfuscatedVehicleId, "property" => UpdateModelStep::NAME]);
+    }
 }

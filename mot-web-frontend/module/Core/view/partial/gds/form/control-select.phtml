@@ -2,6 +2,10 @@
     if (empty($defaultValue)) {
         $defaultValue = 'Please select';
     }
+
+    if( empty($formControlClass)) {
+        $formControlClass = "form-control";
+    }
 ?>
 <?php
     $dataTarget = $this->dataTarget ? sprintf('data-target="%s"', $this->escapeHtmlAttr($this->dataTarget)) : '';
@@ -10,7 +14,7 @@
 <select
     id="<?php echo $this->escapeHtmlAttr($this->id); ?>"
     name="<?php echo $this->escapeHtmlAttr($this->name); ?>"
-    class="form-control
+    class="<?php echo $this->escapeHtmlAttr($formControlClass) ?>
         <?php echo !empty($inputModifier) ? 'form-control-' . $this->escapeHtmlAttr($inputModifier) : ''; ?>"
     <?php echo $dataTarget ?>
     <?php echo $dataTargetValue ?>

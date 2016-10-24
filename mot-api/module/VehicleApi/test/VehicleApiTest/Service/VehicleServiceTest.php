@@ -1154,8 +1154,8 @@ class VehicleServiceTest extends AbstractServiceTestCase
 
         $expectedRequest = new CreateDvsaVehicleRequest();
         $expectedRequest->setRegistration($inputData['registrationNumber']);
-        $expectedRequest->setColourId($colourId);
-        $expectedRequest->setSecondaryColourId($secondaryColourId);
+        $expectedRequest->setColourCode($colourCode);
+        $expectedRequest->setSecondaryColourCode($secondaryColourCode);
         $expectedRequest->setCountryOfRegistrationId($countryOfRegistrationId);
         $expectedRequest->setVin($inputData['vin']);
         $expectedRequest->setCylinderCapacity($inputData['cylinderCapacity']);
@@ -1266,8 +1266,14 @@ class VehicleServiceTest extends AbstractServiceTestCase
                         'id'   => 6,
                         'name' => 'BOXSTER',
                     ],
-                    'colour'                => 'Red',
-                    'colourSecondary'       => 'Not Stated',
+                    'colour'                 => [
+                        'code'   => 'C',
+                        'name' => 'Red',
+                    ],
+                    'colourSecondary'                 => [
+                        'code'   => 'W',
+                        'name' => 'Not Stated',
+                    ],
                     'vehicleClass' => ['code' => '4', 'name' => '4'],
                     'bodyType'              => '2 Door Saloon',
                     'cylinderCapacity'      => 1700,
@@ -1309,8 +1315,14 @@ class VehicleServiceTest extends AbstractServiceTestCase
                         'id'   => 6,
                         'name' => 'BOXSTER',
                     ],
-                    'colour'                => 'Red',
-                    'colourSecondary'       => 'Not Stated',
+                    'colour'                 => [
+                        'code'   => 'C',
+                        'name' => 'Red',
+                    ],
+                    'colourSecondary'                 => [
+                        'code'   => 'W',
+                        'name' => 'Not Stated',
+                    ],
                     'vehicleClass' => ['code' => '4', 'name' => '4'],
                     'bodyType'              => '2 Door Saloon',
                     'cylinderCapacity'      => 1700,

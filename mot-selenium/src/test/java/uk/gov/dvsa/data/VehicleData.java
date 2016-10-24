@@ -41,7 +41,7 @@ public class VehicleData extends VehicleService {
         return createVehicle(
                 user,
                 DEFAULT_PIN,
-                Colour.Blue.getId().toString(),
+                Colours.Blue.getCode(),
                 CountryOfRegistration.Great_Britain.getRegistrationId(),
                 DEFAULT_CC,
                 getDateMinusYears(5),
@@ -49,7 +49,7 @@ public class VehicleData extends VehicleService {
                 makeId,
                 modelId,
                 registration,
-                Colour.Grey.getId().toString(),
+                Colours.Grey.getCode(),
                 getRandomVin(),
                 vehicleClass.getCode(),
                 DEFAULT_TRANSMISSION_TYPE_ID

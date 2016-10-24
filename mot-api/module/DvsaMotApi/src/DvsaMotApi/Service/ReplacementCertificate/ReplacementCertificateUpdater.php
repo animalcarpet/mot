@@ -164,11 +164,11 @@ class ReplacementCertificateUpdater
         $updateVehicleRequest = new UpdateDvsaVehicleRequest;
 
         if ($draft->getPrimaryColour()) {
-            $updateVehicleRequest->setColourId($draft->getPrimaryColour()->getId());
+            $updateVehicleRequest->setColourCode($draft->getPrimaryColour()->getCode());
         }
 
         if ($draft->getSecondaryColour()) {
-            $updateVehicleRequest->setSecondaryColourId($draft->getSecondaryColour()->getId());
+            $updateVehicleRequest->setSecondaryColourCode($draft->getSecondaryColour()->getCode());
         }
 
         if ($hasFullRights) {

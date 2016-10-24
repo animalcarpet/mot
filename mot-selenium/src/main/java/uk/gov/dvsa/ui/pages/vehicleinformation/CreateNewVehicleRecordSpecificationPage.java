@@ -3,8 +3,7 @@ package uk.gov.dvsa.ui.pages.vehicleinformation;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import uk.gov.dvsa.domain.model.vehicle.Colour;
-import uk.gov.dvsa.domain.model.vehicle.FuelTypes;
+import uk.gov.dvsa.domain.model.vehicle.Colours;
 import uk.gov.dvsa.domain.model.vehicle.Model;
 import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
@@ -75,18 +74,16 @@ public class CreateNewVehicleRecordSpecificationPage extends Page {
             );
         }
 
-
-
-        if(! vehicle.getColour().equals("")){
+        if(vehicle.getColour().getName() != null){
             FormDataHelper.selectFromDropDownByValue(
-                    colour, Colour.findByName(vehicle.getColour()).getId().toString()
+                    colour, Colours.findByName(vehicle.getColour().getName()).getCode()
             );
         }
 
-        if(! vehicle.getColourSecondary().equals("")){
+        if(vehicle.getColourSecondary().getName() != null){
             FormDataHelper.selectFromDropDownByValue(
                     secondaryColour,
-                    Colour.findByName(vehicle.getColourSecondary()).getId().toString()
+                    Colours.findByName(vehicle.getColourSecondary().getName()).getCode()
             );
         }
     }

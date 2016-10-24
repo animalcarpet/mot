@@ -169,6 +169,7 @@ $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
                     <dd>
                         <div class="form-group">
                             <?php
+                            $colourName = $vehicle->getColour() ? $vehicle->getColour()->getName() : "";
                             if (!$this->doNotShowDropDowns) {
                                 echo $this->partial(
                                     'selectElementSelectedByDisplayedValue',
@@ -176,13 +177,13 @@ $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
                                         'id'      => 'primary-colour',
                                         'name'    => 'colourId',
                                         'options' => $colours->getPrimaryColours(),
-                                        'value'   => $vehicle->getColour()
+                                        'value'   => $colourName
                                     ]
                                 );
                             } else {
-                                echo $vehicle->getColour();
+                                echo $colourName;
                                 ?>
-                                    <input type="hidden" name="colourId" value="<?php echo $vehicle->getColour(); ?>" />
+                                    <input type="hidden" name="colourId" value="<?php echo $colourName; ?>" />
                                 <?php
                             }
                             ?>
@@ -196,7 +197,7 @@ $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
                     <dd>
                         <div class="form-group">
                             <?php
-                            $secondaryColourCode = $vehicle->getColourSecondary();
+                            $secondaryColourName = $vehicle->getColourSecondary() ? $vehicle->getColourSecondary()->getName() : "";
                             if (!$this->doNotShowDropDowns) {
                                 echo $this->partial(
                                     'selectElementSelectedByDisplayedValue',
@@ -204,13 +205,13 @@ $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
                                         'id'      => 'secondary-colour',
                                         'name'    => 'secondaryColourId',
                                         'options' => $colours->getSecondaryColours(),
-                                        'value'   => $secondaryColourCode
+                                        'value'   => $secondaryColourName
                                     ]
                                 );
                             } else {
-                                echo $secondaryColourCode;
+                                echo $secondaryColourName;
                                 ?>
-                                    <input type="hidden" name="secondaryColourId" value="<?php echo $secondaryColourCode; ?>" />
+                                    <input type="hidden" name="secondaryColourId" value="<?php echo $secondaryColourName; ?>" />
                                 <?php
                             }
                             ?>

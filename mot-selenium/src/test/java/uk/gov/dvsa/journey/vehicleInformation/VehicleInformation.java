@@ -1,5 +1,6 @@
 package uk.gov.dvsa.journey.vehicleInformation;
 
+import uk.gov.dvsa.domain.api.response.Colour;
 import uk.gov.dvsa.domain.model.vehicle.*;
 import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationPage;
 
@@ -60,4 +61,14 @@ public class VehicleInformation {
     public String getMakeAndModel() {
         return vehicleInformationPage.getMakeModel();
     }
+
+    public VehicleInformationPage changeColour(Colours colour, Colours secondaryColour) {
+        return vehicleInformationPage
+                .clickChangeColourLink()
+                .selectColour(colour)
+                .selectSecondaryColour(secondaryColour)
+                .submit();
+    }
+
+    public String getColour() { return vehicleInformationPage.getColour(); }
 }

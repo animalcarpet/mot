@@ -49,7 +49,7 @@ public class VehicleService extends Service {
     protected Vehicle createVehicle(
             User user,
             String oneTimePasswordPin,
-            String colourId,
+            String colourCode,
             String countryOfRegistrationId,
             String cylinderCapacity,
             String firstUsedDate,
@@ -57,14 +57,14 @@ public class VehicleService extends Service {
             String makeId,
             String modelId,
             String registration,
-            String secondaryColourId,
+            String secondaryColourCode,
             String vin,
             String vehicleClassCode,
             String transmissionTypeId
     ) throws IOException {
         Map<String, Map<String, String>> vehicleDataMap = prepareDvsaVehiclePayloadMap(
                 oneTimePasswordPin,
-                colourId,
+                colourCode,
                 countryOfRegistrationId,
                 cylinderCapacity,
                 firstUsedDate,
@@ -72,7 +72,7 @@ public class VehicleService extends Service {
                 makeId,
                 modelId,
                 registration,
-                secondaryColourId,
+                secondaryColourCode,
                 vin,
                 vehicleClassCode,
                 transmissionTypeId
@@ -88,7 +88,7 @@ public class VehicleService extends Service {
 
     private Map<String, Map<String, String>> prepareDvsaVehiclePayloadMap(
             String oneTimePasswordPin,
-            String colourId,
+            String colourCode,
             String countryOfRegistrationId,
             String cylinderCapacity,
             String firstUsedDate,
@@ -96,14 +96,14 @@ public class VehicleService extends Service {
             String makeId,
             String modelId,
             String registration,
-            String secondaryColourId,
+            String secondaryColourCode,
             String vin,
             String vehicleClassCode,
             String transmissionTypeId
     ) throws IOException {
 
         Map<String, String> vehicleDataMap = new HashMap<>();
-        vehicleDataMap.put("colourId", colourId);
+        vehicleDataMap.put("colourCode", colourCode);
         vehicleDataMap.put("countryOfRegistrationId", countryOfRegistrationId);
         vehicleDataMap.put("cylinderCapacity", cylinderCapacity);
         vehicleDataMap.put("firstUsedDate", firstUsedDate);
@@ -111,7 +111,7 @@ public class VehicleService extends Service {
         vehicleDataMap.put("makeId", makeId);
         vehicleDataMap.put("modelId", modelId);
         vehicleDataMap.put("registration", registration);
-        vehicleDataMap.put("secondaryColourId", secondaryColourId);
+        vehicleDataMap.put("secondaryColourCode", secondaryColourCode);
         vehicleDataMap.put("vin", vin);
         vehicleDataMap.put("vehicleClassCode", vehicleClassCode);
         vehicleDataMap.put("transmissionTypeId", transmissionTypeId);
