@@ -71,28 +71,6 @@ class RegisterUserService
     }
 
     /**
-     * @param $emailAddress
-     * @return bool
-     */
-    public function isEmailDuplicated($emailAddress)
-    {
-        $url = RegistrationUrlBuilder::checkEmail();
-        $payload = [self::KEY_EMAIL => $emailAddress];
-
-        $response = $this->jsonClient->post($url, $payload);
-
-        if (
-            !is_array($response) ||
-            !array_key_exists('data', $response) ||
-            !array_key_exists('isExists',  $response['data'])
-        ){
-            throw new \LogicException('Expected to receive a valid response from the API containing nesting "date" and "isExists" keys');
-        }
-
-        return $response['data']['isExists'];
-    }
-
-    /**
      * @param array $sessionData
      *
      * @throws \Exception

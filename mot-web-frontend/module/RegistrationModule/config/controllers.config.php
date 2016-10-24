@@ -25,8 +25,12 @@ use Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller\SecurityQuestionTwoC
 use Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller\SummaryControllerFactory;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\EmailController;
 use Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller\EmailControllerFactory;
+use Dvsa\Mot\Frontend\RegistrationModule\Controller\DuplicateEmailController;
 
 return [
+    'invokables' => [
+        DuplicateEmailController::class         => DuplicateEmailController::class,
+    ],
     'factories' => [
         AddressController::class                => AddressControllerFactory::class,
         CompletedController::class              => CompletedControllerFactory::class,

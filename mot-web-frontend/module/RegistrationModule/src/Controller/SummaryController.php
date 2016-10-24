@@ -22,11 +22,6 @@ class SummaryController extends RegistrationBaseController
     const PAGE_TITLE = 'Account summary';
 
     /**
-     * @var RegisterUserService
-     */
-    private $registerUserService;
-
-    /**
      * @var array
      */
     private $helpDeskConfig;
@@ -38,13 +33,10 @@ class SummaryController extends RegistrationBaseController
      */
     public function __construct(
         StepService $stepService,
-        RegisterUserService $registerUserService,
         $helpDeskConfig
     )
     {
         parent::__construct($stepService);
-
-        $this->registerUserService = $registerUserService;
         $this->helpDeskConfig = $helpDeskConfig;
     }
     /**
@@ -52,14 +44,9 @@ class SummaryController extends RegistrationBaseController
      */
     public function indexAction()
     {
-        $email = $this->stepService->getById(AccountSummaryStep::STEP_ID)->toArray()[EmailInputFilter::FIELD_EMAIL];
-
-        $isEmailDuplicated = $this->registerUserService->isEmailDuplicated($email);
-
         $viewModel = $this->doStepLogic(AccountSummaryStep::STEP_ID, self::PAGE_TITLE, self::DEFAULT_SUB_TITLE);
 
         if ($viewModel instanceof ViewModel) {
-            $viewModel->setVariable('emailIsDuplicated', $isEmailDuplicated);
             $viewModel->setVariable('helpDesk', $this->helpDeskConfig);
         }
 

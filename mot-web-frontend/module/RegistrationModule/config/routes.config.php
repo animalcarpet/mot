@@ -9,6 +9,7 @@ use Dvsa\Mot\Frontend\RegistrationModule\Controller\AddressController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\CompletedController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\CreateAccountController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\DetailsController;
+use Dvsa\Mot\Frontend\RegistrationModule\Controller\DuplicateEmailController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\IndexController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\PasswordController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\SecurityQuestionOneController;
@@ -146,7 +147,16 @@ return [
                             ],
                         ],
                     ],
-
+                    'duplicate-email' => [
+                        'type'    => 'literal',
+                        'options' => [
+                            'route'    => '/duplicate-email',
+                            'defaults' => [
+                                'controller' => DuplicateEmailController::class,
+                                'action'     => 'index',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],

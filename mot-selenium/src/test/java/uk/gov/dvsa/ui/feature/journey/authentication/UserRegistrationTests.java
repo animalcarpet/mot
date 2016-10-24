@@ -8,14 +8,12 @@ import uk.gov.dvsa.ui.pages.userregistration.CreateAnAccountPage;
 
 import java.io.IOException;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 public class UserRegistrationTests extends DslTest {
-
-    private final String name = ContactDetailsHelper.generateUniqueName();
-    private final String surname = ContactDetailsHelper.generateUniqueName();
-    private final String email = ContactDetailsHelper.getEmail();
+    
     private final String telephone = ContactDetailsHelper.getPhoneNumber();
 
     @Test(groups = {"BVT"}, description = "VM-11472")
@@ -25,26 +23,25 @@ public class UserRegistrationTests extends DslTest {
         motUI.register.createAccountPage();
 
         //When I continue to enter my details
+        String email = ContactDetailsHelper.getEmail();
         motUI.register.completeDetailsWithDefaultValues(email, telephone);
 
         //Then my account is created successfully
         assertThat(motUI.register.isAccountCreated(), is(true));
     }
 
-    @Test(groups = {"BVT"}, description = "VM-11472")
-    public void checkForDuplicateEmail() throws IOException {
+    @Test(groups = {"BVT"})
+    public void cannotCreateANewAccountIfEmailIsAlreadyInUse() throws IOException {
 
-        //Given I am on the Create Account Page
-        motUI.register.createAccountPage();
-
-        //When I continue to enter my details
+        step("Given I create an account");
+        String email = ContactDetailsHelper.getEmail();
         motUI.register.completeDetailsWithDefaultValues(email, telephone);
 
-        //When I re-enter my details and use the same email as before
-        motUI.register.completeDetailsWithCustomValues(name, surname, email, telephone);
+        step("When I create another account with the same email");
+        String message = motUI.register.completeDetailsWithCustomValuesExpectingMessage(email);
 
-        //Then I am prompted that this email is already in use
-        assertThat(motUI.register.isEmailDuplicated(), is(true));
+        step("Then I am redirected to a Duplicate email page and advised that this email is already in use");
+        assertThat("message is displayed", message, containsString("This email is already in use"));
     }
 
     @Test(groups = {"BVT"}, description = "VM-11472")

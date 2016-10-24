@@ -10,11 +10,14 @@ namespace Dvsa\Mot\Api\RegistrationModule\Service;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Mot\Api\RegistrationModule\Validator\RegistrationValidator;
+use Dvsa\Mot\Frontend\RegistrationModule\Step\EmailStep;
 use DvsaApplicationLogger\Log\Logger;
 use DvsaCommon\Enum\BusinessRoleName;
+use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
 use DvsaEntities\Entity\Person;
 use MailerApi\Logic\UsernameCreator;
+use PersonApi\Service\DuplicateEmailCheckerService;
 
 /**
  * In charge of:
@@ -81,14 +84,21 @@ class RegistrationService extends AbstractPersistableService
     private $mailerLogic;
 
     /**
-     * @param EntityManager         $entityManager
-     * @param Logger                $logger
+     * @var DuplicateEmailCheckerService
+     */
+    private $duplicateEmailCheckerService;
+
+    /**
+     * RegistrationService constructor.
+     * @param EntityManager $entityManager
+     * @param Logger $logger
      * @param OpenAMIdentityCreator $openAMService
      * @param RegistrationValidator $registrationValidator
-     * @param PersonCreator         $personService
-     * @param BusinessRoleAssigner  $roleAssigner
+     * @param PersonCreator $personService
+     * @param BusinessRoleAssigner $roleAssigner
      * @param ContactDetailsCreator $contactDetailService
-     * @param UsernameCreator       $mailerLogic
+     * @param UsernameCreator $mailerLogic
+     * @param DuplicateEmailCheckerService $duplicateEmailCheckerService
      */
     public function __construct(
         EntityManager $entityManager,
@@ -98,7 +108,8 @@ class RegistrationService extends AbstractPersistableService
         PersonCreator $personService,
         BusinessRoleAssigner $roleAssigner,
         ContactDetailsCreator $contactDetailService,
-        UsernameCreator $mailerLogic
+        UsernameCreator $mailerLogic,
+        DuplicateEmailCheckerService $duplicateEmailCheckerService
     ) {
         parent::__construct($entityManager, $logger);
         $this->openAMService = $openAMService;
@@ -107,6 +118,7 @@ class RegistrationService extends AbstractPersistableService
         $this->roleAssigner = $roleAssigner;
         $this->contactDetailService = $contactDetailService;
         $this->mailerLogic = $mailerLogic;
+        $this->duplicateEmailCheckerService = $duplicateEmailCheckerService;
     }
 
     /**
@@ -121,8 +133,10 @@ class RegistrationService extends AbstractPersistableService
     public function register($data)
     {
         $this->logInfo(self::LOG_REG_STARTED);
+        $email = $data['stepEmail'][EmailInputFilter::FIELD_EMAIL];
 
-        if (true === $this->registrationValidator->validate($data)->isValid()) {
+        if ($this->registrationValidator->validate($data)->isValid() &&
+            !$this->duplicateEmailCheckerService->isEmailDuplicated($email)) {
             $this->logInfo(self::LOG_REG_VALID);
 
             $registeredPerson = $this->registeredPerson;

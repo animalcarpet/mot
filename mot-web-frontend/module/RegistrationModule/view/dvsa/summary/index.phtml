@@ -112,27 +112,12 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
 
 <form action="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->summaryStep());?>" method="POST">
     <?php echo $this->csrfToken(); ?>
-    <nav class="content-navigation<?php echo $emailIsDuplicated != '' ? '--notice' : ''; ?>" <?php echo $emailIsDuplicated != '' ? 'id="duplicatedEmailAddress"' : ''; ?>>
-
-        <?php if ($emailIsDuplicated): ?>
-
-            <h3 class="content-navigation__heading"><?php echo $this->escapeHtmlAttr($emailAddress) ?> is used by another account</h3>
-            <p>Using the same email address on multiple accounts is not recommended. If you're having problems signing in, you should:</p>
-            <ul id="duplicateEmailResolutions" class="list-bullet">
-                <li><a href="/forgotten-password">Reset your password</a> if you've forgotten your password</li>
-                <li>Call <strong><?php echo $helpDesk['name'] ?></strong> on <strong><?php echo $helpDesk['phoneNumber'] ?></strong> if you've forgotten your username</li>
-                <li>Check your SPAM folder if you've created an account but not received your username by email</li>
-            </ul>
-
-        <?php endif; ?>
-
+    <nav class="content-navigation">
         <input type="submit" value="Create your account" id="continue" class="button">
-
         <ul class="content-navigation__secondary">
             <li>
                 <a href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->passwordStep());?>" id="back">Back</a>
             </li>
         </ul>
-
     </nav>
 </form>

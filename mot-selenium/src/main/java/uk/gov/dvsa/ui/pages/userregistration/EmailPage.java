@@ -12,11 +12,15 @@ public class EmailPage extends Page {
 
     private static final String PAGE_TITLE = "Your email address";
 
-    @FindBy(id = "emailAddress") private WebElement emailAddress;
+    @FindBy(id = "emailAddress")
+    private WebElement emailAddress;
 
-    @FindBy(id = "confirmEmailAddress") private WebElement verifyEmailAddress;
+    @FindBy(id = "confirmEmailAddress")
+    private WebElement verifyEmailAddress;
 
-    @FindBy(id = "continue") private WebElement continueToNextPage;
+    @FindBy(id = "continue")
+    private WebElement continueToNextPage;
+
 
     public EmailPage(MotAppDriver driver) {
         super(driver);
@@ -40,11 +44,15 @@ public class EmailPage extends Page {
         return new DetailsPage(driver);
     }
 
-    public EmailPage enterYourDetails(String email, String confirmEmail)
-    {
+    public EmailPage enterYourDetails(String email, String confirmEmail) {
         FormDataHelper.enterText(emailAddress, email);
         FormDataHelper.enterText(verifyEmailAddress, email);
 
         return this;
+    }
+
+    public DuplicateEmailPage clickContinueWithEmailAlreadyInUse() {
+        continueToNextPage.click();
+        return new DuplicateEmailPage(driver);
     }
 }

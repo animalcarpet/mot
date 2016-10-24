@@ -5,6 +5,7 @@ namespace Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\DetailsController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\EmailController;
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationStepService;
+use UserAdmin\Service\IsEmailDuplicateService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -22,8 +23,10 @@ class EmailControllerFactory implements FactoryInterface
     {
         $serviceLocator = $serviceLocator->getServiceLocator();
 
+        $isEmailDuplicateService = $serviceLocator->get(IsEmailDuplicateService::class);
+
         $stepService = $serviceLocator->get(RegistrationStepService::class);
 
-        return new EmailController($stepService);
+        return new EmailController($stepService, $isEmailDuplicateService);
     }
 }

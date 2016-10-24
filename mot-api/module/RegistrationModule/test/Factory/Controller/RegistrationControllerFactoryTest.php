@@ -9,7 +9,6 @@ namespace Dvsa\Mot\Api\RegistrationModuleTest\Factory\Controller;
 
 use Dvsa\Mot\Api\RegistrationModule\Controller\RegistrationController;
 use Dvsa\Mot\Api\RegistrationModule\Factory\Controller\RegistrationControllerFactory;
-use Dvsa\Mot\Api\RegistrationModule\Service\DuplicatedEmailChecker;
 use Dvsa\Mot\Api\RegistrationModule\Service\RegistrationService;
 use DvsaCommonTest\TestUtils\XMock;
 use Zend\Mvc\Controller\ControllerManager;
@@ -28,9 +27,6 @@ class RegistrationControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService(
             RegistrationService::class,
             XMock::of(RegistrationService::class)
-        )->setService(
-            DuplicatedEmailChecker::class,
-            XMock::of(DuplicatedEmailChecker::class)
         );
 
         /** @var ControllerManager $plugins */

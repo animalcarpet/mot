@@ -8,7 +8,6 @@
 namespace Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller;
 
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\SummaryController;
-use Dvsa\Mot\Frontend\RegistrationModule\Service\RegisterUserService;
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationStepService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -29,8 +28,6 @@ class SummaryControllerFactory implements FactoryInterface
 
         $stepService = $serviceLocator->get(RegistrationStepService::class);
 
-        $registerUserService = $serviceLocator->get(RegisterUserService::class);
-
         $config = $serviceLocator->get('Config');
         $helpDeskConfig = isset($config['helpdesk']) ? $config['helpdesk'] : null;
         if (!$helpDeskConfig) {
@@ -39,7 +36,6 @@ class SummaryControllerFactory implements FactoryInterface
 
         return new SummaryController(
             $stepService,
-            $registerUserService,
             $helpDeskConfig
         );
     }

@@ -7,6 +7,7 @@ use Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller\EmailControllerFacto
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationStepService;
 use Dvsa\MOT\Frontend\RegistrationModule\Controller\DetailsController;
 use DvsaCommonTest\TestUtils\XMock;
+use UserAdmin\Service\IsEmailDuplicateService;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\ServiceManager;
 
@@ -19,8 +20,10 @@ class EmailControllerFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $serviceManager = new ServiceManager();
 
-        $service  =  XMock::of(RegistrationStepService::class);
-        $serviceManager->setService(RegistrationStepService::class, $service);
+        $stepServiceService  =  XMock::of(RegistrationStepService::class);
+        $isEmailDuplicateService = XMock::of(IsEmailDuplicateService::class);
+        $serviceManager->setService(RegistrationStepService::class, $stepServiceService);
+        $serviceManager->setService(IsEmailDuplicateService::class, $isEmailDuplicateService);
 
         $plugins = $this->getMock(ControllerManager::class);
         $plugins->expects($this->any())

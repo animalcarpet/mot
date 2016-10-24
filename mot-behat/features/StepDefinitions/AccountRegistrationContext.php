@@ -90,6 +90,7 @@ class AccountRegistrationContext implements Context
     /**
      * @When I confirm my details
      * @When I try to confirm my details
+     * @When I try to register an account with the same email
      */
     public function iConfirmMyDetails()
     {

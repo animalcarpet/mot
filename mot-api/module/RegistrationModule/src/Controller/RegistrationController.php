@@ -26,18 +26,11 @@ class RegistrationController extends AbstractDvsaRestfulController
      */
     private $registrationService;
 
-    /**
-     * @var DuplicatedEmailChecker
-     */
-    private $duplicatedEmailChecker;
-
     public function __construct(
-        RegistrationService $registrationService,
-        DuplicatedEmailChecker $duplicatedEmailChecker
+        RegistrationService $registrationService
     )
     {
         $this->registrationService = $registrationService;
-        $this->duplicatedEmailChecker = $duplicatedEmailChecker;
     }
 
     /**
@@ -62,29 +55,6 @@ class RegistrationController extends AbstractDvsaRestfulController
 
         return ApiResponse::jsonError(
             [$this->registrationService->getMessages()]
-        );
-    }
-
-    /**
-     * @return \Zend\View\Model\JsonModel
-     * @throws BadRequestException
-     */
-    public function checkDuplicatedEmailAction()
-    {
-        $content = json_decode($this->getRequest()->getContent(), true);
-
-        if (!array_key_exists(self::KEY_EMAIL, $content)) {
-            throw new BadRequestException(
-                sprintf(self::ERR_MSG_MISSING_KEY, self::KEY_EMAIL)
-            );
-        }
-
-        $email = $content[self::KEY_EMAIL];
-
-        return ApiResponse::jsonOk(
-            [
-                'isExists' => $this->duplicatedEmailChecker->isEmailDuplicated($email)
-            ]
         );
     }
 }

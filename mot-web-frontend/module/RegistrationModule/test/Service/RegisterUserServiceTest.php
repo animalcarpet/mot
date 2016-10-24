@@ -53,53 +53,6 @@ class RegisterUserServiceTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    /**
-     * @dataProvider getStubAPIResponse
-     */
-    public function testIsEmailDuplicated($apiResponse, $expectedOutcome)
-    {
-        $jsonClientMock = XMock::of(HttpRestJsonClient::class);
-
-        $jsonClientMock->expects($this->any())
-                ->method('post')
-                ->willReturn($apiResponse);
-
-
-        $registerUserService = new RegisterUserService($jsonClientMock);
-
-        if ($expectedOutcome instanceof \Exception) {
-            $this->setExpectedException(get_class($expectedOutcome));
-        }
-
-        $this->assertEquals($expectedOutcome, $registerUserService->isEmailDuplicated(''));
-    }
-
-    public function getStubAPIResponse()
-    {
-        return [
-            [
-                ['data'=> ['isExists' => true]],
-                true,
-            ],
-            [
-                ['data'=> ['isExists' => false]],
-                false,
-            ],
-            [
-                ['data'=> []],
-                new \LogicException(),
-            ],
-            [
-                [],
-                new \LogicException(),
-            ],
-            [
-                '',
-                new \LogicException(),
-            ],
-        ];
-    }
-
     private function registrationData()
     {
         return [
