@@ -3,6 +3,7 @@
 namespace Dvsa\Mot\Frontend\RegistrationModule\Step;
 
 use DvsaCommon\InputFilter\Registration\EmailInputFilter;
+use Zend\InputFilter\InputFilter;
 
 class EmailStep extends AbstractRegistrationStep
 {

@@ -16,6 +16,7 @@ use Dvsa\Mot\Api\RegistrationModule\Service\RegistrationService;
 use Dvsa\Mot\Api\RegistrationModule\Validator\RegistrationValidator;
 use DvsaApplicationLogger\Log\Logger;
 use MailerApi\Logic\UsernameCreator;
+use PersonApi\Service\DuplicateEmailCheckerService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -59,6 +60,8 @@ class RegistrationServiceFactory implements FactoryInterface
          */
         $mailerLogic = $serviceLocator->get(UsernameCreator::class);
 
+        $duplicateEmailChecker = $serviceLocator->get(DuplicateEmailCheckerService::class);
+
         $service = new RegistrationService(
             $entityManager,
             $applicationLogger,
@@ -67,7 +70,8 @@ class RegistrationServiceFactory implements FactoryInterface
             $personService,
             $roleAssigner,
             $contactDetailCreator,
-            $mailerLogic
+            $mailerLogic,
+            $duplicateEmailChecker
         );
 
         return $service;

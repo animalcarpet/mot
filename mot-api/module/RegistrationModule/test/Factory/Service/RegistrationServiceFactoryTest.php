@@ -18,6 +18,7 @@ use Dvsa\Mot\Api\RegistrationModule\Validator\RegistrationValidator;
 use DvsaApplicationLogger\Log\Logger;
 use DvsaCommonTest\TestUtils\XMock;
 use MailerApi\Logic\UsernameCreator;
+use PersonApi\Service\DuplicateEmailCheckerService;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -57,6 +58,9 @@ class RegistrationServiceFactoryTest extends \PHPUnit_Framework_TestCase
         )->setService(
             'Application/Logger',
             XMock::of(Logger::class)
+        )->setService(
+            DuplicateEmailCheckerService::class,
+            XMock::of(DuplicateEmailCheckerService::class)
         );
 
         $this->assertInstanceOf(

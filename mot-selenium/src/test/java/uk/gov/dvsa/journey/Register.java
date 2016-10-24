@@ -61,12 +61,16 @@ public class Register {
         return passwordPage.clickContinue();
     }
 
-    public boolean isAccountCreated()
-    {
+    public String completeDetailsWithCustomValuesExpectingMessage(String emailAddress) throws IOException {
+        EmailPage emailPage = createAccountPage().email();
+        emailPage.enterYourDetails(emailAddress, emailAddress);
+
+        DuplicateEmailPage duplicateEmailPage = emailPage.clickContinueWithEmailAlreadyInUse();
+        return duplicateEmailPage.getMessageText();
+    }
+
+    public boolean isAccountCreated() {
         return accountCreated;
     }
 
-    public boolean isEmailDuplicated() {
-        return duplicateEmailAddress;
-    }
 }

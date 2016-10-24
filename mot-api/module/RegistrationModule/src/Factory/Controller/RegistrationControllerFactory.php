@@ -34,12 +34,8 @@ class RegistrationControllerFactory implements FactoryInterface
         /** @var RegistrationService $registrationService */
         $registrationService = $serviceLocator->get(RegistrationService::class);
 
-        /** @var DuplicatedEmailChecker $duplicatedEmailChecker */
-        $duplicatedEmailChecker = $serviceLocator->get(DuplicatedEmailChecker::class);
-
         $controller = new RegistrationController(
-            $registrationService,
-            $duplicatedEmailChecker
+            $registrationService
         );
 
         return $controller;

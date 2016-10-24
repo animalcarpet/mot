@@ -90,13 +90,12 @@ class CardOrderNewActionTest extends \PHPUnit_Framework_TestCase
 
     private function buildAction()
     {
-        $action = new CardOrderNewAction(
+        return new CardOrderNewAction(
             $this->sessionService,
             $this->stepService,
             $this->identityProvider,
             $this->cardOrderProtection
         );
-        return $action;
     }
 
     private function setSecondFactorRequiredMock($secondFactorRequired) {

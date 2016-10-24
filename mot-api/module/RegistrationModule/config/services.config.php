@@ -30,7 +30,6 @@ return [
     'factories' => [
         BusinessRoleAssigner::class          => BusinessRoleAssignerFactory::class,
         ContactDetailsCreator::class         => ContactDetailsCreatorFactory::class,
-        DuplicatedEmailChecker::class        => DuplicatedEmailCheckerFactory::class,
         OpenAMIdentityCreator::class         => OpenAMIdentityCreatorFactory::class,
         PersonCreator::class                 => PersonCreatorFactory::class,
         PersonSecurityAnswerRecorder::class  => PersonSecurityAnswerRecorderFactory::class,
