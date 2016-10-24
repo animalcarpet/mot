@@ -16,11 +16,13 @@ $params = [
     "dataTarget" => $element->getAttribute("data-target"),
     "dataTargetValue" => $element->getAttribute("data-target-value"),
     "info" => $info,
+    "formControlClass" => $element->getAttribute("formControlClass"),
 ];
 $params = array_merge($params, $element->getAttributes());
 
 if ($element instanceof Select) {
     $params["options"] = $element->getValueOptions();
+    $params["defaultValue"] = $element->getAttribute("defaultValue");
 } elseif ($element instanceof Radio) {
     $params["options"] = ArrayUtils::map($element->getValueOptions(),
         function (array $option) use ($element) {

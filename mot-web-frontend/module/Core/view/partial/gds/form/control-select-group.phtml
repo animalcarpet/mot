@@ -8,6 +8,8 @@ $optional= $this->optional;
 $dataTarget = $this->dataTarget;
 $dataTargetValue = $this->dataTargetValue;
 $type = (empty($this->type) ? 'text' : $this->type);
+$defaultValue = $this->defaultValue;
+$formControlClass = $this->formControlClass;
 
 $inputModifier  = isset($inputModifier) ? $inputModifier : '';
 $divModifier    = isset($divModifier) ? $divModifier : '';
@@ -48,6 +50,8 @@ $cssClass = join(
             'dataTarget'    => $dataTarget,
             'dataTargetValue'=> $dataTargetValue,
             'inputModifier' => $inputModifier,
+            'defaultValue'  => $defaultValue,
+            'formControlClass' => $formControlClass,
         ]
     ); ?>
 </div>

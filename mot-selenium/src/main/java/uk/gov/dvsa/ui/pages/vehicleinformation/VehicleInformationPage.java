@@ -31,6 +31,7 @@ public class VehicleInformationPage extends Page {
     @FindBy(id = "mot-test-class") private WebElement motTestClass;
     @FindBy(id = "country-of-registration") private WebElement countryOfRegistration;
     @FindBy(id = "country-of-registration-change") private WebElement changeCountryOfRegistrationLink;
+    @FindBy(id = "colour-change") private WebElement changeColourLink;
 
     public VehicleInformationPage(MotAppDriver driver) {
         super(driver);
@@ -111,5 +112,10 @@ public class VehicleInformationPage extends Page {
     public ChangeMakePage clickChangeMakeAndModelLink() {
         changeMakeAndModelLink.click();
         return new ChangeMakePage(driver);
+    }
+
+    public ChangeColourPage clickChangeColourLink() {
+        changeColourLink.click();
+        return new ChangeColourPage(driver);
     }
 }

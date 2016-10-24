@@ -159,6 +159,18 @@ public class VehicleInformationViewTests extends DslTest {
         assertThat(motUI.vehicleInformation.getMakeAndModel(), is(Make.SUBARU.getName()+", "+ Model.SUBARU_IMPREZA.getName()));
     }
 
+    @Test(groups = {"Regression"})
+    public void vehicleEditColourCorrectByAreaOffice() throws  IOException, URISyntaxException {
+        //Given I am on the Vehicle Information Page as an AreaOffice
+        motUI.showVehicleInformationFor(areaOffice1User, vehicle);
+
+        //When I change primary and secondary colour
+        motUI.vehicleInformation.changeColour(Colours.Black, Colours.White);
+
+        //Then colours will be changed
+        assertThat(motUI.vehicleInformation.getColour(), is(Colours.Black.getName() + " and " + Colours.White.getName()));
+    }
+
     private String getManufactureDateForVehicle(String manufactureDate) {
         return DateTimeFormat.forPattern("yyyy-MM-dd")
                 .parseDateTime(manufactureDate)

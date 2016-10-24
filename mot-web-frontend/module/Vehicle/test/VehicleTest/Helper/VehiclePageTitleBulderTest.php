@@ -69,8 +69,14 @@ class VehiclePageTitleBulderTest extends \PHPUnit_Framework_TestCase
                 'id' => 6,
                 'name' => self::MODEL_NAME,
             ],
-            'colour' => 'Grey',
-            'colourSecondary' => 'Not Stated',
+            'colour' => [
+                'code' => 'L',
+                'name' => 'Grey',
+            ],
+            'colourSecondary' => [
+                'code' => 'W',
+                'name' => 'Not Stated',
+            ],
             'countryOfRegistration' => 'GB, UK, ENG, CYM, SCO (UK) - Great Britain',
             'vehicleClass' => ['code' => VehicleClassCode::CLASS_4, 'name' => '4'],
             'fuelType' => [

@@ -296,13 +296,13 @@ class SummaryStep extends AbstractStep implements WizardStep
         $createVehicleRequest = new CreateDvsaVehicleRequest();
         $createVehicleRequest
             ->setOneTimePassword($oneTimePassword)
-            ->setColourId($stepsData['colour'])
+            ->setColourCode($stepsData['colour'])
             ->setCountryOfRegistrationId($stepsData['countryOfRegistration'])
             ->setFirstUsedDate(new \DateTime(vsprintf('%04d-%02d-%02d',array_reverse($stepsData['dateOfFirstUse']))))
             ->setFuelTypeCode($stepsData['fuelType'])
             ->setMakeId($makeId)
             ->setModelId($modelId)
-            ->setSecondaryColourId($stepsData['secondaryColour'])
+            ->setSecondaryColourCode($stepsData['secondaryColour'])
             ->setVehicleClassCode($stepsData['testClass'])
             ->setTransmissionTypeId($stepsData['transmissionType']);
 
@@ -392,8 +392,8 @@ class SummaryStep extends AbstractStep implements WizardStep
         $vehicleTestingStationId = $this->identityProvider->getIdentity()->getCurrentVts()->getVtsId();
         $hasRegistration = is_null($vehicle->getEmptyVrmReason());
 
-        $primaryColour = $this->evalColourCodeEnumsBasedOnTheColourName($vehicle->getColour());
-        $secondaryColour = $this->evalColourCodeEnumsBasedOnTheColourName($vehicle->getColourSecondary());
+        $primaryColour = $vehicle->getColour()->getCode();
+        $secondaryColour = $vehicle->getColourSecondary()->getCode();
         $fuelTypeCode = $vehicle->getFuelType()->getCode();
 
         $data = [
@@ -417,35 +417,5 @@ class SummaryStep extends AbstractStep implements WizardStep
         }
 
         return $data;
-    }
-
-    /**
-     * @TODO (ABN) Once the new API accepts MOT-TEST creation calls all this mess will be gone!
-     *             and hopefully the rest of the useless single dimension enums, or make them smarter
-     *
-     * @param string $enumPath
-     * @param string $enumName
-     * @return string
-     */
-    private function evalEnumByName($enumPath, $enumName)
-    {
-        $enumNameSpecialCharsRemoved = str_replace(['(', ')', ',', ':', '\'', '.', '?'], '', $enumName);
-        $enumNameWithUnderscores = str_replace([' ', ' - ', '-', '/'], '_', $enumNameSpecialCharsRemoved);
-
-        return constant(
-            $enumPath . '::' .
-            strtoupper($enumNameWithUnderscores)
-        );
-    }
-
-    /**
-     * @TODO (ABN) Same as evalEnumByName()!!
-     *
-     * @param string $colorName
-     * @return string enum name from ColourCode
-     */
-    private function evalColourCodeEnumsBasedOnTheColourName($colorName)
-    {
-        return $this->evalEnumByName(ColourCode::class, $colorName);
     }
 }

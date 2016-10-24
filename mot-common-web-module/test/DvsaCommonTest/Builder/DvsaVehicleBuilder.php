@@ -14,6 +14,10 @@ class DvsaVehicleBuilder
         $vehicle->model = $emptyResource;
         $vehicle->vehicleClass = null;
         $vehicle->fuelType = $emptyResource;
+        $vehicle->registration = null;
+        $vehicle->vin = null;
+        $vehicle->colour = null;
+        $vehicle->colourSecondary = null;
 
         return $vehicle;
     }

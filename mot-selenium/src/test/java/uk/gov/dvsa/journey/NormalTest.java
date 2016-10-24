@@ -1,6 +1,7 @@
 package uk.gov.dvsa.journey;
 
 import uk.gov.dvsa.data.VehicleData;
+import uk.gov.dvsa.domain.api.response.Colour;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.CancelTestReason;
 import uk.gov.dvsa.domain.model.mot.Defect;
@@ -365,7 +366,7 @@ public class NormalTest {
                 vehicle.setCylinderCapacity("");
                 break;
             case "Primary":
-                vehicle.setColour("");
+                vehicle.setColour(new Colour());
                 break;
         }
 

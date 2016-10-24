@@ -63,8 +63,8 @@ class VehicleService
             'makeId' => 100024, //BMW
             'modelId' => 104420, //Alpina
             'transmissionTypeId' => 1, //automatic
-            'colourId' => 13, //red
-            'secondaryColourId' => 13, //red
+            'colourCode' => "C", //red
+            'secondaryColourCode' => "C", //red
             'cylinderCapacity' => 1300, //red
             'fuelTypeCode' => "PE", //petrol
             'testClass' => 4,
@@ -89,8 +89,8 @@ class VehicleService
             -> setRegistration($data['registrationNumber'])
             -> setVin($data['vin'])
             -> setCountryOfRegistrationId($data['countryOfRegistrationId'])
-            -> setColourId($data['colourId'])
-            -> setSecondaryColourId($data['secondaryColourId'])
+            -> setColourCode($data['colourCode'])
+            -> setSecondaryColourCode($data['secondaryColourCode'])
             -> setFuelTypeCode($data['fuelTypeCode'])
             -> setFirstUsedDate(new \DateTime($data['dateOfFirstUse']))
             -> setCylinderCapacity($data['cylinderCapacity'])

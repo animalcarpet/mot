@@ -373,11 +373,12 @@ class VehicleService
             $bodyType = $this->vehicleCatalog->findBodyTypeByCode(self::DEFAULT_BODY_TYPE_CODE);
         }
 
-        $colourId = $this->vehicleCatalog->getColourByCode($dvlaVehicle->getPrimaryColour())->getId();
+        $colour = $this->vehicleCatalog->findColourByCode($dvlaVehicle->getPrimaryColour());
+        $colourCode = $colour ? $colour->getCode() : null;
 
-        $secondaryColourId = $dvlaVehicle->getSecondaryColour() ?
-                $this->vehicleCatalog->getColourByCode($dvlaVehicle->getSecondaryColour())->getId() :
-                null;
+        $secondaryColour = $this->vehicleCatalog->findColourByCode($dvlaVehicle->getSecondaryColour());
+        $secondaryColourCode = $secondaryColour ? $secondaryColour->getCode() : null;
+
 
         $countryOfRegistrationId = $this->vehicleCatalog->getCountryOfRegistrationByCode(
             self::DEFAULT_COUNTRY_OF_REGISTRATION
@@ -394,8 +395,8 @@ class VehicleService
             ->setBodyTypeId($bodyType->getId())
             ->setVehicleClassCode($vehicleClass->getCode())
             ->setFuelTypeCode($fuelTypeCode)
-            ->setColourId($colourId)
-            ->setSecondaryColourId($secondaryColourId)
+            ->setColourCode($colourCode)
+            ->setSecondaryColourCode($secondaryColourCode)
             ->setCountryOfRegistrationId($countryOfRegistrationId)
             ->setFirstUsedDate($dvlaVehicle->getFirstUsedDate())
             ->setFirstRegistrationDate($dvlaVehicle->getFirstRegistrationDate())
@@ -447,8 +448,8 @@ class VehicleService
             ->setVehicleClassCode($dvsaVehicle->getModelDetail()->getVehicleClass()->getCode())
             ->setFuelTypeCode($fuelTypeCode)
             ->setTransmissionTypeId($dvsaVehicle->getModelDetail()->getTransmissionType()->getId())
-            ->setColourId($dvsaVehicle->getColour()->getId())
-            ->setSecondaryColourId($dvsaVehicle->getSecondaryColour()->getId())
+            ->setColourCode($dvsaVehicle->getColour()->getCode())
+            ->setSecondaryColourCode($dvsaVehicle->getSecondaryColour()->getCode())
             ->setCountryOfRegistrationId($dvsaVehicle->getCountryOfRegistration()->getId())
             ->setFirstUsedDate($dvsaVehicle->getFirstUsedDate());
 

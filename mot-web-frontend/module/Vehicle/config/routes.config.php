@@ -103,6 +103,16 @@ return [
                                     ]
                                 ],
                             ],
+                            'colour' => [
+                                'type' => 'segment',
+                                'options' => [
+                                    'route' => '/colour',
+                                    'defaults' => [
+                                        'controller' => UpdateVehiclePropertyController::class,
+                                        'action' => 'editColour',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                 ],

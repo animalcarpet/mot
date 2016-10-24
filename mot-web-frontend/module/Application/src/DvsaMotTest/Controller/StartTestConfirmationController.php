@@ -259,14 +259,14 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
 
         $targetVehicle = $this->getVehicleDetails();
 
-        $selectedColourName = $this->mapIdToName('colours', $this->request->getPost('colourId'));
-        $selectedSecondaryColourName = $this->mapIdToName('colours', $this->request->getPost('secondaryColourId'));
+        $selectedColourCode = $this->mapIdToCode('colours', $this->request->getPost('colourId'));
+        $selectedSecondaryColourCode = $this->mapIdToCode('colours', $this->request->getPost('secondaryColourId'));
         $selectedFuelTypeCode = $this->mapIdToCode('fuelTypes', $this->request->getPost('fuelTypeId'));
         $selectedVehicleClass = $this->request->getPost('vehicleClassId');
 
         if (
-            $targetVehicle->getColour() !== $selectedColourName ||
-            $targetVehicle->getColourSecondary() !== $selectedSecondaryColourName ||
+            ($targetVehicle->getColour() && $targetVehicle->getColour()->getCode() !== $selectedColourCode) ||
+            ($targetVehicle->getColourSecondary() && $targetVehicle->getColourSecondary()->getCode() !== $selectedSecondaryColourCode) ||
             ($targetVehicle->getFuelType() && $targetVehicle->getFuelType()->getCode() !== $selectedFuelTypeCode) ||
             ($targetVehicle->getVehicleClass() && $targetVehicle->getVehicleClass()->getCode() !== $selectedVehicleClass)
         ) {
@@ -323,28 +323,6 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         }
 
         return $data;
-    }
-
-    /**
-     * @see self::mapCatalogEntities
-     * @param string $listName
-     * @param string $code
-     * @return string
-     */
-    private function mapCodeToName($listName, $code)
-    {
-        return $this->mapCatalogEntities($listName, $code, 'code', 'name');
-    }
-
-    /**
-     * @see self::mapCatalogEntities
-     * @param string $listName
-     * @param string $id
-     * @return string
-     */
-    private function mapIdToName($listName, $id)
-    {
-        return $this->mapCatalogEntities($listName, $id, 'id', 'name');
     }
 
     /**

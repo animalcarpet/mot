@@ -128,6 +128,14 @@ class ReviewMakeAndModelStepTest extends \PHPUnit_Framework_TestCase
         $model->code = "PE";
         $model->name = "Petrol";
 
+        $colour = new stdClass();
+        $colour->code = "L";
+        $colour->name = "Grey";
+
+        $secondaryColour = new stdClass();
+        $secondaryColour->code = "W";
+        $secondaryColour->name = "Not Stated";
+
         $std = new stdClass();
         $std->id = 283;
         $std->make = $make;
@@ -136,6 +144,8 @@ class ReviewMakeAndModelStepTest extends \PHPUnit_Framework_TestCase
         $std->vin = "VIN98798798";
         $std->vehicleClass = null;
         $std->fuelType = $fuel;
+        $std->colour = $colour;
+        $std->colourSecondary = $secondaryColour;
 
         return new DvsaVehicle($std);
     }

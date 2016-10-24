@@ -137,8 +137,14 @@ class VehicleObjectsFactory
                     'emptyVinReason' => null,
                     'make' => 'PORSCHE',
                     'model' => 'BOXSTER',
-                    'colour' => 'Red',
-                    'colourSecondary' => 'Not Stated',
+                    'colour'                 => [
+                        'code'   => 'C',
+                        'name' => 'Red',
+                    ],
+                    'colourSecondary'                 => [
+                        'code'   => 'W',
+                        'name' => 'Not Stated',
+                    ],
                     'vehicleClass' => [ 'code' => '4', 'name' => '4'],
                     'fuelType'              => [
                         'code' => FuelTypeCode::PETROL,
