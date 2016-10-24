@@ -1,0 +1,15 @@
+<div>
+    <div class="banner--error">
+        <span class="banner__heading-large">You have already activated a security card</span>
+    </div>
+
+    <p>
+        <span>Your security card was activated {{ securityCardDate }} and has the serial number {{ securityCard.serialNumber }}.</span>
+    </p>
+    <p>
+        <span>Remember, you only need one security card and that card is linked to you. You can use it at any Vehicle Testing Station.</span>
+    </p>
+    <p>
+        <a href="{{ url('user-home') }}">Return home</a>
+    </p>
+</div>

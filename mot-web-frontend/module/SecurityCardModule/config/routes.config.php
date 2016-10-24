@@ -1,6 +1,6 @@
 <?php
 
-
+use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Controller\AlreadyHasRegisteredCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Controller\RegisterCardHardStopController;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Controller\RegisterCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Controller\RegisterCardInformationController;
@@ -98,6 +98,16 @@ return [
                             'defaults' => [
                                 'controller' => RegisterCardSuccessController::class,
                                 'action'     => 'success'
+                            ],
+                        ],
+                    ],
+                    'already-has-card' => [
+                        'type'    => 'segment',
+                        'options' => [
+                            'route'    => '/already-has-card',
+                            'defaults' => [
+                                'controller' => AlreadyHasRegisteredCardController::class,
+                                'action'     => 'index'
                             ],
                         ],
                     ],

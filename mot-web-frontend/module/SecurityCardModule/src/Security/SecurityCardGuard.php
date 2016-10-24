@@ -93,6 +93,19 @@ class SecurityCardGuard
         return $demoTestNeeded && $this->hasNoSecurityCardOrders($identity) && !$this->hasActiveTwoFaCard($identity);
     }
 
+    public function isEligibleForActivatingTwoFaCardAfterNomination(MotFrontendIdentityInterface $identity)
+    {
+        if (!$this->twoFaFeatureToggle->isEnabled()) {
+            return false;
+        }
+
+        $hasPendingRoleNomination = $this->personRoleManagementService->personHasPendingRole($identity->getUserId());
+        $hasSecurityCardOrders = $this->hasOutstandingCardOrdersAndNoActiveCard($identity);
+        $hasNoActiveSecurityCard = !$this->hasActiveTwoFaCard($identity);
+
+        return $hasPendingRoleNomination && $hasSecurityCardOrders && $hasNoActiveSecurityCard;
+    }
+
     public function isEligibleForNewTwoFaCardAfterNomination(MotFrontendIdentityInterface $identity)
     {
         if (!$this->twoFaFeatureToggle->isEnabled()) {
@@ -122,6 +135,17 @@ class SecurityCardGuard
         }
 
         return $this->hasSecurityCardOrders($identity) && !$this->hasActiveTwoFaCard($identity);
+    }
+
+    public function is2faEligibleUserWhichCanActivateACard(MotFrontendIdentityInterface $identity)
+    {
+         $hasSecurityCardOrders = $this->hasSecurityCardOrders($identity);
+         $isEligibleForActivatingAfterNomination = $this->isEligibleForActivatingTwoFaCardAfterNomination($identity);
+         $isEligibleForReplacementCard = $this->isEligibleForReplacementTwoFaCard($identity);
+         $isGrantedToOrderCard = $this->authorisationService->isGranted(PermissionInSystem::CAN_ORDER_2FA_SECURITY_CARD);
+
+        return $hasSecurityCardOrders || $isEligibleForActivatingAfterNomination ||
+                $isEligibleForReplacementCard || $isGrantedToOrderCard;
     }
 
     private function isDemoTestNeededStatus($status)

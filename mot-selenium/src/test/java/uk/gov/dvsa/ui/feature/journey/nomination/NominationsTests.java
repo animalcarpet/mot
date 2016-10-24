@@ -138,4 +138,19 @@ public class NominationsTests extends DslTest {
         step("Then I receive an activate notification on my homepage");
         motUI.nominations.viewActivateCardNotification(tradeUser);
     }
+
+    @Test(testName = "2fa", groups = {"BVT"})
+    public void userWithAnActivatedCard_cannotActivateAnotherCard() throws IOException {
+        step("Given I am user with an active security card");
+        User activatedUser = motApi.user.createUserWithoutRole();
+        motApi.nominations.nominateSiteRole(activatedUser, siteData.createSite().getId(), TradeRoles.SITE_MANAGER);
+        motUI.nominations.orderAndActivateSecurityCard(activatedUser);
+
+        step("When I activate a card via the nomination activate your security card link");
+        motUI.nominations.viewActivateCardNotification(activatedUser).clickActivateCard();
+        String message = motUI.authentication.securityCard.getAlreadyActivatedCardErrorMessage();
+
+        step("Then I should see the Already Activated a Card alert page");
+        assertThat("You have already activated a security card page is shown", message, containsString("You have already activated a security card"));
+    }
 }

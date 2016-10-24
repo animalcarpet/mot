@@ -1,7 +1,9 @@
 <?php
 
+use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Controller\AlreadyHasRegisteredCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Controller\RegisterCardHardStopController;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Controller\RegisterCardInformationController;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Factory\Controller\AlreadyHasRegisteredCardControllerFactory;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Factory\Controller\RegisterCardHardStopControllerFactory;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Factory\Controller\RegisterCardInformationControllerFactory;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Controller\OrderNewCardController;
@@ -44,6 +46,7 @@ return [
         CardOrderReportListController::class => CardOrderReportListControllerFactory::class,
         CardOrderCsvReportController::class => CardOrderCsvReportControllerFactory::class,
         RegisterCardHardStopController::class => RegisterCardHardStopControllerFactory::class,
-        AlreadyOrderedNewCardController::class => AlreadyOrderedNewCardControllerFactory::class
+        AlreadyOrderedNewCardController::class => AlreadyOrderedNewCardControllerFactory::class,
+        AlreadyHasRegisteredCardController::class => AlreadyHasRegisteredCardControllerFactory::class,
     ]
 ];

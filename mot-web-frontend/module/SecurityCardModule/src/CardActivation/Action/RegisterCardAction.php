@@ -3,11 +3,11 @@
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Action;
 
 use Core\Action\ActionResult;
+use Core\Action\RedirectToRoute;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Controller\AlreadyHasRegisteredCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardViewStrategy;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\ViewModel\RegisterCardViewModel;
-use DvsaFeature\FeatureToggles;
 use Zend\Http\Request;
-use Zend\View\Model\ViewModel;
 
 abstract class RegisterCardAction
 {
@@ -32,6 +32,9 @@ abstract class RegisterCardAction
 
     protected function defaultActionResult()
     {
+        if (!$this->viewStrategy->canActivateACard()) {
+            return new RedirectToRoute(AlreadyHasRegisteredCardController::ROUTE);
+        }
         $result = new ActionResult();
         $viewModel = new RegisterCardViewModel();
         $viewModel->setSkipCtaTemplate($this->viewStrategy->skipCtaTemplate());
