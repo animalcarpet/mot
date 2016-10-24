@@ -277,7 +277,7 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
         $stmt = $em->getConnection()->prepare(
             "UPDATE mot_test m LEFT JOIN mot_test n on n.id = m.prs_mot_test_id "
             . "SET m.started_date = ?, m.completed_date = ?, m.issued_date = ?, m.expiry_date = ? "
-            . "WHERE m.number = ? or n.number=?"
+            . "WHERE m.number = ?"
         );
 
         $stmt->bindValue(1, $startedDate, 'datetime');
@@ -285,9 +285,23 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
         $stmt->bindValue(3, $issueDate, 'date');
         $stmt->bindValue(4, $expiryDate, 'date');
         $stmt->bindValue(5, $motTestNumber);
-        $stmt->bindValue(6, $motTestNumber);
 
         $stmt->execute();
+
+        $stmt = $em->getConnection()->prepare(
+            "UPDATE mot_test m LEFT JOIN mot_test n on n.id = m.prs_mot_test_id "
+            . "SET m.started_date = ?, m.completed_date = ?, m.issued_date = ?, m.expiry_date = ? "
+            . "WHERE n.number=?"
+        );
+
+        $stmt->bindValue(1, $startedDate, 'datetime');
+        $stmt->bindValue(2, $completedDate, 'datetime');
+        $stmt->bindValue(3, $issueDate, 'date');
+        $stmt->bindValue(4, $expiryDate, 'date');
+        $stmt->bindValue(5, $motTestNumber);
+
+        $stmt->execute();
+
     }
 
     /**
