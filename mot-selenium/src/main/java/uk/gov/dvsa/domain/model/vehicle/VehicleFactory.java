@@ -23,7 +23,8 @@ public class VehicleFactory {
                 TransmissionType.Manual.getName(),
                 RandomStringUtils.randomAlphabetic(17),
                 VehicleClass.four,
-                "888"
+                "888",
+                false
         );
     }
 
@@ -36,7 +37,8 @@ public class VehicleFactory {
                 "FakeFuel",
                 " ",
                 VehicleClass.four,
-                "888"
+                "888",
+                false
         );
     }
 }
