@@ -12,25 +12,27 @@ class TqiStatisticsStorageFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        /** @var MotConfig $config */
         $config = $serviceLocator->get(MotConfig::class);
 
-        $s3Client = new S3Client([
-            'credentials' => [
-                'key'    => $config->get('aws', 'statisticsAmazonStorage', 'accessKeyId'),
+        $s3ClientArgs = [
+            'version' => 'latest',
+            'region' => $config->get('aws', 'statisticsAmazonStorage', 'region'),
+        ];
+
+        // If "accessKeyId" and "secretKey" are not defined then fallback to IAM roles.
+        if ($config->valueExists('aws', 'statisticsAmazonStorage', 'accessKeyId') ||
+            $config->valueExists('aws', 'statisticsAmazonStorage', 'secretKey')) {
+            $s3ClientArgs['credentials'] = [
+                'key' => $config->get('aws', 'statisticsAmazonStorage', 'accessKeyId'),
                 'secret' => $config->get('aws', 'statisticsAmazonStorage', 'secretKey'),
-            ],
-            'version'     => 'latest',
-            'region'      => $config->get('aws', 'statisticsAmazonStorage', 'region'),
-        ]);
+            ];
+        }
 
+        $s3Client = new S3Client($s3ClientArgs);
         $bucket = $config->get('aws', 'statisticsAmazonStorage', 'bucket');
-
         $rootFolder = $config->get('aws', 'statisticsAmazonStorage', 'root_folder');
 
-        return new S3KeyValueStorage(
-            $s3Client,
-            $bucket,
-            $rootFolder
-        );
+        return new S3KeyValueStorage($s3Client, $bucket, $rootFolder);
     }
 }
