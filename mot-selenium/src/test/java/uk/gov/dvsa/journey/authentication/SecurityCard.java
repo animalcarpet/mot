@@ -16,6 +16,7 @@ import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostFo
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardPage;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardSuccessPage;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.TwoFactorPinEntryPage;
+import uk.gov.dvsa.ui.pages.nominations.AlreadyActivatedCardPage;
 
 import java.io.IOException;
 
@@ -29,6 +30,10 @@ public class SecurityCard {
 
     public final RegisterCardSuccessPage activate2faCard(final User user) throws IOException {
         return activate2faCard(user, user.getSerialNumber(true), user.getTwoFactorPin(), RegisterCardSuccessPage.class);
+    }
+
+    public String getAlreadyActivatedCardErrorMessage() {
+        return new AlreadyActivatedCardPage(pageNavigator.getDriver()).getBannerTitleText();
     }
 
     public final RegisterCardPage activateInvalid2faCard(final User user, String serialNumber, String pin)

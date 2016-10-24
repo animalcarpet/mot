@@ -65,7 +65,7 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
 
     public function testWhenFormInvalid_shouldReturnErrors()
     {
-        $this->withCanSeePage(true);
+        $this->withCanActivateACard(true);
         $this->request->setPost(new Parameters());
         /** @var ActionResult $result */
         $result = $this->action()->execute($this->request);
@@ -84,7 +84,7 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
 
     public function testWhenFormInvalid_shouldAddGoogleAnalyticsMessages()
     {
-        $this->withCanSeePage(true);
+        $this->withCanActivateACard(true);
         $this->request->setPost(new Parameters());
         /** @var ActionResult $result */
         $result = $this->action()->execute($this->request);
@@ -98,7 +98,7 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
 
     public function testWhenFormInvalid_shouldClearPin()
     {
-        $this->withCanSeePage(true);
+        $this->withCanActivateACard(true);
         $this->request->setPost(new Parameters());
         /** @var ActionResult $result */
         $result = $this->action()->execute($this->request);
@@ -113,7 +113,7 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
 
     public function testWhenFormValid_shouldRedirectToSuccessPage()
     {
-        $this->withCanSeePage(true);
+        $this->withCanActivateACard(true);
         $this->withIdentity();
 
         /** @var RedirectToRoute $result */
@@ -126,7 +126,7 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
 
     public function testNominationServiceCalledAndRedirectToSuccess()
     {
-        $this->withCanSeePage(true);
+        $this->withCanActivateACard(true);
         $this->withIdentity();
 
         $this->twoFactorNominationNotificationService
@@ -144,7 +144,7 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
 
     public function testWhenAedmNomination_NominationServiceCalledAndRedirectToSuccessWithNewRoleQueryParam()
     {
-        $this->withCanSeePage(true);
+        $this->withCanActivateACard(true);
         $this->withIdentity();
 
         $roleSummaryCollection = XMock::of(RoleSummaryCollection::class);
@@ -171,7 +171,7 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
 
     public function testWhenActivationFailsDueInvalidSerialOrPin_shouldDisplayInvalidSerialOrPinMessage()
     {
-        $this->withCanSeePage(true);
+        $this->withCanActivateACard(true);
 
         $this->withFailingActivationCall(ResourceValidationException::class);
         /** @var ActionResult $result */
@@ -182,7 +182,7 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
 
     public function testWhenActivationFailsDueSerialNumberNotFound_shouldRaiseErrorForSerialNumber()
     {
-        $this->withCanSeePage(true);
+        $this->withCanActivateACard(true);
 
         $this->withFailingActivationCall(ResourceNotFoundException::class);
         /** @var ActionResult $result */
@@ -196,19 +196,13 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
 
     public function testWhenActivationFailsOnCardAlreadyRegistered_shouldSetFlagOnViewModel()
     {
-        $this->withCanSeePage(true);
+        $this->withCanActivateACard(true);
 
         $this->withFailingActivationCall(ResourceConflictException::class);
         /** @var ActionResult $result */
         $result = $this->action()->execute($this->request);
 
         $this->assertTrue($result->getViewModel()->isCardAlreadyRegistered());
-    }
-
-    private function withCanSeePage($val)
-    {
-        $this->viewStrategy->expects($this->any())->method('canSee')->willReturn($val);
-
     }
 
     private function withSuccessfulActivationCall()
@@ -221,6 +215,14 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
     {
         $this->registerCardService->expects($this->any())->method('registerCard')
             ->willThrowException(XMock::of($exceptionClass));
+    }
+
+    private function withCanActivateACard($val)
+    {
+        return $this->viewStrategy
+            ->expects($this->once())
+            ->method('canActivateACard')
+            ->willReturn($val);
     }
 
     private function withIdentity()
