@@ -9,6 +9,7 @@ MYSQL_ADMIN_PASSWORD=${2-"password"}
 MYSQL_HOST=${3-"mysql"}
 
 # Add files here in intended run order for release.
+upgrade_files+=('2016-10-17-BL-3441-update-non-working-days-STORY.sql');
 upgrade_files+=('2016-10-20-BL-3655-mask-vehicle-as-mystery-shopper-premissions-STORY.sql');
 
 # Necessary for first deployment.
