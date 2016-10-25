@@ -32,6 +32,8 @@
             ]
         );
         ?>
+    </fieldset>
+    <fieldset>
         <details <?php echo $expandAdditionalSearchCriteria ? 'open="null"' : null ?>>
             <summary id="show-additonal-search-criteria">
                 Additional search criteria
@@ -87,6 +89,7 @@
             </div>
         </details>
     </fieldset>
+
     <div class="form-group">
         <?php
         echo $this->partial(
