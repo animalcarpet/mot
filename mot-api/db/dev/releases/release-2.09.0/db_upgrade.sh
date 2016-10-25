@@ -11,6 +11,7 @@ MYSQL_HOST=${3-"mysql"}
 # Add files here in intended run order for release.
 upgrade_files+=('2016-10-17-BL-3441-update-non-working-days-STORY.sql');
 upgrade_files+=('2016-10-20-BL-3655-mask-vehicle-as-mystery-shopper-premissions-STORY.sql');
+upgrade_files+=('2016-10-20-BL-3879-security-card-drift-tracebility-improvements-STORY.sql');
 upgrade_files+=('2016-10-01-BL-1861-insert-specific-mappings-STORY.sql');
 upgrade_files+=('2016-10-04-BL-1861-Alter-Make_Table-Story.sql');
 upgrade_files+=('2016-10-05-BL-1861-Restrict-Makes-for-display-STORY.sql');
