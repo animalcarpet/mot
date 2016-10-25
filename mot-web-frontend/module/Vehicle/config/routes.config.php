@@ -1,11 +1,13 @@
 <?php
 
 use DvsaMotEnforcement\Controller\MotTestSearchController as EnforcementMotTestSearchController;
+use Vehicle\Controller\MaskVehicleController;
+use Vehicle\Controller\UnmaskVehicleController;
 use Vehicle\Controller\VehicleController;
 use Vehicle\UpdateVehicleProperty\Controller\UpdateVehiclePropertyController;
+use Vehicle\UpdateVehicleProperty\Form\Wizard\Step\ReviewMakeAndModelStep;
 use Vehicle\UpdateVehicleProperty\Form\Wizard\Step\UpdateMakeStep;
 use Vehicle\UpdateVehicleProperty\Form\Wizard\Step\UpdateModelStep;
-use Vehicle\UpdateVehicleProperty\Form\Wizard\Step\ReviewMakeAndModelStep;
 
 return [
     'vehicle' => [
@@ -99,8 +101,8 @@ return [
                                         'action' => 'editMakeAndModel',
                                     ],
                                     'constraints' => [
-                                        "property" => join("|", [UpdateMakeStep::NAME, UpdateModelStep::NAME, ReviewMakeAndModelStep::NAME])
-                                    ]
+                                        "property" => implode("|", [UpdateMakeStep::NAME, UpdateModelStep::NAME, ReviewMakeAndModelStep::NAME]),
+                                    ],
                                 ],
                             ],
                             'colour' => [
@@ -112,6 +114,46 @@ return [
                                         'action' => 'editColour',
                                     ],
                                 ],
+                            ],
+                        ],
+                    ],
+                    'mask' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route'    => '/enforcement/mask',
+                            'defaults' => [
+                                'controller' => MaskVehicleController::class,
+                                'action'     => 'mask',
+                            ],
+                        ],
+                    ],
+                    'masked-successfully' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route'    => '/enforcement/masked-successfully',
+                            'defaults' => [
+                                'controller' => MaskVehicleController::class,
+                                'action'     => 'maskedSuccessfully',
+                            ],
+                        ],
+                    ],
+                    'unmask' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route'    => '/enforcement/unmask',
+                            'defaults' => [
+                                'controller' => UnmaskVehicleController::class,
+                                'action'     => 'unmask',
+                            ],
+                        ],
+                    ],
+                    'unmasked-successfully' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route'    => '/enforcement/unmasked-successfully',
+                            'defaults' => [
+                                'controller' => UnmaskVehicleController::class,
+                                'action'     => 'unmaskedSuccessfully',
                             ],
                         ],
                     ],

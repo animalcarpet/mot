@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Vehicle\ViewModel;
-
 
 use Core\ViewModel\Gds\Table\GdsTable;
 use Core\ViewModel\Header\HeaderTertiaryList;
@@ -24,6 +22,16 @@ class VehicleViewModel
     protected $breadcrumbs;
 
     /**
+     * @var bool
+     */
+    private $shouldDisplayVehicleMaskedBanner = false;
+
+    /**
+     * @var string
+     */
+    private $obfuscatedVehicleId;
+
+    /**
      * @return GdsTable
      */
     public function getVehicleSpecificationGdsTable()
@@ -33,11 +41,13 @@ class VehicleViewModel
 
     /**
      * @param GdsTable $vehicleSpecificationGdsTable
+     *
      * @return VehicleViewModel
      */
     public function setVehicleSpecificationGdsTable($vehicleSpecificationGdsTable)
     {
         $this->vehicleSpecificationGdsTable = $vehicleSpecificationGdsTable;
+
         return $this;
     }
 
@@ -51,11 +61,13 @@ class VehicleViewModel
 
     /**
      * @param GdsTable $vehicleRegistrationGdsTable
+     *
      * @return VehicleViewModel
      */
     public function setVehicleRegistrationGdsTable($vehicleRegistrationGdsTable)
     {
         $this->vehicleRegistrationGdsTable = $vehicleRegistrationGdsTable;
+
         return $this;
     }
 
@@ -69,11 +81,13 @@ class VehicleViewModel
 
     /**
      * @param string $backUrl
+     *
      * @return VehicleViewModel
      */
     public function setBackUrl($backUrl)
     {
         $this->backUrl = $backUrl;
+
         return $this;
     }
 
@@ -87,11 +101,13 @@ class VehicleViewModel
 
     /**
      * @param string $pageTitle
+     *
      * @return VehicleViewModel
      */
     public function setPageTitle($pageTitle)
     {
         $this->pageTitle = $pageTitle;
+
         return $this;
     }
 
@@ -105,11 +121,13 @@ class VehicleViewModel
 
     /**
      * @param string $backLinkText
+     *
      * @return VehicleViewModel
      */
     public function setBackLinkText($backLinkText)
     {
         $this->backLinkText = $backLinkText;
+
         return $this;
     }
 
@@ -123,11 +141,13 @@ class VehicleViewModel
 
     /**
      * @param string $pageSecondaryTitle
+     *
      * @return VehicleViewModel
      */
     public function setPageSecondaryTitle($pageSecondaryTitle)
     {
         $this->pageSecondaryTitle = $pageSecondaryTitle;
+
         return $this;
     }
 
@@ -141,11 +161,13 @@ class VehicleViewModel
 
     /**
      * @param HeaderTertiaryList $pageTertiaryTitle
+     *
      * @return VehicleViewModel
      */
     public function setPageTertiaryTitle($pageTertiaryTitle)
     {
         $this->pageTertiaryTitle = $pageTertiaryTitle;
+
         return $this;
     }
 
@@ -159,11 +181,13 @@ class VehicleViewModel
 
     /**
      * @param VehicleSidebar $sidebar
+     *
      * @return VehicleViewModel
      */
     public function setSidebar($sidebar)
     {
         $this->sidebar = $sidebar;
+
         return $this;
     }
 
@@ -177,11 +201,53 @@ class VehicleViewModel
 
     /**
      * @param array $breadcrumbs
+     *
      * @return VehicleViewModel
      */
     public function setBreadcrumbs($breadcrumbs)
     {
         $this->breadcrumbs = $breadcrumbs;
+
         return $this;
+    }
+
+    /**
+     * @param boolean $shouldDisplayVehicleMaskedBanner
+     *
+     * @return $this
+     */
+    public function setShouldDisplayVehicleMaskedBanner($shouldDisplayVehicleMaskedBanner)
+    {
+        $this->shouldDisplayVehicleMaskedBanner = $shouldDisplayVehicleMaskedBanner;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function shouldDisplayVehicleMaskedBanner()
+    {
+        return $this->shouldDisplayVehicleMaskedBanner;
+    }
+
+    /**
+     * @param int $obfuscatedVehicleId
+     *
+     * @return $this
+     */
+    public function setObfuscatedVehicleId($obfuscatedVehicleId)
+    {
+        $this->obfuscatedVehicleId = $obfuscatedVehicleId;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getObfuscatedVehicleId()
+    {
+        return $this->obfuscatedVehicleId;
     }
 }

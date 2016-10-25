@@ -6,6 +6,8 @@ import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
+import uk.gov.dvsa.ui.pages.enforcement.MaskThisVehiclePage;
+import uk.gov.dvsa.ui.pages.enforcement.UnmaskThisVehiclePage;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -34,6 +36,9 @@ public class VehicleInformationPage extends Page {
     @FindBy(id = "country-of-registration-change") private WebElement changeCountryOfRegistrationLink;
     @FindBy(id = "colour-change") private WebElement changeColourLink;
     @FindBy(id = "first-used-change") private WebElement changeFirstDateUsedLink;
+    @FindBy(id = "mask-vehicle") private WebElement maskThisVehicleButton;
+    @FindBy(id = "unmask-vehicle") private WebElement unmaskThisVehicleButton;
+    @FindBy(className = "entity-status") private WebElement vehicleStatusBanner;
 
     public VehicleInformationPage(MotAppDriver driver) {
         super(driver);
@@ -85,11 +90,12 @@ public class VehicleInformationPage extends Page {
         return vinNumber.getText();
     }
 
-    public void verifyVehicleRegistrationAndVin(Vehicle vehicle) {
-        assertThat("The registration is as expected", getRegistrationNumber(),
-                is(vehicle.getDvsaRegistration()));
-        assertThat("The Vin is as expected", getVinNumber(),
-                is(vehicle.getVin()));
+    public String getMotTestClass() {
+        return motTestClass.getText();
+    }
+
+    public String getCountryOfRegistration() {
+        return countryOfRegistration.getText();
     }
 
     public ChangeEnginePage clickChangeEngineLink() {
@@ -102,14 +108,6 @@ public class VehicleInformationPage extends Page {
         return new ChangeMotTestClassPage(driver);
     }
 
-    public String getMotTestClass() {
-        return motTestClass.getText();
-    }
-
-    public String getCountryOfRegistration() {
-        return countryOfRegistration.getText();
-    }
-
     public ChangeCountryOfRegistrationPage clickChangeCountryOfRegistrationLink() {
         changeCountryOfRegistrationLink.click();
         return new ChangeCountryOfRegistrationPage(driver);
@@ -118,6 +116,20 @@ public class VehicleInformationPage extends Page {
     public ChangeMakePage clickChangeMakeAndModelLink() {
         changeMakeAndModelLink.click();
         return new ChangeMakePage(driver);
+    }
+
+    public MaskThisVehiclePage clickMaskThisVehicleButton() {
+        maskThisVehicleButton.click();
+        return new MaskThisVehiclePage(driver);
+    }
+
+    public UnmaskThisVehiclePage clickUnmaskThisVehicleButton() {
+        unmaskThisVehicleButton.click();
+        return new UnmaskThisVehiclePage(driver);
+    }
+
+    public boolean isVehicleStatusBannerDisplayed() {
+        return PageInteractionHelper.isElementDisplayed(vehicleStatusBanner);
     }
 
     public ChangeColourPage clickChangeColourLink() {

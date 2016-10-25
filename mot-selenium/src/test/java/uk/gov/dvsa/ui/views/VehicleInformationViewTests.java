@@ -9,7 +9,9 @@ import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.vehicle.*;
 import uk.gov.dvsa.ui.DslTest;
+import uk.gov.dvsa.ui.pages.VehicleSearchResultsPage;
 import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationPage;
+import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationResultsPage;
 import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationSearchPage;
 
 import java.io.IOException;
@@ -44,7 +46,7 @@ public class VehicleInformationViewTests extends DslTest {
 
         //When I search for a vehicle and open vehicle information page
         VehicleInformationPage vehicleInformationPage = vehicleInformationSearchPage
-                .searchVehicleByRegistration(vehicle.getDvsaRegistration())
+                .searchVehicleByRegistration(vehicle.getDvsaRegistration(), VehicleInformationResultsPage.class)
                 .clickVehicleDetailsLink();
 
         //Then vehicle information will be correct

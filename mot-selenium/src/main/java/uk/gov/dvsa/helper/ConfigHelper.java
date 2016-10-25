@@ -16,4 +16,8 @@ public class ConfigHelper {
     public static boolean isTestResultEntryImprovementsEnabled() {
         return service.getToggleValue("test_result_entry_improvements");
     }
+
+    public static boolean isMysteryShopperEnabled() {
+        return service.getToggleValue("mystery_shopper");
+    }
 }

@@ -6,9 +6,14 @@ use Application\Service\CatalogService;
 use Core\ViewModel\Gds\Table\GdsTable;
 use Core\ViewModel\Header\HeaderTertiaryList;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use DvsaCommon\Auth\MotAuthorisationServiceInterface;
+use DvsaCommon\Auth\PermissionInSystem;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\Vehicle\VehicleExpiryDto;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaFeature\FeatureToggles;
+use UnexpectedValueException;
 use Vehicle\Controller\VehicleController;
 use Vehicle\Helper\VehicleInformationTableBuilder;
 use Vehicle\Helper\VehiclePageTitleBuilder;
@@ -31,16 +36,31 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($urlToReturn, $route);
         });
 
+        $authorisationService = $this->getMock(MotAuthorisationServiceInterface::class);
+
+        $featureToggles = $this
+            ->getMockBuilder(FeatureToggles::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $featureToggles
+            ->method('isEnabled')
+            ->with(FeatureToggle::MYSTERY_SHOPPER)
+            ->willReturn(true);
+
         $helper = new VehicleViewModelBuilder(
             $url,
             XMock::of(VehicleInformationTableBuilder::class),
             XMock::of(VehiclePageTitleBuilder::class),
-            XMock::of(VehicleSidebarBuilder::class)
+            XMock::of(VehicleSidebarBuilder::class),
+            $authorisationService,
+            $featureToggles
         );
 
         $searchData = new Parameters($searchData);
         $helper->setSearchData($searchData);
-        $vm = $helper->getViewModel();
+        $helper->setVehicle(new DvsaVehicle($this->getVehicle()));
+
+        $helper->getViewModel();
     }
 
     public function testBreadcrumbs()
@@ -53,19 +73,34 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
 
         $params = new Parameters([]);
 
+        $authorisationService = $this->getMock(MotAuthorisationServiceInterface::class);
+
+        $featureToggles = $this
+            ->getMockBuilder(FeatureToggles::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $featureToggles
+            ->method('isEnabled')
+            ->with(FeatureToggle::MYSTERY_SHOPPER)
+            ->willReturn(true);
+
         $helper = new VehicleViewModelBuilder(
             $url,
             XMock::of(VehicleInformationTableBuilder::class),
             XMock::of(VehiclePageTitleBuilder::class),
-            XMock::of(VehicleSidebarBuilder::class)
+            XMock::of(VehicleSidebarBuilder::class),
+            $authorisationService,
+            $featureToggles
         );
 
         $helper->setSearchData($params);
+        $helper->setVehicle(new DvsaVehicle($this->getVehicle()));
 
-        $vm = $helper->getViewModel();
+        $helper->getViewModel();
     }
 
-    public function testViewModelGeneration(){
+    public function testViewModelGeneration()
+    {
         $catalogService = XMock::of(CatalogService::class);
         $catalogService->expects($this->any())->method('getCountriesOfRegistrationByCode')->willReturn([]);
 
@@ -82,11 +117,31 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
             ->method('getVehicleRegistrationGdsTable')
             ->willReturn(new GdsTable());
 
+        $authorisationService = $this
+            ->getMockBuilder(MotAuthorisationServiceInterface::class)
+            ->getMock();
+        $authorisationService
+            ->expects($this->atLeastOnce())
+            ->method('isGranted')
+            ->with(PermissionInSystem::ENFORCEMENT_CAN_MASK_AND_UNMASK_VEHICLES)
+            ->willReturn(true);
+
+        $featureToggles = $this
+            ->getMockBuilder(FeatureToggles::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $featureToggles
+            ->method('isEnabled')
+            ->with(FeatureToggle::MYSTERY_SHOPPER)
+            ->willReturn(true);
+
         $helper = new VehicleViewModelBuilder(
             $url,
             $vehicleInformationTableBuilder,
-            new VehiclePageTitleBuilder,
-            new VehicleSidebarBuilder(XMock::of(Url::class))
+            new VehiclePageTitleBuilder(),
+            new VehicleSidebarBuilder(XMock::of(Url::class), $authorisationService, $featureToggles),
+            $authorisationService,
+            $featureToggles
         );
 
         $helper->setSearchData(new Parameters([]));
@@ -107,6 +162,40 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(GdsTable::class, $vm->getVehicleSpecificationGdsTable());
     }
 
+    /**
+     * @expectedException UnexpectedValueException
+     */
+    public function testGetViewModelBeforeSettingTheVehicleThrowsException()
+    {
+        $catalogService = XMock::of(CatalogService::class);
+        $catalogService->expects($this->any())->method('getCountriesOfRegistrationByCode')->willReturn([]);
+
+        $url = XMock::of(Url::class);
+        $backUrl = 'backUrl';
+        $url->expects($this->any())->method('__invoke')->willReturn($backUrl);
+
+        /** @var VehicleInformationTableBuilder | \PHPUnit_Framework_MockObject_MockObject $vehicleInformationTableBuilder */
+        $vehicleInformationTableBuilder = XMock::of(VehicleInformationTableBuilder::class);
+
+        $authorisationService = $this->getMock(MotAuthorisationServiceInterface::class);
+
+        $featureToggles = $this
+            ->getMockBuilder(FeatureToggles::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $featureToggles
+            ->method('isEnabled')
+            ->with(FeatureToggle::MYSTERY_SHOPPER)
+            ->willReturn(true);
+
+        $vehicleViewModelBuilder = new VehicleViewModelBuilder($url, $vehicleInformationTableBuilder,
+            new VehiclePageTitleBuilder(), new VehicleSidebarBuilder(XMock::of(Url::class), $authorisationService,
+                $featureToggles),
+            $authorisationService, $featureToggles);
+
+        $vehicleViewModelBuilder->getViewModel();
+    }
+
     public function dataProviderTestBackUrlGeneration()
     {
         return [
@@ -124,8 +213,8 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
             'amendedOn' => '2016-09-07',
             'registration' => 'FNZ610',
             'vin' => '18M234WET2523',
-            'emptyVrmReason' => NULL,
-            'emptyVinReason' => NULL,
+            'emptyVrmReason' => null,
+            'emptyVinReason' => null,
             'make' => [
                 'id' => 5,
                 'name' => 'Renault',
@@ -155,6 +244,7 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
             'firstUsedDate' => '2004-01-02',
             'manufactureDate' => '2004-01-02',
             'isNewAtFirstReg' => false,
+            'isIncognito' => true,
             'weight' => 12467,
             'version' => 2,
         ]));

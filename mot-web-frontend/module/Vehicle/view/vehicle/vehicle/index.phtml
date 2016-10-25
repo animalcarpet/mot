@@ -22,6 +22,17 @@
     ]);
 ?>
 
+<?php if ($viewModel->shouldDisplayVehicleMaskedBanner()): ?>
+<div class="entity-status">
+    <h3 class="entity-status__title bold-xlarge">Vehicle masked</h3>
+    <p>An MOT tester will see a false expiry date of tomorrow's date. This will update every day.</p>
+    <p>Any tests done will not show on the vehicle's MOT history.</p>
+    <a id="unmask-vehicle" class="button button--on-dark"
+       href="<?php echo $this->url('vehicle/detail/unmask', ['id' => $viewModel->getObfuscatedVehicleId()]); ?>"
+    >Unmask this vehicle</a>
+</div>
+<?php endif; ?>
+
 <h3 class="summary-heading">Vehicle specification</h3>
 <?php
     echo $this->partial('partial/gds/gds-table/gds-summary-table', [

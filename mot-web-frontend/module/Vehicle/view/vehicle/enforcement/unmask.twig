@@ -1,0 +1,23 @@
+<div class="grid-row">
+
+    <div class="column-two-thirds">
+
+        <p class="lede">Unmask the vehicle if you have completed your mystery shopper activity.</p>
+
+        <p>MOT testers will be able to see the vehicle's true expiry date.</p>
+
+        <p>Any MOT tests done after unmasking will appear in the vehicle's MOT history, as normal.</p>
+
+        <form name="postUnMask" action="{{ url('vehicle/detail/unmask', {id: obfuscatedVehicleId}) }}" method="post">
+            {{ csrfToken() }}
+            <nav class="content-navigation">
+                <input id="unmask-vehicle" type="submit" value="Unmask vehicle" class="button">
+                <ul class="content-navigation__secondary">
+                    <li>
+                        <a href="{{ url('vehicle/detail', {id: obfuscatedVehicleId}) }}">Cancel and return to vehicle record</a>
+                    </li>
+                </ul>
+            </nav>
+        </form>
+    </div>
+</div>

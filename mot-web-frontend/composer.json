@@ -13,12 +13,12 @@
         "maglnet/magl-markdown": "1.3.0",
         "soflomo/purifier": "0.1.1",
         "slot-purchase/web-frontend": "^3.8.3",
-        "dvsa/web-frontend-assets": "0.9.6",
+        "dvsa/web-frontend-assets": "0.9.7",
         "dvsa/dvsa-application-logger": "~1.3.0",
         "dvsa/dvsa-doctrine-module": "~1.1",
         "zendframework/zendpdf": "2.0.2",
         "zf-commons/zfc-twig": "^1.2",
-        "mot/api-client-php": "9.0.0",
+        "mot/api-client-php": "9.1.0",
         "noiselabs/zf-debug-utils": "^0.3"
     },
     "autoload" : {
