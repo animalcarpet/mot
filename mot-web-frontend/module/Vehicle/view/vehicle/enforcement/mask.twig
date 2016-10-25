@@ -1,0 +1,31 @@
+<div class="grid-row">
+
+    <div class="column-two-thirds">
+
+        <p class="lede">Mask the vehicle's MOT expiry date and new MOT tests if you are carrying out a mystery shopper activity.</p>
+
+        <h3 class="heading-small">What happens when I mask a vehicle?</h3>
+
+        <p>An MOT tester will see a false MOT expiry date of tomorrow's date. This will update every day.</p>
+
+        <p>Any MOT tests done while the vehicle is masked:</p>
+
+        <ul class="list-bullet">
+            <li>will use a test slot</li>
+            <li>will appear in the station's test logs and test statistics</li>
+            <li>will not appear on the vehicle's MOT history</li>
+        </ul>
+
+        <form name="postMask" action="{{ url('vehicle/detail/mask', {id: obfuscatedVehicleId}) }}" method="post">
+            {{ csrfToken() }}
+            <nav class="content-navigation">
+                <input id="mask-vehicle" type="submit" value="Mask this vehicle" class="button">
+                 <ul class="content-navigation__secondary">
+                    <li>
+                        <a href="{{ url('vehicle/detail', {id: obfuscatedVehicleId}) }}">Cancel and return to vehicle record</a>
+                    </li>
+                </ul>
+            </nav>
+        </form>
+    </div>
+</div>

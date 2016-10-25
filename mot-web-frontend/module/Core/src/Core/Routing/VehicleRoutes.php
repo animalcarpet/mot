@@ -12,6 +12,7 @@ class VehicleRoutes extends AbstractRoutes
 {
     /**
      * @param Url|PhpRenderer|AbstractController|\Zend\Mvc\Controller\Plugin\Url $object
+     *
      * @return VehicleRoutes
      */
     public static function of($object)
@@ -60,22 +61,62 @@ class VehicleRoutes extends AbstractRoutes
 
     public function changeClass($vehicleId)
     {
-        return $this->url(VehicleRouteList::VEHICLE_CHANGE_CLASS,['id' => $vehicleId]);
+        return $this->url(VehicleRouteList::VEHICLE_CHANGE_CLASS, ['id' => $vehicleId]);
     }
 
     public function changeFirstUsedDate($vehicleId)
     {
-        return $this->url(VehicleRouteList::VEHICLE_CHANGE_FIRST_USED_DATE,['id' => $vehicleId]);
+        return $this->url(VehicleRouteList::VEHICLE_CHANGE_FIRST_USED_DATE, ['id' => $vehicleId]);
     }
 
     public function changeMake($obfuscatedVehicleId)
     {
-        return $this->url(VehicleRouteList::VEHICLE_CHANGE_MAKE_AND_MODEL,['id' => $obfuscatedVehicleId, "property" => UpdateMakeStep::NAME]);
+        return $this->url(VehicleRouteList::VEHICLE_CHANGE_MAKE_AND_MODEL, ['id' => $obfuscatedVehicleId, "property" => UpdateMakeStep::NAME]);
     }
 
     public function changeModel($obfuscatedVehicleId)
     {
-        return $this->url(VehicleRouteList::VEHICLE_CHANGE_MAKE_AND_MODEL,['id' => $obfuscatedVehicleId, "property" => UpdateModelStep::NAME]);
+        return $this->url(VehicleRouteList::VEHICLE_CHANGE_MAKE_AND_MODEL, ['id' => $obfuscatedVehicleId, "property" => UpdateModelStep::NAME]);
+    }
+
+    /**
+     * @param string $obfuscatedVehicleId
+     *
+     * @return string
+     */
+    public function maskVehicle($obfuscatedVehicleId)
+    {
+        return $this->url(VehicleRouteList::VEHICLE_ENFORCEMENT_MASK, ['id' => $obfuscatedVehicleId]);
+    }
+
+    /**
+     * @param string $obfuscatedVehicleId
+     *
+     * @return string
+     */
+    public function vehicleMaskedSuccessfully($obfuscatedVehicleId)
+    {
+        return $this->url(VehicleRouteList::VEHICLE_ENFORCEMENT_MASKED_SUCCESSFULLY, ['id' => $obfuscatedVehicleId]);
+    }
+
+    /**
+     * @param string $obfuscatedVehicleId
+     *
+     * @return string
+     */
+    public function unmaskVehicle($obfuscatedVehicleId)
+    {
+        return $this->url(VehicleRouteList::VEHICLE_ENFORCEMENT_UNMASK, ['id' => $obfuscatedVehicleId]);
+    }
+
+    /**
+     * @param string $obfuscatedVehicleId
+     *
+     * @return string
+     */
+    public function vehicleUnmaskedSuccessfully($obfuscatedVehicleId)
+    {
+        return $this->url(VehicleRouteList::VEHICLE_ENFORCEMENT_UNMASKED_SUCCESSFULLY, ['id' => $obfuscatedVehicleId]);
     }
 
     public function changeColour($obfuscatedVehicleId)

@@ -2,6 +2,7 @@ package uk.gov.dvsa.ui.pages.vehicleinformation;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
@@ -26,10 +27,10 @@ public class VehicleInformationSearchPage extends Page {
         return PageInteractionHelper.verifyTitle(getTitle(), PAGE_TITLE);
     }
 
-    public VehicleInformationResultsPage searchVehicleByRegistration(String registration) {
+    public <T extends Page>T searchVehicleByRegistration(String registration, Class<T> clazz) {
         FormDataHelper.enterText(vehicleSearchInput, registration);
         searchButton.click();
-        return new VehicleInformationResultsPage(driver);
+        return MotPageFactory.newPage(driver, clazz);
     }
 
     public VehicleInformationPage findVehicleAndRedirectToVehicleInformationPage(String registration) {

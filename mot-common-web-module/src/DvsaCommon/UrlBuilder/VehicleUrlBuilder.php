@@ -3,9 +3,7 @@
 namespace DvsaCommon\UrlBuilder;
 
 /**
- * Class VehicleUrlBuilder
- *
- * @package DvsaCommon\UrlBuilder
+ * Class VehicleUrlBuilder.
  */
 class VehicleUrlBuilder extends AbstractUrlBuilder
 {
@@ -44,7 +42,7 @@ class VehicleUrlBuilder extends AbstractUrlBuilder
             self::VEHICLE_DVLA => '',
             self::SEARCH       => '',
             self::TRAINING_SEARCH  => '',
-            self::VEHICLE_LIST => ''
+            self::VEHICLE_LIST => '',
         ];
 
     /**
@@ -68,6 +66,7 @@ class VehicleUrlBuilder extends AbstractUrlBuilder
 
     /**
      * @param $vehicleId
+     *
      * @return $this
      */
     public static function mysteryShopperCampaign($vehicleId)
@@ -78,6 +77,7 @@ class VehicleUrlBuilder extends AbstractUrlBuilder
 
     /**
      * @param $vehicleId
+     *
      * @return $this
      */
     public static function mysteryShopperCurrent($vehicleId)
@@ -88,6 +88,7 @@ class VehicleUrlBuilder extends AbstractUrlBuilder
 
     /**
      * @param $vehicleId
+     *
      * @return $this
      */
     public static function mysteryShopperExtend($vehicleId)
@@ -98,6 +99,7 @@ class VehicleUrlBuilder extends AbstractUrlBuilder
 
     /**
      * @param $vehicleId
+     *
      * @return $this
      */
     public static function mysteryShopperList($vehicleId)
@@ -133,7 +135,8 @@ class VehicleUrlBuilder extends AbstractUrlBuilder
     }
 
     /**
-     * @param  bool $isDvlaVehicle
+     * @param bool $isDvlaVehicle
+     *
      * @return $this
      */
     public static function testExpiryCheck($vehicleId, $isDvlaVehicle)
