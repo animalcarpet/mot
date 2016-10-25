@@ -23,15 +23,17 @@ public class VehicleInformationPage extends Page {
     @FindBy(id = "colour") private WebElement colour;
     @FindBy(id = "make-and-model") private WebElement makeModel;
     @FindBy(id = "make-and-model-change") private WebElement changeMakeAndModelLink;
+    @FindBy(id = "first-used") private WebElement firstDateUsed;
     @FindBy(id = "registration-mark") private WebElement registrationNumber;
-    @FindBy (id = "vin") private WebElement vinNumber;
-    @FindBy (id = "engine") private WebElement engine;
+    @FindBy(id = "vin") private WebElement vinNumber;
+    @FindBy(id = "engine") private WebElement engine;
     @FindBy(id = "engine-change") private WebElement changeEngineLink;
     @FindBy(id = "mot-test-class-change") private WebElement changeMotTestClassLink;
     @FindBy(id = "mot-test-class") private WebElement motTestClass;
     @FindBy(id = "country-of-registration") private WebElement countryOfRegistration;
     @FindBy(id = "country-of-registration-change") private WebElement changeCountryOfRegistrationLink;
     @FindBy(id = "colour-change") private WebElement changeColourLink;
+    @FindBy(id = "first-used-change") private WebElement changeFirstDateUsedLink;
 
     public VehicleInformationPage(MotAppDriver driver) {
         super(driver);
@@ -57,6 +59,10 @@ public class VehicleInformationPage extends Page {
 
     public String getRegistrationNumber() {
         return registrationNumber.getText();
+    }
+
+    public String getFirstDateUsed() {
+        return firstDateUsed.getText();
     }
 
     public String getPageHeaderTitle() {
@@ -117,5 +123,10 @@ public class VehicleInformationPage extends Page {
     public ChangeColourPage clickChangeColourLink() {
         changeColourLink.click();
         return new ChangeColourPage(driver);
+    }
+
+    public ChangeFirstDateUsedPage clickChangeFirstDateUsedLink() {
+        changeFirstDateUsedLink.click();
+        return new ChangeFirstDateUsedPage(driver);
     }
 }

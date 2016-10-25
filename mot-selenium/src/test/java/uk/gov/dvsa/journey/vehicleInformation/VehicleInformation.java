@@ -2,6 +2,11 @@ package uk.gov.dvsa.journey.vehicleInformation;
 
 import uk.gov.dvsa.domain.api.response.Colour;
 import uk.gov.dvsa.domain.model.vehicle.*;
+import org.joda.time.DateTime;
+
+import uk.gov.dvsa.domain.model.vehicle.CountryOfRegistration;
+import uk.gov.dvsa.domain.model.vehicle.FuelTypes;
+import uk.gov.dvsa.domain.model.vehicle.VehicleClass;
 import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationPage;
 
 public class VehicleInformation {
@@ -71,4 +76,15 @@ public class VehicleInformation {
     }
 
     public String getColour() { return vehicleInformationPage.getColour(); }
+
+    public String getFirstDateUsed() {
+        return vehicleInformationPage.getFirstDateUsed();
+    }
+
+    public VehicleInformationPage changeFirstDateUsed(DateTime date) {
+        return vehicleInformationPage
+                .clickChangeFirstDateUsedLink()
+                .selectFirstDateUsed(date)
+                .submit();
+    }
 }
