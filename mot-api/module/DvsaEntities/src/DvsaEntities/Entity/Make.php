@@ -46,6 +46,13 @@ class Make extends Entity
     private $isVerified;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_selectable", type="boolean")
+     */
+    private $isSelectable;
+
+    /**
      * @param string $code
      *
      * @return Make
@@ -90,5 +97,13 @@ class Make extends Entity
     public function isVerified()
     {
         return $this->isVerified;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isSelectable()
+    {
+        return $this->isSelectable;
     }
 }
