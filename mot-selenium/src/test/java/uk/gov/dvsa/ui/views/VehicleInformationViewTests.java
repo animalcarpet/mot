@@ -1,5 +1,6 @@
 package uk.gov.dvsa.ui.views;
 
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -156,7 +157,20 @@ public class VehicleInformationViewTests extends DslTest {
         motUI.vehicleInformation.changeMakeAndModel(Make.SUBARU, Model.SUBARU_IMPREZA);
 
         //Then Make and Model will be changed
-        assertThat(motUI.vehicleInformation.getMakeAndModel(), is(Make.SUBARU.getName()+", "+ Model.SUBARU_IMPREZA.getName()));
+        assertThat(motUI.vehicleInformation.getMakeAndModel(), is(Make.SUBARU.getName() + ", " + Model.SUBARU_IMPREZA.getName()));
+    }
+
+    @Test(groups = {"Regression"})
+    public void vehicleEditFirstDateUsedByAreaOffice() throws  IOException, URISyntaxException {
+        //Given I am on the Vehicle Information Page as an AreaOffice1User
+        motUI.showVehicleInformationFor(areaOffice1User, vehicle);
+
+        //When I change date of first use
+        DateTime newDate = new DateTime(2010, 4, 6, 0, 0);
+        motUI.vehicleInformation.changeFirstDateUsed(newDate);
+
+        //Then the new value is shown
+        assertThat(motUI.vehicleInformation.getFirstDateUsed(), is(newDate.toString("d MMMM yyyy")));
     }
 
     @Test(groups = {"Regression"})
