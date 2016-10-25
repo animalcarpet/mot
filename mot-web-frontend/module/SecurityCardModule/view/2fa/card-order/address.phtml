@@ -5,7 +5,16 @@ $this->layout('layout/layout-govuk.phtml');
 /** @var CardOrderAddressViewModel $viewModel */
 /** @var SecurityCardAddressForm $form */
 $form = $viewModel->getForm();
+$addressIsCustom = ($form->getAddressRadios()->getValue() === SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE);
 ?>
+<style>
+    .customAddressJavascriptDisplay {display: <?php echo $addressIsCustom ? 'block' : 'none'; ?>}
+</style>
+<noscript>
+    <style>
+        .customAddressJavascriptDisplay {display:block;}
+    </style>
+</noscript>
 <div class="grid-row">
     <div class="column-two-thirds">
         <?php if($form->getAddressRadios()->getMessages()) : ?>
@@ -30,7 +39,9 @@ $form = $viewModel->getForm();
                 );
                 ?>
 
-                <div id="customAddressContainer"  class="panel-indent  inline" aria-hidden="<?php echo  ($form->getAddressRadios()->getValue() !== SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE) ? "true" : "false" ?>" style="display:  <?php echo ($form->getAddressRadios()->getValue() === SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE) ? 'block' : 'none'; ?>">
+                <div id="customAddressContainer"
+                     class="panel-indent inline customAddressJavascriptDisplay"
+                     aria-hidden="<?php echo $addressIsCustom ? "false" : "true" ?>">
                     <?php if($form->isCustomAddressChosen()) : ?>
                         <?php echo $this->partial('zendFormErrorMessages', ['form' => $form]); ?>
                     <?php endif; ?>
