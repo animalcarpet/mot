@@ -7,10 +7,15 @@ use Dvsa\Mot\Behat\Support\Response;
 use PHPUnit_Framework_Assert as PHPUnit;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use TestSupport\Service\AEService;
-use DvsaCommon\Dto\Organisation\OrganisationDto;
+use Dvsa\Mot\Behat\Support\Data\Params\AuthorisedExaminerParams;
+use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
+use Dvsa\Mot\Behat\Support\Data\UserData;
+use Zend\Http\Response as HttpResponse;
 
 class SlotsManualAdjustmentContext implements Context
 {
+    const AE_NAME = "Slots AE";
+
     /**
      * @var SessionContext
      */
@@ -31,8 +36,6 @@ class SlotsManualAdjustmentContext implements Context
      */
     private $response;
 
-    private $authorisedExaminerService;
-
     /**
      * @var TestSupportHelper
      */
@@ -45,15 +48,26 @@ class SlotsManualAdjustmentContext implements Context
 
     private $authorisedExaminer;
 
+    private $authorisedExaminerData;
+
+    private $userData;
+
     /**
      * SlotsManualAdjustmentContext constructor.
      * @param SlotPurchase $slotPurchaseApi
      * @param TestSupportHelper $testSupportHelper
      */
-    public function __construct(SlotPurchase $slotPurchaseApi, TestSupportHelper $testSupportHelper)
+    public function __construct(
+        SlotPurchase $slotPurchaseApi,
+        TestSupportHelper $testSupportHelper,
+        AuthorisedExaminerData $authorisedExaminerData,
+        UserData $userData
+    )
     {
         $this->slotPurchaseApi = $slotPurchaseApi;
         $this->testSupportHelper = $testSupportHelper;
+        $this->authorisedExaminerData = $authorisedExaminerData;
+        $this->userData = $userData;
     }
 
     /**
@@ -68,31 +82,11 @@ class SlotsManualAdjustmentContext implements Context
     }
 
     /**
-     * @When I submit a valid manual adjustment
-     */
-    public function iSubmitAValidManualAdjustment()
-    {
-        PHPUnit::assertEquals(['id', 'aeRef', 'aeName'], array_keys($this->authorisedExaminer));
-
-        $token = $this->sessionContext->getCurrentAccessToken();
-        $this->response = $this->slotPurchaseApi->makeManualAdjustment(
-            $token,
-            $this->authorisedExaminer['id'],
-            SlotPurchase::MANUAL_ADJUSTMENT_TYPE_POSITIVE,
-            'R101',
-            null,
-            15
-        );
-    }
-
-
-    /**
      *  @Given /^An AE has a slot balance of (.*)$/
      */
     public function anAeHasASlotBalanceOf($initialBalance)
     {
-        $this->authorisedExaminer = $this->authorisedExaminerContext->createAE($initialBalance);
-        PHPUnit::assertEquals(['id', 'aeRef', 'aeName'], array_keys($this->authorisedExaminer));
+        $this->authorisedExaminerData->createWithCustomSlots($initialBalance, self::AE_NAME);
     }
 
     /**
@@ -100,8 +94,7 @@ class SlotsManualAdjustmentContext implements Context
      */
     public function anAeRequiresAManualAdjustment()
     {
-        $this->authorisedExaminer = $this->authorisedExaminerContext->createAE();
-        PHPUnit::assertEquals(['id', 'aeRef', 'aeName'], array_keys($this->authorisedExaminer));
+        $this->authorisedExaminerData->create(self::AE_NAME);
     }
 
     /**
@@ -109,12 +102,10 @@ class SlotsManualAdjustmentContext implements Context
      */
     public function iSubmitATopUpManualAdjustmentWithNegativeType()
     {
-        PHPUnit::assertEquals(['id', 'aeRef', 'aeName'], array_keys($this->authorisedExaminer));
-
-        $token = $this->sessionContext->getCurrentAccessToken();
+        $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $this->response = $this->slotPurchaseApi->makeManualAdjustment(
             $token,
-            $this->authorisedExaminer['id'],
+            $this->authorisedExaminerData->get(self::AE_NAME)->getId(),
             SlotPurchase::MANUAL_ADJUSTMENT_TYPE_NEGATIVE,
             'R105',
             null,
@@ -127,12 +118,10 @@ class SlotsManualAdjustmentContext implements Context
      */
     public function iSubmitAManualAdjustmentWithNoReason()
     {
-        PHPUnit::assertEquals(['id', 'aeRef', 'aeName'], array_keys($this->authorisedExaminer));
-
-        $token = $this->sessionContext->getCurrentAccessToken();
+        $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $this->response = $this->slotPurchaseApi->makeManualAdjustment(
             $token,
-            $this->authorisedExaminer['id'],
+            $this->authorisedExaminerData->get(self::AE_NAME),
             SlotPurchase::MANUAL_ADJUSTMENT_TYPE_POSITIVE,
             null,
             'comment',
@@ -146,13 +135,11 @@ class SlotsManualAdjustmentContext implements Context
      */
     public function iSubmitAValidTypeManualAdjustmentWithNumberOfSlots($type, $numberOfSlots)
     {
-        PHPUnit::assertEquals(['id', 'aeRef', 'aeName'], array_keys($this->authorisedExaminer));
-
         $slots = intval($numberOfSlots);
-        $token = $this->sessionContext->getCurrentAccessToken();
+        $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $this->response = $this->slotPurchaseApi->makeManualAdjustment(
             $token,
-            $this->authorisedExaminer['id'],
+            $this->authorisedExaminerData->get(self::AE_NAME)->getId(),
             $type,
             'MOT01',
             "Test comment",
@@ -166,13 +153,11 @@ class SlotsManualAdjustmentContext implements Context
      */
     public function iSubmitAnInvalidManualAdjustmentWithNumberOfSlots($type, $numberOfSlots)
     {
-        PHPUnit::assertEquals(['id', 'aeRef', 'aeName'], array_keys($this->authorisedExaminer));
-
         $slots = intval($numberOfSlots);
-        $token = $this->sessionContext->getCurrentAccessToken();
+        $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $this->response = $this->slotPurchaseApi->makeManualAdjustment(
             $token,
-            $this->authorisedExaminer['id'],
+            $this->authorisedExaminerData->get(self::AE_NAME),
             $type,
             'MOT01',
             "Test comment",
@@ -185,8 +170,7 @@ class SlotsManualAdjustmentContext implements Context
      */
     public function aeSlotBalanceShouldBeUpdatedTo($updatedBalance)
     {
-        PHPUnit::assertEquals(['id', 'aeRef', 'aeName'], array_keys($this->authorisedExaminer));
-        $actual = $this->aeService->getSlotBalanceForAE($this->authorisedExaminer['id']);
+        $actual = $this->aeService->getSlotBalanceForAE($this->authorisedExaminerData->get(self::AE_NAME)->getId());
         PHPUnit::assertSame($updatedBalance, $actual);
     }
 
@@ -200,7 +184,7 @@ class SlotsManualAdjustmentContext implements Context
         }
 
         $body = $this->response->getBody()->toArray();
-        PHPUnit::assertEquals(200, $this->response->getStatusCode());
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $this->response->getStatusCode());
         PHPUnit::assertArrayHasKey('data', $body);
         PHPUnit::assertArrayHasKey('errors', $body['data']);
 

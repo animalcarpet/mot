@@ -9,6 +9,7 @@ use Dvsa\Mot\Behat\Support\Api\OdometerReading;
 use Dvsa\Mot\Behat\Support\Api\ReasonForRejection;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Support\Data\Collection\SharedDataCollection;
+use Dvsa\Mot\Behat\Support\Data\Params\MotTestParams;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Dto\Common\MotTestDto;
@@ -17,6 +18,7 @@ use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\Enum\MotTestStatusCode;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Utility\ArrayUtils;
+use Zend\Http\Response as HttpResponse;
 
 class MotTestData extends AbstractMotTestData
 {
@@ -26,11 +28,10 @@ class MotTestData extends AbstractMotTestData
     private $normalMotTestData;
     private $contingencyTest;
     private $demoTest;
-    private $testSupportHelper;
-    protected $motCollection;
 
     const TEST_WITH_PRS = "prs";
     const TEST_WITH_ADVISORY = 'advisory';
+    const TEST_TYPE_CONTINGENCY = "contingency";
 
     public function __construct(
         UserData $userData,
@@ -47,7 +48,7 @@ class MotTestData extends AbstractMotTestData
         TestSupportHelper $testSupportHelper
     )
     {
-        parent::__construct($userData, $motTest, $brakeTestResult, $odometerReading, $reasonForRejection);
+        parent::__construct($userData, $motTest, $brakeTestResult, $odometerReading, $reasonForRejection, $testSupportHelper);
 
         $this->contingencyData = $contingencyData;
         $this->contingencyMotTestData = $contingencyMotTestData;
@@ -55,7 +56,6 @@ class MotTestData extends AbstractMotTestData
         $this->normalMotTestData = $normalMotTestData;
         $this->contingencyTest = $contingencyTest;
         $this->demoTest = $demoTest;
-        $this->testSupportHelper = $testSupportHelper;
         $this->motCollection = SharedDataCollection::get(MotTestDto::class);
     }
 
@@ -65,22 +65,54 @@ class MotTestData extends AbstractMotTestData
             case MotTestTypeCode::NORMAL_TEST:
                 return $this->normalMotTestData->create($tester, $vehicle, $site);
                 break;
-            case 'contingency':
+            case self::TEST_TYPE_CONTINGENCY:
                 return $this->contingencyMotTestData->create($tester, $vehicle, $site);
                 break;
             case MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING:
                 return $this->demoMotTestData->create($tester, $vehicle);
                 break;
             default:
-                throw new \InvalidArgumentException(sprintf("Unrecognised type '%s'", $type));
+                return $this->createWithType($tester, $vehicle, $site, $type);
         }
+    }
+
+    private function createWithType(AuthenticatedUser $tester, VehicleDto $vehicle, SiteDto $site, $type)
+    {
+       if (MotTestTypeCode::exists($type) === false) {
+           throw new \InvalidArgumentException(sprintf("Unrecognised type '%s'", $type));
+       }
+
+        $mot = $this
+            ->motTest
+            ->startMOTTest(
+                $tester->getAccessToken(),
+                $vehicle->getId(),
+                $site->getId(),
+                $vehicle->getVehicleClass()->getCode()
+            );
+
+        if ($mot->getStatusCode() !== HttpResponse::STATUS_CODE_200) {
+            throw new \Exception("Something went wrong during creating mot test");
+        }
+
+        $dto = $this->mapToMotTestDto(
+            $tester,
+            $vehicle,
+            $mot->getBody()->getData()[MotTestParams::MOT_TEST_NUMBER],
+            $type,
+            $site
+        );
+
+        $this->motCollection->add($dto, $dto->getMotTestNumber());
+
+        return $dto;
     }
 
     public function createCompletedMotTest(AuthenticatedUser $tester, SiteDto $site, VehicleDto $vehicle, array $params)
     {
-        $type = ArrayUtils::tryGet($params, "type");
-        $status = ArrayUtils::tryGet($params, "status");
-        $rfrId = ArrayUtils::tryGet($params, "rfrId");
+        $type = ArrayUtils::tryGet($params, MotTestParams::TYPE);
+        $status = ArrayUtils::tryGet($params, MotTestParams::STATUS);
+        $rfrId = ArrayUtils::tryGet($params, MotTestParams::RFR_ID);
 
         $mot = $this->create($tester, $vehicle, $site, $type);
         return $this->finishMotTest($mot, $status, $rfrId);
@@ -90,9 +122,9 @@ class MotTestData extends AbstractMotTestData
     {
         switch ($status) {
             case MotTestStatusCode::PASSED:
-                return $this->passMotTest($mot);
+                return $this->passMotTestWithDefaultBrakeTestAndMeterReading($mot);
             case MotTestStatusCode::FAILED:
-                return $this->failMotTest($mot, $rfrId);
+                return $this->failMotTestWithDefaultBrakeTestAndMeterReading($mot, $rfrId);
             case self::TEST_WITH_PRS:
                 return $this->failMotTestWithPrs($mot, $rfrId);
             case self::TEST_WITH_ADVISORY:
@@ -144,16 +176,24 @@ class MotTestData extends AbstractMotTestData
         return $this->motCollection;
     }
 
-    public function createPassedMotTest(AuthenticatedUser $tester, SiteDto $site, VehicleDto $vehicle, $type = MotTestTypeCode::NORMAL_TEST)
+    /**
+     * @return MotTestDto
+     */
+    public function getLast()
+    {
+        return $this->getAll()->last();
+    }
+
+    public function createPassedMotTest(AuthenticatedUser $tester, SiteDto $site = null, VehicleDto $vehicle, $type = MotTestTypeCode::NORMAL_TEST)
     {
         $mot = $this->create($tester, $vehicle, $site, $type);
-        return $this->passMotTest($mot);
+        return $this->passMotTestWithDefaultBrakeTestAndMeterReading($mot);
     }
 
     public function createFailedMotTest(AuthenticatedUser $tester, SiteDto $site, VehicleDto $vehicle, $type = MotTestTypeCode::NORMAL_TEST, $rfrId = null)
     {
         $mot = $this->create($tester, $vehicle, $site, $type);
-        return $this->failMotTest($mot, $rfrId);
+        return $this->failMotTestWithDefaultBrakeTestAndMeterReading($mot, $rfrId);
     }
 
     public function createPassedMotTestWithPrs(AuthenticatedUser $tester, SiteDto $site, VehicleDto $vehicle, $type = MotTestTypeCode::NORMAL_TEST, $rfrId)

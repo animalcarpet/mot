@@ -7,6 +7,9 @@ use Dvsa\Mot\Behat\Support\Api\MotTest;
 use Dvsa\Mot\Behat\Support\Api\OdometerReading;
 use Dvsa\Mot\Behat\Support\Api\ReasonForRejection;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
+use Dvsa\Mot\Behat\Support\Data\Params\MotTestParams;
+use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
+use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use DvsaCommon\Dto\Site\SiteDto;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\Enum\MotTestTypeCode;
@@ -23,18 +26,20 @@ class ContingencyMotTestData extends AbstractMotTestData
         MotTest $motTest,
         BrakeTestResult $brakeTestResult,
         OdometerReading $odometerReading,
-        ReasonForRejection $reasonForRejection
+        ReasonForRejection $reasonForRejection,
+        TestSupportHelper $testSupportHelper
     )
     {
-        parent::__construct($userData, $motTest, $brakeTestResult, $odometerReading, $reasonForRejection);
+        parent::__construct($userData, $motTest, $brakeTestResult, $odometerReading, $reasonForRejection, $testSupportHelper);
 
         $this->contingencyData = $contingencyData;
         $this->contingencyTest = $contingencyTest;
     }
 
-    public function create(AuthenticatedUser $tester, VehicleDto $vehicle, SiteDto $site)
+    public function create(AuthenticatedUser $tester, VehicleDto $vehicle, SiteDto $site, array $contingencyParams = [])
     {
-        $this->contingencyData->create($tester, ["siteName" => $site->getName()]);
+        $contingencyParams[SiteParams::SITE_NAME] = $site->getName();
+        $this->contingencyData->create($tester, $contingencyParams);
         $emergencyLogId = $this->contingencyData->getEmergencyLogId($site->getName());
 
         $mot = $this->contingencyTest->startContingencyTest(
@@ -48,7 +53,7 @@ class ContingencyMotTestData extends AbstractMotTestData
         $dto = $this->mapToMotTestDto(
             $tester,
             $vehicle,
-            $mot->getBody()->toArray()["data"]["motTestNumber"],
+            $mot->getBody()->getData()[MotTestParams::MOT_TEST_NUMBER],
             MotTestTypeCode::NORMAL_TEST,
             $site
         );
@@ -63,13 +68,13 @@ class ContingencyMotTestData extends AbstractMotTestData
     public function createPassedMotTest(AuthenticatedUser $tester, VehicleDto $vehicle, SiteDto $site)
     {
         $mot = $this->create($tester, $vehicle, $site);
-        return $this->passMotTest($mot);
+        return $this->passMotTestWithDefaultBrakeTestAndMeterReading($mot);
     }
 
     public function createFailedMotTest(AuthenticatedUser $tester, VehicleDto $vehicle, SiteDto $site)
     {
         $mot = $this->create($tester, $vehicle, $site);
-        return $this->failMotTest($mot);
+        return $this->failMotTestWithDefaultBrakeTestAndMeterReading($mot);
     }
 
     public function createFailedMotTestWithPrs(AuthenticatedUser $tester, VehicleDto $vehicle, SiteDto $site, $rfrId = null)

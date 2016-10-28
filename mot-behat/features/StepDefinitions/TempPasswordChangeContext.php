@@ -61,7 +61,7 @@ class TempPasswordChangeContext implements Context
             self::PASSWORD_VALID
         );
 
-        $passwordUpdateSuccess = $response->getBody()['data']['success'];
+        $passwordUpdateSuccess = $response->getBody()->getData()['success'];
         if ($passwordUpdateSuccess !== true) {
             throw new Exception('Password update not successful');
         }
@@ -90,6 +90,6 @@ class TempPasswordChangeContext implements Context
     protected function isPasswordChangeRequired()
     {
         $response = $this->accountClaim->getIdentityData($this->sessionContext->getCurrentAccessToken());
-        return (bool) $response->getBody()['data']['user']['isPasswordChangeRequired'];
+        return (bool) $response->getBody()->getData()['user']['isPasswordChangeRequired'];
     }
 }

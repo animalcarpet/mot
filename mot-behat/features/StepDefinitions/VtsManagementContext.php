@@ -1,42 +1,26 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
-use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use DvsaCommon\Model\VehicleTestingStation;
 use PHPUnit_Framework_Assert as PHPUnit;
 use Dvsa\Mot\Behat\Support\Api\Vts;
+use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
+use Dvsa\Mot\Behat\Support\Data\Params\FacilityParams;
+use Dvsa\Mot\Behat\Support\Data\UserData;
+use Dvsa\Mot\Behat\Support\Data\SiteData;
+use Dvsa\Mot\Behat\Support\Data\VehicleData;
+use Dvsa\Mot\Behat\Support\Data\MotTestData;
+use DvsaCommon\Dto\Site\SiteDto;
+use DvsaCommon\Enum\SiteStatusCode;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use Dvsa\Mot\Behat\Support\Response;
+use Zend\Http\Response as HttpResponse;
 
 class VtsManagementContext implements Context
 {
-    /**
-     * @var TestSupportHelper
-     */
-    protected $testSupportHelper;
-
-    /**
-     * @var Session
-     */
-    protected $session;
-
-    /**
-     * @var SessionContext
-     */
-    protected $sessionContext;
-
-    /**
-     * @var Vts
-     */
     protected $vehicleTestingStation;
-
-    /**
-     * @var array
-     */
-    protected $siteCreate;
 
     /**
      * @var Response
@@ -47,8 +31,8 @@ class VtsManagementContext implements Context
      * @var array
      */
     protected $testingFacilitiesData = [
-        'OPTL' => null,
-        'TPTL' => null,
+        FacilityParams::OPTL => null,
+        FacilityParams::TPTL => null,
     ];
 
     /**
@@ -56,41 +40,27 @@ class VtsManagementContext implements Context
      */
     protected $siteStatus;
 
-    /**
-     * @var MotTestContext
-     */
-    protected $motTestContext;
+    private $userData;
 
-    /**
-     * @var VehicleContext
-     */
-    protected $vehicleContext;
+    private $siteData;
 
-    /**
-     * @var VtsContext
-     */
-    protected $vtsContext;
+    private $vehicleData;
 
-    /**
-     * @param TestSupportHelper $testSupportHelper
-     * @param Session $session
-     */
-    public function __construct(TestSupportHelper $testSupportHelper, Session $session, Vts $vehicleTestingStation)
+    private $motTestData;
+
+    public function __construct(
+        Vts $vehicleTestingStation,
+        UserData $userData,
+        SiteData $siteData,
+        VehicleData $vehicleData,
+        MotTestData $motTestData
+    )
     {
-        $this->testSupportHelper = $testSupportHelper;
         $this->vehicleTestingStation = $vehicleTestingStation;
-        $this->session = $session;
-    }
-
-    /**
-     * @BeforeScenario
-     */
-    public function gatherContexts(BeforeScenarioScope $scope)
-    {
-        $this->sessionContext = $scope->getEnvironment()->getContext(\SessionContext::class);
-        $this->motTestContext = $scope->getEnvironment()->getContext(\MotTestContext::class);
-        $this->vehicleContext = $scope->getEnvironment()->getContext(\VehicleContext::class);
-        $this->vtsContext = $scope->getEnvironment()->getContext(\VtsContext::class);
+        $this->userData = $userData;
+        $this->siteData = $siteData;
+        $this->vehicleData = $vehicleData;
+        $this->motTestData = $motTestData;
     }
 
     /**
@@ -98,25 +68,25 @@ class VtsManagementContext implements Context
      */
     public function aVehicleTestingSiteExists($name)
     {
-        $this->createSite($name);
+        $this->siteData->create($name);
     }
 
     /**
-     * @When I configure its test lines to:
+     * @When I configure :site test lines to:
      */
-    public function iConfigureItsTestLinesTo(TableNode $table)
+    public function iConfigureItsTestLinesTo(SiteDto $site,TableNode $table)
     {
         $data = $table->getColumnsHash();
         $numOptl = (int) $data[0]['number of one person test lanes'];
         $numTptl = (int) $data[0]['number of two person test lanes'];
 
-        $this->testingFacilitiesData['OPTL'] = $numOptl;
-        $this->testingFacilitiesData['TPTL'] = $numTptl;
+        $this->testingFacilitiesData[FacilityParams::OPTL] = $numOptl;
+        $this->testingFacilitiesData[FacilityParams::TPTL] = $numTptl;
 
         $response = $this->vehicleTestingStation->updateTestingFacilities(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->siteCreate['id'],
-            ['name' => $this->siteCreate['name']],
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $site->getId(),
+            [SiteParams::NAME => $site->getName()],
             $numOptl,
             $numTptl
         );
@@ -125,46 +95,31 @@ class VtsManagementContext implements Context
     }
 
     /**
-     * @Then site details should be updated
+     * @Then site details for :site should be updated
      */
-    public function siteDetailsShouldBeUpdated()
+    public function siteDetailsShouldBeUpdated(SiteDto $site)
     {
-        PHPUnit::assertEquals(200, $this->response->getStatusCode());
-        $expectedBody = [
-            'data' => [
-                'success' => true,
-            ],
-        ];
-        PHPUnit::assertSame($expectedBody, $this->response->getBody()->toArray());
+        $facilities = $this->siteData->getVtsDetails($this->userData->getCurrentLoggedUser(), $site->getId());
 
-        $facilities = $this->getVtsDetails()->getFacilities();
-
-        PHPUnit::assertArrayHasKey('TPTL', $facilities);
-        PHPUnit::assertArrayHasKey('OPTL', $facilities);
-        PHPUnit::assertCount($this->testingFacilitiesData['TPTL'], $facilities['TPTL']);
-        PHPUnit::assertCount($this->testingFacilitiesData['OPTL'], $facilities['OPTL']);
+        PHPUnit::assertCount($this->testingFacilitiesData[FacilityParams::TPTL], $facilities->getFacilities()[FacilityParams::TPTL]);
+        PHPUnit::assertCount($this->testingFacilitiesData[FacilityParams::OPTL], $facilities->getFacilities()[FacilityParams::OPTL]);
     }
 
     /**
-     * @Then site testing classes shoud be removed
+     * @Then site testing classes for :site should be removed
      */
-    public function siteTestingClassesShoudBeRemoved()
+    public function siteTestingClassesShoudBeRemoved(SiteDto $site)
     {
-        PHPUnit::assertEquals(200, $this->response->getStatusCode());
-        $expectedBody = [
-            'data' => [
-                'success' => true,
-            ],
-        ];
-        PHPUnit::assertSame($expectedBody, $this->response->getBody()->toArray());
+        $facilities = $this->siteData->getVtsDetails($this->userData->getCurrentLoggedUser(), $site->getId());
+        PHPUnit::assertCount(0, $facilities->getTestClasses());
     }
 
     /**
-     * @Then My changes should not be updated
+     * @Then site details for :site should not be updated
      */
-    public function myChangesShouldNotBeUpdated()
+    public function siteDetailsForShouldNotBeUpdated(SiteDto $site)
     {
-        PHPUnit::assertEquals(400, $this->response->getStatusCode());
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_400, $this->response->getStatusCode());
         $expectedBody = [
             'errors' => [
                 [
@@ -177,15 +132,9 @@ class VtsManagementContext implements Context
         ];
         PHPUnit::assertSame($expectedBody, $this->response->getBody()->toArray());
 
-        $facilities = $this->getVtsDetails()->getFacilities();
-
-        PHPUnit::assertArrayNotHasKey('TPTL', $facilities);
-        PHPUnit::assertArrayHasKey('OPTL', $facilities);
-        /*
-         * 1 OPTL is added by default in Dvsa\Mot\Behat\Support\Api\Vts::generateSiteDto()
-         * i.e. no changes have been made to the initial creation of a site
-         */
-        PHPUnit::assertCount(1, $facilities['OPTL']);
+        $facilities = $this->siteData->getVtsDetails($this->userData->getCurrentLoggedUser(), $site->getId());
+        PHPUnit::assertCount(1, $facilities->getFacilities());
+        PHPUnit::assertCount(1, $facilities->getFacilities()[FacilityParams::OPTL]);
     }
 
     /**
@@ -193,7 +142,7 @@ class VtsManagementContext implements Context
      */
     public function siteDetailsShouldNotBeUpdated()
     {
-        PHPUnit::assertEquals(403, $this->response->getStatusCode());
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_403, $this->response->getStatusCode());
         $expectedErrors = [
             [
                 'message' => 'Forbidden',
@@ -206,99 +155,72 @@ class VtsManagementContext implements Context
         PHPUnit::assertSame($expectedErrors, $responseArray['errors']);
     }
 
-
-
-    protected function createSite($name)
+    /**
+     * @When I change the :site site status to Applied
+     */
+    public function iChangeTheSiteStatusToApplied(SiteDto $site)
     {
-        if (null === $this->siteCreate) {
-            $ao = $this->testSupportHelper->getAreaOffice1Service()->create([]);
-            $aoSession = $this->session->startSession($ao->data['username'], $ao->data['password']);
-
-            $params = [
-                'accessToken' => $aoSession->getAccessToken(),
-                'name'        => $name,
-                'town'        => 'test',
-                'postcode'    => 'test',
-            ];
-
-            $response = $this->vehicleTestingStation->create($aoSession->getAccessToken(), $params);
-            $responseBody = $response->getBody();
-
-            if (!is_object($responseBody)) {
-                throw new \Exception("createSite: responseBody is not an object: failed to create Vts");
-            }
-
-            $this->siteCreate = $responseBody->toArray()['data'];
-            $this->siteCreate['name'] = $name;
-        }
+        $this->updateSiteDetails($site, SiteStatusCode::APPLIED);
     }
 
     /**
-     * @When I change the site status to Applied
+     * @When I change the :site site status to Lapsed
      */
-    public function iChangeTheSiteStatusToApplied()
+    public function iChangeTheSiteStatusToLapsed(SiteDto $site)
     {
-        $this->updateSiteDetails('AP');
+        $this->updateSiteDetails($site, SiteStatusCode::LAPSED);
     }
 
     /**
-     * @When I change the site status to Lapsed
+     * @When I change the :site site status to Approved
      */
-    public function iChangeTheSiteStatusToLapsed()
+    public function iChangeTheSiteStatusToApproved(SiteDto $site)
     {
-        $this->updateSiteDetails('LA');
+        $this->updateSiteDetails($site, SiteStatusCode::APPROVED);
     }
 
     /**
-     * @When I change the site status to Approved
+     * @When I change the :site site status to Rejected
      */
-    public function iChangeTheSiteStatusToApproved()
+    public function iChangeTheSiteStatusToRejected(SiteDto $site)
     {
-        $this->updateSiteDetails('AV');
+        $this->updateSiteDetails($site, SiteStatusCode::REJECTED);
     }
 
     /**
-     * @When I change the site status to Rejected
+     * @When I change the :site site status to Retracted
      */
-    public function iChangeTheSiteStatusToRejected()
+    public function iChangeTheSiteStatusToRetracted(SiteDto $site)
     {
-        $this->updateSiteDetails('RJ');
+        $this->updateSiteDetails($site, SiteStatusCode::RETRACTED);
     }
 
     /**
-     * @When I change the site status to Retracted
+     * @When I change the :site site status to Extinct
      */
-    public function iChangeTheSiteStatusToRetracted()
+    public function iChangeTheSiteStatusToExtinct(SiteDto $site)
     {
-        $this->updateSiteDetails('RE');
-    }
-
-    /**
-     * @When I change the site status to Extinct
-     */
-    public function iChangeTheSiteStatusToExtinct()
-    {
-        $this->updateSiteDetails('EX');
+        $this->updateSiteDetails($site, SiteStatusCode::EXTINCT);
     }
 
      /**
-     * @When I remove all test classes
+     * @When I remove all test classes from :site
      */
-    public function iRemoveAllTestClasses()
+    public function iRemoveAllTestClassesFrom(SiteDto $site)
     {
         $this->response = $this->vehicleTestingStation->removeAllTestClasses(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->siteCreate['id']
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $site->getId()
         );
     }
 
 
-    protected function updateSiteDetails($siteStatus)
+    protected function updateSiteDetails(SiteDto $site, $siteStatus)
     {
         $this->siteStatus = $siteStatus;
         $response = $this->vehicleTestingStation->updateSiteDetails(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->siteCreate['id'],
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $site->getId(),
             [
                 VehicleTestingStation::PATCH_PROPERTY_STATUS => $this->siteStatus,
                 '_class' => VehicleTestingStationDto::class,
@@ -309,11 +231,11 @@ class VtsManagementContext implements Context
     }
 
     /**
-     * @Then my status should be updated
+     * @Then site status for :site should be updated
      */
-    public function myStatusShouldBeUpdated()
+    public function siteStatusShouldBeUpdated(SiteDto $site)
     {
-        PHPUnit::assertEquals(200, $this->response->getStatusCode());
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $this->response->getStatusCode());
         $expectedBody = [
             'data' => [
                 'success' => true,
@@ -321,34 +243,9 @@ class VtsManagementContext implements Context
         ];
         PHPUnit::assertSame($expectedBody, $this->response->getBody()->toArray());
 
-        $vtsDto = $this->getVtsDetails();
+        $vtsDto = $this->siteData->getVtsDetails($this->userData->getCurrentLoggedUser(), $site->getId());
 
         PHPUnit::assertEquals($this->siteStatus, $vtsDto->getStatus());
-    }
-
-
-    /**
-     * @return VehicleTestingStationDto
-     */
-    protected function getVtsDetails()
-    {
-        $response = $this->vehicleTestingStation->getVtsDetails(
-            $this->siteCreate['id'],
-            $this->sessionContext->getCurrentAccessToken()
-        );
-
-        /**
-         * @var VehicleTestingStationDto $vtsDto
-         */
-         return \DvsaCommon\Utility\DtoHydrator::of()->doHydration($response->getBody()->toArray()['data']);
-    }
-
-    /**
-     * @Given I log in as a tester assigned to newly created site with no test classes
-     */
-    public function iAmLoggedInAsATesterAssignedToSiteWithNoTestClasses()
-    {
-        $this->sessionContext->iAmLoggedInAsATesterAssignedToSites([$this->vtsContext->getSite()['id']]);
     }
 
     /**
@@ -356,11 +253,15 @@ class VtsManagementContext implements Context
      */
     public function iTryToStartMOTTest()
     {
-        $this->vehicleContext->createVehicle();
-        $this->motTestContext->startMotTest(
-            $this->sessionContext->getCurrentUserId(),
-            $this->sessionContext->getCurrentAccessToken()
-        );
+        try {
+            $this->motTestData->create(
+                $this->userData->getCurrentLoggedUser(),
+                $this->vehicleData->create(),
+                $this->siteData->get()
+            );
+        } catch (\Exception $e) {
+
+        }
     }
 
     /**
@@ -368,7 +269,7 @@ class VtsManagementContext implements Context
      */
     public function iAmNotPermittedToDoThis()
     {
-        $data = $this->motTestContext->getRawMotTestData()->getBody();
+        $data = $this->motTestData->getLastResponse()->getBody();
         PHPUnit::assertArrayHasKey('errors', $data);
     }
 }

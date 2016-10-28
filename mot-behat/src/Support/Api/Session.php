@@ -3,6 +3,7 @@
 namespace Dvsa\Mot\Behat\Support\Api;
 
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
+use Dvsa\Mot\Behat\Support\Data\Params\PersonParams;
 use Dvsa\Mot\Behat\Support\Request;
 use Dvsa\Mot\Behat\Support\Response;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
@@ -25,14 +26,15 @@ class Session extends MotApi
     {
         $response = $this->createNewSession($username, $password);
 
-        if (!isset($response->getBody()['data']['accessToken'])) {
+        $data = $response->getBody()->getData();
+        if (!isset($data[PersonParams::ACCESS_TOKEN])) {
             throw new Exception(sprintf('No access Token returned with User Credentials: %s / %s', $username, $password));
         }
 
         return new AuthenticatedUser(
-            $response->getBody()['data']['user']['userId'],
-            $response->getBody()['data']['user']['username'],
-            $response->getBody()['data']['accessToken']
+            $response->getBody()['data']['user'][PersonParams::USER_ID],
+            $response->getBody()['data']['user'][PersonParams::USERNAME],
+            $response->getBody()['data'][PersonParams::ACCESS_TOKEN]
         );
     }
 
@@ -43,17 +45,16 @@ class Session extends MotApi
      */
     private function createNewSession($username, $password)
     {
-        $body = json_encode([
-            'username' => $username,
-            'password' => $password,
-        ]);
+        $params = [
+            PersonParams::USERNAME => $username,
+            PersonParams::PASSWORD => $password,
+        ];
 
-        return $this->client->request(new Request(
-            'POST',
+        return $this->sendPostRequest(
+            null,
             self::PATH,
-            ['Content-Type' => 'application/json'],
-            $body
-        ));
+            $params
+        );
     }
 
     /**
@@ -63,19 +64,11 @@ class Session extends MotApi
      */
     public function confirmSession($accessToken, $password)
     {
-        $body = json_encode([
-            'password' => $password,
-        ]);
-
-        return $this->client->request(new Request(
-            'POST',
+        return $this->sendPostRequest(
+            $accessToken,
             self::PATH_CONFIRMATION,
-            [
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
-            ],
-            $body
-        ));
+            [PersonParams::PASSWORD => $password]
+        );
     }
 
     /**
@@ -85,21 +78,21 @@ class Session extends MotApi
      * @return string Returned token
      * @throws Exception
      */
-    public function logInAsTester(TestSupportHelper $helper, $siteIds = [1])
+    public function logInAsTester(TestSupportHelper $helper, array $siteIds)
     {
         $testerService = $helper->getTesterService();
         $tester = $testerService->create([
-            'siteIds' => $siteIds,
+            PersonParams::SITE_IDS => $siteIds,
         ]);
 
-        return $this->startSession($tester->data['username'], $tester->data['password']);
+        return $this->startSession($tester->data[PersonParams::USERNAME], $tester->data[PersonParams::PASSWORD]);
     }
 
     public function logInAsNewUser(TestSupportHelper $helper)
     {
         $user = $this->createNewUser($helper);
 
-        return $this->startSession($user->data['username'], $user->data['password']);
+        return $this->startSession($user->data[PersonParams::USERNAME], $user->data[PersonParams::PASSWORD]);
     }
 
     public function createNewUser(TestSupportHelper $helper)

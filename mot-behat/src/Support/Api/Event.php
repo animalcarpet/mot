@@ -4,7 +4,6 @@ namespace Dvsa\Mot\Behat\Support\Api;
 
 class Event extends MotApi
 {
-    const PATH_DETAILS = 'event/{id}';
     const PATH_PERSON_LIST = 'event/list/person/{personId}';
     const PATH_SITE_LIST = 'event/list/site/{siteId}';
     const PATH_ORGANISATION_LIST = 'event/list/ae/{organisationId}';
@@ -71,16 +70,6 @@ class Event extends MotApi
             MotApi::METHOD_POST,
             $path,
             $this->params
-        );
-    }
-
-    public function getEventDetails($token, $eventId)
-    {
-        $path = str_replace("{id}", $eventId, self::PATH_DETAILS);
-        return $this->sendRequest(
-            $token,
-            MotApi::METHOD_GET,
-            $path
         );
     }
 

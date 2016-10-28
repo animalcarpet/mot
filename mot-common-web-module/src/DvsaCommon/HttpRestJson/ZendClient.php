@@ -53,7 +53,7 @@ class  ZendClient implements Client
     protected $logger;
 
     protected $apiUrl;
-    protected $token;
+    public $token;
     protected $requestUuid;
 
     /**

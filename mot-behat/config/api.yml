@@ -160,3 +160,11 @@ services:
     dvsa.stats_component_fail_rate:
         class: Dvsa\Mot\Behat\Support\Api\StatsComponentFailRate
         parent: dvsa.api
+
+    dvsa.data_catalog:
+        class: Dvsa\Mot\Behat\Support\Api\DataCatalog
+        parent: dvsa.api
+
+    dvsa.vehicle_dictionary:
+        class: Dvsa\Mot\Behat\Support\Api\VehicleDictionary
+        parent: dvsa.api

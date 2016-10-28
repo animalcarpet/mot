@@ -6,14 +6,18 @@ use Dvsa\Mot\Behat\Support\Api\BrakeTestResult;
 use Dvsa\Mot\Behat\Support\Api\RollerBrakeTestClass3To7;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Response;
+use Dvsa\Mot\Behat\Support\Data\UserData;
+use Dvsa\Mot\Behat\Support\Data\MotTestData;
+use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class BrakeTestResultContext implements Context
 {
-    /**
-     * @var BrakeTestResult
-     */
     private $brakeTestResult;
+
+    private $userData;
+
+    private $motTestData;
 
     /**
      * @var SessionContext
@@ -33,9 +37,16 @@ class BrakeTestResultContext implements Context
     /**
      * @param BrakeTestResult $brakeTestResult
      */
-    public function __construct(BrakeTestResult $brakeTestResult)
+    public function __construct(
+        BrakeTestResult $brakeTestResult,
+        UserData $userData,
+        MotTestData $motTestData
+    )
     {
         $this->brakeTestResult = $brakeTestResult;
+        $this->userData = $userData;
+        $this->motTestData = $motTestData;
+
     }
 
     /**
@@ -52,22 +63,11 @@ class BrakeTestResultContext implements Context
      */
     public function theTesterAddsAClass3To7RollerBrakeTestResult()
     {
-        $this->brakeTestResultResponse = $this->brakeTestResult->addBrakeTestRollerClass3To7(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->motTestContext->getMotTestNumber()
+        $brakeTestResultResponse = $this->brakeTestResult->addBrakeTestRollerClass3To7(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->motTestData->getAll()->last()->getMotTestNumber()
         );
-        $this->assertResponseIsCorrect($this->brakeTestResultResponse);
-    }
-
-    /**
-     * @Given the Tester adds a Class 1-2 Roller Brake Test Result
-     */
-    public function theTesterAddsAClass1To2RollerBrakeTestResult()
-    {
-        $this->brakeTestResultResponse = $this->brakeTestResult->addBrakeTestForRollerClass1To2(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->motTestContext->getMotTestNumber()
-        );
+        $this->assertResponseIsCorrect($brakeTestResultResponse);
     }
 
     /**
@@ -75,12 +75,17 @@ class BrakeTestResultContext implements Context
      */
     public function theTesterAddsAClass3To7DecelerometerBrakeTest()
     {
-        $this->brakeTestResultResponse = $this->brakeTestResult->addBrakeTestDecelerometerClass3To7(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->motTestContext->getMotTestNumber()
+        $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
+
+        $motTest = $this->motTestData->getAll()->last();
+        $motTestNumber = $motTest->getMotTestNumber();
+
+        $brakeTestResultResponse = $this->brakeTestResult->addBrakeTestDecelerometerClass3To7(
+            $token,
+            $motTestNumber
         );
 
-        $this->assertResponseIsCorrect($this->brakeTestResultResponse, 'Confirm Deceleromter was added');
+        $this->assertResponseIsCorrect($brakeTestResultResponse, 'Confirm Deceleromter was added');
     }
 
     /**
@@ -88,12 +93,12 @@ class BrakeTestResultContext implements Context
      */
     public function theTesterAddsAClass3To7DecelerometerBrakeTestWithCustomData($scenario)
     {
-        $this->brakeTestResultResponse = $this->brakeTestResult->addBrakeTestDecelerometerClass3To7WithCustomData(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->motTestContext->getMotTestNumber(),
+        $brakeTestResultResponse = $this->brakeTestResult->addBrakeTestDecelerometerClass3To7WithCustomData(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->motTestData->getAll()->last()->getMotTestNumber(),
             $this->getDecelerometerBrakeTestDataForClass3To7($scenario)
         );
-        $this->assertResponseIsCorrect($this->brakeTestResultResponse);
+        $this->assertResponseIsCorrect($brakeTestResultResponse);
     }
 
     /**
@@ -101,12 +106,12 @@ class BrakeTestResultContext implements Context
      */
     public function theTesterAddsAClass1DecelerometerBrakeTest()
     {
-        $this->brakeTestResultResponse = $this->brakeTestResult->addBrakeTestDecelerometerClass1To2(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->motTestContext->getMotTestNumber()
+        $brakeTestResultResponse = $this->brakeTestResult->addBrakeTestDecelerometerClass1To2(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->motTestData->getAll()->last()->getMotTestNumber()
         );
 
-        $this->assertResponseIsCorrect($this->brakeTestResultResponse, 'Incorrect status code when adding Decelerometer brake test.');
+        $this->assertResponseIsCorrect($brakeTestResultResponse, 'Incorrect status code when adding Decelerometer brake test.');
     }
 
     /**
@@ -114,12 +119,12 @@ class BrakeTestResultContext implements Context
      */
     public function theTesterAddsAClass1DecelerometerBrakeTestWithCustomBrakeData($scenario)
     {
-        $this->brakeTestResultResponse = $this->brakeTestResult->addBrakeTestDecelerometerClass1To2WithCustomData(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->motTestContext->getMotTestNumber(),
+        $brakeTestResultResponse = $this->brakeTestResult->addBrakeTestDecelerometerClass1To2WithCustomData(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->motTestData->getAll()->last()->getMotTestNumber(),
             $this->getDecelerometerBrakeTestDataForClass1To2($scenario)
         );
-        $this->assertResponseIsCorrect($this->brakeTestResultResponse);
+        $this->assertResponseIsCorrect($brakeTestResultResponse);
     }
 
     /**
@@ -127,12 +132,12 @@ class BrakeTestResultContext implements Context
      */
     public function iAddRollerBrakeTestDataFor($scenario)
     {
-        $this->brakeTestResultResponse = $this->brakeTestResult->addBrakeTestForRollerClass1To2WithCustomData(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->motTestContext->getMotTestNumber(),
+        $brakeTestResultResponse = $this->brakeTestResult->addBrakeTestForRollerClass1To2WithCustomData(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->motTestData->getAll()->last()->getMotTestNumber(),
             $this->getRollerBrakeTestObjectForClass1And2($scenario)
         );
-        $this->assertResponseIsCorrect($this->brakeTestResultResponse);
+        $this->assertResponseIsCorrect($brakeTestResultResponse);
     }
 
     /**
@@ -140,12 +145,12 @@ class BrakeTestResultContext implements Context
      */
     public function iAddPlateBrakeTestDataFor($scenario)
     {
-        $this->brakeTestResultResponse = $this->brakeTestResult->addBrakeTestForPlateClass1To2WithCustomData(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->motTestContext->getMotTestNumber(),
+        $brakeTestResultResponse = $this->brakeTestResult->addBrakeTestForPlateClass1To2WithCustomData(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->motTestData->getAll()->last()->getMotTestNumber(),
             $this->getPlateBrakeTestObjectForClass1And2($scenario)
         );
-        $this->assertResponseIsCorrect($this->brakeTestResultResponse);
+        $this->assertResponseIsCorrect($brakeTestResultResponse);
     }
 
     /**
@@ -153,13 +158,13 @@ class BrakeTestResultContext implements Context
      */
     public function iAddGradientBrakeTestDataFor($scenario)
     {
-        $this->brakeTestResultResponse = $this->brakeTestResult->addBrakeTestGradientClass1To2WithCustomData(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->motTestContext->getMotTestNumber(),
+        $brakeTestResultResponse = $this->brakeTestResult->addBrakeTestGradientClass1To2WithCustomData(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->motTestData->getAll()->last()->getMotTestNumber(),
             $this->getGradientBrakeTestObjectForClass1And2($scenario)
         );
 
-        $this->assertResponseIsCorrect($this->brakeTestResultResponse,
+        $this->assertResponseIsCorrect($brakeTestResultResponse,
             'Incorrect status code when adding Gradient brake test.');
     }
 
@@ -168,12 +173,12 @@ class BrakeTestResultContext implements Context
      */
     public function iAddFloorBrakeTestDataFor($scenario)
     {
-        $this->brakeTestResultResponse = $this->brakeTestResult->addBrakeTestFloorClass1To2WithCustomData(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->motTestContext->getMotTestNumber(),
+        $brakeTestResultResponse = $this->brakeTestResult->addBrakeTestFloorClass1To2WithCustomData(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->motTestData->getAll()->last()->getMotTestNumber(),
             $this->getFloorBrakeTestObjectForClass1And2($scenario)
         );
-        $this->assertResponseIsCorrect($this->brakeTestResultResponse);
+        $this->assertResponseIsCorrect($brakeTestResultResponse);
     }
 
     /**
@@ -181,11 +186,11 @@ class BrakeTestResultContext implements Context
      */
     public function theTesterAddsAClass3to7PlateBrakeTest()
     {
-        $this->brakeTestResultResponse = $this->brakeTestResult->addBrakeTestPlateClass3to7(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->motTestContext->getMotTestNumber()
+        $brakeTestResultResponse = $this->brakeTestResult->addBrakeTestPlateClass3to7(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->motTestData->getAll()->last()->getMotTestNumber()
         );
-        $this->assertResponseIsCorrect($this->brakeTestResultResponse);
+        $this->assertResponseIsCorrect($brakeTestResultResponse);
     }
 
     /**
@@ -195,12 +200,12 @@ class BrakeTestResultContext implements Context
     {
         $rollerBrakeTestObject = $this->getRollerBrakeTestObjectForClass3To7($scenario);
 
-        $this->brakeTestResultResponse = $this->brakeTestResult->addBrakeTestRollerClass3To7WithCustomData(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->motTestContext->getMotTestNumber(),
+        $brakeTestResultResponse = $this->brakeTestResult->addBrakeTestRollerClass3To7WithCustomData(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->motTestData->getAll()->last()->getMotTestNumber(),
             $rollerBrakeTestObject
         );
-        $this->assertResponseIsCorrect($this->brakeTestResultResponse);
+        $this->assertResponseIsCorrect($brakeTestResultResponse);
     }
 
     /**
@@ -208,7 +213,7 @@ class BrakeTestResultContext implements Context
      */
     private function assertResponseIsCorrect($response, $message = 'Brake test response code is not 200')
     {
-        \PHPUnit_Framework_Assert::assertEquals(200, $response->getStatusCode(), $message);
+        \PHPUnit_Framework_Assert::assertEquals(HttpResponse::STATUS_CODE_200, $response->getStatusCode(), $message);
     }
 
     private function getRollerBrakeTestObjectForClass3To7($scenario) {

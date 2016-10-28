@@ -19,10 +19,9 @@ Feature: MOT Logs
 
   @quarantine
   Scenario:
-    Given I am logged in as a Tester
-    And I perform test on the VTS when it's linked to some AE first time
-    And I perform test on the VTS when it's linked to other AE first time
-    And I perform test on the VTS when it's linked to some AE second time
+    Given there is a test performed at the VTS when it's linked to some AE first time
+    And there is a test performed at the VTS when it's linked to other AE first time
+    And there is a test performed at the VTS when it's linked to some AE second time
     When I am logged in as a Area Office 1
     And I fetch test logs for those AE and VTS's
     Then test logs show correct test count

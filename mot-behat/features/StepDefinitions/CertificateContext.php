@@ -5,7 +5,13 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\Certificate;
 use Dvsa\Mot\Behat\Support\Api\MotTest;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
+use Dvsa\Mot\Behat\Support\Data\Params\MotTestParams;
+use Dvsa\Mot\Behat\Support\Data\Params\OdometerReadingParams;
+use Dvsa\Mot\Behat\Support\Data\Params\MotTestPdfDocumentParams;
+use Dvsa\Mot\Behat\Support\Data\MotTestData;
+use Dvsa\Mot\Behat\Support\Data\UserData;
 use DvsaCommon\Enum\MotTestStatusName;
+use DvsaCommon\Dto\Common\MotTestDto;
 use PHPUnit_Framework_Assert as PHPUnit;
 use Smalot\PdfParser\Document;
 
@@ -20,11 +26,6 @@ class CertificateContext implements Context
      * @var MotTest
      */
     private $motTest;
-
-    /**
-     * @var array
-     */
-    private $motTests;
 
     /**
      * @var SessionContext
@@ -42,16 +43,24 @@ class CertificateContext implements Context
      */
     private $testSupportHelper;
 
+    private $motTestData;
+
+    private $userData;
+
+    private $documents = [];
+
     /**
      * @param Certificate $certificate
      * @param MotTest $motTest
      * @param TestSupportHelper $testSupportHelper
      */
-    public function __construct(Certificate $certificate, MotTest $motTest, TestSupportHelper $testSupportHelper)
+    public function __construct(Certificate $certificate, MotTest $motTest, TestSupportHelper $testSupportHelper, MotTestData $motTestData, UserData $userData)
     {
         $this->certificate = $certificate;
         $this->motTest = $motTest;
         $this->testSupportHelper = $testSupportHelper;
+        $this->motTestData = $motTestData;
+        $this->userData = $userData;
     }
 
     /**
@@ -79,8 +88,8 @@ class CertificateContext implements Context
     public function requestsTheCertificate()
     {
         $this->certificateResult = $this->certificate->requestCertificate(
-            $this->motTestContext->getMotTestNumber(),
-            $this->sessionContext->getCurrentAccessToken()
+            $this->motTestData->getLast()->getMotTestNumber(),
+            $this->userData->getCurrentLoggedUser()->getAccessToken()
         );
     }
 
@@ -111,8 +120,8 @@ class CertificateContext implements Context
      */
     public function iReprintAnMOTTestCertificate()
     {
-        $token = $this->sessionContext->getCurrentAccessToken();
-        $this->motTest->getMOTCertificateDetails($token, '651157444199');
+        $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
+        $this->motTest->getMOTCertificateDetails($token);
 
         $this->certificate->getDuplicateCertificate($token);
     }
@@ -140,14 +149,13 @@ class CertificateContext implements Context
      */
     public function iFetchJasperDocumentForTest()
     {
-        $motTests = [];
-        foreach($this->motTestContext->getMotTests() as $key => $motTest)
+        $motTests = $this->motTestData->getAll();
+        /** @var MotTestDto $mot */
+        foreach($motTests as $mot)
         {
-            $document = $this->testSupportHelper->getDocumentService()->get($motTest['document'])[0];
-            $motTest['document'] = $document;
-            $motTests[]= $motTest;
+            $document = $this->testSupportHelper->getDocumentService()->get($mot->getDocument());
+            $this->documents[$mot->getId()] = $document;
         }
-        $this->motTestContext->setMotTests($motTests);
     }
 
     /**
@@ -158,15 +166,15 @@ class CertificateContext implements Context
         $fullOdometerHistory = [];
         foreach($this->motTestContext->getMotTests() as $motTest) {
             $fullOdometerHistory[]= [
-                'startedDate' => $motTest['startedDate'],
-                'odometerReading' => $motTest['odometerReading']
+                MotTestParams::STARTED_DATE => $motTest[MotTestParams::STARTED_DATE],
+                MotTestParams::ODOMETER_READING => $motTest[MotTestParams::ODOMETER_READING]
             ];
         }
 
         foreach($this->motTestContext->getMotTests() as $motTest) {
-            $documentContent = json_decode($motTest['document']['document_content'], true);
-            $documentOdometerHistory = $documentContent['OdometerHistory'];
-            $this->validateOdometerHistory($fullOdometerHistory, $documentOdometerHistory, $motTest['startedDate']);
+            $documentContent = json_decode($motTest[MotTestParams::DOCUMENT][MotTestPdfDocumentParams::DOCUMENT_CONTENT], true);
+            $documentOdometerHistory = $documentContent[MotTestPdfDocumentParams::ODOMETER_HISTORY];
+            $this->validateOdometerHistory($fullOdometerHistory, $documentOdometerHistory, $motTest[MotTestParams::STARTED_DATE]);
         }
     }
 
@@ -177,8 +185,10 @@ class CertificateContext implements Context
     {
         $testsNotShown = [];
         $passedTests = [];
-        foreach($this->motTestContext->getMotTests() as $motTest) {
-            if($motTest['status'] != MotTestStatusName::PASSED){
+        $motTests = $this->motTestData->getAll();
+        /** @var MotTestDto $motTest */
+        foreach($motTests as $motTest) {
+            if($motTest->getStatus() !== MotTestStatusName::PASSED){
                 $testsNotShown[] = $motTest;
             } else {
                 $passedTests[] = $motTest;
@@ -186,6 +196,7 @@ class CertificateContext implements Context
         }
 
         // remove 4 newest passed MOT tests, to get old tests
+        $passedTests = array_reverse($passedTests);
         $passedTestsReadingsNotShown = array_slice($passedTests, $number);
         $testsNotShown += $passedTestsReadingsNotShown;
         // get 4 newest mot tests
@@ -200,14 +211,14 @@ class CertificateContext implements Context
     {
         $expectedOdometerReadings = array_filter($fullOdometerHistory, function($value) use ($startedDate) {
             $motTestDate = new DateTime($startedDate);
-            $odometerReadingDate = new DateTime($value['startedDate']);
+            $odometerReadingDate = new DateTime($value[MotTestParams::STARTED_DATE]);
 
             return $motTestDate >= $odometerReadingDate;
         });
 
         $expectedOdometerValues = [];
         foreach($expectedOdometerReadings as $reading) {
-            $expectedOdometerValues[]= $reading['odometerReading']['value'] . ' ' . $reading['odometerReading']['unit'];
+            $expectedOdometerValues[]= $reading[MotTestParams::ODOMETER_READING][OdometerReadingParams::VALUE] . ' ' . $reading[MotTestParams::ODOMETER_READING][OdometerReadingParams::UNIT];
         }
 
         $documentOdometerValues = array_reduce(explode("\n", $documentOdometerHistory), function($result, $value) {
@@ -227,7 +238,7 @@ class CertificateContext implements Context
     public function printOfCreatedMotTestsIsIssued()
     {
         foreach($this->motTestContext->getMotTests() as $motTest) {
-            $this->certificate->requestCertificate($motTest['motTestNumber'], $this->sessionContext->getCurrentAccessToken());
+            $this->certificate->requestCertificate($motTest[MotTestParams::MOT_TEST_NUMBER], $this->sessionContext->getCurrentAccessToken());
         }
 
         $this->motTestContext->refreshMotTests();
@@ -242,44 +253,60 @@ class CertificateContext implements Context
         $motTests=[];
         foreach($this->motTestContext->getMotTests() as $motTest)
         {
-            $this->testSupportHelper->getDocumentService()->delete($motTest['document']);
-            unset($motTest['document']);
+            $this->testSupportHelper->getDocumentService()->delete($motTest[MotTestParams::DOCUMENT]);
+            unset($motTest[MotTestParams::DOCUMENT]);
             $motTests[]=$motTest;
         }
         $this->motTestContext->setMotTests($motTests);
     }
 
-    private function getMotTestsPerformedBeforeTest($motTestCollection, $motTest)
+    /**
+     * @param MotTestDto[] $motTestCollection
+     * @param MotTestDto $motTest
+     * @return MotTestDto[]
+     */
+    private function getMotTestsPerformedBeforeTest(array $motTestCollection, MotTestDto $motTest)
     {
         $testsInThePast = [];
         foreach ($motTestCollection as $test) {
-            if($motTest['completedDate'] > $test['completedDate']){
+            if($motTest->getCompletedDate() > $test->getCompletedDate()){
                 $testsInThePast[] = $test;
             }
         }
 
         return $testsInThePast;
     }
-    
-    private function validateOdometerHistoryIsCreatedFromPassedTests($testsShown, $motTestToCheck)
+
+    /**
+     * @param MotTestDto[] $testsShown
+     * @param MotTestDto $motTestToCheck
+     */
+    private function validateOdometerHistoryIsCreatedFromPassedTests(array $testsShown, MotTestDto $motTestToCheck)
     {
         $motTestsPerformedBefore = $this->getMotTestsPerformedBeforeTest($testsShown, $motTestToCheck);
+        $document = array_shift($this->documents[$motTestToCheck->getId()]);
+        $odometerHistory = json_decode($document[MotTestPdfDocumentParams::DOCUMENT_CONTENT], true)[MotTestPdfDocumentParams::ODOMETER_HISTORY];
         foreach ($motTestsPerformedBefore as $testThatShoudBeInHistory) {
-            $odometerHistory = json_decode($motTestToCheck['document']['document_content'], true)['OdometerHistory'];
+            $expectedOdometerHistory = (string)$testThatShoudBeInHistory->getOdometerReading()->getValue();
             PHPUnit::assertGreaterThan(
                 0,
-                strpos($odometerHistory, (string)$testThatShoudBeInHistory['odometerReading']['value']),
+                strpos($odometerHistory, $expectedOdometerHistory),
                 'one of the odometer readings from passed MOT tests is not in certificate'
             );
         }
     }
 
-    private function validateOdometerHistoryDoesNotContainFailedAndOldTests($testsNotShown, $motTestToCheck)
+    /**
+     * @param MotTestDto[] $testsNotShown
+     * @param MotTestDto $motTestToCheck
+     */
+    private function validateOdometerHistoryDoesNotContainFailedAndOldTests(array $testsNotShown, MotTestDto $motTestToCheck)
     {
-        $odometerHistory = json_decode($motTestToCheck['document']['document_content'], true)['OdometerHistory'];
-        foreach ($testsNotShown as $odometer) {
+        $document = array_shift($this->documents[$motTestToCheck->getId()]);
+        $odometerHistory = json_decode($document[MotTestPdfDocumentParams::DOCUMENT_CONTENT], true)[MotTestPdfDocumentParams::ODOMETER_HISTORY];
+        foreach ($testsNotShown as $mot) {
             PHPUnit::assertFalse(
-                strpos($odometerHistory, (string)$odometer['odometerReading']['value']),
+                strpos($odometerHistory, (string)$mot->getOdometerReading()->getValue()),
                 'one of the odometer readings is from failed or too old test'
             );
         }

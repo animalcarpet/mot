@@ -6,29 +6,64 @@ use Dvsa\Mot\Behat\Support\Data\Transformer\AeNameToOrganisationDtoTransformer;
 use Dvsa\Mot\Behat\Support\Data\Transformer\SiteNameToSiteDtoTransformer;
 use Dvsa\Mot\Behat\Support\Data\Transformer\TypeConversion;
 use Dvsa\Mot\Behat\Support\Data\Transformer\UsernameToAuthenticatedUserTransformer;
+use Dvsa\Mot\Behat\Support\Data\Transformer\MotTestTypeToCodeTransformer;
+use Dvsa\Mot\Behat\Support\Data\Transformer\MotTestStatusToCodeTransformer;
+use Dvsa\Mot\Behat\Support\Data\Transformer\EventTypeToCodeTransformer;
+use Dvsa\Mot\Behat\Support\Data\Transformer\EmergencyReasonToCodeTransformer;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Dvsa\Mot\Behat\Support\Api\Session;
+use Dvsa\Mot\Behat\Support\Api\DataCatalog;
+use Dvsa\Mot\Behat\Support\Api\VehicleDictionary;
 use Dvsa\Mot\Behat\Support\History;
 use Dvsa\Mot\Behat\Support\Scope\BeforeBehatScenarioScope;
+use Dvsa\Mot\Behat\Support\Data\SiteData;
+use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
+use Dvsa\Mot\Behat\Support\Data\UserData;
+use Dvsa\Mot\Behat\Support\Data\Generator\DefaultDataGenerator;
+use Dvsa\Mot\Behat\Support\Data\Generator\BeforeScenarioDataGenerator;
+use Zend\Http\Response as HttpResponse;
+
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class FeatureContext implements Context
 {
     use AeNameToOrganisationDtoTransformer, SiteNameToSiteDtoTransformer, TypeConversion, UsernameToAuthenticatedUserTransformer;
+    use MotTestTypeToCodeTransformer, MotTestStatusToCodeTransformer, EventTypeToCodeTransformer, EmergencyReasonToCodeTransformer;
 
     /**
      * @var History
      */
     private $history;
 
+    private $siteData;
+    private $authorisedExaminerData;
+    private $userData;
+    private $session;
+    private $dataCatalog;
+    private $vehicleDictionary;
+
     /**
      * @param History $history
      */
-    public function __construct(History $history)
+    public function __construct(
+        History $history,
+        SiteData $siteData,
+        AuthorisedExaminerData $authorisedExaminerData,
+        UserData $userData,
+        Session $session,
+        DataCatalog $dataCatalog,
+        VehicleDictionary $vehicleDictionary
+    )
     {
         $this->history = $history;
+        $this->siteData = $siteData;
+        $this->authorisedExaminerData = $authorisedExaminerData;
+        $this->userData = $userData;
+        $this->session = $session;
+        $this->dataCatalog = $dataCatalog;
+        $this->vehicleDictionary = $vehicleDictionary;
     }
 
     /**
@@ -57,19 +92,11 @@ class FeatureContext implements Context
     }
 
     /**
-     * @BeforeScenario
+     * @AfterScenario
      */
-    public function cleanupContexts(BeforeScenarioScope $scope)
+    public function cleanupContexts(AfterScenarioScope $scope)
     {
         (new ContextCleanup())->cleanup($scope->getEnvironment()->getContexts());
-    }
-
-    /**
-     * @BeforeScenario
-     */
-    public function setUp(BeforeScenarioScope $scope)
-    {
-        BeforeBehatScenarioScope::set($scope);
     }
 
     /**
@@ -81,6 +108,33 @@ class FeatureContext implements Context
     }
 
     /**
+     * @BeforeScenario
+     */
+    public function setUp(BeforeScenarioScope $scope)
+    {
+        BeforeBehatScenarioScope::set($scope);
+
+        $defaultDataGenerator = new DefaultDataGenerator(
+            $this->authorisedExaminerData,
+            $this->siteData,
+            $this->userData,
+            $this->session,
+            $this->dataCatalog,
+            $this->vehicleDictionary
+        );
+
+        $defaultDataGenerator->generate();
+
+        $beforeScenarioDataGenerator = new BeforeScenarioDataGenerator(
+            $scope,
+            $this->authorisedExaminerData,
+            $this->siteData,
+            $this->userData
+        );
+        $beforeScenarioDataGenerator->generate();
+    }
+
+    /**
      * @Then /^I should receive an Unauthorised response$/
      *
      * @deprecated this is only temporarly here and will be removed as soon as scenarios are reworded to not include implementation details
@@ -89,7 +143,7 @@ class FeatureContext implements Context
     {
         $response = $this->history->getLastResponse();
 
-        PHPUnit::assertEquals(401, $response->getStatusCode(), 'Did not receive 401 Unauthorised response');
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_401, $response->getStatusCode(), 'Did not receive 401 Unauthorised response');
     }
 
     /**
@@ -113,7 +167,7 @@ class FeatureContext implements Context
     {
         $response = $this->history->getLastResponse();
 
-        PHPUnit::assertEquals(403, $response->getStatusCode(), 'Did not receive 403 Forbidden response');
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_403, $response->getStatusCode(), 'Did not receive 403 Forbidden response');
     }
 
     /**
@@ -125,7 +179,7 @@ class FeatureContext implements Context
     {
         $response = $this->history->getLastResponse();
 
-        PHPUnit::assertEquals(400, $response->getStatusCode(), 'Did not receive 400 Bad Request response');
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_400, $response->getStatusCode(), 'Did not receive 400 Bad Request response');
     }
 
 
@@ -138,7 +192,7 @@ class FeatureContext implements Context
     {
         $response = $this->history->getLastResponse();
 
-        PHPUnit::assertEquals(422, $response->getStatusCode(), 'Did not receive 422 Unprocessable Entity response');
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_422, $response->getStatusCode(), 'Did not receive 422 Unprocessable Entity response');
     }
 
     /**
@@ -169,7 +223,7 @@ class FeatureContext implements Context
     public function iShouldReceiveASuccessResponse()
     {
         $response = $this->history->getLastResponse();
-        PHPUnit::assertEquals(200, $response->getStatusCode(), 'Did not receive 200 OK response');
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $response->getStatusCode(), 'Did not receive 200 OK response');
     }
 
     /**

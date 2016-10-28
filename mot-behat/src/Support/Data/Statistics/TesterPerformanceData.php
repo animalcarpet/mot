@@ -2,6 +2,7 @@
 namespace Dvsa\Mot\Behat\Support\Data\Statistics;
 
 use Dvsa\Mot\Behat\Support\Data\Collection\DataCollection;
+use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
 use Dvsa\Mot\Behat\Support\Data\SiteData;
 use Dvsa\Mot\Behat\Support\Data\UserData;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\EmployeePerformanceDto;
@@ -33,7 +34,7 @@ class TesterPerformanceData
         $motTests = $this->filterTests($motCollection, $months);
 
         $motTests = $motTests->filter(function (MotTestDto $mot) use ($siteId) {
-            return $mot->getVehicleTestingStation()["id"] === $siteId;
+            return $mot->getVehicleTestingStation()[SiteParams::ID] === $siteId;
         });
 
         $groupAmotTests = $this->filterTestsForGroupA($motTests);

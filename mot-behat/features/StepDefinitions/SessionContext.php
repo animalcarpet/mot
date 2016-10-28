@@ -8,9 +8,12 @@ use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Support\Api\AuthorisedExaminer;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
-use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
+use Dvsa\Mot\Behat\Support\Data\Params\PersonParams;
+use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
 use Dvsa\Mot\Behat\Support\Data\UserData;
 use Dvsa\Mot\Behat\Support\Data\SiteData;
+use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
+use DvsaCommon\Dto\Site\SiteDto;
 
 class SessionContext implements Context
 {
@@ -64,6 +67,7 @@ class SessionContext implements Context
 
     private $userData;
     private $siteData;
+    private $authorisedExaminerData;
 
     /**
      * @param AccountClaim $accountClaim
@@ -77,7 +81,8 @@ class SessionContext implements Context
         TestSupportHelper $testSupportHelper,
         AuthorisedExaminer $authorisedExaminer,
         UserData $userData,
-        SiteData $siteData
+        SiteData $siteData,
+        AuthorisedExaminerData $authorisedExaminerData
     ) {
         $this->accountClaim      = $accountClaim;
         $this->session           = $session;
@@ -85,6 +90,7 @@ class SessionContext implements Context
         $this->authorisedExaminer = $authorisedExaminer;
         $this->userData = $userData;
         $this->siteData = $siteData;
+        $this->authorisedExaminerData = $authorisedExaminerData;
     }
 
     /**
@@ -101,20 +107,12 @@ class SessionContext implements Context
 
     /**
      * @Given I am registered as a new user
+     * @Given I am logged in as a new User
      */
     public function iAmRegisteredAsANewUser()
     {
-        $user = $this->session->createNewUser($this->testSupportHelper);
-        $this->currentUser = new AuthenticatedUser($user->data['username'], $user->data['password'], null);
-    }
-    
-    /**
-     * @Given I am logged in as a new User
-     */
-    public function iAmLoggedInAsANewUser()
-    {
-        $this->currentUser = $this->session->logInAsNewUser($this->testSupportHelper);
-
+        $this->currentUser = $this->userData->createUser();
+        $this->userData->setCurrentLoggedUser($this->currentUser);
     }
 
     /**
@@ -122,7 +120,9 @@ class SessionContext implements Context
      */
     public function iAmLoggedInAsATester()
     {
-        $this->currentUser = $this->session->logInAsTester($this->testSupportHelper);
+        $site = $this->siteData->get();
+        $this->currentUser = $this->userData->createTesterAssignedWitSite($site->getId());
+        $this->userData->setCurrentLoggedUser($this->currentUser);
     }
 
     /**
@@ -131,15 +131,7 @@ class SessionContext implements Context
     public function iAmLoggedInAsATesterAssignedToSites($siteIds)
     {
         $this->currentUser = $this->session->logInAsTester($this->testSupportHelper, $siteIds);
-    }
-
-    /**
-     * @Given I am logged in as a Tester assigned to :name site
-     */
-    public function iAmLoggedInAsATesterAssignedToNameSite($name = "default")
-    {
-        $site = $this->vtsContext->getSite($name);
-        $this->iAmLoggedInAsATesterAssignedToSites([$site["id"]]);
+        $this->userData->setCurrentLoggedUser($this->currentUser);
     }
 
     /**
@@ -151,6 +143,7 @@ class SessionContext implements Context
         $password = Authentication::PASSWORD_DEFAULT;
 
         $this->currentUser = $this->session->startSession($username, $password);
+        $this->userData->setCurrentLoggedUser($this->currentUser);
     }
 
     /**
@@ -158,10 +151,8 @@ class SessionContext implements Context
      */
     public function iAmLoggedInAsASchemeUser()
     {
-        $schemeUserService = $this->testSupportHelper->getSchemeUserService();
-        $user              = $schemeUserService->create([]);
-
-        $this->currentUser  = $this->session->startSession($user->data['username'], $user->data['password']);
+        $this->currentUser  = $this->userData->createSchemeUser();
+        $this->userData->setCurrentLoggedUser($this->currentUser);
     }
 
     /**
@@ -171,16 +162,7 @@ class SessionContext implements Context
     public function iAmNotLoggedIn()
     {
         $this->currentUser = null;
-    }
-
-    /**
-     * @Given /^I am logged in as an? Area Office User$/
-     */
-    public function iAmLoggedInAsAnAreaOfficeUser()
-    {
-        $areaOffice1Service = $this->testSupportHelper->getAreaOffice1Service();
-        $user               = $areaOffice1Service->create([]);
-        $this->currentUser  = $this->session->startSession($user->data['username'], $user->data['password']);
+        $this->userData->setCurrentLoggedUser(null);
     }
 
     /**
@@ -188,9 +170,8 @@ class SessionContext implements Context
      */
     public function iAmLoggedInAsAnAreaOfficeUser2()
     {
-        $areaOffice2Service = $this->testSupportHelper->getAreaOffice2Service();
-        $user               = $areaOffice2Service->create([]);
-        $this->currentUser  = $this->session->startSession($user->data['username'], $user->data['password']);
+        $this->currentUser  = $this->userData->createAreaOffice2User();
+        $this->userData->setCurrentLoggedUser($this->currentUser);
     }
 
     /**
@@ -198,20 +179,17 @@ class SessionContext implements Context
      */
     public function iAmLoggedInAsAnCronUser()
     {
-        $cronUserService = $this->testSupportHelper->getCronUserService();
-        $user               = $cronUserService->create([]);
-        $this->currentUser  = $this->session->startSession($user->data['username'], $user->data['password']);
+        $this->currentUser  = $this->userData->createCronUser();
+        $this->userData->setCurrentLoggedUser($this->currentUser);
     }
-
 
     /**
      * @Given I am logged in as a Finance User
      */
     public function iAmLoggedInAsAFinanceUser()
     {
-        $financeUserService = $this->testSupportHelper->getFinanceUserService();
-        $user               = $financeUserService->create([]);
-        $this->currentUser  = $this->session->startSession($user->data['username'], $user->data['password']);
+        $this->currentUser  = $this->userData->createFinanceUser();
+        $this->userData->setCurrentLoggedUser($this->currentUser);
     }
 
     /**
@@ -228,6 +206,7 @@ class SessionContext implements Context
         }
 
         $this->currentUser = $this->session->startSession($username, $password);
+        $this->userData->setCurrentLoggedUser($this->currentUser);
     }
 
     /**
@@ -239,9 +218,11 @@ class SessionContext implements Context
         $sveService = $this->testSupportHelper->getVM10519UserService();
         $user                   = $sveService->create([]);
         $this->currentUser      = $this->session->startSession(
-            $user->data['username'],
-            $user->data['password']
+            $user->data[PersonParams::USERNAME],
+            $user->data[PersonParams::PASSWORD]
         );
+
+        $this->userData->setCurrentLoggedUser($this->currentUser);
     }
 
     /**
@@ -250,12 +231,8 @@ class SessionContext implements Context
      */
     public function iAmLoggedInAsAVehicleExaminer()
     {
-        $vehicleExaminerService = $this->testSupportHelper->getVehicleExaminerService();
-        $user                   = $vehicleExaminerService->create([]);
-        $this->currentUser      = $this->session->startSession(
-            $user->data['username'],
-            $user->data['password']
-        );
+        $this->currentUser = $this->userData->createVehicleExaminer();
+        $this->userData->setCurrentLoggedUser($this->currentUser);
     }
 
     /**
@@ -263,12 +240,8 @@ class SessionContext implements Context
      */
     public function iAmLoggedInAsADVLAOperative()
     {
-        $vehicleExaminerService = $this->testSupportHelper->getDVLAOperativeService();
-        $user                   = $vehicleExaminerService->create([]);
-        $this->currentUser      = $this->session->startSession(
-            $user->data['username'],
-            $user->data['password']
-        );
+        $this->currentUser = $this->userData->createDVLAOperative();
+        $this->userData->setCurrentLoggedUser($this->currentUser);
     }
 
     /**
@@ -276,38 +249,8 @@ class SessionContext implements Context
      */
     public function iAmLoggedInAsACustomerServiceOperator()
     {
-        $cscoService       = $this->testSupportHelper->getCscoService();
-        $user              = $cscoService->create([]);
-        $this->currentUser = $this->session->startSession(
-            $user->data['username'],
-            $user->data['password']
-        );
-    }
-
-    /**
-     * @Given I am logged in as a Customer Service Manager
-     */
-    public function iAmLoggedInAsACustomerServiceManager()
-    {
-        $csmService        = $this->testSupportHelper->getCsmService();
-        $user              = $csmService->create([]);
-        $this->currentUser = $this->session->startSession(
-            $user->data['username'],
-            $user->data['password']
-        );
-    }
-
-    /**
-     * @Given I am logged in as a Area Office 1
-     */
-    public function iAmLoggedInAsAnAreaOffice1()
-    {
-        $ao1user           = $this->testSupportHelper->getAreaOffice1Service();
-        $user              = $ao1user->create([]);
-        $this->currentUser = $this->session->startSession(
-            $user->data['username'],
-            $user->data['password']
-        );
+        $this->currentUser = $this->userData->createCustomerServiceOperator();
+        $this->userData->setCurrentLoggedUser($this->currentUser);
     }
 
     /**
@@ -315,12 +258,17 @@ class SessionContext implements Context
      */
     public function iAmLoggedInAsAnGVTSTester()
     {
-        $service           = $this->testSupportHelper->getGVTSTesterService();
-        $user              = $service->create([]);
-        $this->currentUser = $this->session->startSession(
-            $user->data['username'],
-            $user->data['password']
-        );
+        $this->currentUser = $this->userData->createGVTSTester();
+        $this->userData->setCurrentLoggedUser($this->currentUser);
+    }
+
+    /**
+     * @Given I am logged in as a Customer Service Manager
+     */
+    public function iAmLoggedInAsACustomerServiceManager()
+    {
+        $this->currentUser = $this->userData->createCustomerServiceManager();
+        $this->userData->setCurrentLoggedUser($this->currentUser);
     }
 
     /**
@@ -328,12 +276,29 @@ class SessionContext implements Context
      */
     public function iAmLoggedInAsADVLAManager()
     {
-        $dvlaManagerService = $this->testSupportHelper->getDVLAManagerService();
-        $user               = $dvlaManagerService->create([]);
-        $this->currentUser  = $this->session->startSession(
-            $user->data['username'],
-            $user->data['password']
-        );
+        $this->currentUser = $this->userData->createDVLAManager();
+        $this->userData->setCurrentLoggedUser($this->currentUser);
+    }
+
+    /**
+     * @Given I am logged in as an Area Office 1
+     * @Given I am logged in as a Area Office 1
+     * @Given I am logged in as a Area Office User
+     * @Given I am logged in as an Area Office User
+     */
+    public function iAmLoggedInAsAnAreaOffice1()
+    {
+        $this->currentUser = $this->userData->createAreaOffice1User();
+        $this->userData->setCurrentLoggedUser($this->currentUser);
+    }
+
+    /**
+     * @Given I am logged in as an Area Office User to new site
+     */
+    public function iAmLoggedInAsAnAreaOfficeUserToNewSite()
+    {
+        $this->siteData->create("Auto Moto");
+        $this->iAmLoggedInAsAnAreaOffice1();
     }
 
     /**
@@ -341,30 +306,22 @@ class SessionContext implements Context
      */
     public function iAmLoggedInAsASchemeManager()
     {
-        $schemeManagerService = $this->testSupportHelper->getSchemeManagerService();
-        $schemeManager        = $schemeManagerService->create([]);
-
-        $this->currentUser = $this->session->startSession(
-            $schemeManager->data['username'],
-            $schemeManager->data['password']
-        );
+        $this->currentUser = $this->userData->createSchemeManager();
+        $this->userData->setCurrentLoggedUser($this->currentUser);
     }
-
 
     /**
      * @Given I am logged in as a Tester with an unclaimed account
      */
     public function iAmLoggedInAsATesterWithAnUnclaimedAccount()
     {
-        $testerService = $this->testSupportHelper->getTesterService();
-        $tester        = $testerService->create([
-            'accountClaimRequired' => true,
-            'siteIds'              => [1],
-        ]);
+        $params = [
+            PersonParams::ACCOUNT_CLAIM_REQUIRED => true,
+            PersonParams::SITE_IDS => [$this->siteData->get()->getId()],
+        ];
 
-        $this->currentUser = $this->session->startSession($tester->data['username'], $tester->data['password']);
-
-        $this->accountClaimContext->myAccountHasNotYetBeenClaimed();
+        $this->currentUser = $this->userData->createTesterWithParams($params, "Tester With Unclaimed Account");
+        $this->userData->setCurrentLoggedUser($this->currentUser);
     }
 
     /**
@@ -372,15 +329,13 @@ class SessionContext implements Context
      */
     public function iAmLoggedInAsATesterWithATempPassword()
     {
-        $testerService = $this->testSupportHelper->getTesterService();
-        $tester        = $testerService->create([
-            'passwordChangeRequired' => true,
-            'siteIds'                => [1],
-        ]);
+        $params = [
+            PersonParams::PASSWORD_CHANGE_REQUIRED => true,
+            PersonParams::SITE_IDS => [$this->siteData->get()->getId()],
+        ];
 
-        $this->currentUser = $this->session->startSession($tester->data['username'], $tester->data['password']);
-
-        $this->tempPasswordChangeContext->myAccountHasBeenFlaggedAsTempPassword();
+        $this->currentUser = $this->userData->createTesterWithParams($params, "Tester With Temp Password");
+        $this->userData->setCurrentLoggedUser($this->currentUser);
     }
 
     /**
@@ -436,36 +391,16 @@ class SessionContext implements Context
     }
 
     /**
-     * @Given I am authenticated as :username
-     */
-    public function iAmAuthenticatedAs($username)
-    {
-        $this->iMAuthenticatedWithMyUsernameAndPassword($username, Authentication::PASSWORD_DEFAULT);
-    }
-
-    /**
-     * @Given I am logged in as :role
-     */
-    public function iAmLoggedInAs($role)
-    {
-        $this->iMAuthenticatedWithMyUsernameAndPassword($role, Authentication::PASSWORD_DEFAULT);
-    }
-
-    /**
      * @Given /^I am logged in as an? Authorised Examiner$/
+     * @Given I am logged in as an AEDM
+     * @Given I am logged in as an AEDM of :aeName
      */
-    public function iAmLoggedInAsAnAuthorisedExaminer()
+    public function iAmLoggedInAsAnAedmOf($aeName = AuthorisedExaminerData::DEFAULT_NAME)
     {
-        $this->iMAuthenticatedWithMyUsernameAndPassword('aedm', Authentication::PASSWORD_DEFAULT);
-    }
-
-    /**
-     * @Given I am logged in as an Area Office User to new site
-     */
-    public function iAmLoggedInAsAnAreaOfficeUserToNewSite()
-    {
-        $this->vtsContext->createSite();
-        $this->iAmLoggedInAsAnAreaOfficeUser();
+        $ae = $this->authorisedExaminerData->create($aeName);
+        $aedm = $this->userData->getAedmByAeId($ae->getId());
+        $this->userData->setCurrentLoggedUser($aedm);
+        $this->currentUser = $aedm;
     }
 
     /**
@@ -473,7 +408,7 @@ class SessionContext implements Context
      */
     public function iAmLoggedInAsAnAreaOfficeUser2ToNewSite()
     {
-        $this->vtsContext->createSite();
+        $this->siteData->create("V-Tech UK");
         $this->iAmLoggedInAsAnAreaOfficeUser2();
     }
 
@@ -482,19 +417,18 @@ class SessionContext implements Context
      */
     public function iAmLoggedInAsASiteManagerToNewSite()
     {
-        $this->vtsContext->createSite();
-        $siteId = $this->vtsContext->getSite()["id"];
-        $siteManagerService = $this->testSupportHelper->getSiteUserDataService();
+        $site = $this->siteData->create("Best Garage");
+        $this->currentUser  = $this->userData->createSiteManager($site->getId());
+        $this->userData->setCurrentLoggedUser($this->currentUser);
+    }
 
-        $data = [
-            "siteIds" => [ $siteId ],
-            "requestor" => [
-                "username" => "schememgt",
-                "password" => "Password1"
-            ]
-        ];
-        $user               = $siteManagerService->create($data, "SITE-MANAGER");
-        $this->currentUser  = $this->session->startSession($user->data['username'], $user->data['password']);
+    /**
+     * @Given I am logged in as a Site Manager at :site site
+     */
+    public function iAmLoggedInAsASiteManager(SiteDto $site)
+    {
+        $this->currentUser  = $this->userData->createSiteManager($site->getId());
+        $this->userData->setCurrentLoggedUser($this->currentUser);
     }
 
     /**
@@ -502,48 +436,9 @@ class SessionContext implements Context
      */
     public function iAmLoggedInAsAnAedmToNewOrganisation()
     {
-        $ae = $this->authorisedExaminerContext->createAE();
-        $this->currentUser = $this->userData->getAedmByAeId($ae["id"]);
-    }
-
-    /**
-     * @Given I am logged in as a Tester to new site
-     */
-    public function iAmLoggedInAsATesterToNewSite()
-    {
-        $this->logInTesterToNewSiteAssignedToAe();
-    }
-
-    public function logInTesterToNewSiteAssignedToAe($siteName = 'default', $aeName = 'default')
-    {
-        $aeId = $this->authorisedExaminerContext->createAE(1001, $aeName)["id"];
-        $this->vtsContext->createSite($siteName);
-        $siteId = $this->vtsContext->getSite($siteName)["id"];
-        $siteNumber = $this->vtsContext->getSite($siteName)["siteNumber"];
-
-        $areaOffice1Service = $this->testSupportHelper->getAreaOffice1Service();
-        $ao = $areaOffice1Service->create([]);
-        $aoSession = $this->session->startSession(
-            $ao->data["username"],
-            $ao->data["password"]
-        );
-
-        $this->authorisedExaminer->linkAuthorisedExaminerWithSite(
-            $aoSession->getAccessToken(),
-            $aeId,
-            $siteNumber
-        );
-
-        $testerService = $this->testSupportHelper->getTesterService();
-        $tester        = $testerService->create([
-            'siteIds'                => [$siteId],
-        ]);
-
-        $this->personContext->createSiteAdmin($siteId);
-
-        $this->currentUser = $this->session->startSession($tester->data['username'], $tester->data['password']);
-
-        return $this->currentUser;
+        $ae = $this->authorisedExaminerData->create("Best Company Ltd");
+        $this->currentUser = $this->userData->getAedmByAeId($ae->getId());
+        $this->userData->setCurrentLoggedUser($this->currentUser);
     }
 
     /**
@@ -590,19 +485,8 @@ class SessionContext implements Context
 
     public function iAmLoggedInAsASiteAdmin()
     {
-        $this->vtsContext->createSite();
-        $siteId = $this->vtsContext->getSite()["id"];
-        $siteManagerService = $this->testSupportHelper->getSiteUserDataService();
-
-        $data = [
-            "siteIds" => [ $siteId ],
-            "requestor" => [
-                "username" => "tester1",
-                "password" => "Password1"
-            ]
-        ];
-        $user               = $siteManagerService->create($data, "SITE-ADMIN");
-        $this->currentUser  = $this->session->startSession($user->data['username'], $user->data['password']);
+        $siteId = $this->siteData->get()->getId();
+        $this->currentUser  = $this->userData->createSiteAdmin($siteId);
+        $this->userData->setCurrentLoggedUser($this->currentUser);
     }
-
 }

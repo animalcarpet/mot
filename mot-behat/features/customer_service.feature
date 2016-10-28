@@ -58,8 +58,8 @@ Feature: Customer Service
 
   Scenario: Non-existent Authorised Examiner information search
     Given I am logged in as a Customer Service Operator
-    When I search for an Invalid Authorised Examiner
-    Then I am informed that Authorised Examiner does not exist
+    When I search for an Invalid Authorised Examiner with number "NotExistsAeNumber0192!"
+    Then I am informed that Authorised Examiner with number "NotExistsAeNumber0192!" does not exist
 
   Scenario: Non-existent MOT test information search
     Given I am logged in as a Customer Service Operator

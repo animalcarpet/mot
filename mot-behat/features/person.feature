@@ -71,16 +71,10 @@ Feature: Person
     Then the user's email address will be updated
     And the person should receive a notification about the change
 
-  @wip
-  Scenario: AE record contains Data Disclosure
-    Given I am logged in as an Area Office User
-    When I search for an Authorised Examiner
-    Then the Authorised Examiner record contains Data Disclosure data
-
+  @create-default-site("Big Garage")
   Scenario: A Person can view their test logs
-    Given there is a Vts assigned to Ae
-    Given I am logged in as a Tester assigned to default site
-    And I have created 2 mot tests for default site
+    Given I am logged in as a Tester
+    And I have created 2 mot tests
     When I review my test logs
     Then 2 test logs should show today in summary section
     And My test logs should return 2 detailed records

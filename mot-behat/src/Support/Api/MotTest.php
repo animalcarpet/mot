@@ -3,8 +3,12 @@
 namespace Dvsa\Mot\Behat\Support\Api;
 
 use Dvsa\Mot\Behat\Datasource\Authentication;
+use Dvsa\Mot\Behat\Support\Data\DefaultData\DefaultVehicleTestingStation;
 use Dvsa\Mot\Behat\Support\HttpClient;
 use Dvsa\Mot\Behat\Support\Request;
+use DvsaCommon\Enum\ColourCode;
+use DvsaCommon\Enum\FuelTypeCode;
+use DvsaCommon\Enum\VehicleClassCode;
 
 class MotTest extends AbstractMotTest
 {
@@ -39,14 +43,14 @@ class MotTest extends AbstractMotTest
      * @param array $params
      * @return \Dvsa\Mot\Behat\Support\Response
      */
-    public function startMOTTest($token, $vehicleId = '3', $testClass = '4', $params = [])
+    public function startMOTTest($token, $vehicleId, $siteId, $testClass = VehicleClassCode::CLASS_4, $params = [])
     {
         $defaults = [
             'vehicleId' => $vehicleId,
-            'vehicleTestingStationId' => '1',
-            'primaryColour' => 'L',
-            'secondaryColour' => 'L',
-            'fuelTypeId' => 'PE',
+            'vehicleTestingStationId' => $siteId,
+            'primaryColour' => ColourCode::GREY,
+            'secondaryColour' => ColourCode::GREY,
+            'fuelTypeId' => FuelTypeCode::PETROL,
             'vehicleClassCode' => $testClass,
             'hasRegistration' => '1',
             'oneTimePassword' => Authentication::ONE_TIME_PASSWORD,
@@ -57,29 +61,17 @@ class MotTest extends AbstractMotTest
         return parent::createMotWithParams($token, $params);
     }
 
-    public function startMOTTestForTester($token, $userId)
+    public function startNewMotTestWithVehicleId($token, $userId, $vehicleId, $siteId, $vehicleClass = VehicleClassCode::CLASS_4, $motTestParams = [])
     {
         if (!$this->isMOTTestInProgressForTester($token, $userId)) {
-            return $this->startMOTTest($token);
-        } else {
-            $currentMotTestNumber = $this->getInProgressTestId($token, $userId);
-            $this->abort($token, $currentMotTestNumber);
-
-            return $this->startMOTTest($token);
-        }
-    }
-
-    public function startNewMotTestWithVehicleId($token, $userId, $vehicleId, $vehicleClass = '4', $motTestParams = [])
-    {
-        if (!$this->isMOTTestInProgressForTester($token, $userId)) {
-            return $this->startMOTTest($token, $vehicleId, $vehicleClass, $motTestParams);
+            return $this->startMOTTest($token, $vehicleId, $siteId, $vehicleClass, $motTestParams);
         } else {
             //Stop Current Test and Start a New one with the new Vehicle Id
 
             $currentMotTestNumber = $this->getInProgressTestId($token, $userId);
             $this->abort($token, $currentMotTestNumber);
 
-            return $this->startMOTTest($token, $vehicleId, $vehicleClass);
+            return $this->startMOTTest($token, $vehicleId, $siteId, $vehicleClass);
         }
     }
 
@@ -169,17 +161,12 @@ class MotTest extends AbstractMotTest
      */
     public function submitSurveyResponse($authToken, $satisfactionRating, $surveyToken)
     {
-        $body = json_encode(
-            ['satisfaction_rating' => $satisfactionRating, 'token' => $surveyToken]
-        );
+        $params = ['satisfaction_rating' => $satisfactionRating, 'token' => $surveyToken];
 
-        return $this->client->request(
-            new Request(
-                MotApi::METHOD_POST,
-                self::PATH_SURVEY,
-                ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '. $authToken],
-                $body
-            )
+        return $this->sendPostRequest(
+            $authToken,
+            self::PATH_SURVEY,
+            $params
         );
     }
 
@@ -189,19 +176,17 @@ class MotTest extends AbstractMotTest
      */
     public function generateSurveyReports($token)
     {
-        return $this->client->request(new Request(
-            MotApi::METHOD_GET,
-            self::PATH_SURVEY.self::PATH_SURVEY_REPORTS.'/generate',
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '. $token]
-        ));
+        return $this->sendGetRequest(
+            $token,
+            self::PATH_SURVEY.self::PATH_SURVEY_REPORTS.'/generate'
+        );
     }
     
     public function getSurveyReports($token)
     {
-        return $this->client->request(new Request(
-            MotApi::METHOD_GET,
-            self::PATH_SURVEY.self::PATH_SURVEY_REPORTS,
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '. $token]
-        ));
+        return $this->sendGetRequest(
+            $token,
+            self::PATH_SURVEY.self::PATH_SURVEY_REPORTS
+        );
     }
 }

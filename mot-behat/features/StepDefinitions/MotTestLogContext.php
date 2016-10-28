@@ -3,7 +3,11 @@
 use Behat\Behat\Context\Context;
 use Dvsa\Mot\Behat\Support\Api\AuthorisedExaminer;
 use Dvsa\Mot\Behat\Support\Api\MotTest;
+use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
+use Dvsa\Mot\Behat\Support\Data\SiteData;
+use Dvsa\Mot\Behat\Support\Data\UserData;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Dvsa\Mot\Behat\Support\Api\SlotReport;
 use PHPUnit_Framework_Assert as PHPUnit;
 use Dvsa\Mot\Behat\Support\Response;
 
@@ -26,6 +30,21 @@ class MotTestLogContext implements Context
     private $motTest;
 
     /**
+     * @var SiteData
+     */
+    private $siteData;
+
+    private $authorisedExaminerData;
+
+    private $userData;
+
+    private $slotReport;
+
+    private $aeTestLogs = [];
+
+    private $siteTestLogs = [];
+
+    /**
      * @var Response
      */
     private $userTestLogs;
@@ -33,10 +52,18 @@ class MotTestLogContext implements Context
 
     public function __construct(
         AuthorisedExaminer $authorisedExaminer,
-        MotTest $motTest
+        MotTest $motTest,
+        SiteData $siteData,
+        AuthorisedExaminerData $authorisedExaminerData,
+        UserData $userData,
+        SlotReport $slotReport
     ) {
         $this->authorisedExaminer = $authorisedExaminer;
         $this->motTest = $motTest;
+        $this->siteData = $siteData;
+        $this->authorisedExaminerData = $authorisedExaminerData;
+        $this->userData = $userData;
+        $this->slotReport = $slotReport;
     }
 
     /**
@@ -61,12 +88,12 @@ class MotTestLogContext implements Context
     /**
      * @When I download that site's test logs for today
      */
-    public function getSiteTestLogs($siteId = 1)
+    public function getSiteTestLogs()
     {
         $this->userTestLogs = $this->authorisedExaminer->getTodaysTestLogs(
             $this->sessionContext->getCurrentAccessToken(),
-            2,
-            $siteId
+            $this->siteData->get()->getId(),
+            $this->siteData->get()->getOrganisation()->getId()
         );
     }
 
@@ -91,5 +118,76 @@ class MotTestLogContext implements Context
                 (new \DateTime())->format('dmY')
             );
         }
+    }
+
+    /**
+     * @When I fetch test logs for those AE and VTS's
+     */
+    public function iFetchTestLogsForThoseAeAndVtsS()
+    {
+        $someAe = $this->authorisedExaminerData->get("some");
+        $otherAe = $this->authorisedExaminerData->get("other");
+
+        $this->aeTestLogs = [
+            "some" => $this->authorisedExaminerData->getTodaysTestLogs($this->userData->getCurrentLoggedUser(), $someAe),
+            "other" => $this->authorisedExaminerData->getTodaysTestLogs($this->userData->getCurrentLoggedUser(), $otherAe),
+        ];
+
+        $this->siteTestLogs = [
+            "some site" => $this->siteData->getTestLogs($this->userData->getCurrentLoggedUser(), $this->siteData->get("some site"))
+
+        ];
+    }
+
+    /**
+     * @Then test logs show correct test count
+     */
+    public function testLogsShowCorrectTestCount()
+    {
+        PHPUnit::assertEquals(2, $this->aeTestLogs["some"]);
+        PHPUnit::assertEquals(1, $this->aeTestLogs["other"]);
+        PHPUnit::assertEquals(2, $this->siteTestLogs["some site"]);
+    }
+
+    /**
+     * @Then slot usage shows correct value
+     */
+    public function slotUsageShowsCorrectValue()
+    {
+        $response = $this->slotReport->getSlotUsage(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->authorisedExaminerData->get("some")->getId()
+        );
+
+        $rows = $response->getBody()->getData()["rows"];
+
+        PHPUnit::assertCount(1, $rows);
+
+        $data = array_shift($rows);
+
+        PHPUnit::assertEquals(2, $data["tests_number"]);
+
+        $response = $this->slotReport->getSlotUsage(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->authorisedExaminerData->get("other")->getId()
+        );
+
+        $rows = $response->getBody()->getData()["rows"];
+
+        PHPUnit::assertCount(1, $rows);
+
+        $data = array_shift($rows);
+
+        PHPUnit::assertEquals(1, $data["tests_number"]);
+
+        $response = $this->slotReport->getSlotUsageNumber(
+            $this->sessionContext->getCurrentAccessToken(),
+            $this->siteData->get("some site")->getId(),
+            $this->authorisedExaminerData->get("some")->getId()
+        );
+
+        $slotUsageNumber = $response->getBody()->getData()["slot_usage_number"];
+
+        PHPUnit::assertEquals(2, $slotUsageNumber);
     }
 }

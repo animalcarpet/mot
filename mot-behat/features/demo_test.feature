@@ -52,23 +52,6 @@ Feature: Demo MOT Test
     When the Tester Fails the Mot Test
     Then the MOT Test Status is "FAILED"
 
-  Scenario: Unauthenticated user attempts to create Demo MOT Test
-    Given I am not logged in
-    When I attempt to create a Demo MOT Test
-    Then I should receive an Unauthorised response
-
-  @defect @VM-7620 @disabled
-  Scenario: Special Notice Broadcast user attempts to create Demo MOT Test
-    Given I am logged in as a Special Notice broadcast user
-    When I attempt to create a Demo MOT Test
-    Then an MOT test number should not be allocated
-
-  @defect @VM-7620 @disabled
-  Scenario: Area Office user attempts to create Demo MOT Test
-    Given I am logged in as an Area Office User
-    When I attempt to create a Demo MOT Test
-    Then an MOT test number should not be allocated
-
   @defect
   Scenario Outline: Being authorised to perform Demo Test, I can interact with reasons for rejection
     Given I am logged in as a <permitted user>

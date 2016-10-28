@@ -45,12 +45,6 @@ class StatsComponentFailRateContext implements Context
         $this->apiResourceHelper = $apiResourceHelper;
     }
 
-    /** @BeforeScenario @test-quality-information */
-    public function clearAmazonCache(BeforeScenarioScope $scope)
-    {
-        $this->testSupportHelper->getStatisticsAmazonCacheService()->removeAll();
-    }
-
     /**
      * @Given there are tests with reason for rejection performed at site :site by :tester
      */

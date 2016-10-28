@@ -10,17 +10,16 @@ Feature: Contingency Test
     Then I should receive the MOT test number
     And the MOT Test Number should be 12 digits long
 
+  @transform
   Scenario Outline: Tester submits Contingency test details
     Given I am logged in as a Tester
-    When I create a new contingency test with reason <reason>
+    When I create a new contingency test with reason "<reason>"
     Then I should receive an emergency log id
 
   Examples:
-    | reason |
-    | CP     |
-    | OT     |
-    | CP     |
-    | OT     |
+    | reason                |
+    | communication problem |
+    | other                 |
 
   Scenario: Unauthenticated Tester attempts to submit Contingency test details
     Given I am not logged in
@@ -81,7 +80,7 @@ Feature: Contingency Test
     When the Tester Passes the Mot Test
     Then the MOT Test Status is "PASSED"
     And the Contingency Test is Logged
-  
+
   @quarantine
   Scenario Outline: Tester Completes a Contingency expecting a specific response
     Given I am logged in as a Tester

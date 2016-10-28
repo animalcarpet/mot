@@ -1,3 +1,4 @@
+@transform
 Feature: Permissions
   As the Roles Based Access Control process
   I want to implement user permissions and roles
@@ -49,6 +50,7 @@ Feature: Permissions
     | USER          |
 
   @story @VM-9865
+  @transform
   Scenario Outline: Vehicle Examiner can view the summary of a MOT test that is completed
     Given there is a "<status>" "<test>" MOT test
     When I log in as a Vehicle Examiner
@@ -88,44 +90,35 @@ Feature: Permissions
       | tester          | FORBIDDEN     |
       | siteManager     | FORBIDDEN     |
       | siteAdmin       | FORBIDDEN     |
-      | aedm            | CREATED       |
+      | aedm            | FORBIDDEN     |
       | vehicleExaminer | FORBIDDEN     |
       | csco            | FORBIDDEN     |
       | schememgt       | FORBIDDEN     |
       | schemeuser      | FORBIDDEN     |
       | dvlaOper        | FORBIDDEN     |
 
-  Scenario Outline: Validate the permission of who can remove an AE
-    Given I am logged in as user with <role>
-    When I attempt to remove an AE
-    Then the removal of AE will be <status>
-    Examples:
-      | role            | status        |
-      | tester          | Forbidden     |
-      | siteManager     | Forbidden     |
-      | siteAdmin       | Forbidden     |
-      | aedm            | Forbidden     |
-      | vehicleExaminer | Forbidden     |
-      | csco            | Forbidden     |
-      | schemeuser      | Forbidden     |
-      | dvlaOper        | Forbidden     |
-      | schememgt       | REMOVED       |
-
-  Scenario Outline: User can/cannot ABORT MOT test
-    Given I am logged in as a Tester
-    And vehicle has a <test_type> test started
+  Scenario Outline: User cannot ABORT MOT test
+    Given there is a Mot test with "<test_type>" type in progress
     And I am logged in as user with <role>
-    When the User Aborts the Mot Test
+    When I abort the Mot Test
+    Then I should receive a Forbidden response
+    Examples:
+      | test_type                | role            |
+      | Targeted Reinspection    | areaOffice      |
+      #| MOT Compliance Survey    | tester          |
+      | Inverted Appeal          | siteManager     |
+      #| Targeted Reinspection    | siteAdmin       |
+      | Statutory Appeal         | aedm            |
+      | MOT Compliance Survey    | csco            |
+      | Targeted Reinspection    | schememgt       |
+      | Inverted Appeal          | schemeuser      |
+      | Statutory Appeal         | dvlaOper        |
+
+  Scenario Outline: User can ABORT MOT test
+    Given there is a Mot test with "<test_type>" type in progress
+    And I am logged in as user with <role>
+    When I abort the Mot Test
     Then the MOT Test Status is "<status>"
     Examples:
       | test_type                | role            | status     |
-      | Targeted Reinspection    | areaOffice      | Forbidden  |
-      | MOT Compliance Survey    | tester          | Forbidden  |
-      | Inverted Appeal          | siteManager     | Forbidden  |
-      | Targeted Reinspection    | siteAdmin       | Forbidden  |
-      | Statutory Appeal         | aedm            | Forbidden  |
       | Targeted Reinspection    | vehicleExaminer | ABORTED    |
-      | MOT Compliance Survey    | csco            | Forbidden  |
-      | Targeted Reinspection    | schememgt       | Forbidden  |
-      | Inverted Appeal          | schemeuser      | Forbidden  |
-      | Statutory Appeal         | dvlaOper        | Forbidden  |

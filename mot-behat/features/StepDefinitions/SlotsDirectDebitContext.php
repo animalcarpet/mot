@@ -5,6 +5,9 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\DirectDebit;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Response;
+use DvsaCommon\Dto\Organisation\OrganisationDto;
+use Dvsa\Mot\Behat\Support\Data\UserData;
+use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class SlotsDirectDebitContext implements Context
@@ -18,17 +21,6 @@ class SlotsDirectDebitContext implements Context
      * @var SessionContext
      */
     private $sessionContext;
-    /**
-     * @var array
-     */
-    private $organisationMap = [
-        'crazyWheels' => 10,
-        'halfords'    => 9,
-        'asda'        => 12,
-        'city'        => 13,
-        'speed'       => 1001,
-        'kwikfit'     => 2001,
-    ];
 
     private $slotPrice = 2.05;
     /**
@@ -41,12 +33,15 @@ class SlotsDirectDebitContext implements Context
      */
     private $mandateReference;
 
+    private $userData;
+
     /**
      * @param DirectDebit $directDebit
      */
-    public function __construct(DirectDebit $directDebit)
+    public function __construct(DirectDebit $directDebit, UserData $userData)
     {
         $this->directDebit = $directDebit;
+        $this->userData = $userData;
     }
 
     /**
@@ -58,26 +53,40 @@ class SlotsDirectDebitContext implements Context
     }
 
     /**
-     * @Given I have an active direct debit mandate set up for :slots slots in :organisation on :day
+     * @Given I have an active direct debit mandate set up for :slots slots in :ae on :day
      */
-    public function iHaveAnActiveDirectDebitMandateSetUpFor($slots, $organisation, $day)
+    public function iHaveAnActiveDirectDebitMandateSetUpFor($slots, OrganisationDto $ae, $day)
     {
         $token           = $this->sessionContext->getCurrentAccessToken();
-        $mandateResponse = $this->directDebit->getActiveMandate($token, $this->organisationMap[$organisation]);
+        $this->setUpDirectDebitMandate($token, $ae->getId(), $slots, $day);
+    }
+
+    /**
+     * @Given :ae has active direct debit mandate set up for :slots slots on :day
+     */
+    public function hasActiveDirectDebitMandateSetUpForSlotsOn(OrganisationDto $ae, $slots, $day)
+    {
+        $aedm = $this->userData->getAedmByAeId($ae->getId());
+        $this->setUpDirectDebitMandate($aedm->getAccessToken(), $ae->getId(), $slots, $day);
+    }
+
+    private function setUpDirectDebitMandate($token, $orgId, $slots, $day)
+    {
+        $mandateResponse = $this->directDebit->getActiveMandate($token, $orgId);
         $mandateBody     = $mandateResponse->getBody();
 
         if (empty($mandateBody['data']['mandate_id'])) {
 
             $this->responseReceived = $this->directDebit->setUpDirectDebitMandate(
                 $token,
-                $this->organisationMap[$organisation],
+                $orgId,
                 $slots,
                 $day,
                 number_format($slots * $this->slotPrice, 2, '.', '')
             );
 
             PHPUnit::assertEquals(
-                200,
+                HttpResponse::STATUS_CODE_200,
                 $this->responseReceived->getStatusCode(),
                 'Unable to setup mandate'
             );
@@ -90,12 +99,12 @@ class SlotsDirectDebitContext implements Context
     }
 
     /**
-     * @Given I have an active direct debit mandate for :organisation
+     * @Given I have an active direct debit mandate for :ae
      */
-    public function iHaveAnActiveDirectDebitMandate($organisation)
+    public function iHaveAnActiveDirectDebitMandate(OrganisationDto $ae)
     {
         $token           = $this->sessionContext->getCurrentAccessToken();
-        $mandateResponse = $this->directDebit->getActiveMandate($token, $this->organisationMap[$organisation]);
+        $mandateResponse = $this->directDebit->getActiveMandate($token, $ae->getId());
         $mandateBody     = $mandateResponse->getBody();
 
         if (isset($mandateBody['data']['mandate_id'])) {
@@ -106,20 +115,20 @@ class SlotsDirectDebitContext implements Context
 
         if ($mandateBody['data']['status']['code'] == 'C') {
             $this->directDebit->completeMandateSetup(
-                $token, $this->organisationMap[$organisation], $mandateBody['data']['mandate_id']
+                $token, $ae->getId(), $mandateBody['data']['mandate_id']
             );
         }
     }
 
     /**
-     * @When I request to cancel the direct debit for :organisation
+     * @When I request to cancel the direct debit for :ae
      */
-    public function iRequestToCancelTheDirectDebit($organisation)
+    public function iRequestToCancelTheDirectDebit(OrganisationDto $ae)
     {
         $token                  = $this->sessionContext->getCurrentAccessToken();
         $this->responseReceived = $this->directDebit->cancelDirectDebit(
             $token,
-            $this->organisationMap[$organisation],
+            $ae->getId(),
             $this->mandateReference
         );
     }
@@ -130,7 +139,7 @@ class SlotsDirectDebitContext implements Context
     public function theDirectDebitShouldBeInactive()
     {
         PHPUnit::assertEquals(
-            200,
+            HttpResponse::STATUS_CODE_200,
             $this->responseReceived->getStatusCode(),
             'Unable to cancel the direct debit'
         );
@@ -148,7 +157,7 @@ class SlotsDirectDebitContext implements Context
     {
         $body = $this->responseReceived->getBody();
         PHPUnit::assertEquals(
-            200,
+            HttpResponse::STATUS_CODE_200,
             $this->responseReceived->getStatusCode(),
             'Direct request was not rejected'
         );
@@ -158,26 +167,26 @@ class SlotsDirectDebitContext implements Context
     }
 
     /**
-     * @When I setup direct debit of :numberOfSlots slots for :organisation on :dayOfMonth day of the month
+     * @When I setup direct debit of :numberOfSlots slots for :ae on :dayOfMonth day of the month
      */
-    public function iSetupDirectDebitOfSlotsForAsdaOnDayOfTheMonth($numberOfSlots, $organisation, $dayOfMonth)
+    public function iSetupDirectDebitOfSlotsForAsdaOnDayOfTheMonth($numberOfSlots, OrganisationDto $ae, $dayOfMonth)
     {
         $token           = $this->sessionContext->getCurrentAccessToken();
-        $mandateResponse = $this->directDebit->getActiveMandate($token, $this->organisationMap[$organisation]);
+        $mandateResponse = $this->directDebit->getActiveMandate($token, $ae->getId());
         $mandateBody     = $mandateResponse->getBody();
 
         if (isset($mandateBody['data']['mandate_id'])) {
             //Cancel existing mandate
             $this->directDebit->cancelDirectDebit(
                 $token,
-                $this->organisationMap[$organisation],
+                $ae->getId(),
                 $mandateBody['data']['mandate_id']
             );
         }
 
         $this->responseReceived = $this->directDebit->setUpDirectDebitMandate(
             $token,
-            $this->organisationMap[$organisation],
+            $ae->getId(),
             $numberOfSlots,
             $dayOfMonth,
             number_format($numberOfSlots * $this->slotPrice, 2, '.', '')

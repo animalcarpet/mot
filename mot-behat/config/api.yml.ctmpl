@@ -14,7 +14,7 @@ services:
     dvsa.email_duplicate:
         class: Dvsa\Mot\Behat\Support\Api\EmailDuplicate
         parent: dvsa.api
-        
+
     dvsa.security_pin:
         class: Dvsa\Mot\Behat\Support\Api\SecurityPin
         parent: dvsa.api
@@ -159,4 +159,12 @@ services:
 
     dvsa.stats_component_fail_rate:
         class: Dvsa\Mot\Behat\Support\Api\StatsComponentFailRate
+        parent: dvsa.api
+
+    dvsa.data_catalog:
+        class: Dvsa\Mot\Behat\Support\Api\DataCatalog
+        parent: dvsa.api
+
+    dvsa.vehicle_dictionary:
+        class: Dvsa\Mot\Behat\Support\Api\VehicleDictionary
         parent: dvsa.api

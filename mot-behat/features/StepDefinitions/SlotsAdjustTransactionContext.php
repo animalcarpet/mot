@@ -5,6 +5,7 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\SlotPurchase;
 use Dvsa\Mot\Behat\Support\Response;
+use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class SlotsAdjustTransactionContext implements Context
@@ -93,7 +94,7 @@ class SlotsAdjustTransactionContext implements Context
     public function theTransactionShouldBeCorrectlyAdjusted()
     {
         PHPUnit::assertEquals(
-            200,
+            HttpResponse::STATUS_CODE_200,
             $this->responseReceived->getStatusCode(),
             'Unable to adjust transaction'
         );
@@ -132,12 +133,12 @@ class SlotsAdjustTransactionContext implements Context
     public function checkReasonPresentInResponse($reason)
     {
         PHPUnit::assertEquals(
-            200,
+            HttpResponse::STATUS_CODE_200,
             $this->responseReceived->getStatusCode(),
             'Unable to adjust transaction'
         );
 
-        $arrayOfReasons = array_values($this->responseReceived->getBody()->toArray()['data']);
+        $arrayOfReasons = array_values($this->responseReceived->getBody()->getData());
 
         PHPUnit::assertNotFalse(
             array_search($reason, $arrayOfReasons),

@@ -2,6 +2,7 @@
 
 namespace Dvsa\Mot\Behat\Support\Api;
 
+use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
 use Dvsa\Mot\Behat\Support\Request;
 use DvsaCommon\Dto\Contact\AddressDto;
 use DvsaCommon\Dto\Contact\EmailDto;
@@ -9,9 +10,14 @@ use DvsaCommon\Dto\Contact\PhoneDto;
 use DvsaCommon\Dto\Site\EnforcementSiteAssessmentDto;
 use DvsaCommon\Dto\Site\SiteContactDto;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
+use DvsaCommon\Enum\MotTestStatusCode;
+use DvsaCommon\Enum\MotTestStatusName;
+use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\PhoneContactTypeCode;
 use DvsaCommon\Enum\SiteContactTypeCode;
+use DvsaCommon\Enum\SiteStatusCode;
 use DvsaCommon\Enum\SiteTypeCode;
+use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Model\VehicleTestingStation;
 use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaCommon\UrlBuilder\VehicleTestingStationUrlBuilder;
@@ -34,12 +40,9 @@ class Vts extends MotApi
 
     public function getVtsDetails($vtsId, $token)
     {
-        return $this->client->request(
-            new Request(
-                'GET',
-                str_replace('{vts_id}', $vtsId, self::PATH),
-                ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token]
-            )
+        return $this->sendGetRequest(
+            $token,
+            str_replace('{vts_id}', $vtsId, self::PATH)
         );
     }
 
@@ -70,31 +73,17 @@ class Vts extends MotApi
 
     protected function getDefaults()
     {
-        return [
-            'name'         => 'Garage Name',
-            'status'       => 'AV',
-            'addressLine1' => 'addressLine1',
-            'town'         => 'Boston',
-            'postcode'     => 'BT2 4RR',
-            'email'        => 'vtsbehatsupport@' . EmailAddressValidator::TEST_DOMAIN,
-            'phoneNumber'  => '01117 26374',
-            'classes'      => [1, 2, 3, 4, 5, 7],
-        ];
+        return SiteParams::getDefaultParams();
     }
 
     public function create($token, $site = [])
     {
         $site = array_merge($this->getDefaults(), $site);
 
-        $body = json_encode(DtoHydrator::dtoToJson($this->generateSiteDto($site)));
-
-        return $this->client->request(
-            new Request(
-                'POST',
-                UrlBuilder::of()->vehicleTestingStation()->toString(),
-                ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token],
-                $body
-            )
+        return $this->sendPostRequest(
+            $token,
+            UrlBuilder::of()->vehicleTestingStation()->toString(),
+            DtoHydrator::dtoToJson($this->generateSiteDto($site))
         );
     }
 
@@ -114,58 +103,49 @@ class Vts extends MotApi
         $facilities = [];
         for ($i = 0; $i < $numOptl; $i++) {
             $facility = (new FacilityDto())
-                ->setName('OPTL')
+                ->setName(FacilityTypeCode::ONE_PERSON_TEST_LANE)
                 ->setType((new FacilityTypeDto())->setCode(FacilityTypeCode::ONE_PERSON_TEST_LANE));
             array_push($facilities, $facility);
         }
 
         for ($i = 0; $i < $numTptl; $i++) {
             $facility = (new FacilityDto())
-                ->setName('TPTL')
+                ->setName(FacilityTypeCode::TWO_PERSON_TEST_LANE)
                 ->setType((new FacilityTypeDto())->setCode(FacilityTypeCode::TWO_PERSON_TEST_LANE));
             array_push($facilities, $facility);
         }
 
         $siteDto->setFacilities($facilities);
-        $body = json_encode(DtoHydrator::dtoToJson($siteDto));
 
-        return $this->client->request(
-            new Request(
-                'PUT',
-                str_replace('{site_id}', $siteId, self::TESTING_FACILITIES),
-                ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token],
-                $body
-            )
+        return $this->sendPutRequest(
+            $token,
+            str_replace('{site_id}', $siteId, self::TESTING_FACILITIES),
+            DtoHydrator::dtoToJson($siteDto)
         );
     }
 
     public function updateSiteDetails($token, $siteId, array $site)
     {
-        $body = json_encode($site);
-
-        return $this->client->request(
-            new Request(
-                'PATCH',
-                VehicleTestingStationUrlBuilder::vtsDetails($siteId),
-                ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token],
-                $body
-            )
+        return $this->sendPatchRequest(
+            $token,
+            VehicleTestingStationUrlBuilder::vtsDetails($siteId),
+            $site
         );
     }
 
     private function generateSiteDto($site)
     {
         $address = (new AddressDto())
-            ->setAddressLine1($site['addressLine1'])
-            ->setPostcode($site['postcode'])
-            ->setTown($site['town']);
+            ->setAddressLine1($site[SiteParams::ADDRESS_LINE_1])
+            ->setPostcode($site[SiteParams::POSTCODE])
+            ->setTown($site[SiteParams::TOWN]);
 
         $email = (new EmailDto())
-            ->setEmail($site['email'])
+            ->setEmail($site[SiteParams::EMAIL])
             ->setIsPrimary(true);
 
         $phone = (new PhoneDto())
-            ->setNumber($site['phoneNumber'])
+            ->setNumber($site[SiteParams::PHONE_NUMBER])
             ->setContactType(PhoneContactTypeCode::BUSINESS)
             ->setIsPrimary(true);
 
@@ -177,16 +157,16 @@ class Vts extends MotApi
             ->setPhones([$phone]);
 
         $facility = (new FacilityDto())
-            ->setName('OPTL')
+            ->setName(FacilityTypeCode::ONE_PERSON_TEST_LANE)
             ->setType((new FacilityTypeDto())->setCode(FacilityTypeCode::ONE_PERSON_TEST_LANE));
 
         //  logical block :: assemble dto
         $siteDto = new VehicleTestingStationDto();
         $siteDto
-            ->setName($site['name'])
-            ->setStatus($site['status'])
-            ->setType(SiteTypeCode::VEHICLE_TESTING_STATION)
-            ->setTestClasses($site['classes'])
+            ->setName($site[SiteParams::NAME])
+            ->setStatus($site[SiteParams::STATUS])
+            ->setType($site[SiteParams::TYPE])
+            ->setTestClasses($site[SiteParams::CLASSES])
             ->setIsDualLanguage(false)
             ->setFacilities([$facility])
             ->setIsOptlSelected(true)
@@ -218,26 +198,18 @@ class Vts extends MotApi
 
         $riskAssessment = array_replace($defaults, $riskAssessment);
 
-        $body = json_encode($riskAssessment);
-
-        return $this->client->request(
-            new Request(
-                'POST',
-                str_replace('{site_id}', $siteId, self::RISK_ASSESMENT),
-                ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token],
-                $body
-            )
+        return $this->sendPostRequest(
+            $token,
+            str_replace('{site_id}', $siteId, self::RISK_ASSESMENT),
+            $riskAssessment
         );
     }
 
     public function getRiskAssessment($token, $siteId)
     {
-        return $this->client->request(
-            new Request(
-                'GET',
-                str_replace('{site_id}', $siteId, self::RISK_ASSESMENT),
-                ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token]
-            )
+        return $this->sendGetRequest(
+            $token,
+            str_replace('{site_id}', $siteId, self::RISK_ASSESMENT)
         );
     }
 
@@ -253,7 +225,7 @@ class Vts extends MotApi
     public function getTestLogs($token, $siteId)
     {
         //todo probably there's no need to pass that much params to api
-        $body = json_encode([
+        $params = [
             'organisationId' => NULL,
             'siteId' => $siteId,
             'siteNr' => NULL,
@@ -265,19 +237,19 @@ class Vts extends MotApi
             'dateToTs' => strtotime('tomorrow 01 am'),
             'status' =>
                 array (
-                    0 => 'ABANDONED',
-                    1 => 'ABORTED',
-                    2 => 'ABORTED_VE',
-                    3 => 'FAILED',
-                    4 => 'PASSED',
-                    5 => 'REFUSED',
+                    0 => MotTestStatusName::ABANDONED,
+                    1 => MotTestStatusName::ABORTED,
+                    2 => MotTestStatusName::ABORTED_VE,
+                    3 => MotTestStatusName::FAILED,
+                    4 => MotTestStatusName::PASSED,
+                    5 => MotTestStatusName::REFUSED,
                 ),
             'testType' =>
                 array (
-                    0 => 'NT',
-                    1 => 'PL',
-                    2 => 'PV',
-                    3 => 'RT',
+                    0 => MotTestTypeCode::NORMAL_TEST,
+                    1 => MotTestTypeCode::PARTIAL_RETEST_LEFT_VTS,
+                    2 => MotTestTypeCode::PARTIAL_RETEST_REPAIRED_AT_VTS,
+                    3 => MotTestTypeCode::RE_TEST,
                 ),
             'format' => 'DATA_CSV',
             'isSearchRecent' => false,
@@ -292,13 +264,12 @@ class Vts extends MotApi
             'isApiGetTotalCount' => false,
             'isEsEnabled' => NULL,
             '_class' => 'DvsaCommon\Dto\Search\MotTestSearchParamsDto',
-        ]);
+        ];
 
-        return $this->client->request(new Request(
-            MotApi::METHOD_POST,
+        return $this->sendPostRequest(
+            $token,
             str_replace('{site_id}', $siteId, self::TEST_LOG),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token],
-            $body
-        ));
+            $params
+        );
     }
 }

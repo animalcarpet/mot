@@ -3,6 +3,9 @@ namespace Dvsa\Mot\Behat\Support\Data\Collection;
 
 class SharedDataCollection
 {
+    /**
+     * @var DataCollection[]
+     */
     private static $collection = [];
 
     public static function get($class)
@@ -24,7 +27,6 @@ class SharedDataCollection
 
     public static function clear()
     {
-        /** @var DataCollection $dataCollection */
         foreach (static::$collection as $dataCollection) {
             $dataCollection->clear();
         }

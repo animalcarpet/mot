@@ -7,6 +7,7 @@ use Dvsa\Mot\Behat\Support\Api\Person;
 use Dvsa\Mot\Behat\Support\Response;
 use DvsaCommon\InputFilter\Account\ChangePasswordInputFilter;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
+use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class PasswordContext implements Context
@@ -89,7 +90,7 @@ class PasswordContext implements Context
             $this->data
         );
 
-        PHPUnit::assertEquals(200, $response->getStatusCode());
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
 
     /**
@@ -115,7 +116,7 @@ class PasswordContext implements Context
             $this->data
         );
 
-        $errors = $response->getBody()->toArray()["errors"];
+        $errors = $response->getBody()->getErrors();
         $isEmpty = empty($errors);
 
         PHPUnit::assertFalse($isEmpty);
@@ -137,47 +138,13 @@ class PasswordContext implements Context
     }
 
     /**
-     * @Given /^I have a (.*) token and I attempt to change my password to (.*)$/
-     */
-    public function iHaveATokenAndIAttemptToChangeMyPasswordTo($tokenType, $newPassword)
-    {
-        switch ($tokenType) {
-            case "valid":
-                $this->iHaveClickedForgottenPasswordAndIEnterThe($this->sessionContext->getCurrentUserIdOrNull());
-                $token = $this->response->getBody()['data']['token'];
-                break;
-            case "empty":
-                $token = "";
-                break;
-            case "invalid":
-                $token = "INVALIDTOKEN12";
-                break;
-            case "expired":
-                $token = "";
-                break;
-            default:
-                throw new InvalidArgumentException;
-        }
-
-        $param = [
-            'token' => $token,
-            'newPassword' => $newPassword
-        ];
-
-        $this->response = $this->person->changePasswordWithToken(
-            $this->sessionContext->getCurrentAccessTokenOrNull(),
-            $param
-        );
-    }
-
-    /**
      * @Then /^the result should be (.*) with (.*)$/
      */
     public function theResultShouldBeWith($expectedResult, $expectedErrorMessage)
     {
         $responseBody = $responseBody = $this->getMotResponse();
 
-        if ($this->response->getStatusCode() == 200){
+        if ($this->response->getStatusCode() == HttpResponse::STATUS_CODE_200){
             $actualResult = $responseBody['data']['success'];
         } else {
             $actualResult = false;
@@ -212,7 +179,7 @@ class PasswordContext implements Context
             $this->sessionContext->getCurrentAccessToken(),
             ['expiry-date' => '10-02-2016']
         );
-        PHPUnit::assertEquals($this->response->getStatusCode(), 200);
+        PHPUnit::assertEquals($this->response->getStatusCode(), HttpResponse::STATUS_CODE_200);
     }
 
     /**
@@ -222,7 +189,7 @@ class PasswordContext implements Context
     {
         $responseBody = $this->getMotResponse();
 
-        if ($this->response->getStatusCode() == 200){
+        if ($this->response->getStatusCode() == HttpResponse::STATUS_CODE_200){
             $actualMessage = $responseBody['data']['type']['name'];
         } else {
             $actualMessage = $this->findErrorMessage($expectedMessage, $responseBody);
@@ -239,7 +206,7 @@ class PasswordContext implements Context
         switch ($tokenType) {
             case "valid":
                 $this->iAttemptToResetMyPasswordWith($this->sessionContext->getCurrentUserIdOrNull());
-                $this->passwordResetToken = $this->response->getBody()['data']['token'];
+                $this->passwordResetToken = $this->response->getBody()->getData()['token'];
                 break;
             case "invalid":
                 $this->passwordResetToken = "INVALIDTOKEN12";

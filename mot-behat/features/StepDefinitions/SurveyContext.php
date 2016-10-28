@@ -5,6 +5,8 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\MotTest;
 use Dvsa\Mot\Behat\Support\Api\Survey;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
+use Dvsa\Mot\Behat\Support\Data\MotTestData;
+use Dvsa\Mot\Behat\Support\Data\UserData;
 use PHPUnit_Framework_Assert as PHPUnit;
 use Ramsey\Uuid\Uuid;
 use Zend\Http\Response;
@@ -27,6 +29,12 @@ class SurveyContext implements Context
     /** @var Survey $survey */
     private $survey;
 
+    /** @var MotTestData  */
+    private $motTestData;
+
+    /** @var  UserData */
+    private $userData;
+
     /** @var SessionContext $sessionContext */
     private $sessionContext;
 
@@ -45,16 +53,18 @@ class SurveyContext implements Context
     /** @var array $satisfactionRatings */
     private $satisfactionRatings;
 
-    /**
-     * @param MotTest           $motTest
-     * @param TestSupportHelper $testSupportHelper
-     * @param Survey            $survey
-     */
-    public function __construct(MotTest $motTest, Survey $survey, TestSupportHelper $testSupportHelper)
+    public function __construct(
+        MotTest $motTest, Survey $survey,
+        TestSupportHelper $testSupportHelper,
+        MotTestData $motTestData,
+        UserData $userData
+    )
     {
         $this->testSupportHelper = $testSupportHelper;
         $this->motTest = $motTest;
         $this->survey = $survey;
+        $this->motTestData = $motTestData;
+        $this->userData = $userData;
     }
 
     /**
@@ -66,18 +76,6 @@ class SurveyContext implements Context
     {
         $this->motTestContext = $scope->getEnvironment()->getContext(MotTestContext::class);
         $this->sessionContext = $scope->getEnvironment()->getContext(SessionContext::class);
-    }
-
-    /**
-     * @Given No survey has been completed
-     */
-    public function noSurveyCompleted()
-    {
-        $this->testSupportHelper->getGdsSurveyService()->deleteAllSurveys();
-
-        $numberOfSurveys = $this->testSupportHelper->getGdsSurveyService()->getNumberOfSurveysCompleted();
-
-        PHPUnit::assertEquals(0, $numberOfSurveys);
     }
 
     /**
@@ -103,7 +101,7 @@ class SurveyContext implements Context
         $this->testSupportHelper->getGdsSurveyService()
             ->persistTokenToDb(
                 $this->generatedSurveyToken,
-                $this->motTestContext->getMotTestIdFromNumber($this->motTestContext->getMotTestNumber())
+                $this->motTestData->getLast()->getId()
             );
     }
 
@@ -146,7 +144,7 @@ class SurveyContext implements Context
         $this->satisfactionRating = $satisfactionRating;
 
         $this->submittedSurveyHTTPResponse = $this->motTest->submitSurveyResponse(
-            $this->sessionContext->getCurrentAccessToken(),
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
             $satisfactionRating,
             $this->generatedSurveyToken
         );
@@ -222,25 +220,12 @@ class SurveyContext implements Context
     }
 
     /**
-     * @Then a survey token is generated
-     */
-    public function surveyTokenIsGenerated()
-    {
-        $motTestDetails = $this->getMotTestDetailsForSurveyCheck();
-        $token = $this->sessionContext->getCurrentAccessToken();
-        $tokenGeneratedForTest = $this->testSupportHelper->getGdsSurveyService()
-            ->tokenExistsForTest($token, $motTestDetails);
-
-        PHPUnit::assertEquals(true, $tokenGeneratedForTest);
-    }
-
-    /**
      * @Then the survey will not be displayed to the user
      */
     public function surveyNotDisplayedToUser()
     {
-        $motTestDetails = $this->getMotTestDetailsForSurveyCheck();
-        $token = $this->sessionContext->getCurrentAccessToken();
+        $motTestDetails = $this->motTestData->getLastResponse()->getBody()->getData();
+        $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $apiResult = $this->survey->surveyIsDisplayed($token, $motTestDetails);
 
         PHPUnit::assertEquals(false, $apiResult);
@@ -265,7 +250,7 @@ class SurveyContext implements Context
             $this->sessionContext->getCurrentAccessToken()
         );
 
-        PHPUnit::assertNotNull($reportResponse->getBody()['data']);
+        PHPUnit::assertNotNull($reportResponse->getBody()->getData());
     }
 
     /**
@@ -273,14 +258,14 @@ class SurveyContext implements Context
      */
     public function theSurveyResponseIsSaved()
     {
-        PHPUnit::assertSame(200, $this->submittedSurveyHTTPResponse->getStatusCode());
+        PHPUnit::assertSame(Response::STATUS_CODE_200, $this->submittedSurveyHTTPResponse->getStatusCode());
         if (is_int((int) $this->satisfactionRating)) {
             PHPUnit::assertTrue(
                 $this->satisfactionRating ==
                 $this->submittedSurveyHTTPResponse->getBody()['data']['satisfaction_rating']
             );
         } else {
-            PHPUnit::assertNull($this->submittedSurveyHTTPResponse->getBody()['data']['satisfaction_rating']);
+            PHPUnit::assertNull($this->submittedSurveyHTTPResponse->getBody()['satisfaction_rating']);
         }
     }
 
@@ -291,6 +276,6 @@ class SurveyContext implements Context
      */
     public function getMotTestDetailsForSurveyCheck()
     {
-        return $this->motTestContext->getMotStatusData()->getBody()['data'];
+        return $this->motTestContext->getMotStatusData()->getBody()->getData();
     }
 }

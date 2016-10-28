@@ -4,19 +4,22 @@ namespace Dvsa\Mot\Behat\Support\Data;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\Vts;
 use Dvsa\Mot\Behat\Support\Data\Collection\SharedDataCollection;
+use Dvsa\Mot\Behat\Support\Data\Params\AuthorisedExaminerParams;
+use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use Dvsa\Mot\Behat\Support\Response;
+use DvsaCommon\Dto\Search\SiteSearchParamsDto;
 use DvsaCommon\Dto\Site\SiteDto;
+use DvsaCommon\Dto\Site\SiteListDto;
+use DvsaCommon\Dto\Site\VehicleTestingStationDto;
+use DvsaCommon\Enum\SiteTypeCode;
+use DvsaCommon\Utility\ArrayUtils;
+use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
+use DvsaCommon\Utility\DtoHydrator;
 
 class SiteData
 {
-    const DEFAULT_NAME = "default";
-
-    private $defaultSiteData = [
-        "name" => self::DEFAULT_NAME,
-        'town' => "Toulouse",
-        'postcode' => "BS1 3LL",
-    ];
+    const DEFAULT_NAME = "Crazy cars garage";
 
     private $authorisedExaminerData;
     private $vts;
@@ -24,7 +27,7 @@ class SiteData
     private $testSupportHelper;
 
     private $siteCollection;
-    private $responseCollection;
+    private $siteSearchCollection;
 
     public function __construct(
         AuthorisedExaminerData $authorisedExaminerData,
@@ -38,71 +41,111 @@ class SiteData
         $this->userData = $userData;
         $this->testSupportHelper = $testSupportHelper;
         $this->siteCollection = SharedDataCollection::get(SiteDto::class);
-        $this->responseCollection = SharedDataCollection::get(Response::class);
     }
 
-    public function createUnassociatedSite(array $params = [])
+    public function createAreaOffice($name = "Area Office")
     {
-        $params = array_replace($this->defaultSiteData, $params);
+        $site = $this->createUnassociatedSite([SiteParams::NAME => $name, SiteParams::TYPE => SiteTypeCode::AREA_OFFICE]);
 
-        $site = $this->tryGet($params["name"]);
+        $siteNumber = $this
+            ->testSupportHelper
+            ->getVtsService()
+            ->changeSiteNumberForAreaOffice($site->getId());
+
+        $site->setSiteNumber($siteNumber);
+
+        return $site;
+    }
+
+    public function createUnassociatedSiteByUser(AuthenticatedUser $user, array $params = [])
+    {
+        $default = SiteParams::getDefaultParams();
+        $params = array_replace($default, $params);
+
+        $site = $this->tryGet($params[SiteParams::NAME]);
         if ($site !== null) {
             return $site;
         }
 
-        $user = $this->userData->createAreaOffice1User();
-
         $response = $this->vts->create($user->getAccessToken(), $params);
         $responseBody = $response->getBody();
         if (!is_object($responseBody)) {
-            $this->responseCollection->add($responseBody, $params["name"]);
             throw new \Exception("createSite: responseBody is not an object: failed to create Vts");
         }
 
-        $site = $responseBody->toArray()['data'];
+        $site = $responseBody->getData();
         $dto = new SiteDto();
         $dto
-            ->setId($site["id"])
-            ->setSiteNumber($site["siteNumber"])
-            ->setName($params["name"]);
+            ->setId($site[SiteParams::ID])
+            ->setSiteNumber($site[SiteParams::SITE_NUMBER])
+            ->setName($params[SiteParams::NAME])
+            ->setType($params[SiteParams::TYPE])
+        ;
 
-        $this->siteCollection->add($dto, $params["name"]);
+        $this->siteCollection->add($dto, $params[SiteParams::NAME]);
 
         return $dto;
     }
 
-    public function create(array $params = [])
+    public function createUnassociatedSite(array $params = [])
     {
+        return $this->createUnassociatedSiteByUser($this->userData->createAreaOffice1User(), $params);
+    }
+
+    public function create($name = self::DEFAULT_NAME)
+    {
+        return $this->createWithParams([SiteParams::NAME => $name]);
+    }
+
+    public function createWithParams(array $params = [])
+    {
+        return $this->createBy($this->userData->createAreaOffice1User(), $params);
+    }
+
+    public function createBy(AuthenticatedUser $user, array $params = [])
+    {
+        $default = $default = SiteParams::getDefaultParams();
         $default = array_merge(
-            $this->defaultSiteData,
+            $default,
             [
-                "aeName" => AuthorisedExaminerData::DEFAULT_NAME,
-                "startDate" => null,
-                "endDate" => null
+                AuthorisedExaminerParams::AE_NAME => AuthorisedExaminerData::DEFAULT_NAME,
+                SiteParams::START_DATE => null,
+                SiteParams::END_DATE => null
             ]
         );
 
         $data = array_replace($default, $params);
 
-        $site = $this->tryGet($data["name"]);
+        $site = $this->tryGet($data[SiteParams::NAME]);
         if ($site !== null) {
             return $site;
         }
 
-        $site = $this->createUnassociatedSite($data);
-        $ae = $this->authorisedExaminerData->create(1001, $data["aeName"]);
+        $site = $this->createUnassociatedSiteByUser($user, $data);
+
+        $slots = ArrayUtils::tryGet($data, AuthorisedExaminerParams::SLOTS, AuthorisedExaminerData::DEFAULT_SLOTS);
+        $ae = $this->authorisedExaminerData->createWithCustomSlots($slots, $data[AuthorisedExaminerParams::AE_NAME]);
 
         $site->setOrganisation($ae);
 
         $this->authorisedExaminerData->linkAuthorisedExaminerWithSite($ae, $site);
 
-        if ($data["startDate"] || $data["endDate"]) {
-            $this->changeAssociatedDate($ae->getId(), $site->getId(), $data["startDate"], $data["endDate"]);
+        if ($data[SiteParams::START_DATE] || $data[SiteParams::END_DATE]) {
+            $this->changeAssociatedDate($ae->getId(), $site->getId(), $data[SiteParams::START_DATE], $data[SiteParams::END_DATE]);
         }
 
-        $this->siteCollection->add($site, $data["name"]);
+        $this->siteCollection->add($site, $data[SiteParams::NAME]);
 
         return $site;
+    }
+
+    public function getTestLogs(AuthenticatedUser $user, SiteDto $siteDto)
+    {
+        $response = $this->vts->getTestLogs(
+            $user->getAccessToken(), $siteDto->getId()
+        );
+
+        return $response->getBody()->getData()["resultCount"];
     }
 
     public function changeAssociatedDate($aeId, $siteId, $startDate, $endDate = null)
@@ -126,9 +169,75 @@ class SiteData
             );
     }
 
+    public function changeEndDateOfAssociation($aeId, $siteId, \DateTime $endDate)
+    {
+        $this
+            ->testSupportHelper
+            ->getVtsService()
+            ->changeEndDateOfAssociation($aeId, $siteId, $endDate);
+    }
+
+    public function searchVtsByName(AuthenticatedUser $user, $siteName)
+    {
+        $params = [ SiteParams::SITE_NAME => $siteName];
+        return $this->searchVtsByParams($user, $params);
+    }
+
+    public function searchVtsByNumber(AuthenticatedUser $user, $siteNumber)
+    {
+        $params = [ SiteParams::SITE_NUMBER => $siteNumber];
+        return $this->searchVtsByParams($user, $params);
+    }
+
+    public function searchVtsBySiteTown(AuthenticatedUser $user, $town)
+    {
+        $params = [ SiteParams::SITE_TOWN => $town];
+        return $this->searchVtsByParams($user, $params);
+    }
+
+    public function searchVtsBySitePostcode(AuthenticatedUser $user, $postcode)
+    {
+        $params = [ SiteParams::SITE_POSTCODE => $postcode];
+        return $this->searchVtsByParams($user, $params);
+    }
+
+    public function searchVtsByParams(AuthenticatedUser $user, array $params)
+    {
+        $defaults = [
+            "pageNr" => 1,
+            "rowsCount" => 10,
+            "sortBy" => "site.name",
+            "sortDirection" => "ASC",
+            '_class' => SiteSearchParamsDto::class,
+        ];
+
+        $params = array_replace($defaults, $params);
+        $response = $this->vts->searchVts($params, $user->getAccessToken());
+
+        /** @var SiteListDto $siteListDto */
+        $siteListDto = DtoHydrator::jsonToDto($response->getBody()->getData());
+
+        return $siteListDto;
+    }
+
+    /**
+     * @param AuthenticatedUser $user
+     * @param $siteId
+     * @return SiteDto
+     */
+    public function getVtsDetails(AuthenticatedUser $user, $siteId)
+    {
+        $response = $this->vts->getVtsDetails(
+            $siteId,
+            $user->getAccessToken()
+        );
+
+        return DtoHydrator::jsonToDto($response->getBody()->getData());
+    }
+
     /**
      * @param string $siteName
-     * @return SiteDto
+     * @return VehicleTestingStationDto
      */
     public function get($siteName = self::DEFAULT_NAME)
     {
@@ -161,19 +270,14 @@ class SiteData
         return null;
     }
 
-    public function getOrCreate($siteName = self::DEFAULT_NAME)
-    {
-        $site = $this->tryGet($siteName);
-        if ($site === null) {
-            $site = $this->create(["siteName" => $siteName]);
-        }
-
-        return $site;
-    }
-
     public function getAll()
     {
         return $this->siteCollection;
+    }
+
+    public function getSiteSearchCollection()
+    {
+        return $this->siteSearchCollection;
     }
 
     /**
@@ -181,15 +285,6 @@ class SiteData
      */
     public function getLastResponse()
     {
-        return $this->responseCollection->last();
-    }
-
-    /**
-     * @param $siteName
-     * @return Response
-     */
-    public function getResponse($siteName)
-    {
-        return $this->responseCollection->get($siteName);
+        return $this->vts->getLastResponse();
     }
 }

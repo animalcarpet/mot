@@ -90,30 +90,6 @@ class BrakeTestResult extends MotApi
         return $this->addBrakeTestResult($token, $motNumber, $body);
     }
 
-    public function addBrakeTestForRollerClass1To2($token, $motNumber)
-    {
-        $body = [
-            'control1EffortFront' => 100,
-            'control1EffortRear' => 100,
-            'control1EffortSidecar' => null,
-            'control2EffortFront' => 100,
-            'control2EffortRear' => 100,
-            'control2EffortSidecar' => null,
-            'control1LockFront' => false,
-            'control1LockRear' => false,
-            'control2LockFront' => false,
-            'control2LockRear' => false,
-            'brakeTestType' => 'ROLR',
-            'vehicleWeightFront' => 100,
-            'vehicleWeightRear' => 100,
-            'riderWeight' => 100,
-            'isSidecarAttached' => 0,
-            'sidecarWeight' => null,
-        ];
-
-        return $this->addBrakeTestResult($token, $motNumber, $body);
-    }
-
     public function addBrakeTestForRollerClass1To2WithCustomData($token, $motNumber, $dataMap)
     {
         $body = [

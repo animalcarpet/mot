@@ -8,10 +8,10 @@ class Rest extends MotApi
 {
     public function makeRequest($token, $method, $url)
     {
-        return $this->client->request(new Request(
+        return $this->sendRequest(
+            $token,
             strtoupper($method),
-            $url,
-            ['Authorization' => 'Bearer ' . $token]
-        ));
+            $url
+        );
     }
 }

@@ -5,6 +5,7 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\Tester;
 use Dvsa\Mot\Behat\Support\Api\MotTest;
 use Dvsa\Mot\Behat\Support\Api\Session;
+use Dvsa\Mot\Behat\Support\Data\UserData;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class MotTestHistoryContext implements Context
@@ -29,12 +30,15 @@ class MotTestHistoryContext implements Context
      */
     private $tester;
 
+    private $userData;
+
     private $motTestHistory = [];
 
-    public function __construct(MotTest $motTest, Tester $tester)
+    public function __construct(MotTest $motTest, Tester $tester, UserData $userData)
     {
         $this->motTest = $motTest;
         $this->tester = $tester;
+        $this->userData = $userData;
     }
 
     /**
@@ -51,18 +55,18 @@ class MotTestHistoryContext implements Context
      */
     public function iSearchForAnMotTestsByUsername()
     {
-        $username = $this->personContext->getPersonUsername();
-        $token = $this->sessionContext->getCurrentAccessToken();
+        $username = $this->userData->getLast()->getUsername();
+        $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
 
         $response = $this->tester->getTesterFull($token, $username);
-        $testerFullData = $response->getBody()->toArray()['data'];
+        $testerFullData = $response->getBody()->getData();
 
         PHPUnit::assertEquals(1, $testerFullData["resultCount"]);
         PHPUnit::assertEquals(1, $testerFullData["totalResultCount"]);
         PHPUnit::assertCount(1, $testerFullData["data"]);
         PHPUnit::assertEquals(1, preg_match("/" . $username . ",/", current($testerFullData["data"])));
 
-        $response = $this->motTest->searchMotTestHistory($token, ["tester" => $this->personContext->getPersonUserId()]);
+        $response = $this->motTest->searchMotTestHistory($token, ["tester" => $this->userData->getLast()->getUserId()]);
         $this->motTestHistory = $response->getBody()->toArray()["data"];
     }
 
@@ -73,7 +77,7 @@ class MotTestHistoryContext implements Context
     {
         PHPUnit::assertNotEmpty($this->motTestHistory);
 
-        $username = $this->personContext->getPersonUsername();
+        $username = $this->userData->getLast()->getUsername();
         $test = current($this->motTestHistory["data"]);
 
         PHPUnit::assertCount(1, $this->motTestHistory["data"]);
@@ -85,12 +89,12 @@ class MotTestHistoryContext implements Context
      */
     public function iSearchForAnMotTestsByPartialUsername()
     {
-        $username = $this->personContext->getPersonUsername();
-        $token = $this->sessionContext->getCurrentAccessToken();
+        $username = $this->userData->getLast()->getUsername();
+        $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $usernamePrefix = substr($username, 0, MotTestContext::USERNAME_PREFIX_LENGTH);
 
         $response = $this->tester->getTesterFull($token, $usernamePrefix);
-        $testerFullData = $response->getBody()->toArray()['data'];
+        $testerFullData = $response->getBody()->getData();
 
         PHPUnit::assertEquals(0, $testerFullData["resultCount"]);
         PHPUnit::assertEquals(0, $testerFullData["totalResultCount"]);

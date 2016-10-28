@@ -3,6 +3,7 @@
 use Behat\Behat\Context\Context;
 use Dvsa\Mot\Behat\Support\Api\Rest;
 use Dvsa\Mot\Behat\Support\Response;
+use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class RestContext implements Context
@@ -51,7 +52,7 @@ class RestContext implements Context
      */
     public function iShouldReceiveAnUnauthorisedResponse()
     {
-        PHPUnit::assertEquals(401, $this->lastResponse->getStatusCode(), 'Did not receive 401 Unauthorised response');
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_401, $this->lastResponse->getStatusCode(), 'Did not receive 401 Unauthorised response');
     }
 
     /**
@@ -69,7 +70,7 @@ class RestContext implements Context
      */
     public function iShouldSeeInTheErrorMessage($expectedError)
     {
-        PHPUnit::assertEquals($expectedError, $this->lastResponse->getBody()['errors']['message'], 'Data key found in response body');
+        PHPUnit::assertEquals($expectedError, $this->lastResponse->getBody()->getErrors()['message'], 'Data key found in response body');
     }
 
     /**
@@ -77,7 +78,7 @@ class RestContext implements Context
      */
     public function iShouldReceiveAForbiddenResponse()
     {
-        PHPUnit::assertEquals(403, $this->lastResponse->getStatusCode(), 'Did not receive 403 Forbidden response');
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_403, $this->lastResponse->getStatusCode(), 'Did not receive 403 Forbidden response');
     }
 
     /**
@@ -85,22 +86,6 @@ class RestContext implements Context
      */
     public function iShouldReceiveABadRequestResponse()
     {
-        PHPUnit::assertEquals(400, $this->lastResponse->getStatusCode(), 'Did not receive 400 Bad Request response');
-    }
-
-    /**
-     * @Then I should receive a Success response
-     */
-    public function iShouldReceiveAnHTTP200SuccessResponse()
-    {
-        PHPUnit::assertEquals(200, $this->lastResponse->getStatusCode(), 'Did not receive 200 OK response');
-    }
-
-    /**
-     * @Then I should receive an Unexpected Value response
-     */
-    public function iShouldReceiveAnUnexpectedValueResponse()
-    {
-        PHPUnit::assertEquals(500, $this->lastResponse->getStatusCode(), 'Did not receive 500 Unexpected Value response');
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_400, $this->lastResponse->getStatusCode(), 'Did not receive 400 Bad Request response');
     }
 }

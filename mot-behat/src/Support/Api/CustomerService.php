@@ -44,38 +44,34 @@ class CustomerService extends MotApi
             $searchString = $searchString.$append.'dateOfBirth='.urlencode($searchData['dateOfBirth']);
         }
 
-        return $this->client->request(new Request(
-            'GET',
-            self::PATH.$searchString,
-            ['Authorization' => 'Bearer '.$token]
-        ));
+        return $this->sendGetRequest(
+            $token,
+            self::PATH.$searchString
+        );
     }
 
     public function helpDeskProfile($token, $userId)
     {
-        return $this->client->request(new Request(
-            'GET',
-            str_replace('{userId}', $userId, self::PATH_PROFILE),
-            ['Authorization' => 'Bearer '.$token]
-        ));
+        return $this->sendGetRequest(
+            $token,
+            str_replace('{userId}', $userId, self::PATH_PROFILE)
+        );
     }
 
     public function updateLicence($token, $userId, $licenceDetails)
     {
-        return $this->client->request(new Request(
-            'POST',
+        return $this->sendPostRequest(
+            $token,
             str_replace('{userId}', $userId, self::PATH_UPDATE_LICENCE),
-            ['Authorization' => 'Bearer ' . $token, 'Content-Type' => 'application/json'],
             $licenceDetails
-        ));
+        );
     }
 
     public function deleteLicence($token, $userId)
     {
-        return $this->client->request(new Request(
-            'DELETE',
-            str_replace('{userId}', $userId, self::PATH_UPDATE_LICENCE),
-            ['Authorization' => 'Bearer ' . $token]
-        ));
+        return $this->sendDeleteRequest(
+            $token,
+            str_replace('{userId}', $userId, self::PATH_UPDATE_LICENCE)
+        );
     }
 }

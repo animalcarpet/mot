@@ -10,6 +10,8 @@ use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use Dvsa\Mot\Behat\Support\Data\SiteData;
 use Dvsa\Mot\Behat\Support\Data\UserData;
+use Dvsa\Mot\Behat\Support\Data\Params\PersonParams;
+use Zend\Http\Response as HttpResponse;
 
 class SpecialNoticeContext implements Context
 {
@@ -156,7 +158,7 @@ class SpecialNoticeContext implements Context
     public function siteWithDvsaAndVtsUsersRolesExists()
     {
         $site = $this->siteData->create();
-        $this->tester = $this->personContext->createTester(["siteIds" => [$site->getId()]]);
+        $this->tester = $this->personContext->createTester([PersonParams::SITE_IDS => [$site->getId()]]);
         $this->aedm = $this->userData->getAedmByAeId($site->getOrganisation()->getId());
         $this->areaOffice1user = $this->testSupportHelper->getAreaOffice1Service()->create([]);
     }
@@ -167,11 +169,11 @@ class SpecialNoticeContext implements Context
     public function iPublishSpecialNotice()
     {
         $token = $this->sessionContext->getCurrentAccessTokenOrNull();
-        $id = $this->specialNoticeResponse->getBody()->toArray()["data"]["id"];
+        $id = $this->specialNoticeResponse->getBody()->getData()["id"];
 
         $response = $this->specialNotice->publish($token, $id);
 
-        PHPUnit_Framework_Assert::assertEquals(200, $response->getStatusCode());
+        PHPUnit_Framework_Assert::assertEquals(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
 
     /**
@@ -196,12 +198,12 @@ class SpecialNoticeContext implements Context
 
     private function assertInternalSpecialNotice()
     {
-        $dvsaUserSession = $this->session->startSession($this->areaOffice1user->data["username"], $this->areaOffice1user->data["password"]);
+        $dvsaUserSession = $this->session->startSession($this->areaOffice1user->data[PersonParams::USERNAME], $this->areaOffice1user->data[PersonParams::PASSWORD]);
         $dvsaUserResponse = $this->specialNotice->getSpecialNotices($dvsaUserSession->getAccessToken(), $dvsaUserSession->getUserId());
 
-        PHPUnit_Framework_Assert::assertEquals(200, $dvsaUserResponse->getStatusCode());
+        PHPUnit_Framework_Assert::assertEquals(HttpResponse::STATUS_CODE_200, $dvsaUserResponse->getStatusCode());
 
-        $sn = $this->specialNoticeResponse->getBody()->toArray()["data"];
+        $sn = $this->specialNoticeResponse->getBody()->getData();
         $snContentid = $sn["id"];
 
         $today = new \DateTime("");
@@ -210,7 +212,7 @@ class SpecialNoticeContext implements Context
         $internalPublishDate = new \DateTime($sn["internalPublishDate"]);
         $internalPublishDate->setTime(0,0,0);
 
-        $dvsaUserSpecialNotices = $dvsaUserResponse->getBody()->toArray()["data"];
+        $dvsaUserSpecialNotices = $dvsaUserResponse->getBody()->getData();
         $foundDvsaSpecialNotice = false;
         foreach ($dvsaUserSpecialNotices as $specialNotice) {
             if ($snContentid === $specialNotice["contentId"]) {
@@ -228,16 +230,16 @@ class SpecialNoticeContext implements Context
 
     private function assertExternalSpecialNotice()
     {
-        $testerSession = $this->session->startSession($this->tester->data["username"], $this->tester->data["password"]);
+        $testerSession = $this->session->startSession($this->tester->data[PersonParams::USERNAME], $this->tester->data[PersonParams::PASSWORD]);
         $testerResponse = $this->specialNotice->getSpecialNotices($testerSession->getAccessToken(), $testerSession->getUserId());
 
         $vtsUserSession = $this->aedm;
         $vtsUserResponse = $this->specialNotice->getSpecialNotices($vtsUserSession->getAccessToken(), $vtsUserSession->getUserId());
 
-        PHPUnit_Framework_Assert::assertEquals(200, $testerResponse->getStatusCode());
-        PHPUnit_Framework_Assert::assertEquals(200, $vtsUserResponse->getStatusCode());
+        PHPUnit_Framework_Assert::assertEquals(HttpResponse::STATUS_CODE_200, $testerResponse->getStatusCode());
+        PHPUnit_Framework_Assert::assertEquals(HttpResponse::STATUS_CODE_200, $vtsUserResponse->getStatusCode());
 
-        $sn = $this->specialNoticeResponse->getBody()->toArray()["data"];
+        $sn = $this->specialNoticeResponse->getBody()->getData();
         $snContentid = $sn["id"];
 
         $today = new \DateTime("");
@@ -246,7 +248,7 @@ class SpecialNoticeContext implements Context
         $externalPublishDate = new \DateTime($sn["externalPublishDate"]);
         $externalPublishDate->setTime(0,0,0);
 
-        $testerSpecialNotices = $testerResponse->getBody()->toArray()["data"];
+        $testerSpecialNotices = $testerResponse->getBody()->getData();
         $foundTesterSpecialNotice = false;
         foreach ($testerSpecialNotices as $specialNotice) {
             if ($snContentid === $specialNotice["contentId"]) {
@@ -255,7 +257,7 @@ class SpecialNoticeContext implements Context
             }
         }
 
-        $vtsUserSpecialNotices = $vtsUserResponse->getBody()->toArray()["data"];
+        $vtsUserSpecialNotices = $vtsUserResponse->getBody()->getData();
         $foundVtsUserSpecialNotice = false;
         foreach ($vtsUserSpecialNotices as $specialNotice) {
             if ($snContentid === $specialNotice["contentId"]) {
@@ -279,9 +281,9 @@ class SpecialNoticeContext implements Context
      */
     public function theSpecialNoticeIsCreated()
     {
-        PHPUnit_Framework_Assert::assertNotEmpty($this->specialNoticeResponse->getBody()['data']['id'], 'Special Notice Id was not returned in response');
-        PHPUnit_Framework_Assert::assertTrue(is_int($this->specialNoticeResponse->getBody()['data']['id']), 'Special Notice Id is not a number');
-        PHPUnit_Framework_Assert::assertEquals(200, $this->specialNoticeResponse->getStatusCode(), 'Incorrect Status Code returned');
+        PHPUnit_Framework_Assert::assertNotEmpty($this->specialNoticeResponse->getBody()->getData()['id'], 'Special Notice Id was not returned in response');
+        PHPUnit_Framework_Assert::assertTrue(is_int($this->specialNoticeResponse->getBody()->getData()['id']), 'Special Notice Id is not a number');
+        PHPUnit_Framework_Assert::assertEquals(HttpResponse::STATUS_CODE_200, $this->specialNoticeResponse->getStatusCode(), 'Incorrect Status Code returned');
     }
 
     /**
@@ -292,6 +294,6 @@ class SpecialNoticeContext implements Context
         $body = $this->specialNoticeResponse->getBody()->toArray();
 
         PHPUnit_Framework_Assert::assertFalse(isset($body['data']['id']), 'Special Notice Id returned in response');
-        PHPUnit_Framework_Assert::assertNotEquals(200, $this->specialNoticeResponse->getStatusCode(), 'HTTP 200 Status Code returned');
+        PHPUnit_Framework_Assert::assertNotEquals(HttpResponse::STATUS_CODE_200, $this->specialNoticeResponse->getStatusCode(), 'HTTP 200 Status Code returned');
     }
 }

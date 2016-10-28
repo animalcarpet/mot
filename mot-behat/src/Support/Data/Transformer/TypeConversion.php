@@ -30,6 +30,22 @@ trait TypeConversion
     }
 
     /**
+     * @Transform /^true|TRUE|false|FALSE+$/
+     */
+    public function castToBool($string)
+    {
+        if (BeforeBehatScenarioScope::isTransformerDisabled()) {
+            return $string;
+        }
+
+        if (strtolower($string) === "true") {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @Transform :startDate
      * @Transform :endDate
      * @Transform :date

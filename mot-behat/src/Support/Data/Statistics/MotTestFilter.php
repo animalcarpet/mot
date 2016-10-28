@@ -3,6 +3,7 @@
 namespace Dvsa\Mot\Behat\Support\Data\Statistics;
 
 use Dvsa\Mot\Behat\Support\Data\Collection\DataCollection;
+use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
@@ -84,7 +85,7 @@ class MotTestFilter
     public function filterBySiteId(DataCollection $motCollection, $siteId)
     {
         return $motCollection->filter(function (MotTestDto $mot) use ($siteId) {
-            return $mot->getVehicleTestingStation()["id"] === $siteId;
+            return $mot->getVehicleTestingStation()[SiteParams::ID] === $siteId;
         });
     }
 }
