@@ -4,11 +4,14 @@ namespace Dvsa\Mot\Behat\Support\Data;
 use Dvsa\Mot\Behat\Support\Api\ContingencyTest;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Support\Data\Collection\DataCollection;
+use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
 use DvsaCommon\Dto\MotTesting\ContingencyTestDto;
 use DvsaCommon\Utility\ArrayUtils;
 
 class ContingencyData
 {
+    const CONTINGENCY_CODE = "12345A";
+
     private $userData;
     private $siteData;
     private $contingencyTest;
@@ -30,16 +33,16 @@ class ContingencyData
 
     public function create(AuthenticatedUser $user, array $params = [])
     {
-        $contingencyCode = ArrayUtils::tryGet($params, "contingencyCode", "12345A");
+        $contingencyCode = ArrayUtils::tryGet($params, "contingencyCode", self::CONTINGENCY_CODE);
         $reasonCode = ArrayUtils::tryGet($params, "reasonCode", "SO");
         $dateTime = ArrayUtils::tryGet($params, "dateTime");
-        $siteName = ArrayUtils::tryGet($params, "siteName", SiteData::DEFAULT_NAME);
+        $siteName = ArrayUtils::tryGet($params, SiteParams::SITE_NAME, SiteData::DEFAULT_NAME);
 
         if ($this->contingencyCollection->containsKey($siteName) === true) {
             return $this->contingencyCollection->get($siteName);
         }
 
-        $site = $this->siteData->create(["name" => $siteName]);
+        $site = $this->siteData->create($siteName);
 
         $response = $this->contingencyTest->getContingencyCodeID(
             $user->getAccessToken(),
@@ -56,7 +59,7 @@ class ContingencyData
             ->setSiteId($site->getId());
 
         $this->contingencyCollection->add($dto, $siteName);
-        $this->emergencyLogs[$siteName] = $response->getBody()['data']['emergencyLogId'];
+        $this->emergencyLogs[$siteName] = $response->getBody()->getData()['emergencyLogId'];
 
         return $dto;
     }
@@ -68,5 +71,23 @@ class ContingencyData
         }
 
         return $this->emergencyLogs[$siteName];
+    }
+
+    /**
+     * @param int $siteId
+     * @return ContingencyTestDto
+     */
+    public function getBySiteId($siteId)
+    {
+        $collection = $this->contingencyCollection->filter(function (ContingencyTestDto $dto) use ($siteId) {
+            return $dto->getSiteId() === $siteId;
+        });
+
+        return $collection->first();
+    }
+
+    public function getAll()
+    {
+        return $this->contingencyCollection;
     }
 }

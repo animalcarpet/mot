@@ -4,6 +4,7 @@ use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 use Dvsa\Mot\Behat\Support\Data\UserData;
 use Dvsa\Mot\Behat\Support\Helper\ApiResourceHelper;
+use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
 use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\AuthorisedExaminerSitesPerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\AuthorisedExaminerSitePerformanceApiResource;
 use DvsaCommon\Dto\Organisation\OrganisationDto;
@@ -47,12 +48,12 @@ class StatsAeTesterPerformanceContext implements Context
     private function assertAuthorisedExaminerSitePerformance(array $expected, array $actual)
     {
         foreach ($actual as $site) {
-            if ($expected["siteName"] === $site->getName()) {
+            if ($expected[SiteParams::SITE_NAME] === $site->getName()) {
                 PHPUnit::assertEquals($expected["riskScore"], $site->getRiskAssessmentScore());
                 return;
             }
         }
 
-        throw new \InvalidArgumentException(sprintf("Site '%s' not found", $expected["siteName"]));
+        throw new \InvalidArgumentException(sprintf("Site '%s' not found", $expected[SiteParams::SITE_NAME]));
     }
 }

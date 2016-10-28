@@ -2,6 +2,7 @@
 
 namespace Dvsa\Mot\Behat\Support\Api;
 
+use Dvsa\Mot\Behat\Support\Data\Params\PersonParams;
 use Dvsa\Mot\Behat\Support\Request;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 
@@ -30,17 +31,10 @@ class TempPasswordChange extends MotApi
      */
     public function updatePassword($token, $userId, $password)
     {
-        $body = json_encode(
-            [
-                'password' => $this->testSupportHelper->getParamObfuscatorService()->obfuscate($password)
-            ]
-        );
-
-        return $this->client->request(new Request(
-            'PUT',
+        return $this->sendPutRequest(
+            $token,
             str_replace('{user_id}', $userId, self::PATH_PASSWORD_UPDATE),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token],
-            $body
-        ));
+            [ PersonParams::PASSWORD => $this->testSupportHelper->getParamObfuscatorService()->obfuscate($password) ]
+        );
     }
 }

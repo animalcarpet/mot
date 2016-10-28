@@ -5,6 +5,7 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\SlotReport;
 use Dvsa\Mot\Behat\Support\Response;
+use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 /**
@@ -21,17 +22,6 @@ class SlotsReportContext implements Context
      * @var SessionContext
      */
     private $sessionContext;
-    /**
-     * @var array
-     */
-    private $organisationMap = [
-        'crazyWheels' => 10,
-        'halfords'    => 9,
-        'asda'        => 12,
-        'city'        => 13,
-        'speed'       => 1001,
-        'kwikfit'     => 2001,
-    ];
 
     /**
      * @var Response
@@ -69,7 +59,7 @@ class SlotsReportContext implements Context
         );
 
         PHPUnit::assertEquals(
-            200,
+            HttpResponse::STATUS_CODE_200,
             $this->responseReceived->getStatusCode(),
             'Unable to generate report'
         );
@@ -95,7 +85,7 @@ class SlotsReportContext implements Context
         $this->responseReceived = $this->reportApi->getReportStatus($token, $body['data']['reference']);
 
         PHPUnit::assertEquals(
-            200,
+            HttpResponse::STATUS_CODE_200,
             $this->responseReceived->getStatusCode(),
             'Unable to generate report'
         );

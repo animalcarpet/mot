@@ -6,6 +6,7 @@ use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupA;
 use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupB;
 use Dvsa\Mot\Behat\Support\Data\MotTestData;
+use Dvsa\Mot\Behat\Support\Data\Params\VehicleParams;
 use Dvsa\Mot\Behat\Support\Data\VehicleData;
 use DvsaCommon\Dto\Site\SiteDto;
 use DvsaCommon\Enum\VehicleClassCode;
@@ -27,7 +28,13 @@ class ComponentBreakdownMotTestGenerator
     {
         $testStartedDate = "first day of previous month";
         $dateOfManufacture = new \DateTime("first day of 2 years ago");
-        $motorcycleClass1 = $this->vehicleData->create(["testClass" => VehicleClassCode::CLASS_1, "dateOfManufacture" => $dateOfManufacture->format("Y-m-d")]);
+        $motorcycleClass1 = $this->vehicleData->createWithParams(
+            $tester->getAccessToken(),
+            [
+                VehicleParams::TEST_CLASS => VehicleClassCode::CLASS_1,
+                VehicleParams::DATE_OF_MANUFACTURE => $dateOfManufacture->format("Y-m-d")
+            ]
+        );
 
         $this->motTestGenerator
             ->setDuration(60)
@@ -35,7 +42,13 @@ class ComponentBreakdownMotTestGenerator
         $this->motTestGenerator->generatePassedMotTests($tester, $site, $motorcycleClass1);
 
         $dateOfManufacture = new \DateTime("first day of 4 years ago");
-        $motorcycleClass2 = $this->vehicleData->create(["testClass" => VehicleClassCode::CLASS_2, "dateOfManufacture" => $dateOfManufacture->format("Y-m-d")]);
+        $motorcycleClass2 = $this->vehicleData->createWithParams(
+            $tester->getAccessToken(),
+            [
+                VehicleParams::TEST_CLASS => VehicleClassCode::CLASS_2,
+                VehicleParams::DATE_OF_MANUFACTURE => $dateOfManufacture->format("Y-m-d")
+            ]
+        );
         $this->motTestGenerator
             ->setDuration(50)
             ->setStartedDate($testStartedDate)
@@ -52,7 +65,13 @@ class ComponentBreakdownMotTestGenerator
         $this->motTestData->failMotTestWithManyRfrs($motTest, [ReasonForRejectionGroupA::RFR_POSITION_LAMPS_MOTORCYCLE_FRONT, ReasonForRejectionGroupA::RFR_BRAKES_PERFORMANCE_GRADIENT]);
 
         $dateOfManufacture = new \DateTime("first day of 14 years ago");
-        $vehicleClass4 = $this->vehicleData->create(["testClass" => VehicleClassCode::CLASS_4, "dateOfManufacture" => $dateOfManufacture->format("Y-m-d")]);
+        $vehicleClass4 = $this->vehicleData->createWithParams(
+            $tester->getAccessToken(),
+            [
+                VehicleParams::TEST_CLASS => VehicleClassCode::CLASS_4,
+                VehicleParams::DATE_OF_MANUFACTURE => $dateOfManufacture->format("Y-m-d")
+            ]
+        );
         $this->motTestGenerator
             ->setDuration(40)
             ->setStartedDate($testStartedDate)

@@ -6,7 +6,17 @@ use PHPUnit_Framework_Assert as PHPUnit;
 use Dvsa\Mot\Behat\Support\Api\Event;
 use Dvsa\Mot\Behat\Support\Api\Person;
 use Dvsa\Mot\Behat\Support\Api\Session;
+use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
+use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
+use Dvsa\Mot\Behat\Support\Data\SiteData;
+use Dvsa\Mot\Behat\Support\Data\UserData;
+use Dvsa\Mot\Behat\Support\Data\Params\AuthorisedExaminerParams;
+use Dvsa\Mot\Behat\Support\Data\Params\EventParams;
+use Dvsa\Mot\Behat\Support\Data\Params\PersonParams;
+use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
+use DvsaCommon\Enum\EventCategoryCode;
+use Zend\Http\Response as HttpResponse;
 
 class EventContext implements Context
 {
@@ -64,6 +74,12 @@ class EventContext implements Context
      */
     private $eventCreationEntityId;
 
+    private $authorisedExaminerData;
+
+    private $siteData;
+
+    private $userData;
+
     /**
      * @param Event $event
      */
@@ -71,13 +87,19 @@ class EventContext implements Context
         Event $event,
         Person $person,
         Session $session,
-        TestSupportHelper $testSupportHelper
+        TestSupportHelper $testSupportHelper,
+        AuthorisedExaminerData $authorisedExaminerData,
+        SiteData $siteData,
+        UserData $userData
     )
     {
         $this->event = $event;
         $this->person = $person;
         $this->session = $session;
         $this->testSupportHelper = $testSupportHelper;
+        $this->authorisedExaminerData = $authorisedExaminerData;
+        $this->siteData = $siteData;
+        $this->userData = $userData;
     }
 
     /**
@@ -99,7 +121,7 @@ class EventContext implements Context
         // We also need to create a person here
         $this->personContext->theUserExists('User');
         $this->eventCreationEntityId = $this->personContext->getPersonUserId();
-        $this->eventCreationData['eventCategoryCode'] = 'NT';
+        $this->eventCreationData[EventParams::EVENT_CATEGORY_CODE] = EventCategoryCode::NT_EVENTS;
     }
 
     /**
@@ -107,10 +129,9 @@ class EventContext implements Context
      */
     public function iCreateAnEventForAnOrganisation()
     {
-        $this->aeContext->createAE();
-        $ae = $this->aeContext->getAE();
-        $this->eventCreationEntityId = $ae['id'];
-        $this->eventCreationData['eventCategoryCode'] = 'AE';
+        $ae = $this->authorisedExaminerData->get();
+        $this->eventCreationEntityId = $ae->getId();
+        $this->eventCreationData[EventParams::EVENT_CATEGORY_CODE] = EventCategoryCode::AE_EVENT;
     }
 
     /**
@@ -118,11 +139,10 @@ class EventContext implements Context
      */
     public function iCreateAnEventForASite()
     {
-        $this->vtsContext->createSite();
-        $site = $this->vtsContext->getSite();
-        $this->eventCreationEntityId = $site['id'];
+        $site = $this->siteData->get();
+        $this->eventCreationEntityId = $site->getId();
 
-        $this->eventCreationData['eventCategoryCode'] = 'VTS';
+        $this->eventCreationData[EventParams::EVENT_CATEGORY_CODE] = EventCategoryCode::VTS_EVENT;
 
     }
 
@@ -131,7 +151,7 @@ class EventContext implements Context
      */
     public function iSelectTheEventType($eventTypeCode)
     {
-        $this->eventCreationData['eventTypeCode'] = $eventTypeCode;
+        $this->eventCreationData[EventParams::EVENT_TYPE_CODE] = $eventTypeCode;
     }
 
     /**
@@ -140,7 +160,7 @@ class EventContext implements Context
     public function iSupplyAValidDate()
     {
         $dt = new \DateTime();
-        $this->eventCreationData['eventDate'] = [
+        $this->eventCreationData[EventParams::EVENT_DATE] = [
             'day' => $dt->format('d'),
             'month' => $dt->format('m'),
             'year' => $dt->format('Y')
@@ -152,7 +172,7 @@ class EventContext implements Context
      */
     public function iSelectTheEventOutcome($eventOutcomeCode)
     {
-        $this->eventCreationData['eventOutcomeCode'] = $eventOutcomeCode;
+        $this->eventCreationData[EventParams::EVENT_OUTCOME_CODE] = $eventOutcomeCode;
     }
 
     /**
@@ -160,7 +180,7 @@ class EventContext implements Context
      */
     public function iSupplyABlankDescription()
     {
-        $this->eventCreationData['eventDescription'] = '';
+        $this->eventCreationData[EventParams::EVENT_DESCRIPTION] = '';
     }
 
     /**
@@ -169,26 +189,32 @@ class EventContext implements Context
     public function iSubmitTheEvent()
     {
         $reponse = $this->event->postEvent(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->eventCreationData['eventCategoryCode'],
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->eventCreationData[EventParams::EVENT_CATEGORY_CODE],
             $this->eventCreationEntityId,
             $this->eventCreationData
         );
-        PHPUnit::assertSame(200, $reponse->getStatusCode());
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $reponse->getStatusCode());
     }
 
     /**
-     * @When I submit the non manual event
+     * @When I submit :eventType non manual event for :user
      */
-    public function iSubmitTheNonManualEvent()
+    public function iSubmitTheNonManualEvent($eventType, AuthenticatedUser $user)
     {
-        $this->eventCreationData['description'] = 'Card order';
+        $data = [
+            EventParams::EVENT_TYPE_CODE => $eventType,
+            EventParams::DESCRIPTION => 'Card order',
+            EventParams::EVENT_CATEGORY_CODE => EventCategoryCode::NT_EVENTS
+        ];
+
         $reponse = $this->event->postNonManualEvent(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->personContext->getPersonUserId(),
-            $this->eventCreationData
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $user->getUserId(),
+            $data
         );
-        PHPUnit::assertSame(200, $reponse->getStatusCode());
+
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $reponse->getStatusCode());
     }
 
     /**
@@ -198,14 +224,14 @@ class EventContext implements Context
     public function aStatusChangeEventIsGeneratedForTheUserOf($eventType)
     {
         $response = $this->event->getPersonEventsData($this->sessionContext->getCurrentAccessToken(), $this->personContext->getPersonUserId());
-        $data = $response->getBody()->toArray()["data"];
+        $data = $response->getBody()->getData();
         $eventList = $data["events"];
 
         PHPUnit::assertNotEmpty($eventList);
 
         $found = false;
         foreach ($eventList as $event) {
-            if ($event["type"] === $eventType) {
+            if ($event[EventParams::TYPE] === $eventType) {
                 $this->userEvent = $event;
                 $found = true;
                 break;
@@ -213,6 +239,29 @@ class EventContext implements Context
         }
 
         PHPUnit::assertTrue($found, "Event type {$eventType} not found");
+    }
+
+    /**
+     * @Then an event is generated for :user of :type
+     */
+    public function aStatusChangeEventIsGeneratedForTheUserOfEventType(AuthenticatedUser $user, $type)
+    {
+        $response = $this->event->getPersonEventsData($this->userData->getCurrentLoggedUser()->getAccessToken(), $user->getUserId());
+        $data = $response->getBody()->getData();
+        $eventList = $data["events"];
+
+        PHPUnit::assertNotEmpty($eventList);
+
+        $found = false;
+        foreach ($eventList as $event) {
+            if ($event[EventParams::TYPE] === $type) {
+                $this->userEvent = $event;
+                $found = true;
+                break;
+            }
+        }
+
+        PHPUnit::assertTrue($found, "Event type {$type} not found");
     }
 
     /**
@@ -237,12 +286,12 @@ class EventContext implements Context
     public function aStatusChangeEventIsNotGeneratedForTheUserOf($eventType)
     {
         $response = $this->event->getPersonEventsData($this->sessionContext->getCurrentAccessToken(), $this->personContext->getPersonUserId());
-        $data = $response->getBody()->toArray()["data"];
+        $data = $response->getBody()->getData();
         $eventList = $data["events"];
 
         $found = false;
         foreach ($eventList as $event) {
-            if ($event["type"] === $eventType) {
+            if ($event[EventParams::TYPE] === $eventType) {
                 $found = true;
                 break;
             }
@@ -256,22 +305,16 @@ class EventContext implements Context
      */
     public function aSiteEventIsGeneratedForTheSiteOf($eventType)
     {
-        $areaOffice1Service = $this->testSupportHelper->getAreaOffice1Service();
-        $ao = $areaOffice1Service->create([]);
-        $aoSession = $this->session->startSession(
-            $ao->data["username"],
-            $ao->data["password"]
-        );
+        $areaOffice1User = $this->userData->createAreaOffice1User();
+        $siteId = $this->siteData->get()->getId();
 
-        $site = $this->vtsContext->getSite();
-
-        $response = $this->event->getSiteEventsData($aoSession->getAccessToken(), $site["id"]);
-        $data = $response->getBody()->toArray()["data"];
+        $response = $this->event->getSiteEventsData($areaOffice1User->getAccessToken(), $siteId);
+        $data = $response->getBody()->getData();
         $eventList = $data["events"];
 
         $found = false;
         foreach ($eventList as $event) {
-            if ($event["type"] === $eventType) {
+            if ($event[EventParams::TYPE] === $eventType) {
                 $this->siteEvent = $event;
                 $found = true;
                 break;
@@ -286,22 +329,18 @@ class EventContext implements Context
      */
     public function anOrganisationEventIsGeneratedForTheOrganisationOf($eventType)
     {
-        $areaOffice1Service = $this->testSupportHelper->getAreaOffice1Service();
-        $ao = $areaOffice1Service->create([]);
-        $aoSession = $this->session->startSession(
-            $ao->data["username"],
-            $ao->data["password"]
-        );
+        $areaOffice1User = $this->userData->createAreaOffice1User();
+        $aeId = $this->authorisedExaminerData->get()->getId();
 
-        $ae = $this->aeContext->getAE();
+        $ae = $this->authorisedExaminerData->get();
 
-        $response = $this->event->getOrganisationEventsData($aoSession->getAccessToken(), $ae["id"]);
-        $data = $response->getBody()->toArray()["data"];
+        $response = $this->event->getOrganisationEventsData($areaOffice1User->getAccessToken(), $aeId);
+        $data = $response->getBody()->getData();
         $eventList = $data["events"];
 
         $found = false;
         foreach ($eventList as $event) {
-            if ($event["type"] === $eventType) {
+            if ($event[EventParams::TYPE] === $eventType) {
                 $this->siteEvent = $event;
                 $found = true;
                 break;
@@ -314,8 +353,8 @@ class EventContext implements Context
     private function getPersonDisplayName()
     {
         $response = $this->person->getPersonDetails($this->sessionContext->getCurrentAccessToken(),$this->sessionContext->getCurrentUserId());
-        $data = $response->getBody()->toArray()["data"];
+        $data = $response->getBody()->getData();
 
-        return implode(" ", array_filter([$data["firstName"], $data["middleName"], $data["surname"]]));
+        return implode(" ", array_filter([$data[PersonParams::FIRST_NAME], $data[PersonParams::MIDDLE_NAME], $data[PersonParams::SURNAME]]));
     }
 }

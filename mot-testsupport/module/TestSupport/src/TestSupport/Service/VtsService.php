@@ -14,6 +14,7 @@ use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\PhoneContactTypeCode;
 use DvsaCommon\Enum\SiteContactTypeCode;
 use DvsaCommon\Enum\SiteTypeCode;
+use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Utility\DtoHydrator;
 use TestSupport\Helper\TestDataResponseHelper;
@@ -67,7 +68,7 @@ class VtsService
             'email' => ArrayUtils::tryGet($data, 'email', $email),
             'phoneNumber' => ArrayUtils::tryGet($data, 'phoneNumber', $dataGenerator->phoneNumber()),
             'startDate' =>  ArrayUtils::tryGet($data, 'startDate', $dataGenerator->startDate()),
-            'classes' => [1, 2, 3, 4, 5, 7],
+            'classes' => VehicleClassCode::getAll(),
         ];
         $data = array_merge($data, $default);
 
@@ -220,5 +221,25 @@ class VtsService
             ["end_date" => $endDate->format("Y-m-d H:i:s")],
             ['organisation_id' => $aeId, 'site_id' => $siteId]
         );
+    }
+
+    public function changeSiteNumberForAreaOffice($siteId)
+    {
+        $siteNumber =  (int) $this->em->getConnection()->fetchColumn(
+            "SELECT MAX(site_number) FROM site INNER JOIN site_type ON site.type_id = site_type.id WHERE site_type.code = ? AND LENGTH(site.site_number) = ?",
+            [SiteTypeCode::AREA_OFFICE, 2]
+        );
+
+        $siteNumber += 1;
+
+        $siteNumber = str_pad($siteNumber, 2, "0", STR_PAD_LEFT);
+
+        $this->em->getConnection()->update(
+            "site",
+            ["site_number" => $siteNumber],
+            ["id" => $siteId]
+            );
+
+        return $siteNumber;
     }
 }

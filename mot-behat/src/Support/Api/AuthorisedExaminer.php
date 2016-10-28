@@ -2,6 +2,9 @@
 
 namespace Dvsa\Mot\Behat\Support\Api;
 
+use Dvsa\Mot\Behat\Support\Data\DefaultData\DefaultAreaOffice;
+use Dvsa\Mot\Behat\Support\Data\Map\RoleMap;
+use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
 use Dvsa\Mot\Behat\Support\Request;
 use DvsaCommon\Dto\Common\AuthForAeStatusDto;
 use DvsaCommon\Dto\Contact\AddressDto;
@@ -10,7 +13,10 @@ use DvsaCommon\Dto\Contact\PhoneDto;
 use DvsaCommon\Dto\Organisation\AuthorisedExaminerAuthorisationDto;
 use DvsaCommon\Dto\Organisation\OrganisationContactDto;
 use DvsaCommon\Dto\Organisation\OrganisationDto;
+use DvsaCommon\Enum\AuthorisationForAuthorisedExaminerStatusCode;
 use DvsaCommon\Enum\CompanyTypeCode;
+use DvsaCommon\Enum\MotTestStatusName;
+use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\OrganisationContactTypeCode;
 use DvsaCommon\Enum\OrganisationSiteStatusCode;
 use DvsaCommon\Enum\PhoneContactTypeCode;
@@ -22,29 +28,22 @@ use DvsaCommon\Utility\DtoHydrator;
 class AuthorisedExaminer extends MotApi
 {
     const AE_NAME = 'some ae name';
-    const POSITION = '/organisation/{organisation_id}/position';
     const POSITION_DELETE = '/organisation/{organisation_id}/position/{position_id}';
     const TEST_LOGS = 'authorised-examiner/{authorised_examiner_id}/mot-test-log';
 
     public function search($token, $aeNumber)
     {
-        return $this->client->request(
-            new Request(
-                'GET',
-                AuthorisedExaminerUrlBuilder::of()->authorisedExaminerByNumber($aeNumber),
-                ['Content-Type' => 'application/json', 'Authorization' => 'Bearer ' . $token]
-            )
-        );
+        return $this->sendGetRequest(
+            $token,
+            AuthorisedExaminerUrlBuilder::of()->authorisedExaminerByNumber($aeNumber)
+            );
     }
 
     public function getAuthorisedExaminerDetails($token, $aeId)
     {
-        return $this->client->request(
-            new Request(
-                'GET',
-                AuthorisedExaminerUrlBuilder::of($aeId),
-                ['Content-Type' => 'application/json', 'Authorization' => 'Bearer ' . $token]
-            )
+        return $this->sendGetRequest(
+            $token,
+            AuthorisedExaminerUrlBuilder::of($aeId)
         );
     }
 
@@ -52,21 +51,18 @@ class AuthorisedExaminer extends MotApi
     {
         $url = OrganisationUrlBuilder::position($aeId)->toString();
 
-        return $this->client->request(
-            new Request(
-                'GET',
-                $url,
-                ['Content-Type' => 'application/json', 'Authorization' => 'Bearer ' . $token]
-            )
+        return $this->sendGetRequest(
+            $token,
+            $url
         );
     }
 
     public function createAuthorisedExaminer($token)
     {
         $aeDto = new AuthorisedExaminerAuthorisationDto();
-        $aeDto->setAssignedAreaOffice(1);
+        $aeDto->setAssignedAreaOffice(DefaultAreaOffice::get()->getSiteNumber());
         $statusDto = new AuthForAeStatusDto();
-        $statusDto->setCode("APRVD");
+        $statusDto->setCode(AuthorisationForAuthorisedExaminerStatusCode::APPROVED);
         $aeDto->setStatus($statusDto);
 
         $dto = (new OrganisationDto())
@@ -101,74 +97,45 @@ class AuthorisedExaminer extends MotApi
             ->setName(self::AE_NAME)
             ->setCompanyType(CompanyTypeCode::SOLE_TRADER);
 
-        return $this->client->request(
-            new Request(
-                'POST',
-                'authorised-examiner',
-                ['Content-Type' => 'application/json', 'Authorization' => 'Bearer ' . $token],
-                json_encode(DtoHydrator::dtoToJson($dto))
-            )
+        return $this->sendPostRequest(
+            $token,
+            'authorised-examiner',
+            DtoHydrator::dtoToJson($dto)
         );
     }
 
     public function updateStatusAuthorisedExaminer($token, $id, $status)
     {
-        return $this->client->request(
-            new Request(
-                'PATCH',
-                AuthorisedExaminerUrlBuilder::of($id),
-                ['Content-Type' => 'application/json', 'Authorization' => 'Bearer ' . $token],
-                json_encode([AuthorisedExaminerPatchModel::STATUS => $status])
-            )
-        );
-    }
-
-    public function removeAuthorisedExaminer($token)
-    {
-        return $this->client->request(
-            new Request(
-                'DELETE',
-                OrganisationUrlBuilder::position(2, 4),
-                ['Content-Type' => 'application/json', 'Authorization' => 'Bearer ' . $token]
-            )
-        );
-    }
-
-    public function nominate($userId, $orgRoleName, $orgId, $token)
-    {
-        $roles = [
-            "Authorised examiner designated manager" => 1,
-            "Authorised examiner delegate" => 2
-        ];
-
-        if (!array_key_exists($orgRoleName, $roles)) {
-            throw new \InvalidArgumentException("Organisation role '" .$orgRoleName. "' not found");
-        }
-
-        $orgRoleId = $roles[$orgRoleName];
-        $data = [
-            "nomineeId" => $userId,
-            "roleId" => $orgRoleId
-        ];
-
-        return $this->sendRequest(
+        return $this->sendPatchRequest(
             $token,
-            MotApi::METHOD_POST,
+            AuthorisedExaminerUrlBuilder::of($id),
+            [AuthorisedExaminerPatchModel::STATUS => $status]
+        );
+    }
+
+    public function nominate($userId, $orgRoleCode, $orgId, $token)
+    {
+        $orgRoleId = (new RoleMap())->get($orgRoleCode)->getId();
+
+        return $this->sendPostRequest(
+            $token,
             OrganisationUrlBuilder::position($orgId),
-            $data
+            [
+                "nomineeId" => $userId,
+                "roleId" => $orgRoleId
+            ]
         );
     }
 
     public function linkAuthorisedExaminerWithSite($token, $aeId, $siteNumber)
     {
         $linkUrl = AuthorisedExaminerUrlBuilder::siteLink($aeId);
-        $request = new Request(
-            'POST',
+
+        return $this->sendPostRequest(
+            $token,
             $linkUrl,
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer ' . $token],
-            json_encode(['siteNumber' => $siteNumber])
+            [SiteParams::SITE_NUMBER => $siteNumber]
         );
-        return $this->client->request($request);
     }
 
     public function unlinkSiteFromAuthorisedExaminer($token, $aeId, $linkId)
@@ -182,7 +149,9 @@ class AuthorisedExaminer extends MotApi
             json_encode(OrganisationSiteStatusCode::SURRENDERED)
         );
 
-        return $this->client->request($request);
+        $response = $this->client->request($request);
+        $this->lasteResponse = $response;
+        return $response;
     }
 
     public function denominate($orgId, $positionId, $token)
@@ -191,16 +160,15 @@ class AuthorisedExaminer extends MotApi
         $url = str_replace("{organisation_id}", $orgId, $url);
         $url = str_replace("{position_id}", $positionId, $url);
 
-        return $this->sendRequest(
+        return $this->sendDeleteRequest(
             $token,
-            MotApi::METHOD_DELETE,
             $url
         );
     }
 
     public function getTodaysTestLogs($token, $examinerId, $siteId = null)
     {
-        $body = json_encode([
+        $params = [
             'organisationId' => NULL,
             'siteId' => $siteId,
             'siteNr' => NULL,
@@ -212,19 +180,19 @@ class AuthorisedExaminer extends MotApi
             'dateToTs' => strtotime('tomorrow 01 am'),
             'status' =>
                 array (
-                    0 => 'ABANDONED',
-                    1 => 'ABORTED',
-                    2 => 'ABORTED_VE',
-                    3 => 'FAILED',
-                    4 => 'PASSED',
-                    5 => 'REFUSED',
+                    0 => MotTestStatusName::ABANDONED,
+                    1 => MotTestStatusName::ABORTED,
+                    2 => MotTestStatusName::ABORTED_VE,
+                    3 => MotTestStatusName::FAILED,
+                    4 => MotTestStatusName::PASSED,
+                    5 => MotTestStatusName::REFUSED,
                 ),
             'testType' =>
                 array (
-                    0 => 'NT',
-                    1 => 'PL',
-                    2 => 'PV',
-                    3 => 'RT',
+                    0 => MotTestTypeCode::NORMAL_TEST,
+                    1 => MotTestTypeCode::PARTIAL_RETEST_LEFT_VTS,
+                    2 => MotTestTypeCode::PARTIAL_RETEST_REPAIRED_AT_VTS,
+                    3 => MotTestTypeCode::RE_TEST,
                 ),
             'format' => 'DATA_CSV',
             'isSearchRecent' => false,
@@ -239,13 +207,12 @@ class AuthorisedExaminer extends MotApi
             'isApiGetTotalCount' => false,
             'isEsEnabled' => NULL,
             '_class' => 'DvsaCommon\Dto\Search\MotTestSearchParamsDto',
-        ]);
+        ];
 
-        return $this->client->request(new Request(
-            MotApi::METHOD_POST,
+        return $this->sendPostRequest(
+            $token,
             str_replace('{authorised_examiner_id}', $examinerId, self::TEST_LOGS),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token],
-            $body
-        ));
+            $params
+        );
     }
 }

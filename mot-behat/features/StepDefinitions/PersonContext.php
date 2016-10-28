@@ -20,8 +20,15 @@ use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Enum\VehicleClassGroupCode;
+use DvsaCommon\Enum\RoleCode;
 use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
+use Dvsa\Mot\Behat\Support\Data\Params\PersonParams;
+use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
+use Dvsa\Mot\Behat\Support\Data\MotTestData;
 use Dvsa\Mot\Behat\Support\Data\SiteData;
+use Dvsa\Mot\Behat\Support\Data\UserData;
+use DvsaCommon\Dto\Site\SiteDto;
+use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingContext
@@ -190,6 +197,10 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
     /** @var  Response */
     private $isEmailDuplicatedResponse;
 
+    private $userData;
+
+    private $motTestData;
+
     /**
      * @param TestSupportHelper $testSupportHelper
      * @param CustomerService $customerService
@@ -212,7 +223,9 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
         Notification $notification,
         AuthorisedExaminerData $authorisedExaminerData,
         SiteData $siteData,
-        EmailDuplicate $emailDuplication
+        EmailDuplicate $emailDuplication,
+        UserData $userData,
+        MotTestData $motTestData
     ) {
         $this->testSupportHelper = $testSupportHelper;
         $this->customerService = $customerService;
@@ -225,6 +238,8 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
         $this->authorisedExaminerData = $authorisedExaminerData;
         $this->siteData = $siteData;
         $this->emailDuplication = $emailDuplication;
+        $this->userData = $userData;
+        $this->motTestData = $motTestData;
     }
 
     /**
@@ -254,7 +269,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function iWillSeeMyAvailableClasses()
     {
-        $classes = $this->personalMotTestingClasses->getBody()['data'];
+        $classes = $this->personalMotTestingClasses->getBody()->getData();
         foreach ($classes as $class => $status) {
             PHPUnit::assertEquals(AuthorisationForTestingMotStatusCode::QUALIFIED, $status, $class . ' not QLFD');
         }
@@ -278,7 +293,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
     {
         // Check that the dashboard page returned a 200 status code
         PHPUnit::assertEquals(
-            200,
+            HttpResponse::STATUS_CODE_200,
             $this->personalDashboard->getStatusCode(),
             'Non-200 status code returned for dashboard'
         );
@@ -286,7 +301,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
         // Check that the hero key in response data is 'tester'
         PHPUnit::assertEquals(
             'tester',
-            $this->personalDashboard->getBody()['data']['hero'],
+            $this->personalDashboard->getBody()->getData()['hero'],
             'Dashboard does not contain Tester'
         );
     }
@@ -296,10 +311,8 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function myDashboardWillReturnTheMotTestNumber()
     {
-        PHPUnit::assertTrue(is_numeric($this->motTestContext->getMotTestNumber()), 'MOT test number is not numeric');
-
-        $inProgressTestNumber = $this->personalDashboard->getBody()['data']['inProgressTestNumber'];
-        $createdMotTestNumber = $this->motTestContext->getMotTestNumber();
+        $inProgressTestNumber = $this->personalDashboard->getBody()->getData()['inProgressTestNumber'];
+        $createdMotTestNumber = $this->motTestData->getLast()->getMotTestNumber();
         $message = 'In progress MOT test number %s does not match created MOT test number %s';
 
         PHPUnit::assertEquals(
@@ -341,10 +354,10 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function iWillSeeMyUpdatedEmailAddress()
     {
-        PHPUnit::assertSame(200, $this->updateUserEmailResponse->getStatusCode());
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $this->updateUserEmailResponse->getStatusCode());
         PHPUnit::assertSame(
             $this->newEmailAddress,
-            $this->updateUserEmailResponse->getBody()['data']['emails'][0]['email'],
+            $this->updateUserEmailResponse->getBody()->getData()['emails'][0][PersonParams::EMAIL],
             'Email address on User Profile is incorrect.'
         );
     }
@@ -356,7 +369,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
     {
         $body = $this->updateUserEmailResponse->getBody()->toArray();
 
-        PHPUnit::assertSame(422, $this->updateUserEmailResponse->getStatusCode(), 'Did not receive 422 Unprocessable entity response');
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_422, $this->updateUserEmailResponse->getStatusCode(), 'Did not receive 422 Unprocessable entity response');
         PHPUnit::assertFalse(isset($body['data']['emails']), 'Data key containing Email data was returned in response body.');
     }
 
@@ -368,12 +381,12 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
         $body = $this->updateUserEmailResponse->getBody()->toArray();
 
         PHPUnit::assertSame(
-            200,
+            HttpResponse::STATUS_CODE_200,
             $this->updateUserEmailResponse->getStatusCode()
         );
         PHPUnit::assertSame(
             $this->newEmailAddress,
-            $body['data']['emails'][0]['email'],
+            $body['data']['emails'][0][PersonParams::EMAIL],
             'Email address on User Profile is incorrect.'
         );
     }
@@ -385,7 +398,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
     {
         $expected = 'Email confirmation does not match the email provided';
 
-        PHPUnit::assertSame(400, $this->updateUserEmailResponse->getStatusCode(), 'Did not receive 400 Bad Request response');
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_400, $this->updateUserEmailResponse->getStatusCode(), 'Did not receive 400 Bad Request response');
         PHPUnit::assertSame($expected, $this->updateUserEmailResponse->getBody()['errors'][0]['message'], 'Expected error text not returned in response message: '.$expected);
     }
 
@@ -408,12 +421,12 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
 
         foreach ($hash as $row) {
             $this->searchData = [
-                'userName' => $row['userName'],
-                'firstName' => $row['firstName'],
-                'lastName' => $row['lastName'],
-                'postCode' => $row['postCode'],
-                'dateOfBirth' => $row['dateOfBirth'],
-                'email' => $row['email'],
+                PersonParams::USER_NAME => $row[PersonParams::USER_NAME],
+                PersonParams::FIRST_NAME => $row[PersonParams::FIRST_NAME],
+                PersonParams::LAST_NAME => $row[PersonParams::LAST_NAME],
+                PersonParams::POST_CODE => $row[PersonParams::POST_CODE],
+                PersonParams::DATE_OF_BIRTH => $row[PersonParams::DATE_OF_BIRTH],
+                PersonParams::EMAIL => $row[PersonParams::EMAIL],
             ];
 
             $this->customerServiceSearchResponse = $this->customerService->search($this->sessionContext->getCurrentAccessToken(), $this->searchData);
@@ -427,17 +440,17 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
     {
         $response = $this->customerServiceSearchResponse;
         //Check Search Produces valid Results
-        PHPUnit::assertEquals(200, $response->getStatusCode(), 'User data not returned,HTTP200 status code not returned in response');
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $response->getStatusCode(), 'User data not returned,HTTP200 status code not returned in response');
 
         //Check Results with Searched Data
-        if (!empty($this->searchData['firstName'])) {
-            PHPUnit::assertEquals($this->searchData['firstName'], $response->getBody()['data'][0]['firstName'], 'First Name');
+        if (!empty($this->searchData[PersonParams::FIRST_NAME])) {
+            PHPUnit::assertEquals($this->searchData[PersonParams::FIRST_NAME], $response->getBody()->getData()[0][PersonParams::FIRST_NAME], 'First Name');
         }
-        if (!empty($this->searchData['lastName'])) {
-            PHPUnit::assertEquals($this->searchData['lastName'], $response->getBody()['data'][0]['lastName'], 'Last Name');
+        if (!empty($this->searchData[PersonParams::LAST_NAME])) {
+            PHPUnit::assertEquals($this->searchData[PersonParams::LAST_NAME], $response->getBody()['data'][0][PersonParams::LAST_NAME], 'Last Name');
         }
-        if (!empty($this->searchData['postCode'])) {
-            PHPUnit::assertEquals($this->searchData['postCode'], $response->getBody()['data'][0]['postcode'], 'Post Code');
+        if (!empty($this->searchData[PersonParams::POST_CODE])) {
+            PHPUnit::assertEquals($this->searchData[PersonParams::POST_CODE], $response->getBody()['data'][0]['postcode'], 'Post Code');
         }
     }
 
@@ -449,9 +462,9 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
         $response = $this->customerServiceSearchResponse;
 
         //Check Search Produced Results
-        PHPUnit::assertEquals(400, $response->getStatusCode(), 'User data returned, HTTP400 status code not returned in response');
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_400, $response->getStatusCode(), 'User data returned, HTTP400 status code not returned in response');
 
-        PHPUnit::assertEquals('Your search returned no results. Add more details and try again.', $response->getBody()['errors'][0]['message'], 'Errors');
+        PHPUnit::assertEquals('Your search returned no results. Add more details and try again.', $response->getBody()->getErrors()[0]['message'], 'Errors');
     }
 
     /**
@@ -471,7 +484,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function theUsersDataWillBeReturned()
     {
-        PHPUnit::assertEquals(200, $this->userHelpDeskData->getStatusCode(), 'No Search Results Returned, HTTP200 status code not returned in response');
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $this->userHelpDeskData->getStatusCode(), 'No Search Results Returned, HTTP200 status code not returned in response');
         PHPUnit::assertEquals(Authentication::UNCLAIMED_ACCOUNT, $this->userHelpDeskData->getBody()['data']['userName'], 'Username in User Profile is incorrect');
     }
 
@@ -480,8 +493,8 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function noUserDataWillBeReturned()
     {
-        PHPUnit::assertEquals(404, $this->userHelpDeskData->getStatusCode(), 'User data returned in ');
-        PHPUnit::assertEquals('Person '.$this->userId.' not found not found', $this->userHelpDeskData->getBody()['errors'][0]['message'], 'Error Message');
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_404, $this->userHelpDeskData->getStatusCode(), 'User data returned in ');
+        PHPUnit::assertEquals('Person '.$this->userId.' not found not found', $this->userHelpDeskData->getBody()->getErrors()[0]['message'], 'Error Message');
     }
 
     /**
@@ -490,8 +503,8 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
     public function iGetMyProfileDetails()
     {
         $this->testerDetailsResponse = $this->tester->getTesterDetails(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->sessionContext->getCurrentUserId()
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->userData->getCurrentLoggedUser()->getUserId()
         );
     }
 
@@ -502,7 +515,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
     {
         PHPUnit::assertEquals(
             $this->sessionContext->getCurrentUser()->getUsername(),
-            $this->testerDetailsResponse->getBody()['data']['username'],
+            $this->testerDetailsResponse->getBody()->getData()[PersonParams::USERNAME],
             'Username not returned in response object.'
         );
     }
@@ -514,7 +527,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
     {
         PHPUnit::assertEquals(
             $this->sessionContext->getCurrentUserId(),
-            $this->testerDetailsResponse->getBody()['data']['id'],
+            $this->testerDetailsResponse->getBody()->getData()[PersonParams::ID],
             'User id not returned in response object.'
         );
     }
@@ -528,7 +541,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function myProfileWillContainTheRole($role)
     {
-        $roles = $this->testerDetailsResponse->getBody()['data']['roles']->toArray();
+        $roles = $this->testerDetailsResponse->getBody()->getData()['roles'];
 
         for ($x = 0; $x < count($roles); $x++) {
             if (stristr($roles[$x], $role) == true) {
@@ -631,7 +644,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
             $role
         );
 
-        PHPUnit::assertEquals(200, $response->getStatusCode(), "Unable to remove role '{$role}'");
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $response->getStatusCode(), "Unable to remove role '{$role}'");
     }
 
     /**
@@ -643,7 +656,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
 
         $tester = $this->testSupportHelper->getTesterService();
         $this->personLoginData = $tester->create([
-            'siteIds' => [1],
+            PersonParams::SITE_IDS => [$this->siteData->get()->getId()],
             "qualifications"=> [
                 "A"=> $statusCode,
                 "B"=> $statusCode
@@ -690,7 +703,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function anErrorOccurs()
     {
-        $errors = $this->testerQualificationResponse->getBody()->toArray()['errors'];
+        $errors = $this->testerQualificationResponse->getBody()->getErrors();
         PHPUnit::assertCount(1, $errors);
     }
 
@@ -699,13 +712,14 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function getTestLogs()
     {
+        $user = $this->userData->getCurrentLoggedUser();
         $this->userTestLogs = $this->tester->getTesterTestLogs(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->sessionContext->getCurrentUserId()
+            $user->getAccessToken(),
+            $user->getUserId()
         );
         $this->userTestLogsSummary = $this->tester->getTesterTestLogsSummary(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->sessionContext->getCurrentUserId()
+            $user->getAccessToken(),
+            $user->getUserId()
         );
     }
 
@@ -804,7 +818,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
 
         // duplicated from $this->createTester due to PHP 5.5 not supporting array constants
         $defaults = [
-            'siteIds' => [1],
+            PersonParams::SITE_IDS => [$this->siteData->get()->getId()],
             "qualifications"=> [
                 "A"=> $this->getAuthorisationForTestingMotStatusCode("Qualified"),
                 "B"=> $this->getAuthorisationForTestingMotStatusCode("Qualified")
@@ -840,19 +854,20 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function updateUserLicenceWithRegion($licenceNumber, $licenceRegion)
     {
-        $testerId = $this->personLoginData->data['personId'];
+        $testerId = $this->personLoginData->data[PersonParams::PERSON_ID];
 
-        // create JSON to send to endpoint
-        $licenceDetails = '{"drivingLicenceNumber": "' . $licenceNumber . '", "drivingLicenceRegion": "';
-        $licenceDetails .= $licenceRegion . '"}';
+        $params = [
+            "drivingLicenceNumber" => $licenceNumber,
+            "drivingLicenceRegion" => $licenceRegion
+        ];
 
         $response = $this->customerService->updateLicence(
             $this->sessionContext->getCurrentAccessToken(),
             $testerId,
-            $licenceDetails
+            $params
         );
 
-        PHPUnit::assertEquals(200, $response->getStatusCode());
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
 
     /**
@@ -861,14 +876,14 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function licenceNumbersMatch($licenceNumber)
     {
-        $testerId = $this->personLoginData->data['personId'];
+        $testerId = $this->personLoginData->data[PersonParams::PERSON_ID];
 
         $testerDetails = $this->customerService->helpDeskProfile(
             $this->sessionContext->getCurrentAccessToken(),
             $testerId
         );
 
-        PHPUnit::assertEquals($licenceNumber, $testerDetails->getBody()['data']['drivingLicence']);
+        PHPUnit::assertEquals($licenceNumber, $testerDetails->getBody()->getData()[PersonParams::DRIVING_LICENCE]);
     }
 
     /**
@@ -876,14 +891,14 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function licenceDoesNotExist()
     {
-        $testerId = $this->personLoginData->data['personId'];
+        $testerId = $this->personLoginData->data[PersonParams::PERSON_ID];
 
         $testerDetails = $this->customerService->helpDeskProfile(
             $this->sessionContext->getCurrentAccessToken(),
             $testerId
         );
 
-        PHPUnit::assertEquals('', $testerDetails->getBody()['data']['drivingLicence']);
+        PHPUnit::assertEquals('', $testerDetails->getBody()->getData()[PersonParams::DRIVING_LICENCE]);
     }
 
     /**
@@ -891,14 +906,14 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function theirLicenceShouldNotMatch($licenceNumber)
     {
-        $testerId = $this->personLoginData->data['personId'];
+        $testerId = $this->personLoginData->data[PersonParams::PERSON_ID];
 
         $testerDetails = $this->customerService->helpDeskProfile(
             $this->sessionContext->getCurrentAccessToken(),
             $testerId
         );
 
-        PHPUnit::assertNotEquals($licenceNumber, $testerDetails->getBody()['data']['drivingLicence']);
+        PHPUnit::assertNotEquals($licenceNumber, $testerDetails->getBody()->getData()[PersonParams::DRIVING_LICENCE]);
     }
 
     /**
@@ -906,14 +921,14 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function removeUserLicence()
     {
-        $testerId = $this->personLoginData->data['personId'];
+        $testerId = $this->personLoginData->data[PersonParams::PERSON_ID];
 
         $response = $this->customerService->deleteLicence(
             $this->sessionContext->getCurrentAccessToken(),
             $testerId
         );
 
-        PHPUnit::assertEquals(200, $response->getStatusCode());
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
 
     /**
@@ -921,11 +936,11 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function getPersonUserId()
     {
-        if (!isset($this->personLoginData->data['personId'])) {
+        if (!isset($this->personLoginData->data[PersonParams::PERSON_ID])) {
             throw new \BadMethodCallException('No person id exists');
         }
 
-        return $this->personLoginData->data['personId'];
+        return $this->personLoginData->data[PersonParams::PERSON_ID];
     }
 
     /**
@@ -933,10 +948,10 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function getPersonUsername()
     {
-        if (!isset($this->personLoginData->data['username'])) {
+        if (!isset($this->personLoginData->data[PersonParams::USERNAME])) {
             throw new \BadMethodCallException('No person username exists');
         }
-        return $this->personLoginData->data['username'];
+        return $this->personLoginData->data[PersonParams::USERNAME];
     }
 
     /**
@@ -944,70 +959,20 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function getPersonPassword()
     {
-        if (!isset($this->personLoginData->data['password'])) {
+        if (!isset($this->personLoginData->data[PersonParams::PASSWORD])) {
             throw new \BadMethodCallException('No person password exists');
         }
-        return $this->personLoginData->data['password'];
+        return $this->personLoginData->data[PersonParams::PASSWORD];
     }
 
-    /**
-     * @Given I nominate user to TESTER role
-     */
-    public function iNominateUserToTesterRole()
-    {
-        $this->createTester();
-        $this->nominateToSiteRole("TESTER");
-    }
 
-    /**
-     * @Given I nominate user to SITE-ADMIN role
-     */
-    public function iNominateUserToSiteAdminRole()
-    {
-        $siteIds = [$this->vtsContext->getSite()["id"]];
-        $params = ["siteIds" => $siteIds];
-        $this->createTester($params);
 
-        $this->nominateToSiteRole("SITE-ADMIN");
-    }
 
-    /**
-     * @Given I nominate user to SITE-MANAGER role
-     */
-    public function iNominateUserToSiteManagerRole()
-    {
-        $siteIds = [$this->vtsContext->getSite()["id"]];
-        $params = ["siteIds" => $siteIds];
-        $this->createTester($params);
-        $this->nominateToSiteRole("SITE-MANAGER");
-    }
-
-    /**
-     * @Given I nominate user to Authorised examiner delegate role
-     */
-    public function iNominateUserToAedRole()
-    {
-        $params = [
-            "siteIds" => [1]
-        ];
-        $this->createTester($params);
-        $this->nominateToOrganisationRole("Authorised examiner delegate");
-    }
-
-    /**
-     * @Given I nominate user to Authorised examiner delegate manager role
-     */
-    public function iNominateUserToAedmRole()
-    {
-        $params = ["siteIds" => [1]];
-        $this->createTester($params);
-        $this->nominateToOrganisationRole("Authorised examiner designated manager");
-    }
 
     public function createTester(array $params = [])
     {
         $defaults = [
-            'siteIds' => [1],
+            PersonParams::SITE_IDS => [$this->siteData->get()->getId()],
             "qualifications"=> [
                 "A"=> $this->getAuthorisationForTestingMotStatusCode("Qualified"),
                 "B"=> $this->getAuthorisationForTestingMotStatusCode("Qualified")
@@ -1020,117 +985,6 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
         $this->personLoginData = $tester->create($params);
 
         return $this->personLoginData;
-    }
-
-    public function createAedm(array $data = [], $aeId = null)
-    {
-        if (is_null($aeId)) {
-            $ae = $this->authorisedExaminerContext->createAE();
-            $aeId = $ae["id"];
-        }
-
-        $defaults = [
-            "aeIds" => [$aeId],
-        ];
-
-        $data = array_replace($defaults, $data);
-
-        $aedm = $this->testSupportHelper->getAedmService();
-        $this->personLoginData = $aedm->create($data);
-
-        return $this->personLoginData;
-    }
-
-    public function createSiteAdmin($siteId)
-    {
-        $siteManagerService = $this->testSupportHelper->getSiteUserDataService();
-
-        $data = [
-            "siteIds" => [ $siteId ],
-            "requestor" => ["username" => "", "password" => ""]
-        ];
-
-        $user = $siteManagerService->create($data, "SITE-ADMIN");
-        return $this->session->startSession($user->data['username'], $user->data['password']);
-    }
-
-    private function nominateToSiteRole($role)
-    {
-        $siteId = $this->vtsContext->getSite()["id"];
-        $token = $this->sessionContext->getCurrentAccessToken();
-        $response = $this->vts->nominateToRole($this->getPersonUserId(), $role, $siteId, $token);
-        PHPUnit::assertEquals(200, $response->getStatusCode());
-    }
-
-    private function nominateToOrganisationRole($role)
-    {
-        $aeId = $this->authorisedExaminerData->get()->getId();
-        $token = $this->sessionContext->getCurrentAccessToken();
-        $response = $this->authorisedExaminer->nominate($this->getPersonUserId(), $role, $aeId, $token);
-        PHPUnit::assertEquals(200, $response->getStatusCode());
-    }
-
-    private function denominateFromOrganisationRole($role)
-    {
-        $token = $this->sessionContext->getCurrentAccessToken();
-        $aeId = $this->authorisedExaminerContext->getAE()['id'];
-
-        // Retrieve details from organisation
-        $positions = $this->authorisedExaminer->getAuthorisedExaminerPositions($token, $aeId);
-        $positionsToArray = $positions->getBody()->toArray();
-
-        $positionId = null;
-
-        foreach ($positionsToArray['data'] as $position) {
-            if ($position['role'] == $role) {
-                $positionId = $position['id'];
-                continue;
-            }
-        }
-
-        if (is_null($positionId)) {
-            throw new \InvalidArgumentException('Invalid Position Id');
-        }
-
-        // Remove role from organisation using the current session from context
-        $response = $this->authorisedExaminer->denominate($aeId, $positionId, $token);
-
-        PHPUnit::assertEquals(200, $response->getStatusCode());
-    }
-
-    /**
-     * @Then a user has new site role :role
-     */
-    public function aUserHasNewSiteRole($role)
-    {
-        $detailsResponse = $this->person->getPersonDetails(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->getPersonUserId()
-        );
-
-        $siteId = $this->vtsContext->getSite()["id"];
-        $roles = $detailsResponse->getBody()['data']['roles']->toArray();
-        $siteRoles = $roles["sites"][$siteId]["roles"];
-
-        PHPUnit::assertTrue(in_array($role, $siteRoles), "Site role '" . $role . "' not found");
-    }
-
-    /**
-     * @Then a user has new organisation role :role
-     */
-    public function aUserHasNewOrganisationRole($role)
-    {
-        $detailsResponse = $this->person->getPersonDetails(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->getPersonUserId()
-        );
-
-        $aeId = $this->authorisedExaminerData->get()->getId();
-        $roles = $detailsResponse->getBody()['data']['roles']->toArray();
-
-        $orgRoles = $roles["organisations"][$aeId]["roles"];
-
-        PHPUnit::assertTrue(in_array($role, $orgRoles), "Organisation role '" . $role . "' not found");
     }
 
     /**
@@ -1146,7 +1000,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
         $testerService = $this->testSupportHelper->getTesterService();
         $statusCode = $this->getAuthorisationForTestingMotStatusCode($status);
 
-        $testerService->updateTesterQualificationStatus($this->sessionContext->getCurrentUserId(), $group, $statusCode);
+        $testerService->updateTesterQualificationStatus($this->userData->getCurrentLoggedUser()->getUserId(), $group, $statusCode);
     }
 
     /**
@@ -1164,70 +1018,6 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
     }
 
     /**
-     * @Then I denominate user to Authorised examiner delegate role to new organisation
-     */
-    public function iDenominateUserToAuthorisedExaminerDelegateRoleToNewOrganisation()
-    {
-        $this->denominateFromOrganisationRole("Authorised examiner delegate");
-    }
-
-    /**
-     * @Then I denominate user to Authorised examiner designated manager role to new organisation
-     */
-    public function iDenominateUserToAuthorisedExaminerDesignatedManagerRoleToNewOrganisation()
-    {
-        $this->denominateFromOrganisationRole("Authorised examiner designated manager");
-    }
-
-    /**
-     * @Given I nominate user to Authorised Examiner Delegate role to new organisation
-     */
-    public function iNominateUserToAuthorisedExaminerDelegateRoleToNewOrganisation()
-    {
-        $this->authorisedExaminerContext->createAE();
-
-        $params = ["siteIds" => [1]];
-        $this->createTester($params);
-        $this->nominateToOrganisationRole("Authorised examiner delegate");
-    }
-
-    /**
-     * @Given I nominate user to Authorised Examiner Designated Manager role to new organisation
-     */
-    public function iNominateUserToAuthorisedExaminerDesignatedManagerRoleToNewOrganisation()
-    {
-        $this->authorisedExaminerContext->createAEwithoutAedm();
-        $site = $this->siteData->create(["aeName" => AuthorisedExaminerData::DEFAULT_NAME]);
-        $params = ["siteIds" => [$site->getId()]];
-        $this->createTester($params);
-        $this->nominateToOrganisationRole("Authorised examiner designated manager");
-    }
-
-    /**
-     * @Then a user does not have organisation role :arg1
-     */
-    public function aUserDoesNotHaveOrganisationRole($role)
-    {
-        $token = $this->sessionContext->getCurrentAccessToken();
-        $aeId = $this->authorisedExaminerContext->getAE()['id'];
-
-        // Retrieve details from organisation
-        $positions = $this->authorisedExaminer->getAuthorisedExaminerPositions($token, $aeId);
-        $positionsToArray = $positions->getBody()->toArray();
-
-        $positionId = null;
-
-        foreach ($positionsToArray['data'] as $position) {
-            if ($position['role'] == $role) {
-                $positionId = $position['id'];
-                continue;
-            }
-        }
-
-        PHPUnit::assertNull($positionId);
-    }
-
-    /**
      * @When /^I change a person's name to (.*) (.*) (.*)$/
      *
      * @param $firstName
@@ -1236,9 +1026,11 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function iChangeAPersonsName($firstName, $middleName, $lastName)
     {
-        $this->newName = ['firstName' => $firstName,
-                          'middleName' => $middleName,
-                          'lastName' => $lastName];
+        $this->newName = [
+            PersonParams::FIRST_NAME => $firstName,
+            PersonParams::MIDDLE_NAME => $middleName,
+            PersonParams::LAST_NAME => $lastName
+        ];
 
         $userService = $this->testSupportHelper->getUserService();
         $this->personLoginData = $userService->create([]);
@@ -1256,9 +1048,11 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function iChangeMyOwnName($firstName, $middleName, $lastName)
     {
-        $this->newName = ['firstName' => $firstName,
-                          'middleName' => $middleName,
-                          'lastName' => $lastName];
+        $this->newName = [
+            PersonParams::FIRST_NAME => $firstName,
+            PersonParams::MIDDLE_NAME => $middleName,
+            PersonParams::LAST_NAME => $lastName
+        ];
 
         $token = $this->sessionContext->getCurrentAccessToken();
         $this->updateNameResponse = $this->person->changeName($token, $this->sessionContext->getCurrentUserId(), $this->newName);
@@ -1270,7 +1064,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function thePersonsNameShouldBeUpdated()
     {
-        PHPUnit::assertSame(200, $this->updateNameResponse->getStatusCode());
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $this->updateNameResponse->getStatusCode());
     }
 
     /**
@@ -1278,8 +1072,8 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function thePersonsNameShouldNotBeUpdated()
     {
-        PHPUnit::assertSame(400, $this->updateNameResponse->getStatusCode());
-        PHPUnit::assertNotEmpty($this->updateNameResponse->getBody()['errors']);
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_400, $this->updateNameResponse->getStatusCode());
+        PHPUnit::assertNotEmpty($this->updateNameResponse->getBody()->getErrors());
     }
 
     /**
@@ -1287,7 +1081,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function iAmForbiddenFromChangingName()
     {
-        PHPUnit::assertSame(403, $this->updateNameResponse->getStatusCode());
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_403, $this->updateNameResponse->getStatusCode());
     }
 
     /**
@@ -1403,8 +1197,8 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function thePersonsAddressIsUpdated()
     {
-        PHPUnit::assertSame(200, $this->updateAddressResponse->getStatusCode());
-        PHPUnit::assertSame($this->newAddress, $this->updateAddressResponse->getBody()['data']->toArray());
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $this->updateAddressResponse->getStatusCode());
+        PHPUnit::assertSame($this->newAddress, $this->updateAddressResponse->getBody()->getData());
     }
 
     /**
@@ -1412,8 +1206,8 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function thePersonsAddressShouldNotBeUpdated()
     {
-        PHPUnit::assertSame(400, $this->updateAddressResponse->getStatusCode());
-        PHPUnit::assertNotEmpty($this->updateAddressResponse->getBody()['errors']);
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_400, $this->updateAddressResponse->getStatusCode());
+        PHPUnit::assertNotEmpty($this->updateAddressResponse->getBody()->getErrors());
     }
 
     /**
@@ -1421,7 +1215,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function iAmForbiddenFromChangingAddress()
     {
-        PHPUnit::assertSame(403, $this->updateAddressResponse->getStatusCode());
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_403, $this->updateAddressResponse->getStatusCode());
     }
 
     /**
@@ -1447,7 +1241,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function thePersonSDateOfBirthShouldBeUpdated()
     {
-        PHPUnit::assertSame(200, $this->updateDateOfBirthResponse->getStatusCode());
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $this->updateDateOfBirthResponse->getStatusCode());
     }
     /**
      *
@@ -1455,8 +1249,8 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function thePersonSDateOfBirthShouldNotBeUpdated()
     {
-        PHPUnit::assertSame(400, $this->updateDateOfBirthResponse->getStatusCode());
-        PHPUnit::assertNotEmpty($this->updateDateOfBirthResponse->getBody()['errors']);
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_400, $this->updateDateOfBirthResponse->getStatusCode());
+        PHPUnit::assertNotEmpty($this->updateDateOfBirthResponse->getBody()->getErrors());
     }
 
     /**
@@ -1506,7 +1300,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function telephoneNumberShouldBeUpdated()
     {
-        PHPUnit::assertSame(200, $this->updateTelephoneNumberResponse->getStatusCode());
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $this->updateTelephoneNumberResponse->getStatusCode());
     }
 
     /**
@@ -1515,8 +1309,8 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function telephoneNumberShouldNotBeUpdated()
     {
-        PHPUnit::assertSame(400, $this->updateTelephoneNumberResponse->getStatusCode());
-        PHPUnit::assertNotEmpty($this->updateTelephoneNumberResponse->getBody()['errors']);
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_400, $this->updateTelephoneNumberResponse->getStatusCode());
+        PHPUnit::assertNotEmpty($this->updateTelephoneNumberResponse->getBody()->getErrors());
     }
 
     /**
@@ -1574,9 +1368,10 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function iGetMyPersonalStats()
     {
+        $user = $this->userData->getCurrentLoggedUser();
         $this->personStats = $this->person->getPersonStats(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->sessionContext->getCurrentUserId()
+            $user->getAccessToken(),
+            $user->getUserId()
         );
     }
 
@@ -1585,7 +1380,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
      */
     public function personStatsShowCorrectTestCount($conductedTests, $passedNormalTests, $failedNormalTests)
     {
-        $data = $this->personStats->getBody()["data"];
+        $data = $this->personStats->getBody()->getData();
 
         PHPUnit::assertEquals($conductedTests, $data["total"]);
         PHPUnit::assertEquals($passedNormalTests, $data["numberOfPasses"]);
@@ -1598,7 +1393,7 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
     public function theMyProfileDetailsAreReturned()
     {
         $currentUsername = $this->sessionContext->getCurrentUser()->getUsername();
-        $retrievedUsername = $this->testerDetailsResponse->getBody()->toArray()['data']['username'];
+        $retrievedUsername = $this->testerDetailsResponse->getBody()->getData()[PersonParams::USERNAME];
         PHPUnit::assertEquals($retrievedUsername, $currentUsername);
     }
 
@@ -1608,9 +1403,10 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
     public function iAttemptToCreateANewAE()
     {
         $this->iGetMyProfileDetails();
-        $username =  $this->testerDetailsResponse->getBody()['data']['username'];
+        $username =  $this->testerDetailsResponse->getBody()->getData()[PersonParams::USERNAME];
+        $user = $this->userData->get($username);
         try {
-            $this->authorisedExaminerContext->iAttemptsToCreateAEAs($username, "Password1");
+            $this->authorisedExaminerData->createByUser($user, "Organisation Ltd");
             $this->ae = "CREATED";
         } catch (UnauthorisedException $ue) {
             $this->ae = "FORBIDDEN";
@@ -1623,15 +1419,6 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
     public function theCreationOfAEWillBe($expectedStatus)
     {
         PHPUnit::assertEquals($this->ae, $expectedStatus);
-    }
-
-    /**
-     * @When /^I attempt to remove an AE$/
-     */
-    public function iAttemptToRemoveAnAE()
-    {
-        $this->authorisedExaminerContext->createAE();
-        $this->ae = $this->authorisedExaminerContext->iAttemptToRemoveAnAuthorisedExaminer();
     }
 
     /**
@@ -1677,25 +1464,6 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
         $this->testSupportHelper->getTesterService()->insertTesterQualificationStatus($personId, $group, $code);
     }
 
-    /**
-     * @Given There is a tester :testerName associated with sites:
-     */
-    public function thereIsATesterAssociatedWithSites($testerName, Table $table)
-    {
-        $sites = [];
-        $rows = $table->getColumnsHash();
-        foreach ($rows  as $row) {
-            $sites[] = $this->vtsContext->getSite($row["site"])["id"];
-        }
-
-        $tester = $this->createTester(["siteIds" => $sites])->data;
-        $authenticatedUser = $this->session->startSession($tester["username"], $tester["password"]);
-
-        $this->addUser($testerName, $authenticatedUser);
-
-        return $authenticatedUser;
-    }
-
     public function addUser($key, AuthenticatedUser $user, $overwrite = true)
     {
         if (array_key_exists($user->getUsername(), $this->users) && $overwrite === false) {
@@ -1721,38 +1489,21 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
     }
 
     /**
-     * @Then the nominated user has a pending organisation role :role
+     * @Then the nominated user :user has a pending organisation role :role
      */
-    public function theNominatedUserHasAPendingOrganisationRole($role)
+    public function theNominatedUserHasAPendingOrganisationRole(AuthenticatedUser $user, $role)
     {
         $response = $this->person->getPendingRoles(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->getPersonUserId()
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $user->getUserId()
         );
 
-        $aeId = $this->authorisedExaminerContext->getAe()["id"];
-        $roles = $response->getBody()['data']->toArray();
+        $aeId = $this->authorisedExaminerData->get()->getId();
+        $roles = $response->getBody()->getData();
 
         $orgRoles = $roles["organisations"][$aeId]["roles"];
 
         PHPUnit::assertTrue(in_array($role, $orgRoles), "Organisation role '$role' should be pending");
-    }
-
-    /**
-     * @Then the nominated user has a pending site role :role
-     */
-    public function theNominatedUserHasAPendingSiteRole($role)
-    {
-        $response = $this->person->getPendingRoles(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->getPersonUserId()
-        );
-
-        $siteId = $this->vtsContext->getSite()["id"];
-        $roles = $response->getBody()['data']->toArray();
-        $siteRoles = $roles["sites"][$siteId]["roles"];
-
-        PHPUnit::assertTrue(in_array($role, $siteRoles), "Site role '$role' should be pending");
     }
 
     /**

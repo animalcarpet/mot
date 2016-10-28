@@ -14,7 +14,7 @@ Feature: Cherished Transfer
     
   Scenario: Create a cherished transfer on a previously MOT tested vehicle
     Given I am logged in as a Tester
-    And I have imported a vehicle with registration "LUL1357" and vin "767240PKXA9QDG7M1" from DVLA
+    And I have imported a dvla vehicle
     And I have completed an MOT test on the vehicle
     And I am logged in as an Area Office User
     When I update the vehicle to a new registration of "LOL2468"

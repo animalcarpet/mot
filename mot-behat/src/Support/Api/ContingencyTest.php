@@ -5,6 +5,8 @@ namespace Dvsa\Mot\Behat\Support\Api;
 use Dvsa\Mot\Behat\Datasource\Authentication;
 use Dvsa\Mot\Behat\Support\Request;
 use DvsaCommon\Date\DateUtils;
+use DvsaCommon\Enum\ColourCode;
+use DvsaCommon\Enum\FuelTypeCode;
 
 class ContingencyTest extends MotApi
 {
@@ -18,7 +20,7 @@ class ContingencyTest extends MotApi
      *
      * @return array
      */
-    public function getContingencyCodeID($token, $contingencyCode, $reasonCode, \DateTime $dateTime = null, $siteId = 1)
+    public function getContingencyCodeID($token, $contingencyCode, $reasonCode, \DateTime $dateTime = null, $siteId)
     {
         //use generic password if $password is "default"
         $contingencyCode = strcasecmp($contingencyCode, 'DEFAULT') == 0 ? Authentication::CONTINGENCY_CODE_DEFAULT : $contingencyCode;
@@ -28,7 +30,7 @@ class ContingencyTest extends MotApi
             $dateTime = DateUtils::today();
         }
 
-        $body = json_encode([
+        $params = [
             'siteId'            => (string) $siteId,
             'contingencyCode'   => $contingencyCode,
             'performedAtYear'   => $dateTime->format('Y'),
@@ -40,26 +42,25 @@ class ContingencyTest extends MotApi
             'reasonCode'        => $reasonCode,
             'otherReasonText'   => $otherReasonText,
             '_class'            => '\\DvsaCommon\\Dto\MotTesting\\ContingencyTestDto',
-        ]);
+        ];
 
-        return $this->client->request(new Request(
-            'POST',
+        return $this->sendPostRequest(
+            $token,
             self::PATH,
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer ' . $token],
-            $body
-        ));
+            $params
+        );
     }
 
-    public function startContingencyTest($token, $contingencyId, $vehicleId, $vehicleClass, $siteId = 1)
+    public function startContingencyTest($token, $contingencyId, $vehicleId, $vehicleClass, $siteId)
     {
         $today =  DateUtils::today();
 
-        $body = json_encode([
+        $params = [
             'vehicleId'               => $vehicleId,
             'vehicleTestingStationId' => $siteId,
-            'primaryColour'           => 'C',
-            'secondaryColour'         => 'C',
-            'fuelTypeId'              => 'PE',
+            'primaryColour'           => ColourCode::RED,
+            'secondaryColour'         => ColourCode::RED,
+            'fuelTypeId'              => FuelTypeCode::PETROL,
             'vehicleClassCode'        => $vehicleClass,
             'hasRegistration'         => true,
             'oneTimePassword'         => Authentication::ONE_TIME_PASSWORD,
@@ -78,24 +79,23 @@ class ContingencyTest extends MotApi
                     'performedAtAmPm'   => $today->format('a'),
                     '_class'            => 'DvsaCommon\\Dto\\MotTesting\\ContingencyTestDto',
                 ],
-        ]);
+        ];
 
-        return $this->client->request(new Request(
-            'POST',
+        return $this->sendPostRequest(
+            $token,
             self::PATH_START_CONT_TEST,
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer ' . $token],
-            $body
-        ));
+            $params
+        );
     }
 
-    public function startContingencyTestOnDateAtTime($token, $contingencyId, $vehicleId, $vehicleClass, \DateTime $dateTime)
+    public function startContingencyTestOnDateAtTime($token, $contingencyId, $vehicleId, $vehicleClass, \DateTime $dateTime, $siteId)
     {
-        $body = json_encode([
+        $params = [
             'vehicleId'               => $vehicleId,
-            'vehicleTestingStationId' => 1,
-            'primaryColour'           => 'C',
-            'secondaryColour'         => 'C',
-            'fuelTypeId'              => 'PE',
+            'vehicleTestingStationId' => $siteId,
+            'primaryColour'           => ColourCode::RED,
+            'secondaryColour'         => ColourCode::RED,
+            'fuelTypeId'              => FuelTypeCode::PETROL,
             'vehicleClassCode'        => $vehicleClass,
             'hasRegistration'         => true,
             'oneTimePassword'         => Authentication::ONE_TIME_PASSWORD,
@@ -104,7 +104,7 @@ class ContingencyTest extends MotApi
                 'contingencyCode'   => Authentication::CONTINGENCY_CODE_DEFAULT,
                 'reasonCode'        => 'SO',
                 'otherReasonText'   => '',
-                'siteId'            => '1',
+                'siteId'            => $siteId,
                 'testType'          => 'normal',
                 'performedAtYear'   => $dateTime->format('Y'),
                 'performedAtMonth'  => $dateTime->format('m'),
@@ -114,13 +114,12 @@ class ContingencyTest extends MotApi
                 'performedAtAmPm'   => $dateTime->format('a'),
                 '_class'            => 'DvsaCommon\\Dto\\MotTesting\\ContingencyTestDto',
             ],
-        ]);
+        ];
 
-        return $this->client->request(new Request(
-            'POST',
+        return $this->sendPostRequest(
+            $token,
             self::PATH_START_CONT_TEST,
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer ' . $token],
-            $body
-        ));
+            $params
+        );
     }
 }

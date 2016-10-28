@@ -7,20 +7,19 @@ use Dvsa\Mot\Behat\Support\Request;
 class SpecialNotice extends MotApi
 {
     const PATH_SN_CONTENT = 'special-notice-content';
-    const PATH = 'special-notice';
     const PATH_SN_BROADCAST = 'special-notice-broadcast';
     const PATH_SN_PUBLISH = 'special-notice-content/{sn_id}/publish';
     const PATH_SN_PERSON = 'person/{person_id}/special-notice';
 
     public function sendBroadcast($token)
     {
-        $result = $this->client->request(new Request(
-            'POST',
-            self::PATH_SN_BROADCAST,
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token]
-        ));
+        $result = $this->sendPostRequest(
+            $token,
+            self::PATH_SN_BROADCAST
+        );
 
-        return (isset($result->getBody()['data']['success'])) ? $result->getBody()['data']['success'] : false;
+        $data = $result->getBody()->getData();
+        return (isset($data['success'])) ? $data['success'] : false;
     }
 
     /**
@@ -41,31 +40,28 @@ class SpecialNotice extends MotApi
         ];
 
         $default = array_replace($default, $data);
-        $body = json_encode($default);
 
-        return $this->client->request(new Request(
-            'POST',
+        return $this->sendPostRequest(
+            $token,
             self::PATH_SN_CONTENT,
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token],
-            $body
-        ));
+            $default
+        );
     }
 
     public function publish($token, $id)
     {
-        return $this->client->request(new Request(
-            'PUT',
-            str_replace("{sn_id}", $id, self::PATH_SN_PUBLISH),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token]
-        ));
+        return $this->sendPutRequest(
+            $token,
+            str_replace("{sn_id}", $id, self::PATH_SN_PUBLISH)
+
+        );
     }
 
     public function getSpecialNotices($token, $personId)
     {
-        return $this->client->request(new Request(
-            'GET',
-            str_replace("{person_id}", $personId, self::PATH_SN_PERSON),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token]
-        ));
+        return $this->sendGetRequest(
+            $token,
+            str_replace("{person_id}", $personId, self::PATH_SN_PERSON)
+        );
     }
 }

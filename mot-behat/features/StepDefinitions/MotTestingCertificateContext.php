@@ -5,11 +5,14 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\Person;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\MotTestingCertificate;
+use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
+use Dvsa\Mot\Behat\Support\Data\SiteData;
 use DvsaCommon\Model\VehicleClassGroup;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Enum\VehicleClassGroupCode;
+use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class MotTestingCertificateContext implements Context, \Behat\Behat\Context\SnippetAcceptingContext
@@ -36,14 +39,18 @@ class MotTestingCertificateContext implements Context, \Behat\Behat\Context\Snip
 
     private $data;
 
+    private $siteData;
+
     public function __construct(
         TestSupportHelper $testSupportHelper,
         MotTestingCertificate $motTestingCertificate,
-        Person $person
+        Person $person,
+        SiteData $siteData
     ) {
         $this->testSupportHelper = $testSupportHelper;
         $this->motTestingCertificate = $motTestingCertificate;
         $this->person = $person;
+        $this->siteData = $siteData;
     }
 
     /**
@@ -76,13 +83,13 @@ class MotTestingCertificateContext implements Context, \Behat\Behat\Context\Snip
     {
         $this->personId = $personId;
 
-        $siteNumber = $this->vtsContext->createSite()["siteNumber"];
+        $siteNumber = $this->siteData->get()->getSiteNumber();
 
         $this->data = [
             VehicleClassGroupCode::BIKES => [
                 "id" => null,
                 "vehicleClassGroupCode" => VehicleClassGroupCode::BIKES,
-                "siteNumber" => $siteNumber,
+                SiteParams::SITE_NUMBER => $siteNumber,
                 "certificateNumber" => "certNumA1234",
                 "dateOfQualification" => "2015-12-12"
             ],
@@ -90,7 +97,7 @@ class MotTestingCertificateContext implements Context, \Behat\Behat\Context\Snip
             VehicleClassGroupCode::CARS_ETC => [
                 "id" => null,
                 "vehicleClassGroupCode" => VehicleClassGroupCode::CARS_ETC,
-                "siteNumber" => "",
+                SiteParams::SITE_NUMBER => "",
                 "certificateNumber" => "certNumB1234",
                 "dateOfQualification" => "2015-12-12"
             ],
@@ -110,7 +117,7 @@ class MotTestingCertificateContext implements Context, \Behat\Behat\Context\Snip
             ->motTestingCertificate
             ->createCertificate($this->sessionContext->getCurrentAccessToken(), $this->personId, $data);
 
-        PHPUnit::assertEquals(200, $response->getStatusCode());
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
 
     /**
@@ -132,7 +139,7 @@ class MotTestingCertificateContext implements Context, \Behat\Behat\Context\Snip
             ->getPersonMotTestingClasses($this->sessionContext->getCurrentAccessToken(), $this->personId)
         ;
 
-        $qualifications = $response->getBody()->toArray()["data"];
+        $qualifications = $response->getBody()->getData();
 
         $vehicleClasses = VehicleClassGroup::getClassesForGroup($vehicleClassGroup);
         foreach ($vehicleClasses as $class) {
@@ -181,7 +188,7 @@ class MotTestingCertificateContext implements Context, \Behat\Behat\Context\Snip
     }
 
     /**
-     * @Given I have Mot Testing Certificate for group :vvehicleClassGroup
+     * @Given I have Mot Testing Certificate for group :vehicleClassGroup
      */
     public function iHaveMotTestingCertificateForGroup($vehicleClassGroup)
     {
@@ -206,6 +213,6 @@ class MotTestingCertificateContext implements Context, \Behat\Behat\Context\Snip
             ->motTestingCertificate
             ->removeCertificate($this->sessionContext->getCurrentAccessToken(), $this->personId, strtolower($vehicleClassGroup));
 
-        PHPUnit::assertEquals(200, $response->getStatusCode());
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
 }

@@ -5,14 +5,19 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\OdometerReading;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Response;
+use Dvsa\Mot\Behat\Support\Data\Params\MeterReadingParams;
+use Dvsa\Mot\Behat\Support\Data\UserData;
+use Dvsa\Mot\Behat\Support\Data\MotTestData;
+use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class OdometerReadingContext implements Context
 {
-    /**
-     * @var OdometerReading
-     */
     private $odometerReading;
+
+    private $userData;
+
+    private $motTestData;
 
     /**
      * @var SessionContext
@@ -32,9 +37,15 @@ class OdometerReadingContext implements Context
     /**
      * @param OdometerReading $odometerReading
      */
-    public function __construct(OdometerReading $odometerReading)
+    public function __construct(
+        OdometerReading $odometerReading,
+        UserData $userData,
+        MotTestData $motTestData
+    )
     {
         $this->odometerReading = $odometerReading;
+        $this->userData = $userData;
+        $this->motTestData = $motTestData;
     }
 
     /**
@@ -53,13 +64,13 @@ class OdometerReadingContext implements Context
     {
         if ($type == 'NO METER') {
             $this->odometerReading->addNoMeterReadingToTest(
-                $this->sessionContext->getCurrentAccessToken(),
-                $this->motTestContext->getMotTestNumber()
+                $this->userData->getCurrentLoggedUser()->getAccessToken(),
+                $this->motTestData->getAll()->last()->getMotTestNumber()
             );
         } else {
             $this->odometerReading->addOdometerNotReadToTest(
-                $this->sessionContext->getCurrentAccessToken(),
-                $this->motTestContext->getMotTestNumber()
+                $this->userData->getCurrentLoggedUser()->getAccessToken(),
+                $this->motTestData->getAll()->last()->getMotTestNumber()
             );
         }
     }
@@ -68,11 +79,13 @@ class OdometerReadingContext implements Context
      * @Given /^the Tester adds an Odometer Reading of (\d+) (mi|km)$/
      * @Given the Tester adds an Odometer Reading
      */
-    public function theTesterAddsAnOdometerReadingOfMiles($value = 1000, $unit = 'km')
+    public function theTesterAddsAnOdometerReadingOfMiles($value = 1000, $unit = MeterReadingParams::KM)
     {
-        $response = $this->odometerReading->addMeterReading($this->sessionContext->getCurrentAccessToken(), $this->motTestContext->getMotTestNumber(), $value, $unit);
+        $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
+        $motTestId = $this->motTestData->getAll()->last()->getMotTestNumber();
+        $response = $this->odometerReading->addMeterReading($token, $motTestId, $value, $unit);
 
-        PHPUnit::assertSame(200, $response->getStatusCode());
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
 
     /**
@@ -80,7 +93,12 @@ class OdometerReadingContext implements Context
      */
     public function theTesterAttemptsToAddAnOdometerReadingOf($value, $unit)
     {
-        $this->odometerReadingResponse = $this->odometerReading->addMeterReading($this->sessionContext->getCurrentAccessToken(), $this->motTestContext->getMotTestNumber(), $value, $unit);
+        $this->odometerReadingResponse = $this->odometerReading->addMeterReading(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->motTestData->getLast()->getMotTestNumber(),
+            $value,
+            $unit
+        );
     }
 
     /**
@@ -88,6 +106,6 @@ class OdometerReadingContext implements Context
      */
     public function theOdometerReadingIsRejected()
     {
-        PHPUnit::assertEquals(422, $this->odometerReadingResponse->getStatusCode(), 'Odometer reading not rejected as expected.');
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_422, $this->odometerReadingResponse->getStatusCode(), 'Odometer reading not rejected as expected.');
     }
 }

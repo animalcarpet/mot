@@ -2,8 +2,6 @@
 
 namespace Dvsa\Mot\Behat\Support\Api;
 
-use Dvsa\Mot\Behat\Support\Request;
-
 class AccountRegistration extends MotApi
 {
     const PATH = "/account/register";
@@ -15,13 +13,10 @@ class AccountRegistration extends MotApi
      */
     public function registerUser(array $inputData)
     {
-        $body = json_encode($inputData);
-
-        return $this->client->request(new Request(
-            MotApi::METHOD_POST,
+        return $this->sendPostRequest(
+            null,
             self::PATH,
-            ['Content-Type' => 'application/json'],
-            $body
-        ));
+            $inputData
+        );
     }
 }

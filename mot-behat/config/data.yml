@@ -18,6 +18,11 @@ services:
         arguments:
             - @dvsa.data.mot_test
 
+    dvsa.data.mot_test_search:
+        class: Dvsa\Mot\Behat\Support\Data\MotTestSearchData
+        arguments:
+            - @dvsa.mot_test
+
     dvsa.data.mot_test:
         class: Dvsa\Mot\Behat\Support\Data\MotTestData
         arguments:
@@ -47,6 +52,7 @@ services:
             - @dvsa.brake_test_result
             - @dvsa.odometer_reading
             - @dvsa.reason_for_rejection
+            - @dvsa.test_support_helper
 
     dvsa.data.contingency_mot_test:
         class: Dvsa\Mot\Behat\Support\Data\ContingencyMotTestData
@@ -58,7 +64,7 @@ services:
             - @dvsa.brake_test_result
             - @dvsa.odometer_reading
             - @dvsa.reason_for_rejection
-
+            - @dvsa.test_support_helper
 
     dvsa.data.abstract_mot_test:
         class: Dvsa\Mot\Behat\Support\Data\AbstractMotTestData
@@ -68,6 +74,7 @@ services:
             - @dvsa.brake_test_result
             - @dvsa.odometer_reading
             - @dvsa.reason_for_rejection
+            - @dvsa.test_support_helper
 
     dvsa.data.site:
         class: Dvsa\Mot\Behat\Support\Data\SiteData

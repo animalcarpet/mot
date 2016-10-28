@@ -2,9 +2,11 @@
 namespace Dvsa\Mot\Behat\Support\Data;
 
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
+use Dvsa\Mot\Behat\Support\Data\Params\MotTestParams;
 use DvsaCommon\Dto\Site\SiteDto;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\Enum\MotTestTypeCode;
+use Zend\Http\Response as HttpResponse;
 
 class NormalMotTestData extends AbstractMotTestData
 {
@@ -15,14 +17,18 @@ class NormalMotTestData extends AbstractMotTestData
             ->startMOTTest(
                 $tester->getAccessToken(),
                 $vehicle->getId(),
-                $vehicle->getVehicleClass()->getCode(),
-                ["vehicleTestingStationId" => $site->getId()]
+                $site->getId(),
+                $vehicle->getVehicleClass()->getCode()
             );
+
+        if ($mot->getStatusCode() !== HttpResponse::STATUS_CODE_200) {
+            throw new \Exception("Something went wrong during creating mot test");
+        }
 
         $dto = $this->mapToMotTestDto(
             $tester,
             $vehicle,
-            $mot->getBody()->toArray()["data"]["motTestNumber"],
+            $mot->getBody()->getData()[MotTestParams::MOT_TEST_NUMBER],
             MotTestTypeCode::NORMAL_TEST,
             $site
         );
@@ -35,13 +41,13 @@ class NormalMotTestData extends AbstractMotTestData
     public function createPassedMotTest(AuthenticatedUser $tester, VehicleDto $vehicle, SiteDto $site)
     {
         $mot = $this->create($tester, $vehicle, $site);
-        return $this->passMotTest($mot);
+        return $this->passMotTestWithDefaultBrakeTestAndMeterReading($mot);
     }
 
     public function createFailedMotTest(AuthenticatedUser $tester, VehicleDto $vehicle, SiteDto $site)
     {
         $mot = $this->create($tester, $vehicle, $site);
-        return $this->failMotTest($mot);
+        return $this->failMotTestWithDefaultBrakeTestAndMeterReading($mot);
     }
 
     public function createFailedMotTestWithManyRfrs(AuthenticatedUser $tester, VehicleDto $vehicle, SiteDto $site, array $rfrs)

@@ -2,6 +2,11 @@
 
 namespace Dvsa\Mot\Behat\Support\Api;
 
+use Dvsa\Mot\Behat\Support\Data\DefaultData\DefaultVehicleTestingStation;
+use DvsaCommon\Enum\ColourCode;
+use DvsaCommon\Enum\FuelTypeCode;
+use DvsaCommon\Enum\VehicleClassCode;
+
 class DemoTest extends AbstractMotTest
 {
     const PATH = 'mot-demo-test';
@@ -11,14 +16,14 @@ class DemoTest extends AbstractMotTest
         return self::PATH;
     }
 
-    public function startMotTest($token = null, $vehicleId = '3', $testClass = '4')
+    public function startMotTest($token = null, $vehicleId, $testClass = VehicleClassCode::CLASS_4)
     {
         $params = [
             'vehicleId' => $vehicleId,
-            'vehicleTestingStationId' => '1',
-            'primaryColour' => 'L',
-            'secondaryColour' => 'L',
-            'fuelTypeId' => 'PE',
+            'vehicleTestingStationId' => null,
+            'primaryColour' => ColourCode::GREY,
+            'secondaryColour' => ColourCode::GREY,
+            'fuelTypeId' => FuelTypeCode::PETROL,
             'vehicleClassCode' => $testClass,
             'hasRegistration' => '1',
             'oneTimePassword' => '',

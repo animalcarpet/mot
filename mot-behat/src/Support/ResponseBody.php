@@ -34,6 +34,29 @@ class ResponseBody implements \ArrayAccess
     }
 
     /**
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->body['data'];
+    }
+
+    public function getErrors()
+    {
+        return $this->body['errors'];
+    }
+
+    public function getErrorMessages()
+    {
+        $messages = [];
+        foreach ($this->getErrors() as $error) {
+            $messages[] = $error["message"];
+        }
+
+        return $messages;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function offsetExists($offset)

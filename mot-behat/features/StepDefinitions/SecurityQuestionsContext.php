@@ -6,6 +6,7 @@ use Dvsa\Mot\Behat\Support\Response;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use PHPUnit_Framework_TestCase as PHPUnit;
 use Dvsa\Mot\Behat\Support\Api\SecurityQuestionsChange;
+use Zend\Http\Response as HttpResponse;
 
 class SecurityQuestionsContext implements Context
 {
@@ -87,7 +88,7 @@ class SecurityQuestionsContext implements Context
      */
     public function myQuestionsAreUpdated()
     {
-        PHPUnit::assertEquals(200, $this->response->getStatusCode());
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $this->response->getStatusCode());
     }
 
     /**
@@ -95,7 +96,7 @@ class SecurityQuestionsContext implements Context
      */
     public function myQuestionsHaveNotBeenUpdated()
     {
-        PHPUnit::assertEquals(400, $this->response->getStatusCode());
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_400, $this->response->getStatusCode());
     }
 
 }

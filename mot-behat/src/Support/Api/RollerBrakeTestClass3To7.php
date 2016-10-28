@@ -92,14 +92,6 @@ class RollerBrakeTestClass3To7
     /**
      * @return mixed
      */
-    public function getServiceBrake()
-    {
-        return $this->serviceBrake;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getVehicleWeight()
     {
         return $this->vehicleWeight;
@@ -151,14 +143,6 @@ class RollerBrakeTestClass3To7
     public function getPositionOfSingleWheel()
     {
         return $this->positionOfSingleWheel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getServiceBrake2TestType()
-    {
-        return $this->serviceBrake2TestType;
     }
 
     /**

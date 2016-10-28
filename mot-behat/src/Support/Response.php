@@ -2,6 +2,8 @@
 
 namespace Dvsa\Mot\Behat\Support;
 
+use Zend\Http\Response as HttpResponse;
+
 class Response
 {
     /**
@@ -34,7 +36,7 @@ class Response
      * @param array      $headers
      * @param array|null $body
      */
-    public function __construct(Request $request, $statusCode = 200, array $headers = [], $body = null, $rawBody = null)
+    public function __construct(Request $request, $statusCode = HttpResponse::STATUS_CODE_200, array $headers = [], $body = null, $rawBody = null)
     {
         $this->request = $request;
         $this->statusCode = $statusCode;

@@ -17,9 +17,10 @@ class SecurityPin extends MotApi
     public function resetPin($user_id, $token)
     {
         $url = str_replace('{user_id}', $user_id, self::PATH);
-        return $this->client->request(new Request('PUT', $url, [
-            'Content-Type' => 'application/json',
-            'Authorization' => 'Bearer ' . $token
-        ]));
+
+        return $this->sendPutRequest(
+            $token,
+            $url
+        );
     }
 }

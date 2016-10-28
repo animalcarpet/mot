@@ -4,7 +4,7 @@ Feature: MOT Test
   So that I can verify a Vehicle is Road Worthy
 
   @brake-test
-  Scenario Outline: Submit Decelerometer brake test values for vehicle type and check results
+  Scenario Outline: As a tester I require the ability to pass Decelerometer test
     Given I am logged in as a Tester
     And I start an Mot Test with a Class 4 Vehicle
     And the Tester adds an Odometer Reading of 1000 mi
@@ -12,26 +12,26 @@ Feature: MOT Test
     And the Tester Passes the Mot Test
     Then the Mot test status should be <status>
     Examples:
-      | scenario                                      | status |
-      | class4.decelerometer.commercial.valid.high    | PASSED |
-      | class4.decelerometer.commercial.valid.low     | PASSED |
-      | class4.decelerometer.goods.valid.high         | PASSED |
-      | class4.decelerometer.goods.invalid.low        | FAILED |
+      | scenario                                   | status |
+      | class4.decelerometer.commercial.valid.high | PASSED |
+      | class4.decelerometer.commercial.valid.low  | PASSED |
+      | class4.decelerometer.goods.valid.high      | PASSED |
+      | class4.decelerometer.valid.high            | PASSED |
+      | class4.decelerometer.valid.low             | PASSED |
 
   @brake-test
-  Scenario Outline: Submit Decelerometer brake test values and check result
+  Scenario Outline: As a tester I require the ability to fail Decelerometer test
     Given I am logged in as a Tester
     And I start an Mot Test with a Class 4 Vehicle
     And the Tester adds an Odometer Reading of 1000 mi
     And the Tester adds a Class 3-7 Decelerometer Brake Test Result with custom <scenario>
-    And the Tester Passes the Mot Test
+    And the Tester Fails the Mot Test
     Then the Mot test status should be <status>
     Examples:
-      | scenario                            | status |
-      | class4.decelerometer.valid.high     | PASSED |
-      | class4.decelerometer.valid.low      | PASSED |
-      | class4.decelerometer.invalid.high   | FAILED |
-      | class4.decelerometer.invalid.low    | FAILED |
+      | scenario                               | status |
+      | class4.decelerometer.goods.invalid.low | FAILED |
+      | class4.decelerometer.invalid.high      | FAILED |
+      | class4.decelerometer.invalid.low       | FAILED |
 
   @brake-test
   Scenario Outline: Submit Reason For Rejection after submission of brake test result
@@ -48,7 +48,7 @@ Feature: MOT Test
       | class4.roller.invalid.low  | FAILED |
 
   @brake-test
-  Scenario Outline: Submit Roller brake test values and check result
+  Scenario Outline: Pass Roller brake test values and check result
     Given I am logged in as a Tester
     And I start an Mot Test with a Class 4 Vehicle
     And the Tester adds an Odometer Reading of 1000 mi
@@ -59,6 +59,17 @@ Feature: MOT Test
       | scenario                    | status  |
       | class4.roller.valid.high    | PASSED  |
       | class4.roller.valid.low     | PASSED  |
+
+  @brake-test
+  Scenario Outline: Fail Roller brake test values and check result
+    Given I am logged in as a Tester
+    And I start an Mot Test with a Class 4 Vehicle
+    And the Tester adds an Odometer Reading of 1000 mi
+    And the Tester adds a Class 3-7 Roller Brake Test Result with custom <scenario>
+    And the Tester Fails the Mot Test
+    Then the Mot test status should be <status>
+    Examples:
+      | scenario                    | status  |
       | class4.roller.invalid.low   | FAILED  |
       | class4.roller.invalid.high  | FAILED  |
 

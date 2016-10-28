@@ -16,7 +16,6 @@ class Person extends MotApi
     const PATH_NAME = '/name';
     const PATH_ADDRESS = '/address';
     const PATH_DATE_OF_BIRTH = '/date-of-birth';
-    const PATH_LICENCE_UPDATE = '/driving-licence';
     const PATH_TELEPHONE_NUMBER = '/phone-number';
     const PATH_RESET = '/reset-password';
     const PATH_RESET_VALIDATE_TOKEN = '/{token}';
@@ -179,16 +178,6 @@ class Person extends MotApi
             MotApi::METHOD_PATCH,
             str_replace('{user_id}', $user_id, self::PATH . self::PATH_EMAIL),
             $body
-        );
-    }
-
-    public function addLicence($token, $userId, $licenceData)
-    {
-        return $this->sendRequest(
-            $token,
-            MotApi::METHOD_GET,
-            str_replace('{user_id}', $userId, self::PATH.self::PATH_LICENCE_UPDATE),
-            $licenceData
         );
     }
 

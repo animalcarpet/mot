@@ -5,14 +5,25 @@ use Dvsa\Mot\Behat\Support\Api\AuthorisedExaminer;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Support\Data\Collection\SharedDataCollection;
+use Dvsa\Mot\Behat\Support\Data\DefaultData\DefaultAreaOffice;
+use Dvsa\Mot\Behat\Support\Data\Params\AssignedAreaOfficeParams;
+use Dvsa\Mot\Behat\Support\Data\Params\AuthorisedExaminerAuthorisationParams;
+use Dvsa\Mot\Behat\Support\Data\Params\AuthorisedExaminerParams;
+use Dvsa\Mot\Behat\Support\Data\Params\PersonParams;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
+use DvsaCommon\Dto\AreaOffice\AreaOfficeDto;
 use DvsaCommon\Dto\Organisation\AuthorisedExaminerAuthorisationDto;
 use DvsaCommon\Dto\Organisation\OrganisationDto;
 use DvsaCommon\Dto\Site\SiteDto;
+use DvsaCommon\Enum\AuthorisationForAuthorisedExaminerStatusCode;
+use TestSupport\Service\AccountService;
+use Dvsa\Mot\Behat\Support\Response;
+use Zend\Http\Response as HttpResponse;
 
 class AuthorisedExaminerData
 {
-    const DEFAULT_NAME = "default";
+    const DEFAULT_NAME = "Vehicle Fixes Ltd";
+    const DEFAULT_SLOTS = 1001;
 
     private $userData;
     private $authorisedExaminer;
@@ -32,15 +43,20 @@ class AuthorisedExaminerData
         $this->aeCollection = SharedDataCollection::get(OrganisationDto::class);
     }
 
-    public function create($slots = 1001, $name = self::DEFAULT_NAME)
+    public function create($name = self::DEFAULT_NAME)
+    {
+        return $this->createWithCustomSlots(self::DEFAULT_SLOTS, $name);
+    }
+
+    public function createWithCustomSlots($slots, $name = self::DEFAULT_NAME)
     {
         $ae = $this->tryGet($name);
         if ($ae !== null) {
             return $ae;
         }
 
-        $ae = $this->createWithoutAedm($slots, $name);
-        $this->userData->createAedm(["aeIds" => [$ae->getId()]]);
+        $ae = $this->createWithoutAedm($name, $slots);
+        $this->userData->createAedmAssignedWithOrganisation($ae->getId());
 
         return $ae;
     }
@@ -50,7 +66,7 @@ class AuthorisedExaminerData
      * @param string $name
      * @return OrganisationDto
      */
-    public function createWithoutAedm($slots = 1001, $name = self::DEFAULT_NAME)
+    public function createWithoutAedm($name = self::DEFAULT_NAME, $slots = self::DEFAULT_SLOTS)
     {
         $ae = $this->tryGet($name);
         if ($ae !== null) {
@@ -62,26 +78,40 @@ class AuthorisedExaminerData
         return $this->createByUser($ao1User, $name, $slots);
     }
 
-    public function createByUser(AuthenticatedUser $user, $aeName = self::DEFAULT_NAME, $slots = 1001)
+    public function createByUser(AuthenticatedUser $user, $aeName = self::DEFAULT_NAME, $slots = self::DEFAULT_SLOTS)
+    {
+        $ae = $this->createUnapprovedByUser($user, $aeName, $slots);
+        //$this->updateStatusToApprove($ae, $user);
+
+        return $ae;
+    }
+
+    public function createUnapprovedByUser(AuthenticatedUser $user, $aeName = self::DEFAULT_NAME, $slots = self::DEFAULT_SLOTS)
     {
         $data = [
-            "slots" => $slots,
-            "requestor" => [
-                "username" => $user->getUsername(),
-                "password" => "Password1"
-            ]
+            AuthorisedExaminerParams::SLOTS => $slots,
+            PersonParams::REQUESTOR => [
+                PersonParams::USERNAME => $user->getUsername(),
+                PersonParams::PASSWORD => AccountService::PASSWORD
+            ],
+            AuthorisedExaminerParams::AREA_OFFICE_SITE_NUMBER => DefaultAreaOffice::get()->getSiteNumber(),
         ];
 
         $ae = $this->testSupportHelper->getAeService()->create($data);
 
+        $assignedAreaOffice = new AreaOfficeDto();
+        $assignedAreaOffice->setSiteNumber($data[AuthorisedExaminerParams::AREA_OFFICE_SITE_NUMBER]);
+
         $aea = new AuthorisedExaminerAuthorisationDto();
-        $aea->setAuthorisedExaminerRef($ae->data["aeRef"]);
+        $aea->setAuthorisedExaminerRef($ae->data[AuthorisedExaminerParams::AE_REF]);
+        $aea->setAssignedAreaOffice($assignedAreaOffice);
 
         $dto = new OrganisationDto();
         $dto
-            ->setId($ae->data["id"])
-            ->setName($ae->data["aeName"])
-            ->setAuthorisedExaminerAuthorisation($aea);
+            ->setId($ae->data[AuthorisedExaminerParams::ID])
+            ->setName($ae->data[AuthorisedExaminerParams::AE_NAME])
+            ->setAuthorisedExaminerAuthorisation($aea)
+        ;
 
         $this->aeCollection->add($dto, $aeName);
 
@@ -91,19 +121,88 @@ class AuthorisedExaminerData
     public function linkAuthorisedExaminerWithSite(OrganisationDto $ae, SiteDto $site)
     {
         $ao1User = $this->userData->createAreaOffice1User();
-        $this->authorisedExaminer->linkAuthorisedExaminerWithSite(
-            $ao1User->getAccessToken(),
+        return $this->linkAuthorisedExaminerWithSiteByUser($ao1User, $ae, $site);
+
+    }
+
+    public function linkAuthorisedExaminerWithSiteByUser(AuthenticatedUser $user, OrganisationDto $ae, SiteDto $site)
+    {
+        $response = $this->authorisedExaminer->linkAuthorisedExaminerWithSite(
+            $user->getAccessToken(),
             $ae->getId(),
             $site->getSiteNumber()
         );
+
+        if ($response->getStatusCode() !== HttpResponse::STATUS_CODE_200) {
+            throw new \Exception("Something went wrong during linking AE with Site");
+        }
+
+        return $response->getBody()->getData()["id"];
     }
 
-    public function unlinkAuthorisedExaminerWithSite(OrganisationDto $ae, SiteDto $site)
+    public function unlinkSiteFromAuthorisedExaminer(OrganisationDto $ae, SiteDto $site)
     {
         $linkId = $this->testSupportHelper->getAeService()->getLinkId($ae->getId(), $site->getId());
         $ao1User = $this->userData->createAreaOffice1User();
 
-        return $this->authorisedExaminer->unlinkSiteFromAuthorisedExaminer($ao1User->getAccessToken(), $ae->getId(), $linkId);
+        $response = $this->authorisedExaminer->unlinkSiteFromAuthorisedExaminer($ao1User->getAccessToken(), $ae->getId(), $linkId);
+        return $response->getBody()->getData();
+    }
+
+    public function updateStatusToApprove(OrganisationDto $ae, AuthenticatedUser $user)
+    {
+        $this->updateStatus($ae, $user, AuthorisationForAuthorisedExaminerStatusCode::APPROVED);
+    }
+
+    public function updateStatus(OrganisationDto $ae, AuthenticatedUser $user, $status)
+    {
+        $authorisedExaminerResponse = $this->authorisedExaminer->updateStatusAuthorisedExaminer(
+            $user->getAccessToken(),
+            $ae->getId(),
+            $status
+        );
+
+        if ($authorisedExaminerResponse->getStatusCode() !== HttpResponse::STATUS_CODE_200) {
+            throw new \Exception("Authorised Examiner status has not been updated");
+        }
+    }
+
+    public function getTodaysTestLogs(AuthenticatedUser $user, OrganisationDto $ae)
+    {
+        $response = $this->authorisedExaminer->getTodaysTestLogs(
+            $user->getAccessToken(), $ae->getId()
+        );
+
+        return $response->getBody()->getData()["resultCount"];
+    }
+
+    public function search(AuthenticatedUser $user, $number)
+    {
+        $response = $this->authorisedExaminer->search($user->getAccessToken(), $number);
+
+        if ($response->getStatusCode() !== HttpResponse::STATUS_CODE_200) {
+            throw new \Exception("Authorised Examiner not found");
+        }
+
+        $data = $response->getBody()->getData();
+
+        $assignedAreaOfficeData = $data[AuthorisedExaminerParams::AUTHORISED_EXAMINER_AUTHORISATION][AuthorisedExaminerAuthorisationParams::ASSIGNED_AREA_OFFICE];
+
+        $assignedAreaOffice = new AreaOfficeDto();
+        $assignedAreaOffice->setSiteNumber($assignedAreaOfficeData[AssignedAreaOfficeParams::SITE_NUMBER]);
+
+        $aea = new AuthorisedExaminerAuthorisationDto();
+        $aea->setAuthorisedExaminerRef($data[AuthorisedExaminerParams::AUTHORISED_EXAMINER_AUTHORISATION][AuthorisedExaminerAuthorisationParams::AUTHORISED_EXAMINER_REF]);
+        $aea->setAssignedAreaOffice($assignedAreaOffice);
+
+        $dto = new OrganisationDto();
+        $dto
+            ->setId($data[AuthorisedExaminerParams::ID])
+            ->setName($data[AuthorisedExaminerParams::NAME])
+            ->setAuthorisedExaminerAuthorisation($aea)
+        ;
+
+        return $dto;
     }
 
     public function get($aeName = self::DEFAULT_NAME)
@@ -135,5 +234,18 @@ class AuthorisedExaminerData
         }
 
         return null;
+    }
+
+    public function getAll()
+    {
+        return $this->aeCollection;
+    }
+
+    /**
+     * @return Response
+     */
+    public function getLastResponse()
+    {
+        return $this->authorisedExaminer->getLastResponse();
     }
 }

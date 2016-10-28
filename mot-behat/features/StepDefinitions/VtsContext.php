@@ -10,14 +10,20 @@ use Dvsa\Mot\Behat\Support\Api\Vts;
 use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
 use Dvsa\Mot\Behat\Support\Data\SiteData;
 use Dvsa\Mot\Behat\Support\Data\UserData;
+use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
+use Dvsa\Mot\Behat\Support\Data\Params\PersonParams;
+use Dvsa\Mot\Behat\Support\Data\Params\AuthorisedExaminerParams;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use DvsaCommon\Dto\Site\SiteListDto;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Dto\Site\SiteDto;
 use DvsaCommon\Dto\Organisation\OrganisationDto;
 use DvsaCommon\Enum\VehicleClassId;
+use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Model\VehicleTestingStation;
+use DvsaCommon\Dto\Search\SiteSearchParamsDto;
 use DvsaCommon\Utility\DtoHydrator;
+use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class VtsContext implements Context
@@ -66,14 +72,18 @@ class VtsContext implements Context
     /** @var AuthorisedExaminerContext */
     private $authorisedExaminerContext;
 
-    private $siteManager1Data = null;
-    private $siteManager2Data = null;
-
     private $riskAssessmentData = [];
 
     private $siteData;
 
     private $userData;
+
+    private $authorisedExaminerData;
+
+    /**
+     * @var SiteListDto
+     */
+    private $foundedVts;
 
     /**
      * @param Vts $vehicleTestingStation
@@ -85,7 +95,8 @@ class VtsContext implements Context
         Notification $notification,
         AuthorisedExaminer $authorisedExaminer,
         SiteData $siteData,
-        UserData $userData
+        UserData $userData,
+        AuthorisedExaminerData $authorisedExaminerData
     )
     {
         $this->vehicleTestingStation = $vehicleTestingStation;
@@ -95,6 +106,7 @@ class VtsContext implements Context
         $this->authorisedExaminer = $authorisedExaminer;
         $this->siteData = $siteData;
         $this->userData = $userData;
+        $this->authorisedExaminerData = $authorisedExaminerData;
     }
 
     /**
@@ -113,62 +125,14 @@ class VtsContext implements Context
      */
     public function createSiteBeforeScenario()
     {
-        return $this->createSiteAssociatedWithAe();
-    }
-
-    public function createSite($name = "default")
-    {
-        if (!array_key_exists($name, $this->createdVts)) {
-            $areaOffice1Service = $this->testSupportHelper->getAreaOffice1Service();
-            $ao = $areaOffice1Service->create([]);
-            $aoSession = $this->session->startSession(
-                $ao->data["username"],
-                $ao->data["password"]
-            );
-
-            $params = [
-                'accessToken' => $aoSession->getAccessToken(),
-                'name' => $name == "default" ? self::SITE_NAME : $name,
-                'town' => self::SITE_TOWN,
-                'postcode' => self::SITE_POSTCODE,
-            ];
-
-            $response = $this->vehicleTestingStation->create($aoSession->getAccessToken(), $params);
-            $responseBody = $response->getBody();
-            if (!is_object($responseBody)) {
-                throw new Exception("createSite: responseBody is not an object: failed to create Vts");
-            }
-
-            $this->createdVts[$name] = $responseBody->toArray()['data'];
-        }
-
-        return $this->createdVts[$name];
-    }
-
-    public function createSiteAssociatedWithAe($siteName = "default", $aeName = "default")
-    {
-        if ($this->getSite($siteName)) {
-            return $this->getSite($siteName);
-        }
-
-        $site = $this->createSite($siteName);
-
-        $areaOffice1Service = $this->testSupportHelper->getAreaOffice1Service();
-        $ao = $areaOffice1Service->create([]);
-        $aoSession = $this->session->startSession(
-            $ao->data["username"],
-            $ao->data["password"]
+        return $this->siteData->createWithParams(
+            [
+                SiteParams::NAME => self::SITE_NAME,
+                SiteParams::TOWN => self::SITE_TOWN,
+                SiteParams::POSTCODE => self::SITE_POSTCODE,
+                AuthorisedExaminerParams::AE_NAME => "Ae Ltd"
+            ]
         );
-
-        $aeId = $this->authorisedExaminerContext->createAE(1001, $aeName)["id"];
-
-        $this->authorisedExaminer->linkAuthorisedExaminerWithSite(
-            $aoSession->getAccessToken(),
-            $aeId,
-            $site["siteNumber"]
-        );
-
-        return $site;
     }
 
     /**
@@ -176,7 +140,7 @@ class VtsContext implements Context
      */
     public function thereIsASiteAssociatedWithAuthorisedExaminer($siteName, $aeName)
     {
-        $this->siteData->create(['name' => $siteName, 'aename' => $aeName]);
+        $this->siteData->createWithParams([SiteParams::NAME => $siteName, AuthorisedExaminerParams::AE_NAME => $aeName]);
     }
 
     /**
@@ -185,59 +149,44 @@ class VtsContext implements Context
     public function thereIsASiteAssociatedWithAuthorisedExaminerWithFollowingData(TableNode $table)
     {
         $defaults = [
-            "name" => SiteData::DEFAULT_NAME,
-            "aeName" => AuthorisedExaminerData::DEFAULT_NAME,
-            "startDate" => null,
-            "endDate" => null
+            SiteParams::NAME => SiteData::DEFAULT_NAME,
+            AuthorisedExaminerParams::AE_NAME => AuthorisedExaminerData::DEFAULT_NAME,
+            SiteParams::START_DATE => null,
+            SiteParams::END_DATE => null
         ];
 
         $rows = $table->getColumnsHash();
         foreach ($rows as $row) {
-            $row["name"] = $row["siteName"];
-            unset($row["siteName"]);
+            $row[SiteParams::NAME] = $row[SiteParams::SITE_NAME];
+            unset($row[SiteParams::SITE_NAME]);
             $data = array_replace($defaults, $row);
-            $this->siteData->create($data);
+            $this->siteData->createWithParams($data);
         }
     }
 
     /**
      * @When /^I request information about a VTS$/
      */
-    public function iRequestInformationAboutVts($name = "default")
+    public function iRequestInformationAboutVts($name = SiteData::DEFAULT_NAME)
     {
         $this->resultContext = $this->vehicleTestingStation->getVtsDetails(
-            $this->createdVts[$name]['id'],
-            $this->sessionContext->getCurrentAccessToken()
+            $this->siteData->get($name)->getId(),
+            $this->userData->getCurrentLoggedUser()->getAccessToken()
         );
     }
 
     /**
      * @Then /^the VTS details are returned$/
      */
-    public function theVtsDetailsAreReturned($name = "default")
+    public function theVtsDetailsAreReturned($name = SiteData::DEFAULT_NAME)
     {
         /** @var \DvsaCommon\Dto\Site\VehicleTestingStationDto $dto */
-        $dto = DtoHydrator::jsonToDto($this->resultContext->getBody()->toArray()['data']);
+        $dto = DtoHydrator::jsonToDto($this->resultContext->getBody()->getData());
 
         PHPUnit::assertThat(
             $dto->getSiteNumber(),
-            PHPUnit::equalTo($this->createdVts[$name]['siteNumber']), 'No VTS details returned for VTS Number'
+            PHPUnit::equalTo($this->siteData->get($name)->getSiteNumber()), 'No VTS details returned for VTS Number'
         );
-    }
-
-    /**
-     * @When /^I search for a VTS with "([^"]*)" "([^"]*)"$/
-     * @param string $field
-     * @param string $search
-     */
-    public function iSearchForVtsBySiteNumber($field, $search)
-    {
-        $params = [
-            $field => $search,
-            '_class' => '\\DvsaCommon\\Dto\\Search\\SiteSearchParamsDto'
-        ];
-
-        $this->vehicleTestingStation->searchVts($params, $this->sessionContext->getCurrentAccessToken());
     }
 
     /**
@@ -245,31 +194,15 @@ class VtsContext implements Context
      */
     public function iSearchForAnExistingVehicleTestingStationByItsName()
     {
-        $this->iSearchForAnExistingVehicleTestingStationByParam(['siteName' => self::SITE_NAME]);
-    }
-
-    private function iSearchForAnExistingVehicleTestingStationByParam($params)
-    {
-        $params = array_merge(
-            $params,
-            [
-                "pageNr" => 1,
-                "rowsCount" => 10,
-                "sortBy" => "site.name",
-                "sortDirection" => "ASC",
-                '_class' => '\\DvsaCommon\\Dto\\Search\\SiteSearchParamsDto',
-            ]
-        );
-        $response = $this->vehicleTestingStation->searchVts($params, $this->sessionContext->getCurrentAccessToken());
-        $this->resultContext = $response->getBody()->toArray()['data'];
+        $this->foundedVts = $this->siteData->searchVtsByName($this->userData->getCurrentLoggedUser(), self::SITE_NAME);
     }
 
     /**
      * @When /^I search for a existing Vehicle Testing Station by it's number$/
      */
-    public function iSearchForAnExistingVehicleTestingStationByItsNumber($name = "default")
+    public function iSearchForAnExistingVehicleTestingStationByItsNumber($name = self::SITE_NAME)
     {
-        $this->iSearchForAnExistingVehicleTestingStationByParam(['siteNumber' => $this->createdVts[$name]['siteNumber']]);
+        $this->foundedVts = $this->siteData->searchVtsByNumber($this->userData->getCurrentLoggedUser(), $name);
     }
 
     /**
@@ -277,7 +210,7 @@ class VtsContext implements Context
      */
     public function iSearchForAnExistingVehicleTestingStationByItsTown()
     {
-        $this->iSearchForAnExistingVehicleTestingStationByParam(['siteTown' => self::SITE_TOWN]);
+        $this->foundedVts = $this->siteData->searchVtsBySiteTown($this->userData->getCurrentLoggedUser(), self::SITE_TOWN);
     }
 
     /**
@@ -285,7 +218,7 @@ class VtsContext implements Context
      */
     public function iSearchForAnExistingVehicleTestingStationByItsPostcode()
     {
-        $this->iSearchForAnExistingVehicleTestingStationByParam(['sitePostcode' => self::SITE_POSTCODE]);
+        $this->foundedVts = $this->siteData->searchVtsBySitePostcode($this->userData->getCurrentLoggedUser(), self::SITE_POSTCODE);
     }
 
     /**
@@ -293,14 +226,12 @@ class VtsContext implements Context
      */
     public function iShouldSeeTheVehicleTestingStationResult()
     {
-        /** @var SiteListDto $result */
-        $result = DtoHydrator::jsonToDto($this->resultContext);
-        $site = $result->getData()[0];
+        $sites = $this->foundedVts->getData();
+        $actualSite = end($sites);
 
-        PHPUnit::assertInstanceOf(SiteListDto::class, $result);
-        PHPUnit::assertEquals(self::SITE_NAME, $site['name']);
-        PHPUnit::assertEquals(self::SITE_TOWN, $site['town']);
-        PHPUnit::assertEquals(self::SITE_POSTCODE, $site['postcode']);
+        PHPUnit::assertEquals(self::SITE_NAME, $actualSite[SiteParams::NAME]);
+        PHPUnit::assertEquals(self::SITE_TOWN, $actualSite[SiteParams::TOWN]);
+        PHPUnit::assertEquals(self::SITE_POSTCODE, $actualSite[SiteParams::POSTCODE]);
     }
 
     /**
@@ -309,15 +240,15 @@ class VtsContext implements Context
     public function iSearchForVehicleTestingStationOnlyByClass()
     {
         $params = [
-            'siteVehicleClass' => [1],
-            '_class' => '\\DvsaCommon\\Dto\\Search\\SiteSearchParamsDto'
+            'siteVehicleClass' => [VehicleClassCode::CLASS_1],
+            '_class' => SiteSearchParamsDto::class
         ];
 
         $response = $this->vehicleTestingStation->searchVts(
             $params,
             $this->sessionContext->getCurrentAccessToken()
         );
-        PHPUnit::assertEquals(500, $response->getStatusCode());
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_500, $response->getStatusCode());
         $this->resultContext = [
             '_class' => SiteListDto::class,
             'totalResult' => 0,
@@ -343,156 +274,39 @@ class VtsContext implements Context
     {
         $params = [
             'siteTown' => self::SITE_TOWN_NO_GARAGE,
-            '_class' => '\\DvsaCommon\\Dto\\Search\\SiteSearchParamsDto'
+            '_class' => SiteSearchParamsDto::class
         ];
 
         $response = $this->vehicleTestingStation->searchVts(
             $params,
             $this->sessionContext->getCurrentAccessToken()
         );
-        $this->resultContext = $response->getBody()->toArray()['data'];
+        $this->resultContext = $response->getBody()->getData();
     }
 
-    /**
-     * @Given I attempt to assign the role of site manager to more than one user of a vehicle testing station
-     */
-    public function IAttemptToAssignTheRoleOfSiteManagerToMoreThanOneUserOfAVTS($name = "default")
+    private function prepareRiskAssessmentData($siteName, $aeName, array $data, $linkAeWithSite = true)
     {
-        $testerService = $this->sessionContext->testSupportHelper->getTesterService();
-
-        $this->siteManager1Data = $testerService->create(
-            [
-                'accountClaimRequired' => false,
-                'siteIds' => [1],
-            ]
-        )->data;
-
-        $this->siteManager2Data = $testerService->create(
-            [
-                'accountClaimRequired' => false,
-                'siteIds' => [1],
-            ]
-        )->data;
-
-        $role = 'SITE-MANAGER';
-        $result1 = $this->vehicleTestingStation->nominateToRole(
-            $this->siteManager1Data['personId'],
-            $role,
-            $this->createdVts[$name]['id'],
-            $this->sessionContext->getCurrentAccessToken()
-        );
-
-        $role = 'SITE-MANAGER';
-        $result2 = $this->vehicleTestingStation->nominateToRole(
-            $this->siteManager2Data['personId'],
-            $role,
-            $this->createdVts[$name]['id'],
-            $this->sessionContext->getCurrentAccessToken()
-        );
-
-        PHPUnit::assertEquals(200, $result1->getStatusCode());
-        PHPUnit::assertEquals(200, $result2->getStatusCode());
-    }
-
-    /**
-     * @Then /^the site manager roles should be assigned successfully$/
-     */
-    public function theSiteManagerRolesShouldBeAssignedSuccessfully()
-    {
-        $positionName = 'Site manager';
-
-        // login as user1
-        $this->sessionContext->iMAuthenticatedWithMyUsernameAndPassword(
-            $this->siteManager1Data['username'],
-            $this->siteManager1Data['password']
-        );
-
-        $notification = $this->notification->getRoleNominationNotification(
-            $positionName,
-            $this->siteManager1Data['personId'],
-            $this->sessionContext->getCurrentAccessToken()
-        );
-
-        $user1Response = $this->notification->acceptSiteNomination($this->sessionContext->getCurrentAccessToken(), $notification["id"]);
-
-        //login as user2
-        $this->sessionContext->iMAuthenticatedWithMyUsernameAndPassword(
-            $this->siteManager2Data['username'],
-            $this->siteManager2Data['password']
-        );
-
-        $notification = $this->notification->getRoleNominationNotification(
-            $positionName,
-            $this->siteManager2Data['personId'],
-            $this->sessionContext->getCurrentAccessToken()
-        );
-
-        $user2Response = $this->notification->acceptSiteNomination($this->sessionContext->getCurrentAccessToken(), $notification["id"]);
-
-        PHPUnit::assertEquals(200, $user1Response->getStatusCode());
-        PHPUnit::assertEquals(200, $user2Response->getStatusCode());
-
-    }
-
-    /**
-     * @return array
-     */
-    public function getSite($name = "default")
-    {
-        if (array_key_exists($name, $this->createdVts)) {
-            return $this->createdVts[$name];
-        }
-
-        return null;
-    }
-
-    /**
-     * @Given /^I attempt to add risk assessment to site "([^"]*)" on ae "([^"]*)" with data:$/
-     */
-    public function iAttemptToAddRiskAssessmentToSiteOnAeWithData($siteName = "default", $aeName = "default", TableNode $table)
-    {
-        $hash = $table->getColumnsHash();
-
-        if (count($hash) !== 1) {
-            throw new \InvalidArgumentException(sprintf('Expected a single record but got: %d', count($hash)));
-        }
-
-        $this->riskAssessmentData = $this->prepareRiskAssessmentData($siteName, $aeName, $hash[0]);
-        $response = $this->vehicleTestingStation->addRiskAssessment($this->sessionContext->getCurrentAccessToken(), $this->getSite($siteName)['id'], $this->riskAssessmentData);
-
-        PHPUnit::assertEquals(200, $response->getStatusCode());
-    }
-
-    private function prepareRiskAssessmentData($siteName, $aeName, array $data)
-    {
-        $site = $this->getSite($siteName);
+        $site = $this->siteData->tryGet($siteName);
 
         if(empty($site)) {
-            $siteName = "default";
-            $site = $this->createSite($siteName);
+            $site = $this->siteData->createUnassociatedSite([SiteParams::NAME => $siteName]);
         }
 
-        $siteId = $site['id'];
-        $siteNumber = $site["siteNumber"];
+        $siteId = $site->getId();
         $dataGeneratorHelper = $this->testSupportHelper->getDataGeneratorHelper();
         $suffixLength = 10;
 
-        $ae = $this->authorisedExaminerContext->getAe($aeName);
-        $aedm = $this->userData->getAedmByAeId($ae["id"]);
+        $ae = $this->authorisedExaminerData->tryGet($aeName);
+        if ($ae === null) {
+            $ae = $this->authorisedExaminerData->create($aeName);
+        }
+
+        $aedm = $this->userData->getAedmByAeId($ae->getId());
         $aedmUsername = $aedm->getUsername();
 
-        $areaOffice1Service = $this->testSupportHelper->getAreaOffice1Service();
-        $ao1user = $areaOffice1Service->create([]);
-        $ao1Session = $this->session->startSession(
-            $ao1user->data['username'],
-            $ao1user->data['password']
-        );
-
-        $this->authorisedExaminer->linkAuthorisedExaminerWithSite(
-            $ao1Session->getAccessToken(),
-            $this->authorisedExaminerContext->getAE()["id"],
-            $siteNumber
-        );
+        if ($linkAeWithSite) {
+            $this->authorisedExaminerData->linkAuthorisedExaminerWithSite($ae, $site);
+        }
 
         if (!empty($data["aeRepresentativesUserId"])) {
             $data["aeRepresentativesUserId"] = $aedmUsername;
@@ -500,15 +314,14 @@ class VtsContext implements Context
 
         if (!empty($data["testerUserId"])) {
             $username = $data["testerUserId"] . $dataGeneratorHelper->generateRandomString($suffixLength);
-            $this->personContext->createTester(["siteIds" => [$siteId], "username" => $username]);
-            $data["testerUserId"] = $this->personContext->getPersonUsername();
+            $tester = $this->userData->createTesterAssignedWitSite($siteId, $username);
+            $data["testerUserId"] = $tester->getUsername();
         }
 
         if (!empty($data["dvsaExaminersUserId"])) {
             $username = $data["dvsaExaminersUserId"] . $dataGeneratorHelper->generateRandomString($suffixLength);
-            $vehicleExaminerService = $this->testSupportHelper->getVehicleExaminerService();
-            $examiner = $vehicleExaminerService->create(["username" => $username]);
-            $data["dvsaExaminersUserId"] = $examiner->data["username"];
+            $examiner = $this->userData->createVehicleExaminer($username);
+            $data["dvsaExaminersUserId"] = $examiner->getUsername();
         }
 
         return $data;
@@ -519,7 +332,8 @@ class VtsContext implements Context
      */
     public function riskAssessmentIsAddedToSite()
     {
-        $response = $this->vehicleTestingStation->getRiskAssessment($this->sessionContext->getCurrentAccessToken(), $this->getSite()['id']);
+        $user = $this->userData->getCurrentLoggedUser();
+        $response = $this->vehicleTestingStation->getRiskAssessment($user->getAccessToken(), $this->siteData->get("VTS")->getId());
         $riskAssessment = $response->getBody()->toArray()["data"];
 
         PHPUnit::assertEquals($this->riskAssessmentData["siteAssessmentScore"], $riskAssessment["siteAssessmentScore"]);
@@ -554,10 +368,14 @@ class VtsContext implements Context
             throw new \InvalidArgumentException(sprintf('Expected a single record but got: %d', count($hash)));
         }
 
-        $this->riskAssessmentData = $this->prepareRiskAssessmentData("default", "default", $hash[0]);
-        $response = $this->vehicleTestingStation->addRiskAssessment($this->sessionContext->getCurrentAccessToken(), $this->getSite()['id'], $this->riskAssessmentData);
+        $this->riskAssessmentData = $this->prepareRiskAssessmentData("VTS", "Organisation", $hash[0]);
+        $response = $this->vehicleTestingStation->addRiskAssessment(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->siteData->get("VTS")->getId(),
+            $this->riskAssessmentData
+        );
 
-        PHPUnit::assertEquals(400, $response->getStatusCode());
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_400, $response->getStatusCode());
     }
 
     /**
@@ -565,21 +383,24 @@ class VtsContext implements Context
      */
     public function riskAssessmentIsNotAddedToSite()
     {
-        $response = $this->vehicleTestingStation->getRiskAssessment($this->sessionContext->getCurrentAccessToken(), $this->getSite()['id']);
+        $response = $this->vehicleTestingStation->getRiskAssessment(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->siteData->get("VTS")->getId()
+        );
 
-        PHPUnit::assertEquals(404, $response->getStatusCode());
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_404, $response->getStatusCode());
     }
 
     /**
      * @When class :vtsClass is removed from site
      */
-    public function classIsRemovedFromSite($vtsClass, $name = "default")
+    public function classIsRemovedFromSite($vtsClass, $name = SiteData::DEFAULT_NAME)
     {
         $areaOffice1Service = $this->testSupportHelper->getAreaOffice1Service();
         $ao = $areaOffice1Service->create([]);
         $aoSession = $this->session->startSession(
-            $ao->data["username"],
-            $ao->data["password"]
+            $ao->data[PersonParams::USERNAME],
+            $ao->data[PersonParams::PASSWORD]
         );
 
         $classes = VehicleClassId::getAll();
@@ -590,28 +411,23 @@ class VtsContext implements Context
 
         $response = $this->vehicleTestingStation->updateSiteDetails(
             $aoSession->getAccessToken(),
-            $this->createdVts[$name]["id"],
+            $this->siteData->get()->getId(),
             [
                 VehicleTestingStation::PATCH_PROPERTY_CLASSES => $classes,
                 '_class' => VehicleTestingStationDto::class,
             ]
         );
 
-        PHPUnit::assertEquals(200, $response->getStatusCode());
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
 
-    public function getCreatedSites()
+    public function iGetTestLogs($name = SiteData::DEFAULT_NAME)
     {
-        return $this->createdVts;
-    }
-
-    public function iGetTestLogs($name = "default")
-    {
-        $this->createdVts[$name]["testLogs"] = $this->vehicleTestingStation->getTestLogs(
-            $this->sessionContext->getCurrentAccessToken(), $this->createdVts[$name]["id"]
+        $this->createdVts[$name][AuthorisedExaminerParams::TEST_LOGS] = $this->vehicleTestingStation->getTestLogs(
+            $this->sessionContext->getCurrentAccessToken(), $this->createdVts[$name][SiteParams::ID]
         )->getBody()["data"];
 
-        return $this->createdVts[$name]["testLogs"];
+        return $this->createdVts[$name][AuthorisedExaminerParams::TEST_LOGS];
     }
 
     /**
@@ -619,7 +435,20 @@ class VtsContext implements Context
      */
     public function iAttemptToAddRiskAssessmentToSiteWithData(TableNode $table)
     {
-        $this->iAttemptToAddRiskAssessmentToSiteOnAeWithData("default", "default", $table);
+        $hash = $table->getColumnsHash();
+
+        if (count($hash) !== 1) {
+            throw new \InvalidArgumentException(sprintf('Expected a single record but got: %d', count($hash)));
+        }
+
+        $this->riskAssessmentData = $this->prepareRiskAssessmentData("VTS", "Organisation", $hash[0]);
+        $response = $this->vehicleTestingStation->addRiskAssessment(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->siteData->get("VTS")->getId(),
+            $this->riskAssessmentData
+        );
+
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
 
     /**
@@ -629,7 +458,7 @@ class VtsContext implements Context
     {
         $hash = ["siteAssessmentScore" => $score] + $this->getRiskAssessmentDefaults();
 
-        $this->riskAssessmentData = $this->prepareRiskAssessmentData($site->getName(), $ae->getName(), $hash);
+        $this->riskAssessmentData = $this->prepareRiskAssessmentData($site->getName(), $ae->getName(), $hash, false);
 
         $response = $this->vehicleTestingStation->addRiskAssessment(
             $this->sessionContext->getCurrentAccessToken(),

@@ -18,34 +18,19 @@ class OdometerReading extends MotApi
         return $this->addReading($token, $mot_test_id, 'NOT_READ');
     }
 
-    public function editOdometerReading($token, $mot_test_id){
-        $body = json_encode([
-            'value' => 1001,
-            'unit' => "mi",
-        ]);
-
-        $this->client->request(new Request(
-            'POST',
-            str_replace('{mot_test_id}', $mot_test_id, self::PATH),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer' . $token],
-            $body
-        ));
-    }
-
     public function addMeterReading($token, $mot_test_id, $value, $unit)
     {
-        $body = json_encode([
+        $params = [
             'value' => (integer) $value,
             'unit' => $unit,
             'resultType' => 'OK',
-        ]);
+        ];
 
-        return $this->client->request(new Request(
-            'PUT',
+        return $this->sendPutRequest(
+            $token,
             str_replace('{mot_test_id}', $mot_test_id, self::PATH),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token],
-            $body
-        ));
+            $params
+        );
     }
 
     /**
@@ -57,15 +42,14 @@ class OdometerReading extends MotApi
      */
     private function addReading($token, $mot_test_id, $resultType)
     {
-        $body = json_encode([
+        $params = [
             'resultType' => $resultType,
-        ]);
+        ];
 
-        return $this->client->request(new Request(
-            'PUT',
+        return $this->sendPutRequest(
+            $token,
             str_replace('{mot_test_id}', $mot_test_id, self::PATH),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token],
-            $body
-        ));
+            $params
+        );
     }
 }

@@ -4,8 +4,11 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\SecurityPin;
 use Dvsa\Mot\Behat\Support\Api\Session;
+use Dvsa\Mot\Behat\Support\Data\SiteData;
 use PHPUnit_Framework_Assert as PHPUnit;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
+use Zend\Http\Response as HttpResponse;
+use Dvsa\Mot\Behat\Support\Data\Params\PersonParams;
 
 /**
  * Class ContingencyContext.
@@ -28,6 +31,11 @@ class SecurityPinContext implements Context
     private $testSupportHelper;
 
     /**
+     * @var SiteData
+     */
+    private $siteData;
+
+    /**
      * @var SessionContext
      */
     private $sessionContext;
@@ -41,11 +49,17 @@ class SecurityPinContext implements Context
      * @param SecurityPin $securityPin
      * @param Session     $session
      */
-    public function __construct(SecurityPin $securityPin, Session $session, TestSupportHelper $testSupportHelper)
+    public function __construct(
+        SecurityPin $securityPin,
+        Session $session,
+        TestSupportHelper $testSupportHelper,
+        SiteData $siteData
+    )
     {
         $this->securityPin = $securityPin;
         $this->session = $session;
         $this->testSupportHelper = $testSupportHelper;
+        $this->siteData = $siteData;
     }
 
     /**
@@ -67,20 +81,11 @@ class SecurityPinContext implements Context
     }
 
     /**
-     * @Then /^I should receive a new security pin$/
-     */
-    public function iShouldReceiveANewSecurityPin()
-    {
-        $pin = $this->resetPinResponse->getBody()['data']['pin'];
-        PHPUnit::assertNotEmpty($pin, 'Security pin not returned in response message.');
-    }
-
-    /**
      * @Given /^the generated pin should be a number$/
      */
     public function theGeneratedPinShouldBeANumber()
     {
-        $pin = $this->resetPinResponse->getBody()['data']['pin'];
+        $pin = $this->resetPinResponse->getBody()->getData()['pin'];
         PHPUnit::assertTrue(is_numeric($pin), 'Security pin is not a number.');
     }
 
@@ -97,7 +102,7 @@ class SecurityPinContext implements Context
             $user = $areaOffice2Service->create([]);
         } elseif ($role == 'tester') {
             $testerService = $this->testSupportHelper->getTesterService();
-            $user = $testerService->create(['siteIds' => [1]]);
+            $user = $testerService->create([PersonParams::SITE_IDS => [$this->siteData->get()->getId()]]);
         } elseif ($role == 'csco') {
             $cscoService = $this->testSupportHelper->getCscoService();
             $user = $cscoService->create([]);
@@ -105,7 +110,7 @@ class SecurityPinContext implements Context
             throw new \InvalidArgumentException('Role ' . $role . ' has not been implemented');
         }
 
-        $user = $this->session->startSession($user->data['username'], $user->data['password']);
+        $user = $this->session->startSession($user->data[PersonParams::USERNAME], $user->data[PersonParams::PASSWORD]);
 
         $accessToken = $this->sessionContext->getCurrentAccessToken();
         $this->resetPinResponse = $this->securityPin->resetPin($user->getUserId(), $accessToken);
@@ -116,15 +121,7 @@ class SecurityPinContext implements Context
      */
     public function iShouldNotReceiveANewSecurityPin()
     {
-        PHPUnit::assertEquals($this->resetPinResponse->getBody()['errors']['message'], 'Can only reset your own PIN');
-    }
-
-    /**
-     * @Given /^the generated pin should not be a number$/
-     */
-    public function theGeneratedPinShouldNotBeANumber()
-    {
-        PHPUnit::assertFalse(is_numeric($this->resetPinResponse->getBody()['data']['pin']), 'Security pin is a number.');
+        PHPUnit::assertEquals($this->resetPinResponse->getBody()->getErrors()['message'], 'Can only reset your own PIN');
     }
 
     /**
@@ -133,9 +130,9 @@ class SecurityPinContext implements Context
      */
     public function theGeneratedPinShouldBeDigitsLong($length)
     {
-        PHPUnit::assertEquals(200, $this->resetPinResponse->getStatusCode(), 'Did not receive 200 OK response');
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $this->resetPinResponse->getStatusCode(), 'Did not receive 200 OK response');
 
-        $pin = $this->resetPinResponse->getBody()['data']['pin'];
+        $pin = $this->resetPinResponse->getBody()->getData()['pin'];
         PHPUnit::assertEquals($length, strlen($pin), 'Pin is not ' . $length . ' digits long.');
     }
 }

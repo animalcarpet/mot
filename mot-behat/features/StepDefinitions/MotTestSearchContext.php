@@ -5,17 +5,31 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\MotTest;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Response;
-use DvsaCommon\Utility\DtoHydrator;
+use Dvsa\Mot\Behat\Support\Data\SiteData;
+use Dvsa\Mot\Behat\Support\Data\UserData;
+use Dvsa\Mot\Behat\Support\Data\MotTestData;
+use Dvsa\Mot\Behat\Support\Data\MotTestSearchData;
+use DvsaCommon\Dto\Common\MotTestDto;
+use DvsaCommon\Collection\Collection;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class MotTestSearchContext implements Context
 {
-    const SITE_NUMBER = 'V1234';
-
     /**
      * @var MotTest
      */
     private $motTest;
+
+    /**
+     * @var SiteData
+     */
+    private $siteData;
+
+    private $userData;
+
+    private $motTestData;
+
+    private $motTestSearchData;
 
     /**
      * @var SessionContext
@@ -33,11 +47,23 @@ class MotTestSearchContext implements Context
     private $searchResponse;
 
     /**
-     * @param MotTest $motTest
+     * @var Collection;
      */
-    public function __construct(MotTest $motTest)
+    private $foundedMotTests;
+
+    public function __construct(
+        MotTest $motTest,
+        SiteData $siteData,
+        UserData $userData,
+        MotTestData $motTestData,
+        MotTestSearchData $motTestSearchData
+    )
     {
         $this->motTest = $motTest;
+        $this->siteData = $siteData;
+        $this->userData = $userData;
+        $this->motTestData = $motTestData;
+        $this->motTestSearchData = $motTestSearchData;
     }
 
     /**
@@ -54,9 +80,9 @@ class MotTestSearchContext implements Context
      */
     public function iSearchForAnMOTTest()
     {
-        $this->searchResponse = $this->motTest->searchMOTTest(
-            $this->sessionContext->getCurrentAccessToken(),
-            ['siteNr' => self::SITE_NUMBER]
+        $this->foundedMotTests = $this->motTestSearchData->searchBySiteNumber(
+            $this->userData->getCurrentLoggedUser(),
+            $this->siteData->get()->getSiteNumber()
         );
     }
 
@@ -65,9 +91,9 @@ class MotTestSearchContext implements Context
      */
     public function iSearchForAnInvalidMOTTest()
     {
-        $this->searchResponse = $this->motTest->searchMOTTest(
-            $this->sessionContext->getCurrentAccessToken(),
-            ['siteNr' => 'abcdefghijklmnopqrstuvwxyz']
+        $this->foundedMotTests = $this->motTestSearchData->searchBySiteNumber(
+            $this->userData->getCurrentLoggedUser(),
+            'abcdefghijklmnopqrstuvwxyz'
         );
     }
 
@@ -76,9 +102,13 @@ class MotTestSearchContext implements Context
      */
     public function theMOTTestDataIsReturned()
     {
-        $motTestNumber = $this->motTestContext->getMotTestNumber();
-        $data = $this->searchResponse->getBody()['data']['data'];
-        PHPUnit::assertArrayHasKey($motTestNumber, $data);
+        /** @var MotTestDto $motTest */
+        $motTest = $this->motTestData->getAll()->last();
+
+        /** @var MotTestDto $foundedMotTest */
+        $foundedMotTest = $this->foundedMotTests->get($motTest->getMotTestNumber());
+
+        PHPUnit::assertEquals($motTest->getMotTestNumber(), $foundedMotTest->getMotTestNumber());
     }
 
     /**
@@ -86,8 +116,7 @@ class MotTestSearchContext implements Context
      */
     public function theMOTTestIsNotFound()
     {
-        $body = $this->searchResponse->getBody()->toArray();
-        PHPUnit::assertEmpty($body['data']['data']);
+        PHPUnit::assertCount(0, $this->foundedMotTests);
     }
 
     /**
@@ -104,7 +133,7 @@ class MotTestSearchContext implements Context
 
         switch($type) {
             case "site":
-                $params["siteNumber"] = "V1234";
+                $params["siteNumber"] = $this->siteData->get()->getSiteNumber();
                 break;
             case "vin":
                 $params["vin"] = "VIN123456789";
@@ -166,10 +195,15 @@ class MotTestSearchContext implements Context
      */
     public function iSearchForAnMOTTestWithInvalidMotTestNumber()
     {
-        $this->searchResponse = $this->motTest->searchMOTTest(
-            $this->sessionContext->getCurrentAccessToken(),
-            ['testNumber' => '']
-        );
+        try {
+            $this->foundedMotTests = $this->motTestSearchData->searchByTestNumber(
+                $this->userData->getCurrentLoggedUser(),
+                ''
+            );
+        } catch (\Exception $e) {
+            $this->foundedMotTests = new Collection(MotTestDto::class);
+        }
+
     }
 
     /**
@@ -177,26 +211,23 @@ class MotTestSearchContext implements Context
      */
     public function iSearchForAnMOTTestWithMissingVRM()
     {
-        $this->searchResponse = $this->motTest->searchMOTTest(
-            $this->sessionContext->getCurrentAccessToken(),
-            ['vehicleRegNr' => '']
-        );
+        try {
+            $this->foundedMotTests = $this->motTestSearchData->searchByVehicleRegNr(
+                $this->userData->getCurrentLoggedUser(),
+                ''
+            );
+        } catch (\Exception $e) {
+            $this->foundedMotTests = new Collection(MotTestDto::class);
+        }
+
     }
 
     /**
-     * @Then /^the search is failed with error "([^"]*)"$/
+     * @Then the search is failed
      */
-    public function theSearchIsFailedWithError($expectedErrorMessage)
+    public function theSearchIsFailedWithError()
     {
-        $errorArr = $this->searchResponse->getBody()['errors'];
-        $foundError = false;
-        for ($i = 0; $i < count($errorArr); $i++){
-            if($errorArr[$i]['message'] == $expectedErrorMessage) {
-                $foundError = true;
-                break;
-            }
-        }
-        PHPUnit::assertTrue($foundError, 'Error Message not found: ' . $expectedErrorMessage);
+        PHPUnit::assertCount(0, $this->foundedMotTests);
     }
 
     /**
@@ -204,9 +235,9 @@ class MotTestSearchContext implements Context
      */
     public function iSearchForAnMOTTestWithNonExistingVRM()
     {
-        $this->searchResponse = $this->motTest->searchMOTTest(
-            $this->sessionContext->getCurrentAccessToken(),
-            ['vehicleRegNr' => 'YYYYYY']
+        $this->foundedMotTests = $this->motTestSearchData->searchByVehicleRegNr(
+            $this->userData->getCurrentLoggedUser(),
+            'YYYYYY'
         );
     }
 
@@ -224,9 +255,9 @@ class MotTestSearchContext implements Context
      */
     public function iSearchForAnMOTTestWithNonExistingMotTestNumber()
     {
-        $this->searchResponse = $this->motTest->searchMOTTest(
-            $this->sessionContext->getCurrentAccessToken(),
-            ['testNumber' => '0000000000000']
+        $this->foundedMotTests = $this->motTestSearchData->searchByTestNumber(
+            $this->userData->getCurrentLoggedUser(),
+            '0000000000000'
         );
     }
 }

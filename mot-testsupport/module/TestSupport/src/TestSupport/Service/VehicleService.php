@@ -6,6 +6,12 @@ use Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
 use Dvsa\Mot\ApiClient\Request\CreateDvsaVehicleRequest;
 use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\Connection;
+use DvsaCommon\Enum\ColourCode;
+use DvsaCommon\Enum\ColourId;
+use DvsaCommon\Enum\CountryOfRegistrationId;
+use DvsaCommon\Enum\FuelTypeCode;
+use DvsaCommon\Enum\FuelTypeId;
+use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Utility\ArrayUtils;
 use TestSupport\Helper\TestSupportAccessTokenManager;
 
@@ -53,21 +59,22 @@ class VehicleService
 
     /**
      * Uses save internally to minimise what data is needed to be provided
+     * @param string $token
      * @param array $overrideData
      * @return int
      */
-    public function createWithDefaults(array $overrideData = [])
+    public function createWithDefaults($token, array $overrideData = [])
     {
         $defaults = [
-            'countryOfRegistrationId' => 1, //GB
+            'countryOfRegistrationId' => CountryOfRegistrationId::GB_UK_ENG_CYM_SCO_UK_GREAT_BRITAIN, //GB
             'makeId' => 100024, //BMW
             'modelId' => 104420, //Alpina
-            'transmissionTypeId' => 1, //automatic
-            'colourCode' => "C", //red
-            'secondaryColourCode' => "C", //red
-            'cylinderCapacity' => 1300, //red
-            'fuelTypeCode' => "PE", //petrol
-            'testClass' => 4,
+            'transmissionTypeId' => 1,
+            'colourCode' => ColourCode::RED,
+            'secondaryColourCode' => ColourCode::RED,
+            'cylinderCapacity' => 1300,
+            'fuelTypeCode' => FuelTypeCode::PETROL,
+            'testClass' => VehicleClassCode::CLASS_4,
             // Not required for a save but required for the API
             'registrationNumber' => 'ABCD123',
             'vin' => 'VIN123456789',
@@ -79,7 +86,7 @@ class VehicleService
 
         $data = array_merge($defaults, $overrideData);
 
-        $vehicleService = $this->getNewVehicleServiceForUser('tester3', 'Password1');
+        $vehicleService = $this->getNewVehicleServiceForUser($token);
 
         $createDvsaVehicleRequest = new CreateDvsaVehicleRequest();
         $createDvsaVehicleRequest
@@ -268,15 +275,12 @@ EOF;
     }
 
     /**
-     * @param string $username
-     * @param string $password
+     * @param string $token
      * @return NewVehicleService
      * @throws \Exception
      */
-    private function getNewVehicleServiceForUser($username, $password)
+    private function getNewVehicleServiceForUser($token)
     {
-        $token = $this->tokenManager->getToken($username, $password);
-
         $newVehicleService = new NewVehicleService(
             $token,
             $this->newVehicleServiceAdditionalConfig

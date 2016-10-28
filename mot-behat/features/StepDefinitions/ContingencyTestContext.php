@@ -5,6 +5,9 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Datasource\Authentication;
 use Dvsa\Mot\Behat\Support\Api\ContingencyTest;
 use Dvsa\Mot\Behat\Support\Response;
+use Dvsa\Mot\Behat\Support\Data\SiteData;
+use Dvsa\Mot\Behat\Support\Data\ContingencyData;
+use Dvsa\Mot\Behat\Support\Data\Params\ContingencyDataParams;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class ContingencyTestContext implements Context
@@ -13,6 +16,11 @@ class ContingencyTestContext implements Context
      * @var ContingencyTest
      */
     private $contingencyTest;
+
+    /**
+     * @var SiteData
+     */
+    private $siteData;
 
     /**
      * @var SessionContext
@@ -37,9 +45,10 @@ class ContingencyTestContext implements Context
     /**
      * @param ContingencyTest $contingencyTest
      */
-    public function __construct(ContingencyTest $contingencyTest)
+    public function __construct(ContingencyTest $contingencyTest, SiteData $siteData)
     {
         $this->contingencyTest = $contingencyTest;
+        $this->siteData = $siteData;
     }
 
     /**
@@ -55,15 +64,7 @@ class ContingencyTestContext implements Context
      */
     public function iCalledHelpdeskToAskForDailyContingencyCode()
     {
-        $this->dailyContingencyCode = '12345A';
-    }
-
-    /**
-     * @When /^I create a new contingency test$/
-     */
-    public function iCreateANewContingencyTest()
-    {
-        $this->createContingencyCode($this->dailyContingencyCode, 'SO');
+        $this->dailyContingencyCode = ContingencyData::CONTINGENCY_CODE;
     }
 
     /**
@@ -83,19 +84,11 @@ class ContingencyTestContext implements Context
     }
 
     /**
-     * @When /^I create a new contingency test with a Contingency Code and Reason (.*) (.*)$/
+     * @When I create a new contingency test with reason :emergencyCode
      */
-    public function iCreateANewContingencyTestWithAContingencyCodeAndReason($contingencyCode, $reason)
+    public function iCreateANewContingencyTestWithReason($emergencyCode)
     {
-        $this->createContingencyCode($contingencyCode, $reason);
-    }
-
-    /**
-     * @When /^I create a new contingency test with reason (.*)$/
-     */
-    public function iCreateANewContingencyTestWithReason($reason)
-    {
-        $this->createContingencyCode(Authentication::CONTINGENCY_CODE_DEFAULT, $reason);
+        $this->createContingencyCode(Authentication::CONTINGENCY_CODE_DEFAULT, $emergencyCode);
     }
 
     /**
@@ -116,21 +109,25 @@ class ContingencyTestContext implements Context
         $reasonCode = 'SO',
         DateTime $dateTime = null,
         $token = null,
-        $siteId = 1
+        $siteId = null
     ) {
         $this->contingencyData = [
-            'contingencyCode' => $contingencyCode,
-            'reasonCode' => $reasonCode,
+            ContingencyDataParams::CONTINGENCY_CODE => $contingencyCode,
+            ContingencyDataParams::REASON_CODE => $reasonCode,
         ];
 
         if ($token === null) {
             $token = $this->sessionContext->getCurrentAccessTokenOrNull();
         }
 
+        if ($siteId === null) {
+            $siteId = $this->siteData->get()->getId();
+        }
+
         $this->createContingencyCodeIdResponse = $this->contingencyTest->getContingencyCodeID(
             $token,
-            $this->contingencyData['contingencyCode'],
-            $this->contingencyData['reasonCode'],
+            $this->contingencyData[ContingencyDataParams::CONTINGENCY_CODE],
+            $this->contingencyData[ContingencyDataParams::REASON_CODE],
             $dateTime,
             $siteId
         );
@@ -141,11 +138,11 @@ class ContingencyTestContext implements Context
      */
     public function getContingencyCode()
     {
-        if (!isset($this->contingencyData['contingencyCode'])) {
+        if (!isset($this->contingencyData[ContingencyDataParams::CONTINGENCY_CODE])) {
             throw new \LogicException('No contingency code was set');
         }
 
-        return (string) $this->contingencyData['contingencyCode'];
+        return (string) $this->contingencyData[ContingencyDataParams::CONTINGENCY_CODE];
     }
 
     /**
@@ -157,6 +154,6 @@ class ContingencyTestContext implements Context
             throw new \LogicException('Failed to get the contingency code');
         }
 
-        return (int) $this->createContingencyCodeIdResponse->getBody()['data']['emergencyLogId'];
+        return (int) $this->createContingencyCodeIdResponse->getBody()->getData()[ContingencyDataParams::EMERGENCY_LOG_ID];
     }
 }

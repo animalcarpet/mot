@@ -14,13 +14,10 @@ class SecurityQuestionsChange extends MotApi
      */
     public function changeQuestions($userId, array $inputData)
     {
-        $body = json_encode($inputData);
-
-        return $this->client->request(new Request(
-            MotApi::METHOD_PUT,
+        return $this->sendPutRequest(
+            null,
             str_replace('{user_id}', $userId, self::PATH),
-            ['Content-Type' => 'application/json'],
-            $body
-        ));
+            $inputData
+        );
     }
 }

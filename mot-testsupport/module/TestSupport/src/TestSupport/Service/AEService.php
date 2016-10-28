@@ -54,7 +54,12 @@ class AEService
      */
     public function create($data)
     {
+        if (!array_key_exists("areaOfficeSiteNumber", $data)) {
+            $data["areaOfficeSiteNumber"] = self::DEFAULT_AREA_OFFICE;
+        }
+
         $organisationDto = $this->generateDto($data);
+
         $result = $this->restClientHelper->getJsonClient($data)->post(
             AuthorisedExaminerUrlBuilder::of()->toString(),
             DtoHydrator::dtoToJson($organisationDto)
@@ -99,12 +104,13 @@ class AEService
             ->setEmails([$email]);
 
         $authForAeDto = new AuthorisedExaminerAuthorisationDto();
-        $authForAeDto->setAssignedAreaOffice(self::DEFAULT_AREA_OFFICE);
+        $authForAeDto->setAssignedAreaOffice($data["areaOfficeSiteNumber"]);
 
         return (new OrganisationDto())
             ->setName($aeName)
             ->setAuthorisedExaminerAuthorisation($authForAeDto)
             ->setOrganisationType(OrganisationType::AUTHORISED_EXAMINER)
+            ->setSlotBalance(ArrayUtils::tryGet($data, "slots", 1001))
             ->setCompanyType(CompanyTypeCode::SOLE_TRADER)
             ->setContacts([$contact]);
     }

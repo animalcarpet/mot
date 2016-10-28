@@ -12,12 +12,12 @@ use Dvsa\Mot\Behat\Support\Data\UserData;
 use Dvsa\Mot\Behat\Support\Data\VehicleData;
 use Dvsa\Mot\Behat\Support\Helper\ApiResourceHelper;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
+use Dvsa\MOT\Behat\Support\Data\Params\PersonParams;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\NationalPerformanceApiResource;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\SitePerformanceApiResource;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\TesterPerformanceApiResource;
 use DvsaCommon\Dto\Site\SiteDto;
 use PHPUnit_Framework_Assert as PHPUnit;
-
 
 class StatsTesterPerformanceContext implements Context
 {
@@ -56,7 +56,7 @@ class StatsTesterPerformanceContext implements Context
      */
     public function thereIsATesterAssociatedWithAnd($testerName, SiteDto $site1, SiteDto $site2)
     {
-        $this->userData->createTester(["siteIds" => [$site1->getId(), $site2->getId()]], $testerName);
+        $this->userData->createTesterWithParams([PersonParams::SITE_IDS => [$site1->getId(), $site2->getId()]], $testerName);
     }
 
     /**
@@ -64,7 +64,7 @@ class StatsTesterPerformanceContext implements Context
      */
     public function thereIsATesterAssociatedWith($testerName, SiteDto $site)
     {
-        $this->userData->createTester(["siteIds" => [$site->getId()]], $testerName);
+        $this->userData->createTesterWithParams([PersonParams::SITE_IDS => [$site->getId()]], $testerName);
     }
 
     /**

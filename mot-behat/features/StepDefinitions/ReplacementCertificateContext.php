@@ -2,19 +2,17 @@
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Dvsa\Mot\Behat\Support\Api\MotTest;
-use Dvsa\Mot\Behat\Support\Api\Vehicle;
 use Dvsa\Mot\Behat\Support\Api\ReplacementCertificate;
 use Dvsa\Mot\Behat\Support\Api\Session;
+use Dvsa\Mot\Behat\Support\Data\Params\VehicleParams;
+use Dvsa\Mot\Behat\Support\Data\MotTestData;
+use Dvsa\Mot\Behat\Support\Data\UserData;
+use Dvsa\Mot\Behat\Support\Data\VehicleData;
+use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class ReplacementCertificateContext implements Context
 {
-    /**
-     * @var MotTest
-     */
-    private $motTest;
-
     /**
      * @var ReplacementCertificate
      */
@@ -35,14 +33,28 @@ class ReplacementCertificateContext implements Context
      */
     private $motTestContext;
 
+    private $motTestData;
+
+    private $userData;
+
+    private $vehicleData;
+
     /**
      * @var array
      */
     private $draftData;
 
-    public function __construct(ReplacementCertificate $replacementCertificate)
+    public function __construct(
+        ReplacementCertificate $replacementCertificate,
+        MotTestData $motTestData,
+        UserData $userData,
+        VehicleData $vehicleData
+    )
     {
         $this->replacementCertificate = $replacementCertificate;
+        $this->motTestData = $motTestData;
+        $this->userData = $userData;
+        $this->vehicleData = $vehicleData;
     }
 
     /**
@@ -60,7 +72,7 @@ class ReplacementCertificateContext implements Context
      */
     public function iUpdateExpiryDateOnReplacementCertificateForTheVehicleWithRegAndVin($modify)
     {
-        $motTestNumber = $this->motTestContext->getMotTestNumber();
+        $motTestNumber = $this->motTestData->getLast()->getMotTestNumber();
         $draft = $this->createDraft($motTestNumber);
 
         $expiryDate = new \DateTime($draft["expiryDate"]);
@@ -71,8 +83,9 @@ class ReplacementCertificateContext implements Context
 
     private function createDraft($motTestNumber)
     {
+        $user = $this->userData->getCurrentLoggedUser();
         $response = $this->replacementCertificate->createDraft(
-            $this->sessionContext->getCurrentAccessToken(),
+            $user->getAccessToken(),
             $motTestNumber
         );
 
@@ -80,17 +93,19 @@ class ReplacementCertificateContext implements Context
         $draft = $this->replacementCertificate->getDraft(
             $motTestNumber,
             $draftId,
-            $this->sessionContext->getCurrentAccessToken())
+            $user->getAccessToken()
+        )
             ->getBody()
-            ->toArray()["data"];
+            ->getData();
 
         $draft["id"] = $draftId;
-        $vehicle = $this->vehicleContext->getCurrentVehicleData()->toArray()["data"];
+        $vehicleId = $this->vehicleData->getLast()->getId();
+        $vehicle = $this->vehicleData->getVehicleDetails($vehicleId, $this->userData->getCurrentLoggedUser()->getUsername());
 
-        PHPUnit::assertEquals($vehicle["registration"], $draft["vrm"]);
-        PHPUnit::assertEquals($vehicle["vin"], $draft["vin"]);
-        PHPUnit::assertEquals($vehicle["makeName"], $draft["make"]["name"]);
-        PHPUnit::assertEquals($vehicle["modelName"], $draft["model"]["name"]);
+        PHPUnit::assertEquals($vehicle->getRegistration(), $draft["vrm"]);
+        PHPUnit::assertEquals($vehicle->getVin(), $draft["vin"]);
+        PHPUnit::assertEquals($vehicle->getMakeName(), $draft["make"]["name"]);
+        PHPUnit::assertEquals($vehicle->getModelName(), $draft["model"]["name"]);
 
         $this->draftData = $draft;
 
@@ -103,10 +118,10 @@ class ReplacementCertificateContext implements Context
             $motTestNumber,
             $draftId,
             $params,
-            $this->sessionContext->getCurrentAccessToken()
+            $this->userData->getCurrentLoggedUser()->getAccessToken()
         );
 
-        PHPUnit::assertEquals(200, $resp->getStatusCode());
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $resp->getStatusCode());
 
         return $resp;
     }
@@ -117,10 +132,10 @@ class ReplacementCertificateContext implements Context
             $motTestNumber,
             $draftId,
             $params,
-            $this->sessionContext->getCurrentAccessToken()
+            $this->userData->getCurrentLoggedUser()->getAccessToken()
         );
 
-        PHPUnit::assertEquals(200, $resp->getStatusCode());
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $resp->getStatusCode());
 
         return $resp;
     }
@@ -131,11 +146,12 @@ class ReplacementCertificateContext implements Context
     public function expiryDateOnReplacementCertificateDraftForTheVehicleShouldBeChangedTo($modify)
     {
         $updatedDraft = $this->replacementCertificate->getDraft(
-            $this->motTestContext->getMotTestNumber(),
+            $this->motTestData->getLast()->getMotTestNumber(),
             $this->draftData["id"],
-            $this->sessionContext->getCurrentAccessToken())
+            $this->userData->getCurrentLoggedUser()->getAccessToken()
+        )
             ->getBody()
-            ->toArray()["data"];
+            ->getData();
 
         $expiryDate = (new \DateTime($this->draftData["expiryDate"]))->modify($modify)->format("Y-m-d");
 
@@ -149,20 +165,18 @@ class ReplacementCertificateContext implements Context
     {
         $params = ["reasonForReplacement" => "Because I can!"];
         $resp = $this->updateDraft(
-            $this->motTestContext->getMotTestNumber(),
+            $this->motTestData->getlast()->getMotTestNumber(),
             $this->draftData["id"],
-            $params,
-            $this->sessionContext->getCurrentAccessToken()
+            $params
             );
 
-        PHPUnit::assertEquals(200, $resp->getStatusCode());
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $resp->getStatusCode());
 
         $resp = $this->applyDraft(
-            $this->motTestContext->getMotTestNumber(),
+            $this->motTestData->getLast()->getMotTestNumber(),
             $this->draftData["id"],
-            [],
-            $this->sessionContext->getCurrentAccessToken()
+            []
         );
-        PHPUnit::assertEquals(200, $resp->getStatusCode());
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $resp->getStatusCode());
     }
 }

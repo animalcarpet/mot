@@ -2,77 +2,55 @@
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use DvsaCommon\Enum\VehicleClassCode;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\Vehicle;
 use Dvsa\Mot\Behat\Support\Api\MotTest;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use Dvsa\Mot\Behat\Support\Api\BrakeTestResult;
 use Dvsa\Mot\Behat\Support\Api\OdometerReading;
+use Dvsa\Mot\Behat\Support\Data\SiteData;
+use Dvsa\Mot\Behat\Support\Data\UserData;
+use Dvsa\Mot\Behat\Support\Data\VehicleData;
+use Dvsa\Mot\Behat\Support\Data\MotTestData;
+use Dvsa\Mot\Behat\Support\Data\Params\VehicleParams;
+use DvsaCommon\Dto\Vehicle\VehicleDto;
+use Dvsa\Mot\Behat\Support\Data\Params\PersonParams;;
+use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class CherishedTransferContext implements Context
 {
-    private $session;
-    private $vehicle;
-    private $motTest;
     private $testSupportHelper;
-    private $brakeTestResult;
-    private $odometerReading;
-    private $sessionContext;
-    private $motTestContext;
-    private $createdVehicle;
-    private $motTestId;
     private $vehicleData;
+    private $siteData;
+    private $userData;
+    private $motTestData;
+    private $dvlaRegistration;
+    private $dvlaVin;
 
-    /**
-     * @param Session $session
-     * @param Vehicle $vehicle
-     * @param MotTest $motTest
-     * @param TestSupportHelper $testSupportHelper
-     * @param BrakeTestResult $brakeTestResult
-     * @param OdometerReading $odometerReading
-     */
     public function __construct(
-        Session $session,
-        Vehicle $vehicle,
-        MotTest $motTest,
         TestSupportHelper $testSupportHelper,
-        BrakeTestResult $brakeTestResult,
-        OdometerReading $odometerReading
+        SiteData $siteData,
+        UserData $userData,
+        VehicleData $vehicleData,
+        MotTestData $motTestData
     ) {
-        $this->session = $session;
-        $this->vehicle = $vehicle;
-        $this->motTest = $motTest;
         $this->testSupportHelper = $testSupportHelper;
-        $this->brakeTestResult = $brakeTestResult;
-        $this->odometerReading = $odometerReading;
+        $this->siteData = $siteData;
+        $this->userData = $userData;
+        $this->vehicleData = $vehicleData;
+        $this->motTestData = $motTestData;
+        $this->dvlaRegistration = $this->vehicleData->generateRandomRegistration();
+        $this->dvlaVin = $this->vehicleData->generateRandomVin();
     }
 
     /**
-     * @BeforeScenario
+     * @Given I have imported a dvla vehicle
      */
-    public function gatherContexts(BeforeScenarioScope $scope)
+    public function iHaveImportedAVehicleWithRegistrationAndVinFromDvla()
     {
-        $this->sessionContext = $scope->getEnvironment()->getContext(SessionContext::class);
-        $this->motTestContext = $scope->getEnvironment()->getContext(MotTestContext::class);
-    }
-
-    /**
-     * @Given I have imported a vehicle with registration :registration and vin :vin from DVLA
-     *
-     * @param string $registration
-     * @param string $vin
-     */
-    public function iHaveImportedAVehicleWithRegistrationAndVinFromDvla($registration, $vin)
-    {
-        $dvlaVehicleService = $this->testSupportHelper->getDVLAVehicleService();
-
-        $this->vehicleData = [
-            'registration' => $registration,
-            'vin' => $vin
-        ];
-
-        $dvlaVehicleService->save($this->vehicleData);
+        $this->vehicleData->createDvlaVehicle($this->dvlaRegistration, $this->dvlaVin);
     }
 
     /**
@@ -80,51 +58,13 @@ class CherishedTransferContext implements Context
      */
     public function iHaveCompletedAnMotTestOnAVehicleWithRegistrationAndVin()
     {
-        $dvlaVehicleService = $this->testSupportHelper->getDVLAVehicleService();
-        $vehicleService = $this->testSupportHelper->getVehicleService();
-
-        // get the vehicle
-        $dvlaVehicle = (int)$this->vehicle->vehicleSearch(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->vehicleData['registration'],
-            $this->vehicleData['vin'],
-            $searchDvla = true
-        )->getBody()['data']['vehicles'][0]['id'];
-
-        // add to the vehicle table
-        $this->createdVehicle = $vehicleService->createWithDefaults($this->vehicleData);
-
-        // update dvla_vehicle entry with vehicleId of entry in vehicle table
-        $dvlaVehicleService->update($dvlaVehicle, ['vehicle_id' => $this->createdVehicle]);
-
-        // MOT the vehicle
-        $this->motTestId = $this->motTest->startNewMotTestWithVehicleId(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->sessionContext->getCurrentUserId(),
-            $this->createdVehicle
-        )->getBody()['data']['motTestNumber'];
-
-        $response = $this->odometerReading->addMeterReading(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->motTestId,
-            1000,
-            'mi'
+        $vehicle = $this->vehicleData->createVehicleFromDvla(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->dvlaRegistration,
+            $this->dvlaVin
         );
 
-        PHPUnit::assertSame(200, $response->getStatusCode());
-
-        $brakeTestResultResponse = $this->brakeTestResult->addBrakeTestDecelerometerClass3To7(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->motTestId
-        );
-
-        PHPUnit::assertEquals(200, $brakeTestResultResponse->getStatusCode());
-
-        // pass the MOT
-        $this->statusData = $this->motTest->passed(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->motTestId
-        );
+        $this->motTestData->createPassedMotTest($this->userData->getCurrentLoggedUser(), $this->siteData->get(), $vehicle);
     }
 
     /**
@@ -132,23 +72,14 @@ class CherishedTransferContext implements Context
      */
     public function iUpdateTheVehicleWithRegistrationAndVinToANewRegistrationOf($newRegistration)
     {
-        $dvlaVehicleService = $this->testSupportHelper->getDVLAVehicleService();
-        $vehicleService = $this->testSupportHelper->getVehicleService();
-        $motService = $this->testSupportHelper->getMotService();
+        $dvlaVehicleId = $this->vehicleData->fetchDvlaVehicleId($this->dvlaRegistration, $this->dvlaVin);
+        $this->vehicleData->updateDvlaVehicle($dvlaVehicleId, [VehicleParams::REGISTRATION => $newRegistration]);
 
-        $dvlaVehicleId = $dvlaVehicleService->fetchId(
-            $this->vehicleData['registration'],
-            $this->vehicleData['vin']
-        );
+        $vehicle = $this->getCreatedVehicle($this->dvlaRegistration, $this->dvlaVin);
 
-        // update the dvla_vehicle entry
-        $dvlaVehicleService->update($dvlaVehicleId, ['registration' => $newRegistration]);
+        $this->vehicleData->update($vehicle->getId(), [VehicleParams::REGISTRATION => $newRegistration]);
 
-        // update vehicle entry with new dvla_vehicle entry details
-        $vehicleService->update($this->createdVehicle, ['registration' => $newRegistration]);
-
-        // update latest MOT test with new dvla_vehicle entry details
-        $motService->updateLatest($this->createdVehicle, ['registration' => $newRegistration]);
+        $this->motTestData->updateLatestMotTestWithNewDvlaVehicleDetails($vehicle->getId(), [VehicleParams::REGISTRATION => $newRegistration]);
     }
 
     /**
@@ -156,11 +87,8 @@ class CherishedTransferContext implements Context
      */
     public function createCherishedTransferReplacementCertificate()
     {
-        // call update API endpoint to generate certificate replacement
-        $this->vehicle->dvlaVehicleUpdated(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->createdVehicle
-        );
+        $vehicle = $this->getCreatedVehicle($this->dvlaRegistration, $this->dvlaVin);
+        $this->vehicleData->createDvlaVehicleUpdatedCertificat($this->userData->getCurrentLoggedUser()->getAccessToken(), $vehicle->getId());
     }
 
     /**
@@ -169,12 +97,11 @@ class CherishedTransferContext implements Context
     public function attemptToCreateACherishedTransferReplacementCertificate()
     {
         $vehicleId = $this->completeMotTest();
+        try {
+            $this->vehicleData->createDvlaVehicleUpdatedCertificat($this->userData->getCurrentLoggedUser()->getAccessToken(), $vehicleId);
+        } catch (\Exception $e) {
 
-        // this doesn't generate a replacement certificate, figure out why
-        $this->response = $this->vehicle->dvlaVehicleUpdated(
-            $this->sessionContext->getCurrentAccessToken(),
-            $vehicleId
-        );
+        }
     }
 
     /**
@@ -182,7 +109,7 @@ class CherishedTransferContext implements Context
      */
     public function aReplacementCertificateWillBeCreated()
     {
-        PHPUnit::assertEquals(200, $this->response->getStatusCode());
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $this->vehicleData->getLastResponse()->getStatusCode());
     }
 
     /**
@@ -190,7 +117,7 @@ class CherishedTransferContext implements Context
      */
     public function iWouldBeForbiddenToCreateReplacement()
     {
-        PHPUnit::assertEquals(403, $this->response->getStatusCode());
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_403, $this->vehicleData->getLastResponse()->getStatusCode());
     }
 
     /**
@@ -204,15 +131,17 @@ class CherishedTransferContext implements Context
             $certificateCode = 'F';
         } elseif ($type == 'Replacement') {
             $certificateCode = 'R';
+        } else {
+            throw new \InvalidArgumentException("Wrong certificate type");
         }
 
         $certificateReplacementService = $this->testSupportHelper->getCertificateReplacementService();
-        $motTestService = $this->testSupportHelper->getMotService();
 
-        $motTest = $motTestService->getLatestTest($this->createdVehicle);
+        $vehicle = $this->getCreatedVehicle($this->dvlaRegistration, $this->dvlaVin);
 
-        // get the certificate replacement
-        $certificateType = $certificateReplacementService->getCertificateReplacementType($motTest);
+        $motId = $this->motTestData->getLatestMotTestIdForVehicle($vehicle->getId());
+
+        $certificateType = $certificateReplacementService->getCertificateReplacementType($motId);
 
         PHPUnit::assertEquals($certificateType, $certificateCode);
     }
@@ -224,38 +153,28 @@ class CherishedTransferContext implements Context
      */
     private function completeMotTest()
     {
-        $testerService = $this->testSupportHelper->getTesterService();
-        $tester = $testerService->create(
-            ['siteIds' => [1],]
-        );
+        $tester = $this->userData->createTesterWithParams([PersonParams::SITE_IDS => [$this->siteData->get()->getId()]]);
+        $vehicle = $this->vehicleData->createWithVehicleClass($tester->getAccessToken(), VehicleClassCode::CLASS_4);
+        $this->motTestData->createPassedMotTest($tester, $this->siteData->get(), $vehicle);
 
-        $testerSession = $this->session->startSession($tester->data['username'], $tester->data['password']);
-        $testerToken = $testerSession->getAccessToken();
+        return $vehicle->getId();
+    }
 
-        // @todo The vehicle service should not have "dual-mode" and returnOriginalId will be removed
-        $vehicleData = ['testClass' => 4, 'returnOriginalId' => true];
-        $motTest = $this->vehicle->create($testerToken, $vehicleData);
+    /**
+     * @param $registration
+     * @param $vin
+     * @return VehicleDto
+     */
+    private function getCreatedVehicle($registration, $vin)
+    {
+        $collection = $this->vehicleData->getAll()->filter(function (VehicleDto $vehicle) use ($registration, $vin) {
+            if ($vehicle->getRegistration() === $registration && $vehicle->getVin() === $vin) {
+                return true;
+            }
 
-        $vehicleId = $motTest->getBody()['data']['vehicleId'];
-        $motTestId = $motTest->getBody()['data']['startedMotTestNumber'];
+            return false;
+        });
 
-        $this->odometerReading->addMeterReading(
-            $testerToken,
-            $motTestId,
-            1000,
-            'mi'
-        );
-
-        $this->brakeTestResult->addBrakeTestDecelerometerClass3To7(
-            $testerToken,
-            $motTestId
-        );
-
-        $this->motTest->passed(
-            $testerToken,
-            $motTestId
-        );
-
-        return $vehicleId;
+        return $collection->first();
     }
 }

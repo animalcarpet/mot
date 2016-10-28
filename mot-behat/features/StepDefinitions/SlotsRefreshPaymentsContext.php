@@ -56,37 +56,11 @@ class SlotsRefreshPaymentsContext implements Context
             10
         );
 
-        $transactionId        = $this->responseReceived->getBody()->toArray()['data']['transaction_id'];
+        $transactionId        = $this->responseReceived->getBody()->getData()['transaction_id'];
         $this->paymentDetails = $this->slotPurchase->getPaymentDetails(
             $this->sessionContext->getCurrentAccessToken(),
             $transactionId
         )->getBody()->toArray();
-    }
-
-    /**
-     * @When I request the the list of payments to be refreshed
-     */
-    public function iRequestTheTheListOfPaymentsToBeRefreshed()
-    {
-        $this->responseReceived = $this->slotPurchase
-            ->getPaymentsToRefresh($this->sessionContext->getCurrentAccessToken());
-    }
-
-    /**
-     * @Then /^I should get results with receipt references$/
-     */
-    public function iShouldGetResultsWithReceiptReferences()
-    {
-
-        $body = $this->responseReceived->getBody();
-
-        PHPUnit::assertEquals(
-            200,
-            $this->responseReceived->getStatusCode(),
-            'List has not been received'
-        );
-
-        PHPUnit::assertArrayHasKey('data', $body);
     }
 
     /**
@@ -108,6 +82,6 @@ class SlotsRefreshPaymentsContext implements Context
     public function iShouldGetValidMessageFromRefreshEndpoint()
     {
         PHPUnit::assertArrayHasKey('data', $this->responseReceived->getBody()->toArray());
-        PHPUnit::assertArrayHasKey('message', $this->responseReceived->getBody()->toArray()['data']);
+        PHPUnit::assertArrayHasKey('message', $this->responseReceived->getBody()->getData());
     }
 }

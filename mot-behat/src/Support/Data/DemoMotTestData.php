@@ -7,6 +7,8 @@ use Dvsa\Mot\Behat\Support\Api\MotTest;
 use Dvsa\Mot\Behat\Support\Api\OdometerReading;
 use Dvsa\Mot\Behat\Support\Api\ReasonForRejection;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
+use Dvsa\Mot\Behat\Support\Data\Params\MotTestParams;
+use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\Enum\MotTestTypeCode;
 
@@ -20,9 +22,11 @@ class DemoMotTestData extends AbstractMotTestData
         MotTest $motTest,
         BrakeTestResult $brakeTestResult,
         OdometerReading $odometerReading,
-        ReasonForRejection $reasonForRejection)
+        ReasonForRejection $reasonForRejection,
+        TestSupportHelper $testSupportHelper
+    )
     {
-        parent::__construct($userData, $motTest, $brakeTestResult, $odometerReading, $reasonForRejection);
+        parent::__construct($userData, $motTest, $brakeTestResult, $odometerReading, $reasonForRejection, $testSupportHelper);
 
         $this->demoTest = $demoTest;
     }
@@ -40,7 +44,7 @@ class DemoMotTestData extends AbstractMotTestData
         $dto = $this->mapToMotTestDto(
             $tester,
             $vehicle,
-            $mot->getBody()->toArray()["data"]["motTestNumber"],
+            $mot->getBody()->getData()[MotTestParams::MOT_TEST_NUMBER],
             MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING
         );
 
@@ -52,12 +56,12 @@ class DemoMotTestData extends AbstractMotTestData
     public function createPassedMotTest(AuthenticatedUser $tester, VehicleDto $vehicle)
     {
         $mot = $this->create($tester, $vehicle);
-        return $this->passMotTest($mot);
+        return $this->passMotTestWithDefaultBrakeTestAndMeterReading($mot);
     }
 
     public function createFailedMotTest(AuthenticatedUser $tester, VehicleDto $vehicle)
     {
         $mot = $this->create($tester, $vehicle);
-        return $this->failMotTest($mot);
+        return $this->failMotTestWithDefaultBrakeTestAndMeterReading($mot);
     }
 }

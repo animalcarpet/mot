@@ -19,6 +19,10 @@ use TestSupport\Model\AccountPerson;
  */
 class AccountService
 {
+    const PASSWORD = "Password1";
+    const SECURITY_QUESTION_ID_FIRST_KISS = 1;
+    const SECURITY_QUESTION_ID_NAME_OF_DOG = 2;
+
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -59,13 +63,12 @@ class AccountService
      */
     public function createAccount($role, DataGeneratorHelper $dataGeneratorHelper, AccountPerson $accountPerson, $addLicence = true)
     {
-        $password = "Password1";
         $username = $accountPerson->getUsername();
 
         $emailAddress = $accountPerson->getEmailAddress();
 
         /** @var Client $restClient */
-        $accessToken = $this->tokenManager->getToken('schememgt', 'Password1');
+        $accessToken = $this->tokenManager->getToken('schememgt', self::PASSWORD);
         $this->restClient->setAccessToken($accessToken);
 
         $personDetails = [
@@ -82,8 +85,8 @@ class AccountService
             'phoneNumber' => $accountPerson->getPhoneNumber(),
             'email' => $emailAddress,
             'emailConfirmation' => $emailAddress,
-            'password' => $password,
-            'passwordConfirmation' => $password,
+            'password' => self::PASSWORD,
+            'passwordConfirmation' => self::PASSWORD,
             'dateOfBirth' => $accountPerson->getDateOfBirth(),
             'accountClaimRequired' => $accountPerson->isAccountClaimRequired(),
             'passwordChangeRequired' => $accountPerson->isPasswordChangeRequired(),
@@ -101,11 +104,11 @@ class AccountService
 
         $result = $this->restClient->post(UrlBuilder::of()->account()->toString(), $personDetails);
 
-        $this->securityQuestionsService->create($result['data'], 1);
-        $this->securityQuestionsService->create($result['data'], 2);
+        $this->securityQuestionsService->create($result['data'], self::SECURITY_QUESTION_ID_FIRST_KISS);
+        $this->securityQuestionsService->create($result['data'], self::SECURITY_QUESTION_ID_NAME_OF_DOG);
 
         if ($accountPerson->isSecurityQuestionsRequired()) {
-            foreach ([1, 2] as $questionId) {
+            foreach ([self::SECURITY_QUESTION_ID_FIRST_KISS, self::SECURITY_QUESTION_ID_NAME_OF_DOG] as $questionId) {
                 $this->restClient->get('security-question', [
                     'person' => $result['data'],
                     'question' => $questionId,
@@ -116,7 +119,7 @@ class AccountService
         return new Account([
             'personId' => $result['data'],
             'username' => $username,
-            'password' => $password,
+            'password' => self::PASSWORD,
             'firstName' => $accountPerson->getFirstName(),
             'surname' => $accountPerson->getSurname(),
         ]);

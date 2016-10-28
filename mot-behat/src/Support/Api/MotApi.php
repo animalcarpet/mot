@@ -14,6 +14,7 @@ class MotApi
     const METHOD_PATCH   = 'PATCH';
 
     protected $client;
+    protected $lastResponse;
 
     const ACCEPT_APPLICATION_JSON = 'application/json';
     const ACCEPT_APPLICATION_PDF = 'application/pdf';
@@ -37,7 +38,7 @@ class MotApi
     {
         $body = null !== $params ? json_encode($params) : null;
 
-        return $this->client->request(new Request(
+        $this->lastResponse = $this->client->request(new Request(
             $method,
             $path,
             [
@@ -47,7 +48,35 @@ class MotApi
             ],
             $body
         ));
+
+        return $this->lastResponse;
     }
+
+    public function sendGetRequest($token, $path, array $params = null, $accept = self::ACCEPT_APPLICATION_JSON)
+    {
+        return $this->sendRequest($token, self::METHOD_GET, $path, $params, $accept);
+    }
+
+    public function sendPostRequest($token, $path, array $params = null, $accept = self::ACCEPT_APPLICATION_JSON)
+    {
+        return $this->sendRequest($token, self::METHOD_POST, $path, $params, $accept);
+    }
+
+    public function sendPutRequest($token, $path, array $params = null, $accept = self::ACCEPT_APPLICATION_JSON)
+    {
+        return $this->sendRequest($token, self::METHOD_PUT, $path, $params, $accept);
+    }
+
+    public function sendPatchRequest($token, $path, array $params = null, $accept = self::ACCEPT_APPLICATION_JSON)
+    {
+        return $this->sendRequest($token, self::METHOD_PATCH, $path, $params, $accept);
+    }
+
+    public function sendDeleteRequest($token, $path, array $params = null, $accept = self::ACCEPT_APPLICATION_JSON)
+    {
+        return $this->sendRequest($token, self::METHOD_DELETE, $path, $params, $accept);
+    }
+
     /**
      * @param string $token
      * @param string $method
@@ -59,5 +88,13 @@ class MotApi
     public function pdfRequest($token, $method, $path, array $params = null)
     {
         return $this->sendRequest($token, $method, $path, $params, self::ACCEPT_APPLICATION_PDF);
+    }
+
+    /**
+     * @return \Dvsa\Mot\Behat\Support\Response
+     */
+    public function getLastResponse()
+    {
+        return $this->lastResponse;
     }
 }

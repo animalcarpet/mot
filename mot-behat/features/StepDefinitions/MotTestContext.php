@@ -4,7 +4,6 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
-use Dvsa\Mot\Behat\Datasource\Authentication;
 use Dvsa\Mot\Behat\Support\Api\BrakeTestResult;
 use Dvsa\Mot\Behat\Support\Api\ContingencyTest;
 use Dvsa\Mot\Behat\Support\Api\DemoTest;
@@ -12,25 +11,45 @@ use Dvsa\Mot\Behat\Support\Api\MotTest;
 use Dvsa\Mot\Behat\Support\Api\OdometerReading;
 use Dvsa\Mot\Behat\Support\Api\ReasonForRejection;
 use Dvsa\Mot\Behat\Support\Api\Session;
+use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Support\Api\Vehicle;
 use Dvsa\Mot\Behat\Support\Api\SlotReport;
+use Dvsa\Mot\Behat\Support\Data\VehicleData;
+use Dvsa\Mot\Behat\Support\Data\SiteData;
+use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
+use Dvsa\Mot\Behat\Support\Data\UserData;
+use Dvsa\Mot\Behat\Support\Data\MotTestData;
+use Dvsa\Mot\Behat\Support\Data\ContingencyMotTestData;
 use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupA;
 use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupB;
+use Dvsa\Mot\Behat\Support\Data\Params\MotTestParams;
+use Dvsa\Mot\Behat\Support\Data\Params\VehicleParams;
+use Dvsa\Mot\Behat\Support\Data\Params\PersonParams;
+use Dvsa\Mot\Behat\Support\Data\Params\MeterReadingParams;
+use Dvsa\Mot\Behat\Support\Data\Params\ContingencyDataParams;
+use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
+use Dvsa\Mot\Behat\Support\Data\Params\BrakeTestResultParams;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use Dvsa\Mot\Behat\Support\Response;
+use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\Enum\MotTestTypeCode;
+use DvsaCommon\Enum\VehicleClassCode;
+use DvsaCommon\Enum\MotTestStatusName;
+use DvsaCommon\Dto\Common\MotTestDto;
+use DvsaCommon\Utility\ArrayUtils;
+use Dvsa\Mot\Behat\Support\Data\ContingencyData;
 use Dvsa\Mot\Behat\Support\History;
+use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class MotTestContext implements Context, SnippetAcceptingContext
 {
-    const SITE_NUMBER = 'V1234';
     const USERNAME_PREFIX_LENGTH = 20;
 
     /**
      * @var Response
      */
-    private $motTestData;
+    private $motTestResponse;
 
     /**
      * @var Response
@@ -162,6 +181,20 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     private $brakeTestResultContext;
 
+    private $vehicleData;
+
+    private $siteData;
+
+    private $authorisedExaminerData;
+
+    private $userData;
+
+    private $motTestData;
+
+    private $contingencyData;
+
+    private $contingencyMotTestData;
+
     public function __construct(
         BrakeTestResult $brakeTestResult,
         MotTest $motTest,
@@ -173,7 +206,14 @@ class MotTestContext implements Context, SnippetAcceptingContext
         TestSupportHelper $testSupportHelper,
         Vehicle $vehicle,
         History $history,
-        SlotReport $slotsReport
+        SlotReport $slotsReport,
+        VehicleData $vehicleData,
+        SiteData $siteData,
+        AuthorisedExaminerData $authorisedExaminerData,
+        UserData $userData,
+        MotTestData $motTestData,
+        ContingencyData $contingencyData,
+        ContingencyMotTestData $contingencyMotTestData
     ) {
         $this->brakeTestResult = $brakeTestResult;
         $this->motTest = $motTest;
@@ -186,6 +226,13 @@ class MotTestContext implements Context, SnippetAcceptingContext
         $this->vehicle = $vehicle;
         $this->history = $history;
         $this->slotsReport = $slotsReport;
+        $this->vehicleData = $vehicleData;
+        $this->siteData = $siteData;
+        $this->authorisedExaminerData = $authorisedExaminerData;
+        $this->userData = $userData;
+        $this->motTestData = $motTestData;
+        $this->contingencyData = $contingencyData;
+        $this->contingencyMotTestData = $contingencyMotTestData;
     }
 
     /**
@@ -213,13 +260,9 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function theMOTTestStatusIs($status)
     {
-        try {
-            $actualResponse = $this->statusData->getBody()['data']['status'];
-        } catch (Exception $error) {
-            $actualResponse = $this->statusData->getBody()['errors'][0]['message'];
-        }
+        $actualStatus = $this->motTestData->getAll()->last()->getStatus();
 
-        PHPUnit::assertEquals($status, $actualResponse, 'MOT Test Status is incorrect');
+        PHPUnit::assertEquals($status, $actualStatus, 'MOT Test Status is incorrect');
     }
 
     /**
@@ -232,28 +275,41 @@ class MotTestContext implements Context, SnippetAcceptingContext
         if (!$useCurrentTester) {
             $this->sessionContext->iAmLoggedInAsATester();
         }
-        $this->startMotTest($this->sessionContext->getCurrentUserId(), $this->sessionContext->getCurrentAccessToken());
+
+        $this->motTestData->create(
+            $this->userData->getCurrentLoggedUser(),
+            $this->vehicleData->create(),
+            $this->siteData->get()
+            );
     }
 
     public function startMotTest($userId, $token, $motTestParams = [], $vehicleId = null)
     {
-        $testClass = 4;
+        $testClass = VehicleClassCode::CLASS_4;
 
         if (is_null($vehicleId)) {
-            $this->vehicleId  = $this->vehicleContext->createVehicle(['testClass' => $testClass]);
+            $vehicle  = $this->vehicleData->createWithVehicleClass($token, $testClass);
         } else {
-            $this->vehicleId = $vehicleId;
+            /** @var VehicleDto $vehicle */
+            $vehicle = $this->vehicleData->getAll()->filter(function (VehicleDto $vehicle) use ($vehicleId){
+                return $vehicle->getId() === $vehicleId;
+            })->first();
         }
 
-        $this->motTestData = $this->motTest->startNewMotTestWithVehicleId(
-            $token,
-            $userId,
-            $this->vehicleId,
-            $testClass,
-            $motTestParams
-        );
+        $collection = $this->userData->getAll()->filter(function (AuthenticatedUser $user) use ($userId){
+            return $user->getUserId() === $userId;
+        });
 
-        return $this->motTestData;
+        $user = $collection->first();
+
+        $type = ArrayUtils::tryGet($motTestParams, "motTestType", MotTestTypeCode::NORMAL_TEST);
+
+        return $this->motTestData->create(
+            $user,
+            $vehicle,
+            $this->siteData->get(),
+            $type
+        );
     }
 
     /**
@@ -261,11 +317,12 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iStartDemoTest()
     {
-        $vehicleId = $this->vehicleContext->createVehicle();
-
-        $this->motTestData = $this->demoTest->startMotTest(
-            $this->sessionContext->getCurrentAccessToken(),
-            $vehicleId
+        $vehicle = $this->vehicleData->create();
+        $this->motTestData->create(
+            $this->userData->getCurrentLoggedUser(),
+            $vehicle,
+            null,
+            MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING
         );
     }
 
@@ -274,11 +331,11 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iStartMotTest()
     {
-        $vehicleId = $this->vehicleContext->createVehicle();
-
-        $this->motTestData = $this->motTest->startMotTest(
-            $this->sessionContext->getCurrentAccessToken(),
-            $vehicleId
+        $vehicle = $this->vehicleData->createByUser($this->userData->getCurrentLoggedUser()->getAccessToken());
+        $this->motTestData->create(
+            $this->userData->getCurrentLoggedUser(),
+            $vehicle,
+            $this->siteData->get()
         );
     }
 
@@ -296,11 +353,16 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function theTesterAddsAReasonForRejection()
     {
-        $rfrId = $this->vehicleContext->getCurrentVehicleClass() < 3
-            ? ReasonForRejectionGroupA::RFR_BRAKE_HANDLEBAR_LEVER
-            : ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION;
-        $response = $this->reasonForRejection->addFailure($this->sessionContext->getCurrentAccessToken(), $this->getMotTestNumber(), $rfrId);
-        PHPUnit::assertSame(200, $response->getStatusCode());
+        $motTest = $this->motTestData->getAll()->last();
+        if ($motTest->getVehicleClass()->getCode() < VehicleClassCode::CLASS_3) {
+            $rfrId = ReasonForRejectionGroupA::RFR_BRAKE_HANDLEBAR_LEVER;
+        } else {
+            $rfrId = ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION;
+        }
+
+        $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
+        $response = $this->reasonForRejection->addFailure($token, $motTest->getMotTestNumber(), $rfrId);
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
 
     /**
@@ -309,11 +371,11 @@ class MotTestContext implements Context, SnippetAcceptingContext
     public function iCanSearchForRfr()
     {
         $response = $this->reasonForRejection->search(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->getMotTestNumber(),
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->motTestData->getAll()->last()->getMotTestNumber(),
             "brake", 0, 2
         );
-        PHPUnit::assertSame(200, $response->getStatusCode());
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
 
     /**
@@ -321,11 +383,14 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iCanListChildTestItemSelector()
     {
+        /** @var MotTestDto $mot */
+        $mot = $this->motTestData->getAll()->last();
+
         $response = $this->reasonForRejection->listTestItemSelectors(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->getMotTestNumber()
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $mot->getMotTestNumber()
         );
-        PHPUnit::assertSame(200, $response->getStatusCode());
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
 
     /**
@@ -333,10 +398,12 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function theTesterFailsTheMotTest()
     {
-        $this->statusData = $this->motTest->failed(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->getMotTestNumber()
-        );
+        try {
+            $this->motTestData->failMotTest($this->motTestData->getAll()->last());
+        } catch (\Exception $e) {
+
+        }
+
     }
 
     /**
@@ -344,10 +411,12 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function theTesterPassesTheMotTest()
     {
-        $this->statusData = $this->motTest->passed(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->getMotTestNumber()
-        );
+        try {
+            $this->motTestData->passMotTest($this->motTestData->getAll()->last());
+        } catch (\Exception $e) {
+
+        }
+
     }
 
     /**
@@ -355,7 +424,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iHaveAnMOTTestInProgress()
     {
-        $this->iStartAnMotTestWithAClassVehicle(4);
+        $this->iStartAnMotTestWithAClassVehicle(VehicleClassCode::CLASS_4);
     }
 
     /**
@@ -371,7 +440,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     function iDontHaveDemoTestAlreadyInProgress()
     {
-        if (null !== $this->motTestData) {
+        if (null !== $this->motTestResponse) {
             throw new \LogicException('You already have a demo test in progress');
         }
     }
@@ -383,14 +452,42 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     function iCanCompleteDemoTestForVehicleClass($vehicleClassCode)
     {
-        $vehicleId = $this->vehicleContext->createVehicle(['testClass' => $vehicleClassCode]);
+        $this->vehicleData->create($vehicleClassCode);
 
-        $this->motTestData = $this->demoTest->startMotTest(
-            $this->sessionContext->getCurrentAccessTokenOrNull(), $vehicleId, $vehicleClassCode
+        $this->motTestData->createPassedMotTest(
+            $this->userData->getCurrentLoggedUser(),
+            null,
+            $this->vehicleData->create($vehicleClassCode),
+            MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING
+
         );
-        $this->demoTest->passed(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->getMotTestNumber()
+    }
+
+    /**
+     * @Given I pass Mot Test with a Class :testClass Vehicle
+     *
+     * @param $testClass
+     */
+    public function IPassMotTestWithAClassVehicle($testClass)
+    {
+        $this->motTestData->createPassedMotTest(
+            $this->userData->getCurrentLoggedUser(),
+            $this->siteData->get(),
+            $this->vehicleData->create($testClass)
+        );
+    }
+
+    /**
+     * @Given I fail Mot Test with a Class :testClass Vehicle
+     *
+     * @param $testClass
+     */
+    public function IFailMotTestWithAClassVehicle($testClass)
+    {
+        $this->motTestData->createFailedMotTest(
+            $this->userData->getCurrentLoggedUser(),
+            $this->siteData->get(),
+            $this->vehicleData->create($testClass)
         );
     }
 
@@ -401,16 +498,12 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iStartAnMotTestWithAClassVehicle($testClass)
     {
-        $vehicleId = $this->vehicleContext->createVehicle(['testClass' => $testClass]);
+        $user = $this->userData->getCurrentLoggedUser();
+        $vehicle = $this->vehicleData->createWithVehicleClass($user->getAccessToken(), $testClass);
 
-        $this->motTestData = $this->motTest->startNewMotTestWithVehicleId(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->sessionContext->getCurrentUserId(),
-            $vehicleId,
-            $testClass
-        );
+        $mot = $this->motTestData->create($user, $vehicle, $this->siteData->get());
 
-        PHPUnit::assertSame(200, $this->motTestData->getStatusCode());
+        PHPUnit::assertInstanceOf(MotTestDto::class, $mot);
     }
 
     /**
@@ -418,12 +511,14 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iAttemptToStartAnMotTestForAClassVehicle($testClass)
     {
-        $vehicleId = $this->vehicleContext->createVehicle(['testClass' => $testClass]);
+        $tester = $this->userData->createTesterWithParams([PersonParams::SITE_IDS => [$this->siteData->get()->getId()]]);
+        $vehicleId = $this->vehicleContext->createVehicle($tester->getAccessToken(), [VehicleParams::TEST_CLASS => $testClass]);
 
-        $this->motTestData = $this->motTest->startNewMotTestWithVehicleId(
+        $this->motTestResponse = $this->motTest->startNewMotTestWithVehicleId(
             $this->sessionContext->getCurrentAccessToken(),
             $this->sessionContext->getCurrentUserId(),
             $vehicleId,
+            $this->siteData->get()->getId(),
             $testClass
         );
     }
@@ -433,8 +528,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function theTesterAbortsTheMotTest()
     {
-        $currentMotTestNumber = $this->motTest->getInProgressTestId($this->sessionContext->getCurrentAccessToken(), $this->sessionContext->getCurrentUserId());
-        $this->statusData = $this->motTest->abort($this->sessionContext->getCurrentAccessToken(), $currentMotTestNumber);
+        $this->motTestData->abortMotTest($this->motTestData->getAll()->last());
     }
 
     /**
@@ -442,8 +536,8 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function theTestWillNotBeFailedAsThereAreNoFailures()
     {
-        PHPUnit::assertEquals(400, $this->statusData->getStatusCode(), 'Incorrect Status Code Returned');
-        PHPUnit::assertEquals('The MOT Test does not contain failures and can not be failed', $this->statusData->getBody()['errors'][0]['message']);
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_400, $this->motTestData->getLastResponse()->getStatusCode(), 'Incorrect Status Code Returned');
+        PHPUnit::assertEquals('The MOT Test does not contain failures and can not be failed', $this->motTestData->getLastResponse()->getBody()->getErrors()[0]['message']);
     }
 
     /**
@@ -451,8 +545,8 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function theTestWillNotBePassedAsThereAreFailures()
     {
-        PHPUnit::assertEquals(400, $this->statusData->getStatusCode(), 'Incorrect Status Code Returned');
-        PHPUnit::assertEquals('The MOT Test contains failures and can not be passed', $this->statusData->getBody()['errors'][0]['message']);
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_400, $this->motTestData->getLastResponse()->getStatusCode(), 'Incorrect Status Code Returned');
+        PHPUnit::assertEquals('The MOT Test contains failures and can not be passed', $this->motTestData->getLastResponse()->getBody()->getErrors()[0]['message']);
     }
 
     /**
@@ -460,8 +554,8 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function theTestWillNotBeAbortedAsTheTestIsComplete()
     {
-        PHPUnit::assertEquals(403, $this->statusData->getStatusCode(), 'Incorrect Status Code Returned');
-        PHPUnit::assertEquals('The MOT Test is incomplete, unable to change status to PASSED', $this->statusData->getBody()['errors'][0]['message']);
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_403, $this->motTestData->getLastResponse()->getStatusCode(), 'Incorrect Status Code Returned');
+        PHPUnit::assertEquals('The MOT Test is incomplete, unable to change status to PASSED', $this->motTestData->getLastResponse()->getBody()->getErrors()[0]['message']);
     }
 
     /**
@@ -469,37 +563,8 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function theTestWillNotCompleteAsItSInProgress()
     {
-        PHPUnit::assertEquals(400, $this->statusData->getStatusCode(), 'Incorrect Status Code Returned');
-        PHPUnit::assertEquals('The MOT Test is incomplete, unable to change status to PASSED', $this->statusData->getBody()['errors'][0]['message']);
-    }
-
-    /**
-     * @Given /^the status of the test is (.*)$/
-     */
-    public function iHaveAMOTTest($status)
-    {
-        switch (strtolower($status)) {
-            case 'passed':
-                $this->statusData = $this->motTest->passed(
-                    $this->sessionContext->getCurrentAccessToken(),
-                    $this->getMotTestNumber()
-                );
-                break;
-            case 'failed':
-                $rfrId = ($this->vehicleContext->getCurrentVehicleClass() < 3)
-                    ? ReasonForRejectionGroupA::RFR_BRAKE_HANDLEBAR_LEVER
-                    : ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION;
-                $this->reasonForRejection->addFailure($this->sessionContext->getCurrentAccessToken(), $this->getMotTestNumber(), $rfrId);
-                $this->statusData = $this->motTest->failed($this->sessionContext->getCurrentAccessToken(), $this->getMotTestNumber());
-                break;
-            case 'prs':
-                $rfrId = ($this->vehicleContext->getCurrentVehicleClass() < 3)
-                    ? ReasonForRejectionGroupA::RFR_BRAKE_HANDLEBAR_LEVER
-                    : ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION;
-                $this->reasonForRejection->addPrs($this->sessionContext->getCurrentAccessToken(), $this->getMotTestNumber(), $rfrId);
-                $this->statusData = $this->motTest->passed($this->sessionContext->getCurrentAccessToken(), $this->getMotTestNumber());
-                break;
-        }
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_400, $this->motTestData->getLastResponse()->getStatusCode(), 'Incorrect Status Code Returned');
+        PHPUnit::assertEquals('The MOT Test is incomplete, unable to change status to PASSED', $this->motTestData->getLastResponse()->getBody()->getErrors()[0]['message']);
     }
 
     /**
@@ -507,10 +572,9 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function anMOTTestNumberShouldBeAllocated()
     {
-        $motTestNumber = $this->getMotTestNumber();
+        $mot = $this->motTestData->getLast();
 
-        PHPUnit::assertNotEmpty($motTestNumber, 'Demo MOT Test number is empty');
-        PHPUnit::assertTrue(is_numeric($motTestNumber), 'Demo MOT Test number is not numeric.');
+        PHPUnit::assertNotEmpty($mot->getMotTestNumber(), 'Demo MOT Test number is empty');
     }
 
     /**
@@ -519,8 +583,8 @@ class MotTestContext implements Context, SnippetAcceptingContext
     public function anMOTTestNumberShouldNotBeAllocated()
     {
         try {
-            $motTestNumber = $this->getMotTestNumber();
-            PHPUnit::assertThat($motTestNumber, PHPUnit::isEmpty(), 'MOT Test number returned in response message');
+            $body = $this->motTestData->getLastResponse()->getBody();
+            PHPUnit::assertThat($body->offsetExists("data"), PHPUnit::isEmpty(), 'MOT Test number returned in response message');
         } catch (\LogicException $e) {
         }
     }
@@ -530,7 +594,20 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iAttemptToCreateADemoMOTTest()
     {
-        $this->motTestData = $this->demoTest->startMotTest($this->sessionContext->getCurrentAccessTokenOrNull());
+        $user = $this->userData->getCurrentLoggedUser();
+        $token = null;
+        if ($user !== null) {
+            $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
+        }
+
+        $vehicle = $this->vehicleData->createByUser($token);
+        $this->motTestResponse = $this
+            ->demoTest
+            ->startMotTest(
+                $this->sessionContext->getCurrentAccessTokenOrNull(),
+                $vehicle->getId(),
+                $this->siteData->get()->getId()
+            );
     }
 
     /**
@@ -540,12 +617,18 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iAttemptToStartAnMotTestWithAClassVehicle($testClass)
     {
-        $this->motTestData = $this->motTest->startNewMotTestWithVehicleId(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->sessionContext->getCurrentUserId(),
-            $this->vehicleContext->getCurrentVehicleId(),
-            $testClass
-        );
+        $vehicle = $this->vehicleData->create($testClass);
+
+        try {
+            $this->motTestData->create(
+                $this->userData->getCurrentLoggedUser(),
+                $vehicle,
+                $this->siteData->get()
+            );
+        } catch (\Exception $e) {
+
+        }
+
     }
 
     /**
@@ -553,11 +636,9 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function anAuthenticatedVehicleExaminerAbortsTheTest()
     {
-        $user = $this->session->startSession(
-            Authentication::LOGIN_VEHICLE_EXAMINER_USER, Authentication::PASSWORD_DEFAULT
-        );
+        $user = $this->userData->createVehicleExaminer();
 
-        $this->statusData = $this->motTest->abortTestByVE($user->getAccessToken(), $this->getMotTestNumber());
+        $this->motTestData->abortMotTestByVE($this->motTestData->getLast(), $user);
     }
 
     /**
@@ -567,9 +648,9 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function theTesterCancelsTheTestWithAReasonOf($cancelReasonId)
     {
-        $this->statusData = $this->motTest->abandon(
-            $this->sessionContext->getCurrentAccessToken(), $this->getMotTestNumber(), $cancelReasonId
-        );
+        /** @var MotTestDto $mot */
+        $mot = $this->motTestData->getAll()->last();
+        $this->motTestData->abandonMotTest($mot, $cancelReasonId);
     }
 
     /**
@@ -598,21 +679,30 @@ class MotTestContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @Given there is a :status MOT test
-     * @Given there is a :status :test MOT test
+     * @Given there is a :testStatus MOT test
+     * @Given there is a :testStatus :testType MOT test
      */
-    public function thereIsAMot($status, $test = 'normal')
+    public function thereIsAMot($testStatus, $testType = MotTestTypeCode::NORMAL_TEST)
     {
-        $this->createCompletedMotTest($status, $test);
+        $tester = $this->userData->createTesterWithParams([PersonParams::SITE_IDS => [$this->siteData->get()->getId()]]);
+        $vehicle = $this->vehicleData->createByUser($tester->getAccessToken());
+        $params = [
+            MotTestParams::TYPE => $testType,
+            MotTestParams::STATUS => $testStatus,
+            MotTestParams::RFR_ID => null,
+        ];
+        $this->motTestData->createCompletedMotTest($tester, $this->siteData->get(), $vehicle, $params);
     }
 
     public function createCompletedMotTest($status, $testType, array $params = [])
     {
+        $tester = $this->userData->createTesterWithParams([PersonParams::SITE_IDS => [$this->siteData->get()->getId()]]);
+        $vehicle = $this->vehicleData->createByUser($tester->getAccessToken());
         $default = [
-            "vehicleId" => 3,
-            "vehicleClass" => 4,
-            "siteId" => 1,
-            "token" => null,
+            "vehicleId" => $vehicle->getId(),
+            "vehicleClass" => $vehicle->getVehicleClass()->getCode(),
+            "siteId" => $this->siteData->get()->getId(),
+            "token" => $tester->getAccessToken(),
             "rfrId" => null
         ];
 
@@ -631,28 +721,28 @@ class MotTestContext implements Context, SnippetAcceptingContext
 
         if ($testType === 'contingency') {
             $response = $this->startStartAContingencyMOTTest($token, $vehicleClass, $siteId);
-            $lastMotTestNumber = $response->getBody()->toArray()["data"]["motTestNumber"];
+            $lastMotTestNumber = $response->getBody()->getData()[MotTestParams::MOT_TEST_NUMBER];
             $mot = $this->motTest;
         } elseif ($testType === 'demo') {
             $mot = $this->getMotTest($testType);
-            $this->motTestData = $mot->startMotTest($token, $vehicleId, $vehicleClass);
+            $this->motTestResponse = $mot->startMotTest($token, $vehicleId, $vehicleClass);
             $lastMotTestNumber = $mot->getLastMotTestNumber();
         } else {
             $mot = $this->getMotTest($testType);
-            $this->motTestData = $mot->startMotTest($token, $vehicleId, $vehicleClass, ["vehicleTestingStationId" => $siteId]);
+            $this->motTestResponse = $mot->startMotTest($token, $vehicleId, $vehicleClass, ["vehicleTestingStationId" => $siteId]);
             $lastMotTestNumber = $mot->getLastMotTestNumber();
         }
 
         // Set the bits so that we can pass or fail the test
-        $this->odometerReading->addMeterReading($token, $lastMotTestNumber, 658, 'mi');
+        $this->odometerReading->addMeterReading($token, $lastMotTestNumber, 658, MeterReadingParams::MI);
 
         if ($rfrId === null) {
-            $rfrId = ($vehicleClass < 3)
+            $rfrId = ($vehicleClass < VehicleClassCode::CLASS_3)
                 ? ReasonForRejectionGroupA::RFR_BRAKE_HANDLEBAR_LEVER
                 : ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION;
         }
 
-        if ($vehicleClass < 3) {
+        if ($vehicleClass < VehicleClassCode::CLASS_3) {
             $this->brakeTestResult->addBrakeTestDecelerometerClass1To2($token, $lastMotTestNumber);
         } else {
             $this->brakeTestResult->addBrakeTestDecelerometerClass3To7($token, $lastMotTestNumber);
@@ -695,6 +785,19 @@ class MotTestContext implements Context, SnippetAcceptingContext
         $this->theTesterPassesTheMotTest();
     }
 
+    /**
+     * @Given there is a Mot test with :testType type in progress
+     */
+    public function thereIsAMotTestWithTypeInProgress($testType)
+    {
+        $this->motTestData->create(
+            $this->userData->createTester("Mike Tyson"),
+            $this->vehicleData->create(),
+            $this->siteData->get(),
+            $testType
+        );
+    }
+
     public function anMotHasBeenPassed()
     {
         $this->sessionContext->iAmLoggedInAsATester();
@@ -709,17 +812,24 @@ class MotTestContext implements Context, SnippetAcceptingContext
         $mot = $this->getMotTest($test);
 
         $motTestData = $mot->getMotData($this->sessionContext->getCurrentAccessToken(), $mot->getLastMotTestNumber());
-        PHPUnit::assertEquals(200, $motTestData->getStatusCode());
-        PHPUnit::assertNotEquals('ACTIVE', $motTestData->getBody()['data']['status']);
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $motTestData->getStatusCode());
+        PHPUnit::assertNotEquals(MotTestStatusName::ACTIVE, $motTestData->getBody()->getData()[MotTestParams::STATUS]);
     }
 
     /**
-     * @When /^the User Aborts the Mot Test$/
+     * @When I abort the Mot Test
      */
-    public function theUserAbortsTheMotTest($test = 'normal')
+    public function theUserAbortsTheMotTest()
     {
-        $mot = $this->getMotTest($test);
-        $this->statusData = $this->motTest->abort($this->sessionContext->getCurrentAccessToken(), $mot->getLastMotTestNumber());
+        $mot = $this->motTestData->getLast();
+        try {
+            $this->motTestData->abortMotTestByUser($mot, $this->userData->getCurrentLoggedUser());
+        } catch (\Exception $e) {
+            $response = $this->motTestData->getLastResponse();
+            $x = 1;
+        }
+
+
     }
 
     /**
@@ -727,17 +837,27 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iStartAContingencyMOTTest()
     {
-        $this->startStartAContingencyMOTTest($this->sessionContext->getCurrentAccessToken(), 4);
+        $user = $this->userData->getCurrentLoggedUser();
+        $this->motTestData->create(
+            $user,
+            $this->vehicleData->createByUser($user->getAccessToken()),
+            $this->siteData->get(),
+            MotTestData::TEST_TYPE_CONTINGENCY
+        );
     }
 
-    public function startStartAContingencyMOTTest($token, $testClass, $siteId = 1)
+    public function startStartAContingencyMOTTest($token, $testClass, $siteId = null)
     {
-        $vehicleId = $this->vehicleContext->createVehicle(['testClass' => $testClass]);
-        $this->contingencyTestContext->createContingencyCode('12345A', 'SO', null, $token, $siteId);
+        if ($siteId === null) {
+            $siteId = $this->siteData->get()->getId();
+        }
+
+        $vehicleId = $this->vehicleContext->createVehicle($token, [VehicleParams::TEST_CLASS => $testClass]);
+        $this->contingencyTestContext->createContingencyCode(ContingencyData::CONTINGENCY_CODE, 'SO', null, $token, $siteId);
 
         $emergencyLogId = $this->contingencyTestContext->getEmergencyLogId();
 
-        $this->motTestData = $this->contingencyTest->startContingencyTest(
+        $this->motTestResponse = $this->contingencyTest->startContingencyTest(
             $token,
             $emergencyLogId,
             $vehicleId,
@@ -745,7 +865,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
             $siteId
         );
 
-        return $this->motTestData;
+        return $this->motTestResponse;
     }
 
     /**
@@ -766,22 +886,12 @@ class MotTestContext implements Context, SnippetAcceptingContext
             $dateTime->setTime($timeParts[0], $timeParts[1], $timeParts[2]);
         }
 
-        $testClass = 4;
-        $vehicleId = $this->vehicleContext->createVehicle(['testClass' => $testClass]);
-
-        $this->contingencyTestContext->createContingencyCode(Authentication::CONTINGENCY_CODE_DEFAULT, 'SO', $dateTime);
-
-        try {
-            $emergencyLogId = $this->contingencyTestContext->getEmergencyLogId();
-            $this->motTestData = $this->contingencyTest->startContingencyTestOnDateAtTime(
-                $this->sessionContext->getCurrentAccessToken(),
-                $emergencyLogId,
-                $vehicleId,
-                $testClass,
-                $dateTime
-            );
-        } catch (\LogicException $e) {
-        }
+        $this->contingencyMotTestData->create(
+            $this->userData->getCurrentLoggedUser(),
+            $this->vehicleData->createByUser($this->userData->getCurrentLoggedUser()->getAccessToken()),
+            $this->siteData->get(),
+            ["dateTime" => $dateTime]
+        );
     }
 
     /**
@@ -789,10 +899,12 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function theContingencyTestIsLogged()
     {
-        $actual = $this->motTest->getMotData($this->sessionContext->getCurrentAccessToken(), $this->getMotTestNumber());
+        /** @var MotTestDto $motTest */
+        $motTest = $this->motTestData->getAll()->last();
 
-        PHPUnit::assertEquals($this->contingencyTestContext->getContingencyCode(), $actual->getBody()['data']['emergencyLog']['number'], 'Contingency Code not returned.');
-        PHPUnit::assertEquals($this->contingencyTestContext->getEmergencyLogId(), $actual->getBody()['data']['emergencyLog']['id'], 'Emergency Log Id not returned.');
+        $contingencyDto = $this->contingencyData->getBySiteId($this->siteData->get()->getId());
+        PHPUnit::assertEquals($contingencyDto->getContingencyCode(), $motTest->getEmergencyLog()[ContingencyDataParams::NUMBER], 'Contingency Code not returned.');
+        PHPUnit::assertEquals($this->contingencyData->getEmergencyLogId(), $motTest->getEmergencyLog()[ContingencyDataParams::ID], 'Emergency Log Id not returned.');
     }
 
     /**
@@ -800,12 +912,15 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iAmUnableToStartANewDemoMotTest()
     {
-        $this->getMotTestNumber(); // you already have a demo test in progress
-        $this->iStartDemoTest(); // try to create another one
-        // We cannot create another demo test as long as the previous one is not finished
-        PHPUnit::AssertSame(
-            'You have a demo test that is already in progress', $this->motTestData->getBody()['errors'][0]['message']
-        );
+        $userId = $this->userData->getCurrentLoggedUser()->getUserId();
+        /** @var MotTestDto $mot */
+        $mot = $this->motTestData->getAll()->filter(function (MotTestDto $dto) use ($userId) {
+            return $dto->getTester()->getId() === $userId;
+        })->first();
+
+        $motDetails = $this->motTestData->fetchMotTestData($this->userData->getCurrentLoggedUser(), $mot->getMotTestNumber());
+
+        PHPUnit::assertEquals(MotTestStatusName::ACTIVE, $motDetails->getStatus());
     }
 
     /**
@@ -813,11 +928,11 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function getMotTestNumber()
     {
-        if (!$this->motTestData) {
+        if (!$this->motTestResponse) {
             throw new \BadMethodCallException('There is no MOT test in progress');
         }
 
-        return $this->motTestData->getBody()['data']['motTestNumber'];
+        return $this->motTestResponse->getBody()->getData()[MotTestParams::MOT_TEST_NUMBER];
     }
 
     /**
@@ -825,7 +940,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function theRecordedIPIs($clientIp)
     {
-        $actualClientIp = $this->statusData->getBody()['data']['clientIp'];
+        $actualClientIp = $this->statusData->getBody()->getData()['clientIp'];
 
         PHPUnit::assertEquals($clientIp, $actualClientIp, 'Recorded client IP incorrect');
     }
@@ -852,57 +967,18 @@ class MotTestContext implements Context, SnippetAcceptingContext
      *
      * @param $number
      */
-    public function ICreateMotTests($number = 1, $siteName = null)
+    public function ICreateMotTests($number = 1, $siteName = SiteData::DEFAULT_NAME)
     {
         $motTestParams = [];
         if(!empty($siteName)) {
-            $site = $this->vtsContext->getSite($siteName);
-            $motTestParams["vehicleTestingStationId"] = $site["id"];
+            $site = $this->siteData->get($siteName);
+            $motTestParams[MotTestParams::VEHICLE_TESTING_STATION_ID] = $site->getId();
         }
 
+        $user = $this->userData->getCurrentLoggedUser();
         for ($i=0; $i < $number; $i++) {
-            $this->startMotTest($this->sessionContext->getCurrentUserId(), $this->sessionContext->getCurrentAccessToken(),
-                $motTestParams
-            );
-            $this->motTest->abort(
-                $this->sessionContext->getCurrentAccessToken(),
-                $this->motTest->getInProgressTestId(
-                    $this->sessionContext->getCurrentAccessToken(),
-                    $this->sessionContext->getCurrentUserId()
-                )
-            );
+            $this->motTestData->createAbortedMotTest($user, $this->siteData->get($siteName), $this->vehicleData->create());
         }
-    }
-
-    /**
-     * @When /^I search for a vehicle without a manufactured date and first used date$/
-     *
-     */
-    public function ISearchForAVehicleWithoutAManufacturerAndFirstUsedDate()
-    {
-        $vehicleData =  [
-            'dateOfFirstUse' => null,
-            'manufactureDate' => null,
-            'vin' => 'WF0BXXGAJB1R41234',
-            'registrationNumber' => 'F50GGP'
-        ];
-
-        $this->vehicleId = $this->vehicleContext->createVehicle($vehicleData);
-
-        // throws exception if not found
-        PHPUnit::assertNotNull($this->vehicleContext->getCurrentVehicleData());
-    }
-
-    /**
-     * @Then /^manufactured date and first used date should be displayed as unknown$/
-     *
-     */
-    public function manufacturerAndFirstUsedDateShouldBeDisplayedAsNotKnown()
-    {
-        $data = $this->vehicleContext->getCurrentVehicleData();
-
-        PHPUnit::assertNull($data['data']['firstUsedDate']);
-        PHPUnit::assertNull($data['data']['manufactureDate']);
     }
 
     /**
@@ -912,18 +988,19 @@ class MotTestContext implements Context, SnippetAcceptingContext
     public function IAttemptToCreateAnMOTTestOnAVehicleWithoutAManufacturerAndFirstUsedDate()
     {
         $vehicleData =  [
-            'dateOfFirstUse' => null,
-            'manufactureDate' => null,
-            'vin' => 'WF0BXXGAJB1R41234',
-            'registrationNumber' => 'F50GGP'
+            VehicleParams::DATE_OF_FIRST_USE => null,
+            VehicleParams::MANUFACTURE_DATE => null,
+            VehicleParams::VIN => 'WF0BXXGAJB1R41234',
+            VehicleParams::REGISTRATION_NUMBER => 'F50GGP'
         ];
 
-        $this->vehicleId = $this->vehicleContext->createVehicle($vehicleData);
+        $this->vehicleId = $this->vehicleContext->createVehicle($this->sessionContext->getCurrentAccessToken(), $vehicleData);
 
-        $this->motTestData = $this->motTest->startNewMotTestWithVehicleId(
+        $this->motTestResponse = $this->motTest->startNewMotTestWithVehicleId(
             $this->sessionContext->getCurrentAccessToken(),
             $this->sessionContext->getCurrentUserId(),
-            $this->vehicleId
+            $this->vehicleId,
+            $this->siteData->get()->getId()
         );
     }
 
@@ -933,7 +1010,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function MOTTestShouldBeCreatedSuccessfully()
     {
-        PHPUnit::assertNotNull($this->motTestData);
+        PHPUnit::assertNotNull($this->motTestResponse);
     }
 
     /**
@@ -969,8 +1046,9 @@ class MotTestContext implements Context, SnippetAcceptingContext
         while ($number) {
             $username = $baseUsername . str_repeat($suffix, $number);
 
-            $this->personContext->createTester(["username" => $username]);
-            $this->createPassedMotTest($this->personContext->getPersonUserId(), $this->personContext->getPersonToken());
+            $user = $this->userData->createTester($username);
+            $vehicle = $this->vehicleData->create();
+            $this->motTestData->createPassedMotTest($user, $this->siteData->get(), $vehicle);
             $number--;
         }
     }
@@ -980,7 +1058,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iCreateANewVehicle()
     {
-        $this->vehicleContext->createVehicle();
+        $this->vehicleData->createByUser($this->userData->getCurrentLoggedUser()->getAccessToken());
     }
 
 
@@ -991,12 +1069,11 @@ class MotTestContext implements Context, SnippetAcceptingContext
     {
         while ($number) {
             $this->createPassedMotTest(
-                $this->sessionContext->getCurrentUserId(),
-                $this->sessionContext->getCurrentAccessToken(),
-                $this->vehicleContext->getCurrentVehicleId(),
+                $this->userData->getCurrentLoggedUser()->getUserId(),
+                $this->userData->getCurrentLoggedUser()->getAccessToken(),
+                $this->vehicleData->getLast()->getId(),
                 $this->getUniqueOdometer()
             );
-            $this->motTestNumbers[]=$this->getMotTestNumber();
             $number--;
         }
     }
@@ -1007,8 +1084,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
     public function failedMotTestsHaveBeenCreatedForTheSameVehicle($number)
     {
         while ($number) {
-            $this->vehicleHasMotTestFailed($this->vehicleContext->getCurrentVehicleId(), [], $this->getUniqueOdometer());
-            $this->motTestNumbers[] = $this->getMotTestNumber();
+            $this->vehicleHasMotTestFailed($this->vehicleData->getLast()->getId(), [], $this->getUniqueOdometer());
             $number--;
         }
     }
@@ -1025,13 +1101,11 @@ class MotTestContext implements Context, SnippetAcceptingContext
 
     public function createPassedMotTest($userId, $token, $vehicleId = null, $odometerValue = null)
     {
-        $this->startMotTest($userId, $token, [], $vehicleId);
-        $this->brakeTestResult->addBrakeTestDecelerometerClass3To7($token, $this->getMotTestNumber());
-        $this->odometerReading->addMeterReading($token, $this->getMotTestNumber(), is_null($odometerValue) ? date('Gis') : $odometerValue, 'km');
-        $this->motTest->passed(
-            $token,
-            $this->getMotTestNumber()
-        );
+        $mot = $this->startMotTest($userId, $token, [], $vehicleId);
+        $this->brakeTestResult->addBrakeTestDecelerometerClass3To7($token, $mot->getMotTestNumber());
+        $this->odometerReading->addMeterReading($token, $mot->getMotTestNumber(), is_null($odometerValue) ? date('Gis') : $odometerValue, MeterReadingParams::KM);
+
+        return $this->motTestData->passMotTest($mot);
     }
 
     /**
@@ -1039,7 +1113,6 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function aMotTestForVehicleWithTheFollowingDataExists(TableNode $table)
     {
-        $this->personContext->createTester();
         $hash = $table->getColumnsHash();
 
         if (count($hash) !== 1) {
@@ -1049,19 +1122,18 @@ class MotTestContext implements Context, SnippetAcceptingContext
         $row = $hash[0];
 
         $vehicleData = [
-            'registrationNumber' => $this->vehicle->randomRegNumber(),
-            'vin' => $this->vehicle->randomVin(),
-            'make' => $row['make_code'],
-            'makeOther' => $row['make_other'],
-            'model' => null,
-            'modelOther' => $row['model_other']
+            VehicleParams::MAKE => $row['make_code'],
+            VehicleParams::MAKE_OTHER => $row['make_other'],
+            VehicleParams::MODEL => null,
+            VehicleParams::MODEL_OTHER => $row['model_other']
         ];
 
-        $this->vehicleId = $this->vehicleContext->createVehicle($vehicleData);
+        $tester = $this->userData->createTesterAssignedWitSite($this->siteData->get()->getId(), 'Vehicle Constructor');
+        $this->vehicleId = $this->vehicleData->createWithParams($tester->getAccessToken(), $vehicleData)->getId();
 
         $this->createPassedMotTest(
-            $this->personContext->getPersonUserId(),
-            $this->personContext->getPersonToken(),
+            $tester->getUserId(),
+            $tester->getAccessToken(),
             $this->vehicleId
         );
     }
@@ -1087,7 +1159,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
             ['motTestType' => $testType],
             !empty($this->vehicleId) ? $this->vehicleId : null
         );
-        $this->odometerReading->addMeterReading($this->sessionContext->getCurrentAccessToken(), $this->motTest->getLastMotTestNumber(), 111, 'mi');
+        $this->odometerReading->addMeterReading($this->sessionContext->getCurrentAccessToken(), $this->motTest->getLastMotTestNumber(), 111, MeterReadingParams::MI);
         $this->brakeTestResult->addBrakeTestDecelerometerClass3To7($this->sessionContext->getCurrentAccessToken(), $this->motTest->getLastMotTestNumber());
         $this->theTesterPassesTheMotTest();
     }
@@ -1095,11 +1167,15 @@ class MotTestContext implements Context, SnippetAcceptingContext
 
     public function vehicleHasMotTestFailed($vehicleId = null, $motTestParams = [], $odometerValue = 658)
     {
-        $this->startMotTest($this->sessionContext->getCurrentUserId(),
-            $this->sessionContext->getCurrentAccessToken(), $motTestParams, $vehicleId
+        $user = $this->userData->getCurrentLoggedUser();
+        $this->startMotTest(
+            $user->getUserId(),
+            $user->getAccessToken(),
+            $motTestParams,
+            $vehicleId
         );
-        $this->odometerReading->addMeterReading($this->sessionContext->getCurrentAccessToken(), $this->motTest->getLastMotTestNumber(), $odometerValue, 'mi');
-        $this->brakeTestResult->addBrakeTestDecelerometerClass3To7($this->sessionContext->getCurrentAccessToken(), $this->motTest->getLastMotTestNumber());
+        $this->odometerReading->addMeterReading($user->getAccessToken(), $this->motTestData->getLast()->getMotTestNumber(), $odometerValue, MeterReadingParams::MI);
+        $this->brakeTestResult->addBrakeTestDecelerometerClass3To7($user->getAccessToken(), $this->motTestData->getLast()->getMotTestNumber());
         $this->theTesterAddsAReasonForRejection();
         $this->theTesterFailsTheMotTest();
     }
@@ -1134,8 +1210,8 @@ class MotTestContext implements Context, SnippetAcceptingContext
     {
         $this->vehicleHasMotTestFailed();
 
-        $this->startMotTest($this->sessionContext->getCurrentUserId(),
-            $this->sessionContext->getCurrentAccessToken(),
+        $this->startMotTest($this->userData->getCurrentLoggedUser()->getUserId(),
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
             ['motTestType' => MotTestTypeCode::TARGETED_REINSPECTION],
             !empty($this->vehicleId) ? $this->vehicleId : null
         );
@@ -1192,7 +1268,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function vehicleHasARoutineDemonstrationTestTestStarted()
     {
-        $this->vehicleHasMotTestStarted(MotTestTypeCode::ROUTINE_DEMONSTRATION_TEST);
+        $this->vehicleHasMotTestStarted(MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING);
     }
 
     public function vehicleHasAbortedTest()
@@ -1215,19 +1291,11 @@ class MotTestContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @return array
-     */
-    public function getMotTestData()
-    {
-        return $this->statusData->getBody()['data'];
-    }
-
-    /**
      * @return \Dvsa\Mot\Behat\Support\Response
      */
     public function getRawMotTestData()
     {
-        return $this->motTestData;
+        return $this->motTestResponse;
     }
 
     public function getMotTestNumbers()
@@ -1241,13 +1309,13 @@ class MotTestContext implements Context, SnippetAcceptingContext
             $this->motTests = [];
 
             foreach ($this->getMotTestNumbers() as $motTestNumber) {
-                $motTest = $this->motTest->getMotData($this->sessionContext->getCurrentAccessToken(), $motTestNumber)->getBody()->toArray()['data'];
+                $motTest = $this->motTest->getMotData($this->sessionContext->getCurrentAccessToken(), $motTestNumber)->getBody()->getData();
                 $this->motTests[] = $motTest;
             }
         }
 
         usort($this->motTests, function($a, $b) {
-            return $a['id'] < $b['id'];
+            return $a[MotTestParams::ID] < $b[MotTestParams::ID];
         });
 
         return $this->motTests;
@@ -1282,12 +1350,15 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iCanAddPRSToTest()
     {
+        /** @var MotTestDto $mot */
+        $mot = $this->motTestData->getAll()->last();
+
         $response = $this->reasonForRejection->addPrs(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->getMotTestNumber()
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $mot->getMotTestNumber()
         );
 
-        PHPUnit::assertSame(200, $response->getStatusCode());
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
 
     /**
@@ -1295,12 +1366,15 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iCanAddAFailureToTest()
     {
+        /** @var MotTestDto $mot */
+        $mot = $this->motTestData->getAll()->last();
+
         $response = $this->reasonForRejection->addFailure(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->getMotTestNumber()
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $mot->getMotTestNumber()
         );
 
-        PHPUnit::assertSame(200, $response->getStatusCode());
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
 
     /**
@@ -1308,13 +1382,16 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iCanEditPreviouslyAddedRfr()
     {
+        /** @var MotTestDto $mot */
+        $mot = $this->motTestData->getAll()->last();
+
         $response = $this->reasonForRejection->editRFR(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->getMotTestNumber(),
-            $this->history->getLastResponse()->getBody()['data']
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $mot->getMotTestNumber(),
+            $this->history->getLastResponse()->getBody()->getData()
         );
 
-        PHPUnit::assertSame(200, $response->getStatusCode());
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
 
     /**
@@ -1322,20 +1399,25 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iCanNotStartAnMotTestForVehicleWithClass($vehicleClass)
     {
-        $vehicleId = $this->vehicleContext->createVehicle(['testClass' => $vehicleClass]);
+        $vehicle = $this->vehicleData->create($vehicleClass);
 
-        $this->motTestData = $this->motTest->startNewMotTestWithVehicleId(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->sessionContext->getCurrentUserId(),
-            $vehicleId,
-            $vehicleClass,
-            ["vehicleTestingStationId" => $this->vtsContext->getSite()["id"]]
-        );
+        try {
+            $response = null;
+            $this->motTestData->create(
+                $this->userData->getCurrentLoggedUser(),
+                $vehicle,
+                $this->siteData->get()
 
-        PHPUnit::assertSame(403, $this->motTestData->getStatusCode());
+            );
+        } catch (\Exception $e) {
+            $response = $this->motTestData->getLastResponse();
+        }
+
+
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_403, $response->getStatusCode());
 
         $expectedError = sprintf("Your Site is not authorised to test class %s vehicles", $vehicleClass);
-        $apiErrors = $this->motTestData->getBody()->offsetGet("errors")->toArray();
+        $apiErrors = $response->getBody()->offsetGet("errors")->toArray();
         $error = array_shift($apiErrors)["message"];
 
         PHPUnit::assertSame($expectedError, $error);
@@ -1346,17 +1428,14 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function theControlOneAndControlTwoStatusShouldBe($expectedControl1Pass, $expectedControl2Pass)
     {
-        $motTestResponseArray = $this->getMotResponseAsArray();
+        /** @var MotTestDto $mot */
+        $mot = $this->motTestData->getAll()->last();
 
-        if (array_key_exists('data', $motTestResponseArray)) {
-            $actualControl1Pass = $motTestResponseArray['data']['brakeTestResult']['control1EfficiencyPass'];
-            $actualControl2Pass = $motTestResponseArray['data']['brakeTestResult']['control2EfficiencyPass'];
-        } else {
-            $actualControl1Pass = 0; $actualControl2Pass = 0;
-        }
+        $actualControl1Pass = $mot->getBrakeTestResult()[BrakeTestResultParams::CONTROL_1_EFFICIENCY_PASS];
+        $actualControl2Pass = $mot->getBrakeTestResult()[BrakeTestResultParams::CONTROL_2_EFFICIENCY_PASS];
 
-        PHPUnit::assertEquals($actualControl1Pass, ($expectedControl1Pass == "true") ? 1 : 0);
-        PHPUnit::assertEquals($actualControl2Pass, ($expectedControl2Pass == "true") ? 1 : 0);
+        PHPUnit::assertEquals($expectedControl1Pass, $actualControl1Pass);
+        PHPUnit::assertEquals($expectedControl2Pass, $actualControl2Pass);
     }
 
     /**
@@ -1364,130 +1443,28 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function theMotTestStatusShouldBe($expectedResult)
     {
-        $responseArray = $this->getMotResponseAsArray();
-        if (array_key_exists('data', $responseArray)) {
-            $actualResult = $responseArray['data']['brakeTestResult']['generalPass'];
-        } else {
-            $actualResult = 0;
-        }
-        PHPUnit::assertEquals($expectedResult, ($actualResult == 1) ? "PASSED" : "FAILED");
-    }
-
-    private function getMotResponseAsArray(){
-        if ($this->statusData instanceof Response) {
-           return $this->statusData->getBody()->toArray();
-        } else {
-            PHPUnit::assertTrue(true, "Test Failed"); return [];
-        }
+        $mot = $this->motTestData->getAll()->last();
+        PHPUnit::assertEquals($expectedResult, $mot->getStatus());
     }
 
     /**
-     * @Given I perform test on the VTS when it's linked to :ae AE :time time
+     * @Given there is a test performed at the VTS when it's linked to :ae AE :time time
      */
     public function iPerformTestOnTheVtsWhenItsLinkedToAe($aeName, $time)
     {
-        $this->sessionContext->iAmLoggedInAsAnAreaOffice1();
-        $ae = $this->aeContext->createAE(1000, $aeName);
-        $vts = $this->vtsContext->createSite();
+        $ae = $this->authorisedExaminerData->create($aeName);
+        $site = $this->siteData->createUnassociatedSite([SiteParams::NAME => "some site"]);
+        $tester = $this->userData->createTesterAssignedWitSite($site->getId(), "John Kowalsky");
+        $vehicle = $this->vehicleData->createByUser($tester->getAccessToken());
 
-        $this->aeContext->iLinkVtsToAe($ae["id"], $vts["siteNumber"], $aeName);
+        $this->authorisedExaminerData->linkAuthorisedExaminerWithSite($ae, $site);
 
-        $this->sessionContext->iAmLoggedInAsATesterAssignedToSites([$vts["id"]]);
-        $this->startMotTest($this->sessionContext->getCurrentUserId(),
-            $this->sessionContext->getCurrentAccessToken(), ["vehicleTestingStationId" => $vts["id"]]
-        );
-        $this->odometerReading->addMeterReading($this->sessionContext->getCurrentAccessToken(), $this->motTest->getLastMotTestNumber(), 111, 'mi');
-        $this->brakeTestResult->addBrakeTestDecelerometerClass3To7($this->sessionContext->getCurrentAccessToken(), $this->motTest->getLastMotTestNumber());
-        $this->theTesterPassesTheMotTest();
+        $this->motTestData->createPassedMotTest($tester, $site, $vehicle);
 
         //When we assign VTS back to first AE, we don't want to unlink them after test
         if($time != 'second') {
-            $this->sessionContext->iAmLoggedInAsAnAreaOffice1();
-            $this->aeContext->iUnlinkEveryVtsFromAe($aeName);
+            $this->authorisedExaminerData->unlinkSiteFromAuthorisedExaminer($ae, $site);
         }
-    }
-
-    /**
-     * @When I fetch test logs for those AE and VTS's
-     */
-    public function iFetchTestLogsForThoseAeAndVtsS()
-    {
-        $this->aeContext->iGetTestLogs("some");
-        $this->aeContext->iGetTestLogs("other");
-        $this->vtsContext->iGetTestLogs();
-    }
-
-    /**
-     * @Then test logs show correct test count
-     */
-    public function testLogsShowCorrectTestCount()
-    {
-        $someTestLogs = $this->aeContext->getAe("some")["testLogs"];
-        PHPUnit::assertEquals(2, $someTestLogs["resultCount"]);
-
-        $otherTestLogs = $this->aeContext->getAe("other")["testLogs"];
-        PHPUnit::assertEquals(1, $otherTestLogs["resultCount"]);
-
-        $siteTestLogs = $this->vtsContext->getSite()["testLogs"];
-        PHPUnit::assertEquals(2, $siteTestLogs["resultCount"]);
-
-        //cleanup
-        $this->aeContext->iUnlinkEveryVtsFromAe("some");
-    }
-
-    /**
-     * @Then slot usage shows correct value
-     */
-    public function slotUsageShowsCorrectValue()
-    {
-        $this->sessionContext->iAmLoggedInAsAnAreaOffice1();
-
-        $response = $this->slotsReport->getSlotUsage(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->aeContext->getAe("some")["id"]
-            );
-
-        $rows = $response->getBody()->toArray()["data"]["rows"];
-
-        PHPUnit::assertCount(1, $rows);
-
-        $data = array_shift($rows);
-
-        PHPUnit::assertEquals(2, $data["tests_number"]);
-
-        $response = $this->slotsReport->getSlotUsage(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->aeContext->getAe("other")["id"]
-        );
-
-        $rows = $response->getBody()->toArray()["data"]["rows"];
-
-        PHPUnit::assertCount(1, $rows);
-
-        $data = array_shift($rows);
-
-        PHPUnit::assertEquals(1, $data["tests_number"]);
-
-        $response = $this->slotsReport->getSlotUsageNumber(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->vtsContext->getSite()["id"],
-            $this->aeContext->getAe("some")["id"]
-        );
-
-        $slotUsageNumber = $response->getBody()->toArray()["data"]["slot_usage_number"];
-
-        PHPUnit::assertEquals(2, $slotUsageNumber);
-    }
-
-    /**
-     * @Given there is a Vts assigned to Ae
-     */
-    public function thereIsAVtsAssignedToAe()
-    {
-        $this->sessionContext->iAmLoggedInAsAnAreaOffice1();
-        $ae = $this->aeContext->createAE(1001);
-        $vts = $this->vtsContext->createSite();
-        $this->aeContext->iLinkVtsToAe($ae["id"], $vts["siteNumber"]);
     }
 
     public function getMotTestIdFromNumber($motTestNumber)
@@ -1495,18 +1472,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
         return $this->motTest->getMotData(
             $this->sessionContext->getCurrentAccessToken(),
             $motTestNumber
-        )->getBody()['data']['id'];
-    }
-
-    public function createNormalMotTestPass($useCurrentTester = false)
-    {
-        $this->iStartMotTestAsTester($useCurrentTester);
-        $this->odometerReadingContext->theTesterAddsAnOdometerReadingOfMiles(1000);
-        $this->brakeTestResultContext->theTesterAddsAClass3to7PlateBrakeTest();
-        $this->theTesterPassesTheMotTest();
-
-        $motTestId = $this->getMotTestIdFromNumber($this->getMotTestNumber());
-        return $motTestId;
+        )->getBody()->getData()[MotTestParams::ID];
     }
 
     /**
@@ -1515,22 +1481,6 @@ class MotTestContext implements Context, SnippetAcceptingContext
     public function getMotStatusData()
     {
         return $this->statusData;
-    }
-
-    /**
-     * @return bool
-     */
-    public function motTestHasBeenPerformed()
-    {
-        return Response::class === gettype($this->statusData);
-    }
-
-    /**
-     * @return string
-     */
-    public function getTesterId()
-    {
-        return $this->statusData->getBody()['data']['tester']['id'];
     }
 
     private function getUniqueOdometer()

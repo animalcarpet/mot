@@ -164,40 +164,6 @@ class NotificationsContext implements Context
         PHPUnit::assertFalse($found);
     }
 
-    /**
-     * @When a user accepts nomination to :role site role
-     */
-    public function aUserAcceptsNominationToSiteRole($role)
-    {
-        $userSession = $this->session->startSession(
-            $this->personContext->getPersonUsername(),
-            $this->personContext->getPersonPassword()
-        );
-
-        $userToken = $userSession->getAccessToken();
-        $notification = $this->notification->getRoleNominationNotification($role, $this->personContext->getPersonUserId(), $userToken);
-
-        $response = $this->notification->acceptSiteNomination($userToken, $notification["id"]);;
-        PHPUnit::assertEquals(200, $response->getStatusCode());
-    }
-
-    /**
-     * @When a user accepts nomination to :role organisation role
-     */
-    public function aUserAcceptsNominationToOrganisationRole($role)
-    {
-        $userSession = $this->session->startSession(
-            $this->personContext->getPersonUsername(),
-            $this->personContext->getPersonPassword()
-        );
-
-        $userToken = $userSession->getAccessToken();
-        $notification = $this->notification->getRoleNominationNotification($role, $this->personContext->getPersonUserId(), $userToken);
-
-        $response = $this->notification->acceptOrganisationNomination($userToken, $notification["id"]);;
-        PHPUnit::assertEquals(200, $response->getStatusCode());
-    }
-
     private function getNotificationTemplateId($template)
     {
         if (isset($this->templateMap[$template])) {

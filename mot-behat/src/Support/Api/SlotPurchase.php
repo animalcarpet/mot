@@ -8,16 +8,13 @@ use Dvsa\Mot\Behat\Support\Response;
 class SlotPurchase extends MotApi
 {
     const END_POINT_SLOT_PAYMENT = 'slots/add-instant-settlement';
-    const END_POINT_REFUND = 'slots/refund/%s';
     const END_POINT_TRANSACTION_SEARCH = 'slots/transaction/search/%s';
     const END_POINT_ADJUSTMENT = 'slots/amendment/%s/adjustment';
     const END_POINT_ADJUSTMENT_REASON_TYPE = 'slots/amendment-reason/type/%s';
-    const END_POINT_REVERSAL = 'slots/amendment/%s/charge-back';
     const END_POINT_REDIRECTION_DATE = 'slots/redirection-data';
     const END_POINT_PAYMENT_REFRESH = 'slots/payment-refresh/%s';
     const END_POINT_PAYMENT_DETAILS = 'slots/report/details/payment/%s';
     const END_POINT_MANUAL_ADJUSTMENT = 'slots/adjustment';
-    const END_POINT_MANUAL_ADJUSTMENT_VALIDATE = 'slots/adjustment/validate';
 
     const MANUAL_ADJUSTMENT_TYPE_POSITIVE = 'positive';
     const MANUAL_ADJUSTMENT_TYPE_NEGATIVE = 'negative';
@@ -69,34 +66,6 @@ class SlotPurchase extends MotApi
     }
 
     /**
-     * @param string $token
-     * @param int    $organisation
-     * @param [] $body
-     *
-     * @return Response
-     */
-    public function requestRefund($token, $organisation, $body)
-    {
-        $url = sprintf(self::END_POINT_REFUND, $organisation);
-
-        return $this->sendRequest($token, 'POST', $url, $body);
-    }
-
-    /**
-     * @param string $token
-     * @param int    $organisation
-     * @param [] $param
-     *
-     * @return Response
-     */
-    public function requestRefundSummaryDetails($token, $organisation, $param)
-    {
-        $url = sprintf(self::END_POINT_REFUND, $organisation) . '?' . http_build_query($param);
-
-        return $this->sendRequest($token, 'GET', $url);
-    }
-
-    /**
      * @param $token
      * @param $invoiceNumber
      *
@@ -114,22 +83,6 @@ class SlotPurchase extends MotApi
 
     /**
      * @param $token
-     * @param $reference
-     *
-     * @return Response
-     */
-    public function searchByPaymentReference($token, $reference)
-    {
-        $param = [
-            'type' => 1
-        ];
-        $url   = sprintf(self::END_POINT_TRANSACTION_SEARCH, $reference) . '?' . http_build_query($param);
-
-        return $this->sendRequest($token, 'GET', $url);
-    }
-
-    /**
-     * @param $token
      * @param $type
      *
      * @return Response
@@ -139,19 +92,6 @@ class SlotPurchase extends MotApi
         $url = sprintf(self::END_POINT_ADJUSTMENT_REASON_TYPE, $type);
 
         return $this->sendRequest($token, 'GET', $url);
-    }
-
-    /**
-     * @param     $token
-     * @param int $transactionId
-     *
-     * @return Response
-     */
-    public function reverseTransaction($token, $transactionId)
-    {
-        $url = sprintf(self::END_POINT_REVERSAL, $transactionId);
-
-        return $this->sendRequest($token, 'POST', $url);
     }
 
     /**
@@ -186,15 +126,6 @@ class SlotPurchase extends MotApi
         ];
 
         return $this->sendRequest($token, 'POST', self::END_POINT_REDIRECTION_DATE, $body);
-    }
-
-    /**
-     * @param $token
-     * @return Response
-     */
-    public function getPaymentsToRefresh($token)
-    {
-        return $this->sendRequest($token, 'GET', rtrim(sprintf(self::END_POINT_PAYMENT_REFRESH, ''), '/'));
     }
 
     /**

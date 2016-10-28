@@ -1,3 +1,4 @@
+@transform
 Feature: Record a new event
   As a DVSA User
   I want the ability to record events for certain actions a user will take
@@ -5,9 +6,8 @@ Feature: Record a new event
 
   @story
   @non-manual-event
-  Scenario: Record a new security card event for a person
+  @create-user("Marty McFly")
+  Scenario: Record a new security card event for a persons
     Given I am logged in as an Customer Service Operator
-    And I create an event for a person
-    And I select the event type "SCO"
-    When I submit the non manual event
-    Then an event is generated for the user of "Security Card Order"
+    When I submit "create security card order" non manual event for "Marty McFly"
+    Then an event is generated for "Marty McFly" of "Security Card Order"

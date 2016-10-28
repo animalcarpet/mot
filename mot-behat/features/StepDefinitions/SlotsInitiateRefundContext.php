@@ -5,6 +5,7 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\SlotPurchase;
 use Dvsa\Mot\Behat\Support\Response;
+use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class SlotsInitiateRefundContext implements Context
@@ -56,48 +57,6 @@ class SlotsInitiateRefundContext implements Context
     }
 
     /**
-     * @Given The latest transaction is reversed
-     */
-    public function theLatestTransactionIsReversed()
-    {
-        $transactionId = $this->responseReceived->getBody()->toArray()['data']['transaction_id'];
-
-        $this->responseReceived = $this->slotPurchase->reverseTransaction(
-            $this->sessionContext->getCurrentAccessToken(),
-            $transactionId
-        );
-    }
-
-    /**
-     * @When I request a refund of :slots slots for organisation :organisation
-     */
-    public function iRequestARefundOfSlotsForOrganisation($slots, $organisation)
-    {
-        $token                  = $this->sessionContext->getCurrentAccessToken();
-        $body                   = [
-            'organisation' => $this->organisationMap[$organisation],
-            'slots'        => $slots,
-        ];
-        $this->responseReceived = $this->slotPurchase->requestRefund(
-            $token, $this->organisationMap[$organisation], $body
-        );
-    }
-
-    /**
-     * @When I ask for refund summary of :slots slots for organisation :organisation
-     */
-    public function iAskForRefundSummaryOfSlotsForOrganisation($slots, $organisation)
-    {
-        $body                   = [
-            'slots' => $slots
-        ];
-        $token                  = $this->sessionContext->getCurrentAccessToken();
-        $this->responseReceived = $this->slotPurchase->requestRefundSummaryDetails(
-            $token, $this->organisationMap[$organisation], $body
-        );
-    }
-
-    /**
      * @When I search for the payment with a valid invoice
      */
     public function iSearchForThePaymentWithAValidInvoice()
@@ -118,51 +77,12 @@ class SlotsInitiateRefundContext implements Context
     }
 
     /**
-     * @Then The slots purchased should be refunded
-     */
-    public function theSlotsPurchasedShouldBeRefunded()
-    {
-        PHPUnit::assertEquals(
-            200,
-            $this->responseReceived->getStatusCode(),
-            'Slots not refunded'
-        );
-    }
-
-    /**
-     * @Then I should receive summary information
-     */
-    public function iShouldReceiveSummaryInformation()
-    {
-        PHPUnit::assertEquals(
-            200,
-            $this->responseReceived->getStatusCode(),
-            'Summary information was not received'
-        );
-    }
-
-    /**
-     * @Then My refund request should be rejected
-     */
-    public function myRefundRequestShouldBeRejected()
-    {
-        PHPUnit::assertEquals(
-            200,
-            $this->responseReceived->getStatusCode(),
-            'Refund was not rejected'
-        );
-        $body = $this->responseReceived->getBody();
-        PHPUnit::assertArrayHasKey('validationError', $body);
-        PHPUnit::assertArrayHasKey('code', $body['validationError']);
-    }
-
-    /**
      * @Then I should receive invoice details
      */
     public function iShouldReceiveInvoiceDetails()
     {
         PHPUnit::assertEquals(
-            200,
+            HttpResponse::STATUS_CODE_200,
             $this->responseReceived->getStatusCode(),
             'Refund was not rejected'
         );
@@ -182,7 +102,7 @@ class SlotsInitiateRefundContext implements Context
     public function iShouldNotReceiveInvoiceDetails()
     {
         PHPUnit::assertEquals(
-            200,
+            HttpResponse::STATUS_CODE_200,
             $this->responseReceived->getStatusCode(),
             'Refund was not rejected'
         );

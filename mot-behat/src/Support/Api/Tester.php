@@ -14,20 +14,18 @@ class Tester extends MotApi
 
     public function getTesterDetails($token, $user_id)
     {
-        return $this->client->request(new Request(
-            MotApi::METHOD_GET,
-            str_replace('{user_id}', $user_id, self::PATH_TESTER),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token]
-        ));
+        return $this->sendGetRequest(
+            $token,
+            str_replace('{user_id}', $user_id, self::PATH_TESTER)
+        );
     }
 
     public function getTesterTestLogsSummary($token, $user_id)
     {
-        return $this->client->request(new Request(
-            'GET',
-            str_replace('{user_id}', $user_id, self::PATH_TESTER_TEST_LOGS_SUMMARY),
-            ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token]
-        ));
+        return $this->sendGetRequest(
+            $token,
+            str_replace('{user_id}', $user_id, self::PATH_TESTER_TEST_LOGS_SUMMARY)
+        );
     }
 
     /**
@@ -52,16 +50,13 @@ class Tester extends MotApi
 
     public function getTesterTestLogs($token, $user_id)
     {
-        return $this->client->request(
-            new Request(
-                'POST',
-                str_replace('{user_id}', $user_id, self::PATH_TESTER_TEST_LOGS),
-                [
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer '.$token
-                ],
-                '{"format":"DATA_TABLES","_class":"DvsaCommon\\\\Dto\\\\Search\\\\MotTestSearchParamsDto"}'
-            )
+        return $this->sendPostRequest(
+            $token,
+            str_replace('{user_id}', $user_id, self::PATH_TESTER_TEST_LOGS),
+            [
+                "format" => "DATA_TABLES",
+                "_class" => "DvsaCommon\\Dto\\Search\\MotTestSearchParamsDto"
+            ]
         );
     }
 

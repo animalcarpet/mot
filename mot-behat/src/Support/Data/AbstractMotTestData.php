@@ -6,10 +6,15 @@ use Dvsa\Mot\Behat\Support\Api\MotTest;
 use Dvsa\Mot\Behat\Support\Api\OdometerReading;
 use Dvsa\Mot\Behat\Support\Api\ReasonForRejection;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
-use Dvsa\Mot\Behat\Support\Data\Collection\DataCollection;
+use Dvsa\Mot\Behat\Support\Data\Params\MotTestParams;
+use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
+use Dvsa\Mot\Behat\Support\Data\Collection\SharedDataCollection;
 use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupA;
 use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupB;
+use Dvsa\Mot\Behat\Support\Data\Params\OdometerReadingParams;
+use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
 use Dvsa\Mot\Behat\Support\Response;
+use Zend\Http\Response as HttpResponse;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Common\MotTestTypeDto;
 use DvsaCommon\Dto\Person\PersonDto;
@@ -25,6 +30,7 @@ abstract class AbstractMotTestData
     private $brakeTestResult;
     private $odometerReading;
     private $reasonForRejection;
+    protected $testSupportHelper;
 
     protected $motCollection;
 
@@ -33,7 +39,8 @@ abstract class AbstractMotTestData
         MotTest $motTest,
         BrakeTestResult $brakeTestResult,
         OdometerReading $odometerReading,
-        ReasonForRejection $reasonForRejection
+        ReasonForRejection $reasonForRejection,
+        TestSupportHelper $testSupportHelper
     )
     {
         $this->userData = $userData;
@@ -41,19 +48,28 @@ abstract class AbstractMotTestData
         $this->brakeTestResult = $brakeTestResult;
         $this->odometerReading = $odometerReading;
         $this->reasonForRejection = $reasonForRejection;
-        $this->motCollection = new DataCollection(MotTestDto::class);
+        $this->testSupportHelper = $testSupportHelper;
+        $this->motCollection = SharedDataCollection::get(MotTestDto::class);
+    }
+
+    public function passMotTestWithDefaultBrakeTestAndMeterReading(MotTestDto $mot)
+    {
+        $this->addBrakeTestDecelerometerClass($mot);
+        $this->addMeterReading($mot);
+
+        return $this->passMotTest($mot);
     }
 
     public function passMotTest(MotTestDto $mot)
     {
         $tester = $this->getTester($mot);
-
-        $this->addBrakeTestDecelerometerClass($mot);
-        $this->addMeterReading($mot);
-
         $response = $this->motTest->passed($tester->getAccessToken(), $mot->getMotTestNumber());
 
-        $mot = $this->hydrateToDto($response);
+        if ($response->getStatusCode() !== HttpResponse::STATUS_CODE_200) {
+            throw new \Exception("Something went wrong during passing mot test");
+        }
+
+        $mot = $this->hydrateResponseToDto($response);
         $this->motCollection->add($mot, $mot->getMotTestNumber());
 
         return $mot;
@@ -63,33 +79,49 @@ abstract class AbstractMotTestData
     {
         $tester = $this->getTester($mot);
         $this->reasonForRejection->addAdvisory($tester->getAccessToken(), $mot->getMotTestNumber(), $rfrId);
-        return $this->passMotTest($mot);
+        return $this->passMotTestWithDefaultBrakeTestAndMeterReading($mot);
     }
 
     public function failMotTestWithAdvisory(MotTestDto $mot, $rfrId)
     {
         $tester = $this->getTester($mot);
         $this->reasonForRejection->addAdvisory($tester->getAccessToken(), $mot->getMotTestNumber(), $rfrId);
-        return $this->failMotTest($mot);
+        return $this->failMotTestWithDefaultBrakeTestAndMeterReading($mot);
     }
 
-    public function failMotTest(MotTestDto $mot, $rfrId = null)
+    public function failMotTestWithDefaultBrakeTestAndMeterReading(MotTestDto $mot, $rfrId = null)
     {
-        $tester = $this->getTester($mot);
-
         $this->addBrakeTestDecelerometerClass($mot);
         $this->addMeterReading($mot);
 
+        return $this->failMotTestWithRfr($mot, $rfrId);
+    }
+
+    public function failMotTestWithRfr(MotTestDto $mot, $rfrId = null)
+    {
+        $tester = $this->getTester($mot);
+
         if ($rfrId === null) {
-            $rfrId = ($mot->getVehicleClass()->getCode() < 3)
+            $rfrId = ($mot->getVehicleClass()->getCode() < VehicleClassCode::CLASS_3)
                 ? ReasonForRejectionGroupA::RFR_BRAKE_HANDLEBAR_LEVER
                 : ReasonForRejectionGroupB::RFR_BODY_STRUCTURE_CONDITION;
         }
 
         $this->reasonForRejection->addFailure($tester->getAccessToken(), $mot->getMotTestNumber(), $rfrId);
+
+        return $this->failMotTest($mot);
+    }
+
+    public function failMotTest(MotTestDto $mot)
+    {
+        $tester = $this->getTester($mot);
         $response = $this->motTest->failed($tester->getAccessToken(), $mot->getMotTestNumber());
 
-        $mot = $this->hydrateToDto($response);
+        if ($response->getStatusCode() !== HttpResponse::STATUS_CODE_200) {
+            throw new \Exception("Something went wrong during failing mot tests");
+        }
+
+        $mot = $this->hydrateResponseToDto($response);
 
         $this->motCollection->add($mot, $mot->getMotTestNumber());
 
@@ -109,7 +141,7 @@ abstract class AbstractMotTestData
 
         $response = $this->motTest->failed($tester->getAccessToken(), $mot->getMotTestNumber());
 
-        $mot = $this->hydrateToDto($response);
+        $mot = $this->hydrateResponseToDto($response);
 
         $this->motCollection->add($mot, $mot->getMotTestNumber());
 
@@ -133,7 +165,23 @@ abstract class AbstractMotTestData
         $this->reasonForRejection->addPrs($tester->getAccessToken(), $mot->getMotTestNumber(), $rfrId);
         $response = $this->motTest->passed($tester->getAccessToken(), $mot->getMotTestNumber());
 
-        $mot = $this->hydrateToDto($response);
+        $mot = $this->hydrateResponseToDto($response);
+        $this->motCollection->add($mot, $mot->getMotTestNumber());
+
+        return $mot;
+    }
+
+    public function abandonMotTestByUser(MotTestDto $mot, AuthenticatedUser $user, $cancelReasonId = 23)
+    {
+        $this->addBrakeTestDecelerometerClass($mot);
+        $this->addMeterReading($mot);
+
+        $response = $this->motTest->abandon($user->getAccessToken(), $mot->getMotTestNumber(), $cancelReasonId);
+        if ($response->getStatusCode() !== HttpResponse::STATUS_CODE_200) {
+            throw new \Exception(join("; ", $response->getBody()->getErrorMessages()));
+        }
+
+        $mot = $this->hydrateResponseToDto($response);
         $this->motCollection->add($mot, $mot->getMotTestNumber());
 
         return $mot;
@@ -143,15 +191,14 @@ abstract class AbstractMotTestData
     {
         $tester = $this->getTester($mot);
 
-        $this->addBrakeTestDecelerometerClass($mot);
-        $this->addMeterReading($mot);
-
-        $response = $this->motTest->abandon($tester->getAccessToken(), $mot->getMotTestNumber(), $cancelReasonId);
-
-        $mot = $this->hydrateToDto($response);
-        $this->motCollection->add($mot, $mot->getMotTestNumber());
+        $this->abandonMotTestByUser($mot, $tester, $cancelReasonId);
 
         return $mot;
+    }
+
+    public function abortMotTestByUser(MotTestDto $mot, AuthenticatedUser $user)
+    {
+        return $this->abandonMotTestByUser($mot,$user, 5);
     }
 
     public function abortMotTest(MotTestDto $mot)
@@ -159,11 +206,20 @@ abstract class AbstractMotTestData
         return $this->abandonMotTest($mot, 5);
     }
 
+    public function abortMotTestByVE(MotTestDto $mot, AuthenticatedUser $user)
+    {
+        $response = $this->motTest->abortTestByVE($user->getAccessToken(), $mot->getMotTestNumber());
+        $mot = $this->hydrateResponseToDto($response);
+        $this->motCollection->add($mot, $mot->getMotTestNumber());
+
+        return $mot;
+    }
+
     public function addBrakeTestDecelerometerClass(MotTestDto $motTest)
     {
         $tester = $this->getTester($motTest);
 
-        if ($motTest->getVehicleClass()->getCode() < 3) {
+        if ($motTest->getVehicleClass()->getCode() < VehicleClassCode::CLASS_3) {
             return $this->brakeTestResult->addBrakeTestDecelerometerClass1To2($tester->getAccessToken(), $motTest->getMotTestNumber());
         } else {
             return $this->brakeTestResult->addBrakeTestDecelerometerClass3To7($tester->getAccessToken(), $motTest->getMotTestNumber());
@@ -174,7 +230,25 @@ abstract class AbstractMotTestData
     {
         $tester = $this->getTester($motTest);
 
-        $this->odometerReading->addMeterReading($tester->getAccessToken(), $motTest->getMotTestNumber(), 658, 'mi');
+        $this->odometerReading->addMeterReading($tester->getAccessToken(), $motTest->getMotTestNumber(), 658, OdometerReadingParams::MI);
+    }
+
+    public function updateLatestMotTestWithNewDvlaVehicleDetails($id, array $data)
+    {
+        $service = $this->testSupportHelper->getMotService();
+        $service->updateLatest($id, $data);
+    }
+
+    /**
+     * @param int $vehicleId
+     * @return int
+     */
+    public function getLatestMotTestIdForVehicle($vehicleId)
+    {
+        $service = $this->testSupportHelper->getMotService();
+        $mot = $service->getLatestTest($vehicleId);
+
+        return $mot[MotTestParams::ID];
     }
 
     /**
@@ -188,10 +262,10 @@ abstract class AbstractMotTestData
             ->get($mot->getTester()->getUsername());
     }
 
-    private function hydrateToDto(Response $response)
+    private function hydrateResponseToDto(Response $response)
     {
         /** @var MotTestDto $dto */
-        $dto = DtoHydrator::jsonToDto($response->getBody()->toArray()["data"]);
+        $dto = DtoHydrator::jsonToDto($response->getBody()->getData());
 
         return $dto;
     }
@@ -209,6 +283,24 @@ abstract class AbstractMotTestData
     public function getMotCollection()
     {
         return $this->motCollection;
+    }
+
+    public function fetchMotTestData(AuthenticatedUser $user, $motTestNumber)
+    {
+        $response = $this->motTest->getMotData($user->getAccessToken(), $motTestNumber);
+
+        $mot = $this->hydrateResponseToDto($response);
+        $this->motCollection->add($mot, $mot->getMotTestNumber());
+
+        return $mot;
+    }
+
+    /**
+     * @return Response
+     */
+    public function getLastResponse()
+    {
+        return $this->motTest->getLastResponse();
     }
 
     protected function mapToMotTestDto(
@@ -230,9 +322,9 @@ abstract class AbstractMotTestData
         $vts = [];
         if ($site !== null) {
             $vts = [
-                'name' => $site->getName(),
+                SiteParams::NAME => $site->getName(),
                 'address' => [],
-                'siteNumber' => $site->getSiteNumber(),
+                SiteParams::SITE_NUMBER => $site->getSiteNumber(),
             ];
         }
 
