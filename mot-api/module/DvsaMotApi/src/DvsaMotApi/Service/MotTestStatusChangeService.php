@@ -816,5 +816,7 @@ class MotTestStatusChangeService implements TransactionAwareInterface
                 $this->entityManager->remove($motTestReasonForRejection);
             }
         }
+
+        $this->entityManager->flush();
     }
 }
