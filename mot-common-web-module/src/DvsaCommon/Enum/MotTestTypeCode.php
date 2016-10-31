@@ -22,6 +22,7 @@ class MotTestTypeCode
     const DEMONSTRATION_TEST_FOLLOWING_TRAINING = 'DT';
     const ROUTINE_DEMONSTRATION_TEST = 'DR';
     const NON_MOT_TEST = 'EN';
+    const MYSTERY_SHOPPER = 'MS';
 
     /**
      * @return array of values for the type MotTestTypeCode
@@ -41,6 +42,7 @@ class MotTestTypeCode
             self::DEMONSTRATION_TEST_FOLLOWING_TRAINING,
             self::ROUTINE_DEMONSTRATION_TEST,
             self::NON_MOT_TEST,
+            self::MYSTERY_SHOPPER,
         ];
     }
 
