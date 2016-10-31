@@ -54,7 +54,7 @@ class DownloadableSurveyReports implements IteratorAggregate
                 continue;
             }
 
-            $date = DateTimeImmutable::createFromFormat('Y-m', $data['month']);
+            $date = DateTimeImmutable::createFromFormat('!Y-m', $data['month']);
             $year = $date->format('Y');
             if (!isset($reports[$year])) {
                 $reports[$year] = [];
