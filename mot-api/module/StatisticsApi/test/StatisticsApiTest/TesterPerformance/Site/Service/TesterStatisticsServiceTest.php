@@ -213,7 +213,7 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
 
     private function getDateTimeHolder()
     {
-        return new TestDateTimeHolder(new \DateTime());
+        return new TestDateTimeHolder(new \DateTime("first day of this month"));
     }
 
     private function getCurrentDate()
