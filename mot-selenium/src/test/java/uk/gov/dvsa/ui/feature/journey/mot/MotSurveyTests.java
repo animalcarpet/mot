@@ -56,7 +56,7 @@ public class MotSurveyTests extends DslTest {
 
     @Test(groups = {"Regression", "BL-1529"},
             description = "Verifies that user is redirected to login page after submitting empty survey",
-            priority = 1)
+            dependsOnMethods = {"backwardNavigationFromSurveyPageToLoginPage"})
     public void userRedirectedToThankYouPageOnSubmissionOfEmptySurvey() throws IOException, URISyntaxException {
         // Given I am on the Test Complete Page as a tester
         TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle).finishTest();
@@ -76,7 +76,7 @@ public class MotSurveyTests extends DslTest {
 
     @Test(groups = {"Regression", "BL-1529"},
             description = "Verifies that user is able to submit feedback",
-            priority = 2)
+            dependsOnMethods = {"userRedirectedToThankYouPageOnSubmissionOfEmptySurvey"})
     public void userRedirectedToThankYouPageOnSubmissionOfCompletedSurvey() throws IOException, URISyntaxException {
         // Given I am on the Test Complete Page as a tester
         TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle).finishTest();
@@ -95,7 +95,8 @@ public class MotSurveyTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-1531"},
-            description = "Verifies that a valid user can navigate back from Survey Reports page to Home page")
+            description = "Verifies that a valid user can navigate back from Survey Reports page to Home page",
+            dependsOnMethods = {"userRedirectedToThankYouPageOnSubmissionOfCompletedSurvey"})
     public void backwardNavigationFromSurveyReportsPageToHomePage() throws IOException, URISyntaxException {
         // Given I am on the Survey Reports page as a scheme user
         GenerateSurveyReportsPage generateSurveyReportsPage =
@@ -108,7 +109,8 @@ public class MotSurveyTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-1531"},
-            description = "Verifies that an invalid user cannot navigate to the Survey Reports page")
+            description = "Verifies that an invalid user cannot navigate to the Survey Reports page",
+            dependsOnMethods = {"backwardNavigationFromSurveyReportsPageToHomePage"})
     public void testNonValidUserCannotNavigateToSurveyReportsPage() throws IOException, URISyntaxException {
         // Given I am on the home page as an invalid user
         HomePage homePage = pageNavigator.gotoHomePage(areaOffice1User);
