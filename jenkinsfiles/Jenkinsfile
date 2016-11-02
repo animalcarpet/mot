@@ -203,14 +203,14 @@ wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
         run_phpunit_independent(mot_web_frontend)
     }
     stage 'Static Code Analysis'
-    parallel(
-      'api': { run_sonar("mot-api", "${SONAR_LOGIN}", "${SONAR_PASSWORD}", 5, 10, 500, 1000) },
-      'frontend': { run_sonar("mot-web-frontend",  "${SONAR_LOGIN}", "${SONAR_PASSWORD}", 5, 10, 500, 1000) }
-    )
-    parallel(
-      'api-check': { check_sonar("mot-api") },
-      'frontend-check': { check_sonar("mot-web-frontend") }
-    )
+    // parallel(
+    //   'api': { run_sonar("mot-api", "${SONAR_LOGIN}", "${SONAR_PASSWORD}", 5, 10, 500, 1000) },
+    //   'frontend': { run_sonar("mot-web-frontend",  "${SONAR_LOGIN}", "${SONAR_PASSWORD}", 5, 10, 500, 1000) }
+    // )
+    // parallel(
+    //   'api-check': { check_sonar("mot-api") },
+    //   'frontend-check': { check_sonar("mot-web-frontend") }
+    // )
 
     stage 'Build MOT RPMs'
     sh 'echo -e "\033[34mBuild MOT RPMs\033[0m"'
