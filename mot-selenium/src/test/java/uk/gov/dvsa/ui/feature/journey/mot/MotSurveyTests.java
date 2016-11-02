@@ -56,7 +56,7 @@ public class MotSurveyTests extends DslTest {
 
     @Test(groups = {"Regression", "BL-1529"},
             description = "Verifies that user is redirected to login page after submitting empty survey",
-            dependsOnMethods = {"backwardNavigationFromSurveyPageToLoginPage"})
+            enabled = false)
     public void userRedirectedToThankYouPageOnSubmissionOfEmptySurvey() throws IOException, URISyntaxException {
         // Given I am on the Test Complete Page as a tester
         TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle).finishTest();
@@ -76,7 +76,7 @@ public class MotSurveyTests extends DslTest {
 
     @Test(groups = {"Regression", "BL-1529"},
             description = "Verifies that user is able to submit feedback",
-            dependsOnMethods = {"userRedirectedToThankYouPageOnSubmissionOfEmptySurvey"})
+            enabled = false)
     public void userRedirectedToThankYouPageOnSubmissionOfCompletedSurvey() throws IOException, URISyntaxException {
         // Given I am on the Test Complete Page as a tester
         TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle).finishTest();
@@ -95,8 +95,7 @@ public class MotSurveyTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-1531"},
-            description = "Verifies that a valid user can navigate back from Survey Reports page to Home page",
-            dependsOnMethods = {"userRedirectedToThankYouPageOnSubmissionOfCompletedSurvey"})
+            description = "Verifies that a valid user can navigate back from Survey Reports page to Home page")
     public void backwardNavigationFromSurveyReportsPageToHomePage() throws IOException, URISyntaxException {
         // Given I am on the Survey Reports page as a scheme user
         GenerateSurveyReportsPage generateSurveyReportsPage =
