@@ -2,10 +2,8 @@ package uk.gov.dvsa.journey;
 
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
-import uk.gov.dvsa.ui.pages.profile.NewUserProfilePage;
 import uk.gov.dvsa.ui.pages.dvsa.ManageRolesPage;
 import uk.gov.dvsa.ui.pages.dvsa.RolesAndAssociationsPage;
-import uk.gov.dvsa.ui.pages.profile.PersonProfilePage;
 import uk.gov.dvsa.ui.pages.vts.VehicleTestingStationPage;
 
 import java.util.List;
@@ -15,7 +13,6 @@ public class ManageRoles {
     private PageNavigator pageNavigator;
     private static final String ERROR_MESSAGE_ON_REMOVE_ROLE_PAGE = "You currently have a vehicle registered for test " +
             "or retest. This must be completed or aborted before you can remove this role.";
-    public static final String SUCCESS_MESSAGE_ON_ROLES_AND_ASSOCIATIONS_PAGE = "Role removed successfully";
 
     public ManageRoles(PageNavigator pageNavigator) {
         this.pageNavigator = pageNavigator;
@@ -68,7 +65,7 @@ public class ManageRoles {
     }
 
     public boolean isSuccessMessageDisplayedOnRolesAndAssociationsPage() {
-        return getRolesAndAssociationsPage().getSuccessMessage().equals(SUCCESS_MESSAGE_ON_ROLES_AND_ASSOCIATIONS_PAGE);
+        return getRolesAndAssociationsPage().getSuccessMessage().equals("Role removed successfully.");
     }
 
     public boolean isUserAssignedToVts(User user) {

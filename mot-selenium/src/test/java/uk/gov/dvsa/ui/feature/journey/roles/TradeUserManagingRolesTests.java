@@ -2,10 +2,10 @@ package uk.gov.dvsa.ui.feature.journey.roles;
 
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.model.AeDetails;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
-import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.RemoveRolePage;
 import uk.gov.dvsa.ui.pages.dvsa.RolesAndAssociationsPage;

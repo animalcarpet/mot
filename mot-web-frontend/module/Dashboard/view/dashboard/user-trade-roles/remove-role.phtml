@@ -8,8 +8,10 @@ use DvsaCommon\Constants\FeatureToggle;
 
 <div class="text">
     <p class="lede">
-        Please confirm that you want to remove the role of <?php echo $this->escapeHtml($viewModel->getRoleName()); ?>
-        at <?php echo $this->escapeHtml($viewModel->getEntityName()); ?>
+        Are you sure you want to remove the role of
+        <strong><?php echo $this->escapeHtml($viewModel->getRoleName()); ?></strong>
+        at
+        <strong><?php echo $this->escapeHtml($viewModel->getEntityName()); ?></strong>?
     </p>
 </div>
 
@@ -23,7 +25,7 @@ echo $this->url(null, [
     <?php echo $this->csrfToken(); ?>
     <nav class="content-navigation">
 
-        <input type="submit" name="submit" id="confirm" class="button" value="Confirm">
+        <input type="submit" name="submit" id="confirm" class="button" value="Remove role">
 
         <ul class="content-navigation__secondary">
             <li>
