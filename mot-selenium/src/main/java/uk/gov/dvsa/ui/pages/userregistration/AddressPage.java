@@ -10,7 +10,7 @@ import uk.gov.dvsa.ui.pages.Page;
 
 public class AddressPage extends Page {
 
-    private static final String PAGE_TITLE = "address";
+    private static final String PAGE_TITLE = "Your contact details";
 
     @FindBy(id = "address1") private WebElement homeAddressLineOne;
 
@@ -23,6 +23,8 @@ public class AddressPage extends Page {
     @FindBy(id = "postcode") private WebElement postcode;
 
     @FindBy(id = "continue") private WebElement continueToNextPage;
+
+    @FindBy(id = "phone") private WebElement telephoneNumber;
 
     public AddressPage(MotAppDriver driver) {
         super(driver);
@@ -41,24 +43,28 @@ public class AddressPage extends Page {
     }
 
     public SecurityQuestionOnePage enterAddressAndSubmitExpectingFirstSecurityQuestionPage(String addressLine1, String addressLine2, String addressLine3, String town,
-                                                     String postCode) {
+                                                     String postCode, String telephone) {
         FormDataHelper.enterText(homeAddressLineOne, addressLine1);
         FormDataHelper.enterText(homeAddressLineTwo, addressLine2);
         FormDataHelper.enterText(homeAddressLineThree, addressLine3);
         FormDataHelper.enterText(townCity, town);
         FormDataHelper.enterText(postcode, postCode);
+        FormDataHelper.enterText(telephoneNumber, telephone);
         continueToNextPage.click();
         return new SecurityQuestionOnePage(driver);
     }
 
-    public AddressPage enterAddress()
+    public AddressPage enterAddressandTelephone()
     {
         FormDataHelper.enterText(homeAddressLineOne, ContactDetailsHelper.getAddressLine1());
         FormDataHelper.enterText(homeAddressLineTwo, ContactDetailsHelper.getAddressLine2());
         FormDataHelper.enterText(homeAddressLineThree, ContactDetailsHelper.getAddressLine3());
         FormDataHelper.enterText(townCity, ContactDetailsHelper.getCity());
         FormDataHelper.enterText(postcode, ContactDetailsHelper.getPostCode());
+        FormDataHelper.enterText(telephoneNumber, ContactDetailsHelper.getPhoneNumber());
 
         return this;
     }
+
+
 }

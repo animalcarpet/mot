@@ -119,6 +119,11 @@ class PersonCreatorTest extends \PHPUnit_Framework_TestCase
                         DetailsInputFilter::FIELD_FIRST_NAME  => 'x',
                         DetailsInputFilter::FIELD_MIDDLE_NAME => 'y',
                         DetailsInputFilter::FIELD_LAST_NAME   => 'o',
+                        DetailsInputFilter::FIELD_DATE => [
+                            DetailsInputFilter::FIELD_DAY => '01',
+                            DetailsInputFilter::FIELD_MONTH => '02',
+                            DetailsInputFilter::FIELD_YEAR => '1990',
+                        ],
                     ],
                     ValidatorKeyConverter::inputFilterToStep(SecurityQuestionFirstInputFilter::class) => [
                         SecurityQuestionFirstInputFilter::FIELD_QUESTION => 1,

@@ -10,7 +10,7 @@ namespace Dvsa\Mot\Api\RegistrationModule\Service;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use DvsaCommon\InputFilter\Registration\AddressInputFilter;
+use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommonTest\TestUtils\XMock;
@@ -93,14 +93,16 @@ class ContactDetailsCreatorTest extends \PHPUnit_Framework_TestCase
                         EmailInputFilter::FIELD_EMAIL => 'x',
                     ],
                     ValidatorKeyConverter::inputFilterToStep(DetailsInputFilter::class) => [
-                        DetailsInputFilter::FIELD_PHONE => '1',
+                        DetailsInputFilter::FIELD_FIRST_NAME => 'testName',
+                        DetailsInputFilter::FIELD_LAST_NAME => 'McTester',
                     ],
-                    ValidatorKeyConverter::inputFilterToStep(AddressInputFilter::class) => [
-                        AddressInputFilter::FIELD_ADDRESS_1    => 'a1',
-                        AddressInputFilter::FIELD_ADDRESS_2    => 'a2',
-                        AddressInputFilter::FIELD_ADDRESS_3    => 'a3',
-                        AddressInputFilter::FIELD_TOWN_OR_CITY => 'TC',
-                        AddressInputFilter::FIELD_POSTCODE     => 'PC',
+                    ValidatorKeyConverter::inputFilterToStep(ContactDetailsInputFilter::class) => [
+                        ContactDetailsInputFilter::FIELD_ADDRESS_1    => 'a1',
+                        ContactDetailsInputFilter::FIELD_ADDRESS_2    => 'a2',
+                        ContactDetailsInputFilter::FIELD_ADDRESS_3    => 'a3',
+                        ContactDetailsInputFilter::FIELD_TOWN_OR_CITY => 'TC',
+                        ContactDetailsInputFilter::FIELD_POSTCODE     => 'PC',
+                        ContactDetailsInputFilter::FIELD_PHONE        => '1',
                     ],
                 ],
             ],

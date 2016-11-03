@@ -8,7 +8,7 @@
 namespace Dvsa\Mot\Api\RegistrationModule\Validator;
 
 use Dvsa\Mot\Api\RegistrationModule\Service\ValidatorKeyConverter;
-use DvsaCommon\InputFilter\Registration\AddressInputFilter;
+use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
@@ -28,7 +28,7 @@ class RegistrationValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $emailInputFilter = new EmailInputFilter();
         $detailsInputFilter = new DetailsInputFilter();
-        $addressInputFilter = new AddressInputFilter();
+        $addressInputFilter = new ContactDetailsInputFilter();
         $passwordInputFilter = new PasswordInputFilter();
         $securityQuestionFirstInputFilter = new SecurityQuestionFirstInputFilter();
         $securityQuestionSecondInputFilter = new SecurityQuestionSecondInputFilter();
@@ -76,7 +76,7 @@ class RegistrationValidatorTest extends \PHPUnit_Framework_TestCase
         foreach ([
                      EmailInputFilter::class,
                      DetailsInputFilter::class,
-                     AddressInputFilter::class,
+                     ContactDetailsInputFilter::class,
                      PasswordInputFilter::class,
                      SecurityQuestionFirstInputFilter::class,
                      SecurityQuestionSecondInputFilter::class,
@@ -146,12 +146,17 @@ class RegistrationValidatorTest extends \PHPUnit_Framework_TestCase
             DetailsInputFilter::class => [
                 DetailsInputFilter::FIELD_FIRST_NAME    => 'Joe',
                 DetailsInputFilter::FIELD_LAST_NAME     => 'Brown',
-                DetailsInputFilter::FIELD_PHONE         => '123123123',
+                DetailsInputFilter::FIELD_DATE => [
+                    DetailsInputFilter::FIELD_DAY => '01',
+                    DetailsInputFilter::FIELD_MONTH => '02',
+                    DetailsInputFilter::FIELD_YEAR => '1990',
+                ],
             ],
-            AddressInputFilter::class => [
-                AddressInputFilter::FIELD_ADDRESS_1    => 'Center',
-                AddressInputFilter::FIELD_TOWN_OR_CITY => 'Bristol',
-                AddressInputFilter::FIELD_POSTCODE     => 'BS1 1SB',
+            ContactDetailsInputFilter::class => [
+                ContactDetailsInputFilter::FIELD_ADDRESS_1    => 'Center',
+                ContactDetailsInputFilter::FIELD_TOWN_OR_CITY => 'Bristol',
+                ContactDetailsInputFilter::FIELD_POSTCODE     => 'BS1 1SB',
+                ContactDetailsInputFilter::FIELD_PHONE        => '123123123',
             ],
             PasswordInputFilter::class => [
                 PasswordInputFilter::FIELD_PASSWORD         => 'Password1',
@@ -178,7 +183,7 @@ class RegistrationValidatorTest extends \PHPUnit_Framework_TestCase
         $data = [
             EmailInputFilter::class                  => [],
             DetailsInputFilter::class                => [],
-            AddressInputFilter::class                => [],
+            ContactDetailsInputFilter::class                => [],
             PasswordInputFilter::class               => [],
             SecurityQuestionFirstInputFilter::class  => [],
             SecurityQuestionSecondInputFilter::class => [],

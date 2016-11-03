@@ -7,7 +7,6 @@
 
 namespace Dvsa\Mot\Frontend\RegistrationModule\Controller;
 
-use Dvsa\Mot\Frontend\RegistrationModule\Service\PasswordService;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\PasswordStep;
 use Zend\View\Model\ViewModel;
 

@@ -9,8 +9,7 @@ namespace DvsaCommonTest\InputFilter\Registration;
 
 use DvsaCommon\Factory\InputFilter\Registration\DetailsInputFilterFactory;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
-use DvsaCommon\Validator\EmailAddressValidator;
-use DvsaCommon\Validator\TelephoneNumberValidator;
+use DvsaCommon\Validator\DateOfBirthValidator;
 use DvsaCommonTest\Bootstrap;
 use Zend\Validator\EmailAddress;
 use Zend\Validator\Identical;
@@ -61,7 +60,9 @@ class DetailsInputFilterTest extends \PHPUnit_Framework_TestCase
                     'Joe',
                     'Light',
                     'Brown',
-                    '123123123'
+                    '01',
+                    '02',
+                    '1990'
                 ),
                 'isValid' => true,
                 'errorMessages' => $this->prepareMessages(
@@ -74,6 +75,8 @@ class DetailsInputFilterTest extends \PHPUnit_Framework_TestCase
             [
                 // Test Empty Data Set
                 'data' => $this->prepareData(
+                    '',
+                    '',
                     '',
                     '',
                     '',
@@ -91,7 +94,7 @@ class DetailsInputFilterTest extends \PHPUnit_Framework_TestCase
                         Regex::NOT_MATCH => DetailsInputFilter::MSG_NAME_NO_PATTERN_MATCH,
                     ],
                     [
-                        NotEmpty::IS_EMPTY => DetailsInputFilter::MSG_PHONE_INVALID,
+                        DateOfBirthValidator::IS_EMPTY => DateOfBirthValidator::ERR_MSG_IS_EMPTY,
                     ]
                 ),
             ],
@@ -101,7 +104,9 @@ class DetailsInputFilterTest extends \PHPUnit_Framework_TestCase
                     'J0£',
                     'L1ght',
                     'Br0wn',
-                    '123123123'
+                    '01',
+                    '02',
+                    '1990'
                 ),
                 'isValid' => false,
                 'errorMessages' => $this->prepareMessages(
@@ -111,40 +116,104 @@ class DetailsInputFilterTest extends \PHPUnit_Framework_TestCase
                     []
                 ),
             ],
+            [
+                // Test Invalid Date format
+                'data' => $this->prepareData(
+                    'Joe',
+                    'Light',
+                    'Brown',
+                    'ss',
+                    'ss',
+                    'ssss'
+                ),
+                'isValid' => false,
+                'errorMessages' => $this->prepareMessages(
+                    [],
+                    [],
+                    [],
+                    [DateOfBirthValidator::IS_INVALID_FORMAT => DateOfBirthValidator::ERR_MSG_IS_INVALID_FORMAT]
+                ),
+            ],
+            [
+                // Test Date over 100 years old
+                'data' => $this->prepareData(
+                    'Joe',
+                    'Light',
+                    'Brown',
+                    '01',
+                    '02',
+                    $this->getOldDate()
+                ),
+                'isValid' => false,
+                'errorMessages' => $this->prepareMessages(
+                    [],
+                    [],
+                    [],
+                    [DateOfBirthValidator::IS_OVER100 => DateOfBirthValidator::ERR_MSG_IS_OVER100]
+                ),
+            ],
+            [
+                // Test Date in the future
+                'data' => $this->prepareData(
+                    'Joe',
+                    'Light',
+                    'Brown',
+                    '01',
+                    '02',
+                    $this->getFutureDate()
+                ),
+                'isValid' => false,
+                'errorMessages' => $this->prepareMessages(
+                    [],
+                    [],
+                    [],
+                    [DateOfBirthValidator::IS_FUTURE => DateOfBirthValidator::ERR_MSG_IS_FUTURE]
+                ),
+            ],
         ];
     }
 
     /**
-     * @param string $firstName
-     * @param string $middleName
-     * @param string $lastName
+     * @param $firstName
+     * @param $middleName
+     * @param $lastName
+     * @param $day
+     * @param $month
+     * @param $year
      * @return array
      */
     public function prepareData(
         $firstName,
         $middleName,
         $lastName,
-        $phone
+        $day,
+        $month,
+        $year
     ) {
         return [
             DetailsInputFilter::FIELD_FIRST_NAME => $firstName,
             DetailsInputFilter::FIELD_MIDDLE_NAME => $middleName,
             DetailsInputFilter::FIELD_LAST_NAME => $lastName,
-            DetailsInputFilter::FIELD_PHONE => $phone,
+            DetailsInputFilter::FIELD_DATE => [
+                DetailsInputFilter::FIELD_DAY => $day,
+                DetailsInputFilter::FIELD_MONTH => $month,
+                DetailsInputFilter::FIELD_YEAR => $year,
+            ],
         ];
     }
 
     /**
-     * @param string[] $firstNameMessages
-     * @param string[] $middleNameMessages
-     * @param string[] $lastNameMessages
+     * @param array $firstNameMessages
+     * @param array $middleNameMessages
+     * @param array $lastNameMessages
+     * @param array $dateMessages
      * @return array
      */
     public function prepareMessages(
         $firstNameMessages = [],
         $middleNameMessages = [],
         $lastNameMessages = [],
-        $phoneMessages = []
+        $dateMessages = []
     ) {
         $messages = [];
 
@@ -157,9 +226,21 @@ class DetailsInputFilterTest extends \PHPUnit_Framework_TestCase
         if (!empty($lastNameMessages)) {
             $messages[DetailsInputFilter::FIELD_LAST_NAME] = $lastNameMessages;
         }
-        if (!empty($phoneMessages)) {
-            $messages[DetailsInputFilter::FIELD_PHONE] = $phoneMessages;
+        if (!empty($dateMessages)) {
+            $messages[DetailsInputFilter::FIELD_DATE] = $dateMessages;
         }
         return $messages;
+    }
+
+    private function getOldDate()
+    {
+        $date = new \DateTime('-101 years');
+        return $date->format('Y');
+    }
+
+    private function getFutureDate()
+    {
+        $date = new \DateTime('+1 year');
+        return $date->format('Y');
     }
 }

@@ -10,7 +10,6 @@ namespace Dvsa\Mot\Api\RegistrationModule\Service;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Mot\Api\RegistrationModule\Validator\RegistrationValidator;
-use Dvsa\Mot\Frontend\RegistrationModule\Step\EmailStep;
 use DvsaApplicationLogger\Log\Logger;
 use DvsaCommon\Enum\BusinessRoleName;
 use DvsaCommon\InputFilter\Registration\EmailInputFilter;

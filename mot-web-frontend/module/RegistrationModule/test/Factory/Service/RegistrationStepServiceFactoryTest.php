@@ -3,10 +3,9 @@
 namespace Dvsa\Mot\Frontend\RegistrationModule\Factory\Service;
 
 use Core\Service\StepService;
-use Core\Step\Step;
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationSessionService;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\AccountSummaryStep;
-use Dvsa\Mot\Frontend\RegistrationModule\Step\AddressStep;
+use Dvsa\Mot\Frontend\RegistrationModule\Step\ContactDetailsStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\CompletedStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\CreateAccountStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\DetailsStep;
@@ -63,7 +62,7 @@ class RegistrationStepServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(CreateAccountStep::class, $steps[0]);
         $this->assertInstanceOf(EmailStep::class, $steps[1]);
         $this->assertInstanceOf(DetailsStep::class, $steps[2]);
-        $this->assertInstanceOf(AddressStep::class, $steps[3]);
+        $this->assertInstanceOf(ContactDetailsStep::class, $steps[3]);
         $this->assertInstanceOf(SecurityQuestionOneStep::class, $steps[4]);
         $this->assertInstanceOf(SecurityQuestionTwoStep::class, $steps[5]);
         $this->assertInstanceOf(PasswordStep::class, $steps[6]);

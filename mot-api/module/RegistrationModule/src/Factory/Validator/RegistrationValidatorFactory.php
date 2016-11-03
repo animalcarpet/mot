@@ -8,7 +8,7 @@
 namespace Dvsa\Mot\Api\RegistrationModule\Factory\Validator;
 
 use Dvsa\Mot\Api\RegistrationModule\Validator\RegistrationValidator;
-use DvsaCommon\InputFilter\Registration\AddressInputFilter;
+use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
@@ -33,14 +33,14 @@ class RegistrationValidatorFactory implements FactoryInterface
     {
         $emailInputFilter = new EmailInputFilter();
         $detailsInputFilter = new DetailsInputFilter();
-        $addressInputFilter = new AddressInputFilter();
+        $contactDetailsInputFilter = new ContactDetailsInputFilter();
         $passwordInputFilter = new PasswordInputFilter();
         $securityQuestionFirstInputFilter = new SecurityQuestionFirstInputFilter();
         $securityQuestionSecondInputFilter = new SecurityQuestionSecondInputFilter();
 
         $emailInputFilter->init();
         $detailsInputFilter->init();
-        $addressInputFilter->init();
+        $contactDetailsInputFilter->init();
         $passwordInputFilter->init();
         $securityQuestionFirstInputFilter->init();
         $securityQuestionSecondInputFilter->init();
@@ -48,7 +48,7 @@ class RegistrationValidatorFactory implements FactoryInterface
         $service = new RegistrationValidator(
             $emailInputFilter,
             $detailsInputFilter,
-            $addressInputFilter,
+            $contactDetailsInputFilter,
             $passwordInputFilter,
             $securityQuestionFirstInputFilter,
             $securityQuestionSecondInputFilter

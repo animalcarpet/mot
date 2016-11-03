@@ -7,11 +7,9 @@
 
 namespace Dvsa\Mot\Api\RegistrationModule\Controller;
 
-use Dvsa\Mot\Api\RegistrationModule\Service\DuplicatedEmailChecker;
 use Dvsa\Mot\Api\RegistrationModule\Service\RegistrationService;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
-use DvsaCommonApi\Service\Exception\BadRequestException;
 
 /**
  * Class RegistrationController.

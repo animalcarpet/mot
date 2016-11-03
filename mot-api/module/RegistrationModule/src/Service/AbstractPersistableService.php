@@ -9,7 +9,7 @@ namespace Dvsa\Mot\Api\RegistrationModule\Service;
 
 use Doctrine\ORM\EntityManager;
 use DvsaApplicationLogger\Log\Logger;
-use DvsaCommon\InputFilter\Registration\AddressInputFilter;
+use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
@@ -86,9 +86,9 @@ class AbstractPersistableService implements TransactionAwareInterface
     /**
      * @return string
      */
-    protected function getAddressStepName()
+    protected function getContactDetailsStepName()
     {
-        return ValidatorKeyConverter::inputFilterToStep(AddressInputFilter::class);
+        return ValidatorKeyConverter::inputFilterToStep(ContactDetailsInputFilter::class);
     }
 
     /**

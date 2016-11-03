@@ -7,18 +7,20 @@
 
 namespace DvsaCommon\InputFilter\Registration;
 
+use DvsaCommon\Validator\TelephoneNumberValidator;
 use Zend\I18n\Validator\PostCode;
 use Zend\InputFilter\InputFilter;
+use Zend\Validator\Hostname;
 use Zend\Validator\NotEmpty;
 use Zend\Validator\StringLength;
 use Zend\Validator\Regex;
 
 /**
- * (Account registration) Your address' step input filter.
+ * (Account registration) Your contact details step input filter.
  *
- * Class AddressInputFilter
+ * Class ContactDetailsInputFilter
  */
-class AddressInputFilter extends InputFilter
+class ContactDetailsInputFilter extends InputFilter
 {
     /** To be used by address line 1, 2, 3 since they have identical criteria */
     const LIMIT_ADDRESS_MAX = 50;
@@ -49,13 +51,19 @@ class AddressInputFilter extends InputFilter
     const MSG_POSTCODE_EMPTY = 'enter a valid postcode';
     const MSG_POSTCODE_MAX = 'must be %d, or less, characters long';
 
+    /** Phone */
+    const FIELD_PHONE = 'phone';
+    const MSG_PHONE_MAX = 'must be %d characters or less';
+    const MSG_PHONE_INVALID = 'enter a telephone number';
+
     public function init()
     {
-        $this->initValidatorsForAddress(AddressInputFilter::FIELD_ADDRESS_1, true);
-        $this->initValidatorsForAddress(AddressInputFilter::FIELD_ADDRESS_2);
-        $this->initValidatorsForAddress(AddressInputFilter::FIELD_ADDRESS_3);
+        $this->initValidatorsForAddress(ContactDetailsInputFilter::FIELD_ADDRESS_1, true);
+        $this->initValidatorsForAddress(ContactDetailsInputFilter::FIELD_ADDRESS_2);
+        $this->initValidatorsForAddress(ContactDetailsInputFilter::FIELD_ADDRESS_3);
         $this->initValidatorsForTownAndCity();
         $this->initValidatorsForPostcode();
+        $this->initValidatorPhone();
     }
 
     /**
@@ -163,6 +171,34 @@ class AddressInputFilter extends InputFilter
                         'options' => [
                             'locale' => 'en_GB',
                             'message' => self::MSG_POSTCODE_EMPTY,
+                        ],
+                    ],
+                ],
+            ]
+        );
+    }
+
+    /**
+     * Adding validators for the phone field/input.
+     */
+    private function initValidatorPhone()
+    {
+        $this->add(
+            [
+                'name'       => self::FIELD_PHONE,
+                'required'   => true,
+                'validators' => [
+                    [
+                        'name'    => TelephoneNumberValidator::class,
+                        'options' => [
+                            'allow'   => Hostname::ALLOW_ALL,
+                            'message' => self::MSG_PHONE_INVALID,
+                        ],
+                    ],
+                    [
+                        'name'    => NotEmpty::class,
+                        'options' => [
+                            'message' => self::MSG_PHONE_INVALID,
                         ],
                     ],
                 ],

@@ -2,18 +2,15 @@
 use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
 
 ?>
-<div class="text">
-    <p class="lede">Your address is used to identify you if you contact the help desk.</p>
-</div>
 
 <?php echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => $errorsSummary]); ?>
 
-<form action="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->addressStep());?>"
+<form action="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->contactDetailsStep());?>"
       method="post" autocomplete="off" novalidate="">
     <?php echo $this->csrfToken(); ?>
 
     <fieldset>
-        <legend class="form-title heading-large" id="newUserAddress">Your address</legend>
+        <legend class="form-title heading-large" id="newUserAddress">Address</legend>
 
         <div class="form-group form-group-compound<?php if ($address1HasError): ?> has-error<?php endif; ?>">
             <label class="form-label" for="address1">
@@ -73,6 +70,25 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
             </label> <input class="form-control form-control-1-8"
                 id="postcode" name="postcode" type="text" value="<?php echo $this->escapeHtmlAttr($postcode) ?>">
         </div>
+    </fieldset>
+
+    <legend class="form-title heading-large" id="phone-legend">Phone number</legend>
+    <fieldset>
+        <?php
+        $classFormGroup =  $phoneHasError ? 'has-error' : '';
+        echo $this->partial(
+            'partial/forms/inputBox.phtml', [
+                'id'    => 'phone',
+                'label' => 'Enter your home, mobile or work number',
+                'labelId' => 'phone-number-label',
+                'type'  => 'text',
+                'classFormGroup' => $classFormGroup,
+                'errors' => $errors['phone'],
+                'classLabel' => 'form-label',
+                'value' => $phone ? : '',
+                'optional' => false,
+            ]
+        ); ?>
     </fieldset>
 
     <nav class="content-navigation">

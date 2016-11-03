@@ -3,7 +3,7 @@
 namespace Dvsa\Mot\Frontend\RegistrationModuleTest\Service;
 
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegisterUserService;
-use Dvsa\Mot\Frontend\RegistrationModule\Step\AddressStep;
+use Dvsa\Mot\Frontend\RegistrationModule\Step\ContactDetailsStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\DetailsStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\EmailStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\PasswordStep;
@@ -11,7 +11,7 @@ use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionOneStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionTwoStep;
 use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
-use DvsaCommon\InputFilter\Registration\AddressInputFilter;
+use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
@@ -64,14 +64,22 @@ class RegisterUserServiceTest extends \PHPUnit_Framework_TestCase
                 DetailsInputFilter::FIELD_FIRST_NAME    => 'Fred',
                 DetailsInputFilter::FIELD_MIDDLE_NAME   => '',
                 DetailsInputFilter::FIELD_LAST_NAME     => 'Flintstone',
-                DetailsInputFilter::FIELD_PHONE         => '123123123',
+                DetailsInputFilter::FIELD_DAY => '01',
+                DetailsInputFilter::FIELD_MONTH => '02',
+                DetailsInputFilter::FIELD_YEAR => '1999',
+                DetailsInputFilter::FIELD_DATE => [
+                    DetailsInputFilter::FIELD_DAY => '01',
+                    DetailsInputFilter::FIELD_MONTH => '02',
+                    DetailsInputFilter::FIELD_YEAR => '1999',
+                ],
             ],
-            AddressStep::STEP_ID => [
-                AddressInputFilter::FIELD_ADDRESS_1    => '1 Bedrock Way',
-                AddressInputFilter::FIELD_ADDRESS_2    => '',
-                AddressInputFilter::FIELD_ADDRESS_3    => '',
-                AddressInputFilter::FIELD_TOWN_OR_CITY => 'Bedrock',
-                AddressInputFilter::FIELD_POSTCODE     => 'BR1 2FF',
+            ContactDetailsStep::STEP_ID => [
+                ContactDetailsInputFilter::FIELD_ADDRESS_1    => '1 Bedrock Way',
+                ContactDetailsInputFilter::FIELD_ADDRESS_2    => '',
+                ContactDetailsInputFilter::FIELD_ADDRESS_3    => '',
+                ContactDetailsInputFilter::FIELD_TOWN_OR_CITY => 'Bedrock',
+                ContactDetailsInputFilter::FIELD_POSTCODE     => 'BR1 2FF',
+                ContactDetailsInputFilter::FIELD_PHONE         => '123123123',
             ],
             PasswordStep::STEP_ID => [
                 PasswordInputFilter::FIELD_PASSWORD         => 'password1',

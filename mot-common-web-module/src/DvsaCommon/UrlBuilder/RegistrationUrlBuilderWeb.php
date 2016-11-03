@@ -10,7 +10,7 @@ namespace DvsaCommon\UrlBuilder;
 class RegistrationUrlBuilderWeb extends AbstractUrlBuilder
 {
     const MAIN = '/account/register';
-    const ADDRESS = '/address';
+    const CONTACT_DETAILS = '/contact-details';
     const CREATE = '/create-an-account';
     const EMAIL = '/email';
     const DETAILS = '/details';
@@ -29,7 +29,7 @@ class RegistrationUrlBuilderWeb extends AbstractUrlBuilder
         self::MAIN => [
             self::CREATE => '',
             self::EMAIL => '',
-            self::ADDRESS => '',
+            self::CONTACT_DETAILS => '',
             self::DETAILS => '',
             self::SUMMARY => '',
             self::PASSWORD => '',
@@ -50,10 +50,10 @@ class RegistrationUrlBuilderWeb extends AbstractUrlBuilder
     /**
      * @return $this
      */
-    public function addressStep()
+    public function contactDetailsStep()
     {
         return $this->register()
-            ->appendRoutesAndParams(self::ADDRESS);
+            ->appendRoutesAndParams(self::CONTACT_DETAILS);
     }
 
     /**

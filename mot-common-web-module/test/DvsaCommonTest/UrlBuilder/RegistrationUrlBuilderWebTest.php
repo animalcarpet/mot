@@ -45,7 +45,7 @@ class RegistrationUrlBuilderWebTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['createStep', RegistrationUrlBuilderWeb::CREATE],
-            ['addressStep', RegistrationUrlBuilderWeb::ADDRESS],
+            ['contactDetailsStep', RegistrationUrlBuilderWeb::CONTACT_DETAILS],
             ['passwordStep', RegistrationUrlBuilderWeb::PASSWORD],
             ['detailsStep', RegistrationUrlBuilderWeb::DETAILS],
             ['summaryStep', RegistrationUrlBuilderWeb::SUMMARY],

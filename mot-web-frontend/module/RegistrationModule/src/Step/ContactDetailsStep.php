@@ -7,14 +7,14 @@
 
 namespace Dvsa\Mot\Frontend\RegistrationModule\Step;
 
-use DvsaCommon\InputFilter\Registration\AddressInputFilter;
+use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
 
-class AddressStep extends AbstractRegistrationStep
+class ContactDetailsStep extends AbstractRegistrationStep
 {
     /**
      * const used for the session key, available via getId().
      */
-    const STEP_ID = "ADDRESS";
+    const STEP_ID = "CONTACT_DETAILS";
 
     /**
      * @var string
@@ -40,6 +40,11 @@ class AddressStep extends AbstractRegistrationStep
      * @var string
      */
     private $postcode;
+
+    /**
+     * @var string
+     */
+    private $phone;
 
     /**
      * @return string
@@ -70,11 +75,12 @@ class AddressStep extends AbstractRegistrationStep
     public function toArray()
     {
         return [
-            AddressInputFilter::FIELD_ADDRESS_1    => $this->getAddress1(),
-            AddressInputFilter::FIELD_ADDRESS_2    => $this->getAddress2(),
-            AddressInputFilter::FIELD_ADDRESS_3    => $this->getAddress3(),
-            AddressInputFilter::FIELD_TOWN_OR_CITY => $this->getTownOrCity(),
-            AddressInputFilter::FIELD_POSTCODE     => $this->getPostcode(),
+            ContactDetailsInputFilter::FIELD_ADDRESS_1    => $this->getAddress1(),
+            ContactDetailsInputFilter::FIELD_ADDRESS_2    => $this->getAddress2(),
+            ContactDetailsInputFilter::FIELD_ADDRESS_3    => $this->getAddress3(),
+            ContactDetailsInputFilter::FIELD_TOWN_OR_CITY => $this->getTownOrCity(),
+            ContactDetailsInputFilter::FIELD_POSTCODE     => $this->getPostcode(),
+            ContactDetailsInputFilter::FIELD_PHONE        => $this->getPhone(),
         ];
     }
 
@@ -84,11 +90,12 @@ class AddressStep extends AbstractRegistrationStep
     protected function getCleanFilterWhiteList()
     {
         return [
-            AddressInputFilter::FIELD_ADDRESS_1,
-            AddressInputFilter::FIELD_ADDRESS_2,
-            AddressInputFilter::FIELD_ADDRESS_3,
-            AddressInputFilter::FIELD_TOWN_OR_CITY,
-            AddressInputFilter::FIELD_POSTCODE,
+            ContactDetailsInputFilter::FIELD_ADDRESS_1,
+            ContactDetailsInputFilter::FIELD_ADDRESS_2,
+            ContactDetailsInputFilter::FIELD_ADDRESS_3,
+            ContactDetailsInputFilter::FIELD_TOWN_OR_CITY,
+            ContactDetailsInputFilter::FIELD_POSTCODE,
+            ContactDetailsInputFilter::FIELD_PHONE,
         ];
     }
 
@@ -100,11 +107,12 @@ class AddressStep extends AbstractRegistrationStep
     public function readFromArray(array $values)
     {
         if (is_array($values) && count($values)) {
-            $this->setAddress1($values[AddressInputFilter::FIELD_ADDRESS_1]);
-            $this->setAddress2($values[AddressInputFilter::FIELD_ADDRESS_2]);
-            $this->setAddress3($values[AddressInputFilter::FIELD_ADDRESS_3]);
-            $this->setTownOrCity($values[AddressInputFilter::FIELD_TOWN_OR_CITY]);
-            $this->setPostcode(strtoupper($values[AddressInputFilter::FIELD_POSTCODE]));
+            $this->setAddress1($values[ContactDetailsInputFilter::FIELD_ADDRESS_1]);
+            $this->setAddress2($values[ContactDetailsInputFilter::FIELD_ADDRESS_2]);
+            $this->setAddress3($values[ContactDetailsInputFilter::FIELD_ADDRESS_3]);
+            $this->setTownOrCity($values[ContactDetailsInputFilter::FIELD_TOWN_OR_CITY]);
+            $this->setPostcode(strtoupper($values[ContactDetailsInputFilter::FIELD_POSTCODE]));
+            $this->setPhone($values[ContactDetailsInputFilter::FIELD_PHONE]);
         }
     }
 
@@ -174,13 +182,13 @@ class AddressStep extends AbstractRegistrationStep
         return $this->townOrCity;
     }
 
-        /**
-         * @param string $townOrCity
-         */
-        public function setTownOrCity($townOrCity)
-        {
-            $this->townOrCity = $townOrCity;
-        }
+    /**
+     * @param string $townOrCity
+     */
+    public function setTownOrCity($townOrCity)
+    {
+        $this->townOrCity = $townOrCity;
+    }
 
     /**
      * @return string
@@ -196,5 +204,21 @@ class AddressStep extends AbstractRegistrationStep
     public function setPostcode($postcode)
     {
         $this->postcode = $postcode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param string $phone
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
     }
 }

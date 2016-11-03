@@ -124,6 +124,8 @@ class PersonCreator extends AbstractPersistableService
                     $this->data[$this->getSecurityQuestionSecondStepName()][SecurityQuestionSecondInputFilter::FIELD_ANSWER]
                 )
             );
+        $date = new \DateTime($this->formatDateOfBirth());
+        $this->person->setDateOfBirth($date);
     }
 
     /**
@@ -172,5 +174,15 @@ class PersonCreator extends AbstractPersistableService
             $this->data[$this->getDetailsStepName()][DetailsInputFilter::FIELD_LAST_NAME],
             $this->data[$this->getPasswordStepName()][PasswordInputFilter::FIELD_PASSWORD]
         );
+    }
+
+    private function formatDateOfBirth()
+    {
+        $date = $this->data[$this->getDetailsStepName()][DetailsInputFilter::FIELD_DATE];
+        $day = $date[DetailsInputFilter::FIELD_DAY];
+        $month = $date[DetailsInputFilter::FIELD_MONTH];
+        $year = $date[DetailsInputFilter::FIELD_YEAR];
+
+        return implode('-', array_filter([$year, $month, $day]));
     }
 }

@@ -5,7 +5,7 @@
  * @link http://gitlab.clb.npm/mot/mot
  */
 
-use Dvsa\Mot\Frontend\RegistrationModule\Controller\AddressController;
+use Dvsa\Mot\Frontend\RegistrationModule\Controller\ContactDetailsController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\CompletedController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\CreateAccountController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\DetailsController;
@@ -24,7 +24,7 @@ use Dvsa\Mot\Frontend\RegistrationModule\Controller\EmailController;
  * http://mot-web-frontend.mot.gov.uk/account/register/create-an-account
  * http://mot-web-frontend.mot.gov.uk/account/register/email
  * http://mot-web-frontend.mot.gov.uk/account/register/details
- * http://mot-web-frontend.mot.gov.uk/account/register/address
+ * http://mot-web-frontend.mot.gov.uk/account/register/contact-details
  * http://mot-web-frontend.mot.gov.uk/account/register/security-question/one
  * http://mot-web-frontend.mot.gov.uk/account/register/security-question/two
  * http://mot-web-frontend.mot.gov.uk/account/register/password
@@ -75,9 +75,9 @@ return [
                     'address' => [
                         'type'    => 'segment',
                         'options' => [
-                            'route'    => '/address[/]',
+                            'route'    => '/contact-details[/]',
                             'defaults' => [
-                                'controller' => AddressController::class,
+                                'controller' => ContactDetailsController::class,
                             ],
                         ],
                     ],

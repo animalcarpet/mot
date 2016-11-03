@@ -11,6 +11,7 @@ use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
 use Dvsa\Mot\Frontend\SecurityCardModule\Security\SecurityCardGuard;
 use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
+use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\Model\TesterAuthorisation;
@@ -284,6 +285,51 @@ class SecurityCardGuardTest extends PHPUnit_Framework_TestCase
         $guard = $this->buildSecurityCardGuard();
 
         $this->assertTrue($guard->hasOutstandingCardOrdersAndNoActiveCard($this->identity));
+    }
+
+    public function testHasPermissionToOrderForOtherUserHasPermissionShouldReturnTrue()
+    {
+        $this->authorisationService
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with(PermissionInSystem::CAN_ORDER_2FA_SECURITY_CARD_FOR_OTHER_USER)
+            ->willReturn(true);
+
+        $this->assertTrue($this->buildSecurityCardGuard()->hasPermissionToOrderCardForOtherUser());
+    }
+
+    public function testHasPermissionToOrderForOtherUserHasNoPermissionShouldReturnFalse()
+    {
+        $this->authorisationService
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with(PermissionInSystem::CAN_ORDER_2FA_SECURITY_CARD_FOR_OTHER_USER)
+            ->willReturn(false);
+
+        $this->assertFalse($this->buildSecurityCardGuard()->hasPermissionToOrderCardForOtherUser());
+    }
+
+    public function testHasInactiveCardReturnsTrueWhenUserHasInactiveCard()
+    {
+        $this->withInactiveSecurityCard();
+        $this->withFeatureToggleEnabled(true);
+
+        $this->assertTrue($this->buildSecurityCardGuard()->hasInactiveTwoFaCard($this->identity));
+    }
+
+    public function testHasInactiveCardReturnsFalseWhenUserHasAnActiveCard()
+    {
+        $this->withActiveSecurityCard();
+        $this->withFeatureToggleEnabled(true);
+
+        $this->assertFalse($this->buildSecurityCardGuard()->hasInactiveTwoFaCard($this->identity));
+    }
+
+    public function testHasInactiveCardReturnsFalseWhenTwoFaOff()
+    {
+        $this->withFeatureToggleEnabled(false);
+
+        $this->assertFalse($this->buildSecurityCardGuard()->hasInactiveTwoFaCard($this->identity));
     }
 
     private function withActiveSecurityCard()

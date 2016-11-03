@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Mot\Frontend\RegistrationModuleTest\Factory\Service;
 
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationSessionService;

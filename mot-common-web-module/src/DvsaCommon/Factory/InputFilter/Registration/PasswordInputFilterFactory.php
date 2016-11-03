@@ -7,7 +7,6 @@
 
 namespace DvsaCommon\Factory\InputFilter\Registration;
 
-use DvsaCommon\InputFilter\Registration\AddressInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;

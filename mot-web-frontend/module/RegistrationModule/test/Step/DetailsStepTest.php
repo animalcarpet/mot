@@ -67,7 +67,6 @@ class DetailsStepTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($step->getFirstName(), $fixture['firstName']);
         $this->assertEquals($step->getMiddleName(), $fixture['middleName']);
         $this->assertEquals($step->getLastName(), $fixture['lastName']);
-        $this->assertEquals($step->getPhone(), $fixture['phone']);
     }
 
     /**
@@ -83,14 +82,22 @@ class DetailsStepTest extends \PHPUnit_Framework_TestCase
         $step->setFirstName('firstName');
         $step->setMiddleName('middleName');
         $step->setLastName('lastName');
-        $step->setPhone('phone');
+        $step->setDay('01');
+        $step->setMonth('02');
+        $step->setYear('1990');
 
         $values = $step->toArray();
 
         $this->assertEquals('firstName', $values['firstName']);
         $this->assertEquals('middleName', $values['middleName']);
         $this->assertEquals('lastName', $values['lastName']);
-        $this->assertEquals('phone', $values['phone']);
+        $this->assertEquals('01', $values['day']);
+        $this->assertEquals('02', $values['month']);
+        $this->assertEquals('1990', $values['year']);
+        $this->assertEquals(
+            ['day' => '01', 'month' => '02', 'year' => '1990'],
+            $values['date']
+        );
     }
 
     /**
@@ -106,12 +113,16 @@ class DetailsStepTest extends \PHPUnit_Framework_TestCase
         $step->setFirstName('firstName');
         $step->setMiddleName('middleName');
         $step->setLastName('lastName');
-        $step->setPhone('phone');
+        $step->setDay('01');
+        $step->setMonth('02');
+        $step->setYear('1990');
 
         $this->assertEquals('firstName', $step->getFirstName());
         $this->assertEquals('middleName', $step->getMiddleName());
         $this->assertEquals('lastName', $step->getLastName());
-        $this->assertEquals('phone', $step->getPhone());
+        $this->assertEquals('01', $step->getDay());
+        $this->assertEquals('02', $step->getMonth());
+        $this->assertEquals('1990', $step->getYear());
     }
 
     /**
@@ -123,7 +134,9 @@ class DetailsStepTest extends \PHPUnit_Framework_TestCase
             'firstName'             => __METHOD__ . '_firstName',
             'middleName'            => __METHOD__ . '_middleName',
             'lastName'              => __METHOD__ . '_lastName',
-            'phone'                 => __METHOD__ . '_phone',
+            'day'                   => __METHOD__ . '_01',
+            'month'                 => __METHOD__ . '_02',
+            'year'                  => __METHOD__ . '_1990',
         ];
 
         return $fixture;

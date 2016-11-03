@@ -7,18 +7,18 @@
 
 namespace Dvsa\Mot\Frontend\RegistrationModuleTest\Factory\Controller;
 
-use Dvsa\MOT\Frontend\RegistrationModule\Controller\AddressController;
-use Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller\AddressControllerFactory;
+use Dvsa\MOT\Frontend\RegistrationModule\Controller\ContactDetailsController;
+use Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller\ContactDetailsControllerFactory;
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationStepService;
 use DvsaCommonTest\TestUtils\XMock;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class AddressControllerFactoryTest.
+ * Class ContactDetailsControllerFactoryTest.
  */
 
-class AddressControllerFactoryTest extends \PHPUnit_Framework_TestCase
+class ContactDetailsControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @throws \Exception
@@ -36,8 +36,8 @@ class AddressControllerFactoryTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($serviceManager));
 
         //Create Factory
-        $factory = new AddressControllerFactory();
+        $factory = new ContactDetailsControllerFactory();
         $factoryResult = $factory->createService($plugins);
-        $this->assertInstanceOf(AddressController::class, $factoryResult);
+        $this->assertInstanceOf(ContactDetailsController::class, $factoryResult);
     }
 }
