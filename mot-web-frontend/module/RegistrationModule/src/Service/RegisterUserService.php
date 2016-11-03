@@ -7,7 +7,7 @@
 
 namespace Dvsa\Mot\Frontend\RegistrationModule\Service;
 
-use Dvsa\Mot\Frontend\RegistrationModule\Step\AddressStep;
+use Dvsa\Mot\Frontend\RegistrationModule\Step\ContactDetailsStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\DetailsStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\EmailStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\PasswordStep;
@@ -15,7 +15,7 @@ use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionOneStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionTwoStep;
 use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
-use DvsaCommon\InputFilter\Registration\AddressInputFilter;
+use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
@@ -30,7 +30,7 @@ class RegisterUserService
      */
     const STEP_EMAIL = 'stepEmail';
     const STEP_DETAILS = 'stepDetails';
-    const STEP_ADDRESS = 'stepAddress';
+    const STEP_CONTACT_DETAILS = 'stepContactDetails';
     const STEP_PASSWORD = 'stepPassword';
     const STEP_SECURITY_QUESTION_ONE = 'stepSecurityQuestionFirst';
     const STEP_SECURITY_QUESTION_TWO = 'stepSecurityQuestionSecond';
@@ -90,16 +90,21 @@ class RegisterUserService
             DetailsInputFilter::FIELD_FIRST_NAME    => $this->dataExists($detailsData, DetailsInputFilter::FIELD_FIRST_NAME),
             DetailsInputFilter::FIELD_MIDDLE_NAME   => $this->dataExists($detailsData, DetailsInputFilter::FIELD_MIDDLE_NAME),
             DetailsInputFilter::FIELD_LAST_NAME     => $this->dataExists($detailsData, DetailsInputFilter::FIELD_LAST_NAME),
-            DetailsInputFilter::FIELD_PHONE         => $this->dataExists($detailsData, DetailsInputFilter::FIELD_PHONE),
+            DetailsInputFilter::FIELD_DATE          => [
+                DetailsInputFilter::FIELD_DAY           => $this->dataExists($detailsData, DetailsInputFilter::FIELD_DAY),
+                DetailsInputFilter::FIELD_MONTH         => $this->dataExists($detailsData, DetailsInputFilter::FIELD_MONTH),
+                DetailsInputFilter::FIELD_YEAR          => $this->dataExists($detailsData, DetailsInputFilter::FIELD_YEAR),
+            ],
         ];
 
-        $addressData = $this->dataExists($sessionData, AddressStep::STEP_ID);
-        $array[self::STEP_ADDRESS] = [
-            AddressInputFilter::FIELD_ADDRESS_1    => $this->dataExists($addressData, AddressInputFilter::FIELD_ADDRESS_1),
-            AddressInputFilter::FIELD_ADDRESS_2    => $this->dataExists($addressData, AddressInputFilter::FIELD_ADDRESS_2),
-            AddressInputFilter::FIELD_ADDRESS_3    => $this->dataExists($addressData, AddressInputFilter::FIELD_ADDRESS_3),
-            AddressInputFilter::FIELD_TOWN_OR_CITY => $this->dataExists($addressData, AddressInputFilter::FIELD_TOWN_OR_CITY),
-            AddressInputFilter::FIELD_POSTCODE     => $this->dataExists($addressData, AddressInputFilter::FIELD_POSTCODE),
+        $contactDetailsData = $this->dataExists($sessionData, ContactDetailsStep::STEP_ID);
+        $array[self::STEP_CONTACT_DETAILS] = [
+            ContactDetailsInputFilter::FIELD_ADDRESS_1    => $this->dataExists($contactDetailsData, ContactDetailsInputFilter::FIELD_ADDRESS_1),
+            ContactDetailsInputFilter::FIELD_ADDRESS_2    => $this->dataExists($contactDetailsData, ContactDetailsInputFilter::FIELD_ADDRESS_2),
+            ContactDetailsInputFilter::FIELD_ADDRESS_3    => $this->dataExists($contactDetailsData, ContactDetailsInputFilter::FIELD_ADDRESS_3),
+            ContactDetailsInputFilter::FIELD_TOWN_OR_CITY => $this->dataExists($contactDetailsData, ContactDetailsInputFilter::FIELD_TOWN_OR_CITY),
+            ContactDetailsInputFilter::FIELD_POSTCODE     => $this->dataExists($contactDetailsData, ContactDetailsInputFilter::FIELD_POSTCODE),
+            ContactDetailsInputFilter::FIELD_PHONE        => $this->dataExists($contactDetailsData, ContactDetailsInputFilter::FIELD_PHONE),
         ];
 
         $passwordData = $this->dataExists($sessionData, PasswordStep::STEP_ID);

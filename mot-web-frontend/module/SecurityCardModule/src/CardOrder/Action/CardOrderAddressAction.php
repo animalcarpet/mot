@@ -10,7 +10,7 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardStep
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\ViewModel\CardOrderAddressViewModel;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardAddressService;
-use DvsaCommon\InputFilter\Registration\AddressInputFilter;
+use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
 use Zend\Form\Form;
 use Zend\Http\Request;
 
@@ -121,11 +121,11 @@ class CardOrderAddressAction
                 $addressData['addressChoice'] = $values['addressChoice'];
             } else {
                 $addressData['vtsName'] = '';
-                $addressData['address1'] = $values[AddressInputFilter::FIELD_ADDRESS_1];
-                $addressData['address2'] = $values[AddressInputFilter::FIELD_ADDRESS_2];
-                $addressData['address3'] = $values[AddressInputFilter::FIELD_ADDRESS_3];
-                $addressData['townOrCity'] = $values[AddressInputFilter::FIELD_TOWN_OR_CITY];
-                $addressData['postcode'] = strtoupper($values[AddressInputFilter::FIELD_POSTCODE]);
+                $addressData['address1'] = $values[ContactDetailsInputFilter::FIELD_ADDRESS_1];
+                $addressData['address2'] = $values[ContactDetailsInputFilter::FIELD_ADDRESS_2];
+                $addressData['address3'] = $values[ContactDetailsInputFilter::FIELD_ADDRESS_3];
+                $addressData['townOrCity'] = $values[ContactDetailsInputFilter::FIELD_TOWN_OR_CITY];
+                $addressData['postcode'] = strtoupper($values[ContactDetailsInputFilter::FIELD_POSTCODE]);
                 $addressData['addressChoice'] = $values['addressChoice'];
             }
 

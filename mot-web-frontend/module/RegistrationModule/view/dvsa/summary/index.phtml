@@ -4,7 +4,7 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
 ?>
 
 <div class="text">
-    <p class="lede">Please check that the details below are correct.</p>
+    <p class="lede">Check that the information is correct before you create your account.</p>
 </div>
 
 <h2 class="heading-medium">Your details</h2>
@@ -36,13 +36,13 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
     </tr>
     <tr>
         <th scope="col" class="key-value-list__key">
-            Telephone number
+            Date of birth
         </th>
-        <td id="phone" scope="col" class="key-value-list__value">
-            <?php echo $this->escapeHtmlAttr($phone) ?>
+        <td id="date-of-birth" scope="col" class="key-value-list__value">
+            <?php echo $this->escapeHtmlAttr($dateOfBirth); ?>
         </td>
         <td scope="col" class="key-value-list__item-action">
-            <a id="change-phone" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->detailsStep());?>">Change<span class="visuallyhidden"> telephone number</span></a>
+            <a id="change-phone" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->detailsStep());?>">Change<span class="visuallyhidden"> date of birth</span></a>
         </td>
     </tr>
     <tr>
@@ -59,7 +59,18 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
             ?>
         </td>
         <td scope="col" class="key-value-list__item-action">
-            <a id="change-address" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->addressStep());?>">Change<span class="visuallyhidden"> address</span></a>
+            <a id="change-address" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->contactDetailsStep());?>">Change<span class="visuallyhidden"> address</span></a>
+        </td>
+    </tr>
+    <tr>
+        <th scope="col" class="key-value-list__key">
+            Phone number
+        </th>
+        <td id="phone" scope="col" class="key-value-list__value">
+            <?php echo $this->escapeHtmlAttr($phone) ?>
+        </td>
+        <td scope="col" class="key-value-list__item-action">
+            <a id="change-phone" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->contactDetailsStep());?>">Change<span class="visuallyhidden"> phone number</span></a>
         </td>
     </tr>
     </tbody>

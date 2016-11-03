@@ -11,8 +11,8 @@ public class PersonDetails {
     private Address address;
 
     public PersonDetails() {
-        this.firstName = RandomDataGenerator.generateRandomString();
-        this.lastName = RandomDataGenerator.generateRandomString();
+        this.firstName = RandomDataGenerator.generateRandomString(8, 9);
+        this.lastName = RandomDataGenerator.generateRandomString(8, 9);
         this.dateOfBirthDay = RandomDataGenerator.generateRandomInteger(1, 28);
         this.dateOfBirthMonth = RandomDataGenerator.generateRandomInteger(1, 12);
         this.dateOfBirthYear = RandomDataGenerator.generateRandomInteger(1950, 2000);

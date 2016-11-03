@@ -7,7 +7,7 @@
 
 namespace DvsaCommon\InputFilter\Registration;
 
-use DvsaCommon\Validator\EmailAddressValidator;
+use DvsaCommon\Validator\DateOfBirthValidator;
 use DvsaCommon\Validator\TelephoneNumberValidator;
 use Zend\InputFilter\InputFilter;
 use Zend\Validator\EmailAddress;
@@ -42,27 +42,18 @@ class DetailsInputFilter extends InputFilter
     const FIELD_LAST_NAME = 'lastName';
     const MSG_LAST_NAME_EMPTY = 'enter a last name';
 
-    /** Phone */
-    const FIELD_PHONE = 'phone';
-    const MSG_PHONE_MAX = 'must be %d characters or less';
-    const MSG_PHONE_INVALID = 'enter a telephone number';
-
-    /** Email address */
-    const FIELD_EMAIL = 'emailAddress';
-    const MSG_EMAIL_MAX = 'must be %d, or less, characters long';
-    const MSG_EMAIL_INVALID = 'enter a valid email address';
-
-    /** Email confirmation */
-    const FIELD_EMAIL_CONFIRM = 'confirmEmailAddress';
-    const MSG_EMAIL_CONFIRM_EMPTY = 'confirm your email address';
-    const MSG_EMAIL_CONFIRM_DIFFER = 'the email addresses you have entered don\'t match';
+    /** Date of Birth */
+    const FIELD_DAY = 'day';
+    const FIELD_MONTH = 'month';
+    const FIELD_YEAR = 'year';
+    const FIELD_DATE = 'date';
 
     public function init()
     {
         $this->initValidatorsForNames(self::FIELD_FIRST_NAME, true, self::MSG_FIRST_NAME_EMPTY);
         $this->initValidatorsForNames(self::FIELD_MIDDLE_NAME);
         $this->initValidatorsForNames(self::FIELD_LAST_NAME, true, self::MSG_LAST_NAME_EMPTY);
-        $this->initValidatorPhone();
+        $this->initValidatorDateOfBirth();
     }
 
     /**
@@ -105,28 +96,15 @@ class DetailsInputFilter extends InputFilter
         $this->add($input);
     }
 
-    /**
-     * Adding validators for the phone field/input.
-     */
-    private function initValidatorPhone()
+    private function initValidatorDateOfBirth()
     {
         $this->add(
             [
-                'name'       => self::FIELD_PHONE,
-                'required'   => true,
+                'name' => self::FIELD_DATE,
+                'required' => true,
                 'validators' => [
                     [
-                        'name'    => TelephoneNumberValidator::class,
-                        'options' => [
-                            'allow'   => Hostname::ALLOW_ALL,
-                            'message' => self::MSG_PHONE_INVALID,
-                        ],
-                    ],
-                    [
-                        'name'    => NotEmpty::class,
-                        'options' => [
-                            'message' => self::MSG_PHONE_INVALID,
-                        ],
+                        'name' => DateOfBirthValidator::class,
                     ],
                 ],
             ]

@@ -5,7 +5,6 @@ namespace Dvsa\Mot\Frontend\RegistrationModuleTest\Factory\Controller;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\EmailController;
 use Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller\EmailControllerFactory;
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationStepService;
-use Dvsa\MOT\Frontend\RegistrationModule\Controller\DetailsController;
 use DvsaCommonTest\TestUtils\XMock;
 use UserAdmin\Service\IsEmailDuplicateService;
 use Zend\Mvc\Controller\ControllerManager;

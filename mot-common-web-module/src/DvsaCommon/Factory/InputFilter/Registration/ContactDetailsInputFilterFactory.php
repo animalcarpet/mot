@@ -7,25 +7,25 @@
 
 namespace DvsaCommon\Factory\InputFilter\Registration;
 
-use DvsaCommon\InputFilter\Registration\AddressInputFilter;
+use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * To initiate an instance of DetailsInputFilter
- * Class AddressInputFilterFactory
+ * To initiate an instance of ContactDetailsInputFilter
+ * Class ContactDetailsInputFilterFactory
  */
-class AddressInputFilterFactory implements FactoryInterface
+class ContactDetailsInputFilterFactory implements FactoryInterface
 {
     /**
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
-     * @return AddressInputFilter
+     * @return ContactDetailsInputFilter
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $inputFilter = new AddressInputFilter();
+        $inputFilter = new ContactDetailsInputFilter();
         $inputFilter->init();
 
         return $inputFilter;

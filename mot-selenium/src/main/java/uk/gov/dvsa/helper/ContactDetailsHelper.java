@@ -30,8 +30,12 @@ public class ContactDetailsHelper {
         return  RandomDataGenerator.generateEmail(20, System.nanoTime());
     }
 
+    public static String generateUniqueName() {return RandomDataGenerator.generateRandomString(8, 9);}
 
-    public static String generateUniqueName() {
-        return RandomDataGenerator.generateRandomString(8, 9);
-    }
+    public static int getDateOfBirthDay() { return RandomDataGenerator.generateRandomInteger(1,28); }
+
+    public static int getDateOfBirthMonth() { return RandomDataGenerator.generateRandomInteger(1, 12); }
+
+    public static int getDateOfBirthYear() {return RandomDataGenerator.generateRandomInteger(1950, 2010); }
+
 }

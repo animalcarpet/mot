@@ -1,11 +1,8 @@
 <?php
+
 use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
 
 ?>
-
-<div class="text">
-    <p class="lede">We will create your user ID from this information and email you with news about the MOT testing service.</p>
-</div>
 
 <?php echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => $errorsSummary]); ?>
 
@@ -14,7 +11,8 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
     <?php echo $this->csrfToken(); ?>
 
     <fieldset>
-        <legend class="form-title heading-large" id="newUserName">Your name</legend>
+        <legend class="form-title heading-large" id="newUserName">Name</legend>
+        <p class="lede">Enter all of your names in full - don't use initials.</p>
 
         <?php
         $classFormGroup =  $firstNameHasError ? 'has-error' : '';
@@ -64,26 +62,36 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
 
     </fieldset>
 
-    <fieldset>
-        <legend class="form-title heading-large" id="phone-legend">Your telephone number</legend>
-
-        <?php
-        $classFormGroup =  $phoneHasError ? 'has-error' : '';
-        echo $this->partial(
-            'partial/forms/inputBox.phtml', [
-                'id'    => 'phone',
-                'label' => 'Telephone number',
-                'labelId' => 'telephone-number',
-                'type'  => 'text',
-                'classFormGroup' => $classFormGroup,
-                'errors' => $errors['phone'],
-                'classLabel' => 'form-label',
-                'value' => $phone ? : '',
-                'optional' => false,
-            ]
-        ); ?>
-
-    </fieldset>
+    <legend class="form-title heading-large" id="newUserDob">Date of birth</legend>
+    <p class="lede">
+        This helps DVSA to identify you if you contact them.
+    </p>
+    <div class="form-group <?php if ($dateHasError) echo ' has-error' ?>">
+            <fieldset>
+                <div class="form-date <?php if ($dateHasError) echo ' has-error' ?>">
+                    <p>Enter your date of birth</p>
+                    <span class="form-hint">For example, 31 03 2015
+                        <?php
+                        if ($dateHasError) {
+                            echo $this->partial('partial/forms/errorMessageInline.phtml', ['messages' => $errors['date']]);
+                        }
+                        ?>
+                    </span>
+                    <div class="form-group form-group-day">
+                        <label for="day">Day</label>
+                        <input type="text" id="day" name="day" class="form-control" value="<?php echo $this->escapeHtmlAttr($day);?>">
+                    </div>
+                    <div class="form-group form-group-month">
+                        <label for="month">Month</label>
+                        <input type="text" id="month" name="month" class="form-control" value="<?php echo $this->escapeHtmlAttr($month);?>">
+                    </div>
+                    <div class="form-group form-group-year">
+                        <label for="year">Year</label>
+                        <input type="text" id="year" name="year" class="form-control" value="<?php echo $this->escapeHtmlAttr($year);?>">
+                    </div>
+                </div>
+            </fieldset>
+    </div>
 
     <nav class="content-navigation">
         <?php

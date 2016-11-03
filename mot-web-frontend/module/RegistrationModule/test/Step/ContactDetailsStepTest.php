@@ -3,16 +3,16 @@
 namespace Dvsa\Mot\Frontend\RegistrationModuleTest\Step;
 
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationSessionService;
-use Dvsa\Mot\Frontend\RegistrationModule\Step\AddressStep;
+use Dvsa\Mot\Frontend\RegistrationModule\Step\ContactDetailsStep;
 use DvsaCommonTest\TestUtils\XMock;
 use Zend\InputFilter\InputFilter;
 
 /**
- * Class AddressStepTest.
+ * Class ContactDetailsStepTest.
  *
  * @group VM-11506
  */
-class AddressStepTest extends \PHPUnit_Framework_TestCase
+class ContactDetailsStepTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Test the constructor.
@@ -21,12 +21,12 @@ class AddressStepTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $step = new AddressStep(
+        $step = new ContactDetailsStep(
             XMock::of(RegistrationSessionService::class),
             XMock::of(InputFilter::class)
         );
 
-        $this->assertInstanceOf(AddressStep::class, $step);
+        $this->assertInstanceOf(ContactDetailsStep::class, $step);
     }
 
     /**
@@ -34,12 +34,12 @@ class AddressStepTest extends \PHPUnit_Framework_TestCase
      */
     public function testId()
     {
-        $step = new AddressStep(
+        $step = new ContactDetailsStep(
             XMock::of(RegistrationSessionService::class),
             XMock::of(InputFilter::class)
         );
 
-        $this->assertEquals(AddressStep::STEP_ID, $step->getId());
+        $this->assertEquals(ContactDetailsStep::STEP_ID, $step->getId());
     }
 
     /**
@@ -54,10 +54,10 @@ class AddressStepTest extends \PHPUnit_Framework_TestCase
         $session = XMock::of(RegistrationSessionService::class);
         $session->expects($this->once())
             ->method('load')
-            ->with(AddressStep::STEP_ID)
+            ->with(ContactDetailsStep::STEP_ID)
             ->willReturn($fixture);
 
-        $step = new AddressStep(
+        $step = new ContactDetailsStep(
             $session,
             XMock::of(InputFilter::class)
         );
@@ -76,7 +76,7 @@ class AddressStepTest extends \PHPUnit_Framework_TestCase
      */
     public function testToArray()
     {
-        $step = new AddressStep(
+        $step = new ContactDetailsStep(
             XMock::of(RegistrationSessionService::class),
             XMock::of(InputFilter::class)
         );
@@ -86,6 +86,7 @@ class AddressStepTest extends \PHPUnit_Framework_TestCase
         $step->setAddress3('address3');
         $step->settownOrCity('townOrCity');
         $step->setpostcode('postcode');
+        $step->setPhone('12345678');
 
         $values = $step->toArray();
 
@@ -94,6 +95,7 @@ class AddressStepTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('address3', $values['address3']);
         $this->assertEquals('townOrCity', $values['townOrCity']);
         $this->assertEquals('postcode', $values['postcode']);
+        $this->assertEquals('12345678', $values['phone']);
     }
 
     /**
@@ -101,7 +103,7 @@ class AddressStepTest extends \PHPUnit_Framework_TestCase
      */
     public function testGettersSetters()
     {
-        $step = new AddressStep(
+        $step = new ContactDetailsStep(
             XMock::of(RegistrationSessionService::class),
             XMock::of(InputFilter::class)
         );
@@ -111,12 +113,14 @@ class AddressStepTest extends \PHPUnit_Framework_TestCase
         $step->setAddress3('address3');
         $step->settownOrCity('townOrCity');
         $step->setpostcode('postcode');
+        $step->setPhone('12345678');
 
         $this->assertEquals('address1', $step->getAddress1());
         $this->assertEquals('address2', $step->getAddress2());
         $this->assertEquals('address3', $step->getAddress3());
         $this->assertEquals('townOrCity', $step->gettownOrCity());
         $this->assertEquals('postcode', $step->getpostcode());
+        $this->assertEquals('12345678', $step->getPhone());
     }
 
     /**
@@ -130,6 +134,7 @@ class AddressStepTest extends \PHPUnit_Framework_TestCase
             'address3'   => __METHOD__ . '_address3',
             'townOrCity' => __METHOD__ . '_townOrCity',
             'postcode'   => __METHOD__ . '_postcode',
+            'phone'      => __METHOD__ . '_phone',
         ];
 
         return $fixture;

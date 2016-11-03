@@ -34,7 +34,22 @@ class DetailsStep extends AbstractRegistrationStep
     /**
      * @var string
      */
-    private $phone;
+    private $day;
+
+    /**
+     * @var string
+     */
+    private $month;
+
+    /**
+     * @var string
+     */
+    private $year;
+
+    /**
+     * @var array
+     */
+    private $date;
 
     /**
      * @return string
@@ -68,7 +83,10 @@ class DetailsStep extends AbstractRegistrationStep
             $this->setFirstName($values[DetailsInputFilter::FIELD_FIRST_NAME]);
             $this->setMiddleName($values[DetailsInputFilter::FIELD_MIDDLE_NAME]);
             $this->setLastName($values[DetailsInputFilter::FIELD_LAST_NAME]);
-            $this->setPhone($values[DetailsInputFilter::FIELD_PHONE]);
+            $this->setDay($values[DetailsInputFilter::FIELD_DAY]);
+            $this->setMonth($values[DetailsInputFilter::FIELD_MONTH]);
+            $this->setYear($values[DetailsInputFilter::FIELD_YEAR]);
+            $this->setDate($this->makeDate());
         }
     }
 
@@ -83,7 +101,19 @@ class DetailsStep extends AbstractRegistrationStep
             DetailsInputFilter::FIELD_FIRST_NAME     => $this->getFirstName(),
             DetailsInputFilter::FIELD_MIDDLE_NAME    => $this->getMiddleName(),
             DetailsInputFilter::FIELD_LAST_NAME      => $this->getLastName(),
-            DetailsInputFilter::FIELD_PHONE          => $this->getPhone(),
+            DetailsInputFilter::FIELD_DATE           => $this->makeDate(),
+            DetailsInputFilter::FIELD_DAY            => $this->getDay(),
+            DetailsInputFilter::FIELD_MONTH          => $this->getMonth(),
+            DetailsInputFilter::FIELD_YEAR           => $this->getYear(),
+        ];
+    }
+
+    protected function makeDate()
+    {
+        return [
+            DetailsInputFilter::FIELD_DAY => $this->getDay(),
+            DetailsInputFilter::FIELD_MONTH => $this->getMonth(),
+            DetailsInputFilter::FIELD_YEAR => $this->getYear()
         ];
     }
 
@@ -96,7 +126,9 @@ class DetailsStep extends AbstractRegistrationStep
             DetailsInputFilter::FIELD_FIRST_NAME,
             DetailsInputFilter::FIELD_MIDDLE_NAME,
             DetailsInputFilter::FIELD_LAST_NAME,
-            DetailsInputFilter::FIELD_PHONE,
+            DetailsInputFilter::FIELD_DAY,
+            DetailsInputFilter::FIELD_MONTH,
+            DetailsInputFilter::FIELD_YEAR,
         ];
     }
 
@@ -161,16 +193,65 @@ class DetailsStep extends AbstractRegistrationStep
     /**
      * @return string
      */
-    public function getPhone()
+    public function getDay()
     {
-        return $this->phone;
+        return $this->day;
     }
 
     /**
-     * @param string $phone
+     * @param string $day
      */
-    public function setPhone($phone)
+    public function setDay($day)
     {
-        $this->phone = $phone;
+        $this->day = $day;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMonth()
+    {
+        return $this->month;
+    }
+
+    /**
+     * @param string $month
+     */
+    public function setMonth($month)
+    {
+        $this->month = $month;
+    }
+
+    /**
+     * @return string
+     */
+    public function getYear()
+    {
+        return $this->year;
+    }
+
+    /**
+     * @param string $year
+     */
+    public function setYear($year)
+    {
+        $this->year = $year;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+
+    /**
+     * @param array $date
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
     }
 }

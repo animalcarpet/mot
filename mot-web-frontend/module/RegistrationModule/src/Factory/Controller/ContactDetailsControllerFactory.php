@@ -8,19 +8,19 @@
 namespace Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller;
 
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationStepService;
-use Dvsa\Mot\Frontend\RegistrationModule\Controller\AddressController;
+use Dvsa\Mot\Frontend\RegistrationModule\Controller\ContactDetailsController;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Factory for AddressController instances.
+ * Factory for ContactDetailsController instances.
  */
-class AddressControllerFactory implements FactoryInterface
+class ContactDetailsControllerFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return AddressController
+     * @return ContactDetailsController
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
@@ -28,6 +28,6 @@ class AddressControllerFactory implements FactoryInterface
 
         $stepService = $serviceLocator->get(RegistrationStepService::class);
 
-        return new AddressController($stepService);
+        return new ContactDetailsController($stepService);
     }
 }

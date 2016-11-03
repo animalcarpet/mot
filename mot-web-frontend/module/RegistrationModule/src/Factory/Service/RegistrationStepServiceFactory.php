@@ -7,7 +7,7 @@ use Core\Service\SessionService;
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationSessionService;
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationStepService;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\AccountSummaryStep;
-use Dvsa\Mot\Frontend\RegistrationModule\Step\AddressStep;
+use Dvsa\Mot\Frontend\RegistrationModule\Step\ContactDetailsStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\CompletedStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\CreateAccountStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\DetailsStep;
@@ -15,7 +15,7 @@ use Dvsa\Mot\Frontend\RegistrationModule\Step\EmailStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\PasswordStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionOneStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionTwoStep;
-use DvsaCommon\InputFilter\Registration\AddressInputFilter;
+use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
@@ -50,7 +50,7 @@ class RegistrationStepServiceFactory extends StepServiceFactory
             new CreateAccountStep($sessionService, new InputFilter()),
             new EmailStep($sessionService, new EmailInputFilter()),
             new DetailsStep($sessionService, new DetailsInputFilter()),
-            new AddressStep($sessionService, new AddressInputFilter()),
+            new ContactDetailsStep($sessionService, new ContactDetailsInputFilter()),
             new SecurityQuestionOneStep($sessionService, new SecurityQuestionFirstInputFilter()),
             new SecurityQuestionTwoStep($sessionService, new SecurityQuestionSecondInputFilter()),
             new PasswordStep($sessionService, new PasswordInputFilter()),

@@ -1,5 +1,6 @@
 package uk.gov.dvsa.journey;
 
+import uk.gov.dvsa.domain.model.PersonDetails;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.helper.ContactDetailsHelper;
 import uk.gov.dvsa.ui.pages.userregistration.*;
@@ -9,7 +10,6 @@ import java.io.IOException;
 public class Register {
     private PageNavigator pageNavigator;
     private boolean accountCreated = false;
-    private boolean duplicateEmailAddress = false;
 
     public Register(PageNavigator pageNavigator)
     {
@@ -22,32 +22,31 @@ public class Register {
     }
 
     public void completeDetailsWithDefaultValues(String email, String telephone) throws IOException {
-        SummaryPage summaryPage = enterDetails(ContactDetailsHelper.generateUniqueName(),
-                ContactDetailsHelper.generateUniqueName(),
-                email, telephone);
-
-        AccountCreatedPage createdPage = summaryPage.clickCreateYourAccount();
-        accountCreated = createdPage.isAccountCreatedTextDisplayed();
+        PersonDetails personDetails = new PersonDetails();
+        completeDetailsWithCustomValues(personDetails.getFirstName(), personDetails.getLastName(),
+                    email, telephone, personDetails.getDateOfBirthDay(), personDetails.getDateOfBirthMonth(), personDetails.getDateOfBirthYear());
     }
 
-    public void completeDetailsWithCustomValues(String name, String surname, String emailAddress, String telephone) throws IOException {
+    public void completeDetailsWithCustomValues(String name, String surname, String emailAddress, String telephone,
+                                                int dateOfBirthDay, int dateOfBirthMonth, int dateOfYear) throws IOException {
 
-        SummaryPage summaryPage = enterDetails(name, surname, emailAddress, telephone);
+        SummaryPage summaryPage = enterDetails(name, surname, emailAddress, telephone,
+                dateOfBirthDay, dateOfBirthMonth, dateOfYear);
 
-        duplicateEmailAddress = summaryPage.emailAlreadyUsedMessage();
-
-        summaryPage.clickCreateYourAccount();
+        accountCreated = summaryPage.clickCreateYourAccount().isAccountCreatedTextDisplayed();
     }
 
-    private SummaryPage enterDetails(String name, String surname, String emailAddress, String telephone) throws IOException {
+    private SummaryPage enterDetails(String name, String surname, String emailAddress, String telephone,
+                                        int dateOfBirthDay, int dateOfBirthMonth, int dateOfYear) throws IOException {
+
         EmailPage emailPage = createAccountPage().email();
         emailPage.enterYourDetails(emailAddress, emailAddress);
 
         DetailsPage detailsPage = emailPage.clickContinue();
-        detailsPage.enterYourDetails(name, surname, telephone);
+        detailsPage.enterYourDetails(name, surname, dateOfBirthDay, dateOfBirthMonth, dateOfYear);
 
         AddressPage addressPage = detailsPage.clickContinue();
-        addressPage.enterAddress();
+        addressPage.enterAddressandTelephone();
 
         SecurityQuestionOnePage questionOnePage = addressPage.clickContinue();
         questionOnePage.chooseQuestionAndAnswer();

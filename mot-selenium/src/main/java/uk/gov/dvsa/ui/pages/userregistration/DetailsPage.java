@@ -17,7 +17,11 @@ public class DetailsPage extends Page {
 
     @FindBy(id = "lastName") private WebElement lastName;
 
-    @FindBy(id = "phone") private WebElement telephoneNumber;
+    @FindBy(id = "day") private WebElement dobDay;
+
+    @FindBy(id = "month") private WebElement dobMonth;
+
+    @FindBy(id = "year") private WebElement dobYear;
 
     @FindBy(id = "continue") private WebElement continueToNextPage;
 
@@ -36,11 +40,14 @@ public class DetailsPage extends Page {
         return new AddressPage(driver);
     }
 
-    public DetailsPage enterYourDetails(String name, String surname, String telephone)
+    public DetailsPage enterYourDetails(String name, String surname,
+                                            int dateOfBirthDay, int dateOfBirthMonth, int dateOfBirthYear)
     {
         FormDataHelper.enterText(firstName, name);
         FormDataHelper.enterText(lastName, surname);
-        FormDataHelper.enterText(telephoneNumber, telephone);
+        FormDataHelper.enterNumber(dobDay, dateOfBirthDay);
+        FormDataHelper.enterNumber(dobMonth, dateOfBirthMonth);
+        FormDataHelper.enterNumber(dobYear, dateOfBirthYear);
 
         return this;
     }

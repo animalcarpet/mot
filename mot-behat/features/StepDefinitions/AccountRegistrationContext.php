@@ -54,6 +54,15 @@ class AccountRegistrationContext implements Context
     }
 
     /**
+     * @Given For the date of Birth I input:
+     */
+    public function forTheDateOfBirthIInput(TableNode $table)
+    {
+        $dateData = $table->getColumnsHash()[0];
+        $this->registrationData['stepDetails']['date'] = $dateData;
+    }
+
+    /**
      * @Given I supply valid answers to the security questions
      */
     public function iSupplyValidAnswersToTheSecurityQuestions()

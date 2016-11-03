@@ -2,6 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardTest\Service;
 
+use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\LostOrForgottenCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Service\LostOrForgottenSessionService;
 use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Service\LostOrForgottenService;
 use DvsaClient\Mapper\UserAdminMapper;
@@ -289,5 +290,77 @@ class LostOrForgottenServiceTest extends \PHPUnit_Framework_TestCase
             ->method('clear');
 
         $this->lostAndForgottenService->clearSession();
+    }
+
+    public function testIsEnteringThroughLostAndForgottenStepInSessionShouldReturnTrue()
+    {
+        $steps = [
+            LostOrForgottenCardController::START_ALREADY_ORDERED_ROUTE => false,
+            'security-question-2' => false,
+            'confirmation' => false,
+        ];
+
+        $this->sessionService
+            ->expects($this->once())
+            ->method('load')
+            ->with(LostOrForgottenSessionService::UNIQUE_KEY)
+            ->willReturn($steps);
+
+        $actual = $this->lostAndForgottenService->isEnteringThroughAlreadyOrdered();
+        $this->assertTrue($actual);
+    }
+
+    public function testIsEnteringThroughLostAndForgottenStepNotInSessionShouldReturnFalse()
+    {
+        $steps = [
+            'test-step' => false,
+            'security-question-2' => false,
+            'confirmation' => false,
+        ];
+
+        $this->sessionService
+            ->expects($this->once())
+            ->method('load')
+            ->with(LostOrForgottenSessionService::UNIQUE_KEY)
+            ->willReturn($steps);
+
+        $actual = $this->lostAndForgottenService->isEnteringThroughAlreadyOrdered();
+        $this->assertFalse($actual);
+    }
+
+    public function testIsEnteringThroughSecurityQuestionOneStepInSessionShouldReturnTrue()
+    {
+        $steps = [
+            LostOrForgottenCardController::LOGIN_SESSION_ROUTE => false,
+            'security-question-2' => false,
+            'confirmation' => false,
+        ];
+
+        $this->sessionService
+            ->expects($this->once())
+            ->method('load')
+            ->with(LostOrForgottenSessionService::UNIQUE_KEY)
+            ->willReturn($steps);
+
+        $actual = $this->lostAndForgottenService->isEnteringThroughSecurityQuestionOne();
+        $this->assertTrue($actual);
+    }
+
+    public function testIsEnteringThroughSecurityQuestionOneStepNotInSessionShouldReturnFalse()
+    {
+        $steps = [
+            'test-step' => false,
+            'security-question-2' => false,
+            'confirmation' => false,
+        ];
+
+        $this->sessionService
+            ->expects($this->once())
+            ->method('load')
+            ->with(LostOrForgottenSessionService::UNIQUE_KEY)
+            ->willReturn($steps);
+
+        $actual = $this->lostAndForgottenService->isEnteringThroughSecurityQuestionOne();
+        $this->assertFalse($actual);
     }
 }

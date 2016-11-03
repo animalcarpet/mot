@@ -8,7 +8,7 @@ import uk.gov.dvsa.ui.pages.Page;
 
 public class SummaryPage extends Page {
 
-    private static final String PAGE_TITLE = "Account summary";
+    private static final String PAGE_TITLE = "Review your account details";
 
     @FindBy(id = "continue") private WebElement createYourAccount;
 
@@ -32,8 +32,6 @@ public class SummaryPage extends Page {
     }
 
     public boolean emailAlreadyUsedMessage() {
-        return duplicateEmailMessage.isDisplayed();
+        return PageInteractionHelper.isElementDisplayed(duplicateEmailMessage);
     }
-
-
 }

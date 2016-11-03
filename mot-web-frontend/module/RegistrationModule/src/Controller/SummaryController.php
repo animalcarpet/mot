@@ -10,8 +10,6 @@ namespace Dvsa\Mot\Frontend\RegistrationModule\Controller;
 use Core\Service\StepService;
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegisterUserService;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\AccountSummaryStep;
-use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
-use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -19,7 +17,7 @@ use Zend\View\Model\ViewModel;
  */
 class SummaryController extends RegistrationBaseController
 {
-    const PAGE_TITLE = 'Account summary';
+    const PAGE_TITLE = 'Review your account details';
 
     /**
      * @var array

@@ -10,9 +10,7 @@ namespace Dvsa\Mot\Frontend\RegistrationModule\Controller;
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegisterUserService;
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationSessionService;
 use Core\Service\StepService;
-use Dvsa\Mot\Frontend\RegistrationModule\Step\DetailsStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\EmailStep;
-use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use Zend\View\Model\ViewModel;
 

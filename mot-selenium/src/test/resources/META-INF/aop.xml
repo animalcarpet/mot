@@ -1,5 +1,5 @@
 <aspectj>
-    <weaver>
+    <weaver options= "-nowarn">
         <include within="uk.gov.dvsa..*"/>
     </weaver>
 </aspectj>

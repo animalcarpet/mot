@@ -91,6 +91,8 @@ class AccountSummaryStep extends AbstractRegistrationStep
         $result['firstQuestion'] = $this->getFirstSelectedQuestion($values);
         $result['secondQuestion'] = $this->getSecondSelectedQuestion($values);
 
+        $result['dateOfBirth'] = $this->makeDateOfBirth($result);
+
         return $result;
     }
 
@@ -165,6 +167,14 @@ class AccountSummaryStep extends AbstractRegistrationStep
             ],
             'strlen'
         );
+    }
+
+    private function makeDateOfBirth($values)
+    {
+        $dateString = implode('-', array_filter([$values['year'], $values['month'], $values['day']]));
+
+        $date = new \DateTime($dateString);
+        return $date->format('j F Y');
     }
 
     /**

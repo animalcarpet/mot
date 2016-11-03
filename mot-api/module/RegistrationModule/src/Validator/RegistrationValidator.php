@@ -8,7 +8,7 @@
 namespace Dvsa\Mot\Api\RegistrationModule\Validator;
 
 use Dvsa\Mot\Api\RegistrationModule\Service\ValidatorKeyConverter;
-use DvsaCommon\InputFilter\Registration\AddressInputFilter;
+use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
@@ -34,7 +34,7 @@ class RegistrationValidator
      * RegistrationValidator constructor.
      * @param EmailInputFilter $emailInputFilter
      * @param DetailsInputFilter $detailsInputFilter
-     * @param AddressInputFilter $addressInputFilter
+     * @param ContactDetailsInputFilter $contactDetailsInputFilter
      * @param PasswordInputFilter $passwordInputFilter
      * @param SecurityQuestionFirstInputFilter $securityQuestionFirstInputFilter
      * @param SecurityQuestionSecondInputFilter $securityQuestionSecondInputFilter
@@ -42,14 +42,14 @@ class RegistrationValidator
     public function __construct(
         EmailInputFilter $emailInputFilter,
         DetailsInputFilter $detailsInputFilter,
-        AddressInputFilter $addressInputFilter,
+        ContactDetailsInputFilter $contactDetailsInputFilter,
         PasswordInputFilter $passwordInputFilter,
         SecurityQuestionFirstInputFilter $securityQuestionFirstInputFilter,
         SecurityQuestionSecondInputFilter $securityQuestionSecondInputFilter
     ) {
         $this->attach($emailInputFilter);
         $this->attach($detailsInputFilter);
-        $this->attach($addressInputFilter);
+        $this->attach($contactDetailsInputFilter);
         $this->attach($passwordInputFilter);
         $this->attach($securityQuestionFirstInputFilter);
         $this->attach($securityQuestionSecondInputFilter);

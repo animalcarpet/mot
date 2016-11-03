@@ -5,7 +5,8 @@
  * @link http://gitlab.clb.npm/mot/mot
  */
 
-use Dvsa\Mot\Frontend\RegistrationModule\Controller\AddressController;
+use Dvsa\Mot\Frontend\RegistrationModule\Controller\ContactDetailsController;
+use Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller\ContactDetailsControllerFactory;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\CompletedController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\CreateAccountController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\DetailsController;
@@ -14,7 +15,6 @@ use Dvsa\Mot\Frontend\RegistrationModule\Controller\PasswordController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\SecurityQuestionOneController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\SecurityQuestionTwoController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\SummaryController;
-use Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller\AddressControllerFactory;
 use Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller\CompletedControllerFactory;
 use Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller\CreateAccountControllerFactory;
 use Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller\DetailsControllerFactory;
@@ -32,7 +32,7 @@ return [
         DuplicateEmailController::class         => DuplicateEmailController::class,
     ],
     'factories' => [
-        AddressController::class                => AddressControllerFactory::class,
+        ContactDetailsController::class         => ContactDetailsControllerFactory::class,
         CompletedController::class              => CompletedControllerFactory::class,
         CreateAccountController::class          => CreateAccountControllerFactory::class,
         DetailsController::class                => DetailsControllerFactory::class,

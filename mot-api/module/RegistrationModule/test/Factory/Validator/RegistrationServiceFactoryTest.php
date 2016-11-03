@@ -9,7 +9,7 @@ namespace Dvsa\Mot\Api\RegistrationModuleTest\Factory\Validator;
 
 use Dvsa\Mot\Api\RegistrationModule\Factory\Validator\RegistrationValidatorFactory;
 use Dvsa\Mot\Api\RegistrationModule\Validator\RegistrationValidator;
-use DvsaCommon\InputFilter\Registration\AddressInputFilter;
+use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
 use DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter;
@@ -32,8 +32,8 @@ class RegistrationServiceFactoryTest extends \PHPUnit_Framework_TestCase
                 DetailsInputFilter::class,
                 XMock::of(DetailsInputFilter::class)
             )->setService(
-                AddressInputFilter::class,
-                XMock::of(AddressInputFilter::class)
+                ContactDetailsInputFilter::class,
+                XMock::of(ContactDetailsInputFilter::class)
             )->setService(
                 PasswordInputFilter::class,
                 XMock::of(PasswordInputFilter::class)

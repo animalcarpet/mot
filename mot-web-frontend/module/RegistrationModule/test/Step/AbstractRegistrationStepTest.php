@@ -4,14 +4,7 @@ namespace Dvsa\Mot\Frontend\RegistrationModuleTest\Step;
 
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationSessionService;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\AbstractRegistrationStep;
-use Dvsa\Mot\Frontend\RegistrationModule\Step\AccountSummaryStep;
-use Dvsa\Mot\Frontend\RegistrationModule\Step\AddressStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\CompleteStep;
-use Dvsa\Mot\Frontend\RegistrationModule\Step\CreateAccountStep;
-use Dvsa\Mot\Frontend\RegistrationModule\Step\DetailsStep;
-use Dvsa\Mot\Frontend\RegistrationModule\Step\PasswordStep;
-use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionOneStep;
-use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionTwoStep;
 use DvsaCommonTest\TestUtils\XMock;
 use Zend\InputFilter\InputFilter;
 

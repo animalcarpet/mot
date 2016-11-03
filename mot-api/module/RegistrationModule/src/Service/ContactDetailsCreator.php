@@ -10,8 +10,7 @@ namespace Dvsa\Mot\Api\RegistrationModule\Service;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use DvsaCommon\Constants\PersonContactType as PersonContactTypeConstant;
-use DvsaCommon\InputFilter\Registration\AddressInputFilter;
-use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
+use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaEntities\Entity\Address;
 use DvsaEntities\Entity\ContactDetail;
@@ -132,9 +131,9 @@ class ContactDetailsCreator extends AbstractPersistableService
             ->setEmail($this->data[$this->getEmailStepName()][EmailInputFilter::FIELD_EMAIL]);
 
         $this->address
-            ->setAddressLine1($this->data[$this->getAddressStepName()][AddressInputFilter::FIELD_ADDRESS_1])
-            ->setTown($this->data[$this->getAddressStepName()][AddressInputFilter::FIELD_TOWN_OR_CITY])
-            ->setPostcode($this->data[$this->getAddressStepName()][AddressInputFilter::FIELD_POSTCODE]);
+            ->setAddressLine1($this->data[$this->getContactDetailsStepName()][ContactDetailsInputFilter::FIELD_ADDRESS_1])
+            ->setTown($this->data[$this->getContactDetailsStepName()][ContactDetailsInputFilter::FIELD_TOWN_OR_CITY])
+            ->setPostcode($this->data[$this->getContactDetailsStepName()][ContactDetailsInputFilter::FIELD_POSTCODE]);
 
 
         /** @var PhoneContactType $phoneContactType */
@@ -142,7 +141,7 @@ class ContactDetailsCreator extends AbstractPersistableService
 
         $this->phone
             ->setIsPrimary(true)
-            ->setNumber($this->data[$this->getDetailsStepName()][DetailsInputFilter::FIELD_PHONE])
+            ->setNumber($this->data[$this->getContactDetailsStepName()][ContactDetailsInputFilter::FIELD_PHONE])
             ->setContactType($phoneContactType);
     }
 
@@ -151,14 +150,14 @@ class ContactDetailsCreator extends AbstractPersistableService
      */
     private function populateOptionalFields()
     {
-        if (isset($this->data[$this->getAddressStepName()][AddressInputFilter::FIELD_ADDRESS_2])) {
+        if (isset($this->data[$this->getContactDetailsStepName()][ContactDetailsInputFilter::FIELD_ADDRESS_2])) {
             $this->address
-                ->setAddressLine2($this->data[$this->getAddressStepName()][AddressInputFilter::FIELD_ADDRESS_2]);
+                ->setAddressLine2($this->data[$this->getContactDetailsStepName()][ContactDetailsInputFilter::FIELD_ADDRESS_2]);
         }
 
-        if (isset($this->data[$this->getAddressStepName()][AddressInputFilter::FIELD_ADDRESS_3])) {
+        if (isset($this->data[$this->getContactDetailsStepName()][ContactDetailsInputFilter::FIELD_ADDRESS_3])) {
             $this->address
-                ->setAddressLine3($this->data[$this->getAddressStepName()][AddressInputFilter::FIELD_ADDRESS_3]);
+                ->setAddressLine3($this->data[$this->getContactDetailsStepName()][ContactDetailsInputFilter::FIELD_ADDRESS_3]);
         }
     }
 
