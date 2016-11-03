@@ -157,7 +157,7 @@ class UserTradeRolesController extends AbstractAuthActionController
 
         $tradeRoles = $this->personTradeRolesApiResource->getRoles($personId);
 
-        $this->setPageTitle('Roles and Associations');
+        $this->setPageTitle('Roles and associations');
 
         $personIsViewingOwnProfile = false;
         if ($personId == $this->identityProvider->getIdentity()->getUserId()) {
@@ -169,7 +169,7 @@ class UserTradeRolesController extends AbstractAuthActionController
 
         if (!$tradeRoles) {
             if ($personId == $this->identityProvider->getIdentity()->getUserId()) {
-                $this->setPageLede("You don't have any roles and associations");
+                $this->setPageLede("You don't have any roles and associations.");
             } else {
                 $this->setPageLede("User doesn't have any active role associations");
             }
@@ -234,7 +234,7 @@ class UserTradeRolesController extends AbstractAuthActionController
         if ($this->getRequest()->isPost()) {
             try {
                 $positionMapper->deletePosition($entityId, $positionId);
-                $this->addSuccessMessage('Role removed successfully');
+                $this->addSuccessMessage('Role removed successfully.');
 
                 $this->clearCurrentVtsIfNeeded($personTradeRole);
                 $this->authorisationRefresher->refreshAuthorization();

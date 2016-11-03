@@ -7,22 +7,22 @@ import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
-import uk.gov.dvsa.ui.pages.profile.ProfilePage;
 import uk.gov.dvsa.ui.pages.RemoveRolePage;
 import uk.gov.dvsa.ui.pages.profile.NewUserProfilePage;
+import uk.gov.dvsa.ui.pages.profile.ProfilePage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RolesAndAssociationsPage extends Page{
 
-    private static final String PAGE_TITLE = "Roles and Associations";
+    private static final String PAGE_TITLE = "Roles and associations";
 
     @FindBy(id = "trade-roles-table") private WebElement rolesTableElement;
     @FindBy(className = "history-go-back") private WebElement returnToUserProfileLink;
     @FindBy(id = "validation-message--success") private WebElement successMessage;
     @FindBy(id = "validation-message--failure") private WebElement failureMessage;
-    @FindBy(linkText = "Remove") private WebElement removeRoleLink;
+    @FindBy(id = "remove-role-link-0") private WebElement removeRoleLink;
 
     public RolesAndAssociationsPage(MotAppDriver driver) {
         super(driver);

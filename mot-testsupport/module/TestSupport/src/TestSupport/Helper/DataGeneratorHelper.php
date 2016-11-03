@@ -72,12 +72,12 @@ class DataGeneratorHelper
 
     public function firstName()
     {
-        return substr($this->differentiator . 'FakeTest', 0, 45);
+        return substr($this->differentiator . 'FakeTest', 0, 12);
     }
 
     public function surname()
     {
-        return substr('Surname-Mc' . $this->differentiator, 0, 45);
+        return substr('Surname-Mc' . $this->differentiator, 0, 12);
     }
 
     public function middleName()
@@ -102,7 +102,7 @@ class DataGeneratorHelper
 
     public function username()
     {
-        return preg_replace('/[^A-Z-a-z0-9]/', $this->generateRandomString() , $this->emailAddress());
+        return substr('User' . $this->generateRandomString(15) . $this->differentiator, 0, 25);
     }
 
     public function prefix($role)

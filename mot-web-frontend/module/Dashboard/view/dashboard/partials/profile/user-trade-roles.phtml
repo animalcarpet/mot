@@ -48,7 +48,7 @@ foreach ($userTradeRolesViewModel->getTradeRoles() as $tradeRoles) : ?>
                     <?php $roleCode = $this->escapeHtml($personTradeRole->getRoleCode()) . '-' . $this->escapeHtml($personTradeRole->getWorkplaceId()); ?>
                     <td class="matched-records__value--right" <?php echo sprintf('id="role-%s"', $roleCode); ?>>
                         <?php if ($userTradeRolesViewModel->canBeRemoved($personTradeRole)): ?>
-                            <a href="<?php echo $userTradeRolesViewModel->getUrlForRemoveRole($personTradeRole); ?>" id="remove-role-link-<?php echo $i++ ?>">Remove</a>
+                            <a href="<?php echo $userTradeRolesViewModel->getUrlForRemoveRole($personTradeRole); ?>" id="remove-role-link-<?php echo $i++ ?>">Remove role</a>
                         <?php endif ?>
                     </td>
                 </tr>
