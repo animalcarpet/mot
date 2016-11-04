@@ -59,7 +59,7 @@ class PersonRoleController extends AbstractAuthActionController
             $this->layout()->setVariables(
                 [
                     'pageSubTitle' => 'User profile',
-                    'pageTitle' => 'Manage roles',
+                    'pageTitle' => 'Add role',
                     'breadcrumbs' => $this->getBreadcrumbs('Manage roles'),
                 ]
             )->setTemplate('layout/layout-govuk.phtml');
@@ -106,7 +106,7 @@ class PersonRoleController extends AbstractAuthActionController
             $this->layout()->setVariables(
                 [
                     'pageSubTitle' => 'User profile',
-                    'pageTitle' => 'Manage roles',
+                    'pageTitle' => 'Remove role',
                     'progressBar' => ['breadcrumbs' => $this->getBreadcrumbs('Manage roles')],
                 ]
             )->setTemplate('layout/layout-govuk.phtml');
