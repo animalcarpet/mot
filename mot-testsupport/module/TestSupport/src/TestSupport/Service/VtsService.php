@@ -21,6 +21,7 @@ use TestSupport\Helper\TestDataResponseHelper;
 use DvsaCommon\UrlBuilder\UrlBuilder;
 use TestSupport\Helper\DataGeneratorHelper;
 use TestSupport\Helper\TestSupportRestClientHelper;
+use Doctrine\DBAL\DBALException;
 
 class VtsService
 {
@@ -225,20 +226,37 @@ class VtsService
 
     public function changeSiteNumberForAreaOffice($siteId)
     {
+        $created = false;
+
+        do {
+            try {
+                $siteNumber = $this->updateAreaOfficeNumber($siteId);
+                $created = true;
+            } catch(DBALException $e) {
+
+            }
+
+        } while ($created === false);
+
+        return $siteNumber;
+
+    }
+
+    private function updateAreaOfficeNumber($siteId)
+    {
         $siteNumber =  (int) $this->em->getConnection()->fetchColumn(
             "SELECT MAX(site_number) FROM site INNER JOIN site_type ON site.type_id = site_type.id WHERE site_type.code = ? AND LENGTH(site.site_number) = ?",
             [SiteTypeCode::AREA_OFFICE, 2]
         );
 
         $siteNumber += 1;
-
         $siteNumber = str_pad($siteNumber, 2, "0", STR_PAD_LEFT);
 
         $this->em->getConnection()->update(
             "site",
             ["site_number" => $siteNumber],
             ["id" => $siteId]
-            );
+        );
 
         return $siteNumber;
     }
