@@ -10,6 +10,7 @@ MYSQL_HOST=${3-"mysql"}
 
 # Add files here in intended run order for release.
 upgrade_files+=('2016-10-24-BL-3923-add-mystery-shopper-mot-test-type-to-db-STORY.sql');
+upgrade_files+=('2016-11-04-BL-4021-create-correct-permissions-for-enforcement-epic-STORY.sql');
 
 # Necessary for first deployment.
 $(mysql -h ${MYSQL_HOST} -u ${MYSQL_USER} -p${MYSQL_ADMIN_PASSWORD} ${MYSQL_DB_NAME} -e "CREATE TABLE IF NOT EXISTS db_upgrade (
