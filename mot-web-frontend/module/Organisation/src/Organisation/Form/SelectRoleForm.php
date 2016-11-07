@@ -49,7 +49,7 @@ class SelectRoleForm extends Form implements InputFilterAwareInterface
                 ],
                 'attributes' => [
                     'type'  => 'submit',
-                    'value' => 'Select',
+                    'value' => 'Choose role',
                     'class' => 'btn btn-primary button',
                     'id'    => 'assign-role-button',
                 ],

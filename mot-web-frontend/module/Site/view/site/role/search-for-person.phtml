@@ -5,11 +5,11 @@ use Site\Controller\VehicleTestingStationController;
 <header class="content-header">
     <h1>
         <span class="content-header__type">
-           Vehicle Testing Station
+           Vehicle testing station
         </span>
 
         <span class="content-header__title">
-            Search for a user
+            Assign a role
         </span>
     </h1>
 </header>
@@ -23,7 +23,7 @@ use Site\Controller\VehicleTestingStationController;
 <?php echo $this->partial('errorMessages', array('getFromFlash' => true, 'isShowHidden' => true)); ?>
 
 <div class="text">
-    <p class="lede">This process allows you to assign a role to an existing user.</p>
+    <p class="lede">Assign someone a role at this vehicle testing station. They must have an MOT testing service account.</p>
 </div>
 <form action="<?php echo $this->url(
     RoleController::ROUTE_SEARCH_FOR_PERSON,
@@ -32,14 +32,13 @@ use Site\Controller\VehicleTestingStationController;
     ]
 ); ?>" method="POST">
     <fieldset>
-        <legend class="form-title heading-large" id="">Username</legend>
+        <legend class="form-title heading-large" id="">Their username</legend>
             <?php echo $this->csrfToken() ?>
             <?php echo $this->partial(
                 'inputBox',
                 [
                     'id' => 'userSearchBox',
                     'required' => true,
-                    'label' => 'What is the username of the person you would like to assign a role?',
                     'labelLayout' => 'form-label',
                     'name' => 'userSearchBox',
                     'class' => 'form-control',
@@ -48,6 +47,7 @@ use Site\Controller\VehicleTestingStationController;
             );
             ?>
     </fieldset>
+    <span class="form-hint">For example, SMIT0001</span>
 
     <nav class="content-navigation">
         <?php

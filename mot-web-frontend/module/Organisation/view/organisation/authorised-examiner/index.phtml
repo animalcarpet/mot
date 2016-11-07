@@ -140,7 +140,7 @@ endif; ?>
 
 <?php if ($viewModel->getViewAuthorisation()->canViewVtsList()): ?>
     <h3 class="summary-heading">
-        Vehicle Testing Stations
+        Vehicle testing stations
         <?php if ($viewModel->getViewAuthorisation()->canCreateSiteAssociation()) : ?>
             <span class="summary-heading__action">
                 <a href="<?php echo $this->url(SiteController::ROUTE_LINK, ['id' =>$orgId]); ?>" >Add site associations</a>
@@ -209,7 +209,7 @@ endif; ?>
 
 <?php if ($viewModel->canViewAepSection()): ?>
     <h3 class="summary-heading">
-        Authorised Examiner Principals
+        Authorised Examiner principals
         <?php if ($viewModel->getViewAuthorisation()->canCreateAuthorisedExaminerPrincipal()): ?>
             <span class="summary-heading__action">
                 <a id="add-aep" href="<?php echo AeRoutes::of($this)->aeAddPrincipal($orgId); ?>">

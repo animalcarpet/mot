@@ -44,7 +44,7 @@ public class AcceptNominationTests extends DslTest {
         step("Then I can accept my Site Manager nomination");
 
         assertThat("Nominated was accepted successfully",
-                message, containsString("You have been assigned the role of 'Site manager'"));
+                message, containsString("You have accepted the role of Site manager"));
 
     }
 
@@ -61,7 +61,7 @@ public class AcceptNominationTests extends DslTest {
         step("Then I can accept my AED nomination");
 
         assertThat("Authorised Examiner Delegate Role Confirmation",
-                message, containsString("You have been assigned the role of 'Authorised Examiner Delegate'"));
+                message, containsString("You have accepted the role of Authorised Examiner Delegate"));
     }
 
     @Test(testName = "2fa", groups = {"BVT"})
@@ -74,7 +74,7 @@ public class AcceptNominationTests extends DslTest {
         String message = motUI.nominations.viewMostRecent(nominee).acceptNomination().getConfirmationText();
 
         step("Then I am given the site admin role");
-        assertThat("Site Admin Role Confirmation", message, containsString("You have been assigned the role of 'Site admin'"));
+        assertThat("Site Admin Role Confirmation", message, containsString("You have accepted the role of Site admin"));
     }
 
     @Test(testName = "2fa", groups = {"BVT"})
@@ -88,7 +88,7 @@ public class AcceptNominationTests extends DslTest {
 
         step("Then I can accept my AED nomination");
         assertThat("Authorised Examiner Delegate Role Confirmation",
-                message, containsString("You have been assigned the role of 'Authorised Examiner Delegate'"));
+                message, containsString("You have accepted the role of Authorised Examiner Delegate"));
     }
 
     @Test(testName = "2fa", groups = {"BVT"})
@@ -101,7 +101,7 @@ public class AcceptNominationTests extends DslTest {
         String message = motUI.nominations.viewMostRecent(nominee).acceptNomination().getConfirmationText();
 
         step("Then I am given the site manager role");
-        assertThat("Site Manager Role Confirmation", message, containsString("You have been assigned the role of 'Site manager'"));
+        assertThat("Site Manager Role Confirmation", message, containsString("You have accepted the role of Site manager"));
     }
 
     @Test(groups = {"BVT"})
@@ -114,7 +114,7 @@ public class AcceptNominationTests extends DslTest {
         String message = motUI.nominations.viewMostRecent(nominee).acceptNomination().getConfirmationText();
 
         step("Then I am given the tester role");
-        assertThat("Tester Role Confirmation", message, containsString("You have been assigned the role of 'Tester'"));
+        assertThat("Tester Role Confirmation", message, containsString("You have accepted the role of Tester"));
     }
 
     @Test(groups = {"BVT"})
@@ -127,7 +127,7 @@ public class AcceptNominationTests extends DslTest {
         String message = motUI.nominations.viewMostRecent(nominee).acceptNomination().getConfirmationText();
 
         step("Then I am given the site admin role");
-        assertThat("Site Admin Role Confirmation", message, containsString("You have been assigned the role of 'Site admin'"));
+        assertThat("Site Admin Role Confirmation", message, containsString("You have accepted the role of Site admin"));
     }
 
     @Test(groups = {"BVT"})
@@ -140,7 +140,7 @@ public class AcceptNominationTests extends DslTest {
         String message = motUI.nominations.viewMostRecent(nominee).acceptNomination().getConfirmationText();
 
         step("Then I am given the site manager role");
-        assertThat("Site Manager Role Confirmation", message, containsString("You have been assigned the role of 'Site manager'"));
+        assertThat("Site Manager Role Confirmation", message, containsString("You have accepted the role of Site manager"));
     }
 
     @Test(testName = "non-2fa", groups = {"BVT"})
@@ -154,6 +154,6 @@ public class AcceptNominationTests extends DslTest {
 
         step("Then I am given the aed role");
         assertThat("Authorised Examiner Delegate Role Confirmation",
-            message, containsString("You have been assigned the role of 'Authorised Examiner Delegate'"));
+            message, containsString("You have accepted the role of Authorised Examiner Delegate"));
     }
 }

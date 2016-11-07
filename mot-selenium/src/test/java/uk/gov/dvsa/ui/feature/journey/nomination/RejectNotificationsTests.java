@@ -47,7 +47,7 @@ public class RejectNotificationsTests extends DslTest {
         step("Then I can reject my nomination");
 
         assertThat("Nominated was rejected successfully",
-                message, containsString("You have rejected the role of 'Site manager'"));
+                message, containsString("You have rejected the role of Site manager"));
     }
 
     @Test(testName = "2fa", groups = {"BVT"})
@@ -63,7 +63,7 @@ public class RejectNotificationsTests extends DslTest {
         step("Then I can reject my nomination");
 
         assertThat("Nominated was rejected successfully",
-                message, containsString("You have rejected the role of 'Site admin'"));
+                message, containsString("You have rejected the role of Site admin"));
     }
 
     @Test(testName = "2fa", groups = {"BVT"})
@@ -82,7 +82,7 @@ public class RejectNotificationsTests extends DslTest {
 
         step("Then I can reject my nomination");
         assertThat("Nominated was rejected successfully",
-                message, containsString("You have rejected the role of 'Tester'"));
+                message, containsString("You have rejected the role of Tester"));
     }
 
     @Test(testName = "2fa", groups = {"BVT"})
@@ -98,7 +98,7 @@ public class RejectNotificationsTests extends DslTest {
         step("Then I can reject my nomination");
 
         assertThat("Nominated was rejected successfully",
-                message, containsString("You have rejected the role of 'Authorised Examiner Delegate'"));
+                message, containsString("You have rejected the role of Authorised Examiner Delegate"));
     }
 
     @Test(testName = "non-2fa", groups = {"BVT"})
@@ -111,7 +111,7 @@ public class RejectNotificationsTests extends DslTest {
         String message = motUI.nominations.viewMostRecent(nominee).rejectNomination().getConfirmationText();
 
         assertThat("Nominated was rejected successfully",
-                message, containsString("You have rejected the role of 'Tester'"));
+                message, containsString("You have rejected the role of Tester"));
     }
     @Test(testName = "non-2fa", groups = {"BVT"})
     void userRejectAedNominationWith2faOff() throws IOException {
@@ -123,7 +123,7 @@ public class RejectNotificationsTests extends DslTest {
         String message = motUI.nominations.viewMostRecent(nominee).rejectNomination().getConfirmationText();
 
         assertThat("Nominated was rejected successfully",
-                message, containsString("You have rejected the role of 'Authorised Examiner Delegate'"));
+                message, containsString("You have rejected the role of Authorised Examiner Delegate"));
     }
 
 
