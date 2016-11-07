@@ -70,7 +70,7 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
     {
         $nomination = new Notification(self::getNominationData('THIS IS ACCEPTED NOMINATION'));
         $this->assertTrue($nomination->isDone());
-        $this->assertEquals('confirmed', $nomination->getFriendlyAction());
+        $this->assertEquals('accepted', $nomination->getFriendlyAction());
     }
 
     /**

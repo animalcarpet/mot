@@ -25,7 +25,7 @@ foreach ($dashboard->getAuthorisedExaminers() as $authorisedExaminer) :
                 <a href="<?php echo $escUrlAEView ?>"><?php echo $this->escapeHtml($authorisedExaminer->getName()); ?></a>
             </h2>
             <p class="pivot-panel_subtitle">
-                AE number: <?php echo $this->escapeHtml($authorisedExaminer->getReference()); ?>
+                Authorised Examiner number: <?php echo $this->escapeHtml($authorisedExaminer->getReference()); ?>
             </p>
         </header>
 
@@ -51,7 +51,7 @@ foreach ($dashboard->getAuthorisedExaminers() as $authorisedExaminer) :
             <p>
                 <a class="mega-number" href="<?php echo $escUrlAEView; ?>">
                     <strong class="number"><?php echo intval($vtsCount); ?></strong>
-                    <span class="sub-text">VTS</span>
+                    <span class="sub-text">vehicle testing stations</span>
                 </a>
 
             </p>

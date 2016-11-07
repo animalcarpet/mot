@@ -219,7 +219,7 @@ class SiteController extends AbstractAuthActionController
         $breadcrumbs = [];
         $breadcrumbs = $this->prependBreadcrumbsWithAeLink($site,$breadcrumbs);
 
-        return $this->prepareViewModel($viewModel, $site->getName(), 'Vehicle Testing Station',$breadcrumbs);
+        return $this->prepareViewModel($viewModel, $site->getName(), self::EDIT_SUBTITLE, $breadcrumbs);
     }
 
     private function setUpIndexSidebar($siteStatusCode, $testsInProgress, $hasBeenAssessed, RiskAssessmentScoreRagClassifier $ragClassifier)

@@ -292,7 +292,7 @@ class IndexViewModel
         if ($permissions->canUpdateAEBusinessDetailsBusinessType()) {
             $row->addActionLink('Change', AeRoutes::of($urlHelper)->aeEditProperty($orgId, UpdateAePropertyAction::AE_BUSINESS_TYPE_PROPERTY), "Change Business Type");
         }
-        $table->newRow('ae-number')->setLabel('AE ID')->setValue($presenter->getNumber() ? : 'N/A');
+        $table->newRow('ae-number')->setLabel('Authorised Examiner ID')->setValue($presenter->getNumber() ? : 'N/A');
         if ($permissions->canViewAeStatus()) {
             $table->newRow('ae-appeal-status')->setLabel('AE Appeal status')->setValue('N/A');
             $table->newRow('ae-withdraw-date')->setLabel('AE Withdrawal date')->setValue($withdrawalDate ? $withdrawalDate : 'N/A');

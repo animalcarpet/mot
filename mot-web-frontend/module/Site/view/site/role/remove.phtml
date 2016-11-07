@@ -11,9 +11,9 @@ use Site\Controller\RoleController;
     <div class="text">
         <p class="lede">
             Are you sure you want to remove the role of
-            <?php echo $this->escapeHtml($viewModel->getRoleName()); ?>
-            at <?php echo $this->escapeHtml($viewModel->getSiteName()); ?>
-            from <?php echo $this->escapeHtml($viewModel->getEmployeeName()); ?>
+            <strong><?php echo $this->escapeHtml($viewModel->getRoleName()); ?></strong>
+            at <strong><?php echo $this->escapeHtml($viewModel->getSiteName()); ?></strong>
+            from <strong><?php echo $this->escapeHtml($viewModel->getEmployeeName()); ?></strong>
         </p>
     </div>
 <?php endif; ?>

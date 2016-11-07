@@ -11,7 +11,7 @@ use DvsaCommon\Utility\TypeCheck;
 class Notification
 {
     const FRIENDLY_ACTION_REJECTED = 'rejected';
-    const FRIENDLY_ACTION_CONFIRMED = 'confirmed';
+    const FRIENDLY_ACTION_CONFIRMED = 'accepted';
 
     /** @var $id int */
     private $id;

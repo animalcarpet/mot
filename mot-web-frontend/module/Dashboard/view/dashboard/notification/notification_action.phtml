@@ -11,30 +11,37 @@ $fields = $notification->getFields();
 
 ?>
 
-<div class="text"></div>
+<div class="text" xmlns="http://www.w3.org/1999/html"></div>
 
 <?php if ($notification->isActionRequired()) : ?>
     <?php if ($notification->isDone()) : ?>
         <div class="text">
             <p class="lede" id="notification-decision">
                 <?php if ($notification->isConfirmedAction()): ?>
-                    You have been assigned the role of '<?php echo $this->escapeHtml($fields['positionName']); ?>' at '<?php echo $this->escapeHtml($notification->getName()); ?> <?php echo $this->escapeHtml($fields['siteOrOrganisationId']); ?>'.
-                    <p>You should sign out and in again for this to take effect.</p>
+                    You have accepted the role of <?php echo $this->escapeHtml($fields['positionName']); ?> at <?php echo $this->escapeHtml($notification->getName()); ?>.
                 <?php else: ?>
-                    You have rejected the role of '<?php echo $this->escapeHtml($fields['positionName']); ?>' at '<?php echo $this->escapeHtml($notification->getName()); ?> <?php echo $this->escapeHtml($fields['siteOrOrganisationId']); ?>'.
+                    You have rejected the role of <?php echo $this->escapeHtml($fields['positionName']); ?> at <?php echo $this->escapeHtml($notification->getName()); ?>.
                 <?php endif; ?>
             </p>
             <p id="notification-decision-datetime">
-                You <?php echo $this->escapeHtml($notification->getFriendlyAction()); ?> this association on  <?php echo DateTimeDisplayFormat::textDateTime($notification->getUpdatedOn()); ?>
+                You <?php echo $this->escapeHtml($notification->getFriendlyAction()); ?> this role on  <?php echo DateTimeDisplayFormat::textDateTime($notification->getUpdatedOn()); ?>
             </p>
         </div>
         <div class="text">
-            <p>Nomination sent <?php echo DateTimeDisplayFormat::textDateTime($notification->getCreatedOn()); ?></p>
+            <p>The nomination was sent on <?php echo DateTimeDisplayFormat::textDateTime($notification->getCreatedOn()); ?></p>
+        </div>
+
+        <div class="text">
+            <p class="lede" id="notification-decision">
+                <?php if ($notification->isConfirmedAction()): ?>
+                    <p>You must sign out of your account and in again for the new role to be applied.</p>
+                <?php endif; ?>
+            </p>
         </div>
 
         <ul class="content-navigation__secondary">
             <li>
-                <a href="<?php echo $this->url(UserHomeController::ROUTE) ?>" id="link-back-to-home">Back to Home</a>
+                <a href="<?php echo $this->url(UserHomeController::ROUTE) ?>" id="link-back-to-home">Return home</a>
             </li>
         </ul>
     <?php else: ?>
@@ -86,9 +93,6 @@ $fields = $notification->getFields();
                 <?php endforeach; ?>
             </nav>
         </form>
-        <div class="text">
-            <p>You should sign out and in again for this to take effect.</p>
-        </div>
         <ul class="content-navigation__secondary">
             <li>
                 <a href="<?php echo $this->url(UserHomeController::ROUTE) ?>" id="link-back-to-home">Cancel and return to Home</a>

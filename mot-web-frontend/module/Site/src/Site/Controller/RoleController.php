@@ -174,7 +174,7 @@ class RoleController extends AbstractAuthActionController
 
                 $this->addSuccessMessage(
                     sprintf(
-                        "A role notification has been sent to %s '%s'.",
+                        "You have assigned a role to %s, %s. They have been sent a notification.",
                         $nominee->getFullName(),
                         $nominee->getUsername()
                     )
@@ -250,7 +250,7 @@ class RoleController extends AbstractAuthActionController
         $this->layout('layout/layout-govuk.phtml');
         $this->layout()->setVariable(
             'pageSubTitle',
-            'Vehicle Testing Station'
+            'Vehicle testing station'
         );
 
         $this->layout()->setVariable('pageTitle', 'Remove a role');
