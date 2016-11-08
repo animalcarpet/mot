@@ -28,14 +28,14 @@ class CreateAePrincipalProcess extends AbstractTwoStepAeProcess implements AutoW
 {
     private $propertyName = UpdateAePropertyAction::AE_CREATE_AEP_PROPERTY;
     private $permission = PermissionAtOrganisation::AUTHORISED_EXAMINER_PRINCIPAL_CREATE;
-    private $submitButtonText = "Review principal";
+    private $submitButtonText = "Continue";
     private $successfulEditMessage = "%s has been added as a Authorised Examiner Principal.";
     private $formPageTitle = "Add a principal";
     private $formPartial = "organisation/update-ae-property/partials/add-principle";
     private $personMapper;
-    protected $reviewPageTitle = "Review principal";
-    protected $reviewPageLede = "Please check the information below is correct.";
-    protected $reviewPageButtonText = "Add principal";
+    protected $reviewPageTitle = "Review new Principal";
+    protected $reviewPageLede = "";
+    protected $reviewPageButtonText = "Add Principal";
     private $aepName = "";
 
     public function __construct(MapperFactory $mapperFactory, OrganisationMapper $organisationMapper, Url $urlHelper)

@@ -143,7 +143,7 @@ endif; ?>
         Vehicle testing stations
         <?php if ($viewModel->getViewAuthorisation()->canCreateSiteAssociation()) : ?>
             <span class="summary-heading__action">
-                <a href="<?php echo $this->url(SiteController::ROUTE_LINK, ['id' =>$orgId]); ?>" >Add site associations</a>
+                <a href="<?php echo $this->url(SiteController::ROUTE_LINK, ['id' =>$orgId]); ?>" >Add a site association</a>
             </span>
         <?php endif; ?>
     </h3>
@@ -213,7 +213,7 @@ endif; ?>
         <?php if ($viewModel->getViewAuthorisation()->canCreateAuthorisedExaminerPrincipal()): ?>
             <span class="summary-heading__action">
                 <a id="add-aep" href="<?php echo AeRoutes::of($this)->aeAddPrincipal($orgId); ?>">
-                    Add a principal
+                    Add a Principal
                 </a>
             </span>
         <?php endif; ?>

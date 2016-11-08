@@ -34,7 +34,7 @@ use Zend\Mvc\Controller\Plugin\Url;
 class AuthorisedExaminerPrincipalController extends AbstractAuthActionController implements AutoWireableInterface
 {
     const ROUTE_REMOVE_CONFIRMATION = 'authorised-examiner/remove-principal-confirmation';
-    const REMOVE_TITLE = 'Remove a principal';
+    const REMOVE_TITLE = 'Remove a Principal';
     use OrganisationServicesTrait;
 
     private $authorisationService;
@@ -99,7 +99,7 @@ class AuthorisedExaminerPrincipalController extends AbstractAuthActionController
         if ($request->isPost()) {
             try {
                 $this->mapper->AuthorisedExaminerPrincipal->removePrincipalsForOrganisation($authorisedExaminerId, $principalId);
-                $this->addSuccessMessage($principal->getDisplayName() . ' has been removed successfully.');
+                $this->addSuccessMessage('Principal - '. $principal->getDisplayName() . ' has been removed successfully.');
             } catch (RestApplicationException $e) {
                 $this->addErrorMessages($e->getDisplayMessages());
             }

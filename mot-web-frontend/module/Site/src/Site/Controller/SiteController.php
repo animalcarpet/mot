@@ -51,17 +51,17 @@ class SiteController extends AbstractAuthActionController
     const SESSION_KEY = 'data';
     const SITE_ASSESSMENT_SESSION_KEY = 'SITE_ASSESSMENT';
 
-    const CREATE_TITLE = 'Create Site';
-    const CREATE_CONFIRM_TITLE = 'Confirm new site details';
+    const CREATE_TITLE = 'Create a site';
+    const CREATE_CONFIRM_TITLE = 'Review new site';
     const SITE_SUBTITLE = 'Site management';
     const STEP_ONE = 'Step 1 of 2';
     const STEP_TWO = 'Step 2 of 2';
 
     const REFERER = 'refererToSite';
 
-    const EDIT_SUBTITLE = 'Vehicle testing station';
+    const EDIT_SUBTITLE = 'Vehicle Testing Station';
     const EDIT_TESTING_FACILITIES = 'Change testing facilities';
-    const EDIT_TESTING_FACILITIES_CONFIRM = 'Confirm testing facilities';
+    const EDIT_TESTING_FACILITIES_CONFIRM = 'Review change to testing facilities';
 
     const ROUTE_CONFIGURE_BRAKE_TEST_DEFAULTS = 'site/configure-brake-test-defaults';
 

@@ -12,9 +12,9 @@ class CompanyTypeName
 {
     const COMPANY = 'Company';
     const PARTNERSHIP = 'Partnership';
-    const SOLE_TRADER = 'Sole Trader';
-    const LIMITED_LIABILITY_PARTNERSHIP = 'Limited Liability Partnership';
-    const PUBLIC_BODY = 'Public Body';
+    const SOLE_TRADER = 'Sole trader';
+    const LIMITED_LIABILITY_PARTNERSHIP = 'Limited liability partnership';
+    const PUBLIC_BODY = 'Public body';
 
     /**
      * @return array of values for the type CompanyTypeName

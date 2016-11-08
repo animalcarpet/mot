@@ -29,7 +29,7 @@ echo $this->partial(
                 'id'           => 'siteNumber',
                 'help'         => 'For example, V1234',
                 'errorMessage' => $form->getError(AeLinkSiteForm::FIELD_SITE_NR),
-                'label'        => 'Enter a site ID',
+                'label'        => 'Site ID',
                 'value'        => $form->getSiteNumber(),
                 'maxLength'    => $form->getMaxInputLength(),
             ]
@@ -41,7 +41,7 @@ echo $this->partial(
             'id'         => 'submitAeLink',
             'value'      => 'Associate this site',
             'navigation' => [
-                'Cancel and return to AE details' => $model->getCancelUrl()
+                'Cancel and return to Authorised Examiner' => $model->getCancelUrl()
             ]
         ]
     ); ?>

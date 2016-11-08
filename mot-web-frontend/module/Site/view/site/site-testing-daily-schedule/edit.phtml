@@ -18,8 +18,8 @@ $errorData = isset($errorData) ? $errorData : '';
 $openHours = $this->siteOpeningHours;
 ?>
 <h1>
-    <small>VTS Details</small>
-    <span>Manage opening hours</span>
+    <small>Vehicle Testing Station</small>
+    <span>Change testing hours</span>
 </h1>
 
 <hr class="hr-thick">
@@ -159,11 +159,11 @@ $openHours = $this->siteOpeningHours;
             <?php endfor; ?>
 
             <p>
-                <button id="update-opening-hours" type="submit" class="btn btn-primary">Update</button>
+                <button id="update-opening-hours" type="submit" class="btn btn-primary">Change testing hours</button>
             </p>
             <p>
                 <a href="<?php echo VehicleTestingStationUrlBuilderWeb::byId($this->siteId); ?> ">
-                    Cancel and return to <?php echo $this->escapeHtml($this->vtsName); ?> details
+                    Cancel and return to Vehicle Testing Station
                 </a>
             </p>
         </form>

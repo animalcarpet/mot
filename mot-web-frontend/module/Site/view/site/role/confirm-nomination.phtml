@@ -14,7 +14,7 @@
         </span>
 
         <span class="content-header__title">
-            Review role details
+            Review role
         </span>
     </h1>
 </header>
@@ -22,9 +22,6 @@
 <?php echo $this->partial('errorMessages', ['getFromFlash' => true]); ?>
 
 <div class="text">
-
-    <p class="lede">Check that this information is correct before you assign the new role.</p>
-
     <table class="key-value-list">
         <tbody>
             <tr>
@@ -42,18 +39,17 @@
 
         </tbody>
     </table>
-
 </div>
 
 <?php if ($twoFactorEnabled): ?>
     <div class="message" id="security-card-notification">
-        <p>The user will receive a notification of the nomination. </p>
+        <p>The user must accept the role to make it active. They will be sent a role notification.</p>
         <p>To accept or reject the role the user needs an active security card. </p>
         If they do not have one they will need to order one and activate it.
     </div>
     <?php else: ?>
         <div class="message">
-            <p>The user will receive a role nomination in their notifications. They must accept this for the role to become active.</p>
+            <p>The user must accept the role to make it active. They will be sent a role notification.</p>
         </div>
     <?php endif; ?>
 
@@ -66,7 +62,7 @@
                 <a href="<?php echo $this->url('vehicle-testing-station-list-user-roles', [
                         'vehicleTestingStationId' => $vehicleTestingStationId,
                         'personId' => $nominee->getId()
-                    ]); ?>">Back to choose a role</a>
+                    ]); ?>">Back</a>
             </li>
         </ul>
     </nav>

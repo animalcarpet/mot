@@ -14,8 +14,6 @@ $busContact = $form->getBusContactModel();
 $corrContact = $form->isCorrDetailsTheSame() ? $form->getBusContactModel() : $form->getCorrContactModel();
 
 ?>
-<!--Display of the information enter-->
-<h3 class="key-value-list__header">AE record summary</h3>
     <?php
     echo $this->partial(
         'partial/gds/table/table',
@@ -25,7 +23,7 @@ $corrContact = $form->isCorrDetailsTheSame() ? $form->getBusContactModel() : $fo
                 ['Business name', $form->getName(), 'id' => 'businessName'],
                 ['Trading name', $form->getTradingAs(), 'id' => 'tradingName'],
                 ['Business type', $form->getCompanyTypes()[$form->getCompanyType()], 'id' => 'businessType'],
-                ['Company number (optional if not Ltd.)', strtoupper($form->getRegisteredCompanyNumber()), 'id' => 'companyNumber'],
+                ['Company number (optional if not a limited company)', strtoupper($form->getRegisteredCompanyNumber()), 'id' => 'companyNumber'],
             ],
         ]
     );
@@ -59,13 +57,12 @@ $corrContact = $form->isCorrDetailsTheSame() ? $form->getBusContactModel() : $fo
         [
             'head' => 'Area Office',
             'body' => [
-                ['DVSA area Office', $this->areaOfficeDisplayName, 'id' => 'areaOfficeNumber'],
+                ['DVSA Area Office', $this->areaOfficeDisplayName, 'id' => 'areaOfficeNumber'],
             ],
         ]
     );
 ?>
 
-<!--Hidden information of the AE for save purpose-->
 <form method="POST" action="<?php echo $form->getFormUrl(); ?>">
 <?php
     echo $this->csrfToken();
@@ -75,9 +72,9 @@ $corrContact = $form->isCorrDetailsTheSame() ? $form->getBusContactModel() : $fo
         'partial/gds/form/control-navigation',
         [
             'id'         => 'submitAeConfirmation',
-            'value'      => 'Create new AE',
+            'value'      => 'Create Authorised Examiner',
             'navigation' => [
-                'Back to Create AE' => $model->getCancelUrl(),
+                'Back' => $model->getCancelUrl(),
             ],
         ]
     );

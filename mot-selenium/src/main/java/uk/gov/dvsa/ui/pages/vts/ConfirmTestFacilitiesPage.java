@@ -8,7 +8,7 @@ import uk.gov.dvsa.ui.pages.Page;
 
 
 public class ConfirmTestFacilitiesPage extends Page {
-    private static final String PAGE_TITLE = "Confirm testing facilities";
+    private static final String PAGE_TITLE = "Review change to testing facilities";
     @FindBy(id = "submitTestingFacilitiesUpdate") private WebElement saveTestingFacilitiesChangesButton;
 
     public ConfirmTestFacilitiesPage(MotAppDriver driver) {

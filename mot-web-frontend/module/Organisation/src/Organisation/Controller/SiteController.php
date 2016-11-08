@@ -24,8 +24,8 @@ use Zend\View\Model\ViewModel;
 class SiteController extends AbstractDvsaMotTestController
 {
     const LINK_TITLE = 'Associate a site';
-    const UNLINK_TITLE = 'Disassociate a site';
-    const AE_TEXT = 'Authorised examiner';
+    const UNLINK_TITLE = 'Remove site association';
+    const AE_TEXT = 'Authorised Examiner';
 
     const ERR_ORG_SITE_LINK_NOT_FOUND = "Association between Authorised Examiner and Site not found";
 

@@ -10,7 +10,7 @@ use DvsaCommon\UrlBuilder\AuthorisedExaminerUrlBuilderWeb;
         </span>
 
         <span class="content-header__title">
-            Search for a user
+            Assign a role
         </span>
     </h1>
 </header>
@@ -24,18 +24,19 @@ use DvsaCommon\UrlBuilder\AuthorisedExaminerUrlBuilderWeb;
 <?php echo $this->partial('errorMessages', array('getFromFlash' => true, 'isShowHidden' => true)); ?>
 
 <div class="text">
-    <p class="lede">This process allows you to assign a role to an existing user.</p>
+    <p class="lede">Search for a user to assign a role to them.</p>
 </div>
 <form action="<?php echo AuthorisedExaminerUrlBuilderWeb::roles($id); ?>" method="POST">
     <fieldset>
         <legend class="form-title heading-large" id="">Username</legend>
         <?php echo $this->csrfToken() ?>
+        <span class="form-hint">For example, SMIT0001</span>
         <?php echo $this->partial(
             'inputBox',
             [
                 'id' => 'userSearchBox',
+                'formHintText' => 'For example, SMIT0001',
                 'required' => true,
-                'label' => 'What is the username of the person you would like to assign a role?',
                 'labelLayout' => 'form-label',
                 'name' => 'userSearchBox',
                 'class' => 'form-control',

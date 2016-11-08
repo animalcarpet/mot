@@ -12,7 +12,7 @@ public class ReviewCreateAepPage extends Page {
 
     @FindBy(id = "confirm-button") private WebElement submit;
 
-    private static String pageTitle = "Review principal";
+    private static String pageTitle = "Review new Principal";
 
     public ReviewCreateAepPage(MotAppDriver driver) {
         super(driver);

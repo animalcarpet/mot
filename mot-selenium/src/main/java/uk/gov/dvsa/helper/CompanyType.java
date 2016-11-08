@@ -3,8 +3,8 @@ package uk.gov.dvsa.helper;
 public enum CompanyType {
     Company("RC", "Company"),
     Partnership("P", "Partnership"),
-    SoleTrader("ST","Sole Trader"),
-    PublicBody("PA","Public Body");
+    SoleTrader("ST","Sole trader"),
+    PublicBody("PA","Public body");
 
     private String name;
     private String value;
