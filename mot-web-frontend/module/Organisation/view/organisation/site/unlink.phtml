@@ -24,7 +24,7 @@ echo $this->partial(
 );
 ?>
 
-<h3 class="key-value-list__header">Remove this AE's association with the following site?</h3>
+<h3 class="key-value-list__header">Site</h3>
 
 <table class="key-value-list">
     <tbody>
@@ -68,14 +68,14 @@ echo $this->partial(
         <?php
         echo $this->partial(
             'partial/gds/form/control-legend',
-            ['id' => 'assignStatus', 'text' => 'Assign a status']
+            ['id' => 'assignStatus', 'text' => 'Reason for removing association']
         );
 
         echo $this->partial(
             'partial/gds/form/control-select-group',
             [
                 'id'           => AeUnlinkSiteForm::FIELD_STATUS,
-                'label'        => 'Please assign a status for this disassociation',
+                'label'        => 'Choose a status',
                 'value'        => $form->getStatus(),
                 'options'      => $form->getStatuses(),
                 'errorMessage' => $form->getError(AeUnlinkSiteForm::FIELD_STATUS),
@@ -90,9 +90,9 @@ echo $this->partial(
         'partial/gds/form/control-navigation',
         [
             'id'         => 'submitAeSiteUnlink',
-            'value'      => 'Confirm and remove this association',
+            'value'      => 'Remove association',
             'navigation' => [
-                'Cancel and return to AE details' => $model->getCancelUrl(),
+                'Cancel and return to Authorised Examiner' => $model->getCancelUrl(),
             ],
         ]
     );

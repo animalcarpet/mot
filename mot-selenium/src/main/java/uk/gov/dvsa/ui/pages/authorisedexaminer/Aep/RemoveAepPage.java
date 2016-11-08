@@ -12,7 +12,7 @@ public class RemoveAepPage extends Page {
 
     @FindBy(id = "confirm-button") private WebElement submit;
 
-    private static String PAGE_TITLE = "Remove a principal";
+    private static String PAGE_TITLE = "Remove a Principal";
 
     public RemoveAepPage(MotAppDriver driver) {
         super(driver);

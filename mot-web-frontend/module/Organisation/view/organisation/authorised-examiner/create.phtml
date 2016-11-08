@@ -27,14 +27,14 @@ echo $this->partial(
         <?php
         echo $this->partial(
             'partial/gds/form/control-legend',
-            ['id' => 'legendBusiness', 'text' => 'Business details']
+            ['id' => 'legendBusiness', 'text' => 'Their business details']
         );
 
         echo $this->partial(
             'partial/gds/form/control-text-group',
             [
                 'id'           => AeCreateForm::FIELD_NAME,
-                'label'        => 'AE business name',
+                'label'        => 'Business name',
                 'title'        => 'Enter AE business name',
                 'value'        => $form->getName(),
                 'errorMessage' => $form->getError(AeCreateForm::FIELD_NAME),
@@ -46,7 +46,7 @@ echo $this->partial(
             'partial/gds/form/control-text-group',
             [
                 'id'           => AeCreateForm::FIELD_TRADING_AS,
-                'label'        => 'AE trading name',
+                'label'        => 'Trading name',
                 'title'        => 'Enter AE trading as',
                 'errorMessage' => $form->getError(AeCreateForm::FIELD_TRADING_AS),
                 'value'        => $form->getTradingAs(),
@@ -57,7 +57,7 @@ echo $this->partial(
             'partial/gds/form/control-select-group',
             [
                 'id'           => AeCreateForm::FIELD_COMPANY_TYPE,
-                'label'        => 'AE business type',
+                'label'        => 'Business type',
                 'errorMessage' => $form->getError(AeCreateForm::FIELD_COMPANY_TYPE),
                 'value'        => $form->getCompanyType(),
                 'options'      => $form->getCompanyTypes(),
@@ -81,7 +81,7 @@ echo $this->partial(
         <?php
         echo $this->partial(
             'partial/gds/form/control-legend',
-            ['id' => 'legendBusinessContact', 'text' => 'Business contact details']
+            ['id' => 'legendBusinessContact', 'text' => 'Their business contact details']
         );
 
         $busContactModel = $form->getBusContactModel();
@@ -138,7 +138,7 @@ echo $this->partial(
         echo $this->partial(
             'partial/gds/form/control-is-the-same',
             [
-                'title'      => 'Is this the same as the business details?',
+                'title'      => 'Are they the same as the business contact details? ',
                 'name'       => AeCreateForm::FIELD_IS_CORR_DETAILS_THE_SAME,
                 'value'      => $form->isCorrDetailsTheSame(),
                 'addressElm' => 'addressDetailsFragmentDiv',
@@ -210,7 +210,7 @@ echo $this->partial(
         'partial/gds/form/control-navigation',
         [
             'id'         => 'submitAeEdit',
-            'value'      => 'Continue to summary',
+            'value'      => 'Continue',
             'navigation' => [
                 'Cancel and return home' => $model->getCancelUrl(),
             ],

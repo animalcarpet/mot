@@ -6,20 +6,19 @@ use DvsaCommon\Constants\FeatureToggle;
 ?>
 <div class="module-pivot-panel">
     <header class="pivot-panel_header">
-        <h2 class="pivot-panel_title">AE management</h2>
+        <h2 class="pivot-panel_title">Authorised Examiner management</h2>
     </header>
-    <p>You can apply for</p>
     <ul>
         <li>
             <a href="<?php echo AuthorisedExaminerUrlBuilderWeb::create(); ?>"
                id="createAuthorisedExaminerLink">
-                Create AE
+                Create an Authorised Examiner
             </a>
         </li>
         <li>
             <a href="<?php echo VehicleTestingStationUrlBuilderWeb::create(); ?>"
                id="action-create-vts">
-                Create Site
+                Create a site
             </a>
         </li>
     </ul>

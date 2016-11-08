@@ -9,7 +9,7 @@ import uk.gov.dvsa.ui.pages.AreaOfficerAuthorisedExaminerViewPage;
 import uk.gov.dvsa.ui.pages.Page;
 
 public class DisassociateASitePage extends Page {
-    private static final String PAGE_TITLE = "Disassociate a site";
+    private static final String PAGE_TITLE = "Remove site association";
 
     @FindBy(id = "status") private WebElement statusDropDown;
     @FindBy(id = "submitAeSiteUnlink") private WebElement confirmAndRemoveThisAssociationButton;

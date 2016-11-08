@@ -5,12 +5,7 @@ use \Site\Form\VtsUpdateTestingFacilitiesForm;
 /**
  * @var VtsUpdateTestingFacilitiesForm $form;
  */
-?>
 
-<!--Display of the information enter-->
-<h3 class="key-value-list__header">Confirm testing facility changes below</h3>
-
-<?php
 echo $this->partial(
     'partial/gds/table/table',
     [
@@ -31,9 +26,9 @@ echo $this->partial(
         [
             'id'         => 'submitTestingFacilitiesUpdate',
             'name'       => 'submitTestingFacilitiesUpdate',
-            'value'      => 'Save testing facilities changes',
+            'value'      => 'Change testing facilities',
             'navigation' => [
-                'Back to change testing facilities' => $cancelUrl,
+                'Back' => $cancelUrl,
             ],
         ]
     );

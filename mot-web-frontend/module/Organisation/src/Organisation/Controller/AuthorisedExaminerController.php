@@ -42,11 +42,11 @@ class AuthorisedExaminerController extends AbstractDvsaMotTestController
     const SESSION_CNTR_KEY = 'AE_CREATE_UPDATE';
     const SESSION_KEY = 'data';
 
-    const AE_SUBTITLE = 'AE management';
+    const AE_SUBTITLE = 'Authorised Examiner management';
     const INDEX_TITLE = 'Authorised Examiner';
 
-    const CREATE_TITLE = 'Create Authorised Examiner';
-    const CREATE_CONFIRM_TITLE = 'Confirm new AE details';
+    const CREATE_TITLE = 'Create an Authorised Examiner';
+    const CREATE_CONFIRM_TITLE = 'Review new Authorised Examiner';
 
     const EDIT_TITLE = 'Change contact details';
     const EDIT_SUBTITLE = 'Authorised examiner';

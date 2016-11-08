@@ -28,7 +28,7 @@ echo $this->partial(
         <?php
         echo $this->partial(
             'partial/gds/form/control-legend',
-            ['id' => 'legendSiteDetails', 'text' => 'Site name & type']
+            ['id' => 'legendSiteDetails', 'text' => 'Name and type']
         );
         echo $this->partial(
             'partial/gds/form/control-text-group',
@@ -71,7 +71,7 @@ echo $this->partial(
 
         echo $this->partial(
             'partial/gds/form/control-legend',
-            ['id' => 'legendSiteContactDetails', 'text' => 'Site location']
+            ['id' => 'legendSiteContactDetails', 'text' => 'Address']
         );
 
         echo $this->partial(
@@ -91,10 +91,10 @@ echo $this->partial(
         <?php
         echo $this->partial(
             'partial/gds/form/control-legend',
-            ['id' => 'legendSiteEmail', 'text' => 'Email']
+            ['id' => 'legendSiteEmail', 'text' => 'Email address']
         );
         ?>
-        <p>Please enter an email address if provided by the applicant</p>
+        <p>Enter an email address if the applicant has provided one</p>
         <?php
         echo $this->partial(
             'partial/gds/form/control-email-conf-group',
@@ -113,7 +113,7 @@ echo $this->partial(
         <?php
         echo $this->partial(
             'partial/gds/form/control-legend',
-            ['id' => 'legendSiteTelephone', 'text' => 'Telephone']
+            ['id' => 'legendSiteTelephone', 'text' => 'Telephone number']
         );
         echo $this->partial(
             'partial/gds/form/control-text-group',
@@ -187,7 +187,7 @@ echo $this->partial(
         [
             'id'         => 'submitSiteCreate',
             'name'       => 'submitSiteCreate',
-            'value'      => 'Continue to summary',
+            'value'      => 'Continue',
             'navigation' => [
                 'Cancel and return home' => $model->getCancelUrl(),
             ],

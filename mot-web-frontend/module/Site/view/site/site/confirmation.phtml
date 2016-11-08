@@ -12,18 +12,13 @@ $form = $model->getForm();
 
 $contact = $form->getContactModel();
 
-?>
-<!--Display of the information enter-->
-<h3 class="key-value-list__header">Site summary</h3>
-<?php
-
 echo $this->partial(
     'partial/gds/table/table',
     [
-        'head' => 'Site name and type',
+        'head' => 'Name and type',
         'body' => [
-            ['Site name', $form->getName()],
-            ['Site type', $form->getSiteTypes()[$form->getType()]],
+            ['Name', $form->getName()],
+            ['Type', $form->getSiteTypes()[$form->getType()]],
         ],
     ]
 );
@@ -31,7 +26,7 @@ echo $this->partial(
 echo $this->partial(
     'partial/gds/table/table',
     [
-        'head' => 'Site location and contacts',
+        'head' => 'Location and contacts',
         'body' => [
             ['Address', AddressUtils::stringify($contact->getAddressModel()->toDto())],
             ['Country', $form->getCountries()[$form->getCountry()]],
@@ -65,9 +60,9 @@ echo $this->partial(
         [
             'id'         => 'submitSiteConfirmation',
             'name'       => 'submitSiteConfirmation',
-            'value'      => 'Create new site',
+            'value'      => 'Create site',
             'navigation' => [
-                'Back to Create Site' => $model->getCancelUrl(),
+                'Back' => $model->getCancelUrl(),
             ],
         ]
     );

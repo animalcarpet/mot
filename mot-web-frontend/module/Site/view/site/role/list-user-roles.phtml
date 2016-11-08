@@ -35,7 +35,7 @@ use Site\Controller\RoleController;
         <table class="key-value-list">
             <tbody>
                 <tr>
-                    <th class="key-value-list__key">Name</th>
+                    <th class="key-value-list__key">User</th>
                     <td class="key-value-list__value">
                         <?php echo $this->escapeHtml($personFullName); ?>
                         <span class="key-value-list__meta"><?php echo $this->escapeHtml($personUsername); ?></span>
@@ -101,7 +101,7 @@ use Site\Controller\RoleController;
                 <li>
                     <a id="vehicle-testing-station-home"
                        href="<?php echo $this->url(RoleController::ROUTE_SEARCH_FOR_PERSON, ['vehicleTestingStationId' => $vehicleTestingStationId]); ?>"
-                       class="btn btn-link">Back to user search</a>
+                       class="btn btn-link">Back</a>
                 </li>
             </ul>
         </nav>

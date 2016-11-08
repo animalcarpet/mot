@@ -5,11 +5,11 @@ use Site\Controller\VehicleTestingStationController;
 <header class="content-header">
     <h1>
         <span class="content-header__type">
-           Vehicle testing station
+           Vehicle Testing Station
         </span>
 
         <span class="content-header__title">
-            Assign a role
+             Assign a role
         </span>
     </h1>
 </header>
@@ -23,7 +23,7 @@ use Site\Controller\VehicleTestingStationController;
 <?php echo $this->partial('errorMessages', array('getFromFlash' => true, 'isShowHidden' => true)); ?>
 
 <div class="text">
-    <p class="lede">Assign someone a role at this vehicle testing station. They must have an MOT testing service account.</p>
+    <p class="lede">Search for a user to assign a role to them.</p>
 </div>
 <form action="<?php echo $this->url(
     RoleController::ROUTE_SEARCH_FOR_PERSON,
@@ -32,8 +32,9 @@ use Site\Controller\VehicleTestingStationController;
     ]
 ); ?>" method="POST">
     <fieldset>
-        <legend class="form-title heading-large" id="">Their username</legend>
+        <legend class="form-title heading-large" id="">Username</legend>
             <?php echo $this->csrfToken() ?>
+        <span class="form-hint">For example, SMIT0001</span>
             <?php echo $this->partial(
                 'inputBox',
                 [
@@ -47,7 +48,6 @@ use Site\Controller\VehicleTestingStationController;
             );
             ?>
     </fieldset>
-    <span class="form-hint">For example, SMIT0001</span>
 
     <nav class="content-navigation">
         <?php

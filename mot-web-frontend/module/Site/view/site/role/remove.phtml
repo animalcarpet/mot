@@ -13,7 +13,7 @@ use Site\Controller\RoleController;
             Are you sure you want to remove the role of
             <strong><?php echo $this->escapeHtml($viewModel->getRoleName()); ?></strong>
             at <strong><?php echo $this->escapeHtml($viewModel->getSiteName()); ?></strong>
-            from <strong><?php echo $this->escapeHtml($viewModel->getEmployeeName()); ?></strong>
+            from <strong><?php echo $this->escapeHtml($viewModel->getEmployeeName()); ?></strong>?
         </p>
     </div>
 <?php endif; ?>
@@ -42,13 +42,13 @@ echo $this->url(
     <nav class="content-navigation">
 
         <?php if ($viewModel->canRoleBeRemoved()): ?>
-            <input type="submit" name="submit" id="confirm" class="button" value="Confirm">
+            <input type="submit" name="submit" id="confirm" class="button" value="Remove role">
         <?php endif; ?>
 
         <ul class="content-navigation__secondary">
             <li>
                 <a id="cancel-and-return-to-garage" href="<?php echo $this->url('vehicle-testing-station', [ 'id' => $viewModel->getSiteId()]); ?>">
-                    Cancel and return to <?php echo $this->escapeHtml($viewModel->getSiteName()); ?>
+                    Cancel and return to Vehicle Testing Station
                 </a>
             </li>
         </ul>

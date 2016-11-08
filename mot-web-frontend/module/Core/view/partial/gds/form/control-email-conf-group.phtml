@@ -31,7 +31,7 @@ echo $this->partial(
         'name'          => sprintf($tmplFieldName, $group, EmailFormModel::FIELD_EMAIL_CONFIRM),
         'errorMessage'  => $emailModel->getError(sprintf($tmplFieldName, $group, EmailFormModel::FIELD_EMAIL_CONFIRM)),
         'inputModifier' => '1-3',
-        'label'         => 'Confirm email address',
+        'label'         => 'Re-type email address',
         'value'         => $emailModel->getEmailConfirm(),
         'maxLength'     => 255,
     ]

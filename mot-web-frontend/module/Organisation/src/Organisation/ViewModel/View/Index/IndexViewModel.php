@@ -294,9 +294,9 @@ class IndexViewModel
         }
         $table->newRow('ae-number')->setLabel('Authorised Examiner ID')->setValue($presenter->getNumber() ? : 'N/A');
         if ($permissions->canViewAeStatus()) {
-            $table->newRow('ae-appeal-status')->setLabel('AE Appeal status')->setValue('N/A');
-            $table->newRow('ae-withdraw-date')->setLabel('AE Withdrawal date')->setValue($withdrawalDate ? $withdrawalDate : 'N/A');
-            $row = $table->newRow('ae-dvsa-area-office')->setLabel('DVSA area office')->setValue($aoNumber);
+            $table->newRow('ae-appeal-status')->setLabel('Appeal status')->setValue('N/A');
+            $table->newRow('ae-withdraw-date')->setLabel('Withdrawal date')->setValue($withdrawalDate ? $withdrawalDate : 'N/A');
+            $row = $table->newRow('ae-dvsa-area-office')->setLabel('DVSA Area Office')->setValue($aoNumber);
             if ($permissions->canUpdateAEBusinessDetailsDVSAAreaOffice()) {
                 $row->addActionLink('Change', AeRoutes::of($urlHelper)->aeEditProperty($orgId, UpdateAePropertyAction::AE_DVSA_AREA_OFFICE_STATUS_PROPERTY), "Change DVSA AO");
             }
