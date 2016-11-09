@@ -13,6 +13,9 @@ use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use Zend\Http\Response;
+use DvsaCommon\Utility\ArrayUtils;
+use Dvsa\Mot\Frontend\MotTestModule\ViewModel\MotTestResults;
+
 
 /**
  * Class RepairDefectController.
@@ -39,23 +42,53 @@ class RepairDefectController extends AbstractDvsaMotTestController
      */
     public function repairAction()
     {
+        $request = $this->getRequest();
         $motTestNumber = (int) $this->params()->fromRoute('motTestNumber');
         $identifiedDefectId = (int) $this->params('identifiedDefectId');
-        $identifiedDefectType = $this->getRequest()->getPost('defectType', 'defect');
-        $identifiedDefectText = $this->getRequest()->getPost('defectText', '');
+        $identifiedDefectType = $request->getPost('defectType', 'defect');
+        $identifiedDefectText = $request->getPost('defectText', '');
+        $isAjax = $request->isXmlHttpRequest();
 
         try {
             $apiUrl = MotTestUrlBuilder::markDefectAsRepaired($motTestNumber, $identifiedDefectId)->toString();
             $this->getRestClient()->post($apiUrl);
 
-            $this->addSuccessMessage(FlashMessageBuilder::defectRepairedSuccessfully($identifiedDefectType, $identifiedDefectText));
+            if (false === $isAjax) {
+                $this->addSuccessMessage(FlashMessageBuilder::defectRepairedSuccessfully($identifiedDefectType, $identifiedDefectText));
+            } else {
+                $success = true;
+            }
 
         } catch (GeneralRestException $e) {
-            $this->addErrorMessage(FlashMessageBuilder::defectRepairedUnsuccessfully($identifiedDefectType, $identifiedDefectText));
-
+            if (false === $isAjax) {
+                $this->addErrorMessage(FlashMessageBuilder::defectRepairedUnsuccessfully($identifiedDefectType, $identifiedDefectText));
+            } else {
+                $success = false;
+            }
         }
 
-        return $this->redirect()->toUrl($this->defectsJourneyUrlGenerator->goBack());
+        if (true === $isAjax){
+            $motTest = $this->getMotTestFromApi($motTestNumber);
+            $motTestResults = new MotTestResults($motTest);
+
+            $data = array(
+                'success' => $success,
+                'defectType' => $identifiedDefectType,
+                'action' => 'repair',
+                'brakeTestOutcome' => $motTestResults->getBrakeTestOutcome(),
+                'brakeTestResults' => $motTestResults->hasBrakeTestResult(),
+                'brakesTested' => !$motTestResults->isBrakePerformanceNotTested(),
+                'disableSubmitButton' => $motTestResults->shouldDisableSubmitButton()
+            );
+
+            $response = $this->getResponse();
+            $response->getHeaders()->addHeaderLine( 'Content-Type', 'application/json' );
+            $response->setContent(json_encode($data));
+            return $response;
+        } else {
+            return $this->redirect()->toUrl($this->defectsJourneyUrlGenerator->goBack());
+        }
+
     }
 
     /**
@@ -63,21 +96,51 @@ class RepairDefectController extends AbstractDvsaMotTestController
      */
     public function undoRepairAction()
     {
+        $request = $this->getRequest();
         $motTestNumber = (int) $this->params()->fromRoute('motTestNumber');
         $identifiedDefectId = (int) $this->params('identifiedDefectId');
-        $identifiedDefectType = $this->getRequest()->getPost('defectType', 'defect');
-        $identifiedDefectText = $this->getRequest()->getPost('defectText', '');
+        $identifiedDefectType = $request->getPost('defectType', 'defect');
+        $identifiedDefectText = $request->getPost('defectText', '');
+        $isAjax = $request->isXmlHttpRequest();
 
         try {
             $apiUrl = MotTestUrlBuilder::undoMarkDefectAsRepaired($motTestNumber, $identifiedDefectId)->toString();
+
             $this->getRestClient()->post($apiUrl);
 
-            $this->addSuccessMessage(FlashMessageBuilder::undoDefectRepairSuccessfully($identifiedDefectType, $identifiedDefectText));
+            if (false === $isAjax) {
+                $this->addSuccessMessage(FlashMessageBuilder::undoDefectRepairSuccessfully($identifiedDefectType, $identifiedDefectText));
+            } else {
+                $success = true;
+            }
 
         } catch (GeneralRestException $e) {
-            $this->addErrorMessage(FlashMessageBuilder::undoDefectRepairUnsuccessfully($identifiedDefectType, $identifiedDefectText));
+            if (false === $isAjax) {
+                $this->addErrorMessage(FlashMessageBuilder::undoDefectRepairUnsuccessfully($identifiedDefectType, $identifiedDefectText));
+            } else {
+                $success = false;
+            }
         }
 
-        return $this->redirect()->toUrl($this->defectsJourneyUrlGenerator->goBack());
+        if (true === $isAjax){
+            $motTest = $this->getMotTestFromApi($motTestNumber);
+            $motTestResults = new MotTestResults($motTest);
+
+            $data = array(
+                'success' => $success,
+                'defectType' => $identifiedDefectType,
+                'action' => 'undo',
+                'brakeTestOutcome' => $motTestResults->getBrakeTestOutcome(),
+                'brakeTestResults' => $motTestResults->hasBrakeTestResult(),
+                'brakesTested' => !$motTestResults->isBrakePerformanceNotTested(),
+                'disableSubmitButton' => $motTestResults->shouldDisableSubmitButton()
+            );
+            $response = $this->getResponse();
+            $response->getHeaders()->addHeaderLine( 'Content-Type', 'application/json' );
+            $response->setContent(json_encode($data));
+            return $response;
+        } else {
+            return $this->redirect()->toUrl($this->defectsJourneyUrlGenerator->goBack());
+        }
     }
 }

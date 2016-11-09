@@ -32,6 +32,7 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
     @FindBy(id = "addDefectButton") private WebElement addDefect;
     @FindBy(id = "searchForDefect") private WebElement searchForDefect;
     @FindBy(id = "addBrakeTestButton") private WebElement addBrakeTest;
+    @FindBy(id = "editBrakeTestButton") private WebElement editBrakeTest;
     @FindBy(id = "reviewTest") private WebElement reviewTest;
     @FindBy(id = "cancelTest") private WebElement cancelTest;
     @FindBy(id = "reviewTest") private WebElement reviewTestButton;
@@ -101,6 +102,10 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
         return addBrakeTest.isDisplayed();
     }
 
+    public boolean editBrakeTestButtonIsDisplayed() {
+        return editBrakeTest.isDisplayed();
+    }
+
     public boolean reviewTestButtonIsDisplayed() {
         return reviewTest.isDisplayed();
     }
@@ -123,8 +128,8 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
         return new TestAbandonedPage(driver);
     }
 
-    public TestResultsEntryNewPage completeBrakeTestWithPassValues() {
-        addDefaultBrakeTestValues("pass");
+    public TestResultsEntryNewPage completeBrakeTestWithPassValues(boolean isRetest) {
+        addDefaultBrakeTestValues("pass", isRetest);
 
         return this;
     }
@@ -182,15 +187,15 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
         return brakeTestResultsNotice.getText().contains("Pass");
     }
 
-    public TestResultsEntryPageInterface completeTestDetailsWithPassValues() {
+    public TestResultsEntryPageInterface completeTestDetailsWithPassValues(boolean isRetest) {
         addOdometerReading(1001);
-        completeBrakeTestWithPassValues();
+        completeBrakeTestWithPassValues(isRetest);
 
         return this;
     }
 
-    public TestSummaryPage completeTestDetailsWithPassValues(String defectName) {
-        completeTestDetailsWithPassValues();
+    public TestSummaryPage completeTestDetailsWithPassValues(String defectName, boolean isRetest) {
+        completeTestDetailsWithPassValues(isRetest);
         clickRepaired(defectName, this.getClass());
         return clickReviewTestButton();
     }
@@ -267,8 +272,13 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
         return new ReasonToCancelTestPage(driver);
     }
 
-    private TestResultsEntryNewPage addDefaultBrakeTestValues(String outcome) {
-        addBrakeTest.click();
+    private TestResultsEntryNewPage addDefaultBrakeTestValues(String outcome, boolean isRetest) {
+
+        if (isRetest) {
+            editBrakeTest.click();
+        } else {
+            addBrakeTest.click();
+        }
 
         BrakeTestConfigurationPage brakeTestConfigurationPage =
                 PageLocator.getBrakeTestConfigurationPage(driver);

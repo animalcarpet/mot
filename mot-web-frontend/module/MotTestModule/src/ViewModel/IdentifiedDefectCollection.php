@@ -202,6 +202,20 @@ class IdentifiedDefectCollection
     }
 
     /**
+    * @return int
+    */
+    public function getNumberOfUnrepairedFailures()
+    {
+        $count = 0;
+        foreach (array_keys($this->failures) as $k) {
+            if (false === $this->failures[$k]->isMarkedAsRepaired()) {
+                $count++;
+            }
+        }
+        return $count;
+    }
+
+    /**
      * @return int
      */
     public function getNumberOfPrs()
@@ -215,6 +229,21 @@ class IdentifiedDefectCollection
     public function getNumberOfAdvisories()
     {
         return count($this->advisories);
+    }
+
+    /**
+    * @return int
+    */
+    public function getNumberOfUnrepairedAdvisories()
+    {
+        $count = 0;
+        foreach (array_keys($this->advisories) as $k) {
+            if (false === $this->advisories[$k]->isMarkedAsRepaired()) {
+                $count++;
+            }
+        }
+
+        return $count;
     }
 
     /**

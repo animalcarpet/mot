@@ -54,12 +54,12 @@ public class Contingency {
                     startTestConfirmationPage.clickStartMotTestWhenConductingContingencyTest(TestResultsEntryNewPage.class);
 
             testResultsEntryPage = testResultsEntryPage.clickAddReadingButton().addOdometerReading(99999, OdometerUnit.MILES, true);
-            testSummaryPage = testResultsEntryPage.completeBrakeTestWithPassValues().clickReviewTestButton();
+            testSummaryPage = testResultsEntryPage.completeBrakeTestWithPassValues(false).clickReviewTestButton();
         } else {
             TestResultsEntryPage testResultsEntryPage =
                     startTestConfirmationPage.clickStartMotTestWhenConductingContingencyTest(TestResultsEntryPage.class);
 
-            testResultsEntryPage.completeTestDetailsWithPassValues();
+            testResultsEntryPage.completeTestDetailsWithPassValues(false);
 
             testSummaryPage = testResultsEntryPage.clickReviewTestButton();
         }
@@ -82,7 +82,7 @@ public class Contingency {
         ReTestSummaryPage summaryPage;
         if (ConfigHelper.isTestResultEntryImprovementsEnabled()) {
             TestResultsEntryNewPage resultsEntryPage = retestPage.startContigencyRetest(TestResultsEntryNewPage.class);
-            resultsEntryPage.completeTestDetailsWithPassValues();
+            resultsEntryPage.completeTestDetailsWithPassValues(true);
             summaryPage = resultsEntryPage.clickReviewTestButton(true);
         } else {
             ReTestResultsEntryPage resultsEntryPage = retestPage.startContigencyRetest(ReTestResultsEntryPage.class);

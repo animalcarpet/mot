@@ -56,7 +56,7 @@ public class ConductMotTests extends DslTest {
         TestResultsEntryGroupAPageInterface testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester,vehicle);
 
         //When I complete all test details with passing data
-        testResultsEntryPage.completeTestDetailsWithPassValues();
+        testResultsEntryPage.completeTestDetailsWithPassValues(false);
 
         //Then I should see a pass on the test result page
         assertThat(testResultsEntryPage.isPassNoticeDisplayed(), is(true));
@@ -256,9 +256,8 @@ public class ConductMotTests extends DslTest {
         TestResultsEntryNewPage testResultsEntryNewPage = ((TestResultsEntryNewPage)motUI.retest.startRetest(vehicle, tester))
                 .clickRepaired(defectName, TestResultsEntryNewPage.class);
 
-        //Then the defect shouldn't be displayed
-        assertThat(testResultsEntryNewPage.isDefectRepairedSuccessMessageDisplayed(defectName) &&
-                testResultsEntryNewPage.isUndoLinkDisplayed(), is(true));
+        //Then the defect should be marked as repaired and the undo link is displayed
+        assertThat(testResultsEntryNewPage.isUndoLinkDisplayed(), is(true));
     }
 
     @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1423"},
@@ -288,7 +287,7 @@ public class ConductMotTests extends DslTest {
 
         //When I conduct a retest on the vehicle click repaired on defect and click review test button
         TestSummaryPage testSummaryPage = ((TestResultsEntryNewPage)motUI.retest.startRetest(vehicle, tester))
-                .completeTestDetailsWithPassValues(defectName);
+                .completeTestDetailsWithPassValues(defectName, true);
 
         //Then the defect should not be displayed
         assertThat(testSummaryPage.isDefectDisplayed(defectName), is(false));

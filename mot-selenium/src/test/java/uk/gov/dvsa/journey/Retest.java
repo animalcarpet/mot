@@ -42,7 +42,7 @@ public class Retest {
         ReTestSummaryPage summaryPage;
         if (ConfigHelper.isTestResultEntryImprovementsEnabled()) {
             TestResultsEntryNewPage resultsEntryPage = pageNavigator.gotoReTestResultsEntryPage(tester, vehicle);
-            resultsEntryPage.completeTestDetailsWithPassValues();
+            resultsEntryPage.completeTestDetailsWithPassValues(true);
             summaryPage = resultsEntryPage.clickReviewTestButton(true);
         } else {
             ReTestResultsEntryPage resultsEntryPage = pageNavigator.gotoReTestResultsEntryPage(tester, vehicle);

@@ -45,7 +45,7 @@ public class BrakeTestResultsTest extends DslTest {
         TestResultsEntryNewPage testResultsEntryNewPage = pageNavigator.gotoTestResultsEntryNewPage(tester,vehicle);
 
         // When I complete all Brake test Values with passing data
-        testResultsEntryNewPage.completeBrakeTestWithPassValues();
+        testResultsEntryNewPage.completeBrakeTestWithPassValues(false);
 
         // Then I should see a pass on the test result page
         assertThat(testResultsEntryNewPage.isPassNoticeDisplayed(), is(true));

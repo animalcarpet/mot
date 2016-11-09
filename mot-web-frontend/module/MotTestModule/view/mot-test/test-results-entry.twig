@@ -68,29 +68,30 @@
 </div>
 
 {# Brake test section #}
-<div class="action-panel">
+<div class="js-brakeTestActionPanel action-panel">
     <div class="clear-float">
         <div class="action-panel__container">
             <h3 class="action-panel__heading">Brake test</h3>
             <h4 class="action-panel__sub-heading"></h4>
         </div>
         <div class="action-panel__container">
-            <h3 id="brakeTestResultsNotice" class="action-panel__value">{{ motTestResults.brakeTestOutcome }}</h3>
+            <h3 id="brakeTestResultsNotice" class="js-brakeTestStatus action-panel__value">{{ motTestResults.brakeTestOutcome }}</h3>
         </div>
+
         <div class="action-panel__container--last">
-        {% if not motTestResults.isBrakePerformanceNotTested %}
-            {% if motTestResults.hasBrakeTestResult %}
-                <a href="{{ url('mot-test/brake-test-configuration', {'motTestNumber': motTest.motTestNumber}) }}"
-                   id="addBrakeTestButton" class="button">Edit brake test</a>
+
+            <div class="js-brakeTestActions{% if (not motTestResults.hasBrakeTestResult) or (motTestResults.isBrakePerformanceNotTested and motTestResults.hasBrakeTestResult) %} u-hidden{% endif %}">
+                <a class="button" href="{{ url('mot-test/brake-test-configuration', {'motTestNumber': motTest.motTestNumber}) }}"
+                   id="editBrakeTestButton" class="button">Edit brake test</a>
                 <span class="action-panel__secondary-action">or
                     <a href="{{ url('mot-test/brake-test-summary', {'motTestNumber': motTest.motTestNumber}) }}">
                         view brake test results</a>
                 </span>
-            {% else %}
-                <a href="{{ url('mot-test/brake-test-configuration', {'motTestNumber': motTest.motTestNumber}) }}"
-                   id="addBrakeTestButton" class="button">Add brake test</a>
-            {% endif %}
-        {% endif %}
+            </div>
+
+
+            <a class="js-addBrakeTest button {% if motTestResults.isBrakePerformanceNotTested or motTestResults.hasBrakeTestResult %} u-hidden{% endif %}" href="{{ url('mot-test/brake-test-configuration', {'motTestNumber': motTest.motTestNumber}) }}" id="addBrakeTestButton">Add brake test</a>
+
         </div>
     </div>
 </div>
@@ -102,7 +103,7 @@
 
 <nav class="content-navigation">
     <form action="{% if shouldDisableSubmitButton %}#{% else %}{{ url('mot-test/test-summary', {'motTestNumber' : motTest.motTestNumber}) }}{% endif %}" method="get">
-        <input id="reviewTest" type="submit" class="button" value="Review test" {% if shouldDisableSubmitButton %} disabled {% endif %}>
+        <input id="reviewTest" type="submit" class="js-reviewTestButton button" value="Review test" {% if shouldDisableSubmitButton %} disabled {% endif %}>
     </form>
     {% if not isDemo %}
     <ul class="content-navigation__secondary">
@@ -112,3 +113,20 @@
     </ul>
     {% endif %}
 </nav>
+
+
+<!-- {{ inlineScript().appendFile("/assets/javascripts/dvsa.js") }} -->
+
+{# JavaScript for the "Show/Hide defects button. #}
+{{ inlineScript().captureStart() }}
+$(document).ready(function() {
+var showerHider = new DVSA.Modules.DVSAShowHideToggle.showerHider({});
+showerHider.init();
+
+var markRepairs = new DVSA.Modules.DVSAMarkRepairs.markRepairs({});
+markRepairs.init();
+
+
+
+});
+{{ inlineScript().captureEnd() }}

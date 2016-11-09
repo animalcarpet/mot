@@ -38,11 +38,13 @@ public abstract class AbstractReasonsForRejectionPage extends Page {
 
     public <T extends Page> T repairDefect(String defect, Class<T> clazz) {
         driver.findElement(By.xpath(String.format(repairedButton, defect))).click();
+        PageInteractionHelper.waitForAjaxToComplete();
         return MotPageFactory.newPage(driver, clazz);
     }
 
     public <T extends Page> T undoRepairDefect(Class<T> clazz) {
         undoLink.click();
+        PageInteractionHelper.waitForAjaxToComplete();
         return MotPageFactory.newPage(driver, clazz);
     }
 
@@ -91,6 +93,7 @@ public abstract class AbstractReasonsForRejectionPage extends Page {
     }
 
     public boolean isUndoLinkDisplayed() {
+        PageInteractionHelper.waitForAjaxToComplete();
         return PageInteractionHelper.isElementDisplayed(undoLink);
     }
 
