@@ -34,20 +34,13 @@
         </tr>
     </tbody>
 </table>
-<form action="<?php echo $this->isFeatureEnabled('new_person_profile')
-    ?
+<form action="<?php echo
     $this->url(
         'user_admin/profile/record-demo-test', [
             'personId'          => $viewModel->getTester()->getId(),
             'vehicleClassGroup' => $viewModel->getVehicleClassGroup()
         ]
-    ):
-    $this->url(
-        'user_admin/user-profile/record-demo-test', [
-            'personId'          => $viewModel->getTester()->getId(),
-            'vehicleClassGroup' => $viewModel->getVehicleClassGroup()
-        ]
-    ) ?>" method="post">
+    ); ?>" method="post">
     <?php echo $this->csrfToken() ?>
     
     <nav class="content-navigation">
@@ -55,16 +48,7 @@
         <ul class="content-navigation__secondary">
             <li>
                 <a id="cancel-record-demo-test" href="<?php
-                    echo $this->isFeatureEnabled('new_person_profile') ?
-                        $this->url(
-                            "user_admin/user-profile",
-                            [
-                                "personId" => $viewModel->getTester()->getId()
-                            ], [
-                                "query" => $viewModel->getSearchQueryParams()
-                            ]
-                        ) :
-                        $this->url(
+                    echo $this->url(
                             "user_admin/user-profile",
                             [
                                 "personId" => $viewModel->getTester()->getId()

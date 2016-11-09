@@ -16,7 +16,7 @@ import uk.gov.dvsa.ui.pages.events.EventsHistoryPage;
 import uk.gov.dvsa.ui.pages.profile.qualificationdetails.QualificationDetailsPage;
 import uk.gov.dvsa.ui.pages.profile.testqualityinformation.AggregatedTestQualityPage;
 
-public class NewUserProfilePage extends ProfilePage {
+public class UserProfilePage extends ProfilePage {
     private static final String PAGE_TITLE = "User profile";
     public static final String PATH = "/user-admin/user/%s";
 
@@ -50,7 +50,7 @@ public class NewUserProfilePage extends ProfilePage {
 
     private By securityCardPanel = By.id("security-card");
 
-    public NewUserProfilePage(MotAppDriver driver) {
+    public UserProfilePage(MotAppDriver driver) {
         super(driver);
         selfVerify();
     }

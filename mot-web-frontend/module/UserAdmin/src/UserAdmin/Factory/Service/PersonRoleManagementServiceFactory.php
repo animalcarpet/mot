@@ -2,6 +2,7 @@
 
 namespace UserAdmin\Factory\Service;
 
+use DvsaClient\Mapper\UserAdminMapper;
 use DvsaClient\MapperFactory;
 use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 use UserAdmin\Service\PersonRoleManagementService;
@@ -31,11 +32,14 @@ class PersonRoleManagementServiceFactory implements FactoryInterface
 
         $catalogService = $serviceLocator->get('CatalogService');
 
+        $userAdminMapper = new UserAdminMapper($httpRestJsonClient);
+
         $service = new PersonRoleManagementService(
             $identityService,
             $authorisationService,
             $httpRestJsonClient,
-            $catalogService
+            $catalogService,
+            $userAdminMapper
         );
 
         return $service;

@@ -28,16 +28,12 @@ class PasswordExpiryNotificationServiceFactory implements FactoryInterface
         /** @var EntityManager $entityManager */
         $entityManager = $serviceLocator->get(EntityManager::class);
 
-        /** @var FeatureToggles $featureToggle */
-        $featureToggles = $serviceLocator->get('Feature\FeatureToggles');
-
         return new PasswordExpiryNotificationService(
             $serviceLocator->get(NotificationService::class),
             $entityManager->getRepository(Notification::class),
             $entityManager->getRepository(Person::class),
             $entityManager->getRepository(PasswordDetail::class),
-            new Transaction($entityManager),
-            $featureToggles
+            new Transaction($entityManager)
         );
     }
 }

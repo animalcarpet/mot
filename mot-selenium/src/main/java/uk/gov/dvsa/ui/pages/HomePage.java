@@ -5,6 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
+import uk.gov.dvsa.ui.pages.profile.PersonProfilePage;
 import uk.gov.dvsa.ui.pages.vts.VehicleTestingStationPage;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class HomePage extends Page {
     @FindBy(css = ".site-link") private WebElement siteName;
     @FindBy(id = "action-resume-mot-test") private WebElement resumeMotTestButton;
     @FindBy(id = "header_title") private WebElement vtsActivityLabel;
+    @FindBy(id = "user-profile") private WebElement profileLink;
     @FindBy(id = "mot-test-certificates-list") private WebElement motCertificateList;
     @FindBy(id = "action-start-certificate-reissue") private WebElement StartCertificateReissue;
     @FindBy(className = "notification_link") private WebElement notificationMessage;
@@ -121,5 +123,10 @@ public class HomePage extends Page {
 
     public boolean isGoogleTagManagerDataLayerRendered() {
         return googleTagManagerDataLayer.isEnabled();
+    }
+
+    public PersonProfilePage clickYourProfile() {
+        profileLink.click();
+        return new PersonProfilePage(driver);
     }
 }

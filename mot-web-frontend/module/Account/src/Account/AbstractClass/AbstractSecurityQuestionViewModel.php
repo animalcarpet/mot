@@ -21,11 +21,6 @@ use Zend\View\Model\ViewModel;
 abstract class AbstractSecurityQuestionViewModel
 {
     /**
-     * @var bool
-     */
-    private $isNewPersonProfileEnabled;
-
-    /**
      * @var \Dvsa\Mot\Frontend\PersonModule\View\PersonProfileUrlGenerator
      */
     protected $personProfileUrlGenerator;
@@ -37,13 +32,11 @@ abstract class AbstractSecurityQuestionViewModel
 
     /**
      * @param SecurityQuestionService   $service
-     * @param bool                      $isNewPersonProfileEnabled
      * @param PersonProfileUrlGenerator $personProfileUrlGenerator
      */
-    public function __construct($service, $isNewPersonProfileEnabled, PersonProfileUrlGenerator $personProfileUrlGenerator)
+    public function __construct($service, PersonProfileUrlGenerator $personProfileUrlGenerator)
     {
         $this->service = $service;
-        $this->isNewPersonProfileEnabled = (bool) $isNewPersonProfileEnabled;
         $this->personProfileUrlGenerator = $personProfileUrlGenerator;
     }
 
@@ -97,14 +90,6 @@ abstract class AbstractSecurityQuestionViewModel
     public function getSearchParams()
     {
         return $this->service->getSearchParams();
-    }
-
-    /**
-     * @return bool
-     */
-    protected function isNewPersonProfileEnabled()
-    {
-        return $this->isNewPersonProfileEnabled;
     }
 
     /**

@@ -89,9 +89,7 @@ $mastheadPresenter = new MastheadPresenter;
                     </li>
                     <li>
                         <a href="<?php
-                        echo $this->isFeatureEnabled('new_person_profile')
-                            ? $this->url('newProfile', [],[]) :
-                            PersonUrlBuilderWeb::profile();
+                        echo $this->url('newProfile', [],[]);
                         ?>" id="user-profile">Your profile</a>
                     </li>
                     <li>

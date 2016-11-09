@@ -8,9 +8,7 @@ import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
-
 public class UserSearchPage extends Page {
-
     private static final String PAGE_TITLE = "User management";
     public static final String PATH = "/user-admin/search";
 

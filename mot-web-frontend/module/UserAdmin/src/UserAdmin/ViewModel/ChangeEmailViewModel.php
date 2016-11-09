@@ -14,18 +14,6 @@ class ChangeEmailViewModel
 
     private $isViewingOwnProfile;
 
-    private $newProfileEnabled;
-
-    public function setNewProfileEnabled($newProfileEnabled)
-    {
-        $this->newProfileEnabled = $newProfileEnabled;
-    }
-
-    public function getNewProfileEnabled()
-    {
-        return $this->newProfileEnabled;
-    }
-
     public function setIsViewingOwnProfile($isViewingOwnProfile)
     {
         $this->isViewingOwnProfile = $isViewingOwnProfile;

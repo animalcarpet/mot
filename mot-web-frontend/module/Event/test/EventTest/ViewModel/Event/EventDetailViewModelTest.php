@@ -121,11 +121,11 @@ class EventDetailViewModelTest extends \PHPUnit_Framework_TestCase
             ->setId(self::SITE_ID);
 
         $this->viewModel = new EventDetailViewModel($organisation, $site, null, null, 'ae', new EventFormDto($data), false, '');
-        $this->assertEquals('/event/list/ae/9?search=search&isShowDate=1&dateFrom%5BDay%5D=1&dateFrom%5BMonth%5D=1&dateFrom%5BYear%5D=2015&dateTo%5BDay%5D=1&dateTo%5BMonth%5D=1&dateTo%5BYear%5D=2015', $this->viewModel->getGoBackLink());
+        $this->assertEquals('/event/list/ae/9?search=search&isShowDate=1&dateFrom%5BDay%5D=1&dateFrom%5BMonth%5D=1&dateFrom%5BYear%5D=2015&dateTo%5BDay%5D=1&dateTo%5BMonth%5D=1&dateTo%5BYear%5D=2015&goBack=', $this->viewModel->getGoBackLink());
         $this->viewModel->setEventType('site');
-        $this->assertEquals('/event/list/site/1?search=search&isShowDate=1&dateFrom%5BDay%5D=1&dateFrom%5BMonth%5D=1&dateFrom%5BYear%5D=2015&dateTo%5BDay%5D=1&dateTo%5BMonth%5D=1&dateTo%5BYear%5D=2015', $this->viewModel->getGoBackLink());
+        $this->assertEquals('/event/list/site/1?search=search&isShowDate=1&dateFrom%5BDay%5D=1&dateFrom%5BMonth%5D=1&dateFrom%5BYear%5D=2015&dateTo%5BDay%5D=1&dateTo%5BMonth%5D=1&dateTo%5BYear%5D=2015&goBack=', $this->viewModel->getGoBackLink());
         $this->viewModel->setEventType('');
-        $this->assertEquals('', $this->viewModel->getGoBackLink());
+        $this->assertEquals('&goBack=', $this->viewModel->getGoBackLink());
     }
 
     public function testGetTitleName()

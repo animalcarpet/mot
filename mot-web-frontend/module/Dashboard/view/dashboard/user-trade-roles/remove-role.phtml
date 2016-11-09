@@ -2,7 +2,6 @@
 /**
  * @var $viewModel \DashBoard\ViewModel\RemoveRoleViewModel
  */
-use DvsaCommon\Constants\FeatureToggle;
 
 ?>
 
@@ -30,9 +29,7 @@ echo $this->url(null, [
         <ul class="content-navigation__secondary">
             <li>
                 <a id="cancel-and-return-to-profile" href="<?php
-                    echo $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-                        $this->personProfileUrl()->fromPersonProfile('trade-roles'):
-                        $this->url('user-home/profile/byId/trade-roles', [ 'id' => $viewModel->getPersonId()]); ?>">
+                    echo $this->personProfileUrl()->fromPersonProfile('trade-roles'); ?>">
                     Cancel and return to roles and associations
                 </a>
             </li>

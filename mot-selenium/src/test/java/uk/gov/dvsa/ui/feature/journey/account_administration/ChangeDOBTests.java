@@ -24,7 +24,6 @@ public class ChangeDOBTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-927"},
-            testName = "NewProfile",
             description = "Test that Authorised user can change date of birth on other person profile",
             dataProvider = "dvsaUserChangeDOBProvider")
     public void dvsaUserCanChangeDOBOnOtherPersonProfile(User user) throws IOException {
@@ -39,7 +38,6 @@ public class ChangeDOBTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-927"},
-            testName = "NewProfile",
             description = "Test that user cant change date of birth on own person profile",
             dataProvider = "userCantSeeChangeDOBLinkProvider")
     public void userCantSeeChangeDOBLinkOnOwnProfile(User user) throws IOException, URISyntaxException {
@@ -52,7 +50,6 @@ public class ChangeDOBTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-927"},
-            testName = "NewProfile",
             description = "Test that user should provide a valid day in order to change date of birth",
             dataProvider = "invalidDateData")
     public void validationMessageDisplayedForInvalidInput(String day, String month, String year) throws IOException, URISyntaxException {
@@ -68,7 +65,6 @@ public class ChangeDOBTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-59"},
-            testName = "NewProfile",
             description = "Test that Authorised user can navigate to Change date of birth page and backward")
     public void dvsaUserCanNavigateToAndBackwardDOBPage() throws IOException {
         // Given I am on other person profile as an authorised user

@@ -25,9 +25,9 @@ public class ChangeAddress {
             case "INVALID_INPUT":
                 return (T) changeAddressPage.clickReviewAddress(ChangeAddressPage.class);
             case "PERSON_PROFILE":
-                return (T) changeAddressPage.clickReviewAddress(ReviewAddressPage.class).clickChangeAddressButton(NewPersonProfilePage.class);
+                return (T) changeAddressPage.clickReviewAddress(ReviewAddressPage.class).clickChangeAddressButton(PersonProfilePage.class);
             case "USER_PROFILE":
-                return (T) changeAddressPage.clickReviewAddress(ReviewAddressPage.class).clickChangeAddressButton(NewUserProfilePage.class);
+                return (T) changeAddressPage.clickReviewAddress(ReviewAddressPage.class).clickChangeAddressButton(UserProfilePage.class);
             default:
                 throw new PageInstanceNotFoundException("Page instantiation exception");
         }
@@ -72,8 +72,8 @@ public class ChangeAddress {
             profilePage.clickChangeAddressLink();
         }
         if (isPersonProfile) {
-            return (T)changeAddressPage.clickCancelAndReturn(NewPersonProfilePage.class);
+            return (T)changeAddressPage.clickCancelAndReturn(PersonProfilePage.class);
         }
-        return (T)changeAddressPage.clickCancelAndReturn(NewUserProfilePage.class);
+        return (T)changeAddressPage.clickCancelAndReturn(UserProfilePage.class);
     }
 }

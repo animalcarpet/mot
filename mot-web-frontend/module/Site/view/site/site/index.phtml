@@ -79,14 +79,12 @@ echo $this->partial(
                 <?php if ($permission->canViewProfile($position->getPerson())): ?>
 
                     <a href="<?php
-                    echo $this->isFeatureEnabled('new_person_profile')
-                        ? $this->url(ContextProvider::VTS_PARENT_ROUTE,
+                    echo $this->url(ContextProvider::VTS_PARENT_ROUTE,
                             [
                                 'vehicleTestingStationId' => $site->getId(),
                                 'id' => $position->getPerson()->getId()
                             ], []
-                        )
-                        : PersonUrlBuilderWeb::profile($position->getPerson()->getId())?>">
+                        )?>">
                         <?php echo $this->escapeHtml($position->getPerson()->getFullName());
                         if ($permission->canViewUsername()):
                             echo "(" . $this->escapeHtml($position->getPerson()->getUsername()) . ")";

@@ -22,25 +22,18 @@ class PasswordExpiryNotificationService
     private $personRepository;
     private $transaction;
 
-    /**
-     * @var FeatureToggles $featureToggles
-     */
-    private $featureToggles;
-
     public function __construct(
         NotificationService $notificationService,
         NotificationRepository $notificationRepository,
         PersonRepository $personRepository,
         PasswordDetailRepository $passwordDetailRepository,
-        Transaction $transaction,
-        FeatureToggles $featureToggles
+        Transaction $transaction
     ) {
         $this->notificationService = $notificationService;
         $this->notificationRepository = $notificationRepository;
         $this->personRepository = $personRepository;
         $this->passwordDetail = $passwordDetailRepository;
         $this->transaction = $transaction;
-        $this->featureToggles = $featureToggles;
     }
 
     /**
@@ -55,7 +48,7 @@ class PasswordExpiryNotificationService
             ->setRecipient($person->getId())
             ->setTemplate(Notification::TEMPLATE_PASSWORD_EXPIRY)
             ->addField("expiryDay", $this->getExpiryDay($day))
-            ->addField("change_password_url", $this->getChangePasswordUrl($personId))
+            ->addField("change_password_url", '/your-profile/change-password')
             ->toArray();
 
         $this->transaction->begin();
@@ -95,19 +88,6 @@ class PasswordExpiryNotificationService
         }
 
         return sprintf(self::EXPIRY_IN_XX_DAYS, $day);
-    }
-
-    /**
-     * Return the correct URL for taking the user to the change-password page.
-     *
-     * @return string
-     */
-    private function getChangePasswordUrl() {
-        if (true === $this->featureToggles->isEnabled(FeatureToggle::NEW_PERSON_PROFILE)) {
-            return '/your-profile/change-password';
-        } else {
-            return '/profile/change-password';
-        }
     }
 
     /**

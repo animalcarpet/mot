@@ -3,6 +3,7 @@
 namespace UserAdminTest\Service;
 
 use CoreTest\Service\StubCatalogService;
+use DvsaClient\Mapper\UserAdminMapper;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
@@ -35,12 +36,14 @@ class PersonRoleManagementServiceTest extends TestCase
         $this->authorisationMock = new GrantAllAuthorisationServiceStub();
         $mockRestClient = $this->stubHttpRestJsonClient();
         $mockCatalogService = new StubCatalogService();
+        $userAdminMapper = new UserAdminMapper($mockRestClient);
 
         $this->service = new PersonRoleManagementService(
             $this->identityMock,
             $this->authorisationMock,
             $mockRestClient,
-            $mockCatalogService
+            $mockCatalogService,
+            $userAdminMapper
         );
     }
 
@@ -59,41 +62,30 @@ class PersonRoleManagementServiceTest extends TestCase
             ->method('post')
             ->with($url, $data);
 
+        $userAdminMapper = new UserAdminMapper($mockRestClient);
+
         (new PersonRoleManagementService(
             $this->identityMock,
             $this->authorisationMock,
             $mockRestClient,
-            $mockCatalogService
+            $mockCatalogService,
+            $userAdminMapper
         ))->addRole($personId, $role);
     }
 
     public function testGetPersonManageableInternalRoles()
     {
-        $isNewPersonProfileEnabled = false;
-
         $this->assertEquals(
             $this->expectedDataForMockPersonId(PersonRoleManagementService::ROLES_MANAGEABLE),
-            $this->service->getPersonManageableInternalRoles(self::PID_AO1, $isNewPersonProfileEnabled)
+            $this->service->getPersonManageableInternalRoles(self::PID_AO1)
         );
     }
 
     public function testGetPersonAssignedInternalRoles()
     {
-        $isNewPersonProfileEnabled = false;
-
         $this->assertEquals(
             $this->expectedDataForMockPersonId(PersonRoleManagementService::ROLES_ASSIGNED),
-            $this->service->getPersonAssignedInternalRoles(self::PID_AO1, $isNewPersonProfileEnabled)
-        );
-    }
-
-    public function testGetUserProfile()
-    {
-        $isNewPersonProfileEnabled = false;
-
-        $this->assertInstanceOf(
-            PersonHelpDeskProfileDto::class,
-            $this->service->getUserProfile(self::PID_AO1, $isNewPersonProfileEnabled)
+            $this->service->getPersonAssignedInternalRoles(self::PID_AO1)
         );
     }
 
@@ -116,11 +108,14 @@ class PersonRoleManagementServiceTest extends TestCase
             ->method('getIdentity')
             ->willReturn($mockIdentity);
 
+        $userAdminMapper = new UserAdminMapper($mockRestClient);
+
         $obj = new PersonRoleManagementService(
             $mockIdentityProvider,
             $this->authorisationMock,
             $mockRestClient,
-            $mockCatalogService
+            $mockCatalogService,
+            $userAdminMapper
         );
         $obj->forbidManagementOfSelf($id);
     }
@@ -141,11 +136,14 @@ class PersonRoleManagementServiceTest extends TestCase
             ->method('getIdentity')
             ->willReturn($mockIdentity);
 
+        $userAdminMapper = new UserAdminMapper($mockRestClient);
+
         $obj = new PersonRoleManagementService(
             $mockIdentityProvider,
             $this->authorisationMock,
             $mockRestClient,
-            $mockCatalogService
+            $mockCatalogService,
+            $userAdminMapper
         );
         $this->assertTrue($obj->personToManageIsSelf($id));
         $this->assertFalse($obj->personToManageIsSelf(321));
@@ -176,9 +174,10 @@ class PersonRoleManagementServiceTest extends TestCase
         $service = new PersonRoleManagementService(
             XMock::of(MotIdentityProviderInterface::class),
             $this->authorisationMock,
-            $this->stubHttpRestJsonClient(),
-            new StubCatalogService()
-        );
+            $mockRestClient = $this->stubHttpRestJsonClient(),
+            new StubCatalogService(),
+            $userAdminMapper = new UserAdminMapper($mockRestClient)
+    );
         $this->assertTrue($service->$methodName());
     }
 
@@ -212,41 +211,7 @@ class PersonRoleManagementServiceTest extends TestCase
                         'DVSA-AREA-OFFICE-1',
                     ],
                 ],
-            ],
-            PersonUrlBuilder::helpDeskProfileUnrestricted(self::PID_AO1)->toString() => [
-                'data' => [
-                    'title' => 'Mr',
-                    'userName' => 'areaoffice1user',
-                    'firstName' => 'John',
-                    'middleName' => '',
-                    'lastName' => 'Wayne Areaoffice1User',
-                    'dateOfBirth' => '1981-04-24',
-                    'postcode' => 'L1 1PQ',
-                    'addressLine1' => '1 Straw Hut',
-                    'addressLine2' => '5 Uncanny St',
-                    'addressLine3' => '',
-                    'addressLine4' => '',
-                    'town' => 'Liverpool',
-                    'email' => 'personrolemanagementservicetest@' . EmailAddressValidator::TEST_DOMAIN,
-                    'telephone' => '+768-45-4433630',
-                    'roles' => [
-                        'system' => [
-                            'roles' => [
-                                'USER',
-                                'DVSA-AREA-OFFICE-1',
-                            ],
-                        ],
-                        'organisations' => [],
-                        'sites' => [],
-
-                    ],
-                    'drivingLicence' => 'GARDN605109C99LY60',
-                    'authenticationMethod' => [
-                        'name' => 'Pin',
-                        'code' => 'PIN',
-                    ],
-                ],
-            ],
+            ]
         ];
 
         return $urlDataMap[$url];
@@ -260,9 +225,9 @@ class PersonRoleManagementServiceTest extends TestCase
                     'id' => 5,
                     'name' => 'DVSA Area Admin',
                     'url' => [
-                        'route' => 'user_admin/user-profile/manage-user-internal-role/add-internal-role',
+                        'route' => 'newProfileUserAdmin/manage-user-internal-role/add-internal-role',
                         'params' => [
-                            'personId' => 147,
+                            'id' => 147,
                             'personSystemRoleId' => 5,
                         ],
                     ],
@@ -274,9 +239,9 @@ class PersonRoleManagementServiceTest extends TestCase
                     'name' => 'Vehicle Examiner',
                     'canManageThisRole' => true,
                     'url' => [
-                        'route' => 'user_admin/user-profile/manage-user-internal-role/remove-internal-role',
+                        'route' => 'newProfileUserAdmin/manage-user-internal-role/remove-internal-role',
                         'params' => [
-                            'personId' => 147,
+                            'id' => 147,
                             'personSystemRoleId' => 2,
                         ],
                     ],
@@ -286,9 +251,9 @@ class PersonRoleManagementServiceTest extends TestCase
                     'name' => 'DVSA Area Admin 2',
                     'canManageThisRole' => true,
                     'url' => [
-                        'route' => 'user_admin/user-profile/manage-user-internal-role/remove-internal-role',
+                        'route' => 'newProfileUserAdmin/manage-user-internal-role/remove-internal-role',
                         'params' => [
-                            'personId' => 147,
+                            'id' => 147,
                             'personSystemRoleId' => 11,
                         ],
                     ],

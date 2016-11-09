@@ -5,11 +5,8 @@ namespace Application\Listener;
 use Account\Service\ExpiredPasswordService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
-use Dvsa\OpenAM\Model\OpenAMLoginDetails;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Date\DateTimeHolder;
-use DvsaFeature\FeatureToggles;
 use Zend\Log\LoggerInterface;
 use Zend\Mvc\MvcEvent;
 
@@ -34,21 +31,17 @@ class ExpiredPasswordListener
 
     private $expiredPasswordService;
 
-    private $featureToggles;
-
     public function __construct(
         MotIdentityProviderInterface $identityProvider,
         DateTimeHolder $timeHolder,
         LoggerInterface $logger,
-        ExpiredPasswordService $expiredPasswordService,
-        FeatureToggles $featureToggles
+        ExpiredPasswordService $expiredPasswordService
     )
     {
         $this->identityProvider = $identityProvider;
         $this->timeHolder = $timeHolder;
         $this->logger = $logger;
         $this->expiredPasswordService = $expiredPasswordService;
-        $this->featureToggles = $featureToggles;
     }
 
     public function __invoke(MvcEvent $event)
@@ -85,18 +78,10 @@ class ExpiredPasswordListener
 
         $personId = $this->identityProvider->getIdentity()->getUserId();
 
-        $newProfileEnabled
-            = $this->featureToggles->isEnabled(FeatureToggle::NEW_PERSON_PROFILE);
+        $redirectUrl = $event->getRouter()->assemble(
+            ['id' => $personId], ['name' => ContextProvider::YOUR_PROFILE_PARENT_ROUTE . '/change-password']
+        );
 
-        if ($newProfileEnabled) {
-            $redirectUrl = $event->getRouter()->assemble(
-                ['id' => $personId], ['name' => ContextProvider::YOUR_PROFILE_PARENT_ROUTE . '/change-password']
-            );
-        } else {
-            $redirectUrl = $event->getRouter()->assemble(
-                [], ['name' => 'user-home/profile/change-password']
-            );
-        }
         
         if ($redirectUrl) {
             $response = $event->getResponse();

@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.is;
 public class TradeUserManagingRolesTests extends DslTest {
 
     @Test(dataProvider = "dvsaTesterAndSiteManager",
-            testName = "NewProfile", groups = {"BVT", "VM-12321"},
+            groups = {"BVT", "VM-12321"},
             description = "Verifies that trade user cant check roles via roles and associations link " +
                     "of other trade user")
     public void tradeUserCantViewAeAssociationOfOtherTradeUser(User tester, User siteManager) throws IOException, URISyntaxException {

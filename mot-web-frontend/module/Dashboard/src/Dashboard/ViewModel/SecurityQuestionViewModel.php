@@ -32,9 +32,7 @@ class SecurityQuestionViewModel extends AbstractSecurityQuestionViewModel
             if ($this->service->getQuestionSuccess() === true) {
                 $questionNumber = UserAdminSessionManager::SECOND_QUESTION;
 
-                return true === $this->isNewPersonProfileEnabled()
-                    ? $this->generateSecurityQuestionsUrlForNewProfile($questionNumber)
-                    : PersonUrlBuilderWeb::securityQuestions($questionNumber);
+                return $this->generateSecurityQuestionsUrlForNewProfile($questionNumber);
             }
 
             $flashMessenger->clearCurrentMessagesFromNamespace(FlashMessenger::NAMESPACE_ERROR);
@@ -43,9 +41,7 @@ class SecurityQuestionViewModel extends AbstractSecurityQuestionViewModel
         }
 
         if ($this->service->getQuestionSuccess() === true) {
-            return true === $this->isNewPersonProfileEnabled()
-                ? $this->generateSecuritySettingsUrlForNewProfile()
-                : PersonUrlBuilderWeb::securitySettings();
+            return $this->generateSecuritySettingsUrlForNewProfile();
         }
 
         return AccountUrlBuilderWeb::forgottenPasswordNotAuthenticated();
@@ -60,9 +56,7 @@ class SecurityQuestionViewModel extends AbstractSecurityQuestionViewModel
     {
         $questionNumber = $this->getQuestionNumber();
 
-        return true === $this->isNewPersonProfileEnabled()
-            ? $this->generateSecurityQuestionsUrlForNewProfile($questionNumber)
-            : PersonUrlBuilderWeb::securityQuestions($questionNumber);
+        return $this->generateSecurityQuestionsUrlForNewProfile($questionNumber);
     }
 
     /**
@@ -72,8 +66,6 @@ class SecurityQuestionViewModel extends AbstractSecurityQuestionViewModel
      */
     public function getFormActionUrl($questionNumber)
     {
-        return true === $this->isNewPersonProfileEnabled()
-            ? $this->generateSecurityQuestionsUrlForNewProfile($questionNumber)
-            : (string) PersonUrlBuilderWeb::securityQuestions($questionNumber);
+        return $this->generateSecurityQuestionsUrlForNewProfile($questionNumber);
     }
 }

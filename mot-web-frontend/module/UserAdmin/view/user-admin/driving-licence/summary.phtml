@@ -3,14 +3,9 @@
 use UserAdmin\Presenter\DrivingLicenceSummaryPresenter;
 /** @var DrivingLicenceSummaryPresenter $presenter */
 
-$backButtonUrl = $this->isFeatureEnabled('new_person_profile')
-    ? $this->url(
+$backButtonUrl = $this->url(
         'newProfileUserAdmin/driving-licence-change',
         ['id' => $presenter->getPersonId()]
-    ):
-    $this->url(
-        'user_admin/user-profile/driving-licence-change',
-        ['personId' => $presenter->getPersonId()]
     );
 
 ?>

@@ -22,8 +22,7 @@ use Zend\Mvc\Controller\Plugin\Url;
 class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
 {
     const PERSON_ID = 1;
-    const NEW_PROFILE_ENABLED = true;
-    const CURRENT_URL = 'current-url';
+    const CURRENT_URL = '/profile/1';
     const TEST_LOG_URL = 'test-log-url';
     const TEST_QUALITY_URL = 'test-quality-information/%s';
 
@@ -455,7 +454,6 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
             self::PERSON_ID,
             $this->personProfileGuardMock,
             $this->testerAuthorisationMock,
-            self::NEW_PROFILE_ENABLED,
             self::CURRENT_URL,
             $this->personProfileRoutesMock,
             $this->urlPluginMock,

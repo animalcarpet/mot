@@ -3,7 +3,7 @@ package uk.gov.dvsa.journey.userprofile;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import uk.gov.dvsa.ui.pages.profile.ChangeDateOfBirthPage;
-import uk.gov.dvsa.ui.pages.profile.NewUserProfilePage;
+import uk.gov.dvsa.ui.pages.profile.UserProfilePage;
 import uk.gov.dvsa.ui.pages.profile.ProfilePage;
 
 public class ChangeDOB {
@@ -20,7 +20,7 @@ public class ChangeDOB {
                 .fillDay(newDob.dayOfMonth().getAsString())
                 .fillMonth(newDob.monthOfYear().getAsString())
                 .fillYear(newDob.year().getAsString())
-                .clickSubmitButton(NewUserProfilePage.class);
+                .clickSubmitButton(UserProfilePage.class);
 
         return profilePage;
     }

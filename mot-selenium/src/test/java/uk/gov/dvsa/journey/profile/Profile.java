@@ -2,19 +2,17 @@ package uk.gov.dvsa.journey.profile;
 
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
-import uk.gov.dvsa.helper.ConfigHelper;
 import uk.gov.dvsa.journey.userprofile.*;
 import uk.gov.dvsa.journey.userprofile.ChangeTelephone;
 import uk.gov.dvsa.module.userprofile.AnnualAssessmentCertificates;
+import uk.gov.dvsa.ui.pages.ChangePasswordFromProfilePage;
 import uk.gov.dvsa.ui.pages.ChangeTelephoneDetailsPage;
 import uk.gov.dvsa.ui.pages.HomePage;
 import uk.gov.dvsa.ui.pages.changedriverlicence.ChangeDrivingLicencePage;
 import uk.gov.dvsa.ui.pages.changedriverlicence.RemoveDriverLicencePage;
 import uk.gov.dvsa.ui.pages.changedriverlicence.ReviewDrivingLicencePage;
-import uk.gov.dvsa.ui.pages.dvsa.UserSearchProfilePage;
 import uk.gov.dvsa.ui.pages.exception.PageInstanceNotFoundException;
 import uk.gov.dvsa.ui.pages.profile.*;
-import uk.gov.dvsa.ui.pages.profile.qualificationdetails.QualificationDetailsPage;
 import uk.gov.dvsa.ui.pages.profile.security.ChangeSecurityQuestionsPasswordPage;
 import uk.gov.dvsa.ui.pages.vts.VehicleTestingStationPage;
 
@@ -34,37 +32,15 @@ public class Profile {
     }
 
     public ProfilePage viewYourProfile(final User user) throws IOException {
-        if(ConfigHelper.isNewPersonProfileEnabled()){
-            profilePage = pageNavigator.navigateToPage(user, NewPersonProfilePage.PATH, NewPersonProfilePage.class);
-        } else {
-            profilePage = pageNavigator.navigateToPage(user, PersonProfilePage.PATH, PersonProfilePage.class);
-        }
-
+        profilePage = pageNavigator.navigateToPage(user, PersonProfilePage.PATH, PersonProfilePage.class);
         return profilePage;
     }
 
     public ProfilePage dvsaViewUserProfile(final User userViewingProfile, final User userProfileToView) throws IOException {
-        String newQueryPath = String.format(NewUserProfilePage.PATH, userProfileToView.getId());
-        String oldQueryPath = String.format(UserSearchProfilePage.PATH, userProfileToView.getId());
-
-        if(ConfigHelper.isNewPersonProfileEnabled()){
-            profilePage = pageNavigator.navigateToPage(userViewingProfile, newQueryPath, NewUserProfilePage.class);
-        } else {
-            profilePage = pageNavigator.navigateToPage(userViewingProfile, oldQueryPath, UserSearchProfilePage.class);
-        }
+        String queryPath = String.format(UserProfilePage.PATH, userProfileToView.getId());
+        profilePage = pageNavigator.navigateToPage(userViewingProfile, queryPath, UserProfilePage.class);
 
         return profilePage;
-    }
-
-    public QualificationDetailsPage userDisplayQualificationDetailsPage(final User userViewingProfile, final User userProfileToView) throws Exception {
-
-        String newQueryPath = String.format(QualificationDetailsPage.PATH, userProfileToView.getId());
-
-        if(ConfigHelper.isNewPersonProfileEnabled()){
-            return pageNavigator.navigateToPage(userViewingProfile, newQueryPath, QualificationDetailsPage.class);
-        } else {
-            throw new Exception("Not supported");
-        }
     }
 
     public ProfilePage tradeViewUserProfile(final User userViewingProfile, final User userProfileToView) throws IOException {
@@ -198,5 +174,20 @@ public class Profile {
 
     public String changeSecurityQuestionsAndAnswer(User user) {
         return new ChangeSecurityQuestions(profilePage).change(user.getPassword());
+    }
+
+    public String changePasswordExpectingSuccessText(User user, String oldPassword, String newPassword) throws IOException {
+        ChangePasswordFromProfilePage changePasswordPage = pageNavigator.gotoHomePage(user).clickYourProfile().clickChangePasswordLink();
+        return changePasswordPage.changePasswordExpectingText(oldPassword,newPassword);
+    }
+
+    public String changePasswordExpectingErrorText(User user, String oldPassword,String newPassword) throws IOException {
+        ChangePasswordFromProfilePage changePasswordPage =
+            pageNavigator.navigateToPage(user, ChangePasswordFromProfilePage.PATH, ChangePasswordFromProfilePage.class);
+        return changePasswordPage
+            .enterOldPassword(oldPassword)
+            .enterNewPassword(newPassword)
+            .confirmNewPassword(newPassword = oldPassword.equals(newPassword) ? newPassword : newPassword + "wwe")
+            .clickSubmitButton(ChangePasswordFromProfilePage.class).getErrorMessage();
     }
 }

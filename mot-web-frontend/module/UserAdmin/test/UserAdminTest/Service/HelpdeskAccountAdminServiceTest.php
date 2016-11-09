@@ -5,7 +5,6 @@ namespace UserAdminTest\Service;
 use DvsaClient\Mapper\UserAdminMapper;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\Person\PersonHelpDeskProfileDto;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaFeature\FeatureToggles;
@@ -30,12 +29,10 @@ class HelpdeskAccountAdminServiceTest extends TestCase
     {
         $this->userAdminMapperMock = XMock::of(UserAdminMapper::class);
         $this->authorisationMock = XMock::of(MotAuthorisationServiceInterface::class);
-        $featureToggles = $this->getFeatureTogglesService([FeatureToggle::NEW_PERSON_PROFILE => false]);
 
         $this->sut = new HelpdeskAccountAdminService(
             $this->authorisationMock,
-            $this->userAdminMapperMock,
-            $featureToggles
+            $this->userAdminMapperMock
         );
     }
 

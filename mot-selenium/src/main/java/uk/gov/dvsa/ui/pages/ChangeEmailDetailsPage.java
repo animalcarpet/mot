@@ -6,8 +6,8 @@ import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
-import uk.gov.dvsa.ui.pages.profile.NewPersonProfilePage;
-import uk.gov.dvsa.ui.pages.profile.NewUserProfilePage;
+import uk.gov.dvsa.ui.pages.profile.PersonProfilePage;
+import uk.gov.dvsa.ui.pages.profile.UserProfilePage;
 
 public class ChangeEmailDetailsPage extends Page {
 
@@ -47,9 +47,9 @@ public class ChangeEmailDetailsPage extends Page {
     public <T extends Page> T clickCancelButton(boolean isYourProfile){
         cancelAndReturnToYourProfile.click();
         if (isYourProfile){
-            return (T)MotPageFactory.newPage(driver, NewPersonProfilePage.class);
+            return (T)MotPageFactory.newPage(driver, PersonProfilePage.class);
         }
-        return (T)MotPageFactory.newPage(driver, NewUserProfilePage.class);
+        return (T)MotPageFactory.newPage(driver, UserProfilePage.class);
     }
 
     public String getValidationMessage() {

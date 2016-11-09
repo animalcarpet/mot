@@ -17,12 +17,10 @@ use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Constants\Role;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\UserAdminUrlBuilderWeb;
-use DvsaFeature\FeatureToggles;
 use UserAdmin\Form\ChangeEmailForm;
 use UserAdmin\Presenter\UserProfilePresenter;
 use UserAdmin\Service\HelpdeskAccountAdminService;
@@ -86,9 +84,6 @@ class EmailAddressController extends AbstractDvsaActionController
     /** @var  IsEmailDuplicateService */
     private $duplicateEmailService;
 
-    /** @var  FeatureToggles */
-    private $featureToggles;
-
     /** @var Request  */
     protected $request;
 
@@ -104,7 +99,6 @@ class EmailAddressController extends AbstractDvsaActionController
      * @param PersonProfileUrlGenerator $personProfileUrlGenerator
      * @param ContextProvider $contextProvider
      * @param IsEmailDuplicateService $duplicateEmailService
-     * @param FeatureToggles $featureToggles
      * @param Request $request
      * @param MotIdentityProviderInterface $identityProvider
      */
@@ -116,7 +110,6 @@ class EmailAddressController extends AbstractDvsaActionController
         PersonProfileUrlGenerator $personProfileUrlGenerator,
         ContextProvider $contextProvider,
         IsEmailDuplicateService $duplicateEmailService,
-        FeatureToggles $featureToggles,
         Request $request,
         MotIdentityProviderInterface $identityProvider
     ) {
@@ -127,24 +120,19 @@ class EmailAddressController extends AbstractDvsaActionController
         $this->personProfileUrlGenerator = $personProfileUrlGenerator;
         $this->contextProvider = $contextProvider;
         $this->duplicateEmailService = $duplicateEmailService;
-        $this->featureToggles = $featureToggles;
         $this->request = $request;
         $this->identityProvider = $identityProvider;
     }
 
     public function indexAction()
     {
-        $isNewPersonProfileEnabled = $this->featureToggles->isEnabled(FeatureToggle::NEW_PERSON_PROFILE);
         $personId = $this->getPersonId();
 
-        if (true === $isNewPersonProfileEnabled) {
-            $context = $this->contextProvider->getContext();
-            if (!$this->canChangeEmailAddress($context)) {
-                throw new UnauthorisedException(sprintf("Person with ID '%d' is not allowed to change email with context '%s'",
-                    $personId, $context));
-            }
-        } else {
-            $this->authorisationService->assertGranted(PermissionInSystem::PROFILE_EDIT_OTHERS_EMAIL_ADDRESS);
+        $context = $this->contextProvider->getContext();
+
+        if (!$this->canChangeEmailAddress($context)) {
+            throw new UnauthorisedException(sprintf("Person with ID '%d' is not allowed to change email with context '%s'",
+                $personId, $context));
         }
 
         $result = new ActionResult();
@@ -187,9 +175,7 @@ class EmailAddressController extends AbstractDvsaActionController
                     }
 
                     if ($validated) {
-                        $url = (true === $isNewPersonProfileEnabled)
-                            ? $this->personProfileUrlGenerator->toPersonProfile()
-                            : UserAdminUrlBuilderWeb::of()->UserProfile($personId);
+                        $url = $this->personProfileUrlGenerator->toPersonProfile();
 
                         return $this->redirect()->toUrl($url);
                     }
@@ -198,8 +184,6 @@ class EmailAddressController extends AbstractDvsaActionController
         }
 
         $viewModel->setIsViewingOwnProfile($this->contextProvider->getContext() === ContextProvider::YOUR_PROFILE_CONTEXT);
-
-        $viewModel->setNewProfileEnabled($this->featureToggles->isEnabled(FeatureToggle::NEW_PERSON_PROFILE));
 
         $viewModel->setForm($form);
 
@@ -293,16 +277,6 @@ class EmailAddressController extends AbstractDvsaActionController
      */
     private function getBreadcrumbs($personId, UserProfilePresenter $presenter, $isProfile)
     {
-        if (true !== $this->featureToggles->isEnabled(FeatureToggle::NEW_PERSON_PROFILE)) {
-            return [
-                'User search' => $this->buildUrlWithCurrentSearchQuery(UserAdminUrlBuilderWeb::of()->userSearch()),
-                $presenter->displayTitleAndFullName() => $isProfile === false ? $this->buildUrlWithCurrentSearchQuery(
-                    UserAdminUrlBuilderWeb::of()->userProfile($personId)
-                ) : '',
-                 'Change email address' => '',
-            ];
-        }
-
         $breadcrumbs = [];
         $personName = $presenter->displayTitleAndFullName();
         $context = $this->contextProvider->getContext();
@@ -356,7 +330,7 @@ class EmailAddressController extends AbstractDvsaActionController
         } else {
             $userSearchUrl = $this->buildUrlWithCurrentSearchQuery(UserAdminUrlBuilderWeb::of()->userSearch());
             $profileUrl = $isProfile === false
-                ? $this->buildUrlWithCurrentSearchQuery(UserAdminUrlBuilderWeb::of()->UserProfile($personId)) : '';
+                ? $this->buildUrlWithCurrentSearchQuery(UserAdminUrlBuilderWeb::of()->userProfile($personId)) : '';
             $breadcrumbs += [PersonProfileController::CONTENT_HEADER_TYPE__USER_SEARCH => $userSearchUrl, $personName => $profileUrl];
         }
 

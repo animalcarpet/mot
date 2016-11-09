@@ -20,12 +20,7 @@ public class HelpDesk {
 
     public void viewUserProfile(User userViewingProfile, String profileIdToView) throws IOException {
         String path = String.format(NewHelpDeskUserProfilePage.PATH, profileIdToView);
-        String legacyPath = String.format(HelpDeskUserProfilePage.PATH, profileIdToView);
-        if(ConfigHelper.isNewPersonProfileEnabled()){
-            profilePage = navigator.navigateToPage(userViewingProfile, path, NewHelpDeskUserProfilePage.class);
-        } else {
-            profilePage = navigator.navigateToPage(userViewingProfile, legacyPath, HelpDeskUserProfilePage.class);
-        }
+        profilePage = navigator.navigateToPage(userViewingProfile, path, NewHelpDeskUserProfilePage.class);
     }
 
     public HelpDeskProfilePage page() {

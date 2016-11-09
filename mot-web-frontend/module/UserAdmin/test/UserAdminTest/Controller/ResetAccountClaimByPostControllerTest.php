@@ -113,7 +113,7 @@ class ResetAccountClaimByPostControllerTest extends AbstractFrontendControllerTe
                 'params' => [
                     'post'  => [],
                     'route' => [
-                        'personId' => self::PERSON_ID,
+                        'id' => self::PERSON_ID,
                     ],
                 ],
                 'mocks'  => [
@@ -135,7 +135,7 @@ class ResetAccountClaimByPostControllerTest extends AbstractFrontendControllerTe
                 'params' => [
                     'post'  => [],
                     'route' => [
-                        'personId' => self::PERSON_ID,
+                        'id' => self::PERSON_ID,
                     ],
                     'get'   => [
                         'personUsername' => self::PERSON_USERNAME,
@@ -160,7 +160,7 @@ class ResetAccountClaimByPostControllerTest extends AbstractFrontendControllerTe
                 'params' => [
                     'post'  => [],
                     'route' => [
-                        'personId' => self::PERSON_ID,
+                        'id' => self::PERSON_ID,
                     ],
                 ],
                 'mocks'  => [
@@ -172,7 +172,7 @@ class ResetAccountClaimByPostControllerTest extends AbstractFrontendControllerTe
                     ],
                 ],
                 'expect' => [
-                    'url' => UserAdminUrlBuilderWeb ::userProfile(self::PERSON_ID),
+                    'url' => '/user-admin/user/' . self::PERSON_ID,
                 ],
             ],
             //  --  index: post action fail --
@@ -182,7 +182,7 @@ class ResetAccountClaimByPostControllerTest extends AbstractFrontendControllerTe
                 'params' => [
                     'post'  => [],
                     'route' => [
-                        'personId' => self::PERSON_ID,
+                        'id' => self::PERSON_ID,
                     ],
                 ],
                 'mocks'  => [
@@ -194,7 +194,7 @@ class ResetAccountClaimByPostControllerTest extends AbstractFrontendControllerTe
                     ],
                 ],
                 'expect' => [
-                    'url' => UserAdminUrlBuilderWeb ::userProfile(self::PERSON_ID),
+                    'url' => '/user-admin/user/' . self::PERSON_ID,
                 ],
             ],
         ];

@@ -8,7 +8,6 @@ use CoreTest\Controller\AbstractFrontendControllerTestCase;
 use Dashboard\Controller\SecurityQuestionController;
 use Dvsa\Mot\Frontend\PersonModule\View\PersonProfileUrlGenerator;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\HttpRestJson\Exception\NotFoundException;
 use DvsaCommon\UrlBuilder\AccountUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
@@ -47,7 +46,6 @@ class SecurityQuestionControllerTest extends AbstractFrontendControllerTestCase
         $this
             ->getServiceManager()
             ->setService(PersonProfileUrlGenerator::class, $personProfileUrlGenerator);
-        $this->withFeatureToggles([FeatureToggle::NEW_PERSON_PROFILE => false]);
 
         $this->setController(
             new SecurityQuestionController($this->securityQuestionService)
@@ -153,9 +151,7 @@ class SecurityQuestionControllerTest extends AbstractFrontendControllerTestCase
                     ],
                 ],
                 'expect'   => [
-                    'url' => PersonUrlBuilderWeb::securityQuestions(
-                        self::QUESTION_NUNMBER
-                    ),
+                    'url' => '',
                 ],
             ],
             //  --  index: get with error get question  --

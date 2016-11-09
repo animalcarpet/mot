@@ -7,7 +7,6 @@ import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
-import uk.gov.dvsa.ui.pages.profile.NewPersonProfilePage;
 import uk.gov.dvsa.ui.pages.profile.PersonProfilePage;
 import uk.gov.dvsa.ui.pages.profile.ProfilePage;
 
@@ -47,9 +46,16 @@ public class ChangePasswordFromProfilePage extends Page {
         return this;
     }
 
+    public String changePasswordExpectingText(String oldPassword, String newPassword) {
+        enterOldPassword(oldPassword);
+        enterNewPassword(newPassword);
+        confirmNewPassword(newPassword);
+        return clickSubmitButton(PersonProfilePage.class).getMessageSuccess();
+    }
+
     public ProfilePage clickCancelLink() {
         cancelLink.click();
-        return MotPageFactory.getProfilePageInstance(new NewPersonProfilePage(driver), new PersonProfilePage(driver));
+        return new PersonProfilePage(driver);
     }
 
     public <T extends Page> T clickSubmitButton(Class<T> clazz) {

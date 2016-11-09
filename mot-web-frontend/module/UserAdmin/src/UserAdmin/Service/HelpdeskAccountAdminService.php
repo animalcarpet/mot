@@ -9,42 +9,28 @@ use DvsaCommon\Dto\Person\PersonContactDto;
 use DvsaCommon\Dto\Person\PersonHelpDeskProfileDto;
 use DvsaCommon\Enum\MessageTypeCode;
 use DvsaCommon\HttpRestJson\Exception\NotFoundException;
-use DvsaCommon\Constants\FeatureToggle;
-use DvsaFeature\FeatureToggles;
 
 /**
  * Service for account management by helpdesk.
  */
 class HelpdeskAccountAdminService
 {
-    /**
-     * @var UserAdminMapper
-     */
+    /** @var UserAdminMapper */
     private $userAdminMapper;
 
-    /**
-     * @var MotAuthorisationServiceInterface
-     */
+    /** @var MotAuthorisationServiceInterface */
     private $authorisationService;
-
-    /**
-     * @var FeatureToggles
-     */
-    private $featureToggles;
 
     /**
      * @param MotAuthorisationServiceInterface $authorisationService
      * @param UserAdminMapper $userAdminMapper
-     * @param FeatureToggles $featureToggles
      */
     public function __construct(
         MotAuthorisationServiceInterface $authorisationService,
-        UserAdminMapper $userAdminMapper,
-        FeatureToggles $featureToggles
+        UserAdminMapper $userAdminMapper
     ) {
         $this->authorisationService = $authorisationService;
         $this->userAdminMapper = $userAdminMapper;
-        $this->featureToggles = $featureToggles;
     }
 
     /**
@@ -54,11 +40,7 @@ class HelpdeskAccountAdminService
      */
     public function getUserProfile($personId)
     {
-        if($this->featureToggles->isEnabled(FeatureToggle::NEW_PERSON_PROFILE)) {
-            return $this->userAdminMapper->getUserProfile($personId, true);
-        } else {
-            return $this->userAdminMapper->getUserProfile($personId, false);
-        }
+        return $this->userAdminMapper->getUserProfile($personId);
     }
 
     public function resetAccount($personId)

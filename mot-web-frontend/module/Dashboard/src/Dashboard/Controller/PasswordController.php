@@ -38,7 +38,7 @@ class PasswordController extends AbstractAuthActionController
         $this->layout()->setVariable('pageSubTitle', "Your profile");
         $this->layout()->setVariable('pageTitle', "Change your password");
         $breadcrumbs = [
-            'Your profile'         => $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ? '/your-profile' : '/profile',
+            'Your profile'         => '/your-profile',
             'Change your password' => '',
         ];
 
@@ -55,27 +55,14 @@ class PasswordController extends AbstractAuthActionController
             if ($form->isValid()) {
                 if ($this->passwordService->changePassword($form->getData())) {
                     if ($hasPasswordExpired) {
-                        $url = $this->isFeatureEnabled(
-                            FeatureToggle::NEW_PERSON_PROFILE
-                        )
-                            ? ContextProvider::YOUR_PROFILE_PARENT_ROUTE
-                                . '/change-password/confirmation'
-                            : 'user-home/profile/change-password/confirmation';
-                        return  $this->isFeatureEnabled(
-                            FeatureToggle::NEW_PERSON_PROFILE
-                        )
-                        ? $this->redirect()->toRoute(
+                        $url = ContextProvider::YOUR_PROFILE_PARENT_ROUTE
+                                . '/change-password/confirmation';
+                        return  $this->redirect()->toRoute(
                             $url,
-                            ['id' => $this->identityProvider->getIdentity()->getUserId()]
-                        )
-                        : $this->redirect()->toRoute($url);
+                            ['id' => $this->identityProvider->getIdentity()->getUserId()]);
                     } else {
                         $this->addSuccessMessage("Your password has been changed.");
-                        $url = $this->isFeatureEnabled(
-                            FeatureToggle::NEW_PERSON_PROFILE
-                        ) 
-                            ? ContextProvider::YOUR_PROFILE_PARENT_ROUTE
-                            : 'user-home/profile/byId';
+                        $url = ContextProvider::YOUR_PROFILE_PARENT_ROUTE;
 
                         return $this->redirect()->toRoute($url);
                     }
@@ -89,15 +76,12 @@ class PasswordController extends AbstractAuthActionController
         }
 
         $form->obfuscateOldPasswordElementName();
-
-        $newProfileEnabled = $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE);
-
+        
         return [
             'form'        => $form,
             'username'    => $this->getIdentity()->getUsername(),
-            'cancelRoute' => $hasPasswordExpired ? "logout" : ($this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ? 'newProfile' : 'user-home/profile/byId'),
-            'cancelText'  => $hasPasswordExpired ? "Cancel and return to sign in" : "Cancel and return to your profile",
-            'newProfileEnabled' => $newProfileEnabled,
+            'cancelRoute' => $hasPasswordExpired ? "logout" : 'newProfile',
+            'cancelText'  => $hasPasswordExpired ? "Cancel and return to sign in" : "Cancel and return to your profile"
         ];
     }
 

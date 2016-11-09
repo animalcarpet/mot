@@ -46,10 +46,9 @@ class SecurityQuestionController extends AbstractSecurityQuestionController
      */
     private function createViewModel()
     {
-        $isNewPersonProfileEnabled = $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE);
         /** @var PersonProfileUrlGenerator $personProfileUrlGenerator */
         $personProfileUrlGenerator = $this->getServiceLocator()->get(PersonProfileUrlGenerator::class);
 
-        return new SecurityQuestionViewModel($this->service, $isNewPersonProfileEnabled, $personProfileUrlGenerator);
+        return new SecurityQuestionViewModel($this->service, $personProfileUrlGenerator);
     }
 }

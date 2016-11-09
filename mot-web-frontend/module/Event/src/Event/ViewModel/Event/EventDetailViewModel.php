@@ -7,7 +7,6 @@
 
 namespace Event\ViewModel\Event;
 
-use Core\Controller\AbstractAuthActionController;
 use DvsaClient\Entity\Person;
 use DvsaCommon\Dto\Event\EventDto;
 use DvsaCommon\Dto\Event\EventFormDto;
@@ -15,7 +14,6 @@ use DvsaCommon\Dto\Organisation\OrganisationDto;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\UrlBuilder\EventUrlBuilderWeb;
 use Event\Controller\EventController;
-use Zend\Http\Request;
 
 /**
  * Class EventDetailViewModel.
@@ -47,10 +45,6 @@ class EventDetailViewModel
     private $formModel;
 
     /**
-     * @var bool */
-    private $usingNewProfile;
-
-    /**
      * @var string */
     private $previousRoute;
 
@@ -61,7 +55,6 @@ class EventDetailViewModel
      * @param string                   $eventType
      * @param EventDto                 $event
      * @param EventFormDto             $formModel
-     * @param bool                     $usingNewProfile
      * @param string                   $previousRoute
      */
     public function __construct(
@@ -71,10 +64,8 @@ class EventDetailViewModel
         $event,
         $eventType,
         $formModel,
-        $usingNewProfile,
         $previousRoute
     ) {
-        $this->usingNewProfile = $usingNewProfile;
         $this->previousRoute = $previousRoute;
 
         $this->setOrganisation($organisation);
@@ -114,7 +105,7 @@ class EventDetailViewModel
                 break;
         }
 
-        if ($this->usingNewProfile && null !== $this->previousRoute) {
+        if (null !== $this->previousRoute) {
             $url = sprintf('%s&%s=%s', $url,
                 EventController::PERSON_PROFILE_GO_BACK_PARAMETER, urlencode($this->previousRoute));
         }

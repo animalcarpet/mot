@@ -25,7 +25,6 @@ use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use Dvsa\Mot\Frontend\PersonModule\View\PersonProfileSidebar;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaClient\MapperFactory;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use DvsaCommon\UrlBuilder\PersonUrlBuilder;
 use Exception;
@@ -76,6 +75,9 @@ class PersonProfileController extends AbstractAuthActionController
     /** @var SecurityCardGuard */
     private $securityCardGuard;
 
+    /** @var TwoFaFeatureToggle  */
+    private $twoFaFeatureToggle;
+
     /**
      * @param ApiPersonalDetails $personalDetailsService
      * @param ApiDashboardResource $dashboardResourceService
@@ -90,18 +92,19 @@ class PersonProfileController extends AbstractAuthActionController
      * @param SecurityCardGuard $securityCardGuard
      * @param TwoFaFeatureToggle $twoFaFeatureToggle
      */
-    public function __construct(ApiPersonalDetails $personalDetailsService,
-                                ApiDashboardResource $dashboardResourceService,
-                                CatalogService $catalogService,
-                                UserAdminSessionManager $userAdminSessionManager,
-                                ViewTradeRolesAssertion $canViewTradeRolesAssertion,
-                                PersonProfileGuardBuilder $personProfileGuardBuilder,
-                                MapperFactory $mapperFactory,
-                                ContextProvider $contextProvider,
-                                CanTestWithoutOtpService $canTestWithoutOtpService,
-                                SecurityCardService $securityCardService,
-                                SecurityCardGuard $securityCardGuard,
-                                TwoFaFeatureToggle $twoFaFeatureToggle
+    public function __construct(
+        ApiPersonalDetails $personalDetailsService,
+        ApiDashboardResource $dashboardResourceService,
+        CatalogService $catalogService,
+        UserAdminSessionManager $userAdminSessionManager,
+        ViewTradeRolesAssertion $canViewTradeRolesAssertion,
+        PersonProfileGuardBuilder $personProfileGuardBuilder,
+        MapperFactory $mapperFactory,
+        ContextProvider $contextProvider,
+        CanTestWithoutOtpService $canTestWithoutOtpService,
+        SecurityCardService $securityCardService,
+        SecurityCardGuard $securityCardGuard,
+        TwoFaFeatureToggle $twoFaFeatureToggle
     ) {
         $this->personalDetailsService = $personalDetailsService;
         $this->dashboardResourceService = $dashboardResourceService;
@@ -122,10 +125,6 @@ class PersonProfileController extends AbstractAuthActionController
      */
     public function indexAction()
     {
-        if (true !== $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE)) {
-            return $this->notFoundAction();
-        }
-
         $this->userAdminSessionManager->deleteUserAdminSession();
         $this->layout('layout/layout-govuk.phtml');
         $data = $this->getAuthenticatedData();
@@ -401,7 +400,6 @@ class PersonProfileController extends AbstractAuthActionController
         /** @var PersonalDetails $personalDetails */
         $personalDetails = $this->getAuthenticatedData()['personalDetails'];
         $testerAuthorisation = $this->personProfileGuardBuilder->getTesterAuthorisation($targetPersonId);
-        $newProfileEnabled = $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE);
         $twoFactorAuthEnabled = $this->twoFaFeatureToggle->isEnabled();
         $currentUrl = $this->url()->fromRoute($routeName, $this->getRouteParams($personalDetails, $routeName));
         $canOrderSecurityCard =
@@ -418,7 +416,6 @@ class PersonProfileController extends AbstractAuthActionController
             $targetPersonId,
             $personProfileGuard,
             $testerAuthorisation,
-            $newProfileEnabled,
             $currentUrl,
             new PersonProfileRoutes($this->contextProvider), 
             $this->url(),

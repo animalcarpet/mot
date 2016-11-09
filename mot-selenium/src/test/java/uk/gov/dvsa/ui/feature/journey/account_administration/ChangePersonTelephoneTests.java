@@ -42,7 +42,6 @@ public class ChangePersonTelephoneTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-931"},
-            testName = "NewProfile",
             description = "Test that Trade users can edit their telephone from their profile page")
     public void tradeUserCanEditHisTelephone() throws Exception{
         // Given I am logged in as a Tester and I am on the My Profile Page
@@ -56,7 +55,6 @@ public class ChangePersonTelephoneTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-931"},
-            testName = "NewProfile",
             description = "Test that Trade user can cancel their telephone update from change telephone page")
     public void tradeUserCanCancelHisTelephoneChange() throws IOException {
         // Given I am the Change telephone page as a tester
@@ -70,7 +68,6 @@ public class ChangePersonTelephoneTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-931"},
-            testName = "NewProfile",
             description = "Test that DVSA user can cancel amending a users telephone number change",
             dataProvider = "dvsaUserChangeTelephoneProvider")
     public void dvsaUserCanCancelUserTelephoneChange(User user) throws IOException {
@@ -85,7 +82,6 @@ public class ChangePersonTelephoneTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-931"},
-            testName = "NewProfile",
             description = "Test that Authorised user can change telephone number on person profile",
             dataProvider = "dvsaUserChangeTelephoneProvider")
     public void dvsaUserCanChangeTelephoneNumberOnOtherPersonProfile(User user) throws IOException {
@@ -100,7 +96,6 @@ public class ChangePersonTelephoneTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-931"},
-            testName = "NewProfile",
             description = "Test that Trade user cannot enter more than 24 Chars in the Telephone number")
     public void tradeUserShouldProvideValidTelephoneNumber() throws IOException {
         // Given I am logged in as a Tester and I am on the My Profile Page
@@ -114,7 +109,6 @@ public class ChangePersonTelephoneTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-931"},
-            testName = "NewProfile",
             description = "Test that Authorised user should provide an appropriate sized telephone number in order to update user information")
     public void dvsaUserShouldNotProvideInvalidSizedTelephoneNumber() throws IOException {
         // Given I am on other person profile as an authorised user

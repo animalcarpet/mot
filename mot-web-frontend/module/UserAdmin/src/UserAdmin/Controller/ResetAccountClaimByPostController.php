@@ -49,9 +49,7 @@ class ResetAccountClaimByPostController extends AbstractAuthActionController
 
     public function indexAction()
     {
-        $personId = $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-            $this->params()->fromRoute('id') :
-            $this->params()->fromRoute('personId');
+        $personId = $this->params()->fromRoute('id');
 
         if ($this->getRequest()->isPost() === true) {
             return $this->requestReclaim($personId);
@@ -72,9 +70,7 @@ class ResetAccountClaimByPostController extends AbstractAuthActionController
             }
         }
 
-        $redirectUrl = $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-            $this->url()->fromRoute('newProfileUserAdmin', ['id' => $personId]):
-            $this->buildUrlWithCurrentSearchQuery(UserAdminUrlBuilderWeb::userProfile($personId));
+        $redirectUrl = $this->url()->fromRoute('newProfileUserAdmin', ['id' => $personId]);
 
         return $this->redirect()->toUrl($redirectUrl);
     }
@@ -91,9 +87,7 @@ class ResetAccountClaimByPostController extends AbstractAuthActionController
         $this->layout()->setVariable('pageTitle', self::PAGE_TITLE_INDEX);
 
         if (false === $isOwnProfile) {
-            $userProfileUrl = (true === $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE))
-                ? $this->url()->fromRoute(ContextProvider::USER_SEARCH_PARENT_ROUTE, ['id' => $personId])
-                : $this->buildUrlWithCurrentSearchQuery(UserAdminUrlBuilderWeb::of()->userProfile($personId));
+            $userProfileUrl = $this->url()->fromRoute(ContextProvider::USER_SEARCH_PARENT_ROUTE, ['id' => $personId]);
         } else {
             $userProfileUrl = '';
         }
@@ -103,20 +97,14 @@ class ResetAccountClaimByPostController extends AbstractAuthActionController
             $profilePresenter->displayTitleAndFullName() => $userProfileUrl
         ];
 
-        if ($this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE)) {
-            $breadcrumbs += ['Reclaim account' => ''];
-        }
+        $breadcrumbs += ['Reclaim account' => ''];
 
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
 
         return new ViewModel(
             [
                 'profilePresenter' => $profilePresenter,
-                'userProfileUrl' => $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-                    $this->url()->fromRoute('newProfileUserAdmin', ['id' => $personId]) :
-                    $this->buildUrlWithCurrentSearchQuery(
-                        UserAdminUrlBuilderWeb::userProfile($personId)
-                    ),
+                'userProfileUrl' => $this->url()->fromRoute('newProfileUserAdmin', ['id' => $personId]),
                 'resetClaimAccountUrlPost' => $this->buildUrlWithCurrentSearchQuery(
                     UserAdminUrlBuilderWeb::userProfileClaimAccountPost($personId)
                 ),

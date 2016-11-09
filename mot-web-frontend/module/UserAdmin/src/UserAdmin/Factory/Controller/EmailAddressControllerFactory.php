@@ -7,13 +7,11 @@ use Dvsa\Mot\Frontend\PersonModule\View\PersonProfileUrlGenerator;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
-use DvsaFeature\FeatureToggles;
 use UserAdmin\Controller\EmailAddressController;
 use UserAdmin\Service\HelpdeskAccountAdminService;
 use UserAdmin\Service\IsEmailDuplicateService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
 
 /**
  * Factory for {@link \UserAdmin\Controller\EmailAddressController}.
@@ -40,9 +38,6 @@ class EmailAddressControllerFactory implements FactoryInterface
         /** @var IsEmailDuplicateService $duplicateEmailService */
         $duplicateEmailService = $appServiceLocator->get(IsEmailDuplicateService::class);
 
-        /** @var FeatureToggles $featureToggles */
-        $featureToggles = $appServiceLocator->get(FeatureToggles::class);
-
         $request = $appServiceLocator->get('request');
 
         /** @var MotIdentityProviderInterface $identityProvider */
@@ -56,7 +51,6 @@ class EmailAddressControllerFactory implements FactoryInterface
             $personProfileUrlGenerator,
             $contextProvider,
             $duplicateEmailService,
-            $featureToggles,
             $request,
             $identityProvider
         );

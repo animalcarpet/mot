@@ -10,7 +10,6 @@ use DvsaCommon\UrlBuilder\UserAdminUrlBuilderWeb;
 /** @var string $previousProfileUrl */
 /** @var bool $isViewingOwnProfile */
 /**
- * @var bool $newProfileEnabled
  */
 
 $this->layout('layout/layout-govuk.phtml');
@@ -54,12 +53,10 @@ echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => 
         [
             'id'            => 'submitEmailAddress',
             'value'         => 'Change email address',
-            'linkMessage'   => $newProfileEnabled ? $this->serverUrl(true) : $emailAddressUrl,
+            'linkMessage'   =>  $this->serverUrl(true),
             'navigation'    => [
                 $viewModel->getIsViewingOwnProfile() ? 'Cancel and return to your profile'
-                    : 'Cancel and return to user profile' => $viewModel->getNewProfileEnabled() ?
-                    $this->personProfileUrl()->toPersonProfile() :
-                    UserAdminUrlBuilderWeb::of()->userProfile($presenter->getPersonId()),
+                    : 'Cancel and return to user profile' => $this->personProfileUrl()->toPersonProfile(),
             ]
         ]
     ); ?>

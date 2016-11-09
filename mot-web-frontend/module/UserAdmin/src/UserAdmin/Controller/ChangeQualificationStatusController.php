@@ -75,13 +75,9 @@ class ChangeQualificationStatusController extends AbstractDvsaMotTestController
 
         $this->authorisationService->assertGranted(PermissionInSystem::ALTER_TESTER_AUTHORISATION_STATUS);
 
-        $personId = true === $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-            $this->getPersonId() :
-            $this->params()->fromRoute('personId');
+        $personId = $this->getPersonId();
 
-        $tester = true === $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-            new PersonalDetails($this->personalDetails->getPersonalDetailsData($personId)) :
-            $this->personMapper->getById($personId);
+        $tester = new PersonalDetails($this->personalDetails->getPersonalDetailsData($personId));
 
         $testerId = $tester->getId();
 
@@ -104,14 +100,9 @@ class ChangeQualificationStatusController extends AbstractDvsaMotTestController
             $this->sessionContainer->offsetSet('vehicleClassGroup', $vehicleClassGroup);
             $this->sessionContainer->offsetSet('status', $this->getRequest()->getPost('qualificationStatus'));
 
-            return true === $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-                $this->redirect()->toRoute(
-                    'newProfileUserAdmin/change-qualification-status/confirmation',
-                    ['id' => $testerId, 'vehicleClassGroup' => $vehicleClassGroup]
-                ) :
-                $this->redirect()->toRoute(
-                'user_admin/user-profile/change-qualification-status/confirmation',
-                ['personId' => $testerId, 'vehicleClassGroup' => $vehicleClassGroup]
+            return $this->redirect()->toRoute(
+                'newProfileUserAdmin/change-qualification-status/confirmation',
+                ['id' => $testerId, 'vehicleClassGroup' => $vehicleClassGroup]
             );
         }
         $this->sessionContainer->getManager()->getStorage()->clear(self::SESSION_CONTAINER_NAME);
@@ -120,9 +111,7 @@ class ChangeQualificationStatusController extends AbstractDvsaMotTestController
         $this->layout()->setVariable('pageSubTitle', 'User profile');
         $this->layout()->setVariable('pageTitle', 'Change qualification status');
 
-        $userProfileUrl = true === $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-            $this->url()->fromRoute('newProfileUserAdmin', ['id' => $testerId]) :
-            '';
+        $userProfileUrl = $this->url()->fromRoute('newProfileUserAdmin', ['id' => $testerId]);
 
         $breadcrumbs = [
             'User search' => $this->buildUrlWithCurrentSearchQuery(UserAdminUrlBuilderWeb::of()->userSearch()),
@@ -147,13 +136,9 @@ class ChangeQualificationStatusController extends AbstractDvsaMotTestController
     {
         $this->authorisationService->assertGranted(PermissionInSystem::ALTER_TESTER_AUTHORISATION_STATUS);
 
-        $personId = true === $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-            $this->params()->fromRoute('id') :
-            $this->params()->fromRoute('personId');
+        $personId = $this->params()->fromRoute('id');
 
-        $tester = true === $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-            new PersonalDetails($this->personalDetails->getPersonalDetailsData($personId)) :
-            $this->personMapper->getById($personId);
+        $tester = new PersonalDetails($this->personalDetails->getPersonalDetailsData($personId));
         $testerId = $tester->getId();
 
         if ($this->getRequest()->isPost()) {
@@ -170,37 +155,21 @@ class ChangeQualificationStatusController extends AbstractDvsaMotTestController
                 );
 
                 //Add web message for success
-                return $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-                    $this->redirect()->toRoute('newProfileUserAdmin', ['id' => $testerId]) :
-                    $this->redirect()->toRoute(
-                        'user_admin/user-profile', [
-                            'personId' => $testerId,
-                        ]
-                    );
+                return $this->redirect()->toRoute('newProfileUserAdmin', ['id' => $testerId]);
             } catch (\Exception $e) {
                 //Error on post validation... oops...
                 $this->addErrorMessage($e->getMessage());
 
-                return $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-                    $this->redirect()->toRoute(
-                        'newProfileUserAdmin/change-qualification-status/confirmation',
-                        ['id' => $testerId, 'vehicleClassGroup' => $vehicleClassGroup]
-                    ) :
-                    $this->redirect()->toRoute(
-                        'user_admin/user-profile/change-qualification-status/confirmation',
-                        [
-                            'personId' => $testerId,
-                            'vehicleClassGroup' => $vehicleClassGroup,
-                        ]
-                    );
+                return $this->redirect()->toRoute(
+                    'newProfileUserAdmin/change-qualification-status/confirmation',
+                    ['id' => $testerId, 'vehicleClassGroup' => $vehicleClassGroup]
+                );
             }
         }
         $this->layout()->setVariable('pageSubTitle', 'User profile');
         $this->layout()->setVariable('pageTitle', 'Summary and confirmation');
 
-        $userProfileUrl = true === $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-            $this->url()->fromRoute('newProfileUserAdmin', ['id' => $testerId]) :
-            '';
+        $userProfileUrl = $this->url()->fromRoute('newProfileUserAdmin', ['id' => $testerId]);
 
         $breadcrumbs = [
             'User search' => $this->buildUrlWithCurrentSearchQuery(UserAdminUrlBuilderWeb::of()->userSearch()),

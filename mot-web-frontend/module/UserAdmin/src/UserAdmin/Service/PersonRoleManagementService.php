@@ -54,12 +54,13 @@ class PersonRoleManagementService
         MotIdentityProviderInterface $motIdentityProvider,
         MotAuthorisationServiceInterface $authorisationService,
         HttpRestJsonClient $client,
-        CatalogService $catalogService
+        CatalogService $catalogService,
+        UserAdminMapper $userAdminMapper
     ) {
         $this->motIdentityProvider = $motIdentityProvider;
         $this->authorisationService = $authorisationService;
         $this->client = $client;
-        $this->userAdminMapper = new UserAdminMapper($client);
+        $this->userAdminMapper = $userAdminMapper;
         $this->catalogService = $catalogService;
     }
 
@@ -187,13 +188,12 @@ class PersonRoleManagementService
 
     /**
      * @param int  $personId
-     * @param bool $isNewUserProfileEnabled
-     * 
+     *
      * @return \DvsaCommon\Dto\Person\PersonHelpDeskProfileDto
      */
-    public function getUserProfile($personId, $isNewUserProfileEnabled)
+    public function getUserProfile($personId)
     {
-        return $this->userAdminMapper->getUserProfile($personId, $isNewUserProfileEnabled);
+        return $this->userAdminMapper->getUserProfile($personId);
     }
 
     /**
@@ -202,7 +202,7 @@ class PersonRoleManagementService
      *
      * @return array
      */
-    public function getPersonManageableInternalRoles($personId, $isNewUserProfileEnabled)
+    public function getPersonManageableInternalRoles($personId)
     {
         $personSystemRoles = $this->catalogService->getPersonSystemRoles();
 
@@ -215,20 +215,12 @@ class PersonRoleManagementService
         }
 
         $manageableRolesAndUrl = array_map(
-            function ($element) use ($personId, $isNewUserProfileEnabled) {
-                if ($isNewUserProfileEnabled) {
-                    $route = 'newProfileUserAdmin/manage-user-internal-role/add-internal-role';
-                    $params = [
-                        'id' => $personId,
-                        'personSystemRoleId' => $element['id'],
-                    ];
-                } else {
-                    $route = 'user_admin/user-profile/manage-user-internal-role/add-internal-role';
-                    $params = [
-                        'personId' => $personId,
-                        'personSystemRoleId' => $element['id'],
-                    ];
-                }
+            function ($element) use ($personId) {
+                $route = 'newProfileUserAdmin/manage-user-internal-role/add-internal-role';
+                $params = [
+                    'id' => $personId,
+                    'personSystemRoleId' => $element['id'],
+                ];
 
                 $element['url'] = [
                     'route' => $route,
@@ -249,7 +241,7 @@ class PersonRoleManagementService
      *
      * @return array
      */
-    public function getPersonAssignedInternalRoles($personId, $isNewUserProfileEnabled = false)
+    public function getPersonAssignedInternalRoles($personId)
     {
         if (false === $this->userHasPermissionToReadPersonDvsaRoles()) {
             return [];
@@ -268,20 +260,12 @@ class PersonRoleManagementService
         }
 
         $manageableRolesAndUrl = array_map(
-            function ($element) use ($personId, $isNewUserProfileEnabled) {
-                if ($isNewUserProfileEnabled) {
-                    $route = 'newProfileUserAdmin/manage-user-internal-role/remove-internal-role';
-                    $params = [
-                        'id' => $personId,
-                        'personSystemRoleId' => $element['id'],
-                    ];
-                } else {
-                    $route = 'user_admin/user-profile/manage-user-internal-role/remove-internal-role';
-                    $params = [
-                        'personId' => $personId,
-                        'personSystemRoleId' => $element['id'],
-                    ];
-                }
+            function ($element) use ($personId) {
+                $route = 'newProfileUserAdmin/manage-user-internal-role/remove-internal-role';
+                $params = [
+                    'id' => $personId,
+                    'personSystemRoleId' => $element['id'],
+                ];
 
                 $element['url'] = [
                     'route' => $route,

@@ -50,7 +50,7 @@ class SecurityQuestionViewModelTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->view = new SecurityQuestionViewModel($this->service, false, $personProfileUrlGenerator);
+        $this->view = new SecurityQuestionViewModel($this->service, $personProfileUrlGenerator);
         $this->messenger = XMock::of(FlashMessenger::class);
     }
 

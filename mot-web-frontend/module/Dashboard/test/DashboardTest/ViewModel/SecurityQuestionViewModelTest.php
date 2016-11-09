@@ -34,6 +34,8 @@ class SecurityQuestionViewModelTest extends \PHPUnit_Framework_TestCase
     private $question;
     private $messenger;
 
+    private $personProfileUrlGenerator;
+
     public function setup()
     {
         $this->service = XMock::of(
@@ -44,27 +46,28 @@ class SecurityQuestionViewModelTest extends \PHPUnit_Framework_TestCase
         $this->question = new SecurityQuestionDto();
 
         /** @var PersonProfileUrlGenerator $personProfileUrlGenerator */
-        $personProfileUrlGenerator = $this
+        $this->personProfileUrlGenerator = $this
             ->getMockBuilder(PersonProfileUrlGenerator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->view = new SecurityQuestionViewModel($this->service, false, $personProfileUrlGenerator);
+        $this->view = new SecurityQuestionViewModel($this->service, $this->personProfileUrlGenerator);
         $this->messenger = XMock::of(FlashMessenger::class);
     }
 
     public function testGetNextPageLinkQuestionOne()
     {
-        $this->service->expects($this->at(0))
+        $this->service->expects($this->any())
             ->method('getQuestionNumber')
             ->willReturn(UserAdminSessionManager::FIRST_QUESTION);
-        $this->service->expects($this->at(1))
+        $this->service->expects($this->any())
             ->method('getQuestionSuccess')
             ->willReturn(true);
 
+        $this->withPersonProfileUrlGenerator(2);
+
         $link = $this->view->getNextPageLink($this->messenger);
-        $this->assertInstanceOf(PersonUrlBuilderWeb::class, $link);
-        $this->assertSame('/profile/security-question/2', $link->toString());
+        $this->assertSame('/profile/security-question/2', $link);
     }
 
     public function testGetNextPageLinkQuestionOneFailure()
@@ -91,13 +94,14 @@ class SecurityQuestionViewModelTest extends \PHPUnit_Framework_TestCase
 
     public function testGetCurrentLink()
     {
-        $this->service->expects($this->at(0))
+        $this->service->expects($this->any())
             ->method('getQuestionNumber')
             ->willReturn(UserAdminSessionManager::FIRST_QUESTION);
 
+        $this->withPersonProfileUrlGenerator(1);
+
         $link = $this->view->getCurrentLink();
-        $this->assertInstanceOf(PersonUrlBuilderWeb::class, $link);
-        $this->assertSame('/profile/security-question/1', $link->toString());
+        $this->assertSame('/profile/security-question/1', $link);
     }
 
     public function testGetQuestion()
@@ -125,5 +129,13 @@ class SecurityQuestionViewModelTest extends \PHPUnit_Framework_TestCase
             ->willReturn(self::PERSON_ID);
 
         $this->assertEquals(self::PERSON_ID, $this->view->getUserId());
+    }
+
+    private function withPersonProfileUrlGenerator($questionNumber)
+    {
+        return $this->personProfileUrlGenerator
+            ->expects($this->once())
+            ->method('fromPersonProfile')
+            ->willReturn('/profile/security-question/' . $questionNumber);
     }
 }
