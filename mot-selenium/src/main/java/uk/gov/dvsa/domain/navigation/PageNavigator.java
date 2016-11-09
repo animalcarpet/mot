@@ -267,7 +267,7 @@ public class PageNavigator {
 
     public TestSummaryPage getTestSummaryPage(User tester, Vehicle vehicle) throws URISyntaxException, IOException {
         TestResultsEntryPageInterface testResultsEntryPage = getTestResultsEntryPage(tester, vehicle);
-        TestSummaryPage testSummaryPage = testResultsEntryPage.completeTestDetailsWithPassValues().clickReviewTestButton();
+        TestSummaryPage testSummaryPage = testResultsEntryPage.completeTestDetailsWithPassValues(false).clickReviewTestButton();
 
         return testSummaryPage;
     }

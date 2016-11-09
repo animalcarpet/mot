@@ -107,7 +107,7 @@ public class TestResultEntryPageTests extends DslTest {
 
         // When I complete the test
         testResultsEntryPage
-                .completeBrakeTestWithPassValues()
+                .completeBrakeTestWithPassValues(false)
                 .clickReviewTestButton()
                 .finishTest();
 

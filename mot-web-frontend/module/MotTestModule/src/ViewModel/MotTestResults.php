@@ -41,6 +41,17 @@ class MotTestResults
     /**
      * @return bool
      */
+    public function shouldDisableSubmitButton()
+    {
+        $submissionStatus = isset($this->motTestDto->getPendingDetails()['currentSubmissionStatus'])
+            ? $this->motTestDto->getPendingDetails()['currentSubmissionStatus'] : null;
+
+        return $submissionStatus == 'INCOMPLETE';
+    }
+
+    /**
+     * @return bool
+     */
     public function isBrakeTestRecorded()
     {
         if (null === $this->motTestDto->getBrakeTestResult()) {

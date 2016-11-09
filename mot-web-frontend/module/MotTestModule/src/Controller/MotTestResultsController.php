@@ -105,8 +105,6 @@ class MotTestResultsController extends AbstractAuthActionController
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => [$breadcrumb => '']]);
         $this->layout()->setVariable('pageTitle', 'MOT test results');
 
-        $submissionStatus = isset($motTest->getPendingDetails()['currentSubmissionStatus'])
-            ? $motTest->getPendingDetails()['currentSubmissionStatus'] : null;
         $vehicleFirstUsedDate = DateTime::createFromFormat('Y-m-d',
             $motTest->getVehicle()->getFirstUsedDate())->format('j M Y');
 
@@ -126,7 +124,7 @@ class MotTestResultsController extends AbstractAuthActionController
             'vehicle' => $motTest->getVehicle(),
             'vehicleMakeAndModel' => $vehicleMakeAndModel,
             'vehicleFirstUsedDate' => $vehicleFirstUsedDate,
-            'shouldDisableSubmitButton' => $submissionStatus == 'INCOMPLETE',
+            'shouldDisableSubmitButton' => $motTestResults->shouldDisableSubmitButton(),
             'identifiedDefects' => $identifiedDefects,
             'isRetest' => $isRetest,
         ]);
@@ -208,7 +206,7 @@ class MotTestResultsController extends AbstractAuthActionController
 
     /**
      * @param string $motTestNumber
-     * @param int $testTypeId
+     * @param int    $testTypeId
      */
     private function addTestNumberAndTypeToGtmDataLayer($motTestNumber, $testTypeId)
     {

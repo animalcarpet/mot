@@ -1,11 +1,18 @@
 {% if identifiedDefects.failures is not empty %}
 <h3 class="defect-summary__heading">
-    <span class="badge--alert">{{ identifiedDefects.numberOfFailures }}</span>
+    <span class="badge--alert js-numberOfFailures">{{ identifiedDefects.numberOfUnrepairedFailures }}</span>
     <span class="defect-summary__heading-type">Failures</span>
 </h3>
 <ol>
     {% for failure in identifiedDefects.failures %}
-    <li class="defect {% if failure.isMarkedAsRepaired %}defect--is-selected{% endif %}">
+    <li class="js-rfrItem defect {% if failure.isMarkedAsRepaired %}has-success defect--is-selected{% endif %}">
+
+        {% if failure.isRepairable(isRetest) %}
+            <div class="defect-status">
+                <div class="js-itemStatus defect-status__inner"></div>
+            </div>
+        {% endif %}
+
         <div>
             {% if failure.isDangerous %}
             <span class="defect__is-dangerous">Dangerous</span>
@@ -24,28 +31,31 @@
             </ul>
         </div>
         <h4 class="visuallyhidden">Actions</h4>
+
         <ul class="defect__edit">
             {% if failure.isRepairable(isRetest) %}
-                {% if failure.isMarkedAsRepaired %}
+
                 <li class="defect__marked-undo">
                     <span>Repaired</span>
-                    <form method="post" action="{{ defectJourneyUrl().toUndoRepairDefect(failure.id) }}">
+                    <form class="js-rfrForm" method="post" action="{{ defectJourneyUrl().toUndoRepairDefect(failure.id) }}">
                         {{ csrfToken('repairDefect') }}
-                        <input class="button--link button--right" type="submit" value="Undo">
+                        <input class="js-buttonMarkRepaired button--link button--right" type="submit" value="Undo">
                         <input type="hidden" name="defectId" value="{{ failure.id }}">
                         <input type="hidden" name="defectType" value="failure">
                         <input type="hidden" name="defectText" value="{{ failure.name }}">
                     </form>
                 </li>
-                {% else %}
-                <form method="post" action="{{ defectJourneyUrl().toRepairDefect(failure.id) }}">
-                    {{ csrfToken('repairDefect') }}
-                    <input class="button button--small button--right" type="submit" value="Mark as repaired">
-                    <input type="hidden" name="defectId" value="{{ failure.id }}">
-                    <input type="hidden" name="defectType" value="failure">
-                    <input type="hidden" name="defectText" value="{{ failure.name }}">
-                </form>
-                {% endif %}
+
+                <li class="defect__mark-repaired">
+                    <form class="js-rfrForm" method="post" action="{{ defectJourneyUrl().toRepairDefect(failure.id) }}">
+                        {{ csrfToken('repairDefect') }}
+                        <input class="js-buttonMarkRepaired button button--small button--right" type="submit" value="Mark as repaired">
+                        <input type="hidden" name="defectId" value="{{ failure.id }}">
+                        <input type="hidden" name="defectType" value="failure">
+                        <input type="hidden" name="defectText" value="{{ failure.name }}">
+                    </form>
+                </li>
+
             {% elseif failure.isRemovable %}
                 <li> <a href="{{ defectJourneyUrl().toEditDefect(failure.id) }}" class="">Edit</a></li>
                 <li>or <a href="{{ defectJourneyUrl().toRemoveDefect(failure.id) }}" class="">Remove</a></li>
@@ -63,7 +73,8 @@
     </h3>
     <ol>
         {% for prs in identifiedDefects.prs %}
-            <li class="defect {% if prs.isMarkedAsRepaired %}defect--is-selected{% endif %}">
+            <li class="defect {% if prs.isMarkedAsRepaired %}has-success defect--is-selected{% endif %}">
+
                 <div>
                     {% if prs.isDangerous %}
                         <span class="defect__is-dangerous">Dangerous</span>
@@ -95,12 +106,19 @@
 
 {% if identifiedDefects.advisories is not empty %}
 <h3 class="defect-summary__heading">
-    <span class="badge--warn">{{ identifiedDefects.numberOfAdvisories }}</span>
+    <span class="badge--warn js-numberOfAdvisories">{{ identifiedDefects.numberOfUnrepairedAdvisories }}</span>
     <span class="defect-summary__heading-type">Advisories</span>
 </h3>
     <ol>
         {% for advisory in identifiedDefects.advisories %}
-            <li class="defect {% if advisory.isMarkedAsRepaired %}defect--is-selected{% endif %}">
+            <li class="js-rfrItem defect {% if advisory.isMarkedAsRepaired %}has-success defect--is-selected{% endif %}">
+
+                {% if advisory.isRepairable(isRetest) %}
+                    <div class="defect-status">
+                        <div class="js-itemStatus defect-status__inner"></div>
+                    </div>
+                {% endif %}
+
                 <div>
                     {% if advisory.isDangerous %}
                         <span class="defect__is-dangerous">Dangerous</span>
@@ -126,26 +144,25 @@
                 <h4 class="visuallyhidden">Actions</h4>
                 <ul class="defect__edit">
                     {% if advisory.isRepairable(isRetest) %}
-                        {% if advisory.isMarkedAsRepaired %}
                         <li class="defect__marked-undo">
                             <span>Repaired</span>
-                            <form method="post" action="{{ defectJourneyUrl().toUndoRepairDefect(advisory.id) }}">
+                            <form class="js-rfrForm" method="post" action="{{ defectJourneyUrl().toUndoRepairDefect(advisory.id) }}">
                                 {{ csrfToken('repairDefect') }}
-                                <input class="button--link button--right" type="submit" value="Undo">
+                                <input class="js-buttonMarkRepaired button--link button--right" type="submit" value="Undo">
                                 <input type="hidden" name="defectId" value="{{ advisory.id }}">
                                 <input type="hidden" name="defectType" value="advisory">
                                 <input type="hidden" name="defectText" value="{{ advisory.name }}">
                             </form>
                         </li>
-                        {% else %}
-                        <form method="post" action="{{ defectJourneyUrl().toRepairDefect(advisory.id) }}">
-                            {{ csrfToken('repairDefect') }}
-                            <input class="button button--small button--right" type="submit" value="Mark as repaired">
-                            <input type="hidden" name="defectId" value="{{ advisory.id }}">
-                            <input type="hidden" name="defectType" value="advisory">
-                            <input type="hidden" name="defectText" value="{{ advisory.name }}">
-                        </form>
-                        {% endif %}
+                        <li class="defect__mark-repaired">
+                            <form class="js-rfrForm" method="post" action="{{ defectJourneyUrl().toRepairDefect(advisory.id) }}">
+                                {{ csrfToken('repairDefect') }}
+                                <input class="js-buttonMarkRepaired button button--small button--right" type="submit" value="Mark as repaired">
+                                <input type="hidden" name="defectId" value="{{ advisory.id }}">
+                                <input type="hidden" name="defectType" value="advisory">
+                                <input type="hidden" name="defectText" value="{{ advisory.name }}">
+                            </form>
+                        </li>
                     {% elseif advisory.isRemovable %}
                         <li> <a href="{{ defectJourneyUrl().toEditDefect(advisory.id) }}" class="">Edit</a></li>
                         <li>or <a href="{{ defectJourneyUrl().toRemoveDefect(advisory.id) }}" class="">Remove</a></li>

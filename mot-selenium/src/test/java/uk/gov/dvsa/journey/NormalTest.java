@@ -64,7 +64,7 @@ public class NormalTest {
 
     public TestSummaryPage conductTestPass(User tester, Vehicle vehicle) throws IOException, URISyntaxException {
         TestResultsEntryGroupAPageInterface testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester, vehicle);
-        testResultsEntryPage.completeTestDetailsWithPassValues();
+        testResultsEntryPage.completeTestDetailsWithPassValues(false);
         TestSummaryPage testSummaryPage = testResultsEntryPage.clickReviewTestButton();
 
         if (testSummaryPage.isOneTimePasswordBoxDisplayed()) {
@@ -156,7 +156,7 @@ public class NormalTest {
 
     public TestSummaryPage conductTrainingTest(User tester, Vehicle vehicle) throws IOException, URISyntaxException {
         TestResultsEntryGroupAPageInterface testResultsEntryPage = pageNavigator.gotoTrainingTestResultsEntryPage(tester, vehicle);
-        testResultsEntryPage.completeTestDetailsWithPassValues();
+        testResultsEntryPage.completeTestDetailsWithPassValues(false);
         TestSummaryPage testSummaryPage = testResultsEntryPage.clickReviewTestButton();
 
         declarationSuccessful = testSummaryPage.isDeclarationDisplayed();

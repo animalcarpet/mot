@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "cf10ccc99b265c02a0bb0bfdebf0ec42",
-    "content-hash": "c354952fa4d1b9c79a7492a00e5e0197",
+    "hash": "053f60c2898cd85c7c684d5eab559181",
+    "content-hash": "97938edda66cced7fd327e7dccaa051d",
     "packages": [
         {
             "name": "cpms/client",
@@ -1144,17 +1144,17 @@
         },
         {
             "name": "dvsa/web-frontend-assets",
-            "version": "v0.9.7",
+            "version": "v0.10.3",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/web-frontend-assets.git",
-                "reference": "92c5b8e11c5a5322066b2560dedd865159ef229c"
+                "reference": "d45a8d7849e340e9b32e79ade9f060ba55faced2"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/dvsa-web-frontend-assets-v0.9.7-3768ff.tar",
-                "reference": "92c5b8e11c5a5322066b2560dedd865159ef229c",
-                "shasum": "6b42fddfb62f6781ad2fc5dd1de74e1eafd37333"
+                "url": "https://packages.motdev.org.uk//dist/dvsa-web-frontend-assets-v0.10.3-a49a7d.tar",
+                "reference": "d45a8d7849e340e9b32e79ade9f060ba55faced2",
+                "shasum": "ea680e8fd388d2b6dc8d58bf7a7d6075018053d8"
             },
             "type": "library",
             "authors": [
@@ -1163,7 +1163,7 @@
                     "email": ""
                 }
             ],
-            "time": "2016-10-21 15:26:21"
+            "time": "2016-11-08 13:03:54"
         },
         {
             "name": "erusev/parsedown",

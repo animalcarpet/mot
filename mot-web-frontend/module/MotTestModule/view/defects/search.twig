@@ -26,9 +26,9 @@
     <div class="defect-summary__total">
         <h2 class="defect-summary__total-heading">Defects</h2>
         <ul>
-            <li><span class="badge--alert">{{ identifiedDefects.numberOfFailures }}</span> Failures</li>
+            <li><span class="badge--alert js-numberOfFailures">{{ identifiedDefects.numberOfUnrepairedFailures }}</span> Failures</li>
             <li><span class="badge--info">{{ identifiedDefects.numberOfPrs }}</span> PRS</li>
-            <li><span class="badge--warn">{{ identifiedDefects.numberOfAdvisories }}</span> Advisories</li>
+            <li><span class="badge--warn js-numberOfAdvisories">{{ identifiedDefects.numberOfUnrepairedAdvisories }}</span> Advisories</li>
         </ul>
         {# "Show/Hide defects button only appears when there are defects to be shown. #}
         {% if identifiedDefects.hasFailuresPrsOrAdvisories %}
@@ -153,5 +153,8 @@
 $(document).ready(function() {
 var showerHider = new DVSA.Modules.DVSAShowHideToggle.showerHider({});
 showerHider.init();
+
+var markRepairs = new DVSA.Modules.DVSAMarkRepairs.markRepairs({});
+markRepairs.init();
 });
 {{ inlineScript().captureEnd() }}

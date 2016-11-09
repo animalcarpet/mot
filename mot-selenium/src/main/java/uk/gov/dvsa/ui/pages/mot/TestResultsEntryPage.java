@@ -63,7 +63,7 @@ public class TestResultsEntryPage extends Page implements
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE, PAGE_TITLE_TRAINING);
     }
 
-    public TestResultsEntryPageInterface completeTestDetailsWithPassValues() {
+    public TestResultsEntryPageInterface completeTestDetailsWithPassValues(boolean isRetest) {
         addOdometerReading(10000);
         addDefaultBrakeTestValues("pass");
 

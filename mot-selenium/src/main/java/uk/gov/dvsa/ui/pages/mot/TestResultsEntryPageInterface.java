@@ -6,7 +6,7 @@ public interface TestResultsEntryPageInterface {
 
     public Boolean isClickReviewTestButtonPresent();
 
-    public TestResultsEntryPageInterface completeTestDetailsWithPassValues();
+    public TestResultsEntryPageInterface completeTestDetailsWithPassValues(boolean isRetest);
     public TestResultsEntryPageInterface addOdometerReading(int odometerReading);
     public boolean isPassNoticeDisplayed();
     public TestSummaryPage clickReviewTestButton();

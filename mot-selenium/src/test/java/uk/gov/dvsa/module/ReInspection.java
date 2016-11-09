@@ -59,7 +59,7 @@ public class ReInspection {
 
     private TestSummaryPage showTestSummaryPageFor(User user, String testId, String appealType) throws IOException {
         TestResultsEntryGroupAPageInterface reInspectionPage = startReInspection(user, testId, appealType);
-        reInspectionPage.completeTestDetailsWithPassValues();
+        reInspectionPage.completeTestDetailsWithPassValues(false);
 
         return reInspectionPage.clickReviewTestButton();
     }
