@@ -8,13 +8,12 @@ import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.TestOutcome;
 import uk.gov.dvsa.ui.DslTest;
-import uk.gov.dvsa.ui.pages.*;
-import uk.gov.dvsa.ui.pages.profile.PersonProfilePage;
+import uk.gov.dvsa.ui.pages.HomePage;
+import uk.gov.dvsa.ui.pages.PerformanceDashBoardPage;
 
 import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 public class PerformTesterFunctionTests extends DslTest {
@@ -28,26 +27,6 @@ public class PerformTesterFunctionTests extends DslTest {
         aeDetails = aeData.createNewAe("My_Test_AE", 100);
         testSite = siteData.createNewSite(aeDetails.getId(), "Test_Site");
         tester = motApi.user.createTester(testSite.getId());
-    }
-
-    //TODO Rewrite test according new person profile functionality
-    @Test (groups = {"BVT"}, enabled = false)
-    public void editDetailsWithoutNeedingApproval() throws Exception {
-        String newEmail = "email@domaingreat.com";
-        String postCode = "BS33 5TT";
-
-        //Given I am logged as a Tester and I am on the ChangeDetails page
-        ChangeDetailsPage changeDetailsPage = pageNavigator.navigateToPage(tester, ChangeDetailsPage.PATH, ChangeDetailsPage.class);
-
-        //When I edit my postcode and email details
-        changeDetailsPage.editPostCode(postCode).editEmailAndConfirmEmail(newEmail, newEmail);
-
-        //Then I should be able to save with entering my pin
-        PersonProfilePage personProfilePage = changeDetailsPage.update();
-
-       //And my details should be changed
-        assertThat(personProfilePage.verifyPostCodeIsChanged(postCode), is(true));
-        assertThat(personProfilePage.verifyEmailIsChanged(newEmail), is(true));
     }
 
     @Test (groups = {"Regression"})

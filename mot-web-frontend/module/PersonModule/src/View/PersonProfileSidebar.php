@@ -29,10 +29,8 @@ use Zend\Mvc\Controller\Plugin\Url;
  */
 class PersonProfileSidebar extends GeneralSidebar
 {
-    const OLD_USER_PROFILE_URL = '/profile/';
-    const NEW_USER_PROFILE_URL = '/your-profile/';
-    const OLD_USER_ADMIN_PROFILE_URL = 'user-admin/user-profile/';
-    const NEW_USER_ADMIN_PROFILE_URL = 'user-admin/user/';
+    const USER_PROFILE_URL = '/your-profile/';
+    const USER_ADMIN_PROFILE_URL = 'user-admin/user/';
 
     /** @var int */
     private $personId;
@@ -42,9 +40,6 @@ class PersonProfileSidebar extends GeneralSidebar
 
     /** @var TesterAuthorisation */
     private $testerAuthorisation;
-
-    /** @var bool */
-    private $newProfileEnabled;
 
     /** @var string */
     private $currentUrl;
@@ -77,7 +72,6 @@ class PersonProfileSidebar extends GeneralSidebar
      * @param $personId
      * @param PersonProfileGuard $personProfileGuard
      * @param TesterAuthorisation $testerAuthorisation
-     * @param $newProfileEnabled
      * @param $currentUrl
      * @param PersonProfileRoutes $personProfileRoutes
      * @param Url $urlPlugin
@@ -90,7 +84,6 @@ class PersonProfileSidebar extends GeneralSidebar
         $personId,
         PersonProfileGuard $personProfileGuard,
         TesterAuthorisation $testerAuthorisation,
-        $newProfileEnabled,
         $currentUrl,
         PersonProfileRoutes $personProfileRoutes,
         Url $urlPlugin,
@@ -105,7 +98,6 @@ class PersonProfileSidebar extends GeneralSidebar
         $this->personId = $personId;
         $this->personProfileGuard = $personProfileGuard;
         $this->testerAuthorisation = $testerAuthorisation;
-        $this->newProfileEnabled = $newProfileEnabled;
         $this->currentUrl = $currentUrl;
         $this->hideResetPin = $hideResetPin;
         $this->isTwoFactorAuthEnabled = $isTwoFactorAuthEnabled;
@@ -191,12 +183,9 @@ class PersonProfileSidebar extends GeneralSidebar
             return;
         }
 
-        $changePasswordUrl = ($this->newProfileEnabled ? self::NEW_USER_PROFILE_URL
-                : self::OLD_USER_PROFILE_URL) . 'change-password';
-        $changeSecurityQuestionsUrl = ($this->newProfileEnabled ? self::NEW_USER_PROFILE_URL
-                : self::OLD_USER_PROFILE_URL) . 'change-security-questions';
-        $resetPinUrl = $this->newProfileEnabled ? self::NEW_USER_PROFILE_URL . 'security-question'
-            : PersonUrlBuilderWeb::securityQuestions();
+        $changePasswordUrl = self::USER_PROFILE_URL . 'change-password';
+        $changeSecurityQuestionsUrl = self::USER_PROFILE_URL . 'change-security-questions';
+        $resetPinUrl = self::USER_PROFILE_URL . 'security-question';
 
         $accountSecurityBox = new GeneralSidebarLinkList('Account security');
         $accountSecurityBox->setId('account_security');
@@ -231,16 +220,6 @@ class PersonProfileSidebar extends GeneralSidebar
             return;
         }
 
-        $userAdminUrl = $this->getUserAdminUrl();
-
-        // without the /, the url will get appended to the current url instead
-        // of being appended to the root url
-        $usernameRecoveryUrl = '/' . (
-            $this->newProfileEnabled ?
-                sprintf('%s%d/', $userAdminUrl, $this->personId) :
-                self::OLD_USER_PROFILE_URL
-            ) . 'username-recover/';
-
         $accountManagementBox = new GeneralSidebarLinkList('Account management');
         $accountManagementBox->setId('account_management');
 
@@ -250,7 +229,7 @@ class PersonProfileSidebar extends GeneralSidebar
                     new GeneralSidebarLink(
                         'reset-by-email',
                         'Reset account by email',
-                        '/' . $userAdminUrl . $this->personId . '/claim-reset',
+                        '/' . self::USER_ADMIN_PROFILE_URL . $this->personId . '/claim-reset',
                         'related-button--warning'
                     )
                 );
@@ -258,7 +237,7 @@ class PersonProfileSidebar extends GeneralSidebar
                     new GeneralSidebarLink(
                         'reset-by-post',
                         'Reset account by post',
-                        '/' . $userAdminUrl . $this->personId . '/password-reset', '', 'or '
+                        '/' . self::USER_ADMIN_PROFILE_URL . $this->personId . '/password-reset', '', 'or '
                     )
                 );
             }
@@ -267,7 +246,7 @@ class PersonProfileSidebar extends GeneralSidebar
                     new GeneralSidebarLink(
                         'reset-by-post',
                         'Reset account by post',
-                        '/' . $userAdminUrl . $this->personId . '/password-reset', ''
+                        '/' . self::USER_ADMIN_PROFILE_URL . $this->personId . '/password-reset', ''
                     )
                 );
             }
@@ -278,7 +257,7 @@ class PersonProfileSidebar extends GeneralSidebar
                 new GeneralSidebarLink(
                     'id-by-post',
                     'Send User ID by post',
-                    '/' . $userAdminUrl . $this->personId . '/username-recover'
+                    '/' . self::USER_ADMIN_PROFILE_URL . $this->personId . '/username-recover'
                 )
             );
         }
@@ -288,7 +267,7 @@ class PersonProfileSidebar extends GeneralSidebar
                 new GeneralSidebarLink(
                     'password-by-post',
                     'Send password reset by post',
-                    '/' . $userAdminUrl . $this->personId . '/claim-reset/post'
+                    '/' . self::USER_ADMIN_PROFILE_URL . $this->personId . '/claim-reset/post'
                 )
             );
         }
@@ -308,13 +287,9 @@ class PersonProfileSidebar extends GeneralSidebar
 
     private function setUpQualificationsAndAnnualAssessmentSection()
     {
-        $qualificationDetailsUrl = ($this->newProfileEnabled ?
-                $this->currentUrl :
-                self::OLD_USER_PROFILE_URL . $this->personId) . '/qualification-details';
+        $qualificationDetailsUrl = $this->currentUrl . '/qualification-details';
 
-        $annualAssessmentCertificatesUrl = ($this->newProfileEnabled ?
-                $this->currentUrl :
-                self::OLD_USER_PROFILE_URL . $this->personId) . '/annual-assessment-certificates';
+        $annualAssessmentCertificatesUrl = $this->currentUrl . '/annual-assessment-certificates';
 
         $relatedBox = new GeneralSidebarLinkList('MOT training and certificates');
         $relatedBox->setId('qualifications');
@@ -346,23 +321,15 @@ class PersonProfileSidebar extends GeneralSidebar
 
     private function setUpRelatedLinksSection()
     {
-        $changeQualificationStatusUrl = ($this->newProfileEnabled ?
-                $this->currentUrl :
-                self::OLD_USER_PROFILE_URL . $this->personId) . '/change-qualification-status/';
+        $changeQualificationStatusUrl = $this->currentUrl . '/change-qualification-status/';
         $changeGroupAQualificationUrl = $changeQualificationStatusUrl . 'A';
         $changeGroupBQualificationUrl = $changeQualificationStatusUrl . 'B';
 
-        $rolesAndAssociationsUrl = ($this->newProfileEnabled ?
-                $this->currentUrl :
-                self::OLD_USER_PROFILE_URL . $this->personId) . '/trade-roles';
+        $rolesAndAssociationsUrl = $this->currentUrl . '/trade-roles';
 
-        $internalRolesUrl = ($this->newProfileEnabled ?
-                $this->currentUrl :
-                self::OLD_USER_PROFILE_URL . $this->personId) . '/manage-internal-role';
+        $internalRolesUrl = $this->currentUrl . '/manage-internal-role';
 
-        $testQualityInformationUrl = ($this->newProfileEnabled ?
-                $this->currentUrl :
-                self::OLD_USER_PROFILE_URL . $this->personId) .
+        $testQualityInformationUrl = $this->currentUrl .
                 sprintf(
                     '/test-quality-information/%s',
                     DateUtils::subtractCalendarMonths(
@@ -445,15 +412,5 @@ class PersonProfileSidebar extends GeneralSidebar
         if (!empty($relatedBox->getLinks())) {
             $this->addItem($relatedBox);
         }
-    }
-
-    /**
-     * @return string
-     */
-    private function getUserAdminUrl()
-    {
-        return $this->newProfileEnabled ?
-            self::NEW_USER_ADMIN_PROFILE_URL :
-            self::OLD_USER_ADMIN_PROFILE_URL;
     }
 }

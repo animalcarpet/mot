@@ -10,17 +10,16 @@ use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
-use DvsaCommon\Constants\FeatureToggle;
+use DvsaCommon\Auth\PermissionInSystem;
+use DvsaCommon\Constants\Role;
 use DvsaCommon\Dto\Person\PersonHelpDeskProfileDto;
 use DvsaCommon\Model\TesterAuthorisation;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaFeature\FeatureToggles;
 use UserAdmin\Controller\EmailAddressController;
 use UserAdmin\Form\ChangeEmailForm;
 use UserAdmin\Service\HelpdeskAccountAdminService;
 use UserAdmin\Service\IsEmailDuplicateService;
 use Zend\Http\Request;
-use Zend\Stdlib\Parameters;
 use Zend\Stdlib\ParametersInterface;
 use Zend\View\Model\ViewModel;
 
@@ -50,9 +49,6 @@ class EmailAddressControllerTest extends AbstractLightWebControllerTest
     /** @var  IsEmailDuplicateService */
     private $duplicateEmailService;
 
-    /** @var  FeatureToggles */
-    private $featureToggles;
-
     /** @var  TesterAuthorisation */
     private $testerAuthorisation;
 
@@ -75,7 +71,6 @@ class EmailAddressControllerTest extends AbstractLightWebControllerTest
         $this->personProfileUrlGenerator = XMock::of(PersonProfileUrlGenerator::class);
         $this->contextProvider = XMock::of(ContextProvider::class);
         $this->duplicateEmailService = XMock::of(IsEmailDuplicateService::class);
-        $this->featureToggles = XMock::of(FeatureToggles::class);
         $this->testerGroupAuthorisationMapper = XMock::of(TesterGroupAuthorisationMapper::class);
         $this->testerAuthorisation = XMock::of(TesterAuthorisation::class);
         $this->personHelpDeskProfileDto = XMock::of(PersonHelpDeskProfileDto::class);
@@ -83,10 +78,36 @@ class EmailAddressControllerTest extends AbstractLightWebControllerTest
         $this->identityProvider = XMock::of(MotIdentityProviderInterface::class);
     }
 
+    public function testWhenGet_userSearchContext_permissionToEdit()
+    {
+        $this->withContext(ContextProvider::USER_SEARCH_CONTEXT);
+        $this->mockIsGranted(true);
+        $this->getAuthorisationMock();
+        $this->getUserProfileMock();
+        $this->setRouteParams(['id' => self::PERSON_ID]);
+
+        $actual = $this->buildController()->indexAction();
+
+        $this->assertInstanceOf(ViewModel::class, $actual);
+        $this->assertSame('user-admin/email-address/form.phtml', $actual->getTemplate());
+        $this->assertInstanceOf(ChangeEmailForm::class, $actual->getVariables()['viewModel']->getForm());
+    }
+
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage Person with ID '107' is not allowed to change email with context 'user-search'
+     */
+    public function testWhenGet_userSearchContext_noPermissionToEdit()
+    {
+        $this->withContext(ContextProvider::USER_SEARCH_CONTEXT);
+        $this->mockIsGranted(false);
+        $this->setRouteParams(['id' => self::PERSON_ID]);
+
+        $this->buildController()->indexAction();
+    }
+
     public function testWhenPost_formIsValid_emailIsNotDuplicated()
     {
-        $this->withFeatureToggles(true);
-
         $this->withContext(ContextProvider::YOUR_PROFILE_CONTEXT);
 
         $this->withIdentity();
@@ -114,28 +135,12 @@ class EmailAddressControllerTest extends AbstractLightWebControllerTest
         $this->buildController()->indexAction();
     }
 
-    public function testWhenGet_newProfileFeatureNotEnabled()
-    {
-        $this->getAuthorisationMock();
-
-        $this->getUserProfileMock();
-
-        $this->request
-            ->expects($this->any())
-            ->method('getQuery')
-            ->willReturn(new Parameters());
-
-        $this->buildController()->indexAction();
-    }
-
     /**
      * @expectedException \Exception
      * @expectedExceptionMessage Person with ID '0' is not allowed to change email with context 'user-search'
      */
     public function testWhenGet_notAllowedToChangeEmailError()
     {
-        $this->withFeatureToggles(true);
-
         $this->withContext(ContextProvider::USER_SEARCH_CONTEXT);
 
         $this->buildController()->indexAction();
@@ -143,8 +148,6 @@ class EmailAddressControllerTest extends AbstractLightWebControllerTest
 
     public function testWhenPost_formIsValid_emailIsDuplicated()
     {
-        $this->withFeatureToggles(true);
-
         $this->withContext(ContextProvider::YOUR_PROFILE_CONTEXT);
 
         $this->withIdentity();
@@ -167,8 +170,6 @@ class EmailAddressControllerTest extends AbstractLightWebControllerTest
 
     public function testWhenGet_shouldDisplayChangeEmailPage()
     {
-        $this->withFeatureToggles(true);
-
         $this->getAuthorisationMock();
 
         $this->getUserProfileMock();
@@ -184,6 +185,14 @@ class EmailAddressControllerTest extends AbstractLightWebControllerTest
         $this->assertInstanceOf(ViewModel::class, $actual);
         $this->assertSame('user-admin/email-address/form.phtml', $actual->getTemplate());
         $this->assertInstanceOf(ChangeEmailForm::class, $actual->getVariables()['viewModel']->getForm());
+    }
+
+    private function mockIsGranted($isGranted)
+    {
+        return $this->authorisationService
+            ->expects($this->any())
+            ->method('isGranted')
+            ->willReturn($isGranted);
     }
 
     private function mockIsDuplicate($isDuplicate, $email)
@@ -244,7 +253,6 @@ class EmailAddressControllerTest extends AbstractLightWebControllerTest
             $this->personProfileUrlGenerator,
             $this->contextProvider,
             $this->duplicateEmailService,
-            $this->featureToggles,
             $this->request,
             $this->identityProvider
         );
@@ -252,15 +260,6 @@ class EmailAddressControllerTest extends AbstractLightWebControllerTest
         $this->setController($controller);
 
         return $controller;
-    }
-
-    private function withFeatureToggles($isEnabled)
-    {
-        $this->featureToggles
-            ->expects($this->any())
-            ->method('isEnabled')
-            ->with(FeatureToggle::NEW_PERSON_PROFILE)
-            ->willReturn($isEnabled);
     }
 
     private function withIdentity()

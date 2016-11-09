@@ -1,9 +1,7 @@
 package uk.gov.dvsa.journey.userprofile;
 
 import uk.gov.dvsa.domain.navigation.PageNavigator;
-import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.ui.pages.profile.NewPersonProfilePage;
-import uk.gov.dvsa.ui.pages.profile.NewUserProfilePage;
+import uk.gov.dvsa.ui.pages.profile.UserProfilePage;
 import uk.gov.dvsa.ui.pages.profile.ProfilePage;
 import uk.gov.dvsa.ui.pages.profile.ChangeTelephonePage;
 
@@ -27,7 +25,7 @@ public class ChangeTelephone {
     public ProfilePage changeUserTelephoneAsDvsaTo(String phoneNumber) {
         return profilePage.clickChangeTelephoneLink()
                 .fillTel(phoneNumber)
-                .clickSubmitButton(NewUserProfilePage.class);
+                .clickSubmitButton(UserProfilePage.class);
     }
 
     public boolean isValidationMessageOnChangeTelephonePageDisplayed() {

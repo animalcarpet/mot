@@ -96,7 +96,7 @@ public class DriverLicenseViewTests extends DslTest {
         // Then the application will display an error page
     }
 
-    @Test(testName = "NewProfile", groups = {"Regression"},
+    @Test(groups = {"Regression"},
             description = "Test that DVSA user can remove non-DVSA user driving licence")
     public void dvsaUserCanRemoveTradeUserDrivingLicence() throws IOException, URISyntaxException {
         //setup

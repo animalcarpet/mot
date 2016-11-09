@@ -15,8 +15,7 @@
             <?php if ($viewModel->canAlterTesterAuthorisation()): ?>
                 <span class="key-value-list__meta">
                     <a id="record-demo-a" href="<?php
-                    echo $this->isFeatureEnabled('new_person_profile')
-                        ? $this->url(
+                    echo $this->url(
                             'user_admin/profile/change-qualification-status',
                             [
                                 'personId' => $viewModel->getTesterId(),
@@ -24,15 +23,7 @@
                             ], [
                                 'query' => $searchQueryParams
                             ]
-                        ): $this->url(
-                        'user_admin/user-profile/change-qualification-status',
-                        [
-                            'personId' => $viewModel->getTesterId(),
-                            'vehicleClassGroup' => 'A'
-                        ], [
-                            'query' => $searchQueryParams
-                        ]
-                    ); ?>">Change qualification status</a>
+                        ); ?>">Change qualification status</a>
                 </span>
             <?php endif ?>
         </td>
@@ -47,24 +38,13 @@
             <?php if ($viewModel->canAlterTesterAuthorisation()) :?>
                 <span class="key-value-list__meta">
                     <a id="record-demo-b" href="<?php
-                    echo $this->isFeatureEnabled('new_person_profile')
-                        ?
-                        $this->url(
+                    echo $this->url(
                             'user_admin/profile/change-qualification-status',
                             [
                                 'personId' => $viewModel->getTesterId(),
                                 'vehicleClassGroup' => 'B'
                             ], [
                             'query' => $searchQueryParams
-                            ]
-                        ):
-                        $this->url(
-                            'user_admin/user-profile/change-qualification-status',
-                            [
-                                'personId' => $viewModel->getTesterId(),
-                                'vehicleClassGroup' => 'B'
-                            ], [
-                                'query' => $searchQueryParams
                             ]
                         ); ?>">Change qualification status</a>
                 </span>

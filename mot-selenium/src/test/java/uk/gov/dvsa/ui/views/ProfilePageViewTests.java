@@ -56,7 +56,7 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.manageRoles.isRolesTableContainsValidTesterData(), is(true));
     }
 
-    @Test(testName = "NewProfile", groups = {"BVT", "BL-448"},
+    @Test(groups = {"BVT", "BL-448"},
             description = "Verifies that authorised dvsa user can see change driving licence link and date of birth " +
                     "information on trade user profile",
             dataProvider = "dvsaUserForPersonalDetails")
@@ -72,7 +72,7 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isChangeDrivingLicenceLinkIsDisplayed(), is(isChangeLinkDisplayed));
     }
 
-    @Test(testName = "NewProfile", groups = {"BVT", "BL-448"},
+    @Test(groups = {"BVT", "BL-448"},
             description = "Verifies that authorised dvsa user can change trade user email on trade user profile",
             dataProvider = "dvsaUserForContactDetails")
     public void dvsaUserCanSeeUserContactDetails(User user) throws IOException, URISyntaxException {
@@ -84,7 +84,7 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isChangeEmailLinkIsDisplayed(), is(true));
     }
 
-    @Test(testName = "NewProfile", groups = {"BVT", "BL-448"},
+    @Test(groups = {"BVT", "BL-448"},
             description = "Verifies that authorised user can see dvsa roles on dvsa user profile",
             dataProvider = "dvsaUserForContactDetails")
     public void dvsaUserCanSeeDvsaUserRoles(User user) throws IOException, URISyntaxException {
@@ -96,7 +96,7 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isDvsaRolesSectionIsDisplayed(), is(true));
     }
 
-    @Test(testName = "NewProfile", groups = {"BVT", "BL-448"},
+    @Test(groups = {"BVT", "BL-448"},
             description = "Verifies that authorised user can see qualification section on user profile")
     public void anyUserCanSeeQualificationsSection() throws IOException, URISyntaxException {
 
@@ -107,7 +107,7 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isQualificationStatusSectionIsDisplayed(), is(true));
     }
 
-    @Test(testName = "NewProfile", groups = {"BVT", "BL-448"},
+    @Test(groups = {"BVT", "BL-448"},
             description = "Verifies that user can see account security section on own user profile")
     public void anyUserCanSeeAccountSecuritySectionOnOwnProfile() throws IOException, URISyntaxException {
 
@@ -118,7 +118,7 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isAccountSecuritySectionDisplayed(), is(true));
     }
 
-    @Test(testName = "NewProfile", groups = {"BVT", "BL-448"},
+    @Test(groups = {"BVT", "BL-448"},
             description = "Verifies that csco user can see account management section on other user profile")
     public void cscoUserCanSeeAccountManagementSectionOnAnyProfile() throws IOException, URISyntaxException {
 
@@ -131,7 +131,7 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isAccountManagementSectionDisplayed(), is(true));
     }
 
-    @Test(testName = "NewProfile", groups = {"BVT", "BL-448"},
+    @Test(groups = {"BVT", "BL-448"},
             description = "Verifies that authorised dvsa user can see change qualification links " +
                     "on trade user profile",
             dataProvider = "dvsaUser")
@@ -144,7 +144,7 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isChangeDrivingLicenceLinkIsDisplayed(), is(true));
     }
 
-    @Test(testName = "NewProfile", groups = {"BVT", "BL-448"},
+    @Test(groups = {"BVT", "BL-448"},
             description = "Verifies that authorised dvsa user can see manage roles link " +
                     "on other dvsa user profile",
             dataProvider = "dvsaUser")

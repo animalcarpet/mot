@@ -39,7 +39,6 @@ public class ChangePersonNameTests extends DslTest {
     }
 
     @Test(groups = {"BVT", "BL-59"},
-            testName = "NewProfile",
             description = "Test that Authorised user can see change name link on person profile",
             dataProvider = "dvsaUserProvider")
     public void dvsaUserCanSeeChangeNameLinkOnOtherPersonProfile(User user, boolean isLinkVisible) throws IOException {
@@ -51,7 +50,6 @@ public class ChangePersonNameTests extends DslTest {
     }
 
     @Test(groups = {"BVT", "BL-59"},
-            testName = "NewProfile",
             description = "Test that Authorised user can change name on person profile",
             dataProvider = "dvsaUserFroOwnProfileProvider")
     public void dvsaUserCanChangeNameOnOtherPersonProfile(User user) throws IOException {
@@ -66,7 +64,6 @@ public class ChangePersonNameTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-59"},
-            testName = "NewProfile",
             description = "Test that Authorised user should provide a first name in order to update user information")
     public void dvsaUserShouldProvideFirstName() throws IOException {
         // Given I am on other person profile as an authorised user
@@ -81,7 +78,6 @@ public class ChangePersonNameTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-59"},
-            testName = "NewProfile",
             description = "Test that Authorised user should provide a last name in order to update user information")
     public void dvsaUserShouldProvideLastName() throws IOException {
         // Given I am on other person profile as an authorised user
@@ -95,7 +91,6 @@ public class ChangePersonNameTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-59"},
-            testName = "NewProfile",
             description = "Test that Authorised user can navigate to Change name page and backward")
     public void dvsaUserCanNavigateToAndBackwardChangeNamePage() throws IOException {
         // Given I am on other person profile as an authorised user
@@ -109,7 +104,6 @@ public class ChangePersonNameTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-59"},
-            testName = "NewProfile",
             description = "Test that Authorised user can not see change name link on it's own profile",
             dataProvider = "dvsaUserFroOwnProfileProvider")
     public void dvsaUserCantSeeChangeNameLinkOnOwnProfile(User user) throws IOException {
@@ -121,7 +115,6 @@ public class ChangePersonNameTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-59"},
-            testName = "NewProfile",
             description = "Test that Trade user can't see change name link on person profile",
             dataProvider = "tradeUserProvider")
     public void userCantSeeChangeNameLinkOnOtherPersonProfile(User user) throws IOException {

@@ -50,9 +50,7 @@ class PersonRoleController extends AbstractAuthActionController
                 $this->addErrorMessage(sprintf("There has been an error trying to add role %s", $roleName));
             }
 
-            $redirectUrl = $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-                $this->url()->fromRoute('newProfileUserAdmin/manage-user-internal-role', ['id' => $this->getPersonIdFromRoute()]) :
-                UserAdminUrlBuilderWeb::personInternalRoleManagement($this->getPersonIdFromRoute());
+            $redirectUrl = $this->url()->fromRoute('newProfileUserAdmin/manage-user-internal-role', ['id' => $this->getPersonIdFromRoute()]);
 
             $this->redirect()->toUrl($redirectUrl);
         } else {
@@ -69,9 +67,6 @@ class PersonRoleController extends AbstractAuthActionController
                     'personId' => $this->getPersonIdFromRoute(),
                     'roleName' => $roleName,
                     'personName' => $this->getPersonNameForBreadcrumbs(),
-                    'urlManageInternalRoles' => UserAdminUrlBuilderWeb::personInternalRoleManagement(
-                        $this->getPersonIdFromRoute()
-                    ),
                 ]
             );
 
@@ -97,9 +92,7 @@ class PersonRoleController extends AbstractAuthActionController
 
             $this->addSuccessMessage(sprintf("%s has been removed", $roleName));
 
-            $redirectUrl = $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-                $this->url()->fromRoute('newProfileUserAdmin/manage-user-internal-role', ['id' => $this->getPersonIdFromRoute()]) :
-                UserAdminUrlBuilderWeb::personInternalRoleManagement($this->getPersonIdFromRoute());
+            $redirectUrl = $this->url()->fromRoute('newProfileUserAdmin/manage-user-internal-role', ['id' => $this->getPersonIdFromRoute()]);
 
             $this->redirect()->toUrl($redirectUrl);
         } else {
@@ -117,9 +110,6 @@ class PersonRoleController extends AbstractAuthActionController
                     'roleName' => $this->getCatalogService()
                         ->getPersonSystemRoles()[$this->getPersonSystemRoleIdFromRoute()]['name'],
                     'personName' => $this->getPersonNameForBreadcrumbs(),
-                    'urlManageInternalRoles' => UserAdminUrlBuilderWeb::personInternalRoleManagement(
-                        $this->getPersonIdFromRoute()
-                    ),
                 ]
             );
 
@@ -140,11 +130,11 @@ class PersonRoleController extends AbstractAuthActionController
         $this->personRoleManagementService->forbidManagementOfSelf($this->getPersonIdFromRoute());
 
         $assignedInternalRoles = $this->personRoleManagementService->getPersonAssignedInternalRoles(
-            $this->getPersonIdFromRoute(), $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE)
+            $this->getPersonIdFromRoute()
         );
 
         $manageableInternalRoles = $this->personRoleManagementService->getPersonManageableInternalRoles(
-            $this->getPersonIdFromRoute(), $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE)
+            $this->getPersonIdFromRoute()
         );
 
         $viewModel = new ViewModel(
@@ -173,9 +163,7 @@ class PersonRoleController extends AbstractAuthActionController
      */
     private function getPersonIdFromRoute()
     {
-        return $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-            $this->params()->fromRoute('id') :
-            $this->params()->fromRoute('personId');
+        return $this->params()->fromRoute('id');
     }
 
     /**
@@ -191,9 +179,7 @@ class PersonRoleController extends AbstractAuthActionController
      */
     private function getPersonProfileUrl()
     {
-        return $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-            $this->url()->fromRoute('newProfileUserAdmin', ['id' => $this->getPersonIdFromRoute()]) :
-            UserAdminUrlBuilderWeb::of()->userProfile($this->getPersonIdFromRoute())->toString();
+        return $this->url()->fromRoute('newProfileUserAdmin', ['id' => $this->getPersonIdFromRoute()]);
     }
 
     /**
@@ -221,8 +207,7 @@ class PersonRoleController extends AbstractAuthActionController
      */
     private function getPersonNameForBreadcrumbs()
     {
-        $isNewUserProfileEnabled = $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE);
-        $person = $this->personRoleManagementService->getUserProfile($this->getPersonIdFromRoute(), $isNewUserProfileEnabled);
+        $person = $this->personRoleManagementService->getUserProfile($this->getPersonIdFromRoute());
 
         return implode(
             ' ',

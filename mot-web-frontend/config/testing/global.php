@@ -110,7 +110,6 @@ return [
         'vts.risk.score'                 => true,
         '2fa.method.visible'             => false,
         'infinity.contingency'           => true,
-        'new_person_profile'             => true,
         '2fa.enabled'                    => false,
     ],
     'baseUrl' => 'https://dev.motdev.org.uk',

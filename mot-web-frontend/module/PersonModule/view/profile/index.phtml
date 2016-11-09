@@ -40,9 +40,7 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $succes
 echo $this->partial('partial/gds/general/system-message', ['messages' => $errorMessages, 'type' => 'failure']);
 ?>
 <?php if (true === $personProfileGuard->canChangeEmailAddress()) :
-    $emailUrl = $this->isFeatureEnabled('new_person_profile') ?
-        $this->url($routeName, $routeParams) . '/email/change' :
-        '/user-admin/user-profile/' . $personalDetails->getId() . '/email';
+    $emailUrl = $this->url($routeName, $routeParams) . '/email/change';
 endif ?>
 <?php if (!$displayResetAccountError) { ?>
     <div class="banner--error">
@@ -85,7 +83,7 @@ endif ?>
             <?php echo !empty($personalDetails->getDateOfBirth()) ? DateTimeDisplayFormat::textDate($personalDetails->getDateOfBirth())
                 : '<span class="table-summary__meta">Unknown</span>'; ?>
 
-            <?php if($personProfileGuard->canChangeDateOfBirth() && $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE)){
+            <?php if($personProfileGuard->canChangeDateOfBirth()){
                 $url = $this->personProfileUrl()->fromPersonProfile('change-person-date-of-birth');
                 echo '<a href="' . $url .
                     '" class="table-summary__action">Change<span class="visuallyhidden"> Date of birth </span></a>';
@@ -110,9 +108,7 @@ endif ?>
                         . '<span class="table-summary__meta">' .  $this->escapeHtml($licenceRegionCode) .' licence</span>'
                     : '<span class="table-summary__meta">None recorded</span>'; ?>
             <?php if (true === $personProfileGuard->canChangeDrivingLicence()) :
-                $url = $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-                    $this->personProfileUrl()->fromPersonProfile('driving-licence-change') :
-                    ('/user-admin/user-profile/' . $personalDetails->getId() . '/driving-licence');
+                $url = $this->personProfileUrl()->fromPersonProfile('driving-licence-change');
                 echo '<a href="' . $url .
                     '" class="table-summary__action">Change<span class="visuallyhidden"> Driving licence </span></a>';
             endif ?>

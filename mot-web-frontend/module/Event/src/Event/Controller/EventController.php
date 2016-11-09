@@ -10,7 +10,6 @@ namespace Event\Controller;
 use Core\Controller\AbstractAuthActionController;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Dto\Common\DateDto;
 use DvsaCommon\Dto\Event\EventFormDto;
@@ -104,7 +103,6 @@ class EventController extends AbstractAuthActionController
             new EventFormDto($formData),
             $type,
             $id,
-            $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE),
             $previousRoute
         );
 
@@ -352,7 +350,6 @@ class EventController extends AbstractAuthActionController
             $this->getEventDetails($eventId),
             $type,
             new EventFormDto($formData),
-            $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE),
             $previousRoute
         );
 

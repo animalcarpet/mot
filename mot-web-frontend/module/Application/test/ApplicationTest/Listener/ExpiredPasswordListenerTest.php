@@ -6,10 +6,7 @@ namespace ApplicationTest\Listener;
 use Account\Service\ExpiredPasswordService;
 use Application\Listener\ExpiredPasswordListener;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Date\DateTimeHolder;
-use DvsaFeature\Factory\FeatureTogglesFactory;
-use DvsaFeature\FeatureToggles;
 use Zend\Http\Response;
 use Zend\Log\LoggerInterface;
 use Zend\Mvc\MvcEvent;
@@ -48,11 +45,6 @@ class ExpiredPasswordListenerTest extends \PHPUnit_Framework_TestCase
      * @var TreeRouteStack $router
      */
     private $router;
-
-    /**
-     * @var FeatureToggles $featureToggles
-     */
-    private $featureToggles;
 
     public function setUp()
     {
@@ -100,8 +92,6 @@ class ExpiredPasswordListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testChangePasswordLinkIsCorrectNewProfile()
     {
-        $this->withNewProfileToggleOn();
-
         $routeMatch = new RouteMatch([]);
         $routeMatch->setMatchedRouteName('newProfile');
 
@@ -109,8 +99,7 @@ class ExpiredPasswordListenerTest extends \PHPUnit_Framework_TestCase
             $this->identityProvider,
             $this->timeHolder,
             $this->logger,
-            $this->expiredPasswordService,
-            $this->featureToggles
+            $this->expiredPasswordService
         );
 
         $e = new MvcEvent();
@@ -134,8 +123,6 @@ class ExpiredPasswordListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testChangePasswordLinkIsCorrectOldProfile()
     {
-        $this->withNewProfileToggleOff();
-
         $routeMatch = new RouteMatch([]);
         $routeMatch->setMatchedRouteName('newProfile');
 
@@ -143,8 +130,7 @@ class ExpiredPasswordListenerTest extends \PHPUnit_Framework_TestCase
             $this->identityProvider,
             $this->timeHolder,
             $this->logger,
-            $this->expiredPasswordService,
-            $this->featureToggles
+            $this->expiredPasswordService
         );
 
         $e = new MvcEvent();
@@ -158,54 +144,5 @@ class ExpiredPasswordListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             Response::STATUS_CODE_200, $e->getResponse()->getStatusCode()
         );
-    }
-
-    /**
-     * @return $this
-     */
-    public function withNewProfileToggleOn()
-    {
-        $this->withFeatureToggles([FeatureToggle::NEW_PERSON_PROFILE => true]);
-        $this->router
-            ->method('assemble')
-            ->will($this->returnValue('your-profile/change-password'));
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function withNewProfileToggleOff()
-    {
-        $this->withFeatureToggles([FeatureToggle::NEW_PERSON_PROFILE => false]);
-        $this->router
-            ->method('assemble')
-            ->will($this->returnValue('profile/change-password'));
-        return $this;
-    }
-
-    /**
-     * @param array $featureToggles
-     *
-     * @return $this
-     */
-    public function withFeatureToggles(array $featureToggles = [])
-    {
-        $map = [];
-        foreach ($featureToggles as $name => $value) {
-            $map[] = [(string) $name, (bool) $value];
-        }
-
-        $featureToggles = $this
-            ->getMockBuilder(FeatureToggles::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $featureToggles
-            ->method('isEnabled')
-            ->will($this->returnValueMap($map));
-
-         $this->featureToggles = $featureToggles;
-
-        return $this;
     }
 }

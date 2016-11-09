@@ -7,7 +7,6 @@ import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
-import uk.gov.dvsa.ui.pages.profile.PersonProfilePage;
 
 public class ChangeDrivingLicencePage extends Page {
 
@@ -42,11 +41,6 @@ public class ChangeDrivingLicencePage extends Page {
     public <T extends Page>T clickSubmitDrivingLicenceButton(Class<T> clazz) {
         submitDrivingLicenceButton.click();
         return MotPageFactory.newPage(driver, clazz);
-    }
-
-    public PersonProfilePage clickBackToUserProfileLink() {
-        backToUserProfileLink.click();
-        return new PersonProfilePage(driver);
     }
 
     public RemoveDriverLicencePage clickRemoveDrivingLicenceLink()

@@ -55,14 +55,11 @@ public class UserService extends Service {
         return createUserAsTester(siteIdList, accountClaimRequired, null);
     }
 
-    protected User createUserAsTester(List<Integer> siteIdList, boolean accountClaimRequired, TestGroup testGroup) throws IOException {
+    private User createUserAsTester(List<Integer> siteIdList, boolean accountClaimRequired, TestGroup testGroup) throws IOException {
         String userRequest =
-                jsonHandler.convertToString(
-                        new CreateTesterRequest(siteIdList, accountClaimRequired, testGroup));
+                jsonHandler.convertToString(new CreateTesterRequest(siteIdList, accountClaimRequired, testGroup));
 
-        Response response = motClient.createUser
-                (userRequest, CREATE_TESTER_PATH, authService.getDvsaTokenForAuthRequest());
-
+        Response response = motClient.createUser(userRequest, CREATE_TESTER_PATH);
         return userResponse(response);
     }
 

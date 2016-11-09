@@ -3,7 +3,7 @@ package uk.gov.dvsa.journey.userprofile;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.profile.ChangeNamePage;
-import uk.gov.dvsa.ui.pages.profile.NewUserProfilePage;
+import uk.gov.dvsa.ui.pages.profile.UserProfilePage;
 import uk.gov.dvsa.ui.pages.profile.ProfilePage;
 
 public class ChangeName {
@@ -24,7 +24,7 @@ public class ChangeName {
         if (!isInputValid) {
             return (T)getChangeNamePage().clickSubmitButton(ChangeNamePage.class);
         }
-        return (T)getChangeNamePage().clickSubmitButton(NewUserProfilePage.class);
+        return (T)getChangeNamePage().clickSubmitButton(UserProfilePage.class);
     }
 
     public boolean isValidationMessageOnChangeNamePageDisplayed(String warningMessage) {

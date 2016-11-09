@@ -16,8 +16,6 @@ use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\UrlBuilder\AuthorisedExaminerUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\EventUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\SiteUrlBuilderWeb;
-use DvsaCommon\UrlBuilder\UserAdminUrlBuilderWeb;
-use DvsaFeature\FeatureToggles;
 use Event\Controller\EventController;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
@@ -57,11 +55,6 @@ class EventViewModel
      */
     private $eventList;
 
-    /**
-     * @var bool featureToggles
-     */
-    private $newProfileEnabled;
-
     /* @var string $eventType */
     private $eventType;
 
@@ -75,7 +68,6 @@ class EventViewModel
      * @param EventFormDto             $formModel
      * @param string                   $eventType
      * @param int                      $id
-     * @param bool                     $newProfileEnabled
      * @param string|null              $previousRoute
      */
     public function __construct(
@@ -85,7 +77,6 @@ class EventViewModel
         EventFormDto $formModel,
         $eventType,
         $id,
-        $newProfileEnabled,
         $previousRoute = null
     ) {
         $this->setOrganisation($organisation);
@@ -94,7 +85,6 @@ class EventViewModel
         $this->setFormModel($formModel);
         $this->setEventType($eventType);
         $this->setId($id);
-        $this->newProfileEnabled = $newProfileEnabled;
         $this->previousRoute = $previousRoute;
     }
 
@@ -109,9 +99,7 @@ class EventViewModel
     {
         $baseUrl = EventUrlBuilderWeb::of()->eventDetail($this->getId(), $eventId, $this->getEventType())->toString();
 
-        $url = true === $this->newProfileEnabled
-            ? sprintf('%s?%s=%s', $baseUrl, EventController::PERSON_PROFILE_GO_BACK_PARAMETER, urlencode($this->previousRoute))
-            : $baseUrl;
+        $url = sprintf('%s?%s=%s', $baseUrl, EventController::PERSON_PROFILE_GO_BACK_PARAMETER, urlencode($this->previousRoute));
 
         return $url;
     }
@@ -129,15 +117,11 @@ class EventViewModel
             case 'site':
                 return SiteUrlBuilderWeb::of($this->site->getId());
             case 'person':
-                if ($this->newProfileEnabled) {
-                    if (null === $this->previousRoute) {
-                        return '/your-profile';
-                    } else {
-                        return urldecode($this->previousRoute);
-                    }
+                if (null === $this->previousRoute) {
+                    return '/your-profile';
+                } else {
+                    return urldecode($this->previousRoute);
                 }
-
-                return UserAdminUrlBuilderWeb::userProfile($this->person->getId());
         }
 
         return '';

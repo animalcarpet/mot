@@ -65,20 +65,12 @@ class UserAdminMapper extends DtoMapper
 
     /**
      * @param int    $personId
-     * @param string $usingNewProfile
      * @return PersonHelpDeskProfileDto
      */
-    public function getUserProfile($personId, $usingNewProfile)
+    public function getUserProfile($personId)
     {
-        if ($usingNewProfile) {
-            $response = $this->personDetailsService->getPersonalDetailsData($personId);
-            return PersonHelpDeskProfileDto::fromArray($response);
-
-        } else {
-            $url = PersonUrlBuilder::helpDeskProfileUnrestricted($personId)->toString();
-            $response = $this->client->get($url);
-            return PersonHelpDeskProfileDto::fromArray($response['data']);
-        }
+        $response = $this->personDetailsService->getPersonalDetailsData($personId);
+        return PersonHelpDeskProfileDto::fromArray($response);
     }
 
     /**

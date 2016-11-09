@@ -19,11 +19,6 @@ return [
         'vts.risk.score' => true,
 
         /*
-         * Enable new person profile layout.
-         */
-        'new_person_profile' => false,
-
-        /*
          * To control displaying the 2FA method row in the admin area.
          */
         '2fa.method.visible' => false,

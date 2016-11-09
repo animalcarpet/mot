@@ -28,9 +28,7 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $this->
                 ?>
                 href="
                 <?php
-                    echo $userTradeRolesViewModel->isNewProfileEnabled() ?
-                        $userTradeRolesViewModel->getPreviousRouteUrl() :
-                        $this->url('user-home/profile/byId');
+                    echo $userTradeRolesViewModel->getPreviousRouteUrl();
                 ?>">
                 <?php
                     echo $userTradeRolesViewModel->getPersonIsViewingOwnProfile() ?

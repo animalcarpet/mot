@@ -51,7 +51,7 @@ public class ChangeDateOfBirthPage extends Page {
 
     public ProfilePage clickCancelAndReturnLink() {
         cancelAndReturnLink.click();
-        return new NewUserProfilePage(driver);
+        return new UserProfilePage(driver);
     }
 
     public String getValidationMessage() {

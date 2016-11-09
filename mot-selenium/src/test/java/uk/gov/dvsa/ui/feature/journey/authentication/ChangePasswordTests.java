@@ -1,162 +1,91 @@
 package uk.gov.dvsa.ui.feature.journey.authentication;
 
 
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.ui.DslTest;
-import uk.gov.dvsa.ui.pages.ChangePasswordFromProfilePage;
-import uk.gov.dvsa.ui.pages.profile.PersonProfilePage;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 
 import java.io.IOException;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 
 public class ChangePasswordTests extends DslTest {
 
     private User tester;
-    private String messageSuccess = "Your password has been changed.";
-    private String errorMessageBase = "There was a problem with the information you entered:\n";
 
-    @BeforeMethod(alwaysRun = true) public void setUp() throws IOException {
-        tester = motApi.user.createTester(1);
+    @BeforeMethod(alwaysRun = true)
+    public void setUp() throws IOException {
+        tester = motApi.user.createTester(siteData.createSite().getId());
     }
 
     @Test(groups = {"BVT"}, description = "VM-7668, Tester is changing password")
     public void testerChangesPassword() throws Exception {
+        step("Given I change my password");
+        String message = motUI.profile.changePasswordExpectingSuccessText(tester, tester.getPassword(), "Password34");
 
-        //Given I am logged as a tester and I am on my profile page
-        PersonProfilePage personProfilePage = pageNavigator.navigateToPage(tester, PersonProfilePage.PATH, PersonProfilePage.class);
-
-        //And I click change password link
-        ChangePasswordFromProfilePage changePasswordFromProfilePage =
-                personProfilePage.clickChangePasswordLink();
-
-        //When I change my password
-        changePasswordFromProfilePage.enterOldPassword(tester.getPassword());
-        String password = "Password2";
-        changePasswordFromProfilePage.enterNewPassword(password);
-        changePasswordFromProfilePage.confirmNewPassword(password);
-        personProfilePage = changePasswordFromProfilePage.clickSubmitButton(PersonProfilePage.class);
-
-        //Then the password is changed and the success message is displayed
-        assertThat(personProfilePage.isSuccessMessageDisplayed(), is(true));
-        Assert.assertTrue(personProfilePage.getMessageSuccess().toString().equals(messageSuccess));
+        step("Then the password is changed and the success message is displayed");
+        assertThat("Password Changed successfully", message, containsString("Your password has been changed."));
     }
 
     @Test(groups = {"BVT"}, description = "VM-7668, Tester cancels password change")
     public void testerCancelsPasswordChange() throws Exception {
+        step("Given I am on the change password page");
 
-        //Given I am logged as a tester and I am on my profile page
-        PersonProfilePage personProfilePage = pageNavigator.navigateToPage(tester, PersonProfilePage.PATH, PersonProfilePage.class);
-
-        //And I click change password link
-        ChangePasswordFromProfilePage changePasswordFromProfilePage =
-                personProfilePage.clickChangePasswordLink();
-
-        //Then I click cancel link and I am back to the profile page
-        changePasswordFromProfilePage.clickCancelLink();
+        step("Then I can click cancel link to return to profile page");
+        motUI.profile.viewYourProfile(tester).clickChangePasswordLink().clickCancelLink();
     }
 
     @Test(groups = {"BVT"}, description = "VM-7668, Tester changes password for the same one")
     public void testerChangesPasswordForSameOne() throws Exception {
+        step("Given I attempt to change my password with current password");
+        String message = motUI.profile.changePasswordExpectingErrorText(tester, tester.getPassword(), tester.getPassword());
 
-        //Given I am logged in as a tester and I am on the password change page
-        ChangePasswordFromProfilePage changePasswordFromProfilePage =
-                pageNavigator.navigateToPage(tester, ChangePasswordFromProfilePage.PATH, ChangePasswordFromProfilePage.class);
-
-        //When I try to change password same as the old password
-        changePasswordFromProfilePage.enterOldPassword(tester.getPassword());
-        changePasswordFromProfilePage.enterNewPassword(tester.getPassword());
-        changePasswordFromProfilePage.confirmNewPassword(tester.getPassword());
-        changePasswordFromProfilePage.clickSubmitButton(ChangePasswordFromProfilePage.class);
-
-        //Then The error message is displayed
-        String error = "New password - password was found in the password history";
-        assertThat(changePasswordFromProfilePage.isErrorMessageWindowDisplayed(), is(true));
-        Assert.assertTrue(changePasswordFromProfilePage.getErrorMessage()
-                .equals(String.format(errorMessageBase + error)));
+        step("Then The error message is displayed");
+        assertThat("Password found in history exception is shown", message,
+            containsString("New password - password was found in the password history"));
     }
 
     @Test(groups = {"BVT"},
             description = "VM-7668, Tester tries to put new password but does not match with confirm password")
     public void newPasswordAndOldPasswordDoesNotMatch() throws Exception {
+        step("Given I attempt to change my password with incorrect confirm password");
+        String message = motUI.profile.changePasswordExpectingErrorText(tester, tester.getPassword(), "NewPa22word");
 
-        //Given I am logged in as a tester and I am on the password change page
-        ChangePasswordFromProfilePage changePasswordFromProfilePage =
-                pageNavigator.navigateToPage(tester, ChangePasswordFromProfilePage.PATH, ChangePasswordFromProfilePage.class);
-
-        //When I try to type new password that does not match with confirmed password
-        changePasswordFromProfilePage.enterOldPassword(tester.getPassword());
-        changePasswordFromProfilePage.enterNewPassword("Password2");
-        changePasswordFromProfilePage.confirmNewPassword("Password3");
-        changePasswordFromProfilePage.clickSubmitButton(ChangePasswordFromProfilePage.class);
-
-        //Then The error message is displayed
-        String error = "Re-type your new password - the passwords you have entered don't match";
-        assertThat(changePasswordFromProfilePage.isErrorMessageWindowDisplayed(), is(true));
-        Assert.assertTrue(changePasswordFromProfilePage.getErrorMessage()
-                .equals(String.format(errorMessageBase + error)));
+        step("Then Re-type your new password exception is displayed");
+        assertThat("Password found in history exception is shown", message,
+            containsString("Re-type your new password - the passwords you have entered don't match"));
     }
 
     @Test(groups = {"BVT"},
             description = "VM-7668, Tester tries change password that is not according to password policy")
-    public void testerTriesToChangePasswordThatValidatesPolicy() throws Exception {
+    public void testerTriesToChangePasswordThatValidatesPolicy() throws IOException {
+        step("Given I attempt to change my password with a value that fails password policy validation");
+        String message = motUI.profile.changePasswordExpectingErrorText(tester, tester.getPassword(), "pass");
 
-        //Given I am logged in as a tester and I am on the password change page
-        ChangePasswordFromProfilePage changePasswordFromProfilePage =
-                pageNavigator.navigateToPage(tester, ChangePasswordFromProfilePage.PATH, ChangePasswordFromProfilePage.class);
-
-        //When I try to change password for the password that does not match password policy
-        changePasswordFromProfilePage.enterOldPassword(tester.getPassword());
-        changePasswordFromProfilePage.enterNewPassword("pass");
-        changePasswordFromProfilePage.confirmNewPassword("pass");
-        changePasswordFromProfilePage.clickSubmitButton(ChangePasswordFromProfilePage.class);
-
-        //Then The error message is displayed
-        String error1 = "New password - must be 8 or more characters long";
-        assertThat(changePasswordFromProfilePage.isErrorMessageWindowDisplayed(), is(true));
-        Assert.assertTrue(changePasswordFromProfilePage.getErrorMessage().contains(error1));
+        step("Then Password exception is displayed");
+        assertThat("Password exception is shown", message,
+            containsString("New password - must be 8 or more characters long"));
     }
 
     @Test(groups = {"BVT"}, description = "VM-7668, Tester types invalid old password")
-    public void testerPutsInvalidOldPassword() throws Exception {
+    public void testerPutsInvalidOldPassword() throws IOException {
+        step("Given I attempt to change my password with incorrect old password");
+        String message = motUI.profile.changePasswordExpectingErrorText(tester, "oh no", "pass");
 
-        //Given I am logged in as a tester and I am on the password change page
-        ChangePasswordFromProfilePage changePasswordFromProfilePage =
-                pageNavigator.navigateToPage(tester, ChangePasswordFromProfilePage.PATH, ChangePasswordFromProfilePage.class);
-
-        //When I try put empty old password
-        changePasswordFromProfilePage.enterNewPassword("Password1");
-        changePasswordFromProfilePage.confirmNewPassword("Password1");
-        changePasswordFromProfilePage.clickSubmitButton(ChangePasswordFromProfilePage.class);
-
-        //Then The error message is displayed
-        String error = "Current password - enter your current password";
-        assertThat(changePasswordFromProfilePage.isErrorMessageWindowDisplayed(), is(true));
-        Assert.assertTrue(changePasswordFromProfilePage.getErrorMessage()
-                .equals(String.format(errorMessageBase + error)));
+        step("Then invalid old Password exception is displayed");
+        assertThat("Password invalid old Password exception is shown", message,
+            containsString("Current password - enter a valid password"));
     }
 
     @Test(groups = {"BVT"}, description = "VM-7668, Tester leaves empty fields and click submit")
     public void testerLeavesEmptyFields() throws Exception {
+        step("Given I attempt to change my password with inputting any values");
+        String message = motUI.profile.changePasswordExpectingErrorText(tester, " ", " ");
 
-        //Given I am logged in as a tester and I am on the password change page
-        ChangePasswordFromProfilePage changePasswordFromProfilePage =
-                pageNavigator.navigateToPage(tester, ChangePasswordFromProfilePage.PATH, ChangePasswordFromProfilePage.class);
-
-        //When I leave empty fields and click submit
-        changePasswordFromProfilePage.clickSubmitButton(ChangePasswordFromProfilePage.class);
-
-        //Then The error message is displayed
-        assertThat(changePasswordFromProfilePage.isErrorMessageWindowDisplayed(), is(true));
-        Assert.assertTrue(changePasswordFromProfilePage.getErrorMessage()
-                .contains("New password - enter a password"));
-        Assert.assertTrue(changePasswordFromProfilePage.getErrorMessage()
-                .contains("Re-type your new password - re-type your password"));
-        Assert.assertTrue(changePasswordFromProfilePage.getErrorMessage()
-                .contains("Current password - enter your current password"));
+        step("Then Empty field exception is displayed");
+        assertThat("Empty field exception is shown", message,
+            containsString("Current password - enter your current password"));
     }
 }

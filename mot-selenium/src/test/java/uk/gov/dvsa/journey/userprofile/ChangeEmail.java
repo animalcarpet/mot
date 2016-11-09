@@ -1,8 +1,8 @@
 package uk.gov.dvsa.journey.userprofile;
 
 import uk.gov.dvsa.ui.pages.ChangeEmailDetailsPage;
-import uk.gov.dvsa.ui.pages.profile.NewPersonProfilePage;
-import uk.gov.dvsa.ui.pages.profile.NewUserProfilePage;
+import uk.gov.dvsa.ui.pages.profile.PersonProfilePage;
+import uk.gov.dvsa.ui.pages.profile.UserProfilePage;
 import uk.gov.dvsa.ui.pages.profile.ProfilePage;
 
 public class ChangeEmail {
@@ -16,14 +16,14 @@ public class ChangeEmail {
         return profilePage.clickChangeEmailLink()
                 .fillEmail(email)
                 .fillEmailConfirmation(email)
-                .clickSubmitButton(NewPersonProfilePage.class);
+                .clickSubmitButton(PersonProfilePage.class);
     }
 
     public ProfilePage changeUserEmailAsDvsaTo(String email) {
         return profilePage.clickChangeEmailLink()
                 .fillEmail(email)
                 .fillEmailConfirmation(email)
-                .clickSubmitButton(NewUserProfilePage.class);
+                .clickSubmitButton(UserProfilePage.class);
     }
 
     public String changeEmailWithInvalidInputs(String email, String confirmationEmail) {

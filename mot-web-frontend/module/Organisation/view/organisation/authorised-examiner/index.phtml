@@ -84,14 +84,12 @@ endif; ?>
             <tr id="authorised-examiner-designated-manager-<?php echo $escUsersWithRolesCount++; ?>">
                 <th class="table-summary__key">
                     <?php if ($viewModel->getViewAuthorisation()->canViewProfile($employee->getPerson())): ?>
-                        <a href="<?php echo $this->isFeatureEnabled('new_person_profile')
-                                            ? $this->url(ContextProvider::AE_PARENT_ROUTE,
+                        <a href="<?php echo $this->url(ContextProvider::AE_PARENT_ROUTE,
                                                 [
                                                     'authorisedExaminerId' => $orgId,
                                                     'id' => $employee->getPerson()->getId()
                                                 ]
-                                            )
-                                            : $this->url(UserHomeController::ROUTE_PROFILE, ['id' => $employee->getPerson()->getId()]); ?>">
+                                            ); ?>">
                             <?php echo $this->escapeHtml($employee->getPerson()->getFullname()); ?>
                             <?php if ($viewModel->getViewAuthorisation()->canViewUsername()):
                                 echo "(" . $this->escapeHtml($employee->getPerson()->getUsername()) . ")";

@@ -25,16 +25,14 @@ use DvsaCommon\UrlBuilder\UserAdminUrlBuilderWeb;
         <tr data-element="result-details">
             <td data-element="result-username">
                 <a href="<?php
-                echo $this->isFeatureEnabled('new_person_profile')
-                    ? $this->url('newProfileUserAdmin',
+                echo $this->url('newProfileUserAdmin',
                         [
                             'id' => $user->getPersonId(),
                         ],
                         [
                             'query' => $resultsQueryArray,
                         ]
-                    )
-                    : $helper->getProfileUrl($user->getPersonId()) . '?' . http_build_query($resultsQueryArray); ?>">
+                    ); ?>">
                     <?php echo $this->escapeHtml($user->displayFullName()); ?>
                 </a>
             </td>

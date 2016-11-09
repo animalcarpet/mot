@@ -14,11 +14,9 @@ if ($this->authorisationHelper()->hasRole(Role::USER)):
         </a>
     </li>
     <li>
-        <a href="<?php echo $this->isFeatureEnabled('new_person_profile')
-            ? $this->url('newProfile',
+        <a href="<?php echo $this->url('newProfile',
                 [], []
-            )
-            : PersonUrlBuilderWeb::profile(); ?>" id="user-profile">Your profile</a>
+            ); ?>" id="user-profile">Your profile</a>
     </li>
     <li>
         <a href="<?php echo $this->url(LogoutController::ROUTE_LOGOUT); ?>" id="logout">

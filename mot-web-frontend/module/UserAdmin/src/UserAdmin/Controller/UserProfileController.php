@@ -120,9 +120,7 @@ class UserProfileController extends AbstractDvsaMotTestController
         $this->authorisationService->assertGranted(PermissionInSystem::VIEW_OTHER_USER_PROFILE);
 
         // Get the person ID from the URL
-        $personId = $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-            $this->params()->fromRoute('id') :
-            $this->params()->fromRoute('personId');
+        $personId = $this->params()->fromRoute('id');
 
         $presenter = new UserProfilePresenter(
             $this->userAccountAdminService->getUserProfile($personId),
@@ -137,7 +135,7 @@ class UserProfileController extends AbstractDvsaMotTestController
         $viewModel->setTemplate($presenter->getTemplate());
 
         if ($this->viewTradeRolesAssertion->shouldViewLink($personId, $presenter->hasDvsaRoles(), $presenter->hasTradeRoles())) {
-            $this->setSidebar(new ProfileSidebar($personId, $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE)));
+            $this->setSidebar(new ProfileSidebar($personId));
         }
 
         return $viewModel;
@@ -152,9 +150,7 @@ class UserProfileController extends AbstractDvsaMotTestController
     {
         $this->authorisationService->assertGranted(PermissionInSystem::VIEW_OTHER_USER_PROFILE);
 
-        $personId = $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-            $this->params()->fromRoute('id') :
-            $this->params()->fromRoute('personId');
+        $personId = $this->params()->fromRoute('id');
 
         $presenter = new UserProfilePresenter(
             $this->userAccountAdminService->getUserProfile($personId),
@@ -182,9 +178,7 @@ class UserProfileController extends AbstractDvsaMotTestController
     {
         $this->authorisationService->assertGranted(PermissionInSystem::VIEW_OTHER_USER_PROFILE);
 
-        $personId = $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-            $this->params()->fromRoute('id') :
-            $this->params()->fromRoute('personId');
+        $personId = $this->params()->fromRoute('id');
 
         $presenter = new UserProfilePresenter(
             $this->userAccountAdminService->getUserProfile($personId),
@@ -240,9 +234,7 @@ class UserProfileController extends AbstractDvsaMotTestController
     public function claimAccountAction()
     {
         $this->authorisationService->assertGranted(PermissionInSystem::VIEW_OTHER_USER_PROFILE);
-        $personId = $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-            $this->params()->fromRoute('id') :
-            $this->params()->fromRoute('personId');
+        $personId = $this->params()->fromRoute('id');
 
         $person = $this->userAccountAdminService->getUserProfile($personId);
 
@@ -281,9 +273,7 @@ class UserProfileController extends AbstractDvsaMotTestController
      */
     private function claimAccountProcess($personId, PrgHelper $prgHelper)
     {
-        $url = $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-            $this->url()->fromRoute('newProfileUserAdmin', ['id' => $personId]) :
-            $this->buildUrlWithCurrentSearchQuery(UserAdminUrlBuilderWeb::userProfile($personId));
+        $url = $this->url()->fromRoute('newProfileUserAdmin', ['id' => $personId]);
 
         try {
             $this->userAccountAdminService->resetClaimAccount($personId);
@@ -315,9 +305,7 @@ class UserProfileController extends AbstractDvsaMotTestController
         $this->layout()->setVariable('pageTitle', $pageTitle);
 
         if (false === $isProfile) {
-            $userProfileUrl = (true === $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE))
-                ? $this->url()->fromRoute(ContextProvider::USER_SEARCH_PARENT_ROUTE, ['id' => $personId])
-                : $this->buildUrlWithCurrentSearchQuery(UserAdminUrlBuilderWeb::of()->userProfile($personId));
+            $userProfileUrl = $this->url()->fromRoute(ContextProvider::USER_SEARCH_PARENT_ROUTE, ['id' => $personId]);
         } else {
             $userProfileUrl = '';
         }
@@ -327,9 +315,7 @@ class UserProfileController extends AbstractDvsaMotTestController
             $presenter->displayTitleAndFullName() => $userProfileUrl,
         ];
 
-        if (true === $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE)) {
-            $breadcrumbs += ['Reclaim account' => ''];
-        }
+        $breadcrumbs += ['Reclaim account' => ''];
 
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
         $this->layout('layout/layout-govuk.phtml');
@@ -353,11 +339,7 @@ class UserProfileController extends AbstractDvsaMotTestController
                 'resetClaimAccountUrlPost' => $this->buildUrlWithCurrentSearchQuery(
                     UserAdminUrlBuilderWeb::userProfileClaimAccountPost($personId)
                 ),
-                'userProfileUrl' => $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-                    $this->url()->fromRoute('newProfileUserAdmin', ['id' => $personId]) :
-                    $this->buildUrlWithCurrentSearchQuery(
-                        UserAdminUrlBuilderWeb::userProfile($personId)
-                    ),
+                'userProfileUrl' => $this->url()->fromRoute('newProfileUserAdmin', ['id' => $personId]),
                 'reclaimSystemMessage' => $isFor2FaEnabledUser ?
                     self::RECLAIM_ACCOUNT_SYSTEM_MESSAGE_2FA_USER :
                     self::RECLAIM_ACCOUNT_SYSTEM_MESSAGE_NON_2FA_USER,

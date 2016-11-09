@@ -45,11 +45,6 @@ class UserTradeRolesViewModel
     private $businessRoleCatalog;
 
     /**
-     * @var bool
-     */
-    private $newProfileEnabled;
-
-    /**
      * @var Url
      */
     private $urlHelper;
@@ -69,7 +64,6 @@ class UserTradeRolesViewModel
      * @param PersonTradeRoleDto[]                     $tradeRoles
      * @param BusinessRoleCatalog                      $businessRoleCatalog
      * @param Url                                      $urlHelper
-     * @param bool                                     $newProfileEnabled
      * @param PersonProfileUrlGenerator                $personProfileUrlGenerator
      * @param string                                   $previousRouteUrl
      */
@@ -78,7 +72,6 @@ class UserTradeRolesViewModel
         array $tradeRoles,
         BusinessRoleCatalog $businessRoleCatalog,
         Url $urlHelper,
-        $newProfileEnabled,
         PersonProfileUrlGenerator $personProfileUrlGenerator,
         $previousRouteUrl
     ) {
@@ -86,7 +79,6 @@ class UserTradeRolesViewModel
         $this->tradeRoles = $tradeRoles;
         $this->businessRoleCatalog = $businessRoleCatalog;
         $this->urlHelper = $urlHelper;
-        $this->newProfileEnabled = $newProfileEnabled;
         $this->previousRouteUrl = $previousRouteUrl;
         $this->personProfileUrlGenerator = $personProfileUrlGenerator;
     }
@@ -174,13 +166,9 @@ class UserTradeRolesViewModel
             'entityId' => $personTradeRole->getWorkplaceId(),
         ];
 
-        if (true === $this->newProfileEnabled) {
-            $route = basename($route);
+        $route = basename($route);
 
-            return $this->personProfileUrlGenerator->fromPersonProfile($route, $params);
-        }
-
-        return $this->urlHelper->__invoke($route, $params);
+        return $this->personProfileUrlGenerator->fromPersonProfile($route, $params);
     }
 
     public function canBeRemoved(PersonTradeRoleDto $tradeRole)
@@ -233,14 +221,6 @@ class UserTradeRolesViewModel
     public function isRoleTypeSite(PersonTradeRoleDto $position)
     {
         return $this->businessRoleCatalog->getByCode($position->getRoleCode())->getType() == BusinessRole::SITE_TYPE;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isNewProfileEnabled()
-    {
-        return $this->newProfileEnabled;
     }
 
     /**

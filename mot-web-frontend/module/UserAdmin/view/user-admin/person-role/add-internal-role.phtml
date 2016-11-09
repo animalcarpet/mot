@@ -26,9 +26,7 @@
 
     <ul class="content-navigation__secondary">
         <li>
-            <a href="<?php echo $this->isFeatureEnabled(\DvsaCommon\Constants\FeatureToggle::NEW_PERSON_PROFILE) ?
-                $this->url('newProfileUserAdmin/manage-user-internal-role', ['id' => $personId]):
-                $urlManageInternalRoles;
+            <a href="<?php echo $this->url('newProfileUserAdmin/manage-user-internal-role', ['id' => $personId]);
             ?>"> Cancel and return to manage roles</a>
         </li>
     </ul>

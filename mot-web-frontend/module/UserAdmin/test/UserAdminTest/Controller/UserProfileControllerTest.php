@@ -196,7 +196,7 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
                 'action' => 'claimAccount',
                 'params' => [
                     'route' => [
-                        'personId' => self::PERSON_ID,
+                        'id' => self::PERSON_ID,
                     ],
                     'get' => [
                         'test' => 'test',
@@ -235,7 +235,7 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
                 'action' => 'claimAccount',
                 'params' => [
                     'route' => [
-                        'personId' => self::PERSON_ID,
+                        'id' => self::PERSON_ID,
                     ],
                     'get' => [
                         'test' => 'test',
@@ -274,7 +274,7 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
                 'action' => 'claimAccount',
                 'params' => [
                     'route' => [
-                        'personId' => self::PERSON_ID,
+                        'id' => self::PERSON_ID,
                     ],
                     'get' => [
                         'test' => 'test',
@@ -313,7 +313,7 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
                 'action' => 'index',
                 'params' => [
                     'route' => [
-                        'personId' => self::PERSON_ID,
+                        'id' => self::PERSON_ID,
                     ],
                 ],
                 'mocks' => [
@@ -337,7 +337,7 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
                 'action' => 'index',
                 'params' => [
                     'route' => [
-                        'personId' => self::PERSON_ID,
+                        'id' => self::PERSON_ID,
                     ],
                 ],
                 'mocks' => [
@@ -361,7 +361,7 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
                 'action' => 'passwordReset',
                 'params' => [
                     'route' => [
-                        'personId' => self::PERSON_ID,
+                        'id' => self::PERSON_ID,
                     ],
                     'post' => [],
                 ],
@@ -383,7 +383,7 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
                 'action' => 'usernameRecover',
                 'params' => [
                     'route' => [
-                        'personId' => self::PERSON_ID,
+                        'id' => self::PERSON_ID,
                     ],
                     'post' => [],
                 ],
@@ -405,7 +405,7 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
                 'action' => 'usernameRecover',
                 'params' => [
                     'route' => [
-                        'personId' => self::PERSON_ID,
+                        'id' => self::PERSON_ID,
                     ],
                     'post' => [],
                 ],
@@ -433,7 +433,7 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
                 'action' => 'claimAccount',
                 'params' => [
                     'route' => [
-                        'personId' => self::PERSON_ID,
+                        'id' => self::PERSON_ID,
                     ],
                     'get' => [
                         'test' => 'test',
@@ -457,12 +457,12 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
                 'action' => 'claimAccount',
                 'params' => [
                     'route' => [
-                        'personId' => self::PERSON_ID,
+                        'id' => self::PERSON_ID,
                     ],
                 ],
                 'mocks' => null,
                 'expect' => [
-                    'url' => '/user-admin/user-profile/' . self::PERSON_ID,
+                    'url' => '/user-admin/user/' . self::PERSON_ID,
                 ],
             ],
             //  --  claimAccount: post action Failed  --
@@ -471,7 +471,7 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
                 'action' => 'claimAccount',
                 'params' => [
                     'route' => [
-                        'personId' => self::PERSON_ID,
+                        'id' => self::PERSON_ID,
                     ],
                 ],
                 'mocks' => [
@@ -483,7 +483,7 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
                     ],
                 ],
                 'expect' => [
-                    'url' => '/user-admin/user-profile/' . self::PERSON_ID,
+                    'url' => '/user-admin/user/' . self::PERSON_ID,
                 ],
             ],
             //  --  claimAccount: post multi data  --
@@ -492,7 +492,7 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
                 'action'   => 'claimAccount',
                 'params' => [
                     'route' => [
-                        'personId' => self::PERSON_ID,
+                        'id' => self::PERSON_ID,
                     ],
                     'post' => [
                         PrgHelper::FORM_GUID_FIELD_NAME => 'testToken'

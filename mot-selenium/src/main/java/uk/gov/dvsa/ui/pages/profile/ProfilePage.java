@@ -2,6 +2,7 @@ package uk.gov.dvsa.ui.pages.profile;
 
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.ui.pages.ChangeEmailDetailsPage;
+import uk.gov.dvsa.ui.pages.ChangePasswordFromProfilePage;
 import uk.gov.dvsa.ui.pages.ChangeTelephoneDetailsPage;
 import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.changedriverlicence.ChangeDrivingLicencePage;
@@ -168,6 +169,11 @@ public abstract class ProfilePage extends Page {
     public EventsHistoryPage clickEventHistoryLink() {
         throw new UnsupportedOperationException("Operation not supported for: " + this.toString());
     }
+
+    public ChangePasswordFromProfilePage clickChangePasswordLink() {
+        throw new UnsupportedOperationException("Operation not supported for: " + this.toString());
+    }
+
 
     public Boolean isChangeSecurityQuestionsLinkDisplayed() {
         throw new UnsupportedOperationException("Operation not supported for: " + this.toString());

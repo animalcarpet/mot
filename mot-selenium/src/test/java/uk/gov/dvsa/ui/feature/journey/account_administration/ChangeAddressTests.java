@@ -13,7 +13,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 public class ChangeAddressTests extends DslTest {
-
     private Site testSite;
 
     @BeforeClass(alwaysRun = true)
@@ -22,7 +21,6 @@ public class ChangeAddressTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-929"},
-            testName = "NewProfile",
             description = "Test that Authorised user can change address on other person profile",
             dataProvider = "dvsaUserChangeAddressProvider")
     public void dvsaUserCanChangeAddressOnOtherPersonProfile(User user) throws IOException {
@@ -37,7 +35,6 @@ public class ChangeAddressTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-929"},
-            testName = "NewProfile",
             description = "Test that user can change address on own person profile",
             dataProvider = "userChangeOwnAddressProvider")
     public void userCanChangeAddressOnOwnPersonProfile(User user) throws IOException {
@@ -52,7 +49,6 @@ public class ChangeAddressTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-929"},
-            testName = "NewProfile",
             description = "Test that authorised user can navigate through change address journey on other person profile")
     public void dvsaUserCanNavigateThroughChangeAddressJourneyOnOtherPersonProfile() throws IOException {
         // Given I am as authorised user on other person profile
@@ -69,7 +65,6 @@ public class ChangeAddressTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-929"},
-            testName = "NewProfile",
             description = "Test that user can navigate through change address journey on own person profile")
     public void userCanNavigateThroughChangeAddressJourneyOnOwnPersonProfile() throws IOException {
         // Given I am on own person profile
@@ -86,7 +81,6 @@ public class ChangeAddressTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-929"},
-            testName = "NewProfile",
             description = "Test that user should provide correct address during change address journey on own person profile")
     public void userShouldProvideCorrectAddress() throws IOException {
         // Given I am on own person profile
@@ -100,7 +94,6 @@ public class ChangeAddressTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-929"},
-            testName = "NewProfile",
             description = "Test that user should provide correct town during change address journey on own person profile")
     public void userShouldProvideCorrectTown() throws IOException {
         // Given I am on own person profile
@@ -114,7 +107,6 @@ public class ChangeAddressTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-929"},
-            testName = "NewProfile",
             description = "Test that user should provide correct postcode during change address journey on own person profile")
     public void userShouldProvideCorrectPostcode() throws IOException {
         // Given I am on own person profile
@@ -128,7 +120,6 @@ public class ChangeAddressTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-929"},
-            testName = "NewProfile",
             description = "Test that user should provide correct values during change address journey on own person profile")
     public void userShouldProvideCorrectValues() throws IOException {
         // Given I am on own person profile

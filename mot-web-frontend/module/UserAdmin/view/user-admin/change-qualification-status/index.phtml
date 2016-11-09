@@ -3,14 +3,9 @@ use DvsaCommon\Constants\FeatureToggle;
 ?>
 
 <form method="post" action="<?php
-echo $this->isFeatureEnabled('new_person_profile')
-    ? $this->url(
+echo $this->url(
         'newProfileUserAdmin/change-qualification-status',
-        ['id' => $testerId, 'vehicleClassGroup' => $group], ['query' => $searchQueryParams]):
-    $this->url(
-        'user_admin/user-profile/change-qualification-status',
-        ['personId' => $testerId, 'vehicleClassGroup' => $group], ['query' => $searchQueryParams]
-    );
+        ['id' => $testerId, 'vehicleClassGroup' => $group], ['query' => $searchQueryParams]);
 ?>">
     <fieldset>
         <legend class="form-title heading-large" id="example-radio">Testing group <?php echo $this->escapeHtml(
@@ -44,12 +39,7 @@ echo $this->isFeatureEnabled('new_person_profile')
         <ul class="content-navigation__secondary">
             <li>
                 <a id="cancel-record-demo-test" href="<?php echo
-                    $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-                        $this->url('newProfileUserAdmin', ['id' => $testerId], ['query' => $searchQueryParams]) :
-                        $this->url(
-                            "user_admin/user-profile", ["personId" => $testerId],
-                            ["query" => $searchQueryParams]
-                        )
+                        $this->url('newProfileUserAdmin', ['id' => $testerId], ['query' => $searchQueryParams]);
                 ?>">Cancel and return to user profile</a>
             </li>
         </ul>

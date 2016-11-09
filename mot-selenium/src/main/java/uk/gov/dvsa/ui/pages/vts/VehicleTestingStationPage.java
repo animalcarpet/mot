@@ -4,14 +4,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.ConfigHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
-import uk.gov.dvsa.ui.pages.*;
+import uk.gov.dvsa.ui.pages.AddSiteAssessmentPage;
+import uk.gov.dvsa.ui.pages.Page;
+import uk.gov.dvsa.ui.pages.RemoveARolePage;
+import uk.gov.dvsa.ui.pages.SiteAssessmentPage;
 import uk.gov.dvsa.ui.pages.mot.TestShortSummaryPage;
+import uk.gov.dvsa.ui.pages.profile.UserProfilePage;
 import uk.gov.dvsa.ui.pages.profile.ProfilePage;
 import uk.gov.dvsa.ui.pages.vts.ChangeDetails.*;
-import uk.gov.dvsa.ui.pages.profile.NewUserProfilePage;
-import uk.gov.dvsa.ui.pages.profile.ProfileOfUserPage;
 
 public class VehicleTestingStationPage extends Page {
     public static final String PATH = "/vehicle-testing-station/%s";
@@ -220,11 +221,7 @@ public class VehicleTestingStationPage extends Page {
 
     public ProfilePage chooseAssignedToVtsUser(String userId) {
         driver.findElement(By.cssSelector(String.format("a[href*='%s']", userId))).click();
-        if(ConfigHelper.isNewPersonProfileEnabled()) {
-            return new NewUserProfilePage(driver);
-        } else {
-            return new ProfileOfUserPage(driver);
-        }
+            return new UserProfilePage(driver);
     }
 
     public String getSiteAssessmentColour(String colourBadgeType) {

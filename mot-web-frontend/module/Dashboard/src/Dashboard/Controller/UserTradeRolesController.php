@@ -179,14 +179,12 @@ class UserTradeRolesController extends AbstractAuthActionController
 
         $urlHelper = $this->getServiceLocator()->get('ViewHelperManager')->get('url');
 
-        $previousUrl = $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE) ?
-            $this->personProfileUrlGenerator->toPersonProfile() : '';
+        $previousUrl = $this->personProfileUrlGenerator->toPersonProfile();
 
         $vm = new UserTradeRolesViewModel($this->authorisationService,
             $this->personTradeRoleSorter->sortTradeRoles($tradeRoles),
             $this->catalog->businessRole(),
             $urlHelper,
-            $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE),
             $this->personProfileUrlGenerator,
             $previousUrl
         );
@@ -242,15 +240,11 @@ class UserTradeRolesController extends AbstractAuthActionController
                 $this->addErrorMessages($e->getDisplayMessages());
             }
 
-            return true === $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE)
-                ? $this->redirect()->toUrl($this->personProfileUrlGenerator->fromPersonProfile('trade-roles'))
-                : $this->redirect()->toRoute(self::ROUTE_TRADE_ROLES, ['id' => $personId]);
+            return $this->redirect()->toUrl($this->personProfileUrlGenerator->fromPersonProfile('trade-roles'));
         }
 
         if (!$personTradeRole) {
-            return true === $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE)
-                ? $this->redirect()->toUrl($this->personProfileUrlGenerator->fromPersonProfile('trade-roles'))
-                : $this->redirect()->toRoute(self::ROUTE_TRADE_ROLES, ['id' => $personId]);
+            return $this->redirect()->toUrl($this->personProfileUrlGenerator->fromPersonProfile('trade-roles'));
         }
 
         $removeRoleViewModel = (new RemoveRoleViewModel())

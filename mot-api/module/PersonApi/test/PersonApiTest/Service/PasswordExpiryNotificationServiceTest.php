@@ -43,15 +43,12 @@ class PasswordExpiryNotificationServiceTest extends \PHPUnit_Framework_TestCase
             ->method("get")
             ->willReturn($this->user);
 
-        $featureToggles = $this->createFeatureTogglesWithNewPersonProfileEnabled();
-
         $this->service = new PasswordExpiryNotificationService(
             $this->notificationService,
             XMock::of(NotificationRepository::class),
             $personRepository,
             XMock::of(PasswordDetailRepository::class),
-            XMock::of(Transaction::class),
-            $featureToggles
+            XMock::of(Transaction::class)
         );
     }
 
@@ -101,36 +98,5 @@ class PasswordExpiryNotificationServiceTest extends \PHPUnit_Framework_TestCase
         }
 
         return sprintf(PasswordExpiryNotificationService::EXPIRY_IN_XX_DAYS, $day);
-    }
-
-    /**
-     * @return FeatureToggles
-     */
-    private function createFeatureTogglesWithNewPersonProfileEnabled()
-    {
-        return $this->createFeatureToggles([FeatureToggle::NEW_PERSON_PROFILE => true]);
-    }
-
-    /**
-     * @param array $featureToggles
-     *
-     * @return FeatureToggles
-     */
-    private function createFeatureToggles(array $featureToggles = [])
-    {
-        $map = [];
-        foreach ($featureToggles as $name => $value) {
-            $map[] = [(string) $name, (bool) $value];
-        }
-
-        $featureToggles = $this
-            ->getMockBuilder(FeatureToggles::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $featureToggles
-            ->method('isEnabled')
-            ->will($this->returnValueMap($map));
-
-        return $featureToggles;
     }
 }

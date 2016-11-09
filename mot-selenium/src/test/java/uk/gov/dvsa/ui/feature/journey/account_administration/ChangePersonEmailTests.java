@@ -20,22 +20,18 @@ import static org.hamcrest.core.Is.is;
 
 public class ChangePersonEmailTests extends DslTest {
 
-    private static final String EMAIL_MUST_BE_VALID_MESSAGE = "Enter a valid email address";
-    private static final String EMAIL_MUST_MATCH_MESSAGE = "The email addresses must be the same";
-
     private User areaOffice1User;
     private User vehicleExaminerUser;
     private User tester;
     private User schemeManager;
     private Site testSite;
-    private AeDetails aeDetails;
     private User csco;
     private User aedm;
     private User siteManager;
 
     @BeforeClass(alwaysRun = true)
     private void setup() throws IOException {
-        aeDetails = aeData.createAeWithDefaultValues();
+        AeDetails aeDetails = aeData.createAeWithDefaultValues();
         testSite = siteData.createNewSite(aeDetails.getId(), "Test_Site");
         areaOffice1User = motApi.user.createAreaOfficeOne("AreaOfficerOne");
         vehicleExaminerUser = motApi.user.createVehicleExaminer("VehicleExaminer", false);
@@ -46,9 +42,7 @@ public class ChangePersonEmailTests extends DslTest {
         csco = motApi.user.createCustomerServiceOfficer(false);
     }
 
-    @Test(groups = {"Regression", "BL-270"},
-            testName = "NewProfile",
-            description = "Test that Trade user can edit their email from their profile page")
+    @Test(groups = {"Regression", "BL-270"}, description = "Test that Trade user can edit their email from their profile page")
     public void tradeUserCanEditTheirEmailAddress() throws Exception {
         //Given I am logged in as a Tester and I am on the My Profile Page
         motUI.profile.viewYourProfile(motApi.user.createTester(testSite.getId()));
@@ -60,9 +54,7 @@ public class ChangePersonEmailTests extends DslTest {
         assertThat(profilePage.isSuccessMessageDisplayed(), is(true));
     }
 
-    @Test(groups = {"Regression", "BL-270"},
-            testName = "NewProfile",
-            description = "Test that Trade user can cancel their email from change email page")
+    @Test(groups = {"Regression", "BL-270"}, description = "Test that Trade user can cancel their email from change email page")
     public void tradeUserCanCancelTheirEmailChange() throws IOException {
         //Given I am logged in as a Tester and I am on the My Profile Page
         motUI.profile.viewYourProfile(tester);
@@ -74,9 +66,7 @@ public class ChangePersonEmailTests extends DslTest {
         assertThat(page.isPageLoaded(), is(true));
     }
 
-    @Test(groups = {"Regression", "BL-270"},
-            testName = "NewProfile",
-            description = "Test that DVSA user can cancel amending a users email change",
+    @Test(groups = {"Regression", "BL-270"}, description = "Test that DVSA user can cancel amending a users email change",
             dataProvider = "dvsaUserChangeEmailProvider")
     public void dvsaUserCanCancelTheirUserEmailChange(User user) throws IOException {
         //Given I am logged in as a Tester and I am on the My Profile Page
@@ -89,9 +79,7 @@ public class ChangePersonEmailTests extends DslTest {
         assertThat(motUI.profile.page().isPageLoaded(), is(true));
     }
 
-    @Test(groups = {"Regression", "BL-270"},
-            testName = "NewProfile",
-            description = "Test that Authorised user can change email on person profile",
+    @Test(groups = {"Regression", "BL-270"}, description = "Test that Authorised user can change email on person profile",
             dataProvider = "dvsaUserChangeEmailProvider")
     public void dvsaUserCanChangeEmailOnOtherPersonProfile(User user) throws IOException {
         // Given I am on other person profile as an authorised user
@@ -106,7 +94,6 @@ public class ChangePersonEmailTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-270"},
-            testName = "NewProfile",
             dataProvider = "emailValidationTestCaseValues",
             description = "Test that Authorised user should provide a valid email in order to update user information")
     public void validationMessageShouldBeDisplayedForIncorrectInputValue(
@@ -130,7 +117,7 @@ public class ChangePersonEmailTests extends DslTest {
         motApi.user.createUserWithCustomData("emailAddress", "tester1@email.com");
 
         step("When I log in to update my email to tester1@email.com");
-        motUI.profile.viewYourProfile(tester);
+        motUI.profile.viewYourProfile(motApi.user.createTester(testSite.getId()));
         String validationMessage = motUI.profile.changeEmailWithInvalidInputs("tester1@email.com","tester1@email.com");
 
         step("Then I am receive a validation message advising that this email is already in use");
@@ -151,8 +138,8 @@ public class ChangePersonEmailTests extends DslTest {
    @DataProvider
     private Object[][] emailValidationTestCaseValues() {
         return new Object[][] {
-                {"ad%^&*£lkjfhadslkjhf", "ad%^&*£lkjfhadslkjhf", EMAIL_MUST_BE_VALID_MESSAGE },
-                {"fred@bloggs.com", "barry@bloggs.com", EMAIL_MUST_MATCH_MESSAGE},
+                {"ad%^&*£lkjfhadslkjhf", "ad%^&*£lkjfhadslkjhf", "Enter a valid email address" },
+                {"fred@bloggs.com", "barry@bloggs.com", "The email addresses must be the same"},
         };
     }
 

@@ -44,7 +44,6 @@ class SecurityQuestionControllerTest extends AbstractFrontendControllerTestCase
         $serviceManager = Bootstrap::getServiceManager();
         $serviceManager->setAllowOverride(true);
         $this->setServiceManager($serviceManager);
-        $this->withFeatureToggles([FeatureToggle::NEW_PERSON_PROFILE => false]);
 
         $this->securityQuestionService = XMock::of(SecurityQuestionService::class);
 

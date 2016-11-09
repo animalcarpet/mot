@@ -80,16 +80,13 @@ echo $this->partial('partial/forms/errorMessagePageHeader.phtml',['messages' => 
 <ul class="content-navigation__secondary">
     <li>
         <a href="<?php
-            echo $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE)
-                ? $this->personProfileUrl()->toPersonProfile() : $this->url('user_admin/user-profile', ['personId' => $presenter->getPersonId()]);
+            echo $this->personProfileUrl()->toPersonProfile();
         ?>">Cancel and return to user profile</a>
     </li>
     <?php if ($drivingLicenceNumber): ?>
     <li>
         <a id="delete-driving-licence" href="<?php
-            echo $this->isFeatureEnabled(FeatureToggle::NEW_PERSON_PROFILE)
-                ? $this->url('newProfileUserAdmin/driving-licence-change/delete', ['id' => $presenter->getPersonId()]) :
-                UserAdminUrlBuilderWeb::drivingLicenceDelete($presenter->getPersonId());
+            echo $this->url('newProfileUserAdmin/driving-licence-change/delete', ['id' => $presenter->getPersonId()]);
         ?>">Remove driving licence</a>
     </li>
     <?php endif; ?>
