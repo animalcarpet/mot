@@ -5,18 +5,15 @@ namespace DvsaElasticSearchTest\Service;
 use Doctrine\ORM\EntityManager;
 use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Constants\SearchParamConst;
-use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaElasticSearch\Service\ElasticSearchService;
 use DvsaElasticSearchTest\EsHelperTest;
 use DvsaEntities\DqlBuilder\SearchParam\MotTestSearchParam;
-use DvsaEntities\DqlBuilder\SearchParam\VehicleSearchParam;
 use DvsaEntities\DqlBuilder\SearchParam\VehicleTestingStationSearchParam;
-use DvsaEntities\Entity\Site;
-use DvsaEntities\Repository\OrganisationRepository;
 use DvsaEntities\Repository\SiteRepository;
+use DvsaFeature\FeatureToggles;
 use Zend\Http\Request;
 use Zend\ServiceManager\ServiceManager;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
@@ -35,10 +32,11 @@ class ElasticSearchServiceTest extends AbstractServiceTestCase
     /** @var  SiteRepository|MockObj */
     protected $mockSiteRepository;
     protected $mockEm;
+    /** @var FeatureToggles|MockObj $featureToggleMock */
+    protected $featureToggleMock;
 
     /** @var  ElasticSearchService */
     protected $esService;
-
 
     /** @var  \DateTime */
     protected $dateFrom;
@@ -52,10 +50,11 @@ class ElasticSearchServiceTest extends AbstractServiceTestCase
 
         $this->mockEm = $this->getMock(EntityManager::class, ['getRepository'], [], '', false);
         $this->mockSiteRepository = XMock::of(SiteRepository::class);
+        $this->featureToggleMock = XMock::of(FeatureToggles::class);
 
         $this->mockAuth = $this->getMockAuthorizationService(true);
 
-        $this->esService = new ElasticSearchService($this->mockAuth, $this->mockSiteRepository);
+        $this->esService = new ElasticSearchService($this->mockAuth, $this->mockSiteRepository, $this->featureToggleMock);
 
         $this->dateFrom = new \DateTime('1970-01-01');
         $this->dateTo = new \DateTime();

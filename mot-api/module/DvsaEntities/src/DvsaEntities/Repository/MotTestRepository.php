@@ -367,11 +367,12 @@ class MotTestRepository extends AbstractMutableRepository
     }
 
     /**
-     * @param $siteNumber
+     * @param int $siteNumber
+     * @param array $optionalMotTestTypes
      *
-     * @return array|\Doctrine\Common\Collections\ArrayCollection
+     * @return array
      */
-    public function getLatestMotTestsBySiteNumber($siteNumber)
+    public function getLatestMotTestsBySiteNumber($siteNumber, array $optionalMotTestTypes)
     {
         $mtQb = $this
             ->createQueryBuilder('it')
@@ -412,7 +413,7 @@ class MotTestRepository extends AbstractMutableRepository
             ->addOrderBy('v.id', 'DESC')
             ->andWhere('t.startedDate >= :minDate')
             ->andWhere('tt.code IN (:testTypes)')
-            ->setParameter('testTypes', $this->getMotTestHistoryTestTypes())
+            ->setParameter('testTypes', $this->getMotTestHistoryTestTypes($optionalMotTestTypes))
             ->setParameter('minDate', $minDate);
 
         return $qb->getQuery()->getResult();
@@ -1181,10 +1182,11 @@ class MotTestRepository extends AbstractMutableRepository
      * NOT FINISHED.
      *
      * @param MotTestSearchParam $searchParam
+     * @param array $optionalMotTestTypes
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function prepareMotSearch(MotTestSearchParam $searchParam)
+    public function prepareMotSearch(MotTestSearchParam $searchParam, array $optionalMotTestTypes)
     {
         $qb = $this->_em->createQueryBuilder();
 
@@ -1197,7 +1199,7 @@ class MotTestRepository extends AbstractMutableRepository
             ->innerJoin(MotTestType::class, 'testType', 'WITH', 'test.motTestType = testType.id')
             ->innerJoin(Person::class, 'tester', 'WITH', 'tester.id = test.tester')
             ->andWhere('testType.code IN (:testTypes)')
-            ->setParameter('testTypes', $this->getMotTestHistoryTestTypes());
+            ->setParameter('testTypes', $this->getMotTestHistoryTestTypes($optionalMotTestTypes));
 
         if ($searchParam->getDateFrom()) {
             $qb->andwhere('test.startedDate >= :DATE_FROM')
@@ -1241,13 +1243,14 @@ class MotTestRepository extends AbstractMutableRepository
     }
 
     /**
-     * @param \DvsaEntities\DqlBuilder\SearchParam\MotTestSearchParam $searchParam
+     * @param MotTestSearchParam $searchParam
+     * @param array $optionalMotTestTypes
      *
      * @return array
      */
-    public function getMotTestSearchResult(MotTestSearchParam $searchParam)
+    public function getMotTestSearchResult(MotTestSearchParam $searchParam, array $optionalMotTestTypes)
     {
-        $dql = $this->prepareMotSearch($searchParam);
+        $dql = $this->prepareMotSearch($searchParam, $optionalMotTestTypes);
 
         $orderBy = $searchParam->getSortColumnNameDatabase();
         if (is_array($orderBy)) {
@@ -1272,9 +1275,15 @@ class MotTestRepository extends AbstractMutableRepository
         return $query->getResult();
     }
 
-    public function getMotTestSearchResultCount(MotTestSearchParam $searchParam)
+    /**
+     * @param MotTestSearchParam $searchParam
+     * @param array $optionalMotTestTypes
+     *
+     * @return int
+     */
+    public function getMotTestSearchResultCount(MotTestSearchParam $searchParam, array $optionalMotTestTypes)
     {
-        $dql = $this->prepareMotSearch($searchParam);
+        $dql = $this->prepareMotSearch($searchParam, $optionalMotTestTypes);
         $dql->select('count(test)');
 
         return (int) $dql->getQuery()->getSingleScalarResult();
@@ -1381,11 +1390,13 @@ class MotTestRepository extends AbstractMutableRepository
     }
 
     /**
+     * @param array $optionalMotTestTypes
+     *
      * @return array
      */
-    private function getMotTestHistoryTestTypes()
+    private function getMotTestHistoryTestTypes(array $optionalMotTestTypes)
     {
-        return \DvsaCommon\Domain\MotTestType::getMotTestHistoryTypes();
+        return array_merge(\DvsaCommon\Domain\MotTestType::getMotTestHistoryTypes(), $optionalMotTestTypes);
     }
 
     /**

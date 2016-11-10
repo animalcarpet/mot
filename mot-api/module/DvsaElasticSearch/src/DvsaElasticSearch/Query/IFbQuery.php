@@ -12,6 +12,6 @@ use DvsaCommonApi\Model\SearchParam;
  */
 interface IFbQuery
 {
-    public function execute(SearchParam $searchParams);
+    public function execute(SearchParam $searchParams, array $optionalMotTestTypes);
 }
  

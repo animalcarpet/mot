@@ -56,6 +56,8 @@ class FbQueryMotTestTest extends \PHPUnit_Framework_TestCase
 
     public function testFbQueryMotTestExecute()
     {
+        $optionalMotTestTypes = [];
+
         $searchParam = new MotTestSearchParam($this->mockEM);
         $searchParam
             ->setFormat(SearchParamConst::FORMAT_DATA_TABLES)
@@ -70,11 +72,13 @@ class FbQueryMotTestTest extends \PHPUnit_Framework_TestCase
             ->method('getMotTestSearchResultCount')
             ->will($this->returnValue(1));
 
-        $this->assertEquals($this->getResultFb($searchParam), $this->FbQueryMotTest->execute($searchParam));
+        $this->assertEquals($this->getResultFb($searchParam), $this->FbQueryMotTest->execute($searchParam, $optionalMotTestTypes));
     }
 
     public function testFbQueryMotTestExecuteRecent()
     {
+        $optionalMotTestTypes = [];
+
         $searchParam = new MotTestSearchParam($this->mockEM);
         $searchParam
             ->setSearchRecent(true)
@@ -88,7 +92,7 @@ class FbQueryMotTestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             $this->getResultFb($searchParam),
-            $this->FbQueryMotTest->execute($searchParam)
+            $this->FbQueryMotTest->execute($searchParam, $optionalMotTestTypes)
         );
     }
 
