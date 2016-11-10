@@ -22,6 +22,8 @@ class FbQueryMotTestLogTest extends \PHPUnit_Framework_TestCase
 {
     public function testFbQueryMotTestExecute()
     {
+        $optionalMotTestTypes = [];
+
         $fbQueryMotTestLog = new FbQueryMotTestLog();
 
         //  --  mock   --
@@ -52,7 +54,7 @@ class FbQueryMotTestLogTest extends \PHPUnit_Framework_TestCase
             ->method('isApiGetData')
             ->willReturn(true);
 
-        //  --  request and check   --
-        $this->assertInstanceOf(SearchResultDto::class, $fbQueryMotTestLog->execute($mockSearchParam));
+        // Request and check
+        $this->assertInstanceOf(SearchResultDto::class, $fbQueryMotTestLog->execute($mockSearchParam, $optionalMotTestTypes));
     }
 }

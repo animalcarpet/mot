@@ -178,7 +178,7 @@ class MotTestType
             MotTestTypeCode::INVERTED_APPEAL,
             MotTestTypeCode::STATUTORY_APPEAL,
             MotTestTypeCode::OTHER,
-            MotTestTypeCode::RE_TEST
+            MotTestTypeCode::RE_TEST,
         ];
     }
 }

@@ -20,8 +20,8 @@ class MotTestSearchControllerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $controllerManager)
     {
         /* @var ServiceLocatorInterface $serviceLocator */
-        $serviceLocator     = $controllerManager->getServiceLocator();
-        $paramObfuscator    = $serviceLocator->get(ParamObfuscator::class);
+        $serviceLocator = $controllerManager->getServiceLocator();
+        $paramObfuscator = $serviceLocator->get(ParamObfuscator::class);
 
         return new MotTestSearchController($paramObfuscator);
     }

@@ -4,8 +4,8 @@ namespace DvsaElasticSearch\Query;
 
 use DvsaCommon\Dto\Search\SearchResultDto;
 use DvsaCommonApi\Model\SearchParam;
+use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaElasticSearch\Model\ESDocMotTest;
-use DvsaEntities\DqlBuilder\SearchParam\MotTestSearchParam;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Repository\MotTestRepository;
 
@@ -19,13 +19,15 @@ use DvsaEntities\Repository\MotTestRepository;
 class FbQueryMotTest implements IFbQuery
 {
     /**
-     * @param MotTestSearchParam $searchParams
+     * @param SearchParam $searchParams
+     * @param array $optionalMotTestTypes
      *
      * @return array
+     *
+     * @throws BadRequestException
      */
-    public function execute(SearchParam $searchParams)
+    public function execute(SearchParam $searchParams, array $optionalMotTestTypes)
     {
-
         $result = new SearchResultDto();
         $result->setSearched($searchParams->toDto());
 
@@ -33,11 +35,12 @@ class FbQueryMotTest implements IFbQuery
         $motRepo = $searchParams->getRepository(MotTest::class);
 
         if ($searchParams->getSearchRecent()) {
-            $motTests = $motRepo->getLatestMotTestsBySiteNumber($searchParams->getSiteNumber());
+            $motTests = $motRepo->getLatestMotTestsBySiteNumber($searchParams->getSiteNumber(),
+                                                                $optionalMotTestTypes);
             $totalResultCount = count($motTests);
         } else {
-            $motTests = $motRepo->getMotTestSearchResult($searchParams);
-            $totalResultCount = $motRepo->getMotTestSearchResultCount($searchParams);
+            $motTests = $motRepo->getMotTestSearchResult($searchParams, $optionalMotTestTypes);
+            $totalResultCount = $motRepo->getMotTestSearchResultCount($searchParams, $optionalMotTestTypes);
         }
 
         $result

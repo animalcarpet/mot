@@ -1,10 +1,10 @@
 <?php
+
 namespace DvsaElasticSearch;
 
 use Doctrine\ORM\EntityManager;
 use DvsaElasticSearch\Service\ElasticSearchService;
 
-use DvsaEntities\Repository\OrganisationRepository;
 use DvsaEntities\Repository\SiteRepository;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
@@ -23,8 +23,6 @@ class Module implements AutoloaderProviderInterface, ServiceProviderInterface
     {
     }
 
-
-
     /**
      * Note: we only register the configuration service at this point! We manually register
      * the connection and search services once the bootstrap event is fired for this module.
@@ -38,7 +36,8 @@ class Module implements AutoloaderProviderInterface, ServiceProviderInterface
                 'ElasticSearchService' => function (ServiceLocatorInterface $sm) {
                     return new ElasticSearchService(
                         $sm->get('DvsaAuthorisationService'),
-                        $sm->get(SiteRepository::class)
+                        $sm->get(SiteRepository::class),
+                        $sm->get('Feature\FeatureToggles')
                     );
                 }
             ],

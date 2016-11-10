@@ -9,7 +9,9 @@ use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Auth\PermissionAtOrganisation;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\Search\SearchResultDto;
+use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaElasticSearch\Query\FbQueryMotTest;
 use DvsaElasticSearch\Query\FbQueryMotTestLog;
 use DvsaElasticSearch\Query\FbQuerySite;
@@ -19,8 +21,8 @@ use DvsaEntities\DqlBuilder\SearchParam\MotTestSearchParam;
 use DvsaEntities\DqlBuilder\SearchParam\VehicleTestingStationSearchParam;
 use DvsaEntities\DqlBuilder\SearchParam\VehicleSearchParam;
 use DvsaCommonApi\Model\SearchParam;
-use DvsaEntities\Repository\OrganisationRepository;
 use DvsaEntities\Repository\SiteRepository;
+use DvsaFeature\FeatureToggles;
 use Zend\Di\ServiceLocatorInterface;
 use Zend\Http\Request;
 
@@ -42,20 +44,30 @@ class ElasticSearchService
     /** @var AuthorisationServiceInterface */
     protected $authService;
 
+    /** @var SiteRepository $siteRepository */
     private $siteRepository;
+
+    /** @var FeatureToggles $featureToggles */
+    private $featureToggles;
+
+    const NORMAL_TEST_TEST_TYPE = 'Normal Test';
+    const MYSTERY_SHOPPER_TEST_TYPE = 'Mystery Shopper';
 
     /**
      * This creates the ES search service. It requires the following services:
      *
-     * @param AuthorisationServiceInterface                 $authService
-     * @internal param $
+     * @param AuthorisationServiceInterface $authService
+     * @param SiteRepository $siteRepository
+     * @param FeatureToggles $featureToggles
      */
     public function __construct(
         AuthorisationServiceInterface $authService,
-        SiteRepository $siteRepository
+        SiteRepository $siteRepository,
+        FeatureToggles $featureToggles
     ) {
         $this->authService = $authService;
         $this->siteRepository = $siteRepository;
+        $this->featureToggles = $featureToggles;
     }
 
     /**
@@ -70,11 +82,25 @@ class ElasticSearchService
     {
         $this->checkPermissions(PermissionInSystem::MOT_TEST_LIST);
 
-        $result = SuperSearchQuery::execute($params, new FbQueryMotTest());
+        $optionalMotTestTypes = [];
 
-        if($result->getResultCount() == 0 && $this->checkIfParamsNeedStripping($params)) {
-            $result = SuperSearchQuery::execute($this->stripParams($params), new FbQueryMotTest());
+        if ($this->featureToggles->isEnabled(FeatureToggle::MYSTERY_SHOPPER) &&
+            $this->authService->isGranted(PermissionInSystem::VIEW_MYSTERY_SHOPPER_TESTS)) {
+            $optionalMotTestTypes = array_merge($optionalMotTestTypes, [MotTestTypeCode::MYSTERY_SHOPPER]);
         }
+
+        if ($this->featureToggles->isEnabled(FeatureToggle::MYSTERY_SHOPPER) &&
+            $this->authService->isGranted(PermissionInSystem::VIEW_NON_MOT_TESTS)) {
+            $optionalMotTestTypes = array_merge($optionalMotTestTypes, [MotTestTypeCode::NON_MOT_TEST]);
+        }
+
+        /** @var SearchResultDto $result */
+        $result = SuperSearchQuery::execute($params, new FbQueryMotTest(), $optionalMotTestTypes);
+
+        if ($result->getResultCount() == 0 && $this->checkIfParamsNeedStripping($params)) {
+            $result = SuperSearchQuery::execute($this->stripParams($params), new FbQueryMotTest(), $optionalMotTestTypes);
+        }
+        
         return $result;
     }
 

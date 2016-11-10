@@ -4,8 +4,8 @@ namespace DvsaElasticSearch\Query;
 
 use DvsaCommon\Dto\Search\SearchResultDto;
 use DvsaCommonApi\Model\SearchParam;
+use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaElasticSearch\Model\ESDocMotTestLog;
-use DvsaEntities\DqlBuilder\SearchParam\MotTestSearchParam;
 
 /**
  * I answer as a fallback for all MotTestLog that match the set search criteria.
@@ -14,10 +14,13 @@ class FbQueryMotTestLog implements IFbQuery
 {
     /**
      * @param SearchParam $searchParams
+     * @param array $optionalMotTestTypes
      *
      * @return SearchResultDto
+     *
+     * @throws BadRequestException
      */
-    public function execute(SearchParam $searchParams)
+    public function execute(SearchParam $searchParams, array $optionalMotTestTypes)
     {
         $resultDto = new SearchResultDto();
         $resultDto

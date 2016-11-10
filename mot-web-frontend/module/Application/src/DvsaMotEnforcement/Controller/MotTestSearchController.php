@@ -40,7 +40,6 @@ class MotTestSearchController extends AbstractAuthActionController
 
     const SEARCH_TYPE_TEST_NUMBER = 'testNumber';
 
-
     const NO_RESULT_FOUND_FOR_VEHICLE = 'This vehicle has no test history.';
 
     /** @var \DvsaCommon\Obfuscate\ParamObfuscator */

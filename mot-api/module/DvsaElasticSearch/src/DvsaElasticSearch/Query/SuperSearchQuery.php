@@ -14,11 +14,14 @@ use DvsaCommonApi\Model\SearchParam;
 class SuperSearchQuery {
 
     /**
-     * @param SearchParam   $searchParams
-     * @param IFbQuery        $databaseFallBack
+     * @param SearchParam $searchParams
+     * @param IFbQuery $databaseFallBack
+     * @param array $optionalMotTestTypes
+     *
+     * @return
      */
-    public static function execute($searchParams, $databaseFallBack)
+    public static function execute($searchParams, $databaseFallBack, array $optionalMotTestTypes = [])
     {
-        return $databaseFallBack->execute($searchParams);
+        return $databaseFallBack->execute($searchParams, $optionalMotTestTypes);
     }
 }
