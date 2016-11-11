@@ -11,6 +11,7 @@ use DvsaMotApi\Controller\MotTestReasonForRejectionController;
 use DvsaMotApi\Controller\MotTestSearchController;
 use DvsaMotApi\Controller\MotTestShortSummaryController;
 use DvsaMotApi\Controller\MotTestStatusController;
+use DvsaMotApi\Controller\NonMotInspectionController;
 use DvsaMotApi\Controller\ReasonForRejectionController;
 use DvsaMotApi\Controller\ReplacementCertificateDraftController;
 use DvsaMotApi\Controller\RetestController;
@@ -188,6 +189,18 @@ return [
                     ],
                     'defaults'    => [
                         'controller' => 'DvsaMotApi\Controller\DemoTest',
+                    ],
+                ],
+            ],
+            'non-mot-test' => [
+                'type'    => 'Segment',
+                'options' => [
+                    'route'       => '/non-mot-test[/:id]',
+                    'constraints' => [
+                        'id' => '[0-9a-zA-Z]+',
+                    ],
+                    'defaults'    => [
+                        'controller' => NonMotInspectionController::class,
                     ],
                 ],
             ],

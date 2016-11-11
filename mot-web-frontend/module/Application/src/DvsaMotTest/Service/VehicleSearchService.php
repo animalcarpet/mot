@@ -18,6 +18,7 @@ use DvsaMotTest\Constants\VehicleSearchSource;
 use DvsaMotTest\Model\VehicleSearchResult;
 use DvsaMotTest\View\VehicleSearchResult\CertificateUrlTemplate;
 use DvsaMotTest\View\VehicleSearchResult\MotTestUrlTemplate;
+use DvsaMotTest\View\VehicleSearchResult\NonMotTestUrlTemplate;
 use DvsaMotTest\View\VehicleSearchResult\TrainingTestUrlTemplate;
 use DvsaMotTest\View\VehicleSearchResult\VehicleSearchResultMessage;
 use DvsaMotTest\View\VehicleSearchResult\VehicleSearchResultUrlTemplateInterface;
@@ -33,6 +34,7 @@ class VehicleSearchService
     const SEARCH_TYPE_CERTIFICATE = 'certificate';
     const SEARCH_TYPE_TRAINING = 'training';
     const SEARCH_TYPE_V5C = 'v5c';
+    const SEARCH_TYPE_NON_MOT = 'nonMot';
 
     const KEY_FOR_PERSON_APPROVED_CLASSES = 'forPerson';
     const KEY_FOR_VTS_APPROVED_CLASSES = 'forVts';
@@ -341,6 +343,8 @@ class VehicleSearchService
                 return new TrainingTestUrlTemplate($noRegistration, $urlPlugin);
             case VehicleSearchService::SEARCH_TYPE_STANDARD:
                 return new MotTestUrlTemplate($noRegistration, $urlPlugin);
+            case VehicleSearchService::SEARCH_TYPE_NON_MOT:
+                return new NonMotTestUrlTemplate($noRegistration, $urlPlugin);
         }
 
         throw new \InvalidArgumentException('Unknown search type');
@@ -400,5 +404,10 @@ class VehicleSearchService
     public function isV5cSearchType()
     {
         return ($this->getSearchType() === self::SEARCH_TYPE_V5C);
+    }
+
+    public function isNonMotSearchType()
+    {
+        return ($this->getSearchType() === self::SEARCH_TYPE_NON_MOT);
     }
 }

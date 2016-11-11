@@ -1,15 +1,14 @@
 package uk.gov.dvsa.shared;
 
+import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.model.AeDetails;
 import uk.gov.dvsa.domain.model.User;
-import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.journey.*;
 import uk.gov.dvsa.journey.authentication.Authentication;
 import uk.gov.dvsa.journey.profile.Profile;
 import uk.gov.dvsa.journey.vehicleInformation.VehicleInformation;
-import uk.gov.dvsa.module.ReInspection;
 import uk.gov.dvsa.ui.interfaces.TwoFactorPromptPage;
 import uk.gov.dvsa.ui.pages.HomePage;
 import uk.gov.dvsa.ui.pages.authentication.securitycard.ActivateYourCardPromptPage;
@@ -51,6 +50,7 @@ public class MotUI {
     public final ClaimAccount claimAccount;
     public final Nominations nominations;
     public final VehicleInformation vehicleInformation;
+    public final NonMotInspection nonMotInspection;
 
     public MotUI(MotAppDriver driver) {
         pageNavigator.setDriver(driver);
@@ -74,6 +74,7 @@ public class MotUI {
         claimAccount = new ClaimAccount(pageNavigator);
         nominations = new Nominations(pageNavigator);
         vehicleInformation = new VehicleInformation();
+        nonMotInspection = new NonMotInspection(pageNavigator);
     }
 
     public void login(final User user) throws IOException {

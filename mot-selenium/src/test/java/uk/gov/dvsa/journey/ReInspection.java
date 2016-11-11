@@ -1,4 +1,4 @@
-package uk.gov.dvsa.module;
+package uk.gov.dvsa.journey;
 
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
@@ -29,6 +29,21 @@ public class ReInspection {
                             .startReInspection();
     }
 
+    public TestSummaryPage statutoryAppealTestSummaryPage(User user, String testId) throws IOException {
+        return showTestSummaryPageFor(user, testId, STATUTORY_APPEAL);
+    }
+
+    public TestSummaryPage invertedAppealTestSummaryPage(User user, String testId) throws IOException {
+        return showTestSummaryPageFor(user, testId, INVERTED_APPEAL);
+    }
+
+    private TestSummaryPage showTestSummaryPageFor(User user, String testId, String appealType) throws IOException {
+        TestResultsEntryGroupAPageInterface reInspectionPage = startReInspection(user, testId, appealType);
+        reInspectionPage.completeTestDetailsWithPassValues(false);
+
+        return reInspectionPage.clickReviewTestButton();
+    }
+
     public String statutoryAppeal(User user, String motTestId, String siteNumber, Comparison comparison)
             throws IOException {
         return conductAppeal(STATUTORY_APPEAL, user, motTestId, siteNumber, comparison);
@@ -39,17 +54,9 @@ public class ReInspection {
         return conductAppeal(INVERTED_APPEAL, user, motTestId, siteNumber, comparison);
     }
 
-    public TestSummaryPage statutoryAppealTestSummaryPage(User user, String testId) throws IOException {
-        return showTestSummaryPageFor(user, testId, STATUTORY_APPEAL);
-    }
-
-    public TestSummaryPage invertedAppealTestSummaryPage(User user, String testId) throws IOException {
-       return showTestSummaryPageFor(user, testId, INVERTED_APPEAL);
-    }
-
     public String getReInspectionAssessmentMessage(User user, String motTestId) throws IOException {
         TestSummaryPage summaryPage = showTestSummaryPageFor(user, motTestId, TARGETED_REINSPECTION);
-        AssessmentDetailsConfirmationPage confirmationPage = summaryPage.clickFinishButton()
+        AssessmentDetailsConfirmationPage confirmationPage = summaryPage.clickFinishButton(TestCompletePage.class)
                 .clickCompareResultsButton()
                 .completeJustificationWithRandomValues()
                 .recordAssesment();
@@ -57,18 +64,11 @@ public class ReInspection {
         return confirmationPage.getValidationMessageText();
     }
 
-    private TestSummaryPage showTestSummaryPageFor(User user, String testId, String appealType) throws IOException {
-        TestResultsEntryGroupAPageInterface reInspectionPage = startReInspection(user, testId, appealType);
-        reInspectionPage.completeTestDetailsWithPassValues(false);
-
-        return reInspectionPage.clickReviewTestButton();
-    }
-
     private String conductAppeal(String appealType, User user, String motTestId, String siteNumber, Comparison comparison)
             throws IOException {
         TestCompletePage testCompletePage = showTestSummaryPageFor(user, motTestId, appealType)
-                .enterSiteId(siteNumber)
-                .clickFinishButton();
+                .fillSiteIdInput(siteNumber)
+                .clickFinishButton(TestCompletePage.class);
 
         DifferenceBetweenTestPage betweenTestPage = testCompletePage.clickCompareResultsButton();
         betweenTestPage.setScoreByFailureName(comparison);

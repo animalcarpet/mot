@@ -21,7 +21,7 @@ class DashboardDataTest extends AbstractServiceTestCase
         $authorisationMock = new GrantAllAuthorisationServiceStub();
         $motTestType = MotTestTypeCode::NORMAL_TEST;
 
-        $dashboard = new DashboardData([], $specialNotice, $overdueSpecialNotices, [], 3, 4, true, true, $motTestType, $authorisationMock);
+        $dashboard = new DashboardData([], $specialNotice, $overdueSpecialNotices, [], 3, 4, 5, true, true, $motTestType, $authorisationMock);
         $this->assertWellFormedData($dashboard->toArray());
     }
 
@@ -39,6 +39,7 @@ class DashboardDataTest extends AbstractServiceTestCase
             && is_array($data['notifications'])
             && isset($data['inProgressTestNumber'])
             && isset($data['inProgressDemoTestNumber'])
+            && isset($data['inProgressNonMotTestNumber'])
         );
     }
 }

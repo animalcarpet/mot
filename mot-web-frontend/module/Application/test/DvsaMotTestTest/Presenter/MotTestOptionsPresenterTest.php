@@ -41,25 +41,37 @@ class MotTestOptionsPresenterTest extends \PHPUnit_Framework_TestCase
 
     public function testIfMotTestTypeCodeReTestReturnTrueForIsMotTestReTest()
     {
-        $presenter = new MotTestOptionsPresenter(
-            (new MotTestOptionsDto())->setMotTestTypeDto(
-                (new MotTestTypeDto())->setCode(MotTestTypeCode::RE_TEST)
-            )
-        );
+        $presenter = $this->getPresenterWithTestOfType(MotTestTypeCode::RE_TEST);
 
         $this->assertTrue($presenter->isMotTestRetest());
         $this->assertFalse($presenter->isMotTest());
+        $this->assertFalse($presenter->isNonMotTest());
     }
 
     public function testIfMotTestTypeCodeReTestReturnFalseForIsMotTestReTest()
     {
-        $presenter = new MotTestOptionsPresenter(
-            (new MotTestOptionsDto())->setMotTestTypeDto(
-                (new MotTestTypeDto())->setCode(MotTestTypeCode::NORMAL_TEST)
-            )
-        );
+        $presenter = $this->getPresenterWithTestOfType(MotTestTypeCode::NORMAL_TEST);
 
         $this->assertTrue($presenter->isMotTest());
         $this->assertFalse($presenter->isMotTestRetest());
+        $this->assertFalse($presenter->isNonMotTest());
+    }
+
+    public function testIfMotTestTypeCodeNonMotReturnTrueForIsNonMotTest()
+    {
+        $presenter = $this->getPresenterWithTestOfType(MotTestTypeCode::NON_MOT_TEST);
+
+        $this->assertTrue($presenter->isNonMotTest());
+        $this->assertFalse($presenter->isMotTestRetest());
+        $this->assertFalse($presenter->isMotTest());
+    }
+
+    private function getPresenterWithTestOfType($type)
+    {
+        return new MotTestOptionsPresenter(
+            (new MotTestOptionsDto())->setMotTestTypeDto(
+                (new MotTestTypeDto())->setCode($type)
+            )
+        );
     }
 }

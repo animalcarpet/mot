@@ -20,6 +20,7 @@ class OdometerController extends AbstractDvsaMotTestController
     const CONTENT_HEADER_TYPE__TRAINING_TEST = 'Training test';
     const CONTENT_HEADER_TYPE__MOT_TEST_REINSPECTION = 'MOT test reinspection';
     const CONTENT_HEADER_TYPE__MOT_TEST_RESULTS = 'MOT test results';
+    const CONTENT_HEADER_TYPE__NON_MOT_TEST_RESULTS = 'Non-MOT test';
 
     const ODOMETER_VALUE_REQUIRED_MESSAGE = "Odometer value must be entered to update odometer reading";
     const ODOMETER_FORM_ERROR_MESSAGE = "The odometer reading should be a valid number between 0 and 999,999";
@@ -68,6 +69,7 @@ class OdometerController extends AbstractDvsaMotTestController
 
         $isDemo = false;
         $isReinspection = false;
+        $isNonMotTest = false;
 
         /** @var MotTestDto $motTest */
         $motTest = null;
@@ -77,13 +79,14 @@ class OdometerController extends AbstractDvsaMotTestController
             $testType = $motTest->getTestType();
             $isDemo = MotTestType::isDemo($testType->getCode());
             $isReinspection = MotTestType::isReinspection($testType->getCode());
+            $isNonMotTest = MotTestType::isNonMotTypes($testType->getCode());
         } catch (ValidationException $e) {
             $this->addErrorMessages($e->getDisplayMessages());
         }
 
         $this->layout('layout/layout-govuk.phtml');
 
-        $breadcrumbs = $this->getBreadcrumbs($isDemo, $isReinspection);
+        $breadcrumbs = $this->getBreadcrumbs($isDemo, $isReinspection, $isNonMotTest);
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
         $this->layout()->setVariable('pageTitle', 'Odometer reading');
 
@@ -101,10 +104,11 @@ class OdometerController extends AbstractDvsaMotTestController
      *
      * @param boolean $isDemo
      * @param boolean $isReinspection
+     * @param boolean $isNonMotTest
      *
      * @return array
      */
-    private function getBreadcrumbs($isDemo, $isReinspection)
+    private function getBreadcrumbs($isDemo, $isReinspection, $isNonMotTest)
     {
         $breadcrumbs = [];
 
@@ -115,6 +119,8 @@ class OdometerController extends AbstractDvsaMotTestController
             $breadcrumbs += [self::CONTENT_HEADER_TYPE__TRAINING_TEST => $motTestResultsUrl];
         } elseif ($isReinspection) {
             $breadcrumbs += [self::CONTENT_HEADER_TYPE__MOT_TEST_REINSPECTION => $motTestResultsUrl];
+        } elseif ($isNonMotTest) {
+            $breadcrumbs += [self::CONTENT_HEADER_TYPE__NON_MOT_TEST_RESULTS => $motTestResultsUrl];
         } else {
             $breadcrumbs += [self::CONTENT_HEADER_TYPE__MOT_TEST_RESULTS => $motTestResultsUrl];
         }

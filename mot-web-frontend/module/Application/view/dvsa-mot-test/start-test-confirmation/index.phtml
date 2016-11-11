@@ -25,6 +25,15 @@ if (!empty($this->urlSearch)) {
 }
 
 $escUrlDemoSearch = $this->url(VehicleSearchController::ROUTE_VEHICLE_SEARCH_TRAINING, [], ['query' => $query]);
+$escUrlNonMotSearch = $this->url(VehicleSearchController::ROUTE_VEHICLE_SEARCH_NON_MOT, [], ['query' => $query]);
+
+if($viewModel->isTrainingTest()){
+    $backToVehicleSearchUrl = $escUrlDemoSearch;
+} elseif($viewModel->isNonMotTest()){
+    $backToVehicleSearchUrl = $escUrlNonMotSearch;
+} else {
+    $backToVehicleSearchUrl = $escUrlSearch;
+}
 
 $title = $this->title;
 $header = $this->header;
@@ -161,8 +170,10 @@ echo $this->partial('errorMessages', ['getFromFlash' => true]);
         <div class="row">
             <div class="col-sm-6 btn-bar">
                 <?php if ($viewModel->isRetest() && !empty($viewModel->getEligibilityNotices())): ?>
-                    <a href="<?php echo $this->url(UserHomeController::ROUTE);?>"
+                    <a id="back-to-home-link" href="<?php echo $this->url(UserHomeController::ROUTE);?>"
                        class="btn btn-link" id="confirm_vehicle_confirmation">Go to homepage</a>
+                <?php elseif($viewModel->isNonMotTest()): ?>
+                    <h4>Start Non-MOT test</h4>
                 <?php else : ?>
                     <h4>Start MOT <?php echo $viewModel->getTestTypeString(); ?></h4>
                 <?php endif ?>
@@ -170,6 +181,12 @@ echo $this->partial('errorMessages', ['getFromFlash' => true]);
                 <?php if ($viewModel->isNormalTest() || $viewModel->isTrainingTest()): ?>
                     <button type="submit" class="btn btn-primary" id="confirm_vehicle_confirmation">
                         Confirm vehicle and start MOT test
+                    </button>
+                <?php endif; ?>
+
+                <?php if ($viewModel->isNonMotTest()): ?>
+                    <button type="submit" class="btn btn-primary" id="confirm_vehicle_confirmation">
+                        Confirm vehicle and start non-MOT test
                     </button>
                 <?php endif; ?>
 
@@ -182,7 +199,7 @@ echo $this->partial('errorMessages', ['getFromFlash' => true]);
                 <nav class="module-content-navigation">
                     <ul class="content-navigation_secondary">
                         <li>
-                            <a href="<?php echo ($viewModel->isTrainingTest())? $escUrlDemoSearch : $escUrlSearch; ?>">
+                            <a href="<?php echo $backToVehicleSearchUrl; ?>">
                                 Return to find a vehicle
                             </a>
                         </li>

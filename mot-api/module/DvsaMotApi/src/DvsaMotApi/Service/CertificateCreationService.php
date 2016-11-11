@@ -10,6 +10,7 @@ use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaDocument\Service\Document\DocumentService;
+use DvsaMotApi\Domain\DvsaContactDetails\DvsaContactDetailsConfiguration;
 use DvsaMotApi\Mapper;
 use DvsaMotApi\Mapper\AbstractMotTestMapper;
 use InvalidArgumentException;
@@ -24,19 +25,37 @@ class CertificateCreationService
 {
     /** @var MotTestService */
     private $motTestService;
+
     /** @var DocumentService  */
     private $documentService;
+
     /** @var  DataCatalogService */
     private $dataCatalogService;
 
+    /** @var DvsaContactDetailsConfiguration $dvsaContactDetailsConfig */
+    private $dvsaContactDetailsConfig;
+
+    // Used as a label for the DVSA telephone number on a VT32/VE certificate if the test is a non-MOT inspection
+    const TELEPHONE_NUMBER_LABEL = 'Telephone number - ';
+
+    /**
+     * CertificateCreationService constructor.
+     *
+     * @param MotTestService $motTestService
+     * @param DocumentService $documentService
+     * @param DataCatalogService $dataCatalogService
+     * @param DvsaContactDetailsConfiguration $dvsaContactDetailsConfig
+     */
     public function __construct(
         MotTestService $motTestService,
         DocumentService $documentService,
-        DataCatalogService $dataCatalogService
+        DataCatalogService $dataCatalogService,
+        DvsaContactDetailsConfiguration $dvsaContactDetailsConfig
     ) {
         $this->motTestService  = $motTestService;
         $this->documentService = $documentService;
         $this->dataCatalogService = $dataCatalogService;
+        $this->dvsaContactDetailsConfig = $dvsaContactDetailsConfig;
     }
 
     /**
@@ -94,7 +113,6 @@ class CertificateCreationService
 
             return $this->createPassCertificate($motTestNumber, $motTestData, $userId);
         }
-
 
         return $motTestData;
     }
@@ -247,6 +265,14 @@ class CertificateCreationService
 
         $snapShotData = $certificateMapper->mapData();
 
+        if ($this->isNonMotTest($data)) {
+            $dvsaName = $this->dvsaContactDetailsConfig->getName();
+            $dvsaPhone = $this->dvsaContactDetailsConfig->getPhone();
+
+            $snapShotData['TestStation'] = '';
+            $snapShotData['InspectionAuthority'] = $dvsaName . "\n" . self::TELEPHONE_NUMBER_LABEL . $dvsaPhone;
+        }
+
         $data->setDocument($this->documentService->createSnapshot($documentName, $snapShotData, $userId));
 
         if ($motTestNumber) {
@@ -256,6 +282,11 @@ class CertificateCreationService
         return $data;
     }
 
+    /**
+     * @param MotTestDto $data
+     * 
+     * @return bool
+     */
     public static function isRequiresDualLanguage(MotTestDto $data)
     {
         $site = $data->getVehicleTestingStation();
@@ -263,15 +294,35 @@ class CertificateCreationService
         return (ArrayUtils::tryGet($site, 'dualLanguage', false) === true);
     }
 
+    /**
+     * @param MotTestDto $data
+     *
+     * @return bool
+     */
     private function isNormalTest(MotTestDto $data)
     {
         return ($data->getTestType() !== null)
-        && ($data->getTestType()->getCode() === MotTestTypeCode::NORMAL_TEST);
+            && ($data->getTestType()->getCode() === MotTestTypeCode::NORMAL_TEST);
     }
 
+    /**
+     * @param MotTestDto $data
+     *
+     * @return bool
+     */
+    private function isNonMotTest(MotTestDto $data)
+    {
+        return ($data->getTestType() !== null)
+            && ($data->getTestType()->getCode() === MotTestTypeCode::NON_MOT_TEST);
+    }
+
+    /**
+     * @param MotTestDto $motTestData
+     *
+     * @return bool
+     */
     private function isPrsTest(MotTestDto $motTestData)
     {
         return !is_null($motTestData->getPrsMotTestNumber());
     }
-
 }

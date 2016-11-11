@@ -15,6 +15,8 @@ use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaDocument\Service\Document\DocumentService;
+use DvsaMotApi\Domain\DvsaContactDetails\DvsaContactDetailsConfiguration;
+use DvsaMotApi\Mapper\AbstractMotTestMapper;
 use DvsaMotApi\Service\CertificateCreationService;
 use DvsaMotApi\Service\MotTestService;
 use DvsaMotApiTest\Test\ReasonForRejectionBuilder;
@@ -27,15 +29,20 @@ use PHPUnit_Framework_MockObject_MockObject as MockObj;
  */
 class CertificateCreationServiceTest extends AbstractServiceTestCase
 {
+    /** @var DocumentService|MockObj */
+    protected $mockDocumentService;
+
     /** @var MotTestService|MockObj */
     protected $mockMotService;
-    /** @var  DocumentService|MockObj */
-    protected $mockDocumentService;
+
+    /** @var DataCatalogService */
+    private $catalog;
+
+    /** @var DvsaContactDetailsConfiguration $dvsaContactDetailsConfiguration */
+    private $dvsaContactDetailsConfiguration;
+
     /** @var CertificateCreationService|MockObj */
     protected $service;
-
-    /** @var  DataCatalogService */
-    private $catalog;
 
     public function setup()
     {
@@ -49,15 +56,23 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
 
         $this->catalog = XMock::of(DataCatalogService::class);
 
+        $this->dvsaContactDetailsConfiguration = new DvsaContactDetailsConfiguration([
+            'name' => 'Driver Vehicles & Standards Agency',
+            'phone' => '03001239000',
+        ]);
+
         $this->service = new CertificateCreationService(
             $this->mockMotService,
             $this->mockDocumentService,
-            $this->catalog
+            $this->catalog,
+            $this->dvsaContactDetailsConfiguration
         );
     }
 
     /**
      * @dataProvider nonStandardMotTestTypesDataProvider
+     *
+     * @param $testTypeCode
      */
     public function testCreateWithValidDataAndTestTypeExpectsAdvisory($testTypeCode)
     {
@@ -330,6 +345,111 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
         $this->assertEquals($failId, $result->getDocument());
     }
 
+    public function testCreateWithValidDataAndFailedPrs()
+    {
+        $failId = 8;
+        $passId = 7;
+
+        $this->mockDocumentService->expects($this->at(0))
+            ->method('createSnapshot')
+            ->with('MOT-Fail-Certificate')
+            ->will($this->returnValue($failId));
+
+        $this->mockDocumentService->expects($this->at(1))
+            ->method('createSnapshot')
+            ->with('MOT-Pass-Certificate')
+            ->will($this->returnValue($passId));
+
+        $motTestId = 1;
+        $prsTestId = 2;
+
+        $motTestData = (new MotTestDto())
+            ->setId($motTestId)
+            ->setDocument($passId)
+            ->setExpiryDate('2015-01-01')
+            ->setIssuedDate('2014-01-01')
+            ->setVehicle(
+                (new VehicleDto())
+                    ->setFirstUsedDate(new \DateTime('2012-01-01'))
+                    ->setVehicleClass((new VehicleClassDto())->setCode(4))
+            )
+            ->setTester(
+                (new PersonDto())
+                    ->setDisplayName('Testy McTest')
+                    ->setFirstName('Testy')
+                    ->setFamilyName('McTest')
+            )
+            ->setStatus('PASSED')
+            ->setVehicleTestingStation(
+                [
+                    'name'       => 'Montys Mots',
+                    'siteNumber' => 'asdfasda',
+                    'primaryTelephone' => '011712013243',
+                ]
+            )
+            ->setPrsMotTestNumber($prsTestId)
+            ->setPrimaryColour((new ColourDto())->setName('Primary'))
+            ->setSecondaryColour((new ColourDto())->setName('Secondary'))
+            ->setCountryOfRegistration((new CountryDto())->setName('UK'))
+            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4))
+            ->setReasonsForRejection(ReasonForRejectionBuilder::create());
+
+        $expectedPrsTestData = (new MotTestDto())
+            ->setId($prsTestId)
+            ->setDocument($failId)
+            ->setExpiryDate('2015-01-01')
+            ->setIssuedDate('2014-01-01')
+            ->setVehicle(
+                (new VehicleDto())
+                    ->setVehicleClass((new VehicleClassDto())->setCode(4))
+            )
+            ->setTester(
+                (new PersonDto())
+                    ->setDisplayName('Testy McTest')
+                    ->setFirstName('Testy')
+                    ->setFamilyName('McTest')
+            )
+            ->setStatus('FAILED')
+            ->setVehicleTestingStation(
+                [
+                    'name'       => 'Montys Mots',
+                    'siteNumber' => 'asdfasda',
+                    'primaryTelephone' => '011712013243',
+                ]
+            )
+            ->setPrimaryColour((new ColourDto())->setName('Primary'))
+            ->setSecondaryColour((new ColourDto())->setName('Secondary'))
+            ->setCountryOfRegistration((new CountryDto())->setName('UK'))
+            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4))
+            ->setReasonsForRejection(ReasonForRejectionBuilder::create());
+
+        $this->mockMotService->expects($this->once())
+            ->method('getMotTestData')
+            ->with($prsTestId)
+            ->will($this->returnValue($expectedPrsTestData));
+
+        $additionalData = array(
+            'TestStationAddress' => array(
+            )
+        );
+
+        $this->mockMotService->expects($this->exactly(2))
+            ->method('getAdditionalSnapshotData')
+            ->will($this->returnValue($additionalData));
+
+        $this->mockMotService->expects($this->at(2))
+            ->method('updateDocument')
+            ->with($prsTestId, $failId);
+
+        $this->mockMotService->expects($this->at(4))
+            ->method('updateDocument')
+            ->with($motTestId, $passId);
+
+        $result = $this->service->create(1, $motTestData, 1);
+        $this->assertEquals($motTestId, $result->getId());
+        $this->assertEquals($passId, $result->getDocument());
+    }
+
     public function testCreateWithValidDataAndAbandoned()
     {
         $motTestId = 1;
@@ -502,5 +622,110 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->will($this->returnValue($additionalData));
 
         $this->service->create(1, $motTestData, 1);
+    }
+
+    public function testCreateWithValidDataAndTestIsNonMotInspection()
+    {
+        $motTestId = 1;
+        $documentId = 7;
+
+        $this->mockDocumentService
+            ->expects($this->once())
+            ->method('createSnapshot')
+            ->with('MOT-Advisory-Notice')
+            ->will($this->returnValue($documentId));
+
+        $motTestData = (new MotTestDto())
+            ->setId($motTestId)
+            ->setDocument($documentId)
+            ->setExpiryDate('2015-01-01')
+            ->setIssuedDate('2014-01-01')
+            ->setVehicle((new VehicleDto())->setFirstUsedDate(new \DateTime('2012-01-01')))
+            ->setTester(
+                (new PersonDto())
+                    ->setDisplayName('Testy McTest')
+            )
+            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4))
+            ->setStatus('PASSED')
+            ->setTestType((new MotTestTypeDto())->setCode(MotTestTypeCode::NON_MOT_TEST))
+            ->setVehicleTestingStation(
+                [
+                    'name'       => 'Montys Mots',
+                    'siteNumber' => 'asdfasda',
+                    'primaryTelephone' => '011712013243',
+                ]
+            )
+            ->setPrimaryColour((new ColourDto())->setName('Primary'))
+            ->setSecondaryColour((new ColourDto())->setName('Secondary'))
+            ->setCountryOfRegistration((new CountryDto())->setName('UK'))
+            ->setReasonsForRejection(ReasonForRejectionBuilder::create());
+
+        $additionalData = [
+            'TestStationAddress'    => []
+        ];
+
+        $this->mockMotService->expects($this->once())
+            ->method('getAdditionalSnapshotData')
+            ->will($this->returnValue($additionalData));
+
+        $this->mockMotService->expects($this->once())
+            ->method('updateDocument')
+            ->with($motTestId, $documentId);
+
+        $certificateDataBeforeAmendedDuringNonMotInspection = [
+            'TestNumber' => 'test',
+            'TestStation' => 'test',
+            'InspectionAuthority' => 'test',
+            'Odometer' => 'test',
+            'IssuedDate' => 'test',
+            'IssuersName' => 'test',
+            'VRM' => 'test',
+            'VIN' => 'test',
+            'Make' => 'test',
+            'Model' => 'test',
+            'CountryOfRegistration' => 'test',
+            'TestClass' => 'test',
+            'Colour' => 'test',
+            'AdvisoryInformation' => 'test',
+            'ExpiryDate' => 'test',
+            'AdditionalInformation' => 'test',
+        ];
+
+        $certificateDataAfterAmendedDuringNonMotInspection = [
+            'TestNumber' => '',
+            'TestStation' => '',
+            'InspectionAuthority' => 'Driver Vehicles & Standards Agency' . "\n" . 'Telephone number - 03001239000',
+            'Odometer' => 'Not recorded',
+            'IssuedDate' => '1 Jan 2014',
+            'IssuersName' => '',
+            'VRM' => '',
+            'VIN' => '',
+            'Make' => '',
+            'Model' => '',
+            'CountryOfRegistration' => 'UK',
+            'TestClass' => '4',
+            'Colour' => 'Primary and Secondary',
+            'AdvisoryInformation' => '',
+        ];
+
+        $motTestMapperMock = $this
+            ->getMockBuilder(AbstractMotTestMapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $motTestMapperMock
+            ->expects($this->any())
+            ->method('mapData')
+            ->willReturn($certificateDataBeforeAmendedDuringNonMotInspection);
+
+        $this->mockDocumentService
+            ->expects($this->once())
+            ->method('createSnapshot')
+            ->with('MOT-Advisory-Notice', $certificateDataAfterAmendedDuringNonMotInspection, 1);
+
+        /** @var MotTestDto $result */
+        $result = $this->service->create(1, $motTestData, 1);
+        $this->assertEquals($motTestId, $result->getId());
+        $this->assertEquals($documentId, $result->getDocument());
     }
 }

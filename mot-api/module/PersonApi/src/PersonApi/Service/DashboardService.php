@@ -5,6 +5,7 @@ namespace PersonApi\Service;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
+use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Enum\BusinessRoleStatusCode;
 use DvsaCommon\Enum\OrganisationBusinessRoleCode;
 use DvsaCommon\Utility\ArrayUtils;
@@ -81,8 +82,13 @@ class DashboardService extends AbstractService
         $notifications = $this->notificationService->getAllByPersonId($personId);
         $inProgressTest = $this->testerService->findInProgressTestForTester($personId);
         $inProgressDemoTestNumber = $this->testerService->findInProgressDemoTestNumberForTester($personId);
+        $inProgressNonMotTestNumber = null;
         $isTesterQualified = $person->isQualifiedTester();
         $isTesterActive = $this->testerService->isTesterActiveByUser($person);
+
+        if ($this->authorisationService->isGranted(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM)) {
+            $inProgressNonMotTestNumber = $this->testerService->findInProgressNonMotTestNumberForVehicleExaminer($personId);
+        }
 
         $dashboard = new DashboardData(
             $dtoAeList,
@@ -91,6 +97,7 @@ class DashboardService extends AbstractService
             $notifications,
             $inProgressTest !== null ? $inProgressTest->getNumber() : null,
             $inProgressDemoTestNumber,
+            $inProgressNonMotTestNumber,
             $isTesterQualified,
             $isTesterActive,
             $inProgressTest !== null ? $inProgressTest->getMotTestType()->getCode() : null,

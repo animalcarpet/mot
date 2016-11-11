@@ -109,7 +109,7 @@ class MotPrintModelTest extends \PHPUnit_Framework_TestCase
 
         $variables = $object->getVariables();
 
-        $this->assertEquals('Non-MOT test complete', $variables['title']);
+        $this->assertEquals('Non-MOT test finished successfully', $variables['title']);
         $this->assertEquals(true, $variables['isNonMotTest']);
     }
 

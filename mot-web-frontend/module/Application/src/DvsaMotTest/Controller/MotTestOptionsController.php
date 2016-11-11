@@ -18,11 +18,7 @@ class MotTestOptionsController extends AbstractDvsaMotTestController implements 
 
     const TEMPLATE_MOT_TEST_OPTIONS = 'dvsa-mot-test/mot-test/mot-test-options.phtml';
 
-    const PAGE_TITLE_TEST = 'MOT test started';
-    const PAGE_TITLE_RETEST = 'MOT retest started';
-
-    const PAGE_SUB_TITLE_TRAINING = 'Training test';
-    const PAGE_SUB_TITLE_TEST = 'MOT testing';
+    const PAGE_TITLE_TEMPLATE = '%s started';
 
     protected $motChecklistPdfService;
     private $vehicleExpiryMapper;
@@ -46,19 +42,11 @@ class MotTestOptionsController extends AbstractDvsaMotTestController implements 
         $presenter = new MotTestOptionsPresenter($dto);
         $presenter->setMotTestNumber($motTestNumber);
 
-        $pageTitle = self::PAGE_TITLE_TEST;
-
-        if ($presenter->isMotTestRetest()) {
-            $pageTitle = self::PAGE_TITLE_RETEST;
-        }
+        $pageTitle = sprintf(self::PAGE_TITLE_TEMPLATE, $presenter->getReadableMotTestType());
 
         $this->layout()->setVariable('pageTitle', $pageTitle);
+        $this->layout()->setVariable('pageSubTitle', $presenter->getPageSubTitle());
 
-        if ($dto->getMotTestTypeDto()->getCode() === MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING) {
-            $this->layout()->setVariable('pageSubTitle', self::PAGE_SUB_TITLE_TRAINING);
-        } else {
-            $this->layout()->setVariable('pageSubTitle', self::PAGE_SUB_TITLE_TEST);
-        }
         $this->addMotTestLateInfoToGtmDataLayer($dto->getVehicleId());
 
         $viewModel = new ViewModel(['presenter' => $presenter]);

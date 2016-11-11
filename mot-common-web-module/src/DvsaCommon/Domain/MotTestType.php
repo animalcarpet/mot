@@ -130,6 +130,7 @@ class MotTestType
         $veAdvisoryTypes = [
             MotTestTypeCode::TARGETED_REINSPECTION => 1,
             MotTestTypeCode::MOT_COMPLIANCE_SURVEY => 1,
+            MotTestTypeCode::NON_MOT_TEST => 1,
         ];
 
         return !empty($veAdvisoryTypes[$testTypeCode]);
@@ -179,6 +180,7 @@ class MotTestType
             MotTestTypeCode::STATUTORY_APPEAL,
             MotTestTypeCode::OTHER,
             MotTestTypeCode::RE_TEST,
+            MotTestTypeCode::NON_MOT_TEST
         ];
     }
 }

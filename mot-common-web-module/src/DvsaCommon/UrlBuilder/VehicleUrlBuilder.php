@@ -18,6 +18,7 @@ class VehicleUrlBuilder extends AbstractUrlBuilder
 
     const SEARCH = 'vehicle-search';
     const TRAINING_SEARCH = 'training-test-vehicle-search';
+    const NON_MOT_SEARCH = 'non-mot-test-vehicle-search';
 
     const MYSTERY_SHOPPER_CAMPAIGN = '/mystery-shopper-campaign';
     const MYSTERY_SHOPPER_DELETE = '/:incognitoVehicleId';
@@ -42,7 +43,8 @@ class VehicleUrlBuilder extends AbstractUrlBuilder
             self::VEHICLE_DVLA => '',
             self::SEARCH       => '',
             self::TRAINING_SEARCH  => '',
-            self::VEHICLE_LIST => '',
+            self::NON_MOT_SEARCH  => '',
+            self::VEHICLE_LIST => ''
         ];
 
     /**
@@ -167,5 +169,10 @@ class VehicleUrlBuilder extends AbstractUrlBuilder
     public static function trainingSearch()
     {
         return self::of()->appendRoutesAndParams(self::TRAINING_SEARCH);
+    }
+
+    public static function nonMotTestSearch()
+    {
+        return self::of()->appendRoutesAndParams(self::NON_MOT_SEARCH);
     }
 }

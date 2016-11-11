@@ -54,6 +54,7 @@ class MotTestController extends AbstractDvsaMotTestController
         $motTestNumber = (int)$this->params()->fromRoute('motTestNumber', 0);
         $motDetails = null;
         $isDemoMotTest = false;
+        $isNonMotTest = false;
         $tester = null;
 
         /** @var MotTestDto $motDetails */
@@ -68,6 +69,7 @@ class MotTestController extends AbstractDvsaMotTestController
             $userResult = $this->getRestClient()->get($userSearchUrl);
             $tester = $userResult['data'];
             $isDemoMotTest = MotTestType::isDemo($motDetails->getTestType()->getCode());
+            $isNonMotTest = MotTestType::isNonMotTypes($motDetails->getTestType()->getCode());
         }
 
         /** @var CatalogService $catalogService */
@@ -106,16 +108,17 @@ class MotTestController extends AbstractDvsaMotTestController
 
         return new ViewModel(
             [
-                'tester'          => $tester,
-                'motDetails'      => $motDetails,
-                'motTestNumber'   => $motTestNumber,
-                'motTestTypes'    => $motTestTypes,
-                'odometerReading' => $odometerReading,
-                'searchType'      => $searchType,
-                'vehicleId'       => $vehicleId,
-                'summaryParams'   => $summaryParams,
-                'isDemoMotTest'   => $isDemoMotTest,
+                'tester'                 => $tester,
+                'motDetails'             => $motDetails,
+                'motTestNumber'          => $motTestNumber,
+                'motTestTypes'           => $motTestTypes,
+                'odometerReading'        => $odometerReading,
+                'searchType'             => $searchType,
+                'vehicleId'              => $vehicleId,
+                'summaryParams'          => $summaryParams,
+                'isDemoMotTest'          => $isDemoMotTest,
                 'brakeTestTypeCode2Name' => $brakeTestTypeCode2Name,
+                'isNonMotTest'           => $isNonMotTest,
             ]
         );
     }

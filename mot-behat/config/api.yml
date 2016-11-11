@@ -55,6 +55,10 @@ services:
         class: Dvsa\Mot\Behat\Support\Api\DemoTest
         parent: dvsa.api
 
+    dvsa.non_mot_test:
+        class: Dvsa\Mot\Behat\Support\Api\NonMotTest
+        parent: dvsa.api
+
     dvsa.mot_test:
         class: Dvsa\Mot\Behat\Support\Api\MotTest
         arguments:

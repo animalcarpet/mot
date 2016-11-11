@@ -4,6 +4,7 @@ namespace DvsaMotTest\Factory\Controller;
 
 use Application\View\Helper\AuthorisationHelper;
 use Core\Service\MotEventManager;
+use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Controller\MotTestController;
 use Zend\EventManager\EventManager;
 use Zend\ServiceManager\FactoryInterface;
@@ -23,6 +24,9 @@ class MotTestControllerFactory implements FactoryInterface
 
         $eventManager = $serviceLocator->get(MotEventManager::class);
 
-        return new MotTestController($authService, $eventManager);
+        /** @var FeatureToggles $featureToggles */
+        $featureToggles = $serviceLocator->get('Feature\FeatureToggles');
+
+        return new MotTestController($authService, $eventManager, $featureToggles);
     }
 }

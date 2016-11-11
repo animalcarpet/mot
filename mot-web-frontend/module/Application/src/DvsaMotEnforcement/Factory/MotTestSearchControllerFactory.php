@@ -2,6 +2,7 @@
 
 namespace DvsaMotEnforcement\Factory;
 
+use Core\Service\MotFrontendAuthorisationServiceInterface;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaMotEnforcement\Controller\MotTestSearchController;
 use Zend\ServiceManager\FactoryInterface;
@@ -21,8 +22,11 @@ class MotTestSearchControllerFactory implements FactoryInterface
     {
         /* @var ServiceLocatorInterface $serviceLocator */
         $serviceLocator = $controllerManager->getServiceLocator();
-        $paramObfuscator = $serviceLocator->get(ParamObfuscator::class);
 
-        return new MotTestSearchController($paramObfuscator);
+        $paramObfuscator = $serviceLocator->get(ParamObfuscator::class);
+        /** @var MotFrontendAuthorisationServiceInterface $authorisationService */
+        $authorisationService = $serviceLocator->get('AuthorisationService');
+
+        return new MotTestSearchController($paramObfuscator, $authorisationService);
     }
 }

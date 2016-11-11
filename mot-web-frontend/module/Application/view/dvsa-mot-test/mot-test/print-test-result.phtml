@@ -5,7 +5,7 @@ $this->headTitle($this->title);
 
 $canPrint = !($this->isDemoMotTest);
 
-$escUrlPrint = $this->printRoute;   //  generated using UrlBuilder, no need escaping
+$escUrlPrint = $this->printRoute; // generated using UrlBuilder, no need escaping
 
 $escVrn = $this->escapeHtml($this->vehicleRegistration);
 ?>
@@ -25,21 +25,15 @@ echo $this->partial('errorMessages', ['getFromFlash' => true]);
     <?php if ($this->isNonMotTest) : ?>
         <!-- Vehicle Examiner::notMotTest -->
         <div class="col-lg-6">
-            <p>Test results submitted successfully.</p>
+            <h3 class="heading-medium">What happens next?</h3>
+            <p>You can now print a certificate for the test.</p>
             <p>
-                MOT Test for vehicle <strong><?php echo $escVrn ?></strong> has been
-                submitted and the following documents have been issued
-            </p>
-            <p>
-            <ul>
-                <li>Certificate – VT32</li>
-            </ul>
             <a id="reprint-certificate" target="_blank" class="btn btn-primary"
-               href="<?php echo $escUrlPrint; ?>">Print documents</a>
+               href="<?php echo $escUrlPrint; ?>">Print VT32/VE certificate</a>
             </p>
         </div>
         <div class="col-lg-8">
-            <a href="<?php echo PersonUrlBuilderWeb::home(); ?>" style="margin-left: 10px;">Return to Homepage</a>
+            <a href="<?php echo PersonUrlBuilderWeb::home(); ?>">Continue to home</a>
         </div>
 
     <?php elseif ($this->isReinspection) : ?>

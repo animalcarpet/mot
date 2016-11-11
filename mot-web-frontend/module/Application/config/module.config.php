@@ -33,6 +33,7 @@ use DvsaMotTest\Service\MotChecklistPdfService;
 use Zend\EventManager\EventManager;
 use Application\Service\CanTestWithoutOtpService;
 use Application\Factory\Service\CanTestWithoutOtpServiceFactory;
+use DvsaMotTest\View\VehicleSearchResult\NonMotTestUrlTemplate;
 
 return [
     'controllers' => require __DIR__ . '/controllers.config.php',
@@ -311,6 +312,16 @@ return [
                     ],
                 ],
             ],
+            'non-mot-test-vehicle-search'                         => [
+                'type'    => 'segment',
+                'options' => [
+                    'route'    => '/non-mot-test-vehicle-search',
+                    'defaults' => [
+                        'controller' => MotTest\VehicleSearchController::class,
+                        'action'     => 'nonMotVehicleSearch',
+                    ],
+                ],
+            ],
             'start-test-confirmation'                     => [
                 'type'    => 'segment',
                 'options' => [
@@ -338,6 +349,21 @@ return [
                     'defaults'    => [
                         'controller' => MotTest\StartTestConfirmationController::class,
                         'action'     => 'training',
+                    ],
+                ],
+            ],
+            NonMotTestUrlTemplate::START_NON_MOT_TEST_CONFIRMATION_ROUTE    => [
+                'type'    => 'segment',
+                'options' => [
+                    'route'       => '/start-non-mot-test-confirmation[/:id[/:noRegistration[/:source]]]',
+                    'constraints' => [
+                        'id'             => '[0-9a-zA-Z-_]+',   // vehicleId are obfuscated
+                        'noRegistration' => '[0-9]+',
+                        'source'         => '[0-9]+'
+                    ],
+                    'defaults'    => [
+                        'controller' => MotTest\StartTestConfirmationController::class,
+                        'action'     => 'nonMotTest',
                     ],
                 ],
             ],
@@ -1050,9 +1076,11 @@ return [
                 __DIR__ . '/../view/partials/dashboard/tester-contingency-box.phtml',
             'dashboard/financeBox'                                                       =>
                 __DIR__ . '/../view/partials/dashboard/finance-box.phtml',
-            'dashboard/trainingTestBox'                                                       =>
+            'dashboard/trainingTestBox'                                                  =>
                 __DIR__ . '/../view/partials/dashboard/tester-training-test-box.phtml',
-            'dashboard/motActivity'                                                       =>
+            'dashboard/nonMotTestBox'                                                    =>
+                __DIR__ . '/../view/partials/dashboard/non-mot-test-box.phtml',
+            'dashboard/motActivity'                                                      =>
                 __DIR__ . '/../view/partials/dashboard/mot-activity.phtml',
             'vehicle/history'                                                            =>
                 __DIR__ . '/../view/partials/vehicle-history/history.phtml',

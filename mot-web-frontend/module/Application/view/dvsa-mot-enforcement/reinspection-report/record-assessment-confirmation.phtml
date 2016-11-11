@@ -52,7 +52,7 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $errorM
 
 
 <nav class="content-navigation">
-    <a href="/<?php echo UrlBuilder::of()->home(); ?>" class="button">Return to homepage</a>
+    <a id="back-to-home-link" href="/<?php echo UrlBuilder::of()->home(); ?>" class="button">Return to homepage</a>
     <?php echo $this->partial(
         'partial/gds/form/control-navigation-secondary',
         [

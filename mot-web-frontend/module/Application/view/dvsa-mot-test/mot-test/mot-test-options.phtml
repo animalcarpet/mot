@@ -3,21 +3,34 @@
 use Core\Routing\MotTestRouteList;
 use Dashboard\Controller\UserHomeController;
 use Dvsa\Mot\Frontend\AuthenticationModule\Controller\LogoutController;
+use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
+
 /** @var \DvsaMotTest\Presenter\MotTestOptionsPresenter $presenter */
-
-$testString = ($presenter->isMotTest())? 'test' : 'retest';
-
 
 ?>
 
-<p>You have successfully started an MOT <?php echo $testString; ?> for a <strong><span id="vehicle-make-and-model"><?php echo $this->escapeHtml($presenter->displayVehicleMakeAndModel()); ?></span></strong>, registration mark <strong><span id="vehicle-registration-mark"><?php echo $this->escapeHtml($presenter->displayVehicleRegistrationNumber()); ?></span></strong></p>
-<p><?php echo ucfirst($testString); ?> started <strong><?php echo $this->escapeHtml($presenter->displayMotTestStartedDate()); ?></strong></p>
+<p>You have successfully started <?php echo $presenter->getReadableMotTestTypeWithIndefiniteArticle(); ?> for a <strong><span id="vehicle-make-and-model"><?php echo $this->escapeHtml($presenter->displayVehicleMakeAndModel()); ?></span></strong>, registration mark <strong><span id="vehicle-registration-mark"><?php echo $this->escapeHtml($presenter->displayVehicleRegistrationNumber()); ?></span></strong></p>
+<p><?php echo ucfirst($presenter->getReadableMotTestType()); ?> started <strong><?php echo $this->escapeHtml($presenter->displayMotTestStartedDate()); ?></strong></p>
 <p>You can download and print an inspection sheet for this vehicle:
     <a target="_blank" id="print-inspection-sheet" href="<?php echo $this->url(MotTestRouteList::MOT_CHECKLIST_PDF, ['motTestNumber' => $presenter->getMotTestNumber()])?>">
         Vehicle inspection sheet (PDF, 505KB)
     </a>
 </p>
 <p>Now sign out and inspect the vehicle.</p>
+<?php if ($presenter->isNonMotTest()): ?>
+<form action="/<?php echo MotTestUrlBuilder::motTest($presenter->getMotTestNumber()); ?>" method="GET" role="form" novalidate>
+    <div class="form-group">
+        <?php echo $this->partial('partial/forms/submitElement.phtml', ['id' => 'enter-test-results', 'label' => 'Enter non-MOT test results']); ?>
+    </div>
+</form>
+<nav class="module-content-navigation">
+    <ul class="content-navigation_secondary">
+        <li>
+            <a href="<?php echo $this->url(LogoutController::ROUTE_LOGOUT); ?>" id="sign-out">Sign out</a>
+        </li>
+    </ul>
+</nav>
+<?php else: ?>
 <form action="<?php echo $this->url(LogoutController::ROUTE_LOGOUT); ?>" method="GET" role="form" novalidate>
     <div class="form-group">
         <?php echo $this->partial('partial/forms/submitElement.phtml', ['id' => 'sign-out', 'label' => 'Sign out']); ?>
@@ -30,3 +43,4 @@ $testString = ($presenter->isMotTest())? 'test' : 'retest';
         </li>
     </ul>
 </nav>
+<?php endif; ?>

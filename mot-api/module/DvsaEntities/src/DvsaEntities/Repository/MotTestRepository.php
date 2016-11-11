@@ -218,13 +218,29 @@ class MotTestRepository extends AbstractMutableRepository
             ->setParameter('status', MotTestStatusName::ACTIVE)
             ->setParameter(
                 'code',
-                [MotTestTypeCode::ROUTINE_DEMONSTRATION_TEST, MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING]
+                [
+                    MotTestTypeCode::ROUTINE_DEMONSTRATION_TEST,
+                    MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING,
+                    MotTestTypeCode::NON_MOT_TEST
+                ]
             )
             ->setMaxResults(1);
 
         $resultArray = $qb->getQuery()->getResult();
 
         return empty($resultArray) ? null : $resultArray[0];
+    }
+
+    /**
+     * @param int $personId
+     *
+     * @return string|null
+     */
+    public function findInProgressNonMotTestNumberForPerson($personId)
+    {
+        $motTest = $this->findInProgressTestOfTypeForPerson($personId, MotTestTypeCode::NON_MOT_TEST);
+
+        return is_null($motTest) ? null : $motTest->getNumber();
     }
 
     /**
@@ -259,6 +275,18 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function findInProgressDemoTestForPerson($personId, $routine = false)
     {
+        $testTypeCode = $routine ? MotTestTypeCode::ROUTINE_DEMONSTRATION_TEST : MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING;
+
+        return $this->findInProgressTestOfTypeForPerson($personId, $testTypeCode);
+    }
+
+    /**
+     * @param int $personId
+     * @param string $testTypeCode
+     * @return MotTest|null
+     */
+    private function findInProgressTestOfTypeForPerson($personId, $testTypeCode)
+    {
         $qb = $this
             ->createQueryBuilder('mt')
             ->innerJoin('mt.motTestType', 't')
@@ -268,10 +296,7 @@ class MotTestRepository extends AbstractMutableRepository
             ->andWhere('t.code = :code')
             ->setParameter('personId', $personId)
             ->setParameter('status', MotTestStatusName::ACTIVE)
-            ->setParameter(
-                'code',
-                $routine ? MotTestTypeCode::ROUTINE_DEMONSTRATION_TEST : MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING
-            )
+            ->setParameter('code', $testTypeCode)
             ->setMaxResults(1);
 
         $resultArray = $qb->getQuery()->getResult();

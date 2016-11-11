@@ -58,6 +58,15 @@ echo $this->partial('infoMessages', ['getFromFlash' => true]);
 echo $this->partial('errorMessages', ['getFromFlash' => true]);
 echo $this->partial('validationMessages');
 
+if ($this->errorMessages !== '') {
+    echo $this->partial(
+        'partials/page-validation-message',
+        [
+            'errorMessage' => $this->errorMessages['message'],
+        ]
+    );
+}
+
 echo $this->partial(
     'partials/mot-test-summary/test-summary',
     [
@@ -78,7 +87,7 @@ echo $this->partial(
     echo ($this->prgHelper instanceof PrgHelper ? $this->prgHelper->getHtml() : '');
     ?>
 
-<?php if ($isReinspectionSummaryPage):
+<?php if ($isReinspectionSummaryPage || $this->isNonMotTest):
     // Create typeahead and location text reinspection HTML ready for use
     $this->partial(
         'inspectionLocation',
@@ -98,23 +107,35 @@ echo $this->partial(
                     'cssClass' => ArrayUtils::tryGet($formErrors, 'location', ''),
                 ]
         ]
-    );
-    ?>
+    ); ?>
 
     <!-- Full/partial retest: removed -->
     <!-- One person test: removed -->
     <!-- One person reinspection: removed -->
+    <?php if (true === $this->isNonMotTest): ?>
+    <input type="hidden" name="_non_mot_test" value="<?php echo $motDetails->getMotTestNumber(); ?>">
+    <?php endif; ?>
 
-    <div class="row">
-        <div class="col-lg-4">
-            <h2>Site ID (if applicable)</h2>
-        </div>
-        <div class="col-lg-8">
-            <div style="margin-top: 27px;">
-                <?php echo $this->placeholder('inspectionLocation')->siteidentry; ?>
+    <?php if ($this->errorMessages !== '') echo '<div class="form-group has-error">' ?>
+        <div class="row">
+            <div class="col-lg-4">
+                <h2>Site ID <?php if (!$this->isNonMotTest) echo '(if applicable)'; ?></h2>
+            </div>
+            <div class="col-lg-8">
+                <div style="margin-top: 27px;">
+                    <?php if ($this->errorMessages !== '') {
+                        echo $this->partial(
+                            'partials/field-validation-message',
+                            [
+                                'errorMessage' => $this->errorMessages['displayMessage'],
+                            ]
+                        );
+                    }
+                    echo $this->placeholder('inspectionLocation')->siteidentry; ?>
+                </div>
             </div>
         </div>
-    </div>
+    <?php if ($this->errorMessages !== '') echo '</div>' ?>
 
     <div class="row">
         <div class="col-lg-4">
@@ -155,7 +176,7 @@ echo $this->partial(
                 ]
             );
 
-            if ($this->canTestWithoutOtp())
+            if ($this->canTestWithoutOtp() && !$this->isNonMotTest)
             {
                 echo $this->partial(
                     '2faDeclaration',

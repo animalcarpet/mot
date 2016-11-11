@@ -67,6 +67,26 @@ class MotTestStatusChangeValidator extends AbstractValidator
         return true;
     }
 
+    /**
+     * @param MotTest $motTest
+     *
+     * @return bool
+     *
+     * @throws BadRequestException
+     */
+    public function checkSiteIdHasBeenEntered(MotTest $motTest)
+    {
+        if ($motTest->getVehicleTestingStation() == null) {
+            throw new BadRequestException(
+                'Site ID - enter the site ID',
+                BadRequestException::ERROR_CODE_INVALID_DATA,
+                'enter the site ID'
+            );
+        }
+
+        return true;
+    }
+
     public function checkMotTestCanBeCancelled(MotTest $motTest)
     {
         if (!$motTest->isActive()) {

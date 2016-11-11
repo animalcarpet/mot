@@ -32,6 +32,7 @@ class AddManualAdvisoryController extends AbstractDvsaMotTestController
     const CONTENT_HEADER_TYPE__MOT_TEST_RESULTS = 'MOT test results';
     const CONTENT_HEADER_TYPE__SEARCH_RESULTS = 'Search for a defect';
     const CONTENT_HEADER_TYPE__BROWSE_DEFECTS = 'Add a defect';
+    const CONTENT_HEADER_TYPE__NON_MOT_TEST_RESULTS = 'Non-MOT test';
 
     /**
      * @var DefectsJourneyUrlGenerator
@@ -76,6 +77,7 @@ class AddManualAdvisoryController extends AbstractDvsaMotTestController
 
         $isReinspection = null;
         $isDemoTest = null;
+        $isNonMot = false;
         /** @var MotTestDto $motTest */
         $motTest = null;
         $errorMessages = '';
@@ -85,6 +87,7 @@ class AddManualAdvisoryController extends AbstractDvsaMotTestController
             $testType = $motTest->getTestType();
             $isDemoTest = MotTestType::isDemo($testType->getCode());
             $isReinspection = MotTestType::isReinspection($testType->getCode());
+            $isNonMot = MotTestType::isNonMotTypes($testType->getCode());
             $request = $this->getRequest();
 
             if ($request->isPost()) {
@@ -127,7 +130,7 @@ class AddManualAdvisoryController extends AbstractDvsaMotTestController
 
         $backUrl = $this->defectsJourneyUrlGenerator->goBack();
 
-        $breadcrumbs = $this->getBreadcrumbs($isDemoTest, $isReinspection, $title);
+        $breadcrumbs = $this->getBreadcrumbs($isDemoTest, $isReinspection, $isNonMot, $title);
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
 
         return $this->createViewModel('defects/add-defect.twig', [
@@ -161,11 +164,12 @@ class AddManualAdvisoryController extends AbstractDvsaMotTestController
     /**
      * @param bool   $isDemo
      * @param bool   $isReinspection
+     * @param bool   $isNonMotTest
      * @param string $title
      *
      * @return array
      */
-    private function getBreadcrumbs($isDemo, $isReinspection, $title)
+    private function getBreadcrumbs($isDemo, $isReinspection, $isNonMotTest, $title)
     {
         $motTestNumber = $this->params()->fromRoute('motTestNumber');
         $motTestResultsUrl = $this->url()->fromRoute('mot-test', ['motTestNumber' => $motTestNumber]);
@@ -182,6 +186,11 @@ class AddManualAdvisoryController extends AbstractDvsaMotTestController
                 // Re-inspection
                 $breadcrumbs += [
                     self::CONTENT_HEADER_TYPE__MOT_TEST_REINSPECTION => $motTestResultsUrl,
+                ];
+            } elseif ($isNonMotTest) {
+                // Non-MOT test
+                $breadcrumbs += [
+                    self::CONTENT_HEADER_TYPE__NON_MOT_TEST_RESULTS => $motTestResultsUrl,
                 ];
             } else {
                 // Normal test

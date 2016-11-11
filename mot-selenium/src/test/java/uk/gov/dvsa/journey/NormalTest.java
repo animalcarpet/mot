@@ -1,16 +1,12 @@
 package uk.gov.dvsa.journey;
 
 import uk.gov.dvsa.data.VehicleData;
-import uk.gov.dvsa.domain.api.response.Colour;
+import uk.gov.dvsa.domain.api.response.*;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.CancelTestReason;
 import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.domain.model.mot.ReasonForVehicleRefusal;
 import uk.gov.dvsa.domain.model.vehicle.DvlaVehicle;
-import uk.gov.dvsa.domain.api.response.Make;
-import uk.gov.dvsa.domain.api.response.Model;
-import uk.gov.dvsa.domain.api.response.Vehicle;
-import uk.gov.dvsa.domain.api.response.FuelType;
 import uk.gov.dvsa.domain.model.vehicle.VehicleFactory;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
@@ -165,7 +161,7 @@ public class NormalTest {
     }
 
     public TestCompletePage finishTrainingTest(TestSummaryPage testSummaryPage) throws IOException, URISyntaxException {
-        return testSummaryPage.clickFinishButton();
+        return testSummaryPage.clickFinishButton(TestCompletePage.class);
     }
 
     public void refuseToTestVehicle(User tester, Vehicle vehicle, ReasonForVehicleRefusal reason) throws IOException, URISyntaxException {

@@ -7,13 +7,14 @@ import org.joda.time.format.DateTimeFormatter;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.CancelTestReason;
-import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.mot.TestAbandonedPage;
 import uk.gov.dvsa.ui.pages.mot.TestAbortedPage;
+import uk.gov.dvsa.ui.pages.mot.TestCompletePage;
 import uk.gov.dvsa.ui.pages.mot.TestResultsEntryNewPage;
 
 import java.io.IOException;
@@ -109,7 +110,7 @@ public class TestResultEntryPageTests extends DslTest {
         testResultsEntryPage
                 .completeBrakeTestWithPassValues(false)
                 .clickReviewTestButton()
-                .finishTest();
+                .clickFinishButton(TestCompletePage.class);
 
         // And I test the same vehicle again and enter an odometer reading that will trigger a notice
         testResultsEntryPage = pageNavigator

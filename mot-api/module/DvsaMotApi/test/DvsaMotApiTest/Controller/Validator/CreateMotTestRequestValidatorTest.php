@@ -34,6 +34,17 @@ class CreateMotTestRequestValidatorTest extends \PHPUnit_Framework_TestCase
         CreateMotTestRequestValidator::validateDemo($data);
     }
 
+    /**
+     * @dataProvider provider_non_mot_test_requestData
+     */
+    public function test_ValidateNonMot($data, $shouldBeInvalid)
+    {
+        if ($shouldBeInvalid) {
+            $this->setExpectedException(BadRequestException::class);
+        }
+        CreateMotTestRequestValidator::validateDemo($data);
+    }
+
     const FIELD_VEHICLE_ID = 'vehicleId';
     const FIELD_DVLA_VEHICLE_ID = 'dvlaVehicleId';
     const FIELD_VTS_ID = 'vehicleTestingStationId';
@@ -121,5 +132,12 @@ class CreateMotTestRequestValidatorTest extends \PHPUnit_Framework_TestCase
                 true
             ],
         ];
+    }
+
+    public static function provider_non_mot_test_requestData()
+    {
+        // currently same restriction as demo test
+
+        return self::provider_demo_test_requestData();
     }
 }

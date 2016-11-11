@@ -3,6 +3,7 @@
 namespace DvsaMotEnforcement\Controller;
 
 use Core\Controller\AbstractAuthActionController;
+use Core\Service\MotFrontendAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommon\Constants\VehicleSearchType;
@@ -45,12 +46,18 @@ class MotTestSearchController extends AbstractAuthActionController
     /** @var \DvsaCommon\Obfuscate\ParamObfuscator */
     protected $paramObfuscator;
 
+    /** @var MotFrontendAuthorisationServiceInterface $authorisationService */
+    protected $authorisationService;
+
     /**
      * @param \DvsaCommon\Obfuscate\ParamObfuscator $paramObfuscator
+     * @param MotFrontendAuthorisationServiceInterface $authorisationService
      */
-    public function __construct(ParamObfuscator $paramObfuscator = null)
+    public function __construct(ParamObfuscator $paramObfuscator = null,
+                                MotFrontendAuthorisationServiceInterface $authorisationService)
     {
         $this->paramObfuscator = $paramObfuscator;
+        $this->authorisationService = $authorisationService;
     }
 
     public function motTestSearchAction()

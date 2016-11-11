@@ -7,6 +7,7 @@ use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaMotTest\Constants\VehicleSearchSource;
 use DvsaCommon\Utility\ArrayUtils;
+use DvsaMotTest\View\VehicleSearchResult\NonMotTestUrlTemplate;
 
 /**
  * Class StartTestConfirmationViewModel
@@ -21,6 +22,7 @@ class StartTestConfirmationViewModel
 
     const START_TEST_CONFIRMATION_ACTION = '/start-test-confirmation';
     const START_TRAINING_CONFIRMATION_ACTION = '/start-training-test-confirmation';
+    const START_NON_MOT_CONFIRMATION_ACTION = '/start-non-mot-test-confirmation';
 
     /** @var string */
     private $method;
@@ -364,6 +366,10 @@ class StartTestConfirmationViewModel
             $actionConfirm = self::START_TRAINING_CONFIRMATION_ACTION;
         }
 
+        if ($this->getMethod() === MotTestTypeCode::NON_MOT_TEST) {
+            $actionConfirm = self::START_NON_MOT_CONFIRMATION_ACTION;
+        }
+
         $actionConfirm.= '/'. $this->getObfuscatedVehicleId() . '/'
             . $this->getNoRegistration() .
             (!empty($safeSource) ? '/' . $safeSource : '');
@@ -389,6 +395,12 @@ class StartTestConfirmationViewModel
         }
 
         return $safeSource;
+    }
+
+    public function isNonMotTest()
+    {
+        $this->checkMethod();
+        return $this->method === MotTestTypeCode::NON_MOT_TEST;
     }
 
 }

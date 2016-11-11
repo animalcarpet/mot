@@ -38,6 +38,9 @@ class Dashboard
     /** @var $inProgressDemoTestNumber string */
     private $inProgressDemoTestNumber;
 
+    /** @var $inProgressNonMotTestNumber integer */
+    private $inProgressNonMotTestNumber;
+
     /** @var  $inProgressTestTypeCode string */
     private $inProgressTestTypeCode;
 
@@ -51,6 +54,7 @@ class Dashboard
         $this->setInProgressTestNumber(ArrayUtils::get($data, 'inProgressTestNumber'));
         $this->setInProgressTestTypeCode(ArrayUtils::get($data, 'inProgressTestTypeCode'));
         $this->setInProgressDemoTestNumber(ArrayUtils::tryGet($data, 'inProgressDemoTestNumber'));
+        $this->setInProgressNonMotTestNumber(ArrayUtils::tryGet($data, 'inProgressNonMotTestNumber'));
     }
 
     /**
@@ -312,6 +316,33 @@ class Dashboard
     public function hasDemoTestInProgress()
     {
         return null !== $this->inProgressDemoTestNumber;
+    }
+
+    /**
+     * @param $inProgressTestNumber
+     *
+     * @return $this
+     */
+    public function setInProgressNonMotTestNumber($inProgressTestNumber)
+    {
+        $this->inProgressNonMotTestNumber = $inProgressTestNumber;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getInProgressNonMotTestNumber()
+    {
+        return $this->inProgressNonMotTestNumber;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasNonMotTestInProgress()
+    {
+        return null !== $this->inProgressNonMotTestNumber;
     }
 
     /**

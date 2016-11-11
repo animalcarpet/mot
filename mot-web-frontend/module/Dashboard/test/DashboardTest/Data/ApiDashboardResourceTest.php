@@ -103,4 +103,24 @@ class ApiDashboardResourceTest extends \PHPUnit_Framework_TestCase
             'inProgressTestTypeCode' => MotTestTypeCode::NORMAL_TEST
         ];
     }
+
+    public static function getTestDataForVehicleExaminer()
+    {
+        return [
+            'hero' => 'vehicle-examiner',
+            'authorisedExaminers' => [],
+            'specialNotice'       => [
+                'unreadCount'    => 1,
+                'daysLeftToView' => 3,
+                'overdueCount'   => 0,
+            ],
+            "overdueSpecialNotices" => array_combine(VehicleClassCode::getAll(), array_fill(0, count(VehicleClassCode::getAll()), 0)),
+            'notifications'       => [],
+            'sites'               => [],
+            'inProgressTestNumber' => '123456789012',
+            'inProgressDemoTestNumber' => null,
+            'inProgressNonMotTestNumber' => '210987654321',
+            'inProgressTestTypeCode' => MotTestTypeCode::TARGETED_REINSPECTION
+        ];
+    }
 }

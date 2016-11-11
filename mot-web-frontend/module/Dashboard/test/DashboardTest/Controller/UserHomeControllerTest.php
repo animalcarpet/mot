@@ -21,6 +21,7 @@ use Dvsa\OpenAM\OpenAMClient;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\RoleCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
@@ -126,7 +127,7 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
                 $this->mockSecurityQuestionSrv,
                 $this->mockUserAdminSessionSrv,
                 XMock::of(TesterGroupAuthorisationMapper::class),
-                XMock::of(MotAuthorisationServiceInterface::class),
+                $this->authorisationService,
                 $this->mockUserAdminSessionSrv,
                 new ViewTradeRolesAssertion($this->authorisationService, $this->identityProvider),
                 XMock::of(TradeRolesAssociationsService::class)
@@ -682,6 +683,47 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
         $this->assertEquals($authResult, $actual['motAuthorisations']);
         $this->assertEquals(true, $actual['isViewingOwnProfile']);
         $this->assertEquals(['uk' => 'ukLong'], $actual['countries']);
+    }
+
+    public function testNonMotTestPanelIsDisplayedWhenPermissionIsGrantedAndToggleIsOn()
+    {
+        $this->mockMethod(
+            $this->mockPersonalDetailsSrv, 'getPersonalDetailsData', null, $this->getPersonalDetailsData()
+        );
+
+        $this->authorisationService->granted(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM);
+
+        $this->withFeatureToggles([FeatureToggle::MYSTERY_SHOPPER => true]);
+
+        $actual = $this->getResultForAction('userHome');
+
+        $this->assertTrue($actual['canPerformNonMotTest']);
+    }
+
+    public function testNonMotTestPanelIsNotDisplayedWhenPermissionIsNotGrantedAndToggleIsOn()
+    {
+        $this->mockMethod(
+            $this->mockPersonalDetailsSrv, 'getPersonalDetailsData', null, $this->getPersonalDetailsData()
+        );
+
+        $this->withFeatureToggles([FeatureToggle::MYSTERY_SHOPPER]);
+
+        $actual = $this->getResultForAction('userHome');
+
+        $this->assertFalse($actual['canPerformNonMotTest']);
+    }
+
+    public function testNonMotTestPanelIsNotDisplayedWhenPermissionIsGrantedAndToggleIsOff()
+    {
+        $this->mockMethod(
+            $this->mockPersonalDetailsSrv, 'getPersonalDetailsData', null, $this->getPersonalDetailsData()
+        );
+
+        $this->authorisationService->granted(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM);
+
+        $actual = $this->getResultForAction('userHome');
+
+        $this->assertFalse($actual['canPerformNonMotTest']);
     }
 
     /**

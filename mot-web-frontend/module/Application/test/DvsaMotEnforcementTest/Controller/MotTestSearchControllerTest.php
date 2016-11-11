@@ -2,6 +2,7 @@
 
 namespace DvsaMotEnforcementTest\Controller;
 
+use Core\Service\MotFrontendAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\Obfuscate\EncryptionKey;
@@ -11,6 +12,7 @@ use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommonTest\Bootstrap;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
+use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotEnforcement\Controller\MotTestSearchController;
 use DvsaMotEnforcement\Service\VehicleTestSearch;
 use DvsaMotTestTest\Controller\AbstractDvsaMotTestTestCase;
@@ -28,7 +30,8 @@ class MotTestSearchControllerTest extends AbstractDvsaMotTestTestCase
     protected function setUp()
     {
         $this->setServiceManager(Bootstrap::getServiceManager());
-        $this->setController(new MotTestSearchController($this->createParamObfuscator()));
+        $authorisationServiceMock = XMock::of(MotFrontendAuthorisationServiceInterface::class);
+        $this->setController(new MotTestSearchController($this->createParamObfuscator(), $authorisationServiceMock));
         parent::setUp();
     }
 

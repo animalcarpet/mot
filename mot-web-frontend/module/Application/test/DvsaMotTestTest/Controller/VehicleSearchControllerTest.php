@@ -7,6 +7,8 @@ use Application\Service\LoggedInUserManager;
 use CoreTest\Service\StubCatalogService;
 use DvsaClient\MapperFactory;
 use DvsaClient\Mapper\VehicleMapper;
+use DvsaCommon\Constants\FeatureToggle;
+use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -515,6 +517,25 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
         $this->getController()->dispatch($this->request);
 
         $this->assertResponseStatus(self::HTTP_REDIRECT_CODE);
+    }
+
+    public function testNonMotVehicleSearchActionReturns404WhenMysteryShopperToggleIsOff()
+    {
+        $this->withFeatureToggles([FeatureToggle::MYSTERY_SHOPPER => false]);
+
+        $this->getResponseForAction('non-mot-vehicle-search');
+
+        $this->assertResponseStatus(self::HTTP_ERR_404);
+    }
+
+    /**
+     * @expectedException \DvsaCommon\Exception\UnauthorisedException
+     */
+    public function testNonMotVehicleSearchActionThrowsForbiddenWhenPermissionNotGranted()
+    {
+        $this->withFeatureToggles([FeatureToggle::MYSTERY_SHOPPER => true]);
+
+        $this->getResponseForAction('non-mot-vehicle-search');
     }
 
     /**

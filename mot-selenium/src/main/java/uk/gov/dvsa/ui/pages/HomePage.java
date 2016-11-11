@@ -5,6 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
+import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationSearchPage;
 import uk.gov.dvsa.ui.pages.profile.PersonProfilePage;
 import uk.gov.dvsa.ui.pages.vts.VehicleTestingStationPage;
 
@@ -34,6 +35,8 @@ public class HomePage extends Page {
     @FindBy(css = "a[title*='You have ordered a security card']") private WebElement orderSecurityCardSuccessNotificationLink;
     @FindBy(css = "a[title*='activate your security card']") private WebElement activateCardNotificationLink;
     @FindBy(xpath = "//script[contains(text(),'userId') and contains(text(), 'dataLayer')]") private WebElement googleTagManagerDataLayer;
+    @FindBy(id = "action-start-non-mot") private WebElement startNonMotTestButton;
+    @FindBy(linkText = "vehicle information") private WebElement vehicleInformationLink;
 
     private static final By ROLE_NOMINATION_LIST = By.cssSelector(".notification_subject > a");
 
@@ -46,17 +49,39 @@ public class HomePage extends Page {
         selfVerify();
     }
 
-    public HomePage refresh() {
-        driver.navigate().refresh();
-        return new HomePage(driver);
-    }
-
     @Override
     protected boolean selfVerify() {
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE)
                 && userNameHeader.getText().equals(driver.getCurrentUser().getNamesAndSurname());
     }
 
+    public HomePage refresh() {
+        driver.navigate().refresh();
+        return new HomePage(driver);
+    }
+
+    public SiteNotificationPage clickOnNomination(){
+        if (PageInteractionHelper.isElementDisplayed(ROLE_NOMINATION_LIST)) {
+            driver.findElement(ROLE_NOMINATION_LIST).click();
+        }
+        return new SiteNotificationPage(driver);
+    }
+
+    public VehicleTestingStationPage selectRandomVts() {
+        siteName.click();
+
+        return new VehicleTestingStationPage(driver);
+    }
+
+    public VehicleSearchPage clickStartNonMotButton() {
+        startNonMotTestButton.click();
+        return new VehicleSearchPage(driver);
+    }
+
+    public VehicleInformationSearchPage clickVehicleInformationLink() {
+        vehicleInformationLink.click();
+        return new VehicleInformationSearchPage(driver);
+    }
 
     public void clickActivateCardNotificationLink() {
         if(PageInteractionHelper.isElementDisplayed(activateCardNotificationLink)) {
@@ -68,23 +93,6 @@ public class HomePage extends Page {
         if(PageInteractionHelper.isElementDisplayed(orderCardNotificationLink)) {
             orderCardNotificationLink.click();
         }
-    }
-
-    public boolean isOrderSecurityCardSuccessNotificationLinkPresent()
-    {
-        return PageInteractionHelper.isElementDisplayed(orderSecurityCardSuccessNotificationLink);
-    }
-
-    public HomePage clickOnLastNomination() {
-        getTesterNominationElements().get(0).click();
-        return this;
-    }
-
-    public SiteNotificationPage clickOnNomination(){
-        if (PageInteractionHelper.isElementDisplayed(ROLE_NOMINATION_LIST)) {
-            driver.findElement(ROLE_NOMINATION_LIST).click();
-        }
-        return new SiteNotificationPage(driver);
     }
 
     public String getAeName() {
@@ -99,10 +107,8 @@ public class HomePage extends Page {
         return roleType.getText();
     }
 
-    public VehicleTestingStationPage selectRandomVts() {
-        siteName.click();
-
-        return new VehicleTestingStationPage(driver);
+    public boolean isOrderSecurityCardSuccessNotificationLinkPresent() {
+        return PageInteractionHelper.isElementDisplayed(orderSecurityCardSuccessNotificationLink);
     }
 
     public boolean isHeroSideBarDisplayed() {

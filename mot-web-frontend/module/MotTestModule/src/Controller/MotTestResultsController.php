@@ -65,12 +65,14 @@ class MotTestResultsController extends AbstractAuthActionController
         $odometerReading = new OdometerReadingViewObject();
         $isDemo = false;
         $isReinspection = false;
+        $isNonMotTest = false;
 
         try {
             $motTest = $this->getMotTestFromApi($motTestNumber);
             $this->getPerformMotTestAssertion()->assertGranted($motTest);
             $testType = $motTest->getTestType();
             $isDemo = MotTestType::isDemo($testType->getCode());
+            $isNonMotTest = MotTestType::isNonMotTypes($testType->getCode());
             $isReinspection = MotTestType::isReinspection($testType->getCode());
             $isTester = $this->getAuthorizationService()->isTester();
             $currentVts = $this->getIdentity()->getCurrentVts();
@@ -97,13 +99,19 @@ class MotTestResultsController extends AbstractAuthActionController
             $breadcrumb = 'Training test';
         } elseif ($isReinspection) {
             $breadcrumb = 'MOT test reinspection';
+        } elseif ($isNonMotTest) {
+            $breadcrumb = 'Non-MOT test';
         } else {
             $breadcrumb = 'MOT test results';
         }
 
         $this->layout('layout/layout-govuk.phtml');
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => [$breadcrumb => '']]);
-        $this->layout()->setVariable('pageTitle', 'MOT test results');
+        if($isNonMotTest){
+            $this->layout()->setVariable('pageTitle', 'Non-MOT test');
+        } else {
+            $this->layout()->setVariable('pageTitle', 'MOT test results');
+        }
 
         $vehicleFirstUsedDate = DateTime::createFromFormat('Y-m-d',
             $motTest->getVehicle()->getFirstUsedDate())->format('j M Y');
@@ -127,6 +135,7 @@ class MotTestResultsController extends AbstractAuthActionController
             'shouldDisableSubmitButton' => $motTestResults->shouldDisableSubmitButton(),
             'identifiedDefects' => $identifiedDefects,
             'isRetest' => $isRetest,
+            'isNonMotTest' => $isNonMotTest,
         ]);
     }
 

@@ -5,6 +5,7 @@ namespace DvsaMotTestTest\Controller;
 use Application\Helper\PrgHelper;
 use Core\Service\MotEventManager;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
+use CoreTest\Controller\AbstractFrontendControllerTestCase;
 use Dvsa\Mot\Frontend\MotTestModule\Service\SurveyService;
 use Dvsa\Mot\Frontend\GoogleAnalyticsModule\ControllerPlugin\DataLayerPlugin;
 use Dvsa\Mot\Frontend\GoogleAnalyticsModule\TagManager\DataLayer;
@@ -30,16 +31,19 @@ use DvsaCommon\UrlBuilder\MotTestUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Controller\MotTestController;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Mvc\Controller\Plugin\Forward;
+use Zend\ServiceManager\ServiceManager;
 use Zend\Session\Container;
+use Zend\View\Helper\ViewModel;
 
 /**
  * Class MotTestControllerTest.
  */
-class MotTestControllerTest extends AbstractDvsaMotTestTestCase
+class MotTestControllerTest extends AbstractFrontendControllerTestCase
 {
     /* @var MotFrontendAuthorisationServiceInterface|MockObj $authServiceMock */
     private $authServiceMock;
@@ -50,8 +54,16 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
     /** @var MotEventManager|MockObj $eventManagerMock*/
     private $motEventManagerMock;
 
+    /**
+     * @var FeatureToggles
+     */
+    private $featureToggles;
+
     protected function setUp()
     {
+        $this->serviceManager = Bootstrap::getServiceManager();
+        $this->serviceManager->setAllowOverride(true);
+
         $this->authServiceMock = XMock::of(MotFrontendAuthorisationServiceInterface::class);
         $this->surveyServiceMock = $this->getMockBuilder(SurveyService::class)
             ->disableOriginalConstructor()
@@ -62,16 +74,22 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
             ->setMethods(['trigger'])
             ->getMock();
 
-        $this->controller = new MotTestController(
-            $this->authServiceMock,
-            $this->motEventManagerMock
+        /** @var FeatureToggles featureToggles */
+        $this->featureToggles = $this->getMockBuilder(FeatureToggles::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->setServiceManager($this->serviceManager);
+        $this->setController(
+            new MotTestController(
+                $this->authServiceMock,
+                $this->motEventManagerMock,
+                $this->featureToggles
+            )
         );
 
         $dataLayerPlugin = new DataLayerPlugin(new DataLayer());
         $this->getController()->getPluginManager()->setService('gtmDataLayer', $dataLayerPlugin);
-
-        $serviceManager = Bootstrap::getServiceManager();
-        $this->controller->setServiceLocator($serviceManager);
 
         parent::setUp();
 
@@ -92,7 +110,7 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
 
         $this->getController()->getPluginManager()->setService('forward', $forwardPlugin);
 
-        $result = $this->getResultForAction('index', ['motTestNumber' => 656402615654]);
+        $this->getResultForAction('index', ['motTestNumber' => 656402615654]);
     }
 
     public function testMotTestIndexCanBeAccessedForAuthenticatedRequest()
@@ -761,59 +779,6 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
         return $motTest;
     }
 
-    private function getTestMotTestData(array $params = [])
-    {
-        $vehicleClass = 4;
-
-        $motTest = $this->jsonFixture('mot-test', __DIR__);
-
-        $result = array_replace_recursive(
-            $motTest['data'], [
-                'motTestNumber'   => 1,
-                'tester'          => new PersonDto(),
-                "testType"        => (new MotTestTypeDto())->setCode(MotTestTypeCode::NORMAL_TEST),
-                "status"          => MotTestStatusName::PASSED,
-                //                "reasons_for_rejection" => [
-                //                    ['rfr-id' => 1], ['rfr-id' => 2]],
-                //                "break_test_results"    => [['break-result-id' => 1]],
-                "odometerReading" => [
-                    'value'      => 1234,
-                    'unit'       => OdometerUnit::KILOMETERS,
-                    'resultType' => OdometerReadingResultType::OK,
-                ],
-                'vehicle'         => [
-                    'id'           => 1,
-                    'registration' => 'ELFA 1111',
-                    'vin'          => '1M2GDM9AXKP042725',
-                    'year'         => 2011,
-                    'modelDetail'  => [
-                        'make'  => [
-                            'name' => 'Volvo',
-                        ],
-                        'model' => [
-                            'name' => 'S80 GTX',
-                        ],
-                    ],
-                    'fuel_type'    => [
-                        'id' => 'X',
-                    ],
-                    //                    'firstUsedDate' => '2001-02-02',
-                    'colour'       => [
-                        'id'   => 'B',
-                        'name' => 'Black',
-                    ],
-                    'vehicleClass' => [
-                        'id'   => $vehicleClass,
-                        'code' => $vehicleClass,
-                    ],
-                ],
-            ],
-            $params
-        );
-
-        return ['data' => $result];
-    }
-
     private function getRestClientMockWithGetMotTest($motTestData)
     {
         $motTestNumber = is_object($motTestData['data'])
@@ -838,26 +803,139 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
     }
 
     /**
-     * @dataProvider testIpExtractionFromHeaderDataProvider
+     * @dataProvider dataProviderForIsNonMotFlagOnTestSummaryResponse
      */
-    public function testCorrectlyObtainFirstIpFromHeader($testHeader, $expectedIp)
-    {
-        $this->setupAuthorizationService(
-            [PermissionInSystem::MOT_TEST_CONFIRM, PermissionAtSite::MOT_TEST_CONFIRM_AT_SITE]
-        );
-
-        $this->request->getHeaders()->addHeaders(
-            ['X-Forwarded-For' => $testHeader]
-        );
+    public function testIsNonMotFlagOnTestSummaryResponse(
+        $expectedNonMotFlag,
+        $mysteryShopperToggleEnabled,
+        $userHasNonMotTestPermission,
+        $testHasNonMotTestType
+    ) {
+        $this->setUpNonMotDependencies($mysteryShopperToggleEnabled, $userHasNonMotTestPermission);
 
         $motTestNr = (int) rand(1, 1000);
         $motTestData = $this->getTestMotTestDataDto($motTestNr);
-        $expectedPostData = ['clientIp' => $expectedIp];
 
-        $restClientMock = $this->getRestClientMockWithGetMotTest(['data' => $motTestData]);
-        $this->mockMethod($restClientMock, 'post', $this->once(), null, ["mot-test/$motTestNr/status", $expectedPostData]);
-        $this->getResultForAction2('post', 'displayTestSummary', ['motTestNumber' => $motTestNr]);
+        if ($testHasNonMotTestType) {
+            $motTestData->setTestType((new MotTestTypeDto())->setCode(MotTestTypeCode::NON_MOT_TEST));
+        }
 
-        $this->assertResponseStatus(self::HTTP_REDIRECT_CODE);
+        $this->getRestClientMockWithGetMotTest(['data' => $motTestData]);
+
+        $response = $this->getResultForAction('displayTestSummary', ['motTestNumber' => $motTestNr]);
+
+        $this->assertEquals($expectedNonMotFlag, $response->isNonMotTest);
+    }
+
+    public function dataProviderForIsNonMotFlagOnTestSummaryResponse()
+    {
+        $isNonMotShouldBeTrue = true;
+        $isNonMotShouldBeFalse = false;
+
+        $mysteryShopperToggleEnabled = true;
+        $mysteryShopperToggleDisabled = false;
+
+        $userHasNonMotTestPermission = true;
+        $userDoesNotHaveNonMotTestPermission = false;
+
+        $testHasNonMotTestType = true;
+        $testDoesNotHaveNonMotTestType = false;
+
+        return [
+            [$isNonMotShouldBeTrue, $mysteryShopperToggleEnabled, $userHasNonMotTestPermission, $testHasNonMotTestType],
+            [$isNonMotShouldBeFalse, $mysteryShopperToggleDisabled, $userHasNonMotTestPermission, $testHasNonMotTestType],
+            [$isNonMotShouldBeFalse, $mysteryShopperToggleEnabled, $userDoesNotHaveNonMotTestPermission, $testHasNonMotTestType],
+            [$isNonMotShouldBeFalse, $mysteryShopperToggleEnabled, $userHasNonMotTestPermission, $testDoesNotHaveNonMotTestType]
+        ];
+    }
+
+    public function testErrorWhenDisplayTestSummarySubmissionForNonMotTestDoesNotContainSite()
+    {
+        $mysteryShopperToggleEnabled = $userHasNonMotTestPermission = true;
+        $this->setUpNonMotDependencies($mysteryShopperToggleEnabled, $userHasNonMotTestPermission);
+
+        $motTestNr = (int) rand(1, 1000);
+        $motTestData = $this->getTestMotTestDataDto($motTestNr);
+
+        $motTestData->setTestType((new MotTestTypeDto())->setCode(MotTestTypeCode::NON_MOT_TEST));
+
+        $this->getRestClientMockWithGetMotTest(['data' => $motTestData]);
+
+        $exceptionMock = XMock::of(RestApplicationException::class);
+
+        $restClientMock = $this->getRestClientMockForServiceManager();
+        $restClientMock->expects($this->once())
+            ->method('post')
+            ->willThrowException(
+                $exceptionMock
+            );
+
+        $exceptionMock->expects($this->any())
+            ->method('containsError')
+            ->willReturn(false);
+
+        $restClientMock->expects($this->once())
+            ->method('get')
+            ->with(MotTestUrlBuilder::motTest($motTestNr))
+            ->willReturn(['data' => $this->getTestMotTestDataDto($motTestNr)]);
+
+        $this->getResultForAction2('post', 'displayTestSummary', ['motTestNumber' => $motTestNr], null, []);
+    }
+
+    public function testNoErrorWhenDisplayTestSummarySubmissionForNonMotTestDoesContainSite()
+    {
+        $motTestNr = (int) rand(1, 1000);
+        $motTestData = $this->getTestMotTestDataDto($motTestNr);
+
+        $motTestData->setTestType((new MotTestTypeDto())->setCode(MotTestTypeCode::NON_MOT_TEST));
+
+        $this->getFlashMessengerMockForNoErrorMessage();
+
+        $this->executeDisplayTestSummarySubmission($motTestData, ['siteidentry' => 'VTS1234']);
+    }
+
+    private function executeDisplayTestSummarySubmission(MotTestDto $motTestData, array $postData)
+    {
+        $mysteryShopperToggleEnabled = $userHasNonMotTestPermission = true;
+        $this->setUpNonMotDependencies($mysteryShopperToggleEnabled, $userHasNonMotTestPermission);
+
+        $this->getRestClientMockWithGetMotTest(['data' => $motTestData]);
+
+        $this->getResultForAction2('post', 'displayTestSummary', ['motTestNumber' => $motTestData->getMotTestNumber()], null, $postData);
+    }
+
+    public function testNoErrorWhenDisplayTestSummarySubmissionForNormalTestDoesNotContainSite()
+    {
+        $mysteryShopperToggleEnabled = $userHasNonMotTestPermission = true;
+        $this->setUpNonMotDependencies($mysteryShopperToggleEnabled, $userHasNonMotTestPermission);
+
+        $motTestNr = (int) rand(1, 1000);
+        $motTestData = $this->getTestMotTestDataDto($motTestNr);
+
+        $this->getRestClientMockWithGetMotTest(['data' => $motTestData]);
+
+        $this->getFlashMessengerMockForNoErrorMessage();
+
+        $this->getResultForAction2('post', 'displayTestSummary', ['motTestNumber' => $motTestNr], null, []);
+    }
+
+    private function setUpNonMotDependencies($mysteryShopperToggleEnabled, $userHasNonMotTestPermission)
+    {
+        $permissions = [
+            PermissionAtSite::MOT_TEST_CONFIRM_AT_SITE,
+            PermissionInSystem::MOT_TEST_CONFIRM
+        ];
+        if ($userHasNonMotTestPermission) {
+            $permissions[] = PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM;
+        }
+        $this->setupAuthorizationService($permissions);
+
+        $this->authServiceMock
+            ->expects($this->any())
+            ->method('isGranted')
+            ->with(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM)
+            ->willReturn($userHasNonMotTestPermission);
+
+        $this->withFeatureToggles([FeatureToggle::MYSTERY_SHOPPER => $mysteryShopperToggleEnabled]);
     }
 }

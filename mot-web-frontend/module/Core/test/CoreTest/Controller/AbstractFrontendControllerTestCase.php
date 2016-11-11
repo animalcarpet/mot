@@ -491,9 +491,25 @@ abstract class AbstractFrontendControllerTestCase extends PHPUnit_Framework_Test
         return $flashMock;
     }
 
+    public function getFlashMessengerMockForNoCalls($method)
+    {
+        $flashMock = \DvsaCommonTest\TestUtils\XMock::of(\Zend\Mvc\Controller\Plugin\FlashMessenger::class);
+        $flashMock->expects($this->never())
+            ->method($method);
+
+        $this->controller->getPluginManager()->setService('flashMessenger', $flashMock, false);
+
+        return $flashMock;
+    }
+
     public function getFlashMessengerMockForAddManyErrorMessage($errorMessage)
     {
         return $this->getFlashMessengerMockForManyCalls('addErrorMessage', $errorMessage);
+    }
+
+    public function getFlashMessengerMockForNoErrorMessage()
+    {
+        return $this->getFlashMessengerMockForNoCalls('addErrorMessage');
     }
 
     public function getFlashMessengerMockForAddSuccessMessage($successMessage)

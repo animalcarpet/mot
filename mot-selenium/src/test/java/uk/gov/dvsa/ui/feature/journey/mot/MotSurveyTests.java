@@ -42,7 +42,7 @@ public class MotSurveyTests extends DslTest {
             description = "Verifies that user can navigate back from survey page to login page")
     public void backwardNavigationFromSurveyPageToLoginPage() throws IOException, URISyntaxException {
         // Given I am on the Test Complete Page as a tester
-        TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle).finishTest();
+        TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle).clickFinishButton(TestCompletePage.class);
 
         // When I click on the sign out link I should be on the Give Feedback Page
         GiveFeedbackPage giveFeedbackPage = testCompletePage.clickSignOutLink();
@@ -59,7 +59,7 @@ public class MotSurveyTests extends DslTest {
             enabled = false)
     public void userRedirectedToThankYouPageOnSubmissionOfEmptySurvey() throws IOException, URISyntaxException {
         // Given I am on the Test Complete Page as a tester
-        TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle).finishTest();
+        TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle).clickFinishButton(TestCompletePage.class);
 
         // When I click on the sign out link I should be on the Give Feedback Page
         GiveFeedbackPage giveFeedbackPage = testCompletePage.clickSignOutLink();
@@ -79,7 +79,7 @@ public class MotSurveyTests extends DslTest {
             enabled = false)
     public void userRedirectedToThankYouPageOnSubmissionOfCompletedSurvey() throws IOException, URISyntaxException {
         // Given I am on the Test Complete Page as a tester
-        TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle).finishTest();
+        TestCompletePage testCompletePage = motUI.normalTest.conductTestPass(tester, vehicle).clickFinishButton(TestCompletePage.class);
 
         // When I click on the sign out link I should be on the Give Feedback Page
         GiveFeedbackPage giveFeedbackPage = testCompletePage.clickSignOutLink();
@@ -108,8 +108,7 @@ public class MotSurveyTests extends DslTest {
     }
 
     @Test(groups = {"Regression", "BL-1531"},
-            description = "Verifies that an invalid user cannot navigate to the Survey Reports page",
-            dependsOnMethods = {"backwardNavigationFromSurveyReportsPageToHomePage"})
+            description = "Verifies that an invalid user cannot navigate to the Survey Reports page")
     public void testNonValidUserCannotNavigateToSurveyReportsPage() throws IOException, URISyntaxException {
         // Given I am on the home page as an invalid user
         HomePage homePage = pageNavigator.gotoHomePage(areaOffice1User);

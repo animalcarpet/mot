@@ -97,6 +97,10 @@ class MotTestValidator extends AbstractValidator
             return true;
         }
 
+        if($motTest->getMotTestType()->isNonMotTest()){
+            return true;
+        }
+
         if ($motTest->getMotTestType()->getIsReinspection()) {
             $this->authorizationService->assertGranted(PermissionInSystem::VE_MOT_TEST_ABORT);
         }
@@ -231,7 +235,7 @@ class MotTestValidator extends AbstractValidator
     private function checkRequiredVehicleTestingStation($motTest)
     {
         if ($this->isNull($motTest->getVehicleTestingStation())
-            && !$motTest->getMotTestType()->getIsDemo()
+            && !($motTest->getMotTestType()->getIsDemo() || $motTest->getMotTestType()->isNonMotTest())
         ) {
             $this->errors->add(self::ERROR_MSG_REQUIRED_VTS, 'vehicleTestingStationId');
         }

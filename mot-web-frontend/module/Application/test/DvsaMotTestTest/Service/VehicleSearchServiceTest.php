@@ -12,6 +12,11 @@ use DvsaMotTest\Controller\VehicleSearchController;
 use DvsaMotTest\Model\VehicleSearchResult;
 use DvsaMotTest\Service\VehicleSearchService;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
+use DvsaMotTest\View\VehicleSearchResult\CertificateUrlTemplate;
+use DvsaMotTest\View\VehicleSearchResult\MotTestUrlTemplate;
+use DvsaMotTest\View\VehicleSearchResult\NonMotTestUrlTemplate;
+use DvsaMotTest\View\VehicleSearchResult\TrainingTestUrlTemplate;
+use Zend\Mvc\Controller\Plugin\Url;
 
 /**
  * Class VehicleSearchService
@@ -156,6 +161,28 @@ class VehicleSearchServiceTest extends \PHPUnit_Framework_TestCase
         $result = $this->service->getSearchType();
 
         $this->assertEquals(VehicleSearchService::SEARCH_TYPE_CERTIFICATE, $result);
+    }
+
+    public function urlTemplateMappingDataProvider()
+    {
+        return [
+            [VehicleSearchService::SEARCH_TYPE_CERTIFICATE, CertificateUrlTemplate::class],
+            [VehicleSearchService::SEARCH_TYPE_TRAINING, TrainingTestUrlTemplate::class],
+            [VehicleSearchService::SEARCH_TYPE_STANDARD, MotTestUrlTemplate::class],
+            [VehicleSearchService::SEARCH_TYPE_NON_MOT, NonMotTestUrlTemplate::class]
+        ];
+    }
+
+    /**
+     * @dataProvider urlTemplateMappingDataProvider
+     */
+    public function testUrlTemplateMapping($searchType, $urlTemplateClass)
+    {
+        $this->service->setSearchType($searchType);
+
+        $urlTemplate = $this->service->getUrlTemplate('', 1, XMock::of(Url::class));
+
+        $this->assertInstanceOf($urlTemplateClass, $urlTemplate);
     }
 
     private function setAuthorisationServiceResponse($method = 'isTester', $result)
