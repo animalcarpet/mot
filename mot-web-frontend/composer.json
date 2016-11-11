@@ -67,7 +67,8 @@
     "scripts": {
         "post-install-cmd": [
             "cd .. && ln -fs mot-web-frontend/vendor/dvsa/scripts/jenkins Jenkins_Scripts",
-            "mkdir -p public/assets && cp -R vendor/dvsa/web-frontend-assets/dist/* public/assets/"
+            "mkdir -p public/assets && cp -R vendor/dvsa/web-frontend-assets/dist/* public/assets/",
+            "cp ./public/assets/javascripts/dvsa.js ./public/assets/javascripts/dvsa-2100.js"
         ],
         "test": "./vendor/bin/phpunit",
         "test-coverage": "./vendor/bin/phpunit --coverage-clover build/code-coverage/clover/clover.xml --coverage-html build/code-coverage/html/"
