@@ -225,6 +225,21 @@ class TesterService extends AbstractService
     }
 
     /**
+     * @param int $personId
+     * 
+     * @return null|string
+     * @throws UnauthorisedException
+     */
+    public function findInProgressNonMotTestNumberForVehicleExaminer($personId)
+    {
+        if (!$this->authService->isGranted(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM)) {
+            throw new UnauthorisedException("Assertion failed. Cannot read in progress non-MOT test.");
+        }
+
+        return $this->motTestRepository->findInProgressNonMotTestNumberForPerson($personId);
+    }
+
+    /**
      * Returns a collection of VehicleTestingStations where a tester has a role of 'TESTER'.
      *
      * @param int $testerId

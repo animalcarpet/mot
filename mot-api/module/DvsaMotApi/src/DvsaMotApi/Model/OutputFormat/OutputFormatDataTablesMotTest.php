@@ -56,8 +56,8 @@ class OutputFormatDataTablesMotTest extends OutputFormat
                 'make'                  => $item->getMakeName(),
                 'model'                 => $item->getModelName(),
                 'testType'              => $item->getMotTestType()->getDescription(),
-                'siteId'                => ($isDemoTest ? null : $item->getVehicleTestingStation()->getId()),
-                'siteNumber'            => ($isDemoTest ? null : $item->getVehicleTestingStation()->getSiteNumber()),
+                'siteId'                => $this->getSiteId($item, $isDemoTest),
+                'siteNumber'            => $this->getSiteNumber($item, $isDemoTest),
                 'startedDate'           => $item->getStartedDate() !== null ?
                     DateTimeApiFormat::dateTime($item->getStartedDate()) :
                     null,
@@ -127,5 +127,33 @@ class OutputFormatDataTablesMotTest extends OutputFormat
         }
 
         return $result;
+    }
+
+    /**
+     * @param MotTest $item
+     * @param boolean $isDemoTest
+     * @return int|null
+     */
+    private function getSiteId(MotTest $item, $isDemoTest)
+    {
+        if($isDemoTest || !is_object($item->getVehicleTestingStation())){
+            return null;
+        }
+
+        return $item->getVehicleTestingStation()->getId();
+    }
+
+    /**
+     * @param MotTest $item
+     * @param boolean $isDemoTest
+     * @return null|string
+     */
+    private function getSiteNumber(MotTest $item, $isDemoTest)
+    {
+        if($isDemoTest || !is_object($item->getVehicleTestingStation())){
+            return null;
+        }
+
+        return $item->getVehicleTestingStation()->getSiteNumber();
     }
 }

@@ -19,6 +19,8 @@ use Zend\View\Model\ViewModel;
  */
 class MotPrintModel extends ViewModel
 {
+    const DUPLICATE_DOCUMENT_AVAILABLE = 'Duplicate document available';
+
     public function __construct($variables = null, $options = null)
     {
         $code = $prsMotTestNumber = null;
@@ -68,9 +70,11 @@ class MotPrintModel extends ViewModel
             }
         }
 
-        //  --  title and header    --
+        // Title and header
         if ($isDuplicate) {
-            $title = 'Duplicate document available';
+            $title = self::DUPLICATE_DOCUMENT_AVAILABLE;
+        } else if ($code === MotTestTypeCode::NON_MOT_TEST) {
+            $title = AbstractDvsaMotTestController::getTestName($code) . ' finished successfully';
         } else {
             $title = AbstractDvsaMotTestController::getTestName($code) . ' complete';
         }

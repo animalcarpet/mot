@@ -51,6 +51,15 @@ use DvsaCommon\Auth\PermissionAtSite;
             ); ?>
         <?php endif; ?>
 
+        <?php if ($this->canPerformNonMotTest) { ?>
+            <?php echo $this->partial('dashboard/nonMotTestBox',
+                [
+                    'hasInProgressNonMotTest' => $dashboard->hasNonMotTestInProgress(),
+                    'inProgressNonMotTestNumber' => $dashboard->getInProgressNonMotTestNumber()
+                ]
+            ); ?>
+        <?php } ?>
+
         <?php if ($this->authorisationHelper()->isGranted(PermissionInSystem::DISPLAY_TESTER_CONTINGENCY_BOX)) : ?>
             <?php echo $this->partial('dashboard/testerContingencyBox'); ?>
         <?php endif; ?>

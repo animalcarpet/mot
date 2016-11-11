@@ -33,12 +33,26 @@ class CreateMotTestRequestValidator
             case MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING:
                 self::validateDemo($data);
                 break;
+            case MotTestTypeCode::NON_MOT_TEST:
+                self::validateNonMotTest($data);
+                break;
             default:
                 self::validateTest($data);
         }
     }
 
     public static function validateDemo(array $data)
+    {
+        $requiredKeys = [
+            self::FIELD_VEHICLE_ID,
+            self::FIELD_COLOURS_PRIMARY,
+            self::FIELD_HAS_REGISTRATION
+        ];
+
+        self::checkRequiredKeys($data, $requiredKeys);
+    }
+
+    public static function validateNonMotTest(array $data)
     {
         $requiredKeys = [
             self::FIELD_VEHICLE_ID,

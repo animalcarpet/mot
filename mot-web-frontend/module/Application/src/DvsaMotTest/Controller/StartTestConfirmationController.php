@@ -12,6 +12,7 @@ use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use DvsaCommon\Auth\Assertion\RefuseToTestAssertion;
 use DvsaCommon\Auth\PermissionInSystem;
 use Core\Service\RemoteAddress;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Dto\Common\ColourDto;
@@ -102,6 +103,14 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         return $this->commonAction(MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING);
     }
 
+    public function nonMotTestAction()
+    {
+        $this->assertFeatureEnabled(FeatureToggle::MYSTERY_SHOPPER);
+        $this->assertGranted(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM);
+
+        return $this->commonAction(MotTestTypeCode::NON_MOT_TEST);
+    }
+
     /**
      * @param string $method MOT_TEST_TYPE
      *
@@ -143,6 +152,14 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         $this->noRegistration = ($noRegistrationString === '1');
 
         $this->vehicleSource = $this->params()->fromRoute(self::ROUTE_PARAM_SOURCE);
+
+        if($this->isFeatureEnabled(FeatureToggle::MYSTERY_SHOPPER) &&
+            $this->method === MotTestTypeCode::NON_MOT_TEST)
+        {
+            $this->vtsId = null;
+
+            return;
+        }
 
         if ($this->method === MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING) {
             $this->vtsId = null;
@@ -213,6 +230,8 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
             $apiUrl = MotTestUrlBuilder::retest();
         } elseif ($this->method === MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING) {
             $apiUrl = MotTestUrlBuilder::demoTest();
+        } elseif($this->isNotMotTest()){
+            $apiUrl = MotTestUrlBuilder::nonMotTest();
         } else {
             $apiUrl = MotTestUrlBuilder::motTest();
         }
@@ -455,6 +474,7 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
                 MotTestTypeCode::NORMAL_TEST,
                 MotTestTypeCode::RE_TEST,
                 MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING,
+                MotTestTypeCode::NON_MOT_TEST,
             ],
             true
         )
@@ -464,6 +484,8 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
 
         if ($this->method == MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING) {
             $this->layout()->setVariable('pageSubTitle', 'Training test');
+        } elseif($this->method == MotTestTypeCode::NON_MOT_TEST) {
+            $this->layout()->setVariable('pageSubTitle', 'Non-MOT test');
         } else {
             $this->layout()->setVariable('pageSubTitle', 'MOT testing');
         }
@@ -649,5 +671,14 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
     private function getVehicleServiceClient()
     {
         return $this->getServiceLocator()->get(VehicleService::class);
+    }
+
+    private function isNotMotTest()
+    {
+        if (!isset($this->method)) {
+            throw new \LogicException("Method should be set first");
+        }
+
+        return $this->method === MotTestTypeCode::NON_MOT_TEST;
     }
 }

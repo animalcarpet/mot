@@ -26,7 +26,10 @@ class EditDefectController extends AbstractDvsaMotTestController
     const CONTENT_HEADER_TYPE__TRAINING_TEST = 'Training test';
     const CONTENT_HEADER_TYPE__MOT_TEST_REINSPECTION = 'MOT test reinspection';
     const CONTENT_HEADER_TYPE__MOT_TEST_RESULTS = 'MOT test results';
+    const CONTENT_HEADER_TYPE__NON_MOT_TEST_RESULTS = 'Non-MOT test';
+    const CONTENT_HEADER_TYPE__SEARCH_RESULTS = 'Search for a defect';
     const CONTENT_HEADER_TYPE__ADD_DEFECT = "Add a defect";
+    const CONTENT_HEADER_TYPE__EDIT_DEFECT = "Edit a defect";
 
     const DEFECT_TYPE_ADVISORY = 'advisory';
     const DEFECT_TYPE_PRS = 'prs';
@@ -74,6 +77,7 @@ class EditDefectController extends AbstractDvsaMotTestController
 
         $isReinspection = null;
         $isDemoTest = null;
+        $isNonMotTest = false;
         /** @var MotTestDto $motTest */
         $motTest = null;
         $title = '';
@@ -126,6 +130,7 @@ class EditDefectController extends AbstractDvsaMotTestController
             $testType = $motTest->getTestType();
             $isDemoTest = MotTestType::isDemo($testType->getCode());
             $isReinspection = MotTestType::isReinspection($testType->getCode());
+            $isNonMotTest = MotTestType::isNonMotTypes($testType->getCode());
         } catch (RestApplicationException $e) {
             $errorMessages = $e->getErrors()[0];
         } catch (RestServiceUnexpectedContentTypeException $e) {
@@ -136,7 +141,7 @@ class EditDefectController extends AbstractDvsaMotTestController
             ));
         }
 
-        $breadcrumbs = $this->getBreadcrumbs($isDemoTest, $isReinspection, $title);
+        $breadcrumbs = $this->getBreadcrumbs($isDemoTest, $isReinspection, $isNonMotTest, $title);
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
 
         return $this->createViewModel('defects/edit-defect.twig', [
@@ -193,11 +198,12 @@ class EditDefectController extends AbstractDvsaMotTestController
      *
      * @param bool   $isDemo
      * @param bool   $isReinspection
+     * @param bool   $isNonMotTest
      * @param string $title
      *
      * @return array
      */
-    private function getBreadcrumbs($isDemo, $isReinspection, $title)
+    private function getBreadcrumbs($isDemo, $isReinspection, $isNonMotTest, $title)
     {
         $breadcrumbs = [];
 
@@ -208,6 +214,8 @@ class EditDefectController extends AbstractDvsaMotTestController
             $breadcrumbs += [self::CONTENT_HEADER_TYPE__TRAINING_TEST => $motTestResultsUrl];
         } elseif ($isReinspection) {
             $breadcrumbs += [self::CONTENT_HEADER_TYPE__MOT_TEST_REINSPECTION => $motTestResultsUrl];
+        } elseif ($isNonMotTest) {
+            $breadcrumbs += [self::CONTENT_HEADER_TYPE__NON_MOT_TEST_RESULTS => $motTestResultsUrl];
         } else {
             $breadcrumbs += [self::CONTENT_HEADER_TYPE__MOT_TEST_RESULTS => $motTestResultsUrl];
         }
@@ -216,16 +224,22 @@ class EditDefectController extends AbstractDvsaMotTestController
 
         /* Get breadcrumbs for the MOT Test Results page context
            (Get correct breadcrumbs if on the MOT Test Results page) */
-        if (DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT === $defectsJourneyContext) {
-            $breadcrumbs += [$title => ''];
+        if (DefectsJourneyContextProvider::SEARCH_CONTEXT === $defectsJourneyContext) {
+            $breadcrumbs += [
+                self::CONTENT_HEADER_TYPE__SEARCH_RESULTS => $this->defectsJourneyUrlGenerator->goBack(),
+            ];
+        }
+        elseif (DefectsJourneyContextProvider::MOT_TEST_RESULTS_ENTRY_CONTEXT === $defectsJourneyContext) {
+            // add nothing for main result page
         }
         // Get breadcrumbs for any other context in the Defect Journey (e.g. browse, browse-root).
         else {
             $breadcrumbs += [
                 self::CONTENT_HEADER_TYPE__ADD_DEFECT => $this->defectsJourneyUrlGenerator->goBack(),
             ];
-            $breadcrumbs += [$title => ''];
         }
+
+        $breadcrumbs += [$title => ''];
 
         return $breadcrumbs;
     }

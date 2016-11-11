@@ -2,15 +2,11 @@ package uk.gov.dvsa.ui.pages.vehicleinformation;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.enforcement.MaskThisVehiclePage;
 import uk.gov.dvsa.ui.pages.enforcement.UnmaskThisVehiclePage;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 
 public class VehicleInformationPage extends Page {
 
@@ -39,6 +35,7 @@ public class VehicleInformationPage extends Page {
     @FindBy(id = "mask-vehicle") private WebElement maskThisVehicleButton;
     @FindBy(id = "unmask-vehicle") private WebElement unmaskThisVehicleButton;
     @FindBy(className = "entity-status") private WebElement vehicleStatusBanner;
+    @FindBy(linkText = "View MOT history") private WebElement viewMotHistoryLink;
 
     public VehicleInformationPage(MotAppDriver driver) {
         super(driver);
@@ -48,6 +45,51 @@ public class VehicleInformationPage extends Page {
     @Override
     public boolean selfVerify() {
         return PageInteractionHelper.verifyTitle(pageHeaderType.getText(), PAGE_TYPE);
+    }
+
+    public ChangeEnginePage clickChangeEngineLink() {
+        changeEngineLink.click();
+        return new ChangeEnginePage(driver);
+    }
+
+    public ChangeMotTestClassPage clickChangeMotTestClassLink() {
+        changeMotTestClassLink.click();
+        return new ChangeMotTestClassPage(driver);
+    }
+
+    public ChangeCountryOfRegistrationPage clickChangeCountryOfRegistrationLink() {
+        changeCountryOfRegistrationLink.click();
+        return new ChangeCountryOfRegistrationPage(driver);
+    }
+
+    public ChangeMakePage clickChangeMakeAndModelLink() {
+        changeMakeAndModelLink.click();
+        return new ChangeMakePage(driver);
+    }
+
+    public MaskThisVehiclePage clickMaskThisVehicleButton() {
+        maskThisVehicleButton.click();
+        return new MaskThisVehiclePage(driver);
+    }
+
+    public UnmaskThisVehiclePage clickUnmaskThisVehicleButton() {
+        unmaskThisVehicleButton.click();
+        return new UnmaskThisVehiclePage(driver);
+    }
+
+    public ChangeColourPage clickChangeColourLink() {
+        changeColourLink.click();
+        return new ChangeColourPage(driver);
+    }
+
+    public ChangeFirstDateUsedPage clickChangeFirstDateUsedLink() {
+        changeFirstDateUsedLink.click();
+        return new ChangeFirstDateUsedPage(driver);
+    }
+
+    public VehicleMotTestHistoryPage clickViewMotHistoryLink() {
+        viewMotHistoryLink.click();
+        return new VehicleMotTestHistoryPage(driver);
     }
 
     public String getColour() {
@@ -98,47 +140,7 @@ public class VehicleInformationPage extends Page {
         return countryOfRegistration.getText();
     }
 
-    public ChangeEnginePage clickChangeEngineLink() {
-        changeEngineLink.click();
-        return new ChangeEnginePage(driver);
-    }
-
-    public ChangeMotTestClassPage clickChangeMotTestClassLink() {
-        changeMotTestClassLink.click();
-        return new ChangeMotTestClassPage(driver);
-    }
-
-    public ChangeCountryOfRegistrationPage clickChangeCountryOfRegistrationLink() {
-        changeCountryOfRegistrationLink.click();
-        return new ChangeCountryOfRegistrationPage(driver);
-    }
-
-    public ChangeMakePage clickChangeMakeAndModelLink() {
-        changeMakeAndModelLink.click();
-        return new ChangeMakePage(driver);
-    }
-
-    public MaskThisVehiclePage clickMaskThisVehicleButton() {
-        maskThisVehicleButton.click();
-        return new MaskThisVehiclePage(driver);
-    }
-
-    public UnmaskThisVehiclePage clickUnmaskThisVehicleButton() {
-        unmaskThisVehicleButton.click();
-        return new UnmaskThisVehiclePage(driver);
-    }
-
     public boolean isVehicleStatusBannerDisplayed() {
         return PageInteractionHelper.isElementDisplayed(vehicleStatusBanner);
-    }
-
-    public ChangeColourPage clickChangeColourLink() {
-        changeColourLink.click();
-        return new ChangeColourPage(driver);
-    }
-
-    public ChangeFirstDateUsedPage clickChangeFirstDateUsedLink() {
-        changeFirstDateUsedLink.click();
-        return new ChangeFirstDateUsedPage(driver);
     }
 }

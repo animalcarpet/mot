@@ -5,6 +5,7 @@ namespace DvsaMotTest\Controller;
 use Application\Service\CatalogService;
 use Application\Service\ContingencySessionManager;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaMotTest\Service\OverdueSpecialNoticeAssertion;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -26,7 +27,6 @@ use DvsaMotTest\View\VehicleSearchResult\VehicleSearchResultMessage;
 use DvsaMotTest\View\VehicleSearchResult\VehicleSearchResultUrlTemplateInterface;
 use Zend\Escaper\Escaper;
 use Zend\Form\Element\Hidden;
-use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\I18n\Filter\Alnum;
 use Zend\View\Model\ViewModel;
@@ -67,6 +67,7 @@ class VehicleSearchController extends AbstractDvsaMotTestController
     const ROUTE_VEHICLE_SEARCH = 'vehicle-search';
     const ROUTE_VEHICLE_SEARCH_RETEST = 'retest-vehicle-search';
     const ROUTE_VEHICLE_SEARCH_TRAINING = 'training-test-vehicle-search';
+    const ROUTE_VEHICLE_SEARCH_NON_MOT = 'non-mot-test-vehicle-search';
 
     const PRM_SUBMIT = 'submit';
     const PRM_VIN = 'vin';
@@ -164,6 +165,20 @@ class VehicleSearchController extends AbstractDvsaMotTestController
         $this->getAuthorizationService()->assertGranted(PermissionInSystem::MOT_DEMO_TEST_PERFORM);
 
         return $this->vehicleSearch(VehicleSearchService::SEARCH_TYPE_TRAINING);
+    }
+
+    /**
+     * @return \Zend\View\Model\ViewModel|array
+     */
+    public function nonMotVehicleSearchAction()
+    {
+        if (!$this->isFeatureEnabled(FeatureToggle::MYSTERY_SHOPPER)) {
+            return $this->notFoundAction();
+        }
+
+        $this->getAuthorizationService()->assertGranted(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM);
+
+        return $this->vehicleSearch(VehicleSearchService::SEARCH_TYPE_NON_MOT);
     }
 
     /**
@@ -601,6 +616,10 @@ class VehicleSearchController extends AbstractDvsaMotTestController
 
         if ($this->vehicleSearchService->isReplacementCertifificateSearchType()) {
             $this->layout()->setVariable('pageSubTitle', 'Duplicate or replacement certificate');
+        }
+
+        if($this->isFeatureEnabled(FeatureToggle::MYSTERY_SHOPPER) && $this->vehicleSearchService->isNonMotSearchType()) {
+            $this->layout()->setVariable('pageSubTitle', 'Non-MOT test');
         }
     }
 

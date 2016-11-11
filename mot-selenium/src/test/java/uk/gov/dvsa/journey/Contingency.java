@@ -2,9 +2,9 @@ package uk.gov.dvsa.journey;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.OdometerUnit;
-import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.helper.ConfigHelper;
 import uk.gov.dvsa.ui.pages.VehicleSearchPage;
@@ -69,8 +69,8 @@ public class Contingency {
             declarationStatement = true;
         }
 
-        TestCompletePage testCompletePage = testSummaryPage.finishTest();
-        successful = testCompletePage.verifyBackToHomeLinkDisplayed();
+        TestCompletePage testCompletePage = testSummaryPage.clickFinishButton(TestCompletePage.class);
+        successful = testCompletePage.isReturnToHomepageLinkDisplayed();
     }
 
     public void recordReTest(String code, DateTime datetime, Vehicle vehicle) throws IOException, URISyntaxException {

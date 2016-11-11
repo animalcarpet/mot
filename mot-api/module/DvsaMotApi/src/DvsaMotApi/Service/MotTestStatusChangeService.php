@@ -107,6 +107,14 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         MotTestStatusName::FAILED,
         MotTestStatusName::PASSED,
     ];
+    /**
+     * @var array
+     */
+    private static $MOT_TEST_ABORTED_STATUSES = [
+        MotTestStatusName::ABORTED,
+        MotTestStatusName::ABORTED_VE,
+        MotTestStatusName::ABANDONED,
+    ];
 
     /**
      * @var array
@@ -315,6 +323,11 @@ class MotTestStatusChangeService implements TransactionAwareInterface
 
         $this->motTestStatusChangeValidator->verifyThatStatusTransitionIsPossible($motTest, $newStatus);
 
+        // Checking for Site ID is mandatory only for Non-MOT inspection.
+        if ($motTest->getMotTestType()->getCode() == MotTestTypeCode::NON_MOT_TEST && !in_array($newStatus, self::$MOT_TEST_ABORTED_STATUSES)){
+            $this->motTestStatusChangeValidator->checkSiteIdHasBeenEntered($motTest);
+        }
+
         $this->inTransaction(
             function () use ($motTest, &$data, $newStatus) {
                 $this->statusAction($motTest, $data, $newStatus);
@@ -352,6 +365,10 @@ class MotTestStatusChangeService implements TransactionAwareInterface
 
     private function assertCanAbandonVehicle(MotTest $motTest)
     {
+        if ($motTest->getMotTestType()->isNonMotTest()) {
+            return;
+        }
+
         $abandonTestAssertion = new AbandonVehicleTestAssertion(
             $this->motIdentityProvider->getIdentity(),
             $this->authService
@@ -565,7 +582,7 @@ class MotTestStatusChangeService implements TransactionAwareInterface
      */
     private function notifyAboutTestingOutsideHoursIfApplicable(MotTest $motTest)
     {
-        if ($motTest->getMotTestType()->getIsDemo()) {
+        if ($motTest->getMotTestType()->getIsDemo() || $motTest->getMotTestType()->isNonMotTest()) {
             return;
         }
 
@@ -669,7 +686,7 @@ class MotTestStatusChangeService implements TransactionAwareInterface
      */
     private function returnSlotIfApplicable(MotTest $motTest, $newStatus)
     {
-        if ($motTest->getMotTestType()->getIsDemo()) {
+        if ($motTest->getMotTestType()->getIsDemo() || $motTest->getMotTestType()->isNonMotTest()) {
             return null;
         }
 
@@ -752,10 +769,12 @@ class MotTestStatusChangeService implements TransactionAwareInterface
             $this->authService->assertGranted(PermissionInSystem::MOT_TEST_CONFIRM);
             $this->assertUserOwnsTheMotTest($motTest);
 
-            $this->authService->assertGrantedAtSite(
-                PermissionAtSite::MOT_TEST_CONFIRM_AT_SITE,
-                $motTest->getVehicleTestingStation()->getId()
-            );
+            if (!$motTest->getMotTestType()->isNonMotTest()) {
+                $this->authService->assertGrantedAtSite(
+                    PermissionAtSite::MOT_TEST_CONFIRM_AT_SITE,
+                    $motTest->getVehicleTestingStation()->getId()
+                );
+            }
         }
     }
 

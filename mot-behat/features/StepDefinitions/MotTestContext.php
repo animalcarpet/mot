@@ -8,6 +8,7 @@ use Dvsa\Mot\Behat\Support\Api\BrakeTestResult;
 use Dvsa\Mot\Behat\Support\Api\ContingencyTest;
 use Dvsa\Mot\Behat\Support\Api\DemoTest;
 use Dvsa\Mot\Behat\Support\Api\MotTest;
+use Dvsa\Mot\Behat\Support\Api\NonMotTest;
 use Dvsa\Mot\Behat\Support\Api\OdometerReading;
 use Dvsa\Mot\Behat\Support\Api\ReasonForRejection;
 use Dvsa\Mot\Behat\Support\Api\Session;
@@ -80,6 +81,11 @@ class MotTestContext implements Context, SnippetAcceptingContext
      * @var DemoTest
      */
     private $demoTest;
+
+    /**
+     * @var NonMotTest
+     */
+    private $nonMotTest;
 
     /**
      * @var OdometerReading
@@ -200,6 +206,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
         MotTest $motTest,
         DemoTest $demoTest,
         ContingencyTest $contingencyTest,
+        NonMotTest $nonMotTest,
         OdometerReading $odometerReading,
         ReasonForRejection $reasonForRejection,
         Session $session,
@@ -219,6 +226,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
         $this->motTest = $motTest;
         $this->demoTest = $demoTest;
         $this->contingencyTest = $contingencyTest;
+        $this->nonMotTest = $nonMotTest;
         $this->odometerReading = $odometerReading;
         $this->reasonForRejection = $reasonForRejection;
         $this->session = $session;
@@ -323,6 +331,19 @@ class MotTestContext implements Context, SnippetAcceptingContext
             $vehicle,
             null,
             MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING
+        );
+    }
+
+    /**
+     * @When I start a non-MOT Test
+     */
+    public function iStartNonMotTest()
+    {
+        $vehicleId = $this->vehicleContext->createVehicle();
+
+        $this->motTestData = $this->nonMotTest->startMotTest(
+            $this->sessionContext->getCurrentAccessToken(),
+            $vehicleId
         );
     }
 

@@ -56,9 +56,17 @@ class MotTestOptionsPresenter
     /**
      * @return bool
      */
+    public function isNonMotTest()
+    {
+        return $this->motTestOptions->getMotTestTypeDto()->getCode() === MotTestTypeCode::NON_MOT_TEST;
+    }
+
+    /**
+     * @return bool
+     */
     public function isMotTest()
     {
-        return !$this->isMotTestRetest();
+        return !$this->isMotTestRetest() && !$this->isNonMotTest();
     }
 
     /**
@@ -77,5 +85,53 @@ class MotTestOptionsPresenter
     {
         $this->motTestNumber = $motTestNumber;
         return $this;
+    }
+
+    public function getReadableMotTestType()
+    {
+        switch ($this->motTestOptions->getMotTestTypeDto()->getCode()) {
+            case MotTestTypeCode::RE_TEST:
+                $type = 'MOT retest';
+                break;
+            case MotTestTypeCode::NON_MOT_TEST:
+                $type = 'Non-MOT test';
+                break;
+            default:
+                $type = 'MOT test';
+        }
+
+        return $type;
+    }
+
+    public function getReadableMotTestTypeWithIndefiniteArticle()
+    {
+        switch ($this->motTestOptions->getMotTestTypeDto()->getCode()) {
+            case MotTestTypeCode::RE_TEST:
+                $type = 'an MOT retest';
+                break;
+            case MotTestTypeCode::NON_MOT_TEST:
+                $type = 'an Non-MOT test';
+                break;
+            default:
+                $type = 'an MOT test';
+        }
+
+        return $type;
+    }
+
+    public function getPageSubTitle()
+    {
+        switch ($this->motTestOptions->getMotTestTypeDto()->getCode()) {
+            case MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING:
+                $type = 'Training test';
+                break;
+            case MotTestTypeCode::NON_MOT_TEST:
+                $type = 'Non-MOT test';
+                break;
+            default:
+                $type = 'MOT testing';
+        }
+
+        return $type;
     }
 }

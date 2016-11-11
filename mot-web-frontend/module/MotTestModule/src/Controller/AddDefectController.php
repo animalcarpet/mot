@@ -26,6 +26,7 @@ class AddDefectController extends AbstractDvsaMotTestController
     const CONTENT_HEADER_TYPE__TRAINING_TEST = 'Training test';
     const CONTENT_HEADER_TYPE__MOT_TEST_REINSPECTION = 'MOT test reinspection';
     const CONTENT_HEADER_TYPE__MOT_TEST_RESULTS = 'MOT test results';
+    const CONTENT_HEADER_TYPE__NON_MOT_TEST_RESULTS = 'Non-MOT test';
 
     const DEFECT_TYPE_ADVISORY = 'advisory';
     const DEFECT_TYPE_PRS = 'prs';
@@ -73,6 +74,7 @@ class AddDefectController extends AbstractDvsaMotTestController
 
         $isReinspection = null;
         $isDemoTest = null;
+        $isNonMotTest = false;
         /** @var MotTestDto $motTest */
         $motTest = null;
         $defects = null;
@@ -103,6 +105,7 @@ class AddDefectController extends AbstractDvsaMotTestController
             $testType = $motTest->getTestType();
             $isDemoTest = MotTestType::isDemo($testType->getCode());
             $isReinspection = MotTestType::isReinspection($testType->getCode());
+            $isNonMotTest = MotTestType::isNonMotTypes($testType->getCode());
             $request = $this->getRequest();
 
             if ($request->isPost()) {
@@ -138,7 +141,7 @@ class AddDefectController extends AbstractDvsaMotTestController
             $errorMessages = $e->getErrors()[0];
         }
 
-        $breadcrumbs = $this->getBreadcrumbs($isDemoTest, $isReinspection, $title);
+        $breadcrumbs = $this->getBreadcrumbs($isDemoTest, $isReinspection, $isNonMotTest,  $title);
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
 
         $backUrl = $this->defectsJourneyUrlGenerator->goBack();
@@ -158,11 +161,12 @@ class AddDefectController extends AbstractDvsaMotTestController
     /**
      * @param bool   $isDemo
      * @param bool   $isReinspection
+     * @param bool   $isNonMotTest
      * @param string $title
      *
      * @return array
      */
-    private function getBreadcrumbs($isDemo, $isReinspection, $title)
+    private function getBreadcrumbs($isDemo, $isReinspection, $isNonMotTest, $title)
     {
         $motTestNumber = $this->params()->fromRoute('motTestNumber');
         $motTestResultsUrl = $this->url()->fromRoute('mot-test', ['motTestNumber' => $motTestNumber]);
@@ -179,6 +183,10 @@ class AddDefectController extends AbstractDvsaMotTestController
                 // Reinspection
                 $breadcrumbs += [
                     self::CONTENT_HEADER_TYPE__MOT_TEST_REINSPECTION => $motTestResultsUrl,
+                ];
+            } elseif ($isNonMotTest) {
+                $breadcrumbs += [
+                    self::CONTENT_HEADER_TYPE__NON_MOT_TEST_RESULTS => $motTestResultsUrl,
                 ];
             } else {
                 // Normal test

@@ -60,6 +60,17 @@ class StartTestConfirmationViewModelTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testStartNonMotTestActionReturnsStartNonMotTestConfirmationActionUrl()
+    {
+        $viewModel = $this->getViewModel();
+        $viewModel->setMethod(MotTestTypeCode::NON_MOT_TEST);
+
+        $this->assertEquals(
+            '/start-non-mot-test-confirmation/' . self::DUMMY_OBFUSCATED_VEHICLE_ID . '/' . self::DUMMY_NO_REGISTRATION,
+            $viewModel->getConfirmActionUrl()
+        );
+    }
+
     public function testCanRefuseToTestOnNormalTest()
     {
         $viewModel = $this->getViewModel();

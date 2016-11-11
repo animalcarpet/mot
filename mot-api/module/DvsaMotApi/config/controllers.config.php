@@ -11,6 +11,7 @@ use DvsaMotApi\Controller\MotTestReasonForRejectionController;
 use DvsaMotApi\Controller\MotTestSearchController;
 use DvsaMotApi\Controller\MotTestShortSummaryController;
 use DvsaMotApi\Controller\MotTestStatusController;
+use DvsaMotApi\Controller\NonMotInspectionController;
 use DvsaMotApi\Controller\ReasonForRejectionController;
 use DvsaMotApi\Controller\ReplacementCertificateDraftController;
 use DvsaMotApi\Controller\RetestController;
@@ -23,6 +24,7 @@ use DvsaMotApi\Factory\Controller\ContingencyTestControllerFactory;
 use DvsaMotApi\Factory\Controller\DemoTestAssessmentControllerFactory;
 use DvsaMotApi\Factory\Controller\MotTestReasonForRejectionControllerFactory;
 use DvsaMotApi\Factory\Controller\MotTestStatusControllerFactory;
+use DvsaMotApi\Factory\Controller\NonMotInspectionControllerFactory;
 use DvsaMotApi\Factory\Controller\ReplacementCertificateDraftControllerFactory;
 use DvsaMotApi\Factory\Controller\SessionConfirmationControllerFactory;
 use DvsaMotApi\Factory\Controller\SurveyControllerFactory;
@@ -58,7 +60,7 @@ return [
         'DvsaMotApi\Controller\ReinspectionReport'                      => \DvsaMotApi\Controller\ReinspectionReportController::class,
         MotTestShortSummaryController::class                            => MotTestShortSummaryController::class,
         MotTestOptionsController::class                                 => MotTestOptionsController::class,
-        IdentityDataController::class                                   => IdentityDataController::class
+        IdentityDataController::class                                   => IdentityDataController::class,
     ],
     'factories' => [
         ContingencyTestController::class             => ContingencyTestControllerFactory::class,
@@ -72,5 +74,6 @@ return [
         ReplacementCertificateDraftController::class => ReplacementCertificateDraftControllerFactory::class,
         SurveyController::class                      => SurveyControllerFactory::class,
         SessionConfirmationController::class         => SessionConfirmationControllerFactory::class,
+        NonMotInspectionController::class            => NonMotInspectionControllerFactory::class,
     ],
 ];

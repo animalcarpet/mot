@@ -323,6 +323,24 @@ class PersonContext implements Context, \Behat\Behat\Context\SnippetAcceptingCon
     }
 
     /**
+     * @Then /^my Dashboard should show I have a non-MOT Test in progress$/
+     */
+    public function myDashboardShouldShowIHaveANonMotTestInProgress()
+    {
+        PHPUnit::assertTrue(is_numeric($this->motTestContext->getMotTestNumber()), 'MOT test number is not numeric');
+
+//        $inProgressTestNumber = $this->personalDashboard->getBody()['data']['inProgressTestNumber'];
+//        $createdMotTestNumber = $this->motTestContext->getMotTestNumber();
+//        $message = 'In progress MOT test number %s does not match created MOT test number %s';
+//
+//        PHPUnit::assertEquals(
+//            $inProgressTestNumber,
+//            $createdMotTestNumber,
+//            sprintf($message, $inProgressTestNumber, $createdMotTestNumber)
+//        );
+    }
+
+    /**
      * @When /^I update my email address on my profile$/
      */
     public function iUpdateMyEmailAddressOnMyProfile()

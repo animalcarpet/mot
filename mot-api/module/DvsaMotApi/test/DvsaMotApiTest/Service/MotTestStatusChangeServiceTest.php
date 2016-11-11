@@ -15,6 +15,7 @@ use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
 use DvsaCommon\Enum\VehicleClassCode;
+use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
 use DvsaCommonApi\Filter\XssFilter;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
@@ -337,14 +338,32 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
         $motTestId = 1;
         $reasonForCancelId = 3;
         $data = [
-            motTestStatusChangeService::FIELD_STATUS => MotTestStatusName::ABORTED,
-            motTestStatusChangeService::FIELD_REASON_FOR_CANCEL => $reasonForCancelId
+            MotTestStatusChangeService::FIELD_STATUS => MotTestStatusName::ABORTED,
+            MotTestStatusChangeService::FIELD_REASON_FOR_CANCEL => $reasonForCancelId
         ];
         $reasonForCancel = $this->reasonForCancel($reasonForCancelId, false);
         $motTest = MotTestObjectsFactory::activeMotTest()->setId($motTestId);
         $this->reasonForCancelResolvesTo($reasonForCancel);
         $this->motTestResolvesTo($motTest);
         $this->verifySlotReturned();
+
+        $this->createService()->updateStatus($motTestId, $data, 'whatever');
+    }
+
+    public function testUpdateStatusGivenAbortRequestForNormalTestShouldNotReturnSlotForNonMotTest()
+    {
+        $motTestId = 1;
+        $reasonForCancelId = 3;
+        $data = [
+            MotTestStatusChangeService::FIELD_STATUS => MotTestStatusName::ABORTED,
+            MotTestStatusChangeService::FIELD_REASON_FOR_CANCEL => $reasonForCancelId
+        ];
+        $reasonForCancel = $this->reasonForCancel($reasonForCancelId, false);
+        $motTest = MotTestObjectsFactory::createTest(MotTestTypeCode::NON_MOT_TEST, MotTestStatusName::ACTIVE);
+        $motTest->setId($motTestId);
+        $this->reasonForCancelResolvesTo($reasonForCancel);
+        $this->motTestResolvesTo($motTest);
+        $this->verifySlotNotReturned();
 
         $this->createService()->updateStatus($motTestId, $data, 'whatever');
     }
@@ -358,10 +377,10 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
         $otp = '123456';
         $cancelComment = 'test comment';
         $data = [
-            motTestStatusChangeService::FIELD_STATUS => MotTestStatusName::ABORTED,
-            motTestStatusChangeService::FIELD_REASON_FOR_CANCEL => $reasonForCancelId,
-            motTestStatusChangeService::FIELD_CANCEL_COMMENT => $cancelComment,
-            motTestStatusChangeService::FIELD_OTP => $otp
+            MotTestStatusChangeService::FIELD_STATUS => MotTestStatusName::ABORTED,
+            MotTestStatusChangeService::FIELD_REASON_FOR_CANCEL => $reasonForCancelId,
+            MotTestStatusChangeService::FIELD_CANCEL_COMMENT => $cancelComment,
+            MotTestStatusChangeService::FIELD_OTP => $otp
         ];
 
         $reasonForCancel = $this->reasonForCancel($reasonForCancelId, true);
@@ -377,6 +396,46 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
         $this->assertEquals($reasonForCancel, $motTest->getMotTestReasonForCancel());
         $this->assertEquals($cancelComment, $motTest->getReasonForTerminationComment());
         $this->assertEquals($testDate, $motTest->getCompletedDate());
+    }
+
+    public function dataProviderHowOftenShouldAssertionBeMadeWhenVehicleExaminerAbandonsATest()
+    {
+        return [
+            [MotTestTypeCode::TARGETED_REINSPECTION, $this->once()],
+            [MotTestTypeCode::NON_MOT_TEST, $this->never()]
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderHowOftenShouldAssertionBeMadeWhenVehicleExaminerAbandonsATest
+     */
+    public function testUnauthorisedThrownWhenUserAttemptsToAbandonTestWithoutPermission($testType, $assertionInvokeCount)
+    {
+        $testDate = new \DateTime('2012-09-30');
+        $this->dateTimeHolder->setCurrent($testDate);
+        $motTestId = 1;
+        $reasonForCancelId = 3;
+        $otp = '123456';
+        $cancelComment = 'test comment';
+        $data = [
+            MotTestStatusChangeService::FIELD_STATUS => MotTestStatusName::ABORTED,
+            MotTestStatusChangeService::FIELD_REASON_FOR_CANCEL => $reasonForCancelId,
+            MotTestStatusChangeService::FIELD_CANCEL_COMMENT => $cancelComment,
+            MotTestStatusChangeService::FIELD_OTP => $otp
+        ];
+
+        $reasonForCancel = $this->reasonForCancel($reasonForCancelId, true);
+
+        $motTest = MotTestObjectsFactory::activeMotTest()->setId($motTestId);
+        $motTest->setMotTestType((new MotTestType())->setCode($testType));
+
+        $this->reasonForCancelResolvesTo($reasonForCancel);
+        $this->motTestResolvesTo($motTest);
+        $this->otpAuthExpected(true, $otp);
+
+        $this->authService->expects($assertionInvokeCount)->method('assertGrantedAtSite');
+
+        $this->createService()->updateStatus($motTestId, $data, 'whatever');
     }
 
     public function testUpdateStatusGivenPassRequestShouldSetCorrectStatusAndDates()
@@ -532,7 +591,7 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
             [MotTestStatusName::PASSED, MotTestTypeCode::PARTIAL_RETEST_LEFT_VTS, true],
             [MotTestStatusName::PASSED, MotTestTypeCode::PARTIAL_RETEST_REPAIRED_AT_VTS, true],
             [MotTestStatusName::PASSED, MotTestTypeCode::ROUTINE_DEMONSTRATION_TEST, true],
-            [MotTestStatusName::PASSED, MotTestTypeCode::NON_MOT_TEST, true],
+            [MotTestStatusName::PASSED, MotTestTypeCode::NON_MOT_TEST, false],
             [MotTestStatusName::PASSED, MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING, true],
         ];
     }
@@ -725,6 +784,59 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
      */
     public function testUpdateStatusGivenTestFailedOutsideSiteOpeningHoursShouldNotify($status)
     {
+        $motTest = $this->setUpForTestUpdateStatusOutsideOpeningHours(MotTestTypeCode::NORMAL_TEST);
+
+        list($siteCap, $personCap, $completionDateCap) = $this->notificationOnTestOutsideOpeningHoursExpected();
+
+        $this->executeUpdateStatus($status, $motTest->getId());
+
+        $this->assertEquals($motTest->getVehicleTestingStation(), $siteCap->get());
+        $this->assertEquals($motTest->getTester(), $personCap->get());
+        $this->assertEquals($motTest->getCompletedDate(), $completionDateCap->get());
+    }
+
+    public function dataProviderShouldStatusUpdateOutsideOpeningHoursSendNotification()
+    {
+        $shouldNotify = true;
+        $shouldNotNotify = false;
+
+        return [
+            [MotTestTypeCode::NORMAL_TEST, $shouldNotify],
+            [MotTestTypeCode::NON_MOT_TEST, $shouldNotNotify]
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderShouldStatusUpdateOutsideOpeningHoursSendNotification
+     */
+    public function testUpdateStatusOutsideOpeningHoursShouldNotNotify($motTestTypeCode, $shouldNotify)
+    {
+        $motTest = $this->setUpForTestUpdateStatusOutsideOpeningHours($motTestTypeCode);
+
+        if ($shouldNotify) {
+            $this->notificationOnTestOutsideOpeningHoursExpected();
+        } else {
+            $this->notificationOnTestOutsideOpeningHoursNotExpected();
+        }
+
+        $this->executeUpdateStatus(MotTestStatusName::PASSED, $motTest->getId());
+    }
+
+    private function executeUpdateStatus($status, $motTestId)
+    {
+        $otp = '123456';
+        $data = [
+            MotTestStatusChangeService::FIELD_STATUS => $status,
+            MotTestStatusChangeService::FIELD_OTP => $otp
+        ];
+
+        $dateHolder = new InvalidTestDateTimeHolder(DateUtils::toDateTime('2012-09-30T16:00:01Z'));
+
+        $this->createService()->setDateTimeHolder($dateHolder)->updateStatus($motTestId, $data, "whatever");
+    }
+
+    private function setUpForTestUpdateStatusOutsideOpeningHours($motTestTypeCode)
+    {
         $siteBusRoleMap = new SiteBusinessRoleMap();
         $siteBusRoleMap->setPerson(new Person());
 
@@ -749,47 +861,34 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
                 )
             );
 
-        $motTestId = 1;
-        $otp = '123456';
-        $data = [
-            motTestStatusChangeService::FIELD_STATUS => $status,
-            motTestStatusChangeService::FIELD_OTP => $otp
-        ];
+        $motTest = MotTestObjectsFactory::createTest($motTestTypeCode, MotTestStatusName::ACTIVE);
+        $motTest->setId(1);
 
-        $motTest = MotTestObjectsFactory::activeMotTest()->setId($motTestId);
         MotTestObjectsFactory::addTestAuthorisationForClass(
             $motTest,
             "4",
             AuthorisationForTestingMotStatusCode::QUALIFIED
         );
         self::addSiteOpeningHours($motTest);
-        $dateHolder = new InvalidTestDateTimeHolder(DateUtils::toDateTime('2012-09-30T16:00:01Z'));
         $this->motTestResolvesTo($motTest);
-        list($siteCap, $personCap, $completionDateCap) = $this->notificationOnTestOutsideOpeningHoursExpected();
 
-        $this->createService()->setDateTimeHolder($dateHolder)->updateStatus($motTestId, $data, "whatever");
-
-        $this->assertEquals($motTest->getVehicleTestingStation(), $siteCap->get());
-        $this->assertEquals($motTest->getTester(), $personCap->get());
-        $this->assertEquals($motTest->getCompletedDate(), $completionDateCap->get());
+        return $motTest;
     }
 
     private function helperGivenConfirmRequestByAnotherUserShouldThrowError($status)
     {
-        $this->setExpectedUserId(2);
-
-        $motTestId = 1;
         $data = [
-            motTestStatusChangeService::FIELD_STATUS => $status,
+            MotTestStatusChangeService::FIELD_STATUS => $status,
         ];
 
-        $motTest = MotTestObjectsFactory::activeMotTest()->setId($motTestId);
+        $motTest = MotTestObjectsFactory::activeMotTest();
+        $motTest = $this->withDifferentIdentityUserAndTestOwner($motTest);
 
         $this->motTestResolvesTo($motTest);
 
         try {
             $this->createService()
-                ->updateStatus($motTestId, $data, 'whatever');
+                ->updateStatus($motTest->getId(), $data, 'whatever');
         } catch (\Exception $e) {
             $this->assertEquals($e->getMessage(), 'This test was started by another user and you are not allowed to confirm its result');
         }
@@ -805,6 +904,54 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
     public function testUpdateStatusGivenFailRequestByAnotherUserShouldThrowError()
     {
         $this->helperGivenConfirmRequestByAnotherUserShouldThrowError(MotTestStatusName::FAILED);
+    }
+
+    public function testUpdateStatusGivenNormalMotTestShouldAssertTesterCanConfirmAtSite()
+    {
+        $data = [
+            MotTestStatusChangeService::FIELD_STATUS => MotTestStatusName::PASSED,
+        ];
+
+        $motTest = MotTestObjectsFactory::createTest(MotTestTypeCode::NORMAL_TEST, MotTestStatusName::ACTIVE);
+        $motTest = $this->withMatchingIdentityUserAndTestOwner($motTest);
+
+        $this->motTestResolvesTo($motTest);
+
+        $this->authService->expects($this->once())->method('assertGrantedAtSite');
+
+        $this->createService()->updateStatus($motTest->getId(), $data, 'whatever');
+    }
+
+    public function testUpdateStatusGivenNonMotTestShouldNotAssertTesterCanConfirmAtSite()
+    {
+        $data = [
+            MotTestStatusChangeService::FIELD_STATUS => MotTestStatusName::PASSED,
+        ];
+
+        $motTest = MotTestObjectsFactory::createTest(MotTestTypeCode::NON_MOT_TEST, MotTestStatusName::ACTIVE);
+        $motTest = $this->withMatchingIdentityUserAndTestOwner($motTest);
+
+        $this->motTestResolvesTo($motTest);
+
+        $this->authService->expects($this->never())->method('assertGrantedAtSite');
+
+        $this->createService()->updateStatus($motTest->getId(), $data, 'whatever');
+    }
+
+    private function withMatchingIdentityUserAndTestOwner(MotTest $motTest)
+    {
+        $this->setExpectedUserId(1);
+        $motTest->setId(1);
+
+        return $motTest;
+    }
+
+    private function withDifferentIdentityUserAndTestOwner(MotTest $motTest)
+    {
+        $this->setExpectedUserId(2);
+        $motTest->setId(1);
+
+        return $motTest;
     }
 
     /**
@@ -945,6 +1092,12 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
             ->method("notify")->with($site(), $person(), $completionDate());
 
         return [$site, $person, $completionDate];
+    }
+
+    private function notificationOnTestOutsideOpeningHoursNotExpected()
+    {
+        $this->outsideOpeningHoursNotifier->expects($this->never())
+            ->method("notify");
     }
 
     private function verifySlotReturned()

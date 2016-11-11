@@ -13,7 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class RemoveDefectPage extends Page {
 
     private static final String PAGE_TITLE = "Remove ";
-    private static final String BREADCRUMB_TEXT = "Remove a ";
+    private static final String BREADCRUMB_TEXT = "Remove ";
 
     private String defectType;
 

@@ -126,6 +126,10 @@ class UserHomeController extends AbstractAuthActionController
             $canPerformTest = $overdueSpecialNoticeAssertion->canPerformTest();
         }
 
+        $canPerformNonMotTest =
+            $this->getFeatureToggles()->isEnabled(FeatureToggle::MYSTERY_SHOPPER) &&
+            $this->authorisationService->isGranted(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM);
+
         $return = array_merge(
             [
                 'dashboard' => $dashboard,
@@ -133,7 +137,8 @@ class UserHomeController extends AbstractAuthActionController
             $authenticatedData,
             [
                 'specialNotice' => $specialNotice,
-                'canPerformTest' => $canPerformTest
+                'canPerformTest' => $canPerformTest,
+                'canPerformNonMotTest' => $canPerformNonMotTest
             ]
         );
 

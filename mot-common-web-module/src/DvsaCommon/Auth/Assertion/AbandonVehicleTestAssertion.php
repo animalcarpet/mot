@@ -109,7 +109,8 @@ class AbandonVehicleTestAssertion
         ) {
             $this->assertCanTesterAbandonTest();
         } elseif ($this->code === MotTestTypeCode::ROUTINE_DEMONSTRATION_TEST
-        || $this->code === MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING) {
+        || $this->code === MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING
+        || $this->code === MotTestTypeCode::NON_MOT_TEST) {
             return ;
         } elseif (
             $this->code === MotTestTypeCode::TARGETED_REINSPECTION

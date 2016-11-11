@@ -8,6 +8,7 @@ use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use DvsaClient\Mapper\VehicleMapper;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\PermissionInSystem;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
@@ -40,6 +41,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
     const ACTION_TRAINING = 'training';
     const ACTION_INDEX = 'index';
     const ACTION_RETEST = 'retest';
+    const ACTION_NON_MOT = 'nonMotTest';
 
     /** @var  DvsaVehicleBuilder */
     private $dvsaVehicleBuilder;
@@ -82,6 +84,8 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
         $serviceManager->setService(MapperFactory::class, $mockMapperFactory);
 
         parent::setUp();
+
+        $this->withFeatureToggles([FeatureToggle::MYSTERY_SHOPPER => true]);
 
         $identity  = $this->getCurrentIdentity();
         $this->vts = $this->getVtsData();
@@ -310,7 +314,6 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
      */
     public function testAccess($method, $action, $permissions, $mock, $expect)
     {
-        $this->markTestSkipped('BL-1164 is parked to investigate lifting vehicle\'s entity relationship. Talk to Ali');
         $user = ['permissions' => $permissions];
 
         $params = [
@@ -346,6 +349,10 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
             'class'   => UnauthorisedException::class,
             'message' => 'Asserting permission [MOT-TEST-START] failed.',
         ];
+        $unAuthNonMotException = [
+            'class'   => UnauthorisedException::class,
+            'message' => 'Asserting permission [ENFORCEMENT-NON-MOT-TEST-PERFORM] failed.',
+        ];
 
         return [
             [
@@ -373,6 +380,17 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
                 [
                     'status'    => self::HTTP_OK_CODE,
                     'exception' => $unauthException,
+                ],
+            ],
+            [
+                'get', self::ACTION_NON_MOT, [PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM ,PermissionInSystem::MOT_TEST_START], $mockGet,
+                'expect' => ['status' => self::HTTP_OK_CODE],
+            ],
+            [
+                'get', self::ACTION_NON_MOT, [], [],
+                [
+                    'status'    => self::HTTP_OK_CODE,
+                    'exception' => $unAuthNonMotException,
                 ],
             ],
             ['get', self::ACTION_TRAINING, [], $mockGet, ['status' => self::HTTP_OK_CODE]],

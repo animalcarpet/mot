@@ -6,6 +6,7 @@ use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestStatus;
+use DvsaEntities\Entity\Site;
 use DvsaMotApi\Service\MotTestStatusChangeService;
 use DvsaMotApi\Service\MotTestStatusService;
 use DvsaMotApi\Service\Validator\MotTestStatusChangeValidator;
@@ -148,6 +149,24 @@ class MotTestStatusChangeValidatorTest extends PHPUnit_Framework_TestCase
         $newStatus = 'KINDA_PASSED';
 
         $this->motTestStatusChangeValidator->verifyThatStatusTransitionIsPossible($motTest, $newStatus);
+    }
+
+    public function testCheckSiteIdHasBeenEnteredTrueWithSiteId()
+    {
+        $motTest = new MotTest();
+        $motTest->setVehicleTestingStation(new Site());
+
+        $this->assertTrue($this->motTestStatusChangeValidator->checkSiteIdHasBeenEntered($motTest));
+    }
+
+    /**
+     * @expectedException        \DvsaCommonApi\Service\Exception\BadRequestException
+     * @expectedExceptionMessage Site ID - enter the site ID
+     */
+    public function testCheckSiteIdHasBeenEnteredThrowsWithNoSiteId()
+    {
+        $motTest = new MotTest();
+        $this->motTestStatusChangeValidator->checkSiteIdHasBeenEntered($motTest);
     }
 
     private function createMotTestActiveStatus()

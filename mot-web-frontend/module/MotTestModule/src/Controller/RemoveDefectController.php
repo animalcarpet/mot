@@ -28,6 +28,7 @@ class RemoveDefectController extends AbstractDvsaMotTestController
     const CONTENT_HEADER_TYPE__TRAINING_TEST = 'Training test';
     const CONTENT_HEADER_TYPE__MOT_TEST_REINSPECTION = 'MOT test reinspection';
     const CONTENT_HEADER_TYPE__MOT_TEST_RESULTS = 'MOT test results';
+    const CONTENT_HEADER_TYPE__NON_MOT_TEST_RESULTS = 'Non-MOT test';
     const CONTENT_HEADER_TYPE__SEARCH_RESULTS = 'Search for a defect';
     const CONTENT_HEADER_TYPE__BROWSE_DEFECTS = 'Add a defect';
 
@@ -70,6 +71,7 @@ class RemoveDefectController extends AbstractDvsaMotTestController
         $motTest = null;
         $isReinspection = false;
         $isDemoTest = false;
+        $isNonMotTest = false;
 
         $backUrl = $this->defectsJourneyUrlGenerator->goBack();
 
@@ -78,6 +80,7 @@ class RemoveDefectController extends AbstractDvsaMotTestController
             $testType = $motTest->getTestType();
             $isDemoTest = MotTestType::isDemo($testType->getCode());
             $isReinspection = MotTestType::isReinspection($testType->getCode());
+            $isNonMotTest = MotTestType::isNonMotTypes($testType->getCode());
         } catch (RestApplicationException $e) {
             $this->addErrorMessages($e->getDisplayMessages());
         }
@@ -118,7 +121,7 @@ class RemoveDefectController extends AbstractDvsaMotTestController
             }
         }
 
-        $breadcrumbs = $this->getBreadcrumbs($isDemoTest, $isReinspection, $identifiedDefect->getDefectType());
+        $breadcrumbs = $this->getBreadcrumbs($isDemoTest, $isReinspection, $isNonMotTest, $identifiedDefect->getDefectType());
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
         $this->enableGdsLayout('Remove ' . $identifiedDefect->getDefectType(), '');
 
@@ -181,11 +184,12 @@ class RemoveDefectController extends AbstractDvsaMotTestController
     /**
      * @param bool $isDemo
      * @param bool $isReinspection
+     * @param bool $isNonMotTest
      * @param $defectType
      *
      * @return array
      */
-    private function getBreadcrumbs($isDemo, $isReinspection, $defectType)
+    private function getBreadcrumbs($isDemo, $isReinspection, $isNonMotTest, $defectType)
     {
         $motTestNumber = $this->params()->fromRoute('motTestNumber');
         $motTestResultsUrl = $this->url()->fromRoute('mot-test', ['motTestNumber' => $motTestNumber]);
@@ -202,6 +206,11 @@ class RemoveDefectController extends AbstractDvsaMotTestController
                 // Reinspection
                 $breadcrumbs += [
                     self::CONTENT_HEADER_TYPE__MOT_TEST_REINSPECTION => $motTestResultsUrl,
+                ];
+            } elseif ($isNonMotTest) {
+                // Non-MOT test
+                $breadcrumbs += [
+                    self::CONTENT_HEADER_TYPE__NON_MOT_TEST_RESULTS => $motTestResultsUrl,
                 ];
             } else {
                 // Normal test
@@ -227,7 +236,7 @@ class RemoveDefectController extends AbstractDvsaMotTestController
                 self::CONTENT_HEADER_TYPE__SEARCH_RESULTS => $this->defectsJourneyUrlGenerator->goBack(),
             ];
         }
-        $breadcrumbs += ['Remove a ' . $defectType => ''];
+        $breadcrumbs += ['Remove ' . $defectType => ''];
 
         return $breadcrumbs;
     }

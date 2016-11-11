@@ -22,6 +22,7 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
     public static final String PATH = "/mot-test";
 
     private static final String PAGE_TITLE = "MOT test results";
+    private static final String NON_MOT_PAGE_TITLE = "Non-MOT test";
 
     @FindBy(id = "vehicleMakeModel") private WebElement vehicleMakeModel;
     @FindBy(id = "vehicleRegistration") private WebElement vehicleRegistration;
@@ -49,7 +50,7 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
 
     @Override
     protected boolean selfVerify() {
-        return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
+        return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE, NON_MOT_PAGE_TITLE);
     }
 
     public String getVehicleMakeModel() {

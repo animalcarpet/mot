@@ -239,7 +239,7 @@ echo $this->partial(
         </div>
     <?php else: ?>
 
-    <?php if ($isDemoMotTest === false && $this->authorisationHelper()->isGranted(PermissionInSystem::MOT_TEST_REINSPECTION_PERFORM)): ?>
+    <?php if ($isDemoMotTest === false && $isNonMotTest == false && $this->authorisationHelper()->isGranted(PermissionInSystem::MOT_TEST_REINSPECTION_PERFORM)): ?>
 
         <div class="row">
 

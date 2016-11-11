@@ -1,9 +1,11 @@
 <?php
 namespace DvsaMotApi\Controller;
 
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
+use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Transaction\TransactionAwareInterface;
 use DvsaCommonApi\Transaction\TransactionAwareTrait;
 use DvsaDocument\Service\Document\DocumentService;
@@ -13,13 +15,12 @@ use SiteApi\Service\SiteService;
 use Zend\View\Model\JsonModel;
 
 /**
- * Class MotTestController
- *
- * @package DvsaMotApi\Controller
+ * Class MotTestController.
  */
 class MotTestController extends AbstractDvsaRestfulController implements TransactionAwareInterface
 {
     use TransactionAwareTrait;
+
     const FIELD_SITEID = 'siteid';
     const FIELD_LOCATION = 'location';
     const FIELD_ONE_PERSON_TEST = 'onePersonTest';
@@ -34,6 +35,9 @@ class MotTestController extends AbstractDvsaRestfulController implements Transac
     const ERROR_MSG_SITE_NUMBER_INVALID = 'Site number invalid';
     const ERROR_UNABLE_TO_PERFORM_SEARCH_WITH_PARAMS = 'Unable to perform search with given parameters';
 
+    /**
+     * MotTestController constructor.
+     */
     public function __construct()
     {
         $this->setIdentifierName('motTestNumber');
@@ -118,7 +122,7 @@ class MotTestController extends AbstractDvsaRestfulController implements Transac
 
         $motTest = $this->getMotTestService()->getMotTest($motTestNumber);
 
-        if ($motTest && ($motTest->getMotTestType()->getIsReinspection())) {
+        if ($motTest && ($motTest->getMotTestType()->getIsReinspection() || $motTest->getMotTestType()->isNonMotTest())) {
             if (isset($data['operation']) && ($data['operation'] == 'updateOnePersonTest')) {
                 list($onePersonTest, $onePersonReInspection)
                     = $this->validateOnePersonTest($motTestNumber, $data, $errors);
@@ -177,8 +181,10 @@ class MotTestController extends AbstractDvsaRestfulController implements Transac
      * @param $motId  String the MOT id from the URL parameter
      * @param $data   Array  the POST data sent from the page
      * @param $errors Array& accumulator for errors
-     *
      * @return array [new site id, new site location text]
+     *
+     * @throws BadRequestException
+     *
      * @see http://objitsu.blogspot.co.uk/2013/01/php-and-lisp-multiple-value-bind-mvb.html
      */
     protected function performOffsiteValidation($motId, $data, &$errors)
@@ -186,9 +192,23 @@ class MotTestController extends AbstractDvsaRestfulController implements Transac
         $response = [null, null];
         $motTest = $this->getMotTestService()->getMotTest($motId);
 
-        if ($motTest && ($motTest->getMotTestType()->getIsReinspection())) {
+        // Non-MOT checks are only relevant if the Mystery Shopper feature toggle is enabled.
+        $isMysteryShopperFeatureEnabled = true === $this->isFeatureEnabled(FeatureToggle::MYSTERY_SHOPPER);
+
+        if ($motTest && ($motTest->getMotTestType()->getIsReinspection()
+                || ($isMysteryShopperFeatureEnabled && $motTest->getMotTestType()->isNonMotTest()))) {
             $siteIdExists = array_key_exists(self::FIELD_SITEID, $data) && !empty($data[self::FIELD_SITEID]);
             $locationExists = array_key_exists(self::FIELD_LOCATION, $data) && !empty($data[self::FIELD_LOCATION]);
+
+            if ($isMysteryShopperFeatureEnabled) {
+                if ($motTest->getMotTestType()->isNonMotTest() && !$siteIdExists) {
+                    throw new BadRequestException(
+                        'Site ID - enter the site ID',
+                        BadRequestException::ERROR_CODE_INVALID_DATA,
+                        'enter the site ID'
+                    );
+                }
+            }
 
             if (!$siteIdExists && !$locationExists) {
                 $errors[] = $this->makeFieldIsRequiredError(self::FIELD_SITEID);

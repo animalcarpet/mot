@@ -32,6 +32,9 @@ class DashboardData
     /** @var string */
     private $inProgressDemoTestNumber;
 
+    /** @var int */
+    private $inProgressNonMotTestNumber;
+
     /** @var  $inProgressTestTypeCode string */
     private $inProgressTestTypeCode;
 
@@ -45,6 +48,7 @@ class DashboardData
      * @param Notification[]                       $notifications
      * @param                                      $inProgressTestNumber
      * @param                                      $inProgressDemoTestNumber
+     * @param                                      $inProgressNonMotTestNumber
      * @param                                      $isTesterQualified
      * @param                                      $isTesterActive
      * @param                                      $inProgressTestTypeCode
@@ -57,6 +61,7 @@ class DashboardData
         $notifications,
         $inProgressTestNumber,
         $inProgressDemoTestNumber,
+        $inProgressNonMotTestNumber,
         $isTesterQualified,
         $isTesterActive,
         $inProgressTestTypeCode,
@@ -68,6 +73,7 @@ class DashboardData
         $this->setNotifications($notifications);
         $this->setInProgressTestNumber($inProgressTestNumber);
         $this->setInProgressDemoTestNumber($inProgressDemoTestNumber);
+        $this->setInProgressNonMotTestNumber($inProgressNonMotTestNumber);
         $this->setInProgressTestTypeCode($inProgressTestTypeCode);
         $this->authorisationService = $authorisationService;
         $this->setHero($this->authorisationService->getHero());
@@ -100,6 +106,7 @@ class DashboardData
             'inProgressTestNumber'   => $this->inProgressTestNumber,
             'inProgressTestTypeCode' => $this->inProgressTestTypeCode,
             'inProgressDemoTestNumber' => $this->inProgressDemoTestNumber,
+            'inProgressNonMotTestNumber' => $this->inProgressNonMotTestNumber
         ];
     }
 
@@ -239,6 +246,25 @@ class DashboardData
     public function getInProgressDemoTestNumber()
     {
         return $this->inProgressDemoTestNumber;
+    }
+
+    /**
+     * @return int
+     */
+    public function getInProgressNonMotTestNumber()
+    {
+        return $this->inProgressNonMotTestNumber;
+    }
+
+    /**
+     * @param int $inProgressNonMotTestNumber
+     * @return $this
+     */
+    public function setInProgressNonMotTestNumber($inProgressNonMotTestNumber)
+    {
+        $this->inProgressNonMotTestNumber = $inProgressNonMotTestNumber;
+
+        return $this;
     }
 
     /**

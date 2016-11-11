@@ -1,0 +1,10 @@
+<?php
+$errorMessage = isset($errorMessage) ? $errorMessage : '';
+?>
+
+<div class="validation-summary">
+    <h2 class="heading-medium">There was a problem</h2>
+    <ol>
+        <li><?php echo $errorMessage ?></li>
+    </ol>
+</div>

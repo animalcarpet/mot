@@ -1,8 +1,8 @@
 package uk.gov.dvsa.domain.workflow;
 
 import org.openqa.selenium.Cookie;
-import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.api.response.Vehicle;
+import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.service.CookieService;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.ui.pages.AssessmentDetailsConfirmationPage;
@@ -44,32 +44,6 @@ public class VehicleReInspectionWorkflow extends BaseWorkflow {
     public VehicleTestingStationPage gotoVehicleTestingStationPage(User user, String siteId) throws IOException {
         injectOpenAmCookieAndNavigateToPath(user, String.format(VehicleTestingStationPage.PATH, siteId));
         return new VehicleTestingStationPage(driver);
-    }
-
-    public TestCompletePage reinspectVehicle(String testType, int odometerValue, String siteId) {
-        PageLocator.getTestSummaryPage(driver)
-                .selectTestType(testType)
-                .clickStartReinspectionButton();
-        PageLocator.getTestResultsEntryReinspectionPage(driver)
-                .fillOdometerReadingAndSubmit(odometerValue)
-                .clickReviewTest();
-        PageLocator.getTestSummaryPage(driver)
-                .fillSiteIdInput(siteId)
-                .clickFinishButton();
-
-        return new TestCompletePage(driver);
-    }
-
-    public AssessmentDetailsConfirmationPage compareResults(String score, String category) {
-        PageLocator.getTestCompletePage(driver)
-                .clickCompareResultsButton();
-        PageLocator.getTestCompareResultsPage(driver)
-                .selectServiceScore(score).selectServiceCategory(category).fillServiceJustificationInputWithDefaultValue()
-                .selectParkingScore(score).selectParkingCategory(category).fillParkingJustificationInputWithDefaultValue()
-                .fillFinalJustificationInputWithDefaultValue()
-                .clickRecordAssessmentButton();
-
-        return new AssessmentDetailsConfirmationPage(driver);
     }
 
     public TestOptionsPage startMotTestAsATester(User user, Vehicle vehicle) throws IOException {

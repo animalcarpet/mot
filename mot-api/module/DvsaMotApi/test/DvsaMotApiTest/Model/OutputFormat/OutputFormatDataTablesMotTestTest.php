@@ -5,6 +5,7 @@ namespace DvsaMotApiTest\Model\OutputFormat;
 use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Enum\MotTestStatusName;
+use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Colour;
 use DvsaEntities\Entity\Make;
@@ -51,6 +52,30 @@ class OutputFormatDataTablesMotTestTest extends \PHPUnit_Framework_TestCase
         $result = [];
         $this->outputFormat->extractItem($result, 1, $this->getMotTest());
         $this->assertEquals($this->getMotTestJsonDataTable(), $result);
+    }
+
+    public function testExtractedSiteValuesAreSetWhenNonMotTest()
+    {
+        $result = [];
+        $motTest = $this->getMotTest();
+        $motTest->setMotTestType((new MotTestType())->setCode(MotTestTypeCode::NON_MOT_TEST));
+
+        $this->outputFormat->extractItem($result, 1, $motTest);
+
+        $this->assertEquals(self::SITE_ID, $result[$motTest->getNumber()]['siteId']);
+        $this->assertEquals('V1234', $result[$motTest->getNumber()]['siteNumber']);
+    }
+
+    public function testExtractedSiteValuesAreNullWhenDemoTest()
+    {
+        $result = [];
+        $motTest = $this->getMotTest();
+        $motTest->setMotTestType((new MotTestType())->setCode(MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING));
+
+        $this->outputFormat->extractItem($result, 1, $motTest);
+
+        $this->assertNull($result[$motTest->getNumber()]['siteId']);
+        $this->assertNull($result[$motTest->getNumber()]['siteNumber']);
     }
 
     protected function getMotTestEs()

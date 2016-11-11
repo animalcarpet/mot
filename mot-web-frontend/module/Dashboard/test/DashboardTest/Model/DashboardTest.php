@@ -210,4 +210,20 @@ class DashboardTest extends \PHPUnit_Framework_TestCase
         $dashboard = new Dashboard($testData);
         $this->assertSame("Enter test results", $dashboard->getEnterTestResultsLabel());
     }
+
+    public function test_InProgressNonMotTest_shouldBeAvailableIfValueIsSet()
+    {
+        $testData = ApiDashboardResourceTest::getTestDataForVehicleExaminer();
+        $dashboard = new Dashboard($testData);
+        $this->assertTrue($dashboard->hasNonMotTestInProgress());
+        $this->assertEquals($testData['inProgressNonMotTestNumber'], $dashboard->getInProgressNonMotTestNumber());
+    }
+
+    public function test_InProgressNonMotTest_shouldNotBeAvailableIfValueIsNotSet()
+    {
+        $testData = ApiDashboardResourceTest::getTestDataForUser();
+        $dashboard = new Dashboard($testData);
+        $this->assertFalse($dashboard->hasNonMotTestInProgress());
+        $this->assertNull($dashboard->getInProgressNonMotTestNumber());
+    }
 }

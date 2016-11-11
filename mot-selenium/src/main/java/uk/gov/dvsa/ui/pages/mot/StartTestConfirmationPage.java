@@ -5,8 +5,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
-import uk.gov.dvsa.domain.model.vehicle.Colours;
 import uk.gov.dvsa.domain.api.response.Vehicle;
+import uk.gov.dvsa.domain.model.vehicle.Colours;
 import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.FormDataHelper;
@@ -17,6 +17,8 @@ public class StartTestConfirmationPage extends Page {
     public static final String path = "/start-test-confirmation/";
     private final String PAGE_TITLE = "MOT testing";
     private static final String PAGE_TITLE_TRAINING = "Training test\n" +
+            "Confirm vehicle for test";
+    private static final String PAGE_TITLE_NON_MOT = "Non-MOT test\n" +
             "Confirm vehicle for test";
 
     @FindBy(id = "confirm_vehicle_confirmation") private WebElement confirmButton;
@@ -39,7 +41,7 @@ public class StartTestConfirmationPage extends Page {
 
     @Override
     protected boolean selfVerify() {
-        return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE, PAGE_TITLE_TRAINING);
+        return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE, PAGE_TITLE_TRAINING, PAGE_TITLE_NON_MOT);
     }
 
     public TestOptionsPage clickStartMotTest() {
@@ -71,13 +73,13 @@ public class StartTestConfirmationPage extends Page {
         return new RefuseToTestPage(driver);
     }
 
-    public String getVehicleWeight() {
-        return vehicleWeight.getText();
-    }
-
     public StartTestConfirmationPage selectClass(String classNumber){
         FormDataHelper.selectFromDropDownByVisibleText(classDropdown, classNumber);
         return this;
+    }
+
+    public String getVehicleWeight() {
+        return vehicleWeight.getText();
     }
 
     public String getVin() {

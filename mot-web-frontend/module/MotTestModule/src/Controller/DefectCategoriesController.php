@@ -32,6 +32,7 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
     const CONTENT_HEADER_TYPE__TRAINING_TEST = 'Training test';
     const CONTENT_HEADER_TYPE__MOT_TEST_REINSPECTION = 'MOT test reinspection';
     const CONTENT_HEADER_TYPE__MOT_TEST_RESULTS = 'MOT test results';
+    const CONTENT_HEADER_TYPE__NON_MOT_TEST_RESULTS = 'Non-MOT test';
 
     /**
      * @var MotAuthorisationServiceInterface
@@ -101,12 +102,14 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
         $isDemo = false;
         $isReinspection = false;
         $isRetest = false;
+        $isNonMotTest = false;
 
         try {
             $motTest = $this->getMotTestFromApi($motTestNumber);
             $testType = $motTest->getTestType();
             $isDemo = MotTestType::isDemo($testType->getCode());
             $isReinspection = MotTestType::isReinspection($testType->getCode());
+            $isNonMotTest = MotTestType::isNonMotTypes($testType->getCode());
             $isRetest = $motTest->getTestType()->getCode() === MotTestTypeCode::RE_TEST;
             $defectCategories = $this->getDefectCategories($motTestNumber, $categoryId);
         } catch (RestApplicationException $e) {
@@ -115,7 +118,7 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
 
         if (true === $this->isDefectsParent($defectCategories)) {
             return $this->defectsForCategoryAction($motTestNumber, $defectCategories,
-                $motTest, $isDemo, $isReinspection, $categoryId, $isRetest);
+                $motTest, $isDemo, $isReinspection, $categoryId, $isRetest, $isNonMotTest);
         }
 
         $this->enableGdsLayout('Defect categories', '');
@@ -123,7 +126,7 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
         $vehicleFirstUsedDate = $motTest->getVehicle()->getFirstUsedDate();
         $vehicleFirstUsedDate = DateTime::createFromFormat('Y-m-d', $vehicleFirstUsedDate)->format('j M Y');
 
-        $breadcrumbs = $this->getBreadcrumbs($isDemo, $isReinspection);
+        $breadcrumbs = $this->getBreadcrumbs($isDemo, $isReinspection, $isNonMotTest);
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
 
         $identifiedDefects = IdentifiedDefectCollection::fromMotApiData($motTest);
@@ -153,6 +156,8 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
      * @param bool                        $isDemo
      * @param bool                        $isReinspection
      * @param bool                        $categoryId
+     * @param bool                        $isRetest
+     * @param bool                        $isNonMotTest
      *
      * @return ViewModel
      */
@@ -163,7 +168,8 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
         $isDemo,
         $isReinspection,
         $categoryId,
-        $isRetest
+        $isRetest,
+        $isNonMotTest
     ) {
         $this->enableGdsLayout('Defects', '');
 
@@ -173,7 +179,7 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
         
         $identifiedDefects = IdentifiedDefectCollection::fromMotApiData($motTest);
 
-        $breadcrumbs = $this->getBreadcrumbs($isDemo, $isReinspection);
+        $breadcrumbs = $this->getBreadcrumbs($isDemo, $isReinspection, $isNonMotTest);
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
         $contentBreadcrumbs = $this->breadcrumbsBuilder->getContentBreadcrumbs($category, $motTestNumber);
 
@@ -298,10 +304,11 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
      *
      * @param bool $isDemo
      * @param bool $isReinspection
+     * @param bool $isNonMotTest
      *
      * @return array
      */
-    private function getBreadcrumbs($isDemo, $isReinspection)
+    private function getBreadcrumbs($isDemo, $isReinspection, $isNonMotTest)
     {
         $breadcrumbs = [];
 
@@ -312,6 +319,8 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
             $breadcrumbs += [self::CONTENT_HEADER_TYPE__TRAINING_TEST => $motTestResultsUrl];
         } elseif ($isReinspection) {
             $breadcrumbs += [self::CONTENT_HEADER_TYPE__MOT_TEST_REINSPECTION => $motTestResultsUrl];
+        } elseif ($isNonMotTest) {
+            $breadcrumbs += [self::CONTENT_HEADER_TYPE__NON_MOT_TEST_RESULTS => $motTestResultsUrl];
         } else {
             $breadcrumbs += [self::CONTENT_HEADER_TYPE__MOT_TEST_RESULTS => $motTestResultsUrl];
         }

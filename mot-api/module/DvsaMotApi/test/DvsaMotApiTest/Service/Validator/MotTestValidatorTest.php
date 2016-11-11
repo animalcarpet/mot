@@ -9,7 +9,9 @@ use DvsaCommon\Constants\ReasonForRejection as ReasonForRejectionConstants;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\Enum\MotTestStatusName;
+use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
+use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\AuthorisationForTestingMotAtSite;
@@ -313,6 +315,30 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
             ->willReturn(1);
 
         $motTest = $this->setupMotTest(new Person(), new Vehicle(), new Site());
+        $this->motTestValidator->validateNewMotTest($motTest);
+    }
+
+    /**
+     * @expectedException DvsaCommonApi\Service\Exception\BadRequestException
+     */
+    public function testValidateNewMotTestThrowsBadRequestIfNoVehicleTestingStation()
+    {
+        $motTest = $this->setupMotTest(new Person(), new Vehicle(), null, false);
+
+        $this->motTestValidator->validateNewMotTest($motTest);
+    }
+
+    public function testValidateNewMotTestDoesNotThrowBadRequestIfNoVehicleTestingStationButNonMotTest()
+    {
+        $this->setIsVehicleExaminer(true);
+
+        $nonMotTestType = (new MotTestType())
+            ->setCode(MotTestTypeCode::NON_MOT_TEST)
+            ->setIsSlotConsuming(false);
+
+        $motTest = $this->setupMotTest(new Person(), new Vehicle(), null, false);
+        $motTest->setMotTestType($nonMotTestType);
+
         $this->motTestValidator->validateNewMotTest($motTest);
     }
 

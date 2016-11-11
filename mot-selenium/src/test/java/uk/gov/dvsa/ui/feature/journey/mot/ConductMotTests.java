@@ -6,12 +6,12 @@ import org.joda.time.DateTime;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.model.AeDetails;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.CancelTestReason;
 import uk.gov.dvsa.domain.model.mot.TestOutcome;
-import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.model.vehicle.VehicleClass;
 import uk.gov.dvsa.helper.ConfigHelper;
 import uk.gov.dvsa.helper.ReasonForRejection;
@@ -62,9 +62,9 @@ public class ConductMotTests extends DslTest {
         assertThat(testResultsEntryPage.isPassNoticeDisplayed(), is(true));
 
         //Then I should be able to complete the Test Successfully
-        TestCompletePage testCompletePage = testResultsEntryPage.clickReviewTestButton().finishTest();
+        TestCompletePage testCompletePage = testResultsEntryPage.clickReviewTestButton().clickFinishButton(TestCompletePage.class);
 
-        assertThat(testCompletePage.verifyBackToHomeLinkDisplayed(), is(true));
+        assertThat(testCompletePage.isReturnToHomepageLinkDisplayed(), is(true));
     }
 
     @Test(testName = "2fa", groups = {"BVT"}, description = "Two Factor Authenticated users " +
@@ -101,7 +101,7 @@ public class ConductMotTests extends DslTest {
         assertThat(testResultsEntryPage.isPassNoticeDisplayed(), is(true));
 
         //Then I should be able to complete the Test Successfully
-        testResultsEntryPage.clickReviewTestButton().finishTest();
+        testResultsEntryPage.clickReviewTestButton().clickFinishButton(TestCompletePage.class);
     }
 
     @Test(groups = {"BVT"})
@@ -123,7 +123,7 @@ public class ConductMotTests extends DslTest {
         assertThat(testResultsEntryPage.isPassNoticeDisplayed(), is(true));
 
         //Then I should be able to complete the Test Successfully
-        testResultsEntryPage.clickReviewTestButton().finishTest();
+        testResultsEntryPage.clickReviewTestButton().clickFinishButton(TestCompletePage.class);
     }
 
     @Test(groups = {"BVT"} )

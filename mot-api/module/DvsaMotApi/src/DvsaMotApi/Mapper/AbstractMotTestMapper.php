@@ -60,11 +60,17 @@ abstract class AbstractMotTestMapper extends AbstractMapper
     /** @var boolean    Is this certificate for a retest? */
     protected $isNormalTest = false;
 
+    /** @var int $rfrNr */
     protected $rfrNr = 1;
 
+    /** @var DataCatalogService $dataCatalogService */
     protected $dataCatalogService;
 
-
+    /**
+     * AbstractMotTestMapper constructor.
+     *
+     * @param DataCatalogService $dataCatalogService
+     */
     protected function __construct(DataCatalogService $dataCatalogService)
     {
         $this->dataCatalogService = $dataCatalogService;
@@ -97,7 +103,6 @@ abstract class AbstractMotTestMapper extends AbstractMapper
         $this->mapOdometer();
 
         $this->setValue('IssuedDate', $this->formatDate($this->getData()['issuedDate'], 'j M Y'));
-        $this->setValue('TestStation', $this->getData()['vehicleTestingStation']['siteNumber']);
         $this->setValue('IssuersName', Person::getShortName($this->getData()['tester']));
     }
 
@@ -244,10 +249,10 @@ abstract class AbstractMotTestMapper extends AbstractMapper
             return;
         }
 
-        //  --  set VTS station     --
+        // Set VTS
         $this->setValue('TestStation', (!empty($siteData['siteNumber']) ? $siteData['siteNumber'] : 'N/A'));
 
-        //  --  set Address     --
+        // Set address
         $address = ArrayUtils::tryGet($siteData, 'address');
         if (!is_array($address)) {
             $additionalData = $this->getDataSource('Additional');

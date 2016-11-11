@@ -17,6 +17,7 @@ class MotTestUrlBuilder extends AbstractUrlBuilder
 
     const RETEST = 'mot-retest[/:id]';
     const DEMO_TEST = 'mot-demo-test';
+    const NON_MOT_TEST = 'non-mot-test';
     const MINIMAL = '/minimal';
 
     const MOT_VALIDATE_RETEST = 'mot-retest-validate[/:motTestNumber]';
@@ -55,6 +56,7 @@ class MotTestUrlBuilder extends AbstractUrlBuilder
             self::RETEST => '',
             self::DEMO_TEST => '',
             self::REFUSAL => '',
+            self::NON_MOT_TEST => '',
         ];
 
     /**
@@ -116,6 +118,11 @@ class MotTestUrlBuilder extends AbstractUrlBuilder
     public static function demoTest()
     {
         return self::of()->appendRoutesAndParams(self::DEMO_TEST);
+    }
+
+    public static function nonMotTest()
+    {
+        return self::of()->appendRoutesAndParams(self::NON_MOT_TEST);
     }
 
     public static function motTestStatus($motTestNr)
