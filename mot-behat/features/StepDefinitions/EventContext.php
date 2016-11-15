@@ -1,77 +1,30 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use PHPUnit_Framework_Assert as PHPUnit;
 use Dvsa\Mot\Behat\Support\Api\Event;
 use Dvsa\Mot\Behat\Support\Api\Person;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
-use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
 use Dvsa\Mot\Behat\Support\Data\SiteData;
 use Dvsa\Mot\Behat\Support\Data\UserData;
-use Dvsa\Mot\Behat\Support\Data\Params\AuthorisedExaminerParams;
+use DvsaCommon\Utility\DtoHydrator;
+use DvsaCommon\Dto\Event\EventListDto;
 use Dvsa\Mot\Behat\Support\Data\Params\EventParams;
 use Dvsa\Mot\Behat\Support\Data\Params\PersonParams;
-use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
+use DvsaCommon\Dto\Event\EventDto;
 use DvsaCommon\Enum\EventCategoryCode;
 use Zend\Http\Response as HttpResponse;
 
 class EventContext implements Context
 {
-    /**
-     * @var SessionContext
-     */
-    private $sessionContext;
-
-    /**
-     * @var PersonContext
-     */
-    private $personContext;
-
-    /**
-     * @var VtsContext
-     */
-    private $vtsContext;
-
-    /**
-     * @var AuthorisedExaminerContext
-     */
-    private $aeContext;
-
-    /**
-     * @var Event
-     */
     private $event;
 
-    /**
-     * @var Person
-     */
     private $person;
 
-    /**
-     * @var Session
-     */
-    private $session;
+    private $eventCreationData = [];
 
-    /**
-     * @var TestSupportHelper
-     */
-    private $testSupportHelper;
-
-    /** @var array */
-    private $siteEvent = [];
-
-    /**
-     * Used to store data in preparation for manually creating an event
-     * @var array
-     */
-    private $eventCreationData;
-
-    /**
-     * @var int
-     */
     private $eventCreationEntityId;
 
     private $authorisedExaminerData;
@@ -81,13 +34,14 @@ class EventContext implements Context
     private $userData;
 
     /**
-     * @param Event $event
+     * @var EventDto
      */
+    private $userEvent;
+
+
     public function __construct(
         Event $event,
         Person $person,
-        Session $session,
-        TestSupportHelper $testSupportHelper,
         AuthorisedExaminerData $authorisedExaminerData,
         SiteData $siteData,
         UserData $userData
@@ -95,32 +49,18 @@ class EventContext implements Context
     {
         $this->event = $event;
         $this->person = $person;
-        $this->session = $session;
-        $this->testSupportHelper = $testSupportHelper;
         $this->authorisedExaminerData = $authorisedExaminerData;
         $this->siteData = $siteData;
         $this->userData = $userData;
     }
 
     /**
-     * @BeforeScenario
+     * @Given I create an event for :username
      */
-    public function gatherContexts(BeforeScenarioScope $scope)
+    public function iCreateAnEventForAPerson($username)
     {
-        $this->personContext = $scope->getEnvironment()->getContext(PersonContext::class);
-        $this->sessionContext = $scope->getEnvironment()->getContext(SessionContext::class);
-        $this->vtsContext = $scope->getEnvironment()->getContext(VtsContext::class);
-        $this->aeContext = $scope->getEnvironment()->getContext(AuthorisedExaminerContext::class);
-    }
-
-    /**
-     * @Given I create an event for a person
-     */
-    public function iCreateAnEventForAPerson()
-    {
-        // We also need to create a person here
-        $this->personContext->theUserExists('User');
-        $this->eventCreationEntityId = $this->personContext->getPersonUserId();
+        $user = $this->userData->createUser($username);
+        $this->eventCreationEntityId = $user->getUserId();
         $this->eventCreationData[EventParams::EVENT_CATEGORY_CODE] = EventCategoryCode::NT_EVENTS;
     }
 
@@ -141,7 +81,6 @@ class EventContext implements Context
     {
         $site = $this->siteData->get();
         $this->eventCreationEntityId = $site->getId();
-
         $this->eventCreationData[EventParams::EVENT_CATEGORY_CODE] = EventCategoryCode::VTS_EVENT;
 
     }
@@ -218,43 +157,24 @@ class EventContext implements Context
     }
 
     /**
-     * @Then a status change event is generated for the user of :eventType
-     * @Then an event is generated for the user of :eventType
-     */
-    public function aStatusChangeEventIsGeneratedForTheUserOf($eventType)
-    {
-        $response = $this->event->getPersonEventsData($this->sessionContext->getCurrentAccessToken(), $this->personContext->getPersonUserId());
-        $data = $response->getBody()->getData();
-        $eventList = $data["events"];
-
-        PHPUnit::assertNotEmpty($eventList);
-
-        $found = false;
-        foreach ($eventList as $event) {
-            if ($event[EventParams::TYPE] === $eventType) {
-                $this->userEvent = $event;
-                $found = true;
-                break;
-            }
-        }
-
-        PHPUnit::assertTrue($found, "Event type {$eventType} not found");
-    }
-
-    /**
+     * @Then a status change event is generated for :user of :type
+     * @Then an event is generated for the user of :type
      * @Then an event is generated for :user of :type
      */
-    public function aStatusChangeEventIsGeneratedForTheUserOfEventType(AuthenticatedUser $user, $type)
+    public function aStatusChangeEventIsGeneratedForTheUserOf(AuthenticatedUser $user, $type)
     {
         $response = $this->event->getPersonEventsData($this->userData->getCurrentLoggedUser()->getAccessToken(), $user->getUserId());
         $data = $response->getBody()->getData();
-        $eventList = $data["events"];
+
+        /** @var EventListDto $eventList */
+        $eventList = DtoHydrator::jsonToDto($data);
+        $events = $eventList->getEvents();
 
         PHPUnit::assertNotEmpty($eventList);
 
         $found = false;
-        foreach ($eventList as $event) {
-            if ($event[EventParams::TYPE] === $type) {
+        foreach ($events as $event) {
+            if ($event->getType() === $type) {
                 $this->userEvent = $event;
                 $found = true;
                 break;
@@ -269,7 +189,7 @@ class EventContext implements Context
      */
     public function anEventDescriptionContainsPhrase($phrase)
     {
-        PHPUnit::assertContains($phrase, $this->userEvent["description"]);
+        PHPUnit::assertContains($phrase, $this->userEvent->getDescription());
     }
 
     /**
@@ -281,17 +201,23 @@ class EventContext implements Context
     }
 
     /**
-     * @Then a status change event is NOT generated for the user of :eventType
+     * @Then a status change event is NOT generated for the :user of :type
      */
-    public function aStatusChangeEventIsNotGeneratedForTheUserOf($eventType)
+    public function aStatusChangeEventIsNotGeneratedForTheUserOf(AuthenticatedUser $user, $type)
     {
-        $response = $this->event->getPersonEventsData($this->sessionContext->getCurrentAccessToken(), $this->personContext->getPersonUserId());
+        $response = $this->event->getPersonEventsData(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $user->getUserId()
+        );
         $data = $response->getBody()->getData();
-        $eventList = $data["events"];
+
+        /** @var EventListDto $eventList */
+        $eventList = DtoHydrator::jsonToDto($data);
+        $events = $eventList->getEvents();
 
         $found = false;
-        foreach ($eventList as $event) {
-            if ($event[EventParams::TYPE] === $eventType) {
+        foreach ($events as $event) {
+            if ($event->getType() === $type) {
                 $found = true;
                 break;
             }
@@ -301,21 +227,23 @@ class EventContext implements Context
     }
 
     /**
-     * @Then a site event is generated for the site of :eventType
+     * @Then a site event is generated for the site of :type
      */
-    public function aSiteEventIsGeneratedForTheSiteOf($eventType)
+    public function aSiteEventIsGeneratedForTheSiteOf($type)
     {
         $areaOffice1User = $this->userData->createAreaOffice1User();
         $siteId = $this->siteData->get()->getId();
 
         $response = $this->event->getSiteEventsData($areaOffice1User->getAccessToken(), $siteId);
         $data = $response->getBody()->getData();
-        $eventList = $data["events"];
+
+        /** @var EventListDto $eventList */
+        $eventList = DtoHydrator::jsonToDto($data);
+        $events = $eventList->getEvents();
 
         $found = false;
-        foreach ($eventList as $event) {
-            if ($event[EventParams::TYPE] === $eventType) {
-                $this->siteEvent = $event;
+        foreach ($events as $event) {
+            if ($event->getType() === $type) {
                 $found = true;
                 break;
             }
@@ -325,34 +253,35 @@ class EventContext implements Context
     }
 
     /**
-     * @Then an organisation event is generated for the organisation of :eventType
+     * @Then an organisation event is generated for the organisation of :type
      */
-    public function anOrganisationEventIsGeneratedForTheOrganisationOf($eventType)
+    public function anOrganisationEventIsGeneratedForTheOrganisationOf($type)
     {
         $areaOffice1User = $this->userData->createAreaOffice1User();
         $aeId = $this->authorisedExaminerData->get()->getId();
 
-        $ae = $this->authorisedExaminerData->get();
-
         $response = $this->event->getOrganisationEventsData($areaOffice1User->getAccessToken(), $aeId);
         $data = $response->getBody()->getData();
-        $eventList = $data["events"];
+
+        /** @var EventListDto $eventList */
+        $eventList = DtoHydrator::jsonToDto($data);
+        $events = $eventList->getEvents();
 
         $found = false;
-        foreach ($eventList as $event) {
-            if ($event[EventParams::TYPE] === $eventType) {
-                $this->siteEvent = $event;
+        foreach ($events as $event) {
+            if ($event->getType() === $type) {
                 $found = true;
                 break;
             }
         }
 
-        PHPUnit::assertTrue($found, "Event {$eventType} not found");
+        PHPUnit::assertTrue($found, "Event {$type} not found");
     }
 
     private function getPersonDisplayName()
     {
-        $response = $this->person->getPersonDetails($this->sessionContext->getCurrentAccessToken(),$this->sessionContext->getCurrentUserId());
+        $user = $this->userData->getCurrentLoggedUser();
+        $response = $this->person->getPersonDetails($user->getAccessToken(), $user->getUserId());
         $data = $response->getBody()->getData();
 
         return implode(" ", array_filter([$data[PersonParams::FIRST_NAME], $data[PersonParams::MIDDLE_NAME], $data[PersonParams::SURNAME]]));

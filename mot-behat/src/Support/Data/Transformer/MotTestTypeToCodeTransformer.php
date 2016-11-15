@@ -1,7 +1,6 @@
 <?php
 namespace Dvsa\Mot\Behat\Support\Data\Transformer;
 
-use Dvsa\Mot\Behat\Support\Scope\BeforeBehatScenarioScope;
 use DvsaCommon\Enum\MotTestTypeCode;
 
 trait MotTestTypeToCodeTransformer
@@ -11,10 +10,6 @@ trait MotTestTypeToCodeTransformer
      */
     public function castMotTestTypeToCode($testType)
     {
-        if (BeforeBehatScenarioScope::isTransformerDisabled()) {
-            return $testType;
-        }
-
         switch ($testType) {
             case "normal":
                 return MotTestTypeCode::NORMAL_TEST;

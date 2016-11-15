@@ -37,6 +37,10 @@ class UserData
         $this->client = $client;
     }
 
+    /**
+     * @param string $name
+     * @return AuthenticatedUser
+     */
     public function createTester($name = self::DEFAULT_TESTER_NAME)
     {
         $site = DefaultVehicleTestingStation::get();
@@ -69,6 +73,22 @@ class UserData
 
         $service = $this->testSupportHelper->getTesterService();
         $user = $service->create($params);
+
+        return $this->createAuthenticatedUser($user, $name);
+    }
+
+    public function createTesterWithoutLicence($name = "Tester Without Licence")
+    {
+        $user = $this->tryGet($name);
+        if ($user !== null) {
+            return $user;
+        }
+
+        $params = PersonParams::getDefaultParams();
+        $params[PersonParams::SITE_IDS] = [DefaultVehicleTestingStation::get()->getId()];
+
+        $service = $this->testSupportHelper->getTesterService();
+        $user = $service->createWithoutLicence($params);
 
         return $this->createAuthenticatedUser($user, $name);
     }

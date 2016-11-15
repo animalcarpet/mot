@@ -3,24 +3,20 @@
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
-use Dvsa\Mot\Behat\Support\Api\AuthorisedExaminer;
-use Dvsa\Mot\Behat\Support\Api\Notification;
+use Dvsa\Mot\Behat\Support\Data\Exception\UnexpectedResponseStatusCodeException;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\Vts;
 use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
 use Dvsa\Mot\Behat\Support\Data\SiteData;
 use Dvsa\Mot\Behat\Support\Data\UserData;
 use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
-use Dvsa\Mot\Behat\Support\Data\Params\PersonParams;
 use Dvsa\Mot\Behat\Support\Data\Params\AuthorisedExaminerParams;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use DvsaCommon\Dto\Site\SiteListDto;
-use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Dto\Site\SiteDto;
 use DvsaCommon\Dto\Organisation\OrganisationDto;
 use DvsaCommon\Enum\VehicleClassId;
 use DvsaCommon\Enum\VehicleClassCode;
-use DvsaCommon\Model\VehicleTestingStation;
 use DvsaCommon\Dto\Search\SiteSearchParamsDto;
 use DvsaCommon\Utility\DtoHydrator;
 use Zend\Http\Response as HttpResponse;
@@ -43,34 +39,10 @@ class VtsContext implements Context
      */
     private $testSupportHelper;
 
-    /**
-     * @var Session
-     */
-    private $session;
-
-    /**
-     * @var Notification
-     */
-    private $notification;
-
-    /**
-     * @var AuthorisedExaminer
-     */
-    private $authorisedExaminer;
-
     /** @var \SessionContext */
     private $sessionContext;
 
-    /** @var array */
-    private $createdVts = [];
-
     private $resultContext;
-
-    /** @var PersonContext */
-    private $personContext;
-
-    /** @var AuthorisedExaminerContext */
-    private $authorisedExaminerContext;
 
     private $riskAssessmentData = [];
 
@@ -91,9 +63,6 @@ class VtsContext implements Context
     public function __construct(
         Vts $vehicleTestingStation,
         TestSupportHelper $testSupportHelper,
-        Session $session,
-        Notification $notification,
-        AuthorisedExaminer $authorisedExaminer,
         SiteData $siteData,
         UserData $userData,
         AuthorisedExaminerData $authorisedExaminerData
@@ -101,9 +70,6 @@ class VtsContext implements Context
     {
         $this->vehicleTestingStation = $vehicleTestingStation;
         $this->testSupportHelper = $testSupportHelper;
-        $this->session = $session;
-        $this->notification = $notification;
-        $this->authorisedExaminer = $authorisedExaminer;
         $this->siteData = $siteData;
         $this->userData = $userData;
         $this->authorisedExaminerData = $authorisedExaminerData;
@@ -115,8 +81,6 @@ class VtsContext implements Context
     public function gatherContexts(BeforeScenarioScope $scope)
     {
         $this->sessionContext = $scope->getEnvironment()->getContext(\SessionContext::class);
-        $this->personContext = $scope->getEnvironment()->getContext(PersonContext::class);
-        $this->authorisedExaminerContext = $scope->getEnvironment()->getContext(AuthorisedExaminerContext::class);
     }
 
     /**
@@ -239,15 +203,24 @@ class VtsContext implements Context
      */
     public function iSearchForVehicleTestingStationOnlyByClass()
     {
-        $params = [
-            'siteVehicleClass' => [VehicleClassCode::CLASS_1],
-            '_class' => SiteSearchParamsDto::class
-        ];
+        try {
+            $params = [
+                'siteVehicleClass' => [VehicleClassCode::CLASS_1],
+                '_class' => SiteSearchParamsDto::class
+            ];
 
-        $response = $this->vehicleTestingStation->searchVts(
-            $params,
-            $this->sessionContext->getCurrentAccessToken()
-        );
+            $response = $this->vehicleTestingStation->searchVts(
+                $params,
+                $this->userData->getCurrentLoggedUser()->getAccessToken()
+            );
+
+        } catch (UnexpectedResponseStatusCodeException $exception) {
+            $response = $this->vehicleTestingStation->getLastResponse();
+        }
+
+        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+        PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
+
         PHPUnit::assertEquals(HttpResponse::STATUS_CODE_500, $response->getStatusCode());
         $this->resultContext = [
             '_class' => SiteListDto::class,
@@ -279,7 +252,7 @@ class VtsContext implements Context
 
         $response = $this->vehicleTestingStation->searchVts(
             $params,
-            $this->sessionContext->getCurrentAccessToken()
+            $this->userData->getCurrentLoggedUser()->getAccessToken()
         );
         $this->resultContext = $response->getBody()->getData();
     }
@@ -369,12 +342,20 @@ class VtsContext implements Context
         }
 
         $this->riskAssessmentData = $this->prepareRiskAssessmentData("VTS", "Organisation", $hash[0]);
-        $response = $this->vehicleTestingStation->addRiskAssessment(
-            $this->userData->getCurrentLoggedUser()->getAccessToken(),
-            $this->siteData->get("VTS")->getId(),
-            $this->riskAssessmentData
-        );
 
+        try {
+            $response = $this->vehicleTestingStation->addRiskAssessment(
+                $this->userData->getCurrentLoggedUser()->getAccessToken(),
+                $this->siteData->get("VTS")->getId(),
+                $this->riskAssessmentData
+            );
+
+        } catch (UnexpectedResponseStatusCodeException $exception) {
+            $response = $this->vehicleTestingStation->getLastResponse();
+        }
+
+        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+        PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
         PHPUnit::assertEquals(HttpResponse::STATUS_CODE_400, $response->getStatusCode());
     }
 
@@ -383,51 +364,32 @@ class VtsContext implements Context
      */
     public function riskAssessmentIsNotAddedToSite()
     {
-        $response = $this->vehicleTestingStation->getRiskAssessment(
-            $this->userData->getCurrentLoggedUser()->getAccessToken(),
-            $this->siteData->get("VTS")->getId()
-        );
+        try {
+            $response = $this->vehicleTestingStation->getRiskAssessment(
+                $this->userData->getCurrentLoggedUser()->getAccessToken(),
+                $this->siteData->get("VTS")->getId()
+            );
 
+        } catch (UnexpectedResponseStatusCodeException $exception) {
+            $response = $this->vehicleTestingStation->getLastResponse();
+        }
+
+        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+        PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
         PHPUnit::assertEquals(HttpResponse::STATUS_CODE_404, $response->getStatusCode());
     }
 
     /**
-     * @When class :vtsClass is removed from site
+     * @When class :vtsClass is removed from site :site
      */
-    public function classIsRemovedFromSite($vtsClass, $name = SiteData::DEFAULT_NAME)
+    public function classIsRemovedFromSite($vtsClass, SiteDto $site)
     {
-        $areaOffice1Service = $this->testSupportHelper->getAreaOffice1Service();
-        $ao = $areaOffice1Service->create([]);
-        $aoSession = $this->session->startSession(
-            $ao->data[PersonParams::USERNAME],
-            $ao->data[PersonParams::PASSWORD]
-        );
-
         $classes = VehicleClassId::getAll();
-
         if (($key = array_search($vtsClass, $classes)) !== false) {
             unset($classes[$key]);
         }
 
-        $response = $this->vehicleTestingStation->updateSiteDetails(
-            $aoSession->getAccessToken(),
-            $this->siteData->get()->getId(),
-            [
-                VehicleTestingStation::PATCH_PROPERTY_CLASSES => $classes,
-                '_class' => VehicleTestingStationDto::class,
-            ]
-        );
-
-        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
-    }
-
-    public function iGetTestLogs($name = SiteData::DEFAULT_NAME)
-    {
-        $this->createdVts[$name][AuthorisedExaminerParams::TEST_LOGS] = $this->vehicleTestingStation->getTestLogs(
-            $this->sessionContext->getCurrentAccessToken(), $this->createdVts[$name][SiteParams::ID]
-        )->getBody()["data"];
-
-        return $this->createdVts[$name][AuthorisedExaminerParams::TEST_LOGS];
+        $this->siteData->updateSiteClasses($site->getId(), $classes);
     }
 
     /**
@@ -461,7 +423,7 @@ class VtsContext implements Context
         $this->riskAssessmentData = $this->prepareRiskAssessmentData($site->getName(), $ae->getName(), $hash, false);
 
         $response = $this->vehicleTestingStation->addRiskAssessment(
-            $this->sessionContext->getCurrentAccessToken(),
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
             $site->getId(),
             $this->riskAssessmentData
         );

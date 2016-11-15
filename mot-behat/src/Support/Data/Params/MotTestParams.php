@@ -12,5 +12,6 @@ class MotTestParams
     const COMPLETED_DATE = "completedDate";
     const STATUS = "status";
     const TYPE = "type";
+    const MOT_TEST_TYPE = "motTestType";
     const RFR_ID = "rfrId";
 }

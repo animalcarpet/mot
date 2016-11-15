@@ -1,8 +1,6 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Dvsa\Mot\Behat\Support\Api\MotTest;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Response;
 use Dvsa\Mot\Behat\Support\Data\SiteData;
@@ -10,19 +8,11 @@ use Dvsa\Mot\Behat\Support\Data\UserData;
 use Dvsa\Mot\Behat\Support\Data\MotTestData;
 use Dvsa\Mot\Behat\Support\Data\MotTestSearchData;
 use DvsaCommon\Dto\Common\MotTestDto;
-use DvsaCommon\Collection\Collection;
+use Dvsa\Mot\Behat\Support\Data\Collection\DataCollection;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class MotTestSearchContext implements Context
 {
-    /**
-     * @var MotTest
-     */
-    private $motTest;
-
-    /**
-     * @var SiteData
-     */
     private $siteData;
 
     private $userData;
@@ -32,47 +22,26 @@ class MotTestSearchContext implements Context
     private $motTestSearchData;
 
     /**
-     * @var SessionContext
-     */
-    private $sessionContext;
-
-    /**
-     * @var MotTestContext
-     */
-    private $motTestContext;
-
-    /**
      * @var Response
      */
     private $searchResponse;
 
     /**
-     * @var Collection;
+     * @var DataCollection;
      */
     private $foundedMotTests;
 
     public function __construct(
-        MotTest $motTest,
         SiteData $siteData,
         UserData $userData,
         MotTestData $motTestData,
         MotTestSearchData $motTestSearchData
     )
     {
-        $this->motTest = $motTest;
         $this->siteData = $siteData;
         $this->userData = $userData;
         $this->motTestData = $motTestData;
         $this->motTestSearchData = $motTestSearchData;
-    }
-
-    /**
-     * @BeforeScenario
-     */
-    public function gatherContexts(BeforeScenarioScope $scope)
-    {
-        $this->sessionContext = $scope->getEnvironment()->getContext(SessionContext::class);
-        $this->motTestContext = $scope->getEnvironment()->getContext(MotTestContext::class);
     }
 
     /**
@@ -102,8 +71,7 @@ class MotTestSearchContext implements Context
      */
     public function theMOTTestDataIsReturned()
     {
-        /** @var MotTestDto $motTest */
-        $motTest = $this->motTestData->getAll()->last();
+        $motTest = $this->motTestData->getLast();
 
         /** @var MotTestDto $foundedMotTest */
         $foundedMotTest = $this->foundedMotTests->get($motTest->getMotTestNumber());
@@ -119,76 +87,9 @@ class MotTestSearchContext implements Context
         PHPUnit::assertCount(0, $this->foundedMotTests);
     }
 
-    /**
-     * @When /^I search for an MOT tests history by (.*)$/
-     */
-    public function iSearchForAnMOTTestHistoryBy($type)
-    {
-        $params = [
-            "dateFrom" => null,
-            "dateTo" => null,
-            "rowCount" => 1,
-            "order" => "desc"
-        ];
 
-        switch($type) {
-            case "site":
-                $params["siteNumber"] = $this->siteData->get()->getSiteNumber();
-                break;
-            case "vin":
-                $params["vin"] = "VIN123456789";
-                break;
-            case "registration":
-                $params["vrm"] = "ABCD123";
-                break;
-                break;
-            case "testNumber":
-                $params["testNumber"] = $this->motTestContext->getMotTestNumber();
-                break;
-        }
 
-        $this->searchResponse = $this->motTest->searchMotTestHistory(
-            $this->sessionContext->getCurrentAccessToken(),
-            $params
-        );
 
-    }
-
-    /**
-     * @Then /^MOT test history for vehicle and type (.*) is returned$/
-     *
-     * @param $testType
-     */
-    public function motTestHistoryForVehicleIsReturned($testType)
-    {
-        PHPUnit::assertNotEmpty(
-            $this->filterMotHistorySearchResponse($this->searchResponse, "ABCD123", $testType)
-        );
-    }
-
-    /**
-     * @Then /^MOT test history for vehicle and type (.*) is not returned$/
-     *
-     * @param $testType
-     */
-    public function motTestHistoryForVehicleIsNotReturned($testType)
-    {
-        PHPUnit::assertEmpty(
-            $this->filterMotHistorySearchResponse($this->searchResponse, "ABCD123", $testType)
-        );
-    }
-
-    protected function filterMotHistorySearchResponse($response, $registration, $testType)
-    {
-        $data = $response->getBody()["data"]["data"]->toArray();
-
-        $result = array_filter($data, function ($value) use ($registration, $testType) {
-            return $value["registration"] == $registration &&
-            $value["testType"] == $testType;
-        });
-
-        return $result;
-    }
 
     /**
      * @When /^I search for an MOT test with invalid Mot test number$/
@@ -201,7 +102,7 @@ class MotTestSearchContext implements Context
                 ''
             );
         } catch (\Exception $e) {
-            $this->foundedMotTests = new Collection(MotTestDto::class);
+            $this->foundedMotTests = new DataCollection(MotTestDto::class);
         }
 
     }
@@ -217,7 +118,7 @@ class MotTestSearchContext implements Context
                 ''
             );
         } catch (\Exception $e) {
-            $this->foundedMotTests = new Collection(MotTestDto::class);
+            $this->foundedMotTests = new DataCollection(MotTestDto::class);
         }
 
     }

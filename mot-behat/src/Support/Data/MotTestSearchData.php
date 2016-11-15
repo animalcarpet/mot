@@ -1,19 +1,22 @@
 <?php
 namespace Dvsa\Mot\Behat\Support\Data;
 
-use DvsaCommon\Collection\Collection;
+use Dvsa\Mot\Behat\Support\Data\Collection\DataCollection;
 use Dvsa\Mot\Behat\Support\Api\MotTest;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use DvsaCommon\Dto\Common\MotTestDto;
+use DvsaCommon\Dto\Search\SearchResultDto;
 use DvsaCommon\Utility\DtoHydrator;
 use Zend\Http\Response as HttpResponse;
 
-class MotTestSearchData
+class MotTestSearchData extends AbstractData
 {
     private $motTest;
 
-    public function __construct(MotTest $motTest)
+    public function __construct(MotTest $motTest, UserData $userData)
     {
+        parent::__construct($userData);
+
         $this->motTest = $motTest;
     }
 
@@ -39,14 +42,11 @@ class MotTestSearchData
             $params
         );
 
-        if ($response->getStatusCode() !== HttpResponse::STATUS_CODE_200) {
-            throw new \Exception("Mot tests not found");
-        }
-
         $motTests = $response->getBody()->getData()["data"];
-        $searchCollection = new Collection(MotTestDto::class);
+        $searchCollection = new DataCollection(MotTestDto::class);
         foreach ($motTests as $test) {
             $test["_class"] = MotTestDto::class;
+            /** @var MotTestDto $dto */
             $dto = $this->hydrateToDto($test);
             $searchCollection->add($dto, $dto->getMotTestNumber());
         }
@@ -55,11 +55,32 @@ class MotTestSearchData
     }
 
     /**
-     * @param array $mot
-     * @return MotTestDto
+     * @param AuthenticatedUser $user
+     * @param array $params
+     * @return SearchResultDto
      */
-    private function hydrateToDto(array $mot)
+    public function searchMotTestHistory(AuthenticatedUser $user, array $params)
     {
-        return DtoHydrator::jsonToDto($mot);
+        $response = $this->motTest->searchMotTestHistory(
+            $user->getAccessToken(),
+            $params
+        );
+
+        return $this->hydrateToDto($response->getBody()->getData());
+    }
+
+    public function searchMotTestHistoryForTester(AuthenticatedUser $requestor, AuthenticatedUser $tester)
+    {
+        return $this->searchMotTestHistory($requestor, ["tester" => $tester->getUserId()]);
+    }
+
+    private function hydrateToDto(array $data)
+    {
+        return DtoHydrator::jsonToDto($data);
+    }
+
+    public function getLastResponse()
+    {
+        return $this->motTest->getLastResponse();
     }
 }

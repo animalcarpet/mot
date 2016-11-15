@@ -1,11 +1,12 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Response;
 use Dvsa\Mot\Behat\Support\Api\Session;
-use PHPUnit_Framework_TestCase as PHPUnit;
 use Dvsa\Mot\Behat\Support\Api\SecurityQuestionsChange;
+use Dvsa\Mot\Behat\Support\Data\Exception\UnexpectedResponseStatusCodeException;
+use Dvsa\Mot\Behat\Support\Data\UserData;
+use PHPUnit_Framework_TestCase as PHPUnit;
 use Zend\Http\Response as HttpResponse;
 
 class SecurityQuestionsContext implements Context
@@ -14,34 +15,19 @@ class SecurityQuestionsContext implements Context
     const SECURITY_QUESTION_ID_NAME_OF_DOG = 1;
     const SECURITY_QUESTION_ID_FIRST_KISS = 2;
 
-    /** @var SessionContext */
-    private $sessionContext;
-
-    /** @var array */
+    private $userData;
     private $securityQuestionData = [];
-
-    /** @var SecurityQuestionsChange $securityQuestionChange */
     private $securityQuestionsChange;
 
-    /** @var Response $response */
-    private $response;
-
-    /**
-     * @param SecurityQuestionsChange $securityQuestionsChange
-     * @param Session $session
-     */
-    public function __construct(SecurityQuestionsChange $securityQuestionsChange, Session $session)
+    public function __construct(
+        SecurityQuestionsChange $securityQuestionsChange,
+        Session $session,
+        UserData $userData
+    )
     {
         $this->securityQuestionsChange = $securityQuestionsChange;
         $this->session = $session;
-    }
-
-    /**
-     * @BeforeScenario
-     */
-    public function gatherContexts(BeforeScenarioScope $scope)
-    {
-        $this->sessionContext = $scope->getEnvironment()->getContext(SessionContext::class);
+        $this->userData = $userData;
     }
 
     /**
@@ -78,9 +64,23 @@ class SecurityQuestionsContext implements Context
      */
     public function iConfirmMyChangesToMySecurityQuestions()
     {
-        $userId = $this->sessionContext->getCurrentUserId();
-        $this->response =
-            $this->securityQuestionsChange->changeQuestions($userId, $this->securityQuestionData);
+        $userId = $this->userData->getCurrentLoggedUser()->getUserId();
+        $this->securityQuestionsChange->changeQuestions($userId, $this->securityQuestionData);
+    }
+
+    /**
+     * @When I try confirm my changes to my security questions
+     */
+    public function iTryConfirmMyChangesToMySecurityQuestions()
+    {
+        try {
+            $this->iConfirmMyChangesToMySecurityQuestions();
+        } catch (UnexpectedResponseStatusCodeException $exception) {
+
+        }
+
+        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+        PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
     }
 
     /**
@@ -88,7 +88,8 @@ class SecurityQuestionsContext implements Context
      */
     public function myQuestionsAreUpdated()
     {
-        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $this->response->getStatusCode());
+        $response = $this->securityQuestionsChange->getLastResponse();
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
 
     /**
@@ -96,7 +97,7 @@ class SecurityQuestionsContext implements Context
      */
     public function myQuestionsHaveNotBeenUpdated()
     {
-        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_400, $this->response->getStatusCode());
+        $response = $this->securityQuestionsChange->getLastResponse();
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_400, $response->getStatusCode());
     }
-
 }

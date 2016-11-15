@@ -7,7 +7,6 @@ use Dvsa\Mot\Behat\Support\Response;
 use PHPUnit_Framework_Assert as PHPUnit;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use TestSupport\Service\AEService;
-use Dvsa\Mot\Behat\Support\Data\Params\AuthorisedExaminerParams;
 use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
 use Dvsa\Mot\Behat\Support\Data\UserData;
 use Zend\Http\Response as HttpResponse;
@@ -16,15 +15,7 @@ class SlotsManualAdjustmentContext implements Context
 {
     const AE_NAME = "Slots AE";
 
-    /**
-     * @var SessionContext
-     */
-    private $sessionContext;
-
-    /**
-     * @var AuthorisedExaminerContext
-     */
-    private $authorisedExaminerContext;
+    private $testSupportHelper;
 
     /**
      * @var SlotPurchase
@@ -37,16 +28,9 @@ class SlotsManualAdjustmentContext implements Context
     private $response;
 
     /**
-     * @var TestSupportHelper
-     */
-    private $testSupportHelper;
-
-    /**
      * @var AEService
      */
     private $aeService;
-
-    private $authorisedExaminer;
 
     private $authorisedExaminerData;
 
@@ -65,20 +49,17 @@ class SlotsManualAdjustmentContext implements Context
     )
     {
         $this->slotPurchaseApi = $slotPurchaseApi;
-        $this->testSupportHelper = $testSupportHelper;
         $this->authorisedExaminerData = $authorisedExaminerData;
         $this->userData = $userData;
+        $this->testSupportHelper = $testSupportHelper;
     }
 
     /**
      * @BeforeScenario @manual-adjustments
      */
-    public function gatherContexts(BeforeScenarioScope $scope)
+    public function setUp(BeforeScenarioScope $scope)
     {
-        $this->sessionContext = $scope->getEnvironment()->getContext(SessionContext::class);
-        $this->sessionContext->iAmLoggedInAsAFinanceUser();
         $this->aeService = $this->testSupportHelper->getAeService();
-        $this->authorisedExaminerContext = $scope->getEnvironment()->getContext(AuthorisedExaminerContext::class);
     }
 
     /**
@@ -170,7 +151,7 @@ class SlotsManualAdjustmentContext implements Context
      */
     public function aeSlotBalanceShouldBeUpdatedTo($updatedBalance)
     {
-        $actual = $this->aeService->getSlotBalanceForAE($this->authorisedExaminerData->get(self::AE_NAME)->getId());
+        $actual = (int) $this->aeService->getSlotBalanceForAE($this->authorisedExaminerData->get(self::AE_NAME)->getId());
         PHPUnit::assertSame($updatedBalance, $actual);
     }
 

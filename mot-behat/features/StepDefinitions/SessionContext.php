@@ -117,10 +117,15 @@ class SessionContext implements Context
 
     /**
      * @Given I am logged in as a Tester
+     * @Given I am logged in as a Tester at site :name
      */
-    public function iAmLoggedInAsATester()
+    public function iAmLoggedInAsATester($name = SiteData::DEFAULT_NAME)
     {
-        $site = $this->siteData->get();
+        $site = $this->siteData->tryGet($name);
+        if ($site === null) {
+            $site = $this->siteData->create($name);
+        }
+
         $this->currentUser = $this->userData->createTesterAssignedWitSite($site->getId());
         $this->userData->setCurrentLoggedUser($this->currentUser);
     }

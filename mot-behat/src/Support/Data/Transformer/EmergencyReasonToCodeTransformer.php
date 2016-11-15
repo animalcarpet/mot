@@ -1,7 +1,6 @@
 <?php
 namespace Dvsa\Mot\Behat\Support\Data\Transformer;
 
-use Dvsa\Mot\Behat\Support\Scope\BeforeBehatScenarioScope;
 use DvsaCommon\Enum\EmergencyReasonCode;
 
 trait EmergencyReasonToCodeTransformer
@@ -11,10 +10,6 @@ trait EmergencyReasonToCodeTransformer
      */
     public function castEmergencyReasonToCode($emergencyReason)
     {
-        if (BeforeBehatScenarioScope::isTransformerDisabled()) {
-            return $emergencyReason;
-        }
-
         switch ($emergencyReason) {
             case "system outage":
                 return EmergencyReasonCode::SYSTEM_OUTAGE;

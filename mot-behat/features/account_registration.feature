@@ -6,9 +6,7 @@ Feature:
   @VM-11722 @user-registration
   Scenario Outline: A user registers the account successfully
     Given I am an unregistered user
-    And For the "email" step I input:
-      | emailAddress   | confirmEmailAddress   |
-      | <emailAddress> | <confirmEmailAddress> |
+    And For the email step I input email address
     And For the "details" step I input:
       | firstName   | middleName   | lastName   |
       | <firstName> | <middleName> | <lastName> |
@@ -25,14 +23,14 @@ Feature:
     Then I will be able to login
 
     Examples:
-      | firstName | middleName | lastName         | phone         | emailAddress        | confirmEmailAddress | address1             | address2    | address3      | day | month | year |
-      | John      | James      | Doe              | 123123123     | fake@dvsa.test      | fake@dvsa.test      | 123 address one      |             | address three | 01  | 02    | 1990 |
-      | Mary-Anne | Jane       | Smith            | 123456721     | fake123@dvsa.test   | fake123@dvsa.test   | address one          | address two | address three | 1   |  2    | 1990 |
-      | Jäné      | John       | Doe              | 0031123442134 | fake-mail@dvsa.test | fake-mail@dvsa.test | address one          | address two | address three | 01  | 02    | 1990 |
-      | Jane      | May        | Spencer-Campbell | 345623451     | fakemail1@dvsa.test | fakemail1@dvsa.test | address street       | address two | address three | 01  | 02    | 1990 |
-      | Jane      | May-Jane   | Smith            | 2345672345    | fakemail2@dvsa.test | fakemail2@dvsa.test | 12(a) address street | address two | address three | 01  | 02    | 1990 |
-      | Jane      | May        | Smith            | 123456234     | fakemail3@dvsa.test | fakemail3@dvsa.test | 12 address street    | address two |               | 01  | 02    | 1990 |
-      | Jane      | May        | Smith            | 23453456      | fakemail4@dvsa.test | fakemail4@dvsa.test  | 12 address street   |             |               | 01  | 02    | 1990 |
+      | firstName | middleName | lastName         | phone         | address1             | address2    | address3      | day | month | year |
+      | John      | James      | Doe              | 123123123     | 123 address one      |             | address three | 01  | 02    | 1990 |
+      | Mary-Anne | Jane       | Smith            | 123456721     | address one          | address two | address three | 1   |  2    | 1990 |
+      | Jäné      | John       | Doe              | 0031123442134 | address one          | address two | address three | 01  | 02    | 1990 |
+      | Jane      | May        | Spencer-Campbell | 345623451     | address street       | address two | address three | 01  | 02    | 1990 |
+      | Jane      | May-Jane   | Smith            | 2345672345    | 12(a) address street | address two | address three | 01  | 02    | 1990 |
+      | Jane      | May        | Smith            | 123456234     | 12 address street    | address two |               | 01  | 02    | 1990 |
+      | Jane      | May        | Smith            | 23453456      | 12 address street   |             |               | 01  | 02    | 1990 |
 
   @VM-11722 @negative @user-registration
   Scenario Outline: A user attempts to register an account but supplies invalid or insufficient details

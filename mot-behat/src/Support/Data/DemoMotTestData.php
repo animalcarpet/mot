@@ -1,16 +1,14 @@
 <?php
 namespace Dvsa\Mot\Behat\Support\Data;
 
-use Dvsa\Mot\Behat\Support\Api\BrakeTestResult;
 use Dvsa\Mot\Behat\Support\Api\DemoTest;
 use Dvsa\Mot\Behat\Support\Api\MotTest;
-use Dvsa\Mot\Behat\Support\Api\OdometerReading;
-use Dvsa\Mot\Behat\Support\Api\ReasonForRejection;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Support\Data\Params\MotTestParams;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\Enum\MotTestTypeCode;
+use Zend\Http\Response;
 
 class DemoMotTestData extends AbstractMotTestData
 {
@@ -20,13 +18,13 @@ class DemoMotTestData extends AbstractMotTestData
         DemoTest $demoTest,
         UserData $userData,
         MotTest $motTest,
-        BrakeTestResult $brakeTestResult,
-        OdometerReading $odometerReading,
-        ReasonForRejection $reasonForRejection,
+        BrakeTestResultData $brakeTestResultData,
+        OdometerReadingData $odometerReadingData,
+        ReasonForRejectionData $reasonForRejectionData,
         TestSupportHelper $testSupportHelper
     )
     {
-        parent::__construct($userData, $motTest, $brakeTestResult, $odometerReading, $reasonForRejection, $testSupportHelper);
+        parent::__construct($userData, $motTest, $brakeTestResultData, $odometerReadingData, $reasonForRejectionData, $testSupportHelper);
 
         $this->demoTest = $demoTest;
     }
@@ -63,5 +61,13 @@ class DemoMotTestData extends AbstractMotTestData
     {
         $mot = $this->create($tester, $vehicle);
         return $this->failMotTestWithDefaultBrakeTestAndMeterReading($mot);
+    }
+
+    /**
+     * @return Response
+     */
+    public function getLastResponse()
+    {
+        return $this->demoTest->getLastResponse();
     }
 }

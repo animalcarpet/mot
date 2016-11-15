@@ -1,5 +1,4 @@
-@transform
-Feature: Stats Tester Performance
+Feature: TQI Tester Performance at AE
 
   Background:
     Given there is a site associated with Authorised Examiner with following data:

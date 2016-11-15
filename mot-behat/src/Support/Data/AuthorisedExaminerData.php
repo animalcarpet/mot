@@ -14,8 +14,10 @@ use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use DvsaCommon\Dto\AreaOffice\AreaOfficeDto;
 use DvsaCommon\Dto\Organisation\AuthorisedExaminerAuthorisationDto;
 use DvsaCommon\Dto\Organisation\OrganisationDto;
+use DvsaCommon\Dto\Search\SearchResultDto;
 use DvsaCommon\Dto\Site\SiteDto;
 use DvsaCommon\Enum\AuthorisationForAuthorisedExaminerStatusCode;
+use DvsaCommon\Utility\DtoHydrator;
 use TestSupport\Service\AccountService;
 use Dvsa\Mot\Behat\Support\Response;
 use Zend\Http\Response as HttpResponse;
@@ -133,10 +135,6 @@ class AuthorisedExaminerData
             $site->getSiteNumber()
         );
 
-        if ($response->getStatusCode() !== HttpResponse::STATUS_CODE_200) {
-            throw new \Exception("Something went wrong during linking AE with Site");
-        }
-
         return $response->getBody()->getData()["id"];
     }
 
@@ -156,34 +154,46 @@ class AuthorisedExaminerData
 
     public function updateStatus(OrganisationDto $ae, AuthenticatedUser $user, $status)
     {
-        $authorisedExaminerResponse = $this->authorisedExaminer->updateStatusAuthorisedExaminer(
+        $this->authorisedExaminer->updateStatusAuthorisedExaminer(
             $user->getAccessToken(),
             $ae->getId(),
             $status
         );
-
-        if ($authorisedExaminerResponse->getStatusCode() !== HttpResponse::STATUS_CODE_200) {
-            throw new \Exception("Authorised Examiner status has not been updated");
-        }
     }
 
+    /**
+     * @param AuthenticatedUser $user
+     * @param OrganisationDto $ae
+     * @return SearchResultDto
+     */
     public function getTodaysTestLogs(AuthenticatedUser $user, OrganisationDto $ae)
     {
         $response = $this->authorisedExaminer->getTodaysTestLogs(
             $user->getAccessToken(), $ae->getId()
         );
 
-        return $response->getBody()->getData()["resultCount"];
+        return DtoHydrator::jsonToDto($response->getBody()->getData());
+    }
+
+    /**
+     * @param AuthenticatedUser $user
+     * @param SiteDto $site
+     * @return SearchResultDto
+     */
+    public function getTodaysSiteTestLogs(AuthenticatedUser $user, SiteDto $site)
+    {
+        $response = $this->authorisedExaminer->getTodaysTestLogs(
+            $user->getAccessToken(),
+            $site->getOrganisation()->getId(),
+            $site->getId()
+        );
+
+        return DtoHydrator::jsonToDto($response->getBody()->getData());
     }
 
     public function search(AuthenticatedUser $user, $number)
     {
         $response = $this->authorisedExaminer->search($user->getAccessToken(), $number);
-
-        if ($response->getStatusCode() !== HttpResponse::STATUS_CODE_200) {
-            throw new \Exception("Authorised Examiner not found");
-        }
-
         $data = $response->getBody()->getData();
 
         $assignedAreaOfficeData = $data[AuthorisedExaminerParams::AUTHORISED_EXAMINER_AUTHORISATION][AuthorisedExaminerAuthorisationParams::ASSIGNED_AREA_OFFICE];

@@ -1,32 +1,20 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\SlotPurchase;
 use Dvsa\Mot\Behat\Support\Response;
+use Dvsa\Mot\Behat\Support\Data\UserData;
+use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
+use DvsaCommon\Dto\Organisation\OrganisationDto;
 use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class SlotsAdjustTransactionContext implements Context
 {
-    /**
-     * @var SlotPurchase
-     */
     private $slotPurchase;
-
-    /**
-     * @var SessionContext
-     */
-    private $sessionContext;
-    /**
-     * @var array
-     */
-    private $organisationMap = [
-        'kwikfit'  => 10,
-        'halfords' => 9,
-        'asda'     => 12
-    ];
+    private $userData;
+    private $authorisedExaminerData;
 
     /**
      * @var array
@@ -47,20 +35,15 @@ class SlotsAdjustTransactionContext implements Context
      */
     private $responseReceived;
 
-    /**
-     * @param SlotPurchase $directDebit
-     */
-    public function __construct(SlotPurchase $slotPurchase)
+    public function __construct(
+        SlotPurchase $slotPurchase,
+        UserData $userData,
+        AuthorisedExaminerData $authorisedExaminerData
+    )
     {
         $this->slotPurchase = $slotPurchase;
-    }
-
-    /**
-     * @BeforeScenario
-     */
-    public function gatherContexts(BeforeScenarioScope $scope)
-    {
-        $this->sessionContext = $scope->getEnvironment()->getContext(SessionContext::class);
+        $this->userData = $userData;
+        $this->authorisedExaminerData = $authorisedExaminerData;
     }
 
     /**
@@ -70,20 +53,22 @@ class SlotsAdjustTransactionContext implements Context
     {
         $slots                  = rand(25, 500);
         $this->responseReceived = $this->slotPurchase->makePaymentForSlot(
-            $this->sessionContext->getCurrentAccessToken(), $slots, $this->organisationMap['halfords']
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $slots,
+            $this->authorisedExaminerData->get()->getId()
         );
     }
 
     /**
-     * @When I adjust the transaction to the correct Authorised Examiner :authorisedExaminer
+     * @When I adjust the transaction to the correct Authorised Examiner :ae
      */
-    public function iAdjustTheTransactionTotheCorrectAuthorisedExaminer($authorisedExaminer)
+    public function iAdjustTheTransactionTotheCorrectAuthorisedExaminer(OrganisationDto $ae)
     {
         $data                   = $this->responseReceived->getBody();
         $transactionId          = $data['data']['transaction_id'];
-        $token                  = $this->sessionContext->getCurrentAccessToken();
+        $token                  = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $body                   = [
-            'organisationId' => $this->organisationMap[$authorisedExaminer],
+            'organisationId' => $ae->getId(),
         ];
         $this->responseReceived = $this->slotPurchase->adjustTransaction($token, $transactionId, $body);
     }
@@ -107,7 +92,7 @@ class SlotsAdjustTransactionContext implements Context
     {
         $data                   = $this->responseReceived->getBody();
         $transactionId          = $data['data']['transaction_id'];
-        $token                  = $this->sessionContext->getCurrentAccessToken();
+        $token                  = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $body                   = [
             'statusCode' => $this->reasonMap[$reason],
             $field       => $value
@@ -120,7 +105,7 @@ class SlotsAdjustTransactionContext implements Context
      */
     public function requestListOfAmendmentReasonsByType($type)
     {
-            $token = $this->sessionContext->getCurrentAccessToken();
+            $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
 
             $this->responseReceived = $this->slotPurchase->getAmendmentReasonsByType(
                 $token, $this->amendmentReasonTypesMap[$type]

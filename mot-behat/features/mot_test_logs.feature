@@ -26,3 +26,11 @@ Feature: MOT Logs
     And I fetch test logs for those AE and VTS's
     Then test logs show correct test count
     And slot usage shows correct value
+
+  @create-default-site("Big Garage")
+  Scenario: A Person can view their test logs
+    Given I am logged in as a Tester
+    And I have created 2 mot tests
+    When I review my test logs
+    Then 2 test logs should show today in summary section
+    And My test logs should return 2 detailed records

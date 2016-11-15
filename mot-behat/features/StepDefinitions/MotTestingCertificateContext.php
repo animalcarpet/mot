@@ -1,12 +1,12 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\Person;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\MotTestingCertificate;
 use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
 use Dvsa\Mot\Behat\Support\Data\SiteData;
+use Dvsa\Mot\Behat\Support\Data\UserData;
 use DvsaCommon\Model\VehicleClassGroup;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
@@ -26,41 +26,26 @@ class MotTestingCertificateContext implements Context, \Behat\Behat\Context\Snip
     /** @var Person  */
     private $person;
 
-    /** @var SessionContext */
-    private $sessionContext;
-
-    /** @var VtsContext */
-    private $vtsContext;
-
-    /** @var PersonContext */
-    private $personContext;
-
     private $personId;
 
     private $data;
 
     private $siteData;
 
+    private $userData;
+
     public function __construct(
         TestSupportHelper $testSupportHelper,
         MotTestingCertificate $motTestingCertificate,
         Person $person,
-        SiteData $siteData
+        SiteData $siteData,
+        UserData $userData
     ) {
         $this->testSupportHelper = $testSupportHelper;
         $this->motTestingCertificate = $motTestingCertificate;
         $this->person = $person;
         $this->siteData = $siteData;
-    }
-
-    /**
-     * @BeforeScenario
-     */
-    public function gatherContexts(BeforeScenarioScope $scope)
-    {
-        $this->sessionContext = $scope->getEnvironment()->getContext(SessionContext::class);
-        $this->vtsContext = $scope->getEnvironment()->getContext(VtsContext::class);
-        $this->personContext = $scope->getEnvironment()->getContext(PersonContext::class);
+        $this->userData = $userData;
     }
 
     /**
@@ -68,7 +53,7 @@ class MotTestingCertificateContext implements Context, \Behat\Behat\Context\Snip
      */
     public function iEnterMotTestingCertificateDetails()
     {
-        $this->enterMotTestingCertificateDetailsForPerson($this->sessionContext->getCurrentUserId());
+        $this->enterMotTestingCertificateDetailsForPerson($this->userData->getCurrentLoggedUser()->getUserId());
     }
 
     /**
@@ -115,7 +100,7 @@ class MotTestingCertificateContext implements Context, \Behat\Behat\Context\Snip
 
         $response = $this
             ->motTestingCertificate
-            ->createCertificate($this->sessionContext->getCurrentAccessToken(), $this->personId, $data);
+            ->createCertificate($this->userData->getCurrentLoggedUser()->getAccessToken(), $this->personId, $data);
 
         PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
@@ -136,7 +121,7 @@ class MotTestingCertificateContext implements Context, \Behat\Behat\Context\Snip
 
         $response = $this
             ->person
-            ->getPersonMotTestingClasses($this->sessionContext->getCurrentAccessToken(), $this->personId)
+            ->getPersonMotTestingClasses($this->userData->getCurrentLoggedUser()->getAccessToken(), $this->personId)
         ;
 
         $qualifications = $response->getBody()->getData();
@@ -161,13 +146,12 @@ class MotTestingCertificateContext implements Context, \Behat\Behat\Context\Snip
     public function personWithStatusForGroupHasAccount($qualificationStatus, $vehicleClassGroup)
     {
         if ($this->personId === null) {
-            $service = $this->testSupportHelper->getUserService();
-            $user = $service->create([]);
+            $user = $this->userData->createUser();
 
-            $this->personId = $user->data["personId"];
+            $this->personId = $user->getUserId();
         }
 
-        $this->personContext->setQualificationStatus($this->personId, $qualificationStatus, $vehicleClassGroup);
+        $this->setQualificationStatus($this->personId, $qualificationStatus, $vehicleClassGroup);
     }
 
     /**
@@ -192,8 +176,8 @@ class MotTestingCertificateContext implements Context, \Behat\Behat\Context\Snip
      */
     public function iHaveMotTestingCertificateForGroup($vehicleClassGroup)
     {
-        $this->personContext->iHaveStatusForGroup("INITIAL_TRAINING_NEEDED", $vehicleClassGroup);
-        $this->enterMotTestingCertificateDetailsForPerson($this->sessionContext->getCurrentUserId());
+        $this->iHaveStatusForGroup("INITIAL_TRAINING_NEEDED", $vehicleClassGroup);
+        $this->enterMotTestingCertificateDetailsForPerson($this->userData->getCurrentLoggedUser()->getUserId());
 
         if ($vehicleClassGroup === "A and B") {
             $this->motTestingCertificateDetailsForClassIsCreated(VehicleClassGroupCode::BIKES);
@@ -211,8 +195,34 @@ class MotTestingCertificateContext implements Context, \Behat\Behat\Context\Snip
     {
         $response = $this
             ->motTestingCertificate
-            ->removeCertificate($this->sessionContext->getCurrentAccessToken(), $this->personId, strtolower($vehicleClassGroup));
+            ->removeCertificate($this->userData->getCurrentLoggedUser()->getAccessToken(), $this->personId, strtolower($vehicleClassGroup));
 
         PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
+    }
+
+    /**
+     * @Given I have :status status for group :group
+     */
+    public function iHaveStatusForGroup($status, $group)
+    {
+        $this->setQualificationStatus($this->userData->getCurrentLoggedUser()->getUserId(), $status, $group);
+    }
+
+    public function setQualificationStatus($personId, $status, $group)
+    {
+        $this->validateVehicleClassGroup($group);
+
+        if ($status === 'NOT_APPLIED') {
+            $this->testSupportHelper->getTesterService()->removeTesterQualificationStatusForGroup($personId, $group);
+            return;
+        }
+
+        $allowedStatuses = [
+            'INITIAL_TRAINING_NEEDED' => AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED
+        ];
+
+        $code = ArrayUtils::tryGet($allowedStatuses, $status);
+
+        $this->testSupportHelper->getTesterService()->insertTesterQualificationStatus($personId, $group, $code);
     }
 }

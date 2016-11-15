@@ -10,7 +10,6 @@ Feature: Contingency Test
     Then I should receive the MOT test number
     And the MOT Test Number should be 12 digits long
 
-  @transform
   Scenario Outline: Tester submits Contingency test details
     Given I am logged in as a Tester
     When I create a new contingency test with reason "<reason>"
@@ -20,11 +19,6 @@ Feature: Contingency Test
     | reason                |
     | communication problem |
     | other                 |
-
-  Scenario: Unauthenticated Tester attempts to submit Contingency test details
-    Given I am not logged in
-    When I attempt to create a new contingency test
-    Then I should receive an Unauthorised response
 
   Scenario Outline: Tester attempts to submit Contingency test details with invalid contingency code
     Given I am logged in as a Tester

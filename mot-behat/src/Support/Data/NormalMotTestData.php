@@ -21,10 +21,6 @@ class NormalMotTestData extends AbstractMotTestData
                 $vehicle->getVehicleClass()->getCode()
             );
 
-        if ($mot->getStatusCode() !== HttpResponse::STATUS_CODE_200) {
-            throw new \Exception("Something went wrong during creating mot test");
-        }
-
         $dto = $this->mapToMotTestDto(
             $tester,
             $vehicle,

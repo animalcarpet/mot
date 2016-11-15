@@ -16,6 +16,7 @@ use DvsaCommon\Dto\Site\SiteDto;
 use DvsaCommon\Enum\SiteStatusCode;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use Dvsa\Mot\Behat\Support\Response;
+use Dvsa\Mot\Behat\Support\Data\Exception\UnexpectedResponseStatusCodeException;
 use Zend\Http\Response as HttpResponse;
 
 class VtsManagementContext implements Context
@@ -92,6 +93,21 @@ class VtsManagementContext implements Context
         );
 
         $this->response = $response;
+    }
+
+    /**
+     * @When I try configure :site test lines to:
+     */
+    public function iTryConfigureItsTestLinesTo(SiteDto $site,TableNode $table)
+    {
+        try {
+            $this->iConfigureItsTestLinesTo($site, $table);
+        } catch (UnexpectedResponseStatusCodeException $exception) {
+            $this->response = $this->vehicleTestingStation->getLastResponse();
+        }
+
+        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+        PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
     }
 
     /**
@@ -259,9 +275,12 @@ class VtsManagementContext implements Context
                 $this->vehicleData->create(),
                 $this->siteData->get()
             );
-        } catch (\Exception $e) {
+        } catch (UnexpectedResponseStatusCodeException $exception) {
 
         }
+
+        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+        PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
     }
 
     /**

@@ -1,62 +1,60 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Datasource\Authentication;
-use Dvsa\Mot\Behat\Support\Api\ContingencyTest;
-use Dvsa\Mot\Behat\Support\Response;
+use Dvsa\Mot\Behat\Support\Data\UserData;
 use Dvsa\Mot\Behat\Support\Data\SiteData;
+use Dvsa\Mot\Behat\Support\Data\MotTestData;
+use Dvsa\Mot\Behat\Support\Data\VehicleData;
 use Dvsa\Mot\Behat\Support\Data\ContingencyData;
+use Dvsa\Mot\Behat\Support\Data\ContingencyMotTestData;
 use Dvsa\Mot\Behat\Support\Data\Params\ContingencyDataParams;
+use Dvsa\Mot\Behat\Support\Data\Exception\UnexpectedResponseStatusCodeException;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class ContingencyTestContext implements Context
 {
-    /**
-     * @var ContingencyTest
-     */
-    private $contingencyTest;
-
-    /**
-     * @var SiteData
-     */
     private $siteData;
 
-    /**
-     * @var SessionContext
-     */
-    private $sessionContext;
+    private $userData;
 
-    /**
-     * @var Response
-     */
-    private $createContingencyCodeIdResponse;
+    private $motTestData;
 
-    /**
-     * @var array
-     */
     private $contingencyData;
 
-    /**
-     * @var string
-     */
+    private $contingencyMotTestData;
+
+    private $vehicleData;
+
     private $dailyContingencyCode;
 
-    /**
-     * @param ContingencyTest $contingencyTest
-     */
-    public function __construct(ContingencyTest $contingencyTest, SiteData $siteData)
+    public function __construct(
+        SiteData $siteData,
+        UserData $userData,
+        MotTestData $motTestData,
+        ContingencyData $contingencyData,
+        ContingencyMotTestData $contingencyMotTestData,
+        VehicleData $vehicleData
+    )
     {
-        $this->contingencyTest = $contingencyTest;
         $this->siteData = $siteData;
+        $this->userData = $userData;
+        $this->motTestData = $motTestData;
+        $this->contingencyData = $contingencyData;
+        $this->contingencyMotTestData = $contingencyMotTestData;
+        $this->vehicleData = $vehicleData;
     }
 
     /**
-     * @BeforeScenario
+     * @When /^I start a Contingency MOT test$/
      */
-    public function gatherContexts(BeforeScenarioScope $scope)
+    public function iStartAContingencyMOTTest()
     {
-        $this->sessionContext = $scope->getEnvironment()->getContext(SessionContext::class);
+        $this->contingencyMotTestData->create(
+            $this->userData->getCurrentLoggedUser(),
+            $this->vehicleData->create(),
+            $this->siteData->get()
+        );
     }
 
     /**
@@ -68,19 +66,19 @@ class ContingencyTestContext implements Context
     }
 
     /**
-     * @When /^I attempt to create a new contingency test$/
-     */
-    public function iAttemptToCreateANewContingencyTest()
-    {
-        $this->createContingencyCode($this->dailyContingencyCode, 'SO');
-    }
-
-    /**
      * @When /^I attempt to create a new contingency test with a (.*)$/
      */
     public function iAttemptToCreateANewContingencyTestWithA($contingencyCode)
     {
-        $this->createContingencyCode($contingencyCode, 'SO');
+        try {
+            $this->createContingencyCode($contingencyCode, 'SO');
+        } catch (UnexpectedResponseStatusCodeException $e) {
+            $exception = $e;
+        }
+
+        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+        PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
+
     }
 
     /**
@@ -96,64 +94,59 @@ class ContingencyTestContext implements Context
      */
     public function iShouldReceiveAnEmergencyLogId()
     {
-        PHPUnit::assertTrue(is_int($this->getEmergencyLogId()), 'Emergency log Id is not a number.');
+        $emergencyLogId = $this->contingencyData->getEmergencyLogId($this->siteData->get()->getName());
+        PHPUnit::assertTrue(is_int($emergencyLogId), 'Emergency log Id is not a number.');
     }
 
     /**
-     * @param string $testType
-     * @param string $contingencyCode
-     * @param string $reasonCode
+     * @Given /^the Contingency Test is Logged$/
      */
-    public function createContingencyCode(
-        $contingencyCode = Authentication::CONTINGENCY_CODE_DEFAULT,
-        $reasonCode = 'SO',
-        DateTime $dateTime = null,
-        $token = null,
-        $siteId = null
-    ) {
-        $this->contingencyData = [
+    public function theContingencyTestIsLogged()
+    {
+        $motTest = $this->motTestData->getLast();
+
+        $contingencyDto = $this->contingencyData->getBySiteId($this->siteData->get()->getId());
+        PHPUnit::assertEquals($contingencyDto->getContingencyCode(), $motTest->getEmergencyLog()[ContingencyDataParams::NUMBER], 'Contingency Code not returned.');
+        PHPUnit::assertEquals($this->contingencyData->getEmergencyLogId(), $motTest->getEmergencyLog()[ContingencyDataParams::ID], 'Emergency Log Id not returned.');
+    }
+
+    /**
+     * @When /^I record a Contingency Test with (.*) at ([0-9]{2}:[0-9]{2}:[0-9]{2}|now)$/
+     * @param $date
+     * @param $time
+     */
+    public function iStartAContingencyMOTTestOnDateAtTime($date, $time)
+    {
+        $dateTime = new DateTime();
+
+        if ($date != 'today') {
+            $dateTime->modify($date);
+        }
+
+        if ($time != 'now') {
+            $timeParts = explode(':', $time);
+            $dateTime->setTime($timeParts[0], $timeParts[1], $timeParts[2]);
+        }
+
+        $this->contingencyMotTestData->create(
+            $this->userData->getCurrentLoggedUser(),
+            $this->vehicleData->createByUser($this->userData->getCurrentLoggedUser()->getAccessToken()),
+            $this->siteData->get(),
+            ["dateTime" => $dateTime]
+        );
+    }
+
+    public function createContingencyCode($contingencyCode, $reasonCode)
+    {
+        $data = [
             ContingencyDataParams::CONTINGENCY_CODE => $contingencyCode,
             ContingencyDataParams::REASON_CODE => $reasonCode,
         ];
 
-        if ($token === null) {
-            $token = $this->sessionContext->getCurrentAccessTokenOrNull();
-        }
-
-        if ($siteId === null) {
-            $siteId = $this->siteData->get()->getId();
-        }
-
-        $this->createContingencyCodeIdResponse = $this->contingencyTest->getContingencyCodeID(
-            $token,
-            $this->contingencyData[ContingencyDataParams::CONTINGENCY_CODE],
-            $this->contingencyData[ContingencyDataParams::REASON_CODE],
-            $dateTime,
-            $siteId
+        $this->contingencyData->getContingencyCodeID(
+            $this->userData->getCurrentLoggedUser(),
+            $this->siteData->get(),
+            $data
         );
-    }
-
-    /**
-     * @return string
-     */
-    public function getContingencyCode()
-    {
-        if (!isset($this->contingencyData[ContingencyDataParams::CONTINGENCY_CODE])) {
-            throw new \LogicException('No contingency code was set');
-        }
-
-        return (string) $this->contingencyData[ContingencyDataParams::CONTINGENCY_CODE];
-    }
-
-    /**
-     * @return int
-     */
-    public function getEmergencyLogId()
-    {
-        if (200 !== $this->createContingencyCodeIdResponse->getStatusCode()) {
-            throw new \LogicException('Failed to get the contingency code');
-        }
-
-        return (int) $this->createContingencyCodeIdResponse->getBody()->getData()[ContingencyDataParams::EMERGENCY_LOG_ID];
     }
 }

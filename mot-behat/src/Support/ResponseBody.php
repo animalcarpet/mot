@@ -48,12 +48,24 @@ class ResponseBody implements \ArrayAccess
 
     public function getErrorMessages()
     {
+        $errors = $this->getErrors();
         $messages = [];
-        foreach ($this->getErrors() as $error) {
-            $messages[] = $error["message"];
+        if (array_key_exists("message", $errors)) {
+            $messages[] = $errors["message"];
+        } else {
+            foreach ($errors as $error) {
+                if (array_key_exists("message", $error)) {
+                    $messages[] = $error["message"];
+                }
+            }
         }
 
         return $messages;
+    }
+
+    public function getErrorMessagesAsString()
+    {
+        return join("; ", $this->getErrorMessages());
     }
 
     /**

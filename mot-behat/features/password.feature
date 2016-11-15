@@ -30,7 +30,7 @@ Feature: Password
   Scenario Outline: Validate password reset token
     Given I am registered as a new user
     And that I have a password reset token of type <tokenType>
-    When I validate the token
+    When I validate the <tokenType> token
     Then the token should be <result>
     Examples:
       |tokenType    |result            |
@@ -41,25 +41,42 @@ Feature: Password
   Scenario Outline: Change password through the token link
     Given I am registered as a new user
     And that I have a password reset token of type <tokenType>
-    And I attempt to change my password to <newPassword>
+    And I change my password to <newPassword>
+    Then the result should be <result> with <errorMessage>
+    Examples:
+      |newPassword           |tokenType   |errorMessage                             |result  |
+      |newPassword12         |valid       |                                         |true    |
+
+  @password-reset
+  Scenario Outline: Change password through the token link fail
+    Given I am registered as a new user
+    And that I have a password reset token of type <tokenType>
+    And I try to change my password to <newPassword>
     Then the result should be <result> with <errorMessage>
     Examples:
       |newPassword           |tokenType   |errorMessage                             |result  |
       |                      |valid       |newPassword not found                    |false   |
       |newPassword12         |empty       |token not found                          |false   |
       |newPassword12         |invalid     |Message by Token INVALIDTOKEN12 not found|false   |
-      |newPassword12         |valid       |                                         |true    |
       |newPassword12         |expired     |token not found                          |false   |
 
   @password-reset
   Scenario Outline: Sending emails to users who have forgotten their password
     Given I am registered as a new user
-    When I attempt to reset my password with <userId>
+    When I reset my password with <userId>
+    Then the message should be <message>
+    Examples:
+      | userId          | message                 |
+      | validUserId     | Password reset by email |
+
+  @password-reset
+  Scenario Outline: Not Sending emails to users who have forgotten their password
+    Given I am registered as a new user
+    When I try to reset my password with <userId>
     Then the message should be <message>
     Examples:
       | userId          | message                 |
       | invalidUserId   | Person not found        |
-      | validUserId     | Password reset by email |
 
   @password-expiry-notification
   Scenario: Send password expiry remainder emails

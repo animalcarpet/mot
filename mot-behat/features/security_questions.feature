@@ -16,7 +16,7 @@ Feature: user changes their security questions
   Scenario Outline: A user is unsuccessful when changing their security questions
     Given I am logged in as a Tester
     And I update my security question answers to be <firstAnswer> and <secondAnswer>
-    When I confirm my changes to my security questions
+    When I try confirm my changes to my security questions
     Then my questions have not been updated
     Examples:
       | firstAnswer     | secondAnswer           |

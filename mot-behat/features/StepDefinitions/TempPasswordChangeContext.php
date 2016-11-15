@@ -1,10 +1,10 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\TempPasswordChange;
 use PHPUnit_Framework_Assert as PHPUnit;
 use Dvsa\Mot\Behat\Support\Api\AccountClaim;
+use Dvsa\Mot\Behat\Support\Data\UserData;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 
 /**
@@ -12,43 +12,24 @@ use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
  */
 class TempPasswordChangeContext implements Context
 {
-
     const PASSWORD_VALID = 'Newpassword1';
 
-    /**
-     * @var TempPasswordChange
-     */
     private $tempPasswordChange;
-
-    /**
-     * @var AccountClaim
-     */
     private $accountClaim;
+    private $userData;
 
-    /**
-     * @var SessionContext
-     */
-    private $sessionContext;
-
-    /**
-     * @param TempPasswordChange $tempPasswordChange
-     * @param AccountClaim $accountClaim
-     */
-    public function __construct(TempPasswordChange $tempPasswordChange, AccountClaim $accountClaim, TestSupportHelper $testSupportHelper)
+    public function __construct(
+        TempPasswordChange $tempPasswordChange,
+        AccountClaim $accountClaim,
+        TestSupportHelper $testSupportHelper,
+        UserData $userData
+    )
     {
         $this->tempPasswordChange = $tempPasswordChange;
         $this->accountClaim       = $accountClaim;
+        $this->userData       = $userData;
         $this->tempPasswordChange->setTestSupportHelper($testSupportHelper);
     }
-
-    /**
-     * @BeforeScenario
-     */
-    public function gatherContexts(BeforeScenarioScope $scope)
-    {
-        $this->sessionContext      = $scope->getEnvironment()->getContext(SessionContext::class);
-    }
-
 
     /**
      * @When /^I update my password$/
@@ -56,8 +37,8 @@ class TempPasswordChangeContext implements Context
     public function iUpdateMyPassword()
     {
         $response = $this->tempPasswordChange->updatePassword(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->sessionContext->getCurrentUserId(),
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->userData->getCurrentLoggedUser()->getUserId(),
             self::PASSWORD_VALID
         );
 
@@ -89,7 +70,7 @@ class TempPasswordChangeContext implements Context
 
     protected function isPasswordChangeRequired()
     {
-        $response = $this->accountClaim->getIdentityData($this->sessionContext->getCurrentAccessToken());
+        $response = $this->accountClaim->getIdentityData($this->userData->getCurrentLoggedUser()->getAccessToken());
         return (bool) $response->getBody()->getData()['user']['isPasswordChangeRequired'];
     }
 }

@@ -4,6 +4,8 @@ namespace Dvsa\Mot\Behat\Support\Api;
 
 use Dvsa\Mot\Behat\Support\HttpClient;
 use Dvsa\Mot\Behat\Support\Request;
+use Dvsa\Mot\Behat\Support\Data\Exception\UnexpectedResponseStatusCodeException;
+use Zend\Http\Response;
 
 class MotApi
 {
@@ -48,6 +50,15 @@ class MotApi
             ],
             $body
         ));
+
+        if (Response::STATUS_CODE_200 !== $this->lastResponse->getStatusCode()) {
+            if ($this->lastResponse->getBody()->offsetExists("errors") && $this->lastResponse->getBody()->getErrorMessages()) {
+                $message = $this->lastResponse->getBody()->getErrorMessagesAsString();
+            } else {
+                $message = sprintf("Expected response status code %d, but got %d", Response::STATUS_CODE_200, $this->lastResponse->getStatusCode());
+            }
+            throw new UnexpectedResponseStatusCodeException($message);
+        }
 
         return $this->lastResponse;
     }

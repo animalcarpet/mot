@@ -47,7 +47,10 @@ parameters:
           Dvsa\Mot\Behat\Support\Data\DemoMotTestData: dvsa.data.demo_mot_test
           Dvsa\Mot\Behat\Support\Data\ContingencyMotTestData: dvsa.data.contingency_mot_test
           Dvsa\Mot\Behat\Support\Data\AbstractMotTestData: dvsa.data.abstract_mot_test
+          Dvsa\Mot\Behat\Support\Data\ReasonForRejectionData: dvsa.data.reason_for_rejection
           Dvsa\Mot\Behat\Support\Data\SiteData: dvsa.data.site
+          Dvsa\Mot\Behat\Support\Data\OdometerReadingData: dvsa.data.odometer_reading
+          Dvsa\Mot\Behat\Support\Data\BrakeTestResultData: dvsa.data.brake_test_result
           Dvsa\Mot\Behat\Support\Data\UserData: dvsa.data.user
           Dvsa\Mot\Behat\Support\Data\VehicleData: dvsa.data.vehicle
 

@@ -1,42 +1,28 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Dvsa\Mot\Behat\Support\Api\AuthorisedExaminer;
-use Dvsa\Mot\Behat\Support\Api\MotTest;
+use Dvsa\Mot\Behat\Support\Api\Tester;
 use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
 use Dvsa\Mot\Behat\Support\Data\SiteData;
 use Dvsa\Mot\Behat\Support\Data\UserData;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Dvsa\Mot\Behat\Support\Data\MotTestData;
+use DvsaCommon\Dto\Search\SearchResultDto;;
+use DvsaCommon\Dto\Organisation\MotTestLogSummaryDto;
 use Dvsa\Mot\Behat\Support\Api\SlotReport;
+use DvsaCommon\Utility\DtoHydrator;
 use PHPUnit_Framework_Assert as PHPUnit;
-use Dvsa\Mot\Behat\Support\Response;
 
 class MotTestLogContext implements Context
 {
+    private $tester;
 
-    /**
-     * @var AuthorisedExaminer
-     */
-    private $authorisedExaminer;
-
-    /**
-     * @var SessionContext
-     */
-    private $sessionContext;
-
-    /**
-     * @var MotTest
-     */
-    private $motTest;
-
-    /**
-     * @var SiteData
-     */
     private $siteData;
 
     private $authorisedExaminerData;
 
     private $userData;
+
+    private $motTestData;
 
     private $slotReport;
 
@@ -44,44 +30,37 @@ class MotTestLogContext implements Context
 
     private $siteTestLogs = [];
 
-    /**
-     * @var Response
-     */
+    /** @var SearchResultDto */
     private $userTestLogs;
+
+    /** @var MotTestLogSummaryDto */
+    private $userTestLogsSummary;
 
 
     public function __construct(
-        AuthorisedExaminer $authorisedExaminer,
-        MotTest $motTest,
+        Tester $tester,
         SiteData $siteData,
         AuthorisedExaminerData $authorisedExaminerData,
         UserData $userData,
+        MotTestData $motTestData,
         SlotReport $slotReport
     ) {
-        $this->authorisedExaminer = $authorisedExaminer;
-        $this->motTest = $motTest;
+        $this->tester = $tester;
         $this->siteData = $siteData;
         $this->authorisedExaminerData = $authorisedExaminerData;
         $this->userData = $userData;
+        $this->motTestData = $motTestData;
         $this->slotReport = $slotReport;
-    }
-
-    /**
-     * @BeforeScenario
-     */
-    public function gatherContexts(BeforeScenarioScope $scope)
-    {
-        $this->sessionContext = $scope->getEnvironment()->getContext(SessionContext::class);
     }
 
     /**
      * @When I download my test logs for today
      */
-    public function getTestLogs()
+    public function iDownloadMyTestLogsForToday()
     {
-        $this->userTestLogs = $this->authorisedExaminer->getTodaysTestLogs(
-            $this->sessionContext->getCurrentAccessToken(),
-            2
+        $this->userTestLogs = $this->authorisedExaminerData->getTodaysTestLogs(
+            $this->userData->getCurrentLoggedUser(),
+            $this->authorisedExaminerData->get()
         );
     }
 
@@ -90,11 +69,11 @@ class MotTestLogContext implements Context
      */
     public function getSiteTestLogs()
     {
-        $this->userTestLogs = $this->authorisedExaminer->getTodaysTestLogs(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->siteData->get()->getId(),
-            $this->siteData->get()->getOrganisation()->getId()
+        $this->userTestLogs = $this->authorisedExaminerData->getTodaysSiteTestLogs(
+            $this->userData->getCurrentLoggedUser(),
+            $this->siteData->get()
         );
+
     }
 
     /**
@@ -102,19 +81,17 @@ class MotTestLogContext implements Context
      */
     public function iWillSeeTheCorrectMOTTestLogData()
     {
-        PHPUnit::assertEquals(200, $this->userTestLogs->getStatusCode());
-        $result = json_decode($this->userTestLogs->getBody()['data']['data'], true);
+        $data = $this->userTestLogs->getData();
+        PHPUnit::assertNotEmpty($data);
 
-        foreach ($result as $motTestNumber => $motTestLogData) {
-            // Retrieve the MOT test by MOT test number
-            $response = $this->motTest->getMotData($this->sessionContext->getCurrentAccessToken(), $motTestNumber);
-            $motTestData = $response->getBody()['data'];
+        foreach ($data as $motTestNumber => $motTestLogData) {
+            $motTestData = $this->motTestData->fetchMotTestData($this->userData->getCurrentLoggedUser(), $motTestNumber);
 
-            PHPUnit::assertEquals($motTestNumber, $motTestData['motTestNumber']);
-            PHPUnit::assertEquals($motTestLogData['vehicleVRM'], $motTestData['registration']);
-            PHPUnit::assertEquals($motTestLogData['vehicleVIN'], $motTestData['vin']);
+            PHPUnit::assertEquals($motTestNumber, $motTestData->getMotTestNumber());
+            PHPUnit::assertEquals($motTestLogData['vehicleVRM'], $motTestData->getRegistration());
+            PHPUnit::assertEquals($motTestLogData['vehicleVIN'], $motTestData->getVin());
             PHPUnit::assertEquals(
-                (new \DateTime($motTestData['completedDate']))->format('dmY'),
+                (new \DateTime($motTestData->getCompletedDate()))->format('dmY'),
                 (new \DateTime())->format('dmY')
             );
         }
@@ -128,13 +105,17 @@ class MotTestLogContext implements Context
         $someAe = $this->authorisedExaminerData->get("some");
         $otherAe = $this->authorisedExaminerData->get("other");
 
+        $someTestLogs = $this->authorisedExaminerData->getTodaysTestLogs($this->userData->getCurrentLoggedUser(), $someAe);
+        $otherTestLogs = $this->authorisedExaminerData->getTodaysTestLogs($this->userData->getCurrentLoggedUser(), $otherAe);
+
         $this->aeTestLogs = [
-            "some" => $this->authorisedExaminerData->getTodaysTestLogs($this->userData->getCurrentLoggedUser(), $someAe),
-            "other" => $this->authorisedExaminerData->getTodaysTestLogs($this->userData->getCurrentLoggedUser(), $otherAe),
+            "some" => $someTestLogs->getResultCount(),
+            "other" => $otherTestLogs->getResultCount(),
         ];
 
+        $someSiteTestLogs = $this->siteData->getTestLogs($this->userData->getCurrentLoggedUser(), $this->siteData->get("some site"));
         $this->siteTestLogs = [
-            "some site" => $this->siteData->getTestLogs($this->userData->getCurrentLoggedUser(), $this->siteData->get("some site"))
+            "some site" => $someSiteTestLogs
 
         ];
     }
@@ -181,7 +162,7 @@ class MotTestLogContext implements Context
         PHPUnit::assertEquals(1, $data["tests_number"]);
 
         $response = $this->slotReport->getSlotUsageNumber(
-            $this->sessionContext->getCurrentAccessToken(),
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
             $this->siteData->get("some site")->getId(),
             $this->authorisedExaminerData->get("some")->getId()
         );
@@ -190,4 +171,42 @@ class MotTestLogContext implements Context
 
         PHPUnit::assertEquals(2, $slotUsageNumber);
     }
+
+    /**
+     * @When I review my test logs
+     */
+    public function iReviewMyTestLogs()
+    {
+        $user = $this->userData->getCurrentLoggedUser();
+        $response = $this->tester->getTesterTestLogs(
+            $user->getAccessToken(),
+            $user->getUserId()
+        );
+
+        $this->userTestLogs = DtoHydrator::jsonToDto($response->getBody()->getData());
+
+        $response = $this->tester->getTesterTestLogsSummary(
+            $user->getAccessToken(),
+            $user->getUserId()
+        );
+
+        $this->userTestLogsSummary = DtoHydrator::jsonToDto($response->getBody()->getData());
+    }
+
+    /**
+     * @Then /^([1-9]*) test logs should show today in summary section$/
+     */
+    public function TestLogsShouldShowTodayInSummarySection($number)
+    {
+        PHPUnit::assertEquals($number, $this->userTestLogsSummary->getToday());
+    }
+
+    /**
+     * @Then /^My test logs should return ([1-9]*) detailed records$/
+     */
+    public function MyTestLogsShouldReturnDetailedRecords($number)
+    {
+        PHPUnit::assertEquals($number, $this->userTestLogs->getResultCount());
+    }
+
 }

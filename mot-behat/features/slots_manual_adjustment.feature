@@ -3,6 +3,9 @@ Feature: Manual Adjustment
   I want to manually adjust an organisations slot balance
   So that they have the correct number of slots
 
+  Background:
+    Given I am logged in as a Finance User
+
   @slots
   @manual-adjustments
   Scenario Outline: Submit a valid manual slot adjustment

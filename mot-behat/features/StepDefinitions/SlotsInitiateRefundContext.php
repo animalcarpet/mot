@@ -1,58 +1,43 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use DvsaCommon\Dto\Organisation\OrganisationDto;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\SlotPurchase;
 use Dvsa\Mot\Behat\Support\Response;
+use Dvsa\Mot\Behat\Support\Data\UserData;
+use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
 use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class SlotsInitiateRefundContext implements Context
 {
-    /**
-     * @var SlotPurchase
-     */
     protected $slotPurchase;
-    /**
-     * @var SessionContext
-     */
-    protected $sessionContext;
-    /**
-     * @var array
-     */
-    protected $organisationMap = [
-        'kwikfit'  => 10,
-        'halfords' => 1
-    ];
+    protected $userData;
+    protected $authorisedExaminerData;
+
     /**
      * @var Response
      */
     protected $responseReceived;
 
-    /**
-     * @param SlotPurchase $slotPurchase
-     */
-    public function __construct(SlotPurchase $slotPurchase)
+    public function __construct(SlotPurchase $slotPurchase, UserData $userData, AuthorisedExaminerData $authorisedExaminerData)
     {
         $this->slotPurchase = $slotPurchase;
+        $this->userData = $userData;
+        $this->authorisedExaminerData = $authorisedExaminerData;
     }
 
     /**
-     * @BeforeScenario
+     * @Given I bought :slots slots for organisation :ae at :price price
      */
-    public function gatherContexts(BeforeScenarioScope $scope)
-    {
-        $this->sessionContext = $scope->getEnvironment()->getContext(SessionContext::class);
-    }
-
-    /**
-     * @Given I bought :slots slots for organisation :organisation at :price price
-     */
-    public function iBoughtSlotsForOrganisationAtPrice($slots, $organisation, $price)
+    public function iBoughtSlotsForOrganisationAtPrice($slots, OrganisationDto $ae, $price)
     {
         $this->responseReceived = $this->slotPurchase->makePaymentForSlot(
-            $this->sessionContext->getCurrentAccessToken(), $slots, $this->organisationMap[$organisation], $price
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $slots,
+            $ae->getId(),
+            $price
         );
     }
 
@@ -62,7 +47,7 @@ class SlotsInitiateRefundContext implements Context
     public function iSearchForThePaymentWithAValidInvoice()
     {
         $invoice                = 'MOT-20131231-784309AB';
-        $token                  = $this->sessionContext->getCurrentAccessToken();
+        $token                  = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $this->responseReceived = $this->slotPurchase->searchByInvoiceNumber($token, $invoice);
     }
 
@@ -72,7 +57,7 @@ class SlotsInitiateRefundContext implements Context
     public function iSearchForThePaymentWithAnInvalidInvoice()
     {
         $invoice                = 'NGT-00001231-784309AB';
-        $token                  = $this->sessionContext->getCurrentAccessToken();
+        $token                  = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $this->responseReceived = $this->slotPurchase->searchByInvoiceNumber($token, $invoice);
     }
 
@@ -119,9 +104,9 @@ class SlotsInitiateRefundContext implements Context
      */
     public function iInitiateTheRequestToMakeACardPayment()
     {
-        $token                  = $this->sessionContext->getCurrentAccessToken();
+        $token                  = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $responseReceived       = $this->slotPurchase->makePaymentForSlot(
-            $token, 120, $this->organisationMap['kwikfit'], 2.05
+            $token, 120, $this->authorisedExaminerData->get()->getId(), 2.05
         );
         $body                   = $responseReceived->getBody();
         $this->responseReceived = $this->slotPurchase->getRedirectionData(

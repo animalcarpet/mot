@@ -1,4 +1,3 @@
-@transform
 Feature: Confirm Password
   As a security officer
   I want users to confirm their password before changing sensitive data

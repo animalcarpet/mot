@@ -1,7 +1,6 @@
 <?php
 namespace Dvsa\Mot\Behat\Support\Data\Transformer;
 
-use Dvsa\Mot\Behat\Support\Scope\BeforeBehatScenarioScope;
 use DvsaCommon\Enum\EventTypeCode;
 
 trait EventTypeToCodeTransformer
@@ -11,10 +10,6 @@ trait EventTypeToCodeTransformer
      */
     public function castEventTypeToCode($eventType)
     {
-        if (BeforeBehatScenarioScope::isTransformerDisabled()) {
-            return $eventType;
-        }
-
         switch ($eventType) {
             case "create security card order":
                 return EventTypeCode::CREATE_SECURITY_CARD_ORDER;

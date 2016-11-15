@@ -10,7 +10,7 @@ use DvsaCommon\ApiClient\Statistics\TesterPerformance\AuthorisedExaminerSitePerf
 use DvsaCommon\Dto\Organisation\OrganisationDto;
 use PHPUnit_Framework_Assert as PHPUnit;
 
-class StatsAeTesterPerformanceContext implements Context
+class TQIAeTesterPerformanceContext implements Context
 {
     private $userData;
     private $apiResourceHelper;

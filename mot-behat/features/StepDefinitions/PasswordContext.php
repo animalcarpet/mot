@@ -1,12 +1,12 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\Person;
 use Dvsa\Mot\Behat\Support\Response;
+use Dvsa\Mot\Behat\Support\Data\UserData;
 use DvsaCommon\InputFilter\Account\ChangePasswordInputFilter;
-use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
+use Dvsa\Mot\Behat\Support\Data\Exception\UnexpectedResponseStatusCodeException;
 use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_Assert as PHPUnit;
 
@@ -23,14 +23,9 @@ class PasswordContext implements Context
     private $session;
 
     /**
-     * @var TestSupportHelper
+     * @var UserData
      */
-    private $testSupportHelper;
-
-    /**
-     * @var SessionContext
-     */
-    private $sessionContext;
+    private $userData;
 
     /**
      * @var Response
@@ -48,22 +43,13 @@ class PasswordContext implements Context
     public function __construct(
         Person $person,
         Session $session,
-        TestSupportHelper $testSupportHelper
+        UserData $userData
     )
     {
         $this->person = $person;
         $this->session = $session;
-        $this->testSupportHelper = $testSupportHelper;
+        $this->userData = $userData;
     }
-
-    /**
-     * @BeforeScenario
-     */
-    public function gatherContexts(BeforeScenarioScope $scope)
-    {
-        $this->sessionContext = $scope->getEnvironment()->getContext(SessionContext::class);
-    }
-
 
     /**
      * @When user fills in :oldPassword, :newPassword, :confirmNewPassword
@@ -83,10 +69,9 @@ class PasswordContext implements Context
      */
     public function myPasswordIsUpdated()
     {
-        $this->sessionContext->getCurrentAccessToken();
         $response = $this->person->changePassword(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->sessionContext->getCurrentUserIdOrNull(),
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $this->userData->getCurrentLoggedUser()->getUserId(),
             $this->data
         );
 
@@ -98,7 +83,7 @@ class PasswordContext implements Context
      */
     public function iCanLogInWithNewPassword($password)
     {
-        $username = $this->sessionContext->getCurrentUser()->getUsername();
+        $username = $this->userData->getCurrentLoggedUser()->getUsername();
         $resposne = $this->session->startSession($username, $password);
 
         PHPUnit::assertEquals($username, $resposne->getUsername());
@@ -109,12 +94,17 @@ class PasswordContext implements Context
      */
     public function myPasswordIsNotUpdated()
     {
-        $this->sessionContext->getCurrentAccessToken();
-        $response = $this->person->changePassword(
-            $this->sessionContext->getCurrentAccessToken(),
-            $this->sessionContext->getCurrentUserIdOrNull(),
-            $this->data
-        );
+        try {
+            $response = $this->person->changePassword(
+                $this->userData->getCurrentLoggedUser()->getAccessToken(),
+                $this->userData->getCurrentLoggedUser()->getUserId(),
+                $this->data
+            );
+        } catch (UnexpectedResponseStatusCodeException $exception) {
+            $response = $this->person->getLastResponse();
+        }
+
+        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
 
         $errors = $response->getBody()->getErrors();
         $isEmpty = empty($errors);
@@ -132,7 +122,7 @@ class PasswordContext implements Context
         ];
 
         $this->response = $this->person->generateToken(
-            $this->sessionContext->getCurrentAccessTokenOrNull(),
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
             $param
         );
     }
@@ -155,19 +145,34 @@ class PasswordContext implements Context
     }
 
     /**
-     * @When /^I validate the token$/
+     * @When /^I validate the valid token$/
      */
-    public function iValidateTheToken()
+    public function iValidateTheValidToken()
     {
         $param = [
             "token" => $this->passwordResetToken
         ];
 
         $this->response = $this->person->validateToken(
-            $this->sessionContext->getCurrentAccessTokenOrNull(),
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
             $this->passwordResetToken,
             $param
         );
+    }
+
+    /**
+     * @When /^I validate the invalid token$/
+     */
+    public function iValidateTheInvalidToken()
+    {
+        try {
+            $this->iValidateTheValidToken();
+        } catch (UnexpectedResponseStatusCodeException $exception) {
+            $this->response = $this->person->getLastResponse();
+        }
+
+        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+        PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
     }
 
     /**
@@ -176,7 +181,7 @@ class PasswordContext implements Context
     public function iSetRemainderEmailsToBeSentRegardingPasswordExpiry()
     {
         $this->response = $this->person->setEmailRemainderOfExpiryPassword(
-            $this->sessionContext->getCurrentAccessToken(),
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
             ['expiry-date' => '10-02-2016']
         );
         PHPUnit::assertEquals($this->response->getStatusCode(), HttpResponse::STATUS_CODE_200);
@@ -205,7 +210,7 @@ class PasswordContext implements Context
     {
         switch ($tokenType) {
             case "valid":
-                $this->iAttemptToResetMyPasswordWith($this->sessionContext->getCurrentUserIdOrNull());
+                $this->iResetMyPasswordWith($this->userData->getCurrentLoggedUser()->getUserId());
                 $this->passwordResetToken = $this->response->getBody()->getData()['token'];
                 break;
             case "invalid":
@@ -238,9 +243,9 @@ class PasswordContext implements Context
     }
 
     /**
-     * @Given /^I attempt to change my password to (.*)$/
+     * @Given /^I change my password to (.*)$/
      */
-    public function iAttemptToChangeMyPasswordTo($newPassword)
+    public function iChangeMyPasswordTo($newPassword)
     {
         $param = [
             'token' => $this->passwordResetToken,
@@ -248,18 +253,33 @@ class PasswordContext implements Context
         ];
 
         $this->response = $this->person->changePasswordWithToken(
-            $this->sessionContext->getCurrentAccessTokenOrNull(),
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
             $param
         );
     }
 
     /**
-     * @When /^I attempt to reset my password with (.*)$/
+     * @Given /^I try to change my password to (.*)$/
      */
-    public function iAttemptToResetMyPasswordWith($userId)
+    public function iTryToChangeMyPasswordTo($newPassword)
+    {
+        try {
+            $this->iChangeMyPasswordTo($newPassword);
+        } catch (UnexpectedResponseStatusCodeException $exception) {
+            $this->response = $this->person->getLastResponse();
+        }
+
+        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+        PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
+    }
+
+    /**
+     * @When /^I reset my password with (.*)$/
+     */
+    public function iResetMyPasswordWith($userId)
     {
         if ($userId == "validUserId") {
-            $userId = $this->sessionContext->getCurrentUserIdOrNull();
+            $userId = $this->userData->getCurrentLoggedUser()->getUserId();
         } else if ($userId == "invalidUserId") {
             $userId = "0";
         }
@@ -269,9 +289,24 @@ class PasswordContext implements Context
         ];
 
         $this->response = $this->person->generateToken(
-            $this->sessionContext->getCurrentAccessTokenOrNull(),
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
             $param
         );
+    }
+
+    /**
+     * @When /^I try to reset my password with (.*)$/
+     */
+    public function iTryResetMyPasswordWith($userId)
+    {
+        try {
+            $this->iResetMyPasswordWith($userId);
+        } catch (UnexpectedResponseStatusCodeException $exception) {
+            $this->response = $this->person->getLastResponse();
+        }
+
+        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+        PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
     }
 
     private function getMotResponse(){

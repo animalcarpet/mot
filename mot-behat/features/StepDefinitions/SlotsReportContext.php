@@ -1,10 +1,10 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\SlotReport;
 use Dvsa\Mot\Behat\Support\Response;
+use Dvsa\Mot\Behat\Support\Data\UserData;
 use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_Assert as PHPUnit;
 
@@ -13,35 +13,18 @@ use PHPUnit_Framework_Assert as PHPUnit;
  */
 class SlotsReportContext implements Context
 {
-    /**
-     * @var SlotReport
-     */
     private $reportApi;
-
-    /**
-     * @var SessionContext
-     */
-    private $sessionContext;
+    private $userData;
 
     /**
      * @var Response
      */
     private $responseReceived;
 
-    /**
-     * @param SlotReport $reportApi
-     */
-    public function __construct(SlotReport $reportApi)
+    public function __construct(SlotReport $reportApi, UserData $userData)
     {
         $this->reportApi = $reportApi;
-    }
-
-    /**
-     * @BeforeScenario
-     */
-    public function gatherContexts(BeforeScenarioScope $scope)
-    {
-        $this->sessionContext = $scope->getEnvironment()->getContext(SessionContext::class);
+        $this->userData = $userData;
     }
 
     /**
@@ -49,7 +32,7 @@ class SlotsReportContext implements Context
      */
     public function iRequestToGenerateASlotUsageReport($report, $fromDate, $toDate)
     {
-        $token                  = $this->sessionContext->getCurrentAccessToken();
+        $token                  = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $filter                 = new \Zend\Filter\Word\CamelCaseToSeparator(' ');
         $this->responseReceived = $this->reportApi->createReport(
             $token,
@@ -80,7 +63,7 @@ class SlotsReportContext implements Context
      */
     public function iRequestToGetTheStatusOfReport()
     {
-        $token                  = $this->sessionContext->getCurrentAccessToken();
+        $token                  = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $body                   = $this->responseReceived->getBody();
         $this->responseReceived = $this->reportApi->getReportStatus($token, $body['data']['reference']);
 
