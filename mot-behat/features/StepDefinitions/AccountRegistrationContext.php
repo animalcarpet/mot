@@ -5,8 +5,10 @@ use Dvsa\Mot\Behat\Support\Response;
 use Behat\Gherkin\Node\TableNode;
 use Dvsa\Mot\Behat\Support\Api\AccountRegistration;
 use Dvsa\Mot\Behat\Support\Api\Session;
+use Dvsa\Mot\Behat\Support\Data\Exception\UnexpectedResponseStatusCodeException;
 use Dvsa\Mot\Behat\Support\Data\Params\PersonParams;
 use TestSupport\Service\AccountService;
+use TestSupport\Helper\DataGeneratorHelper;
 use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_TestCase as PHPUnit;
 
@@ -32,9 +34,6 @@ class AccountRegistrationContext implements Context
      */
     private $response;
 
-    /**
-     * @param AccountRegistration $accountRegistration
-     */
     public function __construct(
         AccountRegistration $accountRegistration,
         Session $session
@@ -42,6 +41,21 @@ class AccountRegistrationContext implements Context
     {
         $this->accountRegistration = $accountRegistration;
         $this->session = $session;
+    }
+
+    /**
+     * @Given For the email step I input email address
+     */
+    public function iInputEmailAddress()
+    {
+        $dataGeneratorHelper = DataGeneratorHelper::buildForDifferentiator([]);
+
+        $email = $dataGeneratorHelper->emailAddress();
+        $data = [
+            "emailAddress" => $email,
+            "confirmEmailAddress" => $email
+        ];
+        $this->setRegistrationData("email", $data);
     }
 
     /**
@@ -91,12 +105,26 @@ class AccountRegistrationContext implements Context
 
     /**
      * @When I confirm my details
-     * @When I try to confirm my details
-     * @When I try to register an account with the same email
      */
     public function iConfirmMyDetails()
     {
         $this->setRegistrationResponse($this->accountRegistration->registerUser($this->registrationData));
+    }
+
+    /**
+     * @When I try to confirm my details
+     * @When I try to register an account with the same email
+     */
+    public function iTryConfirmMyDetails()
+    {
+        try {
+            $this->iConfirmMyDetails();
+        } catch (UnexpectedResponseStatusCodeException $exception) {
+            $this->setRegistrationResponse($this->accountRegistration->getLastResponse());
+        }
+
+        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+        PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
     }
 
     /**

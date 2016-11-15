@@ -1,73 +1,31 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\SecurityPin;
 use Dvsa\Mot\Behat\Support\Api\Session;
+use Dvsa\Mot\Behat\Support\Data\Exception\UnexpectedResponseStatusCodeException;
 use Dvsa\Mot\Behat\Support\Data\SiteData;
+use Dvsa\Mot\Behat\Support\Data\UserData;
 use PHPUnit_Framework_Assert as PHPUnit;
-use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use Zend\Http\Response as HttpResponse;
-use Dvsa\Mot\Behat\Support\Data\Params\PersonParams;
 
-/**
- * Class ContingencyContext.
- */
+
 class SecurityPinContext implements Context
 {
-    /**
-     * @var SecurityPin
-     */
     private $securityPin;
-
-    /**
-     * @var Session
-     */
-    private $session;
-
-    /**
-     * @var TestSupportHelper
-     */
-    private $testSupportHelper;
-
-    /**
-     * @var SiteData
-     */
     private $siteData;
+    private $userData;
 
-    /**
-     * @var SessionContext
-     */
-    private $sessionContext;
 
-    /**
-     * @var Response
-     */
-    private $resetPinResponse;
-
-    /**
-     * @param SecurityPin $securityPin
-     * @param Session     $session
-     */
     public function __construct(
         SecurityPin $securityPin,
-        Session $session,
-        TestSupportHelper $testSupportHelper,
-        SiteData $siteData
+        SiteData $siteData,
+        UserData $userData
     )
     {
         $this->securityPin = $securityPin;
-        $this->session = $session;
-        $this->testSupportHelper = $testSupportHelper;
         $this->siteData = $siteData;
-    }
-
-    /**
-     * @BeforeScenario
-     */
-    public function gatherContexts(BeforeScenarioScope $scope)
-    {
-        $this->sessionContext = $scope->getEnvironment()->getContext(SessionContext::class);
+        $this->userData = $userData;
     }
 
     /**
@@ -75,9 +33,8 @@ class SecurityPinContext implements Context
      */
     public function iRequestANewSecurityPin()
     {
-        $userId = $this->sessionContext->getCurrentUserIdOrNull();
-        $accessToken = $this->sessionContext->getCurrentAccessTokenOrNull();
-        $this->resetPinResponse = $this->securityPin->resetPin($userId, $accessToken);
+        $user = $this->userData->getCurrentLoggedUser();
+        $this->securityPin->resetPin($user->getUserId(), $user->getAccessToken());
     }
 
     /**
@@ -85,35 +42,40 @@ class SecurityPinContext implements Context
      */
     public function theGeneratedPinShouldBeANumber()
     {
-        $pin = $this->resetPinResponse->getBody()->getData()['pin'];
+        $response = $this->securityPin->getLastResponse();
+        $pin = $response->getBody()->getData()['pin'];
         PHPUnit::assertTrue(is_numeric($pin), 'Security pin is not a number.');
     }
 
     /**
-     * @When /^I request a new security pin for a (.*) user$/
+     * @When /^I try request a new security pin for a (.*) user$/
      */
     public function iRequestANewSecurityPinForAUser($role)
     {
         if ($role == 'ao1') {
-            $areaOffice1Service = $this->testSupportHelper->getAreaOffice1Service();
-            $user = $areaOffice1Service->create([]);
+            $user = $this->userData->createAreaOffice1User();
         } elseif ($role == 'ao2') {
-            $areaOffice2Service = $this->testSupportHelper->getAreaOffice2Service();
-            $user = $areaOffice2Service->create([]);
+            $user = $this->userData->createAreaOffice2User();
         } elseif ($role == 'tester') {
-            $testerService = $this->testSupportHelper->getTesterService();
-            $user = $testerService->create([PersonParams::SITE_IDS => [$this->siteData->get()->getId()]]);
+            $user = $this->userData->createTester("Walter White");
         } elseif ($role == 'csco') {
-            $cscoService = $this->testSupportHelper->getCscoService();
-            $user = $cscoService->create([]);
+            $user = $this->userData->createCustomerServiceOperator();
         } else {
             throw new \InvalidArgumentException('Role ' . $role . ' has not been implemented');
         }
 
-        $user = $this->session->startSession($user->data[PersonParams::USERNAME], $user->data[PersonParams::PASSWORD]);
+        try {
+            $this->securityPin->resetPin(
+                $user->getUserId(),
+                $this->userData->getCurrentLoggedUser()->getAccessToken()
+            );
 
-        $accessToken = $this->sessionContext->getCurrentAccessToken();
-        $this->resetPinResponse = $this->securityPin->resetPin($user->getUserId(), $accessToken);
+        } catch (UnexpectedResponseStatusCodeException $exception) {
+
+        }
+
+        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+        PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
     }
 
     /**
@@ -121,7 +83,8 @@ class SecurityPinContext implements Context
      */
     public function iShouldNotReceiveANewSecurityPin()
     {
-        PHPUnit::assertEquals($this->resetPinResponse->getBody()->getErrors()['message'], 'Can only reset your own PIN');
+        $response = $this->securityPin->getLastResponse();
+        PHPUnit::assertEquals($response->getBody()->getErrors()['message'], 'Can only reset your own PIN');
     }
 
     /**
@@ -130,9 +93,10 @@ class SecurityPinContext implements Context
      */
     public function theGeneratedPinShouldBeDigitsLong($length)
     {
-        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $this->resetPinResponse->getStatusCode(), 'Did not receive 200 OK response');
+        $response = $this->securityPin->getLastResponse();
+        PHPUnit::assertEquals(HttpResponse::STATUS_CODE_200, $response->getStatusCode(), 'Did not receive 200 OK response');
 
-        $pin = $this->resetPinResponse->getBody()->getData()['pin'];
+        $pin = $response->getBody()->getData()['pin'];
         PHPUnit::assertEquals($length, strlen($pin), 'Pin is not ' . $length . ' digits long.');
     }
 }

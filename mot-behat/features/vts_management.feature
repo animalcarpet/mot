@@ -1,4 +1,3 @@
-@transform
 Feature: Vehicle Testing Station management
   In order to manage vehicle testing organisations on the system
   As a DVSA Administrator
@@ -16,7 +15,7 @@ Feature: Vehicle Testing Station management
   @create-site("Popular Garage")
   Scenario: Update test lanes for One person test lane and Two people test lane unsuccessfully
     Given I am logged in as an Area Office User
-    When I configure "Popular Garage" test lines to:
+    When I try configure "Popular Garage" test lines to:
       | number of one person test lanes | number of two person test lanes |
       | 0                               | 0                               |
     Then site details for "Popular Garage" should not be updated
@@ -24,7 +23,7 @@ Feature: Vehicle Testing Station management
   @create-site("Popular Garage")
   Scenario: Update without selecting number of test lanes
     Given I am logged in as an Area Office User
-    When I configure "Popular Garage" test lines to:
+    When I try configure "Popular Garage" test lines to:
       | number of one person test lanes | number of two person test lanes |
       | please select                   | please select                   |
     Then site details for "Popular Garage" should not be updated

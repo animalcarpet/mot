@@ -4,14 +4,15 @@ Feature: Role Management
   So that I can delegate tasks to other users
 
   @VM-10619 @VM-10737 @VM-10722 @VM-10723 @VM-11697
+  @create-user("Mr Smith")
   Scenario Outline: A scheme manager adds a role to another user
     When I am logged in as a <manager>
-    And I add the role of "<role_name>" to another user
-    Then the user's RBAC will have the role "<role_name>"
-    And a status change event is generated for the user of "Role Association Change"
+    And I add the role of "<role_name>" to "Mr Smith"
+    Then "Mr Smith" RBAC will have the role "<role_name>"
+    And a status change event is generated for "Mr Smith" of "Role Association Change"
     And an event description contains my name
     And an event description contains phrase "<role_full_name>"
-    And the user will receive a "DVSA Assign Role" notification
+    And "Mr Smith" will receive a "DVSA Assign Role" notification
     And a notification subject contains phrase "<role_full_name>"
   Examples:
     | manager                  | role_name                         | role_full_name             |
@@ -23,8 +24,8 @@ Feature: Role Management
   Scenario Outline: A permitted user can add an internal role to a user that does not have a trade role
     Given I am logged in as a <permitted user>
     And The user "<non trade user>" exists
-    When I add the role of "<role>" to the user
-    Then the user's RBAC will have the role "<role>"
+    When I add the role of "<role>" to "<non trade user>"
+    Then "<non trade user>" RBAC will have the role "<role>"
   Examples:
     | permitted user           | role                              | non trade user             |
     | Scheme Manager           | CUSTOMER-SERVICE-MANAGER          | Customer Service Operative |
@@ -46,8 +47,8 @@ Feature: Role Management
   Scenario Outline: An unpermitted user can not add an internal role to a user
     Given I am logged in as an <unpermitted user>
     And The user "<non trade user>" exists
-    When I add the role of "<role>" to the user
-    Then the user's RBAC will not have the role "<role>"
+    When I try add the role of "<role>" to "<non trade user>"
+    Then "<non trade user>" RBAC will not have the role "<role>"
   Examples:
     | unpermitted user          | role                              | non trade user   |
     | Scheme User               | DVLA-OPERATIVE                    | DVLA Manager     |
@@ -62,13 +63,13 @@ Feature: Role Management
   Scenario Outline: A permitted user can remove a role from a user
     Given I am logged in as a <permitted user>
     And The user "<user>" exists
-    And The user has the role "<role>"
-    When I remove the role of "<role>" from the user
-    Then the user's RBAC will not have the role "<role>"
-    And a status change event is generated for the user of "Role Association Change"
+    And "<user>" has the role "<role>"
+    When I remove the role of "<role>" from "<user>"
+    Then "<user>" RBAC will not have the role "<role>"
+    And a status change event is generated for "<user>" of "Role Association Change"
     And an event description contains my name
     And an event description contains phrase "<role_full_name>"
-    And the user will receive a "DVSA Remove Role" notification
+    And "<user>" will receive a "DVSA Remove Role" notification
     And a notification subject contains phrase "<role_full_name>"
   Examples:
     | permitted user | role                              | role_full_name             | user         |

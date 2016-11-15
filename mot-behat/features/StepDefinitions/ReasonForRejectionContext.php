@@ -1,111 +1,103 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use PHPUnit_Framework_Assert as PHPUnit;
-use Dvsa\Mot\Behat\Support\Api\Event;
-use Dvsa\Mot\Behat\Support\Api\Person;
 use Dvsa\Mot\Behat\Support\Api\Session;
-use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
-use Dvsa\Mot\Behat\Support\Data\Params\EventParams;
-use Dvsa\Mot\Behat\Support\Data\Params\PersonParams;
-use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
-use Dvsa\Mot\Behat\Support\Data\Params\AuthorisedExaminerParams;
+use Dvsa\Mot\Behat\Support\Data\ReasonForRejectionData;
+use Dvsa\Mot\Behat\Support\Data\UserData;
+use Dvsa\Mot\Behat\Support\Data\MotTestData;
+use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupA;
+use Dvsa\Mot\Behat\Support\Data\Model\ReasonForRejectionGroupB;
+use DvsaCommon\Enum\VehicleClassCode;
+use Zend\Http\Response as HttpResponse;
 
-class ReasonForRejection implements Context
+class ReasonForRejectionContext implements Context
 {
-    /**
-     * @var SessionContext
-     */
-    private $sessionContext;
+    private $reasonForRejectionData;
 
+    private $userData;
 
-    /**
-     * @param Event $event
-     */
-    public function __construct(Event $event, Person $person, Session $session, TestSupportHelper $testSupportHelper)
+    private $motTestData;
+
+    public function __construct(
+        ReasonForRejectionData $reasonForRejectionData,
+        UserData $userData,
+        MotTestData $motTestData
+    )
     {
-        $this->event = $event;
-        $this->person = $person;
-        $this->session = $session;
-        $this->testSupportHelper = $testSupportHelper;
+        $this->reasonForRejectionData = $reasonForRejectionData;
+        $this->userData = $userData;
+        $this->motTestData = $motTestData;
     }
 
     /**
-     * @BeforeScenario
+     * @Then /^I can search for Rfr$/
      */
-    public function gatherContexts(BeforeScenarioScope $scope)
+    public function iCanSearchForRfr()
     {
-        $this->personContext = $scope->getEnvironment()->getContext(PersonContext::class);
-        $this->sessionContext = $scope->getEnvironment()->getContext(SessionContext::class);
-        $this->vtsContext = $scope->getEnvironment()->getContext(VtsContext::class);
-        $this->aeContext = $scope->getEnvironment()->getContext(AuthorisedExaminerContext::class);
+        $this->reasonForRejectionData->searchWithDefaultParamsByUser(
+            $this->userData->getCurrentLoggedUser(),
+            $this->motTestData->getLast()
+        );
+
+        $response = $this->reasonForRejectionData->getLastResponse();
+
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
 
     /**
-     * @Then a status change event is generated for the user of :eventType
+     * @Then /^I can list child test items selector$/
      */
-    public function aStatusChangeEventIsGeneratedForTheUserOf($eventType)
+    public function iCanListChildTestItemSelector()
     {
-        $response = $this->event->getPersonEventsData($this->sessionContext->getCurrentAccessToken(), $this->personContext->getPersonUserId());
-        $data = $response->getBody()->getData();
-        $eventList = $data["events"];
+        $this->reasonForRejectionData->listTestItemSelectors($this->motTestData->getLast());
+        $response = $this->reasonForRejectionData->getLastResponse();
 
-        PHPUnit::assertNotEmpty($eventList);
-
-        $found = false;
-        foreach ($eventList as $event) {
-            if ($event[EventParams::TYPE] === $eventType) {
-                $this->userEvent = $event;
-                $found = true;
-                break;
-            }
-        }
-
-        PHPUnit::assertTrue($found, "Event type {$eventType} not found");
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
 
     /**
-     * @Then an event description contains phrase :phrase
+     * @Given /^I can add PRS to test$/
      */
-    public function anEventDescriptionContainsPhrase($phrase)
+    public function iCanAddPRSToTest()
     {
-        PHPUnit::assertContains($phrase, $this->userEvent["description"]);
+        $this->reasonForRejectionData->addDefaultPrsByUser(
+            $this->userData->getCurrentLoggedUser(),
+            $this->motTestData->getLast()
+        );
+
+        $response =$this->reasonForRejectionData->getLastResponse();
+
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
 
     /**
-     * @Then an event description contains my name
+     * @Given /^I can add a Failure to test$/
+     * @Given /^the Tester adds a Reason for Rejection$/
      */
-    public function anEventDescriptionContainsMyName()
+    public function iCanAddAFailureToTest()
     {
-        $this->anEventDescriptionContainsPhrase($this->getPersonDisplayName());
+        $this->reasonForRejectionData->addDefaultFailureByUser(
+            $this->userData->getCurrentLoggedUser(),
+            $this->motTestData->getLast()
+        );
+
+        $response = $this->reasonForRejectionData->getLastResponse();
+
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
     }
 
     /**
-     * @Then a status change event is NOT generated for the user of :eventType
+     * @Then I can edit previously added Rfr
      */
-    public function aStatusChangeEventIsNotGeneratedForTheUserOf($eventType)
+    public function iCanEditPreviouslyAddedRfr()
     {
-        $response = $this->event->getPersonEventsData($this->sessionContext->getCurrentAccessToken(), $this->personContext->getPersonUserId());
-        $data = $response->getBody()->getData();
-        $eventList = $data["events"];
+        $mot = $this->motTestData->getLast();
 
-        $found = false;
-        foreach ($eventList as $event) {
-            if ($event[EventParams::TYPE] === $eventType) {
-                $found = true;
-                break;
-            }
-        }
-
-        PHPUnit::assertFalse($found);
-    }
-
-    private function getPersonDisplayName()
-    {
-        $response = $this->person->getPersonDetails($this->sessionContext->getCurrentAccessToken(),$this->sessionContext->getCurrentUserId());
-        $data = $response->getBody()->getData();
-
-        return implode(" ", array_filter([$data[PersonParams::FIRST_NAME], $data[PersonParams::MIDDLE_NAME], $data[PersonParams::SURNAME]]));
+        $this->reasonForRejectionData->editRFRByUser(
+            $this->userData->getCurrentLoggedUser(),
+            $mot,
+            $this->reasonForRejectionData->getLastResponse()->getBody()->getData()
+        );
     }
 }

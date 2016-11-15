@@ -1,12 +1,8 @@
 <?php
 namespace Dvsa\Mot\Behat\Support\Data;
 
-use Dvsa\Mot\Behat\Support\Api\BrakeTestResult;
 use Dvsa\Mot\Behat\Support\Api\ContingencyTest;
-use Dvsa\Mot\Behat\Support\Api\DemoTest;
 use Dvsa\Mot\Behat\Support\Api\MotTest;
-use Dvsa\Mot\Behat\Support\Api\OdometerReading;
-use Dvsa\Mot\Behat\Support\Api\ReasonForRejection;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Support\Data\Collection\SharedDataCollection;
 use Dvsa\Mot\Behat\Support\Data\Params\MotTestParams;
@@ -27,7 +23,6 @@ class MotTestData extends AbstractMotTestData
     private $demoMotTestData;
     private $normalMotTestData;
     private $contingencyTest;
-    private $demoTest;
 
     const TEST_WITH_PRS = "prs";
     const TEST_WITH_ADVISORY = 'advisory';
@@ -41,21 +36,19 @@ class MotTestData extends AbstractMotTestData
         NormalMotTestData $normalMotTestData,
         ContingencyTest $contingencyTest,
         MotTest $motTest,
-        DemoTest $demoTest,
-        BrakeTestResult $brakeTestResult,
-        OdometerReading $odometerReading,
-        ReasonForRejection $reasonForRejection,
+        BrakeTestResultData $brakeTestResultData,
+        OdometerReadingData $odometerReadingData,
+        ReasonForRejectionData $reasonForRejectionData,
         TestSupportHelper $testSupportHelper
     )
     {
-        parent::__construct($userData, $motTest, $brakeTestResult, $odometerReading, $reasonForRejection, $testSupportHelper);
+        parent::__construct($userData, $motTest, $brakeTestResultData, $odometerReadingData, $reasonForRejectionData, $testSupportHelper);
 
         $this->contingencyData = $contingencyData;
         $this->contingencyMotTestData = $contingencyMotTestData;
         $this->demoMotTestData = $demoMotTestData;
         $this->normalMotTestData = $normalMotTestData;
         $this->contingencyTest = $contingencyTest;
-        $this->demoTest = $demoTest;
         $this->motCollection = SharedDataCollection::get(MotTestDto::class);
     }
 
@@ -82,23 +75,20 @@ class MotTestData extends AbstractMotTestData
            throw new \InvalidArgumentException(sprintf("Unrecognised type '%s'", $type));
        }
 
-        $mot = $this
+        $response = $this
             ->motTest
             ->startMOTTest(
                 $tester->getAccessToken(),
                 $vehicle->getId(),
                 $site->getId(),
-                $vehicle->getVehicleClass()->getCode()
+                $vehicle->getVehicleClass()->getCode(),
+                [MotTestParams::MOT_TEST_TYPE => $type]
             );
-
-        if ($mot->getStatusCode() !== HttpResponse::STATUS_CODE_200) {
-            throw new \Exception("Something went wrong during creating mot test");
-        }
 
         $dto = $this->mapToMotTestDto(
             $tester,
             $vehicle,
-            $mot->getBody()->getData()[MotTestParams::MOT_TEST_NUMBER],
+            $response->getBody()->getData()[MotTestParams::MOT_TEST_NUMBER],
             $type,
             $site
         );
@@ -110,8 +100,8 @@ class MotTestData extends AbstractMotTestData
 
     public function createCompletedMotTest(AuthenticatedUser $tester, SiteDto $site, VehicleDto $vehicle, array $params)
     {
-        $type = ArrayUtils::tryGet($params, MotTestParams::TYPE);
-        $status = ArrayUtils::tryGet($params, MotTestParams::STATUS);
+        $type = ArrayUtils::tryGet($params, MotTestParams::TYPE, MotTestTypeCode::NORMAL_TEST);
+        $status = ArrayUtils::tryGet($params, MotTestParams::STATUS, MotTestStatusCode::PASSED);
         $rfrId = ArrayUtils::tryGet($params, MotTestParams::RFR_ID);
 
         $mot = $this->create($tester, $vehicle, $site, $type);
@@ -212,5 +202,30 @@ class MotTestData extends AbstractMotTestData
     {
         $mot = $this->create($tester, $vehicle, $site, $type);
         return $this->abortMotTest($mot);
+    }
+
+    public function getNormalMotTestLastResponse()
+    {
+        return $this->normalMotTestData->getLastResponse();
+    }
+
+    public function getDemoMotTestLastResponse()
+    {
+        return $this->demoMotTestData->getLastResponse();
+    }
+
+    public function getContingencyMotTestLastResponse()
+    {
+        return $this->contingencyMotTestData->getLastResponse();
+    }
+
+    public function getOtherMotTestLastResponse()
+    {
+        return $this->motTest->getLastResponse();
+    }
+
+    public function getLastResponse()
+    {
+        return $this->normalMotTestData->getLastResponse();
     }
 }

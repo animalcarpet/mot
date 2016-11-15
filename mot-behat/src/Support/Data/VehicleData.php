@@ -6,7 +6,7 @@ use Dvsa\Mot\Behat\Support\Api\Vehicle;
 use Dvsa\Mot\Behat\Support\Data\Collection\SharedDataCollection;
 use Dvsa\Mot\Behat\Support\Data\Params\VehicleParams;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
-use DvsaCommon\Collection\Collection;
+use Dvsa\Mot\Behat\Support\Data\Collection\DataCollection;
 use DvsaCommon\Dto\Vehicle\DvlaVehicleDto;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
@@ -51,8 +51,8 @@ class VehicleData
         $dto = new VehicleDto();
         $dto
             ->setId($id)
-            ->setVin($data[VehicleParams::VIN])
-            ->setRegistration($data[VehicleParams::REGISTRATION_NUMBER])
+            ->setVin(strtoupper($data[VehicleParams::VIN]))
+            ->setRegistration(strtoupper($data[VehicleParams::REGISTRATION_NUMBER]))
             ->setVehicleClass($vehicleClassDto);
 
         $this->vehicleCollection->add($dto, $id);
@@ -120,7 +120,7 @@ class VehicleData
 
     public function searchDvlaVehicle($token, $registration, $vin)
     {
-        $collection = new Collection(DvlaVehicleDto::class);
+        $collection = new DataCollection(DvlaVehicleDto::class);
         $response = $this->search($token, $registration, $vin, true);
         $vehicles = $response->getBody()->getData()["vehicles"];
         foreach ($vehicles as $vehicle) {
@@ -142,14 +142,10 @@ class VehicleData
 
     public function createDvlaVehicleUpdatedCertificat($token, $vehicleId)
     {
-        $response = $this->vehicle->dvlaVehicleUpdated(
+        $this->vehicle->dvlaVehicleUpdated(
             $token,
             $vehicleId
         );
-
-        if ($response->getStatusCode() !== HttpResponse::STATUS_CODE_200) {
-            throw new \Exception("Dvla vehicle has not been updated");
-        }
     }
 
     public function fetchDvlaVehicleId($registration, $vin)

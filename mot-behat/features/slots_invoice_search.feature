@@ -5,6 +5,7 @@ Feature: Search for payment by Invoice reference
 
   @quarantine
   @slots
+  @create-default-ae("halfords")
   Scenario: Finance User search for payment with a valid invoice reference
     Given I am logged in as a Finance User
     And I bought "100" slots for organisation "halfords" at "2.05" price

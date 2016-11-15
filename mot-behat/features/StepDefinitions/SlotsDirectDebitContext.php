@@ -17,11 +17,6 @@ class SlotsDirectDebitContext implements Context
      */
     private $directDebit;
 
-    /**
-     * @var SessionContext
-     */
-    private $sessionContext;
-
     private $slotPrice = 2.05;
     /**
      * @var Response
@@ -45,19 +40,11 @@ class SlotsDirectDebitContext implements Context
     }
 
     /**
-     * @BeforeScenario
-     */
-    public function gatherContexts(BeforeScenarioScope $scope)
-    {
-        $this->sessionContext = $scope->getEnvironment()->getContext(SessionContext::class);
-    }
-
-    /**
      * @Given I have an active direct debit mandate set up for :slots slots in :ae on :day
      */
     public function iHaveAnActiveDirectDebitMandateSetUpFor($slots, OrganisationDto $ae, $day)
     {
-        $token           = $this->sessionContext->getCurrentAccessToken();
+        $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $this->setUpDirectDebitMandate($token, $ae->getId(), $slots, $day);
     }
 
@@ -103,7 +90,7 @@ class SlotsDirectDebitContext implements Context
      */
     public function iHaveAnActiveDirectDebitMandate(OrganisationDto $ae)
     {
-        $token           = $this->sessionContext->getCurrentAccessToken();
+        $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $mandateResponse = $this->directDebit->getActiveMandate($token, $ae->getId());
         $mandateBody     = $mandateResponse->getBody();
 
@@ -125,7 +112,7 @@ class SlotsDirectDebitContext implements Context
      */
     public function iRequestToCancelTheDirectDebit(OrganisationDto $ae)
     {
-        $token                  = $this->sessionContext->getCurrentAccessToken();
+        $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $this->responseReceived = $this->directDebit->cancelDirectDebit(
             $token,
             $ae->getId(),
@@ -171,7 +158,7 @@ class SlotsDirectDebitContext implements Context
      */
     public function iSetupDirectDebitOfSlotsForAsdaOnDayOfTheMonth($numberOfSlots, OrganisationDto $ae, $dayOfMonth)
     {
-        $token           = $this->sessionContext->getCurrentAccessToken();
+        $token           = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $mandateResponse = $this->directDebit->getActiveMandate($token, $ae->getId());
         $mandateBody     = $mandateResponse->getBody();
 

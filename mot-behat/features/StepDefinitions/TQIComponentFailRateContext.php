@@ -17,7 +17,7 @@ use DvsaCommon\Dto\Site\SiteDto;
 use PHPUnit_Framework_Assert as PHPUnit;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentBreakdownDto;
 
-class StatsComponentFailRateContext implements Context
+class TQIComponentFailRateContext implements Context
 {
     /** @var TestSupportHelper */
     private $testSupportHelper;

@@ -19,7 +19,7 @@ use DvsaCommon\ApiClient\Statistics\TesterPerformance\TesterPerformanceApiResour
 use DvsaCommon\Dto\Site\SiteDto;
 use PHPUnit_Framework_Assert as PHPUnit;
 
-class StatsTesterPerformanceContext implements Context
+class TQITesterPerformanceContext implements Context
 {
     private $siteData;
     private $vehicleData;

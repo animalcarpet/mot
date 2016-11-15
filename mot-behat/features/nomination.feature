@@ -1,4 +1,3 @@
-@transform
 Feature: Nomination
   As a valid user
   I want to nominate user to site or organisation role

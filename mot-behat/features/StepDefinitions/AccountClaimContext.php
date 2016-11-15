@@ -1,46 +1,32 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Datasource\Random;
 use Dvsa\Mot\Behat\Support\Api\AccountClaim;
 use Dvsa\Mot\Behat\Support\Data\Params\PersonParams;
 use TestSupport\Service\AccountService;
+use Dvsa\Mot\Behat\Support\Data\UserData;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class AccountClaimContext implements Context
 {
-    /**
-     * @var AccountClaim
-     */
     private $accountClaim;
+    private $userData;
 
-    /**
-     * @var SessionContext
-     */
-    private $sessionContext;
 
-    /**
-     * @param AccountClaim $accountClaim
-     */
-    public function __construct(AccountClaim $accountClaim)
+    public function __construct(AccountClaim $accountClaim, UserData $userData)
     {
         $this->accountClaim = $accountClaim;
+        $this->userData = $userData;
     }
+
 
     /**
-     * @BeforeScenario
+     * @Then my account has been claimed
      */
-    public function gatherContexts(BeforeScenarioScope $scope)
-    {
-        $this->sessionContext = $scope->getEnvironment()->getContext(SessionContext::class);
-    }
-
     public function myAccountHasNotYetBeenClaimed()
     {
-        if (!$this->isAccountClaimRequired()) {
-            throw new Exception('Expected an unclaimed account, but it was already claimed');
-        }
+        PHPUnit::assertFalse($this->isAccountClaimRequired());
     }
 
     /**
@@ -58,23 +44,8 @@ class AccountClaimContext implements Context
             PersonParams::PASSWORD => Random::password(),
         ];
 
-        $this->accountClaim->updateAccountClaim($this->sessionContext->getCurrentAccessToken(), $this->sessionContext->getCurrentUserId(), $account);
-    }
-
-    /**
-     * @Then I should not be able to test vehicles
-     */
-    public function iShouldNotBeAbleToTestVehicles()
-    {
-        PHPUnit::assertTrue($this->isAccountClaimRequired(), 'Account is already claimed');
-    }
-
-    /**
-     * @Then I should be able to test vehicles
-     */
-    public function iShouldBeAbleToTestVehicles()
-    {
-        PHPUnit::assertFalse($this->isAccountClaimRequired(), 'Account was not claimed');
+        $user = $this->userData->getCurrentLoggedUser();
+        $this->accountClaim->updateAccountClaim($user->getAccessToken(), $user->getUserId(), $account);
     }
 
     /**
@@ -82,7 +53,8 @@ class AccountClaimContext implements Context
      */
     private function isAccountClaimRequired()
     {
-        $response = $this->accountClaim->getIdentityData($this->sessionContext->getCurrentAccessToken());
+        $user = $this->userData->getCurrentLoggedUser();
+        $response = $this->accountClaim->getIdentityData($user->getAccessToken());
 
         return (bool) $response->getBody()->getData()['user']['isAccountClaimRequired'];
     }

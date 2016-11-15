@@ -22,6 +22,10 @@ default:
                 - CertificateContext
                 - CherishedTransferContext
                 - ContingencyTestContext
+                - CustomerServiceContext
+                - DemoMotTestContext
+                - DemoTestRecordContext
+                - EmailContext
                 - EventContext
                 - FeatureContext
                 - MotTestContext
@@ -35,7 +39,14 @@ default:
                 - PasswordContext
                 - PasswordConfirmationContext
                 - PersonContext
+                - PersonAddressContext
+                - PersonDateOfBirthContext
+                - PersonDrivingLicenceContext
+                - PersonNameContext
+                - PersonTelephoneContext
                 - ReplacementCertificateContext
+                - ReasonForRejectionContext
+                - RoleContext
                 - SecurityPinContext
                 - SecurityQuestionsContext
                 - SessionContext
@@ -45,12 +56,12 @@ default:
                 - SlotsManualAdjustmentContext
                 - SlotsReportContext
                 - SlotsRefreshPaymentsContext
-                - StatsAeTesterPerformanceContext
-                - StatsTesterPerformanceContext
-                - StatsComponentFailRateContext
                 - SpecialNoticeContext
                 - SurveyContext
                 - TempPasswordChangeContext
+                - TQIAeTesterPerformanceContext
+                - TQITesterPerformanceContext
+                - TQIComponentFailRateContext
                 - VehicleContext
                 - VtsContext
                 - VtsManagementContext

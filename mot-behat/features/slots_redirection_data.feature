@@ -6,6 +6,7 @@ Feature: Obtain payment gateway redirection data
   @quarantine
   @slots
   @card
+  @create-default-ae("kwikfit")
   Scenario Outline: Finance User initiates a request to make a card payment
     Given  I am logged in as a Finance User
     When I initiate the request to make a card payment

@@ -23,7 +23,7 @@ Feature: Customer Service
 
   Scenario Outline: Invalid search for a User returns no results
     Given I am logged in as a Customer Service Operator
-    When I Search for a Customer Service Operator with following data:
+    When I try Search for a Customer Service Operator with following data:
       | userName   | firstName   | lastName   | postCode   | dateOfBirth   | email   |
       | <userName> | <firstName> | <lastName> | <postCode> | <dateOfBirth> | <email> |
     Then the Searched User data will NOT be returned
@@ -52,7 +52,7 @@ Feature: Customer Service
 
   Scenario: MOT test information search
     Given I am logged in as a Customer Service Operator
-    Given a logged in Tester, starts an MOT Test
+    And there is a Mot test in progress
     When I search for an MOT test
     Then the MOT test data is returned
 

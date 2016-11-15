@@ -5,15 +5,12 @@ Feature: Manual Adjustment of transaction
   So that the right customer gets the right payment, product or amount
 
   @slots
-  Scenario Outline: Manual Adjustment when a transaction is allocated to an Incorrect Authorised Examiner
+  @create-default-ae("Kwikfit")
+  Scenario: Manual Adjustment when a transaction is allocated to an Incorrect Authorised Examiner
     Given I am logged in as a Finance User
     And A slot transaction exist
-    When I adjust the transaction to the correct Authorised Examiner <authorisedExaminer>
+    When I adjust the transaction to the correct Authorised Examiner "Kwikfit"
     Then The transaction should be adjusted
-  Examples:
-    | authorisedExaminer |
-    | kwikfit            |
-    | asda               |
 
   @slots
   Scenario Outline: Manual Adjustment when a transaction is created with Incorrect Data

@@ -1,8 +1,6 @@
 <?php
 namespace Dvsa\Mot\Behat\Support\Data\Transformer;
 
-use Dvsa\Mot\Behat\Support\Scope\BeforeBehatScenarioScope;
-
 trait TypeConversion
 {
     /**
@@ -10,7 +8,7 @@ trait TypeConversion
      */
     public function castToInteger($string)
     {
-        if (BeforeBehatScenarioScope::isTransformerDisabled()) {
+        if ($string != intval($string)) {
             return $string;
         }
 
@@ -22,7 +20,7 @@ trait TypeConversion
      */
     public function castToFloat($string)
     {
-        if (BeforeBehatScenarioScope::isTransformerDisabled()) {
+        if ($string != floatval($string) ) {
             return $string;
         }
 
@@ -34,10 +32,6 @@ trait TypeConversion
      */
     public function castToBool($string)
     {
-        if (BeforeBehatScenarioScope::isTransformerDisabled()) {
-            return $string;
-        }
-
         if (strtolower($string) === "true") {
             return true;
         }
@@ -52,10 +46,6 @@ trait TypeConversion
      */
     public function castToDateTime($dateTime)
     {
-        if (BeforeBehatScenarioScope::isTransformerDisabled()) {
-            return $dateTime;
-        }
-
         return new \DateTime($dateTime);
     }
 }

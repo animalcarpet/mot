@@ -1,4 +1,3 @@
-@transform
 Feature: Cancel a Direct Debit Mandate
   As an Authorised Examiner
   I wants to cancel an existing Direct Debit Mandate

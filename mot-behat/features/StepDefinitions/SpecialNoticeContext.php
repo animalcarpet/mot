@@ -7,10 +7,10 @@ use Dvsa\Mot\Behat\Support\Response;
 use PHPUnit_Framework_Assert as PHPUnit;
 use Dvsa\Mot\Behat\Support\Api\SpecialNotice;
 use Dvsa\Mot\Behat\Support\Api\Session;
+use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use Dvsa\Mot\Behat\Support\Data\SiteData;
 use Dvsa\Mot\Behat\Support\Data\UserData;
-use Dvsa\Mot\Behat\Support\Data\Params\PersonParams;
 use Zend\Http\Response as HttpResponse;
 
 class SpecialNoticeContext implements Context
@@ -24,21 +24,6 @@ class SpecialNoticeContext implements Context
      * @var SessionContext
      */
     private $sessionContext;
-
-    /**
-     * @var VtsContext
-     */
-    private $vtsContext;
-
-    /**
-     * @var PersonContext
-     */
-    private $personContext;
-
-    /**
-     * @var SpecialNoticeBroadcastResult
-     */
-    private $specialNoticeBroadcastResult;
 
     /**
      * @var Response
@@ -56,17 +41,17 @@ class SpecialNoticeContext implements Context
     private $session;
 
     /**
-     * @var Tester
+     * @var AuthenticatedUser
      */
     private $tester;
 
     /**
-     * @var AEDM
+     * @var AuthenticatedUser
      */
     private $aedm;
 
     /**
-     * @var AreaOffice1User
+     * @var AuthenticatedUser
      */
     private $areaOffice1user;
 
@@ -97,8 +82,6 @@ class SpecialNoticeContext implements Context
     public function gatherContexts(BeforeScenarioScope $scope)
     {
         $this->sessionContext = $scope->getEnvironment()->getContext(SessionContext::class);
-        $this->vtsContext = $scope->getEnvironment()->getContext(VtsContext::class);
-        $this->personContext = $scope->getEnvironment()->getContext(PersonContext::class);
     }
 
     /**
@@ -106,7 +89,9 @@ class SpecialNoticeContext implements Context
      */
     public function iSendANewSpecialNoticeBroadcast()
     {
-        $this->specialNoticeBroadcastResult = $this->specialNotice->sendBroadcast($this->sessionContext->getCurrentAccessToken());
+        $this->specialNotice->sendBroadcast(
+            $this->userData->getCurrentLoggedUser()->getAccessToken()
+        );
     }
 
     /**
@@ -114,15 +99,8 @@ class SpecialNoticeContext implements Context
      */
     public function iWillSeeTheBroadcastWasSuccessful()
     {
-        PHPUnit::assertTrue($this->specialNoticeBroadcastResult);
-    }
-
-    /**
-     * @When /^I create a Special Notice$/
-     */
-    public function iCreateASpecialNotice()
-    {
-        $this->specialNoticeResponse = $this->specialNotice->createSpecialNotice($this->sessionContext->getCurrentAccessTokenOrNull());
+        $response = $this->specialNotice->getLastResponse();
+        PHPUnit::assertTrue($response->getBody()->getData()["success"]);
     }
 
     /**
@@ -146,7 +124,7 @@ class SpecialNoticeContext implements Context
         $data["internalPublishDate"] = (new \DateTime($data["internalPublishDate"]))->format("Y-m-d");
         $data["externalPublishDate"] = (new \DateTime($data["externalPublishDate"]))->format("Y-m-d");
 
-        $token = $this->sessionContext->getCurrentAccessTokenOrNull();
+        $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $this->specialNoticeResponse = $this->specialNotice->createSpecialNotice($token, $data);
 
         $this->theSpecialNoticeIsCreated();
@@ -157,10 +135,10 @@ class SpecialNoticeContext implements Context
      */
     public function siteWithDvsaAndVtsUsersRolesExists()
     {
-        $site = $this->siteData->create();
-        $this->tester = $this->personContext->createTester([PersonParams::SITE_IDS => [$site->getId()]]);
+        $site = $this->siteData->create("Popular Garage");
+        $this->tester = $this->userData->createTesterAssignedWitSite($site->getId(), "Bob");
         $this->aedm = $this->userData->getAedmByAeId($site->getOrganisation()->getId());
-        $this->areaOffice1user = $this->testSupportHelper->getAreaOffice1Service()->create([]);
+        $this->areaOffice1user = $this->userData->createAreaOffice1User();
     }
 
     /**
@@ -168,7 +146,7 @@ class SpecialNoticeContext implements Context
      */
     public function iPublishSpecialNotice()
     {
-        $token = $this->sessionContext->getCurrentAccessTokenOrNull();
+        $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
         $id = $this->specialNoticeResponse->getBody()->getData()["id"];
 
         $response = $this->specialNotice->publish($token, $id);
@@ -182,7 +160,7 @@ class SpecialNoticeContext implements Context
     public function theSpecialNoticeIsBroadcasted()
     {
         $this->sessionContext->iAmLoggedInAsAnCronUser();
-        $response = $this->specialNotice->sendBroadcast($this->sessionContext->getCurrentAccessToken());
+        $response = $this->specialNotice->sendBroadcast($this->userData->getCurrentLoggedUser()->getAccessToken());
 
         PHPUnit_Framework_Assert::assertTrue($response);
     }
@@ -198,7 +176,7 @@ class SpecialNoticeContext implements Context
 
     private function assertInternalSpecialNotice()
     {
-        $dvsaUserSession = $this->session->startSession($this->areaOffice1user->data[PersonParams::USERNAME], $this->areaOffice1user->data[PersonParams::PASSWORD]);
+        $dvsaUserSession = $this->areaOffice1user;
         $dvsaUserResponse = $this->specialNotice->getSpecialNotices($dvsaUserSession->getAccessToken(), $dvsaUserSession->getUserId());
 
         PHPUnit_Framework_Assert::assertEquals(HttpResponse::STATUS_CODE_200, $dvsaUserResponse->getStatusCode());
@@ -230,7 +208,7 @@ class SpecialNoticeContext implements Context
 
     private function assertExternalSpecialNotice()
     {
-        $testerSession = $this->session->startSession($this->tester->data[PersonParams::USERNAME], $this->tester->data[PersonParams::PASSWORD]);
+        $testerSession = $this->tester;
         $testerResponse = $this->specialNotice->getSpecialNotices($testerSession->getAccessToken(), $testerSession->getUserId());
 
         $vtsUserSession = $this->aedm;
@@ -284,16 +262,5 @@ class SpecialNoticeContext implements Context
         PHPUnit_Framework_Assert::assertNotEmpty($this->specialNoticeResponse->getBody()->getData()['id'], 'Special Notice Id was not returned in response');
         PHPUnit_Framework_Assert::assertTrue(is_int($this->specialNoticeResponse->getBody()->getData()['id']), 'Special Notice Id is not a number');
         PHPUnit_Framework_Assert::assertEquals(HttpResponse::STATUS_CODE_200, $this->specialNoticeResponse->getStatusCode(), 'Incorrect Status Code returned');
-    }
-
-    /**
-     * @Then /^the Special Notice is not created$/
-     */
-    public function theSpecialNoticeIsNotCreated()
-    {
-        $body = $this->specialNoticeResponse->getBody()->toArray();
-
-        PHPUnit_Framework_Assert::assertFalse(isset($body['data']['id']), 'Special Notice Id returned in response');
-        PHPUnit_Framework_Assert::assertNotEquals(HttpResponse::STATUS_CODE_200, $this->specialNoticeResponse->getStatusCode(), 'HTTP 200 Status Code returned');
     }
 }

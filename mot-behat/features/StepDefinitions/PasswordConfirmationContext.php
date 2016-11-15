@@ -4,6 +4,7 @@ use Behat\Behat\Context\Context;
 use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Data\UserData;
 use Dvsa\Mot\Behat\Support\Response;
+use Dvsa\Mot\Behat\Support\Data\Exception\UnexpectedResponseStatusCodeException;
 use PHPUnit_Framework_Assert as PHPUnit;
 
 class PasswordConfirmationContext implements Context
@@ -55,7 +56,14 @@ class PasswordConfirmationContext implements Context
      */
     public function iSupplyTheIncorrectPassword()
     {
-        $this->submitConfirmSessionRequest('NotThePassword');
+        try {
+            $this->submitConfirmSessionRequest('NotThePassword');
+        } catch (UnexpectedResponseStatusCodeException $exception) {
+            $this->confirmSessionResponse = $this->session->getLastResponse();
+        }
+
+        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+        PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
     }
 
     /**

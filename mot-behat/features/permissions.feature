@@ -1,4 +1,3 @@
-@transform
 Feature: Permissions
   As the Roles Based Access Control process
   I want to implement user permissions and roles
@@ -6,7 +5,7 @@ Feature: Permissions
 
   Scenario Outline: Vehicle Examiner is not authorised to perform an MOT Test for any Class
     Given I am logged in as a Vehicle Examiner
-    When I attempt to start an Mot Test for a class <class> vehicle
+    When I try to start an Mot Test for a class <class> vehicle
     Then I should receive a Forbidden response
   Examples:
     | class |
@@ -22,7 +21,7 @@ Feature: Permissions
     Given I am logged in as a Tester
     And I Create a new Vehicle Technical Record with Class of <class>
     And I'm authenticated with my username and password <username> <password>
-    When I attempt to start an Mot Test with a Class <class> Vehicle
+    When I try to start an Mot Test with a Class <class> Vehicle
     Then an MOT test number should not be allocated
   Examples:
     | username          | password | class |
@@ -50,11 +49,10 @@ Feature: Permissions
     | USER          |
 
   @story @VM-9865
-  @transform
   Scenario Outline: Vehicle Examiner can view the summary of a MOT test that is completed
     Given there is a "<status>" "<test>" MOT test
     When I log in as a Vehicle Examiner
-    Then I can view the "<test>" MOT summary
+    Then I can view the MOT test summary
 
   Examples:
     | test   | status |
@@ -83,7 +81,7 @@ Feature: Permissions
 
   Scenario Outline: Validate the permission of who can create an AE
     Given I am logged in as user with <role>
-    When I attempt to create a new AE
+    When I try to create a new AE
     Then the creation of AE will be <status>
     Examples:
       | role            | status        |
@@ -100,7 +98,7 @@ Feature: Permissions
   Scenario Outline: User cannot ABORT MOT test
     Given there is a Mot test with "<test_type>" type in progress
     And I am logged in as user with <role>
-    When I abort the Mot Test
+    When I try abort the Mot Test
     Then I should receive a Forbidden response
     Examples:
       | test_type                | role            |

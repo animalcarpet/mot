@@ -4,7 +4,6 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\ReplacementCertificate;
 use Dvsa\Mot\Behat\Support\Api\Session;
-use Dvsa\Mot\Behat\Support\Data\Params\VehicleParams;
 use Dvsa\Mot\Behat\Support\Data\MotTestData;
 use Dvsa\Mot\Behat\Support\Data\UserData;
 use Dvsa\Mot\Behat\Support\Data\VehicleData;

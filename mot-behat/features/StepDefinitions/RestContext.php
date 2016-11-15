@@ -3,6 +3,7 @@
 use Behat\Behat\Context\Context;
 use Dvsa\Mot\Behat\Support\Api\Rest;
 use Dvsa\Mot\Behat\Support\Response;
+use Dvsa\Mot\Behat\Support\Data\Exception\UnexpectedResponseStatusCodeException;
 use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_Assert as PHPUnit;
 
@@ -44,7 +45,14 @@ class RestContext implements Context
      */
     public function iMakeARequestTo($method, $endpoint)
     {
-        $this->lastResponse = $this->rest->makeRequest($this->accessToken, $method, $endpoint);
+        try {
+            $this->lastResponse = $this->rest->makeRequest($this->accessToken, $method, $endpoint);
+        } catch (UnexpectedResponseStatusCodeException $exception) {
+            $this->lastResponse = $this->rest->getLastResponse();
+        }
+
+        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+        PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
     }
 
     /**

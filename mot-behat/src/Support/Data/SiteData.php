@@ -14,16 +14,17 @@ use DvsaCommon\Dto\Site\SiteListDto;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\SiteTypeCode;
 use DvsaCommon\Utility\ArrayUtils;
+use DvsaCommon\Model\VehicleTestingStation;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use DvsaCommon\Utility\DtoHydrator;
+use Doctrine\DBAL\DBALException;
 
-class SiteData
+class SiteData extends AbstractData
 {
     const DEFAULT_NAME = "Crazy cars garage";
 
     private $authorisedExaminerData;
     private $vts;
-    private $userData;
     private $testSupportHelper;
 
     private $siteCollection;
@@ -36,9 +37,10 @@ class SiteData
         TestSupportHelper $testSupportHelper
     )
     {
+        parent::__construct($userData);
+
         $this->authorisedExaminerData = $authorisedExaminerData;
         $this->vts = $vts;
-        $this->userData = $userData;
         $this->testSupportHelper = $testSupportHelper;
         $this->siteCollection = SharedDataCollection::get(SiteDto::class);
     }
@@ -69,9 +71,6 @@ class SiteData
 
         $response = $this->vts->create($user->getAccessToken(), $params);
         $responseBody = $response->getBody();
-        if (!is_object($responseBody)) {
-            throw new \Exception("createSite: responseBody is not an object: failed to create Vts");
-        }
 
         $site = $responseBody->getData();
         $dto = new SiteDto();
@@ -233,6 +232,24 @@ class SiteData
         );
 
         return DtoHydrator::jsonToDto($response->getBody()->getData());
+    }
+
+    public function updateSiteClassesByUser(AuthenticatedUser $user, $siteId, array $siteClasses)
+    {
+        $this->vts->updateSiteDetails(
+            $user->getAccessToken(),
+            $siteId,
+            [
+                VehicleTestingStation::PATCH_PROPERTY_CLASSES => $siteClasses,
+                '_class' => VehicleTestingStationDto::class,
+            ]
+        );
+    }
+
+    public function updateSiteClasses($siteId, array $siteClasses)
+    {
+        $areaOffice1User = $this->userData->createAreaOffice1User();
+        return $this->updateSiteClassesByUser($areaOffice1User, $siteId, $siteClasses);
     }
 
     /**

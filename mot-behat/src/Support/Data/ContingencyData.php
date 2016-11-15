@@ -4,8 +4,10 @@ namespace Dvsa\Mot\Behat\Support\Data;
 use Dvsa\Mot\Behat\Support\Api\ContingencyTest;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Support\Data\Collection\DataCollection;
+use Dvsa\Mot\Behat\Support\Data\Collection\SharedDataCollection;
 use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
 use DvsaCommon\Dto\MotTesting\ContingencyTestDto;
+use DvsaCommon\Dto\Site\SiteDto;
 use DvsaCommon\Utility\ArrayUtils;
 
 class ContingencyData
@@ -28,7 +30,7 @@ class ContingencyData
         $this->userData = $userData;
         $this->siteData = $siteData;
         $this->contingencyTest = $contingencyTest;
-        $this->contingencyCollection = new DataCollection(ContingencyTestDto::class);
+        $this->contingencyCollection = SharedDataCollection::get(ContingencyTestDto::class);
     }
 
     public function create(AuthenticatedUser $user, array $params = [])
@@ -62,6 +64,12 @@ class ContingencyData
         $this->emergencyLogs[$siteName] = $response->getBody()->getData()['emergencyLogId'];
 
         return $dto;
+    }
+
+    public function getContingencyCodeID(AuthenticatedUser $user, SiteDto $site, array $params = [])
+    {
+        $params[SiteParams::SITE_NAME] = $site->getName();
+        return $this->create($user, $params);
     }
 
     public function getEmergencyLogId($siteName = SiteData::DEFAULT_NAME)

@@ -7,6 +7,9 @@ use Dvsa\Mot\Behat\Support\Api\Survey;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use Dvsa\Mot\Behat\Support\Data\MotTestData;
 use Dvsa\Mot\Behat\Support\Data\UserData;
+use Dvsa\Mot\Behat\Support\Data\SiteData;
+use Dvsa\Mot\Behat\Support\Data\VehicleData;
+use Dvsa\Mot\Behat\Support\Data\Exception\UnexpectedResponseStatusCodeException;
 use PHPUnit_Framework_Assert as PHPUnit;
 use Ramsey\Uuid\Uuid;
 use Zend\Http\Response;
@@ -35,6 +38,12 @@ class SurveyContext implements Context
     /** @var  UserData */
     private $userData;
 
+    /** @var  SiteData */
+    private $siteData;
+
+    /** @var VehicleData */
+    private $vehicleData;
+
     /** @var SessionContext $sessionContext */
     private $sessionContext;
 
@@ -57,7 +66,9 @@ class SurveyContext implements Context
         MotTest $motTest, Survey $survey,
         TestSupportHelper $testSupportHelper,
         MotTestData $motTestData,
-        UserData $userData
+        UserData $userData,
+        SiteData $siteData,
+        VehicleData $vehicleData
     )
     {
         $this->testSupportHelper = $testSupportHelper;
@@ -65,6 +76,8 @@ class SurveyContext implements Context
         $this->survey = $survey;
         $this->motTestData = $motTestData;
         $this->userData = $userData;
+        $this->siteData = $siteData;
+        $this->vehicleData = $vehicleData;
     }
 
     /**
@@ -83,7 +96,7 @@ class SurveyContext implements Context
      */
     public function surveyCompleted()
     {
-        $this->motTestContext->anMotHasBeenPassed();
+        $this->motTestContext->thereIsAMot();
         $this->generateSurveyToken();
         $this->submitSurveyResponse(3);
 
@@ -124,8 +137,7 @@ class SurveyContext implements Context
         $this->satisfactionRatings['rating5'] = $rating5;
 
         foreach ($this->satisfactionRatings as $rating) {
-            $this->sessionContext->iAmLoggedInAsATester();
-            $this->motTestContext->iHavePassedAnMotTest();
+            $this->motTestContext->thereIsAMot();
             $this->generateSurveyToken();
             $this->submitSurveyResponse($rating);
         }
@@ -187,11 +199,18 @@ class SurveyContext implements Context
      */
     private function submitInvalidSurveyResponse($satisfactionRating, $token)
     {
-        $this->submittedSurveyHTTPResponse = $this->motTest->submitSurveyResponse(
-            $this->sessionContext->getCurrentAccessToken(),
-            $satisfactionRating,
-            $token
-        );
+        try {
+            $this->submittedSurveyHTTPResponse = $this->motTest->submitSurveyResponse(
+                $this->sessionContext->getCurrentAccessToken(),
+                $satisfactionRating,
+                $token
+            );
+        } catch (UnexpectedResponseStatusCodeException $exception) {
+            $this->submittedSurveyHTTPResponse = $this->motTest->getLastResponse();
+        }
+
+        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+        PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
     }
 
     /**
@@ -200,8 +219,7 @@ class SurveyContext implements Context
      */
     private function generateDuplicateToken()
     {
-        $this->sessionContext->iAmLoggedInAsATester();
-        $this->motTestContext->iHavePassedAnMotTest();
+        $this->motTestContext->thereIsAMot();
         $this->generateSurveyToken();
         $this->submitSurveyResponse($this::VALID_SURVEY_RESPONSE);
 
@@ -267,15 +285,5 @@ class SurveyContext implements Context
         } else {
             PHPUnit::assertNull($this->submittedSurveyHTTPResponse->getBody()['satisfaction_rating']);
         }
-    }
-
-    /**
-     * Retrieve details of most recent MOT test and format them for endpoint to determine if survey should be displayed.
-     *
-     * @return array
-     */
-    public function getMotTestDetailsForSurveyCheck()
-    {
-        return $this->motTestContext->getMotStatusData()->getBody()->getData();
     }
 }

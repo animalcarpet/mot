@@ -6,13 +6,13 @@ Feature: Record a new event
   @story @VM-11545
   Scenario Outline: Record a new event for a person
     Given I am logged in as <permitted_user>
-    And I create an event for a person
+    And I create an event for "Mr Smith"
     And I select the event type CONVC
     And I supply a valid date
     And I select the event outcome NADAE
     And I supply a blank description
     When I submit the event
-    Then an event is generated for the user of "Convictions: MOT, motor trade, criminal"
+    Then an event is generated for "Mr Smith" of "Convictions: MOT, motor trade, criminal"
 
   Examples:
     | permitted_user        |

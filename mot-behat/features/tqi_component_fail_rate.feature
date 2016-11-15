@@ -1,5 +1,4 @@
-@transform
-Feature: Stats Component Fail Rate
+Feature: TQI Component Fail Rate
 
   Background:
     Given there is a site associated with Authorised Examiner with following data:

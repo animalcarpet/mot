@@ -173,4 +173,12 @@ class VehicleContext implements Context
         $vehicleDetails = $this->vehicleData->getVehicleDetails($vehicle->getId(), $this->userData->getCurrentLoggedUser()->getUsername());
         PHPUnit::assertSame(null, $vehicleDetails->getWeight());
     }
+
+    /**
+     * @Given I Create a new vehicle
+     */
+    public function iCreateANewVehicle()
+    {
+        $this->vehicleData->createByUser($this->userData->getCurrentLoggedUser()->getAccessToken());
+    }
 }

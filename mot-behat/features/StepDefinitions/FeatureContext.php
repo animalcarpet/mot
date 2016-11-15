@@ -10,6 +10,8 @@ use Dvsa\Mot\Behat\Support\Data\Transformer\MotTestTypeToCodeTransformer;
 use Dvsa\Mot\Behat\Support\Data\Transformer\MotTestStatusToCodeTransformer;
 use Dvsa\Mot\Behat\Support\Data\Transformer\EventTypeToCodeTransformer;
 use Dvsa\Mot\Behat\Support\Data\Transformer\EmergencyReasonToCodeTransformer;
+use Dvsa\Mot\Behat\Support\Data\Transformer\ReasonForCancelToIdTransformer;
+use Dvsa\Mot\Behat\Support\Data\Transformer\AuthorisationForTestingMotStatusToCodeTransformer;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Hook\Scope\AfterStepScope;
@@ -17,7 +19,6 @@ use Dvsa\Mot\Behat\Support\Api\Session;
 use Dvsa\Mot\Behat\Support\Api\DataCatalog;
 use Dvsa\Mot\Behat\Support\Api\VehicleDictionary;
 use Dvsa\Mot\Behat\Support\History;
-use Dvsa\Mot\Behat\Support\Scope\BeforeBehatScenarioScope;
 use Dvsa\Mot\Behat\Support\Data\SiteData;
 use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
 use Dvsa\Mot\Behat\Support\Data\UserData;
@@ -31,6 +32,7 @@ class FeatureContext implements Context
 {
     use AeNameToOrganisationDtoTransformer, SiteNameToSiteDtoTransformer, TypeConversion, UsernameToAuthenticatedUserTransformer;
     use MotTestTypeToCodeTransformer, MotTestStatusToCodeTransformer, EventTypeToCodeTransformer, EmergencyReasonToCodeTransformer;
+    use ReasonForCancelToIdTransformer, AuthorisationForTestingMotStatusToCodeTransformer;
 
     /**
      * @var History
@@ -64,6 +66,22 @@ class FeatureContext implements Context
         $this->session = $session;
         $this->dataCatalog = $dataCatalog;
         $this->vehicleDictionary = $vehicleDictionary;
+
+        $this->generateDefaultData();
+    }
+
+    private function generateDefaultData()
+    {
+        $defaultDataGenerator = new DefaultDataGenerator(
+            $this->authorisedExaminerData,
+            $this->siteData,
+            $this->userData,
+            $this->session,
+            $this->dataCatalog,
+            $this->vehicleDictionary
+        );
+
+        $defaultDataGenerator->generate();
     }
 
     /**
@@ -112,18 +130,7 @@ class FeatureContext implements Context
      */
     public function setUp(BeforeScenarioScope $scope)
     {
-        BeforeBehatScenarioScope::set($scope);
-
-        $defaultDataGenerator = new DefaultDataGenerator(
-            $this->authorisedExaminerData,
-            $this->siteData,
-            $this->userData,
-            $this->session,
-            $this->dataCatalog,
-            $this->vehicleDictionary
-        );
-
-        $defaultDataGenerator->generate();
+        $this->generateDefaultData();
 
         $beforeScenarioDataGenerator = new BeforeScenarioDataGenerator(
             $scope,

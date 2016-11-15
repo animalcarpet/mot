@@ -1,4 +1,3 @@
-@transform
 Feature: MOT Test
   As a Tester
   I want to Perform an MOT Test

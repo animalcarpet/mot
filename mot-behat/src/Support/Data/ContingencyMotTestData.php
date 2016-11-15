@@ -24,13 +24,13 @@ class ContingencyMotTestData extends AbstractMotTestData
         ContingencyTest $contingencyTest,
         UserData $userData,
         MotTest $motTest,
-        BrakeTestResult $brakeTestResult,
-        OdometerReading $odometerReading,
-        ReasonForRejection $reasonForRejection,
+        BrakeTestResultData $brakeTestResultData,
+        OdometerReadingData $odometerReadingData,
+        ReasonForRejectionData $reasonForRejectionData,
         TestSupportHelper $testSupportHelper
     )
     {
-        parent::__construct($userData, $motTest, $brakeTestResult, $odometerReading, $reasonForRejection, $testSupportHelper);
+        parent::__construct($userData, $motTest, $brakeTestResultData, $odometerReadingData, $reasonForRejectionData, $testSupportHelper);
 
         $this->contingencyData = $contingencyData;
         $this->contingencyTest = $contingencyTest;
@@ -93,5 +93,10 @@ class ContingencyMotTestData extends AbstractMotTestData
     {
         $mot = $this->create($tester, $vehicle, $site);
         return $this->abortMotTest($mot);
+    }
+
+    public function getLastResponse()
+    {
+        return $this->contingencyTest->getLastResponse();
     }
 }

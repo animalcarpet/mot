@@ -29,21 +29,17 @@ Feature: MOT Test Survey
 
   @survey
   Scenario: Survey will not be displayed if user has completed survey too recently
-    Given A survey has been completed
-    And I start an MOT Test
-    And the Tester adds an Odometer Reading
-    When the Tester adds a Class 3-7 Plate Brake Test
-    And the Tester Passes the Mot Test
+    Given I am logged in as a Tester
+    And A survey has been completed
+    And I have passed an MOT test
     Then the survey will not be displayed to the user
 
   @survey
   Scenario: Survey will not be displayed if user completes a non-normal MOT test
-    Given A survey has been completed
+    Given I am logged in as a Tester
+    And A survey has been completed
     And I am logged in as a Tester
-    And I start a Demo MOT Test
-    And the Tester adds an Odometer Reading
-    When the Tester adds a Class 3-7 Plate Brake Test
-    And the Tester Passes the Mot Test
+    And I have passed a Demo MOT test
     Then the survey will not be displayed to the user
 
   @survey

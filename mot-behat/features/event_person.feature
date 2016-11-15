@@ -1,4 +1,3 @@
-@transform
 Feature: Record a new event
   As a DVSA User
   I want the ability to record events for certain actions a user will take

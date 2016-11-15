@@ -28,11 +28,6 @@ class CertificateContext implements Context
     private $motTest;
 
     /**
-     * @var SessionContext
-     */
-    private $sessionContext;
-
-    /**
      * @var MotTestContext
      */
     private $motTestContext;
@@ -61,15 +56,6 @@ class CertificateContext implements Context
         $this->testSupportHelper = $testSupportHelper;
         $this->motTestData = $motTestData;
         $this->userData = $userData;
-    }
-
-    /**
-     * @BeforeScenario
-     */
-    public function gatherContexts(BeforeScenarioScope $scope)
-    {
-        $this->sessionContext = $scope->getEnvironment()->getContext(SessionContext::class);
-        $this->motTestContext = $scope->getEnvironment()->getContext(MotTestContext::class);
     }
 
     /**
@@ -238,7 +224,10 @@ class CertificateContext implements Context
     public function printOfCreatedMotTestsIsIssued()
     {
         foreach($this->motTestContext->getMotTests() as $motTest) {
-            $this->certificate->requestCertificate($motTest[MotTestParams::MOT_TEST_NUMBER], $this->sessionContext->getCurrentAccessToken());
+            $this->certificate->requestCertificate(
+                $motTest[MotTestParams::MOT_TEST_NUMBER],
+                $this->userData->getCurrentLoggedUser()->getAccessToken()
+            );
         }
 
         $this->motTestContext->refreshMotTests();
