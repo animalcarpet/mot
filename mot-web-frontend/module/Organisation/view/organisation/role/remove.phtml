@@ -11,9 +11,9 @@ $aeId = $viewModel->getOrganisationId();
 <div class="text">
     <p class="lede">
         Are you sure you want to remove the role of
-        <?php echo $this->escapeHtml($viewModel->getRoleName()); ?>
-        in <?php echo $this->escapeHtml($viewModel->getOrganisationName()); ?>
-        from <?php echo $this->escapeHtml($viewModel->getEmployeeName()); ?>
+        <strong><?php echo $this->escapeHtml($viewModel->getRoleName()); ?></strong>
+        in <strong><?php echo $this->escapeHtml($viewModel->getOrganisationName()); ?></strong>
+        from <strong><?php echo $this->escapeHtml($viewModel->getEmployeeName()); ?></strong>?
     </p>
 </div>
 
@@ -28,7 +28,7 @@ $aeId = $viewModel->getOrganisationId();
     ); ?>" method="post">
     <?php echo $this->csrfToken(); ?>
     <nav class="content-navigation">
-        <input type="submit" name="submit" class="button" id="confirm" value="Confirm">
+        <input type="submit" name="submit" class="button" id="confirm" value="Remove role">
         <ul class="content-navigation__secondary">
             <li>
                 <a href="<?php echo $this->url('authorised-examiner', [ 'id' => $this->escapeHtml($viewModel->getOrganisationId())]); ?>">
