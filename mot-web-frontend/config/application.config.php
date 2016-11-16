@@ -7,7 +7,7 @@ $mods = require_once('modules.list.php');
 # If the APPLICATION_CONFIG_PATH is set then this location is used to read
 # the configs for the application. If this location is not set then the config
 # files are loaded from the standard locaiton within the source tree.
-$path = getenv('APPLICATION_CONFIG_PATH') ? : 'config/autoload';
+$path = getenv('APPLICATION_CONFIG_PATH');
 
 if ($env === 'development') {
     $mods[] = 'ZendDeveloperTools';
