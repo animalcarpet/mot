@@ -10,6 +10,7 @@ use DvsaMotTest\View\Model\MotTestTitleModel;
 
 $defaultValues = $this->defaultValues;
 $formErrors = $this->formErrors;
+$hasErrors = !empty($this->errorMessages);
 
 /** @var \DvsaCommon\Dto\Common\MotTestDto $motDetails */
 $motDetails = $this->motDetails;
@@ -58,7 +59,7 @@ echo $this->partial('infoMessages', ['getFromFlash' => true]);
 echo $this->partial('errorMessages', ['getFromFlash' => true]);
 echo $this->partial('validationMessages');
 
-if ($this->errorMessages !== '') {
+if ($hasErrors) {
     echo $this->partial(
         'partials/page-validation-message',
         [
@@ -116,14 +117,14 @@ echo $this->partial(
     <input type="hidden" name="_non_mot_test" value="<?php echo $motDetails->getMotTestNumber(); ?>">
     <?php endif; ?>
 
-    <?php if ($this->errorMessages !== '') echo '<div class="form-group has-error">' ?>
+    <?php if ($hasErrors) echo '<div class="form-group has-error">' ?>
         <div class="row">
             <div class="col-lg-4">
                 <h2>Site ID <?php if (!$this->isNonMotTest) echo '(if applicable)'; ?></h2>
             </div>
             <div class="col-lg-8">
                 <div style="margin-top: 27px;">
-                    <?php if ($this->errorMessages !== '') {
+                    <?php if ($hasErrors) {
                         echo $this->partial(
                             'partials/field-validation-message',
                             [
@@ -135,7 +136,7 @@ echo $this->partial(
                 </div>
             </div>
         </div>
-    <?php if ($this->errorMessages !== '') echo '</div>' ?>
+    <?php if ($hasErrors) echo '</div>' ?>
 
     <div class="row">
         <div class="col-lg-4">
