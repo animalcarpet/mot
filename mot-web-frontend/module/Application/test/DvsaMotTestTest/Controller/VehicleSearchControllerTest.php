@@ -543,7 +543,7 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
      */
     protected function createParamObfuscator()
     {
-        $config = $this->getServiceManager()->get('Config');
+        $config = ['security' => ['obfuscate' => ['key' => 'ggg', 'entries' => ['vehicleId' => true]]]];
         $paramEncrypter = new ParamEncrypter(new EncryptionKey($config['security']['obfuscate']['key']));
         $paramEncoder = new ParamEncoder();
 

@@ -662,7 +662,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
      */
     protected function createParamObfuscator()
     {
-        $config         = $this->getServiceManager()->get('Config');
+        $config = ['security' => ['obfuscate' => ['key' => 'acjdajsd92md09282822', 'entries' => ['vehicleId' => true]]]];
         $paramEncrypter = new ParamEncrypter(new EncryptionKey($config['security']['obfuscate']['key']));
         $paramEncoder   = new ParamEncoder();
 
