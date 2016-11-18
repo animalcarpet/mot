@@ -44,8 +44,8 @@ public class SiteRagStatusTests extends DslTest {
     public Object[][] assessmentValues() {
         return new Object[][]{
                 {new AssessmentInfo("200.1", "Green", assessmentActors)},
-                {new AssessmentInfo("450", "Amber", assessmentActors)},
-                {new AssessmentInfo("790.5", "Red", assessmentActors)}};
+                {new AssessmentInfo("350", "Amber", assessmentActors)},
+                {new AssessmentInfo("365", "Red", assessmentActors)}};
     }
 
     @Test(groups = {"Regression"}, description = "VM-11544")
