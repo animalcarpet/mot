@@ -3,6 +3,12 @@ namespace Core\Collection;
 
 use DvsaCommon\Utility\TypeCheck;
 
+/**
+ * Class Collection
+ * @package Core\Collection
+ *
+ * @deprecated
+ */
 class Collection implements \Iterator, \Countable
 {
     private $expectedInstance;

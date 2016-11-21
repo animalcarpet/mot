@@ -199,6 +199,16 @@ return [
                     ],
                 ],
             ],
+            'vehicle-certificates'                               => [
+                'type'    => 'segment',
+                'options' => [
+                    'route'    => '/vehicle-certificates',
+                    'defaults' => [
+                        'controller' => MotTest\VehicleSearchController::class,
+                        'action'     => 'certificateList',
+                    ],
+                ],
+            ],
             'vehicle-models'                              => [
                 'type'    => 'segment',
                 'options' => [
@@ -257,23 +267,23 @@ return [
                     ],
                 ],
             ],
-            'replacement-certificate-vehicle-search'      => [
-                'type'    => 'segment',
+            'replacement-certificate-vehicle-search-vin' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/replacement-certificate-vehicle-search',
+                    'route' => '/replacement-certificate-vehicle-search-vin',
                     'defaults' => [
                         'controller' => MotTest\VehicleSearchController::class,
-                        'action'     => 'replacementCertificateVehicleSearch',
+                        'action' => 'replacementCertificateVehicleVinSearch',
                     ],
                 ],
             ],
-            'vehicle-test-history'                        => [
-                'type'    => 'segment',
+            'replacement-certificate-vehicle-search' => [
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/vehicle/:id/test-history',
+                    'route' => '/replacement-certificate-vehicle-search',
                     'defaults' => [
                         'controller' => MotTest\VehicleSearchController::class,
-                        'action'     => 'testHistory',
+                        'action' => 'replacementCertificateVehicleRegistrationSearch',
                     ],
                 ],
             ],
@@ -291,16 +301,6 @@ return [
                     ],
                 ],
                 'may_terminate' => true,
-            ],
-            'dvsa-vehicle-test-history'                   => [
-                'type'    => 'segment',
-                'options' => [
-                    'route'    => '/vehicle/:id/dvsa-test-history',
-                    'defaults' => [
-                        'controller' => MotTest\VehicleSearchController::class,
-                        'action'     => 'dvsaTestHistory',
-                    ],
-                ],
             ],
             'training-test-vehicle-search'                         => [
                 'type'    => 'segment',

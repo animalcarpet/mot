@@ -2,60 +2,42 @@
 
 namespace DvsaMotTest\View\VehicleSearchResult;
 
+use Core\Routing\MotTestRoutes;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
-use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\UrlBuilder\VehicleUrlBuilderWeb;
+use DvsaCommon\Constants\DuplicateCertificateSearchType;
 use Zend\Mvc\Controller\Plugin\Url;
-use DvsaMotTest\Model\VehicleSearchResult;
 
 class CertificateUrlTemplate implements VehicleSearchResultUrlTemplateInterface
 {
     private $urlHelper;
     private $authorisationService;
+    private $noRegistration;
 
-    public function __construct(MotAuthorisationServiceInterface $authorisationService, Url $urlPlugin)
+    /**
+     * @param int $noRegistration
+     * @param MotAuthorisationServiceInterface $authorisationService
+     * @param Url $urlPlugin
+     */
+    public function __construct($noRegistration, MotAuthorisationServiceInterface $authorisationService, Url $urlPlugin)
     {
+        $this->noRegistration = $noRegistration;
         $this->authorisationService = $authorisationService;
         $this->urlHelper = $urlPlugin;
     }
 
     public function getUrl(array $vehicle)
     {
-        $vehicleId = $vehicle['id'];
-        $vin = $vehicle['vin'];
-        $registration = $vehicle['registration'];
-        $isDvsaUser = $this->authorisationService->isGranted(PermissionInSystem::CERTIFICATE_READ_FROM_ANY_SITE);
-
-        if ($isDvsaUser) {
-            $url = VehicleUrlBuilderWeb::historyDvlaMotCertificates($vehicleId);
+        if ($this->noRegistration == 0) {
+            $searchParams = [
+                DuplicateCertificateSearchType::SEARCH_TYPE_VIN => $vehicle['vin'],
+            ];
         } else {
-            $url = VehicleUrlBuilderWeb::historyMotCertificates($vehicleId);
+            $searchParams = [
+                DuplicateCertificateSearchType::SEARCH_TYPE_VRM => $vehicle['registration'],
+            ];
         }
 
-        $query = http_build_query([ "vin" => $vin, 'registration' => $registration]);
-        return $url . "?" . $query;
-    }
-
-    /**
-     * @param VehicleSearchResult $vehicle
-     * @return string
-     */
-    public function getStartMotTestUrl(VehicleSearchResult $vehicle)
-    {
-        $vehicleId = $vehicle->getId();
-        $vin = $vehicle->getVin();
-        $registration = $vehicle->getRegistrationNumber();
-
-        $isDvsaUser = $this->authorisationService->isGranted(PermissionInSystem::CERTIFICATE_READ_FROM_ANY_SITE);
-
-        if ($isDvsaUser) {
-            $url = VehicleUrlBuilderWeb::historyDvlaMotCertificates($vehicleId);
-        } else {
-            $url = VehicleUrlBuilderWeb::historyMotCertificates($vehicleId);
-        }
-
-        $query = http_build_query([ "vin" => $vin, 'registration' => $registration]);
-        return $url . "?" . $query;
+        return MotTestRoutes::of($this->urlHelper)->vehicleSearchResults($searchParams);
     }
 }
 

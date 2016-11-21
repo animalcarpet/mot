@@ -236,13 +236,16 @@ return [
                             ],
                         ],
                     ],
-                    'find-mot-test-number' => [
+                    'edit-allowed-check'  => [
                         'type'    => 'Segment',
                         'options' => [
-                            'route'    => '/find-mot-test-number',
-                            'defaults' => [
+                            'route'       => '/edit-allowed-check/:vehicleId',
+                            'constraints' => [
+                                'vehicleId'  => '[0-9]+',
+                            ],
+                            'defaults'    => [
                                 'controller' => MotTestController::class,
-                                'action'     => 'findMotTestNumber',
+                                'action'     => 'editAllowedCheck',
                             ],
                         ],
                     ],

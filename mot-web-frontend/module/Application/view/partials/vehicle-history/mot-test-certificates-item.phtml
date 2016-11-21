@@ -1,0 +1,29 @@
+<?php
+use Core\Routing\MotTestRoutes;
+use DvsaMotTest\ViewModel\MotTestCertificate\MotTestCertificateTableItem;
+
+/** @var MotTestCertificateTableItem $test */
+?>
+
+<?php if ($test !== null): ?>
+    <td class="layer-table__item">
+        <?php echo $test->getDateOfTest(); ?>
+    </td>
+    <td class="layer-table__item">
+        <span class="<?php echo $test->getStatusBadge()->getCssClass();?>">
+            <?php echo $this->escapeHtml($test->getStatus()); ?>
+        </span>
+    </td>
+    <td class="layer-table__item">
+        <?php echo $this->escapeHtml($test->getSiteName());?>
+        <span class="table-summary__meta">
+            <?php echo $this->escapeHtml($test->getSiteAddress());?>
+        </span>
+    </td>
+    <td class="layer-table__item layer-table__item--right">
+        <a href="<?php echo MotTestRoutes::of($this)->vehicleMotTestCertificateView($test->getTestNumber(), $test->getParamsForSearchBy()); ?>"
+           id="view-<?php echo $test->getTestNumber() ?>" class="layer-table__link view-certificate" title="Action Key">
+            View certificate
+        </a>
+    </td>
+<?php endif?>

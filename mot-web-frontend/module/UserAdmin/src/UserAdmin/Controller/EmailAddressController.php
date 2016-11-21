@@ -7,7 +7,7 @@
 
 namespace UserAdmin\Controller;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Controller\AbstractDvsaActionController;
 use Dvsa\Mot\Frontend\PersonModule\Controller\PersonProfileController;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
@@ -135,7 +135,7 @@ class EmailAddressController extends AbstractDvsaActionController
                 $personId, $context));
         }
 
-        $result = new ActionResult();
+        $result = new ViewActionResult();
         $viewModel = new ChangeEmailViewModel();
         $result->layout()->setPageTitle(self::PAGE_TITLE);
         if ($this->contextProvider->getContext() === ContextProvider::YOUR_PROFILE_CONTEXT) {

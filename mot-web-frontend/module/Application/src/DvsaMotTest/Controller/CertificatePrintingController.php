@@ -45,12 +45,6 @@ class CertificatePrintingController extends AbstractDvsaMotTestController
 
         $certificateUrl = ReportUrlBuilder::printCertificate($motTestNumber, ($isDuplicate ? 'dup' : null));
 
-        //  --  get number of current site --
-        $site = $this->getIdentity()->getCurrentVts();
-        if ($site && $site->getSiteNumber()) {
-            $certificateUrl->queryParam('siteNr', $site->getSiteNumber());
-        }
-
         $result = $this->getRestClient()->getPdf($certificateUrl); // @todo - add some pdf parsing checks in client
 
         $response = new Response;

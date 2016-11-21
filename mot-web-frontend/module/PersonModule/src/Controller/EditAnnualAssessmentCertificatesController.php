@@ -3,7 +3,7 @@
 namespace Dvsa\Mot\Frontend\PersonModule\Controller;
 
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Controller\AbstractAuthActionController;
 use Core\TwoStepForm\EditStepAction;
 use Core\TwoStepForm\ReviewStepAction;
@@ -97,7 +97,7 @@ class EditAnnualAssessmentCertificatesController extends AbstractAuthActionContr
             );
         }
 
-        if ($actionResult instanceof ActionResult) {
+        if ($actionResult instanceof ViewActionResult) {
             $actionResult->setTemplate($template);
         }
 

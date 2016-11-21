@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionsController;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionTwoController;
@@ -39,7 +39,7 @@ class ChangeSecurityQuestionOneAction
 
         $securityQuestions = $this->changeSecurityQuestionsService->getSecurityQuestions();
         $form = new ChangeSecurityQuestionForm($this->filterSecurityQuestions($securityQuestions));
-        $result = new ActionResult();
+        $result = new ViewActionResult();
         $viewModel = new ChangeSecurityQuestionsViewModel();
         $viewModel = $this->populateViewModelFromSession($viewModel);
         $result->layout()->setPageTitle(self::CHANGE_SECURITY_QUESTIONS_QUESTION_ONE_PAGE_TITLE);

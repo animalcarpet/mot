@@ -9,7 +9,6 @@ $searchType = $this->searchType;
 
 $isRetest = ($searchType === VehicleSearchController::SEARCH_TYPE_RETEST);
 $isTraining = ($searchType === VehicleSearchController::SEARCH_TYPE_TRAINING);
-$isReplCert = ($searchType === VehicleSearchController::SEARCH_TYPE_CERTIFICATE);
 
 if (!empty($this->title)) {
     $title = $this->title;
@@ -25,11 +24,8 @@ if (!empty($this->title)) {
 $escTitle = $this->escapeHtml($title);
 
 $this->headTitle($escTitle);
-if (!$isRetest && !$isReplCert) {
+if (!$isRetest) {
     $this->layout()->setVariable('pageSubTitle', 'MOT testing');
-}
-if ($isReplCert) {
-    $this->layout()->setVariable('pageSubTitle', 'Duplicate or replacement certificate');
 }
 $this->layout()->setVariable('pageTitle', $escTitle);
 

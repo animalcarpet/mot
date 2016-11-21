@@ -1,7 +1,7 @@
 <?php
 namespace Dvsa\Mot\Frontend\PersonModule\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\NotFoundActionResult;
 use Dvsa\Mot\Frontend\PersonModule\Routes\PersonProfileRoutes;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
@@ -84,7 +84,7 @@ class TestQualityComponentBreakdownAction implements AutoWireableInterface
 
     private function buildActionResult(TestQualityComponentBreakdownViewModel $vm, array $breadcrumbs)
     {
-        $actionResult = new ActionResult();
+        $actionResult = new ViewActionResult();
         $actionResult->setViewModel($vm);
         $actionResult->setTemplate('test-quality-information/component-breakdown');
         $actionResult->layout()->setPageTitle(self::PAGE_TITLE);

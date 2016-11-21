@@ -1,0 +1,49 @@
+<?php
+
+use Core\Routing\MotTestRoutes;
+use DvsaMotTest\ViewModel\MotTestCertificate\MotTestCertificateListViewModel;
+
+/** @var MotTestCertificateListViewModel $viewModel */
+?>
+
+<p>
+    <strong>
+        <?php echo $viewModel->getFoundVehiclesCount();?>
+    </strong>
+    <?php echo ngettext('vehicle', 'vehicles', $viewModel->getFoundVehiclesCount()); ?>
+     found with
+    <?php echo $viewModel->getFoundByType(); ?>
+        <strong>
+            <?php echo $this->escapeHtml($viewModel->getFoundByValue());?>
+        </strong>
+</p>
+
+<div>
+    <?php
+    foreach ($viewModel->getTables() as $table) {
+        echo $this->partial(
+            'partials/vehicle-history/mot-test-certificates',
+            [
+                'table' => $table,
+            ]
+        );
+        }
+    ?>
+    <nav class="content-navigation">
+        <ul class="content-navigation__secondary">
+            <li>
+                <a href="<?php echo $viewModel->getReturnLink($this);?>">
+                    <?php echo $viewModel->getReturnLinkText();?>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<?php echo $this->headScript()->appendFile('/assets/javascripts/dvsa.js'); ?>
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+            var showerHiderClasses = new DVSA.Modules.DVSAShowHideToggleClasses.showerHiderClasses({});
+            showerHiderClasses.init();
+    });
+</script>

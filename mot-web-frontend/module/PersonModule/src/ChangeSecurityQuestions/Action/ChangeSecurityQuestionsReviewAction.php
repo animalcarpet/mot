@@ -4,7 +4,7 @@
 namespace Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Action;
 
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionsConfirmationController;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionTwoController;
@@ -46,7 +46,7 @@ class ChangeSecurityQuestionsReviewAction
             return new RedirectToRoute(ChangeSecurityQuestionsConfirmationController::ROUTE);
         }
 
-        $result = new ActionResult();
+        $result = new ViewActionResult();
         $viewModel = $this->populateViewModel();
         $result->setViewModel($viewModel);
         $result->layout()->setPageTitle(self::CHANGE_SECURITY_QUESTIONS_REVIEW_PAGE_TITLE);

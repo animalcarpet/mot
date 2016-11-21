@@ -3,7 +3,7 @@
 namespace Dvsa\Mot\Frontend\SecurityCardModuleTest\CardActivation\Action;
 
 use Application\Model\RoleSummaryCollection;
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\NotFoundActionResult;
 use Core\Action\RedirectToRoute;
 use Core\Service\MotFrontendIdentityProvider;
@@ -67,11 +67,11 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
     {
         $this->withCanActivateACard(true);
         $this->request->setPost(new Parameters());
-        /** @var ActionResult $result */
+        /** @var ViewActionResult $result */
         $result = $this->action()->execute($this->request);
 
 
-        $this->assertInstanceOf(ActionResult::class, $result);
+        $this->assertInstanceOf(ViewActionResult::class, $result);
         /** @var RegisterCardViewModel $vm */
         $vm = $result->getViewModel();
         $this->assertFalse($vm->getForm()->isValid());
@@ -86,10 +86,10 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
     {
         $this->withCanActivateACard(true);
         $this->request->setPost(new Parameters());
-        /** @var ActionResult $result */
+        /** @var ViewActionResult $result */
         $result = $this->action()->execute($this->request);
 
-        $this->assertInstanceOf(ActionResult::class, $result);
+        $this->assertInstanceOf(ViewActionResult::class, $result);
         /** @var RegisterCardViewModel $vm */
         $vm = $result->getViewModel();
         $this->assertFalse($vm->getForm()->isValid());
@@ -100,11 +100,11 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
     {
         $this->withCanActivateACard(true);
         $this->request->setPost(new Parameters());
-        /** @var ActionResult $result */
+        /** @var ViewActionResult $result */
         $result = $this->action()->execute($this->request);
 
 
-        $this->assertInstanceOf(ActionResult::class, $result);
+        $this->assertInstanceOf(ViewActionResult::class, $result);
         /** @var RegisterCardViewModel $vm */
         $vm = $result->getViewModel();
         $this->assertEquals('', $vm->getForm()->getPinField()->getValue());
@@ -174,7 +174,7 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
         $this->withCanActivateACard(true);
 
         $this->withFailingActivationCall(ResourceValidationException::class);
-        /** @var ActionResult $result */
+        /** @var ViewActionResult $result */
         $result = $this->action()->execute($this->request);
 
         $this->assertTrue($result->getViewModel()->isPinMismatch());
@@ -185,7 +185,7 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
         $this->withCanActivateACard(true);
 
         $this->withFailingActivationCall(ResourceNotFoundException::class);
-        /** @var ActionResult $result */
+        /** @var ViewActionResult $result */
         $result = $this->action()->execute($this->request);
 
         $this->assertEquals("Enter a valid serial number",
@@ -199,7 +199,7 @@ class RegisterCardPostActionTest extends \PHPUnit_Framework_TestCase
         $this->withCanActivateACard(true);
 
         $this->withFailingActivationCall(ResourceConflictException::class);
-        /** @var ActionResult $result */
+        /** @var ViewActionResult $result */
         $result = $this->action()->execute($this->request);
 
         $this->assertTrue($result->getViewModel()->isCardAlreadyRegistered());

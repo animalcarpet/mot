@@ -3,7 +3,7 @@
 namespace Dvsa\Mot\Frontend\PersonModule\Action;
 
 use Application\Data\ApiPersonalDetails;
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Controller\AbstractAuthActionController;
 use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\PersonProfileBreadcrumbs;
 use Dashboard\Model\PersonalDetails;
@@ -94,7 +94,7 @@ class QualificationDetailsAction extends AbstractAuthActionController implements
 
         $breadcrumbs = $this->personProfileBreadcrumbs->getBreadcrumbs($personId, $controller, $vm->getPageTitle());
 
-        $actionResult = new ActionResult();
+        $actionResult = new ViewActionResult();
         $actionResult->setViewModel($vm);
         $actionResult->setTemplate($vm->getTemplate());
 

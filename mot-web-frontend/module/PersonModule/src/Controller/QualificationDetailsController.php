@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\Controller;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Controller\AbstractAuthActionController;
 use Core\TwoStepForm\EditStepAction;
 use Core\TwoStepForm\ReviewStepAction;
@@ -96,7 +96,7 @@ class QualificationDetailsController extends AbstractAuthActionController implem
         }
 
         //todo if there's no redirect
-        if(get_class($actionResult) == ActionResult::class) {
+        if(get_class($actionResult) == ViewActionResult::class) {
             $actionResult->setTemplate($template);
         }
 

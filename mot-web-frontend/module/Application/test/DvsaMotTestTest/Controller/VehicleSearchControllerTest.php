@@ -4,15 +4,15 @@ namespace DvsaMotTestTest\Controller;
 
 use Application\Service\ContingencySessionManager;
 use Application\Service\LoggedInUserManager;
+use Core\Service\MotFrontendIdentityProviderInterface;
 use CoreTest\Service\StubCatalogService;
 use DvsaClient\MapperFactory;
 use DvsaClient\Mapper\VehicleMapper;
 use DvsaCommon\Constants\FeatureToggle;
-use DvsaCommon\Exception\UnauthorisedException;
+use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Vehicle\History\VehicleHistoryDto;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
@@ -22,6 +22,8 @@ use DvsaCommon\Obfuscate\EncryptionKey;
 use DvsaCommon\Obfuscate\ParamEncoder;
 use DvsaCommon\Obfuscate\ParamEncrypter;
 use DvsaCommon\Obfuscate\ParamObfuscator;
+use DvsaMotTest\Action\DuplicateCertificateSearchByRegistrationAction;
+use DvsaMotTest\Action\DuplicateCertificateSearchByVinAction;
 use DvsaMotTest\Constants\VehicleSearchSource;
 use DvsaMotTest\Controller\VehicleSearchController;
 use DvsaMotTest\Model\VehicleSearchResult;
@@ -102,7 +104,11 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
                 new StubCatalogService(),
                 $this->createVehicleSearchResultModel(),
                 $mockMapperFactory,
-                $client
+                $client,
+                XMock::of(MotAuthorisationServiceInterface::class),
+                XMock::of(MotFrontendIdentityProviderInterface::class),
+                XMock::of(DuplicateCertificateSearchByRegistrationAction::class),
+                XMock::of(DuplicateCertificateSearchByVinAction::class)
             )
         );
 
@@ -327,44 +333,6 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
         $this->assertResponseStatus(self::HTTP_OK_CODE);
     }
 
-    /**
-     * @dataProvider historyActionsDataProvider
-     */
-    public function testHistoryActionsOk($action)
-    {
-        $this->markTestSkipped('BL-1164 is parked to investigate lifting vehicle\'s entity relationship. Talk to Ali');
-        $this->setupAuthorizationService([PermissionInSystem::CERTIFICATE_READ]);
-
-        $vehicleDto = new VehicleDto();
-        $vehicleDto->setId(self::VEHICLE_ID);
-
-        $this->getRestClientMock('get', ['data' => []]);
-
-        $result = $this->getResultForAction($action, ['id' => self::VEHICLE_ID_ENC]);
-        $variables = $result->getVariables();
-
-        $this->assertResponseStatus(self::HTTP_OK_CODE);
-        $this->assertInstanceOf(VehicleHistoryDto::class, $variables['vehicleHistory']);
-    }
-
-    public static function historyActionsDataProvider()
-    {
-        return [
-            ['testHistory'],
-            ['dvsaTestHistory'],
-        ];
-    }
-
-    /**
-     * @expectedException \DvsaCommon\Exception\UnauthorisedException
-     */
-    public function testHistoryUnauthenticatedRequestThrowsException()
-    {
-        $this->setupAuthenticationServiceForIdentity(StubIdentityAdapter::asAnonymous());
-
-        $this->getResponseForAction('testHistory', ['id' => '1']);
-    }
-
     protected function getPositiveMotTestSearchResult()
     {
         return [
@@ -453,19 +421,6 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
                 "reasons_for_rejection" => [['rfr-id' => 1], ['rfr-id' => 2]],
                 "break_test_results" => [['break-result-id' => 1]],
             ],
-        ];
-    }
-
-    private function getTestMotTestDataDto()
-    {
-        $vehicleData = (new VehicleDto())->setId(self::VEHICLE_ID);
-
-        return [
-            "data" => (new MotTestDto())
-                ->setId(1)
-                ->setVehicle($vehicleData)
-                ->setReasonsForRejection([['rfr-id' => 1], ['rfr-id' => 2]])
-                ->setBrakeTestResult([['break-result-id' => 1]]),
         ];
     }
 

@@ -8,7 +8,7 @@ use DvsaClient\Mapper\QualificationDetailsMapper;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\CertificatesBreadcrumbs;
 use Core\ViewModel\Gds\Table\GdsTable;
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Zend\View\Model\ViewModel;
 use Core\Action\RedirectToRoute;
 use Application\Data\ApiPersonalDetails;
@@ -98,7 +98,7 @@ class RemoveCertificateDetailsService implements AutoWireableInterface
             ->setVariable('personId', $personId)
         ;
 
-        $actionResult = new ActionResult();
+        $actionResult = new ViewActionResult();
         $actionResult->setViewModel($vm);
         $actionResult->addErrorMessages($errors);
 

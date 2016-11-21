@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardOrderReport\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\NotFoundActionResult;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
 use DateInterval;
@@ -49,7 +49,7 @@ class CardOrderReportListAction
     }
 
     /**
-     * @return ActionResult|NotFoundActionResult
+     * @return ViewActionResult|NotFoundActionResult
      */
     public function execute()
     {
@@ -97,7 +97,7 @@ class CardOrderReportListAction
             $rows[] = ['date' => $actDate->format(DateUtils::DATETIME_FORMAT), 'count' => $dailyCount->getCount()];
         }
 
-        $result = (new ActionResult())
+        $result = (new ViewActionResult())
             ->setTemplate('2fa/card-order-report/list')
             ->setViewModel(['rows' => $rows]);
         $result->layout()->setBreadcrumbs(['List of ordered security cards' => null]);

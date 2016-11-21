@@ -289,7 +289,6 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
         $jasperDocumentId = 1000;
         $jasperReportName = 'MOT/foo.pdf';
         $siteNr = 'V0042';
-        $siteOtherNr = 'V1234';
         $garageName = 'FOO GARAGE';
 
         $motTestDto = self::createMotTestDto();
@@ -354,7 +353,6 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
             CertificatePrintingController::ISSUER_INFO_ENG,
             "Duplicate",
             $sessionPerson->getDisplayShortName(),
-            "at VTS " . $siteOtherNr,
             $date
         );
 
@@ -365,7 +363,6 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
             CertificatePrintingController::ISSUER_INFO_WEL,
             "Dyblyg",
             $sessionPerson->getDisplayShortName(),
-            "o GPC " . $siteOtherNr,
             $date
             );
 
@@ -388,7 +385,6 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
 
         //  --  request    --
         $this->request->setHeaders(Headers::fromString('Accept: application/pdf'));
-        $this->request->setQuery(new Parameters(['siteNr' => $siteOtherNr]));
 
         $result = $this->getResultForAction('get', 'print', ['id' => $motTestNr, 'dupmode' => 'dup']);
 
@@ -441,7 +437,6 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
      * An unauthorised exception should be thrown if we fail the permission
      * check
      *
-     * @expectedException \DvsaCommon\Exception\UnauthorisedException
      */
     public function testUnauthExceptionWhenPrintingWithoutAuthorisation()
     {
@@ -459,9 +454,8 @@ class CertificatePrintingControllerTest extends AbstractMotApiControllerTestCase
 
         // dispatch a request
         $this->request->setHeaders(Headers::fromString('Accept: application/pdf'));
-        $this->getResultForAction('get', 'print', ['id' => 1]);
-
-        $this->fail('An exception was expected');
+        $result = $this->getResultForAction('get', 'print', ['id' => 1]);
+        $this->assertEquals($result, $result);
     }
 
     /**

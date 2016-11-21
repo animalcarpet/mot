@@ -4,6 +4,14 @@ namespace Core\Action;
 
 use Core\ViewModel\Sidebar\SidebarInterface;
 
+/**
+ * Class ActionResult
+ * @package Core\Action
+ *
+ * @deprecated Please use ViewActionResult instead of this class.
+ * ActionResult class name is not enough descriptive, so please switch to new ViewActionResult.
+ * ViewActionResult will replace shortly ActionResult and ActionResult will be removed.
+ */
 class ActionResult extends AbstractActionResult
 {
     private $template;

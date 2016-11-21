@@ -34,7 +34,7 @@ class VehicleHistoryDto
     }
 
     /**
-     * @return \ArrayIterator
+     * @return \ArrayIterator|VehicleHistoryItemDto[]
      */
     public function getIterator()
     {
@@ -42,7 +42,7 @@ class VehicleHistoryDto
     }
 
     /**
-     * @return \ArrayIterator
+     * @return \ArrayIterator|VehicleHistoryItemDto[]
      */
     public function getIteratorOnOtherSite()
     {

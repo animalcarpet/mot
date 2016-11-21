@@ -33,7 +33,6 @@ class VehicleSearchService
     const SEARCH_TYPE_RETEST = 'retest';
     const SEARCH_TYPE_CERTIFICATE = 'certificate';
     const SEARCH_TYPE_TRAINING = 'training';
-    const SEARCH_TYPE_V5C = 'v5c';
     const SEARCH_TYPE_NON_MOT = 'nonMot';
 
     const KEY_FOR_PERSON_APPROVED_CLASSES = 'forPerson';
@@ -326,7 +325,6 @@ class VehicleSearchService
     }
 
     /**
-     * @param $noRegistration
      * @param int $noRegistration
      * @param Url $urlPlugin
      *
@@ -334,11 +332,11 @@ class VehicleSearchService
      *
      * @return VehicleSearchResultUrlTemplateInterface
      */
-    public function getUrlTemplate($noRegistration, $noRegistration, Url $urlPlugin)
+    public function getUrlTemplate($noRegistration, Url $urlPlugin)
     {
         switch ($this->getSearchType()) {
             case VehicleSearchService::SEARCH_TYPE_CERTIFICATE:
-                return new CertificateUrlTemplate($this->authorisationService, $urlPlugin);
+                return new CertificateUrlTemplate($noRegistration, $this->authorisationService, $urlPlugin);
             case VehicleSearchService::SEARCH_TYPE_TRAINING:
                 return new TrainingTestUrlTemplate($noRegistration, $urlPlugin);
             case VehicleSearchService::SEARCH_TYPE_STANDARD:
@@ -388,22 +386,6 @@ class VehicleSearchService
     public function isTrainingSearchType()
     {
         return ($this->getSearchType() === self::SEARCH_TYPE_TRAINING);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isReplacementCertifificateSearchType()
-    {
-        return ($this->getSearchType() === self::SEARCH_TYPE_CERTIFICATE);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isV5cSearchType()
-    {
-        return ($this->getSearchType() === self::SEARCH_TYPE_V5C);
     }
 
     public function isNonMotSearchType()

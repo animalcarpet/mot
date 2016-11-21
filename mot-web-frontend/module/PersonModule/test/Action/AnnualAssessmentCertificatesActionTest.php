@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\PersonModuleTest\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Controller\AbstractAuthActionController;
 use Dvsa\Mot\Frontend\PersonModule\Action\AnnualAssessmentCertificatesAction;
 use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\PersonProfileBreadcrumbs;
@@ -63,7 +63,7 @@ abstract class AnnualAssessmentCertificatesActionTest extends \PHPUnit_Framework
         $result = $this->annualAssessmentCertificatesAction->execute($formContext, $this);
 
         // THEN I'm not redirected anywhere
-        $this->assertInstanceOf(ActionResult::class, $result);
+        $this->assertInstanceOf(ViewActionResult::class, $result);
 
         //AND fields are generated correct
         $this->assertInstanceOf(AnnualAssessmentCertificatesViewModel::class, $result->getViewModel());

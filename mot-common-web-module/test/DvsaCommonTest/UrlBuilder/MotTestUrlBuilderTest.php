@@ -39,29 +39,6 @@ class MotTestUrlBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->checkUrl(MotTestUrlBuilder::search(), 'mot-test-search');
 
-        $findBase = 'mot-test/find-mot-test-number';
-        $queryParams = ['a' => 'b'];
-
-        $this->checkUrl(
-            MotTestUrlBuilder::findByMotTestIdAndV5c(self::MOT_TEST_ID, self::V5C),
-            $findBase . '?' . http_build_query(
-                [
-                    'motTestId' => self::MOT_TEST_ID,
-                    'v5c'       => self::V5C,
-                ]
-            )
-        );
-
-        $this->checkUrl(
-            MotTestUrlBuilder::findByMotTestIdAndMotTestNumber(self::MOT_TEST_ID, self::MOT_TEST_NR),
-            $findBase . '?' . http_build_query(
-                [
-                    'motTestId'     => self::MOT_TEST_ID,
-                    'motTestNumber' => self::MOT_TEST_NR,
-                ]
-            )
-        );
-
         $this->checkUrl(MotTestUrlBuilder::refusal(), 'mot-test-refusal');
     }
 

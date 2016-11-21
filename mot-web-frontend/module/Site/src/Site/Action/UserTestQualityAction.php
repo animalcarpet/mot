@@ -1,7 +1,7 @@
 <?php
 namespace Site\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\FileAction;
 use Core\Action\NotFoundActionResult;
 use Core\Routing\ProfileRoutes;
@@ -160,7 +160,7 @@ class UserTestQualityAction implements AutoWireableInterface
 
     private function buildActionResult(UserTestQualityViewModel $vm, array $breadcrumbs, $userName, $siteName)
     {
-        $actionResult = new ActionResult();
+        $actionResult = new ViewActionResult();
         $actionResult->setViewModel($vm);
         $actionResult->setTemplate('site/user-test-quality');
         $actionResult->layout()->setPageTitle($userName);

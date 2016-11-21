@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\Model;
 
-use Core\ViewModel\Sidebar\SidebarBadge;
+use Core\ViewModel\Badge\Badge;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 
 /**
@@ -23,19 +23,19 @@ class CertificateFields
     {
         switch ($qualificationStatus) {
             case AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED:
-                return new CertificateFieldsData(self::CERTIFICATE_NO_NOT_RECORDED, self::CERTIFICATE_DATE_NOT_RECORDED, SidebarBadge::normal());
+                return new CertificateFieldsData(self::CERTIFICATE_NO_NOT_RECORDED, self::CERTIFICATE_DATE_NOT_RECORDED, Badge::normal());
                 break;
             case AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED:
-                return new CertificateFieldsData(self::CERTIFICATE_NO_NOT_RECORDED, self::CERTIFICATE_DATE_NOT_RECORDED, SidebarBadge::warning());
+                return new CertificateFieldsData(self::CERTIFICATE_NO_NOT_RECORDED, self::CERTIFICATE_DATE_NOT_RECORDED, Badge::warning());
                 break;
             case AuthorisationForTestingMotStatusCode::QUALIFIED:
-                return new CertificateFieldsData(self::CERTIFICATE_NO_NOT_NEEDED, self::CERTIFICATE_DATE_QUALIFIED, SidebarBadge::success());
+                return new CertificateFieldsData(self::CERTIFICATE_NO_NOT_NEEDED, self::CERTIFICATE_DATE_QUALIFIED, Badge::success());
                 break;
             case AuthorisationForTestingMotStatusCode::SUSPENDED:
-                return new CertificateFieldsData(self::CERTIFICATE_NO_NOT_NEEDED, self::CERTIFICATE_DATE_QUALIFIED, SidebarBadge::alert());
+                return new CertificateFieldsData(self::CERTIFICATE_NO_NOT_NEEDED, self::CERTIFICATE_DATE_QUALIFIED, Badge::alert());
                 break;
             default :
-                return new CertificateFieldsData(self::CERTIFICATE_NO_NOT_RECORDED, self::CERTIFICATE_DATE_NOT_RECORDED, SidebarBadge::normal());
+                return new CertificateFieldsData(self::CERTIFICATE_NO_NOT_RECORDED, self::CERTIFICATE_DATE_NOT_RECORDED, Badge::normal());
         }
     }
 }

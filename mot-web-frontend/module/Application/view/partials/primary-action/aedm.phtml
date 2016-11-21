@@ -1,3 +1,7 @@
+<?php
+use DvsaCommon\Auth\PermissionInSystem;
+use DvsaMotTest\Controller\VehicleSearchController;
+?>
 <section class="module-hero">
     <div class="container">
         <div class="row">
@@ -16,6 +20,17 @@
                 <?php if ($siteNumber > 1) : ?>
                     <p>for <?php echo $this->escapeHtml($siteNumber); ?> sites</p>
                 <?php endif; ?>
+
+                <ul class="list-unstyled">
+                    <?php if ($this->authorisationHelper()->isGranted(PermissionInSystem::CERTIFICATE_SEARCH)): ?>
+                        <li>
+                            <a href="<?php echo $this->url(VehicleSearchController::ROUTE_REPLACEMENT_CERTIFICATE_VEHICLE_SEARCH); ?>"
+                               id="action-start-certificate-reissue">
+                                replacement/duplicate certificate
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
             </div>
         </div>
     </div>

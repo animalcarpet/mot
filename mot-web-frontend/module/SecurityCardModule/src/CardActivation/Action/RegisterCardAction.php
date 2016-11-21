@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Controller\AlreadyHasRegisteredCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardViewStrategy;
@@ -35,7 +35,7 @@ abstract class RegisterCardAction
         if (!$this->viewStrategy->canActivateACard()) {
             return new RedirectToRoute(AlreadyHasRegisteredCardController::ROUTE);
         }
-        $result = new ActionResult();
+        $result = new ViewActionResult();
         $viewModel = new RegisterCardViewModel();
         $viewModel->setSkipCtaTemplate($this->viewStrategy->skipCtaTemplate());
 

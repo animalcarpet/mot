@@ -7,7 +7,7 @@ use Core\ViewModel\Sidebar\GeneralSidebarLink;
 use Core\ViewModel\Sidebar\GeneralSidebarLinkList;
 use Core\ViewModel\Sidebar\GeneralSidebarStatusBox;
 use Core\ViewModel\Sidebar\GeneralSidebarStatusItem;
-use Core\ViewModel\Sidebar\SidebarBadge;
+use Core\ViewModel\Badge\Badge;
 use Core\ViewModel\Sidebar\SidebarButton;
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Dto\Organisation\OrganisationDto;
@@ -96,7 +96,7 @@ class AeOverviewSidebar extends GeneralSidebar
         }
 
         if ($this->authorisationForView->canViewSlotBalance()) {
-            $badge = $this->organisation->getSlotBalance() > 0 ? SidebarBadge::info(): SidebarBadge::normal();
+            $badge = $this->organisation->getSlotBalance() > 0 ? Badge::info(): Badge::normal();
 
             $statusBox->addItem(new GeneralSidebarStatusItem("slot-count", "Slots",
                 number_format($this->organisation->getSlotBalance(), 0, '.', ','), $badge));
@@ -259,23 +259,23 @@ class AeOverviewSidebar extends GeneralSidebar
     {
         switch ($statusCode) {
             case AuthorisationForAuthorisedExaminerStatusCode::APPLIED:
-                return SidebarBadge::normal();
+                return Badge::normal();
             case AuthorisationForAuthorisedExaminerStatusCode::APPROVED:
-                return SidebarBadge::success();
+                return Badge::success();
             case AuthorisationForAuthorisedExaminerStatusCode::LAPSED:
-                return SidebarBadge::normal();
+                return Badge::normal();
             case AuthorisationForAuthorisedExaminerStatusCode::REJECTED:
-                return SidebarBadge::alert();
+                return Badge::alert();
             case AuthorisationForAuthorisedExaminerStatusCode::RETRACTED:
-                return SidebarBadge::normal();
+                return Badge::normal();
             case AuthorisationForAuthorisedExaminerStatusCode::SURRENDERED:
-                return SidebarBadge::normal();
+                return Badge::normal();
             case AuthorisationForAuthorisedExaminerStatusCode::WITHDRAWN:
-                return SidebarBadge::normal();
+                return Badge::normal();
             case AuthorisationForAuthorisedExaminerStatusCode::UNKNOWN:
-                return SidebarBadge::normal();
+                return Badge::normal();
             default:
-                return SidebarBadge::normal();
+                return Badge::normal();
         }
 
     }

@@ -8,7 +8,7 @@ use Core\ViewModel\Sidebar\GeneralSidebarLink;
 use Core\ViewModel\Sidebar\GeneralSidebarLinkList;
 use Core\ViewModel\Sidebar\GeneralSidebarStatusBox;
 use Core\ViewModel\Sidebar\GeneralSidebarStatusItem;
-use Core\ViewModel\Sidebar\SidebarBadge;
+use Core\ViewModel\Badge\Badge;
 use DvsaCommon\Auth\Assertion\ViewVtsTestQualityAssertion;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -70,7 +70,7 @@ class VtsOverviewSidebar extends GeneralSidebar
         }
 
         if ($this->canViewTestInProgress()) {
-            $activeTestsBadge = $activeMotTestCount ? SidebarBadge::info() : SidebarBadge::normal();
+            $activeTestsBadge = $activeMotTestCount ? Badge::info() : Badge::normal();
             $testsItem = new GeneralSidebarStatusItem('', 'Active MOT tests', $activeMotTestCount, $activeTestsBadge);
 
             $statusBox->addItem($testsItem);
@@ -178,19 +178,19 @@ class VtsOverviewSidebar extends GeneralSidebar
     {
         switch ($status) {
             case SiteStatusCode::APPLIED:
-                return SidebarBadge::normal();
+                return Badge::normal();
             case SiteStatusCode::APPROVED:
-                return SidebarBadge::success();
+                return Badge::success();
             case SiteStatusCode::EXTINCT:
-                return SidebarBadge::alert();
+                return Badge::alert();
             case SiteStatusCode::LAPSED:
-                return SidebarBadge::normal();
+                return Badge::normal();
             case SiteStatusCode::REJECTED:
-                return SidebarBadge::alert();
+                return Badge::alert();
             case SiteStatusCode::RETRACTED:
-                return SidebarBadge::normal();
+                return Badge::normal();
             default:
-                return SidebarBadge::normal();
+                return Badge::normal();
         }
 
     }

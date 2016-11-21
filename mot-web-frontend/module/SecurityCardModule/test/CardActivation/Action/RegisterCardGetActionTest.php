@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModuleTest\CardActivation\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
 use CoreTest\Controller\AbstractLightWebControllerTest;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Action\RegisterCardGetAction;
@@ -29,10 +29,10 @@ class RegisterCardGetActionTest extends AbstractLightWebControllerTest
     public function testWhenRegistrationApplicable_shouldDisplayCorrectPage()
     {
         $this->withCanActivateACard(true);
-        /** @var ActionResult $result */
+        /** @var ViewActionResult $result */
         $result = $this->action()->execute(new Request());
 
-        $this->assertInstanceOf(ActionResult::class, $result);
+        $this->assertInstanceOf(ViewActionResult::class, $result);
         $this->assertEquals('2fa/register-card/register-card', $result->getTemplate());
         $this->assertEquals($this->subTitle, $result->layout()->getPageSubTitle());
         $this->assertEquals($this->skipCtaTemplate, $result->getViewModel()->getSkipCtaTemplate());

@@ -5,12 +5,16 @@ namespace DvsaMotTest\Controller;
 use Application\Helper\PrgHelper;
 use Application\Service\ContingencySessionManager;
 use Core\Authorisation\Assertion\WebPerformMotTestAssertion;
+use Dvsa\Mot\ApiClient\Request\Validator\Exception;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\MotTestResultsController;
 use Dvsa\Mot\Frontend\MotTestModule\Listener\MotEvents;
+use DvsaCommon\ApiClient\MotTest\DuplicateCertificate\Dto\MotTestDuplicateCertificateEditAllowedDto;
+use DvsaCommon\ApiClient\MotTest\DuplicateCertificate\MotTestDuplicateCertificateApiResource;
 use DvsaCommon\Auth\Assertion\AbandonVehicleTestAssertion;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
+use DvsaCommon\Constants\DuplicateCertificateSearchType;
 use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Constants\Network;
 use DvsaCommon\Constants\OdometerReadingResultType;
@@ -70,18 +74,26 @@ class MotTestController extends AbstractDvsaMotTestController
      */
     private $featureToggles;
 
+    /** @var MotTestDuplicateCertificateApiResource $duplicateCertificateApiResource */
+    private $duplicateCertificateApiResource;
+
     /**
      * MotTestController constructor.
      *
      * @param MotAuthorisationServiceInterface $authorisationService
-     * @param EventManager                     $eventManager
-     * @param FeatureToggles                   $featureToggles
+     * @param EventManager $eventManager
+     * @param MotTestDuplicateCertificateApiResource $duplicateCertificateApiResource
+     * @param FeatureToggles $featureToggles
      */
-    public function __construct(MotAuthorisationServiceInterface $authorisationService, EventManager $eventManager,
-                                FeatureToggles $featureToggles
+    public function __construct(
+        MotAuthorisationServiceInterface $authorisationService,
+        EventManager $eventManager,
+        MotTestDuplicateCertificateApiResource $duplicateCertificateApiResource,
+        FeatureToggles $featureToggles
     ) {
         $this->authorisationService = $authorisationService;
         $this->eventManager = $eventManager;
+        $this->duplicateCertificateApiResource = $duplicateCertificateApiResource;
         $this->featureToggles = $featureToggles;
     }
 
@@ -302,6 +314,12 @@ class MotTestController extends AbstractDvsaMotTestController
     {
         $this->getAuthorizationService()->assertGranted(PermissionInSystem::CERTIFICATE_READ);
         $number = $this->params()->fromRoute('motTestNumber');
+        $duplicateCertSearchByVrm = $this->params()->fromQuery(DuplicateCertificateSearchType::SEARCH_TYPE_VRM);
+        $duplicateCertSearchByVin = $this->params()->fromQuery(DuplicateCertificateSearchType::SEARCH_TYPE_VIN);
+
+        $duplicateCertRouteSearchParams = $this->generateParamsForSearchBy($duplicateCertSearchByVrm, $duplicateCertSearchByVin);
+        $isDuplicateCertificate = $duplicateCertRouteSearchParams != null;
+
         $apiUrl = UrlBuilder::of()->motTestCertificate()->queryParam('number', $number);
         /** @var MotTestDto $motTest */
         $motTest = $this->getRestClient()->get($apiUrl)['data'];
@@ -313,6 +331,15 @@ class MotTestController extends AbstractDvsaMotTestController
         $testType = $motTest->getTestType();
 
         $isDemo = MotTestType::isDemo($testType->getCode());
+        $motTestEditAllowedDto = null;
+
+        if ($isDuplicateCertificate) {
+            /** @var MotTestDuplicateCertificateEditAllowedDto $motTestEditAllowedDto */
+            $motTestEditAllowedDto = $this->duplicateCertificateApiResource->getEditAllowed(
+                $number,
+                $motTest->getVehicle()->getId()
+            );
+        }
 
         return (new ViewModel(
             [
@@ -322,8 +349,26 @@ class MotTestController extends AbstractDvsaMotTestController
                 'isDemo'            => $isDemo,
                 'brakeTestTypeCode2Name' => $this->getBrakeTestTypeCode2Name(),
                 'motTestTitleViewModel' => (new MotTestTitleModel()),
+                'isDuplicateCertificate' => $isDuplicateCertificate,
+                'duplicateCertRouteSearchParams' => $duplicateCertRouteSearchParams,
+                'motTestEditAllowed' => $motTestEditAllowedDto,
             ]
         ))->setTemplate('dvsa-mot-test/mot-test/display-test-summary');
+    }
+
+    private function generateParamsForSearchBy($vrm, $vin)
+    {
+        if ($vrm === null and $vin === null) {
+            return null;
+        } elseif ($vin === null) {
+            return [
+                DuplicateCertificateSearchType::SEARCH_TYPE_VRM => $vrm
+            ];
+        } else {
+            return [
+                DuplicateCertificateSearchType::SEARCH_TYPE_VIN => $vin
+            ];
+        }
     }
 
     /**
@@ -633,12 +678,6 @@ class MotTestController extends AbstractDvsaMotTestController
         $isDuplicate = $this->params('isDuplicate');
 
         $certificateUrl = ReportUrlBuilder::printCertificate($motTestNumber, ($isDuplicate ? 'dup' : null));
-
-        //  --  get number of current site --
-        $site = $this->getIdentity()->getCurrentVts();
-        if ($site && $site->getSiteNumber()) {
-            $certificateUrl->queryParam('siteNr', $site->getSiteNumber());
-        }
 
         $result = $this->getRestClient()->getPdf($certificateUrl); // @todo - add some pdf parsing checks in client
 

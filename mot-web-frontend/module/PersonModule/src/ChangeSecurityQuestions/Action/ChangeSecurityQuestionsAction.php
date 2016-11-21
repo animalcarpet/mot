@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionOneController;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Form\ChangeSecurityQuestionsPasswordForm;
@@ -35,7 +35,7 @@ class ChangeSecurityQuestionsAction
 
     public function execute(Request $request)
     {
-        $result = new ActionResult();
+        $result = new ViewActionResult();
         $viewModel = new ChangeSecurityQuestionsViewModel();
         $form = new ChangeSecurityQuestionsPasswordForm();
         $result->layout()->setPageTitle(self::CHANGE_SECURITY_QUESTIONS_START_PAGE_TITLE);

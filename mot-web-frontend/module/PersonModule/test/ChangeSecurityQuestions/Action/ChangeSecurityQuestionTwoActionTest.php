@@ -4,7 +4,7 @@
 namespace Dvsa\Mot\Frontend\PersonModuleTest\ChangeSecurityQuestions\Action;
 
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Action\ChangeSecurityQuestionTwoAction;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionOneController;
@@ -72,7 +72,7 @@ class ChangeSecurityQuestionTwoActionTest extends \PHPUnit_Framework_TestCase
 
         $actionResult = $this->buildAction()->execute($this->request);
 
-        $this->assertInstanceOf(ActionResult::class, $actionResult);
+        $this->assertInstanceOf(ViewActionResult::class, $actionResult);
         $form = $actionResult->getViewModel()->getForm();
         $this->assertCount(1, $form->getMessages(ChangeSecurityQuestionForm::FIELD_QUESTION_ANSWER));
         $this->assertSame(ChangeSecurityQuestionForm::MSG_ANSWER_EMPTY,
@@ -90,7 +90,7 @@ class ChangeSecurityQuestionTwoActionTest extends \PHPUnit_Framework_TestCase
 
         $actionResult = $this->buildAction()->execute($this->request);
 
-        $this->assertInstanceOf(ActionResult::class, $actionResult);
+        $this->assertInstanceOf(ViewActionResult::class, $actionResult);
         $form = $actionResult->getViewModel()->getForm();
         $this->assertCount(0, $form->getMessages());
     }

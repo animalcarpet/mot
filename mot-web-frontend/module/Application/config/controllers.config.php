@@ -2,6 +2,7 @@
 
 use Application\Controller\FormsController;
 use Application\Controller\ReportController;
+use DvsaCommon\Factory\AutoWire\AutoWireFactory;
 use DvsaMotEnforcement\Controller\MotTestController as EnforcementMotTestController;
 use DvsaMotEnforcement\Controller\MotTestSearchController as EnforcementMotTestSearchController;
 use DvsaMotEnforcement\Controller\ReinspectionReportController;
@@ -19,7 +20,6 @@ use DvsaMotTest\Controller\StartTestConfirmationController;
 use DvsaMotTest\Controller\TesterMotTestLogController;
 use DvsaMotTest\Controller\TestItemSelectorController;
 use DvsaMotTest\Controller\VehicleDictionaryController;
-use DvsaMotTest\Controller\VehicleSearchController;
 use DvsaMotTest\Factory\Controller\CertificatePrintingControllerFactory;
 use DvsaMotTest\Factory\Controller\MotTestControllerFactory;
 use DvsaMotTest\Factory\Controller\RefuseToTestControllerFactory;
@@ -27,7 +27,6 @@ use DvsaMotTest\Factory\Controller\ReplacementCertificateControllerFactory;
 use DvsaMotTest\Factory\Controller\SpecialNoticesControllerFactory;
 use DvsaMotTest\Factory\Controller\StartTestConfirmationControllerFactory;
 use DvsaMotTest\Factory\Controller\TesterMotTestLogControllerFactory;
-use DvsaMotTest\Factory\Controller\VehicleSearchControllerFactory;
 use DvsaMotTest\NewVehicle\Controller\CreateVehicleController;
 use DvsaMotTest\NewVehicle\Controller\Factory\CreateVehicleControllerFactory;
 
@@ -45,7 +44,6 @@ return [
     'factories' => [
         RefuseToTestController::class             => RefuseToTestControllerFactory::class,
         SpecialNoticesController::class           => SpecialNoticesControllerFactory::class,
-        VehicleSearchController::class            => VehicleSearchControllerFactory::class,
         StartTestConfirmationController::class    => StartTestConfirmationControllerFactory::class,
         EnforcementMotTestSearchController::class => EnforcementMotTestSearchControllerFactory::class,
         CreateVehicleController::class            => CreateVehicleControllerFactory::class,
@@ -55,5 +53,8 @@ return [
         CertificatePrintingController::class      => CertificatePrintingControllerFactory::class,
         ReplacementCertificateController::class   => ReplacementCertificateControllerFactory::class,
         MotTestController::class                  => MotTestControllerFactory::class,
+    ],
+    'abstract_factories' => [
+        AutoWireFactory::class,
     ],
 ];

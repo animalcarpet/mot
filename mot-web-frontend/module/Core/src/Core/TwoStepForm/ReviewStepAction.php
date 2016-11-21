@@ -3,7 +3,7 @@
 namespace Core\TwoStepForm;
 
 use Core\Action\AbstractActionResult;
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\NotFoundActionResult;
 use Core\ViewModel\Gds\Table\GdsTable;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
@@ -30,7 +30,7 @@ final class ReviewStepAction implements AutoWireableInterface
      * @param SingleStepProcessInterface $process
      * @param FormContextInterface $context
      * @param $formUuid
-     * @return ActionResult
+     * @return ViewActionResult
      * @throws UnauthorisedException
      */
     public function execute($isPost, SingleStepProcessInterface $process, FormContextInterface $context, $formUuid)
@@ -86,7 +86,7 @@ final class ReviewStepAction implements AutoWireableInterface
      * @param $formData
      * @param GdsTable $table
      * @param null $errors
-     * @return ActionResult
+     * @return ViewActionResult
      */
     protected function buildActionResult(TwoStepProcessInterface $process, $formUuid, $formData, GdsTable $table, $errors = null)
     {
@@ -94,7 +94,7 @@ final class ReviewStepAction implements AutoWireableInterface
 
         $vm = $process->buildReviewStepViewModel($formUuid, $formData, $table);
 
-        $actionResult = new ActionResult();
+        $actionResult = new ViewActionResult();
         $actionResult->setViewModel($vm);
         $actionResult->addErrorMessages($errors);
 

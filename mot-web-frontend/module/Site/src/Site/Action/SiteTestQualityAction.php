@@ -1,7 +1,7 @@
 <?php
 namespace Site\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\FileAction;
 use Core\Action\NotFoundActionResult;
 use DateTime;
@@ -113,7 +113,7 @@ class SiteTestQualityAction implements AutoWireableInterface
 
     private function buildActionResult(SiteTestQualityViewModel $vm, array $breadcrumbs)
     {
-        $actionResult = new ActionResult();
+        $actionResult = new ViewActionResult();
         $actionResult->setViewModel($vm);
         $actionResult->setTemplate('site/test-quality');
 

@@ -7,7 +7,7 @@ use DvsaClient\Mapper\QualificationDetailsMapper;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use Dvsa\Mot\Frontend\PersonModule\Breadcrumbs\CertificatesBreadcrumbs;
 use DvsaCommonTest\TestUtils\XMock;
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
 use Application\Data\ApiPersonalDetails;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
@@ -48,7 +48,7 @@ class RemoveCertificateDetailsServiceTest extends \PHPUnit_Framework_TestCase
         $this->mockPermissions($this->getCertificateData(), true);
         $result = $this->createService()->process(1, VehicleClassGroupCode::BIKES, self::BACK_URL, false);
 
-        $this->assertInstanceOf(ActionResult::class, $result);
+        $this->assertInstanceOf(ViewActionResult::class, $result);
 
     }
 
@@ -68,7 +68,7 @@ class RemoveCertificateDetailsServiceTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->createService()->process(1, VehicleClassGroupCode::BIKES, self::BACK_URL, false);
 
-        $this->assertInstanceOf(ActionResult::class, $result);
+        $this->assertInstanceOf(ViewActionResult::class, $result);
 
     }
 
@@ -79,7 +79,7 @@ class RemoveCertificateDetailsServiceTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->createService()->process(1, VehicleClassGroupCode::BIKES, self::BACK_URL, false);
 
-        $this->assertInstanceOf(ActionResult::class, $result);
+        $this->assertInstanceOf(ViewActionResult::class, $result);
     }
 
     private function createService()

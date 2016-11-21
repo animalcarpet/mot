@@ -1,0 +1,49 @@
+<?php
+use Core\Routing\MotTestRoutes;
+use DvsaCommon\ApiClient\MotTest\DuplicateCertificate\Dto\MotTestDuplicateCertificateEditAllowedDto;
+use DvsaCommon\Dto\Common\MotTestDto;
+
+/** @var MotTestDto $motDetails */
+/** @var bool $canPrint */
+/** @var MotTestDuplicateCertificateEditAllowedDto $motTestEditAllowed */
+/** @var array|null $duplicateCertRouteSearchParams */
+?>
+
+<nav class="module-content-navigation">
+    <?php if ($canPrint): ?>
+        <h3>
+            Duplicate certificate
+        </h3>
+        <a href="<?php echo MotTestRoutes::of($this)->printDuplicateCertificate($motDetails->getMotTestNumber()); ?>"
+           target="_blank" class="btn btn-primary" id="reprint-certificate">
+            Print certificate
+        </a>
+        <p>
+            This will open in a new browser window as a PDF.
+        </p>
+    <?php endif;
+    if ($motTestEditAllowed->getEditAllowed()): ?>
+        <h3>
+            Replacement certificate
+        </h3>
+
+        <?php if (!$motTestEditAllowed->getIsAllowedToEditAllCertificates()): ?>
+            <p>
+                You can edit this MOT test certificate as it was done at the same VTS.
+            </p>
+        <?php endif; ?>
+        <input type="hidden" name="action" value="edit-certificate"/>
+        <input type="hidden" name="motTestNumber" value="<?php echo $this->escapeHtmlAttr($motDetails->getMotTestNumber()); ?>"/>
+        <button type="submit" id="edit" class="btn btn-info">
+            Edit this MOT test result
+        </button>
+    <?php endif; ?>
+    <ul class="content-navigation_secondary">
+        <li>
+            <a href="<?php echo MotTestRoutes::of($this)->vehicleSearchResults($duplicateCertRouteSearchParams); ?>"
+               class="btn btn-link" id="reprint-certificate-finish">
+                Back to MOT test certificate results
+            </a>
+        </li>
+    </ul>
+</nav>

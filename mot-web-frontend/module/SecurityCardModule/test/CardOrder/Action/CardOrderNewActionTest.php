@@ -10,7 +10,7 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderNewSecurityCardS
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderSecurityCardStepService;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\ViewModel\CardOrderNewViewModel;
 use DvsaCommonTest\TestUtils\XMock;
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Zend\Http\Request;
 use Zend\View\Model\ViewModel;
 use Core\Service\MotFrontendIdentityProvider;
@@ -69,7 +69,7 @@ class CardOrderNewActionTest extends \PHPUnit_Framework_TestCase
             ->method('updateStepStatus')
             ->with(self::USER_ID,  OrderSecurityCardStepService::ADDRESS_STEP, true);
 
-        /** @var ActionResult $actionResult */
+        /** @var ViewActionResult $actionResult */
         $actionResult = $this->buildAction()->execute($this->request, self::USER_ID);
 
         /** @var CardOrderNewViewModel $viewModel */

@@ -4,6 +4,7 @@ use Core\Authorisation\Assertion\WebAcknowledgeSpecialNoticeAssertion;
 use Core\Authorisation\Assertion\WebPerformMotTestAssertion;
 use Core\Catalog\EnumCatalog;
 use Core\Factory\EnumCatalogFactory;
+use Core\Factory\FlashMessengerFactory;
 use Core\Factory\LazyMotFrontendAuthorisationServiceFactory;
 use Core\Factory\MotEventManagerFactory;
 use Core\Factory\MotIdentityProviderFactory;
@@ -20,6 +21,7 @@ use DvsaCommon\Configuration\MotConfigFactory;
 use DvsaCommon\Factory\AutoWire\AutoWireFactory;
 use DvsaMotTest\NewVehicle\Form\VehicleWizard\CreateVehicleFormWizard;
 use DvsaMotTest\NewVehicle\Form\VehicleWizard\Factory\CreateVehicleFormWizardFactory;
+use Zend\Mvc\Controller\Plugin\FlashMessenger;
 use Zend\View\Helper\Url;
 use Zend\Mvc\Router\Http\RouteMatch;
 
@@ -38,6 +40,7 @@ return [
         Url::class => UrlHelperFactory::class,
         MotEventManager::class => MotEventManagerFactory::class,
         RouteMatch::class => HttpRouteMatchFactory::class,
+        FlashMessenger::class => FlashMessengerFactory::class,
     ],
     'abstract_factories' => [
         AutoWireFactory::class,

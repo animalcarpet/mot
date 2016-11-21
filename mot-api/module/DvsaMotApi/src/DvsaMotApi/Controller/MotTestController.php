@@ -11,6 +11,7 @@ use DvsaCommonApi\Transaction\TransactionAwareTrait;
 use DvsaDocument\Service\Document\DocumentService;
 use DvsaEntities\Entity\MotTest;
 use DvsaMotApi\Service\MotTestService;
+use DvsaMotApi\Service\VehicleHistoryService;
 use SiteApi\Service\SiteService;
 use Zend\View\Model\JsonModel;
 
@@ -50,6 +51,17 @@ class MotTestController extends AbstractDvsaRestfulController implements Transac
         return ApiResponse::jsonOk($motTestData);
     }
 
+    public function editAllowedCheckAction()
+    {
+        $motTestNumber = $this->params()->fromRoute('motTestNumber');
+        $vehicleId = $this->params()->fromRoute('vehicleId');
+        $personId = $this->getUserId();
+
+        $motTestEditAllowedDto = $this->getVehicleHistoryService()->getEditAllowedPermissionsDto($vehicleId, $personId, $motTestNumber);
+
+        return $this->returnDto($motTestEditAllowedDto);
+    }
+
     /**
      * @return JsonModel
      * @throws \DvsaCommonApi\Service\Exception\ForbiddenException
@@ -60,35 +72,6 @@ class MotTestController extends AbstractDvsaRestfulController implements Transac
         $motTestData = $this->getMotTestService()->getMotTestData($motTestNumber, true);
 
         return ApiResponse::jsonOk($motTestData);
-    }
-
-    public function findMotTestNumberAction()
-    {
-        $request = $this->getRequest();
-
-        $motTestId = $request->getQuery('motTestId');
-        $motTestNumber = $request->getQuery('motTestNumber');
-        $v5c = $request->getQuery('v5c');
-
-        if ($v5c && $motTestNumber) {
-            return ApiResponse::jsonError(self::ERROR_UNABLE_TO_PERFORM_SEARCH_WITH_PARAMS);
-        }
-
-        $service = $this->getMotTestService();
-
-        if ($motTestId) {
-            if ($v5c) {
-                return ApiResponse::jsonOk(
-                    $service->findMotTestNumberByMotTestIdAndV5c($motTestId, $v5c)
-                );
-            } elseif ($motTestNumber) {
-                return ApiResponse::jsonOk(
-                    $service->findMotTestNumberByMotTestIdAndMotTestNumber($motTestId, $motTestNumber)
-                );
-            }
-        }
-
-        return ApiResponse::jsonError(self::ERROR_UNABLE_TO_PERFORM_SEARCH_WITH_PARAMS);
     }
 
     public function create($data)
@@ -431,5 +414,13 @@ class MotTestController extends AbstractDvsaRestfulController implements Transac
     private function getVehicleTestingStationService()
     {
         return $this->getServiceLocator()->get(SiteService::class);
+    }
+
+    /**
+     * @return VehicleHistoryService
+     */
+    private function getVehicleHistoryService()
+    {
+        return $this->getServiceLocator()->get(VehicleHistoryService::class);
     }
 }

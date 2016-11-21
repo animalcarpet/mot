@@ -6,12 +6,12 @@ import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
 
-public class CertificateEditUpdatePage extends Page {
+public class ReplacementCertificateUpdateSuccessfulPage extends Page {
 
     private static final String PAGE_TITLE = "Test Results Updated Successfully";
     @FindBy (id = "print") private WebElement printButton;
 
-    public CertificateEditUpdatePage(MotAppDriver driver) {
+    public ReplacementCertificateUpdateSuccessfulPage(MotAppDriver driver) {
         super(driver);
     }
 

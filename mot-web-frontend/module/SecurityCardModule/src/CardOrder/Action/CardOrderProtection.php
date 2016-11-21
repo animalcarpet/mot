@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
 use Core\Service\MotFrontendIdentityProvider;
 use Dashboard\Controller\UserHomeController;

@@ -71,7 +71,7 @@ public class ReplacementCertificatesTest extends DslTest {
         motUI.certificate.updateCertificate(tester, vehicle, motTest.getMotTestNumber());
 
         //Then I should be denied the option to edit
-       assertThat(motUI.certificate.isEditButtonDisplayed(), is(false));
+       assertThat(motUI.certificate.isEditOdometerButtonDisplayed(), is(false));
     }
 
     @Test(groups = {"BVT"})
@@ -101,13 +101,13 @@ public class ReplacementCertificatesTest extends DslTest {
         MotTest test = motApi.createTest(twoFactorTester, siteId, vehicle, TestOutcome.PASSED, 123456, DateTime.now());
 
         //When I review the updated Certificate
-        motUI.certificate.updateAndReviewCeritficate(twoFactorTester, vehicle, test.getMotTestNumber());
+        motUI.certificate.updateAndReviewCertificate(twoFactorTester, vehicle, test.getMotTestNumber());
 
         //Then I should NOT see the PIN Box on the Review Page
         assertThat("Pin Box is not Displayed", motUI.certificate.isPinBoxDisplayed(), is(false));
     }
 
-    @Test(groups = {"BVT", "Regression"})
+    @Test(groups = {"Regression"})
     public void pinBoxShownWhenNonTwoFactorUserEditCertificate() throws IOException, URISyntaxException {
 
         //Given I create a test as a non 2fa tester
@@ -118,10 +118,54 @@ public class ReplacementCertificatesTest extends DslTest {
         String testId = motApi.createTest(tester, siteId, vehicle, TestOutcome.PASSED, 123456, DateTime.now()).getMotTestNumber();
 
         //When I review the updated Certificate
-        motUI.certificate.updateAndReviewCeritficate(tester, vehicle, testId);
+        motUI.certificate.updateAndReviewCertificate(tester, vehicle, testId);
 
         //Then I should see the PIN Box on the Review Page
         assertThat("Pin Box is Displayed", motUI.certificate.isPinBoxDisplayed(), is(true));
+    }
+
+    @Test(groups = {"Regression"})
+    public void certificateDisplayedWhenSearchedByVin() throws IOException, URISyntaxException {
+        //Given tester performed a test
+        User tester = motApi.user.createTester(site.getId());
+        Vehicle vehicle = vehicleData.getNewVehicle(tester);
+
+        String testNumber = motApi.createTest(tester, site.getId(), vehicle, TestOutcome.PASSED, 123456, DateTime.now()).getMotTestNumber();
+
+        //When I search vehicle by VIN
+        //Then I should be able to view certificate
+        motUI.certificate.viewCertificatePageUsingVinSearch(tester, vehicle, testNumber);
+    }
+
+    @Test(groups = {"Regression"}, dataProvider="twoTestsPerformedForOneVehicle")
+    public void testerCanEditLastCertificate(User tester, Vehicle vehicle, String previousTestNumber, String lastTestNumber) throws IOException, URISyntaxException {
+        //Given tester performed two tests for same vehicle
+        //When I view certificate for last test
+        motUI.certificate.viewCertificatePage(tester, vehicle, lastTestNumber);
+        //Then I can edit certificate
+        assertThat("Edit button for last test is displayed", motUI.certificate.isEditButtonDisplayed(), is(true));
+    }
+
+    @Test(groups = {"Regression"}, dataProvider="twoTestsPerformedForOneVehicle")
+    public void testerCanNotEditOldCertificates(User tester, Vehicle vehicle, String previousTestNumber, String lastTestNumber) throws IOException, URISyntaxException {
+        //Given tester performed two tests for same vehicle
+        //When I view certificate for test older than latest one
+        motUI.certificate.viewOlderCertificatePage(tester, vehicle, previousTestNumber);
+        //Then I can't edit certificate
+        assertThat("Edit button for last test is not displayed", motUI.certificate.isEditButtonDisplayed(), is(false));
+    }
+
+    @DataProvider(name = "twoTestsPerformedForOneVehicle")
+    public Object[][] twoTestsPerformedForOneVehicle() throws IOException {
+        Object[][] data = new Object[1][4];
+        int siteId = siteData.createSite().getId();
+        User tester = motApi.user.createTester(siteId);
+        Vehicle vehicle = vehicleData.getNewVehicle(tester);
+        String previousTestNumber = motApi.createPassedTestForVehicle(tester, siteId, vehicle).getMotTestNumber();
+        String lastTestNumber = motApi.createPassedTestForVehicle(tester, siteId, vehicle).getMotTestNumber();
+        data[0] = new Object[]{tester, vehicle, previousTestNumber, lastTestNumber};
+
+        return data;
     }
 
     @DataProvider(name = "usersWhoCanPrintCertificate")

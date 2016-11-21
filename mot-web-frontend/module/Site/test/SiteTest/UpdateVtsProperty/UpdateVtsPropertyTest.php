@@ -2,7 +2,7 @@
 
 namespace SiteTest\UpdateVtsProperty;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\NotFoundActionResult;
 use Core\Action\RedirectToRoute;
 use Core\Routing\VtsRouteList;
@@ -115,7 +115,7 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
         $result = $action->execute(false, $process, new UpdateVtsContext($this->vtsId, $this->propertyName), null, []);
 
         // THEN I'm not redirected anywhere
-        $this->assertInstanceOf(ActionResult::class, $result);
+        $this->assertInstanceOf(ViewActionResult::class, $result);
 
         // AND I receive a proper view model
         /** @var UpdateVtsPropertyViewModel $vm */
@@ -193,7 +193,7 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
         $result = $action->execute(false, $process, new UpdateVtsContext($this->vtsId, $this->propertyName), $formUuid, []);
 
         // THEN I'm not redirected anywhere
-        $this->assertInstanceOf(ActionResult::class, $result);
+        $this->assertInstanceOf(ViewActionResult::class, $result);
 
         // AND I receive a proper view model
         /** @var UpdateVtsPropertyViewModel $vm */
@@ -307,14 +307,14 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
         $formData = [$this->formElementName => $tooLongName];
 
         // WHEN I post the form
-        /** @var ActionResult $result */
+        /** @var ViewActionResult $result */
         $result = $action->execute(true, $process, new UpdateVtsContext($this->vtsId, $this->propertyName), null, $formData);
 
         // THEN the form is not submitted to API
         $this->assertEquals(0, $this->updateVtsSpy->invocationCount());
 
         // AND I'm not redirected anywhere
-        $this->assertInstanceOf(ActionResult::class, $result);
+        $this->assertInstanceOf(ViewActionResult::class, $result);
 
         // AND I receive a proper view model
         /** @var UpdateVtsPropertyViewModel $vm */
@@ -347,11 +347,11 @@ class UpdateVtsPropertyTest extends \PHPUnit_Framework_TestCase
         $action = new ReviewStepAction($this->formSession, $this->authorisationService);
 
         // WHEN I review it
-        /** @var ActionResult $result */
+        /** @var ViewActionResult $result */
         $result = $action->execute(false, $process, new UpdateVtsContext($this->vtsId, $this->propertyName), $uuid);
 
         // THEN I'm not redirected anywhere
-        $this->assertInstanceOf(ActionResult::class, $result);
+        $this->assertInstanceOf(ViewActionResult::class, $result);
 
         // AND I receive a proper view model
         /** @var UpdateVtsPropertyReviewViewModel $vm */

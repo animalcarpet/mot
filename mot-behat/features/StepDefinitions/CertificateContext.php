@@ -102,17 +102,6 @@ class CertificateContext implements Context
     }
 
     /**
-     * @When /^I reprint an MOT Test Certificate$/
-     */
-    public function iReprintAnMOTTestCertificate()
-    {
-        $token = $this->userData->getCurrentLoggedUser()->getAccessToken();
-        $this->motTest->getMOTCertificateDetails($token);
-
-        $this->certificate->getDuplicateCertificate($token);
-    }
-
-    /**
      * @param mixed $certificate
      *
      * @return Document

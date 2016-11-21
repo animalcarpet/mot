@@ -180,7 +180,7 @@ class VehicleSearchServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->service->setSearchType($searchType);
 
-        $urlTemplate = $this->service->getUrlTemplate('', 1, XMock::of(Url::class));
+        $urlTemplate = $this->service->getUrlTemplate('', XMock::of(Url::class));
 
         $this->assertInstanceOf($urlTemplateClass, $urlTemplate);
     }

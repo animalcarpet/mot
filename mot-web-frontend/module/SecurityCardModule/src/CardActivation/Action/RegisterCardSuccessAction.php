@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\NotFoundActionResult;
 use Core\Service\MotFrontendIdentityProviderInterface;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardService;
@@ -60,7 +60,7 @@ class RegisterCardSuccessAction implements AutoWireableInterface
     {
         $identity = $this->identityProvider->getIdentity();
         $identity->setAuthenticatedWithLostForgotten(false);
-        $result = new ActionResult();
+        $result = new ViewActionResult();
         $viewModel = new RegisterCardSuccessViewModel();
 
         $hasPendingRoleNominations = $this->twoFactorNominationNotificationService->hasPendingNominations($identity->getUserId());
