@@ -3,7 +3,7 @@
 namespace Dvsa\Mot\Frontend\PersonModuleTest\Action;
 
 use Application\Data\ApiPersonalDetails;
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Controller\AbstractAuthActionController;
 use Dvsa\Mot\Frontend\PersonModule\Action\QualificationDetailsAction;
 use Dashboard\Model\PersonalDetails;
@@ -136,7 +136,7 @@ class QualificationDetailsActionTest extends AbstractAuthActionController
         $result = $this->qualificationDetailsAction->execute($this->personId, $this);
 
         // THEN I'm not redirected anywhere
-        $this->assertInstanceOf(ActionResult::class, $result);
+        $this->assertInstanceOf(ViewActionResult::class, $result);
 
         // AND I receive a proper view model
         /** @var QualificationDetailsViewModel $vm */

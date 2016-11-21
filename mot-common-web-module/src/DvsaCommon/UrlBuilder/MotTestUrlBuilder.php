@@ -9,7 +9,6 @@ class MotTestUrlBuilder extends AbstractUrlBuilder
 {
     const MOTTEST = 'mot-test[/:motTestNumber]';
     const MOT_TEST_STATUS = '/status';
-    const FIND_MOT_TEST_NUMBER = '/find-mot-test-number';
 
     const MOT_TEST_RFR_API_PATH_FORMAT = '/reasons-for-rejection';
     const TEST_ITEM_SELECTOR_API_PATH_FORMAT = '/test-item-selector[/:selectorId]';
@@ -38,7 +37,6 @@ class MotTestUrlBuilder extends AbstractUrlBuilder
         = [
             self::MOTTEST => [
                 self::MOT_TEST_STATUS => '',
-                self::FIND_MOT_TEST_NUMBER => '',
                 self::MOT_TEST_RFR_API_PATH_FORMAT => '',
                 self::TEST_ITEM_SELECTOR_API_PATH_FORMAT => '',
                 self::TEST_ITEM_SELECTOR_RFR_SEARCH_API_PATH_FORMAT => '',
@@ -184,33 +182,6 @@ class MotTestUrlBuilder extends AbstractUrlBuilder
     public static function odometerReadingNotices($motTestNr)
     {
         return self::odometerReading($motTestNr)->appendRoutesAndParams(self::ODOMETER_READING_NOTICES);
-    }
-
-    public static function findByMotTestIdAndV5c($motTestId, $v5c)
-    {
-        return self::findMotTestNumber(
-            [
-                'motTestId' => $motTestId,
-                'v5c' => $v5c,
-            ]
-        );
-    }
-
-    public static function findByMotTestIdAndMotTestNumber($motTestId, $motTestNumber)
-    {
-        return self::findMotTestNumber(
-            [
-                'motTestId' => $motTestId,
-                'motTestNumber' => $motTestNumber,
-            ]
-        );
-    }
-
-    private static function findMotTestNumber(array $queryParams)
-    {
-        return self::motTest()
-            ->appendRoutesAndParams(self::FIND_MOT_TEST_NUMBER)
-            ->queryParams($queryParams);
     }
 
     public static function refusal()

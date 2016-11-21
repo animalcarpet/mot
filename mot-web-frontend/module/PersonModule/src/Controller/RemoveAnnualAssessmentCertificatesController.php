@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\Controller;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Controller\AbstractAuthActionController;
 use Core\TwoStepForm\EditStepAction;
 use Core\TwoStepForm\ReviewStepAction;
@@ -47,7 +47,7 @@ class RemoveAnnualAssessmentCertificatesController extends AbstractAuthActionCon
             $this->params()->fromQuery('formUuid')
         );
 
-        if ($actionResult instanceof ActionResult) {
+        if ($actionResult instanceof ViewActionResult) {
             $actionResult->setTemplate('annual-assessment-certificates/remove');
         }
 

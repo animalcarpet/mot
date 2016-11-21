@@ -3,7 +3,7 @@
 namespace Site\ViewModel\Sidebar;
 
 use Core\ViewModel\Sidebar\GeneralSidebarStatusItem;
-use Core\ViewModel\Sidebar\SidebarBadge;
+use Core\ViewModel\Badge\Badge;
 use Site\Service\RiskAssessmentScoreRagClassifier;
 
 class VtsOverviewRagStatus extends GeneralSidebarStatusItem
@@ -33,13 +33,13 @@ class VtsOverviewRagStatus extends GeneralSidebarStatusItem
 
         switch ($ragStatus) {
             case RiskAssessmentScoreRagClassifier::WHITE_STATUS:
-                return SidebarBadge::normal();
+                return Badge::normal();
             case RiskAssessmentScoreRagClassifier::RED_STATUS:
-                return SidebarBadge::alert();
+                return Badge::alert();
             case RiskAssessmentScoreRagClassifier::AMBER_STATUS:
-                return SidebarBadge::warning();
+                return Badge::warning();
             case RiskAssessmentScoreRagClassifier::GREEN_STATUS:
-                return SidebarBadge::success();
+                return Badge::success();
         }
 
         throw new \Exception("Unknown rag status: '$ragStatus' value.");

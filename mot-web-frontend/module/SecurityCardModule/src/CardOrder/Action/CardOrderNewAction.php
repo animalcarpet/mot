@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
 use Core\Service\MotFrontendIdentityProvider;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderNewSecurityCardSessionService;
@@ -52,7 +52,7 @@ class CardOrderNewAction
             return $cardOrderProtectionResult;
         }
 
-        $result = new ActionResult();
+        $result = new ViewActionResult();
 
         $identity = $this->identityProvider->getIdentity();
         $hasActiveCard = $identity->isSecondFactorRequired();

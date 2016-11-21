@@ -5,6 +5,7 @@ namespace Core\Controller;
 use Application\Navigation\Breadcrumbs\BreadcrumbsBuilder;
 use Core\Action\AbstractActionResult;
 use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\HttpResponseResult;
 use Core\Action\FileAction;
 use Core\Action\NotFoundActionResult;
@@ -274,7 +275,11 @@ abstract class AbstractDvsaActionController
             }
         }
 
-        if ($result instanceof ActionResult) {
+        foreach ($result->getFlashMessages() as $flashMessage) {
+            $this->flashMessenger()->addMessage($flashMessage->getContent(), $flashMessage->getNamespace()->getName());
+        }
+
+        if ($result instanceof ActionResult || $result instanceof ViewActionResult) {
             if ($result->getSidebar()) {
                 $this->setSidebar($result->getSidebar());
             }

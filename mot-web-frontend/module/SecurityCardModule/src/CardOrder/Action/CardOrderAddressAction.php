@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Form\SecurityCardAddressForm;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderNewSecurityCardSessionService;
@@ -75,7 +75,7 @@ class CardOrderAddressAction
                 $this->stepService->updateStepStatus($userId, OrderSecurityCardStepService::REVIEW_STEP, true);
                 return new RedirectToRoute('security-card-order/review', ['userId' => $userId]);
             } else {
-                $result = new ActionResult();
+                $result = new ViewActionResult();
                 $viewModel = new CardOrderAddressViewModel();
                 $viewModel->setUserId($userId);
                 $viewModel->setForm($form);
@@ -87,7 +87,7 @@ class CardOrderAddressAction
             }
         }
 
-        $result = new ActionResult();
+        $result = new ViewActionResult();
         $form = new SecurityCardAddressForm($addresses);
         $form = $this->populateForm($form, $userId);
         $viewModel = new CardOrderAddressViewModel();

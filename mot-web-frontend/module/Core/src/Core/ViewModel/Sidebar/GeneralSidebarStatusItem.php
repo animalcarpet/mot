@@ -2,6 +2,8 @@
 
 namespace Core\ViewModel\Sidebar;
 
+use Core\ViewModel\Badge\Badge;
+
 class GeneralSidebarStatusItem
 {
     private $key;
@@ -10,7 +12,7 @@ class GeneralSidebarStatusItem
     private $secondaryText;
     private $htmlId;
 
-    public function __construct($htmlId, $key, $value, SidebarBadge $badge, $secondaryText = null)
+    public function __construct($htmlId, $key, $value, Badge $badge, $secondaryText = null)
     {
         $this->key = $key;
         $this->value = $value;

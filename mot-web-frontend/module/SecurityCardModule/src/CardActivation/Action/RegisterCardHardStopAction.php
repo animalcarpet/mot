@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\NotFoundActionResult;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardHardStopCondition;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\ViewModel\RegisterCardHardStopViewModel;
@@ -30,7 +30,7 @@ class RegisterCardHardStopAction implements AutoWireableInterface
             return new NotFoundActionResult();
         }
 
-        $result = new ActionResult();
+        $result = new ViewActionResult();
         $result->setViewModel((new RegisterCardHardStopViewModel())
             ->setHelpdeskConfig($this->helpdeskConfig));
         $result->setTemplate('2fa/register-card/hard-stop');

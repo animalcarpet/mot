@@ -3,13 +3,13 @@
 namespace Organisation\Presenter;
 
 
-use Core\ViewModel\Sidebar\SidebarBadge;
+use Core\ViewModel\Badge\Badge;
 
 class StatusPresenterData
 {
     private $status;
 
-    /** @var SidebarBadge */
+    /** @var Badge */
     private $sidebarBadge;
 
     public function __construct($status, $sidebarBadge)

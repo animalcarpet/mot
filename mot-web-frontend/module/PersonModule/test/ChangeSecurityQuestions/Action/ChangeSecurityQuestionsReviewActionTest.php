@@ -3,7 +3,7 @@
 
 namespace Dvsa\Mot\Frontend\PersonModuleTest\ChangeSecurityQuestions\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Action\ChangeSecurityQuestionsConfirmationAction;
@@ -58,7 +58,7 @@ class ChangeSecurityQuestionsReviewActionTest extends \PHPUnit_Framework_TestCas
 
         $actionResult = $this->buildAction()->execute($this->request);
 
-        $this->assertInstanceOf(ActionResult::class, $actionResult);
+        $this->assertInstanceOf(ViewActionResult::class, $actionResult);
         $this->assertSame('Review security question changes', $actionResult->layout()->getPageTitle());
     }
 

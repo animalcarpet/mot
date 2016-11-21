@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModuleTest\CardActivation\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\NotFoundActionResult;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Action\RegisterCardHardStopAction;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardHardStopCondition;
@@ -39,7 +39,7 @@ class RegisterCardHardStopActionTest extends \PHPUnit_Framework_TestCase
     {
         $this->withHardStop(true);
         $result = $this->action()->execute();
-        $this->assertInstanceOf(ActionResult::class, $result);
+        $this->assertInstanceOf(ViewActionResult::class, $result);
         $this->assertEquals('2fa/register-card/hard-stop', $result->getTemplate());
         $this->assertEquals($this->helpdeskConfig, $result->getViewModel()->getHelpdeskConfig());
     }

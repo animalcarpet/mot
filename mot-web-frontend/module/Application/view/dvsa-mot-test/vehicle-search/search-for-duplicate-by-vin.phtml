@@ -1,0 +1,42 @@
+<?php
+use DvsaMotTest\Form\VehicleSearch\DuplicateCertificateVinSearchForm;
+/** @var \DvsaMotTest\ViewModel\VehicleSearch\DuplicateCertificateSearchViewModel $viewModel*/
+
+$form = $viewModel->getForm();
+$vinSearchUrl = $this->url('replacement-certificate-vehicle-search');
+
+if($viewModel->getShowNoResultsMessage()): ?>
+    <div class="message">
+        <p><strong>0</strong> vehicles found with VIN <strong><?php echo $this->escapeHtml($form->getSearchInputElement()->getValue()) ?></strong></p>
+        <p>Your search returned no results.</p>
+        <p>Check if the VIN is correct or <a href="<?php echo $vinSearchUrl; ?>">search by registration mark</a>.</p>
+    </div>
+<?php endif;
+
+echo $this->form()->openTag($form); ?>
+    <div class="text">
+        <p class="lede">Search for a vehicle to get a copy of an MOT certificate or make an edit.</p>
+            <?php echo $this->partial(
+                'partial/gds/form/control',
+                [
+                    'element' => $form->getSearchInputElement()
+                ]
+            );?>
+
+        <p><a href="<?php echo $vinSearchUrl; ?>">Search by registration mark</a></p>
+    </div>
+
+    <?php
+        echo $this->partial(
+            'partial/gds/form/control-navigation',
+            [
+                'id'         => DuplicateCertificateVinSearchForm::FIELD_SUBMIT,
+                'name'       => DuplicateCertificateVinSearchForm::FIELD_SUBMIT,
+                'value'      => 'Search',
+                'navigation' => [
+                    'Return to home' => '/',
+                ],
+            ]
+        );
+    ?>
+<?php echo $this->form()->closeTag(); ?>

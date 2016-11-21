@@ -2,7 +2,7 @@
 
 namespace Vehicle\UpdateVehicleProperty\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\FormWizard\StepResult;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
@@ -58,7 +58,7 @@ class UpdateMakeAndModelAction implements AutoWireableInterface
 
     private function buildActionResult(StepResult $result)
     {
-        $actionResult = new ActionResult();
+        $actionResult = new ViewActionResult();
         $actionResult->setViewModel($result->getViewModel());
         $actionResult->addErrorMessages($result->getErrorMessages());
 

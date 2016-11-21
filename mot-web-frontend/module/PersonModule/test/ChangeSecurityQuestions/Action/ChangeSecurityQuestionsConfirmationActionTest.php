@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\PersonModuleTest\ChangeSecurityQuestions\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Action\ChangeSecurityQuestionsConfirmationAction;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Action\ChangeSecurityQuestionsReviewAction;
@@ -41,7 +41,7 @@ class ChangeSecurityQuestionsConfirmationActionTest extends \PHPUnit_Framework_T
 
         $actionResult = $this->buildAction()->execute();
 
-        $this->assertInstanceOf(ActionResult::class, $actionResult);
+        $this->assertInstanceOf(ViewActionResult::class, $actionResult);
         $this->assertSame('profile/change-security-questions/confirmation', $actionResult->getTemplate());
     }
 

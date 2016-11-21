@@ -1,0 +1,102 @@
+<?php
+
+use DvsaMotTest\ViewModel\MotTestCertificate\VehicleTable;
+use DvsaMotTest\ViewModel\MotTestCertificate\MotTestCertificateTableItem;
+
+/** @var VehicleTable $table */
+?>
+<div>
+    <div class="action-panel">
+        <div class="clear-float">
+            <div class="action-panel__container action-panel__container--wider">
+                <h3 class="action-panel__heading">
+                    <span class="heading-medium"><?php echo $this->escapeHtml($table->getMakeAndModel()); ?></span>
+                </h3>
+            </div>
+            <div class="action-panel__container">
+                <ul class="action-panel__heads">
+                    <li class="action-panel__heads-item">
+                        <span>
+                            Registration mark:
+                        </span>
+                        <strong>
+                            <?php echo $this->escapeHtml($table->getRegistration()); ?>
+                        </strong>
+                    </li>
+                    <li class="action-panel__heads-item">
+                        <span>
+                            VIN:
+                        </span>
+                        <strong>
+                            <?php echo $this->escapeHtml($table->getVin()); ?>
+                        </strong>
+                    </li>
+                </ul>
+                <h3 class="action-panel__value"></h3>
+            </div>
+        </div>
+    </div>
+
+    <table class="layer-table">
+        <caption class="visuallyhidden">
+            Vehicle MOT test certificates
+        </caption>
+        <?php if ($table->getFirstTest() !== null): ?>
+            <thead>
+            <tr class="layer-table__heading">
+                <th>
+                    Date of test
+                </th>
+                <th>
+                    Test result
+                </th>
+                <th>
+                    Vehicle testing station
+                </th>
+                <th>
+                    <span class="visuallyhidden">
+                        Action
+                    </span>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <?php echo $this->partial(
+                    'partials/vehicle-history/mot-test-certificates-item',
+                    [
+                        'test' => $table->getFirstTest(),
+                    ]
+                ); ?>
+            </tr>
+            <?php if ($table->areThereOlderTests()) : ?>
+                <tr>
+                    <td colspan="2" class="layer-table__item layer-table__item--secondary">
+                        <?php echo $this->escapeHtml($table->getOlderTestsSplitText()); ?>
+                    </td>
+                    <td colspan="2" class="layer-table__item layer-table__item--secondary layer-table__item--right">
+                        <a href="#" id="show-older-tests-<?php echo $table->getRegistration() ?>" data-action="showHideToggle" data-open-text="Hide older tests" data-target="" data-toggle-class="<?php echo $table->getToggleTableClassName(); ?>" class="layer-table__link js-only toggle-switch" data-closed-text="Show older tests">Show older tests</a>
+                    </td>
+                </tr>
+
+                <?php foreach ($table->getOlderTests() as $test) : ?>
+                    <tr class="<?php echo $table->getToggleTableClassName(); ?>">
+                        <?php echo $this->partial(
+                            'partials/vehicle-history/mot-test-certificates-item',
+                            [
+                                'test' => $test,
+                            ]
+                        ); ?>
+                    </tr>
+                <?php endforeach;
+            endif; ?>
+            </tbody>
+        <?php else : ?>
+            <tbody>
+                <tr>
+                    <td class="layer-table__item">No MOT test certificates found.</td>
+                </tr>
+            </tbody>
+        <?php endif?>
+    </table>
+</div>

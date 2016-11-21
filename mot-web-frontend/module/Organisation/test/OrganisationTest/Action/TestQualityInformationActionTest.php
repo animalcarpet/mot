@@ -2,6 +2,8 @@
 
 namespace OrganisationTest\Action;
 
+use Core\Action\NotFoundActionResult;
+use Core\Action\ViewActionResult;
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
 use DvsaClient\Mapper\OrganisationMapper;
 use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\AuthorisedExaminerSitesPerformanceDto;
@@ -95,11 +97,11 @@ class TestQualityInformationActionTest extends AbstractFrontendControllerTestCas
         return [
             [
                 'pageNumber' => 0,
-                'result' => 'Core\Action\NotFoundActionResult',
+                'result' => NotFoundActionResult::class,
             ],
             [
                 'pageNumber' => 1,
-                'result' => 'Core\Action\ActionResult',
+                'result' => ViewActionResult::class,
             ],
         ];
     }

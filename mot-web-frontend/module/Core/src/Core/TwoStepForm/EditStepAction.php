@@ -3,7 +3,7 @@
 namespace Core\TwoStepForm;
 
 use Core\Action\AbstractRedirectActionResult;
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
@@ -30,7 +30,7 @@ final class EditStepAction implements AutoWireableInterface
      * @param FormContextInterface $context
      * @param $formUuid
      * @param array $formData
-     * @return ActionResult
+     * @return ViewActionResult
      */
     public function execute($isPost, SingleStepProcessInterface $process, FormContextInterface $context, $formUuid, array $formData = [])
     {
@@ -116,7 +116,7 @@ final class EditStepAction implements AutoWireableInterface
 
         $vm = $process->buildEditStepViewModel($form);
 
-        $actionResult = new ActionResult();
+        $actionResult = new ViewActionResult();
         $actionResult->setViewModel($vm);
         $actionResult->addErrorMessages($errors);
 

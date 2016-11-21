@@ -1,5 +1,7 @@
 <?php
 use Application\Helper\PrgHelper;
+use Core\Routing\MotTestRoutes;
+use DvsaCommon\ApiClient\MotTest\DuplicateCertificate\Dto\MotTestDuplicateCertificateEditAllowedDto;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
@@ -7,6 +9,10 @@ use DvsaCommon\UrlBuilder\MotTestUrlBuilderWeb;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use DvsaMotTest\View\Model\MotTestTitleModel;
+
+/** @var bool $isDuplicateCertificate */
+/** @var array $duplicateCertRouteSearchParams */
+/** @var MotTestDuplicateCertificateEditAllowedDto $motTestEditAllowed */
 
 $defaultValues = $this->defaultValues;
 $formErrors = $this->formErrors;
@@ -17,7 +23,7 @@ $motDetails = $this->motDetails;
 /** @var \DvsaCommon\Dto\Common\MotTestTypeDto $motTestType */
 $motTestType = $motDetails->getTestType();
 /** @var MotTestTitleModel $motTestTitleViewModel */
-$pageSubTitle = $motTestTitleViewModel->getTitle($motDetails);
+$pageSubTitle = $motTestTitleViewModel->getTitle($motDetails, $isDuplicateCertificate);
 
 $pendingDetails = $motDetails->getPendingDetails();
 $pendingStatus = ArrayUtils::tryGet($pendingDetails, 'currentSubmissionStatus');
@@ -42,7 +48,7 @@ $isReinspectionSummaryPage = ($isReinspection && (($isTestReadyToFail || $isTest
 $testName = AbstractDvsaMotTestController::getTestName($motTestType->getCode());
 
 $title = $testName . ' Summary';
-$header = $testName . ($isTestActive ? ' summary' : ' result');
+$header = $testName . ($isTestActive ? ' summary' : ($isDuplicateCertificate ? ' results' : ' result'));
 
 $this->headTitle($title);
 $this->layout()->setVariable('pageSubTitle', $pageSubTitle);
@@ -80,13 +86,18 @@ echo $this->partial(
 
 ?>
 
-<form id="submit-test-results"
-      action="<?php echo MotTestUrlBuilderWeb::summary($motDetails->getMotTestNumber()); ?>"
-      method="POST">
-    <?php
-    echo $this->csrfToken();
-    echo ($this->prgHelper instanceof PrgHelper ? $this->prgHelper->getHtml() : '');
-    ?>
+<?php if ($isDuplicateCertificate) :?>
+    <form id="edit-test-results" method="POST"
+          action="<?php echo MotTestRoutes::of($this)->editDuplicateCertificate($motDetails->getMotTestNumber());?>">
+<?php else :?>
+    <form id="submit-test-results"
+          action="<?php echo MotTestUrlBuilderWeb::summary($motDetails->getMotTestNumber()); ?>"
+          method="POST">
+        <?php
+endif;
+echo $this->csrfToken();
+echo ($this->prgHelper instanceof PrgHelper ? $this->prgHelper->getHtml() : '');
+?>
 
 <?php if ($isReinspectionSummaryPage || $this->isNonMotTest):
     // Create typeahead and location text reinspection HTML ready for use
@@ -200,7 +211,17 @@ echo $this->partial(
                 </ul>
             </nav>
 
-        <?php elseif ($canReprint) :
+        <?php elseif ($isDuplicateCertificate) :
+            echo $this->partial(
+            'partials/mot-test-summary/duplicate-certificate-content-navigation',
+            [
+                'motDetails' => $motDetails,
+                'canPrint' => $canPrint,
+                'motTestEditAllowed' => $motTestEditAllowed,
+                'duplicateCertRouteSearchParams' => $duplicateCertRouteSearchParams,
+            ]
+            );
+        elseif ($canReprint) :
             if ($canPrint) :?>
                 <a href="<?php echo MotTestUrlBuilderWeb::printDuplicateResult($motDetails->getMotTestNumber()); ?>"
                    class="btn btn-primary" id="reprint-certificate">Reprint certificate</a>
@@ -212,8 +233,7 @@ echo $this->partial(
     </div>
 </div>
 
-</form>
-</div><!-- end container -->
+</form><!-- end container -->
 
 <script type="application/javascript">
     /* <![CDATA[ */

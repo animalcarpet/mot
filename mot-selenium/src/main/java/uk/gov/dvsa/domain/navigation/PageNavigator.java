@@ -20,10 +20,10 @@ import uk.gov.dvsa.ui.pages.dvsa.UserSearchPage;
 import uk.gov.dvsa.ui.pages.dvsa.UserSearchResultsPage;
 import uk.gov.dvsa.ui.pages.login.LoginPage;
 import uk.gov.dvsa.ui.pages.mot.*;
-import uk.gov.dvsa.ui.pages.mot.certificates.DuplicateReplacementCertificateTestHistoryPage;
 import uk.gov.dvsa.ui.pages.mot.retest.ConfirmVehicleRetestPage;
 import uk.gov.dvsa.ui.pages.mot.retest.ReTestResultsEntryPage;
 import uk.gov.dvsa.ui.pages.profile.ProfilePage;
+import uk.gov.dvsa.ui.pages.mot.certificates.ReplacementCertificateResultsPage;
 import uk.gov.dvsa.ui.pages.userregistration.CreateAnAccountPage;
 import uk.gov.dvsa.ui.pages.vehicleinformation.CreateNewVehicleRecordIdentificationPage;
 import uk.gov.dvsa.ui.pages.vts.SearchForAVtsPage;
@@ -211,12 +211,11 @@ public class PageNavigator {
         return PageLocator.getVehicleSearchPage(driver).searchVehicle("", "", false).createNewVehicle();
     }
 
-    public DuplicateReplacementCertificateTestHistoryPage gotoDuplicateReplacementCertificateTestHistoryPage(User user, Vehicle vehicle) throws IOException {
-        injectOpenAmCookieAndNavigateToPath(user, String.format("/replacement-certificate-vehicle-search?registration=%s&vin=%s",
-                vehicle.getDvsaRegistration(), vehicle.getVin()));
+    public ReplacementCertificateResultsPage gotoReplacementCertificateResultsPage(User user, Vehicle vehicle) throws IOException {
+        injectOpenAmCookieAndNavigateToPath(user, String.format("/vehicle-certificates?vrm=%s",
+                vehicle.getDvsaRegistration()));
 
-        new VehicleSearchPage(driver).searchVehicle(vehicle).selectVehicle(DuplicateReplacementCertificateTestHistoryPage.class);
-        return new DuplicateReplacementCertificateTestHistoryPage(driver);
+        return new ReplacementCertificateResultsPage(driver);
     }
 
     public RefuseToTestPage gotoRefuseToTestPage(User user, Vehicle vehicle) throws IOException {

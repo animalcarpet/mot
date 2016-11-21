@@ -3,7 +3,7 @@
 namespace Dvsa\Mot\Frontend\PersonModuleTest\Action;
 
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Dvsa\Mot\Frontend\PersonModule\Action\TestQualityAction;
 use Dvsa\Mot\Frontend\PersonModule\Routes\PersonProfileRoutes;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
@@ -137,10 +137,10 @@ class TestQualityInformationActionTest extends AbstractMotUnitTest
 
         $this->mockMultiSiteData();
 
-        /** @var ActionResult $result */
+        /** @var ViewActionResult $result */
         $result = $this->testQualityAction->execute('1', '07', '2013', $this->url, []);
 
-        $this->assertInstanceOf(ActionResult::class, $result);
+        $this->assertInstanceOf(ViewActionResult::class, $result);
 
         /** @var TestQualityInformationViewModel $vm */
         $vm = $result->getViewModel();

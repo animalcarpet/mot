@@ -2,10 +2,14 @@
 
 namespace Core\Action;
 
+use DvsaCommon\Utility\ArrayUtils;
+
 abstract class AbstractActionResult
 {
     private $errorMessages = [];
     private $successMessages = [];
+    /** @var FlashMessage[] */
+    private $flashMessages = [];
 
     public function getErrorMessages()
     {
@@ -43,5 +47,23 @@ abstract class AbstractActionResult
             $this->addErrorMessage($successMessage);
         }
         return $this;
+    }
+
+    public function addFlashMessage(FlashNamespace $namespace, $message)
+    {
+        $this->flashMessages[] = new FlashMessage($namespace, $message);
+    }
+
+    public function getFlashMessages(FlashNamespace $namespaceFilter = null)
+    {
+        if ($namespaceFilter === null) {
+            return $this->flashMessages;
+        }
+
+        return ArrayUtils::filter(
+            $this->flashMessages,
+            function(FlashMessage $message) use ($namespaceFilter) {
+                return $message->getNamespace()->equals($namespaceFilter);
+            });
     }
 }

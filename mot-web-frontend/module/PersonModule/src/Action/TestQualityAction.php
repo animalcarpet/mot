@@ -3,7 +3,7 @@
 namespace Dvsa\Mot\Frontend\PersonModule\Action;
 
 use Core\Action\AbstractActionResult;
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\NotFoundActionResult;
 use Core\Formatting\AddressFormatter;
 use Core\Routing\ProfileRoutes;
@@ -202,11 +202,11 @@ class TestQualityAction implements AutoWireableInterface
      * @param string $monthFullName
      * @param string $year
      * @param array $breadcrumbs
-     * @return ActionResult
+     * @return ViewActionResult
      */
     private function buildActionResult($vm, $monthFullName, $year, $breadcrumbs)
     {
-        $actionResult = new ActionResult();
+        $actionResult = new ViewActionResult();
         $actionResult->setViewModel($vm);
         $actionResult->setTemplate('test-quality-information/view');
 

@@ -467,42 +467,6 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
     }
 
     /**
-     * @param int    $motTestId
-     * @param string $v5c
-     *
-     * @return null|string
-     */
-    public function findMotTestNumberByMotTestIdAndV5c($motTestId, $v5c)
-    {
-        $motTest = $this->motTestRepository->findMotTestByMotTestIdAndV5c($motTestId, $v5c);
-
-        if ($motTest !== null) {
-            $this->readMotTestAssertion->assertGranted($motTest);
-
-            return $motTest->getNumber();
-        }
-
-        return null;
-    }
-
-    /**
-     * @param int    $motTestId
-     * @param string $motTestNumber
-     *
-     * @return null|string
-     */
-    public function findMotTestNumberByMotTestIdAndMotTestNumber($motTestId, $motTestNumber)
-    {
-        $this->authService->assertGranted(PermissionInSystem::MOT_TEST_READ);
-
-        if ($this->motTestRepository->isMotTestNumberValidForMotTest($motTestId, $motTestNumber)) {
-            return $motTestNumber;
-        }
-
-        return null;
-    }
-
-    /**
      * Provides the ability to check the users access to the current search.
      */
     protected function checkPermissions()

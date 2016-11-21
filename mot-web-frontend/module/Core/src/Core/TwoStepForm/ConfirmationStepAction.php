@@ -2,7 +2,7 @@
 
 namespace Core\TwoStepForm;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\NotFoundActionResult;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Exception\UnauthorisedException;
@@ -32,7 +32,7 @@ final class ConfirmationStepAction implements AutoWireableInterface
      * @param $isPost
      * @param SingleStepProcessInterface $process
      * @param FormContextInterface $context
-     * @return ActionResult
+     * @return ViewActionResult
      * @throws UnauthorisedException
      */
     public function execute($isPost, SingleStepProcessInterface $process, FormContextInterface $context)
@@ -61,7 +61,7 @@ final class ConfirmationStepAction implements AutoWireableInterface
 
     /**
      * @param TwoStepProcessInterface $process
-     * @return ActionResult
+     * @return ViewActionResult
      */
     protected function buildActionResult(TwoStepProcessInterface $process)
     {
@@ -73,7 +73,7 @@ final class ConfirmationStepAction implements AutoWireableInterface
 
         $vm->setVariables($variables);
 
-        $actionResult = new ActionResult();
+        $actionResult = new ViewActionResult();
         $actionResult->setViewModel($vm);
 
         $actionResult->layout()->setTemplate('layout/layout-govuk.phtml');

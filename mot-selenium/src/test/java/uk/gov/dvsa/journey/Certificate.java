@@ -3,11 +3,13 @@ package uk.gov.dvsa.journey;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
-import uk.gov.dvsa.ui.pages.VehicleSearchPage;
 import uk.gov.dvsa.ui.pages.mot.MotTestHistoryPage;
 import uk.gov.dvsa.ui.pages.mot.MotTestSearchPage;
 import uk.gov.dvsa.ui.pages.mot.EnforcementTestSummaryPage;
 import uk.gov.dvsa.ui.pages.mot.certificates.*;
+import uk.gov.dvsa.ui.pages.mot.certificates.ReplacementCertificateResultsPage;
+import uk.gov.dvsa.ui.pages.mot.certificates.ReplacementCertificateViewPage;
+import uk.gov.dvsa.ui.pages.mot.certificates.VehicleSearchByVinPage;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -19,11 +21,10 @@ import static org.hamcrest.Matchers.equalToIgnoringCase;
 public class Certificate {
 
     private PageNavigator pageNavigator;
-    DuplicateReplacementCertificateTestHistoryPage certificateTestHistoryPage;
-    MotTestCertificatePage certificatePage;
+    ReplacementCertificateViewPage certificatePage;
     ReplacementCertificateUpdatePage updatePage;
     ReplacementCertificateReviewPage reviewPage;
-    CertificateEditUpdatePage editSuccessfulPage;
+    ReplacementCertificateUpdateSuccessfulPage updateSuccessfulPage;
     private boolean isPrintButtonDisplayed;
     private boolean declarationSuccessful = false;
     private boolean declarationFor2FaSuccessful = false;
@@ -46,8 +47,8 @@ public class Certificate {
     }
 
     public void createReplacementCertificate(User tester, Vehicle vehicle, String motTestId) throws IOException, URISyntaxException {
-        DuplicateReplacementCertificateTestHistoryPage duplicateReplacementCertificateTestHistoryPage = pageNavigator.gotoDuplicateReplacementCertificateTestHistoryPage(tester, vehicle);
-        ReplacementCertificateUpdatePage replacementCertificateUpdatePage = duplicateReplacementCertificateTestHistoryPage.clickEditButton(motTestId);
+        ReplacementCertificateResultsPage replacementCertificateResultsPage = pageNavigator.gotoReplacementCertificateResultsPage(tester, vehicle);
+        ReplacementCertificateUpdatePage replacementCertificateUpdatePage = replacementCertificateResultsPage.viewTest(motTestId).edit();
         replacementCertificateUpdatePage.submitNoOdometerOption();
 
         ReplacementCertificateReviewPage replacementCertificateReviewPage =
@@ -63,19 +64,29 @@ public class Certificate {
     }
 
     public void printReplacementPage(User user, Vehicle vehicle, String motTestNumber) throws IOException, URISyntaxException {
-        certificateTestHistoryPage = pageNavigator.navigateToPage(user, VehicleSearchPage.REPLACEMENT_PATH, VehicleSearchPage.class)
-                .searchVehicle(vehicle).selectVehicle(DuplicateReplacementCertificateTestHistoryPage.class);;
-
-        certificatePage = certificateTestHistoryPage.viewTest(motTestNumber, MotTestCertificatePage.class);
-
+        viewCertificatePage(user, vehicle, motTestNumber);
         isPrintButtonDisplayed = certificatePage.isReprintButtonDisplayed();
     }
 
     private void updateCertificatePage(User user, Vehicle vehicle, String motTestNumber) throws IOException, URISyntaxException {
-        certificateTestHistoryPage = pageNavigator.navigateToPage(user, VehicleSearchPage.REPLACEMENT_PATH, VehicleSearchPage.class)
-                .searchVehicle(vehicle).selectVehicle(DuplicateReplacementCertificateTestHistoryPage.class);
+        viewCertificatePage(user, vehicle, motTestNumber);
+        updatePage = certificatePage.edit();
+    }
 
-        updatePage = certificateTestHistoryPage.editTest(motTestNumber, ReplacementCertificateUpdatePage.class);
+    public void viewCertificatePage(User user, Vehicle vehicle, String motTestNumber) throws IOException, URISyntaxException  {
+        certificatePage = searchVehicle(user, vehicle).viewTest(motTestNumber);
+    }
+
+    public void viewOlderCertificatePage(User user, Vehicle vehicle, String motTestNumber) throws IOException, URISyntaxException  {
+        certificatePage = searchVehicle(user, vehicle).viewOlderTest(vehicle.getDvsaRegistration(), motTestNumber);
+    }
+
+    public void viewCertificatePageUsingVinSearch(User user, Vehicle vehicle, String motTestNumber) throws IOException, URISyntaxException {
+        certificatePage = searchVehicle(user, vehicle).viewTest(motTestNumber);
+    }
+
+    private ReplacementCertificateResultsPage searchVehicle(User user, Vehicle vehicle) throws IOException, URISyntaxException {
+        return pageNavigator.navigateToPage(user, VehicleSearchByVinPage.PATH, VehicleSearchByVinPage.class).searchVehicle(vehicle);
     }
 
     public boolean isReprintButtonDisplayed() {
@@ -95,15 +106,19 @@ public class Certificate {
     public Certificate setOdometerToNull(){
         updateOdometer();
         reviewPage = new ReplacementCertificateReviewPage(pageNavigator.getDriver());
-        editSuccessfulPage = reviewPage.confirmAndPrint(CertificateEditUpdatePage.class);
+        updateSuccessfulPage = reviewPage.confirmAndPrint(ReplacementCertificateUpdateSuccessfulPage.class);
 
-        isPrintButtonDisplayed = editSuccessfulPage.isPrintButtonDisplayed();
+        isPrintButtonDisplayed = updateSuccessfulPage.isPrintButtonDisplayed();
 
         return this;
     }
 
-    public boolean isEditButtonDisplayed() {
+    public boolean isEditOdometerButtonDisplayed() {
         return updatePage.isEditOdometerButtonDisplayed();
+    }
+
+    public boolean isEditButtonDisplayed() {
+        return certificatePage.isEditButtonDisplayed();
     }
 
     public void viewSummaryAsVehicleExaminer(User user, String siteNumber, String testNumber)
@@ -119,7 +134,7 @@ public class Certificate {
         isPrintButtonDisplayed = summaryPage.printCertificateButtonExists(testNumber);
     }
 
-    public void updateAndReviewCeritficate(User user, Vehicle vehicle, String testNumber) throws IOException, URISyntaxException {
+    public void updateAndReviewCertificate(User user, Vehicle vehicle, String testNumber) throws IOException, URISyntaxException {
         updateCertificatePage(user, vehicle, testNumber);
         updateOdometer();
     }

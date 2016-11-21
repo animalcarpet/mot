@@ -11,13 +11,19 @@ class MotTestTitleModel
 
     const MOT_TESTING_TITLE = 'MOT testing';
     const MOT_TRAINING_TEST_TITLE = 'Training test';
+    const DUPLICATE_CERTIFICATE_TITLE = 'Duplicate or replacement certificate';
 
     /**
      * @param null|MotTestDto $motTestDto
+     * @param bool $isDuplicateCertificate
      * @return string
      */
-    public function getTitle($motTestDto)
+    public function getTitle($motTestDto, $isDuplicateCertificate = false)
     {
+        if($isDuplicateCertificate) {
+            return self::DUPLICATE_CERTIFICATE_TITLE;
+        }
+
         if (!is_null($motTestDto) && $motTestDto instanceof MotTestDto) {
             /** @var $motTestDto MotTestDto */
             /** @var $testType MotTestTypeDto */

@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModuleTest\CardOrder\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Action\CardOrderReviewAction;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Service\OrderNewSecurityCardSessionService;
 use Application\Data\ApiPersonalDetails;
@@ -175,10 +175,10 @@ class CardOrderReviewActionTest extends \PHPUnit_Framework_TestCase
             ->with(self::USER_ID)
             ->willReturn($this->buildPersonalDetailsData());
 
-        /** @var ActionResult $actionResult */
+        /** @var ViewActionResult $actionResult */
         $actionResult = $this->buildAction()->execute($this->request, self::USER_ID);
 
-        $this->assertInstanceOf(ActionResult::class, $actionResult);
+        $this->assertInstanceOf(ViewActionResult::class, $actionResult);
         $this->assertEquals('2fa/card-order/review', $actionResult->getTemplate());
         $this->assertEquals(CardOrderReviewAction::REVIEW_PAGE_TITLE, $actionResult->layout()->getPageTitle());
         $this->assertEquals(CardOrderReviewAction::REVIEW_PAGE_SUBTITLE, $actionResult->layout()->getPageSubTitle());

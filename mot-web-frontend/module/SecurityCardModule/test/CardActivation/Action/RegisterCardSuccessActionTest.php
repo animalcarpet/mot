@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModuleTest\CardActivation\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\NotFoundActionResult;
 use Core\Service\MotFrontendIdentityProvider;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
@@ -53,7 +53,7 @@ class RegisterCardSuccessActionTest extends \PHPUnit_Framework_TestCase
         $this->withUserRegistered(true);
         $this->withIdentity();
         $result = $this->action()->execute(new Request());
-        $this->assertInstanceOf(ActionResult::class, $result);
+        $this->assertInstanceOf(ViewActionResult::class, $result);
         $this->assertEquals('2fa/register-card/success', $result->getTemplate());
     }
 

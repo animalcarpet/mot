@@ -10,6 +10,7 @@ use Dvsa\Mot\Frontend\MotTestModule\Service\SurveyService;
 use Dvsa\Mot\Frontend\GoogleAnalyticsModule\ControllerPlugin\DataLayerPlugin;
 use Dvsa\Mot\Frontend\GoogleAnalyticsModule\TagManager\DataLayer;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
+use DvsaCommon\ApiClient\MotTest\DuplicateCertificate\MotTestDuplicateCertificateApiResource;
 use DvsaCommon\Auth\MotIdentityProvider;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -59,6 +60,9 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
      */
     private $featureToggles;
 
+    /** @var MotTestDuplicateCertificateApiResource|MockObj $motTestDuplicateCertificateApiResourceMock*/
+    private $motTestDuplicateCertificateApiResourceMock;
+
     protected function setUp()
     {
         $this->serviceManager = Bootstrap::getServiceManager();
@@ -79,13 +83,16 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->setServiceManager($this->serviceManager);
-        $this->setController(
-            new MotTestController(
-                $this->authServiceMock,
-                $this->motEventManagerMock,
-                $this->featureToggles
-            )
+        $this->motTestDuplicateCertificateApiResourceMock = $this->getMockBuilder(MotTestDuplicateCertificateApiResource::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getEditAllowed'])
+            ->getMock();
+
+        $this->controller = new MotTestController(
+            $this->authServiceMock,
+            $this->motEventManagerMock,
+            $this->motTestDuplicateCertificateApiResourceMock,
+            $this->featureToggles
         );
 
         $dataLayerPlugin = new DataLayerPlugin(new DataLayer());

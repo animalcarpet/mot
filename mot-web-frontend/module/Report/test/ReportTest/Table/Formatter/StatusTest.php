@@ -2,7 +2,7 @@
 
 namespace ReportTest\Table\Formatter;
 
-use Core\ViewModel\Sidebar\SidebarBadge;
+use Core\ViewModel\Badge\Badge;
 use DvsaCommonTest\TestUtils\TestCaseViewTrait;
 use DvsaCommonTest\TestUtils\XMock;
 use Organisation\Presenter\StatusPresenterData;
@@ -29,7 +29,7 @@ class StatusTest extends \PHPUnit_Framework_TestCase
 
         // logical block: prepare parameters
         $column = new ColumnOptions();
-        $sidebarBagde = new SidebarBadge('cssClass');
+        $sidebarBagde = new Badge('cssClass');
         $status = (new StatusPresenterData('status', $sidebarBagde));
         $column->setField('Vts status');
 

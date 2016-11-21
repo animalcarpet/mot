@@ -3,11 +3,9 @@
 namespace DvsaMotApi\Controller;
 
 use DvsaCommon\Auth\AbstractMotAuthorisationService;
-use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Enum\MotTestTypeCode;
-use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\Model\DvsaRole;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
@@ -16,11 +14,7 @@ use DvsaDocument\Service\Document\DocumentService;
 use DvsaMotApi\Service\CertificateCreationService;
 use DvsaMotApi\Service\MotTestService;
 use DvsaReport\Service\Report\ReportService;
-use Zend\Http\Client\Exception\ExceptionInterface;
-use Zend\Http\Client\Exception\RuntimeException;
 use Zend\Http\Header\Accept;
-use Zend\Http\Response;
-use Zend\XmlRpc\Request;
 
 /**
  * Provide functionality for accessing early created PDF reports
@@ -44,12 +38,9 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
     const JREPORT_PRM_SITE_NR = 'Vts';
     const JREPORT_PRM_INSP_AUTH = 'InspectionAuthority';
 
-    const ISSUER_INFO_ENG = "%s certificate issued by %s %s on %s";
-    const ISSUER_INFO_WEL = "%s wedi ei gyhoeddi gan %s %s ar %s";
-    const ISSUER_DVSA_INFO_WEL = "Anfonwyd %s gan %s ar ran y DVSA ar %s";
-
-    //  --  Url query parameters --
-    const QUERY_PRM_SITE_NR = 'siteNr';
+    const ISSUER_INFO_ENG = "%s certificate issued by %s on %s";
+    const ISSUER_INFO_WEL = "%s wedi ei gyhoeddi gan %s ar %s";
+    const ISSUER_DVSA_INFO_WEL = "Anfonwyd %s gan %s ar %s";
 
     private static $validNames = ['CT20', 'CT30', 'CT32'];
 
@@ -167,9 +158,6 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
             );
         }
 
-        //  --  check permission    --
-        $this->assertUserCanPrintCertificate($motTest);
-
         //  --  get mot test certificated   --
         $certificates = MotTestController::getCertificateDetailsContent(
             $motTest,
@@ -191,17 +179,10 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
         ];
 
         if ($isFirstCertIsReplacement || $isDuplicate) {
-            //  --  define site number  --
-            $siteNr = $this->params()->fromQuery(self::QUERY_PRM_SITE_NR);
-            if ($siteNr === null) {
-                $site = $motTest->getVehicleTestingStation();
-                $siteNr = ArrayUtils::tryGet($site, 'siteNumber');
-            }
-
             // @NOTE VM-2805 specifies that a duplicate always trumps replacement in
             // terms of the text printed on the cert
             $runtimeParameters += [
-                self::JREPORT_PRM_ISSUER => $this->getIssuerInfo($siteNr, $isDuplicate, CertificateCreationService::isRequiresDualLanguage($motTest)),
+                self::JREPORT_PRM_ISSUER => $this->getIssuerInfo($isDuplicate, CertificateCreationService::isRequiresDualLanguage($motTest)),
             ];
         }
 
@@ -242,7 +223,7 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
         return $this->getReportService()->getMergedPdfReports($reportArgs);
     }
 
-    private function getIssuerInfo($siteNr, $isDuplicate, $isRequiresDualLanguage = false)
+    private function getIssuerInfo($isDuplicate, $isRequiresDualLanguage = false)
     {
         $person = $this->getIdentity()->getPerson();
         $roles = $this->authorisationService->getRolesAsArray($person->getId());
@@ -254,16 +235,16 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
                 break;
             }
         }
-        $advisoryInformation = $this->getEnglishVersion($siteNr, $isDuplicate, $hasDvsaRole);
+        $advisoryInformation = $this->getEnglishVersion($isDuplicate);
 
         if ($isRequiresDualLanguage) {
-            $advisoryInformation .= " / " . $this->getWelshVersion($siteNr, $isDuplicate, $hasDvsaRole);
+            $advisoryInformation .= " / " . $this->getWelshVersion($isDuplicate, $hasDvsaRole);
         }
 
         return $advisoryInformation;
     }
 
-    private function getEnglishVersion($siteNr, $isDuplicate, $hasDvsaRole = false)
+    private function getEnglishVersion($isDuplicate)
     {
         $type = "Replacement";
         if ($isDuplicate) {
@@ -273,16 +254,10 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
         $date = DateUtils::nowAsUserDateTime();
         $tester = $this->getIdentity()->getPerson()->getDisplayShortName();
 
-        if ($hasDvsaRole) {
-            $vts = "on behalf of DVSA";
-        } else {
-            $vts = "at VTS " . $siteNr;
-        }
-
-        return sprintf(self::ISSUER_INFO_ENG, $type, $tester, $vts, $date->format("d F Y"));
+        return sprintf(self::ISSUER_INFO_ENG, $type, $tester, $date->format("d F Y"));
     }
 
-    private function getWelshVersion($siteNr, $isDuplicate, $hasDvsaRole = false)
+    private function getWelshVersion($isDuplicate, $hasDvsaRole = false)
     {
         $date = datefmt_format_object(
             DateUtils::nowAsUserDateTime(), 'dd MMMM Y', 'cy_GB'
@@ -300,8 +275,7 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
             $type = "Dyblyg";
         }
         
-        $vts = "o GPC " . $siteNr;
-        return sprintf(self::ISSUER_INFO_WEL, $type, $tester, $vts, $date);
+        return sprintf(self::ISSUER_INFO_WEL, $type, $tester, $date);
     }
 
     /**
@@ -386,21 +360,6 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
         }
 
         return $this->reportService;
-    }
-
-    /**
-     * Checks to see if the current user can print the current certificate
-     * in question. If not, then an exception is thrown.
-     * @param MotTestDto $motTest
-     *
-     * @throws UnauthorisedException
-     */
-    private function assertUserCanPrintCertificate(MotTestDto $motTest)
-    {
-        $siteId = ArrayUtils::tryGet($motTest->getVehicleTestingStation(), 'id');
-        if (!$this->authorisationService->isGrantedAtSite(PermissionAtSite::CERTIFICATE_PRINT, $siteId)) {
-            throw new UnauthorisedException('You are not authorised to print this certificate');
-        }
     }
 
     private function getInvalidWatermark(MotTestDto $motTest = null)

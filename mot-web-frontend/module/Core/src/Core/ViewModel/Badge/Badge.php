@@ -1,8 +1,8 @@
 <?php
 
-namespace Core\ViewModel\Sidebar;
+namespace Core\ViewModel\Badge;
 
-class SidebarBadge
+class Badge
 {
     private $cssClass;
 
@@ -16,19 +16,19 @@ class SidebarBadge
         return $this->cssClass;
     }
 
-    /** @var SidebarBadge */
+    /** @var Badge */
     private static $normal;
 
-    /** @var SidebarBadge */
+    /** @var Badge */
     private static $info;
 
-    /** @var SidebarBadge */
+    /** @var Badge */
     private static $alert;
 
-    /** @var SidebarBadge */
+    /** @var Badge */
     private static $warning;
 
-    /** @var SidebarBadge */
+    /** @var Badge */
     private static $success;
 
     public static function normal()
@@ -70,10 +70,10 @@ class SidebarBadge
 
     private static function initialize()
     {
-        self::$normal = new SidebarBadge('badge');
-        self::$alert = new SidebarBadge('badge--alert');
-        self::$info = new SidebarBadge('badge--info');
-        self::$warning = new SidebarBadge('badge--warn');
-        self::$success = new SidebarBadge('badge--success');
+        self::$normal = new Badge('badge');
+        self::$alert = new Badge('badge--alert');
+        self::$info = new Badge('badge--info');
+        self::$warning = new Badge('badge--warn');
+        self::$success = new Badge('badge--success');
     }
 }

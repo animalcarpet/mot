@@ -29,6 +29,7 @@ use DvsaEntities\Entity\VehicleClass;
 use DvsaEntities\Repository\ConfigurationRepository;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\MotTestTypeRepository;
+use DvsaEntities\Repository\PersonRepository;
 use DvsaMotApi\Service\CertificateCreationService;
 use DvsaMotApi\Service\CreateMotTestService;
 use DvsaMotApi\Service\Mapper\MotTestMapper;
@@ -66,6 +67,9 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
 
     /** @var  MotTestRepository|MockObj */
     protected $mockMotTestRepository;
+
+    /** @var  PersonRepository|MockObj */
+    protected $mockPersonRepository;
 
     /** @var  MotTestMapper|MockObj */
     protected $mockMotTestMapper;

@@ -3,7 +3,7 @@
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\Action;
 
 use Application\Data\ApiPersonalDetails;
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
 use Core\Service\MotFrontendIdentityProvider;
 use Dashboard\Model\PersonalDetails;
@@ -102,7 +102,7 @@ class CardOrderReviewAction
                 return new RedirectToRoute('security-card-order/confirmation', ['userId' => $userId]);
             }
         }
-        $result = new ActionResult();
+        $result = new ViewActionResult();
 
         $viewModel = $this->setUpViewModel($userId, $personalDetails);
         $result->setViewModel($viewModel);

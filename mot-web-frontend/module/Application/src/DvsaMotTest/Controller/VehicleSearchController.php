@@ -4,22 +4,20 @@ namespace DvsaMotTest\Controller;
 
 use Application\Service\CatalogService;
 use Application\Service\ContingencySessionManager;
-use Dvsa\Mot\ApiClient\Service\VehicleService;
+use Core\Service\MotFrontendIdentityProviderInterface;
 use DvsaCommon\Constants\FeatureToggle;
+use DvsaCommon\Auth\MotAuthorisationServiceInterface;
+use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
+use DvsaMotTest\Action\VehicleCertificatesAction;
+use DvsaMotTest\Action\DuplicateCertificateSearchByRegistrationAction;
+use DvsaMotTest\Action\DuplicateCertificateSearchByVinAction;
 use DvsaMotTest\Service\OverdueSpecialNoticeAssertion;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Dto\Vehicle\History\VehicleHistoryDto;
-use DvsaCommon\Dto\Vehicle\History\VehicleHistoryMapper;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\Obfuscate\ParamObfuscator;
-use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\UrlBuilder;
-use DvsaCommon\UrlBuilder\VehicleUrlBuilder;
-use DvsaCommon\UrlBuilder\VehicleUrlBuilderWeb;
-use DvsaCommon\Utility\AddressUtils;
-use DvsaCommon\Utility\ArrayUtils;
 use DvsaMotTest\Form\VehicleSearch;
 use DvsaMotTest\Model\VehicleSearchResult;
 use DvsaMotTest\Service\VehicleSearchService;
@@ -27,7 +25,6 @@ use DvsaMotTest\View\VehicleSearchResult\VehicleSearchResultMessage;
 use DvsaMotTest\View\VehicleSearchResult\VehicleSearchResultUrlTemplateInterface;
 use Zend\Escaper\Escaper;
 use Zend\Form\Element\Hidden;
-use Zend\Http\Response;
 use Zend\I18n\Filter\Alnum;
 use Zend\View\Model\ViewModel;
 use DvsaCommon\HttpRestJson\Client;
@@ -35,7 +32,7 @@ use DvsaCommon\HttpRestJson\Client;
 /**
  * VehicleSearch Controller.
  */
-class VehicleSearchController extends AbstractDvsaMotTestController
+class VehicleSearchController extends AbstractDvsaMotTestController implements AutoWireableInterface
 {
     const CONTINGENCY_FORM_NOT_RECORDED = 'The contingency test form has not been filled in.';
     const PARTIAL_VIN_NO_REG_ERROR = 'Please complete the registration number field.';
@@ -78,6 +75,7 @@ class VehicleSearchController extends AbstractDvsaMotTestController
     const START_TEST_CONFIRMATION_ROUTE = 'start-test-confirmation';
     const START_RETEST_CONFIRMATION_ROUTE = 'start-retest-confirmation';
     const START_TRAINING_CONFIRMATION_ROUTE = 'start-training-confirmation';
+    const REPLACEMENT_CERTIFICATE_SEARCH_PAGE_TITLE = 'Duplicate or replacement certificate';
 
     /**
      * @var array
@@ -89,37 +87,28 @@ class VehicleSearchController extends AbstractDvsaMotTestController
             self::NO_VIN => 'No vin',
         ];
 
-    /** @var VehicleSearchService */
     private $vehicleSearchService;
-
-    /** @var \DvsaCommon\Obfuscate\ParamObfuscator */
     private $paramObfuscator;
-
-    /** @var CatalogService */
     private $catalogService;
-
-    /** @var VehicleSearchResult */
     private $vehicleSearchResultModel;
-
-    /** @var MapperFactory */
     private $mapperFactory;
-
-    /** @var Client */
     private $client;
+    private $authorisationService;
+    private $motFrontendIdentity;
+    private $duplicateCertificateSearchByRegistrationAction;
+    private $duplicateCertificateSearchByVinAction;
 
-    /**
-     * @param VehicleSearchService $vehicleSearchService
-     * @param ParamObfuscator $paramObfuscator
-     * @param CatalogService $catalogService
-     * @param VehicleSearchResult $vehicleSearchResultModel
-     */
     public function __construct(
         VehicleSearchService $vehicleSearchService,
         ParamObfuscator $paramObfuscator,
         CatalogService $catalogService,
         VehicleSearchResult $vehicleSearchResultModel,
         MapperFactory $mapperFactory,
-        Client $client
+        Client $client,
+        MotAuthorisationServiceInterface $authorisationService,
+        MotFrontendIdentityProviderInterface $motFrontendIdentity,
+        DuplicateCertificateSearchByRegistrationAction $duplicateCertificateSearchByRegistrationAction,
+        DuplicateCertificateSearchByVinAction $duplicateCertificateSearchByVinAction
     ) {
         $this->paramObfuscator = $paramObfuscator;
         $this->catalogService = $catalogService;
@@ -127,6 +116,10 @@ class VehicleSearchController extends AbstractDvsaMotTestController
         $this->vehicleSearchService = $vehicleSearchService;
         $this->mapperFactory = $mapperFactory;
         $this->client = $client;
+        $this->authorisationService = $authorisationService;
+        $this->motFrontendIdentity = $motFrontendIdentity;
+        $this->duplicateCertificateSearchByRegistrationAction = $duplicateCertificateSearchByRegistrationAction;
+        $this->duplicateCertificateSearchByVinAction = $duplicateCertificateSearchByVinAction;
     }
 
     /**
@@ -140,21 +133,35 @@ class VehicleSearchController extends AbstractDvsaMotTestController
     }
 
     /**
-     * Duplicate and Replacement vehicle search.s.
+     * Duplicate and Replacement vehicle search by registration
      *
      * @return \Zend\Http\Response|ViewModel
      */
-    public function replacementCertificateVehicleSearchAction()
+    public function replacementCertificateVehicleRegistrationSearchAction()
     {
-        $this->assertGranted(PermissionInSystem::CERTIFICATE_SEARCH);
+        $this->authorisationService->assertGranted(PermissionInSystem::CERTIFICATE_SEARCH);
 
-        if (!$this->getAuthorizationService()->isGranted(PermissionInSystem::CERTIFICATE_READ_FROM_ANY_SITE)
-            && !$this->getIdentity()->getCurrentVts()
-        ) {
-            return $this->redirectToLocationSelectScreen();
-        }
+        return $this->applyActionResult(
+            $this->duplicateCertificateSearchByRegistrationAction->execute(
+                $this->getRequest()->getQuery()->toArray()
+            )
+        );
+    }
 
-        return $this->vehicleSearch(VehicleSearchService::SEARCH_TYPE_CERTIFICATE);
+    /**
+     * Duplicate and Replacement vehicle search by vin
+     *
+     * @return \Zend\Http\Response|ViewModel
+     */
+    public function replacementCertificateVehicleVinSearchAction()
+    {
+        $this->authorisationService->assertGranted(PermissionInSystem::CERTIFICATE_SEARCH);
+
+        return $this->applyActionResult(
+            $this->duplicateCertificateSearchByVinAction->execute(
+                $this->getRequest()->getQuery()->toArray()
+            )
+        );
     }
 
     /**
@@ -165,6 +172,20 @@ class VehicleSearchController extends AbstractDvsaMotTestController
         $this->getAuthorizationService()->assertGranted(PermissionInSystem::MOT_DEMO_TEST_PERFORM);
 
         return $this->vehicleSearch(VehicleSearchService::SEARCH_TYPE_TRAINING);
+    }
+
+    public function certificateListAction()
+    {
+        /** @var VehicleCertificatesAction $action */
+        $action = $this->getServiceLocator()->get(VehicleCertificatesAction::class);
+
+        $vrm = $this->params()->fromQuery('vrm');
+        $vin = $this->params()->fromQuery('vin');
+        $params = $this->getRequest()->getQuery()->toArray();
+
+        $result = $action->execute($vrm, $vin, $params);
+
+        return $this->applyActionResult($result);
     }
 
     /**
@@ -179,205 +200,6 @@ class VehicleSearchController extends AbstractDvsaMotTestController
         $this->getAuthorizationService()->assertGranted(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM);
 
         return $this->vehicleSearch(VehicleSearchService::SEARCH_TYPE_NON_MOT);
-    }
-
-    /**
-     * History for DVSA users.
-     *
-     * @return ViewModel
-     */
-    public function dvsaTestHistoryAction()
-    {
-        $this->getAuthorizationService()->assertGranted(PermissionInSystem::CERTIFICATE_READ);
-
-        $obfuscatedVehicleId = (string)$this->params('id', 0);
-        $vehicleId = $this->paramObfuscator->deobfuscateEntry(
-            ParamObfuscator::ENTRY_VEHICLE_ID,
-            $obfuscatedVehicleId,
-            false
-        );
-        $vin = $this->params()->fromQuery('vin');
-        $registration = $this->params()->fromQuery('registration');
-
-        $vehicleHistory = new VehicleHistoryDto();
-        $vehicle = [];
-
-        try {
-            // Get vehicle data.
-            /** @var VehicleService $vehicleService */
-            $vehicleService = $this->getServiceLocator()->get(VehicleService::class);
-            $vehicle = $vehicleService->getDvsaVehicleById((int) $vehicleId);
-
-            // Get history data.
-            $apiUrl = VehicleUrlBuilder::testHistory($vehicleId);
-            $apiResult = $this->getRestClient()->get($apiUrl);
-
-            $vehicleHistory = (new VehicleHistoryMapper())->fromArrayToDto($apiResult['data'], 0);
-        } catch (RestApplicationException $e) {
-            $this->addErrorMessages($e->getDisplayMessages());
-        }
-
-        return new ViewModel(
-            [
-                'vehicleHistory' => $vehicleHistory,
-                'vehicle' => $vehicle,
-                'vin' => $vin,
-                'registration' => $registration
-            ]
-        );
-    }
-
-    /**
-     * @param string $obfuscatedVehicleId
-     * @param array $postParams
-     *
-     * @return \Zend\Http\Response
-     */
-    private function handleDifferentVtsAction($obfuscatedVehicleId, $postParams)
-    {
-        $motTestId = ArrayUtils::get($postParams, 'id');
-        $motTestNumber = ArrayUtils::get($postParams, 'number');
-        $v5c = ArrayUtils::get($postParams, 'v5c');
-
-        if (($v5c && $motTestNumber) || (!$v5c && !$motTestNumber)) {
-            $this->addErrorMessages('Please enter either V5C number or MOT certificate number');
-
-            return $this->redirect()->toUrl(VehicleUrlBuilderWeb::historyMotCertificates($obfuscatedVehicleId));
-        }
-
-        if ($motTestId) {
-            $apiUrl = $searchCriteria = $searchType = null;
-
-            if ($v5c) {
-                $apiUrl = MotTestUrlBuilder::findByMotTestIdAndV5c($motTestId, $v5c)->toString();
-                $searchCriteria = $v5c;
-            } elseif ($motTestNumber) {
-                $apiUrl = MotTestUrlBuilder::findByMotTestIdAndMotTestNumber($motTestId, $motTestNumber)->toString();
-                $searchCriteria = $motTestNumber;
-            }
-
-            return $this->handleV5cOrMotTestNumberCall(
-                $obfuscatedVehicleId,
-                $apiUrl,
-                $searchCriteria,
-                $motTestId
-            );
-        }
-
-        return $this->redirect()->toUrl(VehicleUrlBuilderWeb::historyMotCertificates($obfuscatedVehicleId));
-    }
-
-    /**
-     * @param string $obfuscatedVehicleId
-     * @param string $apiUrl
-     * @param string $searchCriteria
-     * @param string $motTestId
-     *
-     * @return \Zend\Http\Response
-     */
-    private function handleV5cOrMotTestNumberCall(
-        $obfuscatedVehicleId,
-        $apiUrl,
-        $searchCriteria,
-        $motTestId
-    ) {
-        $apiResult = $this->getRestClient()->get($apiUrl);
-
-        $motTestNumberFromApi = $apiResult['data'];
-
-        if ($motTestNumberFromApi) {
-            return $this->redirect()->toRoute(
-                'mot-test-certificate',
-                ['motTestNumber' => $motTestNumberFromApi]
-            );
-        }
-
-        if ($this->vehicleSearchService->isV5cSearchType()) {
-            $this->addErrorMessages('The V5C number is incorrect');
-        } else {
-            $this->addErrorMessages('The MOT certificate number is incorrect');
-        }
-
-        return $this->redirect()->toRoute(
-            'vehicle-test-history',
-            ['id' => $obfuscatedVehicleId],
-            [
-                'query' => [
-                    self::SEARCH_PARAM_SEARCH_CRITERIA => urlencode($searchCriteria),
-                    self::SEARCH_PARAM_SEARCH_TYPE => urlencode($this->vehicleSearchService->getSearchType()),
-                    self::SEARCH_PARAM_MOT_ID => urlencode($motTestId),
-                ],
-                'fragment' => 'show-form-' . $motTestId,
-            ]
-        );
-    }
-
-    /**
-     * History for testers.
-     *
-     * @throws \DvsaCommon\Obfuscate\InvalidArgumentException
-     *
-     * @return ViewModel
-     */
-    public function testHistoryAction()
-    {
-        $this->getAuthorizationService()->assertGranted(PermissionInSystem::CERTIFICATE_READ);
-        $obfuscatedVehicleId = (string)$this->params()->fromRoute('id', 0);
-        $vehicleId = $this->paramObfuscator->deobfuscateEntry(
-            ParamObfuscator::ENTRY_VEHICLE_ID,
-            $obfuscatedVehicleId,
-            false
-        );
-        $motId = (int)$this->params()->fromQuery('id', 0);
-        $searchType = $this->params()->fromQuery('type', VehicleSearchService::SEARCH_TYPE_V5C);
-        $searchCriteria = urldecode($this->params()->fromQuery('criteria', ''));
-        $vin = $this->params()->fromQuery('vin');
-        $registration = $this->params()->fromQuery('registration');
-
-        $this->vehicleSearchService->setSearchType($searchType);
-
-        /** @var \Zend\Http\Request $request */
-        $request = $this->getRequest();
-
-        if ($request->isPost()) {
-            return $this->handleDifferentVtsAction($obfuscatedVehicleId, $request->getPost()->toArray());
-        }
-
-        /** @var \Dvsa\Mot\Frontend\AuthenticationModule\Model\VehicleTestingStation $site */
-        $site = $this->getIdentity()->getCurrentVts();
-        $siteId = $site->getVtsId();
-
-        $vehicleHistory = new VehicleHistoryDto();
-        $vehicle = [];
-
-        try {
-            // Get vehicle data.
-            /** @var VehicleService $vehicleService */
-            $vehicleService = $this->getServiceLocator()->get(VehicleService::class);
-            $vehicle = $vehicleService->getDvsaVehicleById((int) $vehicleId);
-
-            // Get history data.
-            $apiUrl = VehicleUrlBuilder::testHistory($vehicleId);
-            $apiResult = $this->getRestClient()->get($apiUrl);
-
-            $vehicleHistory = (new VehicleHistoryMapper())->fromArrayToDto($apiResult['data'], $siteId);
-        } catch (RestApplicationException $e) {
-            $this->addErrorMessages($e->getDisplayMessages());
-        }
-
-        return new ViewModel(
-            [
-                'obfuscatedVehicleId' => $obfuscatedVehicleId,
-                'vehicleHistory' => $vehicleHistory,
-                'vehicle' => $vehicle,
-                'siteName' => $site->getName() . ', ' . AddressUtils::stringify($site->getAddress()),
-                'searchParamMotId' => $motId,
-                'searchParamType' => $searchType,
-                'searchParamCriteria' => $searchCriteria,
-                'registration' => $registration,
-                'vin' => $vin
-            ]
-        );
     }
 
     /**
@@ -528,7 +350,7 @@ class VehicleSearchController extends AbstractDvsaMotTestController
                         $this->vehicleSearchService->isStandardSearchType(),
                         $vehicles,
                         false,
-                        $this->vehicleSearchService->getUrlTemplate($searchType, $noRegistration, $this->url()),
+                        $this->vehicleSearchService->getUrlTemplate($noRegistration, $this->url()),
                         $this->getVehicleSearchService()->getSearchResultMessage(
                             $escaper->escapeHtml($regEntered),
                             $escaper->escapeHtml($vinEntered),
@@ -589,7 +411,6 @@ class VehicleSearchController extends AbstractDvsaMotTestController
                 'urlTemplate' => $urlTemplate,
                 'isRetest' => $this->vehicleSearchService->isRetestSearchType(),
                 'isTraining' => $this->vehicleSearchService->isTrainingSearchType(),
-                'isReplCert' => $this->vehicleSearchService->isReplacementCertifificateSearchType()
             ]
         );
 
@@ -598,15 +419,11 @@ class VehicleSearchController extends AbstractDvsaMotTestController
         return $viewModel;
     }
 
-    /**
-     * @return bool
-     */
     private function selectPageSubTitle()
     {
         $isRetestSearchType = $this->vehicleSearchService->isRetestSearchType();
-        $isReplacementCertificateSearchType = $this->vehicleSearchService->isReplacementCertifificateSearchType();
 
-        if (!$isRetestSearchType && !$isReplacementCertificateSearchType) {
+        if (!$isRetestSearchType) {
             $this->layout()->setVariable('pageSubTitle', 'MOT testing');
         }
 
@@ -614,30 +431,9 @@ class VehicleSearchController extends AbstractDvsaMotTestController
             $this->layout()->setVariable('pageSubTitle', 'Training test');
         }
 
-        if ($this->vehicleSearchService->isReplacementCertifificateSearchType()) {
-            $this->layout()->setVariable('pageSubTitle', 'Duplicate or replacement certificate');
-        }
-
         if($this->isFeatureEnabled(FeatureToggle::MYSTERY_SHOPPER) && $this->vehicleSearchService->isNonMotSearchType()) {
             $this->layout()->setVariable('pageSubTitle', 'Non-MOT test');
         }
-    }
-
-    /**
-     * @return \Zend\Http\Response
-     */
-    private function redirectToLocationSelectScreen()
-    {
-        $routeMatch = $this->getRouteMatch();
-        $container = $this->getServiceLocator()->get('LocationSelectContainerHelper');
-        $container->persistConfig(
-            [
-                'route' => $routeMatch->getMatchedRouteName(),
-                'params' => $routeMatch->getParams(),
-            ]
-        );
-
-        return $this->redirect()->toRoute(LocationSelectController::ROUTE);
     }
 
     /**

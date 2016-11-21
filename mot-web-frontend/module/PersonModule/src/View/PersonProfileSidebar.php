@@ -14,7 +14,7 @@ use Core\ViewModel\Sidebar\GeneralSidebarLink;
 use Core\ViewModel\Sidebar\GeneralSidebarLinkList;
 use Core\ViewModel\Sidebar\GeneralSidebarStatusBox;
 use Core\ViewModel\Sidebar\GeneralSidebarStatusItem;
-use Core\ViewModel\Sidebar\SidebarBadge;
+use Core\ViewModel\Badge\Badge;
 use Dvsa\Mot\Frontend\PersonModule\Routes\PersonProfileRoutes;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuard;
 use DvsaCommon\Date\DateUtils;
@@ -132,25 +132,25 @@ class PersonProfileSidebar extends GeneralSidebar
     /**
      * @param $code
      *
-     * @return SidebarBadge CSS class modifier for status badge
+     * @return Badge CSS class modifier for status badge
      */
     private function getQualificationStatusModifier($code)
     {
         switch ($code) {
             case AuthorisationForTestingMotStatusCode::INITIAL_TRAINING_NEEDED:
-                return SidebarBadge::normal();
+                return Badge::normal();
                 break;
             case AuthorisationForTestingMotStatusCode::DEMO_TEST_NEEDED:
-                return SidebarBadge::warning();
+                return Badge::warning();
                 break;
             case AuthorisationForTestingMotStatusCode::QUALIFIED:
-                return SidebarBadge::success();
+                return Badge::success();
                 break;
             case AuthorisationForTestingMotStatusCode::SUSPENDED:
-                return SidebarBadge::alert();
+                return Badge::alert();
                 break;
             default :
-                return SidebarBadge::normal();
+                return Badge::normal();
         }
     }
 

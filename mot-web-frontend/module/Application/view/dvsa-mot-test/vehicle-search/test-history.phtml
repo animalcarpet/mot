@@ -8,23 +8,9 @@ use DvsaMotTest\Service\VehicleSearchService;
 <?php
 /** @var DvsaCommon\Dto\Vehicle\History\VehicleHistoryDto $vehicleHistory */
 
-$errorSummaryV5C = 'The V5C number you supplied, <strong>%s</strong>, does not match what we have on record. Check you have typed the number correctly and try again.';
-$errorSummaryMotCert = 'The MOT certificate number you supplied, <strong>%s</strong>, does not match what we have on record. Check you have typed the number correctly and try again.';
-
-if ($searchParamMotId != 0) {
-    if ($searchParamType == VehicleSearchService::SEARCH_TYPE_V5C) {
-        $escErrorSummary = sprintf($errorSummaryV5C, $this->escapeHtmlAttr($searchParamCriteria));
-    } else {
-        $escErrorSummary = sprintf($errorSummaryMotCert, $this->escapeHtmlAttr($searchParamCriteria));
-    }
-} else {
-    $escErrorSummary = false;
-}
-
 echo $this->partial('errorMessages', [
     'getFromFlash' => true,
     'errorTitle' => 'Problem with the form',
-    'escErrorSummary' => $escErrorSummary,
 ]);
 echo $this->partial('vehicleSummary', ['vehicle' => $this->vehicle]);
 
@@ -51,8 +37,6 @@ echo $this->partial(
             foreach ($vehicleHistory->getIteratorOnOtherSite() as $item) :
                 /** @var DvsaCommon\Dto\Vehicle\History\VehicleHistoryItemDto $item */
                 $escId = $this->escapeHtmlAttr($item->getId());
-                $v5cErrorState = ($searchParamMotId == $escId && $searchParamType == VehicleSearchService::SEARCH_TYPE_V5C) ? 'has-error' : '';
-                $certErrorState = ($searchParamMotId == $escId && $searchParamType == 'certificate') ? 'has-error' : '';
                 ?>
                 <div class="row">
                     <div class="results-entry-item clearfix">
@@ -66,49 +50,11 @@ echo $this->partial(
                         </div>
 
                         <div class="col-sm-4">
-                            <button id="view-<?php echo $escId; ?>"
-                                    class="btn btn-primary btn-expand"
-                                    data-toggle="collapse" data-target="#show-form-<?php echo $escId; ?>">
-                                View<span class="fa fa-chevron-down chevron_toggleable"></span>
-                            </button>
+                            <a href="<?php echo $this->url('mot-test-certificate', ['motTestNumber' => $item->getMotTestNumber()]); ?>"
+                               id="view-<?php echo $this->escapeHtmlAttr($item->getMotTestNumber()) ?>" class="btn btn-primary">View</a>
                         </div>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="show-hide-container collapse in" id="show-form-<?php echo $escId; ?>">
-                        <form class="form vehicle-test-history__validation" method="post">
-                            <?php echo $this->csrfToken() ?>
-                            <input type="hidden" name="id" value="<?php echo $escId; ?>">
-                            <input type="hidden" name="action" value="view-diff-vts-certificate"/>
-
-                            <p>You will need a <strong>V5C number or an MOT certificate number</strong> to view documents issued at another VTS</p>
-
-                            <div class="form-group <?php echo $this->escapeHtml($v5cErrorState); ?>">
-                                <label for="v5c-<?php echo $escId; ?>">Please enter V5C number</label>
-                                <?php if (!empty($v5cErrorState)): ?>
-                                <span class="validation-message">Number does not match our records, check it and try again</span>
-                                <?php endif; ?>
-                                <input class="form-control" id="v5c-<?php echo $escId; ?>" name="v5c">
-                            </div>
-
-                            <p><strong>or</strong></p>
-
-                            <div class="form-group <?php echo $this->escapeHtml($certErrorState); ?>">
-                                <label for="cert-number<?php echo $escId; ?>">MOT certificate number</label>
-                                <?php if (!empty($certErrorState)): ?>
-                                <span class="validation-message">Number does not match our records, check it and try again</span>
-                                <?php endif; ?>
-                                <input class="form-control" id="cert-number<?php echo $escId; ?>" name="number">
-                            </div>
-
-                            <button type="submit" class="btn btn-primary"
-                                    id="confirm-v5c-<?php echo $escId; ?>">Confirm
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
                 <div class="row">
                     <span class="divider"></span>
                 </div>
@@ -134,118 +80,4 @@ echo $this->partial(
         </ul>
     </nav>
 </div>
-
-<script>
-    $('.btn-expand').click(function () {
-        $(this).find('.chevron_toggleable').toggleClass('fa-chevron-up fa-chevron-down');
-    });
-    
-    (function($) {
-        function hideAuthoriseContainers(searchParamMotId) {
-            var $motAuthoriseContainers = $('.show-hide-container');
-            if ($motAuthoriseContainers.length) {
-                $motAuthoriseContainers.removeClass('in');
-            }
-
-            if (searchParamMotId != 0) {
-                var $motAuthoriseContainer = $('#show-form-' + searchParamMotId);
-                if ($motAuthoriseContainer.length) {
-                    $motAuthoriseContainer.collapse('show');
-                }
-            }
-        };
-
-        var searchParamMotId = <?php echo $this->escapeJs($searchParamMotId); ?>;
-        hideAuthoriseContainers(searchParamMotId);
-
-        function validateTestHistoryForm(form) {
-            var $form = $(form)
-                , valid = true
-                , msgs = []
-                , $v5cEl = $form.find('input[name=v5c]')
-                , $motCertNumberEl = $form.find('input[name=number]');
-
-            clearFormErrors($form);
-            clearPageMessage();
-
-            if ($v5cEl.val() == '' && $motCertNumberEl.val() == '') {
-                msg = 'You must enter the V5C number or the MOT certificate number';
-                valid = false;
-            } else if ($v5cEl.val() != '' && $motCertNumberEl.val() != '') {
-                msg = 'You must enter either the V5C number or the MOT certificate number';
-                valid = false;
-            }
-
-            if (!valid) {
-                msgs.push({
-                    el: $form
-                    , msg: msg
-                })
-                showFormError($v5cEl, msg);
-                showFormError($motCertNumberEl, msg);
-
-                displayPageErrorMsg(msgs);
-            }
-
-            return valid;
-        };
-
-        function clearFormErrors($form) {
-            var $errorMessages = $('.validation-message');
-            if ($errorMessages.length) {
-                $errorMessages.remove();
-            }
-            var $errorContainers = $('.has-error');
-            if ($errorContainers.length) {
-                $errorContainers.removeClass('has-error');
-            }
-        };
-
-        function clearPageMessage() {
-            var $pageErrorContainer = $('.validation-summary');
-            if ($pageErrorContainer.length) {
-                $pageErrorContainer.remove();
-            }
-        };
-
-        function showFormError($el, msg) {
-            $el.parent('div.form-group').addClass('has-error');
-            var $span = $('<span class="validation-message">' + msg + '</span>');
-            $el.siblings('label').append($span);
-        };
-
-        function displayPageErrorMsg(msgs) {
-            var $container = $('<div class="validation-summary"></div>');
-
-            var $errorMsg = $('<h2>Problem with the form</h2>');
-            var $errorMsgList = $('<ol>');
-
-            for (var m = 0; m < msgs.length; m++) {
-                var errorLinkTarget = '#' + msgs[m].el.attr('id');
-                var $listItem = $('<li><a href="' + errorLinkTarget + '">' + msgs[m].msg + '</a></li>'); 
-                var $gotoEl = msgs[m].el;
-                $listItem.click(function(el) {
-                    el.preventDefault();
-                    $('html, body').animate({
-                        scrollTop: ($gotoEl.parent('div').offset().top)
-                    }, 500);
-                });
-                $errorMsgList.append($listItem);
-            }
-
-            $container.append($errorMsg);
-            $container.append($errorMsgList);
-
-            var $pagePositionEl = $('.vehicle-summary').siblings('.hr-thin');
-            if ($pagePositionEl.length) {
-                $pagePositionEl.after($container);
-            }
-        };
-
-        $('.vehicle-test-history__validation').submit(function(e) {
-            $valid = validateTestHistoryForm(e.currentTarget);
-            return $valid;
-        });
-    }($));
-</script>
 

@@ -3,7 +3,7 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\RedirectToRoute;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Controller\ChangeSecurityQuestionsReviewController;
 use Dvsa\Mot\Frontend\PersonModule\ChangeSecurityQuestions\Service\ChangeSecurityQuestionsSessionService;
@@ -30,7 +30,7 @@ class ChangeSecurityQuestionsConfirmationAction
             return new RedirectToRoute(ChangeSecurityQuestionsReviewController::ROUTE);
         }
 
-        $result = new ActionResult();
+        $result = new ViewActionResult();
         $result->setTemplate(self::CHANGE_SECURITY_QUESTIONS_CONFIRMATION_TEMPLATE);
 
         $this->changeSecurityQuestionsSessionService->clear();

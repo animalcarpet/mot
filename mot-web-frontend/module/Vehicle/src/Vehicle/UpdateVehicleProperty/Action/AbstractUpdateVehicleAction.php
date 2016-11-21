@@ -2,7 +2,7 @@
 
 namespace Vehicle\UpdateVehicleProperty\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\TwoStepForm\EditStepAction;
 use Core\TwoStepForm\SingleStepProcessInterface;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
@@ -48,7 +48,7 @@ class AbstractUpdateVehicleAction implements AutoWireableInterface
             $formData
         );
 
-        if ($result instanceof ActionResult) {
+        if ($result instanceof ViewActionResult) {
             $result->setTemplate($this->template);
         }
 

@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\Model;
 
-use Core\ViewModel\Sidebar\SidebarBadge;
+use Core\ViewModel\Badge\Badge;
 
 /**
  * Data for Certificate Fields Data
@@ -11,7 +11,7 @@ class CertificateFieldsData
 {
     private $certificateNo;
     private $certificateDate;
-    /** @var SidebarBadge */
+    /** @var Badge */
     private $sidebarBadge;
 
     public function __construct($certificateNo, $certificateDate, $sidebarBadge)

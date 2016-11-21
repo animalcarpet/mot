@@ -154,7 +154,7 @@ class VehicleController extends AbstractAuthActionController implements AutoWire
         $vehicleSearchService = new VehicleSearchService($this, $this->getRestClient(), $form, $this->paramObfuscator);
 
         try {
-            $vehicleSearchService->getVehicleResults();
+            $results = $vehicleSearchService->getVehicleResults();
         } catch (RestApplicationException $e) {
             $this->addErrorMessages(self::NO_RESULT_FOUND);
 

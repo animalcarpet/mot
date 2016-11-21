@@ -2,7 +2,7 @@
 
 namespace Organisation\Action;
 
-use Core\Action\ActionResult;
+use Core\Action\ViewActionResult;
 use Core\Action\NotFoundActionResult;
 use Core\Routing\AeRoutes;
 use DvsaClient\Mapper\OrganisationMapper;
@@ -91,7 +91,7 @@ class TestQualityInformationAction implements AutoWireableInterface
      */
     private function buildActionResult(TestQualityInformationViewModel $vm, array $breadcrumbs, $orgSiteCount)
     {
-        $actionResult = new ActionResult();
+        $actionResult = new ViewActionResult();
         $actionResult->setViewModel($vm);
         $actionResult->layout()->setPageSubTitle(self::PAGE_SUBTITLE);
         $actionResult->layout()->setTemplate('layout/layout-govuk.phtml');
