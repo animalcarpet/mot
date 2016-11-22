@@ -388,7 +388,7 @@ class SurveyServiceTest extends PHPUnit_Framework_TestCase
         $row = [
             'timestamp' => $datetime->format('Y-m'),
             'period' => 'month',
-            'slug' => 'https://mot-testing.i-env.net/',
+            'slug' => 'https://www.mot-testing.service.gov.uk/',
             'rating_1' => 1,
             'rating_2' => 2,
             'rating_3' => 3,

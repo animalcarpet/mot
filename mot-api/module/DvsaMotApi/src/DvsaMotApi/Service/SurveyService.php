@@ -318,7 +318,7 @@ class SurveyService
         $row = [
             'timestamp' => $date,
             'period' => 'month',
-            'slug' => 'https://mot-testing.i-env.net/',
+            'slug' => 'https://www.mot-testing.service.gov.uk/',
             'rating_1' => $ratingCounts['rating_1'],
             'rating_2' => $ratingCounts['rating_2'],
             'rating_3' => $ratingCounts['rating_3'],
