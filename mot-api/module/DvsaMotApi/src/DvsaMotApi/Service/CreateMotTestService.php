@@ -133,7 +133,7 @@ class CreateMotTestService implements TransactionAwareInterface
         $vehicleId     = ArrayUtils::tryGet($data, self::FIELD_VEHICLE_ID);
 
         // Unless a new siteid has been specified (for a reinspection) we want to maintain the old value...
-        $vehicleTestingStationId = (int)$data[self::FIELD_VTS_ID];
+        $vehicleTestingStationId = is_null($data[self::FIELD_VTS_ID]) ? null : (int)$data[self::FIELD_VTS_ID];
         $primaryColour           = $data[self::FIELD_COLOURS_PRIMARY];
         $secondaryColour         = ArrayUtils::tryGet($data, self::FIELD_COLOURS_SECONDARY);
         $fuelTypeCode            = ArrayUtils::tryGet($data, self::FIELD_FUEL_TYPE_CODE);

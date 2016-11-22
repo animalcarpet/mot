@@ -201,7 +201,7 @@ class MotTestCreationHelper
             $this->authService->assertGrantedAtSite(PermissionAtSite::MOT_TEST_START_AT_SITE, $vtsId);
         }
 
-        $vts = $motTestType->getIsDemo() ? null : $this->entityManager->find(Site::class, $vtsId);
+        $vts = $motTestType->getIsDemo() || $motTestType->isNonMotTest() ? null : $this->entityManager->find(Site::class, $vtsId);
 
         /** @var Vehicle $vehicle */
         $vehicle = $this->entityManager->getRepository(Vehicle::class)->get($vehicleId);
