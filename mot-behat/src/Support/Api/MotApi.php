@@ -52,7 +52,7 @@ class MotApi
         ));
 
         if (Response::STATUS_CODE_200 !== $this->lastResponse->getStatusCode()) {
-            if ($this->lastResponse->getBody()->offsetExists("errors") && $this->lastResponse->getBody()->getErrorMessages()) {
+            if ($this->lastResponse->getBody() && $this->lastResponse->getBody()->offsetExists("errors") && $this->lastResponse->getBody()->getErrorMessages()) {
                 $message = $this->lastResponse->getBody()->getErrorMessagesAsString();
             } else {
                 $message = sprintf("Expected response status code %d, but got %d", Response::STATUS_CODE_200, $this->lastResponse->getStatusCode());
