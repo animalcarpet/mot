@@ -90,10 +90,6 @@ class RemoveDefectControllerTest extends AbstractFrontendControllerTestCase
             ->method('get')
             ->willReturn(['data' => $this->motTestMock]);
 
-        $restClientMock->expects($this->at(1))
-            ->method('get')
-            ->willReturn(['data' => $this->getDefectDto()]);
-
         $routeParams = [
             'motTestNumber' => $motTestNumber,
             'identifiedDefectId' => $defectId,

@@ -91,22 +91,6 @@ class IdentifiedDefect
     private $id;
 
     /**
-     * The breadcrumb string that is displayed in some places (Remove Defect
-     * screen for example).
-     *
-     * E.g. 'Drivers View of the Road > Mirrors'.
-     *
-     * By default this is an empty string, as building it requires information
-     * coming from a different API endpoint.
-     *
-     * @var string
-     *
-     * @uses DefectDto::$defectBreadcrumb Where the data for this property is
-     *                                    fetched from
-     */
-    private $breadcrumb = '';
-
-    /**
      * This specifies if the defect was added in the first MOT test (before an MOT retest).
      *
      * @var bool
@@ -266,31 +250,11 @@ class IdentifiedDefect
     }
 
     /**
-     * @return string
-     */
-    public function getBreadcrumb()
-    {
-        return $this->breadcrumb;
-    }
-
-    /**
      * @return bool
      */
     public function isOnOriginalTest()
     {
         return $this->onOriginalTest;
-    }
-
-    /**
-     * Unfortunately, we have no way of knowing what the breadcrumb is on
-     * construction. This is due to the breadcrumb information coming from
-     * a different API endpoint.
-     *
-     * @param string $breadcrumb
-     */
-    public function setBreadcrumb($breadcrumb)
-    {
-        $this->breadcrumb = $breadcrumb;
     }
 
     /**
