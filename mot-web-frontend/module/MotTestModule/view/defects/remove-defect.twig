@@ -17,7 +17,6 @@
                 {% if identifiedDefect.isManualAdvisory %}
                     {{  identifiedDefect.userComment }}
                 {% else %}
-                    <span class="key-value-list__meta">{{ identifiedDefect.breadcrumb }}</span>
                     {{ identifiedDefect.name }}
                 {% endif %}
                 {% if identifiedDefect.dangerous %}

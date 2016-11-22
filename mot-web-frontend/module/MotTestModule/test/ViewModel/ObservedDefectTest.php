@@ -59,16 +59,6 @@ class ObservedDefectTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true, $identifiedDefect->isOnOriginalTest());
     }
 
-    public function testSetBreadcrumb()
-    {
-        $identifiedDefect = new IdentifiedDefect(IdentifiedDefect::ADVISORY, '', '',
-            '', 'userComment', false, 'name', 1, 1, false, false, false);
-
-        $identifiedDefect->setBreadcrumb('breadcrumb');
-
-        $this->assertEquals('breadcrumb', $identifiedDefect->getBreadcrumb());
-    }
-
     /**
      * @return array
      */

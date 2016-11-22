@@ -158,16 +158,7 @@ class RemoveDefectController extends AbstractDvsaMotTestController
      */
     private function getIdentifiedDefect($identifiedDefectId, MotTestDto $motTest)
     {
-        $identifiedDefect = IdentifiedDefectCollection::fromMotApiData($motTest)->getDefectById($identifiedDefectId);
-
-        if (true !== $identifiedDefect->isManualAdvisory()) {
-            $breadcrumb = Defect::fromApi($this->restClient->get(
-                MotTestUrlBuilder::reasonForRejection($motTest->getMotTestNumber(), $identifiedDefect->getDefectId())
-            )['data'])->getDefectBreadcrumb();
-            $identifiedDefect->setBreadcrumb($breadcrumb);
-        }
-
-        return $identifiedDefect;
+        return IdentifiedDefectCollection::fromMotApiData($motTest)->getDefectById($identifiedDefectId);
     }
 
     /**
