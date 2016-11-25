@@ -39,7 +39,7 @@ class TradeRolesAssociationsService
         return $this->prepareRolesAndAssociations($personalDetails);
     }
 
-    private function prepareRolesAndAssociations(PersonalDetails $personalDetails)
+    public function prepareRolesAndAssociations(PersonalDetails $personalDetails)
     {
         $siteAndOrganisationRoles = $personalDetails->getSiteAndOrganisationRoles();
         $personSiteAndOrganisationRoles = $this->catalogService->getBusinessRoles();

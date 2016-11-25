@@ -305,7 +305,7 @@ class UserHomeController extends AbstractAuthActionController
             'canAcknowledge'       => $this->acknowledgeSpecialNoticeAssertion->isGranted(),
             'canRead'              => $this->authorisationService->isGranted(PermissionInSystem::SPECIAL_NOTICE_READ),
             'authorisation'        => $this->testerGroupAuthorisationMapper->getAuthorisation($personId),
-            'rolesAndAssociations' => $this->tradeRolesAssociationsService->getRolesAndAssociations($personId),
+            'rolesAndAssociations' => $this->tradeRolesAssociationsService->prepareRolesAndAssociations($personalDetails),
             'canViewUsername'      => $canViewUsername,
             'systemRoles'          => $this->getSystemRoles($personalDetails),
             'roleNiceNameList'     => $this->getRoleNiceNameList($personalDetails),
