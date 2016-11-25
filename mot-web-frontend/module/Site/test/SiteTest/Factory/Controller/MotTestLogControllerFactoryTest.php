@@ -10,6 +10,7 @@ namespace Site\Factory\Controller;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
 use DvsaClient\MapperFactory;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaFeature\FeatureToggles;
 use Organisation\Controller\MotTestLogController;
 use Organisation\Factory\Controller\MotTestLogControllerFactory;
 use Zend\ServiceManager\ServiceManager;
@@ -28,6 +29,9 @@ class MotTestLogControllerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $mapperFactory = XMock::of(MapperFactory::class);
         $serviceManager->setService(MapperFactory::class, $mapperFactory);
+
+        $featureToggles = XMock::of(FeatureToggles::class);
+        $serviceManager->setService('Feature\FeatureToggles', $featureToggles);
 
         $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
         $plugins->expects($this->any())

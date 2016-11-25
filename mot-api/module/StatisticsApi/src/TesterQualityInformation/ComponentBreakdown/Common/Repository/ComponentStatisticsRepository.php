@@ -60,6 +60,7 @@ class ComponentStatisticsRepository extends AbstractStatisticsRepository impleme
         $query->setParameter('failedStatusCode', MotTestStatusCode::FAILED);
         $query->setParameter('passStatusCode', MotTestStatusCode::PASSED);
         $query->setParameter('normalTestCode', MotTestTypeCode::NORMAL_TEST);
+        $query->setParameter('mysteryShopperTestCode', MotTestTypeCode::MYSTERY_SHOPPER);
 
         $group = $params[self::PARAM_GROUP];
         $query->setParameter('groupCode', $group);

@@ -3,6 +3,7 @@
 namespace PersonApi\Factory\Service;
 
 use Doctrine\ORM\EntityManager;
+use DvsaMotApi\Helper\MysteryShopperHelper;
 use PersonApi\Service\UserStatsService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -16,6 +17,8 @@ class UserStatsServiceFactory implements FactoryInterface
         $entityManager = $serviceLocator->get(EntityManager::class);
         /** @var MotTestRepository $motTestRepository */
         $motTestRepository = $entityManager->getRepository(\DvsaEntities\Entity\MotTest::class);
-        return new UserStatsService($entityManager, $motTestRepository);
+        /** @var MysteryShopperHelper $mysteryShopperHelper */
+        $mysteryShopperHelper = $serviceLocator->get(MysteryShopperHelper::class);
+        return new UserStatsService($entityManager, $motTestRepository, $mysteryShopperHelper);
     }
 }

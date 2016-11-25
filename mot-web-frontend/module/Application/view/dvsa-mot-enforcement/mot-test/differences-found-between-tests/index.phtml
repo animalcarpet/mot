@@ -1,3 +1,4 @@
+
 <?php
 
 use DvsaCommon\Enum\MotTestTypeCode;
@@ -49,7 +50,8 @@ $this->headTitle('Mot Test Results');
                     foreach ($this->compareResult as $inspectionManualReference => $rfrs) {
                         $divider = "dividerThick";
                         foreach ($rfrs as $rfr) {
-                            $rfr['tester'] = ($rfr['testType'] === MotTestTypeCode::NORMAL_TEST ? "Tester" : "Vehicle Examiner");
+                            $isTester = $rfr['testType'] === MotTestTypeCode::NORMAL_TEST || $rfr['testType'] === MotTestTypeCode::MYSTERY_SHOPPER;
+                            $rfr['tester'] = ($isTester ? "Tester" : "Vehicle Examiner");
                             $rfr['divider'] = $divider;
                             $rfr['description'] = $rfr['name'] . ' ' . $rfr['failureText'];
 

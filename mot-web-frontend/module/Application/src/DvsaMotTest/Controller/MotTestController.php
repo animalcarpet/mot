@@ -18,18 +18,21 @@ use DvsaCommon\Constants\DuplicateCertificateSearchType;
 use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Constants\Network;
 use DvsaCommon\Constants\OdometerReadingResultType;
+use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Common\MotTestTypeDto;
 use DvsaCommon\Dto\Common\ReasonForCancelDto;
 use DvsaCommon\Dto\Person\PersonDto;
 use DvsaCommon\Enum\MotTestStatusName;
+use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\HttpRestJson\Exception\NotFoundException;
 use DvsaCommon\HttpRestJson\Exception\OtpApplicationException;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException as HttpRestJsonValidationException;
 use DvsaCommon\Messages\InvalidTestStatus;
+use DvsaCommon\MysteryShopper\MysteryShopperExpiryDateGenerator;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\ReportUrlBuilder;
@@ -143,6 +146,12 @@ class MotTestController extends AbstractDvsaMotTestController
 
         if (!empty($readingNotices)) {
             $readingVO->setNotices($readingNotices['data']);
+        }
+
+        if ($this->isMysteryShopper($motTest)) {
+            $mysteryShopperExpiryDate = (new MysteryShopperExpiryDateGenerator())->getCertificateExpiryDate();
+            $mysteryShopperExpiryDate = DateTimeApiFormat::date($mysteryShopperExpiryDate);
+            $motTest->setExpiryDate($mysteryShopperExpiryDate);
         }
 
         return $this->createViewModel(
@@ -461,6 +470,15 @@ class MotTestController extends AbstractDvsaMotTestController
         /** @var MotTestTypeDto $testType */
         $testType = $motTest->getTestType();
         $isDemo = MotTestType::isDemo($testType->getCode());
+
+        if ($this->isMysteryShopper($motTest)) {
+            $mysteryShopperExpiryDate = (new MysteryShopperExpiryDateGenerator())->getCertificateExpiryDate();
+            $mysteryShopperExpiryDate = DateTimeApiFormat::date($mysteryShopperExpiryDate);
+            $motTest->setExpiryDate($mysteryShopperExpiryDate);
+            $pendingDetails = $motTest->getPendingDetails();
+            $pendingDetails['expiryDate'] = $mysteryShopperExpiryDate;
+            $motTest->setPendingDetails($pendingDetails);
+        }
 
         return (new ViewModel(
             [
@@ -1028,5 +1046,20 @@ class MotTestController extends AbstractDvsaMotTestController
             'testId'   => $motTestNumber,
             'testType' => $testTypeId,
         ]);
+    }
+
+    /**
+     * @param MotTestDto $data
+     *
+     * @return bool
+     */
+    private function isMysteryShopper(MotTestDto $data)
+    {
+        if (!$this->featureToggles->isEnabled(FeatureToggle::MYSTERY_SHOPPER)) {
+            return false;
+        };
+
+        return ($data->getTestType() !== null)
+        && ($data->getTestType()->getCode() === MotTestTypeCode::MYSTERY_SHOPPER);
     }
 }

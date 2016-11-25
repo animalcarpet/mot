@@ -2,145 +2,302 @@
 
 namespace DvsaElasticSearchTest\Service;
 
+use DateTime;
 use Doctrine\ORM\EntityManager;
-use DvsaCommon\Constants\OdometerReadingResultType;
+use Doctrine\ORM\EntityRepository;
+use DvsaAuthorisation\Service\AuthorisationServiceInterface;
+use DvsaCommon\Auth\PermissionInSystem;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Constants\SearchParamConst;
-use DvsaCommonApiTest\Service\AbstractServiceTestCase;
-use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaElasticSearch\Service\ElasticSearchService;
-use DvsaElasticSearchTest\EsHelperTest;
 use DvsaEntities\DqlBuilder\SearchParam\MotTestSearchParam;
-use DvsaEntities\DqlBuilder\SearchParam\VehicleTestingStationSearchParam;
+use DvsaEntities\Entity\MotTest;
+use DvsaEntities\Entity\MotTestType;
+use DvsaEntities\Entity\Organisation;
+use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\SiteRepository;
 use DvsaFeature\FeatureToggles;
-use Zend\Http\Request;
-use Zend\ServiceManager\ServiceManager;
-use PHPUnit_Framework_MockObject_MockObject as MockObj;
+use PHPUnit_Framework_TestCase;
+use DvsaEntities\Entity\Make;
+use DvsaEntities\Entity\Model;
+use DvsaCommon\Constants\OdometerReadingResultType;
+use DvsaCommon\Date\DateUtils;
+use DvsaCommon\Enum\MotTestStatusName;
+use DvsaEntities\Entity\Colour;
+use DvsaEntities\Entity\MotTestReasonForCancel;
+use DvsaEntities\Entity\MotTestStatus;
+use DvsaEntities\Entity\OdometerReading;
+use DvsaEntities\Entity\Person;
+use DvsaEntities\Entity\Site;
 
-/**
- * Class ElasticSearchServiceTest
- *
- * @package DvsaElasticSearchTest\Service
- */
-class ElasticSearchServiceTest extends AbstractServiceTestCase
+class ElasticSearchServiceTest extends PHPUnit_Framework_TestCase
 {
-    /** @var  ServiceManager */
-    protected $serviceManager;
+    const TEST_TYPE_NAME_NORMAL_TEST = 'Normal Test';
+    const TEST_TYPE_NAME_MYSTERY_SHOPPER = 'Mystery Shopper';
+    const TEST_TYPE_NAME_NON_MOT = 'Non-Mot Test';
 
-    protected $mockAuth;
-    /** @var  SiteRepository|MockObj */
-    protected $mockSiteRepository;
-    protected $mockEm;
-    /** @var FeatureToggles|MockObj $featureToggleMock */
-    protected $featureToggleMock;
-
-    /** @var  ElasticSearchService */
-    protected $esService;
-
-    /** @var  \DateTime */
-    protected $dateFrom;
-    /** @var  \DateTime */
-    protected $dateTo;
+    private $authorizationService;
+    private $siteRepository;
+    private $entityManager;
+    private $motTestRepository;
+    private $featureToggles;
 
     protected function setUp()
     {
-        $this->serviceManager = Bootstrap::getServiceManager();
-        $this->serviceManager->setAllowOverride(true);
+        $this->authorizationService = XMock::of(AuthorisationServiceInterface::class);
+        $this->siteRepository = XMock::of(SiteRepository::class);
+        $this->motTestRepository = XMock::of(MotTestRepository::class);
+        $this->featureToggles = XMock::of(FeatureToggles::class);
 
-        $this->mockEm = $this->getMock(EntityManager::class, ['getRepository'], [], '', false);
-        $this->mockSiteRepository = XMock::of(SiteRepository::class);
-        $this->featureToggleMock = XMock::of(FeatureToggles::class);
-
-        $this->mockAuth = $this->getMockAuthorizationService(true);
-
-        $this->esService = new ElasticSearchService($this->mockAuth, $this->mockSiteRepository, $this->featureToggleMock);
-
-        $this->dateFrom = new \DateTime('1970-01-01');
-        $this->dateTo = new \DateTime();
+        $this->entityManager = XMock::of(EntityManager::class);
+        $this->entityManager
+            ->expects($this->any())
+            ->method('getRepository')
+            ->with(MotTest::class)
+            ->willReturn($this->motTestRepository);
 
         parent::setUp();
     }
 
-
-    public function testCanRemoveAnyLockfileWithPassphrase()
+    public function testFindTestsWithViewMysteryShopperTestsAndViewNonMotTestsPermissions()
     {
-        // issues to be addressed:
-        //  -- using the configuration file
-        //  -- supplying a mocked configuration file
-        $this->assertTrue(true);
-    }
-
-    protected function getEsQuerySiteReturn()
-    {
-        $result = EsHelperTest::getDefaultResult();
-        $result['hits']['hits'][] = [
-            '_index'  => 'development_site',
-            '_type'   => 'site',
-            '_id'     => '14',
-            '_score'  => null,
-            '_source' => [
-                'siteNumber'   => 'S000001',
-                'name'         => 'Mike and John VTS',
-                'addressLine1' => '67 Main Road',
-                'addressLine2' => null,
-                'addressLine3' => null,
-                'addressLine4' => null,
-                'town'         => 'Bristol',
-                'postcode'     => 'BS8 2NT',
-                'telephone'    => null,
-                'classes'      => [],
-                'type'         => 'AREA OFFICE',
-                'status'       => 'APPLIED',
-            ]
+        $motTestNumber = 999999999014;
+        $motTestsResult = [
+            $this->buildMotTestResultItem($motTestNumber, self::TEST_TYPE_NAME_NORMAL_TEST),
+            $this->buildMotTestResultItem($motTestNumber, self::TEST_TYPE_NAME_MYSTERY_SHOPPER),
+            $this->buildMotTestResultItem($motTestNumber, self::TEST_TYPE_NAME_NON_MOT),
         ];
-        return $result;
+
+        $this->motTestRepository
+            ->expects($this->once())
+            ->method('getMotTestSearchResult')
+            ->willReturn($motTestsResult);
+
+        $this->authorizationService
+            ->expects($this->at(1))
+            ->method('isGranted')
+            ->with(PermissionInSystem::VIEW_MYSTERY_SHOPPER_TESTS)
+            ->willReturn(true);
+
+        $this->authorizationService
+            ->expects($this->at(2))
+            ->method('isGranted')
+            ->with(PermissionInSystem::VIEW_NON_MOT_TESTS)
+            ->willReturn(true);
+
+        $this->featureToggles
+            ->expects($this->any())
+            ->method('isEnabled')
+            ->with(FeatureToggle::MYSTERY_SHOPPER)
+            ->willReturn(true);
+
+        $resultDto = $this->buildService()->findTests($this->buildSearchParams());
+
+        $this->assertEquals(3, $resultDto->getResultCount());
     }
 
-    protected function getEsQueryTestsReturn()
+    public function testFindTestsLog()
     {
-        $result = EsHelperTest::getDefaultResult();
-        $result['hits']['hits'][] = [
-            '_index'  => 'development_mot',
-            '_type'   => 'motTest',
-            '_id'     => '31',
-            '_score'  => null,
-            '_source' => [
-                'motTestNumber'       => 31,
-                'status'              => 'PASSED',
-                'number'              => '1234567890031',
-                'primaryColour'       => 'Red',
-                'hasRegistration'     => true,
-                'odometerType'        => OdometerReadingResultType::OK,
-                'odometerValue'       => 1234,
-                'odometerUnit'        => 'mi',
-                'vin'                 => '4S4BP67CX454878787',
-                'registration'        => 'H66T4',
-                'make'                => 'BMW',
-                'model'               => 'Mini',
-                'testType'            => 'Re-Test',
-                'siteNumber'          => 'V1234',
-                'startedDate'         => '2014-09-02 10:00:00',
-                'completedDate'       => '2014-09-02 11:00:00',
-                'testDate'            => '2014-09-02T11:00:00Z',
-                'testerId'            => 5,
-                'testerUsername'      => 'tester1',
-                'reasonsForRejection' => [],
-            ]
+        $motTestNumber = 999999999014;
+        $motTestLogsResult = [
+            $this->buildMotTestLogResultItem(
+                [
+                    'testTypeName' => self::TEST_TYPE_NAME_NORMAL_TEST,
+                    'number' => $motTestNumber
+                ]
+            )
         ];
-        return $result;
+
+        $this->motTestRepository
+            ->expects($this->any())
+            ->method('getMotTestLogsResult')
+            ->willReturn($motTestLogsResult);
+
+        $resultDto = $this->buildService()->findTestsLog($this->buildSearchParams());
+
+        $this->assertEquals(1, $resultDto->getResultCount());
+        $this->assertEquals(self::TEST_TYPE_NAME_NORMAL_TEST, $resultDto->getData()[$motTestNumber]['testType']);
     }
 
-    protected function getSearchParamsTest()
+    public function testFindSiteTestsLog()
     {
-        $searchParams = new MotTestSearchParam($this->mockEm);
+        $motTestNumber = 999999999014;
+        $motTestLogsResult = [
+            $this->buildMotTestLogResultItem(
+                [
+                    'testTypeName' => self::TEST_TYPE_NAME_NORMAL_TEST,
+                    'number' => $motTestNumber
+                ]
+            )
+        ];
+
+        $this->motTestRepository
+            ->expects($this->any())
+            ->method('getMotTestLogsResult')
+            ->willReturn($motTestLogsResult);
+
+        $organisation = new Organisation();
+        $organisation->setId(1);
+        $organisation->setName('Organisation 1');
+
+        $site = new Site();
+        $site->setid(1);
+        $site->setName("Site 1");
+        $site->setOrganisation($organisation);
+
+        $this->siteRepository
+            ->expects($this->any())
+            ->method('get')
+            ->with(1)
+            ->willReturn($site);
+
+        $resultDto = $this->buildService()->findSiteTestsLog($this->buildSearchParams());
+
+        $this->assertEquals(1, $resultDto->getResultCount());
+        $this->assertEquals(self::TEST_TYPE_NAME_NORMAL_TEST, $resultDto->getData()[$motTestNumber]['testType']);
+    }
+
+    public function testMysteryShopperTestDisguisedInTesterTestsLogWithoutViewMysteryShopperPermission()
+    {
+        $motTestNumber = 999999999014;
+        $motTestLogsResult = [
+            $this->buildMotTestLogResultItem(
+                [
+                    'testTypeName' => self::TEST_TYPE_NAME_MYSTERY_SHOPPER,
+                    'number' => $motTestNumber
+                ]
+            )
+        ];
+
+        $this->motTestRepository
+            ->expects($this->any())
+            ->method('getMotTestLogsResult')
+            ->willReturn($motTestLogsResult);
+
+        $this->authorizationService
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with(PermissionInSystem::VIEW_MYSTERY_SHOPPER_TESTS)
+            ->willReturn(false);
+
+        $resultDto = $this->buildService()->findTesterTestsLog($this->buildSearchParams());
+
+        $this->assertEquals(1, $resultDto->getResultCount());
+        $this->assertEquals(self::TEST_TYPE_NAME_NORMAL_TEST, $resultDto->getData()[$motTestNumber]['testType']);
+    }
+
+    public function testMysteryShopperTestNotDisguisedInTesterTestsLogWithoutViewMysteryShopperPermission()
+    {
+        $motTestNumber = 999999999014;
+        $motTestLogsResult = [
+            $this->buildMotTestLogResultItem(
+                [
+                    'testTypeName' => self::TEST_TYPE_NAME_MYSTERY_SHOPPER,
+                    'number' => $motTestNumber
+                ]
+            )
+        ];
+
+        $this->motTestRepository
+            ->expects($this->any())
+            ->method('getMotTestLogsResult')
+            ->willReturn($motTestLogsResult);
+
+        $this->authorizationService
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with(PermissionInSystem::VIEW_MYSTERY_SHOPPER_TESTS)
+            ->willReturn(true);
+
+        $resultDto = $this->buildService()->findTesterTestsLog($this->buildSearchParams());
+
+        $this->assertEquals(1, $resultDto->getResultCount());
+        $this->assertEquals(self::TEST_TYPE_NAME_MYSTERY_SHOPPER, $resultDto->getData()[$motTestNumber]['testType']);
+    }
+
+    private function buildMotTestResultItem($motTestNumber, $blah)
+    {
+        $status = XMock::of(MotTestStatus::class);
+        $status
+            ->expects($this->any())
+            ->method("getName")
+            ->willReturn(MotTestStatusName::ABORTED);
+
+        $motTest = new MotTest();
+        $motTest
+            ->setId(1)
+            ->setNumber($motTestNumber)
+            ->setStatus($status)
+            ->setPrimaryColour((new Colour())->setName('Black'))
+            ->setHasRegistration(1)
+            ->setOdometerReading(
+                (new OdometerReading())
+                    ->setResultType(OdometerReadingResultType::OK)
+                    ->setValue(10000)
+                    ->setUnit('mi')
+            )
+            ->setVin('1M8GDM9AXKP042788')
+            ->setRegistration('FNZ6110')
+            ->setMake((new Make())->setName('Renault'))
+            ->setModel((new Model())->setName('Clio'))
+            ->setMotTestType((new MotTestType())->setDescription($blah))
+            ->setVehicleTestingStation(
+                (new Site())
+                    ->setId(9999)
+                    ->setSiteNumber('V1234')
+            )
+            ->setTester((new Person())->setUsername('tester1'))
+            ->setStartedDate(DateUtils::toDateTime('2011-01-01T11:11:11Z'))
+            ->setMotTestReasonForCancel((new MotTestReasonForCancel())->setReason([]))
+        ;
+
+        return $motTest;
+    }
+
+    private function buildMotTestLogResultItem(array $override = [])
+    {
+        $defaults = [
+            'testDate' => '2016-11-07 11:39:25.000000',
+            'testDuration' => '48',
+            'number' => '100000000000',
+            'client_ip' => '0.0.0.0',
+            'status' => 'PASSED',
+            'registration' => 'FNZ6110',
+            'vin' => '1M8GDM9AXKP042788',
+            'make_code' => '188A9',
+            'makeName' => 'RENAULT',
+            'modelName' => 'CLIO',
+            'vehicle_class' => '4',
+            'siteNumber' => 'V1234',
+            'userName' => 'tester1',
+            'testTypeName' => self::TEST_TYPE_NAME_NORMAL_TEST,
+            'emLogId' => null
+        ];
+
+        return array_merge($defaults, $override);
+    }
+
+    private function buildSearchParams()
+    {
+        $searchParams = new MotTestSearchParam($this->entityManager);
         $searchParams
+            ->setSiteId(1)
             ->setSiteNumber('V1234')
-            ->setDateFrom($this->dateFrom)
-            ->setDateTo($this->dateTo)
-            ->setFormat(SearchParamConst::FORMAT_DATA_TABLES);
+            ->setDateFrom(new DateTime('1970-01-01'))
+            ->setDateTo(new DateTime())
+            ->setFormat(SearchParamConst::FORMAT_DATA_TABLES)
+            ->setIsApiGetData(true);
 
         return $searchParams;
     }
 
+    private function buildService()
+    {
+        return new ElasticSearchService(
+            $this->authorizationService,
+            $this->siteRepository,
+            $this->featureToggles
+        );
+    }
 }

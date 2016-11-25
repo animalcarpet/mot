@@ -26,6 +26,7 @@ $showCreateButton = isset($showCreateButton) ? $showCreateButton : false;
 $results = isset($results) ? $results : null;
 $tooManyMatches = isset($tooManyMatches) ? $tooManyMatches : null;
 $registrationNumberMaxLength = isset($registrationNumberMaxLength) ? $registrationNumberMaxLength : 10;
+$hideIncognitoVehicles = isset($hideIncognitoVehicles) ? $hideIncognitoVehicles : true;
 
 $form = $this->form;
 $action = (!empty($action)? $action : '');
@@ -51,6 +52,7 @@ echo $this->partial(
         'tooManyMatches'                => $tooManyMatches,
         'registrationNumberMaxLength'   => $registrationNumberMaxLength,
         'urlTemplate'                   => $urlTemplate,
-        'searchResultMessage'          => $searchResultMessage,
+        'searchResultMessage'           => $searchResultMessage,
+        'hideIncognitoVehicles'         => $hideIncognitoVehicles
     ]
 );

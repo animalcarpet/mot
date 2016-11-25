@@ -16,6 +16,7 @@ class StartTestConfirmationViewModelTest extends \PHPUnit_Framework_TestCase
     const DUMMY_SEARCH_VIN = '123445656643534';
     const DUMMY_CAN_REFUSE_TO_TEST = false;
     const DUMMY_IS_MOT_CONTINGENCY = true;
+    const DUMMY_IS_MYSTERY_SHOPPER = true;
 
     public function testSetParametersWillReturnExpectedValues()
     {
@@ -37,6 +38,7 @@ class StartTestConfirmationViewModelTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($viewModel->isNormalTest());
         $this->assertTrue($viewModel->isInProgressTestExists());
         $this->assertTrue($viewModel->isMotContingency());
+        $this->assertTrue($viewModel->isMysteryShopper());
     }
 
     public function testStartTestActionReturnsStartTestConfirmationActionUrl()
@@ -108,6 +110,7 @@ class StartTestConfirmationViewModelTest extends \PHPUnit_Framework_TestCase
         $viewModel->setEligibilityNotices([ 'test' => 'test' ]);
         $viewModel->setEligibleForRetest(true);
         $viewModel->setMotContingency(self::DUMMY_IS_MOT_CONTINGENCY);
+        $viewModel->setIsMysteryShopper(self::DUMMY_IS_MYSTERY_SHOPPER);
 
         return $viewModel;
     }

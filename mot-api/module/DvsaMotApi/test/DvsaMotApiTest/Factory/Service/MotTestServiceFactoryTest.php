@@ -9,6 +9,7 @@ use DvsaCommonTest\TestUtils\TestCaseTrait;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Repository\ConfigurationRepository;
 use DvsaMotApi\Factory\Service\MotTestServiceFactory;
+use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Service\CreateMotTestService;
 use DvsaMotApi\Service\Mapper\MotTestMapper;
 use DvsaMotApi\Service\MotTestService;
@@ -33,6 +34,7 @@ class MotTestServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $this->mockMethod($mockServiceLocator, 'get', $this->at(4), XMock::of(MotTestMapper::class));
         $this->mockMethod($mockServiceLocator, 'get', $this->at(5), XMock::of(ReadMotTestAssertion::class));
         $this->mockMethod($mockServiceLocator, 'get', $this->at(6), XMock::of(CreateMotTestService::class));
+        $this->mockMethod($mockServiceLocator, 'get', $this->at(7), XMock::of(MysteryShopperHelper::class));
 
         $this->assertInstanceOf(
             MotTestService::class,

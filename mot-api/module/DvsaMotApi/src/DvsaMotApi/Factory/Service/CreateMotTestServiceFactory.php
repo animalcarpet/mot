@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use DvsaAuthentication\Service\OtpService;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\Person;
+use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Service\Validator\RetestEligibility\RetestEligibilityValidator;
 use VehicleApi\Service\VehicleService;
 use Zend\ServiceManager\FactoryInterface;
@@ -34,7 +35,8 @@ class CreateMotTestServiceFactory implements FactoryInterface
             $serviceLocator->get(MotIdentityProviderInterface::class),
             $serviceLocator->get(NewVehicleService::class),
             $entityManager->getRepository(Person::class),
-            $entityManager->getRepository(MotTest::class)
+            $entityManager->getRepository(MotTest::class),
+            $serviceLocator->get(MysteryShopperHelper::class)
         );
     }
 }

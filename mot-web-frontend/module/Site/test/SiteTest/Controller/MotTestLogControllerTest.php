@@ -26,6 +26,7 @@ use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\TestCasePermissionTrait;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaFeature\FeatureToggles;
 use Site\ViewModel\MotTestLog\MotTestLogFormViewModel;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use Zend\Http\Response;
@@ -40,30 +41,23 @@ class MotTestLogControllerTest extends AbstractFrontendControllerTestCase
 
     const VTS_ID = 1;
 
-    /**
-     * @var DtoHydrator
-     */
+    /** @var DtoHydrator $dtoHydrator */
     private $dtoHydrator;
 
-    /**
-     * @var MotFrontendAuthorisationServiceInterface|MockObj
-     */
+    /** @var MotFrontendAuthorisationServiceInterface|MockObj $mockAuthSrv */
     private $mockAuthSrv;
 
-    /**
-     * @var MapperFactory|MockObj
-     */
+    /** @var MapperFactory|MockObj $mockMapperFactory */
     private $mockMapperFactory;
 
-    /**
-     * @var MotTestLogMapper|MockObj
-     */
+    /** @var MotTestLogMapper|MockObj $mockMotTestLogMapper */
     private $mockMotTestLogMapper;
 
-    /**
-     * @var SiteMapper|MockObj
-     */
+    /** @var SiteMapper|MockObj $mockSiteMapper */
     private $mockSiteMapper;
+
+    /** @var FeatureToggles|MockObj $mockFeatureToggles */
+    private $mockFeatureToggles;
 
     public function setUp()
     {
@@ -73,13 +67,15 @@ class MotTestLogControllerTest extends AbstractFrontendControllerTestCase
         $serviceManager->setAllowOverride(true);
         $this->setServiceManager($serviceManager);
 
-        $this->mockMapperFactory = $this->getMapperFactory();
         $this->mockAuthSrv = XMock::of(MotFrontendAuthorisationServiceInterface::class);
+        $this->mockMapperFactory = $this->getMapperFactory();
+        $this->mockFeatureToggles = XMock::of(FeatureToggles::class);
 
         $this->setController(
             new MotTestLogController(
                 $this->mockAuthSrv,
-                $this->mockMapperFactory
+                $this->mockMapperFactory,
+                $this->mockFeatureToggles
             )
         );
         $this->getController()->setServiceLocator($serviceManager);

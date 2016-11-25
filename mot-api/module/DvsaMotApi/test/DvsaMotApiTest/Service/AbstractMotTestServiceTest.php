@@ -30,6 +30,7 @@ use DvsaEntities\Repository\ConfigurationRepository;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\MotTestTypeRepository;
 use DvsaEntities\Repository\PersonRepository;
+use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Service\CertificateCreationService;
 use DvsaMotApi\Service\CreateMotTestService;
 use DvsaMotApi\Service\Mapper\MotTestMapper;
@@ -107,6 +108,9 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
     /** @var NewVehicleService */
     protected $mockNewVehicleService;
 
+    /** @var  MysteryShopperHelper|MockObj */
+    protected $mockMysteryShopperHelper;
+
     public function setUp()
     {
         unset(
@@ -124,7 +128,8 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
             $this->mockVehicleService,
             $this->mockMotTestTypeRepository,
             $this->mockCreateMotTestService,
-            $this->mockNewVehicleService
+            $this->mockNewVehicleService,
+            $this->mockMysteryShopperHelper
         );
 
         parent::setUp();
@@ -216,6 +221,8 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
         $this->mockCreateMotTestService = XMock::of(CreateMotTestService::class);
 
         $this->mockNewVehicleService = XMock::of(NewVehicleService::class);
+        $this->mockMysteryShopperHelper = XMock::of(MysteryShopperHelper::class);
+
         return [
             'mockMotTestRepository' => $this->mockMotTestRepository,
             'mockMotTestValidator' => $this->mockMotTestValidator,
@@ -233,7 +240,8 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
             'mockMotTestTypeRepository' => $this->mockMotTestTypeRepository,
             'mockReadMotTestAssertion' => $this->mockReadMotTestAssertion,
             'mockCreateMotTestService' => $this->mockCreateMotTestService,
-            'mockNewVehicleService' => $this->mockNewVehicleService
+            'mockNewVehicleService' => $this->mockNewVehicleService,
+            'mockMysteryShopperHelper' => $this->mockMysteryShopperHelper
         ];
     }
 
@@ -252,7 +260,8 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
             $this->mockMotTestMapper,
             $this->mockReadMotTestAssertion,
             $this->mockCreateMotTestService,
-            $this->mockMotTestRepository
+            $this->mockMotTestRepository,
+            $this->mockMysteryShopperHelper
         );
 
         $this->mockClassField($motTestService, 'dateTimeHolder', $this->dateTimeHolder);

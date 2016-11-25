@@ -1,7 +1,9 @@
 <?php
 namespace DvsaMotTestTest\View\VehicleSearchResult;
 
+use DvsaApplicationLogger\Log\Logger;
 use DvsaCommon\Obfuscate\ParamObfuscator;
+use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTest\Constants\VehicleSearchSource;
 use DvsaMotTest\Model\VehicleSearchResult;
@@ -21,12 +23,23 @@ class TrainingTestUrlTemplateTest extends \PHPUnit_Framework_TestCase
     /** @var bool */
     private $noRegistration;
 
+    /** @var Logger */
+    private $logger;
+
     public function setUp()
     {
         $urlHelper = new Url();
         $this->noRegistration = 0;
 
         $this->trainingTestUrlTemplate = new TrainingTestUrlTemplate($this->noRegistration, $urlHelper);
+
+        $serviceManager = Bootstrap::getServiceManager();
+        $serviceManager->setAllowOverride(true);
+        $this->logger = $this
+            ->getMockBuilder(Logger::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $serviceManager->setService('Application\Logger', $this->logger);
     }
 
     public function testPassingNoVehicleArrayToGetUrlReturnsException()
@@ -91,7 +104,7 @@ class TrainingTestUrlTemplateTest extends \PHPUnit_Framework_TestCase
         $paramObfuscator = XMock::of(ParamObfuscator::class);
         $vehicleSearchSource = XMock::of(VehicleSearchSource::class);
 
-        $vehicle = new VehicleSearchResult($paramObfuscator, $vehicleSearchSource);
+        $vehicle = new VehicleSearchResult($paramObfuscator, $vehicleSearchSource, $this->logger);
 
         return $this->trainingTestUrlTemplate->getStartMotTestUrl($vehicle, $searchParams);
     }

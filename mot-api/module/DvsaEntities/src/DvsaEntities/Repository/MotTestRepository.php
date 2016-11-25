@@ -7,6 +7,7 @@
 
 namespace DvsaEntities\Repository;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query;
@@ -41,6 +42,7 @@ class MotTestRepository extends AbstractMutableRepository
         'TT_PARTIAL_RETEST_LEFT' => MotTestTypeCode::PARTIAL_RETEST_LEFT_VTS,
         'TT_PARTIAL_RETEST_REPAIRED' => MotTestTypeCode::PARTIAL_RETEST_REPAIRED_AT_VTS,
         'TT_RETEST' => MotTestTypeCode::RE_TEST,
+        'TT_MYSTERY_SHOPPER' => MotTestTypeCode::MYSTERY_SHOPPER,
     ];
 
     public static $testLogTestStatuses = [
@@ -107,13 +109,14 @@ class MotTestRepository extends AbstractMutableRepository
     }
 
     /**
-     * @param int       $vehicleId
-     * @param \DateTime $from
-     * @param $contingencyDto
+     * @param $vehicleId
+     * @param DateTime $from
+     * @param null $contingencyDto
+     * @param bool $isMysteryShopper
      *
      * @return int
      */
-    public function countNotCancelledTests($vehicleId, \DateTime $from, $contingencyDto = null)
+    public function countNotCancelledTests($vehicleId, DateTime $from, $contingencyDto = null)
     {
         $qb = $this
             ->createQueryBuilder('mt')
@@ -504,8 +507,8 @@ class MotTestRepository extends AbstractMutableRepository
     /**
      * Returns a list of tests for a given vehicle as of a specified date.
      *
-     * @param $vehicleId
-     * @param $startDate
+     * @param int $vehicleId
+     * @param DateTime|null $startDate
      *
      * @return MotTest[]
      */
@@ -538,6 +541,59 @@ class MotTestRepository extends AbstractMutableRepository
             $qb
                 ->andWhere('mt.issuedDate >= :startDate OR mt.issuedDate IS NULL')
                 ->setParameter('startDate', $startDate);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Returns a list of Mystery Shopper test type mot tests for a given vehicle as of a specified date and vts.
+     *
+     * @param int $vehicleId
+     * @param DateTime $startDate      (optional)
+     * @param int $limit               (optional)
+     * @param int $siteId              (optional)
+     *
+     * @return MotTest[]
+     */
+    public function findHistoricalMysteryShopperTestsForVehicle($vehicleId, DateTime $startDate = null, $limit = null, $siteId = null)
+    {
+        $statuses = [
+            MotTestStatusName::PASSED,
+            MotTestStatusName::FAILED,
+            MotTestStatusName::ABANDONED,
+        ];
+
+        $testTypes = [MotTestTypeCode::MYSTERY_SHOPPER];
+
+        $qb = $this
+            ->createQueryBuilder('mt')
+            ->innerJoin('mt.motTestType', 't')
+            ->innerJoin('mt.status', 'ts')
+            ->where('ts.name IN (:statuses)')
+            ->andWhere('t.code IN (:testTypes)')
+            ->andWhere('mt.vehicle = :vehicleId')
+            ->orderBy('mt.issuedDate', 'DESC')
+            ->addOrderBy('mt.completedDate', 'DESC')
+            ->addOrderBy('mt.vehicleTestingStation', 'ASC')
+            ->setParameter('statuses', $statuses)
+            ->setParameter('testTypes', $testTypes)
+            ->setParameter('vehicleId', $vehicleId);
+
+        if ($startDate !== null) {
+            $qb
+                ->andWhere('mt.issuedDate >= :startDate OR mt.issuedDate IS NULL')
+                ->setParameter('startDate', $startDate);
+        }
+
+        if ($limit !== null) {
+            $qb->setMaxResults($limit);
+        }
+
+        if ($siteId !== null) {
+            $qb
+                ->andWhere('mt.vehicleTestingStation = :vtsId')
+                ->setParameter('vtsId', $siteId);
         }
 
         return $qb->getQuery()->getResult();
@@ -751,13 +807,14 @@ class MotTestRepository extends AbstractMutableRepository
     /**
      * Get the odometer history for a given vehicle id.
      *
-     * @param int       $vehicleId
-     * @param \DateTime $dateTo
-     * @param int       $limit     (default = 4)
+     * @param int                      $vehicleId
+     * @param DateTime                 $dateTo
+     * @param array [MotTestTypeCode]  $optionalMotTestTypeCodes (default = null)
+     * @param int                      $limit (default = 4)
      *
      * @return array
      */
-    public function getOdometerHistoryForVehicleId($vehicleId, \DateTime $dateTo = null, $limit = 4)
+    public function getOdometerHistoryForVehicleId($vehicleId, DateTime $dateTo = null, array $optionalMotTestTypeCodes = null, $limit = 4)
     {
         $qb = $this->_em->createQueryBuilder();
 
@@ -767,6 +824,10 @@ class MotTestRepository extends AbstractMutableRepository
             MotTestTypeCode::INVERTED_APPEAL,
             MotTestTypeCode::STATUTORY_APPEAL,
         ];
+
+        if (!empty($optionalMotTestTypeCodes)) {
+            $codes = array_merge($codes, $optionalMotTestTypeCodes);
+        }
 
         $qb->select('t.issuedDate, o.value, o.unit, ts.name as status, o.resultType as resultType, DATE(t.issuedDate) as dtIssuedDate')
             ->from($this->getEntityName(), 't')

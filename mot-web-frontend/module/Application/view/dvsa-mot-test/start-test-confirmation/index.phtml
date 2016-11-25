@@ -2,6 +2,7 @@
 use Application\Helper\PrgHelper;
 use Dashboard\Controller\UserHomeController;
 use DvsaCommon\Date\DateTimeDisplayFormat;
+use DvsaCommon\MysteryShopper\MysteryShopperExpiryDateGenerator;
 use DvsaMotTest\Controller\RefuseToTestController;
 use DvsaMotTest\Controller\VehicleSearchController;
 use DvsaMotTest\ViewModel\StartTestConfirmationViewModel;
@@ -58,6 +59,12 @@ if (!empty($checkExpiryResults)) {
         if ($viewModel->isNormalTest()) {
             $earliestTestDateForPostdatingExpiryDate = $checkExpiryResults['earliestTestDateForPostdatingExpiryDate'];
             $isEarlierThanTestDateLimit = $checkExpiryResults['isEarlierThanTestDateLimit'];
+        }
+
+        if ($viewModel->isMysteryShopper()) {
+            $mysteryShopperExpiryDate = (new MysteryShopperExpiryDateGenerator)->getPreviousMotExpiryDate();
+            $expiryDate = $mysteryShopperExpiryDate->format('Y-m-d');
+            $isEarlierThanTestDateLimit = false;
         }
     }
 }

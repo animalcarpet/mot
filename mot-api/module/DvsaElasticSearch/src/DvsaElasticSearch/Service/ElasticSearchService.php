@@ -29,7 +29,7 @@ use Zend\Http\Request;
 /**
  * Class ElasticSearchService
  *
- * This class is responsible for handling all Elasatic Search based "super search" queries
+ * This class is responsible for handling all Elastic Search based "super search" queries
  * from the main API.
  *
  * Currently it supports:
@@ -96,11 +96,12 @@ class ElasticSearchService
 
         /** @var SearchResultDto $result */
         $result = SuperSearchQuery::execute($params, new FbQueryMotTest(), $optionalMotTestTypes);
-
         if ($result->getResultCount() == 0 && $this->checkIfParamsNeedStripping($params)) {
             $result = SuperSearchQuery::execute($this->stripParams($params), new FbQueryMotTest(), $optionalMotTestTypes);
         }
-        
+
+        $result = $this->disguiseMysteryShopperTestsAsNormal($result);
+
         return $result;
     }
 
@@ -118,8 +119,10 @@ class ElasticSearchService
         $this->authService->assertGrantedAtOrganisation(
             PermissionAtOrganisation::MOT_TEST_LIST_AT_AE, $params->getOrganisationId()
         );
+        $result = SuperSearchQuery::execute($params, new FbQueryMotTestLog());
+        $result = $this->disguiseMysteryShopperTestsAsNormal($result);
 
-        return SuperSearchQuery::execute($params, new FbQueryMotTestLog());
+        return $result;
     }
 
     /**
@@ -142,7 +145,10 @@ class ElasticSearchService
 
         if(is_object($organisation)) {
             $params->setOrganisationId($organisation->getId());
-            return SuperSearchQuery::execute($params, new FbQueryMotTestLog());
+            $result = SuperSearchQuery::execute($params, new FbQueryMotTestLog());
+            $result = $this->disguiseMysteryShopperTestsAsNormal($result);
+
+            return $result;
         } else {
             $resultDto = new SearchResultDto();
             $resultDto
@@ -164,7 +170,10 @@ class ElasticSearchService
      */
     public function findTesterTestsLog(MotTestSearchParam $params)
     {
-        return SuperSearchQuery::execute($params, new FbQueryMotTestLog());
+        $result = SuperSearchQuery::execute($params, new FbQueryMotTestLog());
+        $result = $this->disguiseMysteryShopperTestsAsNormal($result);
+
+        return $result;
     }
 
     /**
@@ -210,5 +219,29 @@ class ElasticSearchService
         if($params->getRegistration() != NULL && strpos($params->getRegistration(), " ") !== FALSE) {
             return true;
         }
+    }
+
+    /**
+     * @param SearchResultDto $result
+     * @return SearchResultDto
+     */
+    private function disguiseMysteryShopperTestsAsNormal(SearchResultDto $result)
+    {
+        /* If logged in user doesn't have permission to view tests of type mystery shopper, then display
+           mystery shopper tests in search results as "Normal test" rather than "Mystery Shopper" */
+        if (!$this->authService->isGranted(PermissionInSystem::VIEW_MYSTERY_SHOPPER_TESTS)) {
+            $resultData = $result->getData();
+            array_walk(
+                $resultData,
+                function (&$item) {
+                    if ($item['testType'] == self::MYSTERY_SHOPPER_TEST_TYPE) {
+                        $item['testType'] = self::NORMAL_TEST_TEST_TYPE;
+                    }
+                }
+            );
+            $result->setData($resultData);
+        }
+
+        return $result;
     }
 }

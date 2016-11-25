@@ -2,6 +2,7 @@
 
 namespace DvsaMotApiTest\Service;
 
+use DateTime;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Constants\OdometerUnit;
@@ -614,13 +615,59 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
 
         $motTestMock = $this->getMock(MotTest::class);
         $this->mockMethod($motTestMock, 'getVehicleTestingStation', $this->once(), $vehicleTestStation);
-        $this->mockMethod($motTestMock, 'getVehicle', $this->once(), $vehicle);
+        $this->mockMethod($motTestMock, 'getVehicle', $this->atLeastOnce(), $vehicle);
+        $this->mockMethod($this->mockMysteryShopperHelper, 'isMysteryShopperToggleEnabled', $this->atLeastOnce(), false);
 
         $this->mockMethod(
             $this->mockMotTestRepository, 'getMotTestByNumber', $this->once(), $motTestMock, self::MOT_TEST_NUMBER
         );
         $this->mockMethod(
             $this->mockMotTestRepository, 'getOdometerHistoryForVehicleId', $this->once(), $readings, $vehicleId
+        );
+
+        $motTestService = $this->constructMotTestServiceWithMocks($mocks);
+
+        $result = $motTestService->getAdditionalSnapshotData(self::MOT_TEST_NUMBER);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * Test Get Additional Snapshot Data (Without test station)
+     */
+    public function testGetAdditionalSnapshotDataForMysteryShopperVehicle()
+    {
+        $mocks = $this->getMocksForMotTestService();
+        $vehicleTestStation = null;
+        $vehicleId = 1;
+        $vehicle = (new Vehicle())->setId($vehicleId);
+
+        $vehicleOdometerHistory = [
+            [
+                'issuedDate' => '2014-01-01',
+                'value' => '10000',
+                'unit' => 'mi',
+                'resultType' => 'OK'
+            ]
+        ];
+
+        $expected = [
+            'OdometerReadings' => (new OdometerReadingMapper())->manyToDtoFromArray($vehicleOdometerHistory),
+        ];
+
+        $motTestMock = $this->getMock(MotTest::class);
+        $motTestTypeMock = $this->getMock(MotTestType::class);
+        $this->mockMethod($motTestMock, 'getVehicleTestingStation', $this->once(), $vehicleTestStation);
+        $this->mockMethod($motTestMock, 'getVehicle', $this->atLeastOnce(), $vehicle);
+        $this->mockMethod($motTestMock, 'getMotTestType', $this->atLeastOnce(), $motTestTypeMock);
+        $this->mockMethod($motTestTypeMock, 'getCode', $this->atLeastOnce(), MotTestTypeCode::MYSTERY_SHOPPER);
+        $this->mockMethod($this->mockMysteryShopperHelper, 'isMysteryShopperToggleEnabled', $this->atLeastOnce(), true);
+
+        $this->mockMethod(
+            $this->mockMotTestRepository, 'getMotTestByNumber', $this->once(), $motTestMock, self::MOT_TEST_NUMBER
+        );
+        $this->mockMethod(
+            $this->mockMotTestRepository, 'getOdometerHistoryForVehicleId', $this->once(), $vehicleOdometerHistory, $vehicleId
         );
 
         $motTestService = $this->constructMotTestServiceWithMocks($mocks);

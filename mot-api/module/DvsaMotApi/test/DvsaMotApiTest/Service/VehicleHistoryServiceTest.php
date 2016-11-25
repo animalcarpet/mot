@@ -3,6 +3,7 @@
 namespace DvsaMotApiTest\Service;
 
 use DvsaCommon\Auth\PermissionAtSite;
+use DateTime;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Dto\Vehicle\History\VehicleHistoryItemDto;
@@ -24,9 +25,9 @@ use DvsaEntities\Entity\VehicleClass;
 use DvsaEntities\Repository\ConfigurationRepository;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\PersonRepository;
+use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Service\MotTestService;
 use DvsaMotApi\Service\VehicleHistoryService;
-use PHPUnit_Framework_MockObject_MockObject;
 
 /**
  * Unit test for MotTestService.
@@ -137,6 +138,40 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
         $this->assertEquals($expectedCount, $count, "Number of editable Mot tests is incorrect");
     }
 
+    public function testFindHistoricalTestsForVehicleIncludesMysteryShopperTestsInReturnedHistoryWithToggleOn()
+    {
+        $listOfNormalMotTests = $this->createListOfMotTests(MotTestTypeCode::MYSTERY_SHOPPER);
+        $listOfMysteryShopperMotTests = $this->createListOfMotTests(MotTestTypeCode::MYSTERY_SHOPPER);
+        $this->mockIsGranted($this->mockAuthService, [PermissionInSystem::CERTIFICATE_REPLACEMENT]);
+        $this->mockMethod($this->mockMysteryShopperHelper, 'isMysteryShopperToggleEnabled', null, true);
+        $this->mockMethod($this->mockMysteryShopperHelper, 'hasPermissionToMaskAndUnmaskVehicles', null, true);
+        $this->mockMethod($this->mockMotTestRepository, 'findHistoricalTestsForVehicle', null, $listOfNormalMotTests);
+        $this->mockMethod($this->mockMotTestRepository, 'findHistoricalMysteryShopperTestsForVehicle', null, $listOfMysteryShopperMotTests);
+
+        $service           = $this->constructVehicleHistoryServiceWithMocks();
+        $vehicleHistoryDto = $service->findHistoricalTestsForVehicleSince(self::VEHICLE_ID, new DateTime());
+
+        $countOfMotTests = $vehicleHistoryDto->getIterator()->count();
+        $this->assertEquals(4, $countOfMotTests, "Number of vehicle history Mot tests is incorrect");
+    }
+
+    public function testFindHistoricalTestsForVehicleExcludesMysteryShopperTestsInReturnedHistoryWithToggleOff()
+    {
+        $listOfNormalMotTests = $this->createListOfMotTests(MotTestTypeCode::MYSTERY_SHOPPER);
+        $listOfMysteryShopperMotTests = $this->createListOfMotTests(MotTestTypeCode::MYSTERY_SHOPPER);
+        $this->mockIsGranted($this->mockAuthService, [PermissionInSystem::CERTIFICATE_REPLACEMENT]);
+        $this->mockMethod($this->mockMysteryShopperHelper, 'isMysteryShopperToggleEnabled', null, false);
+        $this->mockMethod($this->mockMysteryShopperHelper, 'hasPermissionToMaskAndUnmaskVehicles', null, true);
+        $this->mockMethod($this->mockMotTestRepository, 'findHistoricalTestsForVehicle', null, $listOfNormalMotTests);
+        $this->mockMethod($this->mockMotTestRepository, 'findHistoricalMysteryShopperTestsForVehicle', null, $listOfMysteryShopperMotTests);
+
+        $service           = $this->constructVehicleHistoryServiceWithMocks();
+        $vehicleHistoryDto = $service->findHistoricalTestsForVehicleSince(self::VEHICLE_ID, new DateTime());
+
+        $countOfMotTests = $vehicleHistoryDto->getIterator()->count();
+        $this->assertEquals(2, $countOfMotTests, "Number of vehicle history Mot tests is incorrect");
+    }
+
     protected function checkAllowEditForTest($testId, $listOfMotTests, $expectedOutput)
     {
         $now = new \DateTime();
@@ -179,6 +214,7 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
         $this->mockPersonRepository = $this->getMockRepository(PersonRepository::class);
         $this->mockMotTestRepository = $this->getMockRepository(MotTestRepository::class);
         $this->mockConfigurationRepository = $this->getMockWithDisabledConstructor(ConfigurationRepository::class);
+        $this->mockMysteryShopperHelper = $this->getMockWithDisabledConstructor(MysteryShopperHelper::class);
     }
 
     protected function constructVehicleHistoryServiceWithMocks() //$mocks)
@@ -187,7 +223,8 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
             $this->mockPersonRepository,
             $this->mockMotTestRepository,
             $this->mockAuthService,
-            $this->mockConfigurationRepository
+            $this->mockConfigurationRepository,
+            $this->mockMysteryShopperHelper
         );
 
         XMock::mockClassField($vehicleHistoryService, 'dateTimeHolder', new TestDateTimeHolder(new \DateTime()));
@@ -396,4 +433,27 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
         ];
     }
 
+
+    /**
+     * @param String $MotTestTypeCode
+     * @return MotTest[]
+     */
+    private function createListOfMotTests($MotTestTypeCode)
+    {
+        $listOfNormalMotTests = [(new MotTest())
+            ->setStatus($this->createMotTestStatus(MotTestStatusName::PASSED))
+            ->setMotTestType(
+                (new MotTestType())
+                    ->setCode($MotTestTypeCode)
+            )
+            ->setIssuedDate(new DateTime()),
+            (new MotTest())
+                ->setStatus($this->createMotTestStatus(MotTestStatusName::FAILED))
+                ->setMotTestType(
+                    (new MotTestType())
+                        ->setCode($MotTestTypeCode)
+                )
+                ->setIssuedDate(new DateTime())];
+        return $listOfNormalMotTests;
+    }
 }

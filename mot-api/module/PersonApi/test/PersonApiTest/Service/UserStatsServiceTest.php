@@ -3,6 +3,7 @@
 namespace PersonApiTest\Service;
 
 use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
@@ -13,6 +14,7 @@ use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Repository\MotTestRepository;
+use DvsaMotApi\Helper\MysteryShopperHelper;
 use UserApi\Dashboard\Dto\DayStats;
 use UserApi\Dashboard\Dto\MonthStats;
 use PersonApi\Service\UserStatsService;
@@ -27,12 +29,26 @@ class UserStatsServiceTest extends AbstractServiceTestCase
      */
     public $statsService;
 
+    /** @var MotTestRepository | \PHPUnit_Framework_MockObject_MockObject $mockRepository */
+    private $mockRepository;
+
+    /** @var MysteryShopperHelper | \PHPUnit_Framework_MockObject_MockObject $mockMysteryShopperHelper */
+    private $mockMysteryShopperHelper;
+
+    /** @var EntityManager | \PHPUnit_Framework_MockObject_MockObject $mockEntityManager */
+    private $mockEntityManager;
+
     private $personId = 9;
 
     public function testConstructor()
     {
-        $motTests = $this->getArrayOfMotTests();
+        $motTests = $this->getArrayOfMotTests(MotTestTypeCode::NORMAL_TEST);
         $this->setUpMocks($motTests);
+        $this->statsService = new UserStatsService(
+            $this->mockEntityManager,
+            $this->mockRepository,
+            $this->mockMysteryShopperHelper
+        );
 
         $this->assertEquals(get_class($this->statsService), UserStatsService::class);
     }
@@ -40,8 +56,13 @@ class UserStatsServiceTest extends AbstractServiceTestCase
     public function testGetUserDayStatsByPersonId()
     {
         //given
-        $motTests = $this->getArrayOfMotTests();
+        $motTests = $this->getArrayOfMotTests(MotTestTypeCode::NORMAL_TEST);
         $this->setUpMocks($motTests);
+        $this->statsService = new UserStatsService(
+            $this->mockEntityManager,
+            $this->mockRepository,
+            $this->mockMysteryShopperHelper
+        );
 
         //when
         $result = $this->statsService->getUserDayStatsByPersonId($this->personId);
@@ -61,8 +82,13 @@ class UserStatsServiceTest extends AbstractServiceTestCase
     public function testGetUserCurrentMonthStatsByPersonId()
     {
         //given
-        $motTests = $this->getArrayOfMotTests();
+        $motTests = $this->getArrayOfMotTests(MotTestTypeCode::NORMAL_TEST);
         $this->setUpMocks($motTests);
+        $this->statsService = new UserStatsService(
+            $this->mockEntityManager,
+            $this->mockRepository,
+            $this->mockMysteryShopperHelper
+        );
 
         //when
         $result = $this->statsService->getUserCurrentMonthStatsByPersonId($this->personId);
@@ -78,10 +104,14 @@ class UserStatsServiceTest extends AbstractServiceTestCase
         );
     }
 
-    private function getArrayOfMotTests()
+    /**
+     * @param String $motTestTypeCode
+     * @return array
+     */
+    private function getArrayOfMotTests($motTestTypeCode)
     {
         $mtt = new MotTestType();
-        $mtt->setCode(MotTestTypeCode::NORMAL_TEST);
+        $mtt->setCode($motTestTypeCode);
         $motTestPassed = new MotTest();
         $motTestPassed->setStatus($this->createMotTestStatus(MotTestStatusName::PASSED))
             ->setMotTestType($mtt)
@@ -127,15 +157,17 @@ class UserStatsServiceTest extends AbstractServiceTestCase
         $this->setupMockForCalls($mockQueryBuilder, 'getQuery', $mockQuery);
 
         /** @var MotTestRepository $mockRepository */
-        $mockRepository = $this->getMockRepository(MotTestRepository::class);
-        $this->setupMockForCalls($mockRepository, 'matching', $motTests);
-        $this->setupMockForCalls($mockRepository, 'createQueryBuilder', $mockQueryBuilder, 't');
+        $this->mockRepository = $this->getMockRepository(MotTestRepository::class);
+        $this->setupMockForCalls($this->mockRepository, 'matching', $motTests);
+        $this->setupMockForCalls($this->mockRepository, 'createQueryBuilder', $mockQueryBuilder, 't');
 
-        $mockEntityManager = $this->getMockEntityManager();
-        $this->setupMockForCalls($mockEntityManager, 'find', $person, Person::class);
-        $this->setupMockForCalls($mockEntityManager, 'getRepository', $mockRepository, MotTest::class);
+        /** @var MysteryShopperHelper $mockMysteryShopperHelper */
+        $this->mockMysteryShopperHelper = XMock::of(MysteryShopperHelper::class);
 
-        $this->statsService = new UserStatsService($mockEntityManager, $mockRepository);
+        /** @var EntityManager $mockEntityManager */
+        $this->mockEntityManager = $this->getMockEntityManager();
+        $this->setupMockForCalls($this->mockEntityManager, 'find', $person, Person::class);
+        $this->setupMockForCalls($this->mockEntityManager, 'getRepository', $this->mockRepository, MotTest::class);
     }
 
     /**

@@ -5,7 +5,6 @@ namespace DvsaMotApiTest\Service\Validator;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\SiteContactTypeCode;
-use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonTest\Date\TestDateTimeHolder;
 use DvsaCommonTest\TestUtils\XMock;
@@ -19,6 +18,7 @@ use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\SiteContactType;
 use DvsaEntities\Entity\VehicleClass;
 use DvsaEntities\Repository\MotTestRepository;
+use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Service\Validator\RetestEligibility\RetestEligibilityCheckCode;
 use DvsaMotApi\Service\Validator\RetestEligibility\RetestEligibilityValidator;
 use NonWorkingDaysApi\Constants\CountryCode;
@@ -47,6 +47,11 @@ class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
 
     private $dateTimeHolder;
 
+    /**
+     * @var MysteryShopperHelper
+     */
+    private $mysteryShopperHelper;
+
     /** @var SpecialNoticeService */
     private $specialNoticeService;
 
@@ -59,6 +64,7 @@ class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
         $this->setUpNonWorkingDaysHelper(
             $this->any(), DateUtils::toDate("2014-01-10"), DateUtils::toDate("2014-01-10"), true
         );
+        $this->mysteryShopperHelper = XMock::of(MysteryShopperHelper::class);
         $this->specialNoticeService = XMock::of(SpecialNoticeService::class);
     }
 
@@ -481,6 +487,7 @@ class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
         return (new RetestEligibilityValidator(
             $this->nonWorkingDaysHelper,
             $this->motTestRepository,
+            $this->mysteryShopperHelper,
             $this->specialNoticeService
         ))->setDateTimeHolder($this->dateTimeHolder);
     }

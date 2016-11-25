@@ -3,6 +3,7 @@
 namespace DvsaMotApi\Service;
 
 use DvsaCommon\ApiClient\MotTest\DuplicateCertificate\Dto\MotTestDuplicateCertificateEditAllowedDto;
+use DateTime;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -16,6 +17,7 @@ use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Repository\ConfigurationRepository;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\PersonRepository;
+use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Mapper\VehicleHistoryApiMapper;
 use PersonApi\Service\Mapper\TesterGroupAuthorisationMapper;
 use Zend\Stdlib\ArrayUtils;
@@ -32,25 +34,28 @@ class VehicleHistoryService
     protected $dateTimeHolder;
     protected $motTestRepository;
     protected $personRepository;
+    protected $mysteryShopperHelper;
 
     /**
      * @param PersonRepository $personRepository
      * @param \DvsaEntities\Repository\MotTestRepository $motTestRepository
      * @param \DvsaCommon\Auth\MotAuthorisationServiceInterface $authService
      * @param \DvsaEntities\Repository\ConfigurationRepository $configurationRepository
-     * @internal param VehicleRepository $vehicleClassGroupRepository
+     * @param \DvsaMotApi\Helper\MysteryShopperHelper           $mysteryShopperHelper
      */
     public function __construct(
         PersonRepository $personRepository,
         MotTestRepository $motTestRepository,
         MotAuthorisationServiceInterface $authService,
-        ConfigurationRepository $configurationRepository
+        ConfigurationRepository $configurationRepository,
+        MysteryShopperHelper $mysteryShopperHelper
     )
     {
         $this->personRepository = $personRepository;
         $this->motTestRepository = $motTestRepository;
         $this->authService = $authService;
         $this->configurationRepository = $configurationRepository;
+        $this->mysteryShopperHelper = $mysteryShopperHelper;
 
         $this->dateTimeHolder = new DateTimeHolder();
     }
@@ -58,15 +63,20 @@ class VehicleHistoryService
     /**
      * Returns a list of tests for a given vehicle as of a specified date.
      *
-     * @param int $vehicleId
-     * @param \DateTime $startDate
+     * @param int       $vehicleId
+     * @param DateTime  $startDate    (optional)
+     * @param int       $siteId       (optional)
      *
      * @return \DvsaCommon\Dto\Vehicle\History\VehicleHistoryDto
      */
-    public function findHistoricalTestsForVehicleSince($vehicleId, \DateTime $startDate = null)
+    public function findHistoricalTestsForVehicleSince($vehicleId, DateTime $startDate = null, $siteId = null)
     {
         $this->authService->assertGranted(PermissionInSystem::VEHICLE_MOT_TEST_HISTORY_READ);
+
         $testHistory = $this->getTestHistoryForVehicle($vehicleId, $startDate);
+        if ($this->mysteryShopperHelper->isMysteryShopperToggleEnabled()) {
+            $testHistory = $this->addHistoricalMysteryShopperTests($vehicleId, $startDate, $siteId, $testHistory);
+        }
 
         $vehicleHistoryDto = $this->mapTestHistoryToDto($testHistory);
 
@@ -297,6 +307,7 @@ class VehicleHistoryService
             [
                 MotTestTypeCode::NORMAL_TEST,
                 MotTestTypeCode::RE_TEST,
+                MotTestTypeCode::MYSTERY_SHOPPER
             ])
         ) {
             return FALSE;
@@ -310,5 +321,23 @@ class VehicleHistoryService
         }
 
         return TRUE;
+    }
+
+    /**
+     * @param $vehicleId
+     * @param DateTime $startDate
+     * @param $siteId
+     * @param $testsHistory
+     * @return array
+     */
+    private function addHistoricalMysteryShopperTests($vehicleId, DateTime $startDate, $siteId, $testsHistory)
+    {
+        $mysteryShopperResultLimit = $this->mysteryShopperHelper->hasPermissionToMaskAndUnmaskVehicles() ? null : 1;
+        $mysteryShopperHistory = $this->motTestRepository->findHistoricalMysteryShopperTestsForVehicle($vehicleId, $startDate, $mysteryShopperResultLimit, $siteId);
+        if (!empty($mysteryShopperHistory)) {
+            $testsHistory = array_merge($testsHistory, $mysteryShopperHistory);
+        }
+
+        return $testsHistory;
     }
 }

@@ -3,6 +3,9 @@
 namespace DvsaMotApiTest\Service;
 
 use DataCatalogApi\Service\DataCatalogService;
+use DateInterval;
+use DvsaCommon\Constants\FeatureToggle;
+use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Dto\Common\ColourDto;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Common\MotTestTypeDto;
@@ -12,14 +15,17 @@ use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
+use DvsaCommon\MysteryShopper\MysteryShopperExpiryDateGenerator;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaDocument\Service\Document\DocumentService;
+use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Domain\DvsaContactDetails\DvsaContactDetailsConfiguration;
 use DvsaMotApi\Mapper\AbstractMotTestMapper;
 use DvsaMotApi\Service\CertificateCreationService;
 use DvsaMotApi\Service\MotTestService;
 use DvsaMotApiTest\Test\ReasonForRejectionBuilder;
+use NumberFormatter;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
@@ -44,6 +50,9 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
     /** @var CertificateCreationService|MockObj */
     protected $service;
 
+    /** @var FeatureToggles|MockObj */
+    private $mockFeatureToggles;
+
     public function setup()
     {
         $this->mockDocumentService = $this->getMockWithDisabledConstructor(
@@ -61,11 +70,16 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             'phone' => '03001239000',
         ]);
 
+        $this->mockFeatureToggles = $this->getMockWithDisabledConstructor(
+            FeatureToggles::class
+        );
+
         $this->service = new CertificateCreationService(
             $this->mockMotService,
             $this->mockDocumentService,
             $this->catalog,
-            $this->dvsaContactDetailsConfiguration
+            $this->dvsaContactDetailsConfiguration,
+            $this->mockFeatureToggles
         );
     }
 
@@ -722,6 +736,128 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             ->expects($this->once())
             ->method('createSnapshot')
             ->with('MOT-Advisory-Notice', $certificateDataAfterAmendedDuringNonMotInspection, 1);
+
+        /** @var MotTestDto $result */
+        $result = $this->service->create(1, $motTestData, 1);
+        $this->assertEquals($motTestId, $result->getId());
+        $this->assertEquals($documentId, $result->getDocument());
+    }
+
+    public function testCreateWithValidDataAndTestIsMysteryShopper()
+    {
+        $motTestId = 1;
+        $documentId = 7;
+
+        $this->mockFeatureToggles
+            ->expects($this->any())
+            ->method('isEnabled')
+            ->with(FeatureToggle::MYSTERY_SHOPPER)
+            ->willReturn(true);
+
+        $this->mockDocumentService
+            ->expects($this->once())
+            ->method('createSnapshot')
+            ->with('MOT-Pass-Certificate')
+            ->will($this->returnValue($documentId));
+
+        $motTestData = (new MotTestDto())
+            ->setId($motTestId)
+            ->setDocument($documentId)
+            ->setExpiryDate('2015-01-01')
+            ->setIssuedDate('2014-01-01')
+            ->setVehicle((new VehicleDto())->setFirstUsedDate(new \DateTime('2012-01-01')))
+            ->setTester(
+                (new PersonDto())
+                    ->setDisplayName('Testy McTest')
+            )
+            ->setVehicleClass((new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4))
+            ->setStatus('PASSED')
+            ->setTestType((new MotTestTypeDto())->setCode(MotTestTypeCode::MYSTERY_SHOPPER))
+            ->setVehicleTestingStation(
+                [
+                    'name'       => 'Montys Mots',
+                    'siteNumber' => 'asdfasda',
+                    'primaryTelephone' => '011712013243',
+                ]
+            )
+            ->setPrimaryColour((new ColourDto())->setName('Primary'))
+            ->setSecondaryColour((new ColourDto())->setName('Secondary'))
+            ->setCountryOfRegistration((new CountryDto())->setName('UK'))
+            ->setReasonsForRejection(ReasonForRejectionBuilder::create());
+
+        $additionalData = [
+            'TestStationAddress'    => []
+        ];
+
+        $this->mockMotService->expects($this->once())
+            ->method('getAdditionalSnapshotData')
+            ->will($this->returnValue($additionalData));
+
+        $this->mockMotService->expects($this->once())
+            ->method('updateDocument')
+            ->with($motTestId, $documentId);
+
+        $certificateDataBeforeAmendedDuringMysteryShopper = [
+            'TestNumber' => 'test',
+            'TestStation' => 'test',
+            'InspectionAuthority' => 'test',
+            'Odometer' => 'test',
+            'IssuedDate' => 'test',
+            'IssuersName' => 'test',
+            'VRM' => 'test',
+            'VIN' => 'test',
+            'Make' => 'test',
+            'Model' => 'test',
+            'CountryOfRegistration' => 'test',
+            'TestClass' => 'test',
+            'Colour' => 'test',
+            'AdvisoryInformation' => 'test',
+            'ExpiryDate' => 'test',
+            'AdditionalInformation' => 'test',
+        ];
+
+        $expiryDate = (new MysteryShopperExpiryDateGenerator())->getCertificateExpiryDate();
+        $expiryDateFormatted = date_format($expiryDate,"j F Y");
+        $numberFormatter = new NumberFormatter("en", NumberFormatter::SPELLOUT);
+        $year = date_format($expiryDate,"y");
+        $yearFormatted = $numberFormatter->format((int) $year);
+
+        $expiryDateOnCert = $expiryDateFormatted . ' (' . strtoupper($yearFormatted) . ')';
+        $renewalDateOnCert = date_format($expiryDate->sub(new DateInterval('P1M'))->add(new DateInterval('P1D')),"j F Y");
+
+        $certificateDataAfterAmendedDuringMysteryShopper = [
+            'TestNumber' => '',
+            'TestStation' => 'asdfasda',
+            'InspectionAuthority' => 'Montys Mots' . "\n" . '		011712013243' . "\n",
+            'Odometer' => 'Not recorded',
+            'IssuedDate' => '1 Jan 2014',
+            'IssuersName' => '',
+            'VRM' => '',
+            'VIN' => '',
+            'Make' => '',
+            'Model' => '',
+            'CountryOfRegistration' => 'UK',
+            'TestClass' => '4',
+            'Colour' => 'Primary and Secondary',
+            'AdvisoryInformation' => '',
+            'ExpiryDate' => $expiryDateOnCert,
+            'AdditionalInformation' => 'To preserve the anniversary of the expiry date, the earliest you can present your vehicle for test is ' . $renewalDateOnCert . '.'
+        ];
+
+        $motTestMapperMock = $this
+            ->getMockBuilder(AbstractMotTestMapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $motTestMapperMock
+            ->expects($this->any())
+            ->method('mapData')
+            ->willReturn($certificateDataBeforeAmendedDuringMysteryShopper);
+
+        $this->mockDocumentService
+            ->expects($this->once())
+            ->method('createSnapshot')
+            ->with('MOT-Pass-Certificate', $certificateDataAfterAmendedDuringMysteryShopper, 1);
 
         /** @var MotTestDto $result */
         $result = $this->service->create(1, $motTestData, 1);

@@ -31,6 +31,7 @@ class EnumUtils
             switch (strtoupper($testType)) {
                 case MotTestTypeCode::NORMAL_TEST:
                 case MotTestTypeCode::RE_TEST:
+                case MotTestTypeCode::MYSTERY_SHOPPER:
                     return true;
             }
             return false;

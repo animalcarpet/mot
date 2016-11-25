@@ -30,6 +30,7 @@ public class StartTestConfirmationPage extends Page {
     @FindBy(id = "primary-colour") @CacheLookup private WebElement primaryColor;
     @FindBy(id = "secondary-colour") private WebElement secondaryColour;
     @FindBy(id = "refuse-to-test") private WebElement refuseToTestVehicle;
+    @FindBy(id = "motExpiryDate") private WebElement motExpireDate;
 
     private By vinLocator = By.id("vehicleVINnumber");
     private By registrationLocator = By.id("vehicleRegistrationNumber");

@@ -11,6 +11,7 @@ use DvsaCommon\Dto\Search\MotTestSearchParamsDto;
 use DvsaCommon\Dto\Search\SearchResultDto;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
+use DvsaFeature\FeatureToggles;
 use Organisation\Controller\MotTestLogController;
 use DvsaMotTest\ViewModel\TesterMotTestLog\TesterMotTestLogViewModel;
 use Zend\View\Model\ViewModel;
@@ -28,9 +29,10 @@ class TesterMotTestLogController extends MotTestLogController
     public function __construct(
         MotFrontendAuthorisationServiceInterface $authService,
         MapperFactory $mapperFactory,
+        FeatureToggles $featureToggles,
         ContextProvider $contextProvider
     ) {
-        parent::__construct($authService, $mapperFactory);
+        parent::__construct($authService, $mapperFactory, $featureToggles);
         $this->contextProvider = $contextProvider;
     }
 
