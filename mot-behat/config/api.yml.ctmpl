@@ -65,6 +65,12 @@ services:
             - @dvsa.http_client
             - @dvsa.person
 
+    dvsa.mystery_shopper_test:
+        class: Dvsa\Mot\Behat\Support\Api\MysteryShopperTest
+        arguments:
+            - @dvsa.http_client
+            - @dvsa.person
+
     dvsa.event:
         class: Dvsa\Mot\Behat\Support\Api\Event
         arguments:

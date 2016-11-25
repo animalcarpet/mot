@@ -24,6 +24,7 @@ $results = isset($results) ? $results : null;
 $tooManyMatches = isset($tooManyMatches) ? $tooManyMatches : null;
 //FIXME : Update the callers for this partial to pass in the variable
 $registrationNumberMaxLength = isset($registrationNumberMaxLength) ? $registrationNumberMaxLength : 13;
+$hideIncognitoVehicles = isset($hideIncognitoVehicles) ? $hideIncognitoVehicles : true;
 
 //  --  html form begin --
 $this->form->setAttribute("method", "get");
@@ -75,12 +76,14 @@ if ($this->form->has('contingency')) {
                     <br/>
                     <?php echo $this->escapeHtml($vehicle->getModelDetail()); ?>
                     <span class="result-table__meta">
-                        <?php if ($vehicle->hasMotTests()): ?>
-                            <?php echo $this->escapeHtml($vehicle->getMotTestCount()); ?> test<?php if ($vehicle->getMotTestCount() > 1): ?>s<?php endif; ?>,
-                            last tested
-                            <?php echo $this->escapeHtml($vehicle->getReadableLastMotTestDate()); ?>
-                        <?php else: ?>
-                            No tests
+                        <?php if ((!$vehicle->isIncognito() || ($vehicle->isIncognito() && !$hideIncognitoVehicles))): ?>
+                            <?php if ($vehicle->hasMotTests()): ?>
+                                <?php echo $this->escapeHtml($vehicle->getMotTestCount()); ?> test<?php if ($vehicle->getMotTestCount() > 1): ?>s<?php endif; ?>,
+                                last tested
+                                <?php echo $this->escapeHtml($vehicle->getReadableLastMotTestDate()); ?>
+                            <?php else: ?>
+                                No tests
+                            <?php endif; ?>
                         <?php endif; ?>
                     </span>
                 </td>

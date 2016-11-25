@@ -5,6 +5,7 @@ namespace DvsaMotApi\Factory\Service;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommonApi\Authorisation\Assertion\ReadMotTestAssertion;
+use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Service\MotTestService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -29,7 +30,8 @@ class MotTestServiceFactory implements FactoryInterface
             $serviceLocator->get('MotTestMapper'),
             $serviceLocator->get(ReadMotTestAssertion::class),
             $serviceLocator->get(CreateMotTestService::class),
-            $entityManager->getRepository(MotTest::class)
+            $entityManager->getRepository(MotTest::class),
+            $serviceLocator->get(MysteryShopperHelper::class)
         );
     }
 }

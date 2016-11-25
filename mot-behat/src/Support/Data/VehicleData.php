@@ -33,6 +33,7 @@ class VehicleData
     }
 
     /**
+     * @param $token
      * @param array $data
      * @return VehicleDto
      */
@@ -53,6 +54,33 @@ class VehicleData
             ->setId($id)
             ->setVin(strtoupper($data[VehicleParams::VIN]))
             ->setRegistration(strtoupper($data[VehicleParams::REGISTRATION_NUMBER]))
+            ->setVehicleClass($vehicleClassDto);
+
+        $this->vehicleCollection->add($dto, $id);
+
+        return $dto;
+    }
+
+    /**
+     * @param string $testerToken
+     * @param string $veToken
+     * @return VehicleDto $dto
+     */
+    public function createMaskedVehicleWithParams($testerToken, $veToken)
+    {
+        $default = VehicleParams::getDefaultParams();
+
+        $vehicleService = $this->testSupportHelper->getVehicleService();
+        $id = $vehicleService->createMaskedVehicle($testerToken, $veToken, $default);
+
+        $vehicleClassDto = new VehicleClassDto();
+        $vehicleClassDto->setCode($default[VehicleParams::TEST_CLASS]);
+
+        $dto = new VehicleDto();
+        $dto
+            ->setId($id)
+            ->setVin($default[VehicleParams::VIN])
+            ->setRegistration($default[VehicleParams::REGISTRATION_NUMBER])
             ->setVehicleClass($vehicleClassDto);
 
         $this->vehicleCollection->add($dto, $id);

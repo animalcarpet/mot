@@ -2,12 +2,7 @@
 
 namespace DvsaMotTest\ViewModel;
 
-use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Enum\MotTestTypeCode;
-use DvsaCommon\Obfuscate\ParamObfuscator;
-use DvsaMotTest\Constants\VehicleSearchSource;
-use DvsaCommon\Utility\ArrayUtils;
-use DvsaMotTest\View\VehicleSearchResult\NonMotTestUrlTemplate;
 
 /**
  * Class StartTestConfirmationViewModel
@@ -62,6 +57,9 @@ class StartTestConfirmationViewModel
 
     /** @var bool */
     private $motContingency;
+
+    /** @var bool */
+    private $isMysteryShopper;
 
     /**
      * @return string
@@ -403,4 +401,21 @@ class StartTestConfirmationViewModel
         return $this->method === MotTestTypeCode::NON_MOT_TEST;
     }
 
+    /**
+     * @param bool $isMysteryShopper
+     * @return $this
+     */
+    public function setIsMysteryShopper($isMysteryShopper)
+    {
+        $this->isMysteryShopper = $isMysteryShopper;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMysteryShopper()
+    {
+        return $this->isMysteryShopper;
+    }
 }

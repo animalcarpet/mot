@@ -11,6 +11,7 @@ import uk.gov.dvsa.ui.pages.ChangePasswordFromProfilePage;
 import uk.gov.dvsa.ui.pages.ChangeTelephoneDetailsPage;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardPage;
 import uk.gov.dvsa.ui.pages.dvsa.RolesAndAssociationsPage;
+import uk.gov.dvsa.ui.pages.mot.TesterTestLogPage;
 import uk.gov.dvsa.ui.pages.profile.annualassessmentcertificates.AnnualAssessmentCertificatesIndexPage;
 import uk.gov.dvsa.ui.pages.profile.qualificationdetails.QualificationDetailsPage;
 import uk.gov.dvsa.ui.pages.profile.security.ChangeSecurityQuestionsPasswordPage;
@@ -46,6 +47,7 @@ public class PersonProfilePage extends ProfilePage {
     @FindBy(id = "annual-assessment-certificates") WebElement annualAssessmentCertificates;
     @FindBy(id = "test-quality-information") private WebElement testQualityInformationLink;
     @FindBy(id = "change-security-questions") private WebElement changeSecurityQuestionsLink;
+    @FindBy(id = "test-logs") private WebElement testLogsLink;
 
     private static String DVSA_ROLES = "dvsa_roles";
     private static String QUALIFICATION_STATUS = "qualification_status";
@@ -60,6 +62,74 @@ public class PersonProfilePage extends ProfilePage {
     @Override
     protected boolean selfVerify() {
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
+    }
+
+    @Override
+    public RolesAndAssociationsPage clickRolesAndAssociationsLink() {
+        rolesAndAssociationsLink.click();
+        return new RolesAndAssociationsPage(driver);
+    }
+
+    @Override
+    public ChangeEmailDetailsPage clickChangeEmailLink() {
+        changeEmailLink.click();
+        return new ChangeEmailDetailsPage(driver);
+    }
+
+    @Override
+    public ChangePasswordFromProfilePage clickChangePasswordLink() {
+        if(PageInteractionHelper.isElementDisplayed(changePasswordLink)) changePasswordLink.click();
+        return new ChangePasswordFromProfilePage(driver);
+    }
+
+    public ChangeTelephoneDetailsPage clickChangeTelephoneLink() {
+        userTelephoneLink.click();
+        return new ChangeTelephoneDetailsPage(driver);
+    }
+
+    @Override
+    public ChangeAddressPage clickChangeAddressLink() {
+        changeAddressLink.click();
+        return new ChangeAddressPage(driver);
+    }
+
+    public QualificationDetailsPage clickQualificationDetailsLink(){
+        qualificationDetails.click();
+        return new QualificationDetailsPage(driver);
+    }
+
+    @Override
+    public RegisterCardPage activateCardLink() {
+        activateCardLink.click();
+        return new RegisterCardPage(driver);
+    }
+
+    public AnnualAssessmentCertificatesIndexPage clickAnnualAssessmentCertificatesLink() {
+        annualAssessmentCertificates.click();
+        return new AnnualAssessmentCertificatesIndexPage(driver);
+    }
+
+    public AggregatedTestQualityPage clickTestQualityInformationLink() {
+        testQualityInformationLink.click();
+        return new AggregatedTestQualityPage(driver);
+    }
+
+    public ChangeSecurityQuestionsPasswordPage clickChangeSecurityQuestionsLink() {
+        if(!PageInteractionHelper.isElementDisplayed(changeSecurityQuestionsLink)) {
+            Utilities.Logger.LogInfo("Security Questions link not found");
+        } else {
+            changeSecurityQuestionsLink.click();
+        }
+        return new ChangeSecurityQuestionsPasswordPage(driver);
+    }
+
+    public TesterTestLogPage clickTestLogsLink() {
+        testLogsLink.click();
+        return new TesterTestLogPage(driver);
+    }
+
+    public String getMessageSuccess(){
+        return messageSuccess.getText();
     }
 
     @Override
@@ -128,40 +198,8 @@ public class PersonProfilePage extends ProfilePage {
     }
 
     @Override
-    public RolesAndAssociationsPage clickRolesAndAssociationsLink() {
-        rolesAndAssociationsLink.click();
-        return new RolesAndAssociationsPage(driver);
-    }
-
-    @Override
     public boolean isRolesAndAssociationsLinkDisplayed() {
         return PageInteractionHelper.isElementDisplayed(rolesAndAssociationsLink);
-    }
-
-    @Override
-    public ChangeEmailDetailsPage clickChangeEmailLink() {
-        changeEmailLink.click();
-        return new ChangeEmailDetailsPage(driver);
-    }
-
-
-    @Override
-    public ChangePasswordFromProfilePage clickChangePasswordLink() {
-       if(PageInteractionHelper.isElementDisplayed(changePasswordLink)) changePasswordLink.click();
-        return new ChangePasswordFromProfilePage(driver);
-    }
-
-    public ChangeTelephoneDetailsPage clickChangeTelephoneLink() {
-        userTelephoneLink.click();
-        return new ChangeTelephoneDetailsPage(driver);
-    }
-
-    public String getMessageSuccess(){
-        return messageSuccess.getText();
-    }
-
-    public boolean verifyEmailIsChanged(String email) {
-        return userEmail.getText().contains(email);
     }
 
     public boolean isPageLoaded() {
@@ -169,18 +207,7 @@ public class PersonProfilePage extends ProfilePage {
     }
 
     @Override
-    public ChangeAddressPage clickChangeAddressLink() {
-        changeAddressLink.click();
-        return new ChangeAddressPage(driver);
-    }
-
-    @Override
     public boolean isResetPinLinkDisplayed() { return PageInteractionHelper.isElementDisplayed(resetPinLink); }
-
-    public QualificationDetailsPage clickQualificationDetailsLink(){
-        qualificationDetails.click();
-        return new QualificationDetailsPage(driver);
-    }
 
     @Override
     public boolean isActivateSecurityCardLinkDisplayed() {
@@ -192,32 +219,7 @@ public class PersonProfilePage extends ProfilePage {
         return PageInteractionHelper.isElementDisplayed(securityCardPanel);
     }
 
-    @Override
-    public RegisterCardPage activateCardLink() {
-        activateCardLink.click();
-        return new RegisterCardPage(driver);
-    }
-
-    public AnnualAssessmentCertificatesIndexPage clickAnnualAssessmentCertificatesLink() {
-        annualAssessmentCertificates.click();
-        return new AnnualAssessmentCertificatesIndexPage(driver);
-    }
-
-    public AggregatedTestQualityPage clickTestQualityInformationLink() {
-        testQualityInformationLink.click();
-        return new AggregatedTestQualityPage(driver);
-    }
-
     public Boolean isChangeSecurityQuestionsLinkDisplayed() {
         return PageInteractionHelper.isElementDisplayed(changeSecurityQuestionsLink);
-    }
-
-    public ChangeSecurityQuestionsPasswordPage clickChangeSecurityQuestionsLink() {
-        if(!PageInteractionHelper.isElementDisplayed(changeSecurityQuestionsLink)) {
-            Utilities.Logger.LogInfo("Security Questions link not found");
-        } else {
-            changeSecurityQuestionsLink.click();
-        }
-        return new ChangeSecurityQuestionsPasswordPage(driver);
     }
 }

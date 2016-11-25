@@ -28,6 +28,7 @@ class NationalStatisticsRepository extends AbstractStatisticsRepository implemen
 
         $query = $this->getNativeQuery($this->getSqlForStatistics(), $rsm)
             ->setParameter('normalTestCode', MotTestTypeCode::NORMAL_TEST)
+            ->setParameter('mysteryShopperTestCode', MotTestTypeCode::MYSTERY_SHOPPER)
             ->setParameter('passStatusCode', MotTestStatusCode::PASSED)
             ->setParameter('failedStatusCode', MotTestStatusCode::FAILED)
             ->setParameter('startDate', $this->startDate)
@@ -66,6 +67,7 @@ class NationalStatisticsRepository extends AbstractStatisticsRepository implemen
 
         return $this->getNativeQuery($this->getSqlForNumberOfTesters(), $rsm)
             ->setParameter('normalTestCode', MotTestTypeCode::NORMAL_TEST)
+            ->setParameter('mysteryShopperTestCode', MotTestTypeCode::MYSTERY_SHOPPER)
             ->setParameter('passStatusCode', MotTestStatusCode::PASSED)
             ->setParameter('failedStatusCode', MotTestStatusCode::FAILED)
             ->setParameter('startDate', $this->startDate)
@@ -83,7 +85,7 @@ class NationalStatisticsRepository extends AbstractStatisticsRepository implemen
                   JOIN `vehicle_class` `class` ON `class`.`id` = `test`.`vehicle_class_id`
                   JOIN `vehicle_class_group` `classGroup` ON `classGroup`.`id` = `class`.`vehicle_class_group_id`
                   WHERE `test`.`completed_date` BETWEEN :startDate AND :endDate
-                  AND `type`.`code` = :normalTestCode
+                  AND (`type`.`code` = :normalTestCode OR `type`.`code` = :mysteryShopperTestCode)
                   -- the only tests we take into account are failures or non PRS passed ones
                   AND (`status`.`code` = :failedStatusCode OR (`status`.`code` = :passStatusCode AND `test`.`prs_mot_test_id` IS NULL))
                 AND `test`.`emergency_log_id` IS NULL
@@ -118,7 +120,7 @@ class NationalStatisticsRepository extends AbstractStatisticsRepository implemen
               JOIN `mot_test_type` `type` ON `type`.`id` = `test`.`mot_test_type_id`
               JOIN `vehicle_class` `class` ON `class`.`id` = `test`.`vehicle_class_id`
               JOIN `vehicle_class_group` `classGroup` ON `classGroup`.`id` = `class`.`vehicle_class_group_id`
-                WHERE `type`.`code` = :normalTestCode
+                WHERE (`type`.`code` = :normalTestCode OR `type`.`code` = :mysteryShopperTestCode)
                   -- the only tests we take into account are failures or non PRS passed ones
                   AND (`status`.`code` = :failedStatusCode OR (`status`.`code` = :passStatusCode AND `test`.`prs_mot_test_id` IS NULL))
                   AND `test`.`completed_date` IS NOT NULL

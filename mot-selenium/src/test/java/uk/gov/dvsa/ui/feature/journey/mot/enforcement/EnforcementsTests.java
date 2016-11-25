@@ -10,6 +10,8 @@ import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.mot.TestCompletePage;
 import uk.gov.dvsa.ui.pages.mot.TestResultsEntryNewPage;
 import uk.gov.dvsa.ui.pages.mot.TestSummaryPage;
+import uk.gov.dvsa.ui.pages.mot.TesterTestLogPage;
+import uk.gov.dvsa.ui.pages.profile.PersonProfilePage;
 import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationPage;
 import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationSearchPage;
 import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleMotTestHistoryPage;
@@ -62,17 +64,10 @@ public class EnforcementsTests extends DslTest {
     public void veCanUnmaskVehicleSuccessfully() throws IOException, URISyntaxException {
 
         //Given i am on the Vehicle Information Page as an Vehicle examiner with masked vehicle
-        VehicleInformationPage vehicleInformationPage = pageNavigator
-                                    .navigateToPage(vehicleExaminer, VehicleInformationSearchPage.PATH, VehicleInformationSearchPage.class)
-                                    .searchVehicleByRegistration(vehicle.getDvsaRegistration(), VehicleInformationPage.class)
-                                    .clickMaskThisVehicleButton()
-                                    .clickMaskThisVehicleButton()
-                                    .clickContinueToVehicleRecordLink();
+        motUI.mysteryShopper.maskVehicle(vehicleExaminer, vehicle);
 
         //When I Unmask the vehicle for enforcement activities
-        vehicleInformationPage = vehicleInformationPage.clickUnmaskThisVehicleButton()
-                                    .clickUnmaskThisVehicleButton()
-                                    .clickContinueToVehicleRecordLink();
+        VehicleInformationPage vehicleInformationPage = motUI.mysteryShopper.unMaskVehicle(vehicleExaminer, vehicle);
 
         //Then confirmation message should not be displayed on the Vehicle Information page
         assertThat(vehicleInformationPage.isVehicleStatusBannerDisplayed(), is(false));
@@ -99,12 +94,7 @@ public class EnforcementsTests extends DslTest {
     public void veCanNavigateBackFromUnmaskVehiclePageSuccessfully() throws IOException, URISyntaxException {
 
         //Given i am on the Vehicle Information Page as an Vehicle examiner with masked vehicle
-        VehicleInformationPage vehicleInformationPage = pageNavigator
-                                    .navigateToPage(vehicleExaminer, VehicleInformationSearchPage.PATH, VehicleInformationSearchPage.class)
-                                    .searchVehicleByRegistration(vehicle.getDvsaRegistration(), VehicleInformationPage.class)
-                                    .clickMaskThisVehicleButton()
-                                    .clickMaskThisVehicleButton()
-                                    .clickContinueToVehicleRecordLink();
+        VehicleInformationPage vehicleInformationPage = motUI.mysteryShopper.maskVehicle(vehicleExaminer, vehicle);
 
         //When I navigate back from Unmask the vehicle page
         vehicleInformationPage = vehicleInformationPage.clickUnmaskThisVehicleButton().clickCancelAndReturnLink();
@@ -135,7 +125,8 @@ public class EnforcementsTests extends DslTest {
         TestResultsEntryNewPage testResultsEntryNewPage = motUI.nonMotInspection.startNonMotInspection(vehicleExaminer, vehicle);
 
         //When I pass non mot inspection and navigate to Vehicle MOT test history page
-        VehicleMotTestHistoryPage vehicleMotTestHistoryPage = motUI.nonMotInspection.completeNonMotInspectionWithPassValues(site.getSiteNumber(), testResultsEntryNewPage)
+        VehicleMotTestHistoryPage vehicleMotTestHistoryPage = motUI.nonMotInspection
+                                    .completeNonMotInspectionWithPassValues(site.getSiteNumber(), testResultsEntryNewPage)
                                     .clickReturnToHomepageLink()
                                     .clickVehicleInformationLink()
                                     .searchVehicleByRegistration(vehicle.getDvsaRegistration(), VehicleInformationPage.class)
@@ -154,11 +145,48 @@ public class EnforcementsTests extends DslTest {
 
         //When I am trying to finish non mot inspection without a valid vts number
         TestSummaryPage testSummaryPage = testResultsEntryNewPage.addOdometerReading(10000)
-                                                        .clickReviewTestButton()
-                                                        .fillSiteIdInput("")
-                                                        .clickFinishButton(TestSummaryPage.class);
+                                                            .clickReviewTestButton()
+                                                            .fillSiteIdInput("")
+                                                            .clickFinishButton(TestSummaryPage.class);
 
         //Then I should see a validation message on test summary page
         assertThat(testSummaryPage.isValidationMessageDisplayed(), is(true));
+    }
+
+    @Test(testName = "MysteryShopper", groups = {"Regression", "BL-3659"},
+            description = "Verify that tester can conduct normal test on masked vehicle")
+    public void testerCanConductMysteryShopperTest() throws IOException, URISyntaxException {
+
+        //Given I've masked a vehicle for Enforcement activity as an Vehicle examiner
+        motUI.mysteryShopper.maskVehicle(vehicleExaminer, vehicle);
+
+        //When tester completes all test details with passing data
+        TestCompletePage testCompletePage = pageNavigator.gotoTestResultsEntryPage(tester,vehicle)
+                                                            .completeTestDetailsWithPassValues(false)
+                                                            .clickReviewTestButton()
+                                                            .clickFinishButton(TestCompletePage.class);
+
+        //Then he should be able to complete the Test Successfully
+        assertThat(testCompletePage.isReturnToHomepageLinkDisplayed(), is(true));
+    }
+
+    @Test(testName = "MysteryShopper", groups = {"Regression", "BL-3659"},
+            description = "Verify that tester sees in his Test logs mystery shopper test as Normal test")
+    public void testerSeeMysteryShopperTestAsNormalInHisTestLogs() throws IOException, URISyntaxException {
+
+        //Given I've masked a vehicle for Enforcement activity as an Vehicle examiner
+        motUI.mysteryShopper.maskVehicle(vehicleExaminer, vehicle);
+
+        //When tester completes all test details with passing data
+        pageNavigator.gotoTestResultsEntryPage(tester,vehicle).completeTestDetailsWithPassValues(false)
+                .clickReviewTestButton()
+                .clickFinishButton(TestCompletePage.class);
+
+        //Then he should be able to complete the Test Successfully
+        TesterTestLogPage testerTestLogPage = pageNavigator.navigateToPage(tester, PersonProfilePage.PATH, PersonProfilePage.class)
+                                                            .clickTestLogsLink()
+                                                            .clickTodayLink();
+
+        assertThat(testerTestLogPage.getTestType().equals("Normal Test"), is(true));
     }
 }

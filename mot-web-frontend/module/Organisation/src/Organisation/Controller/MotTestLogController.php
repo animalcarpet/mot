@@ -6,6 +6,8 @@ use Core\Controller\AbstractAuthActionController;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\PermissionAtOrganisation;
+use DvsaCommon\Auth\PermissionInSystem;
+use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Dto\Organisation\MotTestLogSummaryDto;
@@ -16,6 +18,7 @@ use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\AuthorisedExaminerUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
+use DvsaFeature\FeatureToggles;
 use Organisation\ViewModel\MotTestLog\MotTestLogFormViewModel;
 use Organisation\ViewModel\MotTestLog\MotTestLogViewModel;
 use Zend\Http\Headers;
@@ -59,31 +62,30 @@ class MotTestLogController extends AbstractAuthActionController
         'Contingency Code',
     ];
 
-    /**
-     * @var MotFrontendAuthorisationServiceInterface
-     */
+    protected $csvHandle;
+
+    /** @var MotFrontendAuthorisationServiceInterface $authService */
     private $authService;
 
-    /**
-     * @var \Zend\Http\Request
-     */
-    protected $request;
+    /** @var FeatureToggles $featureToggles */
+    private $featureToggles;
 
-    /**
-     * @var
-     */
-    protected $csvHandle;
+    /** @var \Zend\Http\Request $request */
+    protected $request;
 
     /**
      * @param MotFrontendAuthorisationServiceInterface $authService
      * @param MapperFactory $mapperFactory
+     * @param FeatureToggles $featureToggles
      */
     public function __construct(
         MotFrontendAuthorisationServiceInterface $authService,
-        MapperFactory $mapperFactory
+        MapperFactory $mapperFactory,
+        FeatureToggles $featureToggles
     ) {
         $this->authService = $authService;
         $this->mapperFactory = $mapperFactory;
+        $this->featureToggles = $featureToggles;
     }
 
     /**
@@ -307,6 +309,12 @@ class MotTestLogController extends AbstractAuthActionController
     {
         $queryParams = $this->request->getQuery();
 
+        $optionalMotTestTypes = [];
+
+        if ($this->featureToggles->isEnabled(FeatureToggle::MYSTERY_SHOPPER)) {
+            $optionalMotTestTypes = array_merge($optionalMotTestTypes, [MotTestTypeCode::MYSTERY_SHOPPER]);
+        }
+
         $dto = new MotTestSearchParamsDto();
         $dto
             ->setFormat(SearchParamConst::FORMAT_DATA_TABLES)
@@ -320,13 +328,14 @@ class MotTestLogController extends AbstractAuthActionController
                     MotTestStatusName::REFUSED,
                 ]
             )
-            ->setTestType(
+            ->setTestType(array_merge(
                 [
                     MotTestTypeCode::NORMAL_TEST,
                     MotTestTypeCode::PARTIAL_RETEST_LEFT_VTS,
                     MotTestTypeCode::PARTIAL_RETEST_REPAIRED_AT_VTS,
                     MotTestTypeCode::RE_TEST,
-                ]
+                ],
+                $optionalMotTestTypes)
             )
             ->setRowsCount($queryParams->get(SearchParamConst::ROW_COUNT, 0))
             ->setPageNr($queryParams->get(SearchParamConst::PAGE_NR, 1))

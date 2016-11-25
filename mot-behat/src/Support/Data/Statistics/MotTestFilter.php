@@ -59,8 +59,9 @@ class MotTestFilter
         return $motCollection->filter(function (MotTestDto $mot) use ($startDate, $endDate) {
             $completedDate = new \DateTime($mot->getCompletedDate());
             $emergencyLog = $mot->getEmergencyLog();
+            $correctTypes = [MotTestTypeCode::NORMAL_TEST, MotTestTypeCode::MYSTERY_SHOPPER];
             $hasCorrectStatus = in_array($mot->getStatus(), [MotTestStatusName::FAILED, MotTestStatusName::PASSED]);
-            $hasCorrectType = ($mot->getTestType()->getCode() === MotTestTypeCode::NORMAL_TEST && empty($emergencyLog));
+            $hasCorrectType = (in_array($mot->getTestType()->getCode(), $correctTypes) && empty($emergencyLog));
             return ($completedDate >= $startDate && $completedDate <= $endDate && $hasCorrectStatus && $hasCorrectType);
         });
     }

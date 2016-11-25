@@ -4,6 +4,7 @@ namespace DvsaMotApi\Factory\Service;
 
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\PersonRepository;
+use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Service\VehicleHistoryService;
 use Zend\ServiceManager\FactoryInterface;
 use Doctrine\ORM\EntityManager;
@@ -17,7 +18,8 @@ class VehicleHistoryServiceFactory implements FactoryInterface
             $serviceLocator->get(PersonRepository::class),
             $serviceLocator->get(MotTestRepository::class),
             $serviceLocator->get('DvsaAuthorisationService'),
-            $serviceLocator->get('ConfigurationRepository')
+            $serviceLocator->get('ConfigurationRepository'),
+            $serviceLocator->get(MysteryShopperHelper::class)
         );
     }
 }

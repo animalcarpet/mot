@@ -35,11 +35,8 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Controller\MotTestController;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
-use Zend\Http\PhpEnvironment\Request;
 use Zend\Mvc\Controller\Plugin\Forward;
-use Zend\ServiceManager\ServiceManager;
 use Zend\Session\Container;
-use Zend\View\Helper\ViewModel;
 
 /**
  * Class MotTestControllerTest.
@@ -633,6 +630,54 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         $this->assertEquals($motTestData, $result->motDetails);
     }
 
+    public function testIndexActionWithMysteryShopperTestType()
+    {
+        $this->featureToggles
+            ->method('isEnabled')
+            ->willReturn(true);
+
+        $motTestNr = (int) rand(1e12, 1e13 - 1);
+        $motTestData = $this->getTestMotTestDataDto($motTestNr);
+
+        $restClientMock = $this->getRestClientMockForServiceManager();
+        $restClientMock->expects($this->at(0))
+            ->method('get')
+            ->with(UrlBuilder::of()->motTest()->routeParam('motTestNumber', $motTestNr))
+            ->willReturn(['data' => $motTestData]);
+
+        $restClientMock->expects($this->at(1))
+            ->method('get')
+            ->with($this->anything())
+            ->willReturn(['data' => []]);
+
+        $result = $this->getResultForAction('index', ['motTestNumber' => $motTestNr]);
+
+        $this->assertResponseStatus(self::HTTP_OK_CODE);
+        $this->assertEquals($motTestData, $result->motTest);
+    }
+
+    public function testDisplayTestSummaryWithMysteryShopperTestType()
+    {
+        $this->featureToggles
+            ->method('isEnabled')
+            ->willReturn(true);
+
+        $this->setupAuthorizationService(
+            [PermissionInSystem::MOT_TEST_CONFIRM, PermissionAtSite::MOT_TEST_CONFIRM_AT_SITE]
+        );
+
+        $motTestNr = (int) rand(1, 1000);
+        $motTestData = $this->getTestMotTestDataDto($motTestNr);
+        $motTestData->setTestType((new MotTestTypeDto())->setCode(MotTestTypeCode::MYSTERY_SHOPPER));
+
+        $this->getRestClientMockWithGetMotTest(['data' => $motTestData]);
+
+        $result = $this->getResultForAction('displayTestSummary', ['motTestNumber' => $motTestNr]);
+
+        $this->assertResponseStatus(self::HTTP_OK_CODE);
+        $this->assertEquals($motTestData, $result->motDetails);
+    }
+
     public function testDisplayCertificateSummary()
     {
         $motTestNr = (int) rand(1, 1000);
@@ -751,54 +796,6 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         ];
     }
 
-    private function getTestMotTestDataDto($motTestNumber = 1, $status = MotTestStatusName::PASSED)
-    {
-
-        /** @var MotIdentityProvider $mockIdentityProvider */
-        $mockIdentityProvider = $this->getServiceManager()->get('MotIdentityProvider');
-
-        $motTest = (new MotTestDto())
-            ->setMotTestNumber($motTestNumber)
-            ->setTester((new PersonDto())->setId($mockIdentityProvider->getIdentity()->getUserId()))
-            ->setTestType((new MotTestTypeDto())->setCode(MotTestTypeCode::NORMAL_TEST))
-            ->setStatus($status)
-            ->setOdometerReading(
-                (new OdometerReadingDTO())
-                    ->setValue(1234)
-                    ->setUnit(OdometerUnit::KILOMETERS)
-                    ->setResultType(OdometerReadingResultType::OK)
-            )
-            ->setVehicle(
-                (new VehicleDto())
-                    ->setId(1)
-                    ->setRegistration('ELFA 1111')
-                    ->setVin('1M2GDM9AXKP042725')
-                    ->setYear(2011)
-                    ->setVehicleClass(
-                        (new VehicleClassDto())
-                            ->setId(4)
-                            ->setCode(4)
-                    )
-                    ->setMakeName('Volvo')
-                    ->setModelName('S80 GTX')
-            );
-
-        return $motTest;
-    }
-
-    private function getRestClientMockWithGetMotTest($motTestData)
-    {
-        $motTestNumber = is_object($motTestData['data'])
-            ? $motTestData['data']->getMotTestNumber()
-            : $motTestData['data']['motTestNumber'];
-
-        return $this->getRestClientMock(
-            'get',
-            $motTestData,
-            "mot-test/$motTestNumber"
-        );
-    }
-
     public static function testIpExtractionFromHeaderDataProvider()
     {
         return [
@@ -901,16 +898,6 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         $this->executeDisplayTestSummarySubmission($motTestData, ['siteidentry' => 'VTS1234']);
     }
 
-    private function executeDisplayTestSummarySubmission(MotTestDto $motTestData, array $postData)
-    {
-        $mysteryShopperToggleEnabled = $userHasNonMotTestPermission = true;
-        $this->setUpNonMotDependencies($mysteryShopperToggleEnabled, $userHasNonMotTestPermission);
-
-        $this->getRestClientMockWithGetMotTest(['data' => $motTestData]);
-
-        $this->getResultForAction2('post', 'displayTestSummary', ['motTestNumber' => $motTestData->getMotTestNumber()], null, $postData);
-    }
-
     public function testNoErrorWhenDisplayTestSummarySubmissionForNormalTestDoesNotContainSite()
     {
         $mysteryShopperToggleEnabled = $userHasNonMotTestPermission = true;
@@ -924,6 +911,64 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         $this->getFlashMessengerMockForNoErrorMessage();
 
         $this->getResultForAction2('post', 'displayTestSummary', ['motTestNumber' => $motTestNr], null, []);
+    }
+
+    private function getTestMotTestDataDto($motTestNumber = 1, $status = MotTestStatusName::PASSED)
+    {
+
+        /** @var MotIdentityProvider $mockIdentityProvider */
+        $mockIdentityProvider = $this->getServiceManager()->get('MotIdentityProvider');
+
+        $motTest = (new MotTestDto())
+            ->setMotTestNumber($motTestNumber)
+            ->setTester((new PersonDto())->setId($mockIdentityProvider->getIdentity()->getUserId()))
+            ->setTestType((new MotTestTypeDto())->setCode(MotTestTypeCode::NORMAL_TEST))
+            ->setStatus($status)
+            ->setOdometerReading(
+                (new OdometerReadingDTO())
+                    ->setValue(1234)
+                    ->setUnit(OdometerUnit::KILOMETERS)
+                    ->setResultType(OdometerReadingResultType::OK)
+            )
+            ->setVehicle(
+                (new VehicleDto())
+                    ->setId(1)
+                    ->setRegistration('ELFA 1111')
+                    ->setVin('1M2GDM9AXKP042725')
+                    ->setYear(2011)
+                    ->setVehicleClass(
+                        (new VehicleClassDto())
+                            ->setId(4)
+                            ->setCode(4)
+                    )
+                    ->setMakeName('Volvo')
+                    ->setModelName('S80 GTX')
+            );
+
+        return $motTest;
+    }
+
+    private function getRestClientMockWithGetMotTest($motTestData)
+    {
+        $motTestNumber = is_object($motTestData['data'])
+            ? $motTestData['data']->getMotTestNumber()
+            : $motTestData['data']['motTestNumber'];
+
+        return $this->getRestClientMock(
+            'get',
+            $motTestData,
+            "mot-test/$motTestNumber"
+        );
+    }
+
+    private function executeDisplayTestSummarySubmission(MotTestDto $motTestData, array $postData)
+    {
+        $mysteryShopperToggleEnabled = $userHasNonMotTestPermission = true;
+        $this->setUpNonMotDependencies($mysteryShopperToggleEnabled, $userHasNonMotTestPermission);
+
+        $this->getRestClientMockWithGetMotTest(['data' => $motTestData]);
+
+        $this->getResultForAction2('post', 'displayTestSummary', ['motTestNumber' => $motTestData->getMotTestNumber()], null, $postData);
     }
 
     private function setUpNonMotDependencies($mysteryShopperToggleEnabled, $userHasNonMotTestPermission)

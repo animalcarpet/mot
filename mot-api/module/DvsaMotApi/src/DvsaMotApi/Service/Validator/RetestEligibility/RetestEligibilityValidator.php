@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot
+ */
 
 namespace DvsaMotApi\Service\Validator\RetestEligibility;
 
@@ -10,6 +15,7 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Repository\MotTestRepository;
+use DvsaMotApi\Helper\MysteryShopperHelper;
 use NonWorkingDaysApi\NonWorkingDaysHelper;
 
 /**
@@ -27,15 +33,23 @@ class RetestEligibilityValidator
     private $dateTime;
 
     /**
+     * @var MysteryShopperHelper
+     */
+    private $mysteryShopperHelper;
+
+    /**
      * @param NonWorkingDaysHelper $nonWorkingDaysHelper
-     * @param MotTestRepository $motTestRepository
+     * @param MotTestRepository    $motTestRepository
+     * @param MysteryShopperHelper $mysteryShopperHelper
      */
     public function __construct(
         NonWorkingDaysHelper $nonWorkingDaysHelper,
-        MotTestRepository $motTestRepository
+        MotTestRepository $motTestRepository,
+        MysteryShopperHelper $mysteryShopperHelper
     ) {
         $this->nonWorkingDaysHelper = $nonWorkingDaysHelper;
         $this->motTestRepository = $motTestRepository;
+        $this->mysteryShopperHelper = $mysteryShopperHelper;
 
         $this->dateTime = new DateTimeHolder();
     }
@@ -107,7 +121,8 @@ class RetestEligibilityValidator
                 return [RetestEligibilityCheckCode::RETEST_REJECTED_ORIGINAL_WAS_NOT_FAILED];
             }
 
-            $count = $this->motTestRepository->countNotCancelledTests($vehicleId, $lastTest->getCompletedDate(), $contingencyDto);
+            $count = $this->motTestRepository->countNotCancelledTests($vehicleId, $lastTest->getCompletedDate(),
+                $contingencyDto);
 
             if ($count > 0) {
                 return [RetestEligibilityCheckCode::RETEST_REJECTED_ORIGINAL_PERFORMED_AT_A_DIFFERENT_VTS];

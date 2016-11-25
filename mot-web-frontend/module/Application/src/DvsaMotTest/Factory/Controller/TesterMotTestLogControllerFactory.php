@@ -19,6 +19,7 @@ class TesterMotTestLogControllerFactory implements FactoryInterface
         return new TesterMotTestLogController(
             $serviceLocator->get('AuthorisationService'),
             $serviceLocator->get(MapperFactory::class),
+            $serviceLocator->get('Feature\FeatureToggles'),
             $serviceLocator->get(ContextProvider::class)
         );
     }

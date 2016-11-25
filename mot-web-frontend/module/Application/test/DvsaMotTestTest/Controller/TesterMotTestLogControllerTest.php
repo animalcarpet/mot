@@ -6,26 +6,21 @@ use Core\Service\MotFrontendAuthorisationServiceInterface;
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaClient\Mapper\MotTestLogMapper;
-use DvsaClient\Mapper\OrganisationMapper;
 use DvsaClient\MapperFactory;
-use DvsaCommon\Auth\PermissionAtOrganisation;
-use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommon\Dto\Organisation\MotTestLogSummaryDto;
-use DvsaCommon\Dto\Organisation\OrganisationDto;
 use DvsaCommon\Dto\Search\MotTestSearchParamsDto;
 use DvsaCommon\Dto\Search\SearchParamsDto;
 use DvsaCommon\Dto\Search\SearchResultDto;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
-use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonTest\Bootstrap;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaCommonTest\TestUtils\TestCasePermissionTrait;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Controller\TesterMotTestLogController;
-use Organisation\ViewModel\MotTestLog\MotTestLogFormViewModel;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use Zend\Http\Response;
 use Zend\Log\Writer\Mock;
@@ -39,27 +34,23 @@ class TesterMotTestLogControllerTest extends AbstractFrontendControllerTestCase
 
     private static $testerId = 1;
 
-    /**
-     * @var DtoHydrator
-     */
+    /** @var DtoHydrator $dtoHydrator */
     private $dtoHydrator;
 
-    /**
-     * @var  MotFrontendAuthorisationServiceInterface|MockObj
-     */
+    /** @var MotFrontendAuthorisationServiceInterface|MockObj $mockAuthSrv */
     private $mockAuthSrv;
 
-    /**
-     * @var  MapperFactory|MockObj
-     */
+    /** @var MapperFactory|MockObj $mockMapperFactory */
     private $mockMapperFactory;
 
-    /**
-     * @var  MotTestLogMapper|MockObj
-     */
+    /** @var MotTestLogMapper|MockObj $mockMotTestLogMapper */
     private $mockMotTestLogMapper;
-    /** @var  ContextProvider|MockObj */
+
+    /** @var ContextProvider|MockObj $mockContextProvider */
     private $mockContextProvider;
+
+    /** @var FeatureToggles|MockObj $mockFeatureToggles */
+    private $mockFeatureToggles;
 
     public function setUp()
     {
@@ -72,11 +63,13 @@ class TesterMotTestLogControllerTest extends AbstractFrontendControllerTestCase
         $this->mockMapperFactory = $this->getMapperFactory();
         $this->mockAuthSrv = XMock::of(MotFrontendAuthorisationServiceInterface::class);
         $this->mockContextProvider = XMock::of(ContextProvider::class);
+        $this->mockFeatureToggles = XMock::of(FeatureToggles::class);
 
         $this->setController(
             new TesterMotTestLogController(
                 $this->mockAuthSrv,
                 $this->mockMapperFactory,
+                $this->mockFeatureToggles,
                 $this->mockContextProvider
             )
         );

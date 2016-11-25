@@ -2,6 +2,7 @@
 
 namespace DvsaMotTest\Factory\Model;
 
+use DvsaApplicationLogger\Log\Logger;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use DvsaMotTest\Model\VehicleSearchResult;
@@ -26,7 +27,8 @@ class VehicleSearchResultFactory implements FactoryInterface
     {
         $vehicleSearchResult = new VehicleSearchResult(
             $serviceLocator->get(ParamObfuscator::class),
-            new VehicleSearchSource()
+            new VehicleSearchSource(),
+            $serviceLocator->get('Application\Logger')
         );
 
         return $vehicleSearchResult;

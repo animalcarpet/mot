@@ -16,12 +16,10 @@ use DvsaCommon\Dto\Vehicle\History\VehicleHistoryMapper;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\UrlBuilder\VehicleUrlBuilder;
-use DvsaCommon\Utility\TypeCheck;
 use DvsaMotTest\Flash\VehicleCertificateSearchFlashMessage;
 use DvsaMotTest\ViewModel\MotTestCertificate\MotTestCertificateListViewModel;
 use DvsaMotTest\ViewModel\MotTestCertificate\MotTestCertificateTableItem;
 use DvsaMotTest\ViewModel\MotTestCertificate\VehicleTable;
-use Zend\Stdlib\ArrayUtils;
 
 class VehicleCertificatesAction implements AutoWireableInterface
 {
@@ -31,18 +29,31 @@ class VehicleCertificatesAction implements AutoWireableInterface
 
     private $authorisationService;
 
+    /**
+     * VehicleCertificatesAction constructor.
+     *
+     * @param VehicleService                   $vehicleService
+     * @param Client                           $httpClient
+     * @param MotAuthorisationServiceInterface $authorisationService
+     */
     public function __construct(
         VehicleService $vehicleService,
         Client $httpClient,
         MotAuthorisationServiceInterface $authorisationService
-    )
-    {
+    ) {
         $this->vehicleService = $vehicleService;
         $this->httpClient = $httpClient;
         $this->authorisationService = $authorisationService;
     }
 
-    public function execute($vrm, $vin, $params)
+    /**
+     * @param string $vrm
+     * @param string $vin
+     * @param array  $params
+     *
+     * @return NotFoundActionResult|RedirectToRoute|ViewActionResult
+     */
+    public function execute($vrm, $vin, array $params)
     {
         $this->authorisationService->assertGranted(PermissionInSystem::CERTIFICATE_SEARCH);
 
@@ -87,7 +98,7 @@ class VehicleCertificatesAction implements AutoWireableInterface
                 MotTestRouteList::MOT_TEST_CERTIFICATE_SEARCH_BY_REGISTRATION,
                 [],
                 [
-                    DuplicateCertificateSearchType::SEARCH_TYPE_VRM => $vrm
+                    DuplicateCertificateSearchType::SEARCH_TYPE_VRM => $vrm,
                 ]
             );
         } else {
@@ -95,7 +106,7 @@ class VehicleCertificatesAction implements AutoWireableInterface
                 MotTestRouteList::MOT_TEST_CERTIFICATE_SEARCH_BY_VIN,
                 [],
                 [
-                    DuplicateCertificateSearchType::SEARCH_TYPE_VIN => $vin
+                    DuplicateCertificateSearchType::SEARCH_TYPE_VIN => $vin,
                 ]
             );
         }
@@ -125,6 +136,12 @@ class VehicleCertificatesAction implements AutoWireableInterface
         return $vrm === null xor $vin === null;
     }
 
+    /**
+     * @param InternalSearchVehicle $vehicle
+     * @param $paramsForSearchBy
+     *
+     * @return VehicleTable
+     */
     private function createVehicleViewTableFromDto(InternalSearchVehicle $vehicle, $paramsForSearchBy)
     {
         $vehicleTable = new VehicleTable();
@@ -152,16 +169,18 @@ class VehicleCertificatesAction implements AutoWireableInterface
 
     /**
      * @param $vehicleId
+     *
      * @return VehicleHistoryItemDto[] | \ArrayIterator
      */
     private function getCertificatesFromApi($vehicleId)
     {
-        $apiUrl = VehicleUrlBuilder::testHistory($vehicleId);
+        $vtsId = null;
+
+        $apiUrl = VehicleUrlBuilder::testHistory($vehicleId, $vtsId);
         $apiResult = $this->httpClient->get($apiUrl);
 
         $vehicleHistory = (new VehicleHistoryMapper())->fromArrayToDto($apiResult['data'], 0);
 
         return $vehicleHistory->getIterator();
     }
-
 }

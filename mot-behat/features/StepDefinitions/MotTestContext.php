@@ -19,6 +19,7 @@ use Dvsa\Mot\Behat\Support\Data\Params\PersonParams;
 use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
 use Dvsa\Mot\Behat\Support\Data\Exception\UnexpectedResponseStatusCodeException;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
+use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
@@ -203,10 +204,25 @@ class MotTestContext implements Context, SnippetAcceptingContext
         } catch (UnexpectedResponseStatusCodeException $exception) {
 
         }
+            PHPUnit::assertTrue(isset($exception), "Exception not thrown");
+            PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
+    }
 
-        PHPUnit::assertTrue(isset($exception), "Exception not thrown");
-        PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
+    /**
+     * @When /^the Tester Passes the Mystery Shopper Test$/
+     */
+    public function theTesterPassesTheMysteryShopperTest()
+    {
+        /** @var MotTestDto $mot */
+        $mot = $this->motTestData->getAll()->last();
 
+        try {
+            $this->motTestData->passMotTest($mot);
+        } catch (\Exception $e) {
+
+        }
+
+        PHPUnit::assertEquals('MS', $mot->getTestType()->getCode());
     }
 
     /**
@@ -405,6 +421,21 @@ class MotTestContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @Given /^I start an Mot Test with a Masked Vehicle$/
+     */
+    public function iStartAnMotTestWithAMaskedVehicle()
+    {
+        $tester = $this->userData->getCurrentLoggedUser();
+        $ve = $this->userData->createVehicleExaminer();
+
+        $vehicle = $this->vehicleData->createMaskedVehicleWithParams($tester->getAccessToken(), $ve->getAccessToken());
+
+        $mot = $this->motTestData->create($tester, $vehicle, $this->siteData->get(), MotTestTypeCode::MYSTERY_SHOPPER);
+
+        PHPUnit::assertInstanceOf(MotTestDto::class, $mot);
+    }
+
+    /**
      * @Then /^the MOT Test Status is "([^"]*)"$/
      * @Then /^the MOT Test Status should be "([^"]*)"$/
      *
@@ -510,7 +541,8 @@ class MotTestContext implements Context, SnippetAcceptingContext
      * @Given /^I have created (.*) mot tests$/
      * @Given I have created :number mot tests for :siteName site
      *
-     * @param $number
+     * @param int $number
+     * @param string $siteName
      */
     public function ICreateMotTests($number = 1, $siteName = SiteData::DEFAULT_NAME)
     {

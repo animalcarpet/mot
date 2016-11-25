@@ -95,6 +95,7 @@ abstract class AbstractVehicleSearchControllerTest extends AbstractDvsaMotTestTe
             'isDvla'        => false,
             'emptyVinReason' => null,
             'emptyRegistrationReason' => null,
+            'isIncognito' => false,
         ];
     }
 }

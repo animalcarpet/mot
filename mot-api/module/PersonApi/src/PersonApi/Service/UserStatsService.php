@@ -14,6 +14,7 @@ use DvsaCommonApi\Service\AbstractService;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Repository\MotTestRepository;
+use DvsaMotApi\Helper\MysteryShopperHelper;
 use UserApi\Dashboard\Dto\DayStats;
 use UserApi\Dashboard\Dto\MonthStats;
 
@@ -27,9 +28,21 @@ class UserStatsService extends AbstractService
      */
     private $motTestRepository;
 
-    public function __construct(EntityManager $entityManager, MotTestRepository $repository)
+    /**
+     * @var MysteryShopperHelper
+     */
+    private $mysteryShopperHelper;
+
+    /**
+     * UserStatsService constructor.
+     * @param EntityManager $entityManager
+     * @param MotTestRepository $repository
+     * @param MysteryShopperHelper $mysteryShopperHelper
+     */
+    public function __construct(EntityManager $entityManager, MotTestRepository $repository, MysteryShopperHelper $mysteryShopperHelper)
     {
         $this->motTestRepository = $repository;
+        $this->mysteryShopperHelper = $mysteryShopperHelper;
         parent::__construct($entityManager);
     }
 
@@ -43,7 +56,9 @@ class UserStatsService extends AbstractService
         //TODO: OPENAM - confirm the current user is allowed to access these stats
         $person = $this->findOrThrowException(Person::class, $personId, Person::ENTITY_NAME);
 
-        $motTests = $this->getTestsCompletedByTesterFromCompletedDate($person, DateUtils::today());
+        $optionalMotTestTypes = ($this->mysteryShopperHelper->isMysteryShopperToggleEnabled()) ? [MotTestTypeCode::MYSTERY_SHOPPER] : [];
+
+        $motTests = $this->getTestsCompletedByTesterFromCompletedDate($person, DateUtils::today(), $optionalMotTestTypes);
 
         $dayStats = $this->calculateDayStats($motTests);
 
@@ -60,7 +75,9 @@ class UserStatsService extends AbstractService
         //TODO: OPENAM - confirm the current user is allowed to access these stats
         $person = $this->findOrThrowException(Person::class, $personId, Person::ENTITY_NAME);
 
-        $motTests = $this->getTestsCompletedByTesterFromCompletedDate($person, DateUtils::firstOfThisMonth());
+        $optionalMotTestTypes = ($this->mysteryShopperHelper->isMysteryShopperToggleEnabled()) ? [MotTestTypeCode::MYSTERY_SHOPPER] : [];
+
+        $motTests = $this->getTestsCompletedByTesterFromCompletedDate($person, DateUtils::firstOfThisMonth(), $optionalMotTestTypes);
 
         $monthStats = $this->calculateMonthStats($motTests);
 
@@ -70,11 +87,11 @@ class UserStatsService extends AbstractService
     /**
      * @param      $person
      * @param      $startDate
-     * @param bool $onlyNormalTests
+     * @param array $optionalMotTestTypes
      *
      * @return MotTest[]
      */
-    private function getTestsCompletedByTesterFromCompletedDate($person, $startDate)
+    private function getTestsCompletedByTesterFromCompletedDate($person, $startDate, array $optionalMotTestTypes = [])
     {
         //!!! This report query should be rewritten to do counts in database, instead of fetching objects
         //DVSA predicts that in future they will need stats for longer periods than month, then this query must be rewritten
@@ -105,7 +122,13 @@ class UserStatsService extends AbstractService
         $queryBuilder->setParameter('completeDate', $startDate);
 
         $queryBuilder->andWhere("tt.code IN (:SLOT_TEST_TYPES)");
-        $queryBuilder->setParameter('SLOT_TEST_TYPES', MotTestTypeCode::NORMAL_TEST);
+
+        $slotTestTypes = [MotTestTypeCode::NORMAL_TEST];
+        if (!empty($optionalMotTestTypes)) {
+            $slotTestTypes = array_merge($slotTestTypes, $optionalMotTestTypes);
+        }
+
+        $queryBuilder->setParameter('SLOT_TEST_TYPES', $slotTestTypes);
 
         $motTests = $queryBuilder->getQuery()->getResult();
 

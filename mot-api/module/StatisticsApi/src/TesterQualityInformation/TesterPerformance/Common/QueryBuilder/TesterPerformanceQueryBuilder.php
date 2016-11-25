@@ -33,7 +33,7 @@ class TesterPerformanceQueryBuilder
                 WHERE `test`.`completed_date` BETWEEN :startDate AND :endData
         -- the only tests we take into account are failures or non PRS passed ones
         AND (`status`.`code` = :failedStatusCode OR (`status`.`code` = :passStatusCode AND `test`.`prs_mot_test_id` IS NULL))
-                  AND `type`.`code` = :normalTestCode
+        AND (`type`.`code` = :normalTestCode OR `type`.`code` = :mysteryShopperTestCode)
         AND `emergency_log_id` IS NULL
         {$this->where}
         AND EXISTS

@@ -57,6 +57,7 @@ class EnumUtilsTest extends PHPUnit_Framework_TestCase
         return [
             [MotTestTypeCode::NORMAL_TEST],
             [MotTestTypeCode::RE_TEST],
+            [MotTestTypeCode::MYSTERY_SHOPPER]
         ];
     }
 

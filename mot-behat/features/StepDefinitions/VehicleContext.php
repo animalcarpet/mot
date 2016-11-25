@@ -94,7 +94,8 @@ class VehicleContext implements Context
     }
 
     /**
-     * Uses TestSupport to create the vehicle
+     * Uses TestSupport to create a vehicle
+     * @param $token
      * @param array $vehicleDetails
      * @return int
      */

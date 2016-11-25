@@ -6,6 +6,7 @@ use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaMotTest\Constants\VehicleSearchSource;
 use DvsaCommon\Utility\ArrayUtils;
+use Zend\Log\LoggerInterface;
 
 /**
  * Class VehicleSearchResult
@@ -59,14 +60,22 @@ class VehicleSearchResult
     /** @var VehicleSearchSource */
     protected $vehicleSearchSoruce;
 
+    /** @var boolean */
+    protected $isIncognito;
+
+    /** @var LoggerInterface */
+    protected $logger;
+
     /**
      * @param ParamObfuscator $paramObfuscator
      * @param VehicleSearchSource $vehicleSearchSource
+     * @param LoggerInterface $logger
      */
-    public function __construct(ParamObfuscator $paramObfuscator, VehicleSearchSource $vehicleSearchSource)
+    public function __construct(ParamObfuscator $paramObfuscator, VehicleSearchSource $vehicleSearchSource, LoggerInterface $logger)
     {
         $this->paramObfuscator = $paramObfuscator;
         $this->vehicleSearchSoruce = $vehicleSearchSource;
+        $this->logger = $logger;
     }
 
     /**
@@ -76,11 +85,11 @@ class VehicleSearchResult
     public function addResults(array $apiVehicleData)
     {
         if (empty($apiVehicleData)) {
-            return new self($this->paramObfuscator, $this->vehicleSearchSoruce);
+            return new self($this->paramObfuscator, $this->vehicleSearchSoruce, $this->logger);
         }
 
         foreach ($apiVehicleData as $vehicleData) {
-            $newVehicleObject = new self($this->paramObfuscator, $this->vehicleSearchSoruce);
+            $newVehicleObject = new self($this->paramObfuscator, $this->vehicleSearchSoruce, $this->logger);
             $newVehicleObject->setId(ArrayUtils::tryGet($vehicleData, 'id'));
             $newVehicleObject->setRegistrationNumber(ArrayUtils::tryGet($vehicleData, 'registration'));
             $newVehicleObject->setVin(ArrayUtils::tryGet($vehicleData, 'vin'));
@@ -96,6 +105,12 @@ class VehicleSearchResult
             $newVehicleObject->setLastMotTestDate(ArrayUtils::tryGet($vehicleData, 'mot_completed_date'));
             $newVehicleObject->setIsDvlaVehicle(ArrayUtils::tryGet($vehicleData, 'isDvla'));
             $newVehicleObject->setRetestEligibility(ArrayUtils::tryGet($vehicleData, 'retest_eligibility'));
+            $newVehicleObject->setIsIncognito(ArrayUtils::tryGet($vehicleData, 'isIncognito'));
+            if (null === $newVehicleObject->isIncognito()) {
+                $newVehicleObject->setIsIncognito(false);
+                $errorMessage = sprintf('An error occurred while trying to get the isIncognito field for vehicle with Reg: %s and VIN: %s', $newVehicleObject->getRegistrationNumber(), $newVehicleObject->getVin());
+                $this->logger->err($errorMessage);
+            }
 
             $this->addResult($newVehicleObject);
         }
@@ -193,6 +208,15 @@ class VehicleSearchResult
     public function setModel($model)
     {
         $this->model = $model;
+        return $this;
+    }
+
+    /**
+     * @param bool $isIncognito
+     */
+    public function setIsIncognito($isIncognito)
+    {
+        $this->isIncognito = $isIncognito;
         return $this;
     }
 
@@ -377,4 +401,11 @@ class VehicleSearchResult
         return !$this->retestEligibility;
     }
 
+    /**
+     * @return bool
+     */
+    public function isIncognito()
+    {
+        return $this->isIncognito;
+    }
 }

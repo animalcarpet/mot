@@ -2,6 +2,7 @@
 namespace DvsaMotTest\Model;
 
 use Application\Service\CatalogService;
+use DvsaApplicationLogger\Log\Logger;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
@@ -34,14 +35,20 @@ class VehicleSearchResultTest extends PHPUnit_Framework_TestCase
                         ->method('deobfuscateEntry')
                         ->willReturn('123obfuscated123');
 
-
         $this->catalogService = XMock::of(CatalogService::class);
 
         $serviceManager->setService(ParamObfuscator::class, $paramObfuscator);
 
+        $logger = $this
+            ->getMockBuilder(Logger::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $serviceManager->setService('Application\Logger', $logger);
+
         $this->vehicleSearchResultModel = new VehicleSearchResult(
             $paramObfuscator,
-            new VehicleSearchSource()
+            new VehicleSearchSource(),
+            $logger
         );
     }
 
@@ -82,6 +89,7 @@ class VehicleSearchResultTest extends PHPUnit_Framework_TestCase
             $this->assertFalse($result->getRetestEligibility());
             $this->assertFalse($result->isRetest());
             $this->assertTrue($result->isNormalTest());
+            $this->assertEquals($result->isIncognito(), $apiVehicles[$i]['isIncognito']);
 
             if ($result->isDvlaVehicle()) {
                 $this->assertEquals($result->getSource(), VehicleSearchSource::DVLA);
@@ -188,7 +196,8 @@ class VehicleSearchResultTest extends PHPUnit_Framework_TestCase
             'creationDate' => '2015-04-16',
             'mot_id' => null,
             'mot_completed_date' => null,
-            'total_mot_tests' => '0'
+            'total_mot_tests' => '0',
+            'isIncognito' => false
         ];
 
         $vehicleTwo = [
@@ -226,7 +235,8 @@ class VehicleSearchResultTest extends PHPUnit_Framework_TestCase
             'creationDate' => '2015-04-16',
             'mot_id' => null,
             'mot_completed_date' => null,
-            'total_mot_tests' => '0'
+            'total_mot_tests' => '0',
+            'isIncognito' => true
         ];
 
         $vehicleThree = [
@@ -264,7 +274,8 @@ class VehicleSearchResultTest extends PHPUnit_Framework_TestCase
             'creationDate' => '2015-04-16',
             'mot_id' => null,
             'mot_completed_date' => '2015-01-02',
-            'total_mot_tests' => '8'
+            'total_mot_tests' => '8',
+            'isIncognito' => null
         ];
 
         return [

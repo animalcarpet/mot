@@ -1,10 +1,13 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot
+ */
 
 namespace DvsaMotApi\Service;
 
 use Doctrine\ORM\EntityManager;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
-use Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use DvsaAuthentication\Service\OtpService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
@@ -15,6 +18,7 @@ use DvsaCommonApi\Transaction\TransactionAwareTrait;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Repository\MotTestRepository;
+use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Service\Validator\MotTestValidator;
 use DvsaMotApi\Service\Validator\RetestEligibility\RetestEligibilityValidator;
 use OrganisationApi\Service\OrganisationService;
@@ -87,8 +91,24 @@ class CreateMotTestService implements TransactionAwareInterface
     private $personRepository;
 
     /**
-     * @param MotIdentityProviderInterface $identityProvider
-     * @param PersonRepository $personRepository
+     * @var MysteryShopperHelper
+     */
+    private $mysteryShopperHelper;
+
+    /**
+     * @param EntityManager                 $entityManager
+     * @param MotTestValidator              $motTestValidator
+     * @param AuthorisationServiceInterface $authService
+     * @param TesterService                 $testerService
+     * @param RetestEligibilityValidator    $retestEligibilityValidator
+     * @param OtpService                    $otpService
+     * @param OrganisationService           $organisationService
+     * @param VehicleApiVehicleService      $vehicleService
+     * @param MotIdentityProviderInterface  $identityProvider
+     * @param NewVehicleService             $newVehicleService
+     * @param PersonRepository              $personRepository
+     * @param MotTestRepository             $motTestRepository
+     * @param MysteryShopperHelper          $mysteryShopperHelper
      */
     public function __construct(
         EntityManager $entityManager,
@@ -102,7 +122,8 @@ class CreateMotTestService implements TransactionAwareInterface
         MotIdentityProviderInterface $identityProvider,
         NewVehicleService $newVehicleService,
         PersonRepository $personRepository,
-        MotTestRepository $motTestRepository
+        MotTestRepository $motTestRepository,
+        MysteryShopperHelper $mysteryShopperHelper
     )
     {
         $this->entityManager = $entityManager;
@@ -117,6 +138,7 @@ class CreateMotTestService implements TransactionAwareInterface
         $this->identityProvider = $identityProvider;
         $this->motTestRepository = $motTestRepository;
         $this->personRepository = $personRepository;
+        $this->mysteryShopperHelper = $mysteryShopperHelper;
     }
 
     /**
@@ -147,6 +169,11 @@ class CreateMotTestService implements TransactionAwareInterface
         $contingencyId           = ArrayUtils::tryGet($data, self::FIELD_CONTINGENCY);
         $contingencyDto          = ArrayUtils::tryGet($data, self::FIELD_CONTINGENCY_DTO);
         $clientIp                = ArrayUtils::tryGet($data, self::FIELD_CLIENT_IP, Network::DEFAULT_CLIENT_IP);
+
+        if (MotTestTypeCode::NORMAL_TEST === $motTestTypeCode
+            && $this->mysteryShopperHelper->isVehicleMysteryShopper($vehicleId)) {
+            $motTestTypeCode = MotTestTypeCode::MYSTERY_SHOPPER;
+        }
 
         if (!is_null($contingencyDto)) {
             $contingencyDto = DtoHydrator::jsonToDto($contingencyDto);

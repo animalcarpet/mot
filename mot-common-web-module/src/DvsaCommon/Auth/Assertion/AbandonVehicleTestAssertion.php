@@ -106,6 +106,7 @@ class AbandonVehicleTestAssertion
         if (
             $this->code === MotTestTypeCode::NORMAL_TEST
             || $this->code === MotTestTypeCode::RE_TEST
+            || $this->code === MotTestTypeCode::MYSTERY_SHOPPER
         ) {
             $this->assertCanTesterAbandonTest();
         } elseif ($this->code === MotTestTypeCode::ROUTINE_DEMONSTRATION_TEST

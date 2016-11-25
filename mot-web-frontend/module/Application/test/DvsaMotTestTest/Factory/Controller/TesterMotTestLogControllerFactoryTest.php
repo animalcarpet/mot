@@ -6,6 +6,7 @@ use Core\Service\MotFrontendAuthorisationServiceInterface;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use DvsaClient\MapperFactory;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Controller\TesterMotTestLogController;
 use DvsaMotTest\Factory\Controller\TesterMotTestLogControllerFactory;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -25,6 +26,9 @@ class TesterMotTestLogControllerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $contextProvider = XMock::of(ContextProvider::class);
         $serviceManager->setService(ContextProvider::class, $contextProvider);
+
+        $featureToggles = XMock::of(FeatureToggles::class);
+        $serviceManager->setService('Feature\FeatureToggles', $featureToggles);
 
         $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
         $plugins->expects($this->any())

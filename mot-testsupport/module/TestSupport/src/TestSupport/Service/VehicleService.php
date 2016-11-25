@@ -116,6 +116,22 @@ class VehicleService
     }
 
     /**
+     * @param string $testerToken
+     * @param string $veToken
+     * @param array $data
+     * @return int
+     */
+    public function createMaskedVehicle($testerToken, $veToken, array $data)
+    {
+        $vehicleId = $this->createWithDefaults($testerToken, $data);
+        $vehicleService = $this->getNewVehicleServiceForUser($veToken);
+
+        $vehicleService->maskDvsaVehicle($vehicleId);
+
+        return $vehicleId;
+    }
+
+    /**
      * @param array $data
      * @return int
      */

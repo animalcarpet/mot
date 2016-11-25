@@ -5,6 +5,7 @@ use Core\Action\FlashMessage;
 use Core\Action\NotFoundActionResult;
 use Core\Action\RedirectToRoute;
 use Core\Action\ViewActionResult;
+use Core\Service\MotFrontendIdentityProviderInterface;
 use Dvsa\Mot\ApiClient\Resource\Collection;
 use Dvsa\Mot\ApiClient\Resource\Item\InternalSearchVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
@@ -40,6 +41,9 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
     /** @var  AuthorisationServiceMock */
     private $authorisationService;
 
+    /** @var  MotFrontendIdentityProviderInterface| \PHPUnit_Framework_MockObject_MockObject */
+    private $motFrontendIdentityProviderInterface;
+
     private $vehicleId = 10853;
     private $vehicleMake = "Sabre";
     private $vehicleModel = "Turbo";
@@ -59,11 +63,12 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
         $this->httpClient = XMock::of(Client::class);
         $this->authorisationService = new AuthorisationServiceMock();
         $this->authorisationService->granted(PermissionInSystem::CERTIFICATE_SEARCH);
+        $this->motFrontendIdentityProviderInterface = XMock::of(MotFrontendIdentityProviderInterface::class);
 
         $this->internalSearchSpy = new MethodSpy($this->vehicleService, 'internalSearch');
         $this->httpClientGetSpy = new MethodSpy($this->httpClient, 'get');
 
-        $this->action = new VehicleCertificatesAction($this->vehicleService, $this->httpClient, $this->authorisationService);
+        $this->action = new VehicleCertificatesAction($this->vehicleService, $this->httpClient, $this->authorisationService, $this->motFrontendIdentityProviderInterface);
     }
 
     /**
@@ -101,7 +106,7 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->expectedNumberOfCertificates, $this->httpClientGetSpy->invocationCount(), "We expect two calls to API for each of the 2 vehicle in test set ups");
 
         // AND the correct ID of a vehicle is used for the call
-        $actualApiUrl = "vehicle/" . $this->vehicleId . "/test-history";
+        $actualApiUrl = "vehicle/" . $this->vehicleId . "/test-history?";
         $this->assertEquals($actualApiUrl, $this->httpClientGetSpy->paramsForInvocation(0)[0]->toString(), "We expect to call API for a specific vehicle");
 
         // AND the result of action is to view page

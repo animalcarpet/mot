@@ -13,6 +13,7 @@ use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Common\MotTestTypeDto;
+use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\SiteStatusCode;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\SiteStatus;
@@ -39,6 +40,7 @@ use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Repository\ConfigurationRepository;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\SiteTypeRepository;
+use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Service\Mapper\MotTestMapper;
 use DvsaMotApi\Service\Validator\MotTestValidator;
 use DvsaEntities\Repository\SiteStatusRepository;
@@ -76,15 +78,20 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
     private $motTest;
     /** @var CreateMotTestService  */
     private $createMotTestService;
+    /** @var MysteryShopperHelper  */
+    private $mysteryShopperHelper;
 
     /**
-     * @param EntityManager                 $entityManager
-     * @param MotTestValidator              $motTestValidator
+     * MotTestService constructor.
+     * @param EntityManager $entityManager
+     * @param MotTestValidator $motTestValidator
      * @param AuthorisationServiceInterface $authService
-     * @param ConfigurationRepository       $configurationRepository
-     * @param MotTestMapper                 $motTestMapper
-     * @param ReadMotTestAssertion          $readMotTestAssertion
-     * @param CreateMotTestService          $createMotTestService
+     * @param ConfigurationRepository $configurationRepository
+     * @param MotTestMapper $motTestMapper
+     * @param ReadMotTestAssertion $readMotTestAssertion
+     * @param CreateMotTestService $createMotTestService
+     * @param MotTestRepository $motTestRepository
+     * @param MysteryShopperHelper $mysteryShopperHelper
      */
     public function __construct(
         EntityManager $entityManager,
@@ -94,7 +101,8 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
         MotTestMapper $motTestMapper,
         ReadMotTestAssertion $readMotTestAssertion,
         CreateMotTestService $createMotTestService,
-        MotTestRepository $motTestRepository
+        MotTestRepository $motTestRepository,
+        MysteryShopperHelper $mysteryShopperHelper
     ) {
         parent::__construct($entityManager);
 
@@ -106,6 +114,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
         $this->motTestMapper              = $motTestMapper;
         $this->readMotTestAssertion       = $readMotTestAssertion;
         $this->createMotTestService       = $createMotTestService;
+        $this->mysteryShopperHelper       = $mysteryShopperHelper;
     }
 
     /**
@@ -195,11 +204,23 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
 
         if($motTest->getStatus() !== MotTestStatusName::ABORTED
             && $motTest->getStatus() !== MotTestStatusName::ABANDONED){
-            $additionalSnapShotData['OdometerReadings'] = (new OdometerReadingMapper())->manyToDtoFromArray(
-                $this->motTestRepository->getOdometerHistoryForVehicleId(
+            $isMysteryShopper = $this->mysteryShopperHelper->isMysteryShopperToggleEnabled() && $motTest->getMotTestType()->getCode() === MotTestTypeCode::MYSTERY_SHOPPER;
+            if (!$isMysteryShopper) {
+                $odometerHistoryForVehicle = $this->motTestRepository->getOdometerHistoryForVehicleId(
                     $motTest->getVehicle()->getId(),
                     $motTest->getStartedDate()
-                )
+                );
+            }
+            else {
+                $odometerHistoryForVehicle = $this->motTestRepository->getOdometerHistoryForVehicleId(
+                    $motTest->getVehicle()->getId(),
+                    $motTest->getStartedDate(),
+                    [MotTestTypeCode::MYSTERY_SHOPPER],
+                    1
+                );
+            }
+            $additionalSnapShotData['OdometerReadings'] = (new OdometerReadingMapper())->manyToDtoFromArray(
+                $odometerHistoryForVehicle
             );
         }
 

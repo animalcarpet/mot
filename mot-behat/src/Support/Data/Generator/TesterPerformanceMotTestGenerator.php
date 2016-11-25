@@ -9,6 +9,7 @@ use Dvsa\Mot\Behat\Support\Data\MotTestData;
 use Dvsa\Mot\Behat\Support\Data\Params\VehicleParams;
 use Dvsa\Mot\Behat\Support\Data\VehicleData;
 use DvsaCommon\Dto\Site\SiteDto;
+use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
 
 class TesterPerformanceMotTestGenerator
@@ -68,5 +69,13 @@ class TesterPerformanceMotTestGenerator
             ->setStartedDate("first day of 2 months ago")
             ->setRfrId(ReasonForRejectionGroupB::RFR_ROAD_WHEELS_CONDITION);
         $this->motTestGenerator->generateFailedMotTestsWithAdvisories($tester, $site, $vehicle);
+
+        $vehicle = $this->vehicleData->createWithParams(
+            $tester->getAccessToken(),
+            [
+                VehicleParams::TEST_CLASS => VehicleClassCode::CLASS_5
+            ]
+        );
+        $this->motTestData->createPassedMotTest($tester, $site, $vehicle, MotTestTypeCode::MYSTERY_SHOPPER);
     }
 }

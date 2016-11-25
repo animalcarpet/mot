@@ -3,9 +3,7 @@
 namespace Dvsa\Mot\Behat\Support\Api;
 
 use Dvsa\Mot\Behat\Datasource\Authentication;
-use Dvsa\Mot\Behat\Support\Data\DefaultData\DefaultVehicleTestingStation;
 use Dvsa\Mot\Behat\Support\HttpClient;
-use Dvsa\Mot\Behat\Support\Request;
 use DvsaCommon\Enum\ColourCode;
 use DvsaCommon\Enum\FuelTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;

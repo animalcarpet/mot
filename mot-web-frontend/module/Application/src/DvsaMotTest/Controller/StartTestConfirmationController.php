@@ -4,7 +4,6 @@ namespace DvsaMotTest\Controller;
 
 use Application\Helper\PrgHelper;
 use Application\Service\CatalogService;
-use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleUnderTestRequest;
 use Application\Service\ContingencySessionManager;
 use Dvsa\Mot\ApiClient\Resource\Item\AbstractVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle;
@@ -14,11 +13,7 @@ use DvsaCommon\Auth\PermissionInSystem;
 use Core\Service\RemoteAddress;
 use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Date\DateUtils;
-use DvsaCommon\Domain\MotTestType;
-use DvsaCommon\Dto\Common\ColourDto;
 use DvsaCommon\Dto\MotTesting\ContingencyTestDto;
-use DvsaCommon\Dto\Vehicle\VehicleParamDto;
-use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\HttpRestJson\Exception\OtpApplicationException;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
@@ -31,7 +26,6 @@ use DvsaCommon\Utility\DtoHydrator;
 use DvsaMotTest\Constants\VehicleSearchSource;
 use Vehicle\Helper\ColoursContainer;
 use Zend\Http\Request;
-use Zend\Http\Response;
 use Zend\View\Model\ViewModel;
 use DvsaMotTest\ViewModel\StartTestConfirmationViewModel;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
@@ -77,7 +71,9 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
     /** @var StartTestConfirmationViewModel */
     private $startTestConfirmationViewModel;
 
-    /** @param \DvsaCommon\Obfuscate\ParamObfuscator $paramObfuscator */
+    /**
+     * @param \DvsaCommon\Obfuscate\ParamObfuscator $paramObfuscator
+     */
     public function __construct(ParamObfuscator $paramObfuscator)
     {
         $this->paramObfuscator = $paramObfuscator;
@@ -421,6 +417,7 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         $viewModel->setSearchVrm($this->params()->fromQuery('searchVrm', ''));
         $viewModel->setSearchVin($this->params()->fromQuery('searchVin', ''));
         $viewModel->setCanRefuseToTest(false, false);
+        $viewModel->setIsMysteryShopper($this->isMysteryShopper());
 
         $motContingency = $this->getContingencySessionManager()->isMotContingency();
         $viewModel->setMotContingency($motContingency);
@@ -680,5 +677,19 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         }
 
         return $this->method === MotTestTypeCode::NON_MOT_TEST;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isMysteryShopper()
+    {
+        if (true !== $this->isFeatureEnabled(FeatureToggle::MYSTERY_SHOPPER)) {
+            return false;
+        }
+        if (null === $this->getVehicleDetails()) {
+            return false;
+        }
+        return (true === $this->getVehicleDetails()->getIsIncognito());
     }
 }

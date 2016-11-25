@@ -51,6 +51,7 @@ public class MotUI {
     public final Nominations nominations;
     public final VehicleInformation vehicleInformation;
     public final NonMotInspection nonMotInspection;
+    public final MysteryShopper mysteryShopper;
 
     public MotUI(MotAppDriver driver) {
         pageNavigator.setDriver(driver);
@@ -75,6 +76,7 @@ public class MotUI {
         nominations = new Nominations(pageNavigator);
         vehicleInformation = new VehicleInformation();
         nonMotInspection = new NonMotInspection(pageNavigator);
+        mysteryShopper = new MysteryShopper(pageNavigator);
     }
 
     public void login(final User user) throws IOException {

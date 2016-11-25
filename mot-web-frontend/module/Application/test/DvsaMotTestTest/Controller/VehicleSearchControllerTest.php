@@ -6,6 +6,7 @@ use Application\Service\ContingencySessionManager;
 use Application\Service\LoggedInUserManager;
 use Core\Service\MotFrontendIdentityProviderInterface;
 use CoreTest\Service\StubCatalogService;
+use DvsaApplicationLogger\Log\Logger;
 use DvsaClient\MapperFactory;
 use DvsaClient\Mapper\VehicleMapper;
 use DvsaCommon\Constants\FeatureToggle;
@@ -24,6 +25,7 @@ use DvsaCommon\Obfuscate\ParamEncrypter;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaMotTest\Action\DuplicateCertificateSearchByRegistrationAction;
 use DvsaMotTest\Action\DuplicateCertificateSearchByVinAction;
+use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Constants\VehicleSearchSource;
 use DvsaMotTest\Controller\VehicleSearchController;
 use DvsaMotTest\Model\VehicleSearchResult;
@@ -52,6 +54,15 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
     private $mockVehicleSearchService;
     private $mockMapperFactory;
 
+    /** @var  FeatureToggles|MockObj */
+    private $mockMysteryShopperToggle;
+
+    /** @var  MotAuthorisationServiceInterface|MockObj */
+    private $mockAuthorisationService;
+
+    /** @var  Logger|MockObj */
+    private $logger;
+
     protected function setUp()
     {
         // patch for segmentation fault on jenkins
@@ -76,26 +87,44 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
         $authorisationsForTestingMot = [];
         foreach (VehicleClassCode::getAll() as $code) {
             $authorisationsForTestingMot[] = [
-                "vehicleClassCode" => $code,
-                "statusCode" => AuthorisationForTestingMotStatusCode::QUALIFIED
+                'vehicleClassCode' => $code,
+                'statusCode' => AuthorisationForTestingMotStatusCode::QUALIFIED,
             ];
         }
-        $testerData = ["authorisationsForTestingMot" => $authorisationsForTestingMot];
+        $testerData = ['authorisationsForTestingMot' => $authorisationsForTestingMot];
 
         $LoggedInUserManager = XMock::of(LoggedInUserManager::class);
         $LoggedInUserManager
             ->expects($this->any())
-            ->method("getTesterData")
+            ->method('getTesterData')
             ->willReturn($testerData);
 
-        $serviceManager->setService("LoggedInUserManager", $LoggedInUserManager);
+        $serviceManager->setService('LoggedInUserManager', $LoggedInUserManager);
 
-        $overdueSecurityNotices = ["data" => array_fill(0, count(VehicleClassCode::getAll()), 0)];
+        $this->logger = $this
+            ->getMockBuilder(Logger::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $serviceManager->setService('Application\Logger', $this->logger);
+
+        $overdueSecurityNotices = ['data' => array_fill(0, count(VehicleClassCode::getAll()), 0)];
         $client = XMock::of(Client::class);
         $client
             ->expects($this->any())
-            ->method("get")
+            ->method('get')
             ->willReturn($overdueSecurityNotices);
+
+        $this->mockMysteryShopperToggle = XMock::of(FeatureToggles::class);
+        $this->mockMysteryShopperToggle
+            ->expects($this->any())
+            ->method('isGranted')
+            ->willReturn(true);
+
+        $this->mockAuthorisationService = XMock::of(MotAuthorisationServiceInterface::class);
+        $this->mockAuthorisationService
+            ->expects($this->any())
+            ->method('isGranted')
+            ->willReturn(false);
 
         $this->setController(
             new VehicleSearchController(
@@ -108,7 +137,8 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
                 XMock::of(MotAuthorisationServiceInterface::class),
                 XMock::of(MotFrontendIdentityProviderInterface::class),
                 XMock::of(DuplicateCertificateSearchByRegistrationAction::class),
-                XMock::of(DuplicateCertificateSearchByVinAction::class)
+                XMock::of(DuplicateCertificateSearchByVinAction::class),
+                $this->mockMysteryShopperToggle
             )
         );
 
@@ -161,7 +191,7 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
         $this->requestSearch(
             [
                 VehicleSearchController::PRM_VIN => self::TEST_FULL_VIN,
-                VehicleSearchController::PRM_REG => ""
+                VehicleSearchController::PRM_REG => '',
             ],
             'vehicle-search',
             'get'
@@ -179,7 +209,7 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
         $this->requestSearch(
             [
                 VehicleSearchController::PRM_VIN => self::TEST_FULL_VIN_WITH_SPACES,
-                VehicleSearchController::PRM_REG => ""
+                VehicleSearchController::PRM_REG => '',
             ],
             'vehicle-search',
             'get'
@@ -195,7 +225,7 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
 
         $getParams = [
             VehicleSearchController::PRM_VIN => self::TEST_PARTIAL_VIN,
-            VehicleSearchController::PRM_REG => ""
+            VehicleSearchController::PRM_REG => '',
         ];
 
         $result = $this->requestSearch($getParams, $action, 'get');
@@ -255,7 +285,7 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
         $this->getRestClientMock('getWithParams', $this->getMultipleTestSearchResult());
 
         $getParams = [
-            VehicleSearchController::PRM_VIN => "",
+            VehicleSearchController::PRM_VIN => '',
             VehicleSearchController::PRM_REG => self::TEST_REG,
         ];
 
@@ -295,7 +325,7 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
         $this->requestSearch(
             [
                 VehicleSearchController::PRM_VIN => self::TEST_FULL_VIN,
-                VehicleSearchController::PRM_REG => ""
+                VehicleSearchController::PRM_REG => '',
             ]
         );
 
@@ -310,7 +340,7 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
         $this->requestSearch(
             [
                 VehicleSearchController::PRM_VIN => self::TEST_FULL_VIN_WITH_SPACES,
-                VehicleSearchController::PRM_REG => ""
+                VehicleSearchController::PRM_REG => '',
             ]
         );
 
@@ -323,8 +353,8 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
 
         $this->requestSearch(
             [
-                VehicleSearchController::PRM_VIN => "",
-                VehicleSearchController::PRM_REG => ""
+                VehicleSearchController::PRM_VIN => '',
+                VehicleSearchController::PRM_REG => '',
             ],
             null,
             'get'
@@ -357,7 +387,7 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
         return [
             'data' => [
                 'resultType' => VehicleSearchController::SEARCH_RESULT_NO_MATCH,
-                'vehicles' => []
+                'vehicles' => [],
             ],
         ];
     }
@@ -377,7 +407,8 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
                 'fuel_type' => 'P',
                 'isDvla' => true,
                 'emptyVinReason' => null,
-                'emptyRegistrationReason' => null
+                'emptyRegistrationReason' => null,
+                'isIncognito' => false,
             ],
             [
                 'id' => 2,
@@ -391,7 +422,8 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
                 'fuel_type' => 'P',
                 'isDvla' => true,
                 'emptyVinReason' => null,
-                'emptyRegistrationReason' => null
+                'emptyRegistrationReason' => null,
+                'isIncognito' => false,
             ],
         ];
 
@@ -402,7 +434,7 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
     {
         $vehicles = $this->getTwoTestVehicleData();
 
-        $vehicleSearchModel = new VehicleSearchResult($this->mockParamObfuscator, new VehicleSearchSource());
+        $vehicleSearchModel = new VehicleSearchResult($this->mockParamObfuscator, new VehicleSearchSource(), $this->logger);
 
         $vehicleSearchModel = $vehicleSearchModel->addResults($vehicles);
         $vehicles = $vehicleSearchModel->getResults();
@@ -415,11 +447,11 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
         $vehicleData = (new VehicleDto())->setId(self::VEHICLE_ID);
 
         return [
-            "data" => [
-                "id" => 1,
-                "vehicle" => $vehicleData,
-                "reasons_for_rejection" => [['rfr-id' => 1], ['rfr-id' => 2]],
-                "break_test_results" => [['break-result-id' => 1]],
+            'data' => [
+                'id' => 1,
+                'vehicle' => $vehicleData,
+                'reasons_for_rejection' => [['rfr-id' => 1], ['rfr-id' => 2]],
+                'break_test_results' => [['break-result-id' => 1]],
             ],
         ];
     }
@@ -522,7 +554,8 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
     {
         $vehicleSearchResult = new VehicleSearchResult(
             $this->createParamObfuscator(),
-            new VehicleSearchSource()
+            new VehicleSearchSource(),
+            $this->logger
         );
 
         return $vehicleSearchResult;
@@ -534,5 +567,4 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
                                        ->method($method)
                                        ->willReturn($resultWithSearchMethod);
     }
-
 }

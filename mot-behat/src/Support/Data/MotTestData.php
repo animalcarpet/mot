@@ -3,6 +3,7 @@ namespace Dvsa\Mot\Behat\Support\Data;
 
 use Dvsa\Mot\Behat\Support\Api\ContingencyTest;
 use Dvsa\Mot\Behat\Support\Api\MotTest;
+use Dvsa\Mot\Behat\Support\Api\MysteryShopperTest;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Support\Data\Collection\SharedDataCollection;
 use Dvsa\Mot\Behat\Support\Data\Params\MotTestParams;
@@ -22,7 +23,9 @@ class MotTestData extends AbstractMotTestData
     private $contingencyMotTestData;
     private $demoMotTestData;
     private $normalMotTestData;
+    private $mysteryShopperMotTestData;
     private $contingencyTest;
+    private $mysteryShopperTest;
 
     const TEST_WITH_PRS = "prs";
     const TEST_WITH_ADVISORY = 'advisory';
@@ -34,8 +37,10 @@ class MotTestData extends AbstractMotTestData
         ContingencyMotTestData $contingencyMotTestData,
         DemoMotTestData $demoMotTestData,
         NormalMotTestData $normalMotTestData,
+        MysteryShopperMotTestData $mysteryShopperMotTestData,
         ContingencyTest $contingencyTest,
         MotTest $motTest,
+        MysteryShopperTest $mysteryShopperTest,
         BrakeTestResultData $brakeTestResultData,
         OdometerReadingData $odometerReadingData,
         ReasonForRejectionData $reasonForRejectionData,
@@ -48,7 +53,9 @@ class MotTestData extends AbstractMotTestData
         $this->contingencyMotTestData = $contingencyMotTestData;
         $this->demoMotTestData = $demoMotTestData;
         $this->normalMotTestData = $normalMotTestData;
+        $this->mysteryShopperMotTestData = $mysteryShopperMotTestData;
         $this->contingencyTest = $contingencyTest;
+        $this->mysteryShopperTest = $mysteryShopperTest;
         $this->motCollection = SharedDataCollection::get(MotTestDto::class);
     }
 
@@ -63,6 +70,9 @@ class MotTestData extends AbstractMotTestData
                 break;
             case MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING:
                 return $this->demoMotTestData->create($tester, $vehicle);
+                break;
+            case MotTestTypeCode::MYSTERY_SHOPPER:
+                return $this->mysteryShopperMotTestData->create($tester, $vehicle, $site);
                 break;
             default:
                 return $this->createWithType($tester, $vehicle, $site, $type);

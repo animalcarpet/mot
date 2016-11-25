@@ -1,10 +1,16 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot
+ */
 
 use DvsaCommon\Configuration\MotConfig;
 use DvsaCommon\Configuration\MotConfigFactory;
 use DvsaCommonApi\Transaction\ServiceTransactionAwareInitializer;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\TestItemCategoryRepository;
+use DvsaMotApi\Factory\Helper\MysteryShopperHelperFactory;
 use DvsaMotApi\Factory\S3CsvStoreFactory;
 use DvsaMotApi\Factory\CertificateReplacementRepositoryFactory;
 use DvsaMotApi\Factory\ConfigurationRepositoryFactory;
@@ -62,6 +68,7 @@ use DvsaMotApi\Factory\Service\SurveyServiceFactory;
 use DvsaMotApi\Factory\TestItemCategoryRepositoryFactory;
 use DvsaMotApi\Factory\VehicleRepositoryFactory;
 use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
+use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Helper\RoleEventHelper;
 use DvsaMotApi\Helper\RoleNotificationHelper;
 use DvsaMotApi\Helper\TesterQualificationStatusChangeEventHelper;
@@ -153,5 +160,6 @@ return [
         ReplacementCertificateDraftChangeValidator::class   => ReplacementCertificateDraftChangeValidatorFactory::class,
         S3CsvStore::class                                   => S3CsvStoreFactory::class,
         DefectSentenceCaseConverter::class                  => DefectSentenceCaseConverterFactory::class,
+        MysteryShopperHelper::class                         => MysteryShopperHelperFactory::class,
     ],
 ];

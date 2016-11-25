@@ -95,6 +95,7 @@ class MotTestType
         return [
             MotTestTypeCode::NORMAL_TEST,
             MotTestTypeCode::RE_TEST,
+            MotTestTypeCode::MYSTERY_SHOPPER,
         ];
     }
 

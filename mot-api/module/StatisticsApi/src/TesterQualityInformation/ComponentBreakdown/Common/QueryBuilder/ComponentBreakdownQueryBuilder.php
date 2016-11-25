@@ -46,7 +46,7 @@ class ComponentBreakdownQueryBuilder
                WHERE test.completed_date BETWEEN :startDate AND :endDate
                  -- the only tests we take into account are failures
                  AND status.code = :failedStatusCode
-                 AND type.code = :normalTestCode
+                 AND (type.code = :normalTestCode OR type.code = :mysteryShopperTestCode)
                  AND lt.code = :languageTypeCode
                  AND emergency_log_id IS NULL
                  AND class_group.code = :groupCode

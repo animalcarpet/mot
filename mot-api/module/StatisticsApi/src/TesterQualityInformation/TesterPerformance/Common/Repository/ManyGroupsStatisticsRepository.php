@@ -26,6 +26,7 @@ class ManyGroupsStatisticsRepository extends AbstractStatisticsRepository
             ->setParameter('failedStatusCode', MotTestStatusCode::FAILED)
             ->setParameter('passStatusCode', MotTestStatusCode::PASSED)
             ->setParameter('normalTestCode', MotTestTypeCode::NORMAL_TEST)
+            ->setParameter('mysteryShopperTestCode', MotTestTypeCode::MYSTERY_SHOPPER)
             ->setParameter('startDate', $this->startDate)
             ->setParameter('endData', $this->endDate)
             ->setParameter('irrelevantAssociationCodes',
