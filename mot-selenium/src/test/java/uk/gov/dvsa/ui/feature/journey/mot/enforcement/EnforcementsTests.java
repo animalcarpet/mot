@@ -32,11 +32,11 @@ public class EnforcementsTests extends DslTest {
     @BeforeClass(alwaysRun = true)
     public void classSetUp() throws IOException {
         this.site = siteData.createSite();
-        this.tester = motApi.user.createTester(site.getId());
     }
 
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws IOException {
+        tester = motApi.user.createTester(site.getId());
         vehicle = vehicleData.getNewVehicle(tester);
         vehicleExaminer = motApi.user.createVehicleExaminer("ve", false);
     }
@@ -153,8 +153,7 @@ public class EnforcementsTests extends DslTest {
         assertThat(testSummaryPage.isValidationMessageDisplayed(), is(true));
     }
 
-    //TODO This test needs to be fixed asap
-    @Test(testName = "MysteryShopper", groups = {"Skipped", "BL-3659"},
+    @Test(testName = "MysteryShopper", groups = {"Regression", "BL-3659"},
             description = "Verify that tester can conduct normal test on masked vehicle")
     public void testerCanConductMysteryShopperTest() throws IOException, URISyntaxException {
 
@@ -171,8 +170,7 @@ public class EnforcementsTests extends DslTest {
         assertThat(testCompletePage.isReturnToHomepageLinkDisplayed(), is(true));
     }
 
-    //TODO This test needs to be fixed asap
-    @Test(testName = "MysteryShopper", groups = {"Skipped", "BL-3659"},
+    @Test(testName = "MysteryShopper", groups = {"Regression", "BL-3659"},
             description = "Verify that tester sees in his Test logs mystery shopper test as Normal test")
     public void testerSeeMysteryShopperTestAsNormalInHisTestLogs() throws IOException, URISyntaxException {
 
