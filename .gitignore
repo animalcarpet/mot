@@ -66,9 +66,7 @@ mot-behat/bin/templatemap_generator.php
 coverage
 *dist.bak
 /mot-api/build
-
-# Selenium
-/mot-selenium/allure-results
+/mot-api/config/autoload/doctrine.development.php
 
 # Ignore Java services
 vehicle-service

@@ -59,7 +59,8 @@ class MotTestData extends AbstractMotTestData
         $this->motCollection = SharedDataCollection::get(MotTestDto::class);
     }
 
-    public function create(AuthenticatedUser $tester, VehicleDto $vehicle, SiteDto $site = null, $type = MotTestTypeCode::NORMAL_TEST)
+    public function create(AuthenticatedUser $tester, VehicleDto $vehicle, SiteDto $site = null,
+                           $type = MotTestTypeCode::NORMAL_TEST)
     {
         switch ($type) {
             case MotTestTypeCode::NORMAL_TEST:

@@ -88,6 +88,9 @@ abstract class AbstractVehicleDto extends AbstractDataTransferObject
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getId()
     {
         return $this->id;

@@ -88,9 +88,15 @@ class VehicleData
         return $dto;
     }
 
+    /**
+     * @param string $vehicleClass
+     *
+     * @return VehicleDto
+     */
     public function create($vehicleClass = VehicleClassCode::CLASS_4)
     {
         $tester = $this->userData->createTester("Bob The Builder");
+
         return $this->createWithVehicleClass($tester->getAccessToken(), $vehicleClass);
     }
 

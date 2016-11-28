@@ -19,7 +19,6 @@ Feature: Person
     And I get Information about my Dashboard
     Then my Dashboard will return the MotTestNumber
 
-  @wip
   @non-mot-test
   Scenario: Check Vehicle Examiner has non-MOT in progress
     Given I am logged in as a Vehicle Examiner
