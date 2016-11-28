@@ -22,7 +22,7 @@ class IsEmailDuplicateServiceTest extends \PHPUnit_Framework_TestCase
         $this->jsonClient
             ->expects($this->once())
             ->method('get')
-            ->with(IsEmailDuplicateService::URL . $this->validDuplicateEmail())
+            ->with(IsEmailDuplicateService::URL . $this->validEmailEncoded())
             ->willReturn(['data' => ['isDuplicate' => true]]);
 
         $actual = $this->buildService()->isEmailDuplicate($this->validDuplicateEmail());
@@ -35,12 +35,23 @@ class IsEmailDuplicateServiceTest extends \PHPUnit_Framework_TestCase
         $this->jsonClient
             ->expects($this->once())
             ->method('get')
-            ->with(IsEmailDuplicateService::URL . $this->validDuplicateEmail())
+            ->with(IsEmailDuplicateService::URL . $this->validEmailEncoded())
             ->willReturn(['data' => ['isDuplicate' => false]]);
 
         $actual = $this->buildService()->isEmailDuplicate($this->validDuplicateEmail());
 
         $this->assertFalse($actual);
+    }
+
+    public function testWhenEmailContainsSpecialCharacters_specialCharactersShouldBeEncoded()
+    {
+        $this->jsonClient
+            ->expects($this->once())
+            ->method('get')
+            ->with(IsEmailDuplicateService::URL . 'test%2B10%40email.com')
+            ->willReturn(['data' => ['isDuplicate' => false]]);
+
+        $this->buildService()->isEmailDuplicate('test+10@email.com');
     }
 
     private function buildService()
@@ -51,5 +62,10 @@ class IsEmailDuplicateServiceTest extends \PHPUnit_Framework_TestCase
     private function validDuplicateEmail()
     {
         return "dummy@email.com";
+    }
+
+    private function validEmailEncoded()
+    {
+        return urlencode($this->validDuplicateEmail());
     }
 }

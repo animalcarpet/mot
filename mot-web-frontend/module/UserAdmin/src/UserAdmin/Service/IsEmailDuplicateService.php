@@ -17,7 +17,7 @@ class IsEmailDuplicateService
 
     public function isEmailDuplicate($emailAddress)
     {
-        $response = $this->jsonClient->get(self::URL . $emailAddress);
+        $response = $this->jsonClient->get(self::URL . urlencode($emailAddress));
 
         if (
             !is_array($response) ||
