@@ -70,6 +70,9 @@ class MotTestContext implements Context, SnippetAcceptingContext
 
     private $userData;
 
+    /**
+     * @var MotTestData
+     */
     private $motTestData;
 
     private $contingencyData;
@@ -124,11 +127,11 @@ class MotTestContext implements Context, SnippetAcceptingContext
      */
     public function iStartNonMotTest()
     {
-        $vehicleId = $this->vehicleData->create();
-
-        $this->motTestData = $this->nonMotTest->startMotTest(
-            $this->userData->getCurrentLoggedUser()->getAccessToken(),
-            $vehicleId
+        return  $this->motTestData->create(
+            $this->userData->getCurrentLoggedUser(),
+            $this->vehicleData->create(VehicleClassCode::CLASS_4),
+            $this->siteData->get(),
+            MotTestTypeCode::NON_MOT_TEST
         );
     }
 

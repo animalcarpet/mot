@@ -46,6 +46,7 @@ abstract class AbstractMotTest extends MotApi
         if (isset($body['data'])) {
             $this->lastMotTestNumber = $body['data']['motTestNumber'];
         }
+
         return $response;
     }
 

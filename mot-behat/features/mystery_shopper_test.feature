@@ -1,4 +1,3 @@
-@wip
 @mystery-shopper-test
 Feature: Mystery Shopper Test
   As a Vehicle Examiner (VE)
