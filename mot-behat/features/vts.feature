@@ -1,3 +1,4 @@
+@parallel_suite_2
 @create-site
 Feature: VTS
   As DVSA I should be able to search for VTS by name/number/town/postcode

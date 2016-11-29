@@ -1,3 +1,4 @@
+@parallel_suite_2
 Feature: MOT Test
   As a Tester
   I want to Perform an MOT Test
