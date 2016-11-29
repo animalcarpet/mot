@@ -1,3 +1,4 @@
+@parallel_suite_2
 Feature: Vehicle Testing Station management
   In order to manage vehicle testing organisations on the system
   As a DVSA Administrator

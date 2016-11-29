@@ -2,7 +2,7 @@
   "name": "dvsa/mot-api-testing-behat",
   "require": {
     "php": ">=5.5",
-    "behat/behat": "~3.0@dev",
+    "behat/behat": "~3.2.2",
     "guzzle/guzzle": "~3.9",
     "phpunit/phpunit": "~4.3",
     "smalot/pdfparser": "*",

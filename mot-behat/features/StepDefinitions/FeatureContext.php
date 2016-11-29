@@ -130,8 +130,6 @@ class FeatureContext implements Context
      */
     public function setUp(BeforeScenarioScope $scope)
     {
-        $this->generateDefaultData();
-
         $beforeScenarioDataGenerator = new BeforeScenarioDataGenerator(
             $scope,
             $this->authorisedExaminerData,

@@ -1,3 +1,4 @@
+@parallel_suite_2
 Feature: Person address
 
   @address

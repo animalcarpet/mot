@@ -1,3 +1,4 @@
+@parallel_suite_2
 Feature: TQI Component Fail Rate
 
   Background:

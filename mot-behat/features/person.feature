@@ -1,3 +1,4 @@
+@parallel_suite_2
 Feature: Person
   As a Tester
   I want to get information Person Information
