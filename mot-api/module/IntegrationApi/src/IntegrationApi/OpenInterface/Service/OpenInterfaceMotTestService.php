@@ -56,7 +56,9 @@ class OpenInterfaceMotTestService
                 MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING,
                 MotTestTypeCode::ROUTINE_DEMONSTRATION_TEST,
                 MotTestTypeCode::TARGETED_REINSPECTION,
-                MotTestTypeCode::MOT_COMPLIANCE_SURVEY
+                MotTestTypeCode::MOT_COMPLIANCE_SURVEY,
+                MotTestTypeCode::NON_MOT_TEST,
+                MotTestTypeCode::MYSTERY_SHOPPER
             ]
         );
 
@@ -120,7 +122,9 @@ class OpenInterfaceMotTestService
                 MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING,
                 MotTestTypeCode::ROUTINE_DEMONSTRATION_TEST,
                 MotTestTypeCode::TARGETED_REINSPECTION,
-                MotTestTypeCode::MOT_COMPLIANCE_SURVEY
+                MotTestTypeCode::MOT_COMPLIANCE_SURVEY,
+                MotTestTypeCode::NON_MOT_TEST,
+                MotTestTypeCode::MYSTERY_SHOPPER
             ]
         );
 
