@@ -791,15 +791,19 @@ class MotTestRepository extends AbstractMutableRepository
             ->innerJoin('t.status', 'ts')
             ->where('t.vehicle = :vehicleId')
             ->andWhere('t.completedDate IS NOT NULL')
-            ->andWhere('tt.code NOT IN (:codes)')
+            ->andWhere('tt.code IN (:codes)')
             ->andWhere('ts.name = :status')
             ->orderBy('t.completedDate', 'DESC')
             ->setParameter('vehicleId', $vehicleId)
             ->setParameter('status', $status)
             ->setParameter(
                'codes', [
-                MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING,
-                MotTestTypeCode::ROUTINE_DEMONSTRATION_TEST,
+                MotTestTypeCode::NORMAL_TEST, //'NT'
+                MotTestTypeCode::PARTIAL_RETEST_LEFT_VTS, //'PL'
+                MotTestTypeCode::PARTIAL_RETEST_REPAIRED_AT_VTS, //'PV'
+                MotTestTypeCode::RE_TEST, //'RT'
+                MotTestTypeCode::INVERTED_APPEAL, //'EI'
+                MotTestTypeCode::STATUTORY_APPEAL, //'ES'
                ])
             ->setMaxResults(1);
 
