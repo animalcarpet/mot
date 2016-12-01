@@ -148,11 +148,10 @@ class VehicleUrlBuilder extends AbstractUrlBuilder
             ->routeParam('isDvla', (int) $isDvlaVehicle);
     }
 
-    public static function testHistory($vehicleId, $siteId)
+    public static function testHistory($vehicleId)
     {
         return self::vehicle($vehicleId)
-            ->appendRoutesAndParams(self::TEST_HISTORY)
-            ->queryParam('site', $siteId);
+            ->appendRoutesAndParams(self::TEST_HISTORY);
     }
 
     public static function retestEligibilityCheck($vehicleId, $siteId)

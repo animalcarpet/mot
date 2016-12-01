@@ -9,6 +9,8 @@ namespace DvsaEntityTest\Helper;
 
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
+use DvsaCommon\Auth\MotAuthorisationServiceInterface;
+use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
@@ -41,6 +43,11 @@ class MysteryShopperHelperTest extends \PHPUnit_Framework_TestCase
      */
     private $mockVehicleService;
 
+    /**
+     * @var MotAuthorisationServiceInterface
+     */
+    private $mockAuthorisationService;
+
     public function setup()
     {
         $serviceManager = Bootstrap::getServiceManager();
@@ -62,8 +69,11 @@ class MysteryShopperHelperTest extends \PHPUnit_Framework_TestCase
             ->method('getDvsaVehicleById')
             ->willReturn($this->mockDvsaVehicle);
 
+        $this->mockAuthorisationService = XMock::of(MotAuthorisationServiceInterface::class);
+
         $serviceManager->setService('Feature\FeatureToggles', $this->mockMysteryShopperToggle);
         $serviceManager->setService(VehicleService::class, $this->mockVehicleService);
+        $serviceManager->setService(MotAuthorisationServiceInterface::class, $this->mockAuthorisationService);
 
         $this->mysteryShopperHelper = (new MysteryShopperHelperFactory())->createService($serviceManager);
     }
@@ -108,6 +118,30 @@ class MysteryShopperHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedIsMysteryShopper, $actual);
     }
 
+    public function testCanViewMysteryShopperTestsWhenToggleOnAndPermissionGranted()
+    {
+        $this->enableMysteryShopperToggle(true);
+        $this->setPermission(PermissionInSystem::VIEW_MYSTERY_SHOPPER_TESTS, true);
+
+        $this->assertTrue($this->mysteryShopperHelper->hasPermissionToViewMysteryShopperTests());
+    }
+
+    public function testCanNotViewMysteryShopperTestsWhenToggleOffAndPermissionGranted()
+    {
+        $this->enableMysteryShopperToggle(false);
+        $this->setPermission(PermissionInSystem::VIEW_MYSTERY_SHOPPER_TESTS, true);
+
+        $this->assertFalse($this->mysteryShopperHelper->hasPermissionToViewMysteryShopperTests());
+    }
+
+    public function testCanNotViewMysteryShopperTestsWhenToggleOnAndPermissionNotGranted()
+    {
+        $this->enableMysteryShopperToggle(true);
+        $this->setPermission(PermissionInSystem::VIEW_MYSTERY_SHOPPER_TESTS, false);
+
+        $this->assertFalse($this->mysteryShopperHelper->hasPermissionToViewMysteryShopperTests());
+    }
+
     private function enableMysteryShopperToggle($boolean)
     {
         $this->mockMysteryShopperToggle
@@ -115,6 +149,15 @@ class MysteryShopperHelperTest extends \PHPUnit_Framework_TestCase
             ->method('isEnabled')
             ->with(FeatureToggle::MYSTERY_SHOPPER)
             ->willReturn($boolean);
+    }
+
+    private function setPermission($permission, $isActive)
+    {
+        $this->mockAuthorisationService
+            ->expects($this->any())
+            ->method('isGranted')
+            ->with($permission)
+            ->willReturn($isActive);
     }
 
     private function setVehicleIsIncognito($boolean)

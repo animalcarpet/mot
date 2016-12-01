@@ -29,6 +29,7 @@ use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\Vehicle;
+use DvsaMotApi\Helper\MysteryShopperHelper;
 
 /**
  * MotTest Repository.
@@ -505,6 +506,48 @@ class MotTestRepository extends AbstractMutableRepository
     }
 
     /**
+     * Find recent tests for a given vehicle
+     *
+     * @param int $vehicleId
+     * @param string|null $startDate
+     * @param MysteryShopperHelper $mysteryShopperHelper
+     * @param array $mysteryShopperSiteIds Optional
+     * @return mixed
+     */
+    public function findTestsForVehicle(
+        $vehicleId,
+        $startDate,
+        MysteryShopperHelper $mysteryShopperHelper,
+        array $mysteryShopperSiteIds = []
+    ) {
+        $mysteryShopperToggleEnabled = $mysteryShopperHelper->isMysteryShopperToggleEnabled();
+        $canViewAllMysteryShopperTests = $mysteryShopperHelper->hasPermissionToViewMysteryShopperTests();
+
+        $testTypes = $this->testTypes;
+        $testTypes[] = MotTestTypeCode::TARGETED_REINSPECTION;
+
+        $testTypeWhereClauseFunction = null;
+
+        if ($canViewAllMysteryShopperTests) {
+            $testTypes[] = MotTestTypeCode::MYSTERY_SHOPPER;
+        } else if ($mysteryShopperToggleEnabled && !empty($mysteryShopperSiteIds)) {
+            $testTypeWhereClauseFunction = function($qb) use ($mysteryShopperSiteIds) {
+                return $qb->andWhere('(
+                        t.code IN (:testTypes)
+                        OR (
+                            t.code = :mysteryShopperCode 
+                            AND mt.vehicleTestingStation IN (:mysteryShopperSites)
+                        ))')
+                    ->setParameter('mysteryShopperCode', MotTestTypeCode::MYSTERY_SHOPPER)
+                    ->setParameter('mysteryShopperSites', $mysteryShopperSiteIds)
+                    ;
+            };
+        }
+
+        return $this->fetchTestsForVehicle($vehicleId, $startDate, $testTypes, $testTypeWhereClauseFunction);
+    }
+
+    /**
      * Returns a list of tests for a given vehicle as of a specified date.
      *
      * @param int $vehicleId
@@ -512,7 +555,15 @@ class MotTestRepository extends AbstractMutableRepository
      *
      * @return MotTest[]
      */
-    public function findHistoricalTestsForVehicle($vehicleId, $startDate)
+    public function findTestsExcludingNonAuthoritativeTestsForVehicle($vehicleId, $startDate)
+    {
+        $testTypes = $this->testTypes;
+        $testTypes[] = MotTestTypeCode::TARGETED_REINSPECTION;
+
+        return $this->fetchTestsForVehicle($vehicleId, $startDate, $testTypes);
+    }
+
+    private function fetchTestsForVehicle($vehicleId, $startDate, $testTypes, $testTypeWhereClauseFunction = null)
     {
         $statuses = [
             MotTestStatusName::PASSED,
@@ -520,15 +571,16 @@ class MotTestRepository extends AbstractMutableRepository
             MotTestStatusName::ABANDONED,
         ];
 
-        $testTypes = $this->testTypes;
-        $testTypes[] = MotTestTypeCode::TARGETED_REINSPECTION;
-
         $qb = $this
             ->createQueryBuilder('mt')
             ->innerJoin('mt.motTestType', 't')
             ->innerJoin('mt.status', 'ts')
-            ->where('ts.name IN (:statuses)')
-            ->andWhere('t.code IN (:testTypes)')
+            ->where('ts.name IN (:statuses)');
+
+        $qb = is_callable($testTypeWhereClauseFunction) ?
+            $testTypeWhereClauseFunction($qb) : $qb->andWhere('t.code IN (:testTypes)');
+
+        $qb = $qb
             ->andWhere('mt.vehicle = :vehicleId')
             ->orderBy('mt.issuedDate', 'DESC')
             ->addOrderBy('mt.completedDate', 'DESC')

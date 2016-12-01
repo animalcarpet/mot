@@ -11,8 +11,7 @@ class VehicleHistoryController extends AbstractDvsaRestfulController
 {
     public function get($vehicleId)
     {
-        $siteId = $this->params()->fromQuery('site');
-        $history = $this->getVehicleHistoryService()->findHistoricalTestsForVehicleSince($vehicleId, null, $siteId);
+        $history = $this->getVehicleHistoryService()->findHistoricalTestsForVehicleSince($vehicleId, $this->getUserId());
 
         return ApiResponse::jsonOk((new VehicleHistoryMapper)->fromDtoToArray($history));
     }

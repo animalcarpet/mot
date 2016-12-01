@@ -106,7 +106,7 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->expectedNumberOfCertificates, $this->httpClientGetSpy->invocationCount(), "We expect two calls to API for each of the 2 vehicle in test set ups");
 
         // AND the correct ID of a vehicle is used for the call
-        $actualApiUrl = "vehicle/" . $this->vehicleId . "/test-history?";
+        $actualApiUrl = "vehicle/" . $this->vehicleId . "/test-history";
         $this->assertEquals($actualApiUrl, $this->httpClientGetSpy->paramsForInvocation(0)[0]->toString(), "We expect to call API for a specific vehicle");
 
         // AND the result of action is to view page
