@@ -174,9 +174,7 @@ class VehicleCertificatesAction implements AutoWireableInterface
      */
     private function getCertificatesFromApi($vehicleId)
     {
-        $vtsId = null;
-
-        $apiUrl = VehicleUrlBuilder::testHistory($vehicleId, $vtsId);
+        $apiUrl = VehicleUrlBuilder::testHistory($vehicleId);
         $apiResult = $this->httpClient->get($apiUrl);
 
         $vehicleHistory = (new VehicleHistoryMapper())->fromArrayToDto($apiResult['data'], 0);

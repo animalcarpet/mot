@@ -14,9 +14,11 @@ use DvsaCommon\Dto\Vehicle\History\VehicleHistoryItemDto;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaEntities\Entity\MotTest;
+use DvsaEntities\Entity\Site;
 use DvsaEntities\Repository\ConfigurationRepository;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\PersonRepository;
+use DvsaEntities\Repository\SiteRepository;
 use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Mapper\VehicleHistoryApiMapper;
 use PersonApi\Service\Mapper\TesterGroupAuthorisationMapper;
@@ -34,6 +36,7 @@ class VehicleHistoryService
     protected $dateTimeHolder;
     protected $motTestRepository;
     protected $personRepository;
+    protected $siteRepository;
     protected $mysteryShopperHelper;
 
     /**
@@ -41,13 +44,15 @@ class VehicleHistoryService
      * @param \DvsaEntities\Repository\MotTestRepository $motTestRepository
      * @param \DvsaCommon\Auth\MotAuthorisationServiceInterface $authService
      * @param \DvsaEntities\Repository\ConfigurationRepository $configurationRepository
-     * @param \DvsaMotApi\Helper\MysteryShopperHelper           $mysteryShopperHelper
+     * @param \DvsaEntities\Repository\SiteRepository $siteRepository
+     * @param \DvsaMotApi\Helper\MysteryShopperHelper $mysteryShopperHelper
      */
     public function __construct(
         PersonRepository $personRepository,
         MotTestRepository $motTestRepository,
         MotAuthorisationServiceInterface $authService,
         ConfigurationRepository $configurationRepository,
+        SiteRepository $siteRepository,
         MysteryShopperHelper $mysteryShopperHelper
     )
     {
@@ -55,6 +60,7 @@ class VehicleHistoryService
         $this->motTestRepository = $motTestRepository;
         $this->authService = $authService;
         $this->configurationRepository = $configurationRepository;
+        $this->siteRepository = $siteRepository;
         $this->mysteryShopperHelper = $mysteryShopperHelper;
 
         $this->dateTimeHolder = new DateTimeHolder();
@@ -64,19 +70,16 @@ class VehicleHistoryService
      * Returns a list of tests for a given vehicle as of a specified date.
      *
      * @param int       $vehicleId
+     * @param int       $personId
      * @param DateTime  $startDate    (optional)
-     * @param int       $siteId       (optional)
      *
      * @return \DvsaCommon\Dto\Vehicle\History\VehicleHistoryDto
      */
-    public function findHistoricalTestsForVehicleSince($vehicleId, DateTime $startDate = null, $siteId = null)
+    public function findHistoricalTestsForVehicleSince($vehicleId, $personId, DateTime $startDate = null)
     {
         $this->authService->assertGranted(PermissionInSystem::VEHICLE_MOT_TEST_HISTORY_READ);
 
-        $testHistory = $this->getTestHistoryForVehicle($vehicleId, $startDate);
-        if ($this->mysteryShopperHelper->isMysteryShopperToggleEnabled()) {
-            $testHistory = $this->addHistoricalMysteryShopperTests($vehicleId, $startDate, $siteId, $testHistory);
-        }
+        $testHistory = $this->getTestHistoryForVehicle($vehicleId, $personId, $startDate);
 
         $vehicleHistoryDto = $this->mapTestHistoryToDto($testHistory);
 
@@ -112,7 +115,7 @@ class VehicleHistoryService
             return false;
         }
 
-        $testHistory = $this->getTestHistoryForVehicle($vehicleId, $startDate);
+        $testHistory = $this->getTestHistoryForVehicle($vehicleId, $personId, $startDate);
 
         $vehicleHistoryDto = $this->mapTestHistoryToDto($testHistory);
 
@@ -165,15 +168,31 @@ class VehicleHistoryService
 
     /**
      * @param $vehicleId
+     * @param $personId
      * @param $startDate
      * @return \DvsaEntities\Entity\MotTest[]
      */
-    private function getTestHistoryForVehicle($vehicleId, $startDate)
+    private function getTestHistoryForVehicle($vehicleId, $personId, $startDate)
     {
         $startDate = $this->getStartDate($startDate);
-        $testsHistory = $this->motTestRepository->findHistoricalTestsForVehicle($vehicleId, $startDate);
+        $siteIdsWherePersonCanViewMysteryShopperTests = [];
 
-        return $testsHistory;
+        if (
+            $this->mysteryShopperHelper->isMysteryShopperToggleEnabled() &&
+            !$this->mysteryShopperHelper->hasPermissionToViewMysteryShopperTests()
+        ) {
+            $siteIdsWherePersonCanViewMysteryShopperTests = array_merge(
+                $this->siteRepository->findSiteIdsForPersonId($personId),
+                $this->siteRepository->findSiteIdsForPersonIdViaOrganisation($personId)
+            );
+        }
+
+        return $this->motTestRepository->findTestsForVehicle(
+            $vehicleId,
+            $startDate,
+            $this->mysteryShopperHelper,
+            $siteIdsWherePersonCanViewMysteryShopperTests
+        );
     }
 
     private function mapTestHistoryToDto($testsHistory)
@@ -321,23 +340,5 @@ class VehicleHistoryService
         }
 
         return TRUE;
-    }
-
-    /**
-     * @param $vehicleId
-     * @param DateTime $startDate
-     * @param $siteId
-     * @param $testsHistory
-     * @return array
-     */
-    private function addHistoricalMysteryShopperTests($vehicleId, DateTime $startDate, $siteId, $testsHistory)
-    {
-        $mysteryShopperResultLimit = $this->mysteryShopperHelper->hasPermissionToMaskAndUnmaskVehicles() ? null : 1;
-        $mysteryShopperHistory = $this->motTestRepository->findHistoricalMysteryShopperTestsForVehicle($vehicleId, $startDate, $mysteryShopperResultLimit, $siteId);
-        if (!empty($mysteryShopperHistory)) {
-            $testsHistory = array_merge($testsHistory, $mysteryShopperHistory);
-        }
-
-        return $testsHistory;
     }
 }

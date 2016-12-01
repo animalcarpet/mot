@@ -67,7 +67,7 @@ class DvlaInfoMotHistoryServiceTest extends AbstractServiceTestCase
 
         $motTests = $this->prepareMotTestsArray($vehicle);
         $this->mockRepository->expects($this->once())
-            ->method('findHistoricalTestsForVehicle')
+            ->method('findTestsExcludingNonAuthoritativeTestsForVehicle')
             ->will($this->returnValue($motTests));
 
         //when

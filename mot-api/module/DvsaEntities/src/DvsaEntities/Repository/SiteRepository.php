@@ -11,6 +11,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use DvsaCommon\Enum\AuthorisationForTestingMotAtSiteStatusCode;
+use DvsaCommon\Enum\BusinessRoleStatusCode;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\SiteStatusCode;
 use DvsaCommon\Enum\SiteTypeCode;
@@ -21,6 +22,8 @@ use DvsaEntities\DqlBuilder\SearchParam\SiteSearchParam;
 use DvsaEntities\DqlBuilder\SiteSlotUsageParamDqlBuilder;
 use DvsaEntities\DqlBuilder\SlotUsageParamDqlBuilder;
 use DvsaEntities\Entity\BusinessRoleStatus;
+use DvsaEntities\Entity\Organisation;
+use DvsaEntities\Entity\OrganisationBusinessRoleMap;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\SiteBusinessRole;
@@ -206,16 +209,51 @@ class SiteRepository extends AbstractMutableRepository
         );
     }
 
-    public function findForPersonWithRole(Person $person, SiteBusinessRole $role, $status = null)
+    public function findSiteIdsForPersonId($personId)
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $queryBuilder
-            ->select('s')
+            ->select('s.id')
             ->from(SiteBusinessRoleMap::class, 'sbrm')
+            ->join(BusinessRoleStatus::class, 'brs', Join::INNER_JOIN, 'sbrm.businessRoleStatus = brs.id')
+            ->join(Person::class, 'p', Join::INNER_JOIN, 'sbrm.person = p.id')
             ->join(Site::class, 's', Join::INNER_JOIN, 'sbrm.site = s.id')
-            ->where('sbrm.person = :person')
+            ->where('p.id = :personId')
+            ->andWhere('brs.code = :businessRoleStatusCode')
+            ->setParameter('personId', $personId)
+            ->setParameter('businessRoleStatusCode', BusinessRoleStatusCode::ACTIVE);
+
+        return $queryBuilder->getQuery()->getArrayResult();
+    }
+
+    public function findSiteIdsForPersonIdViaOrganisation($personId)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $queryBuilder
+            ->select('s.id')
+            ->from(OrganisationBusinessRoleMap::class, 'obrm')
+            ->join(BusinessRoleStatus::class, 'brs', Join::INNER_JOIN, 'obrm.businessRoleStatus = brs.id')
+            ->join(Organisation::class, 'o', Join::INNER_JOIN, 'obrm.organisation = o.id')
+            ->join(Person::class, 'p', Join::INNER_JOIN, 'obrm.person = p.id')
+            ->join(Site::class, 's', Join::INNER_JOIN, 's.organisation = o.id')
+            ->where('p.id = :personId')
+            ->andWhere('brs.code = :businessRoleStatusCode')
+            ->setParameter('personId', $personId)
+            ->setParameter('businessRoleStatusCode', BusinessRoleStatusCode::ACTIVE);
+
+        return $queryBuilder->getQuery()->getArrayResult();
+    }
+
+    public function findForPerson(Person $person)
+    {
+        return $this->getFindForPersonQueryBuilder($person)->getQuery()->getResult();
+    }
+
+    public function findForPersonWithRole(Person $person, SiteBusinessRole $role, $status = null)
+    {
+        $queryBuilder = $this->getFindForPersonQueryBuilder($person);
+        $queryBuilder
             ->andWhere('sbrm.siteBusinessRole = :role')
-            ->setParameter('person', $person)
             ->setParameter('role', $role);
 
         if ($status) {
@@ -226,6 +264,19 @@ class SiteRepository extends AbstractMutableRepository
         }
 
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    private function getFindForPersonQueryBuilder(Person $person)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $queryBuilder
+            ->select('s')
+            ->from(SiteBusinessRoleMap::class, 'sbrm')
+            ->join(Site::class, 's', Join::INNER_JOIN, 'sbrm.site = s.id')
+            ->where('sbrm.person = :person')
+            ->setParameter('person', $person);
+
+        return $queryBuilder;
     }
 
     /**

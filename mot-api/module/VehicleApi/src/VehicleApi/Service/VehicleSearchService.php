@@ -15,6 +15,7 @@ use DvsaEntities\Repository\DvlaVehicleImportChangesRepository;
 use DvsaEntities\Repository\DvlaVehicleRepository;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\VehicleRepository;
+use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Service\TesterService;
 use DvsaMotApi\Service\Validator\RetestEligibility\RetestEligibilityValidator;
 use DvsaCommonApi\Service\Exception\BadRequestException;
@@ -51,6 +52,8 @@ class VehicleSearchService
     private $enforcementSearchStringConverter;
     /** @var NewVehicleService */
     private $vehicleService;
+    /** @var MysteryShopperHelper */
+    private $mysteryShopperHelper;
 
     /**
      * @param AuthorisationServiceInterface $authService
@@ -64,6 +67,8 @@ class VehicleSearchService
      * @param RetestEligibilityValidator $retestEligibilityValidator
      * @param AbstractStringConverter $searchStringConverter
      * @param AbstractStringConverter $enforcementSearchStringConverter
+     * @param NewVehicleService $vehicleService
+     * @param MysteryShopperHelper $mysteryShopperHelper
      */
     public function __construct(
         AuthorisationServiceInterface $authService,
@@ -77,7 +82,8 @@ class VehicleSearchService
         RetestEligibilityValidator $retestEligibilityValidator,
         AbstractStringConverter $searchStringConverter,
         AbstractStringConverter $enforcementSearchStringConverter,
-        NewVehicleService $vehicleService
+        NewVehicleService $vehicleService,
+        MysteryShopperHelper $mysteryShopperHelper
     ) {
         $this->vehicleRepository = $vehicleRepository;
         $this->dvlaVehicleRepository = $dvlaVehicleRepository;
@@ -91,6 +97,7 @@ class VehicleSearchService
         $this->searchStringConverter = $searchStringConverter;
         $this->enforcementSearchStringConverter = $enforcementSearchStringConverter;
         $this->vehicleService = $vehicleService;
+        $this->mysteryShopperHelper = $mysteryShopperHelper;
     }
 
     /**
@@ -232,7 +239,7 @@ class VehicleSearchService
         ]);
 
         if (!$vehicle['isDvla']) {
-            $motTestData = $this->motTestRepository->findHistoricalTestsForVehicle($vehicle['id'], null);
+            $motTestData = $this->motTestRepository->findTestsForVehicle($vehicle['id'], null, $this->mysteryShopperHelper);
             if ($motTestData) {
                 /** @var MotTest $latestMotTest */
                 $latestMotTest = current($motTestData);

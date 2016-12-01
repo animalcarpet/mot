@@ -51,7 +51,7 @@ class DvlaInfoMotHistoryService
             throw new NotFoundException("MOT tests");
         }
 
-        $motTests = $this->motTestRepository->findHistoricalTestsForVehicle($motTest->getVehicle()->getId(), null);
+        $motTests = $this->motTestRepository->findTestsExcludingNonAuthoritativeTestsForVehicle($motTest->getVehicle()->getId(), null);
 
         return $this->mapper->toArray($motTests);
     }

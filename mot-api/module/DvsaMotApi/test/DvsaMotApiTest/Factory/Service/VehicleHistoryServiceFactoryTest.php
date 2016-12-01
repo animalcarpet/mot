@@ -9,6 +9,7 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Repository\ConfigurationRepository;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\PersonRepository;
+use DvsaEntities\Repository\SiteRepository;
 use DvsaMotApi\Factory\Service\VehicleHistoryServiceFactory;
 use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Service\VehicleHistoryService;
@@ -25,7 +26,8 @@ class VehicleHistoryServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $this->mockMethod($mockServiceLocator, 'get', $this->at(1), XMock::of(MotTestRepository::class));
         $this->mockMethod($mockServiceLocator, 'get', $this->at(2), XMock::of(AuthorisationService::class));
         $this->mockMethod($mockServiceLocator, 'get', $this->at(3), XMock::of(ConfigurationRepository::class));
-        $this->mockMethod($mockServiceLocator, 'get', $this->at(4), XMock::of(MysteryShopperHelper::class));
+        $this->mockMethod($mockServiceLocator, 'get', $this->at(4), XMock::of(SiteRepository::class));
+        $this->mockMethod($mockServiceLocator, 'get', $this->at(5), XMock::of(MysteryShopperHelper::class));
 
         $this->assertInstanceOf(
             VehicleHistoryService::class,

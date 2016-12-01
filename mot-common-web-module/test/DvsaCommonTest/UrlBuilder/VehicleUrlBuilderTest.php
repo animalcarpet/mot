@@ -22,7 +22,7 @@ class VehicleUrlBuilderTest extends \PHPUnit_Framework_TestCase
             $base . '/test-expiry-check/' . self::IS_DVLA
         );
 
-        $this->checkUrl(VehicleUrlBuilder::testHistory(self::VEHICLE_ID, null), $base . '/test-history?');
+        $this->checkUrl(VehicleUrlBuilder::testHistory(self::VEHICLE_ID), $base . '/test-history');
         $this->checkUrl(
             VehicleUrlBuilder::retestEligibilityCheck(self::VEHICLE_ID, self::SITE_ID),
             $base . '/retest-eligibility-check/' . self::SITE_ID

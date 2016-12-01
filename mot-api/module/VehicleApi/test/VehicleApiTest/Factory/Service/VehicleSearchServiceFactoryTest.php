@@ -13,6 +13,7 @@ use DvsaEntities\Repository\DvlaVehicleImportChangesRepository;
 use DvsaEntities\Repository\DvlaVehicleRepository;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\VehicleRepository;
+use DvsaMotApi\Helper\MysteryShopperHelper;
 use VehicleApi\Service\VehicleSearchService;
 use VehicleApi\Factory\Service\VehicleSearchServiceFactory;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -40,6 +41,7 @@ class VehicleSearchServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $this->mockMethod($mockServiceLocator, 'get', $this->at(4), XMock::of(ParamObfuscator::class));
         $this->mockMethod($mockServiceLocator, 'get', $this->at(5), XMock::of(RetestEligibilityValidator::class));
         $this->mockMethod($mockServiceLocator, 'get', $this->at(6), XMock::of(NewVehicleService::class));
+        $this->mockMethod($mockServiceLocator, 'get', $this->at(7), XMock::of(MysteryShopperHelper::class));
 
         $this->assertInstanceOf(
             VehicleSearchService::class,

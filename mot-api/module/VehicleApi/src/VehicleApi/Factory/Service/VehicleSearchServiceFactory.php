@@ -9,6 +9,7 @@ use DvsaEntities\Entity\DvlaVehicle;
 use DvsaEntities\Entity\DvlaVehicleImportChangeLog;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\Vehicle;
+use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Service\Validator\RetestEligibility\RetestEligibilityValidator;
 use VehicleApi\Service\VehicleSearchService;
 use Zend\ServiceManager\FactoryInterface;
@@ -39,7 +40,8 @@ class VehicleSearchServiceFactory implements FactoryInterface
             $serviceLocator->get(RetestEligibilityValidator::class),
             new FuzzySearchConverter(),
             new SpaceStripConverter(),
-            $serviceLocator->get(VehicleService::class)
+            $serviceLocator->get(VehicleService::class),
+            $serviceLocator->get(MysteryShopperHelper::class)
         );
     }
 }

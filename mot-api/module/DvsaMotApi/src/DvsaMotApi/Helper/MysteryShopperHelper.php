@@ -72,7 +72,16 @@ class MysteryShopperHelper
     public function hasPermissionToMaskAndUnmaskVehicles()
     {
         return $this->isMysteryShopperToggleEnabled()
-        && (true === $this->authorisationService->isGranted(PermissionInSystem::ENFORCEMENT_CAN_MASK_AND_UNMASK_VEHICLES));
+            && (true === $this->authorisationService->isGranted(PermissionInSystem::ENFORCEMENT_CAN_MASK_AND_UNMASK_VEHICLES));
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasPermissionToViewMysteryShopperTests()
+    {
+        return $this->isMysteryShopperToggleEnabled()
+            && (true === $this->authorisationService->isGranted(PermissionInSystem::VIEW_MYSTERY_SHOPPER_TESTS));
     }
 
     /**
