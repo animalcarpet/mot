@@ -6,7 +6,7 @@ use Core\Action\NotFoundActionResult;
 use Core\Action\RedirectToRoute;
 use Core\Action\ViewActionResult;
 use Core\Routing\MotTestRouteList;
-use Dvsa\Mot\ApiClient\Resource\Item\InternalSearchVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\SearchVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -67,9 +67,9 @@ class VehicleCertificatesAction implements AutoWireableInterface
         $viewModel = new MotTestCertificateListViewModel();
         $viewModel->setFoundByRegistration($vrm !== null);
 
-        $searchResult = $this->vehicleService->internalSearch($vrm, $vin);
+        $searchResult = $this->vehicleService->search($vrm, $vin);
 
-        /** @var InternalSearchVehicle[] $vehicles */
+        /** @var SearchVehicle[] $vehicles */
         $vehicles = $searchResult->getAll();
 
         if ($searchResult->getCount() == 0) {
@@ -137,12 +137,12 @@ class VehicleCertificatesAction implements AutoWireableInterface
     }
 
     /**
-     * @param InternalSearchVehicle $vehicle
+     * @param SearchVehicle $vehicle
      * @param $paramsForSearchBy
      *
      * @return VehicleTable
      */
-    private function createVehicleViewTableFromDto(InternalSearchVehicle $vehicle, $paramsForSearchBy)
+    private function createVehicleViewTableFromDto(SearchVehicle $vehicle, $paramsForSearchBy)
     {
         $vehicleTable = new VehicleTable();
         $vehicleTable->setMake($vehicle->getMake());

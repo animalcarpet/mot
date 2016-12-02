@@ -7,7 +7,7 @@ use Core\Action\RedirectToRoute;
 use Core\Action\ViewActionResult;
 use Core\Service\MotFrontendIdentityProviderInterface;
 use Dvsa\Mot\ApiClient\Resource\Collection;
-use Dvsa\Mot\ApiClient\Resource\Item\InternalSearchVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\SearchVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Dto\Vehicle\History\VehicleHistoryItemDto;
@@ -30,7 +30,7 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
     private $vehicleService;
 
     /** @var MethodSpy */
-    private $internalSearchSpy;
+    private $searchSpy;
 
     /** @var  Client| \PHPUnit_Framework_MockObject_MockObject */
     private $httpClient;
@@ -65,7 +65,7 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
         $this->authorisationService->granted(PermissionInSystem::CERTIFICATE_SEARCH);
         $this->motFrontendIdentityProviderInterface = XMock::of(MotFrontendIdentityProviderInterface::class);
 
-        $this->internalSearchSpy = new MethodSpy($this->vehicleService, 'internalSearch');
+        $this->searchSpy = new MethodSpy($this->vehicleService, 'search');
         $this->httpClientGetSpy = new MethodSpy($this->httpClient, 'get');
 
         $this->action = new VehicleCertificatesAction($this->vehicleService, $this->httpClient, $this->authorisationService, $this->motFrontendIdentityProviderInterface);
@@ -85,7 +85,7 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
         // GIVEN I want to search for a vehicle with correct parameters
         $vehicles = $this->prepareVehicles();
 
-        $this->internalSearchSpy->mock()->willReturn($vehicles);
+        $this->searchSpy->mock()->willReturn($vehicles);
 
         $certificateData = $this->preperaCertificateData();
 
@@ -96,11 +96,11 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
         $actionResult = $this->action->execute($vrm, $vin, []);
 
         // THEN a call to API is made for vehicles
-        $this->assertEquals(1, $this->internalSearchSpy->invocationCount(), "There was supposed to be one call to API for vehicle search");
+        $this->assertEquals(1, $this->searchSpy->invocationCount(), "There was supposed to be one call to API for vehicle search");
 
         // with correct, cleaned parameters
-        $this->assertSame($cleanedVrm, $this->internalSearchSpy->paramsForLastInvocation()[0], "The search parameter VRM is incorrect");
-        $this->assertSame($cleanedVin, $this->internalSearchSpy->paramsForLastInvocation()[1], "The search parameter VIN is incorrect");
+        $this->assertSame($cleanedVrm, $this->searchSpy->paramsForLastInvocation()[0], "The search parameter VRM is incorrect");
+        $this->assertSame($cleanedVin, $this->searchSpy->paramsForLastInvocation()[1], "The search parameter VIN is incorrect");
 
         // AND a call to API is made for certificates per each vehicle
         $this->assertEquals($this->expectedNumberOfCertificates, $this->httpClientGetSpy->invocationCount(), "We expect two calls to API for each of the 2 vehicle in test set ups");
@@ -176,7 +176,7 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
         $vehicle2Std->vin = null;
         $vehicle2Std->registration = null;
 
-        return new Collection([$vehicle1Std, $vehicle2Std], InternalSearchVehicle::class);
+        return new Collection([$vehicle1Std, $vehicle2Std], SearchVehicle::class);
     }
 
     private function preperaCertificateData()
@@ -258,8 +258,8 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
 
         // GIVEN I use search params of unexisting vehicle
         $vrm = 'ABC';
-        $emptySearchResult = new Collection([], InternalSearchVehicle::class);
-        $this->internalSearchSpy->mock()->willReturn($emptySearchResult);
+        $emptySearchResult = new Collection([], SearchVehicle::class);
+        $this->searchSpy->mock()->willReturn($emptySearchResult);
 
         // WHEN I search for vehicles
         /** @var RedirectToRoute $actionResult */
@@ -289,8 +289,8 @@ class VehicleCertificatesActionTest extends \PHPUnit_Framework_TestCase
 
         // GIVEN I use search params of unexisting vehicle
         $vin = 'ABC';
-        $emptySearchResult = new Collection([], InternalSearchVehicle::class);
-        $this->internalSearchSpy->mock()->willReturn($emptySearchResult);
+        $emptySearchResult = new Collection([], SearchVehicle::class);
+        $this->searchSpy->mock()->willReturn($emptySearchResult);
 
         // WHEN I search for vehicles
         /** @var RedirectToRoute $actionResult */
