@@ -30,6 +30,7 @@ use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Enum\WeightSourceCode;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\Messages\InvalidTestStatus;
+use DvsaCommon\MysteryShopper\MysteryShopperExpiryDateGenerator;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
 use DvsaCommonApi\Filter\XssFilter;
@@ -40,7 +41,6 @@ use DvsaCommonApi\Transaction\TransactionAwareTrait;
 use DvsaEntities\Entity\BrakeTestResult;
 use DvsaEntities\Entity\Comment;
 use DvsaEntities\Entity\MotTest;
-use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\SiteTestingDailySchedule;
@@ -324,7 +324,7 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         $this->motTestStatusChangeValidator->verifyThatStatusTransitionIsPossible($motTest, $newStatus);
 
         // Checking for Site ID is mandatory only for Non-MOT inspection.
-        if ($motTest->getMotTestType()->getCode() == MotTestTypeCode::NON_MOT_TEST && !in_array($newStatus, self::$MOT_TEST_ABORTED_STATUSES)){
+        if ($motTest->getMotTestType()->getCode() == MotTestTypeCode::NON_MOT_TEST && !in_array($newStatus, self::$MOT_TEST_ABORTED_STATUSES)) {
             $this->motTestStatusChangeValidator->checkSiteIdHasBeenEntered($motTest);
         }
 
@@ -416,6 +416,8 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         //  --  set Issue & Expire Date  --
         $motTest->setIssuedDate($this->motTestDateHelper->getIssuedDate($motTest));
         $motTest->setExpiryDate($this->motTestDateHelper->getExpiryDate($motTest));
+
+        $this->updateExpiryDateIfMysteryShopper($motTest);
     }
 
     // NOTE: there should be a cancel status from client point of view that
@@ -491,6 +493,8 @@ class MotTestStatusChangeService implements TransactionAwareInterface
             $passedMotTest->setIssuedDate($this->motTestDateHelper->getIssuedDate($passedMotTest));
             $passedMotTest->setExpiryDate($this->motTestDateHelper->getExpiryDate($passedMotTest));
 
+            $this->updateExpiryDateIfMysteryShopper($passedMotTest);
+
             $this->motTestRepository->save($passedMotTest);
             $passedMotTest->setNumber(MotTestNumberGenerator::generateMotTestNumber($passedMotTest->getId()));
             $this->motTestRepository->save($passedMotTest);
@@ -522,9 +526,6 @@ class MotTestStatusChangeService implements TransactionAwareInterface
 
     private function copyAdvisoryRfrItems(MotTest $sourceMotTest, MotTest &$targetMotTest)
     {
-        /*
-         * @var MotTestReasonForRejection
-         */
         foreach ($sourceMotTest->getMotTestReasonForRejections() as $rfr) {
             if ($rfr->getType() === ReasonForRejectionTypeName::ADVISORY) {
                 $cloneRfr = clone $rfr;
@@ -702,7 +703,7 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         /** @var MotTestType $motTestType */
         $motTestType = $motTestTypeRepository->findOneByCode($motTestTypeCode);
         if (!$motTestType) {
-            throw new \Exception('MotTestType not found by code: ' . $motTestTypeCode);
+            throw new \Exception('MotTestType not found by code: '.$motTestTypeCode);
         }
 
         if (in_array($newStatus, self::$MOT_STATUS_REQUIRING_SLOT_RETURN)
@@ -837,5 +838,33 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         }
 
         $this->entityManager->flush();
+    }
+
+    /**
+     * @param MotTest $motTest
+     *
+     * @return MotTest
+     */
+    private function updateExpiryDateIfMysteryShopper(MotTest $motTest)
+    {
+        if (!$this->isMysteryShopper($motTest)) {
+            return $motTest;
+        }
+
+        $mysteryShopperExpiryDate = (new MysteryShopperExpiryDateGenerator())->getCertificateExpiryDate();
+        $motTest->setExpiryDate($mysteryShopperExpiryDate);
+
+        return $motTest;
+    }
+
+    /**
+     * @param MotTest $motTest
+     *
+     * @return bool
+     */
+    private function isMysteryShopper(MotTest $motTest)
+    {
+        return ($motTest->getMotTestType() !== null)
+        && ($motTest->getMotTestType()->getCode() === MotTestTypeCode::MYSTERY_SHOPPER);
     }
 }
