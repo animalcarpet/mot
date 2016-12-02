@@ -54,8 +54,8 @@ return array(
     // different in different environments
     // @See https://gitlab.motdev.org.uk/mot/api-client-php/tree/develop/config
     // @See https://gitlab.motdev.org.uk/webops/hieradata/blob/develop/code/hieradata/global.yaml#L694 & #L695
-    'api' => [
-        'vehicle_service_url' => 'http://warden:8080/vehicles/',
-        'authorisation_service_url' => 'http://openam.motdev.org.uk:8080/sso/',
+    api' => [
+        'vehicle_service_url' => 'http://dev2.motdev.org.uk:9095/vehicles/',
+        'authorisation_service_url' => 'http://dev2.motdev.org.uk:8095/authorisation/',
     ],
 );
