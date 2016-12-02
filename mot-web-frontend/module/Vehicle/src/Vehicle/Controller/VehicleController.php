@@ -4,7 +4,7 @@ namespace Vehicle\Controller;
 
 use Application\Service\CatalogService;
 use Core\Controller\AbstractAuthActionController;
-use Dvsa\Mot\ApiClient\Resource\Item\InternalSearchVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\SearchVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaClient\Mapper\VehicleExpiryMapper;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
@@ -163,7 +163,7 @@ class VehicleController extends AbstractAuthActionController implements AutoWire
 
         $results = $vehicleSearchService->getVehicleResults();
         if ($results->getCount() === 1) {
-            /** @var InternalSearchVehicle $vehicle */
+            /** @var SearchVehicle $vehicle */
             $vehicle = $results->getItem(0);
 
             return $this->redirect()->toRoute(

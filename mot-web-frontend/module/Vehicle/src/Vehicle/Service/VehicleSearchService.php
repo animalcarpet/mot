@@ -3,7 +3,7 @@
 namespace Vehicle\Service;
 
 use Dvsa\Mot\ApiClient\Resource\Collection;
-use Dvsa\Mot\ApiClient\Resource\Item\InternalSearchVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\SearchVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\UrlBuilder\VehicleUrlBuilder;
@@ -65,9 +65,9 @@ class VehicleSearchService
         $vehicleService = $this->controller->getServiceLocator()->get(VehicleService::class);
 
         if ($this->searchData['type'] == 'registration') {
-            $vehicleCollection = $vehicleService->internalSearch($this->searchData['search'], null);
+            $vehicleCollection = $vehicleService->search($this->searchData['search'], null);
         } else {
-            $vehicleCollection =  $vehicleService->internalSearch(null, $this->searchData['search']);
+            $vehicleCollection =  $vehicleService->search(null, $this->searchData['search']);
         }
 
         $this->apiResults = $vehicleCollection;
@@ -87,7 +87,7 @@ class VehicleSearchService
                 VehicleUrlBuilderWeb::search()->queryParams($this->searchData)
             );
         } elseif ($totalCount == 1) {
-            /** @var InternalSearchVehicle $vehicle */
+            /** @var SearchVehicle $vehicle */
             $vehicle = $data->getItem(0);
             return $this->controller->redirect()->toRoute(
                 "vehicle/detail",
