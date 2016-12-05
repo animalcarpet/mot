@@ -257,14 +257,7 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
                 )
             );
         }
-
-        // The parent of the leftmost-but-one column is always 0, or 'RFR Home'
-        $dataFromApi[$index] = $this->getDataFromApi(
-            MotTestUrlBuilder::motTestItem(
-                $motTestNumber,
-                0
-            )
-        );
+        
         // Here we reverse the tree. We want the the columns stored in order of left->right.
         $dataFromApi = array_reverse($dataFromApi);
 
