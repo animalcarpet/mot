@@ -4,8 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "25b9f7109a2738431f9488b64821983e",
-    "content-hash": "27c3e81f42fd74c6c12e41e676c26517",
+    "content-hash": "5ae77dab3a192be5ae03f6281bef61cf",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -2366,17 +2365,17 @@
         },
         {
             "name": "slot-purchase/backend-api",
-            "version": "v4.0.4",
+            "version": "v4.0.5",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/slot-purchase-backend-api.git",
-                "reference": "d48e6252e95b973bc545733ed31456a50412d0ee"
+                "reference": "0ec259d191d3ca63a145e6f7c9097606ef300af2"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/slot-purchase-backend-api-v4.0.4-5ea7b7.tar",
-                "reference": "d48e6252e95b973bc545733ed31456a50412d0ee",
-                "shasum": "5799f61b72a56c60e3b82e45562c6dcfe9f93649"
+                "url": "https://packages.motdev.org.uk//dist/slot-purchase-backend-api-v4.0.5-3381f5.tar",
+                "reference": "0ec259d191d3ca63a145e6f7c9097606ef300af2",
+                "shasum": "206290661d3faac39dbde49682c0dcd88c3af465"
             },
             "require": {
                 "cpms/client": "^1.25.0",
@@ -2447,7 +2446,7 @@
                 "proprietary"
             ],
             "description": "API for slot purchasing and related features",
-            "time": "2016-11-16 09:22:07"
+            "time": "2016-12-05 09:49:47"
         },
         {
             "name": "soflomo/purifier",
