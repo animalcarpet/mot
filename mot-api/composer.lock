@@ -4,7 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "5ae77dab3a192be5ae03f6281bef61cf",
+    "hash": "44eb05f4df9526f66ab45a7bf582f514",
+    "content-hash": "715d8ce5bf028bfb9987c23665d7f911",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -1905,17 +1906,17 @@
         },
         {
             "name": "mot/api-client-php",
-            "version": "11.0.0",
+            "version": "11.1.0",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/api-client-php.git",
-                "reference": "e07d5ebc4c36bf5b8264b5077cd6064c84d09203"
+                "reference": "75962a3d50ebcfab2ebfdb7fe7cb884f5dc32448"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-11.0.0-f7adf4.tar",
-                "reference": "e07d5ebc4c36bf5b8264b5077cd6064c84d09203",
-                "shasum": "e098d754b9850b1b6e8470e698596e5aef5196a3"
+                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-11.1.0-4f2f21.tar",
+                "reference": "75962a3d50ebcfab2ebfdb7fe7cb884f5dc32448",
+                "shasum": "0aed0561478eacee89a23f0ba98d6a7d823ada38"
             },
             "require": {
                 "guzzlehttp/guzzle": "~6.1",
@@ -1972,7 +1973,7 @@
                     "email": "a.bahman@kainos.com"
                 }
             ],
-            "time": "2016-12-02 09:50:37"
+            "time": "2016-12-05 19:48:04"
         },
         {
             "name": "mtdowling/jmespath.php",

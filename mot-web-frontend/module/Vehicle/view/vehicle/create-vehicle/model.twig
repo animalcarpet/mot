@@ -1,0 +1,44 @@
+<!— {{ inlineScript().appendFile("/assets/javascripts/dvsa.js") }} -->
+{% if viewModel.form.getErrorMessages is not empty %}
+    <div class="validation-summary">
+        <h2 class="heading-medium">There was a problem</h2>
+        <ol>
+            {% for message in viewModel.form.getErrorMessages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ol>
+    </div>
+{%  endif %}
+
+<form method="post" novalidate>
+    {{ csrfToken() }}
+    <fieldset>
+        <div class="form-group {% if viewModel.form.getModel.messages is not empty %} has-error {% endif %}">
+            <label class="form-label" for="vehicleModel">Model</label>
+            {% if viewModel.form.getModel.messages is not empty %}
+                <span class="validation-message">Select a model</span>
+            {% endif %}
+            {{ formElement(viewModel.form.getModel) }}
+        </div>
+
+        <div id="other-wrapper" class="panel-indent js-hidden {% if viewModel.form.getOther.messages is not empty %} has-error {% endif %}" aria-hidden="false">
+            <label id="other-model" class="form-label">
+                If other, please specify
+                {% if viewModel.form.getOther.messages is not empty %}
+                    <span class="validation-message">{{ viewModel.form.getOther.messages[0] }}</span>
+                {% endif %}
+            </label>
+            {{ formElement(viewModel.form.getOther) }}
+        </div>
+    </fieldset>
+    <div class="form-group">
+        <nav class="content-navigation">
+            <input type="submit" id="model-continue" value="{{ viewModel.continueButtonLabel }}" class="button " id="continueButton">
+            <ul class="content-navigation__secondary">
+                <li>
+                    <a href="{{ url('create-vehicle/new-vehicle-make') }}">Back</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</form>

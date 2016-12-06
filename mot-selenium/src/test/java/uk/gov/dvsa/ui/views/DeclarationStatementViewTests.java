@@ -70,36 +70,6 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.retest.isDeclarationStatementDisplayed(), is(true));
     }
 
-    @Test (groups = {"BVT"})
-    public void displayStatementAtChangeVehicleDetailsSummary() throws IOException, URISyntaxException {
-        User nonTwoFactorTester = motApi.user.createTester(site.getId());
-
-        //Given I change the vehicle details
-        motUI.normalTest.changeVehicleDetails(nonTwoFactorTester, vehicle);
-
-        //When I submit the change
-
-        //Then I should be presented with the declaration statement
-        assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(true));
-    }
-
-    @Test (testName = "2fa", groups = {"BVT"})
-    public void displayStatementFor2FaUserAtChangeVehicleDetailsSummary() throws IOException, URISyntaxException {
-
-        //Given I am 2fa tester
-        int siteId = siteData.createSite().getId();
-        User twoFactorTester = motApi.user.createTester(siteId);
-        motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
-
-        //Given I change the vehicle details
-        motUI.normalTest.changeVehicleDetails(twoFactorTester, vehicle);
-
-        //When I submit the change
-
-        //Then I should be presented with 2fa declaration statement
-        assertThat(motUI.normalTest.isDeclarationStatementFor2FaDisplayed(), is(true));
-    }
-
     @Test (groups = {"Regression"})
     public void statementShouldNotBeDisplayedForTrainingTest() throws IOException, URISyntaxException {
 
@@ -159,31 +129,6 @@ public class DeclarationStatementViewTests extends DslTest {
 
         //Then I should be presented with the declaration statement
         assertThat(motUI.contingency.isDeclarationStatementDisplayed(), is(true));
-    }
-
-    @Test (groups = {"Regression"})
-    public void displayStatementAtCreateNewVehicleRecord() throws IOException, URISyntaxException {
-
-        //When I create a new vehicle record within a test
-        motUI.normalTest.createNewVehicleRecord(motApi.user.createTester(site.getId()), vehicle);
-
-        //Then I should be presented with the declaration statement
-        assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(true));
-    }
-
-    @Test (testName = "2fa", groups = {"BVT"})
-    public void displayStatementFor2FaUserAtCreateNewVehicleRecord() throws IOException, URISyntaxException {
-
-        //Given I am 2fa tester
-        int siteId = siteData.createSite().getId();
-        User twoFactorTester = motApi.user.createTester(siteId);
-        motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
-
-        //When I create a new vehicle record within a test
-        motUI.normalTest.createNewVehicleRecord(twoFactorTester, vehicle);
-
-        //Then I should be presented with 2fa declaration statement
-        assertThat(motUI.normalTest.isDeclarationStatementFor2FaDisplayed(), is(true));
     }
 
     @Test (groups = {"BVT", "Regression"})

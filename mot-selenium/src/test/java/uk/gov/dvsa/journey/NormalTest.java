@@ -6,17 +6,15 @@ import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.CancelTestReason;
 import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.domain.model.mot.ReasonForVehicleRefusal;
-import uk.gov.dvsa.domain.model.vehicle.DvlaVehicle;
-import uk.gov.dvsa.domain.model.vehicle.VehicleFactory;
+import uk.gov.dvsa.domain.model.vehicle.*;
+import uk.gov.dvsa.domain.model.vehicle.Make;
+import uk.gov.dvsa.domain.model.vehicle.Model;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.ConfigHelper;
-import uk.gov.dvsa.ui.pages.VehicleSearchPage;
 import uk.gov.dvsa.ui.pages.mot.*;
 import uk.gov.dvsa.ui.pages.mot.modal.ManualAdvisoryModalPage;
-import uk.gov.dvsa.ui.pages.vehicleinformation.CreateNewVehicleRecordConfirmPage;
-import uk.gov.dvsa.ui.pages.vehicleinformation.CreateNewVehicleRecordIdentificationPage;
-import uk.gov.dvsa.ui.pages.vehicleinformation.CreateNewVehicleRecordSpecificationPage;
+import uk.gov.dvsa.ui.pages.vehicleinformation.*;
 
 import java.io.IOException;
 import java.net.URI;
@@ -28,6 +26,7 @@ import static org.hamcrest.Matchers.equalToIgnoringCase;
 public class NormalTest {
 
     private PageNavigator pageNavigator = null;
+    private DefaultVehicleDataRandomizer vehicleDataRandomizer = new DefaultVehicleDataRandomizer();
     private MotAppDriver driver;
     private String testStatus;
     private TestResultsEntryGroupAPageInterface testResultsEntryPage;
@@ -116,16 +115,6 @@ public class NormalTest {
         return path.substring(path.lastIndexOf('/') + 1);
     }
 
-    public VehicleDetailsChangedPage changeVehicleDetails(User tester, Vehicle vehicle) throws IOException, URISyntaxException {
-        VehicleSearchPage vehicleSearchPage = pageNavigator.navigateToPage(tester, VehicleSearchPage.PATH, VehicleSearchPage.class);
-        StartTestConfirmationPage startTestConfirmationPage = vehicleSearchPage.searchVehicle(vehicle).selectVehicle(StartTestConfirmationPage.class);
-        VehicleDetailsChangedPage vehicleDetailsChangedPage = startTestConfirmationPage.changeVehicleDetailAndSubmit(vehicle);
-
-        setDeclarationStatementStatus(vehicleDetailsChangedPage);
-
-        return vehicleDetailsChangedPage;
-    }
-
     private void setDeclarationStatementStatus(VehicleDetailsChangedPage vehicleDetailsChangedPage) {
         if (vehicleDetailsChangedPage.isPinBoxDisplayed()) {
             assertThat(vehicleDetailsChangedPage.getDeclarationText(), equalToIgnoringCase(DECLARATION_STATEMENT));
@@ -171,27 +160,6 @@ public class NormalTest {
         declarationSuccessful = refuseToTestPage.isDeclarationElementPresentInDom();
     }
 
-    public CreateNewVehicleRecordConfirmPage createNewVehicleRecord(User tester, Vehicle vehicle) throws IOException, URISyntaxException {
-
-        CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage = pageNavigator.gotoCreateNewVehicleRecordIdentificationPage(tester);
-        createNewVehicleRecordIdentificationPage.enterDetails(vehicle);
-
-        CreateNewVehicleRecordSpecificationPage createNewVehicleRecordSpecificationPage = createNewVehicleRecordIdentificationPage.submit();
-        createNewVehicleRecordSpecificationPage.enterVehicleDetails(vehicle);
-
-        CreateNewVehicleRecordConfirmPage createNewVehicleRecordConfirmPage = createNewVehicleRecordSpecificationPage.submit();
-
-        if (createNewVehicleRecordConfirmPage.isPinBoxDisplayed()) {
-            assertThat(createNewVehicleRecordConfirmPage.getDeclarationText(), equalToIgnoringCase(DECLARATION_STATEMENT));
-            declarationSuccessful = true;
-        } else {
-            assertThat(createNewVehicleRecordConfirmPage.getDeclarationText(), equalToIgnoringCase(DECLARATION_STATEMENT_2FA_CREATE_VEHICLE));
-            declarationFor2FaSuccessful = true;
-        }
-
-        return createNewVehicleRecordConfirmPage;
-    }
-
     public void viewTestAs(User user, String motTestId) throws IOException, URISyntaxException {
         String path = String.format(EnforcementTestSummaryPage.PATH, motTestId);
         enforcementSummaryPage = pageNavigator.navigateToPage(user, path, EnforcementTestSummaryPage.class);
@@ -233,139 +201,53 @@ public class NormalTest {
         return new StartTestConfirmationPage(driver).getRegistration();
     }
 
-    public boolean createNewDvsaVehicle(User tester, Vehicle vehicle) throws IOException, URISyntaxException {
-
-        CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage =
-            gotoCreateNewVehicleRecordIdentificationPage(tester);
-
-        createNewVehicleRecordIdentificationPage.enterDetails(vehicle);
-        CreateNewVehicleRecordSpecificationPage createNewVehicleRecordSpecificationPage =
-            createNewVehicleRecordIdentificationPage.submit();
-
-        createNewVehicleRecordSpecificationPage.enterVehicleDetails(vehicle);
-        CreateNewVehicleRecordConfirmPage createNewVehicleRecordConfirmPage =
-                createNewVehicleRecordSpecificationPage.submit();
-
-        MotTestStartedPage motTestStartedPage = createNewVehicleRecordConfirmPage.setOneTimePassword("123456").startTest();
-
-        if( motTestStartedPage.getModel().toLowerCase().contains(vehicle.getModel().getName().toLowerCase())
-                && motTestStartedPage.getVrm().toLowerCase().contains(vehicle.getDvsaRegistration().toLowerCase()) ) {
-            return true;
-        }else{
-            return false;
-        }
-    }
-
-    public CreateNewVehicleRecordIdentificationPage gotoCreateNewVehicleRecordIdentificationPage(
-            User tester) throws IOException, URISyntaxException {
-
-        CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage =
+    public VehicleConfirmationPage createNewVehicle(User tester) throws IOException, URISyntaxException {
+        CreateVehicleStartPage createVehicleStartPage =
                 pageNavigator.gotoCreateNewVehicleRecordIdentificationPage(tester);
 
-        return createNewVehicleRecordIdentificationPage;
+        return createVehicleStartPage
+                .continueToVinVrmPage().enterRegistration(vehicleDataRandomizer.nextReg()).enterVin(vehicleDataRandomizer.nextVin())
+                .continueToVehicleMakePage().selectMake(Make.FORD)
+                .continueToVehicleModelPage().selectModel(Model.FORD_MONDEO)
+                .continueToVehicleEnginePage().selectFuelType(FuelTypes.Petrol)
+                .continueToTestClassPage().selectClass()
+                .continueToVehicleColourPage().selectPrimaryColour(Colours.Blue)
+                .continueToVehicleCountryOfRegistrationPage().enterCountryOfRegistration(CountryOfRegistration.Northern_Ireland)
+                .continueToVehicleFirstUseDatePage().enterDate()
+                .continueToVehicleReviewPage()
+                .continueToVehicleConfirmationPage();
     }
 
-    public CreateNewVehicleRecordSpecificationPage submitValidPageOneDetails(
-        CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage) {
+    public VehicleReviewPage reviewVehcielDetails(User tester) throws IOException, URISyntaxException {
+        CreateVehicleStartPage createVehicleStartPage =
+                pageNavigator.gotoCreateNewVehicleRecordIdentificationPage(tester);
 
-        Vehicle vehicle = VehicleFactory.generateValidDetails();
-
-        createNewVehicleRecordIdentificationPage.enterDetails(vehicle);
-        return createNewVehicleRecordIdentificationPage.submit();
+        return createVehicleStartPage
+                .continueToVinVrmPage().enterRegistration(vehicleDataRandomizer.nextReg()).enterVin(vehicleDataRandomizer.nextVin())
+                .continueToVehicleMakePage().selectMake(Make.HYUNDAI)
+                .continueToVehicleModelPage().selectModel(Model.HYUNDAI_I40)
+                .continueToVehicleEnginePage().selectFuelType(FuelTypes.Diesel)
+                .continueToTestClassPage().selectClass()
+                .continueToVehicleColourPage().selectPrimaryColour(Colours.Blue)
+                .continueToVehicleCountryOfRegistrationPage().enterCountryOfRegistration(CountryOfRegistration.Northern_Ireland)
+                .continueToVehicleFirstUseDatePage().enterDate()
+                .continueToVehicleReviewPage();
     }
 
-    public boolean submitInvalidPageOneDate(String date, String errorMsg,
-             CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage) {
+    public VehicleConfirmationPage createNewElectricVehicle(User tester) throws IOException, URISyntaxException {
+        CreateVehicleStartPage createVehicleStartPage =
+                pageNavigator.gotoCreateNewVehicleRecordIdentificationPage(tester);
 
-        Vehicle vehicle = VehicleFactory.generateValidDetails();
-
-        vehicle.setFirstUsedDate(date);
-        createNewVehicleRecordIdentificationPage.enterDetails(vehicle);
-        createNewVehicleRecordIdentificationPage.submit();
-
-        return createNewVehicleRecordIdentificationPage.isErrorMessageDisplayed(errorMsg);
-    }
-
-    public boolean submitInvalidPageOneDetails(String property, String errorMsg,
-             CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage) {
-
-        Vehicle vehicle = resetVehicleProperty(property, VehicleFactory.generateValidDetails());
-
-        createNewVehicleRecordIdentificationPage.enterDetails(vehicle);
-        createNewVehicleRecordIdentificationPage.submit();
-
-        return createNewVehicleRecordIdentificationPage.isErrorMessageDisplayed(errorMsg);
-    }
-
-    public boolean submitInvalidPageTwoDetails(
-        String property, String errorMsg,
-            CreateNewVehicleRecordSpecificationPage createNewVehicleRecordSpecificationPage) {
-
-        Vehicle vehicle = resetVehicleProperty(property, VehicleFactory.generateValidDetails());
-
-        createNewVehicleRecordSpecificationPage.enterVehicleDetails(vehicle);
-        createNewVehicleRecordSpecificationPage.submitInvalidFormDetails();
-
-        return createNewVehicleRecordSpecificationPage.isErrorMessageDisplayed(errorMsg);
-    }
-
-    public Boolean submitPageOneDetailsWithInappropriateReason (
-            String reason, String prop, String errorMsg,
-            CreateNewVehicleRecordIdentificationPage createNewVehicleRecordIdentificationPage) throws Exception {
-
-        Vehicle vehicle = VehicleFactory.generateValidDetails();
-
-        if (prop == "vin") {
-            vehicle.setEmptyVinReason(reason);
-        } else if (prop == "vrm") {
-            vehicle.setEmptyVrmReason(reason);
-        } else {
-            throw new Exception("Unrecognised property. vin or vrm expected");
-        }
-
-        createNewVehicleRecordIdentificationPage.enterDetails(vehicle);
-        createNewVehicleRecordIdentificationPage.submitInvalidFormDetails();
-        return createNewVehicleRecordIdentificationPage.isErrorMessageDisplayed(errorMsg);
-    }
-
-    private Vehicle resetVehicleProperty(String property, Vehicle vehicle) {
-
-        switch(property) {
-            case "Country":
-                vehicle.setCountryOfRegistrationId("");
-                break;
-            case "Registration":
-                vehicle.setRegistration("");
-                break;
-            case "Vin":
-                vehicle.setVin("");
-                break;
-            case "Make":
-                vehicle.setMake(new Make());
-                break;
-            case "Date":
-                vehicle.setFirstUsedDate("");
-                break;
-            case "Transmission":
-                vehicle.setTransmissionType("");
-                break;
-            case "Fuel":
-                vehicle.setFuelType(new FuelType().setCode("").setName(""));
-                break;
-            case "Model":
-                vehicle.setModel(new Model());
-                break;
-            case "Class":
-                vehicle.setVehicleClass(null);
-                break;
-            case "Cylinder":
-                vehicle.setCylinderCapacity("");
-                break;
-            case "Primary":
-                vehicle.setColour(new Colour());
-                break;
-        }
-
-        return vehicle;
+        return createVehicleStartPage
+                .continueToVinVrmPage().enterRegistration(vehicleDataRandomizer.nextReg()).enterVin(vehicleDataRandomizer.nextVin())
+                .continueToVehicleMakePage().selectMake(Make.HARLEY_DAVIDSON)
+                .continueToVehicleModelPage().selectModel(Model.HARLEY_DAVIDSON_FLHC)
+                .continueToVehicleEnginePage().selectFuelType(FuelTypes.Electric)
+                .continueToTestClassPage().selectClass()
+                .continueToVehicleColourPage().selectPrimaryColour(Colours.Blue)
+                .continueToVehicleCountryOfRegistrationPage().enterCountryOfRegistration(CountryOfRegistration.Northern_Ireland)
+                .continueToVehicleFirstUseDatePage().enterDate()
+                .continueToVehicleReviewPage()
+                .continueToVehicleConfirmationPage();
     }
 }

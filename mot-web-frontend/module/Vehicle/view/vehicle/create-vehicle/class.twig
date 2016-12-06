@@ -1,0 +1,38 @@
+<!— {{ inlineScript().appendFile("/assets/javascripts/dvsa.js") }} -->
+
+{% if viewModel.form.getErrorMessages is not empty %}
+    <div class="validation-summary">
+        <h2 class="heading-medium">There was a problem with the information</h2>
+        <ol>
+            {% for message in viewModel.form.getErrorMessages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ol>
+    </div>
+{%  endif %}
+
+<form method="post" novalidate>
+    {{ csrfToken() }}
+
+    <div class="form-group {% if viewModel.form.classRadioGroup.messages is not empty %} {{ 'has-error' }} {% endif %}" id="radio-group">
+        <label id="class-group-label" for="class-radio-group" class="form-label">
+            {{ viewModel.form.classRadioGroup.label }}
+        </label>
+        {% if viewModel.form.classRadioGroup.messages is not empty %}
+            <span class="validation-message">{{ viewModel.form.classRadioGroup.messages[0]|raw }}</span>
+        {% endif %}
+        {{ formElement(viewModel.form.classRadioGroup) }}
+    </div>
+
+
+    <div class="form-group">
+        <nav class="content-navigation">
+            <input type="submit" value="{{ viewModel.continueButtonLabel }}" class="button " id="continueButton">
+            <ul class="content-navigation__secondary">
+                <li>
+                    <a href="{{ url('create-vehicle/new-vehicle-engine') }}">Back</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</form>

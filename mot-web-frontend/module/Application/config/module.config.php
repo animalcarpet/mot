@@ -28,7 +28,6 @@ use DvsaMotTest\Controller as MotTest;
 use DvsaMotTest\Controller\MotTestController;
 use DvsaMotTest\Factory\Service\MotChecklistPdfServiceFactory;
 use DvsaMotTest\Form\Validator\SpecialNoticePublishDateValidator;
-use DvsaMotTest\NewVehicle\Controller\CreateVehicleController;
 use DvsaMotTest\Service\MotChecklistPdfService;
 use Zend\EventManager\EventManager;
 use Application\Service\CanTestWithoutOtpService;
@@ -176,16 +175,6 @@ return [
                     'defaults' => [
                         'controller' => MotTest\SpecialNoticesController::class,
                         'action'     => 'acknowledgeSpecialNotice',
-                    ],
-                ],
-            ],
-            'vehicle-step'                                => [
-                'type'    => 'segment',
-                'options' => [
-                    'route'    => '/vehicle-step[/:action]',
-                    'defaults' => [
-                        'controller' => CreateVehicleController::class,
-                        'action'     => 'index',
                     ],
                 ],
             ],

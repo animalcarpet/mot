@@ -1,5 +1,6 @@
 package uk.gov.dvsa.helper;
 
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -11,10 +12,12 @@ public class FormDataHelper {
 
         try {
             dropdown.selectByValue(value);
+            element.sendKeys(Keys.TAB);
         } catch (NoSuchElementException nse) {
             Utilities.Logger.LogInfo(
                     String.format("Specified value of %s not found.\nSwitched to selecting a default value by index", value));
             dropdown.selectByIndex(dropdown.getOptions().size() - 2);
+            element.sendKeys(Keys.TAB);
         }
     }
 

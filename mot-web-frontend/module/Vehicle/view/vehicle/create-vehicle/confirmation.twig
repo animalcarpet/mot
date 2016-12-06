@@ -1,0 +1,27 @@
+<hr class="hr-thick">
+
+<div class="row contents">
+    <div class="col-lg-12">
+
+        <p>You have successfully started an MOT test for a <strong><span id="vehicle-make-and-model">{{ viewModel.makeAndModel }}</span></strong>, registration mark <strong><span id="vehicle-registration-mark">{{ viewModel.registration }}</span></strong></p>
+        <p>MOT test started <strong>{{ viewModel.dateAndTime }}</strong></p>
+        <p>You can download and print an inspection sheet for this vehicle:
+            <a target="_blank" id="print-inspection-sheet" href="{{ url('mot-test/options/mot-checklist', {motTestNumber: viewModel.testNumber}) }}">
+                Vehicle inspection sheet (PDF, 505KB)
+            </a>
+        </p>
+        <p>Now sign out and inspect the vehicle.</p>
+        <form action="/logout" method="GET" role="form" novalidate="">
+            <div class="form-group">
+                <nav class="content-navigation">
+                    <input type="submit" value="Sign out" class="button ">
+                    <ul class="content-navigation__secondary">
+                        <li>
+                            <a href="{{ url('user-home') }}" id="continue-to-home">Continue to home</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </form>
+    </div>
+</div>

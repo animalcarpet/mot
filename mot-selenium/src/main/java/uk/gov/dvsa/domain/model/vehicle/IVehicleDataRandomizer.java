@@ -2,12 +2,12 @@ package uk.gov.dvsa.domain.model.vehicle;
 
 public interface IVehicleDataRandomizer {
 
-    public String nextVin();
+    String nextVin();
 
-    public String nextReg();
+    String nextReg();
 
-    public String nextVin(int length);
+    String nextVin(int length);
 
-    public String nextReg(int length);
+    String nextReg(int length);
 }
 

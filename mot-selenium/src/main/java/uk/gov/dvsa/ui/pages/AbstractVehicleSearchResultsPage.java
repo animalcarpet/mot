@@ -3,7 +3,7 @@ package uk.gov.dvsa.ui.pages;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.ui.pages.vehicleinformation.CreateNewVehicleRecordIdentificationPage;
+import uk.gov.dvsa.ui.pages.vehicleinformation.CreateVehicleStartPage;
 
 public abstract class AbstractVehicleSearchResultsPage extends AbstractVehicleSearchPage {
 
@@ -24,9 +24,9 @@ public abstract class AbstractVehicleSearchResultsPage extends AbstractVehicleSe
         return searchSummary.getText();
     }
 
-    public CreateNewVehicleRecordIdentificationPage createNewVehicle() {
+    public CreateVehicleStartPage createNewVehicle() {
         createNewVehicleLink.click();
-        return new CreateNewVehicleRecordIdentificationPage(driver);
+        return new CreateVehicleStartPage(driver);
     }
 
     public boolean isCreateNewVehicleRecordLinkDisplayed() {

@@ -1,0 +1,61 @@
+<!— {{ inlineScript().appendFile("/assets/javascripts/dvsa.js") }} -->
+
+{% if viewModel.form.errorMessages %}
+    <div class="validation-summary">
+        <h2 class="heading-medium">There was a problem with the information</h2>
+        <ol>
+            {% for message in viewModel.form.errorMessages %}
+                <li>{{ message|raw }}</li>
+            {% endfor %}
+        </ol>
+    </div>
+{% endif %}
+
+<form method="post" name="VehicleSearch" action="" id="VehicleSearch">
+    {{ csrfToken() }}
+        <legend class="form-title visuallyhidden">Change vehicle colour</legend>
+        <div class="form-group {% if viewModel.form.primaryColourElement.messages is not empty %} {{ 'has-error' }} {% endif %}">
+            <label class="form-label" for="primaryColour">{{ viewModel.form.primaryColourElement.label }}</label>
+            {% if viewModel.form.primaryColourElement.messages is not empty %}
+                <span class="validation-message">{{ viewModel.form.primaryColourElement.messages[0]|raw }}</span>
+            {% endif %}
+            {{ formElement(viewModel.form.primaryColourElement) }}
+        </div>
+
+        <div id="secondaryColours" class="panel-indent" aria-hidden="false" style="display: block;">
+            <label class="form-label" for="secondaryColour">{{ viewModel.form.secondaryColourElement.label }}</label>
+            {{ formElement(viewModel.form.secondaryColourElement) }}
+        </div>
+
+        <div class="form-group">
+            <details>
+                <summary role="button" aria-controls="details-content-0" tabindex="0" aria-expanded="false">
+                    <span class="summary">Not sure of the colour?</span>
+                </summary>
+                <div class="panel-indent" id="details-content-0" aria-hidden="true">
+                    <div class="text">
+                        <p>Check with the manufacturer if you're not sure of the primary colour of the vehicle.</p>
+                        <p>Select a secondary colour if the vehicle has a feature, for example stripes, of another colour.</p>
+                        <p>For vehicles with a vinyl wrapping, take the colour from the wrap rather than the bodywork underneath.</p>
+                    </div>
+                </div>
+            </details>
+        </div>
+    <fieldset>
+
+        <div class="form-group">
+
+            <nav class="content-navigation">
+
+                <input type="submit" value="{{ viewModel.continueButtonLabel }}" class="button " id="continueButton">
+                <ul class="content-navigation__secondary">
+                    <li>
+                        <a href="{{ url('create-vehicle/new-vehicle-class') }}">Back</a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+
+    </fieldset>
+</form>
