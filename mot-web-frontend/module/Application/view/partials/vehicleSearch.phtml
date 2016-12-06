@@ -196,9 +196,7 @@ if ($this->form->has('contingency')) {
         <p id="new-vehicle-record-info">
             If you can't find a vehicle you can
             <a id="new-vehicle-record-link" href="<?php echo $this->url(
-                'vehicle-step',
-                [],
-                ['query' => ['reg' => $registrationElement->getValue()]]
+                'create-vehicle'
             ); ?>">create a new vehicle record</a>.
         </p>
         <p>Check that you have searched with the correct VIN and registration mark before you do this.</p>

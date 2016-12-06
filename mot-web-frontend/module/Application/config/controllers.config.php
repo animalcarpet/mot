@@ -27,8 +27,6 @@ use DvsaMotTest\Factory\Controller\ReplacementCertificateControllerFactory;
 use DvsaMotTest\Factory\Controller\SpecialNoticesControllerFactory;
 use DvsaMotTest\Factory\Controller\StartTestConfirmationControllerFactory;
 use DvsaMotTest\Factory\Controller\TesterMotTestLogControllerFactory;
-use DvsaMotTest\NewVehicle\Controller\CreateVehicleController;
-use DvsaMotTest\NewVehicle\Controller\Factory\CreateVehicleControllerFactory;
 
 return [
     'invokables' => [
@@ -46,7 +44,6 @@ return [
         SpecialNoticesController::class           => SpecialNoticesControllerFactory::class,
         StartTestConfirmationController::class    => StartTestConfirmationControllerFactory::class,
         EnforcementMotTestSearchController::class => EnforcementMotTestSearchControllerFactory::class,
-        CreateVehicleController::class            => CreateVehicleControllerFactory::class,
         EnforcementMotTestController::class       => EnforcementMotTestControllerFactory::class,
         TesterMotTestLogController::class         => TesterMotTestLogControllerFactory::class,
         ReplacementCertificateController::class   => ReplacementCertificateControllerFactory::class,

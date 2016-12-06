@@ -25,7 +25,7 @@ import uk.gov.dvsa.ui.pages.mot.retest.ReTestResultsEntryPage;
 import uk.gov.dvsa.ui.pages.profile.ProfilePage;
 import uk.gov.dvsa.ui.pages.mot.certificates.ReplacementCertificateResultsPage;
 import uk.gov.dvsa.ui.pages.userregistration.CreateAnAccountPage;
-import uk.gov.dvsa.ui.pages.vehicleinformation.CreateNewVehicleRecordIdentificationPage;
+import uk.gov.dvsa.ui.pages.vehicleinformation.CreateVehicleStartPage;
 import uk.gov.dvsa.ui.pages.vts.SearchForAVtsPage;
 import uk.gov.dvsa.ui.pages.vts.SiteTestQualityPage;
 import uk.gov.dvsa.ui.pages.vts.VehicleTestingStationPage;
@@ -205,7 +205,7 @@ public class PageNavigator {
                 .clickSearchButton(UserSearchResultsPage.class).chooseUser(0);
     }
 
-    public CreateNewVehicleRecordIdentificationPage gotoCreateNewVehicleRecordIdentificationPage(User user) throws IOException {
+    public CreateVehicleStartPage gotoCreateNewVehicleRecordIdentificationPage(User user) throws IOException {
         injectOpenAmCookieAndNavigateToPath(user, VehicleSearchPage.PATH);
 
         return PageLocator.getVehicleSearchPage(driver).searchVehicle("", "", false).createNewVehicle();

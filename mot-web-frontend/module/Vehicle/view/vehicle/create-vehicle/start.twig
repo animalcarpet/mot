@@ -1,0 +1,31 @@
+
+    <div class="text">
+        <p class="lede">If you can't find a vehicle for an MOT test, make a new record.</p>
+
+        <p>New records go to the DVLA and DVSA database. You must make sure that the vehicle doesn’t have a record already.</p>
+
+        <p><a href="{{ url('vehicle-search') }}">Try to find the vehicle again</a></p>
+
+        <p>You can only make a new record if you intend to start an MOT test.</p>
+
+        <p>You will need:</p>
+
+        <ul class="list-bullet">
+            <li>registration mark and VIN</li>
+            <li>specification including make, model and engine size</li>
+            <li>the date of first use</li>
+            <li>the country of registration</li>
+
+        </ul>
+    </div>
+
+    <div class="form-group">
+        <nav class="content-navigation">
+            <a href="{{ url('create-vehicle/new-vehicle-vrm-and-vin') }}" class="button" type="submit" id="start-create-vehicle">Start now</a>
+            <ul class="content-navigation__secondary">
+                <li>
+                    <a href="{{ url('vehicle-search') }}" id="cancel-create-vehicle">Cancel and return to find a vehicle</a>
+                </li>
+            </ul>
+        </nav>
+    </div>

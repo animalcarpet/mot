@@ -4,6 +4,17 @@ use DvsaMotEnforcement\Controller\MotTestSearchController as EnforcementMotTestS
 use Vehicle\Controller\MaskVehicleController;
 use Vehicle\Controller\UnmaskVehicleController;
 use Vehicle\Controller\VehicleController;
+use Vehicle\CreateVehicle\Controller\ClassController;
+use Vehicle\CreateVehicle\Controller\ColourController;
+use Vehicle\CreateVehicle\Controller\ConfirmationController;
+use Vehicle\CreateVehicle\Controller\CountryOfRegistrationController;
+use Vehicle\CreateVehicle\Controller\DateOfFirstUseController;
+use Vehicle\CreateVehicle\Controller\EngineController;
+use Vehicle\CreateVehicle\Controller\MakeController;
+use Vehicle\CreateVehicle\Controller\ModelController;
+use Vehicle\CreateVehicle\Controller\RegistrationAndVinController;
+use Vehicle\CreateVehicle\Controller\ReviewController;
+use Vehicle\CreateVehicle\Controller\StartController;
 use Vehicle\UpdateVehicleProperty\Controller\UpdateVehiclePropertyController;
 use Vehicle\UpdateVehicleProperty\Form\Wizard\Step\ReviewMakeAndModelStep;
 use Vehicle\UpdateVehicleProperty\Form\Wizard\Step\UpdateMakeStep;
@@ -174,6 +185,119 @@ return [
                     'route' => '/result',
                     'defaults' => [
                         'action' => 'result',
+                    ],
+                ],
+            ],
+        ],
+    ],
+    'create-vehicle' => [
+        'type' => 'segment',
+        'options' => [
+            'route' => '/create-vehicle',
+            'defaults' => [
+                'controller' => StartController::class,
+                'action' => 'index',
+            ],
+        ],
+        'may_terminate' => true,
+        'child_routes' => [
+            'new-vehicle-vrm-and-vin' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/vrm-and-vin',
+                    'defaults' => [
+                        'controller' => RegistrationAndVinController::class,
+                        'action' => 'index',
+                    ],
+                ],
+            ],
+            'new-vehicle-make' => [
+                'type' => 'segment',
+                'options' => [
+                    'route'    => '/make',
+                    'defaults' => [
+                        'controller' => MakeController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
+            'new-vehicle-model' => [
+                'type' => 'segment',
+                'options' => [
+                    'route'     => '/model',
+                    'defaults' => [
+                        'controller' => ModelController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
+            'new-vehicle-engine' => [
+                'type' => 'segment',
+                'options' => [
+                    'route'     => '/engine',
+                    'defaults' => [
+                        'controller' => EngineController::class,
+                        'action' => 'index',
+                    ],
+                ],
+            ],
+            'new-vehicle-class' => [
+                'type' => 'segment',
+                'options' => [
+                    'route'    => '/class',
+                    'defaults' => [
+                        'controller' => ClassController::class,
+                        'action' => 'index',
+                    ],
+                ],
+            ],
+            'new-vehicle-colour' => [
+                'type' => 'segment',
+                'options' => [
+                    'route'    => '/colour',
+                    'defaults' => [
+                        'controller' => ColourController::class,
+                        'action' => 'index',
+                    ],
+                ],
+            ],
+            'new-vehicle-country-of-reg' => [
+                'type' => 'segment',
+                'options' => [
+                    'route'    => '/country-of-registration',
+                    'defaults' => [
+                        'controller' => CountryOfRegistrationController::class,
+                        'action' => 'index',
+                    ],
+                ],
+            ],
+            'new-vehicle-first-use-date' => [
+                'type' => 'segment',
+                'options' => [
+                    'route'    => '/first-use-date',
+                    'defaults' => [
+                        'controller' => DateOfFirstUseController::class,
+                        'action' => 'index',
+                    ],
+                ],
+            ],
+            'new-vehicle-review' => [
+                'type' => 'segment',
+                'options' => [
+                    'route'    => '/review',
+                    'defaults' => [
+                        'controller' => ReviewController::class,
+                        'action' => 'index',
+                    ],
+                ],
+            ],
+            'new-vehicle-created-and-started' => [
+                'type' => 'segment',
+                'options' => [
+                    'route'    => '/created-and-started',
+                    'defaults' => [
+                        'controller' => ConfirmationController::class,
+                        'action' => 'index',
                     ],
                 ],
             ],

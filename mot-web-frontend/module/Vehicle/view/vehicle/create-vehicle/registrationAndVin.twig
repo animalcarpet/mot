@@ -1,0 +1,52 @@
+{% if viewModel.form.errorMessages %}
+        <div class="validation-summary">
+            <h2 class="heading-medium">There was a problem with the information</h2>
+            <ol>
+                {% for message in viewModel.form.errorMessages %}
+                    <li>{{ message|raw }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+{% endif %}
+
+<form name="vehicleSearch" method="post" autocomplete="off" novalidate="">
+    {{ csrfToken() }}
+    <div class="form-group {% if viewModel.form.registrationField.messages is not empty %} {{ 'has-error' }} {% endif %}" id="registration-field">
+        <label id="reg-label" for="reg-input" class="form-label">
+            {{ viewModel.form.registrationField.label }}
+        </label>
+        {% if viewModel.form.registrationField.messages is not empty %}
+            <span class="validation-message">{{ viewModel.form.registrationField.messages[0]|raw }}</span>
+        {% endif %}
+        {{ formElement(viewModel.form.registrationField) }}
+
+        <label for="leavingRegBlank" class="form-checkbox">
+            {{ formElement(viewModel.form.registrationCheckbox) }}
+            I can't provide the registration mark
+        </label>
+    </div>
+    <div class="form-group {% if viewModel.form.vinField.messages is not empty %} {{ 'has-error' }} {% endif %}" id="vin-field">
+        <label id="vin-label" for="vin-input" class="form-label">
+            {{ viewModel.form.vinField.label }}
+        </label>
+        {% if viewModel.form.vinField.messages is not empty %}
+            <span class="validation-message">{{ viewModel.form.vinField.messages[0]|raw }}</span>
+        {% endif %}
+        {{ formElement(viewModel.form.vinField) }}
+
+        <label for="leavingVINBlank" class="form-checkbox">
+            {{ formElement(viewModel.form.vinCheckbox) }}
+            I can't provide the VIN
+        </label>
+    </div>
+    <div class="form-group">
+        <nav class="content-navigation">
+            <input type="submit" value="{{ viewModel.continueButtonLabel }}" class="button " id="continueButton">
+            <ul class="content-navigation__secondary">
+                <li>
+                    <a href="{{ url('create-vehicle') }}">Back</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</form>

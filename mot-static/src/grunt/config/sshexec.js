@@ -138,14 +138,7 @@ module.exports = function (grunt, config) {
                         'if [ ! -f ${file} ]; then ' +
                         'cp ${file}.dist ${file}; ' +
                         'fi',
-                        "sed -i 's/localhost/mysql/g' ${file}",
-
-                        // temp fix for proxy generation - remove if https://gitlab.motdev.org.uk/webops/mot-vagrant/issues/45 is resolved
-                        'file=<%= vagrant_config.workspace %>/mot-api/config/autoload/doctrine.development.php',
-                        'if [ ! -f ${file} ]; then ' +
-                        'cp ${file}.dist ${file}; ' +
-                        'fi',
-                        "sed -i 's/localhost/mysql/g' ${file}",
+                        "sed -i 's/localhost/mysql/g' ${file}"
                     ].join(' && ');
                 }
             },

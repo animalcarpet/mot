@@ -2,9 +2,7 @@
 
 namespace Vehicle\UpdateVehicleProperty\Form;
 
-use Core\Catalog\CountryOfRegistration\CountryOfRegistration;
 use DvsaCommon\Dto\Vehicle\MakeDto;
-use DvsaCommon\Messages\Vehicle\CreateVehicleErrors;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Utility\TypeCheck;
 use Zend\Form\Element\Select;

@@ -1,0 +1,38 @@
+{% if viewModel.form.errorMessages %}
+    <div class="validation-summary">
+        <h2 class="heading-medium">There was a problem with the information</h2>
+        <ol>
+            {% for message in viewModel.form.errorMessages %}
+                <li>{{ message|raw }}</li>
+            {% endfor %}
+        </ol>
+    </div>
+{% endif %}
+<form method="post" autocomplete="off" novalidate="">
+    {{ csrfToken() }}
+    <div class="text">
+        <p class="lede">This should be the country where the car is registered, not the country of origin.</p>
+    </div>
+
+    <fieldset>
+        <div class="form-group {% if viewModel.form.IsErrorOnCountryField %} has-error {% endif %}">
+            <label class="form-label" for="countryOfRegistration">Country of registration</label>
+            {% if viewModel.form.IsErrorOnCountryField %}
+                <span class="validation-message">{{ viewModel.form.countryOfRegistration.messages[0]|raw }}</span>
+            {% endif %}
+            {{ formElement(viewModel.form.countryOfRegistration) }}
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="form-group">
+            <nav class="content-navigation">
+                <input type="submit" value="{{ viewModel.continueButtonLabel }}" class="button " id="continueButton">
+                <ul class="content-navigation__secondary">
+                    <li>
+                        <a href="{{ url('create-vehicle/new-vehicle-colour') }}">Back</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </fieldset>
+</form>

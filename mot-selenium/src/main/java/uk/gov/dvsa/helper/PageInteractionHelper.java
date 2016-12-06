@@ -58,6 +58,16 @@ public class PageInteractionHelper {
         );
     }
 
+    public static boolean verifyPageUrl(String actual, String expected) {
+        if(actual.contains(expected)){
+            return true;
+        }
+
+        throw new PageInstanceNotFoundException("Page verification failed: "
+                + String.format("\n Expected page Url: %s, \n Found: %s", expected, actual)
+        );
+    }
+
     public static boolean verifyTitle(String actual, String... expected) {
         StringBuilder builder = new StringBuilder();
 

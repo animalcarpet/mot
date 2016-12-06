@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5b778ff6f3797532f1d17823bb1633aa",
-    "content-hash": "2f4344f5afaee76a4384addf7a560cd8",
+    "hash": "8f8831dee17da40e12e6f63d80d7500d",
+    "content-hash": "f06e18c40e9c8d56a5e8c7afd3960b78",
     "packages": [
         {
             "name": "cpms/client",
@@ -1717,17 +1717,17 @@
         },
         {
             "name": "mot/api-client-php",
-            "version": "11.0.0",
+            "version": "11.1.0",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/api-client-php.git",
-                "reference": "e07d5ebc4c36bf5b8264b5077cd6064c84d09203"
+                "reference": "75962a3d50ebcfab2ebfdb7fe7cb884f5dc32448"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-11.0.0-f7adf4.tar",
-                "reference": "e07d5ebc4c36bf5b8264b5077cd6064c84d09203",
-                "shasum": "e098d754b9850b1b6e8470e698596e5aef5196a3"
+                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-11.1.0-4f2f21.tar",
+                "reference": "75962a3d50ebcfab2ebfdb7fe7cb884f5dc32448",
+                "shasum": "0aed0561478eacee89a23f0ba98d6a7d823ada38"
             },
             "require": {
                 "guzzlehttp/guzzle": "~6.1",
@@ -1784,7 +1784,7 @@
                     "email": "a.bahman@kainos.com"
                 }
             ],
-            "time": "2016-12-02 09:50:37"
+            "time": "2016-12-05 19:48:04"
         },
         {
             "name": "noiselabs/zf-debug-utils",

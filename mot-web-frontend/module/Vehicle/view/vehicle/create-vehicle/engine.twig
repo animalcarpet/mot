@@ -1,0 +1,51 @@
+<!— {{ inlineScript().appendFile("/assets/javascripts/dvsa.js") }} -->
+
+{% if viewModel.form.errorMessages %}
+    <div class="validation-summary">
+        <h2 class="heading-medium">There was a problem with the information</h2>
+        <ol>
+            {% for message in viewModel.form.errorMessages %}
+                <li>{{ message|raw }}</li>
+            {% endfor %}
+        </ol>
+    </div>
+{% endif %}
+
+<form action="" method="post" novalidate>
+    <fieldset>
+        {{ csrfToken() }}
+
+        <legend class="form-title visuallyhidden">Change fuel type</legend>
+
+        <div class="form-group {% if viewModel.form.engineTypeElement.messages is not empty %} has-error {% endif %}">
+            <label class="form-label" for="fuel-type">{{ viewModel.form.engineTypeElement.label }}</label>
+            {% if viewModel.form.engineTypeElement.messages is not empty %}
+                <span class="validation-message">{{ viewModel.form.engineTypeElement.messages[0] }}</span>
+            {% endif %}
+            {{ formElement(viewModel.form.engineTypeElement) }}
+        </div>
+
+        <div aria-hidden="false" class="panel-indent js-hidden {% if viewModel.form.engineCapacityElement.messages is not empty %} has-error {% endif %}" id="div-cylinder-capacity">
+            <label class="form-label" id="cylinder-capacity-label" for="capacity">{{ viewModel.form.engineCapacityElement.label }}
+                {% if viewModel.form.engineCapacityElement.messages is not empty %}
+                    <span class="validation-message">{{ viewModel.form.engineCapacityElement.messages[0] }}</span>
+                {% endif %}
+                <span class="form-hint">Enter a value in cc, for example, 1400</span>
+            </label>
+            {{ formElement(viewModel.form.engineCapacityElement) }}
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <div class="form-group">
+            <nav class="content-navigation">
+                <input type="submit" value="{{ viewModel.continueButtonLabel }}" id="engine-continue" class="button " id="continueButton">
+                <ul class="content-navigation__secondary">
+                    <li>
+                        <a href="{{ url('create-vehicle/new-vehicle-model') }}" id="back-button">Back</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </fieldset>
+</form>
