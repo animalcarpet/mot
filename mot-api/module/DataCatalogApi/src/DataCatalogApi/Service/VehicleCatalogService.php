@@ -74,13 +74,13 @@ class VehicleCatalogService
     }
 
     /**
-     * @param string $code
+     * @param string $id
      *
      * @return Make|null
      */
-    public function findMakeByCode($code)
+    public function findMakeById($id)
     {
-        return $this->makeRepository()->findOneBy(["code" => $code]);
+        return $this->makeRepository()->findOneBy(["id" => $id]);
     }
 
     /**
@@ -107,19 +107,9 @@ class VehicleCatalogService
      *
      * @return array
      */
-    public function findModelByNameAndCodeId($name, $makeId)
+    public function findModelByNameAndMakeId($name, $makeId)
     {
         return $this->modelRepository()->findByNameForMake($name, $makeId);
-    }
-
-    /**
-     * @param string $makeCode
-     *
-     * @return \DvsaEntities\Entity\Model[]
-     */
-    public function getModelsByMake($makeCode)
-    {
-        return $this->modelRepository()->getByMake($makeCode);
     }
 
     /**
@@ -134,15 +124,15 @@ class VehicleCatalogService
 
     /**
      * @param string $makeId
-     * @param string $modelCode
+     * @param string $modelId
      *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      *
      * @return Model
      */
-    public function getModel($makeId, $modelCode)
+    public function getModel($makeId, $modelId)
     {
-        return $this->modelRepository()->getByCode($makeId, $modelCode);
+        return $this->modelRepository()->getByMakeAndModelId($makeId, $modelId);
     }
 
     /**
@@ -288,26 +278,6 @@ class VehicleCatalogService
         $make = $stmt->fetchColumn();
 
         return $make;
-    }
-
-    /**
-     * @param string $code
-     *
-     * @return Make
-     */
-    public function getMakeByCode($code)
-    {
-        return $this->makeRepository()->findOneBy(['code' => $code]);
-    }
-
-    /**
-     * @param string $code
-     *
-     * @return Model
-     */
-    public function getModelByCode($code)
-    {
-        return $this->modelRepository()->findOneBy(['code' => $code]);
     }
 
     /**

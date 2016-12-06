@@ -11,14 +11,11 @@ class ReplacementModelViewModel
     private $id;
     /** @var string $name */
     private $name;
-    /** @var string $code */
-    private $code;
 
     public function __construct(array $data)
     {
         $this->id = ArrayUtils::tryGet($data, 'id');
         $this->name = ArrayUtils::tryGet($data, 'name');
-        $this->code = ArrayUtils::tryGet($data, 'code');
     }
 
     /**
@@ -36,13 +33,4 @@ class ReplacementModelViewModel
     {
         return $this->name;
     }
-
-    /**
-     * @return string
-     */
-    public function getCode()
-    {
-        return $this->code;
-    }
-
 }

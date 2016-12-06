@@ -35,15 +35,15 @@ class ModelRepository extends AbstractMutableRepository
 
     /**
      * @param string $makeId
-     * @param string $modelCode
+     * @param string $modelId
      * @return Model
      * @throws NotFoundException
      */
-    public function getByCode($makeId, $modelCode)
+    public function getByMakeAndModelId($makeId, $modelId)
     {
-        $result = $this->findOneBy(['makeId' => $makeId, 'code' => $modelCode]);
+        $result = $this->findOneBy(['makeId' => $makeId, 'id' => $modelId]);
         if (is_null($result)) {
-            throw new NotFoundException("Model", $makeId . '/' . $modelCode);
+            throw new NotFoundException("Model", $makeId . '/' . $modelId);
         }
         return $result;
     }

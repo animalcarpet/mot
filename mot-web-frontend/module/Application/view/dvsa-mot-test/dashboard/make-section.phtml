@@ -26,12 +26,13 @@ use DvsaMotTest\View\ReplacementMakeViewModel;
                         <?php $otherMake = true; ?>
                         <?php foreach ($makeList as $id => $makeRecord): ?>
                             <?php
-                                $makeSelected = $makeRecord['code'] == $make->getCode();
+                                $makeSelected = $makeRecord['id'] == $make->getId();
                                 if ($makeSelected) {
                                     $otherMake = false;
                                 }
                             ?>
-                            <option value="<?php echo $this->escapeHTML($makeRecord['code']); ?>"<?php if ($makeSelected): ?> selected<?php endif; ?>>
+                            <?php print_r($makeRecord); ?>
+                            <option value="<?php echo $this->escapeHTML($makeRecord['id']); ?>"<?php if ($makeSelected): ?> selected<?php endif; ?>>
                                 <?php echo $this->escapeHTML($makeRecord['name']); ?>
                             </option>
                         <?php endforeach; ?>

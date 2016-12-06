@@ -22,7 +22,7 @@ use DvsaMotTest\View\ReplacementModelViewModel;
         <div>
             <div class="row">
                 <div class="form-group col-sm-6">
-                    <input type="hidden" name="make" value="<?php echo $make->getCode(); ?>"/>
+                    <input type="hidden" name="make" value="<?php echo $make->getId(); ?>"/>
                     <select name="model" id="input-model" class="form-control input-small">
                         <option value="">Select a model</option>
                         <?php $otherModel = true; ?>
@@ -34,7 +34,7 @@ use DvsaMotTest\View\ReplacementModelViewModel;
                                 }
                             ?>
                             <option
-                                value="<?php echo $this->escapeHTML($modelRecord['code']); ?>"<?php if ($modelSelected): ?> selected<?php endif; ?>>
+                                value="<?php echo $this->escapeHTML($modelRecord['id']); ?>"<?php if ($modelSelected): ?> selected<?php endif; ?>>
                                 <?php echo $this->escapeHTML($modelRecord['name']); ?>
                             </option>
                         <?php endforeach; ?>
