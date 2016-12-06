@@ -14,6 +14,7 @@ import uk.gov.dvsa.domain.model.mot.CancelTestReason;
 import uk.gov.dvsa.domain.model.mot.TestOutcome;
 import uk.gov.dvsa.domain.model.vehicle.VehicleClass;
 import uk.gov.dvsa.helper.ConfigHelper;
+import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.helper.ReasonForRejection;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.mot.*;
@@ -217,6 +218,16 @@ public class ConductMotTests extends DslTest {
         // THEN the PDF is successfully generated
         assertThat(HttpStatus.SC_OK, is(pdfResponse.getStatusCode()));
         assertThat("application/pdf", is(pdfResponse.getContentType()));
+    }
+
+    @Test(groups = {"regression"}, description = "Tester print a VIS after starting a MOT Test")
+    public void printInspectionSheetFromTestResultsEntryIsDisplayed() throws IOException, URISyntaxException {
+        step("Given I start a MOT Test");
+        step("When I sign out and back in to complete the test");
+        TestResultsEntryGroupAPageInterface testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester, vehicle);
+
+        step("Then the 'Print MOT inspection sheet' link is displayed ");
+        assertThat(testResultsEntryPage.isVehicleInspectionSheetDisplayed(), is(true));
     }
 
     @Test (groups = {"Regression"})
