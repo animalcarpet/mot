@@ -27,7 +27,7 @@ class VehicleDictionaryController extends AbstractDvsaRestfulController
             $result = array_map(
                 function (Make $make) {
                     return [
-                        'id' => $make->getCode(),
+                        'id' => $make->getId(),
                         'code' => $make->getCode(),
                         'name' => $make->getName()
                     ];
@@ -35,13 +35,16 @@ class VehicleDictionaryController extends AbstractDvsaRestfulController
                 $makes
             );
         } elseif ($searchType === 'model') {
-            $makeCode = $this->params()->fromQuery("make");
-            if ($makeCode) {
-                $make = $this->getVehicleCatalogService()->findMakeByCode($makeCode);
-                $makeModels = $this->getVehicleCatalogService()->findModelByNameAndCodeId($searchTerm, $make->getId());
+            $makeId = $this->params()->fromQuery("make");
+            if ($makeId) {
+                $makeModels = $this->getVehicleCatalogService()->findModelByNameAndMakeId($searchTerm, $makeId);
                 $result = array_map(
                     function (Model $model) {
-                        return ['id' => $model->getId(), 'name' => $model->getName(), 'code' => $model->getCode()];
+                        return [
+                            'id' => $model->getId(),
+                            'code' => $model->getCode(),
+                            'name' => $model->getName()
+                        ];
                     }, $makeModels
                 );
             }

@@ -69,7 +69,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
         $this->assertGranted(PermissionInSystem::CERTIFICATE_REPLACEMENT);
 
         $id = $this->params()->fromRoute('id', null);
-        $makeCode = $this->params()->fromRoute('makeCode', null);
+        $makeId = $this->params()->fromRoute('makeId', null);
         $motTestNumber = $this->params()->fromRoute('motTestNumber', 0);
 
         if ($this->getRequest()->isPost()) {
@@ -80,7 +80,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
             return $this->updateDraft($id, $motTestNumber);
         }
 
-        return $this->showDraft($id, $motTestNumber, $makeCode);
+        return $this->showDraft($id, $motTestNumber, $makeId);
     }
 
     /**
@@ -313,7 +313,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
                 } else {
                     return $this->redirect()->toRoute(
                         'mot-test/replacement-certificate/select-model',
-                        ['id' => $id, 'makeCode' => $result['make'], 'motTestNumber' => $motTestNumber]
+                        ['id' => $id, 'makeId' => $result['make'], 'motTestNumber' => $motTestNumber]
                     );
                 }
             }
@@ -493,14 +493,14 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
     /**
      * @param string $id
      * @param string $motTestNumber
-     * @param bool $makeCode
+     * @param int $makeId
      *
      * @return ViewModel
      */
-    private function showDraft($id, $motTestNumber, $makeCode = false)
+    private function showDraft($id, $motTestNumber, $makeId = null)
     {
         $draft = $this->getDraftData($id, $motTestNumber);
-        $viewData = $this->buildViewData($draft, $makeCode);
+        $viewData = $this->buildViewData($draft, $makeId);
 
         $viewData = array_merge(
             $viewData,
@@ -514,10 +514,10 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
     }
 
     /**
-     * @param string $makeCode
+     * @param int $makeId
      * @return array
      */
-    private function getStaticData($makeCode)
+    private function getStaticData($makeId)
     {
         /** @var CatalogService $catalogService */
         $catalogService = $this->getCatalogService();
@@ -528,7 +528,7 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
             'colours' => new ColoursContainer($catalogService->getColours()),
             'countryOfRegistrationList' => $catalogService->getCountriesOfRegistration(),
             'makeList' => $this->vehicleCatalogService->findMake(),
-            'modelList' => $this->vehicleCatalogService->findModel(false, $makeCode)
+            'modelList' => $this->vehicleCatalogService->findModel(false, $makeId)
         ];
     }
 
@@ -567,11 +567,11 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
 
     /**
      * @param array $draftData
-     * @param string $makeCode
+     * @param int $makeId
      * @return array
      * @throws \Exception
      */
-    private function buildViewData($draftData, $makeCode)
+    private function buildViewData($draftData, $makeId)
     {
         $readingVO = $this->buildOdometerReadingViewObject($draftData);
 
@@ -579,20 +579,20 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
 
         $vehicleViewModel = new ReplacementVehicleViewModel($draftData);
 
-        if ($makeCode) {
-            $vehicleViewModel->getMake()->setCode($makeCode);
+        if ($makeId) {
+            $vehicleViewModel->getMake()->setId((int) $makeId);
             $vehicleViewModel->setDisplayModelBody(true);
         }
 
-        if ($makeCode === self::MAKE_MODEL_OTHER_VALUE) {
-            $makeCode = null;
+        if ($makeId === self::MAKE_MODEL_OTHER_VALUE) {
+            $makeId = null;
         } else {
-            $makeCode = $vehicleViewModel->getMake()->getCode();
+            $makeId = $vehicleViewModel->getMake()->getId();
         }
 
-        $staticData = $this->getStaticData($makeCode);
+        $staticData = $this->getStaticData($makeId);
 
-        $selectedMake = $this->getSelectedMakeOption($makeCode, $staticData['makeList']);
+        $selectedMake = $this->getSelectedMakeOption($makeId, $staticData['makeList']);
 
         if ($selectedMake) {
             $vehicleViewModel->setMake($selectedMake);
@@ -613,19 +613,19 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
     }
 
     /**
-     * @param string $makeCode
+     * @param int $makeId
      * @param array $makeList
      * @return bool|ReplacementMakeViewModel
      * @throws \Exception
      */
-    private function getSelectedMakeOption($makeCode, array $makeList)
+    private function getSelectedMakeOption($makeId, array $makeList)
     {
-        if (!$makeCode) {
+        if (!$makeId) {
             return false;
         }
 
         foreach ($makeList as $make) {
-            if ($makeCode === $make['code']) {
+            if ($makeId === $make['id']) {
                 $modelView = new ReplacementMakeViewModel($make);
 
                 return $modelView;

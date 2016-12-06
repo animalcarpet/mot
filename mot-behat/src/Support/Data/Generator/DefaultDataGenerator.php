@@ -70,18 +70,17 @@ class DefaultDataGenerator
             $makeList = $this->vehicleDictionary->getMakeList($aedm->getAccessToken());
             VehicleMakeDictionary::set($makeList->getBody()->getData());
             $makeMap = new MakeMap();
-            $bmw = $makeMap->getByCode("18811");
+            $bmw = $makeMap->getByName("BMW"); //BMW
             DefaultMake::set($bmw);
 
             $modelResponse = $this->vehicleDictionary->getModelListByMakeId($aedm->getAccessToken(), $bmw->getId());
             $modelList = $modelResponse->getBody()->getData();
             foreach ($modelList as $model) {
-                if ($model["code"] === "01459") {
+                if ($model["name"] === "ALPINA") {
 
                     $dto = new ModelDto();
                     $dto->setId($model["id"]);
                     $dto->setName($model["name"]);
-                    $dto->setCode($model["code"]);
 
                     DefaultModel::set($dto);
                     break;

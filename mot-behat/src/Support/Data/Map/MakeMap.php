@@ -17,15 +17,6 @@ class MakeMap
 
     }
 
-    /**
-     * @param $code
-     * @return MakeDto
-     */
-    public function getByCode($code)
-    {
-        return $this->collection->get($code);
-    }
-
     public function getByName($name)
     {
         $make = $this->collection->filter(function (MakeDto $make) use ($name){
@@ -34,7 +25,7 @@ class MakeMap
 
         $this->validate($make);
 
-        $make->first();
+        return $make->first();
     }
 
     private function validate(DataCollection $collection)
@@ -51,9 +42,8 @@ class MakeMap
             $dto = new MakeDto();
             $dto->setId($make["id"]);
             $dto->setName($make["name"]);
-            $dto->setCode($make["code"]);
 
-            $list[$make["code"]] = $dto;
+            $list[$make["id"]] = $dto;
         }
 
         return $list;

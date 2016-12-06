@@ -7,13 +7,11 @@ use DvsaCommon\Utility\ArrayUtils;
 class ReplacementMakeViewModel
 {
     private $id;
-    private $code;
     private $name;
 
     public function __construct(array $data)
     {
         $this->id = ArrayUtils::tryGet($data, 'id');
-        $this->code = ArrayUtils::tryGet($data, 'code');
         $this->name = ArrayUtils::tryGet($data, 'name');
     }
 
@@ -21,9 +19,9 @@ class ReplacementMakeViewModel
      * @param $id
      * @return $this
      */
-    public function setCode($code)
+    public function setId($id)
     {
-        $this->code = $code;
+        $this->id = $id;
         return $this;
     }
 
@@ -33,14 +31,6 @@ class ReplacementMakeViewModel
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCode()
-    {
-        return $this->code;
     }
 
     /**

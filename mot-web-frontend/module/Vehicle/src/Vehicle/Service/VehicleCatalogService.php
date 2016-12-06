@@ -30,7 +30,7 @@ class VehicleCatalogService
     }
 
     /**
-     * @param string $query
+     * @param bool $query
      * @return array
      */
     public function findMake($query = false)
@@ -46,8 +46,8 @@ class VehicleCatalogService
     }
 
     /**
-     * @param string $query
-     * @param string $make
+     * @param bool $query
+     * @param bool $make
      * @return array
      */
     public function findModel($query = false, $make = false)
@@ -59,7 +59,6 @@ class VehicleCatalogService
         if (!$query) {
             $query = '';
         }
-
         $params = ['searchType' => 'model', 'searchTerm' => $query, 'make' => $make];
         $responseFromApi = $this->restClient->getWithParams(self::URL_VEHICLE_DICTIONARY, $params);
 

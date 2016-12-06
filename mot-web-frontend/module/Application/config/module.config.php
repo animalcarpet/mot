@@ -690,18 +690,18 @@ return [
                             'select-model' => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/select-model[/:makeCode]',
+                                    'route'    => '/select-model[/:makeId]',
                                     'constraints' => [
-                                        'makeCode' => '[0-9a-zA-Z-_]+',
+                                        'makeId' => '[0-9]+',
                                     ]
                                 ]
                             ],
                             'other-vehicle' => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/other-vehicle[/:makeCode]',
+                                    'route'    => '/other-vehicle[/:makeId]',
                                     'constraints' => [
-                                        'makeCode' => '[0-9a-zA-Z-_]+',
+                                        'makeId' => '[0-9]+',
                                     ],
                                     'defaults' => [
                                         'controller' => MotTest\ReplacementCertificateController::class,

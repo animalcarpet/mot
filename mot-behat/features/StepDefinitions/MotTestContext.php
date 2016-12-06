@@ -651,7 +651,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
         $row = $hash[0];
 
         $vehicleData = [
-            VehicleParams::MAKE => $row['make_code'],
+            VehicleParams::MAKE => $row['make_id'],
             VehicleParams::MAKE_OTHER => $row['make_other'],
             VehicleParams::MODEL => null,
             VehicleParams::MODEL_OTHER => $row['model_other']
