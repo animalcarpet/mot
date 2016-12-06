@@ -5,7 +5,12 @@
         <li id="firstUsedDate" class="content-header__list-item">First used {{ vehicleFirstUsedDate|escape }}</li>
     </ul>
 </header>
-
+<p>
+    <a target="_blank" id="print-inspection-sheet" href="{{ url('mot-test/options/mot-checklist', {'motTestNumber' : motTest.motTestNumber}) }}">
+        Print the MOT inspection sheet
+    </a>
+    for this test.
+</p>
 {% if flashMessenger().hasSuccessMessages() %}
     {% for message in flashMessenger().getSuccessMessages() %}
         <div class="message--success" id="validation-message--success">

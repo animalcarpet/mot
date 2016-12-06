@@ -14,5 +14,5 @@ public interface TestResultsEntryPageInterface {
     public TestAbortedPage abortMotTest(CancelTestReason reason);
     public ReasonToCancelTestPage clickCancelTest();
     public TestAbandonedPage abandonMotTest2FaActiveUser(CancelTestReason reason);
-
+    public boolean isVehicleInspectionSheetDisplayed();
 }

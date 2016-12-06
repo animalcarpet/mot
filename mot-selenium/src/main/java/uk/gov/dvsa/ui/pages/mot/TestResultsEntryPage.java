@@ -221,4 +221,8 @@ public class TestResultsEntryPage extends Page implements
     public Boolean isClickReviewTestButtonPresent(){
         return reviewTestButton.isDisplayed();
     }
+
+    public boolean isVehicleInspectionSheetDisplayed(){
+        return false;
+    }
 }

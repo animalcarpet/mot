@@ -42,6 +42,7 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
     @FindBy(id = "unit") private WebElement odometerUnit;
     @FindBy(xpath = "//*[@id='rfrList']//a[contains(., 'Edit')]") private WebElement editDefectLink;
     @FindBy(id = "brakeTestResultsNotice") private WebElement brakeTestResultsNotice;
+    @FindBy(id = "print-inspection-sheet") private WebElement printInspectionSheetLink;
 
     public TestResultsEntryNewPage(MotAppDriver driver) {
         super(driver);
@@ -294,5 +295,12 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
 
     public String getOdometerNoticeText() {
         return odometerNotice.getText();
+    }
+
+    public boolean isVehicleInspectionSheetDisplayed() {
+        if (PageInteractionHelper.isElementDisplayed(printInspectionSheetLink)) {
+            return true;
+        }
+        return false;
     }
 }
