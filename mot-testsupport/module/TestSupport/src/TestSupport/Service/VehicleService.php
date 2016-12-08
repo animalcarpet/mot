@@ -131,6 +131,12 @@ class VehicleService
         return $vehicleId;
     }
 
+    public function unmaskVehicle($vehicleId, $veToken)
+    {
+        $vehicleService = $this->getNewVehicleServiceForUser($veToken);
+        $vehicleService->unmaskDvsaVehicle($vehicleId);
+    }
+
     /**
      * @param array $data
      * @return int

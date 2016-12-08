@@ -447,6 +447,16 @@ class SessionContext implements Context
     }
 
     /**
+     * @Given I am logged in as an AEDM to :organisationName
+     */
+    public function iAmLoggedInAsAnAedmTo($organisationName)
+    {
+        $ae = $this->authorisedExaminerData->get($organisationName);
+        $this->currentUser = $this->userData->getAedmByAeId($ae->getId());
+        $this->userData->setCurrentLoggedUser($this->currentUser);
+    }
+
+    /**
      * @Given /^I am logged in as user with (.*)$/
      */
     public function iAmLoggedInAsUserWith($role)
