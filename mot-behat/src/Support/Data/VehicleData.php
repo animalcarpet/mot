@@ -88,6 +88,12 @@ class VehicleData
         return $dto;
     }
 
+    public function unmaskVehicle($vehicleId, $veToken)
+    {
+        $vehicleService = $this->testSupportHelper->getVehicleService();
+        $vehicleService->unmaskVehicle($vehicleId, $veToken);
+    }
+
     /**
      * @param string $vehicleClass
      *

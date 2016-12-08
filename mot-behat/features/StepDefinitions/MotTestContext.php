@@ -6,6 +6,7 @@ use Behat\Gherkin\Node\TableNode;
 use Dvsa\Mot\Behat\Support\Api\NonMotTest;
 use Dvsa\Mot\Behat\Support\Api\MotTest;
 use Dvsa\Mot\Behat\Support\Api\Session;
+use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Support\Data\VehicleData;
 use Dvsa\Mot\Behat\Support\Data\SiteData;
 use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
@@ -26,6 +27,7 @@ use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestStatusCode;
 use DvsaCommon\Dto\Site\SiteDto;
+use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use Dvsa\Mot\Behat\Support\Data\ContingencyData;
 use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_Assert as PHPUnit;
@@ -436,6 +438,48 @@ class MotTestContext implements Context, SnippetAcceptingContext
         $mot = $this->motTestData->create($tester, $vehicle, $this->siteData->get(), MotTestTypeCode::MYSTERY_SHOPPER);
 
         PHPUnit::assertInstanceOf(MotTestDto::class, $mot);
+    }
+
+    /**
+     * @When /^I pass an MOT Test on a Masked Vehicle$/
+     */
+    public function iPassAnMotTestOnAMaskedVehicle()
+    {
+        $this->passMotTestOnAMaskedVehicle($this->userData->getCurrentLoggedUser(), $this->siteData->get());
+    }
+
+    /**
+     * @When another Tester passes an MOT Test on a Masked Vehicle at :vtsName
+     */
+    public function anotherTesterPassesAnMotTestOnAMaskedVehicleAt($vtsName)
+    {
+        $vts = $this->siteData->get($vtsName);
+
+        $tester = $this->userData->createTesterAssignedWitSite($vts->getId(), "another tester");
+
+        $this->passMotTestOnAMaskedVehicle($tester, $vts);
+    }
+
+    private function passMotTestOnAMaskedVehicle(AuthenticatedUser $user, SiteDto $vts)
+    {
+        $ve = $this->userData->createVehicleExaminer();
+
+        $vehicle = $this->vehicleData->createMaskedVehicleWithParams($user->getAccessToken(), $ve->getAccessToken());
+
+        $mot = $this->motTestData->createPassedMotTest($user, $vts, $vehicle, MotTestTypeCode::MYSTERY_SHOPPER);
+
+        PHPUnit::assertInstanceOf(MotTestDto::class, $mot);
+    }
+
+    /**
+     * @When the vehicle from the previous MOT Test is unmasked
+     */
+    public function theVehicleIsUnmasked()
+    {
+        $ve = $this->userData->createVehicleExaminer();
+        $mot = $this->motTestData->getLast();
+
+        $this->vehicleData->unmaskVehicle($mot->getVehicle()->getId(), $ve->getAccessToken());
     }
 
     /**
@@ -866,5 +910,32 @@ class MotTestContext implements Context, SnippetAcceptingContext
         PHPUnit::assertTrue(isset($exception), "Exception not thrown");
         PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
         PHPUnit::assertEquals(HttpResponse::STATUS_CODE_403, $actualStatusCode);
+    }
+
+    /**
+     * @Then I should be able to find the MOT Test certificate for reprinting
+     * @Then I should still be able to find the MOT Test certificate for reprinting
+     */
+    public function iShouldSeeAnEntryInTheTestHistory()
+    {
+        PHPUnit::assertCount(1, $this->getTestHistoryForVehicleInLastMotTest());
+    }
+
+    /**
+     * @Then I should not be able to find the MOT Test certificate for reprinting
+     */
+    public function iShouldNotSeeAnEntryInTheTestHistory()
+    {
+        PHPUnit::assertCount(0, $this->getTestHistoryForVehicleInLastMotTest());
+    }
+
+    private function getTestHistoryForVehicleInLastMotTest()
+    {
+        $mot = $this->motTestData->getLast();
+
+        return $this->motTestData->getTestHistory(
+            $mot->getVehicle()->getId(),
+            $this->userData->getCurrentLoggedUser()
+        );
     }
 }

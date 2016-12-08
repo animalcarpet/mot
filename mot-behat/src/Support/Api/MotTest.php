@@ -15,6 +15,7 @@ class MotTest extends AbstractMotTest
     const PATH_SEARCH = 'mot-test-search';
     const PATH_SURVEY = '/survey';
     const PATH_SURVEY_REPORTS = '/reports';
+    const PATH_TEST_HISTORY = 'vehicle/{vehicle_id}/test-history';
 
     /**
      * @var Person
@@ -148,6 +149,14 @@ class MotTest extends AbstractMotTest
             $token,
             MotApi::METHOD_GET,
             self::PATH_SEARCH . "?" . http_build_query($params)
+        );
+    }
+
+    public function getTestHistory($token, $vehicleId)
+    {
+        return $this->sendGetRequest(
+            $token,
+            str_replace('{vehicle_id}', $vehicleId, self::PATH_TEST_HISTORY)
         );
     }
 

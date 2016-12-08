@@ -282,6 +282,23 @@ abstract class AbstractMotTestData extends AbstractData
     }
 
     /**
+     * @param $vehicleId
+     * @param AuthenticatedUser $tester
+     * @return MotTestDto[]
+     */
+    public function getTestHistory($vehicleId, AuthenticatedUser $tester)
+    {
+        $response = $this->motTest->getTestHistory($tester->getAccessToken(), $vehicleId);
+        $history = [];
+
+        foreach ($response->getBody()->getData() as $datum) {
+            $history[] = DtoHydrator::jsonToDto($datum);
+        }
+
+        return $history;
+    }
+
+    /**
      * @return Response
      */
     public function getLastResponse()
