@@ -99,6 +99,11 @@
             <artifactId>json</artifactId>
             <version>20160212</version>
         </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.10</version>
+        </dependency>
 
     </dependencies>
 
@@ -117,13 +122,23 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.5.0</version>
+                <configuration>
+                        <classpathScope>test</classpathScope>
+                        <mainClass>uk.gov.dvsa.tools.AutoDocs</mainClass>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.0</version>
                 <configuration>
                     <!-- For OSX 10.8 compatibility - should really remove this and target 1.7 -->
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
