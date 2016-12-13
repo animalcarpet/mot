@@ -12,9 +12,9 @@ import uk.gov.dvsa.framework.config.Configurator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.framework.config.webdriver.WebDriverConfigurator;
 import uk.gov.dvsa.framework.listeners.TestListener;
+import uk.gov.dvsa.helper.Utilities.Logger;
 import uk.gov.dvsa.shared.MotApi;
 import uk.gov.dvsa.shared.MotUI;
-import uk.gov.dvsa.helper.Utilities.Logger;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,13 +33,14 @@ public abstract class DslTest {
     protected MotApi motApi = new MotApi();
     protected MotUI motUI;
     protected static SimpleDateFormat screenshotDateFormat =
-            new SimpleDateFormat("yyyyMMdd-HHmmss");
+        new SimpleDateFormat("yyyyMMdd-HHmmss");
 
     private static final ThreadLocal<WebDriverConfigurator> webDriverConfigurator =
-            new ThreadLocal<>();
+        new ThreadLocal<>();
 
     protected PageNavigator pageNavigator = new PageNavigator();
-     private VehicleReInspectionWorkflow vehicleReInspectionWorkflow = new VehicleReInspectionWorkflow();
+    private VehicleReInspectionWorkflow vehicleReInspectionWorkflow = new VehicleReInspectionWorkflow();
+
     protected VehicleReInspectionWorkflow vehicleReinspectionWorkflow() {
         return vehicleReInspectionWorkflow;
     }
@@ -48,9 +49,10 @@ public abstract class DslTest {
      * This is an allure report annotation
      * When used, the report will printout the content of String value
      * See uk.gov.dvsa.ui.views.EventHistoryViewTests for usage
-     * */
+     */
     @Step("{0}")
-    protected void step(String value){}
+    protected void step(String value) {
+    }
 
     @BeforeMethod(alwaysRun = true)
     public void setupBaseTest() {
@@ -78,8 +80,8 @@ public abstract class DslTest {
             // Take screenshot on test failure
             if (cachedDriver != null && result.getStatus() == ITestResult.FAILURE && Configurator.isErrorScreenshotEnabled()) {
                 driver.takeScreenShot(result.getTestClass().getName().replace("uk.gov.dvsa.ui", "")
-                                + "." + result.getName() + "_" + screenshotDateFormat.format(new Date())
-                                + ".png", Configurator.getErrorScreenshotPath() + "/" + Configurator.getBuildNumber());
+                    + "." + result.getName() + "_" + screenshotDateFormat.format(new Date())
+                    + ".png", Configurator.getErrorScreenshotPath() + "/" + Configurator.getBuildNumber());
             }
 
             if (null != cachedDriver) {
