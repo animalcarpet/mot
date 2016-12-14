@@ -1,4 +1,5 @@
 <?php
+
 namespace DvsaMotApi\Service\Calculator;
 
 use DvsaCommon\Enum\BrakeTestTypeCode;
@@ -7,7 +8,7 @@ use DvsaEntities\Entity\BrakeTestResultServiceBrakeData;
 use DvsaEntities\Entity\Vehicle;
 
 /**
- * Class BrakeTestResultClass3AndAboveCalculatorBase
+ * Class BrakeTestResultClass3AndAboveCalculatorBase.
  */
 abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResultCalculatorBase
 {
@@ -184,7 +185,7 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
                 && $serviceBrake->getEffortOffsideAxle3() >= self::LOCKS_MINIMUM_EFFICIENCY;
         }
 
-        return $this->calculatePercentLocked($potentialLocks);
+        return $this->calculatePercentLockedClass3AndAbove($potentialLocks);
     }
 
     public function calculateParkingBrakePercentLocked(BrakeTestResultClass3AndAbove $brakeTestResult)
@@ -207,7 +208,8 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
                     && $brakeTestResult->getParkingBrakeEffortSecondaryNearside() >= self::LOCKS_MINIMUM_EFFICIENCY;
             }
         }
-        return $this->calculatePercentLocked($potentialLocks);
+
+        return $this->calculatePercentLockedClass3AndAbove($potentialLocks);
     }
 
     protected function isTestTypeWithEffortCalculations($testType)
@@ -216,11 +218,11 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
     }
 
     /**
-     * Sets imbalance properties in passed serviceBrakeData
+     * Sets imbalance properties in passed serviceBrakeData.
      *
      * @param BrakeTestResultServiceBrakeData $serviceBrakeData
      * @param int                             $wheelCount
-     * @param boolean|null                    $isSingleInFront
+     * @param bool|null                       $isSingleInFront
      */
     protected function performImbalanceCalculations(
         BrakeTestResultServiceBrakeData &$serviceBrakeData,
@@ -313,6 +315,7 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
             + $brakeTestResult->getParkingBrakeEffortSecondaryNearside()
             + $brakeTestResult->getParkingBrakeEffortSecondaryOffside();
         $weight = $brakeTestResult->getVehicleWeight();
+
         return $this->calculateEfficiency($effort, $weight);
     }
 
@@ -369,6 +372,7 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
             $result /= $maxEffortOnAxle;
             $result *= 100;
             $result = round($result, 3);
+
             return ceil($result);
         }
     }
@@ -477,7 +481,7 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
             [
                 BrakeTestTypeCode::ROLLER,
                 BrakeTestTypeCode::PLATE,
-                BrakeTestTypeCode::DECELEROMETER
+                BrakeTestTypeCode::DECELEROMETER,
             ]
         );
     }
@@ -488,7 +492,7 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
             $testType,
             [
                 BrakeTestTypeCode::ROLLER,
-                BrakeTestTypeCode::PLATE
+                BrakeTestTypeCode::PLATE,
             ]
         );
     }
@@ -511,6 +515,7 @@ abstract class BrakeTestResultClass3AndAboveCalculatorBase extends BrakeTestResu
     {
         $offsideLower = ($offsideEff < $nearsideEff);
         $nearsideLower = ($nearsideEff < $offsideEff);
+
         return ($offsideLower && $offsideLock) || ($nearsideLower && $nearsideLock);
     }
 }

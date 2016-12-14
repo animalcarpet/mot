@@ -1,13 +1,12 @@
 <?php
+
 namespace DvsaMotApi\Service\Calculator;
 
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaEntities\Entity\BrakeTestResultClass12;
 
 /**
- * Class BrakeTestResultClass1And2Calculator
- *
- * @package DvsaMotApi\Service\Calculator
+ * Class BrakeTestResultClass1And2Calculator.
  */
 class BrakeTestResultClass1And2Calculator extends BrakeTestResultCalculatorBase
 {
@@ -32,6 +31,7 @@ class BrakeTestResultClass1And2Calculator extends BrakeTestResultCalculatorBase
                 $this->performGradientPassCalculations($brakeTestResult, $firstUsedDate);
                 break;
         }
+
         return $brakeTestResult;
     }
 
@@ -69,24 +69,32 @@ class BrakeTestResultClass1And2Calculator extends BrakeTestResultCalculatorBase
 
     public function calculateControl1PercentLocked(BrakeTestResultClass12 $brakeTestResult)
     {
-        $potentialLocks = [];
-        $potentialLocks[] = $brakeTestResult->getControl1LockFront();
-        /** @BL-412 For FLOOR type test, we already only use values for front */
+        $locks = [];
+        $locks[] = $brakeTestResult->getControl1LockFront();
+        $brakeEfforts = [];
+        $brakeEfforts[] = $brakeTestResult->getControl1EffortFront();
+        /* @BL-412 For FLOOR type test, we already only use values for front */
         if ($brakeTestResult->getBrakeTestType()->getCode() !== BrakeTestTypeCode::FLOOR) {
-            $potentialLocks[] = $brakeTestResult->getControl1LockRear();
+            $locks[] = $brakeTestResult->getControl1LockRear();
+            $brakeEfforts[] = $brakeTestResult->getControl1EffortRear();
         }
-        return $this->calculatePercentLocked($potentialLocks);
+
+        return $this->calculatePercentLockedClass1And2($locks, $brakeEfforts);
     }
 
     public function calculateControl2PercentLocked(BrakeTestResultClass12 $brakeTestResult)
     {
-        $potentialLocks = [];
-        $potentialLocks[] = $brakeTestResult->getControl2LockFront();
-        /** @BL-412 For FLOOR type test, we already only use values for front */
+        $locks = [];
+        $locks[] = $brakeTestResult->getControl2LockFront();
+        $brakeEfforts = [];
+        $brakeEfforts[] = $brakeTestResult->getControl2EffortFront();
+        /* @BL-412 For FLOOR type test, we already only use values for front */
         if ($brakeTestResult->getBrakeTestType()->getCode() !== BrakeTestTypeCode::FLOOR) {
-            $potentialLocks[] = $brakeTestResult->getControl2LockRear();
+            $locks[] = $brakeTestResult->getControl2LockRear();
+            $brakeEfforts[] = $brakeTestResult->getControl2EffortRear();
         }
-        return $this->calculatePercentLocked($potentialLocks);
+
+        return $this->calculatePercentLockedClass1And2($locks, $brakeEfforts);
     }
 
     public function areBothControlsUnderSecondaryMinimum(BrakeTestResultClass12 $brakeTestResult)
@@ -113,8 +121,8 @@ class BrakeTestResultClass1And2Calculator extends BrakeTestResultCalculatorBase
     public function oneControlNotReachingSecondaryMinimum(
         BrakeTestResultClass12 $brakeTestResult
     ) {
-        return ($brakeTestResult->getControl1EfficiencyPass() !== false
-            xor $brakeTestResult->getControl2EfficiencyPass() !== false);
+        return $brakeTestResult->getControl1EfficiencyPass() !== false
+            xor $brakeTestResult->getControl2EfficiencyPass() !== false;
     }
 
     protected function calculateControl1Efficiency(
@@ -124,6 +132,7 @@ class BrakeTestResultClass1And2Calculator extends BrakeTestResultCalculatorBase
         $rear = $brakeTestResult->getControl1EffortRear();
         $sidecar = $brakeTestResult->getControl1EffortSidecar();
         $effort = intval($front) + intval($rear) + intval($sidecar);
+
         return $this->calculateEfficiency($effort, $this->getWeight($brakeTestResult));
     }
 
@@ -134,9 +143,10 @@ class BrakeTestResultClass1And2Calculator extends BrakeTestResultCalculatorBase
         $rear = $brakeTestResult->getControl2EffortRear();
         $sidecar = $brakeTestResult->getControl2EffortSidecar();
         if ($front === null && $rear === null && $sidecar === null) {
-            return null;
+            return;
         }
         $effort = intval($front) + intval($rear) + intval($sidecar);
+
         return $this->calculateEfficiency($effort, $this->getWeight($brakeTestResult));
     }
 
@@ -168,11 +178,12 @@ class BrakeTestResultClass1And2Calculator extends BrakeTestResultCalculatorBase
         $control2BrakeEfficiency = $brakeTestResult->getControl2BrakeEfficiency();
         if ($control2BrakeEfficiency === null) {
             if ($this->oneControlAllowedInBike($firstUsed)) {
-                return null;
+                return;
             } else {
                 return false;
             }
         }
+
         return $this->isPassingEfficiency(
             $brakeTestResult->getBrakeTestType()->getCode(),
             $brakeTestResult->getControl2BrakeEfficiency(),
@@ -211,6 +222,7 @@ class BrakeTestResultClass1And2Calculator extends BrakeTestResultCalculatorBase
     ) {
         $pass1 = $brakeTestResult->getControl1EfficiencyPass();
         $pass2 = $brakeTestResult->getControl2EfficiencyPass();
+
         return $pass1 === true
         && ($pass2 === true || ($pass2 === null && $this->oneControlAllowedInBike($firstUsedDate)));
     }
@@ -219,6 +231,7 @@ class BrakeTestResultClass1And2Calculator extends BrakeTestResultCalculatorBase
         $firstUsedDate
     ) {
         $limitDate = new \DateTime(BrakeTestResultClass12::DATE_FIRST_USED_ONLY_ONE_CONTROL_ALLOWED);
+
         return $firstUsedDate < $limitDate;
     }
 }
