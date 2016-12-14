@@ -91,6 +91,11 @@ class ReplacementCertificateDraftChangeDTO
      */
     private $includeInPassFile;
 
+    /**
+     * @var boolean $isDvlaImportProcess
+     */
+    private $isDvlaImportProcess = false;
+
     public static function create()
     {
         return new static();
@@ -626,4 +631,23 @@ class ReplacementCertificateDraftChangeDTO
     {
         return $this->includeInPassFile;
     }
+
+    /**
+     * @param boolean $isDvlaImportProcess
+     * @return $this
+     */
+    public function setIsDvlaImportProcess($isDvlaImportProcess)
+    {
+        $this->isDvlaImportProcess = $isDvlaImportProcess;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isDvlaImportProcess()
+    {
+        return $this->isDvlaImportProcess;
+    }
+
 }

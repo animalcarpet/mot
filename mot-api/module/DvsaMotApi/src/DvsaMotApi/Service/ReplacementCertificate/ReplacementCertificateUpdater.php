@@ -53,11 +53,12 @@ class ReplacementCertificateUpdater
 
     /**
      * @param ReplacementCertificateDraft $draft
+     * @param bool $dvlaImportProcess
      *
      * @return MotTest
      * @throws ForbiddenException
      */
-    public function update(ReplacementCertificateDraft $draft)
+    public function update(ReplacementCertificateDraft $draft, $dvlaImportProcess = false)
     {
         $hasFullRights = $this->authService->isGranted(PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS);
 
@@ -83,6 +84,50 @@ class ReplacementCertificateUpdater
             }
         }
 
+        // Only update vehicle when user initiated from front-end.  Dvla Import has already updated vehicle.
+        if ($dvlaImportProcess) {
+            $motTest = $this->updateMotTestForDvlaImport($draft, $motTest);
+        } else {
+            $motTest = $this->updateMotTestForNotDvlaImport($draft, $motTest, $hasFullRights);
+        }
+
+        return $motTest;
+    }
+
+    /**
+     * @param ReplacementCertificateDraft $draft
+     * @param MotTest $motTest
+     * @return MotTest
+     */
+    private function updateMotTestForDvlaImport(ReplacementCertificateDraft $draft, MotTest $motTest) {
+        $motTest
+            ->setVin($draft->getVin())
+            ->setRegistration($draft->getVrm());
+
+        $prsTest = $motTest->getPrsMotTest();
+        if($prsTest) {
+            $motTest->setPrsMotTest(
+                $prsTest
+                    ->setVin($draft->getVin())
+                    ->setRegistration($draft->getVrm())
+            );
+
+        }
+        return $motTest;
+    }
+
+
+    /** Function for update Test when it is not DVLA Import
+     * @param ReplacementCertificateDraft $draft
+     * @param MotTest $motTest
+     * @param bool $hasFullRights
+     * @return MotTest
+     */
+    private function updateMotTestForNotDvlaImport(
+        ReplacementCertificateDraft $draft,
+        MotTest $motTest,
+        $hasFullRights
+    ) {
         $this->updateVehicleFromDraftUsingJavaService($draft, $motTest, $hasFullRights);
         $this->updateMotTestFromDraft($draft, $motTest, $hasFullRights);
 
@@ -126,29 +171,17 @@ class ReplacementCertificateUpdater
         }
 
         if ($hasFullRights) {
-            $vehicle = $motTest->getVehicle();
-
             $motTest
                 ->setVehicleTestingStation($draft->getVehicleTestingStation())
                 ->setVin($draft->getVin())
                 ->setRegistration($draft->getVrm())
-                ->setModel($draft->getModel())
-                ->setFreeTextModelName($draft->getModel() ? null : $vehicle->getModelName())
-                ->setMake($draft->getMake())
-                ->setFreeTextMakeName($draft->getMake() ? null : $vehicle->getMakeName())
+                ->setModel($draft->getModelName() ? null : $draft->getModel())
+                ->setFreeTextModelName($draft->getModelName())
+                ->setMake($draft->getMakeName() ? null : $draft->getMake())
+                ->setFreeTextMakeName($draft->getMakeName())
                 ->setCountryOfRegistration($draft->getCountryOfRegistration())
                 ->setEmptyVinReason(null)
                 ->setEmptyVrmReason(null);
-
-            if ($draft->getMakeName()) {
-                $motTest->setMake(null);
-                $motTest->setFreeTextMakeName($draft->getMakeName());
-            }
-
-            if ($draft->getModelName()) {
-                $motTest->setModel(null);
-                $motTest->setFreeTextModelName($draft->getModelName());
-            }
         }
 
         return $motTest;

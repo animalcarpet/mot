@@ -11,6 +11,8 @@ use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaEntities\Entity\Make;
+use DvsaEntities\Entity\Model;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\ReplacementCertificateDraft;
 use DvsaMotApi\Service\MotTestSecurityService;
@@ -246,5 +248,84 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
     {
         $this->motIdentityService->expects($this->any())->method("getIdentity")
             ->will($this->returnValue(new MotIdentity($id, null)));
+    }
+
+    public function testUpdateReplacementCertificateWithCustomModelShouldSetCustomModelAndModelIdNullStatus()
+    {
+        $this->userAssignedToVts();
+        $this->userHasId(2);
+        $this->permissionsGranted(
+            [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
+        );
+
+        $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft()->setReplacementReason("REASON");
+        $draft->getMotTest()->setVin('123456');
+        $draft->setModel((new Model)->setId(1)->setCode('T')->setName('Model name'));
+        $draft->setModelName(null);
+        $draft->setMake(new Make());
+        $draft->setMakeName('Test');
+
+        $motTest = $this->createSUT()->update($draft);
+
+        $this->assertNotNull($motTest->getModel());
+        $this->assertEquals('Model name', $motTest->getModel()->getName());
+    }
+
+    public function testUpdateReplacementCertificateWithCustomModelShouldNotSetCustomModelAndModelIdNullStatusForDvlaImport()
+    {
+        $this->userAssignedToVts();
+        $this->userHasId(2);
+        $this->permissionsGranted(
+            [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
+        );
+
+        $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft()->setReplacementReason("REASON");
+        $draft->getMotTest()->setVin('123456');
+        $draft->setModel((new Model)->setId(1)->setCode('T')->setName('Model name'));
+        $draft->setModelName(null);
+        $draft->setMake(new Make());
+        $draft->setMakeName('Test');
+
+        $motTest = $this->createSUT()->update($draft, true);
+
+        $this->assertNull($motTest->getModel());
+    }
+
+    public function testUpdateReplacementCertificateWithVinAndVrmAndMakeNameShouldSetVinAndVrmShouldNotSetMakeNameForDvlaImport()
+    {
+        $this->userAssignedToVts();
+        $this->userHasId(2);
+        $this->permissionsGranted(
+            [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
+        );
+
+        $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft()->setReplacementReason("REASON");
+        $draft->setVin('123456')->setVrm('ABCDEF')->setMakeName('make name');
+
+        $motTest = $this->createSUT()->update($draft, true);
+
+        $this->assertEquals('123456', $motTest->getVin());
+        $this->assertEquals('ABCDEF', $motTest->getRegistration());
+        $this->assertEmpty($motTest->getMakeName());
+    }
+
+    public function testUpdateReplacementCertificateWithVinAndVrmAndMakeNameForPrsShouldSetVinAndVrmShouldNotSetMakeNameDvlaImport()
+    {
+        $this->userAssignedToVts();
+        $this->userHasId(2);
+        $this->permissionsGranted(
+            [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
+        );
+
+        $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft()->setReplacementReason("REASON");
+        $draft->setVin('123456')->setVrm('ABCDEF')->setMakeName('make name');
+        $prsTest = MotTestObjectsFactory::motTest();
+        $draft->getMotTest()->setPrsMotTest($prsTest);
+
+        $motTest = $this->createSUT()->update($draft, true);
+
+        $this->assertEquals('123456', $motTest->getPrsMotTest()->getVin());
+        $this->assertEquals('ABCDEF', $motTest->getPrsMotTest()->getRegistration());
+        $this->assertEmpty($motTest->getPrsMotTest()->getMakeName());
     }
 }

@@ -275,7 +275,9 @@ class ReplacementCertificateDraftUpdater implements TransactionAwareInterface
         ReplacementCertificateDraftChangeDTO $updates
     ) {
 
-        $this->performMakeModelChanges($draft, $updates);
+        if (!$updates->isDvlaImportProcess()) {
+            $this->performMakeModelChanges($draft, $updates);
+        }
 
         if ($updates->isCountryOfRegistrationSet()) {
             $draft->setCountryOfRegistration(
@@ -290,6 +292,7 @@ class ReplacementCertificateDraftUpdater implements TransactionAwareInterface
                 $this->vtsRepository->getBySiteNumber($updates->getVtsSiteNumber())
             );
         }
+
         if ($updates->isReasonForReplacementSet()) {
             $draft->setReplacementReason($updates->getReasonForReplacement());
         }
