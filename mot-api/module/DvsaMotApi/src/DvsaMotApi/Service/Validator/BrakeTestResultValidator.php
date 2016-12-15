@@ -4,6 +4,7 @@ namespace DvsaMotApi\Service\Validator;
 
 use DvsaCommon\Constants\BrakeTestConfigurationClass1And2;
 use DvsaCommon\Enum\BrakeTestTypeCode;
+use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\ServiceException;
 use DvsaCommonApi\Service\Validator\AbstractValidator;
 use DvsaEntities\Entity\BrakeTestResultClass12;
@@ -12,13 +13,13 @@ use DvsaEntities\Entity\BrakeTestResultServiceBrakeData;
 use DvsaEntities\Entity\Vehicle;
 
 /**
- * Class BrakeTestResultValidator
+ * Class BrakeTestResultValidator.
  */
 class BrakeTestResultValidator extends AbstractValidator
 {
-
     const MESSAGE_EFFORT_VALUE_TOO_LARGE = 'The value entered for %s is too large';
     const MESSAGE_EFFORT_POSITIVE_NUMBER_OR_NULL = 'Efforts should be positive numbers or null';
+    const MESSAGE_BRAKE_EFFORT_POSITIVE_IF_LOCK_BOX_CHECKED = '%s - enter a value for %s or uncheck "lock"';
     const VALUE_EFFORT_NOT_APPLICABLE = 'Efforts do not apply to this type of test';
     const BOOL_VALUE_MESSAGE_LOCK_TRUE_FALSE = 'Locks should be true/false values or null';
     const VALUE_LOCK_NOT_APPLICABLE = 'Locks do not apply to this type of test';
@@ -38,7 +39,7 @@ class BrakeTestResultValidator extends AbstractValidator
     const MESSAGE_INVALID_TEST_TYPE = 'Invalid service / parking brake type combination';
     const MESSAGE_SERVICE_BRAKE_2_DATA_N_A = 'Service brake 2 is not applicable to this vehicle class';
     const MESSAGE_SINGLE_LINE_N_A_PAST_2010_SEP
-        = "Single line service brake type is not applicable to vehicles past 1 Sep 2010";
+        = 'Single line service brake type is not applicable to vehicles past 1 Sep 2010';
     const MESSAGE_GRADIENT_CONTROLS_BELOW_BOOL
         = 'Controls below minimum flag for gradient type test should be boolean value';
     const MESSAGE_GRADIENT_CONTROLS_ABOVE_BOOL
@@ -49,28 +50,35 @@ class BrakeTestResultValidator extends AbstractValidator
 
     private $brakeEfforts
         = [
-            'nearsideAxle1'                 => 'service brake nearside axle 1',
-            'offsideAxle1'                  => 'service brake offside axle 1',
-            'nearsideAxle2'                 => 'service brake nearside axle 2',
-            'offsideAxle2'                  => 'service brake offside axle 2',
-            'nearsideAxle3'                 => 'service brake nearside axle 3',
-            'offsideAxle3'                  => 'service brake offside axle 3',
-            'parkingBrakeNearside'          => 'parking brake nearside',
-            'parkingBrakeOffside'           => 'parking brake offside',
-            'parkingBrakeSecondaryOffside'  => 'parking brake secondary offside',
+            'nearsideAxle1' => 'service brake nearside axle 1',
+            'offsideAxle1' => 'service brake offside axle 1',
+            'nearsideAxle2' => 'service brake nearside axle 2',
+            'offsideAxle2' => 'service brake offside axle 2',
+            'nearsideAxle3' => 'service brake nearside axle 3',
+            'offsideAxle3' => 'service brake offside axle 3',
+            'parkingBrakeNearside' => 'parking brake nearside',
+            'parkingBrakeOffside' => 'parking brake offside',
+            'parkingBrakeSecondaryOffside' => 'parking brake secondary offside',
             'parkingBrakeSecondaryNearside' => 'parking brake secondary nearside',
-            'parkingBrakeSingle'            => 'parking brake single',
+            'parkingBrakeSingle' => 'parking brake single',
         ];
 
     private $controls
         = [
-            'control1EffortFront'   => 'control 1 effort front',
-            'control2EffortFront'   => 'control 2 effort front',
-            'control1EffortRear'    => 'control 1 effort rear',
+            'control1EffortFront' => 'control 1 effort front',
+            'control2EffortFront' => 'control 2 effort front',
+            'control1EffortRear' => 'control 1 effort rear',
             'control1EffortSidecar' => 'control 1 effort sidecar',
-            'control2EffortRear'    => 'control 2 effort rear',
+            'control2EffortRear' => 'control 2 effort rear',
             'control2EffortSidecar' => 'control 2 effort sidecar',
         ];
+
+    private $controlToNameAndPositionMap = [
+        'control1EffortFront' => ['control one', 'front'],
+        'control2EffortFront' => ['control two', 'front'],
+        'control1EffortRear' => ['control one', 'rear'],
+        'control2EffortRear' => ['control two', 'rear'],
+    ];
 
     private function validateEfforts(ServiceException $validationException, $efforts, $brakeTestType)
     {
@@ -159,7 +167,7 @@ class BrakeTestResultValidator extends AbstractValidator
                         $brakeTestType,
                         [
                             BrakeTestTypeCode::ROLLER,
-                            BrakeTestTypeCode::PLATE
+                            BrakeTestTypeCode::PLATE,
                         ]
                     );
                     $this->validateValuesAreNull(
@@ -208,6 +216,7 @@ class BrakeTestResultValidator extends AbstractValidator
             $efforts['nearsideAxle3'] = $serviceBrakeData->getEffortNearsideAxle3();
             $efforts['offsideAxle3'] = $serviceBrakeData->getEffortOffsideAxle3();
         }
+
         return $efforts;
     }
 
@@ -230,6 +239,7 @@ class BrakeTestResultValidator extends AbstractValidator
             $efforts[] = $serviceBrakeData->getEffortNearsideAxle3();
             $efforts[] = $serviceBrakeData->getEffortOffsideAxle3();
         }
+
         return $efforts;
     }
 
@@ -257,6 +267,7 @@ class BrakeTestResultValidator extends AbstractValidator
             $locks[] = $serviceBrakeData->getLockNearsideAxle3();
             $locks[] = $serviceBrakeData->getLockOffsideAxle3();
         }
+
         return $locks;
     }
 
@@ -279,6 +290,7 @@ class BrakeTestResultValidator extends AbstractValidator
             $locks[] = $serviceBrakeData->getLockNearsideAxle3();
             $locks[] = $serviceBrakeData->getLockOffsideAxle3();
         }
+
         return $locks;
     }
 
@@ -385,11 +397,11 @@ class BrakeTestResultValidator extends AbstractValidator
         $this->validateEfforts(
             $validationException,
             [
-                'parkingBrakeNearside'          => $brakeTestResult->getParkingBrakeEffortNearside(),
-                'parkingBrakeOffside'           => $brakeTestResult->getParkingBrakeEffortOffside(),
-                'parkingBrakeSecondaryOffside'  => $brakeTestResult->getParkingBrakeEffortSecondaryOffside(),
+                'parkingBrakeNearside' => $brakeTestResult->getParkingBrakeEffortNearside(),
+                'parkingBrakeOffside' => $brakeTestResult->getParkingBrakeEffortOffside(),
+                'parkingBrakeSecondaryOffside' => $brakeTestResult->getParkingBrakeEffortSecondaryOffside(),
                 'parkingBrakeSecondaryNearside' => $brakeTestResult->getParkingBrakeEffortSecondaryNearside(),
-                'parkingBrakeSingle'            => $brakeTestResult->getParkingBrakeEffortSingle(),
+                'parkingBrakeSingle' => $brakeTestResult->getParkingBrakeEffortSingle(),
             ],
             $parkingBrakeTestType
         );
@@ -406,7 +418,7 @@ class BrakeTestResultValidator extends AbstractValidator
             $parkingBrakeTestType,
             [
                 BrakeTestTypeCode::ROLLER,
-                BrakeTestTypeCode::PLATE
+                BrakeTestTypeCode::PLATE,
             ]
         );
 
@@ -462,6 +474,8 @@ class BrakeTestResultValidator extends AbstractValidator
             $brakeTestResult->getBrakeTestType()->getCode(),
             BrakeTestConfigurationClass1And2::$locksApplicable
         );
+
+        $this->validateEffortNotNullIfLockSelected($validationException, $brakeTestResult);
 
         $this->validateClass1And2Rules($validationException, $brakeTestResult, $firstUsedDate);
 
@@ -603,9 +617,9 @@ class BrakeTestResultValidator extends AbstractValidator
             'control2EffortFront' => $brakeTestResult->getControl2EffortFront(),
         ];
         $effortValuesRearAndSidecar = [
-            'control1EffortRear'    => $brakeTestResult->getControl1EffortRear(),
+            'control1EffortRear' => $brakeTestResult->getControl1EffortRear(),
             'control1EffortSidecar' => $brakeTestResult->getControl1EffortSidecar(),
-            'control2EffortRear'    => $brakeTestResult->getControl2EffortRear(),
+            'control2EffortRear' => $brakeTestResult->getControl2EffortRear(),
             'control2EffortSidecar' => $brakeTestResult->getControl2EffortSidecar(),
         ];
         $effortValues = array_merge($effortValuesFront, $effortValuesRearAndSidecar);
@@ -682,5 +696,79 @@ class BrakeTestResultValidator extends AbstractValidator
         return $vehicleClass === Vehicle::VEHICLE_CLASS_4
         || $vehicleClass === Vehicle::VEHICLE_CLASS_5
         || $vehicleClass === Vehicle::VEHICLE_CLASS_7;
+    }
+
+    /**
+     * @param BadRequestException    $validationException
+     * @param BrakeTestResultClass12 $brakeTestResult
+     */
+    private function validateEffortNotNullIfLockSelected($validationException, BrakeTestResultClass12 $brakeTestResult)
+    {
+        /**
+         * @var BrakeResult[]
+         */
+        $brakeResults = [
+            (new BrakeResult())
+                ->setControl('control one')
+                ->setLocation('front')
+                ->setEffort($brakeTestResult->getControl1EffortFront())
+                ->setLocked($brakeTestResult->getControl1LockFront()),
+            (new BrakeResult())
+                ->setControl('control one')
+                ->setLocation('rear')
+                ->setEffort($brakeTestResult->getControl1EffortRear())
+                ->setLocked($brakeTestResult->getControl1LockRear()),
+            (new BrakeResult())
+                ->setControl('control two')
+                ->setLocation('front')
+                ->setEffort($brakeTestResult->getControl2EffortFront())
+                ->setLocked($brakeTestResult->getControl2LockFront()),
+            (new BrakeResult())
+                ->setControl('control two')
+                ->setLocation('rear')
+                ->setEffort($brakeTestResult->getControl2EffortRear())
+                ->setLocked($brakeTestResult->getControl2LockRear()),
+        ];
+
+        foreach ($brakeResults as $brakeResult) {
+            $this->validateBrakeLock($validationException, $brakeResult);
+        }
+    }
+
+    /**
+     * @param $validationException
+     * @param BrakeResult $brakeResult
+     */
+    private function validateBrakeLock($validationException, $brakeResult)
+    {
+        if (!$brakeResult->isLocked()) {
+            return;
+        }
+        if ($brakeResult->getEffort() !== null) {
+            return;
+        }
+        $this->addFormattedException(
+            $validationException,
+            self::MESSAGE_BRAKE_EFFORT_POSITIVE_IF_LOCK_BOX_CHECKED,
+            [$brakeResult->getControl(), $brakeResult->getLocation()]
+        );
+    }
+
+    /**
+     * @param $validationException
+     * @param string $format
+     * @param array  $args   (optional)
+     */
+    private function addFormattedException($validationException, $format, array $args = null)
+    {
+        $this->addMessageToException(
+            $validationException,
+            ucfirst(
+                vsprintf(
+                    $format,
+                    $args
+                )
+            )
+        );
     }
 }
