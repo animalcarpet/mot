@@ -3,7 +3,6 @@ package uk.gov.dvsa.domain.model;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import uk.gov.dvsa.domain.service.TwoFactorService;
-import uk.gov.dvsa.helper.enums.TesterStatus;
 
 import java.io.IOException;
 
@@ -31,9 +30,9 @@ public class User {
     private boolean multiSiteUser;
     private final String DEFAULT_TITLE = "Mr";
     private TwoFactorDetails twoFactorDetails;
+    private TwoFactorService twoFactorService;
 
-    public User() {
-    }
+    public User() {}
 
     public User(String username, String password) {
         this.username = username;
@@ -120,16 +119,21 @@ public class User {
         return middleName != null && !middleName.isEmpty();
     }
 
-    public String getSerialNumber(boolean generateNewSerialNumber) {
+    public String getSerialNumber(boolean generateNewSerialNumber) throws IOException {
         createTwoFactorDetails(generateNewSerialNumber);
         return twoFactorDetails.serialNumber();
+    }
+
+    public void activate2faCard() throws IOException {
+        createTwoFactorDetails(false);
+        twoFactorService.activateCardForUser(this, twoFactorDetails);
     }
 
     public String getOneTimePasswordPin() {
         return ONE_TIME_PASSWORD_PIN;
     }
 
-    public String getTwoFactorPin() {
+    public String getTwoFactorPin() throws IOException {
         createTwoFactorDetails(false);
         return twoFactorDetails.pin();
     }
@@ -138,10 +142,11 @@ public class User {
         return personId;
     }
 
-    private void createTwoFactorDetails(boolean generateNewSerialNumber) {
+    private void createTwoFactorDetails(boolean generateNewSerialNumber) throws IOException {
+        twoFactorService = new TwoFactorService();
         if(twoFactorDetails == null || generateNewSerialNumber){
             try {
-                twoFactorDetails = new TwoFactorService().createTwoFactorDetails();
+                twoFactorDetails = twoFactorService.createTwoFactorDetails();
             } catch (IOException e) {
                 throw new IllegalStateException("Could not create Two factor Details");
             }

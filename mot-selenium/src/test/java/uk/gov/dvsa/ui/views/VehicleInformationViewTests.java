@@ -4,12 +4,18 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
-import uk.gov.dvsa.domain.model.vehicle.*;
+import uk.gov.dvsa.domain.model.vehicle.Colours;
+import uk.gov.dvsa.domain.model.vehicle.CountryOfRegistration;
+import uk.gov.dvsa.domain.model.vehicle.DvlaVehicle;
+import uk.gov.dvsa.domain.model.vehicle.FuelTypes;
+import uk.gov.dvsa.domain.model.vehicle.Make;
+import uk.gov.dvsa.domain.model.vehicle.Model;
+import uk.gov.dvsa.domain.model.vehicle.VehicleClass;
 import uk.gov.dvsa.ui.DslTest;
-import uk.gov.dvsa.ui.pages.VehicleSearchResultsPage;
 import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationPage;
 import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationResultsPage;
 import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationSearchPage;
@@ -96,7 +102,7 @@ public class VehicleInformationViewTests extends DslTest {
         motUI.normalTest.changeClass("5");
 
         //Then I submit the new class successfully
-        assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(true));
+        assertThat(motUI.normalTest.isDeclarationStatementFor2FaDisplayed(), is(true));
     }
 
     @Test(groups = {"Regression"})

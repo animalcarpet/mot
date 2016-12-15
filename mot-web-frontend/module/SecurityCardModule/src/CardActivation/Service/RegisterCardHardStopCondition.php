@@ -41,8 +41,9 @@ class RegisterCardHardStopCondition
         $is2FaEnabled = $this->featureToggles->isEnabled(FeatureToggle::TWO_FA);
         $is2FaHardStop = $this->featureToggles->isEnabled(FeatureToggle::TWO_FA_HARD_STOP);
         $isTradeUser = $this->authorisationService->isTradeUser();
+        $isDvsaUser = $this->authorisationService->isDvsa();
         $isNot2FaActive = !$this->identityProvider->getIdentity()->isSecondFactorRequired();
 
-        return $is2FaEnabled && $is2FaHardStop && $isTradeUser && $isNot2FaActive;
+        return $is2FaEnabled && $is2FaHardStop && $isTradeUser && $isNot2FaActive && !$isDvsaUser;
     }
 }

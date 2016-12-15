@@ -44,23 +44,27 @@ public class UserService extends Service {
         return userResponse(motClient.createUser(request, CREATE_USER_PATH));
     }
 
-    protected User createUserAsTester(int siteId) throws IOException {
-        return createUserAsTester(siteId, false);
+    protected User createUserAsTester(int siteId, boolean is2Fa) throws IOException {
+        return createUserAsTester(siteId, false, is2Fa);
     }
 
-    protected User createUserAsTester(int siteId, boolean accountClaimRequired) throws IOException {
+    protected User createUserAsTester(int siteId, boolean accountClaimRequired, boolean is2Fa) throws IOException {
         List<Integer> siteIdList = new ArrayList<>();
         siteIdList.add(siteId);
 
-        return createUserAsTester(siteIdList, accountClaimRequired, null);
+        return createUserAsTester(siteIdList, accountClaimRequired, null, is2Fa);
     }
 
-    private User createUserAsTester(List<Integer> siteIdList, boolean accountClaimRequired, TestGroup testGroup) throws IOException {
+    private User createUserAsTester(List<Integer> siteIdList, boolean accountClaimRequired, TestGroup testGroup, boolean is2Fa) throws IOException {
         String userRequest =
                 jsonHandler.convertToString(new CreateTesterRequest(siteIdList, accountClaimRequired, testGroup));
 
         Response response = motClient.createUser(userRequest, CREATE_TESTER_PATH);
-        return userResponse(response);
+        User user = userResponse(response);
+        if(is2Fa) {
+            user.activate2faCard();
+        }
+        return user;
     }
 
     protected User createUserAsAedm(int aeId, String namePrefix, boolean accountClaimRequired) throws IOException {
@@ -72,7 +76,9 @@ public class UserService extends Service {
         );
         Response response = motClient.createUser(aedmRequest, CREATE_AEDM_PATH, authService.getDvsaTokenForAuthRequest());
 
-        return userResponse(response);
+        User user = userResponse(response);
+        user.activate2faCard();
+        return user;
     }
 
     public User createUserAsAreaOfficeOneUser(String namePrefix) throws IOException {
@@ -97,40 +103,48 @@ public class UserService extends Service {
         return userResponse(response);
     }
 
-    protected User createUserAsSiteManager(int siteId, boolean accountClaimRequired) throws IOException {
+    protected User createUserAsSiteManager(int siteId, boolean accountClaimRequired, boolean is2Fa) throws IOException {
         List<Integer> siteIdList = new ArrayList<>();
         siteIdList.add(siteId);
 
-        return createUserAsSiteManager(siteIdList, accountClaimRequired, null);
+        return createUserAsSiteManager(siteIdList, accountClaimRequired, null, is2Fa);
     }
 
     protected User createUserAsSiteManager(List<Integer> siteIdList,
-                                           boolean accountClaimRequired, TestGroup testGroup) throws IOException {
+                                           boolean accountClaimRequired, TestGroup testGroup, boolean is2Fa) throws IOException {
         String userRequest =
                 jsonHandler.convertToString(new CreateSiteManagerRequest(siteIdList, accountClaimRequired, testGroup));
 
         Response response = motClient.createUser
                 (userRequest, CREATE_MANAGER_PATH, authService.getDvsaTokenForAuthRequest());
 
-        return userResponse(response);
+        User user = userResponse(response);
+        if(is2Fa) {
+            user.activate2faCard();
+        }
+        return user;
     }
 
-    protected User createUserAsSiteAdmin(int siteId, boolean accountClaimRequired) throws IOException {
+    protected User createUserAsSiteAdmin(int siteId, boolean accountClaimRequired, boolean is2Fa) throws IOException {
         List<Integer> siteIdList = new ArrayList<>();
         siteIdList.add(siteId);
 
-        return createUserAsSiteAdmin(siteIdList, accountClaimRequired, null);
+        return createUserAsSiteAdmin(siteIdList, accountClaimRequired, null, is2Fa);
     }
 
     protected User createUserAsSiteAdmin(List<Integer> siteIdList,
-                                         boolean accountClaimRequired, TestGroup testGroup) throws IOException {
+                                         boolean accountClaimRequired, TestGroup testGroup, boolean is2Fa) throws IOException {
         String userRequest =
                 jsonHandler.convertToString(new CreateSiteAdminRequest(siteIdList, accountClaimRequired, testGroup));
 
         Response response = motClient.createUser
                 (userRequest, CREATE_ADMIN_PATH, authService.getDvsaTokenForAuthRequest());
 
-        return userResponse(response);
+        User user = userResponse(response);
+        if(is2Fa) {
+            user.activate2faCard();
+        }
+        return user;
     }
 
     protected User createUserAsCsco(boolean claimAccount) throws IOException {

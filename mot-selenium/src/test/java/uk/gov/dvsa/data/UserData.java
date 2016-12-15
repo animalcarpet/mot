@@ -16,7 +16,11 @@ public class UserData extends UserService{
     }
 
     public User createTester(int siteId) throws IOException {
-        return createUserAsTester(siteId);
+        return createUserAsTester(siteId, true);
+    }
+
+    public User createNon2FaTester(int siteId) throws IOException {
+        return createUserAsTester(siteId, false);
     }
 
     public User createCentralAdminTeamUser() throws IOException {
@@ -24,7 +28,12 @@ public class UserData extends UserService{
     }
 
     public User createTester(int siteId, boolean claimAccount) throws IOException {
-        return createUserAsTester(siteId, claimAccount);
+        return createUserAsTester(siteId, claimAccount, true);
+    }
+
+
+    public User createNon2FaTester(int siteId, boolean claimAccount) throws IOException {
+        return createUserAsTester(siteId, claimAccount, false);
     }
 
     public User createCustomerServiceOfficer(boolean claimAccount) throws IOException {
@@ -69,11 +78,20 @@ public class UserData extends UserService{
     }
 
     public User createSiteManager(int siteId, boolean accountClaimRequired) throws IOException {
-        return createUserAsSiteManager(siteId, accountClaimRequired);
+        return createUserAsSiteManager(siteId, accountClaimRequired, true);
+    }
+
+
+    public User createNon2FaSiteManager(int siteId, boolean accountClaimRequired) throws IOException {
+        return createUserAsSiteManager(siteId, accountClaimRequired, false);
     }
 
     public User createSiteAdmin(int siteId, boolean accountClaimRequired) throws IOException {
-        return createUserAsSiteAdmin(siteId, accountClaimRequired);
+        return createUserAsSiteAdmin(siteId, accountClaimRequired, true);
+    }
+
+    public User createNon2FaSiteAdmin(int siteId, boolean accountClaimRequired) throws IOException {
+        return createUserAsSiteAdmin(siteId, accountClaimRequired, false);
     }
 
     public User createDvlaOfficer(String diff) throws IOException {

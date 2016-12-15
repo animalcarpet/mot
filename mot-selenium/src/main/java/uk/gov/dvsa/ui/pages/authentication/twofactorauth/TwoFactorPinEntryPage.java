@@ -26,8 +26,9 @@ public class TwoFactorPinEntryPage extends Page {
         return PageInteractionHelper.isElementDisplayed(pinBox);
     }
 
-    public void enterTwoFactorPin(String pin){
+    public TwoFactorPinEntryPage enterTwoFactorPin(String pin){
         FormDataHelper.enterText(pinBox, pin);
+        return this;
     }
 
     public LostForgottenCardSignInPage clickLostForgottenLink() {

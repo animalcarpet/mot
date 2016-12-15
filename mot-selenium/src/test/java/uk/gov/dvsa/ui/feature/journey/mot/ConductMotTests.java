@@ -1,11 +1,13 @@
 package uk.gov.dvsa.ui.feature.journey.mot;
 
 import com.jayway.restassured.response.Response;
+
 import org.apache.http.HttpStatus;
 import org.joda.time.DateTime;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.model.AeDetails;
 import uk.gov.dvsa.domain.model.Site;
@@ -14,10 +16,16 @@ import uk.gov.dvsa.domain.model.mot.CancelTestReason;
 import uk.gov.dvsa.domain.model.mot.TestOutcome;
 import uk.gov.dvsa.domain.model.vehicle.VehicleClass;
 import uk.gov.dvsa.helper.ConfigHelper;
-import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.helper.ReasonForRejection;
 import uk.gov.dvsa.ui.DslTest;
-import uk.gov.dvsa.ui.pages.mot.*;
+import uk.gov.dvsa.ui.pages.mot.TestAbandonedPage;
+import uk.gov.dvsa.ui.pages.mot.TestAbortedPage;
+import uk.gov.dvsa.ui.pages.mot.TestCompletePage;
+import uk.gov.dvsa.ui.pages.mot.TestOptionsPage;
+import uk.gov.dvsa.ui.pages.mot.TestResultsEntryGroupAPageInterface;
+import uk.gov.dvsa.ui.pages.mot.TestResultsEntryNewPage;
+import uk.gov.dvsa.ui.pages.mot.TestResultsEntryPageInterface;
+import uk.gov.dvsa.ui.pages.mot.TestSummaryPage;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -74,7 +82,6 @@ public class ConductMotTests extends DslTest {
 
         //Given I am logged in as a tester authenticated by 2fa Card
         User twoFactorTester = motApi.user.createTester(site.getId());
-        motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
 
         //When I complete an mot test
         motUI.normalTest.conductTestPass(twoFactorTester, vehicleData.getNewVehicle(twoFactorTester));
@@ -145,7 +152,6 @@ public class ConductMotTests extends DslTest {
     public void startAndAbandonTest2FaActiveUser() throws URISyntaxException, IOException {
         //Given I am a 2FA activated user and I am on the Test Results Page
         User twoFactorUser = motApi.user.createTester(site.getId());
-        motUI.authentication.registerAndSignInTwoFactorUser(twoFactorUser);
         TestResultsEntryGroupAPageInterface testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(twoFactorUser, vehicle);
 
         //When I abandon the test with a reason

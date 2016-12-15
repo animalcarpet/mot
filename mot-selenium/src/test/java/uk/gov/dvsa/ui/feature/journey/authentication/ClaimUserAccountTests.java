@@ -21,23 +21,21 @@ public class ClaimUserAccountTests extends DslTest {
          testSite = siteData.createNewSite(aeDetails.getId(), "My_Site");
     }
 
-    @Test(groups = {"BVT"}, description = "VM-10319 - Tester, CSCO, AEDM can Claim Account and Set Password")
+    @Test(testName = "2faHardStopDisabled", groups = {"BVT"}, description = "VM-10319 - Tester, CSCO, AEDM can Claim Account and Set Password")
     public void whenIClaimAccountAsUserIShouldSeePin() throws Exception {
 
         // Given I claim my account as non 2fa user
-        motUI.claimAccount.claimAsUser(motApi.user.createTester(testSite.getId(), true));
+        motUI.claimAccount.claimAsUser(motApi.user.createNon2FaTester(testSite.getId(), true));
 
         // Then I should see pin
         assertThat(motUI.claimAccount.isPinDisplayed(), is(true));
     }
 
-    @Test(testName = "2fa", groups = {"BVT", "Regression"}, description="2Fa user should see different confirmation page for claim account")
+    @Test(groups = {"BVT", "Regression"}, description="2Fa user should see different confirmation page for claim account")
     public void whenIClaimAccountAs2FaUserIShouldNotSeePin() throws Exception {
 
         // Given I am 2FA user
         User twoFaUser = motApi.user.createTester(testSite.getId());
-        motUI.authentication.securityCard.activate2faCard(twoFaUser);
-        motUI.logout(twoFaUser);
 
         // And I need to claim my account
         motApi.user.requireClaimAccount(twoFaUser);

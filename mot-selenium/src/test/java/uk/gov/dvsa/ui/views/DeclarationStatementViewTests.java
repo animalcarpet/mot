@@ -30,11 +30,11 @@ public class DeclarationStatementViewTests extends DslTest {
         vehicle = vehicleData.getNewVehicle(tester);
     }
 
-    @Test (groups = {"BVT"})
+    @Test (testName="2faHardStopDisabled", groups = {"BVT"})
     public void displayStatementAtTestSummaryPage() throws IOException, URISyntaxException {
 
         //Given I complete a normal test as a tester
-        motUI.normalTest.conductTestPass(motApi.user.createTester(site.getId()), vehicle);
+        motUI.normalTest.conductTestPass(motApi.user.createNon2FaTester(site.getId()), vehicle);
 
         //And I am on the Test Summary Page
 
@@ -42,12 +42,11 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(true));
     }
 
-    @Test (testName = "2fa", groups = {"BVT"})
+    @Test (groups = {"BVT"})
     public void display2faStatementAtTestSummaryPage() throws IOException, URISyntaxException {
 
         //Given I complete a normal test as a 2FA tester
         User twoFactorTester = motApi.user.createTester(site.getId());
-        motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
         motUI.normalTest.conductTestPass(twoFactorTester, vehicle);
 
         //And I am on the Test Summary Page
@@ -70,11 +69,11 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.retest.isDeclarationStatementDisplayed(), is(true));
     }
 
-    @Test (groups = {"Regression"})
+    @Test (testName="2faHardStopDisabled", groups = {"Regression"})
     public void statementShouldNotBeDisplayedForTrainingTest() throws IOException, URISyntaxException {
 
         //Given I am on the review Page of training test
-        motUI.normalTest.conductTrainingTest(motApi.user.createTester(site.getId()), vehicle);
+        motUI.normalTest.conductTrainingTest(motApi.user.createNon2FaTester(site.getId()), vehicle);
 
         //Then I should NOT be presented with the declaration statement
         assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(false));
@@ -93,12 +92,11 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(true));
     }
 
-    @Test (testName = "2fa", groups = {"BVT"})
+    @Test (groups = {"BVT"})
     public void display2faStatementWhenAbortingTest() throws IOException, URISyntaxException {
 
         //Given I have an in progress Mot Test
         User twoFactorTester = motApi.user.createTester(site.getId());
-        motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
         motUI.normalTest.startTest(twoFactorTester);
 
         //When I cancel the Test with [INSPECTION MAY DANGEROUS] Reason
@@ -108,11 +106,11 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(true));
     }
 
-    @Test (groups = {"Regression"})
+    @Test (testName="2faHardStopDisabled", groups = {"Regression"})
     public void statementShouldNotBeDisplayedOnTestRefusal() throws IOException, URISyntaxException {
 
         //Given I refuse to test a vehicle
-        motUI.normalTest.refuseToTestVehicle(motApi.user.createTester(site.getId()), vehicle, ReasonForVehicleRefusal.INSPECTION_MAY_BE_DANGEROUS);
+        motUI.normalTest.refuseToTestVehicle(motApi.user.createNon2FaTester(site.getId()), vehicle, ReasonForVehicleRefusal.INSPECTION_MAY_BE_DANGEROUS);
 
         //Then I should Not be presented with the declaration statement
         assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(false));
@@ -131,11 +129,11 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.contingency.isDeclarationStatementDisplayed(), is(true));
     }
 
-    @Test (groups = {"BVT", "Regression"})
+    @Test (testName = "2faHardStopDisabled", groups = {"BVT", "Regression"})
     public void replacementCertificateDeclarationStatement() throws IOException, URISyntaxException {
 
         //Given I have completed an Mot Test
-        User tester = motApi.user.createTester(site.getId());
+        User tester = motApi.user.createNon2FaTester(site.getId());
         String testId = motApi.createTest(tester, site.getId(), vehicle, TestOutcome.PASSED, 123456,
                 DateTime.now()).getMotTestNumber();
 
@@ -146,13 +144,12 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.certificate.isDeclarationStatementDisplayed(), is(true));
     }
 
-    @Test (testName = "2fa", groups = {"BVT"})
+    @Test (groups = {"BVT"})
     public void displayDeclarationStatementFor2faUserOnReplacementCertificatePage() throws IOException, URISyntaxException {
 
         //Given I have completed an Mot Test as 2fa user
         int siteId = siteData.createSite().getId();
         User twoFactorTester = motApi.user.createTester(siteId);
-        motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
 
         String testId = motApi.createTest(twoFactorTester, siteId, vehicle, TestOutcome.PASSED, 123456,
                 DateTime.now()).getMotTestNumber();

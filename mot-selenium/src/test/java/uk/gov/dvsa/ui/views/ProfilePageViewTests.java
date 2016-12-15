@@ -150,6 +150,8 @@ public class ProfilePageViewTests extends DslTest {
             dataProvider = "dvsaUser")
     public void dvsaUserCanSeeManageRolesOnUserProfile(User user) throws IOException, URISyntaxException {
 
+        User tester = motApi.user.createTester(site.getId());
+
         //Given I'm on the New Profile Details page as logged user
         motUI.profile.dvsaViewUserProfile(user, tester);
 
@@ -157,12 +159,11 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isChangeQualificationLinksDisplayed(), is(true));
     }
 
-    @Test(testName = "2fa", groups = {"BVT", "BL-1963"})
+    @Test(groups = {"BVT", "BL-1963"})
     public void registered2faTradeUserCanSeeSecurityCardPanelOnOwnProfile()  throws IOException, URISyntaxException {
 
         // Given I have registered for two factor authentication
         User twoFactorTester = motApi.user.createTester(site.getId());
-        motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
 
         // When I view my own profile
         motUI.profile.viewYourProfile(twoFactorTester);
@@ -171,11 +172,11 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isSecurityCardPanelDisplayed(), is(true));
     }
 
-    @Test(testName = "2fa", groups = {"BVT", "BL-1963"})
+    @Test(testName = "2faHardStopDisabled", groups = {"BVT", "BL-1963"})
     public void notRegistered2faTradeUserCanNotSeeSecurityCardPanelOnOwnProfile()  throws IOException, URISyntaxException {
 
         // Given I have not registered for two factor authentication
-        User nonTwoFactorTester = motApi.user.createTester(site.getId());
+        User nonTwoFactorTester = motApi.user.createNon2FaTester(site.getId());
 
         // When I view my own profile
         motUI.profile.viewYourProfile(nonTwoFactorTester);
@@ -184,12 +185,11 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isSecurityCardPanelDisplayed(), is(false));
     }
 
-    @Test(testName = "2fa", groups = {"BVT", "BL-1963"}, dataProvider = "dvsaUserForSecurityCard")
+    @Test(groups = {"BVT", "BL-1963"}, dataProvider = "dvsaUserForSecurityCard")
     public void dvsaCanSeeSecurityCardPanelOnRegistered2faTradeUserProfile(User dvsaUser)  throws IOException, URISyntaxException {
 
         step("Given a tester who has registered for two factor authentication");
         User twoFactorTester = motApi.user.createTester(site.getId());
-        motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
 
         step("When I log in as a DVSA user and view their profile page");
         motUI.profile.dvsaViewUserProfile(dvsaUser, twoFactorTester);
@@ -198,10 +198,11 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isSecurityCardPanelDisplayed(), is(true));
     }
 
-    @Test(testName = "2fa", groups = {"BVT", "BL-1963"}, dataProvider = "dvsaUserForSecurityCard")
+    @Test(groups = {"BVT", "BL-1963"}, dataProvider = "dvsaUserForSecurityCard")
     public void dvsaCannotSeeSecurityCardPanelOnNonRegistered2faTradeUserProfile(User dvsaUser)  throws IOException, URISyntaxException {
 
         // Given a tester who has not registered for two factor authentication
+        tester = motApi.user.createNon2FaTester(site.getId());
 
         // When I log in as a DVSA user and view their profile page
         motUI.profile.dvsaViewUserProfile(dvsaUser, tester);
@@ -210,7 +211,7 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isSecurityCardPanelDisplayed(), is(false));
     }
 
-    @Test(testName = "2fa", groups = {"BVT", "BL-1963"}, dataProvider = "dvsaUserForSecurityCard")
+    @Test(groups = {"BVT", "BL-1963"}, dataProvider = "dvsaUserForSecurityCard")
     public void dvsaCanNotSeeSecurityCardPanelOnOwnProfile(User dvsaUser)  throws IOException, URISyntaxException {
         // Given I am logged in as DVSA user
 

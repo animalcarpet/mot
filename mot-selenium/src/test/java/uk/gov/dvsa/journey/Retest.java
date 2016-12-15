@@ -28,10 +28,8 @@ public class Retest {
     private String expectedText;
     private boolean declarationSuccessful = false;
 
-
-    private static final String DECLARATION_STATEMENT = "I confirm that this MOT transaction has been conducted in accordance with " +
-            "the conditions of authorisation which includes compliance with the MOT testing guide, the requirements for " +
-            "authorisation, the appropriate MOT Inspection Manual and any other instructions issued by DVSA.";
+    private static final String TWO_FA_DECLARATION_STATEMENT = "By saving this test result you confirm that you have carried out " +
+            "this MOT test in line with DVSA conditions for MOT testing.";
 
     public Retest(PageNavigator pageNavigator)
     {
@@ -50,7 +48,8 @@ public class Retest {
         }
 
         if (summaryPage.isDeclarationTextDisplayed()) {
-            assertThat(summaryPage.getDeclarationText(), equalToIgnoringCase(DECLARATION_STATEMENT));
+            assertThat(summaryPage.getDeclarationText(), equalToIgnoringCase(TWO_FA_DECLARATION_STATEMENT));
+
             declarationSuccessful = true;
         }
 

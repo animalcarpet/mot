@@ -52,6 +52,10 @@ public class MotClient {
         return postRequest(request, path, token);
     }
 
+    public Response activateCard(String request, String path, String token) {
+        return postRequest(request, path, token);
+    }
+
     public Response createSite(String request, String path) {
         return postRequestWithoutToken(request, path);
     }
@@ -68,6 +72,10 @@ public class MotClient {
 
     public Response createTwoFactorDetails(String path) {
         return postRequestWithoutToken("", path);
+    }
+
+    public Response activate2faCard(String request, String path, String token) {
+        return postRequest(request, path, token);
     }
 
     public Response getFeature(String path)

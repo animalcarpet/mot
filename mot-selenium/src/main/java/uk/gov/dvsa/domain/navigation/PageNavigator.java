@@ -3,27 +3,43 @@ package uk.gov.dvsa.domain.navigation;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebElement;
+
+import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.domain.model.vehicle.DvlaVehicle;
-import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.service.CookieService;
 import uk.gov.dvsa.framework.config.Configurator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.ConfigHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
-import uk.gov.dvsa.ui.pages.*;
+import uk.gov.dvsa.ui.pages.HomePage;
+import uk.gov.dvsa.ui.pages.Page;
+import uk.gov.dvsa.ui.pages.PageLocator;
+import uk.gov.dvsa.ui.pages.VehicleSearchPage;
+import uk.gov.dvsa.ui.pages.VehicleSearchResultsPage;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardPage;
+import uk.gov.dvsa.ui.pages.authentication.twofactorauth.TwoFactorPinEntryPage;
 import uk.gov.dvsa.ui.pages.dvsa.ManageRolesPage;
 import uk.gov.dvsa.ui.pages.dvsa.UserSearchPage;
 import uk.gov.dvsa.ui.pages.dvsa.UserSearchResultsPage;
 import uk.gov.dvsa.ui.pages.login.LoginPage;
-import uk.gov.dvsa.ui.pages.mot.*;
+import uk.gov.dvsa.ui.pages.mot.ContingencyTestEntryPage;
+import uk.gov.dvsa.ui.pages.mot.DefectCategoriesPage;
+import uk.gov.dvsa.ui.pages.mot.DefectsPage;
+import uk.gov.dvsa.ui.pages.mot.RefuseToTestPage;
+import uk.gov.dvsa.ui.pages.mot.SearchForADefectPage;
+import uk.gov.dvsa.ui.pages.mot.StartTestConfirmationPage;
+import uk.gov.dvsa.ui.pages.mot.TestResultsEntryGroupAPageInterface;
+import uk.gov.dvsa.ui.pages.mot.TestResultsEntryNewPage;
+import uk.gov.dvsa.ui.pages.mot.TestResultsEntryPage;
+import uk.gov.dvsa.ui.pages.mot.TestResultsEntryPageInterface;
+import uk.gov.dvsa.ui.pages.mot.TestSummaryPage;
+import uk.gov.dvsa.ui.pages.mot.certificates.ReplacementCertificateResultsPage;
 import uk.gov.dvsa.ui.pages.mot.retest.ConfirmVehicleRetestPage;
 import uk.gov.dvsa.ui.pages.mot.retest.ReTestResultsEntryPage;
 import uk.gov.dvsa.ui.pages.profile.ProfilePage;
-import uk.gov.dvsa.ui.pages.mot.certificates.ReplacementCertificateResultsPage;
 import uk.gov.dvsa.ui.pages.userregistration.CreateAnAccountPage;
 import uk.gov.dvsa.ui.pages.vehicleinformation.CreateVehicleStartPage;
 import uk.gov.dvsa.ui.pages.vts.SearchForAVtsPage;
@@ -34,6 +50,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 public class PageNavigator {
+
+    private static final String PATH_2FA_LOGIN = "login-2fa";
     private MotAppDriver driver;
 
     public void setDriver(MotAppDriver driver) {
@@ -248,12 +266,20 @@ public class PageNavigator {
         return driver.userHasSession(user);
     }
 
-    private void injectOpenAmCookieAndNavigateToPath(User user, String path) throws IOException {
+
+    public void injectOpenAmCookieAndNavigateToPath(User user, String path) throws IOException {
+
         if (userAlreadyHaveASession(user)) {
             navigateToPath(path);
         } else {
             driver.setUser(user);
             addCookieToBrowser(user);
+            navigateToPath(path);
+        }
+
+        boolean bouncedTo2FaLoginScreen = driver.getCurrentUrl().contains(PATH_2FA_LOGIN) && !path.contains(PATH_2FA_LOGIN);
+        if(bouncedTo2FaLoginScreen) {
+            new TwoFactorPinEntryPage(getDriver()).enterTwoFactorPin(user.getTwoFactorPin()).clickSignIn();
             navigateToPath(path);
         }
     }
