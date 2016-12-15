@@ -21,6 +21,7 @@ use DvsaCommon\Constants\Role;
 use DvsaCommon\Dto\Site\EnforcementSiteAssessmentDto;
 use DvsaCommon\Dto\Site\SiteDto;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
+use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Enum\SiteContactTypeCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
@@ -41,7 +42,7 @@ use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
 
 /**
- * Class SiteController
+ * Class SiteController.
  *
  * @package DvsaMotTest\Controller
  */
@@ -74,18 +75,22 @@ class SiteController extends AbstractAuthActionController
      * @var MotFrontendAuthorisationServiceInterface
      */
     private $auth;
+
     /**
      * @var MapperFactory
      */
     private $mapper;
+
     /**
      * @var MotIdentityProviderInterface
      */
     private $identity;
+
     /**
      * @var CatalogService
      */
     private $catalog;
+
     /**
      * @var Container
      */
@@ -130,18 +135,17 @@ class SiteController extends AbstractAuthActionController
     }
 
     /**
-     * Display the details of a VTS
+     * Display the details of a VTS.
      */
     public function indexAction()
     {
         $isEnforcementUser = $this->auth->hasRole(Role::VEHICLE_EXAMINER);
 
-        //  --  process request --
         /** @var \Zend\Http\Request $request */
         $request = $this->getRequest();
         $vtsId = $this->params()->fromRoute('id', null);
 
-        //  --  store url for back url in following pages   --
+        // Store url for back URL in following pages
         $refBack = new Container(self::REFERER);
         $refBack->uri = $request->getUri();
 
@@ -153,7 +157,7 @@ class SiteController extends AbstractAuthActionController
 
         $permissions = $this->getPermissions($site);
 
-        //  --  prepare view data   --
+        // Prepare view data
         $equipment = $this->mapper->Equipment->fetchAllForVts($site->getId());
 
         $testInProgress = ($permissions->canViewTestsInProgress()
@@ -166,7 +170,7 @@ class SiteController extends AbstractAuthActionController
 
         $view = new SiteViewModel($site, $equipment, $testInProgress, $permissions, $equipmentModelStatusMap, $this->url());
 
-        //  --  get ref page    --
+        // Get ref page
         $refSession = new Container('referralSession');
         if ($isEnforcementUser && !empty($refSession->url)) {
             $escRefPage = '/mot-test-search/vrm?' . http_build_query($refSession->url);
@@ -176,16 +180,15 @@ class SiteController extends AbstractAuthActionController
         $refSession->url = false;
 
         $assessmentDto = $site->getAssessment();
-        if($assessmentDto instanceof EnforcementSiteAssessmentDto){
+        if ($assessmentDto instanceof EnforcementSiteAssessmentDto) {
             $riskAssessmentScore = $assessmentDto->getSiteAssessmentScore();
-        }
-        else {
+        } else {
             $riskAssessmentScore = 0;
         }
 
         $config = $this->getServiceLocator()->get(MotConfig::class);
         $ragClassifier = new RiskAssessmentScoreRagClassifier($riskAssessmentScore, $config);
-        //  --
+
         $searchString = null;
         if ($isEnforcementUser) {
             // Used when constructing the back-link.  If the searchString is provided we know
@@ -194,7 +197,7 @@ class SiteController extends AbstractAuthActionController
             $searchString = $request->getQuery(self::SEARCH_RESULT_PARAM);
         }
 
-        //  logical block :: prepare view model
+        // Logical block - prepare view model
         $this->layout()->setVariable(
             'pageTertiaryTitle',
             $site->getContactByType(SiteContactTypeCode::BUSINESS)->getAddress()->getFullAddressString()
@@ -217,14 +220,14 @@ class SiteController extends AbstractAuthActionController
         );
 
         $breadcrumbs = [];
-        $breadcrumbs = $this->prependBreadcrumbsWithAeLink($site,$breadcrumbs);
+        $breadcrumbs = $this->prependBreadcrumbsWithAeLink($site, $breadcrumbs);
 
         return $this->prepareViewModel($viewModel, $site->getName(), self::EDIT_SUBTITLE, $breadcrumbs);
     }
 
     private function setUpIndexSidebar($siteStatusCode, $testsInProgress, $hasBeenAssessed, RiskAssessmentScoreRagClassifier $ragClassifier)
     {
-        $vtsId = (int)$this->params()->fromRoute('id');
+        $vtsId = (int) $this->params()->fromRoute('id');
 
         $activeTestsCount = count($testsInProgress);
 
@@ -250,7 +253,7 @@ class SiteController extends AbstractAuthActionController
         /** @var Request $request */
         $request = $this->getRequest();
 
-        //  create new form or get from session when come back from confirmation
+        // Create new form or get from session when come back from confirmation
         $sessionKey = $request->getQuery(self::SESSION_KEY) ?: uniqid();
         $form = $this->session->offsetGet($sessionKey);
 
@@ -276,7 +279,7 @@ class SiteController extends AbstractAuthActionController
             }
         }
 
-        //  logical block :: prepare view model
+        // Logical block - prepare view model
         $model = (new VtsFormViewModel())
             ->setForm($form)
             ->setCancelUrl('/');
@@ -295,21 +298,21 @@ class SiteController extends AbstractAuthActionController
         /** @var Request $request */
         $request = $this->getRequest();
 
-        //  get form from session
+        // Get form from session
         $sessionKey = $request->getQuery(self::SESSION_KEY);
         $form = $this->session->offsetGet($sessionKey);
 
-        //  redirect to create ae page if form data not provided
+        // Redirect to create AE page if form data not provided
         if (!($form instanceof VtsCreateForm)) {
             return $this->redirect()->toUrl($urlCreate);
         }
 
-        //  save ae to db and redirect to ae view page
+        // Save AE to DB and redirect to AE view page
         if ($request->isPost()) {
             try {
                 $result = $this->mapper->Site->create($form->toDto());
 
-                //  clean session after self
+                // Clean session
                 $this->session->offsetUnset($sessionKey);
 
                 return $this->redirect()->toUrl(VehicleTestingStationUrlBuilderWeb::byId($result['id']));
@@ -318,7 +321,7 @@ class SiteController extends AbstractAuthActionController
             }
         }
 
-        //  create a model
+        // Create a model
         $model = new VtsFormViewModel();
         $model
             ->setForm($form)
@@ -341,19 +344,15 @@ class SiteController extends AbstractAuthActionController
         /** @var VehicleTestingStationDto $vtsDto */
         $vtsDto = $this->mapper->Site->getById($siteId);
 
-        /**
-         * @var \Zend\Http\Request $request
-         */
+        /** @var \Zend\Http\Request $request */
         $request = $this->getRequest();
 
-        //  create new form or get from session when come back from confirmation
+        // Create new form or get from session when come back from confirmation
         $sessionKey = $request->getQuery(self::SESSION_KEY) ?: uniqid();
         $form = $this->session->offsetGet($sessionKey);
 
         if (!$form instanceof VtsUpdateTestingFacilitiesForm) {
-            /**
-             * @var VehicleTestingStationDto $vtsDto
-             */
+            /** @var VehicleTestingStationDto $vtsDto */
             $vtsDto = $this->mapper->Site->getById($siteId);
             $form = new VtsUpdateTestingFacilitiesForm();
             $form->fromDto($vtsDto);
@@ -381,7 +380,7 @@ class SiteController extends AbstractAuthActionController
             }
         }
 
-        //  logical block :: prepare view model
+        // Logical block - prepare view model
         $viewModel = new ViewModel([
             'form'      => $form,
             'cancelUrl' => $vtsViewUrl,
@@ -419,7 +418,7 @@ class SiteController extends AbstractAuthActionController
         /** @var Request $request */
         $request = $this->getRequest();
 
-        //  get form from session
+        // Get form from session
         $sessionKey = $request->getQuery(self::SESSION_KEY);
         $form = $this->session->offsetGet($sessionKey);
 
@@ -427,15 +426,14 @@ class SiteController extends AbstractAuthActionController
             return $this->redirect()->toUrl($vtsViewUrl);
         }
 
-        /**
-         * @var VehicleTestingStationDto $vtsDto
-         */
+        /** @var VehicleTestingStationDto $vtsDto */
         $vtsDto = $form->getVtsDto();
 
         if ($request->isPost()) {
             try {
                 $this->mapper->Site->updateTestingFacilities($siteId, $form->toDto());
                 $this->session->offsetUnset($sessionKey);
+
                 return $this->redirect()->toUrl($vtsViewUrl);
             } catch (RestApplicationException $ve) {
                 $this->addErrorMessages($ve->getDisplayMessages());
@@ -474,15 +472,17 @@ class SiteController extends AbstractAuthActionController
     }
 
     /**
-     * Prepare the view model for all the step of the create ae
+     * Prepare the view model for all the step of the create ae.
      *
      * @param ViewModel $view
-     * @param string $title
-     * @param string $subtitle
-     * @param array $breadcrumbs
-     * @param array $progress
-     * @param string $template
+     * @param string    $title
+     * @param string    $subtitle
+     * @param array     $breadcrumbs
+     * @param array     $progress
+     * @param string    $template
+     *
      * @return ViewModel
+     *
      * @internal param ViewModel $model
      */
     private function prepareViewModel(
@@ -493,11 +493,10 @@ class SiteController extends AbstractAuthActionController
         $progress = null,
         $template = null
     ) {
-        //  logical block:: prepare view
+        // Logical block - prepare view
         $this->layout('layout/layout-govuk.phtml');
         $this->layout()->setVariable('pageTitle', $title);
         $this->layout()->setVariable('pageSubTitle', $subtitle);
-
 
         if (!empty($progress)) {
             $this->layout()->setVariable('progress', $progress);
@@ -507,18 +506,38 @@ class SiteController extends AbstractAuthActionController
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
 
         return $template !== null ? $view->setTemplate($template) : $view;
-
     }
 
     public function configureBrakeTestDefaultsAction()
     {
-        $id = (int)$this->params()->fromRoute('id');
+        $id = (int) $this->params()->fromRoute('id');
 
         if ($id <= 0) {
             throw new \Exception(self::ERR_MSG_INVALID_SITE_ID_OR_NR);
         }
 
         $this->auth->assertGrantedAtSite(PermissionAtSite::DEFAULT_BRAKE_TESTS_CHANGE, $id);
+
+        $defaultBrakeTestClass1And2Options = [
+            BrakeTestTypeCode::ROLLER,
+            BrakeTestTypeCode::PLATE,
+            BrakeTestTypeCode::DECELEROMETER,
+            BrakeTestTypeCode::FLOOR,
+            BrakeTestTypeCode::GRADIENT,
+        ];
+
+        $defaultParkingBrakeTestClass3AndAboveOptions = [
+            BrakeTestTypeCode::ROLLER,
+            BrakeTestTypeCode::PLATE,
+            BrakeTestTypeCode::DECELEROMETER,
+            BrakeTestTypeCode::GRADIENT,
+        ];
+
+        $defaultServiceBrakeTestClass3AndAboveOptions = [
+            BrakeTestTypeCode::ROLLER,
+            BrakeTestTypeCode::PLATE,
+            BrakeTestTypeCode::DECELEROMETER,
+        ];
 
         /** @var \Zend\Http\Request $request */
         $request = $this->getRequest();
@@ -538,6 +557,9 @@ class SiteController extends AbstractAuthActionController
 
         return new ViewModel(
             [
+                'defaultBrakeTestClass1And2Options' => $defaultBrakeTestClass1And2Options,
+                'defaultParkingBrakeTestClass3AndAboveOptions' => $defaultParkingBrakeTestClass3AndAboveOptions,
+                'defaultServiceBrakeTestClass3AndAboveOptions' => $defaultServiceBrakeTestClass3AndAboveOptions,
                 'defaultBrakeTestClass1And2' => $site->getDefaultBrakeTestClass1And2(),
                 'defaultParkingBrakeTestClass3AndAbove' => $site->getDefaultParkingBrakeTestClass3AndAbove(),
                 'defaultServiceBrakeTestClass3AndAbove' => $site->getDefaultServiceBrakeTestClass3AndAbove(),
@@ -551,6 +573,7 @@ class SiteController extends AbstractAuthActionController
 
     /**
      * @param VehicleTestingStationDto $site
+     *
      * @return VtsOverviewPagePermissions
      */
     private function getPermissions($site)
@@ -570,14 +593,14 @@ class SiteController extends AbstractAuthActionController
     {
         $this->assertFeatureEnabled(FeatureToggle::VTS_RISK_SCORE);
 
-        $siteId = (int)$this->params()->fromRoute('id');
+        $siteId = (int) $this->params()->fromRoute('id');
         $this->auth->assertGrantedAtSite(PermissionAtSite::VTS_VIEW_SITE_RISK_ASSESSMENT, $siteId);
 
         $vtsDto = $this->mapper->Site->getById($siteId);
         /** @var EnforcementSiteAssessmentDto $assessmentDto */
         $assessmentDto = $vtsDto->getAssessment();
 
-        if(!$assessmentDto){
+        if (!$assessmentDto) {
             return $this->createHttpNotFoundModel($this->getResponse());
         }
 
@@ -592,7 +615,7 @@ class SiteController extends AbstractAuthActionController
                 'vtsViewUrl' => $vtsViewUrl,
                 'assessmentDto' => $assessmentDto,
                 'permissions' => $permissions,
-                'ragClassifier' => $ragClassifier
+                'ragClassifier' => $ragClassifier,
             ]
         );
 
@@ -613,7 +636,7 @@ class SiteController extends AbstractAuthActionController
     {
         $this->assertFeatureEnabled(FeatureToggle::VTS_RISK_SCORE);
 
-        $siteId = (int)$this->params()->fromRoute('id');
+        $siteId = (int) $this->params()->fromRoute('id');
         $this->auth->assertGrantedAtSite(PermissionAtSite::VTS_UPDATE_SITE_RISK_ASSESSMENT, $siteId);
 
         /** @var \Zend\Http\Request $request */
@@ -638,7 +661,7 @@ class SiteController extends AbstractAuthActionController
             try {
                 $dto = $this->mapper->Site->validateSiteAssessment($siteId, $dto);
 
-                if($dto instanceof EnforcementSiteAssessmentDto){
+                if ($dto instanceof EnforcementSiteAssessmentDto) {
                     $form = new VtsSiteAssessmentForm();
                     $form->fromDto($dto);
                 }
@@ -658,8 +681,8 @@ class SiteController extends AbstractAuthActionController
         $viewModel = new ViewModel(
             [
                 'siteId' => $siteId,
-                'vtsViewUrl' =>$vtsViewUrl,
-                'cancelUrl' =>$cancelUrl,
+                'vtsViewUrl' => $vtsViewUrl,
+                'cancelUrl' => $cancelUrl,
                 'form' => $form,
             ]
         );
@@ -668,7 +691,6 @@ class SiteController extends AbstractAuthActionController
             $vtsDto->getName() => $vtsViewUrl,
         ];
         $breadcrumbs = $this->prependBreadcrumbsWithAeLink($vtsDto, $breadcrumbs);
-
 
         return $this->prepareViewModel(
             $viewModel,
@@ -682,7 +704,7 @@ class SiteController extends AbstractAuthActionController
     {
         $this->assertFeatureEnabled(FeatureToggle::VTS_RISK_SCORE);
 
-        $siteId = (int)$this->params()->fromRoute('id');
+        $siteId = (int) $this->params()->fromRoute('id');
         $this->auth->assertGrantedAtSite(PermissionAtSite::VTS_UPDATE_SITE_RISK_ASSESSMENT, $siteId);
 
         /** @var \Zend\Http\Request $request */
@@ -709,8 +731,8 @@ class SiteController extends AbstractAuthActionController
                 $this->session->offsetUnset(self::SITE_ASSESSMENT_SESSION_KEY);
 
                 $this->flashMessenger()->addSuccessMessage(self::MSG_ADD_RISK_ASSESSMENT_SUCCESS);
-                return $this->redirect()->toUrl($vtsViewUrl);
 
+                return $this->redirect()->toUrl($vtsViewUrl);
             } catch (RestApplicationException $ve) {
                 $this->addErrorMessages($ve->getDisplayMessages());
             }
@@ -747,27 +769,29 @@ class SiteController extends AbstractAuthActionController
         $this->session->offsetUnset(self::SITE_ASSESSMENT_SESSION_KEY);
 
         $cancelUrl = VehicleTestingStationUrlBuilderWeb::byId($siteId)->toString();
+
         return $this->redirect()->toUrl($cancelUrl);
     }
 
     /**
-     * @return int
      * @throws \Exception
+     *
+     * @return int
      */
     private function getSiteIdOrFail()
     {
-        $siteId = (int)$this->params('id');
+        $siteId = (int) $this->params('id');
         if ($siteId == 0) {
             throw new \Exception(self::ERR_MSG_INVALID_SITE_ID_OR_NR);
         }
+
         return $siteId;
     }
 
-
-
     /**
      * @param SiteDto $site
-     * @param array $breadcrumbs
+     * @param array   $breadcrumbs
+     *
      * @return array
      */
     private function prependBreadcrumbsWithAeLink(SiteDto $site, &$breadcrumbs)
@@ -777,7 +801,7 @@ class SiteController extends AbstractAuthActionController
         if ($org) {
             $canVisitAePage = $this->canAccessAePage($org->getId());
 
-            if($canVisitAePage) {
+            if ($canVisitAePage) {
                 $aeBreadcrumb = [$org->getName() => AuthorisedExaminerUrlBuilderWeb::of($org->getId())->toString()];
                 $breadcrumbs = $aeBreadcrumb + $breadcrumbs;
             }
@@ -798,7 +822,7 @@ class SiteController extends AbstractAuthActionController
         $id = $this->params('id');
         $month = $this->params('month');
         $year = $this->params('year');
-        $isReturnToAETQI = (bool)$this->params()->fromQuery('returnToAETQI');
+        $isReturnToAETQI = (bool) $this->params()->fromQuery('returnToAETQI');
 
         return $this->applyActionResult(
             $this->siteTestQualityAction->execute($id, $month, $year, $isReturnToAETQI, $this->buildBreadcrumbs($id), $this->url(), $this->params()->fromRoute(), $this->params()->fromQuery())
@@ -807,7 +831,7 @@ class SiteController extends AbstractAuthActionController
 
     public function userTestQualityAction()
     {
-        $isReturnToAETQI = (bool)$this->params()->fromQuery('returnToAETQI');
+        $isReturnToAETQI = (bool) $this->params()->fromQuery('returnToAETQI');
 
         $group = $this->params('group');
         $month = $this->params('month');
@@ -825,8 +849,7 @@ class SiteController extends AbstractAuthActionController
             $vtsId = $this->params('id');
             $userId = $this->params('userId');
             $breadcrumbs = $this->testerTqiComponentsAtSiteBreadcrumbs->getBreadcrumbs($userId, $month, $year);
-        }
-        else {
+        } else {
             $vtsId = $this->params('id');
             $userId = $this->params('userId');
             $breadcrumbs = $this->buildBreadcrumbs($vtsId);

@@ -1,8 +1,8 @@
 <?php
-
-use DvsaCommon\Enum\BrakeTestTypeCode;
-
 /**
+ * @var array  $defaultBrakeTestClass1And2Options
+ * @var array  $defaultParkingBrakeTestClass3AndAboveOptions
+ * @var array  $defaultServiceBrakeTestClass3AndAboveOptions
  * @var string $cancelRoute
  * @var string $defaultBrakeTestClass1And2
  * @var string $defaultParkingBrakeTestClass3AndAbove
@@ -18,27 +18,6 @@ $taskName = "Change default test settings";
 $this->headTitle($sectionName . ' - ' . $taskName);
 $this->layout()->setVariable('pageSubTitle', $sectionName);
 $this->layout()->setVariable('pageTitle', $taskName);
-
-$defaultBrakeTestClass1And2Options = [
-    BrakeTestTypeCode::ROLLER,
-    BrakeTestTypeCode::DECELEROMETER,
-    BrakeTestTypeCode::FLOOR,
-    BrakeTestTypeCode::GRADIENT,
-];
-
-$defaultParkingBrakeTestClass3AndAboveOptions = [
-    BrakeTestTypeCode::ROLLER,
-    BrakeTestTypeCode::PLATE,
-    BrakeTestTypeCode::DECELEROMETER,
-    BrakeTestTypeCode::GRADIENT,
-];
-
-$defaultServiceBrakeTestClass3AndAboveOptions = [
-    BrakeTestTypeCode::ROLLER,
-    BrakeTestTypeCode::PLATE,
-    BrakeTestTypeCode::DECELEROMETER,
-];
-
 ?>
 
 <form method="POST">
