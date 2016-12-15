@@ -45,13 +45,13 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
                 $message, $brakeTestResult, $vehicle->getVehicleClass()->getCode(), $ex->getErrors()
             );
             if ($expectedCount === 0) {
-                $this->fail("Exception not expected. " . $traceMessage);
+                $this->fail('Exception not expected. '.$traceMessage);
             }
             $errors = $ex->getErrors();
-            $this->assertCount($expectedCount, $errors, "Wrong count. " . $traceMessage);
+            $this->assertCount($expectedCount, $errors, 'Wrong count. '.$traceMessage);
             if ($expectedMessage) {
                 foreach ($errors as $error) {
-                    $this->assertEquals($expectedMessage, $error['message'], "Wrong error message. " . $traceMessage);
+                    $this->assertEquals($expectedMessage, $error['message'], 'Wrong error message. '.$traceMessage);
                 }
             }
         }
@@ -59,9 +59,9 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
 
     protected function getTraceMessageAfterException($testMessage, $data, $vehicleClass, $exceptionErrors)
     {
-        return " Message: [" . $testMessage . "] \n
-                    Data: [" . print_r($data, true) . ", vehicle class: [$vehicleClass]\n
-                    Exception errors: " . print_r($exceptionErrors, true);
+        return ' Message: ['.$testMessage."] \n
+                    Data: [".print_r($data, true).", vehicle class: [$vehicleClass]\n
+                    Exception errors: ".print_r($exceptionErrors, true);
     }
 
     public static function brakeTestValidatorItemsClass3AndAbove()
@@ -72,7 +72,7 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
                 [
                     'Test valid brake test result class 4',
                     self::getValidBrakeTestResultRoller(),
-                    self::getTestVehicle()
+                    self::getTestVehicle(),
                 ],
                 [
                     'Test invalid efforts throw exception',
@@ -93,14 +93,14 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
                     self::getBrakeTestResultClass4VeryLargeEfforts(),
                     self::getTestVehicle(),
                     1,
-                    sprintf(BrakeTestResultValidator::MESSAGE_EFFORT_VALUE_TOO_LARGE, 'service brake nearside axle 1')
+                    sprintf(BrakeTestResultValidator::MESSAGE_EFFORT_VALUE_TOO_LARGE, 'service brake nearside axle 1'),
                 ],
                 [
                     'Test very large brake values for parking brake throws exception',
                     self::getBrakeTestResultClass4VeryLargeEfforts(false),
                     self::getTestVehicle(),
                     1,
-                    sprintf(BrakeTestResultValidator::MESSAGE_EFFORT_VALUE_TOO_LARGE, 'parking brake offside')
+                    sprintf(BrakeTestResultValidator::MESSAGE_EFFORT_VALUE_TOO_LARGE, 'parking brake offside'),
                 ],
                 [
                     'Test exception thrown on single line past sep 2010',
@@ -111,7 +111,19 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
                         BrakeTestResultClass3AndAbove::DATE_BEFORE_CLASS_4_LOWER_EFFICIENCY
                     ),
                     1,
-                    "Single line service brake type is not applicable to vehicles past 1 Sep 2010",
+                    'Single line service brake type is not applicable to vehicles past 1 Sep 2010',
+                ],
+                [
+                    'Test class 4 with locks and null efforts does not throw validation message expected only for class 1&2',
+                    self::getValidBrakeTestResultRoller()
+                        ->setServiceBrake1Data(
+                            self::getValidServiceBrakeData()
+                                ->setLockNearsideAxle2(true)
+                                ->setEffortNearsideAxle2(null)
+                        )
+                        ->setParkingBrakeLockNearside(true)
+                        ->setParkingBrakeEffortNearside(null),
+                    self::getTestVehicle(),
                 ],
                 //DECELEROMETER
                 [
@@ -125,7 +137,7 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
                         ->setServiceBrake1Data(new BrakeTestResultServiceBrakeData()),
                     self::getTestVehicle(),
                     1,
-                    BrakeTestResultValidator::MESSAGE_SERVICE_BRAKE_DATA_NOT_ALLOWED
+                    BrakeTestResultValidator::MESSAGE_SERVICE_BRAKE_DATA_NOT_ALLOWED,
                 ],
                 //SERVICE BRAKE 2 - VARIOUS CLASSES
                 [
@@ -135,7 +147,7 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
                         ->setServiceBrake2Data(new BrakeTestResultServiceBrakeData()),
                     self::getTestVehicle(Vehicle::VEHICLE_CLASS_5),
                     1,
-                    BrakeTestResultValidator::MESSAGE_SERVICE_BRAKE_2_DATA_N_A
+                    BrakeTestResultValidator::MESSAGE_SERVICE_BRAKE_2_DATA_N_A,
                 ],
                 [
                     'Test second service brake throws exception for class 7',
@@ -144,7 +156,7 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
                         ->setServiceBrake2Data(new BrakeTestResultServiceBrakeData()),
                     self::getTestVehicle(Vehicle::VEHICLE_CLASS_7),
                     1,
-                    BrakeTestResultValidator::MESSAGE_SERVICE_BRAKE_2_DATA_N_A
+                    BrakeTestResultValidator::MESSAGE_SERVICE_BRAKE_2_DATA_N_A,
                 ],
                 [
                     'Test second service brake all right for class 3',
@@ -263,7 +275,7 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
                         ->setControl1EffortFront(99999)
                         ->setControl1EffortRear(100),
                     1,
-                    sprintf(BrakeTestResultValidator::MESSAGE_EFFORT_VALUE_TOO_LARGE, 'control 1 effort front')
+                    sprintf(BrakeTestResultValidator::MESSAGE_EFFORT_VALUE_TOO_LARGE, 'control 1 effort front'),
                 ],
                 [
                     'Test very large control 1 rear throws exception',
@@ -271,7 +283,7 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
                         ->setControl1EffortFront(100)
                         ->setControl1EffortRear(99999),
                     1,
-                    sprintf(BrakeTestResultValidator::MESSAGE_EFFORT_VALUE_TOO_LARGE, 'control 1 effort rear')
+                    sprintf(BrakeTestResultValidator::MESSAGE_EFFORT_VALUE_TOO_LARGE, 'control 1 effort rear'),
                 ],
                 [
                     'Test empty front both controls throws exception',
@@ -347,11 +359,11 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
                         ->setControl2BrakeEfficiency(null),
                     0,
                     null,
-                    self::getOldBikeDate()
+                    self::getOldBikeDate(),
                 ],
                 [
                     'Test valid gradient type test',
-                    self::getValidBrakeTestResultClass1And2TypeGradient()
+                    self::getValidBrakeTestResultClass1And2TypeGradient(),
                 ],
                 [
                     'Test gradient type test is valid for old bike',
@@ -360,7 +372,7 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
                         ->setControl2EfficiencyPass(null),
                     0,
                     null,
-                    self::getOldBikeDate()
+                    self::getOldBikeDate(),
                 ],
                 [
                     'Test valid gradient type test',
@@ -368,7 +380,7 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
                         ->setGradientControl1BelowMinimum(0)
                         ->setGradientControl2BelowMinimum(1),
                     2,
-                    BrakeTestResultValidator::MESSAGE_GRADIENT_CONTROLS_BELOW_BOOL
+                    BrakeTestResultValidator::MESSAGE_GRADIENT_CONTROLS_BELOW_BOOL,
                 ],
                 [
                     'Test valid gradient type test',
@@ -376,7 +388,7 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
                         ->setGradientControl1AboveUpperMinimum(0)
                         ->setGradientControl2AboveUpperMinimum(1),
                     2,
-                    BrakeTestResultValidator::MESSAGE_GRADIENT_CONTROLS_ABOVE_BOOL
+                    BrakeTestResultValidator::MESSAGE_GRADIENT_CONTROLS_ABOVE_BOOL,
                 ],
                 [
                     'Wrong gradient settings',
@@ -386,7 +398,39 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
                         ->setGradientControl1AboveUpperMinimum(true)
                         ->setGradientControl2AboveUpperMinimum(true),
                     2,
-                    BrakeTestResultValidator::MESSAGE_GRADIENT_CONTROLS_MINIMUMS_INVALID
+                    BrakeTestResultValidator::MESSAGE_GRADIENT_CONTROLS_MINIMUMS_INVALID,
+                ],
+                [
+                    'Test empty control 1 front with lock box checked throws exception',
+                    self::getValidBrakeTestResultClass1And2()
+                        ->setControl1EffortFront(null)
+                        ->setControl1LockFront(true),
+                    1,
+                    sprintf(BrakeTestResultValidator::MESSAGE_BRAKE_EFFORT_POSITIVE_IF_LOCK_BOX_CHECKED, 'Control one', 'front'),
+                ],
+                [
+                    'Test filled control 1 rear with lock box checked does not throw exception',
+                    self::getValidBrakeTestResultClass1And2()
+                        ->setControl1EffortFront(100)
+                        ->setControl1LockFront(true),
+                    0,
+                    null,
+                ],
+                [
+                    'Test empty control 2 rear with lock box checked throws exception',
+                    self::getValidBrakeTestResultClass1And2()
+                        ->setControl2EffortRear(null)
+                        ->setControl2LockRear(true),
+                    1,
+                    sprintf(BrakeTestResultValidator::MESSAGE_BRAKE_EFFORT_POSITIVE_IF_LOCK_BOX_CHECKED, 'Control two', 'rear'),
+                ],
+                [
+                    'Test empty control 2 rear with lock box not checked does not throw exception',
+                    self::getValidBrakeTestResultClass1And2()
+                        ->setControl2EffortRear(null)
+                        ->setControl2LockRear(false),
+                    0,
+                    null,
                 ],
             ];
     }
@@ -416,6 +460,7 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
             ->setControl1LockRear(null)
             ->setControl2LockFront(null)
             ->setControl2LockRear(null);
+
         return $brakeTestResult;
     }
 
@@ -436,6 +481,7 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
             ->setControl1LockRear(null)
             ->setControl2LockFront(null)
             ->setControl2LockRear(null);
+
         return $brakeTestResult;
     }
 
@@ -452,6 +498,7 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
             ->setGradientControl2BelowMinimum(false)
             ->setGradientControl1AboveUpperMinimum(true)
             ->setGradientControl2AboveUpperMinimum(true);
+
         return $brakeTestResult;
     }
 
@@ -479,6 +526,7 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
             ->setParkingBrakeLockOffside(false);
         $serviceBrake1 = self::getValidServiceBrakeData($vehicleClass);
         $brakeTestResult->setServiceBrake1Data($serviceBrake1);
+
         return $brakeTestResult;
     }
 
@@ -503,6 +551,7 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
                 ->setLockNearsideAxle2(false)
                 ->setLockOffsideAxle2(false);
         }
+
         return $serviceBrake;
     }
 
@@ -514,6 +563,7 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
             ->setParkingBrakeTestType(BrakeTestTypeFactory::decelerometer())
             ->setParkingBrakeEfficiency(30)
             ->setServiceBrake1Efficiency(34);
+
         return $brakeTestResult;
     }
 
@@ -526,6 +576,7 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
             ->setParkingBrakeEffortSecondaryOffside(false)
             ->setParkingBrakeEffortSecondaryNearside('b');
         $serviceBrakeData = self::getInvalidEffortsServiceBrakeData();
+
         return $brakeTestResult
             ->setServiceBrake1Data($serviceBrakeData);
     }
@@ -549,6 +600,7 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
                 ->setParkingBrakeEffortSecondaryNearside(null);
             $serviceBrakeData = self::getValidServiceBrakeData();
         }
+
         return $brakeTestResult
             ->setServiceBrake1Data($serviceBrakeData);
     }
@@ -569,6 +621,7 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
                 ->setEffortNearsideAxle2('a')
                 ->setEffortOffsideAxle2(-5);
         }
+
         return $serviceBrakeData;
     }
 
@@ -580,6 +633,7 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
             ->setEffortOffsideAxle1(100)
             ->setEffortNearsideAxle2(100)
             ->setEffortOffsideAxle2(100);
+
         return $serviceBrakeData;
     }
 
@@ -592,6 +646,7 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
             ->setParkingBrakeLockSecondaryNearside(1)
             ->setParkingBrakeLockSecondaryOffside('n');
         $serviceBrakeData = self::getInvalidLocksServiceBrakeData();
+
         return $brakeTestResult
             ->setServiceBrake1Data($serviceBrakeData);
     }
@@ -612,6 +667,7 @@ class BrakeTestResultValidatorTest extends AbstractServiceTestCase
                 ->setLockNearsideAxle2('a')
                 ->setLockOffsideAxle2(1);
         }
+
         return $serviceBrakeData;
     }
 
