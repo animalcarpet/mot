@@ -32,6 +32,8 @@ public class Contingency {
             "the conditions of authorisation which includes compliance with the MOT testing guide, the requirements for " +
             "authorisation, the appropriate MOT Inspection Manual and any other instructions issued by DVSA.";
 
+    private static final String TWOFA_DECLARATION_STATEMENT = "By saving this test result you confirm that you have carried out this " +
+            "MOT test in line with DVSA conditions for MOT testing.";
 
     public Contingency(PageNavigator pageNavigator)
     {
@@ -65,7 +67,7 @@ public class Contingency {
         }
 
         if (testSummaryPage.isDeclarationTextDisplayed()) {
-            assertThat(testSummaryPage.getDeclarationText(), equalToIgnoringCase(DECLARATION_STATEMENT));
+            assertThat(testSummaryPage.getDeclarationText(), equalToIgnoringCase(TWOFA_DECLARATION_STATEMENT));
             declarationStatement = true;
         }
 
@@ -90,7 +92,7 @@ public class Contingency {
         }
 
         if (summaryPage.isDeclarationTextDisplayed()) {
-            assertThat(summaryPage.getDeclarationText(), equalToIgnoringCase(DECLARATION_STATEMENT));
+            assertThat(summaryPage.getDeclarationText(), equalToIgnoringCase(TWOFA_DECLARATION_STATEMENT));
             declarationStatement = true;
         }
 

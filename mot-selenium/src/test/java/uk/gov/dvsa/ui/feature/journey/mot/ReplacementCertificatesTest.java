@@ -89,13 +89,12 @@ public class ReplacementCertificatesTest extends DslTest {
         assertThat(motUI.certificate.isReprintButtonDisplayed(), is(true));
     }
 
-    @Test(testName = "2fa", groups = {"BVT", "Regression"})
+    @Test(groups = {"BVT", "Regression"})
     public void pinBoxNotShownWhenTwoFactorUserEditCertificate() throws IOException, URISyntaxException {
 
         //Given I create a test as a 2FA user
         int siteId = siteData.createSite().getId();
         User twoFactorTester = motApi.user.createTester(siteId);
-        motUI.authentication.registerAndSignInTwoFactorUser(twoFactorTester);
 
         Vehicle vehicle = vehicleData.getNewVehicle(twoFactorTester);
         MotTest test = motApi.createTest(twoFactorTester, siteId, vehicle, TestOutcome.PASSED, 123456, DateTime.now());
@@ -107,12 +106,12 @@ public class ReplacementCertificatesTest extends DslTest {
         assertThat("Pin Box is not Displayed", motUI.certificate.isPinBoxDisplayed(), is(false));
     }
 
-    @Test(groups = {"Regression"})
+    @Test(testName="2faHardStopDisabled", groups = {"Regression"})
     public void pinBoxShownWhenNonTwoFactorUserEditCertificate() throws IOException, URISyntaxException {
 
         //Given I create a test as a non 2fa tester
         int siteId = siteData.createSite().getId();
-        User tester = motApi.user.createTester(siteId);
+        User tester = motApi.user.createNon2FaTester(siteId);
 
         Vehicle vehicle = vehicleData.getNewVehicle(tester);
         String testId = motApi.createTest(tester, siteId, vehicle, TestOutcome.PASSED, 123456, DateTime.now()).getMotTestNumber();

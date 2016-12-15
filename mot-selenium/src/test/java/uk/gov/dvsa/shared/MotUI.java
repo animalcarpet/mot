@@ -11,6 +11,7 @@ import uk.gov.dvsa.journey.profile.Profile;
 import uk.gov.dvsa.journey.vehicleInformation.VehicleInformation;
 import uk.gov.dvsa.ui.interfaces.TwoFactorPromptPage;
 import uk.gov.dvsa.ui.pages.HomePage;
+import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.authentication.securitycard.ActivateYourCardPromptPage;
 import uk.gov.dvsa.ui.pages.authentication.securitycard.OrderYourCardPromptPage;
 import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostForgottenCardAlreadyOrderedPage;
@@ -19,6 +20,7 @@ import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardInformation
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.TwoFactorPinEntryPage;
 import uk.gov.dvsa.ui.pages.events.EventsHistoryPage;
 import uk.gov.dvsa.ui.pages.events.HistoryType;
+import uk.gov.dvsa.ui.pages.login.HardStop2faPage;
 import uk.gov.dvsa.ui.pages.login.LoginPage;
 import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationPage;
 import uk.gov.dvsa.ui.pages.vehicleinformation.VehicleInformationSearchPage;
@@ -80,27 +82,26 @@ public class MotUI {
     }
 
     public void login(final User user) throws IOException {
-        LoginPage loginPage = pageNavigator.goToLoginPage();
-        pageNavigator.getDriver().setUser(user);
-        loginPage.login(user.getUsername(), user.getPassword(), HomePage.class);
+        loginUser(user, HomePage.class);
     }
 
-    public LoginPage loginWithCustomCredentials(final User user, String username, String password) throws IOException {
+    private <T extends Page> T  loginUser(User user, Class<T> clazz) throws IOException {
         LoginPage loginPage = pageNavigator.goToLoginPage();
         pageNavigator.getDriver().setUser(user);
-        return loginPage.login(username, password, LoginPage.class);
+        return loginPage.login(user.getUsername(), user.getPassword(), clazz);
+    }
+
+    public LoginPage loginWithInvalidCredentials(String username, String password) throws IOException {
+        return pageNavigator.goToLoginPage()
+            .login(username, password, LoginPage.class);
     }
 
     public RegisterCardInformationPage loginExpectingCardInformationPage(final User user) throws IOException {
-        LoginPage loginPage = pageNavigator.goToLoginPage();
-        pageNavigator.getDriver().setUser(user);
-        return loginPage.login(user.getUsername(), user.getPassword(), RegisterCardInformationPage.class);
+        return loginUser(user, RegisterCardInformationPage.class);
     }
 
     public TwoFactorPinEntryPage loginExpectingPinEntryPage(final User user) throws IOException {
-        LoginPage loginPage = pageNavigator.goToLoginPage();
-        pageNavigator.getDriver().setUser(user);
-        return loginPage.login(user.getUsername(), user.getPassword(), TwoFactorPinEntryPage.class);
+        return loginUser(user, TwoFactorPinEntryPage.class);
     }
 
     public boolean isLoginSuccessful(){
@@ -129,26 +130,22 @@ public class MotUI {
     }
 
     public TwoFactorPromptPage loginExpecting2faOrderPromtPage(User user) throws IOException {
-        LoginPage loginPage = pageNavigator.goToLoginPage();
-        pageNavigator.getDriver().setUser(user);
-        return loginPage.login(user.getUsername(), user.getPassword(), OrderYourCardPromptPage.class);
+        return loginUser(user, OrderYourCardPromptPage.class);
     }
 
-    public TwoFactorPromptPage loginExpecting2faActivatePromtPage(User user) throws IOException {
-        LoginPage loginPage = pageNavigator.goToLoginPage();
-        pageNavigator.getDriver().setUser(user);
-        return loginPage.login(user.getUsername(), user.getPassword(), ActivateYourCardPromptPage.class);
+    public TwoFactorPromptPage loginExpecting2faActivatePromptPage(User user) throws IOException {
+        return loginUser(user, ActivateYourCardPromptPage.class);
     }
 
     public LostForgottenCardAlreadyOrderedPage loginExpecting2faAlreadyOrderedPage(User user) throws IOException {
-        LoginPage loginPage = pageNavigator.goToLoginPage();
-        pageNavigator.getDriver().setUser(user);
-        return loginPage.login(user.getUsername(), user.getPassword(), LostForgottenCardAlreadyOrderedPage.class);
+        return loginUser(user, LostForgottenCardAlreadyOrderedPage.class);
     }
 
     public LostForgottenCardQuestionOnePage loginExpecting2faSecurityQuestionOnePage(User user) throws IOException {
-        LoginPage loginPage = pageNavigator.goToLoginPage();
-        pageNavigator.getDriver().setUser(user);
-        return loginPage.login(user.getUsername(), user.getPassword(), LostForgottenCardQuestionOnePage.class);
+        return loginUser(user, LostForgottenCardQuestionOnePage.class);
+    }
+
+    public HardStop2faPage loginExpecting2faHardStopPage(User user) throws IOException {
+        return loginUser(user, HardStop2faPage.class);
     }
 }

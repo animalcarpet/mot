@@ -12,12 +12,9 @@ import static org.hamcrest.core.Is.is;
 
 public class LostOrForgottenCardTests extends DslTest {
 
-    @Test(testName = "2fa", groups = {"BVT"})
+    @Test(groups = {"BVT"})
     public void iCanSignInWhenIForgetMySecurityCardAs2faUser() throws IOException {
         User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
-
-        step("Given I am a 2FA active and on the Security card PIN page");
-        motUI.authentication.gotoTwoFactorPinEntryPage(twoFactorUser);
 
         step("When I complete sign in via the lost and forgotten journey");
         motUI.authentication.securityCard.signInWithoutSecurityCardLandingOnHomePage(twoFactorUser);
@@ -26,12 +23,11 @@ public class LostOrForgottenCardTests extends DslTest {
         assertThat("The User is on the Home Page", motUI.isLoginSuccessful(), is(true));
     }
 
-    @Test(testName = "2fa", groups = {"BVT"})
+    @Test(groups = {"BVT"})
     public void userWithReplacementCardOrderedIsDirectedToAlreadyOrderedCardPage() throws IOException {
         User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
 
         step("Given I am logged out after ordering a card via lost/forgotten journey");
-        motUI.authentication.securityCard.activate2faCard(twoFactorUser).logOut(twoFactorUser);
         motUI.authentication.securityCard.signInWithoutSecurityCardAndOrderCard(twoFactorUser);
         motUI.logout(twoFactorUser);
 
@@ -45,12 +41,11 @@ public class LostOrForgottenCardTests extends DslTest {
         assertThat("The User is on the Home Page", motUI.isLoginSuccessful(), is(true));
     }
 
-    @Test(testName = "2fa", groups = {"BVT"})
+    @Test(groups = {"BVT"})
     public void userWithReplacementCardOrderedAndActivatedDirectedTo2FAPinEntryPage() throws IOException {
         User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
 
         step("Given I am logged out after ordering a card via lost/forgotten journey");
-        motUI.authentication.securityCard.activate2faCard(twoFactorUser).logOut(twoFactorUser);
         motUI.authentication.securityCard.signInWithoutSecurityCardAndOrderCard(twoFactorUser);
         motUI.logout(twoFactorUser);
 
@@ -69,12 +64,9 @@ public class LostOrForgottenCardTests extends DslTest {
 
     @Test(testName = "2fa", groups = {"BVT"})
     public void userDirectedToSecurityQuestionsOnSubsequentDailyLoginsAfterUsingLostForgottenJourney() throws IOException {
-        User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
 
         step("Given I am 2FA active and logged in today using lost/forgotten journey");
-        motUI.authentication.securityCard.activate2faCard(twoFactorUser).logOut(twoFactorUser);
-        motUI.authentication.securityCard.signInWithoutSecurityCard(twoFactorUser);
-        motUI.logout(twoFactorUser);
+        User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
 
         step("When I log in again within the same day");
         step("Then I am directed to answer my security questions");

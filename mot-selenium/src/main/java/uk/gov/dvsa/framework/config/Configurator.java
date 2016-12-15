@@ -135,6 +135,10 @@ public abstract class Configurator {
         return getProp("test.baseApiUrl");
     }
 
+    public static String authServiceUrl() {
+        return getProp("test.authorisationServiceUrl");
+    }
+
     public static String openAmUrl() {
         return getProp("test.openAmUrl");
     }

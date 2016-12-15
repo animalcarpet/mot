@@ -19,8 +19,7 @@ public class Authentication {
     }
 
     public TwoFactorPinEntryPage gotoTwoFactorPinEntryPage(User user) throws IOException {
-        securityCard.activate2faCard(user);
-        pageNavigator.clickLogout(user);
+
         pageNavigator.navigateToPage(user, TwoFactorPinEntryPage.PATH, TwoFactorPinEntryPage.class);
 
         return new TwoFactorPinEntryPage(pageNavigator.getDriver());

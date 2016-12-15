@@ -1,8 +1,6 @@
 package uk.gov.dvsa.ui.feature.journey.nomination;
 
 import org.testng.annotations.Test;
-import ru.yandex.qatools.allure.annotations.Description;
-import ru.yandex.qatools.allure.annotations.Features;
 
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
@@ -11,6 +9,9 @@ import uk.gov.dvsa.domain.shared.role.TradeRoles;
 import uk.gov.dvsa.ui.DslTest;
 
 import java.io.IOException;
+
+import ru.yandex.qatools.allure.annotations.Description;
+import ru.yandex.qatools.allure.annotations.Features;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -21,7 +22,7 @@ import static org.hamcrest.Matchers.is;
 @Features("Nomination notification(s) for nominees to accept or reject role")
 public class RejectNotificationsTests extends DslTest {
 
-    @Test(testName = "2fa", groups = {"BVT"})
+    @Test(groups = {"BVT"})
     void non2faUserCannotRejectNominationWith2faOn() throws IOException {
         step("Given I have been nominated for a Site Manager role as non 2fa user");
         User not2faActiveUser = motApi.user.createUserWithoutRole();
@@ -34,7 +35,7 @@ public class RejectNotificationsTests extends DslTest {
                 motUI.nominations.viewMostRecent(not2faActiveUser).isRejectButtonDisplayed(), is(false));
     }
 
-    @Test(testName = "2fa", groups = {"BVT"})
+    @Test(groups = {"BVT"})
     void userRejectsSiteManagerNominationWith2FAon() throws IOException {
         step("Given I have been nominated for a Site Manager role as non 2fa user");
         User user = motApi.user.createUserWithoutRole();
@@ -50,7 +51,7 @@ public class RejectNotificationsTests extends DslTest {
                 message, containsString("You have rejected the role of Site manager"));
     }
 
-    @Test(testName = "2fa", groups = {"BVT"})
+    @Test(groups = {"BVT"})
     void userRejectsSiteAdminNominationWith2FAon() throws IOException {
         step("Given I have been nominated for a Site Admin role as non 2fa user");
         User user = motApi.user.createUserWithoutRole();
@@ -66,7 +67,7 @@ public class RejectNotificationsTests extends DslTest {
                 message, containsString("You have rejected the role of Site admin"));
     }
 
-    @Test(testName = "2fa", groups = {"BVT"})
+    @Test(groups = {"BVT"})
     void userRejectsTesterNominationWith2FAon() throws IOException {
         step("Given I have been nominated for a Tester role as non 2fa user");
         User user = motApi.user.createUserWithoutRole();
@@ -85,7 +86,7 @@ public class RejectNotificationsTests extends DslTest {
                 message, containsString("You have rejected the role of Tester"));
     }
 
-    @Test(testName = "2fa", groups = {"BVT"})
+    @Test(groups = {"BVT"})
     void userRejectsAEDNominationWith2FAon() throws IOException {
         step("Given I have been nominated for an AED role as non 2fa user");
         User user = motApi.user.createUserWithoutRole();
@@ -100,32 +101,4 @@ public class RejectNotificationsTests extends DslTest {
         assertThat("Nominated was rejected successfully",
                 message, containsString("You have rejected the role of Authorised Examiner Delegate"));
     }
-
-    @Test(testName = "non-2fa", groups = {"BVT"})
-    void userRejectsTesterNominationWith2faOff() throws IOException {
-        step("Given I am nominated as a tester");
-        User nominee = motApi.user.createTester(siteData.createSite().getId());
-        motApi.nominations.nominateSiteRole(nominee,siteData.createSite().getId(), TradeRoles.TESTER);
-
-        step("When I reject the nomination");
-        String message = motUI.nominations.viewMostRecent(nominee).rejectNomination().getConfirmationText();
-
-        assertThat("Nominated was rejected successfully",
-                message, containsString("You have rejected the role of Tester"));
-    }
-    @Test(testName = "non-2fa", groups = {"BVT"})
-    void userRejectAedNominationWith2faOff() throws IOException {
-        step("Given I nominate a user as an aed");
-        User nominee = motApi.user.createUserWithoutRole();
-        motApi.nominations.nominateOrganisationRoleWithRoleCode(nominee, aeData.createAeWithDefaultValues().getId(), OrganisationBusinessRoleCodes.AED);
-
-        step("When I reject the nomination");
-        String message = motUI.nominations.viewMostRecent(nominee).rejectNomination().getConfirmationText();
-
-        assertThat("Nominated was rejected successfully",
-                message, containsString("You have rejected the role of Authorised Examiner Delegate"));
-    }
-
-
-
 }

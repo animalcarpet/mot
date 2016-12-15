@@ -11,4 +11,8 @@ public abstract class Service {
     protected Service(String clientUrl) {
         motClient = new MotClient(clientUrl);
     }
+
+    protected void changeClientUrl(String url){
+        motClient = new MotClient(url);
+    }
 }

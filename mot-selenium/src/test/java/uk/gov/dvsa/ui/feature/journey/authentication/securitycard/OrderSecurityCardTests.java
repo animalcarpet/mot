@@ -1,14 +1,16 @@
 package uk.gov.dvsa.ui.feature.journey.authentication.securitycard;
 
 import org.testng.annotations.Test;
-import ru.yandex.qatools.allure.annotations.Features;
-import ru.yandex.qatools.allure.annotations.Issue;
+
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.shared.role.TradeRoles;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.HomePage;
 
 import java.io.IOException;
+
+import ru.yandex.qatools.allure.annotations.Features;
+import ru.yandex.qatools.allure.annotations.Issue;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -21,7 +23,6 @@ public class OrderSecurityCardTests extends DslTest {
 
         step("Given I am a 2fa authenticated user");
         User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
-        motUI.authentication.securityCard.activate2faCard(twoFactorUser).logOut(twoFactorUser);
 
         step("And I complete the sign in journey without a card");
         motUI.authentication.securityCard.signInWithoutSecurityCard(twoFactorUser);
@@ -74,19 +75,18 @@ public class OrderSecurityCardTests extends DslTest {
         motUI.logout(demoTester);
 
         step("When I sign in to my account");
-        String pageText = motUI.loginExpecting2faActivatePromtPage(demoTester).getText();
+        String pageText = motUI.loginExpecting2faActivatePromptPage(demoTester).getText();
 
         step("Then I should a page prompt to activate card");
         assertThat("Activate Card prompt page is displayed", pageText,
             containsString("You can only access the full MOT testing service with an activated security card."));
     }
 
-    @Test(testName = "2fa", groups = {"BVT"})
+    @Test(groups = {"BVT"})
     public void cardDeactivationMessageIsDisplayedForUserWithActiveCard() throws IOException {
 
         step("Given I am a 2fa authenticated user");
         User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
-        motUI.authentication.securityCard.activate2faCard(twoFactorUser).logOut(twoFactorUser);
 
         step("And I Order a new security card");
         motUI.authentication.securityCard.signInWithoutSecurityCard(twoFactorUser);
@@ -96,12 +96,11 @@ public class OrderSecurityCardTests extends DslTest {
         assertThat(motUI.authentication.securityCard.isExistingCardDeactivationMessageDisplayed(), is(true));
     }
 
-    @Test(testName = "2fa", groups = {"BVT"} )
+    @Test(groups = {"BVT"} )
     public void validationSummaryIsDisplayedForIncorrectCustomAddress() throws IOException {
 
         step("GIVEN I am a 2fa authenticated user");
         User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
-        motUI.authentication.securityCard.activate2faCard(twoFactorUser).logOut(twoFactorUser);
 
         step("And I complete the sign in journey");
         motUI.authentication.securityCard.signInWithoutSecurityCard(twoFactorUser);
@@ -113,11 +112,10 @@ public class OrderSecurityCardTests extends DslTest {
             .isValidationSummaryDisplayed(), is(true));
     }
 
-    @Test(testName = "2fa", groups = {"BVT"})
+    @Test(groups = {"BVT"})
     public void orderNewSecurityCardWithVTSAddress() throws IOException {
         step("GIVEN I am a 2fa authenticated user");
         User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
-        motUI.authentication.securityCard.activate2faCard(twoFactorUser).logOut(twoFactorUser);
         motUI.authentication.securityCard.signInWithoutSecurityCard(twoFactorUser);
 
         step("WHEN I order a card with valid VTS address");
@@ -127,12 +125,11 @@ public class OrderSecurityCardTests extends DslTest {
         assertThat("Card Order was Successful", message, containsString("Your security card has been ordered"));
     }
 
-    @Test(testName = "2fa", groups = {"BVT"})
+    @Test(groups = {"BVT"})
     public void orderNewSecurityCardWithHomeAddress() throws IOException {
 
         step("GIVEN I am a 2fa authenticated user");
         User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
-        motUI.authentication.securityCard.activate2faCard(twoFactorUser).logOut(twoFactorUser);
         motUI.authentication.securityCard.signInWithoutSecurityCard(twoFactorUser);
 
         step("WHEN I order a card with valid Home address");
