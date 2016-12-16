@@ -300,6 +300,11 @@ class MotTestMapper
 
             unset($siteJson['roles']);
 
+            $defaultBrakeTestClass1And2 =  $site->getDefaultBrakeTestClass1And2();
+            if ($defaultBrakeTestClass1And2) {
+                $siteJson['defaultBrakeTestClass1And2'] = $defaultBrakeTestClass1And2->getCode();
+            }
+
             $defaultServiceBrakeTestClass3AndAbove =  $site->getDefaultServiceBrakeTestClass3AndAbove();
             if ($defaultServiceBrakeTestClass3AndAbove) {
                 $siteJson['defaultServiceBrakeTestClass3AndAbove'] = $defaultServiceBrakeTestClass3AndAbove->getCode();
