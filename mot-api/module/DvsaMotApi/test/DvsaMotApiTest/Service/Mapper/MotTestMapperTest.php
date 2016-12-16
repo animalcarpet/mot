@@ -2,12 +2,6 @@
 
 namespace DvsaMotApiTest\Service\Mapper;
 
-use DvsaCommon\Enum\BrakeTestTypeCode;
-use DvsaCommon\Enum\PhoneContactTypeCode;
-use DvsaCommon\Enum\VehicleClassCode;
-use DvsaEntities\Entity\BrakeTestType;
-use DvsaEntities\Entity\ModelDetail;
-use DvsaEntities\Entity\Phone;
 use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Dto\Common\ColourDto;
@@ -18,11 +12,14 @@ use DvsaCommon\Dto\Vehicle\CountryDto;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\Dto\Vehicle\VehicleParamDto;
 use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
+use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
-use DvsaCommon\Enum\SiteBusinessRoleCode;
+use DvsaCommon\Enum\PhoneContactTypeCode;
 use DvsaCommon\Enum\SiteContactTypeCode;
+use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Obfuscate\ParamObfuscator;
+use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\Date\TestDateTimeHolder;
 use DvsaCommonTest\TestUtils\XMock;
@@ -31,6 +28,7 @@ use DvsaEntities\Entity\AuthorisationForAuthorisedExaminer;
 use DvsaEntities\Entity\BodyType;
 use DvsaEntities\Entity\BrakeTestResultClass12;
 use DvsaEntities\Entity\BrakeTestResultClass3AndAbove;
+use DvsaEntities\Entity\BrakeTestType;
 use DvsaEntities\Entity\Colour;
 use DvsaEntities\Entity\ContactDetail;
 use DvsaEntities\Entity\CountryOfRegistration;
@@ -38,12 +36,14 @@ use DvsaEntities\Entity\FuelType;
 use DvsaEntities\Entity\Language;
 use DvsaEntities\Entity\Make;
 use DvsaEntities\Entity\Model;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\Organisation;
 use DvsaEntities\Entity\Person;
+use DvsaEntities\Entity\Phone;
 use DvsaEntities\Entity\PhoneContactType;
 use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Entity\ReasonForRejectionDescription;
@@ -55,8 +55,11 @@ use DvsaEntities\Entity\TestItemSelector;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
 use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
+use DvsaMotApi\Service\BrakeTestResultService;
+use DvsaMotApi\Service\CertificateExpiryService;
 use DvsaMotApi\Service\Mapper\MotTestMapper;
 use DvsaMotApi\Service\MotTestDateHelperService;
+use DvsaMotApi\Service\MotTestStatusService;
 use DvsaMotApiTest\Service\MotTestServiceTest;
 use VehicleApi\Service\VehicleSearchService;
 
@@ -76,13 +79,10 @@ class MotTestMapperTest extends AbstractServiceTestCase
 
     public function testMotTestMappedCorrectlyToDto()
     {
-        //given
         $motTestNumber = 1;
-
-        //// Setup objects for MotTest object to hold
         $vehicleClass = '4';
 
-        $tester = $this->getTestTester();
+        $tester = $this->createTester();
         $testType = (new MotTestType())->setCode(MotTestTypeCode::NORMAL_TEST);
 
         $make = new Make();
@@ -90,7 +90,8 @@ class MotTestMapperTest extends AbstractServiceTestCase
         $model->setMake($make);
 
         $modelDetail = new ModelDetail();
-        $modelDetail->setModel($model)
+        $modelDetail
+            ->setModel($model)
             ->setVehicleClass(new VehicleClass($vehicleClass))
             ->setFuelType(new FuelType())
             ->setBodyType(new BodyType());
@@ -121,7 +122,6 @@ class MotTestMapperTest extends AbstractServiceTestCase
         $testDate = DateUtils::toDate('2013-09-30');
         $dateHolder = new TestDateTimeHolder($testDate);
 
-        // Setup MotTest object
         $motTest = new MotTest();
         /** @var \DateTime $startedDate */
         $startedDate = $dateHolder->getCurrent();
@@ -130,7 +130,7 @@ class MotTestMapperTest extends AbstractServiceTestCase
         $expiryDate->add(\DateInterval::createFromDateString('+1 year -1 day'));
 
         $motTest
-            ->setStatus($this->createMotTestActiveStatus())
+            ->setStatus($this->createMotTestActiveStatusMock())
             ->setNumber($motTestNumber)
             ->setTester($tester)
             ->setMotTestType($testType)
@@ -145,8 +145,18 @@ class MotTestMapperTest extends AbstractServiceTestCase
             ->setPrsMotTest((new MotTest())->setNumber(2))
             ->addMotTestReasonForRejection($motRfrAdvisory);
 
-        $vtsData = ['id' => 3, 'address' => 'Johns Garage', 'authorisedExaminer' => 42, 'comments' => [], 'primaryTelephone' => null];
-        $brakeTestData = ['id' => 3, 'generalPass' => 'true'];
+        $vtsData = [
+            'id' => 3,
+            'address' => 'Johns Garage',
+            'authorisedExaminer' => 42,
+            'comments' => [],
+            'primaryTelephone' => null,
+        ];
+
+        $brakeTestData = [
+            'id' => 3,
+            'generalPass' => 'true',
+        ];
 
         $vehicleDto = (new VehicleDto())
             ->setVehicleClass(
@@ -178,15 +188,14 @@ class MotTestMapperTest extends AbstractServiceTestCase
             ->setVehicleTestingStation($vtsData)
             ->setTestType((new MotTestTypeDto())->setCode('NT'));
 
-        // TODO add mock for new entities
         $expectedRfr1 = [
-            'rfrId' => 1,
-            'name' => 'Rear Stop lamp',
-            'failureText' => 'adversely affected by the operation of another lamp',
-            'inspectionManualReference' => '1.2.1f',
-            'testItemSelectorId' => 12,
+            'rfrId'                       => 1,
+            'name'                        => 'Rear Stop lamp',
+            'failureText'                 => 'adversely affected by the operation of another lamp',
+            'inspectionManualReference'   => '1.2.1f',
+            'testItemSelectorId'          => 12,
             'testItemSelectorDescription' => 'aaa',
-            'markedAsRepaired' => false,
+            'markedAsRepaired'            => false,
         ];
 
         $expectedData->setReasonsForRejection(
@@ -195,7 +204,7 @@ class MotTestMapperTest extends AbstractServiceTestCase
             ]
         );
 
-        // setup motTestMapper mock
+        // Setup MotTestMapper mock
         $mocks = $this->getMocksForMotTestMapperService();
 
         // Setup additional expectedData that relied on motTestMapper function
@@ -204,8 +213,8 @@ class MotTestMapperTest extends AbstractServiceTestCase
             ->setPendingDetails(
                 [
                     'currentSubmissionStatus' => 'INCOMPLETE',
-                    'issuedDate' => null,
-                    'expiryDate' => null,
+                    'issuedDate'              => null,
+                    'expiryDate'              => null,
                 ]
             )
             ->setVehicleClass((new VehicleClassDto())->setCode('4'))
@@ -222,31 +231,34 @@ class MotTestMapperTest extends AbstractServiceTestCase
         ];
         $this->setupHandlerForHydratorMultipleCalls($mocks['mockHydrator'], $hydratorCalls);
 
-        $mocks['mockBrakeTestResultService']->expects($this->once())
+        $mocks['mockBrakeTestResultService']
+            ->expects($this->once())
             ->method('extract')
             ->with($brakeTestResult)
             ->will($this->returnValue($brakeTestData));
 
-        $mocks[self::MOCK_STATUS_SERVICE]->expects($this->once())
+        $mocks[self::MOCK_STATUS_SERVICE]
+            ->expects($this->once())
             ->method('hasUnrepairedBrakePerformanceNotTestedRfr')
             ->with($motTest)
             ->will($this->returnValue(false));
 
-        $mocks[self::MOCK_STATUS_SERVICE]->expects($this->any())
+        $mocks[self::MOCK_STATUS_SERVICE]
+            ->expects($this->any())
             ->method('getMotTestPendingStatus')
             ->with($motTest)
             ->will($this->returnValue('INCOMPLETE'));
 
         $resultFromDefectSentenceCaseConverter = [
-            'failureText' => 'adversely affected by the operation of another lamp',
+            'failureText'                 => 'adversely affected by the operation of another lamp',
             'testItemSelectorDescription' => 'aaa',
         ];
 
-        $mocks[self::MOCK_DEFECT_SENTENCE_CASE_CONVERTER]->expects($this->any())
+        $mocks[self::MOCK_DEFECT_SENTENCE_CASE_CONVERTER]
+            ->expects($this->any())
             ->method('formatRfrDescriptionsForTestResultsAndBasket')
             ->will($this->returnValue($resultFromDefectSentenceCaseConverter));
 
-        //when
         $motTestMapper = $this->constructMotTestMapperWithMocks($mocks);
         $this->mockClassField($motTestMapper, 'dateTimeHolder', $dateHolder);
 
@@ -256,24 +268,81 @@ class MotTestMapperTest extends AbstractServiceTestCase
 
     public function testMotTestOriginalPopulated()
     {
-        //given
         $motTest = MotTestServiceTest::getTestMotTestEntity();
-        $motTest->setStatus($this->createMotTestActiveStatus());
+        $motTest->setStatus($this->createMotTestActiveStatusMock());
         $motTest->setMotTestIdOriginal(clone $motTest);
         $mocks = $this->getMocksForMotTestMapperService();
 
-        //when
         $motTestMapper = $this->constructMotTestMapperWithMocks($mocks);
         /** @var MotTestDto $resultMotTestData */
         $resultMotTestData = $motTestMapper->mapMotTest($motTest);
 
-        //then
         $original = $resultMotTestData->getMotTestOriginal();
         $resultMotTestData->setMotTestOriginal(null);
         $this->assertEquals($resultMotTestData, $original);
     }
 
-    protected static function getTestTester($roleText = SiteBusinessRoleCode::TESTER)
+    /**
+     * @dataProvider motTestsForClass1And2DataProvider
+     *
+     * @param MotTest $motTest
+     */
+    public function testDefaultBrakeTestTypeSetCorrectlyForClass1And2(MotTest $motTest)
+    {
+        $vtsJson = $this->getMappedMotTest($motTest)->getVehicleTestingStation();
+        $actualBrakeTestCode = ArrayUtils::tryGet($vtsJson, 'defaultBrakeTestClass1And2');
+
+        $expectedBrakeTestCode = null;
+        $defaultBrakeTestType = $motTest->getVehicleTestingStation()->getDefaultBrakeTestClass1And2();
+        if (isset($defaultBrakeTestType)){
+            $expectedBrakeTestCode = $defaultBrakeTestType->getCode();
+        }
+
+        $this->assertEquals($expectedBrakeTestCode, $actualBrakeTestCode);
+    }
+
+    /**
+     * @dataProvider motTestsForClass3AndAboveDataProvider
+     *
+     * @param MotTest $motTest
+     */
+    public function testMapMotTestMinimalMappedCorrectlyBrakeTestClass3AndAbove(MotTest $motTest)
+    {
+        $mappedMotTestVts = $this->getMappedMotTest($motTest)->getVehicleTestingStation();
+        $unmappedMotTestVts = $motTest->getVehicleTestingStation();
+
+        if ($unmappedMotTestVts->getDefaultServiceBrakeTestClass3AndAbove()) {
+            $brakeTest = $unmappedMotTestVts->getDefaultServiceBrakeTestClass3AndAbove();
+            $this->assertEquals(
+                $brakeTest->getCode(), $mappedMotTestVts['defaultServiceBrakeTestClass3AndAbove']
+            );
+        } else {
+            $defaultServiceBrakeTestClass3AndAbove = null;
+
+            if (array_key_exists('defaultServiceBrakeTestClass3AndAbove', $mappedMotTestVts)) {
+                $defaultServiceBrakeTestClass3AndAbove = $mappedMotTestVts['defaultServiceBrakeTestClass3AndAbove'];
+            }
+
+            $this->assertNull($defaultServiceBrakeTestClass3AndAbove);
+        }
+
+        if ($unmappedMotTestVts->getDefaultParkingBrakeTestClass3AndAbove()) {
+            $brakeTest = $unmappedMotTestVts->getDefaultParkingBrakeTestClass3AndAbove();
+            $this->assertEquals(
+                $brakeTest->getCode(), $mappedMotTestVts['defaultParkingBrakeTestClass3AndAbove']
+            );
+        } else {
+            $defaultParkingBrakeTestClass3AndAbove = null;
+
+            if (array_key_exists('defaultParkingBrakeTestClass3AndAbove', $mappedMotTestVts)) {
+                $defaultParkingBrakeTestClass3AndAbove = $mappedMotTestVts['defaultParkingBrakeTestClass3AndAbove'];
+            }
+
+            $this->assertNull($defaultParkingBrakeTestClass3AndAbove);
+        }
+    }
+
+    private function createTester()
     {
         $tester = new Person();
         $tester->setId(1);
@@ -283,9 +352,22 @@ class MotTestMapperTest extends AbstractServiceTestCase
     }
 
     /**
+     * @param MotTest $motTest
+     *
+     * @return MotTestDto
+     */
+    private function getMappedMotTest(MotTest $motTest)
+    {
+        $mocks = $this->getMocksForMotTestMapperService();
+        $motTestMapper = $this->constructMotTestMapperWithMocks($mocks);
+
+        return $motTestMapper->mapMotTestMinimal($motTest);
+    }
+
+    /**
      * @param Site $vehicleTestingStation
      */
-    protected function addOrg($vehicleTestingStation)
+    private function addOrg(Site $vehicleTestingStation)
     {
         $org = new Organisation();
         $org->setSlotBalance(MotTestServiceTest::SLOTS_COUNT_START);
@@ -297,18 +379,18 @@ class MotTestMapperTest extends AbstractServiceTestCase
         $vehicleTestingStation->setOrganisation($org);
     }
 
-    protected function getMocksForMotTestMapperService()
+    private function getMocksForMotTestMapperService()
     {
         $mockHydrator = $this->getMockHydrator();
 
         $mockBrakeTestResultService = $this->getMockWithDisabledConstructor(
-            \DvsaMotApi\Service\BrakeTestResultService::class
+            BrakeTestResultService::class
         );
         $mockVehicleSearchService = $this->getMockWithDisabledConstructor(VehicleSearchService::class);
         $mockCertificateExpiryService = $this->getMockWithDisabledConstructor(
-            \DvsaMotApi\Service\CertificateExpiryService::class
+            CertificateExpiryService::class
         );
-        $motTestStatusService = $this->getMockWithDisabledConstructor(\DvsaMotApi\Service\MotTestStatusService::class);
+        $motTestStatusService = $this->getMockWithDisabledConstructor(MotTestStatusService::class);
 
         $motTestDateService = $this->getMockWithDisabledConstructor(MotTestDateHelperService::class);
 
@@ -317,18 +399,23 @@ class MotTestMapperTest extends AbstractServiceTestCase
         $defectSentenceCaseConverter = $this->getMockWithDisabledConstructor(DefectSentenceCaseConverter::class);
 
         return [
-            self::MOCK_BRAKE_TEST_RESULT_SERVICE => $mockBrakeTestResultService,
-            self::MOCK_VEHICLE_SERVICE => $mockVehicleSearchService,
-            self::MOCK_HYDRATOR => $mockHydrator,
-            self::MOCK_CERTIFICATE_EXPIRY_SERVICE => $mockCertificateExpiryService,
-            self::MOCK_STATUS_SERVICE => $motTestStatusService,
-            self::MOCK_DATE_SERVICE => $motTestDateService,
-            self::MOCK_PARAMOBFUSCATOR => $mockParamObfuscator,
+            self::MOCK_BRAKE_TEST_RESULT_SERVICE      => $mockBrakeTestResultService,
+            self::MOCK_VEHICLE_SERVICE                => $mockVehicleSearchService,
+            self::MOCK_HYDRATOR                       => $mockHydrator,
+            self::MOCK_CERTIFICATE_EXPIRY_SERVICE     => $mockCertificateExpiryService,
+            self::MOCK_STATUS_SERVICE                 => $motTestStatusService,
+            self::MOCK_DATE_SERVICE                   => $motTestDateService,
+            self::MOCK_PARAMOBFUSCATOR                => $mockParamObfuscator,
             self::MOCK_DEFECT_SENTENCE_CASE_CONVERTER => $defectSentenceCaseConverter,
         ];
     }
 
-    protected function constructMotTestMapperWithMocks($mocks)
+    /**
+     * @param $mocks
+     *
+     * @return MotTestMapper
+     */
+    private function constructMotTestMapperWithMocks($mocks)
     {
         return new MotTestMapper(
             $mocks[self::MOCK_HYDRATOR],
@@ -342,7 +429,12 @@ class MotTestMapperTest extends AbstractServiceTestCase
         );
     }
 
-    public static function getTestMotTestReasonForRejection($type = 'FAIL')
+    /**
+     * @param string $type
+     *
+     * @return MotTestReasonForRejection
+     */
+    private function getTestMotTestReasonForRejection($type = 'FAIL')
     {
         $motTestRfr = new MotTestReasonForRejection();
         $motTestRfr->setType($type);
@@ -373,7 +465,7 @@ class MotTestMapperTest extends AbstractServiceTestCase
         return $motTestRfr;
     }
 
-    private function createMotTestActiveStatus()
+    private function createMotTestActiveStatusMock()
     {
         $status = XMock::of(MotTestStatus::class);
         $status
@@ -384,77 +476,54 @@ class MotTestMapperTest extends AbstractServiceTestCase
         return $status;
     }
 
-    /**
-     * @dataProvider getMotTests
-     */
-    public function testMapMotTestMinimalMappedCorrectlyBrakeTestClass3AndAbove(MotTest $motTest)
-    {
-        $mocks = $this->getMocksForMotTestMapperService();
-        $motTestMapper = $this->constructMotTestMapperWithMocks($mocks);
-
-        $result = $motTestMapper->mapMotTestMinimal($motTest);
-
-        $vehicle = $motTest->getVehicleTestingStation();
-
-        if ($vehicle->getDefaultServiceBrakeTestClass3AndAbove()) {
-            $brakeTest = $vehicle->getDefaultServiceBrakeTestClass3AndAbove();
-            $this->assertEquals($brakeTest->getCode(), $result->getVehicleTestingStation()['defaultServiceBrakeTestClass3AndAbove']);
-        } else {
-            $vts = $result->getVehicleTestingStation();
-            $defaultServiceBrakeTestClass3AndAbove = null;
-
-            if (array_key_exists('defaultServiceBrakeTestClass3AndAbove', $vts)) {
-                $defaultServiceBrakeTestClass3AndAbove = $vts['defaultServiceBrakeTestClass3AndAbove'];
-            }
-
-            $this->assertNull($defaultServiceBrakeTestClass3AndAbove);
-        }
-
-        if ($vehicle->getDefaultParkingBrakeTestClass3AndAbove()) {
-            $brakeTest = $vehicle->getDefaultParkingBrakeTestClass3AndAbove();
-            $this->assertEquals($brakeTest->getCode(), $result->getVehicleTestingStation()['defaultParkingBrakeTestClass3AndAbove']);
-        } else {
-            $vts = $result->getVehicleTestingStation();
-            $defaultParkingBrakeTestClass3AndAbove = null;
-
-            if (array_key_exists('defaultParkingBrakeTestClass3AndAbove', $vts)) {
-                $defaultParkingBrakeTestClass3AndAbove = $vts['defaultParkingBrakeTestClass3AndAbove'];
-            }
-
-            $this->assertNull($defaultParkingBrakeTestClass3AndAbove);
-        }
-    }
-
-    public function getMotTests()
+    public function motTestsForClass1And2DataProvider()
     {
         $site1 = $this->createSite();
 
-        $brakeTestType = new BrakeTestType();
-        $brakeTestType
-            ->setCode(BrakeTestTypeCode::PLATE)
-            ->setId(1);
+        $site2 = $this->createSite()
+            ->setDefaultBrakeTestClass1And2(
+            (new BrakeTestType())->setCode(BrakeTestTypeCode::DECELEROMETER)
+        );
 
-        $site2 = $this->createSite();
-        $site2->setDefaultServiceBrakeTestClass3AndAbove($brakeTestType);
-
-        $brakeTestType = new BrakeTestType();
-        $brakeTestType
-            ->setCode(BrakeTestTypeCode::PLATE)
-            ->setId(1);
-
-        $site3 = $this->createSite();
-        $site3->setDefaultParkingBrakeTestClass3AndAbove($brakeTestType);
-
-        $site4 = $this->createSite();
-        $site4
-            ->setDefaultServiceBrakeTestClass3AndAbove($brakeTestType)
-            ->setDefaultParkingBrakeTestClass3AndAbove($brakeTestType);
+        $site3 = $this->createSite()
+            ->setDefaultBrakeTestClass1And2(
+            (new BrakeTestType())->setCode(BrakeTestTypeCode::GRADIENT)
+        );
 
         return [
             [$this->createMotTest($site1)],
             [$this->createMotTest($site2)],
             [$this->createMotTest($site3)],
-            [$this->createMotTest($site4)],
+        ];
+    }
+
+    public function motTestsForClass3AndAboveDataProvider()
+    {
+        $decelerometerBrakeTestType = new BrakeTestType();
+        $decelerometerBrakeTestType
+            ->setCode(BrakeTestTypeCode::DECELEROMETER)
+            ->setId(1);
+
+        $gradientBrakeTestType = new BrakeTestType();
+        $gradientBrakeTestType
+            ->setCode(BrakeTestTypeCode::GRADIENT)
+            ->setId(2);
+
+        $site1 = $this->createSite();
+        $site1->setDefaultServiceBrakeTestClass3AndAbove($decelerometerBrakeTestType);
+
+        $site2 = $this->createSite();
+        $site2->setDefaultParkingBrakeTestClass3AndAbove($gradientBrakeTestType);
+
+        $site3 = $this->createSite();
+        $site3
+            ->setDefaultServiceBrakeTestClass3AndAbove($gradientBrakeTestType)
+            ->setDefaultParkingBrakeTestClass3AndAbove($decelerometerBrakeTestType);
+
+        return [
+            [$this->createMotTest($site1)],
+            [$this->createMotTest($site2)],
+            [$this->createMotTest($site3)],
         ];
     }
 
@@ -467,8 +536,7 @@ class MotTestMapperTest extends AbstractServiceTestCase
             ->setAddressLine3('address line 3')
             ->setCountry('England')
             ->setPostcode('postcode')
-            ->setTown('London')
-        ;
+            ->setTown('London');
 
         $phoneContactType = new PhoneContactType();
         $phoneContactType->setCode(PhoneContactTypeCode::BUSINESS);
@@ -477,8 +545,7 @@ class MotTestMapperTest extends AbstractServiceTestCase
         $phone
             ->setContactType($phoneContactType)
             ->setNumber('658 876 678')
-            ->setIsPrimary(true)
-        ;
+            ->setIsPrimary(true);
 
         $contactDetail = new ContactDetail();
         $contactDetail
@@ -491,12 +558,16 @@ class MotTestMapperTest extends AbstractServiceTestCase
         $site = new Site();
         $site
             ->setId(1)
-            ->setContact($contactDetail, $siteContactType)
-        ;
+            ->setContact($contactDetail, $siteContactType);
 
         return $site;
     }
 
+    /**
+     * @param Site|null $site
+     *
+     * @return MotTest
+     */
     private function createMotTest(Site $site = null)
     {
         $vehicleClass = new VehicleClass();
@@ -520,8 +591,7 @@ class MotTestMapperTest extends AbstractServiceTestCase
             ->setMake((new Make())->setName('MAKE'))
             ->setModel((new Model())->setName('MODEL'))
             ->setCountryOfRegistration($countryOfRegistration)
-            ->setPrsMotTest((new MotTest())->setNumber(2))
-            ;
+            ->setPrsMotTest((new MotTest())->setNumber(2));
 
         return $motTest;
     }
