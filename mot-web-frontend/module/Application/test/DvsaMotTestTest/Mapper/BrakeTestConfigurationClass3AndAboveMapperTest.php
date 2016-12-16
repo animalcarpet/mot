@@ -13,7 +13,7 @@ use DvsaMotTest\Mapper\BrakeTestConfigurationClass3AndAboveMapper;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Tests for BrakeTestConfigurationClass3AndAboveMapper
+ * Tests for BrakeTestConfigurationClass3AndAboveMapper.
  */
 class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_TestCase
 {
@@ -68,8 +68,8 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
 
     public function testMapToDefaultDtoWithVehicleWeightDefault()
     {
-        $vehicleWeight = '1800';
-        $motTest = $this->getMotTestWithVehicleWithPresetWeight($vehicleWeight);
+        $vehicleWeight = 1800;
+        $motTest = $this->getMotTestWithPresentWeightAndPresentVehicleClassCode($vehicleWeight, VehicleClassCode::CLASS_4);
         $expected = $this->getDefaultDto()->setVehicleWeight($vehicleWeight);
 
         $actual = $this->mapper->mapToDefaultDto($motTest);
@@ -82,7 +82,7 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
         $motTest = (new MotTestDto())->setVehicleTestingStation(
             [
                 'defaultParkingBrakeTestClass3AndAbove' => BrakeTestTypeCode::GRADIENT,
-                'defaultServiceBrakeTestClass3AndAbove' => BrakeTestTypeCode::DECELEROMETER
+                'defaultServiceBrakeTestClass3AndAbove' => BrakeTestTypeCode::DECELEROMETER,
             ]
         );
         $expected = $this->getDefaultDto()
@@ -91,6 +91,56 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
 
         $actual = $this->mapper->mapToDefaultDto($motTest);
 
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testShouldReturnWeightTypeDGWForVehicleClass7AndWeightGreaterThan0()
+    {
+        $vehicleWeight = 3000;
+        $motTest = $this->getMotTestWithPresentWeightAndPresentVehicleClassCode($vehicleWeight);
+
+        $expected = $this->getDefaultDto()
+            ->setVehicleWeight('3000')
+            ->setWeightType(WeightSourceCode::DGW);
+
+        $actual = $this->mapper->mapToDefaultDto($motTest);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testShouldReturnWeightTypeVSIForVehicleClass7AndWeightEqual0()
+    {
+        $vehicleWeight = 0;
+        $motTest = $this->getMotTestWithPresentWeightAndPresentVehicleClassCode($vehicleWeight);
+
+        $expected = $this->getDefaultDto()
+            ->setVehicleWeight('0')
+            ->setWeightType(WeightSourceCode::VSI);
+
+        $actual = $this->mapper->mapToDefaultDto($motTest);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testShouldReturnWeightTypeVSIForVehicleClass7AndWeightEqualNull()
+    {
+        $vehicleWeight = null;
+        $motTest = $this->getMotTestWithPresentWeightAndPresentVehicleClassCode($vehicleWeight);
+
+        $expected = $this->getDefaultDto()
+            ->setVehicleWeight(null)
+            ->setWeightType(WeightSourceCode::VSI);
+
+        $actual = $this->mapper->mapToDefaultDto($motTest);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testShouldReturnDefaultVSIWeightTypeFoClass4Vehicles()
+    {
+        $vehicleWeight = '';
+        $motTest = $this->getMotTestWithPresentWeightAndPresentVehicleClassCode($vehicleWeight, VehicleClassCode::CLASS_4);
+
+        $expected = $this->getDefaultDto()->setWeightType(WeightSourceCode::VSI);
+
+        $actual = $this->mapper->mapToDefaultDto($motTest);
         $this->assertEquals($expected, $actual);
     }
 
@@ -159,14 +209,16 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
 
     /**
      * @param $vehicleWeight
+     * @param $vehicleClassCode
      *
      * @return MotTestDto
      */
-    private function getMotTestWithVehicleWithPresetWeight($vehicleWeight)
+    private function getMotTestWithPresentWeightAndPresentVehicleClassCode($vehicleWeight, $vehicleClassCode = VehicleClassCode::CLASS_7)
     {
-        $vehicleClass = (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4);
+        $vehicleClass = (new VehicleClassDto())->setCode($vehicleClassCode);
         $vehicle = (new VehicleDto())->setVehicleClass($vehicleClass)->setWeight($vehicleWeight);
-        $motTest = (new MotTestDto())->setVehicle($vehicle);
-        return $motTest;
+        $motTestDto = (new MotTestDto())->setVehicle($vehicle);
+
+        return $motTestDto;
     }
 }

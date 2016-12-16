@@ -13,10 +13,11 @@ Unit tests are usually run on Vagrant, however, to speed up the process (mountin
 ## Configuring PHPStorm for running unit tests
 
 1. Download PHPUnit 4.8 from https://phar.phpunit.de
-2. Open PHPStorm, then Preferences > Languages and Frameworks > PHP > PHPUnit > PHPUnit Library
-3. Set *Path to phpunit.phar*
-4. Set *Default bootstrap file* to ```$WORKSPACE/config/phpstorm/unit-test-bootstrap-proxy/proxy.php```
-5. From now on you should be able to run, debug and calculate coverage for unit tests in PHPStorm: https://www.jetbrains.com/help/phpstorm/2016.1/testing-php-applications.html?origin=old_help
+2. Open PHPStorm, then Preferences > Languages and Frameworks > PHP and add interpreter (/usr/bin/php)
+3. Then Preferences > Languages and Frameworks > PHP > PHPUnit > PHPUnit Library
+4. Set *Path to phpunit.phar*
+5. Set *Default bootstrap file* to ```$WORKSPACE/config/phpstorm/unit-test-bootstrap-proxy/proxy.php```
+6. From now on you should be able to run, debug and calculate coverage for unit tests in PHPStorm: https://www.jetbrains.com/help/phpstorm/2016.1/testing-php-applications.html?origin=old_help
 
 ## Configuring PHPStorm to run unit tests on VM ###
 1. Watch this clip about remote interpreters in PHPStorm https://www.youtube.com/watch?v=YeXJP6qpu0w

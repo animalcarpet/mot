@@ -12,7 +12,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Utility\TypeCheck;
 
 /**
- * Maps form data to BrakeTestConfigurationClass3AndAboveDto
+ * Maps form data to BrakeTestConfigurationClass3AndAboveDto.
  */
 class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurationMapperInterface
 {
@@ -62,7 +62,7 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
         $dto->setServiceBrake1TestType(BrakeTestTypeCode::ROLLER);
         $dto->setServiceBrake2TestType(null);
         $dto->setParkingBrakeTestType(BrakeTestTypeCode::ROLLER);
-        $dto->setWeightType(WeightSourceCode::VSI);
+        $dto->setWeightType($this->getVehicleWeightType($motTest));
         $dto->setWeightIsUnladen(false);
         $dto->setServiceBrakeIsSingleLine(false);
         $dto->setIsCommercialVehicle(false);
@@ -100,6 +100,7 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
         if (intval(ArrayUtils::tryGet($data, 'serviceBrakeControlsCount')) === 2) {
             return ArrayUtils::tryGet($data, 'serviceBrake1TestType');
         }
+
         return null;
     }
 
@@ -114,13 +115,37 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
 
         $vehicle = $motTest->getVehicle();
         if (isset($vehicle)) {
-            $applicableClasses = [VehicleClassCode::CLASS_3, VehicleClassCode::CLASS_4, VehicleClassCode::CLASS_5, VehicleClassCode::CLASS_7];
-
             $vehicleClass = $vehicle->getClassCode();
-            if (in_array($vehicleClass, $applicableClasses)) {
+            if (in_array($vehicleClass, VehicleClassCode::getClass3AndAbove())) {
                 $vehicleWeight = $vehicle->getWeight();
             }
         }
+
         return $vehicleWeight;
+    }
+
+    /**
+     * @param MotTestDto $motTest
+     *
+     * @return string
+     */
+    private function getVehicleWeightType(MotTestDto $motTest)
+    {
+        $vehicle = $motTest->getVehicle();
+        if (!isset($vehicle)) {
+            return WeightSourceCode::VSI;
+        }
+
+        $vehicleClass = $vehicle->getClassCode();
+        if (!isset($vehicleClass)) {
+            return WeightSourceCode::VSI;
+        }
+
+        $weight = $vehicle->getWeight();
+        if ($vehicleClass == VehicleClassCode::CLASS_7 && !empty($weight)) {
+            return WeightSourceCode::DGW;
+        }
+
+        return WeightSourceCode::VSI;
     }
 }

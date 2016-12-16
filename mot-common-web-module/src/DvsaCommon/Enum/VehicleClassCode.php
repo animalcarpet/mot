@@ -33,6 +33,19 @@ class VehicleClassCode
     }
 
     /**
+     * @return array of values of the type VehicleClassCode for Class 3 and above
+     */
+    public static function getClass3AndAbove()
+    {
+        return [
+            self::CLASS_3,
+            self::CLASS_4,
+            self::CLASS_5,
+            self::CLASS_7,
+        ];
+    }
+
+    /**
      * @param mixed $key a candidate VehicleClassCode value
      *
      * @return true if $key is in the list of known values for the type
