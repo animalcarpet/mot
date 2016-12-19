@@ -2,6 +2,7 @@
 namespace DvsaMotApi\Service\Calculator;
 
 use DvsaCommon\Date\DateUtils;
+use DvsaCommon\Domain\BrakeTestTypeConfiguration;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaEntities\Entity\BrakeTestResultClass3AndAbove;
@@ -48,6 +49,14 @@ class BrakeTestResultClass3AndAboveCalculator extends BrakeTestResultClass3AndAb
 
         $isCheckingServiceBrake1 = ($serviceBrakeNumber === self::SERVICE_BRAKE_1);
 
+        $vehicleClassCode = $vehicle->getVehicleClass()->getCode();
+        $parkingBrakeType = $brakeTestResult->getParkingBrakeTestType()->getCode();
+        $lockCheckApplicable = BrakeTestTypeConfiguration::areServiceBrakeLocksApplicable(
+            $vehicleClassCode,
+            $serviceBrakeType,
+            $parkingBrakeType
+        );
+
         if ($isCheckingServiceBrake1) {
             $checkedServiceBrake = $brakeTestResult->getServiceBrake1Data();
             $checkedEfficiency = $brakeTestResult->getServiceBrake1Efficiency();
@@ -64,16 +73,15 @@ class BrakeTestResultClass3AndAboveCalculator extends BrakeTestResultClass3AndAb
             //check efficiency
             $efficiencyPassing = $checkedEfficiency >= $efficiencyThreshold;
             //check locks
-            $locksPassing = $this->lockCheckApplicable($serviceBrakeType) ?
+            $locksPassing = $lockCheckApplicable ?
                 $this->isPassingOnLocks($checkedServiceBrake, $brakeTestResult) : false;
             $serviceBrakeEfficiencyPassing = $serviceBrakeEfficiencyPassing || $locksPassing || $efficiencyPassing;
             //check locks on class 7
             if (in_array($vehicle->getVehicleClass()->getCode(), [Vehicle::VEHICLE_CLASS_7])) {
-                $frontLocksPassing = $this->lockCheckApplicable($serviceBrakeType)
-                    && $this->isPassingFrontWheelsLockedRearEfficiencyClass7(
-                        $brakeTestResult,
-                        $checkedServiceBrake
-                    );
+                $frontLocksPassing = $lockCheckApplicable && $this->isPassingFrontWheelsLockedRearEfficiencyClass7(
+                    $brakeTestResult,
+                    $checkedServiceBrake
+                );
 
                 $serviceBrakeEfficiencyPassing = $serviceBrakeEfficiencyPassing || $frontLocksPassing;
             }
@@ -85,7 +93,7 @@ class BrakeTestResultClass3AndAboveCalculator extends BrakeTestResultClass3AndAb
                     || ($secondEfficiency >= self::EFFICIENCY_TWO_SERVICE_BRAKES_PRIMARY
                         && $checkedEfficiency >= self::EFFICIENCY_TWO_SERVICE_BRAKES_SECONDARY);
                 //check locks
-                $locksPassing = $this->lockCheckApplicable($serviceBrakeType) ?
+                $locksPassing = $lockCheckApplicable ?
                     $this->isPassingOnLocks($checkedServiceBrake, $brakeTestResult) : false;
                 $serviceBrakeEfficiencyPassing = $efficiencyPassing || $locksPassing;
             }
@@ -124,11 +132,6 @@ class BrakeTestResultClass3AndAboveCalculator extends BrakeTestResultClass3AndAb
                 = $brakeTestResult->getParkingBrakeEfficiency() >= self::EFFICIENCY_PARKING_BRAKE_DUAL_LINE;
         }
         return $passesOnEfficiency || $percentLocked > self::LOCKS_MINIMUM;
-    }
-
-    private function lockCheckApplicable($serviceBrakeType)
-    {
-        return in_array($serviceBrakeType, [BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::PLATE]);
     }
 
     private function isPassingOnLocks(

@@ -1,7 +1,6 @@
 <?php
 namespace DvsaMotTestTest\Controller;
 
-use Application\Service\CatalogService;
 use Core\Authorisation\Assertion\WebPerformMotTestAssertion;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass1And2Dto;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass3AndAboveDto;
@@ -18,8 +17,6 @@ use DvsaMotTest\Controller\BrakeTestResultsController;
 use DvsaMotTest\Data\BrakeTestResultsResource;
 use DvsaMotTest\Helper\BrakeTestConfigurationContainerHelper;
 use DvsaMotTest\Model\BrakeTestResultClass1And2ViewModel;
-use Zend\Http\Header\Location;
-use Zend\Stdlib\Parameters;
 
 /**
  * Class BrakeTestResultsControllerTest
@@ -156,6 +153,7 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
             'brakeLineType'             => 'dual',
             'numberOfAxles'             => '2',
             'parkingBrakeNumberOfAxles' => '1',
+            'vehicleClass' => $vehicleClassCode
         ];
 
         $this->brakeTestConfigurationContainerMock->expects($this->any())
@@ -210,6 +208,7 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
             'isSingleInFront'            => null,
             'serviceBrake2TestType'      => null,
             '_class'                     => BrakeTestConfigurationClass3AndAboveDto::class,
+            'vehicleClass'               => $vehicleClassCode
         ];
 
         $this->getRestClientMockWithGetMotTest($motTestData, true);

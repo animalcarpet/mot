@@ -162,6 +162,7 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
             'serviceBrakeControlsCount' => '1',
             'numberOfAxles' => '2',
             'parkingBrakeNumberOfAxles' => '1',
+            'vehicleClass' => VehicleClassCode::CLASS_4
         ];
     }
 
@@ -183,7 +184,8 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
             ->setIsParkingBrakeOnTwoWheels(false)
             ->setServiceBrakeControlsCount(1)
             ->setNumberOfAxles(2)
-            ->setParkingBrakeNumberOfAxles(1);
+            ->setParkingBrakeNumberOfAxles(1)
+            ->setVehicleClass(VehicleClassCode::CLASS_4);
     }
 
     /**

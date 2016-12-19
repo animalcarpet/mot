@@ -75,6 +75,18 @@ Feature: MOT Test
       | class4.roller.invalid.high  | FAILED  |
 
   @brake-test
+  Scenario: RFR added if all wheels are under the 30% efficiency threshold and none have locked
+    Given I am a Tester performing an MOT Test on a Class 4 Vehicle
+    When I submit brake test results with all service brake controls under 30% efficiency and no wheels locked
+    Then the "Service brake performance" - "efficiency below requirements" RFR should have been added
+
+  @brake-test
+  Scenario: RFR not added if one or more wheels is under the 30% efficiency threshold but it has locked
+    Given I am a Tester performing an MOT Test on a Class 4 Vehicle
+    When I submit brake test results with all service brake controls under 30% efficiency and wheels locked
+    Then the "Service brake performance" - "efficiency below requirements" RFR should not have been added
+
+  @brake-test
   Scenario: Putting vehicle weight in brake test updates vehicle record for MOT test
     Given I am logged in as a Tester
     And I start an MOT Test

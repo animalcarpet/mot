@@ -1,16 +1,17 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Dvsa\Mot\Behat\Support\Api\BrakeTestResult;
 use Dvsa\Mot\Behat\Support\Api\RollerBrakeTestClass3To7;
-use Dvsa\Mot\Behat\Support\Api\Session;
-use Dvsa\Mot\Behat\Support\Data\Params\BrakeTestResultParams;
-use Dvsa\Mot\Behat\Support\Data\UserData;
-use Dvsa\Mot\Behat\Support\Data\MotTestData;
 use Dvsa\Mot\Behat\Support\Data\BrakeTestResultData;
-use Zend\Http\Response as HttpResponse;
+use Dvsa\Mot\Behat\Support\Data\Builder\Class3To7BrakeTestResultsBuilder;
+use Dvsa\Mot\Behat\Support\Data\MotTestData;
+use Dvsa\Mot\Behat\Support\Data\OdometerReadingData;
+use Dvsa\Mot\Behat\Support\Data\Params\BrakeTestResultParams;
+use Dvsa\Mot\Behat\Support\Data\Params\MeterReadingParams;
+use Dvsa\Mot\Behat\Support\Data\UserData;
 use PHPUnit_Framework_Assert as PHPUnit;
+use Zend\Http\Response as HttpResponse;
 
 class BrakeTestResultContext implements Context
 {
@@ -22,17 +23,21 @@ class BrakeTestResultContext implements Context
 
     private $brakeTestResultData;
 
+    private $odometerReadingData;
+
     public function __construct(
         BrakeTestResult $brakeTestResult,
         UserData $userData,
         MotTestData $motTestData,
-        BrakeTestResultData $brakeTestResultData
+        BrakeTestResultData $brakeTestResultData,
+        OdometerReadingData $odometerReadingData
     )
     {
         $this->brakeTestResult = $brakeTestResult;
         $this->userData = $userData;
         $this->motTestData = $motTestData;
         $this->brakeTestResultData = $brakeTestResultData;
+        $this->odometerReadingData = $odometerReadingData;
     }
 
     /**
@@ -142,6 +147,54 @@ class BrakeTestResultContext implements Context
             $this->motTestData->getLast(),
             $this->getRollerBrakeTestObjectForClass3To7($scenario)
 
+        );
+    }
+
+    /**
+     * @When I submit brake test results with all service brake controls under 30% efficiency and no wheels locked
+     */
+    public function iSubmitBrakeTestResultsWithAllServiceBrakeControlsUnderEfficiencyAndNoWheelsLocked()
+    {
+        $mot = $this->motTestData->getLast();
+
+        $this->odometerReadingData->addMeterReading($mot, 1000, MeterReadingParams::KM);
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $this->odometerReadingData->getLastResponse()->getStatusCode());
+
+        // efficiency = ((effortNearsideAxle1 + effortOffsideAxle1 + effortNearsideAxle2 + effortOffsideAxle2) / vehicleWeight) * 100
+
+        $brakeTestResultBuilder = (new Class3To7BrakeTestResultsBuilder())
+            ->withVehicleWeight(1000)
+            ->withAllEqualServiceBrakeEffort(70)
+            ->withAllEqualServiceBrakeWheelLocks(false);
+
+        $this->brakeTestResult->addClass3To7BrakeTestResult(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $mot->getMotTestNumber(),
+            $brakeTestResultBuilder
+        );
+    }
+
+    /**
+     * @When I submit brake test results with all service brake controls under 30% efficiency and wheels locked
+     */
+    public function iSubmitBrakeTestResultsWithAllServiceBrakeControlsUnderEfficiencyAndWheelsLocked()
+    {
+        $mot = $this->motTestData->getLast();
+
+        $this->odometerReadingData->addMeterReading($mot, 1000, MeterReadingParams::KM);
+        PHPUnit::assertSame(HttpResponse::STATUS_CODE_200, $this->odometerReadingData->getLastResponse()->getStatusCode());
+
+        // efficiency = ((effortNearsideAxle1 + effortOffsideAxle1 + effortNearsideAxle2 + effortOffsideAxle2) / vehicleWeight) * 100
+
+        $brakeTestResultBuilder = (new Class3To7BrakeTestResultsBuilder())
+            ->withVehicleWeight(1000)
+            ->withAllEqualServiceBrakeEffort(70)
+            ->withAllEqualServiceBrakeWheelLocks(true);
+
+        $this->brakeTestResult->addClass3To7BrakeTestResult(
+            $this->userData->getCurrentLoggedUser()->getAccessToken(),
+            $mot->getMotTestNumber(),
+            $brakeTestResultBuilder
         );
     }
 

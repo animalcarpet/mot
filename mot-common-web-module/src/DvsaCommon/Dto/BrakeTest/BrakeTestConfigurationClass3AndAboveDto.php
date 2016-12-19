@@ -23,6 +23,7 @@ class BrakeTestConfigurationClass3AndAboveDto extends AbstractDataTransferObject
     protected $serviceBrakeControlsCount;
     protected $numberOfAxles;
     protected $parkingBrakeNumberOfAxles;
+    protected $vehicleClass;
 
     /**
      * @param boolean $isCommercialVehicle
@@ -212,6 +213,25 @@ class BrakeTestConfigurationClass3AndAboveDto extends AbstractDataTransferObject
     public function getServiceBrakeIsSingleLine()
     {
         return $this->serviceBrakeIsSingleLine;
+    }
+
+    /**
+     * @param int $vehicleClass
+     *
+     * @return $this
+     */
+    public function setVehicleClass($vehicleClass)
+    {
+        $this->vehicleClass = $vehicleClass;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVehicleClass()
+    {
+        return $this->vehicleClass;
     }
 
     /**

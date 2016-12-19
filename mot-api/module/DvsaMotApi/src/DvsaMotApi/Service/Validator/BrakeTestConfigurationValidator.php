@@ -2,8 +2,8 @@
 
 namespace DvsaMotApi\Service\Validator;
 
+use DvsaCommon\Domain\BrakeTestTypeConfiguration;
 use DvsaCommon\Enum\BrakeTestTypeCode;
-use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Enum\WeightSourceCode;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\InvalidFieldValueException;
@@ -41,114 +41,6 @@ class BrakeTestConfigurationValidator extends AbstractValidator
             BrakeTestTypeCode::PLATE,
             BrakeTestTypeCode::GRADIENT,
             BrakeTestTypeCode::FLOOR,
-        ];
-
-    private $brakeTestValidationRules
-        = [
-            VehicleClassCode::CLASS_3 => [
-                BrakeTestTypeCode::ROLLER        => [
-                    BrakeTestTypeCode::ROLLER        => true,
-                    BrakeTestTypeCode::PLATE         => false,
-                    BrakeTestTypeCode::DECELEROMETER => true,
-                    BrakeTestTypeCode::GRADIENT      => true
-                ],
-                BrakeTestTypeCode::PLATE         => [
-                    BrakeTestTypeCode::ROLLER        => false,
-                    BrakeTestTypeCode::PLATE         => true,
-                    BrakeTestTypeCode::DECELEROMETER => false,
-                    BrakeTestTypeCode::GRADIENT      => false
-                ],
-                BrakeTestTypeCode::DECELEROMETER => [
-                    BrakeTestTypeCode::ROLLER        => true,
-                    BrakeTestTypeCode::PLATE         => false,
-                    BrakeTestTypeCode::DECELEROMETER => true,
-                    BrakeTestTypeCode::GRADIENT      => true
-                ],
-                BrakeTestTypeCode::GRADIENT      => [
-                    BrakeTestTypeCode::ROLLER        => false,
-                    BrakeTestTypeCode::PLATE         => false,
-                    BrakeTestTypeCode::DECELEROMETER => false,
-                    BrakeTestTypeCode::GRADIENT      => false
-                ],
-            ],
-            VehicleClassCode::CLASS_4 => [
-                BrakeTestTypeCode::ROLLER        => [
-                    BrakeTestTypeCode::ROLLER        => true,
-                    BrakeTestTypeCode::PLATE         => false,
-                    BrakeTestTypeCode::DECELEROMETER => true,
-                    BrakeTestTypeCode::GRADIENT      => true
-                ],
-                BrakeTestTypeCode::PLATE         => [
-                    BrakeTestTypeCode::ROLLER        => false,
-                    BrakeTestTypeCode::PLATE         => true,
-                    BrakeTestTypeCode::DECELEROMETER => true,
-                    BrakeTestTypeCode::GRADIENT      => true
-                ],
-                BrakeTestTypeCode::DECELEROMETER => [
-                    BrakeTestTypeCode::ROLLER        => true,
-                    BrakeTestTypeCode::PLATE         => false,
-                    BrakeTestTypeCode::DECELEROMETER => true,
-                    BrakeTestTypeCode::GRADIENT      => true
-                ],
-                BrakeTestTypeCode::GRADIENT      => [
-                    BrakeTestTypeCode::ROLLER        => false,
-                    BrakeTestTypeCode::PLATE         => false,
-                    BrakeTestTypeCode::DECELEROMETER => false,
-                    BrakeTestTypeCode::GRADIENT      => false
-                ],
-            ],
-            VehicleClassCode::CLASS_5 => [
-                BrakeTestTypeCode::ROLLER        => [
-                    BrakeTestTypeCode::ROLLER        => true,
-                    BrakeTestTypeCode::PLATE         => false,
-                    BrakeTestTypeCode::DECELEROMETER => true,
-                    BrakeTestTypeCode::GRADIENT      => true
-                ],
-                BrakeTestTypeCode::PLATE         => [
-                    BrakeTestTypeCode::ROLLER        => false,
-                    BrakeTestTypeCode::PLATE         => false,
-                    BrakeTestTypeCode::DECELEROMETER => false,
-                    BrakeTestTypeCode::GRADIENT      => false
-                ],
-                BrakeTestTypeCode::DECELEROMETER => [
-                    BrakeTestTypeCode::ROLLER        => true,
-                    BrakeTestTypeCode::PLATE         => false,
-                    BrakeTestTypeCode::DECELEROMETER => true,
-                    BrakeTestTypeCode::GRADIENT      => true
-                ],
-                BrakeTestTypeCode::GRADIENT      => [
-                    BrakeTestTypeCode::ROLLER        => false,
-                    BrakeTestTypeCode::PLATE         => false,
-                    BrakeTestTypeCode::DECELEROMETER => false,
-                    BrakeTestTypeCode::GRADIENT      => false
-                ],
-            ],
-            VehicleClassCode::CLASS_7 => [
-                BrakeTestTypeCode::ROLLER        => [
-                    BrakeTestTypeCode::ROLLER        => true,
-                    BrakeTestTypeCode::PLATE         => false,
-                    BrakeTestTypeCode::DECELEROMETER => true,
-                    BrakeTestTypeCode::GRADIENT      => true
-                ],
-                BrakeTestTypeCode::PLATE         => [
-                    BrakeTestTypeCode::ROLLER        => false,
-                    BrakeTestTypeCode::PLATE         => true,
-                    BrakeTestTypeCode::DECELEROMETER => true,
-                    BrakeTestTypeCode::GRADIENT      => true
-                ],
-                BrakeTestTypeCode::DECELEROMETER => [
-                    BrakeTestTypeCode::ROLLER        => true,
-                    BrakeTestTypeCode::PLATE         => true,
-                    BrakeTestTypeCode::DECELEROMETER => true,
-                    BrakeTestTypeCode::GRADIENT      => true
-                ],
-                BrakeTestTypeCode::GRADIENT      => [
-                    BrakeTestTypeCode::ROLLER        => false,
-                    BrakeTestTypeCode::PLATE         => false,
-                    BrakeTestTypeCode::DECELEROMETER => false,
-                    BrakeTestTypeCode::GRADIENT      => false
-                ],
-            ],
         ];
 
     public function validateBrakeTestConfigurationClass3AndAbove(
@@ -231,10 +123,11 @@ class BrakeTestConfigurationValidator extends AbstractValidator
         }
 
         if ($serviceBrake1TestTypeValid && $parkingBrakeTestTypeValid) {
-            if (!$this->brakeTestValidationRules[$vehicleClass]
-                 [$brakeTestResultClass3AndAbove->getServiceBrake1TestType()->getCode()]
-                 [$brakeTestResultClass3AndAbove->getParkingBrakeTestType()->getCode()]
-            ) {
+            if (!BrakeTestTypeConfiguration::isValid(
+                $vehicleClass,
+                $brakeTestResultClass3AndAbove->getServiceBrake1TestType()->getCode(),
+                $brakeTestResultClass3AndAbove->getParkingBrakeTestType()->getCode()
+            )) {
                 $this->addMessageToException(
                     $exception,
                     self::MESSAGE_INVALID_COMBINATION_OF_BRAKE_TEST_TYPES

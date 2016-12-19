@@ -4,6 +4,7 @@ namespace DvsaCommonTest\Dto\BrakeTest;
 
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass3AndAboveDto;
 use DvsaCommon\Enum\BrakeTestTypeCode;
+use DvsaCommon\Enum\VehicleClassCode;
 
 /**
  * Tests for BrakeTestConfigurationClass3AndAboveDto
@@ -146,5 +147,15 @@ class BrakeTestConfigurationClass3AndAboveDtoTest extends \PHPUnit_Framework_Tes
         $returnedValue = $this->dto->getParkingBrakeNumberOfAxles();
 
         $this->assertSame($parkingBrakeNumberOfAxles, $returnedValue);
+    }
+
+    public function testVehicleClass()
+    {
+        $vehicleClass = VehicleClassCode::CLASS_4;
+
+        $this->dto->setVehicleClass($vehicleClass);
+        $returnedValue = $this->dto->getVehicleClass();
+
+        $this->assertSame($vehicleClass, $returnedValue);
     }
 }
