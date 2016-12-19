@@ -18,8 +18,8 @@ use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\MotTestStatus;
-use DvsaEntities\Entity\TestItemSelector;
 use DvsaEntities\Entity\ReasonForRejection;
+use DvsaEntities\Entity\TestItemSelector;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
 use DvsaEntitiesTest\Entity\BrakeTestResultClass12Test;
@@ -369,6 +369,7 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
                     ->will($this->returnValue($returnValue));
             }
         } else {
+            $brakeTestResults->setMotTest($this->getTestMotTest());
             $brakeTestResults->setServiceBrake1TestType(BrakeTestTypeFactory::roller());
             $brakeTestResults->setServiceBrake2TestType(BrakeTestTypeFactory::roller());
             $brakeTestResults->setParkingBrakeTestType(BrakeTestTypeFactory::roller());
@@ -511,8 +512,9 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
 
     private function getTestMotTest($class = Vehicle::VEHICLE_CLASS_4)
     {
+        $vehicleClass = new VehicleClass($class);
         $modelDetail = new ModelDetail();
-        $modelDetail->setVehicleClass(new VehicleClass($class));
+        $modelDetail->setVehicleClass($vehicleClass);
 
         $vehicle = new Vehicle();
         $vehicle->setModelDetail($modelDetail);
@@ -522,6 +524,8 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
         $motTestStatus = new MotTestStatus();
         $motTestStatus->setName(MotTestStatusName::ACTIVE);
         $motTest->setStatus($motTestStatus);
+        $motTest->setVehicleClass($vehicleClass);
+        
         return $motTest;
     }
 

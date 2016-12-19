@@ -3,34 +3,32 @@
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\TableNode;
-use Dvsa\Mot\Behat\Support\Api\NonMotTest;
 use Dvsa\Mot\Behat\Support\Api\MotTest;
-use Dvsa\Mot\Behat\Support\Api\Session;
+use Dvsa\Mot\Behat\Support\Api\NonMotTest;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
-use Dvsa\Mot\Behat\Support\Data\VehicleData;
-use Dvsa\Mot\Behat\Support\Data\SiteData;
 use Dvsa\Mot\Behat\Support\Data\AuthorisedExaminerData;
-use Dvsa\Mot\Behat\Support\Data\UserData;
-use Dvsa\Mot\Behat\Support\Data\MotTestData;
+use Dvsa\Mot\Behat\Support\Data\ContingencyData;
 use Dvsa\Mot\Behat\Support\Data\ContingencyMotTestData;
+use Dvsa\Mot\Behat\Support\Data\Exception\UnexpectedResponseStatusCodeException;
+use Dvsa\Mot\Behat\Support\Data\MotTestData;
 use Dvsa\Mot\Behat\Support\Data\OdometerReadingData;
 use Dvsa\Mot\Behat\Support\Data\Params\MotTestParams;
-use Dvsa\Mot\Behat\Support\Data\Params\VehicleParams;
 use Dvsa\Mot\Behat\Support\Data\Params\PersonParams;
 use Dvsa\Mot\Behat\Support\Data\Params\SiteParams;
-use Dvsa\Mot\Behat\Support\Data\Exception\UnexpectedResponseStatusCodeException;
+use Dvsa\Mot\Behat\Support\Data\Params\VehicleParams;
+use Dvsa\Mot\Behat\Support\Data\SiteData;
+use Dvsa\Mot\Behat\Support\Data\UserData;
+use Dvsa\Mot\Behat\Support\Data\VehicleData;
 use Dvsa\Mot\Behat\Support\Helper\TestSupportHelper;
 use DvsaCommon\Dto\Common\MotTestDto;
+use DvsaCommon\Dto\Site\SiteDto;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
+use DvsaCommon\Enum\MotTestStatusCode;
+use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
-use DvsaCommon\Enum\MotTestStatusName;
-use DvsaCommon\Enum\MotTestStatusCode;
-use DvsaCommon\Dto\Site\SiteDto;
-use DvsaCommon\Dto\Site\VehicleTestingStationDto;
-use Dvsa\Mot\Behat\Support\Data\ContingencyData;
-use Zend\Http\Response as HttpResponse;
 use PHPUnit_Framework_Assert as PHPUnit;
+use Zend\Http\Response as HttpResponse;
 
 class MotTestContext implements Context, SnippetAcceptingContext
 {
@@ -151,6 +149,20 @@ class MotTestContext implements Context, SnippetAcceptingContext
 
         PHPUnit::assertTrue(isset($exception), "Exception not thrown");
         PHPUnit::assertInstanceOf(UnexpectedResponseStatusCodeException::class, $exception);
+    }
+
+    /**
+     * @Given I am a Tester performing an MOT Test on a Class :testClass Vehicle
+     */
+    public function iAmATesterPerformingAnMotTestOnAClassVehicle($testClass)
+    {
+        $site = $this->siteData->create();
+        $user = $this->userData->createTesterAssignedWitSite($site->getId());
+        $vehicle = $this->vehicleData->create($testClass);
+
+        $this->userData->setCurrentLoggedUser($user);
+
+        $this->motTestData->create($user, $vehicle, $site);
     }
 
     /**
@@ -872,6 +884,52 @@ class MotTestContext implements Context, SnippetAcceptingContext
     {
         $mot = $this->motTestData->getAll()->last();
         PHPUnit::assertEquals($expectedResult, $mot->getStatus());
+    }
+
+    /**
+     * @Then the :rfrName - :rfrFailureText RFR should have been added
+     */
+    public function theRfrShouldHaveBeenAdded($rfrName, $rfrFailureText)
+    {
+        $mot = $this->motTestData->fetchMotTestData(
+            $this->userData->getCurrentLoggedUser(),
+            $this->motTestData->getLast()->getMotTestNumber()
+        );
+
+        $rfrs = $mot->getReasonsForRejection();
+
+        PHPUnit::assertArrayHasKey('FAIL', $rfrs);
+
+        foreach ($rfrs['FAIL'] as $rfr) {
+            if ($rfr['name'] == $rfrName && $rfr['failureText'] == $rfrFailureText) {
+                return;
+            }
+        }
+
+        PHPUnit::fail("MOT Test does not have RFR with expected name ($rfrName) and failure text ($rfrFailureText)");
+    }
+
+    /**
+     * @Then the :rfrName - :rfrFailureText RFR should not have been added
+     */
+    public function theRfrShouldNotHaveBeenAdded($rfrName, $rfrFailureText)
+    {
+        $mot = $this->motTestData->fetchMotTestData(
+            $this->userData->getCurrentLoggedUser(),
+            $this->motTestData->getLast()->getMotTestNumber()
+        );
+
+        $rfrs = $mot->getReasonsForRejection();
+
+        if (!isset($rfrs['FAIL'])) {
+            return;
+        }
+
+        foreach ($rfrs['FAIL'] as $rfr) {
+            if ($rfr['name'] == $rfrName && $rfr['failureText'] == $rfrFailureText) {
+                PHPUnit::fail("MOT Test should not have RFR with given name ($rfrName) and failure text ($rfrFailureText)");
+            }
+        }
     }
 
     /**

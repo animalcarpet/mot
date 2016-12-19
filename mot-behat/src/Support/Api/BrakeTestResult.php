@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Behat\Support\Api;
 
-use Dvsa\Mot\Behat\Support\Request;
+use Dvsa\Mot\Behat\Support\Data\Builder\Class3To7BrakeTestResultsBuilder;
 use Dvsa\Mot\Behat\Support\Response;
 
 class BrakeTestResult extends MotApi
@@ -287,6 +287,11 @@ class BrakeTestResult extends MotApi
         ];
 
         return $this->addBrakeTestResult($token, $motNumber, $body);
+    }
+
+    public function addClass3To7BrakeTestResult($token, $motNumber, Class3To7BrakeTestResultsBuilder $dataBuilder)
+    {
+        return $this->addBrakeTestResult($token, $motNumber, $dataBuilder->build());
     }
 
     /**

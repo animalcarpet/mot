@@ -4,6 +4,7 @@ namespace DvsaMotTest\Model;
 
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass3AndAboveDto;
 use DvsaCommon\Enum\BrakeTestTypeCode;
+use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Enum\WeightSourceCode;
 
 /**
@@ -56,8 +57,9 @@ class BrakeTestConfigurationClass3AndAboveTest extends \PHPUnit_Framework_TestCa
             [[ //input #0
                'serviceBrake1TestType'     => BrakeTestTypeCode::ROLLER,
                'serviceBrake2TestType'     => BrakeTestTypeCode::ROLLER,
-               'parkingBrakeTestType'      => BrakeTestTypeCode::PLATE,
+               'parkingBrakeTestType'      => BrakeTestTypeCode::ROLLER,
                'weightType'                => WeightSourceCode::PRESENTED,
+               'vehicleClass'              => VehicleClassCode::CLASS_4,
                'vehicleWeight'             => '1000',
                'serviceBrakeIsSingleLine'  => true,
                'numberOfAxles'             => 2,
@@ -89,8 +91,9 @@ class BrakeTestConfigurationClass3AndAboveTest extends \PHPUnit_Framework_TestCa
             [[ //input #1
                'serviceBrake1TestType'     => BrakeTestTypeCode::PLATE,
                'serviceBrake2TestType'     => BrakeTestTypeCode::PLATE,
-               'parkingBrakeTestType'      => BrakeTestTypeCode::ROLLER,
+               'parkingBrakeTestType'      => BrakeTestTypeCode::PLATE,
                'weightType'                => WeightSourceCode::PRESENTED,
+               'vehicleClass'              => VehicleClassCode::CLASS_4,
                'vehicleWeight'             => '1000',
                'serviceBrakeIsSingleLine'  => false,
                'numberOfAxles'             => 2,
@@ -123,6 +126,7 @@ class BrakeTestConfigurationClass3AndAboveTest extends \PHPUnit_Framework_TestCa
                'serviceBrake1TestType'     => BrakeTestTypeCode::DECELEROMETER,
                'serviceBrake2TestType'     => BrakeTestTypeCode::DECELEROMETER,
                'parkingBrakeTestType'      => BrakeTestTypeCode::GRADIENT,
+               'vehicleClass'              => VehicleClassCode::CLASS_4,
                'weightType'                => 'dgw',
                'vehicleWeight'             => '1010',
                'serviceBrakeIsSingleLine'  => false,
@@ -163,6 +167,7 @@ class BrakeTestConfigurationClass3AndAboveTest extends \PHPUnit_Framework_TestCa
         $dto->setServiceBrake2TestType($testCase['serviceBrake2TestType']);
         $dto->setParkingBrakeTestType($testCase['parkingBrakeTestType']);
         $dto->setWeightType($testCase['weightType']);
+        $dto->setVehicleClass($testCase['vehicleClass']);
         $dto->setVehicleWeight($testCase['vehicleWeight']);
         $dto->setWeightIsUnladen($testCase['weightIsUnladen']);
         $dto->setServiceBrakeIsSingleLine($testCase['serviceBrakeIsSingleLine']);

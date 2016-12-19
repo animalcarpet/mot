@@ -2,6 +2,7 @@
 
 namespace DvsaMotTest\Model;
 
+use DvsaCommon\Domain\BrakeTestTypeConfiguration;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass3AndAboveDto;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationDtoInterface as ConfigDto;
 use DvsaCommon\Enum\BrakeTestTypeCode;
@@ -58,9 +59,10 @@ class BrakeTestConfigurationClass3AndAboveHelper implements BrakeTestConfigurati
      */
     public function locksApplicableToFirstServiceBrake()
     {
-        return in_array(
-            $this->configDto->getParkingBrakeTestType(),
-            [BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::PLATE]
+        return BrakeTestTypeConfiguration::areServiceBrakeLocksApplicable(
+            $this->configDto->getVehicleClass(),
+            $this->configDto->getServiceBrake1TestType(),
+            $this->configDto->getParkingBrakeTestType()
         );
     }
 

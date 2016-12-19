@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Constants\BrakeTestConfigurationClass1And2;
+use DvsaCommon\Domain\BrakeTestTypeConfiguration;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
@@ -335,13 +336,15 @@ class BrakeTestResultService extends AbstractService
                     = $this->brakeTestResultCalculator->calculateParkingBrakePercentLocked($brakeTestResult);
             }
             $serviceBrake1Data = $brakeTestResult->getServiceBrake1Data();
+            $serviceBrakeLocksApplicable = BrakeTestTypeConfiguration::areServiceBrakeLocksApplicable(
+                $brakeTestResult->getMotTest()->getVehicleClass()->getCode(),
+                $brakeTestResult->getServiceBrake1TestType()->getCode(),
+                $brakeTestResult->getParkingBrakeTestType()->getCode()
+            );
             if ($serviceBrake1Data) {
                 $brakeTestResultData['serviceBrake1Data'] = $this->objectHydrator->extract($serviceBrake1Data);
                 ExtractionHelper::unsetAuditColumns($brakeTestResultData['serviceBrake1Data']);
-                if (in_array(
-                    $brakeTestResult->getParkingBrakeTestType()->getCode(),
-                    $this->brakesWithLockApplicable)
-                ) {
+                if ($serviceBrakeLocksApplicable) {
                     $this->populateServiceBrakeLockPercent(
                         $brakeTestResultData['serviceBrake1Data'],
                         $serviceBrake1Data,
@@ -365,10 +368,7 @@ class BrakeTestResultService extends AbstractService
                 $brakeTestResultData['serviceBrake2Data']
                     = $this->objectHydrator->extract($serviceBrake2Data);
                 ExtractionHelper::unsetAuditColumns($brakeTestResultData['serviceBrake2Data']);
-                if (in_array(
-                    $brakeTestResult->getParkingBrakeTestType()->getCode(),
-                    $this->brakesWithLockApplicable)
-                ) {
+                if ($serviceBrakeLocksApplicable) {
                     $this->populateServiceBrakeLockPercent(
                         $brakeTestResultData['serviceBrake2Data'],
                         $serviceBrake2Data,

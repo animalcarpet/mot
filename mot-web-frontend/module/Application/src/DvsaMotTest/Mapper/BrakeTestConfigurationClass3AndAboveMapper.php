@@ -46,6 +46,7 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
         $dto->setServiceBrakeControlsCount(intval(ArrayUtils::tryGet($data, 'serviceBrakeControlsCount')));
         $dto->setNumberOfAxles(intval(ArrayUtils::tryGet($data, 'numberOfAxles')));
         $dto->setParkingBrakeNumberOfAxles(intval(ArrayUtils::tryGet($data, 'parkingBrakeNumberOfAxles')));
+        $dto->setVehicleClass(intval(ArrayUtils::tryGet($data, 'vehicleClass')));
 
         return $dto;
     }
