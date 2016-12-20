@@ -23,6 +23,16 @@ use Zend\Mime;
  */
 class MailerService
 {
+    const AWS_MAIL_SIMULATOR_SUCCESS = 'success@simulator.amazonses.com';
+    const AWS_MAIL_SIMULATOR_BOUNCE = 'bounce@simulator.amazonses.com';
+    const AWS_MAIL_SIMULATOR_OUT_OF_THE_OFFICE = 'ooto@simulator.amazonses.com';
+    const AWS_MAIL_SIMULATOR_COMPLAINT = 'complaint@simulator.amazonses.com';
+    const AWS_MAIL_SIMULATOR_SUPPRESSION_LIST = 'suppressionlist@simulator.amazonses.com';
+
+    // Those are used just if you need to customise the recipient mailbox for particular tests (uniqueness etc)
+    const AWS_MAIL_SIMULATOR_DOMAIN = 'simulator.amazonses.com';
+    const AWS_MAIL_SIMULATOR_SUCCESS_MAILBOX = 'success';
+
     const ERROR_TYPE_STRING = 'Expected a string for ';
     const ERROR_TYPE_LENGTH = 'Length must be non-zero for ';
 
@@ -41,8 +51,27 @@ class MailerService
     private $emailValidator;
 
     /** Default from address for sent emails */
-    const DEFAULT_FROM = 'noreply@dvsa-helpdesk';
+    const DEFAULT_FROM = 'info@mot-testing.service.gov.uk';
 
+    /**
+     * Helper function to generate an test email address for AWS SES-enabled environments (e.g FBs)
+     * @see https://docs.aws.amazon.com/ses/latest/DeveloperGuide/mailbox-simulator.html
+     *
+     * @param string $label
+     * @return string
+     */
+    public static function getTestEmailAddress($label = '')
+    {
+        if(empty($label) || !is_string($label)){
+            return self::AWS_MAIL_SIMULATOR_SUCCESS;
+        }
+
+        return sprintf("%s+%s@%s",
+            self::AWS_MAIL_SIMULATOR_SUCCESS_MAILBOX,
+            $label,
+            self::AWS_MAIL_SIMULATOR_DOMAIN
+        );
+    }
 
     /**
      * The mail engine. A reusable class for sending emails using Zend.

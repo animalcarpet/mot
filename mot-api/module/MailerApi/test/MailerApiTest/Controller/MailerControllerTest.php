@@ -8,6 +8,7 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotApi\Service\UserService;
 use DvsaMotApiTest\Controller\AbstractMotApiControllerTestCase;
 use MailerApi\Controller\MailerController;
+use MailerApi\Service\MailerService;
 use PersonApi\Service\PersonalDetailsService;
 use DvsaEntities\Entity\Person;
 use Zend\View\Renderer\PhpRenderer;
@@ -18,7 +19,7 @@ class MailerControllerTest extends AbstractMotApiControllerTestCase
     protected $mockUserService;
     protected $mockLogger;
 
-    const DUMMY_EMAIL = 'mailercontrollertest@dvsa.test';
+    const DUMMY_EMAIL = MailerService::AWS_MAIL_SIMULATOR_SUCCESS;
 
     protected function setUp()
     {

@@ -16,6 +16,7 @@ use DvsaEntities\Entity\PersonContact;
 use DvsaEntities\Entity\Phone;
 use DvsaEntities\Entity\PhoneContactType;
 use DvsaEntities\Entity\Title;
+use MailerApi\Service\MailerService;
 use PersonApi\Dto\PersonDetails;
 
 class PersonDetailsTest extends \PHPUnit_Framework_TestCase
@@ -32,7 +33,7 @@ class PersonDetailsTest extends \PHPUnit_Framework_TestCase
     const ADDRESS_LINE_3         = '213';
     const TOWN                   = 'Dublin';
     const POSTCODE               = 'LON 123';
-    const EMAIL                  = 'persondetailstest@dvsa.test';
+    const EMAIL                  = MailerService::AWS_MAIL_SIMULATOR_SUCCESS;
     const PHONE                  = '123456765432';
     const DRIVING_LICENCE_NUMBER = '2343213';
     const REGION                 = 'Other';

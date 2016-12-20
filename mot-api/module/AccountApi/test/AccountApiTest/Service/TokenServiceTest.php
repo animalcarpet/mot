@@ -40,7 +40,7 @@ class TokenServiceTest extends AbstractServiceTestCase
     const TOKEN = 'd1c103e634efff7a54288b5cf8f7e57cd5566caaac5c9ca98d450c2de4b56805';
     const USER_ID = 8888;
     const USER_NAME = 'unit_userName1';
-    const USER_EMAIL = 'tokenservicetest@dvsa.test';
+    const USER_EMAIL = 'success@simulator.amazonses.com';
     const USER_PASSWORD = 'Password123';
 
     const CFG_EXPIRE_TIME = 1000;

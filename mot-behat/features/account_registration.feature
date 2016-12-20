@@ -53,19 +53,18 @@ Feature:
     Then an account is not created
 
     Examples:
-      | firstName | middleName | lastName | phone      | emailAddress         | confirmEmailAddress  | address1          | address2    | address3      | day | month | year |
-      |           |            | Smith    | 1234562345 | fake1@dvsa.test      | fake1@dvsa.test      | address street    | address two | address three | 01  | 02    | 1990 |
-      | John      |            |          | 1234562345 | fake2@dvsa.test      | fake2@dvsa.test      | address           | addresstwo  | address3      | 01  | 02    | 1990 |
-      |           |            |          | 123454542  | fakemail5@dvsa.test  | fakemail5@dvsa.test  | 12 address street |             |               | 01  | 02    | 1990 |
-      | Jane      |            | Smith    | 34522224   | fakemail@dvsa.test   | incorrect@dvsa.test  | 12 address street |             |               | 01  | 02    | 1990 |
-      | Jane      |            | Smith    | 1345623456 | fakemail@dvsa.test   |                      | 12 address street |             |               | 01  | 02    | 1990 |
-      | Jane      |            | Smith    | 12345234   | fakemail6dvsa.test   | fakemail6dvsa.test   | 12 address street |             |               | 01  | 02    | 1990 |
-      | Jane      |            | Smith    | 2345345234 | fakemail7@dvsa.test  | fakemail7@dvsa.test  |                   |             |               | 01  | 02    | 1990 |
-      | Jane      | May        | Smith    | 23453456   | fakemail8@dvsa.test  | fakemail8@dvsa.test  | 12 address street |             |               | 30  | 02    | 1900 |
-      | Jane      | May        | Smith    | 23453456   | fakemail9@dvsa.test  | fakemail9@dvsa.test  | 12 address street |             |               | 01  | 02    | 1890 |
-      | Jane      | May        | Smith    | 23453456   | fakemail10@dvsa.test | fakemail10@dvsa.test | 12 address street |             |               | 01  | 02    | 2100 |
-      | Jane      | May        | Smith    | 23453456   | fakemail11@dvsa.test | fakemail11@dvsa.test | 12 address street |             |               | ss  | ss    | ssss |
-      | Jane      | May        | Smith    | 23453456   | fakemail12@dvsa.test | fakemail12@dvsa.test | 12 address street |             |               |     |       |      |
+      | firstName | middleName | lastName | phone      | emailAddress                             | confirmEmailAddress                    | address1          | address2    | address3      | day | month | year |
+      |           |            | Smith    | 1234562345 | success+fake1@simulator.amazonses.com    | success+fake1@simulator.amazonses.com  | address street    | address two | address three | 01  | 02    | 1990 |
+      | John      |            |          | 1234562345 | success+fake2@simulator.amazonses.com    | success+fake2@simulator.amazonses.com  | address           | addresstwo  | address3      | 01  | 02    | 1990 |
+      |           |            |          | 123454542  | success+fake3@simulator.amazonses.com    | success+fake3@simulator.amazonses.com  | 12 address street |             |               | 01  | 02    | 1990 |
+      | Jane      |            | Smith    | 34522224   | success+fake4@simulator.amazonses.com    | incorrect@dvsa.test                    | 12 address street |             |               | 01  | 02    | 1990 |
+      | Jane      |            | Smith    | 1345623456 | success+fake5@simulator.amazonses.com    |                                        | 12 address street |             |               | 01  | 02    | 1990 |
+      | Jane      |            | Smith    | 2345345234 | success+fake7@simulator.amazonses.com    | success+fake7@simulator.amazonses.com  |                   |             |               | 01  | 02    | 1990 |
+      | Jane      | May        | Smith    | 23453456   | success+fake8@simulator.amazonses.com    | success+fake8@simulator.amazonses.com  | 12 address street |             |               | 30  | 02    | 1900 |
+      | Jane      | May        | Smith    | 23453456   | success+fake9@simulator.amazonses.com    | success+fake9@simulator.amazonses.com  | 12 address street |             |               | 01  | 02    | 1890 |
+      | Jane      | May        | Smith    | 23453456   | success+fake10@simulator.amazonses.com   | success+fake10@simulator.amazonses.com | 12 address street |             |               | 01  | 02    | 2100 |
+      | Jane      | May        | Smith    | 23453456   | success+fake11@simulator.amazonses.com   | success+fake11@simulator.amazonses.com | 12 address street |             |               | ss  | ss    | ssss |
+      | Jane      | May        | Smith    | 23453456   | success+fake12@simulator.amazonses.com   | success+fake12@simulator.amazonses.com | 12 address street |             |               |     |       |      |
 
   @negative @user-registration
   Scenario Outline: A user attempts to register an email for an account already in use
@@ -86,6 +85,6 @@ Feature:
     Then an account is not created
 
     Examples:
-      | firstName | middleName | lastName         | phone         | emailAddress                     | confirmEmailAddress               | address1          | address2    | address3      |
-      | John      | James      | Doe              | 123123123     | duplicate-email-test@dvsa.test   | duplicate-email-test@dvsa.test    | 123 address one   |             | address three |
+      | firstName | middleName | lastName         | phone         | emailAddress                                | confirmEmailAddress                           | address1          | address2    | address3      |
+      | John      | James      | Doe              | 123123123     | success+duplicate@simulator.amazonses.com   | success+duplicate0@simulator.amazonses.com    | 123 address one   |             | address three |
 

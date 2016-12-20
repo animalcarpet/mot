@@ -157,10 +157,10 @@ public class DVSAManagingUserRolesTests extends DslTest {
         pageNavigator.navigateToPage(areaOffice1User, UserSearchPage.PATH, UserSearchPage.class);
 
         //When I search for user by email with expanded criteria section
-        motUI.searchUser.searchForUserByUserEmail("dummy@email.com", true, UserSearchPage.class);
+        motUI.searchUser.searchForUserByUserEmail("success@simulator.amazonses.com", true, UserSearchPage.class);
 
         //Then I should see Too many results message
-        assertThat(motUI.searchUser.isTooManyResultsMessageDisplayed("dummy@email.com"), is(true));
+        assertThat(motUI.searchUser.isTooManyResultsMessageDisplayed("success@simulator.amazonses.com"), is(true));
     }
 
     @Test(groups = {"VM-4698", "VM-4842", "VM-7724", "Regression"},

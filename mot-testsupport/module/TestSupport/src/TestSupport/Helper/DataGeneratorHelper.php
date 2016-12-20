@@ -52,7 +52,7 @@ class DataGeneratorHelper
 
     public function emailAddress()
     {
-        return $this->differentiator . '@example.com';
+        return 'success+' . $this->differentiator . '@simulator.amazonses.com';
     }
 
     public function startDate()
