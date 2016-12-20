@@ -124,17 +124,19 @@ class TestItemSelectorControllerTest extends AbstractMotApiControllerTestCase
                     'tisId' => self::TEST_ITEM_SELECTOR_ID,
                 ],
                 'serviceMethod' => 'getTestItemSelectorsData',
-                'serviceReturn' => ['someData' => ''],
+                'serviceReturn' => [['someData' => '']],
 
                 'expectResult' => [
                     'statusCode' => self::HTTP_OK_CODE,
                     'result' => [
                         'data' => $hydrator->dtoToJson(
                             [
-                                'motTest' => (new MotTestDto())
-                                    ->setVehicle($vehicle)
-                                    ->setReasonsForRejection(ReasonForRejectionBuilder::create()),
-                                'someData' => '',
+                                [
+                                    'someData' => '',
+                                    'motTest' => (new MotTestDto())
+                                        ->setVehicle($vehicle)
+                                        ->setReasonsForRejection(ReasonForRejectionBuilder::create()),
+                                ],
                             ]
                         ),
                     ],

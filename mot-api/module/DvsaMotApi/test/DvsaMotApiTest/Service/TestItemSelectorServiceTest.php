@@ -91,7 +91,7 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
     public function testGetTestItemSelectorsData()
     {
         //given
-        $testItemSelectorId = 1;
+        $testItemSelectorId = 0;
 
         $reasonForRejection = (new ReasonForRejection())
             ->setDescriptions([]);
@@ -99,7 +99,8 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
 
         $expectedTisHydratorData = $this->getTestArrayWithId($testItemSelectorId);
 
-        $expectedData = $this->getExpectedData(
+        $expectedData = [];
+        $expectedData[] = $this->getExpectedData(
             $expectedTisHydratorData,
             [$expectedTisHydratorData],
             [$expectedTisHydratorData],
@@ -272,7 +273,7 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
 
     protected function getTestArrayWithId($motTestId = 17)
     {
-        return ['id' => $motTestId];
+        return ['id' => $motTestId, "parentTestItemSelectorId" => 0];
     }
 
     protected function getExpectedData($tis, $tises, $tisRfrs, $parentTises)

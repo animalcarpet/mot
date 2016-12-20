@@ -337,109 +337,95 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
 
     private function getTestItemSelectorsWithRfrs()
     {
-        return [
-            'testItemSelector' => [
-                'sectionTestItemSelectorId' => 1,
-                'parentTestItemSelectorId' => 0,
-                'id' => 0,
-                'vehicleClasses' => [
-                    '3', '4', '5',
+        return
+            [
+                [
+                'testItemSelector' => [
+                    'sectionTestItemSelectorId' => 1,
+                    'parentTestItemSelectorId' => 0,
+                    'id' => 0,
+                    'vehicleClasses' => [
+                        '3', '4', '5',
+                    ],
+                    'descriptions' => [
+                        'Description 1',
+                        'Description 2',
+                    ],
+                    'name' => 'RFR name',
+                    'description' => 'Cool description',
                 ],
-                'descriptions' => [
-                    'Description 1',
-                    'Description 2',
-                ],
-                'name' => 'RFR name',
-                'description' => 'Cool description',
-            ],
-            'parentTestItemSelectors' => [
+                'parentTestItemSelectors' => [
 
-            ],
-            'testItemSelectors' => [
-                1 => [
-                    'sectionTestItemSelectorId' => 10,
-                    'parentTestItemSelectorId' => 20,
-                    'id' => 30,
-                    'vehicleClasses' => [
-                        '3', '4', '5',
-                    ],
-                    'descriptions' => [
-                        'Description 1',
-                        'Description 2',
-                    ],
-                    'name' => 'RFR name',
-                    'description' => 'Cool description2',
                 ],
-                2 => [
-                    'sectionTestItemSelectorId' => 10,
-                    'parentTestItemSelectorId' => 20,
-                    'id' => 30,
-                    'vehicleClasses' => [
-                        '3', '4', '5',
+                'testItemSelectors' => [
+                    1 => [
+                        'sectionTestItemSelectorId' => 10,
+                        'parentTestItemSelectorId' => 20,
+                        'id' => 30,
+                        'vehicleClasses' => [
+                            '3', '4', '5',
+                        ],
+                        'descriptions' => [
+                            'Description 1',
+                            'Description 2',
+                        ],
+                        'name' => 'RFR name',
+                        'description' => 'Cool description2',
                     ],
-                    'descriptions' => [
-                        'Description 1',
-                        'Description 2',
+                    2 => [
+                        'sectionTestItemSelectorId' => 10,
+                        'parentTestItemSelectorId' => 20,
+                        'id' => 30,
+                        'vehicleClasses' => [
+                            '3', '4', '5',
+                        ],
+                        'descriptions' => [
+                            'Description 1',
+                            'Description 2',
+                        ],
+                        'name' => 'RFR name not tested',
+                        'description' => 'Cool description2',
                     ],
-                    'name' => 'RFR name not tested',
-                    'description' => 'Cool description2',
+                    3 => [
+                        'sectionTestItemSelectorId' => 10,
+                        'parentTestItemSelectorId' => 20,
+                        'id' => 30,
+                        'vehicleClasses' => [
+                            '3', '4', '5',
+                        ],
+                        'descriptions' => [
+                            'Description 1',
+                            'Description 2',
+                        ],
+                        'name' => 'RFR name',
+                        'description' => 'Cool description2',
+                    ],
                 ],
-                3 => [
-                    'sectionTestItemSelectorId' => 10,
-                    'parentTestItemSelectorId' => 20,
-                    'id' => 30,
-                    'vehicleClasses' => [
-                        '3', '4', '5',
+                'reasonsForRejection' => [
+                    1 => [
+                        'rfrId' => 1,
+                        'testItemSelectorId' => 1,
+                        'testItemSelectorName' => 'sad',
+                        'description' => 'asd',
+                        'advisoryText' => 'asd',
+                        'inspectionManualReference' => '2.1.2',
+                        'isAdvisory' => true,
+                        'isPrsFail' => false,
+                        'canBeDangerous' => true,
                     ],
-                    'descriptions' => [
-                        'Description 1',
-                        'Description 2',
-                    ],
-                    'name' => 'RFR name',
-                    'description' => 'Cool description2',
                 ],
-            ],
-            'reasonsForRejection' => [
-                1 => [
-                    'rfrId' => 1,
-                    'testItemSelectorId' => 1,
-                    'testItemSelectorName' => 'sad',
-                    'description' => 'asd',
-                    'advisoryText' => 'asd',
-                    'inspectionManualReference' => '2.1.2',
-                    'isAdvisory' => true,
-                    'isPrsFail' => false,
-                    'canBeDangerous' => true,
-                ],
-            ],
+            ]
         ];
     }
 
     private function getTestItemSelectorsWithoutRfrs()
     {
         return [
-            'testItemSelector' => [
-                'sectionTestItemSelectorId' => 0,
-                'parentTestItemSelectorId' => 0,
-                'id' => 0,
-                'vehicleClasses' => [
-                    '3', '4', '5',
-                ],
-                'descriptions' => [
-                    'Description 1',
-                    'Description 2',
-                ],
-                'name' => 'RFR name',
-                'description' => 'Cool description',
-            ],
-            'parentTestItemSelectors' => [
-
-            ],
-            'testItemSelectors' => [
-                1 => [
-                    'sectionTestItemSelectorId' => 10,
-                    'parentTestItemSelectorId' => 20,
-                    'id' => 30,
+                [
+                'testItemSelector' => [
+                    'sectionTestItemSelectorId' => 0,
+                    'parentTestItemSelectorId' => 0,
+                    'id' => 0,
                     'vehicleClasses' => [
                         '3', '4', '5',
                     ],
@@ -448,40 +434,59 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
                         'Description 2',
                     ],
                     'name' => 'RFR name',
-                    'description' => 'Cool description2',
+                    'description' => 'Cool description',
                 ],
-                2 => [
-                    'sectionTestItemSelectorId' => 10,
-                    'parentTestItemSelectorId' => 20,
-                    'id' => 30,
-                    'vehicleClasses' => [
-                        '3', '4', '5',
-                    ],
-                    'descriptions' => [
-                        'Description 1',
-                        'Description 2',
-                    ],
-                    'name' => 'RFR name not tested',
-                    'description' => 'Cool description2',
-                ],
-                3 => [
-                    'sectionTestItemSelectorId' => 10,
-                    'parentTestItemSelectorId' => 20,
-                    'id' => 30,
-                    'vehicleClasses' => [
-                        '3', '4', '5',
-                    ],
-                    'descriptions' => [
-                        'Description 1',
-                        'Description 2',
-                    ],
-                    'name' => 'RFR name',
-                    'description' => 'Cool description2',
-                ],
-            ],
-            'reasonsForRejection' => [
+                'parentTestItemSelectors' => [
 
-            ],
+                ],
+                'testItemSelectors' => [
+                    1 => [
+                        'sectionTestItemSelectorId' => 10,
+                        'parentTestItemSelectorId' => 20,
+                        'id' => 30,
+                        'vehicleClasses' => [
+                            '3', '4', '5',
+                        ],
+                        'descriptions' => [
+                            'Description 1',
+                            'Description 2',
+                        ],
+                        'name' => 'RFR name',
+                        'description' => 'Cool description2',
+                    ],
+                    2 => [
+                        'sectionTestItemSelectorId' => 10,
+                        'parentTestItemSelectorId' => 20,
+                        'id' => 30,
+                        'vehicleClasses' => [
+                            '3', '4', '5',
+                        ],
+                        'descriptions' => [
+                            'Description 1',
+                            'Description 2',
+                        ],
+                        'name' => 'RFR name not tested',
+                        'description' => 'Cool description2',
+                    ],
+                    3 => [
+                        'sectionTestItemSelectorId' => 10,
+                        'parentTestItemSelectorId' => 20,
+                        'id' => 30,
+                        'vehicleClasses' => [
+                            '3', '4', '5',
+                        ],
+                        'descriptions' => [
+                            'Description 1',
+                            'Description 2',
+                        ],
+                        'name' => 'RFR name',
+                        'description' => 'Cool description2',
+                    ],
+                ],
+                'reasonsForRejection' => [
+
+                ],
+            ]
         ];
     }
 
