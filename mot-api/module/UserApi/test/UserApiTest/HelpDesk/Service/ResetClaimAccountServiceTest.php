@@ -25,7 +25,7 @@ class ResetClaimAccountServiceTest extends AbstractServiceTestCase
 {
     const PERSON_ID = 3;
     const PERSON_USERNAME = 'csco';
-    const PERSON_EMAIL = 'resetclaimaccountservicetest@dvsa.test';
+    const PERSON_EMAIL = MailerService::AWS_MAIL_SIMULATOR_SUCCESS;
 
     /** @var ResetClaimAccountService */
     private $service;

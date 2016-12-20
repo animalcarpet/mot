@@ -4,6 +4,7 @@ namespace MailerApiTest\Validator;
 use DvsaCommon\Dto\Mailer\MailerDto;
 use DvsaCommon\Validator\EmailAddressValidator;
 use DvsaMotApi\Service\UserService;
+use MailerApi\Service\MailerService;
 use MailerApi\Validator\MailerValidator;
 use MailerApiTest\Mixin\ServiceManager;
 use PHPUnit_Framework_TestCase;
@@ -95,7 +96,7 @@ class MailerValidatorTest extends PHPUnit_Framework_TestCase
     {
         $dto = new MailerDto();
         $dto->setData([
-            "email" => "mailervalidatortest@dvsa.test",
+            "email" => MailerService::AWS_MAIL_SIMULATOR_SUCCESS,
             "firstName" => "some name",
             "familyName" => "familyName",
             "attachment" => "dummy attachment",
@@ -111,7 +112,7 @@ class MailerValidatorTest extends PHPUnit_Framework_TestCase
     {
         $dto = new MailerDto();
         $dto->setData([
-            "email" => "mailervalidatortestemailtoolonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglong@dvsa.test",
+            "email" => MailerService::getTestEmailAddress('mailervalidatortestemailtoolonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglong@'),
             "firstName" => "some name",
             "familyName" => "familyName",
             "attachment" => "dummy attachment",

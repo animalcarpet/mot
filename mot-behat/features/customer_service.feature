@@ -9,17 +9,17 @@ Feature: Customer Service
       | userName   | firstName   | lastName   | postCode   | dateOfBirth   | email   |
       | <userName> | <firstName> | <lastName> | <postCode> | <dateOfBirth> | <email> |
     Then the Searched User data will be returned
-  Examples:
-    | userName | firstName | lastName       | postCode | dateOfBirth | email |
-    | tester2  | Bob       | Arctor Tester2 | L1 1PQ   | 1981-04-24  | dummy@email.com                         |
-    |          | Bob       | Arctor Tester2 | L1 1PQ   | 1981-04-24  | dummy@email.com                         |
-    | tester2  |           | Arctor Tester2 | L1 1PQ   | 1981-04-24  | dummy@email.com                         |
-    | tester2  | Bob       |                | L1 1PQ   | 1981-04-24  | dummy@email.com                         |
-    | tester2  | Bob       | Arctor Tester2 |          | 1981-04-24  | dummy@email.com                         |
-    | tester2  | Bob       | Arctor Tester2 | L1 1PQ   |             | dummy@email.com                         |
-    |          |           | Arctor Tester2 | L1 1PQ   |             | dummy@email.com                         |
-    |          |           |                |          |             | boy.genius@conjectural-technologies.com |
-    |          |           |                |          |             | pete.white@conjectural-technologies.com |
+    Examples:
+      | userName | firstName | lastName       | postCode | dateOfBirth | email |
+      | tester2  | Bob       | Arctor Tester2 | L1 1PQ   | 1981-04-24  | success@simulator.amazonses.com         |
+      |          | Bob       | Arctor Tester2 | L1 1PQ   | 1981-04-24  | success@simulator.amazonses.com         |
+      | tester2  |           | Arctor Tester2 | L1 1PQ   | 1981-04-24  | success@simulator.amazonses.com         |
+      | tester2  | Bob       |                | L1 1PQ   | 1981-04-24  | success@simulator.amazonses.com         |
+      | tester2  | Bob       | Arctor Tester2 |          | 1981-04-24  | success@simulator.amazonses.com         |
+      | tester2  | Bob       | Arctor Tester2 | L1 1PQ   |             | success@simulator.amazonses.com         |
+      |          |           | Arctor Tester2 | L1 1PQ   |             | success@simulator.amazonses.com         |
+      |          |           |                |          |             | success+unique1@simulator.amazonses.com |
+      |          |           |                |          |             | success+unique2@simulator.amazonses.com |
 
   Scenario Outline: Invalid search for a User returns no results
     Given I am logged in as a Customer Service Operator
@@ -29,11 +29,11 @@ Feature: Customer Service
     Then the Searched User data will NOT be returned
   Examples:
     | userName | firstName | lastName       | postCode | dateOfBirth | email |
-    | tester3  | Bob       | Arctor Tester2 | L1 1PQ   | 1981-04-24  | dummy@example.com |
-    | tester2  | Bob1      | Arctor Tester2 | L1 1PQ   | 1981-04-24  | dummy@example.com |
-    | tester2  | Bob       | Arctor Tester3 | L1 1PQ   | 1981-04-24  | dummy@example.com |
-    | tester2  | Bob       | Arctor Tester2 | L2 1PQ   | 1981-04-24  | dummy@example.com |
-    | tester2  | Bob       | Arctor Tester2 | L1 1PQ   | 1982-04-24  | dummy@example.com |
+    | tester3  | Bob       | Arctor Tester2 | L1 1PQ   | 1981-04-24  | success@simulator.amazonses.com |
+    | tester2  | Bob1      | Arctor Tester2 | L1 1PQ   | 1981-04-24  | success@simulator.amazonses.com |
+    | tester2  | Bob       | Arctor Tester3 | L1 1PQ   | 1981-04-24  | success@simulator.amazonses.com |
+    | tester2  | Bob       | Arctor Tester2 | L2 1PQ   | 1981-04-24  | success@simulator.amazonses.com |
+    | tester2  | Bob       | Arctor Tester2 | L1 1PQ   | 1982-04-24  | success@simulator.amazonses.com |
 
   Scenario: Valid User Details Searched Results
     Given I am logged in as a Customer Service Operator

@@ -19,7 +19,7 @@ class ChangeEmailFormTest extends \PHPUnit_Framework_TestCase
     public function testIsValid_validData_shouldNotDisplayAnyErrors()
     {
         $form = $this->buildController();
-        $form->setData($this->setDataValues('dummy@email.com', 'dummy@email.com'));
+        $form->setData($this->setDataValues('success@simulator.amazonses.com', 'success@simulator.amazonses.com'));
         $this->assertTrue($form->isValid());
         $this->assertCount(0, $form->getMessages());
     }
@@ -43,7 +43,7 @@ class ChangeEmailFormTest extends \PHPUnit_Framework_TestCase
     public function testIsInvalid_emailsDoNotMatch_shouldDisplayErrors()
     {
         $form = $this->buildController();
-        $form->setData($this->setDataValues('dummy@email.com', 'dummy1@email.com'));
+        $form->setData($this->setDataValues('success+1@simulator.amazonses.com', 'success+2@simulator.amazonses.com'));
         $this->assertFalse($form->isValid());
         $this->assertCount(1, $form->getMessages());
         $this->assertSame(

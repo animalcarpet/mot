@@ -117,5 +117,5 @@ public class AedmManagesMotAccountTests extends DslTest {
         return new Object[][]{{aedm, aeDetails, testSite, tester}};
     }
 
-    AeContactDetails aeContactDetails = new AeContactDetails("dummy@email.com", "dummy@email.com", "0117832934");
+    AeContactDetails aeContactDetails = new AeContactDetails("success@simulator.amazonses.com", "success@simulator.amazonses.com", "0117832934");
 }

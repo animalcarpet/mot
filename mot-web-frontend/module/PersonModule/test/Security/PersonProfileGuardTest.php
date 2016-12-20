@@ -26,6 +26,7 @@ use DvsaCommon\Model\OrganisationBusinessRoleCode;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaFeature\FeatureToggles;
 use InvalidArgumentException;
+use MailerApi\Service\MailerService;
 
 class PersonProfileGuardTest extends \PHPUnit_Framework_TestCase
 {
