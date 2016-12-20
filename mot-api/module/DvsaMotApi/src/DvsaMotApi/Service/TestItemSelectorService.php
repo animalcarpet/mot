@@ -8,7 +8,6 @@ use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Constants\ReasonForRejection as ReasonForRejectionConstants;
-use DvsaCommon\Enum\LanguageTypeCode;
 use DvsaCommonApi\Service\AbstractService;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\Entity\MotTest;
@@ -226,15 +225,28 @@ class TestItemSelectorService extends AbstractService
         $role = $this->determineRole();
         $this->authService->assertGranted(PermissionInSystem::RFR_LIST);
 
+        $itemsCollection = [];
+
+        do {
+            $data = $this->getTestItemsByParentId($id, $vehicleClass, $role);
+            $itemsCollection[] = $data;
+            $id = $data["testItemSelector"]["parentTestItemSelectorId"];
+
+        } while ($data["testItemSelector"]["id"] !== 0);
+
+        return $itemsCollection;
+    }
+
+    private function getTestItemsByParentId($id, $vehicleClass, $role)
+    {
         $testItemSelectorResult = $this->getTestItemSelectorById($id, $vehicleClass);
         $testItemSelector = current($testItemSelectorResult);
 
-        $testItemSelectors = $this->testItemCategoryRepository->findByParentIdAndVehicleClass($id, $vehicleClass);
+        $testItemSelectors = $this->testItemCategoryRepository->findByParentIdAndVehicleClass($id, $vehicleClass, $role);
 
         if (true === $this->featureToggles->isEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)) {
             foreach ($testItemSelectors as $key => $value) {
-                if ($this->isOldSelector($value) ||
-                    $this->hasNoTestItemSelectorsOrReasonsForRejection($value, $vehicleClass, $role)) {
+                if ($this->isOldSelector($value)) {
                     unset($testItemSelectors[$key]);
                 }
             }
@@ -407,23 +419,6 @@ class TestItemSelectorService extends AbstractService
     private function shouldHideRfr($rfrId)
     {
         return in_array($rfrId, $this->disabledRfrs);
-    }
-
-    /**
-     * @param TestItemSelector $selector
-     * @param $vehicleClass
-     * @param $role
-     *
-     * @return bool
-     */
-    private function hasNoTestItemSelectorsOrReasonsForRejection(TestItemSelector $selector, $vehicleClass, $role)
-    {
-        return empty($this->testItemCategoryRepository->findByParentIdAndVehicleClass(
-                $selector->getId(), $vehicleClass))
-            &&
-            empty($this->rfrRepository->findByIdAndVehicleClassForUserRole(
-                $selector->getId(), $vehicleClass, $role))
-        ;
     }
 
     /**

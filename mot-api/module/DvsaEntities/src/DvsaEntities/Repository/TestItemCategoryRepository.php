@@ -82,48 +82,32 @@ class TestItemCategoryRepository extends EntityRepository
      *
      * @return TestItemSelector[]
      */
-    public function findByParentIdAndVehicleClass($parentId, $vehicleClass)
-    {
+    public function findByParentIdAndVehicleClass($parentId, $vehicleClass, $audience) {
         $sql = <<<SQL
-(
-    SELECT cat.id, cat.`parent_test_item_category_id`, cat.`section_test_item_category_id`,
-        cat_l.id AS desc_id, cat_l.name, cat_l_lang.id AS lang_id, cat_l_lang.code AS lang_code
-		FROM test_item_category cat
-		JOIN test_item_category p ON cat.`parent_test_item_category_id` = p.`id`
-		JOIN test_item_category child ON child.`parent_test_item_category_id` = cat.id
-		JOIn `test_item_category_vehicle_class_map` cat_vclass ON cat_vclass.`test_item_category_id` = cat.id
-		JOIN `vehicle_class` vclass ON cat_vclass.`vehicle_class_id` = vclass.id
-		JOIN `ti_category_language_content_map` cat_l ON cat_l.`test_item_category_id` = cat.id
-		JOIN language_type cat_l_lang ON cat_l_lang.id = cat_l.`language_lookup_id`
-		WHERE cat.`parent_test_item_category_id` = :parentId
-    AND vclass.code = :vehicleClassCode
-    AND cat_l_lang.code = :languageCode
-    AND cat_l.name NOT LIKE :specialProc
-    AND cat.id != 0
-)
-UNION DISTINCT
-(
-    SELECT cat.id, cat.`parent_test_item_category_id`, cat.`section_test_item_category_id`,
-        cat_l.id AS desc_id, cat_l.name, cat_l_lang.id AS lang_id, cat_l_lang.code AS lang_code
-		FROM test_item_category cat
-		JOIN reason_for_rejection rfr ON rfr.`test_item_category_id` = cat.id
-		JOIN `rfr_vehicle_class_map` rfr_vclass ON rfr_vclass.`rfr_id` = rfr.id
-		JOIN `vehicle_class` vclass ON rfr_vclass.`vehicle_class_id` = vclass.id
-		JOIN `ti_category_language_content_map` cat_l ON cat_l.`test_item_category_id` = cat.id
-		JOIN language_type cat_l_lang ON cat_l_lang.id = cat_l.`language_lookup_id`
-		WHERE vclass.`code` = :vehicleClassCode
-    AND cat.`parent_test_item_category_id` = :parentId
-    AND (rfr.`end_date` IS NULL OR rfr.`end_date` > CURRENT_DATE)
-		AND cat_l_lang.code = :languageCode
-    AND cat_l.name NOT LIKE :specialProc
-    AND cat.id != 0
-)
-ORDER BY name
+            SELECT
+            cat.id, cat.`parent_test_item_category_id`, cat.`section_test_item_category_id`,
+            cat_l.id AS desc_id, cat_l.name, cat_l_lang.id AS lang_id, cat_l_lang.code AS lang_code, child.id AS child_id
+            FROM `test_item_category` AS cat
+            LEFT JOIN reason_for_rejection rfr ON (rfr.`test_item_category_id` = cat.id AND (rfr.audience = :audience OR rfr.audience = 'b'))
+            LEFT JOIN test_item_category child ON child.`parent_test_item_category_id` = cat.id
+            JOIN `test_item_category_vehicle_class_map` cat_vclass ON cat_vclass.`test_item_category_id` = cat.id
+            JOIN `vehicle_class` vclass ON cat_vclass.`vehicle_class_id` = vclass.id
+            JOIN ti_category_language_content_map cat_l ON cat_l.test_item_category_id = cat.`id`
+            JOIN language_type cat_l_lang ON cat_l_lang.id = cat_l.`language_lookup_id`
+            WHERE cat.`parent_test_item_category_id` = :parentId
+            AND (rfr.`end_date` IS NULL OR rfr.`end_date` > CURRENT_DATE)
+            AND vclass.code = :vehicleClassCode
+            AND cat_l_lang.code = :languageCode
+            AND cat_l.name NOT LIKE :specialProc
+            AND cat.id != 0
+            GROUP BY id
+            HAVING (count(rfr.id) > 0 OR child_id IS NOT NULL )
+            ORDER BY cat_l.name
 SQL;
-
 
         return $this->entityManager
             ->createNativeQuery($sql, $this->createCategoryResultSetMapping())
+            ->setParameter('audience', $audience)
             ->setParameter('parentId', $parentId)
             ->setParameter('vehicleClassCode', $vehicleClass)
             ->setParameter('specialProc', self::SPECIAL_PROCESSING_SELECTOR_FORMAT)

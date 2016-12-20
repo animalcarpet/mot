@@ -238,25 +238,12 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
     {
         $isVe = $this->authorisationService->hasRole(Role::VEHICLE_EXAMINER);
 
-        $dataFromApi = [];
-        $index = 0;
-        $dataFromApi[$index] = $this->getDataFromApi(
+        $dataFromApi = $this->getDataFromApi(
             MotTestUrlBuilder::motTestItem(
                 $motTestNumber,
                 $categoryId
             )
         );
-
-        // Traverse the tree of component categories.
-        while ($this->isNotRfrHome($dataFromApi[$index])) {
-            $index += 1;
-            $dataFromApi[$index] = $this->getDataFromApi(
-                MotTestUrlBuilder::motTestItem(
-                    $motTestNumber,
-                    $dataFromApi[$index - 1]['testItemSelector']['parentTestItemSelectorId']
-                )
-            );
-        }
         
         // Here we reverse the tree. We want the the columns stored in order of left->right.
         $dataFromApi = array_reverse($dataFromApi);
@@ -336,15 +323,5 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
         $viewModel->setVariables($variables);
 
         return $viewModel;
-    }
-
-    /**
-     * @param array $componentCategory
-     *
-     * @return bool
-     */
-    private function isNotRfrHome(array $componentCategory)
-    {
-        return $componentCategory['testItemSelector']['id'] !== 0;
     }
 }

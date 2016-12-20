@@ -34,9 +34,12 @@ class TestItemSelectorController extends AbstractDvsaRestfulController
         }
 
         //  --  get items   --
-        $data = $this->getTestItemSelectorService()->getTestItemSelectorsData($testItemSelectorId, $vehicleClassCode);
+        $items = $this->getTestItemSelectorService()->getTestItemSelectorsData($testItemSelectorId, $vehicleClassCode);
+        foreach ($items as $index => $item) {
+            $items[$index] = array_merge($item , ['motTest' => $motTest]);
+        }
 
-        return ApiResponse::jsonOk($data + ['motTest' => $motTest]);
+        return ApiResponse::jsonOk($items);
     }
 
     /**
