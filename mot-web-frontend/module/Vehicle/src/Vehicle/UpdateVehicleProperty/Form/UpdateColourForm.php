@@ -46,6 +46,10 @@ class UpdateColourForm extends Form
             ->setAttribute('required', false)
             ->setAttribute('group', true)
             ->setAttribute('formControlClass', 'form-control-select')
+            ->setAttribute('data-target', 'secondaryColours')
+            ->setAttribute('data-target-value','S,P,B,A,V,G,H,L,T,K,E,D,C,M,U,N,F,R,W,J')
+            ->setAttribute('aria-expanded', false)
+            ->setAttribute('aria-controls', 'secondaryColours')
             ->setAttribute('inputModifier', '1-4');
 
         return $element;

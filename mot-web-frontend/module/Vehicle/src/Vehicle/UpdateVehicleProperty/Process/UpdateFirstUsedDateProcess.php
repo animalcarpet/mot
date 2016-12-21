@@ -3,6 +3,7 @@
 namespace Vehicle\UpdateVehicleProperty\Process;
 
 use Core\Action\RedirectToRoute;
+use Core\Routing\VehicleRouteList;
 use Core\Routing\VehicleRoutes;
 use Core\TwoStepForm\FormContextInterface;
 use Core\TwoStepForm\SingleStepProcessInterface;
@@ -20,7 +21,7 @@ use Vehicle\UpdateVehicleProperty\ViewModel\Builder\VehicleTertiaryTitleBuilder;
 use Vehicle\UpdateVehicleProperty\ViewModel\UpdateVehiclePropertyViewModel;
 use Zend\View\Helper\Url;
 
-class UpdateFirstUsedDateProcess implements SingleStepProcessInterface, AutoWireableInterface
+class UpdateFirstUsedDateProcess implements UpdateVehicleInterface, AutoWireableInterface
 {
     /** @var UpdateVehicleContext */
     private $context;
@@ -135,6 +136,16 @@ class UpdateFirstUsedDateProcess implements SingleStepProcessInterface, AutoWire
         return new RedirectToRoute("vehicle/detail",
             ['id' => $this->context->getObfuscatedVehicleId()]
         );
+    }
+
+    public function redirectToStartUnderTestPage()
+    {
+        return new RedirectToRoute(VehicleRouteList::VEHICLE_CHANGE_UNDER_TEST_CLASS,
+            [
+                'id' => $this->context->getObfuscatedVehicleId(),
+                'noRegistration' => 0,
+                'source' => 1
+            ]);
     }
 
     public function isAuthorised(MotAuthorisationServiceInterface $authorisationService)

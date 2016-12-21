@@ -31,4 +31,12 @@ class VehicleEditBreadcrumbsBuilder implements AutoWireableInterface
             $stepTitle => null,
         ];
     }
+
+    public function getChangeVehicleUnderTestBreadcrumbs($obfucatedVehicleId)
+    {
+        return [
+            'MOT testing' => '/vehicle-search',
+            'Change vehicle record' => null,
+        ];
+    }
 }

@@ -14,10 +14,33 @@ class UpdateVehicleContext implements FormContextInterface
      */
     private $obfuscatedVehicleId;
 
-    public function __construct( DvsaVehicle $vehicle, $obfuscatedVehicleId)
+    /** @var  string */
+    private $requestUrl;
+
+    /**
+     * UpdateVehicleContext constructor.
+     *
+     * @param DvsaVehicle $vehicle
+     * @param             $obfuscatedVehicleId
+     * @param             $requestUrl
+     */
+    public function __construct( DvsaVehicle $vehicle, $obfuscatedVehicleId, $requestUrl)
     {
         $this->vehicle = $vehicle;
         $this->obfuscatedVehicleId = $obfuscatedVehicleId;
+        $this->requestUrl = $requestUrl;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUpdateVehicleDuringTest()
+    {
+        if (strpos($this->requestUrl, 'change-under-test') !== false) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

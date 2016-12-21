@@ -8,6 +8,7 @@
 namespace DvsaMotApi\Service;
 
 use Doctrine\ORM\EntityManager;
+use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
 use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleUnderTestRequest;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaAuthentication\Service\OtpService;
@@ -106,13 +107,13 @@ class MotTestCreationHelper
      * @param $primaryColourCode
      * @param $secondaryColourCode
      * @param $fuelTypeCode
+     * @param $cylinderCapacity
      * @param $vehicleClassCode
      * @param $hasRegistration
      * @param $motTestTypeCode
      * @param $motTestNumberOriginal
      * @param $complaintRef
      * @param $flagPrivate
-     * @param $oneTimePassword
      * @param $contingencyId
      * @param $clientIp
      * @param \DvsaCommon\Dto\MotTesting\ContingencyTestDto $contingencyDto
@@ -133,13 +134,13 @@ class MotTestCreationHelper
         $primaryColourCode,
         $secondaryColourCode,
         $fuelTypeCode,
+        $cylinderCapacity,
         $vehicleClassCode,
         $hasRegistration,
         $motTestTypeCode,
         $motTestNumberOriginal,
         $complaintRef,
         $flagPrivate,
-        $oneTimePassword,
         $contingencyId,
         $clientIp,
         ContingencyTestDto $contingencyDto = null
@@ -295,22 +296,17 @@ class MotTestCreationHelper
         if ($this->isVehicleModified($vehicle, $vehicleClass, $fuelType, $primaryColour, $secondaryColour)
             && !$motTestType->getIsDemo()
         ) {
-            if (!$this->identityProvider->getIdentity()->isSecondFactorRequired() &&
-                !$this->authService->isGranted(PermissionInSystem::MOT_TEST_WITHOUT_OTP)
-            ) {
-                $this->otpService->authenticate($oneTimePassword);
-            }
+
 
             // update vehicle with specified field values
-            $updateDvsaVehicleUnderTestRequest = new UpdateDvsaVehicleUnderTestRequest();
+            $updateDvsaVehicleUnderTestRequest = new UpdateDvsaVehicleRequest();
             $updateDvsaVehicleUnderTestRequest->setColourCode($primaryColour->getCode())
                 ->setSecondaryColourCode($secondaryColour->getCode())
                 ->setVehicleClassCode($vehicleClass->getCode())
                 ->setFuelTypeCode($fuelTypeCode)
-//              ->setCylinderCapacity($data['CylinderCapacity'])   @todo: API and UI need to consider CC according to the certain fuel type
-                ->setOneTimePassword($oneTimePassword);
+                ->setCylinderCapacity($cylinderCapacity);
 
-            $this->vehicleService->updateDvsaVehicleUnderTest(
+            $this->vehicleService->updateDvsaVehicle(
                 $vehicle->getId(),
                 $updateDvsaVehicleUnderTestRequest
             );

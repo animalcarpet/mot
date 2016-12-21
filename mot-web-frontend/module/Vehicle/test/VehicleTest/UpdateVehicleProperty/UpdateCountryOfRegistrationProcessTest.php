@@ -59,7 +59,7 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
 
         $this->vehicle = new DvsaVehicle($vehicleStd);
 
-        $context = new UpdateVehicleContext($this->vehicle, $this->obfuscatedId);
+        $context = new UpdateVehicleContext($this->vehicle, $this->obfuscatedId, '');
 
         $this->process->setContext($context);
     }

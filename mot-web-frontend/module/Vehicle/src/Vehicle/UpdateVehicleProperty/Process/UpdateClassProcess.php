@@ -3,27 +3,28 @@ namespace Vehicle\UpdateVehicleProperty\Process;
 
 use Core\Action\AbstractRedirectActionResult;
 use Core\Action\RedirectToRoute;
+use Core\Routing\MotTestRoutes;
 use Core\Routing\VehicleRouteList;
 use Core\Routing\VehicleRoutes;
 use Core\TwoStepForm\FormContextInterface;
-use Core\TwoStepForm\SingleStepProcessInterface;
 use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
+use DvsaMotTest\Service\StartTestChangeService;
 use Vehicle\UpdateVehicleProperty\Context\UpdateVehicleContext;
 use Vehicle\UpdateVehicleProperty\Form\UpdateClassForm;
 use Vehicle\UpdateVehicleProperty\ViewModel\Builder\VehicleEditBreadcrumbsBuilder;
 use Vehicle\UpdateVehicleProperty\ViewModel\Builder\VehicleTertiaryTitleBuilder;
 use Vehicle\UpdateVehicleProperty\ViewModel\UpdateVehiclePropertyViewModel;
-use Zend\Form\Form;
 use Zend\View\Helper\Url;
 
-class UpdateClassProcess implements SingleStepProcessInterface, AutoWireableInterface
+class UpdateClassProcess implements UpdateVehicleInterface , AutoWireableInterface
 {
     const PAGE_TITLE = "Change MOT test class";
+    const PAGE_TITLE_UPDATE_DURING_TEST = "What is the vehicle's test class?";
 
     /** @var UpdateVehicleContext */
     private $context;
@@ -31,17 +32,21 @@ class UpdateClassProcess implements SingleStepProcessInterface, AutoWireableInte
     private $vehicleService;
     private $breadcrumbsBuilder;
     private $tertiaryTitleBuilder;
+    /** @var  StartTestChangeService */
+    private $startTestChangeService;
 
     public function __construct(
         Url $urlHelper,
         VehicleService $vehicleService,
         VehicleEditBreadcrumbsBuilder $breadcrumbsBuilder,
-        VehicleTertiaryTitleBuilder $tertiaryTitleBuilder
+        VehicleTertiaryTitleBuilder $tertiaryTitleBuilder,
+        StartTestChangeService $startTestChangeService
     ) {
         $this->urlHelper = $urlHelper;
         $this->vehicleService = $vehicleService;
         $this->breadcrumbsBuilder = $breadcrumbsBuilder;
         $this->tertiaryTitleBuilder = $tertiaryTitleBuilder;
+        $this->startTestChangeService = $startTestChangeService;
     }
 
     public function setContext(FormContextInterface $context)
@@ -50,20 +55,23 @@ class UpdateClassProcess implements SingleStepProcessInterface, AutoWireableInte
     }
 
     /**
-     * Will make a call to API to update the data from the form
-     *
-     * @param $formData
+     * @param array $formData
      */
     public function update($formData)
     {
-        $request = new UpdateDvsaVehicleRequest();
-        $vehicleClassCode = $formData[UpdateClassForm::FIELD_CLASS];
-        $request->setVehicleClassCode($vehicleClassCode);
+        if ($this->context->isUpdateVehicleDuringTest()) {
+            $this->startTestChangeService->saveChange(StartTestChangeService::CHANGE_CLASS, $formData[UpdateClassForm::FIELD_CLASS]);
+            $this->startTestChangeService->updateChangedValueStatus(StartTestChangeService::CHANGE_CLASS, true);
+        } else {
+            $request = new UpdateDvsaVehicleRequest();
+            $vehicleClassCode = $formData[UpdateClassForm::FIELD_CLASS];
+            $request->setVehicleClassCode($vehicleClassCode);
 
-        $this->vehicleService->updateDvsaVehicle(
-            $this->context->getVehicleId(),
-            $request
-        );
+            $this->vehicleService->updateDvsaVehicle(
+                $this->context->getVehicleId(),
+                $request
+            );
+        }
     }
 
     /**
@@ -74,8 +82,11 @@ class UpdateClassProcess implements SingleStepProcessInterface, AutoWireableInte
     public function getPrePopulatedData()
     {
         $vehicle = $this->getVehicle();
+        $isValueChanged = $this->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_CLASS);
 
-        return [UpdateClassForm::FIELD_CLASS => $vehicle->getVehicleClass()->getCode()];
+        return [UpdateClassForm::FIELD_CLASS => $isValueChanged
+            ? $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS)
+            : $vehicle->getVehicleClass()->getCode()];
     }
 
     /**
@@ -85,7 +96,25 @@ class UpdateClassProcess implements SingleStepProcessInterface, AutoWireableInte
      */
     public function getSubmitButtonText()
     {
+        if ($this->context->isUpdateVehicleDuringTest()) {
+            return "Continue";
+        }
+
         return self::PAGE_TITLE;
+    }
+
+    /**
+     * What should be displayed on the submit button control.
+     *
+     * @return string
+     */
+    public function getBackButtonText()
+    {
+        if ($this->context->isUpdateVehicleDuringTest()) {
+            return "Back";
+        }
+
+        return "Cancel and return to vehicle";
     }
 
     /**
@@ -97,6 +126,10 @@ class UpdateClassProcess implements SingleStepProcessInterface, AutoWireableInte
      */
     public function getBreadcrumbs(MotAuthorisationServiceInterface $authorisationService)
     {
+        if ($this->context->isUpdateVehicleDuringTest()) {
+            return $this->breadcrumbsBuilder->getChangeVehicleUnderTestBreadcrumbs($this->context->getObfuscatedVehicleId());
+        }
+
         return $this->breadcrumbsBuilder->getVehicleEditBreadcrumbs(
             self::PAGE_TITLE,
             $this->context->getObfuscatedVehicleId());
@@ -119,6 +152,10 @@ class UpdateClassProcess implements SingleStepProcessInterface, AutoWireableInte
      */
     public function getSuccessfulEditMessage()
     {
+        if ($this->context->isUpdateVehicleDuringTest()) {
+            return "Vehicle test class has been successfully changed";
+        }
+
         return "MOT test class has been successfully changed.";
     }
 
@@ -129,6 +166,10 @@ class UpdateClassProcess implements SingleStepProcessInterface, AutoWireableInte
      */
     public function getEditStepPageTitle()
     {
+        if ($this->context->isUpdateVehicleDuringTest()) {
+            return self::PAGE_TITLE_UPDATE_DURING_TEST;
+        }
+
         return self::PAGE_TITLE;
     }
 
@@ -139,6 +180,10 @@ class UpdateClassProcess implements SingleStepProcessInterface, AutoWireableInte
      */
     public function getPageSubTitle()
     {
+        if ( $this->context->isUpdateVehicleDuringTest()) {
+            return self::PAGE_SUBTITLE_UPDATE_DURING_TEST;
+        }
+
         return "Vehicle";
     }
 
@@ -148,13 +193,20 @@ class UpdateClassProcess implements SingleStepProcessInterface, AutoWireableInte
      */
     public function buildEditStepViewModel($form)
     {
+        $changeUnderTestRoute = $this->context->isUpdateVehicleDuringTest();
+        $veBackUrl = $this->startTestChangeService->vehicleExaminerReturnUrl($this->context->getObfuscatedVehicleId());
+        $veActionUrl = VehicleRoutes::of($this->urlHelper)->changeClass($this->context->getObfuscatedVehicleId());
+        $underTestBackUrl = $this->startTestChangeService->underTestReturnUrl($this->context->getObfuscatedVehicleId());
+        $underTestActionUrl = VehicleRoutes::of($this->urlHelper)->changeUnderTestClass($this->context->getObfuscatedVehicleId());
+
         return (new UpdateVehiclePropertyViewModel())
             ->setForm($form)
-            ->setPageTertiaryTitle($this->tertiaryTitleBuilder->getTertiaryTitleForVehicle($this->getVehicle()))
+            ->setPageTertiaryTitle($changeUnderTestRoute ? '' : $this->tertiaryTitleBuilder->getTertiaryTitleForVehicle($this->getVehicle()))
             ->setSubmitButtonText($this->getSubmitButtonText())
+            ->setBackLinkText($this->getBackButtonText())
             ->setPartial('/vehicle/update-vehicle-property/partials/edit-class')
-            ->setBackUrl(VehicleRoutes::of($this->urlHelper)->vehicleDetails($this->context->getObfuscatedVehicleId()))
-            ->setFormActionUrl(VehicleRoutes::of($this->urlHelper)->changeClass($this->context->getObfuscatedVehicleId()));
+            ->setBackUrl($changeUnderTestRoute ? $underTestBackUrl : $veBackUrl)
+            ->setFormActionUrl($changeUnderTestRoute ? $underTestActionUrl : $veActionUrl);
     }
 
     /**
@@ -164,6 +216,19 @@ class UpdateClassProcess implements SingleStepProcessInterface, AutoWireableInte
     {
         return new RedirectToRoute(VehicleRouteList::VEHICLE_DETAIL,
             ['id' => $this->context->getObfuscatedVehicleId()]);
+    }
+
+    /**
+     * @return AbstractRedirectActionResult
+     */
+    public function redirectToStartUnderTestPage()
+    {
+        return new RedirectToRoute($this->startTestChangeService->getChangedValue(StartTestChangeService::URL)['url'],
+            [
+                'id' => $this->context->getObfuscatedVehicleId(),
+                'noRegistration' => $this->startTestChangeService->getChangedValue(StartTestChangeService::NO_REGISTRATION)['noRegistration'],
+                'source' => $this->startTestChangeService->getChangedValue(StartTestChangeService::SOURCE)['source']
+            ]);
     }
 
     /**
