@@ -1,18 +1,16 @@
 <?php
 use Application\Helper\PrgHelper;
-use Dashboard\Controller\UserHomeController;
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\MysteryShopper\MysteryShopperExpiryDateGenerator;
 use DvsaMotTest\Controller\RefuseToTestController;
 use DvsaMotTest\Controller\VehicleSearchController;
 use DvsaMotTest\ViewModel\StartTestConfirmationViewModel;
 
-/**
- * @var StartTestConfirmationViewModel $viewModel
- */
+/** @var StartTestConfirmationViewModel $viewModel */
+
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle|\Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle $vehicleDetails */
 $vehicleDetails = $this->vehicleDetails;
 
-//  --  urls    --
 $query = [];
 $query['vin'] = $viewModel->getSearchVin();
 $query['registration'] = $viewModel->getSearchVrm();
@@ -34,15 +32,6 @@ if($viewModel->isTrainingTest()){
     $backToVehicleSearchUrl = $escUrlNonMotSearch;
 } else {
     $backToVehicleSearchUrl = $escUrlSearch;
-}
-
-$title = $this->title;
-$header = $this->header;
-if (empty($title)) {
-    $title = 'Confirm vehicle for ' . $viewModel->getTestTypeString();
-}
-if (empty($header)) {
-    $header = $title;
 }
 
 $expiryDate = null;
@@ -68,169 +57,213 @@ if (!empty($checkExpiryResults)) {
         }
     }
 }
-
-$this->layout()->setVariable('pageTitle', $title);
-$this->headTitle($title);
-
-$this->placeholder('progressBar')->captureStart();
-echo $this->partial(
-    'motTestProgress',
-    ['currentStep' => 1, 'isMotContingency' => $viewModel->isMotContingency()]
-);
-$this->placeholder('progressBar')->captureEnd();
-
-echo $this->partial('errorMessages', ['getFromFlash' => true]);
 ?>
 
+<div></div>
 <?php if ($viewModel->isInProgressTestExists()): ?>
-    <div class="row">
-        <div class="col-md-8">
-            <div id="inProgressTestExistsAlert" class="info-alert null-top-margin">
-                <p>This vehicle is currently under test.</p>
-            </div>
-        </div>
-    </div>
-
-    <a href="<?php echo $backToVehicleSearchUrl; ?>">Return to find a vehicle</a>
-
-    <hr class="hr-thin" />
+<?php
+    $this->layout()->setVariables([
+        'pageTitle' => '',
+    ]);
+?>
+<div class="banner--error">
+    <span class="banner__heading-large">This vehicle is currently under test</span>
+</div>
 <?php endif; ?>
-
-<form action="<?php echo $viewModel->getConfirmActionUrl() ?>" method="POST" name="StartTestConfirmation" id="StartTestConfirmation">
+<form method="post" name="StartTestConfirmation" id="StartTestConfirmation" action="<?php echo $viewModel->getConfirmActionUrl() ?>">
     <?php
-    echo $this->csrfToken();
-    echo ($this->prgHelper instanceof PrgHelper ? $this->prgHelper->getHtml() : '');
+        echo $this->csrfToken();
+        echo ($this->prgHelper instanceof PrgHelper ? $this->prgHelper->getHtml() : '');
     ?>
-    <input type="hidden" name="startTestConfirm" value="true" />
     <input type="hidden" name="motTestType" value="<?php echo $this->escapeHtmlAttr($viewModel->getMethod()); ?>" />
-    <div class="row">
-        <div class="col-sm-12" id="vehicleDetails">
-            <h2 class="second-header">Vehicle details</h2>
-
-            <?php
-            if (!$isPreviousCertificateExists && $viewModel->isNormalTest()): 
-            ?>
-                <div class="col-md-8">
-                    <div id="expiryInfoAlert" class="info-alert null-top-margin">
-                        <p>This vehicle is being MOT tested for the first time.</p>
-                        <p>The vehicle's "date of first use" anniversary must be no more than a month after today's date.</p>
-                        <p>This makes sure that any extension period is passed on to the MOT expiry date.</p>
-                    </div>
-                </div>
-            <?php else : ?>
-            <?php
-            if ($isEarlierThanTestDateLimit && !$viewModel->isInProgressTestExists()): ?>
-                <div class="col-md-8">
-                    <div id="expiryInfoAlert" class="info-alert null-top-margin">
-                        <?php
-                        $postdatingExpiryDate = DateTimeDisplayFormat::textDate(
-                            $earliestTestDateForPostdatingExpiryDate
-                        );
-                        ?>
-                        <p>Testing this vehicle today will not preserve the current expiry date.
-                            To preserve the date the earliest the vehicle can be tested is
-                           <span><?php echo $this->escapeHtml($postdatingExpiryDate); ?></span>.</p>
-                    </div>
-                </div>
-            <?php endif ?>
-            <?php
-            endif;
-
-            echo $this->partial(
-                'confirmationVehicleSummary', [
-                    'noRegistration' => $viewModel->isNoRegistration(),
-                    'vehicle'        => $vehicleDetails,
-                    'expiryDate'     => $expiryDate,
-                    'staticData'     => $this->staticData,
-                    'doNotShowDropDowns' => $viewModel->isInProgressTestExists() || $viewModel->isTrainingTest(),
-                ]
-            );
-            ?>
-        </div>
-    </div>
-
-    <?php
-    if ($viewModel->isRetest() && !$viewModel->isEligibleForRetest()): ?>
-        <div class="row">
-            <span class="divider"></span>
-            <div class="col-md-6">
-                <div  class="status status-danger">
-                    <p class="message-exclamation-triangle"> Not qualified for a retest</p>
-                </div>
-                <?php if (!empty($eligibilityNotices)): ?>
-                    <div class="info-notice">
-                        <p><strong>The retest option is unavailable due to:</strong>
-                        <ul id="unavailableForRetestMessage">
-                            <?php foreach ($eligibilityNotices as $notice): ?>
-                                <li><?php echo $this->escapeHtml($notice); ?></li>
-                            <?php endforeach ?>
-                        </ul>
-                    </div>
-                <?php endif; ?>
-            </div>
-        </div>
-    <?php endif ?>
 
     <?php if (!$viewModel->isInProgressTestExists()): ?>
-        <hr class="hr-thin"/>
-
-        <div class="row">
-            <div class="col-sm-6 btn-bar">
-                <?php if ($viewModel->isRetest() && !empty($viewModel->getEligibilityNotices())): ?>
-                    <a id="back-to-home-link" href="<?php echo $this->url(UserHomeController::ROUTE);?>"
-                       class="btn btn-link" id="confirm_vehicle_confirmation">Go to homepage</a>
-                <?php elseif($viewModel->isNonMotTest()): ?>
-                    <h4>Start Non-MOT test</h4>
-                <?php else : ?>
-                    <h4>Start MOT <?php echo $viewModel->getTestTypeString(); ?></h4>
-                <?php endif ?>
-
-                <?php if ($viewModel->isNormalTest() || $viewModel->isTrainingTest()): ?>
-                    <button type="submit" class="btn btn-primary" id="confirm_vehicle_confirmation">
-                        Confirm vehicle and start MOT test
-                    </button>
-                <?php endif; ?>
-
-                <?php if ($viewModel->isNonMotTest()): ?>
-                    <button type="submit" class="btn btn-primary" id="confirm_vehicle_confirmation">
-                        Confirm vehicle and start non-MOT test
-                    </button>
-                <?php endif; ?>
-
-                <?php if ($viewModel->isRetest()): ?>
-                    <button type="submit" name="retest" value="true" class="btn btn-primary" id="retest_vehicle_confirmation">
-                        Confirm vehicle and start retest
-                    </button>
-                <?php endif; ?>
-
-                <nav class="module-content-navigation">
-                    <ul class="content-navigation_secondary">
-                        <li>
-                            <a href="<?php echo $backToVehicleSearchUrl; ?>">
-                                Return to find a vehicle
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?php echo $this->url(UserHomeController::ROUTE);?>" id="abort_vehicle_confirmation">
-                                Cancel and return home
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-
-            <?php if ($viewModel->canRefuseToTest()):  ?>
-                <div class="col-sm-6 btn-bar">
-                    <h4>Refuse test</h4>
-                    <a href="<?php echo $this->url(
-                        RefuseToTestController::ROUTE_REFUSE_TO_TEST_REASON,
-                        ['testTypeCode' => $viewModel->getMethod()],
-                        ['query' => ['no-reg' => $viewModel->isNoRegistration(), 'source' => $viewModel->getSafeSource()]],
-                        true
-                    ); ?>" id="refuse-to-test">Refuse to <?php echo $viewModel->getTestTypeString(); ?> this vehicle</a> and provide a reason
-                </div>
-            <?php endif ?>
+        <div class="text">
+            <p class="lede">Check that you have the right vehicle before starting the test.</p>
         </div>
     <?php endif; ?>
 
+    <?php if ($viewModel->isClassUnset() && !$viewModel->isNoTestClassSetOnSubmission()): ?>
+        <div class="message">
+            <h3 class="message__heading">Set the test class</h3>
+            <p>As this is the vehicle's first MOT test, you must enter a test class.</p>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($viewModel->isNoTestClassSetOnSubmission()): ?>
+        <div class="validation-summary">
+            <h2 class="heading-medium">You must set the test class</h2>
+            <ol>
+                <li>As this is the vehicle’s first MOT test, you must enter a test class.</li>
+            </ol>
+        </div>
+    <?php endif; ?>
+    <?php if (!empty($this->layout()->flashMessenger->getErrorMessages())): ?>
+    <div class="validation-summary">
+        <h2 class="heading-medium">There was a problem with the information</h2>
+        <ol>
+        <?php foreach ($this->layout()->flashMessenger->getErrorMessages() as $message) {?>
+            <li><?php echo $message ?></li>
+        <?php } ?>
+        </ol>
+    </div>
+    <?php endif; ?>
+
+
+    <?php
+        echo $this->partial('partial/gds/general/system-message', [
+            'messages' => $this->layout()->flashMessenger->getSuccessMessages(),
+            'type' => 'success'
+        ]);
+    ?>
+
+    <h2 class="heading-medium">Vehicle specification</h2>
+    <table class="table-summary">
+        <tbody>
+        <tr>
+            <th scope="col" class="table-summary__key">Make and model</th>
+            <td class="table-summary__value">
+                <?php echo $viewModel->getMakeAndModel(); ?>
+                <?php if (!$viewModel->isInProgressTestExists() && !$viewModel->isTrainingTest()): ?>
+                <?php endif; ?>
+            </td>
+        </tr>
+        <tr>
+            <th scope="col" class="table-summary__key">Engine</th>
+            <td class="table-summary__value">
+                <?php echo $viewModel->getEngine(); ?>
+                <?php if (!$viewModel->isInProgressTestExists() && !$viewModel->isTrainingTest()): ?>
+                    <a href="<?php echo $this->url('vehicle/detail/change-under-test/engine', ['id' => $viewModel->getObfuscatedVehicleId()]) ?>" id="change-vehicle-engine" class="table-summary__action">Change<span class="visuallyhidden"> engine or fuel type</span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+        <tr>
+            <th scope="col" class="table-summary__key">Colour</th>
+            <td class="table-summary__value">
+                <?php echo $viewModel->getCompoundedColour(); ?>
+                <?php if (!$viewModel->isInProgressTestExists() && !$viewModel->isTrainingTest()): ?>
+                    <a href="<?php echo $this->url('vehicle/detail/change-under-test/colour', ['id' => $viewModel->getObfuscatedVehicleId()]) ?>" id="change-vehicle-colour" class="table-summary__action">Change<span class="visuallyhidden"> colour</span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+        <tr>
+            <th scope="col" class="table-summary__key">Brake test weight</th>
+            <td class="table-summary__value" id="vehicleWeight">
+                <?php echo $viewModel->getBrakeTestWeight(); ?>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2 class="heading-medium">Vehicle registration </h2>
+    <table class="table-summary">
+        <tbody>
+        <tr>
+            <th scope="col" class="table-summary__key">Registration mark</th>
+            <td class="table-summary__value" id="vehicleRegistrationNumber">
+                <?php echo $vehicleDetails->getRegistration(); ?>
+            </td>
+        </tr>
+        <tr>
+            <th scope="col" class="table-summary__key">VIN</th>
+            <td class="table-summary__value" id="vehicleVINnumber">
+                <?php echo $vehicleDetails->getVin(); ?>
+            </td>
+        </tr>
+        <tr>
+            <th scope="col" class="table-summary__key">Country of registration</th>
+            <td class="table-summary__value">
+                <?php echo $viewModel->getCountryOfRegistration(); ?>
+                <?php if (!$viewModel->isInProgressTestExists() && !$viewModel->isTrainingTest()): ?>
+                <?php endif; ?>
+            </td>
+        </tr>
+        <tr>
+            <?php if (!$viewModel->isNoTestClassSetOnSubmission()): ?>
+                <th scope="col" class="table-summary__key">
+                    MOT test class
+                </th>
+                <td class="table-summary__value">
+                    <?php echo $viewModel->getMotTestClass(); ?>
+                    <?php if ($viewModel->isClassUnset()): ?>
+                        <div><strong>You must set a test class</strong></div>
+                    <?php endif; ?>
+                    <?php if (!$viewModel->isInProgressTestExists() && !$viewModel->isTrainingTest()): ?>
+                        <a href="<?php echo $this->url('vehicle/detail/change-under-test/class', ['id' => $viewModel->getObfuscatedVehicleId()]) ?>" id="change-vehicle-class" class="table-summary__action">Change<span class="visuallyhidden"> test class</span></a>
+                    <?php endif; ?>
+                </td>
+            <?php endif; ?>
+
+            <?php if ($viewModel->isNoTestClassSetOnSubmission()): ?>
+                <th scope="col" class="table-summary__key table-summary--error">
+                    MOT test class
+                    <span class="img-icon img-icon--error"></span>
+                </th>
+                <td class="table-summary__value">
+                    Unknown
+                    <span class="table-summary__meta">
+                        <span class="table-summary--error">You must set a test class</span>
+                    </span>
+                    <a href="<?php echo $this->url('vehicle/detail/change-under-test/class', ['id' => $viewModel->getObfuscatedVehicleId()]) ?>" class="table-summary__action">Change<span class="visuallyhidden"> test class</span></a>
+                </td>
+            <?php endif; ?>
+        </tr>
+        <tr>
+            <th scope="col" class="table-summary__key">Date of first use</th>
+            <td class="table-summary__value">
+                <?php echo $viewModel->getFirstUsedDate(); ?>
+            </td>
+        </tr>
+        <tr>
+            <th scope="col" class="table-summary__key">MOT expiration date</th>
+            <td class="table-summary__value">
+                <?php echo DateTimeDisplayFormat::textDate($expiryDate); ?>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <fieldset>
+        <?php if ($isEarlierThanTestDateLimit && !$viewModel->isInProgressTestExists()): ?>
+            <div class="message">
+                <h3 class="message__heading">You're testing early</h3>
+                <p>The current MOT expires on <?php echo DateTimeDisplayFormat::textDate($expiryDate) ?>. Test from <?php echo DateTimeDisplayFormat::textDate($earliestTestDateForPostdatingExpiryDate)?>
+                    to preserve the expiry date of <?php echo DateTimeDisplayFormat::textDayMonth($expiryDate) ?> for next year.</p>
+                <p>You can test now, but the expiry date will change to today’s date, plus a year.</p>
+            </div>
+        <?php endif; ?>
+        <div class="form-group">
+            <nav class="content-navigation">
+                <?php if (!$viewModel->isInProgressTestExists()): ?>
+                    <?php if ($viewModel->isNormalTest() || $viewModel->isTrainingTest()): ?>
+                        <input type="submit" value="Confirm and start test" class="button " id="confirm_vehicle_confirmation" />
+                    <?php endif; ?>
+                    <?php if ($viewModel->isNonMotTest()): ?>
+                        <input type="submit" value="Confirm and start non-MOT test" class="button " id="confirm_vehicle_confirmation" />
+                    <?php endif; ?>
+                    <?php if ($viewModel->isRetest()): ?>
+                        <input type="submit" value="Confirm and start retest" class="button " id="retest_vehicle_confirmation" />
+                    <?php endif; ?>
+                <?php endif ?>
+                <ul class="content-navigation__secondary">
+                    <?php if ($viewModel->canRefuseToTest()):  ?>
+                        <li>
+                            <br/>
+                            <a class="button button--alert" id="refuse-to-test" href="
+                        <?php
+                            echo $this->url(
+                                RefuseToTestController::ROUTE_REFUSE_TO_TEST_REASON,
+                                ['testTypeCode' => $viewModel->getMethod()],
+                                ['query' => ['no-reg' => $viewModel->isNoRegistration(), 'source' => $viewModel->getSafeSource()]],
+                                true
+                            ); ?>">Refuse to test</a>
+                        </li>
+                    <?php endif ?>
+                    <li>
+                        <br />
+                        <a href="<?php echo $backToVehicleSearchUrl ?>">Cancel and return to find a vehicle</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </fieldset>
 </form>

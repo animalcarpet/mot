@@ -42,8 +42,9 @@ class UpdateVehiclePropertyController extends AbstractAuthActionController imple
         $isPost = $this->requestIsPost();
         $vehicleId = $this->getVehicleId();
         $formData = $this->getFormData();
+        $requestUrl = $this->getRequest()->getUri();
 
-        $actionResult = $this->updateEngineAction->execute($isPost, $vehicleId, $formData);
+        $actionResult = $this->updateEngineAction->execute($isPost, $vehicleId, $formData, $requestUrl);
 
         return $this->applyActionResult($actionResult);
     }
@@ -53,8 +54,9 @@ class UpdateVehiclePropertyController extends AbstractAuthActionController imple
         $isPost = $this->requestIsPost();
         $vehicleId = $this->getVehicleId();
         $formData = $this->getFormData();
+        $requestUrl = $this->getRequest()->getUri();
 
-        $actionResult = $this->updateCountryAction->execute($isPost, $vehicleId, $formData);
+        $actionResult = $this->updateCountryAction->execute($isPost, $vehicleId, $formData, $requestUrl);
 
         return $this->applyActionResult($actionResult);
     }
@@ -64,8 +66,9 @@ class UpdateVehiclePropertyController extends AbstractAuthActionController imple
         $isPost = $this->requestIsPost();
         $vehicleId = $this->getVehicleId();
         $formData = $this->getFormData();
+        $requestUrl = $this->getRequest()->getUri()->getPath();
 
-        $actionResult = $this->updateClassAction->execute($isPost, $vehicleId, $formData);
+        $actionResult = $this->updateClassAction->execute($isPost, $vehicleId, $formData, $requestUrl);
 
         return $this->applyActionResult($actionResult);
     }
@@ -75,8 +78,9 @@ class UpdateVehiclePropertyController extends AbstractAuthActionController imple
         $isPost = $this->requestIsPost();
         $vehicleId = $this->getVehicleId();
         $formData = $this->getFormData();
+        $requestUrl = $this->getRequest()->getUri();
 
-        $actionResult = $this->updateFirstUsedDateAction->execute($isPost, $vehicleId, $formData);
+        $actionResult = $this->updateFirstUsedDateAction->execute($isPost, $vehicleId, $formData, $requestUrl);
 
         return $this->applyActionResult($actionResult);
     }
@@ -99,8 +103,9 @@ class UpdateVehiclePropertyController extends AbstractAuthActionController imple
         $isPost = $this->requestIsPost();
         $vehicleId = $this->getVehicleId();
         $formData = $this->getFormData();
+        $requestUrl = $this->getRequest()->getUri();
 
-        $actionResult = $this->updateColourAction->execute($isPost, $vehicleId, $formData);
+        $actionResult = $this->updateColourAction->execute($isPost, $vehicleId, $formData, $requestUrl);
 
         return $this->applyActionResult($actionResult);
     }

@@ -72,6 +72,7 @@ interface SingleStepProcessInterface
 
     /**
      * @param $form
+     * @param string $requestUrl
      * @return Object Anything you want to pass to the view file
      */
     public function buildEditStepViewModel($form);

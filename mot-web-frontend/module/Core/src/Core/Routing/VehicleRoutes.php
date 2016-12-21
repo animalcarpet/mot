@@ -64,6 +64,36 @@ class VehicleRoutes extends AbstractRoutes
         return $this->url(VehicleRouteList::VEHICLE_CHANGE_CLASS, ['id' => $vehicleId]);
     }
 
+    /**
+     * @param $vehicleId
+     *
+     * @return mixed
+     */
+    public function changeUnderTestClass($vehicleId)
+    {
+        return $this->url(VehicleRouteList::VEHICLE_CHANGE_UNDER_TEST_CLASS, ['id' => $vehicleId]);
+    }
+
+    /**
+     * @param $vehicleId
+     *
+     * @return mixed
+     */
+    public function changeUnderTestEngine($vehicleId)
+    {
+        return $this->url(VehicleRouteList::VEHICLE_CHANGE_UNDER_TEST_ENGINE, ['id' => $vehicleId]);
+    }
+
+    /**
+     * @param $vehicleId
+     *
+     * @return mixed
+     */
+    public function changeUnderTestColour($vehicleId)
+    {
+        return $this->url(VehicleRouteList::VEHICLE_CHANGE_UNDER_TEST_COLOUR, ['id' => $vehicleId]);
+    }
+
     public function changeFirstUsedDate($vehicleId)
     {
         return $this->url(VehicleRouteList::VEHICLE_CHANGE_FIRST_USED_DATE, ['id' => $vehicleId]);

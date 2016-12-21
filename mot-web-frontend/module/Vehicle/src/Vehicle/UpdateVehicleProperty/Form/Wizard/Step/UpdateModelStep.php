@@ -100,7 +100,7 @@ class UpdateModelStep extends AbstractStep implements AutoWireableInterface
             ->setSubmitButtonText("Review make and model")
             ->setPartial($partial)
             ->setBackUrl($backUrl)
-            ->setBackLinkLabel("Back")
+            ->setBackLinkText("Back")
             ->setFormActionUrl($formActionUrl)
             ->setPageTertiaryTitle($tertiaryTitle);
     }

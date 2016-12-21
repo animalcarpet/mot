@@ -32,7 +32,7 @@ class AbstractUpdateVehicleAction implements AutoWireableInterface
         $this->paramObfuscator = $paramObfuscator;
     }
 
-    public function execute($isPost, $obfuscatedVehicleId, $formData)
+    public function execute($isPost, $obfuscatedVehicleId, $formData, $requestUrl)
     {
         $vehicleId = (int) $this->paramObfuscator->deobfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, $obfuscatedVehicleId);
         $vehicle = $this->vehicleService->getDvsaVehicleById($vehicleId);
@@ -42,7 +42,8 @@ class AbstractUpdateVehicleAction implements AutoWireableInterface
             $this->process,
             new UpdateVehicleContext(
                 $vehicle,
-                $obfuscatedVehicleId
+                $obfuscatedVehicleId,
+                $requestUrl
             ),
             null,
             $formData

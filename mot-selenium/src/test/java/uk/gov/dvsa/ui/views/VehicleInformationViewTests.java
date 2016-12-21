@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
 public class VehicleInformationViewTests extends DslTest {
@@ -93,16 +94,45 @@ public class VehicleInformationViewTests extends DslTest {
     }
 
     @Test(groups = {"Regression"})
-    public void editVehicleClass() throws IOException, URISyntaxException {
+    public void testerCanUpdateVehicleClassWhenStartingMotTest() throws IOException, URISyntaxException {
 
-        //Given I am on the StartTestConfirmation Page
+        //Given I am logged into MOT2 as a Tester
+        //And I select a vehicle to start a MOT test
         motUI.normalTest.startTestConfirmationPage(tester, vehicle);
 
-        //When I edit the vehicle class
-        motUI.normalTest.changeClass("5");
+        //When I update the class of a vehicle
+        String message = motUI.normalTest.changeClass();
 
-        //Then I submit the new class successfully
-        assertThat(motUI.normalTest.isDeclarationStatementFor2FaDisplayed(), is(true));
+        //Then the vehicle class is updated
+        assertThat(message, containsString("Vehicle test class has been successfully changed"));
+    }
+
+    @Test(groups = {"Regression"})
+    public void testerCanUpdateVehicleColourWhenStartingMotTest() throws IOException, URISyntaxException {
+
+        //Given I am logged into MOT2 as a Tester
+        //And I select a vehicle to start a MOT test
+        motUI.normalTest.startTestConfirmationPage(tester, vehicle);
+
+        //When I update the colour of a vehicle
+        String message = motUI.normalTest.changeColour();
+
+        //Then the vehicle colour is updated
+        assertThat(message, containsString("Vehicle colour has been successfully changed"));
+    }
+
+    @Test(groups = {"Regression"})
+    public void testerCanUpdateVehicleEngineWhenStartingMotTest() throws IOException, URISyntaxException {
+
+        //Given I am logged into MOT2 as a Tester
+        //And I select a vehicle to start a MOT test
+        motUI.normalTest.startTestConfirmationPage(tester, vehicle);
+
+        //When I update the engine of a vehicle
+        String message = motUI.normalTest.changeEngine();
+
+        //Then the vehicle engine is updated
+        assertThat(message, containsString("Vehicle engine specification has been successfully changed"));
     }
 
     @Test(groups = {"Regression"})
@@ -118,6 +148,33 @@ public class VehicleInformationViewTests extends DslTest {
         //Then I should find the vehicle
         assertThat(motUI.normalTest.getVin(), is(dvlaVehicle.getVin()));
         assertThat(motUI.normalTest.getRegistration(), is(dvlaVehicle.getRegistration()));
+    }
+    @Test(groups = {"Regression"})
+    public void testerCannotStartMotForVehicleWhenItIsCurrentlyUnderTest() throws IOException, URISyntaxException {
+
+        //Given I am logged into MOT2 as a Tester
+        motUI.normalTest.confirmAndStartTest(tester, vehicle);
+        motUI.logout(tester);
+
+        //When I start a MOT test for a vehicle already under test
+        motUI.normalTest.startTestConfirmationPage(tester, vehicle);
+
+        //Then I am advised the vehicle is currently under test
+        assertThat(motUI.normalTest.getVehicleUnderTestBanner(), containsString("This vehicle is currently under test"));
+    }
+    @Test(groups = {"Regression"})
+    public void testerCannotStartMotWithoutVehicleClassPopulated() throws IOException, URISyntaxException {
+
+        //Given I am a Tester starting a MOT test
+        //And I select a vehicle without a known vehicle Class
+        User tester = motApi.user.createTester(siteData.createSite().getId());
+        DvlaVehicle dvlaVehicle = vehicleData.getNewDvlaVehicle(tester);
+
+        //When I confirm and start the test
+        motUI.normalTest.startMotTestForDvlaVehicle(tester, dvlaVehicle);
+
+        //Then I advised to enter the vehicle Class
+        assertThat(motUI.normalTest.getNoTestClassValidation(), containsString("You must set the test class"));
     }
 
     @Test(groups = {"Regression"})
