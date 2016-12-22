@@ -117,6 +117,18 @@ if (!empty($checkExpiryResults)) {
         ]);
     ?>
 
+    <?php
+        if ($isEarlierThanTestDateLimit && !$viewModel->isInProgressTestExists()): ?>
+            <div class="message message--important">
+                <?php $postdatingExpiryDate = DateTimeDisplayFormat::textDate(
+                    $earliestTestDateForPostdatingExpiryDate
+                );
+
+                ?>
+                <p>Testing this vehicle today will not preserve the current expiry date.</p>
+                <p>To preserve the date the earliest the vehicle can be tested is <span><?php echo $this->escapeHtml($postdatingExpiryDate); ?></span>.</p>
+            </div>
+    <?php endif ?>
     <h2 class="heading-medium">Vehicle specification</h2>
     <table class="table-summary">
         <tbody>
@@ -223,14 +235,7 @@ if (!empty($checkExpiryResults)) {
         </tbody>
     </table>
     <fieldset>
-        <?php if ($isEarlierThanTestDateLimit && !$viewModel->isInProgressTestExists()): ?>
-            <div class="message">
-                <h3 class="message__heading">You're testing early</h3>
-                <p>The current MOT expires on <?php echo DateTimeDisplayFormat::textDate($expiryDate) ?>. Test from <?php echo DateTimeDisplayFormat::textDate($earliestTestDateForPostdatingExpiryDate)?>
-                    to preserve the expiry date of <?php echo DateTimeDisplayFormat::textDayMonth($expiryDate) ?> for next year.</p>
-                <p>You can test now, but the expiry date will change to today’s date, plus a year.</p>
-            </div>
-        <?php endif; ?>
+
         <div class="form-group">
             <nav class="content-navigation">
                 <?php if (!$viewModel->isInProgressTestExists()): ?>

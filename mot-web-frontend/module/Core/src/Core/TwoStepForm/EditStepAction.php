@@ -34,7 +34,6 @@ final class EditStepAction implements AutoWireableInterface
      * @param FormContextInterface $context
      * @param $formUuid
      * @param array $formData
-     * @param string $requestUrl
      * @return ViewActionResult
      */
     public function execute($isPost, SingleStepProcessInterface $process, FormContextInterface $context, $formUuid, array $formData = [])
@@ -69,10 +68,10 @@ final class EditStepAction implements AutoWireableInterface
 
     /**
      * @param SingleStepProcessInterface $process
-     * @param FormContextInterface       $context
-     * @param array                      $formData
-     *
+     * @param FormContextInterface $context
+     * @param array $formData
      * @return AbstractRedirectActionResult|ViewActionResult
+     * @throws UnauthorisedException
      */
     protected function executePost(SingleStepProcessInterface $process, FormContextInterface $context, array $formData = [])
     {
@@ -85,21 +84,11 @@ final class EditStepAction implements AutoWireableInterface
 
         $errors = [];
         if ($form->isValid()) {
-            if ($context instanceof UpdateVehicleContext && $context->isUpdateVehicleDuringTest()) {
-                try {
-                    return $this->updateAndRedirectToStartTestPage($process, $formData);
-                } catch (ValidationException $exception) {
-                    $exception->getDisplayMessages();
-                }
-            }
-
             if ($process instanceof TwoStepProcessInterface) {
                 $formUuid = $this->formContainer->store($process->getSessionStoreKey(), $formData);
                 return $process->redirectToReviewPage($formUuid);
             }
-
             try {
-
                 return $this->updateAndRedirectToStartPage($process, $formData);
             } catch (ValidationException $exception) {
                 $errors = $exception->getDisplayMessages();
@@ -118,20 +107,6 @@ final class EditStepAction implements AutoWireableInterface
     {
         $process->update($formData);
         $result = $process->redirectToStartPage();
-        $result->addSuccessMessage($process->getSuccessfulEditMessage());
-
-        return $result;
-    }
-
-    /**
-     * @param UpdateVehicleInterface $process
-     * @param array $formData
-     * @return AbstractRedirectActionResult
-     */
-    protected function updateAndRedirectToStartTestPage(SingleStepProcessInterface $process, array $formData)
-    {
-        $process->update($formData);
-        $result = $process->redirectToStartUnderTestPage();
         $result->addSuccessMessage($process->getSuccessfulEditMessage());
 
         return $result;

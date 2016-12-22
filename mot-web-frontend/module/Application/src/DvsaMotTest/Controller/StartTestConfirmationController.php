@@ -206,12 +206,10 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
     {
         if ($this->request->isPost()) {
 
-            //TODO this won't be correct once we have the ability to change the test class
-            //a mechanism is needed to correctly validate the (potentially new 'changed' test class
-            //if the user loads a dvla vehicle (no test class) then sets the class
             if ($this->vehicleDetails instanceof DvlaVehicle) {
-                $this->startTestConfirmationViewModel->setNoTestClassSetOnSubmission(true);
-                return $this->createViewModel();
+                if (!$this->isTestClassSetForDvlaVehicle()) {
+                    return $this->createViewModel();
+                }
             }
 
             $contingencySessionManager = $this->getContingencySessionManager();
@@ -695,5 +693,16 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         $engineType->name = $fuelName['name'];
         $newVehicleEngineDetails->fuelType = $engineType;
         return (new DvsaVehicle($newVehicleEngineDetails));
+    }
+
+    private function isTestClassSetForDvlaVehicle()
+    {
+        if ($this->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_CLASS)) {
+            $this->startTestConfirmationViewModel->setNoTestClassSetOnSubmission(false);
+            return true;
+        } else {
+            $this->startTestConfirmationViewModel->setNoTestClassSetOnSubmission(true);
+            return false;
+        }
     }
 }
