@@ -108,6 +108,20 @@ public class VehicleInformationViewTests extends DslTest {
     }
 
     @Test(groups = {"Regression"})
+    public void testerCanUpdateDvlaVehicleClassWhenStartingMotTest() throws IOException, URISyntaxException {
+
+        //Given I am logged into MOT2 as a Tester
+        //And I select a vehicle to start a MOT test
+        motUI.normalTest.startTestConfirmationPage(tester, vehicleData.getNewDvlaVehicle(tester));
+
+        //When I update the class of a vehicle
+        String message = motUI.normalTest.changeClass();
+
+        //Then the vehicle class is updated
+        assertThat(message, containsString("Vehicle test class has been successfully changed"));
+    }
+
+    @Test(groups = {"Regression"})
     public void testerCanUpdateVehicleColourWhenStartingMotTest() throws IOException, URISyntaxException {
 
         //Given I am logged into MOT2 as a Tester

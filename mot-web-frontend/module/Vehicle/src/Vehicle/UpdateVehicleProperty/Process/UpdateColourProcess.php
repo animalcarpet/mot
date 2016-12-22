@@ -229,23 +229,18 @@ class UpdateColourProcess implements UpdateVehicleInterface, AutoWireableInterfa
      */
     public function redirectToStartPage()
     {
+        if ($this->context->isUpdateVehicleDuringTest()) {
+            return new RedirectToRoute($this->startTestChangeService->getChangedValue(StartTestChangeService::URL)['url'],
+                [
+                    'id' => $this->context->getObfuscatedVehicleId(),
+                    'noRegistration' => $this->startTestChangeService->getChangedValue(StartTestChangeService::NO_REGISTRATION)['noRegistration'],
+                    'source' => $this->startTestChangeService->getChangedValue(StartTestChangeService::SOURCE)['source']
+                ]);
+        }
         return new RedirectToRoute(
             VehicleRouteList::VEHICLE_DETAIL,
             ['id' => $this->context->getObfuscatedVehicleId()]
         );
-    }
-
-    /**
-     * @return AbstractRedirectActionResult
-     */
-    public function redirectToStartUnderTestPage()
-    {
-        return new RedirectToRoute($this->startTestChangeService->getChangedValue(StartTestChangeService::URL)['url'],
-            [
-                'id' => $this->context->getObfuscatedVehicleId(),
-                'noRegistration' => $this->startTestChangeService->getChangedValue(StartTestChangeService::NO_REGISTRATION)['noRegistration'],
-                'source' => $this->startTestChangeService->getChangedValue(StartTestChangeService::SOURCE)['source']
-            ]);
     }
 
     /**

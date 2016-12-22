@@ -3,11 +3,11 @@ namespace Vehicle\UpdateVehicleProperty\Process;
 
 use Core\Action\AbstractRedirectActionResult;
 use Core\Action\RedirectToRoute;
-use Core\Routing\MotTestRoutes;
 use Core\Routing\VehicleRouteList;
 use Core\Routing\VehicleRoutes;
 use Core\TwoStepForm\FormContextInterface;
 use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
+use Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
@@ -84,9 +84,13 @@ class UpdateClassProcess implements UpdateVehicleInterface , AutoWireableInterfa
         $vehicle = $this->getVehicle();
         $isValueChanged = $this->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_CLASS);
 
-        return [UpdateClassForm::FIELD_CLASS => $isValueChanged
-            ? $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS)
-            : $vehicle->getVehicleClass()->getCode()];
+        if ($vehicle instanceof DvsaVehicle) {
+            return [UpdateClassForm::FIELD_CLASS => $this->getDvsaVehicleClass($isValueChanged, $vehicle)];
+        }
+
+        if ($vehicle instanceof DvlaVehicle) {
+            return [UpdateClassForm::FIELD_CLASS => $this->getDvlaVehicleClass($isValueChanged)];
+        }
     }
 
     /**
@@ -214,21 +218,17 @@ class UpdateClassProcess implements UpdateVehicleInterface , AutoWireableInterfa
      */
     public function redirectToStartPage()
     {
+        if ($this->context->isUpdateVehicleDuringTest()) {
+            return new RedirectToRoute($this->startTestChangeService->getChangedValue(StartTestChangeService::URL)['url'],
+                [
+                    'id' => $this->context->getObfuscatedVehicleId(),
+                    'noRegistration' => $this->startTestChangeService->getChangedValue(StartTestChangeService::NO_REGISTRATION)['noRegistration'],
+                    'source' => $this->startTestChangeService->getChangedValue(StartTestChangeService::SOURCE)['source']
+                ]);
+        }
+
         return new RedirectToRoute(VehicleRouteList::VEHICLE_DETAIL,
             ['id' => $this->context->getObfuscatedVehicleId()]);
-    }
-
-    /**
-     * @return AbstractRedirectActionResult
-     */
-    public function redirectToStartUnderTestPage()
-    {
-        return new RedirectToRoute($this->startTestChangeService->getChangedValue(StartTestChangeService::URL)['url'],
-            [
-                'id' => $this->context->getObfuscatedVehicleId(),
-                'noRegistration' => $this->startTestChangeService->getChangedValue(StartTestChangeService::NO_REGISTRATION)['noRegistration'],
-                'source' => $this->startTestChangeService->getChangedValue(StartTestChangeService::SOURCE)['source']
-            ]);
     }
 
     /**
@@ -248,10 +248,39 @@ class UpdateClassProcess implements UpdateVehicleInterface , AutoWireableInterfa
     }
 
     /**
-     * @return DvsaVehicle
+     * @return DvsaVehicle|DvlaVehicle
      */
     private function getVehicle()
     {
         return $this->context->getVehicle();
+    }
+
+    /**
+     * @param bool $isValueChanged
+     * @param DvsaVehicle $vehicle
+     *
+     * @return array
+     */
+    private function getDvsaVehicleClass($isValueChanged, DvsaVehicle $vehicle)
+    {
+        if ($isValueChanged) {
+            return $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS);
+        }
+
+        return $vehicle->getVehicleClass()->getCode();
+    }
+
+    /**
+     * @param $isValueChanged
+     *
+     * @return array
+     */
+    private function getDvlaVehicleClass($isValueChanged)
+    {
+        if ($isValueChanged) {
+            return $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS);
+        }
+
+        return null;
     }
 }
