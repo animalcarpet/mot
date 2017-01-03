@@ -3,7 +3,6 @@
 namespace Vehicle\UpdateVehicleProperty\Context;
 
 use Core\TwoStepForm\FormContextInterface;
-use Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 
 class UpdateVehicleContext implements FormContextInterface
@@ -15,33 +14,10 @@ class UpdateVehicleContext implements FormContextInterface
      */
     private $obfuscatedVehicleId;
 
-    /** @var  string */
-    private $requestUrl;
-
-    /**
-     * UpdateVehicleContext constructor.
-     *
-     * @param DvsaVehicle|DvlaVehicle $vehicle
-     * @param             $obfuscatedVehicleId
-     * @param             $requestUrl
-     */
-    public function __construct( $vehicle, $obfuscatedVehicleId, $requestUrl)
+    public function __construct( DvsaVehicle $vehicle, $obfuscatedVehicleId)
     {
         $this->vehicle = $vehicle;
         $this->obfuscatedVehicleId = $obfuscatedVehicleId;
-        $this->requestUrl = $requestUrl;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isUpdateVehicleDuringTest()
-    {
-        if (strpos($this->requestUrl, 'change-under-test') !== false) {
-            return true;
-        }
-
-        return false;
     }
 
     /**

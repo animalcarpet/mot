@@ -19,14 +19,6 @@ class AbstractUpdateVehicleAction implements AutoWireableInterface
 
     protected $template = 'vehicle/update-vehicle-property/edit';
 
-    /**
-     * AbstractUpdateVehicleAction constructor.
-     *
-     * @param EditStepAction             $editStepAction
-     * @param SingleStepProcessInterface $engineProcess
-     * @param VehicleService             $vehicleService
-     * @param ParamObfuscator            $paramObfuscator
-     */
     public function __construct(
         EditStepAction $editStepAction,
         SingleStepProcessInterface $engineProcess,
@@ -40,18 +32,17 @@ class AbstractUpdateVehicleAction implements AutoWireableInterface
         $this->paramObfuscator = $paramObfuscator;
     }
 
-    public function execute($isPost, $obfuscatedVehicleId, $formData, $requestUrl)
+    public function execute($isPost, $obfuscatedVehicleId, $formData)
     {
         $vehicleId = (int) $this->paramObfuscator->deobfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, $obfuscatedVehicleId);
-        $vehicle = $this->getVehicle($vehicleId);
+        $vehicle = $this->vehicleService->getDvsaVehicleById($vehicleId);
 
         $result = $this->editStepAction->execute(
             $isPost,
             $this->process,
             new UpdateVehicleContext(
                 $vehicle,
-                $obfuscatedVehicleId,
-                $requestUrl
+                $obfuscatedVehicleId
             ),
             null,
             $formData
@@ -62,28 +53,5 @@ class AbstractUpdateVehicleAction implements AutoWireableInterface
         }
 
         return $result;
-    }
-
-    /**
-     * @param $vehicleId
-     *
-     * @return \Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle|\Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle
-     * @throws \Exception
-     */
-    private function getVehicle($vehicleId)
-    {
-        try {
-            $vehicle = $this->vehicleService->getDvsaVehicleById($vehicleId);
-        } catch (\Exception $exception) {
-            try {
-                $vehicle = $this->vehicleService->getDvlaVehicleById($vehicleId);
-            } catch (\Exception $exception) {
-                throw new \Exception(
-                    'No vehicle with id ' . $vehicleId . ' found'
-                );
-            }
-        }
-
-        return $vehicle;
     }
 }

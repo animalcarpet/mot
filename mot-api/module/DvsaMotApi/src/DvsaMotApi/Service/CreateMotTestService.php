@@ -47,7 +47,6 @@ class CreateMotTestService implements TransactionAwareInterface
     const FIELD_COLOURS_PRIMARY = 'primaryColour';
     const FIELD_COLOURS_SECONDARY = 'secondaryColour';
     const FIELD_FUEL_TYPE_CODE = 'fuelTypeId';
-    const FIELD_CYLINDER_CAPACITY = 'cylinderCapacity';
     const FIELD_VEHICLE_CLASS_CODE = "vehicleClassCode";
     const FIELD_REASON_DIFFERENT_TESTER_CODE = 'differentTesterReasonCode';
     const FIELD_SITEID = 'siteid';
@@ -160,13 +159,13 @@ class CreateMotTestService implements TransactionAwareInterface
         $primaryColour           = $data[self::FIELD_COLOURS_PRIMARY];
         $secondaryColour         = ArrayUtils::tryGet($data, self::FIELD_COLOURS_SECONDARY);
         $fuelTypeCode            = ArrayUtils::tryGet($data, self::FIELD_FUEL_TYPE_CODE);
-        $cylinderCapacity        = ArrayUtils::tryGet($data, self::FIELD_CYLINDER_CAPACITY);
         $vehicleClassCode        = ArrayUtils::tryGet($data, self::FIELD_VEHICLE_CLASS_CODE);
         $hasRegistration         = ArrayUtils::tryGet($data, self::FIELD_HAS_REGISTRATION, false);
         $motTestNumberOriginal   = ArrayUtils::tryGet($data, self::FIELD_MOT_TEST_NUMBER_ORIGINAL);
         $complaintRef            = ArrayUtils::tryGet($data, self::FIELD_MOT_TEST_COMPLAINT_REF);
         $motTestTypeCode         = ArrayUtils::tryGet($data, self::FIELD_MOT_TEST_TYPE, MotTestTypeCode::NORMAL_TEST);
         $flagPrivate             = ArrayUtils::tryGet($data, self::FIELD_FLAG_PRIVATE, false);
+        $oneTimePassword         = ArrayUtils::tryGet($data, self::FIELD_ONE_TIME_PASSWORD);
         $contingencyId           = ArrayUtils::tryGet($data, self::FIELD_CONTINGENCY);
         $contingencyDto          = ArrayUtils::tryGet($data, self::FIELD_CONTINGENCY_DTO);
         $clientIp                = ArrayUtils::tryGet($data, self::FIELD_CLIENT_IP, Network::DEFAULT_CLIENT_IP);
@@ -188,7 +187,6 @@ class CreateMotTestService implements TransactionAwareInterface
             $primaryColour,
             $secondaryColour,
             $fuelTypeCode,
-            $cylinderCapacity,
             $vehicleClassCode,
             $hasRegistration,
             $dvlaVehicleId,
@@ -197,6 +195,7 @@ class CreateMotTestService implements TransactionAwareInterface
             $motTestNumberOriginal,
             $complaintRef,
             $flagPrivate,
+            $oneTimePassword,
             $contingencyId,
             $contingencyDto
         );
@@ -216,7 +215,6 @@ class CreateMotTestService implements TransactionAwareInterface
      * @param string                     $primaryColourCode
      * @param string                     $secondaryColourCode
      * @param string                     $fuelTypeCode
-     * @param string                     $cylinderCapacity
      * @param int                        $vehicleClassCode
      * @param bool                       $hasRegistration
      * @param int|null                   $dvlaVehicleId           if given, vehicle is created from DVLA data
@@ -225,6 +223,7 @@ class CreateMotTestService implements TransactionAwareInterface
      * @param string|null                $motTestNumberOriginal
      * @param int|null                   $complaintRef
      * @param bool                       $flagPrivate
+     * @param string|null                $oneTimePassword
      * @param int|null                   $contingencyId
      * @param ContingencyTestDto|null $contingencyDto
      *
@@ -237,7 +236,6 @@ class CreateMotTestService implements TransactionAwareInterface
         $primaryColourCode,
         $secondaryColourCode,
         $fuelTypeCode,
-        $cylinderCapacity,
         $vehicleClassCode,
         $hasRegistration,
         $dvlaVehicleId,
@@ -246,6 +244,7 @@ class CreateMotTestService implements TransactionAwareInterface
         $motTestNumberOriginal = null,
         $complaintRef = null,
         $flagPrivate = false,
+        $oneTimePassword = null,
         $contingencyId = null,
         ContingencyTestDto $contingencyDto = null
     )
@@ -290,7 +289,6 @@ class CreateMotTestService implements TransactionAwareInterface
                 $primaryColourCode,
                 $secondaryColourCode,
                 $fuelTypeCode,
-                $cylinderCapacity,
                 $vehicleClassCode,
                 $hasRegistration,
                 $dvlaVehicleId,
@@ -298,6 +296,7 @@ class CreateMotTestService implements TransactionAwareInterface
                 $motTestNumberOriginal,
                 $complaintRef,
                 $flagPrivate,
+                $oneTimePassword,
                 $contingencyId,
                 $contingencyDto,
                 $clientIp
@@ -322,13 +321,13 @@ class CreateMotTestService implements TransactionAwareInterface
                     $primaryColourCode,
                     $secondaryColourCode,
                     $fuelTypeCode,
-                    $cylinderCapacity,
                     $vehicleClassCode,
                     $hasRegistration,
                     $motTestTypeCode,
                     $motTestNumberOriginal,
                     $complaintRef,
                     $flagPrivate,
+                    $oneTimePassword,
                     $contingencyId,
                     $clientIp,
                     $contingencyDto

@@ -15,7 +15,4 @@ class MotTestRouteList
     const MOT_TEST_CERTIFICATE_VIEW ='mot-test-certificate';
     const MOT_TEST_CERTIFICATE_PRINT = 'mot-test/print-duplicate-certificate';
     const MOT_TEST_CERTIFICATE_EDIT = 'mot-test/replacement-certificate';
-    const MOT_TEST_START_TEST = 'start-test-confirmation';
-    const MOT_TEST_START_TRAINING_TEST = 'start-training-test-confirmation';
-    const MOT_TEST_START_NON_MOT_TEST = 'start-non-mot-test-confirmation';
 }

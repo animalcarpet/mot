@@ -2,11 +2,7 @@
 
 namespace DvsaMotTest\ViewModel;
 
-use Dvsa\Mot\ApiClient\Resource\Item\Colour;
-use Dvsa\Mot\ApiClient\Resource\Item\FuelType;
-use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Enum\MotTestTypeCode;
-use DvsaCommon\Model\FuelTypeAndCylinderCapacity;
 
 /**
  * Class StartTestConfirmationViewModel
@@ -15,8 +11,10 @@ use DvsaCommon\Model\FuelTypeAndCylinderCapacity;
  */
 class StartTestConfirmationViewModel
 {
+
     const STRING_TEST = 'test';
     const STRING_RETEST = 'retest';
+
     const START_TEST_CONFIRMATION_ACTION = '/start-test-confirmation';
     const START_TRAINING_CONFIRMATION_ACTION = '/start-training-test-confirmation';
     const START_NON_MOT_CONFIRMATION_ACTION = '/start-non-mot-test-confirmation';
@@ -63,33 +61,6 @@ class StartTestConfirmationViewModel
     /** @var bool */
     private $isMysteryShopper;
 
-    /** @var string */
-    private $makeAndModel;
-
-    /** @var string */
-    private $engine;
-
-    /** @var string */
-    private $compoundedColour;
-
-    /** @var string */
-    private $firstUsedDate;
-
-    /** @var string */
-    private $brakeTestWeight;
-
-    /** @var string */
-    private $countryOfRegistration;
-
-    /** @var string */
-    private $motTestClass;
-
-    /** @var string */
-    private $motExpirationDate;
-
-    /** @var bool */
-    private $noTestClassSetOnSubmission;
-
     /**
      * @return string
      */
@@ -116,6 +87,7 @@ class StartTestConfirmationViewModel
         if (!isset($this->method)) {
             throw new \LogicException("Method should be set first");
         }
+
         return true;
     }
 
@@ -172,7 +144,6 @@ class StartTestConfirmationViewModel
 
     /**
      * @param string $obfuscatedVehicleId
-     * @return $this
      */
     public function setObfuscatedVehicleId($obfuscatedVehicleId)
     {
@@ -190,7 +161,6 @@ class StartTestConfirmationViewModel
 
     /**
      * @param boolean $noRegistration
-     * @return $this
      */
     public function setNoRegistration($noRegistration)
     {
@@ -216,7 +186,6 @@ class StartTestConfirmationViewModel
 
     /**
      * @param string $vehicleSource
-     * @return $this
      */
     public function setVehicleSource($vehicleSource)
     {
@@ -234,7 +203,6 @@ class StartTestConfirmationViewModel
 
     /**
      * @param boolean $inProgressTestExists
-     * @return $this
      */
     public function setInProgressTestExists($inProgressTestExists)
     {
@@ -252,7 +220,6 @@ class StartTestConfirmationViewModel
 
     /**
      * @param string $searchVrm
-     * @return $this
      */
     public function setSearchVrm($searchVrm)
     {
@@ -270,7 +237,6 @@ class StartTestConfirmationViewModel
 
     /**
      * @param string $searchVin
-     * @return $this
      */
     public function setSearchVin($searchVin)
     {
@@ -288,7 +254,6 @@ class StartTestConfirmationViewModel
 
     /**
      * @param string $vin
-     * @return $this
      */
     public function setVin($vin)
     {
@@ -306,7 +271,6 @@ class StartTestConfirmationViewModel
 
     /**
      * @param string $registration
-     * @return $this
      */
     public function setRegistration($registration)
     {
@@ -324,7 +288,6 @@ class StartTestConfirmationViewModel
 
     /**
      * @param array $eligibilityNotices
-     * @return $this
      */
     public function setEligibilityNotices($eligibilityNotices)
     {
@@ -352,6 +315,7 @@ class StartTestConfirmationViewModel
             && !$this->isInProgressTestExists()
             && $canRefuseToTestAssertion
         );
+
         $this->canRefuseToTest = $canRefuseToTest;
         return $this;
     }
@@ -417,14 +381,17 @@ class StartTestConfirmationViewModel
     public function getSafeSource()
     {
         $safeSource = filter_var($this->getVehicleSource(), FILTER_VALIDATE_INT);
+
         if ($this->isRetest()) {
             if (!empty($this->eligibilityNotices)) {
                 $safeSource = '1';
             }
         }
+
         if (!$safeSource) {
             $safeSource = '0';
         }
+
         return $safeSource;
     }
 
@@ -450,195 +417,5 @@ class StartTestConfirmationViewModel
     public function isMysteryShopper()
     {
         return $this->isMysteryShopper;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMakeAndModel()
-    {
-        return $this->makeAndModel;
-    }
-
-    /**
-     * @param String $make
-     * @param String $model
-     * @return $this
-     */
-    public function setMakeAndModel($make, $model)
-    {
-        $this->makeAndModel = $make . ', ' . $model;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEngine()
-    {
-        return $this->engine;
-    }
-
-    /**
-     * @param FuelType $fuelType
-     * @param String $cylinderCapacity
-     * @return $this
-     */
-    public function setEngine(FuelType $fuelType, $cylinderCapacity)
-    {
-        $fuelTypeName = $fuelType ? $fuelType->getName() : "";
-        $this->engine = $fuelTypeName;
-        if ($this->shouldDisplayCylinderCapacity($fuelType, $cylinderCapacity)) {
-            $this->engine = $this->engine . ', ' . $cylinderCapacity;
-        }
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCompoundedColour()
-    {
-        return $this->compoundedColour;
-    }
-
-    /**
-     * @param Colour $colour
-     * @param Colour|null $secondaryColour
-     * @return $this
-     */
-    public function setCompoundedColour(Colour $colour, Colour $secondaryColour = null)
-    {
-        $colourName = $colour ? $colour->getName() : "";
-        $secondaryColourName = $secondaryColour ? $secondaryColour->getName() : "";
-        if ($secondaryColourName == 'Not Stated' || empty($secondaryColourName)) {
-            $this->compoundedColour = $colourName;
-            return $this;
-        }
-        $this->compoundedColour = $colourName . ', ' . $secondaryColourName;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFirstUsedDate()
-    {
-        return $this->firstUsedDate;
-    }
-
-
-    /**
-     * @param String $firstUsedDate
-     * @return $this
-     */
-    public function setFirstUsedDate($firstUsedDate)
-    {
-        $this->firstUsedDate = DateTimeDisplayFormat::textDate($firstUsedDate);
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getBrakeTestWeight()
-    {
-        return $this->brakeTestWeight;
-    }
-
-    /**
-     * @param string $brakeTestWeight
-     */
-    public function setBrakeTestWeight($brakeTestWeight)
-    {
-        $this->brakeTestWeight = $brakeTestWeight;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCountryOfRegistration()
-    {
-        return $this->countryOfRegistration;
-    }
-
-    /**
-     * @param string $countryOfRegistration
-     */
-    public function setCountryOfRegistration($countryOfRegistration)
-    {
-        $this->countryOfRegistration = $countryOfRegistration;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMotTestClass()
-    {
-        return $this->motTestClass;
-    }
-
-    /**
-     * @param string $motTestClass
-     */
-    public function setMotTestClass($motTestClass)
-    {
-        $this->motTestClass = empty($motTestClass) ? 'Unknown' : $motTestClass;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMotExpirationDate()
-    {
-        return $this->motExpirationDate;
-    }
-
-    /**
-     * @param string $motExpirationDate
-     */
-    public function setMotExpirationDate($motExpirationDate)
-    {
-        $this->motExpirationDate = DateTimeDisplayFormat::textDate($motExpirationDate);;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isClassUnset()
-    {
-        if (strpos($this->motTestClass, 'Unknown') !== false) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isNoTestClassSetOnSubmission()
-    {
-        return $this->noTestClassSetOnSubmission;
-    }
-
-    /**
-     * @param boolean $noTestClassSetOnSubmission
-     */
-    public function setNoTestClassSetOnSubmission($noTestClassSetOnSubmission)
-    {
-        $this->noTestClassSetOnSubmission = $noTestClassSetOnSubmission;
-    }
-
-    /**
-     * @param FuelType $fuelType
-     * @param String $cylinderCapacity
-     * @return bool
-     */
-    private function shouldDisplayCylinderCapacity(FuelType $fuelType, $cylinderCapacity)
-    {
-        $fuelTypeCodesWithOptionalCylinderCapacity = new FuelTypeAndCylinderCapacity();
-        return strlen($cylinderCapacity) > 0
-        && !in_array($fuelType->getCode(), $fuelTypeCodesWithOptionalCylinderCapacity->getAllFuelTypeCodesWithOptionalCylinderCapacity());
     }
 }

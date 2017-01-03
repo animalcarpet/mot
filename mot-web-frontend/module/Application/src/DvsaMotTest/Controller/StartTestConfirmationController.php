@@ -3,9 +3,8 @@
 namespace DvsaMotTest\Controller;
 
 use Application\Helper\PrgHelper;
+use Application\Service\CatalogService;
 use Application\Service\ContingencySessionManager;
-use Core\Catalog\CountryOfRegistration\CountryOfRegistrationCatalog;
-use Core\Routing\MotTestRouteList;
 use Dvsa\Mot\ApiClient\Resource\Item\AbstractVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
@@ -16,6 +15,7 @@ use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Dto\MotTesting\ContingencyTestDto;
 use DvsaCommon\Enum\MotTestTypeCode;
+use DvsaCommon\HttpRestJson\Exception\OtpApplicationException;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommon\Obfuscate\ParamObfuscator;
@@ -24,8 +24,7 @@ use DvsaCommon\UrlBuilder\MotTestUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\VehicleUrlBuilder;
 use DvsaCommon\Utility\DtoHydrator;
 use DvsaMotTest\Constants\VehicleSearchSource;
-use DvsaMotTest\Helper\DvsaVehicleBuilder;
-use DvsaMotTest\Service\StartTestChangeService;
+use Vehicle\Helper\ColoursContainer;
 use Zend\Http\Request;
 use Zend\View\Model\ViewModel;
 use DvsaMotTest\ViewModel\StartTestConfirmationViewModel;
@@ -43,8 +42,6 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
     const ROUTE_PARAM_ID = 'id';
     const ROUTE_PARAM_SOURCE = 'source';
     const RETEST_GRANTED_CHECK_RESULT = 0;
-
-    const UNKNOWN_TEST = 'Unknown';
 
     /** @var Request */
     protected $request;
@@ -74,30 +71,13 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
     /** @var StartTestConfirmationViewModel */
     private $startTestConfirmationViewModel;
 
-    private $countryOfRegistrationCatalog;
-
-    private $vehicleService;
-    /** @var  StartTestChangeService */
-    private $startTestChangeService;
-
     /**
-     * @param ParamObfuscator $paramObfuscator
-     * @param CountryOfRegistrationCatalog $countryOfRegistrationCatalog
-     * @param VehicleService $vehicleService
-     * @param StartTestChangeService $startTestChangeService
+     * @param \DvsaCommon\Obfuscate\ParamObfuscator $paramObfuscator
      */
-    public function __construct(
-        ParamObfuscator $paramObfuscator,
-        CountryOfRegistrationCatalog $countryOfRegistrationCatalog,
-        VehicleService $vehicleService,
-        StartTestChangeService $startTestChangeService
-    )
+    public function __construct(ParamObfuscator $paramObfuscator)
     {
         $this->paramObfuscator = $paramObfuscator;
         $this->startTestConfirmationViewModel = new StartTestConfirmationViewModel();
-        $this->countryOfRegistrationCatalog = $countryOfRegistrationCatalog;
-        $this->vehicleService = $vehicleService;
-        $this->startTestChangeService = $startTestChangeService;
     }
 
     public function indexAction()
@@ -105,7 +85,6 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         /** @var \Zend\Http\Request $request */
         $request = $this->getRequest();
         $method = $request->getQuery('retest') ? MotTestTypeCode::RE_TEST : MotTestTypeCode::NORMAL_TEST;
-        $this->startTestChangeService->saveChange(StartTestChangeService::URL, ['url' => MotTestRouteList::MOT_TEST_START_TEST]);
 
         return $this->commonAction($method);
     }
@@ -117,8 +96,6 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
 
     public function trainingAction()
     {
-        $this->startTestChangeService->saveChange(StartTestChangeService::URL, ['url' => MotTestRouteList::MOT_TEST_START_TRAINING_TEST]);
-
         return $this->commonAction(MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING);
     }
 
@@ -126,8 +103,6 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
     {
         $this->assertFeatureEnabled(FeatureToggle::MYSTERY_SHOPPER);
         $this->assertGranted(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM);
-
-        $this->startTestChangeService->saveChange(StartTestChangeService::URL, ['url' => MotTestRouteList::MOT_TEST_START_NON_MOT_TEST]);
 
         return $this->commonAction(MotTestTypeCode::NON_MOT_TEST);
     }
@@ -151,8 +126,6 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         $this->method = $method;
         $this->request = $this->getRequest();
 
-        $this->setBreadcrumbs(['breadcrumbs' => ['MOT testing' => '']]);
-
         $this->processParams();
         $this->getVehicleDetails();
         $this->findIfInProgressTestExists();
@@ -173,10 +146,8 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
 
         $noRegistrationString = $this->params()->fromRoute(self::ROUTE_PARAM_NO_REG);
         $this->noRegistration = ($noRegistrationString === '1');
-        $this->startTestChangeService->saveChange(StartTestChangeService::NO_REGISTRATION, ['noRegistration' => $noRegistrationString]);
 
         $this->vehicleSource = $this->params()->fromRoute(self::ROUTE_PARAM_SOURCE);
-        $this->startTestChangeService->saveChange(StartTestChangeService::SOURCE, ['source' => $this->vehicleSource]);
 
         if($this->isFeatureEnabled(FeatureToggle::MYSTERY_SHOPPER) &&
             $this->method === MotTestTypeCode::NON_MOT_TEST)
@@ -206,15 +177,14 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
     {
         if ($this->request->isPost()) {
 
-            if ($this->vehicleDetails instanceof DvlaVehicle) {
-                if (!$this->isTestClassSetForDvlaVehicle()) {
-                    return $this->createViewModel();
-                }
+            if ($this->needToCollectOneTimePassword()) {
+                return $this->createOtpViewModel();
             }
 
             $contingencySessionManager = $this->getContingencySessionManager();
 
             try {
+                $pagingFromStartTestConfirm = $this->request->getPost('startTestConfirm');
                 $newMotTestId = $this->createNewTestFromPost();
 
                 $url = $contingencySessionManager->isMotContingency() ?
@@ -224,6 +194,19 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
                 $this->prgHelper->setRedirectUrl($url->toString());
 
                 return $this->redirect()->toUrl($url);
+            } catch (OtpApplicationException $e) {
+                if (isset($pagingFromStartTestConfirm)) {
+                    $errorData = null;
+                } else {
+                    $errorData = $e->getErrorData();
+
+                    if (isset($errorData['message'])) {
+                        $message = $errorData['message'];
+                        $this->addErrorMessages($message);
+                    }
+                }
+
+                return $this->createOtpViewModel($errorData);
             } catch (RestApplicationException $e) {
                 if ($this->isRetest() && ($e instanceof ValidationException)) {
                     $this->isEligibleForRetest = false;
@@ -257,34 +240,80 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
     }
 
     /**
+     *
+     * @return bool
+     */
+    private function needToCollectOneTimePassword()
+    {
+        $oneTimePassword = $this->request->getPost('oneTimePassword');
+
+        if (isset($oneTimePassword)) {
+            return false;
+        }
+
+        $changeConfirmed = $this->request->getPost('changeConfirmed') === '1';
+
+        if (
+            !$this->getAuthorizationService()->isGranted(PermissionInSystem::MOT_TEST_WITHOUT_OTP) &&
+            $this->needToUpdateDvsaVehicleUnderTest() && $changeConfirmed === false
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    private function needToUpdateDvsaVehicleUnderTest()
+    {
+        if (MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING === $this->method) {
+            return false;
+        }
+
+        $targetVehicle = $this->getVehicleDetails();
+
+        $selectedColourCode = $this->mapIdToCode('colours', $this->request->getPost('colourId'));
+        $selectedSecondaryColourCode = $this->mapIdToCode('colours', $this->request->getPost('secondaryColourId'));
+        $selectedFuelTypeCode = $this->mapIdToCode('fuelTypes', $this->request->getPost('fuelTypeId'));
+        $selectedVehicleClass = $this->request->getPost('vehicleClassId');
+
+        if (
+            ($targetVehicle->getColour() && $targetVehicle->getColour()->getCode() !== $selectedColourCode) ||
+            ($targetVehicle->getColourSecondary() && $targetVehicle->getColourSecondary()->getCode() !== $selectedSecondaryColourCode) ||
+            ($targetVehicle->getFuelType() && $targetVehicle->getFuelType()->getCode() !== $selectedFuelTypeCode) ||
+            ($targetVehicle->getVehicleClass() && $targetVehicle->getVehicleClass()->getCode() !== $selectedVehicleClass)
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * @todo: to be removed once new API can create mot test!
      * @return array|null Array of new Test data or Null if was not POST
      */
     protected function prepareNewTestDataFromPostForPhpApi()
     {
+        $request = $this->request;
+
         $vehicleIdKey = $this->isVehicleSource(VehicleSearchSource::DVLA) ? 'dvlaVehicleId' : 'vehicleId';
 
-        $isColourChangedInSession = $this->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_COLOUR);
-        $colourDetailsFromSession = $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_COLOUR);
-        $isFuelChangedInSession = $this->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_ENGINE);
-        $fuelDetailsFromSession = $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_ENGINE);
+        $primaryColour = $request->getPost('colourId');
+        $secondaryColour = $request->getPost('secondaryColourId');
+        $fuelTypeId = $request->getPost('fuelTypeId');
 
-        $primaryColour = $isColourChangedInSession
-            ? $colourDetailsFromSession[StartTestChangeService::PRIMARY_COLOUR]
-            : $this->vehicleDetails->getColour()->getCode();
-        $secondaryColour = $isColourChangedInSession
-            ? $colourDetailsFromSession[StartTestChangeService::SECONDARY_COLOUR]
-            : $this->vehicleDetails->getColourSecondary()->getCode();
-        $fuelTypeId = $isFuelChangedInSession
-            ? $fuelDetailsFromSession[StartTestChangeService::FUEL_TYPE]
-            : $this->vehicleDetails->getFuelType()->getCode();
-        $cylinderCapacity = $isFuelChangedInSession
-            ? $fuelDetailsFromSession[StartTestChangeService::CYLINDER_CAPACITY]
-            : $this->vehicleDetails->getCylinderCapacity();
-        $vehicleClassCode = $this->startTestChangeService
-            ->isValueChanged(StartTestChangeService::CHANGE_CLASS)
-            ? $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS)
-            : $this->vehicleDetails->getVehicleClass()->getCode();
+        if (MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING === $this->method) {
+            $primaryColour = $this->mapNameToCode('colours', $primaryColour);
+            $secondaryColour = $this->mapNameToCode('colours', $secondaryColour);
+            $fuelTypeId = $this->mapNameToCode('fuelTypes', $fuelTypeId);
+        } else {
+            $primaryColour = $this->mapIdToCode('colours', $primaryColour);
+            $secondaryColour = $this->mapIdToCode('colours', $secondaryColour);
+            $fuelTypeId = $this->mapIdToCode('fuelTypes', $fuelTypeId);
+        }
 
         $data = [
             $vehicleIdKey => $this->vehicleId,
@@ -292,10 +321,10 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
             'primaryColour' => $primaryColour,
             'secondaryColour' => $secondaryColour,
             'fuelTypeId' => $fuelTypeId,
-            'cylinderCapacity' => $cylinderCapacity,
-            'vehicleClassCode' => intval($vehicleClassCode),
+            'vehicleClassCode' => intval($request->getPost('vehicleClassId')),
             'hasRegistration' => !$this->noRegistration,
-            'motTestType' => $this->request->getPost('motTestType', $this->method),
+            'oneTimePassword' => $request->getPost('oneTimePassword'),
+            'motTestType' => $request->getPost('motTestType', $this->method)
         ];
 
         $contingencySessionManager = $this->getContingencySessionManager();
@@ -309,6 +338,54 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         }
 
         return $data;
+    }
+
+    /**
+     * @see self::mapCatalogEntities
+     * @param string $listName
+     * @param string $id
+     * @return string
+     */
+    private function mapIdToCode($listName, $id)
+    {
+        return $this->mapCatalogEntities($listName, $id);
+    }
+
+    /**
+     * @see self::mapCatalogEntities
+     * @param string $listName
+     * @param string $name
+     * @return string
+     */
+    private function mapNameToCode($listName, $name)
+    {
+        return $this->mapCatalogEntities($listName, $name, 'name', 'code');
+    }
+
+    /**
+     * Temporary solution to properties on existing multi-dimensional catalogs,
+     * this should addressed by improvement on our single dimension, automatically generated Enums
+     *
+     * @param string $listName
+     * @param int $lookupValue
+     * @return string
+     * @param string $from
+     * @param string $to
+     * @throws NotFoundException
+     */
+    private function mapCatalogEntities($listName, $lookupValue, $from = 'id', $to = 'code')
+    {
+        $list = $this->getCatalogService()->getData()[$listName];
+
+        foreach ($list as $item) {
+            if ($item[$from] == $lookupValue) {
+                return $item[$to];
+            }
+        }
+
+        throw new \RuntimeException(
+            sprintf('Failed to matching %s for %s %s in the list of %s', $to, $from, $lookupValue, $listName)
+        );
     }
 
     /**
@@ -327,68 +404,21 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         $viewData = [
             'vehicleDetails' => $this->vehicleDetails,
             'checkExpiryResults' => null,
+            'staticData' => $this->getStaticData(),
             'prgHelper' => $this->prgHelper,
         ];
 
         $viewModel = $this->startTestConfirmationViewModel;
-        $viewModel->setMethod($this->method)
-            ->setObfuscatedVehicleId($this->obfuscatedVehicleId)
-            ->setNoRegistration($this->noRegistration)
-            ->setVehicleSource($this->vehicleSource)
-            ->setInProgressTestExists($this->inProgressTestExists)
-            ->setSearchVrm($this->params()->fromQuery('searchVrm', ''))
-            ->setSearchVin($this->params()->fromQuery('searchVin', ''))
-            ->setCanRefuseToTest(false, false)
-            ->setMakeAndModel($this->vehicleDetails->getMakeName(), $this->vehicleDetails->getModelName())
-            ->setEngine(
-                $this
-                    ->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_ENGINE)
-                    ? $this->setFuelTypeFromSessionData()->getFuelType()
-                    : $this->vehicleDetails->getFuelType(),
-                $this
-                    ->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_ENGINE)
-                    ? $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_ENGINE)['cylinderCapacity']
-                    : $this->vehicleDetails->getCylinderCapacity())
-            ->setCompoundedColour(
-                $this
-                    ->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_COLOUR)
-                    ? $this->setPrimaryColourFromSessionData()->getColour()
-                    : $this->vehicleDetails->getColour(),
-                $this
-                    ->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_COLOUR)
-                    ? $this->setSecondaryColourFromSessionData()->getColourSecondary()
-                    : $this->vehicleDetails->getColourSecondary())
-            ->setFirstUsedDate($this->vehicleDetails->getFirstUsedDate());
+        $viewModel->setMethod($this->method);
+        $viewModel->setObfuscatedVehicleId($this->obfuscatedVehicleId);
+        $viewModel->setNoRegistration($this->noRegistration);
+        $viewModel->setVehicleSource($this->vehicleSource);
+        $viewModel->setInProgressTestExists($this->inProgressTestExists);
+        $viewModel->setSearchVrm($this->params()->fromQuery('searchVrm', ''));
+        $viewModel->setSearchVin($this->params()->fromQuery('searchVin', ''));
+        $viewModel->setCanRefuseToTest(false, false);
+        $viewModel->setIsMysteryShopper($this->isMysteryShopper());
 
-        if ($this->vehicleDetails instanceof DvsaVehicle) {
-            $viewModel->setIsMysteryShopper($this->isMysteryShopper());
-
-            if (!empty($this->vehicleDetails->getWeight())) {
-                $viewModel->setBrakeTestWeight($this->vehicleDetails->getWeight() . ' ' . 'kg');
-            } else {
-                $viewModel->setBrakeTestWeight(self::UNKNOWN_TEST);
-            }
-            if (!empty($this->vehicleDetails->getVehicleClass()) && !empty($this->vehicleDetails->getVehicleClass()->getCode())) {
-                $viewModel->setMotTestClass($this->vehicleDetails->getVehicleClass()->getName());
-            } else {
-                $viewModel->setMotTestClass(self::UNKNOWN_TEST);
-            }
-        } else {
-            $viewModel->setBrakeTestWeight(self::UNKNOWN_TEST);
-            $viewModel->setMotTestClass(self::UNKNOWN_TEST);
-        }
-
-        if ($this->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_CLASS)) {
-            $viewModel->setMotTestClass($this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS));
-        }
-
-        $country = $this->countryOfRegistrationCatalog->getByCode($this->vehicleDetails->getCountryOfRegistrationId());
-        if (isset($country)) {
-            $viewModel->setCountryOfRegistration($country->getName());
-        } else {
-            $viewModel->setCountryOfRegistration(self::UNKNOWN_TEST);
-        }
-        
         $motContingency = $this->getContingencySessionManager()->isMotContingency();
         $viewModel->setMotContingency($motContingency);
 
@@ -411,12 +441,11 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
 
         if ($viewModel->isRetest() || $viewModel->isNormalTest()) {
             $viewData['checkExpiryResults'] = $this->getCheckExpiryResults();
+
             $viewModel->setCanRefuseToTest(
                 $this->isEligibleForRetest,
                 $this->createRefuseToTestAssertion()->isGranted($this->vtsId)
             );
-
-            $viewModel->setMotExpirationDate($viewData['checkExpiryResults']['expiryDate']);
         }
 
         if ($viewModel->isRetest()) {
@@ -448,14 +477,6 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         )
         ) {
             $viewModel->setTemplate('dvsa-mot-test/start-test-confirmation/index.phtml');
-            $this->layout('layout/layout-govuk.phtml');
-
-            if (!$this->startTestConfirmationViewModel->isInProgressTestExists()) {
-                $this->layout()->setVariable('pageTitle', 'Confirm vehicle and start test');
-            }
-            if ($this->startTestConfirmationViewModel->isRetest()) {
-                $this->layout()->setVariable('pageTitle', 'Confirm vehicle for retest');
-            }
         }
 
         if ($this->method == MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING) {
@@ -463,10 +484,35 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         } elseif($this->method == MotTestTypeCode::NON_MOT_TEST) {
             $this->layout()->setVariable('pageSubTitle', 'Non-MOT test');
         } else {
-            if (!$this->startTestConfirmationViewModel->isInProgressTestExists()) {
-                $this->layout()->setVariable('pageSubTitle', 'MOT testing');
-            }
+            $this->layout()->setVariable('pageSubTitle', 'MOT testing');
         }
+
+        return $viewModel;
+    }
+
+    /**
+     * @param $otpErrorData
+     *
+     * @return ViewModel
+     */
+    protected function createOtpViewModel($otpErrorData)
+    {
+        $viewModel = $this->createViewModel();
+
+        // Override sub title for the Vehicle Details Changed screen
+        $this->layout()->setVariable('pageSubTitle', null);
+
+        $request = $this->getRequest();
+
+        $viewModel->setVariables([
+                'colourId' => $request->getPost('colourId'),
+                'secondaryColourId' => $request->getPost('secondaryColourId'),
+                'fuelTypeId' => $request->getPost('fuelTypeId'),
+                'vehicleClassId' => intval($request->getPost('vehicleClassId')),
+            ]
+        );
+
+        $viewModel->setTemplate('dvsa-mot-test/start-test-confirmation/vehicle-change-confirmation.phtml');
 
         return $viewModel;
     }
@@ -485,9 +531,9 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
     {
         if ($flush || is_null($this->vehicleDetails)) {
             if ($this->isVehicleSource($source)) {
-                $this->vehicleDetails = $this->vehicleService->getDvlaVehicleById((int)$this->vehicleId);
+                $this->vehicleDetails = $this->getVehicleServiceClient()->getDvlaVehicleById((int)$this->vehicleId);
             } else {
-                $this->vehicleDetails = $this->vehicleService->getDvsaVehicleById((int)$this->vehicleId);
+                $this->vehicleDetails = $this->getVehicleServiceClient()->getDvsaVehicleById((int)$this->vehicleId);
             }
         }
 
@@ -537,6 +583,22 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         }
 
         return null;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getStaticData()
+    {
+        /** @var CatalogService $catalogService */
+        $catalogService = $this->getCatalogService();
+
+        return [
+            'colours' => new ColoursContainer($catalogService->getColoursWithIds(), false, true),
+            'fuelTypes' => $catalogService->getFuelTypesWithId(),
+            'emptyVrmReasons' => $catalogService->getReasonsForEmptyVRM(),
+            'emptyVinReasons' => $catalogService->getReasonsForEmptyVIN(),
+        ];
     }
 
     protected function checkEligibilityForRetest()
@@ -605,8 +667,7 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
      */
     private function getVehicleServiceClient()
     {
-        $vehicleService = $this->getServiceLocator()->get(VehicleService::class);
-        return $vehicleService;
+        return $this->getServiceLocator()->get(VehicleService::class);
     }
 
     private function isNotMotTest()
@@ -629,80 +690,6 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         if (null === $this->getVehicleDetails()) {
             return false;
         }
-
-        return (true === $this->vehicleDetails->getIsIncognito());
-    }
-
-    private function setPrimaryColourFromSessionData()
-    {
-        $coloursName = '';
-        $colour = $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_COLOUR)['primaryColour'];
-
-        foreach ($this->getCatalogByName('colours') as $id => $code) {
-            if ($code['code'] == $colour) {
-                $coloursName = $code;
-            }
-        }
-
-        $newVehicleColourDetails = (new DvsaVehicleBuilder())->getEmptyVehicleStdClass();
-
-        $colour = new \stdClass();
-        $colour->code = $coloursName['code'];
-        $colour->name = $coloursName['name'];
-        $newVehicleColourDetails->colour = $colour;
-
-        return (new DvsaVehicle($newVehicleColourDetails));
-    }
-
-    private function setSecondaryColourFromSessionData()
-    {
-        $coloursName = '';
-        $colour = $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_COLOUR)['secondaryColour'];
-
-        foreach ($this->getCatalogByName('colours') as $id => $code) {
-            if ($code['code'] == $colour) {
-                $coloursName = $code;
-            }
-        }
-
-        $newVehicleColourDetails = (new DvsaVehicleBuilder())->getEmptyVehicleStdClass();
-
-        $colour = new \stdClass();
-        $colour->code = $coloursName['code'];
-        $colour->name = $coloursName['name'];
-        $newVehicleColourDetails->colourSecondary = $colour;
-
-        return (new DvsaVehicle($newVehicleColourDetails));
-    }
-
-    private function setFuelTypeFromSessionData()
-    {
-        $fuelName = '';
-        $fuelCodeFromSession = $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_ENGINE);
-
-        foreach ($this->getCatalogByName('fuelTypes') as $id => $code) {
-            if ($code['code'] == $fuelCodeFromSession['fuelType']) {
-                $fuelName = $code;
-            }
-        }
-
-        $newVehicleEngineDetails = (new DvsaVehicleBuilder())->getEmptyVehicleStdClass();
-
-        $engineType = new \stdClass();
-        $engineType->code = $fuelName['code'];
-        $engineType->name = $fuelName['name'];
-        $newVehicleEngineDetails->fuelType = $engineType;
-        return (new DvsaVehicle($newVehicleEngineDetails));
-    }
-
-    private function isTestClassSetForDvlaVehicle()
-    {
-        if ($this->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_CLASS)) {
-            $this->startTestConfirmationViewModel->setNoTestClassSetOnSubmission(false);
-            return true;
-        } else {
-            $this->startTestConfirmationViewModel->setNoTestClassSetOnSubmission(true);
-            return false;
-        }
+        return (true === $this->getVehicleDetails()->getIsIncognito());
     }
 }

@@ -406,28 +406,6 @@
         }, {
             "id": 2,
             "name": "Manual"
-        }],
-        "reasonsForEmptyVIN": [{
-            "id": 1,
-            "code": "MISS",
-            "name": "Missing"
-        }, {
-            "id": 2,
-            "code": "NOTF",
-            "name": "Not found"
-        }, {
-            "id": 3,
-            "code": "NOTR",
-            "name": "Not required"
-        }],
-        "reasonsForEmptyVRM": [{
-            "id": 1,
-            "code": "MISS",
-            "name": "Missing"
-        }, {
-            "id": 2,
-            "code": "NOTR",
-            "name": "Not required"
         }]
     }
 }

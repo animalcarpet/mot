@@ -15,7 +15,6 @@ class DateTimeDisplayFormat
     const FORMAT_DATE_SHORT = 'j M Y';
     const FORMAT_TIME = 'g:ia';
     const FORMAT_MONTH_YEAR = 'M Y';
-    const FORMAT_DAY_MONTH = 'j F';
 
     /**
      * Outputs date and time according to GDS UX guidelines
@@ -101,20 +100,6 @@ class DateTimeDisplayFormat
     public static function textDate($textDate)
     {
         return is_null($textDate) ? '' : self::date(DateUtils::toDateTime($textDate, false));
-    }
-
-    /**
-     * @param $textDate
-     * @return string
-     */
-    public static function textDayMonth($textDate)
-    {
-        if (is_null($textDate)) {
-            return '';
-        } else {
-            $date = DateUtils::toDateTime($textDate, false);
-            return $date->format(self::FORMAT_DAY_MONTH);
-        }
     }
 
 

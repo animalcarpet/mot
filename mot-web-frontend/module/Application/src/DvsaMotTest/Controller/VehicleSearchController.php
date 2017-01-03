@@ -29,7 +29,6 @@ use DvsaCommon\Utility\AddressUtils;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaMotTest\Form\VehicleSearch;
 use DvsaMotTest\Model\VehicleSearchResult;
-use DvsaMotTest\Service\StartTestChangeService;
 use DvsaMotTest\Service\VehicleSearchService;
 use DvsaMotTest\View\VehicleSearchResult\VehicleSearchResultMessage;
 use DvsaMotTest\View\VehicleSearchResult\VehicleSearchResultUrlTemplateInterface;
@@ -126,9 +125,6 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
     /** @var MotAuthorisationServiceInterface */
     protected $authorisationService;
 
-    /** @var  StartTestChangeService */
-    private $startTestChangeService;
-
     /**
      * @param VehicleSearchService $vehicleSearchService
      * @param ParamObfuscator $paramObfuscator
@@ -138,7 +134,6 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
      * @param Client $client
      * @param FeatureToggles $featureToggles
      * @param MotAuthorisationServiceInterface $authorisationService
-     * @param StartTestChangeService $startTestChangeService
      */
     public function __construct(
         VehicleSearchService $vehicleSearchService,
@@ -151,8 +146,7 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
         MotFrontendIdentityProviderInterface $motFrontendIdentity,
         DuplicateCertificateSearchByRegistrationAction $duplicateCertificateSearchByRegistrationAction,
         DuplicateCertificateSearchByVinAction $duplicateCertificateSearchByVinAction,
-        FeatureToggles $featureToggles,
-        StartTestChangeService $startTestChangeService
+        FeatureToggles $featureToggles
     ) {
         $this->paramObfuscator = $paramObfuscator;
         $this->catalogService = $catalogService;
@@ -165,7 +159,6 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
         $this->duplicateCertificateSearchByRegistrationAction = $duplicateCertificateSearchByRegistrationAction;
         $this->duplicateCertificateSearchByVinAction = $duplicateCertificateSearchByVinAction;
         $this->featureToggles = $featureToggles;
-        $this->startTestChangeService = $startTestChangeService;
     }
 
     /**
@@ -271,8 +264,6 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
             $overdueSpecialNotices = new OverdueSpecialNoticeAssertion($overdueSpecialNotices, $authorisationsForTestingMot);
             $overdueSpecialNotices->assertPerformTest();
         }
-
-        $this->startTestChangeService->loadAllowedChangesIntoSession();
 
         $this->vehicleSearchService->setSearchType($searchType);
 
