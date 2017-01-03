@@ -29,7 +29,6 @@ use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Constants\VehicleSearchSource;
 use DvsaMotTest\Controller\VehicleSearchController;
 use DvsaMotTest\Model\VehicleSearchResult;
-use DvsaMotTest\Service\StartTestChangeService;
 use DvsaMotTest\Service\VehicleSearchService;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
@@ -139,8 +138,7 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
                 XMock::of(MotFrontendIdentityProviderInterface::class),
                 XMock::of(DuplicateCertificateSearchByRegistrationAction::class),
                 XMock::of(DuplicateCertificateSearchByVinAction::class),
-                $this->mockMysteryShopperToggle,
-                XMock::of(StartTestChangeService::class)
+                $this->mockMysteryShopperToggle
             )
         );
 

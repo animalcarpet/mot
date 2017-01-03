@@ -14,37 +14,11 @@ $form = $viewModel->getForm();
         ]
     );
     ?>
-    <div id="secondaryColours" class="panel-indent" aria-hidden="false" style="display: block;">
-        <?php echo $this->partial(
-            'partial/gds/form/control',
-            [
-                'element' => $form->getSecondaryColourElement()
-            ]
-        );
-        ?>
-    </div>
+    <?php echo $this->partial(
+        'partial/gds/form/control',
+        [
+            'element' => $form->getSecondaryColourElement()
+        ]
+    );
+    ?>
 </fieldset>
-
-<div class="form-group">
-    <details>
-        <summary role="button" aria-controls="details-content-0" tabindex="0" aria-expanded="false">
-            <span class="summary">Not sure of the colour?</span>
-        </summary>
-        <div class="panel-indent" id="details-content-0" aria-hidden="true">
-            <div class="text">
-                <p>Check with the manufacturer if you're not sure of the primary colour of the vehicle.</p>
-                <p>Select a secondary colour if the vehicle has a feature, for example stripes, of another colour.</p>
-                <p>For vehicles with a vinyl wrapping, take the colour from the wrap rather than the bodywork underneath.</p>
-            </div>
-        </div>
-    </details>
-</div>
-
-<?php echo $this->headScript()->appendFile('/assets/javascripts/vendor/jquery-1.11.0.min.js'); ?>
-<?php echo $this->headScript()->appendFile('/assets/javascripts/dvsa.js'); ?>
-
-<script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function () {
-        DVSASelectToggle.init();
-    });
-</script>

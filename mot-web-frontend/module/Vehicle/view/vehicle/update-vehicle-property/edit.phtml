@@ -25,7 +25,7 @@ echo $this->partial('errorMessages', array('getFromFlash' => true));
         <input type="submit" class="button" value="<?php echo $viewModel->getSubmitButtonText() ?>" id="submitUpdate">
         <ul class="content-navigation__secondary">
             <li>
-                <a href="<?php echo $viewModel->getBackUrl(); ?>"><?php echo $viewModel->getBackLinkText() ?></a>
+                <a href="<?php echo $viewModel->getBackUrl(); ?>"><?php echo $viewModel->getBackLinkLabel() ?></a>
             </li>
         </ul>
     </nav>

@@ -2,37 +2,35 @@ package uk.gov.dvsa.ui.pages.mot;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
-
+import org.openqa.selenium.support.ui.Select;
+import uk.gov.dvsa.domain.api.response.Vehicle;
+import uk.gov.dvsa.domain.model.vehicle.Colours;
 import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
+import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
-import uk.gov.dvsa.ui.pages.vehicleinformation.ChangeClassUnderTestPage;
-import uk.gov.dvsa.ui.pages.vehicleinformation.ChangeColourUnderTestPage;
-import uk.gov.dvsa.ui.pages.vehicleinformation.ChangeEngineUnderTestPage;
 
 public class StartTestConfirmationPage extends Page {
     public static final String path = "/start-test-confirmation/";
     private final String PAGE_TITLE = "MOT testing";
     private static final String PAGE_TITLE_TRAINING = "Training test\n" +
-            "Confirm vehicle and start test";
+            "Confirm vehicle for test";
     private static final String PAGE_TITLE_NON_MOT = "Non-MOT test\n" +
-            "Confirm vehicle and start test";
-    private final String BANNER_PAGE_TITLE = "This vehicle is currently under test";
+            "Confirm vehicle for test";
 
     @FindBy(id = "confirm_vehicle_confirmation") private WebElement confirmButton;
     @FindBy(id = "retest_vehicle_confirmation") private WebElement retestvehicleconfirmation;
     @FindBy(id = "vehicleWeight") private WebElement vehicleWeight;
-    @FindBy(id = "change-vehicle-class") private WebElement changeClassButton;
-    @FindBy(id = "change-vehicle-colour") private WebElement changeColourButton;
-    @FindBy(id = "change-vehicle-engine") private WebElement changeEngineButton;
+    @FindBy(id = "vehicle-class-select") private WebElement classDropdown;
     @FindBy(id = "fuel-type-select") private WebElement fuelType;
+    @FindBy(id = "vehicle-class-select") private WebElement vehicleClass;
+    @FindBy(id = "primary-colour") @CacheLookup private WebElement primaryColor;
+    @FindBy(id = "secondary-colour") private WebElement secondaryColour;
     @FindBy(id = "refuse-to-test") private WebElement refuseToTestVehicle;
     @FindBy(id = "motExpiryDate") private WebElement motExpireDate;
-    @FindBy(className = "banner--error") private WebElement vehicleUnderTestBanner;
-    @FindBy(className = "heading-medium") private WebElement noTestClassValidation;
-    @FindBy(id = "validation-message--success") private WebElement changeDetailsSuccessMessage;
 
     private By vinLocator = By.id("vehicleVINnumber");
     private By registrationLocator = By.id("vehicleRegistrationNumber");
@@ -44,11 +42,7 @@ public class StartTestConfirmationPage extends Page {
 
     @Override
     protected boolean selfVerify() {
-        if (PageInteractionHelper.isElementDisplayed(noTestClassValidation)) {
-            return noTestClassValidation.getText().contains(BANNER_PAGE_TITLE);
-        } else {
-            return PageInteractionHelper.verifyTitle(getTitle(),PAGE_TITLE, PAGE_TITLE_TRAINING, PAGE_TITLE_TRAINING, PAGE_TITLE_NON_MOT);
-        }
+        return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE, PAGE_TITLE_TRAINING, PAGE_TITLE_NON_MOT);
     }
 
     public TestOptionsPage clickStartMotTest() {
@@ -56,9 +50,23 @@ public class StartTestConfirmationPage extends Page {
         return new TestOptionsPage(driver);
     }
 
+    public <T extends Page> T clickStartMotTest(Class<T> clazz) {
+        confirmButton.click();
+        return MotPageFactory.newPage(driver, clazz);
+    }
+
     public <T extends Page> T clickStartMotTestWhenConductingContingencyTest(Class<T> clazz) {
         confirmButton.click();
         return MotPageFactory.newPage(driver, clazz);
+    }
+
+    public VehicleDetailsChangedPage changeVehicleDetailAndSubmit(Vehicle vehicle) {
+        Select s = new Select(this.primaryColor);
+        s.selectByValue(
+                Colours.findByName(vehicle.getColourSecondary().getName()).getId().toString()
+        );
+        confirmButton.click();
+        return new VehicleDetailsChangedPage(driver);
     }
 
     public RefuseToTestPage refuseToTestVehicle() {
@@ -66,35 +74,13 @@ public class StartTestConfirmationPage extends Page {
         return new RefuseToTestPage(driver);
     }
 
-    public ChangeClassUnderTestPage clickChangeClass(){
-        changeClassButton.click();
-        return new ChangeClassUnderTestPage(driver);
-    }
-
-    public ChangeColourUnderTestPage clickChangeColour(){
-        changeColourButton.click();
-        return new ChangeColourUnderTestPage(driver);
-    }
-
-    public ChangeEngineUnderTestPage clickChangeEngne(){
-        changeEngineButton.click();
-        return new ChangeEngineUnderTestPage(driver);
+    public StartTestConfirmationPage selectClass(String classNumber){
+        FormDataHelper.selectFromDropDownByVisibleText(classDropdown, classNumber);
+        return this;
     }
 
     public String getVehicleWeight() {
         return vehicleWeight.getText();
-    }
-
-    public String getNoTestClassValidation() {
-        return noTestClassValidation.getText();
-    }
-    public String noTestClassValidation() {
-         confirmButton.click();
-        return getNoTestClassValidation();
-    }
-
-    public String getVehicleUnderTestBanner() {
-        return vehicleUnderTestBanner.getText();
     }
 
     public String getVin() {
@@ -103,9 +89,5 @@ public class StartTestConfirmationPage extends Page {
 
     public String getRegistration() {
         return driver.findElement(registrationLocator).getText();
-    }
-
-    public String getSuccessMessage() {
-        return changeDetailsSuccessMessage.getText();
     }
 }

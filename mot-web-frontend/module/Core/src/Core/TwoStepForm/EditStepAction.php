@@ -3,15 +3,11 @@
 namespace Core\TwoStepForm;
 
 use Core\Action\AbstractRedirectActionResult;
-use Core\Action\RedirectToRoute;
 use Core\Action\ViewActionResult;
-use Core\Routing\VehicleRouteList;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
-use Vehicle\UpdateVehicleProperty\Context\UpdateVehicleContext;
-use Vehicle\UpdateVehicleProperty\Process\UpdateVehicleInterface;
 use Zend\Form\Form;
 
 final class EditStepAction implements AutoWireableInterface
@@ -66,13 +62,6 @@ final class EditStepAction implements AutoWireableInterface
         return $this->buildActionResult($process, $form);
     }
 
-    /**
-     * @param SingleStepProcessInterface $process
-     * @param FormContextInterface $context
-     * @param array $formData
-     * @return AbstractRedirectActionResult|ViewActionResult
-     * @throws UnauthorisedException
-     */
     protected function executePost(SingleStepProcessInterface $process, FormContextInterface $context, array $formData = [])
     {
         $process->setContext($context);
@@ -88,7 +77,9 @@ final class EditStepAction implements AutoWireableInterface
                 $formUuid = $this->formContainer->store($process->getSessionStoreKey(), $formData);
                 return $process->redirectToReviewPage($formUuid);
             }
+
             try {
+
                 return $this->updateAndRedirectToStartPage($process, $formData);
             } catch (ValidationException $exception) {
                 $errors = $exception->getDisplayMessages();
