@@ -40,7 +40,7 @@ class SecurityCardActivationFormTest extends \PHPUnit_Framework_TestCase
     public static function dataProvider_invalidSerialNumber()
     {
 
-        return [[''],['STTA1234567'],['STTAABCDEFG']];
+        return [['12345678901234567']];
     }
 
     /**
@@ -56,7 +56,20 @@ class SecurityCardActivationFormTest extends \PHPUnit_Framework_TestCase
 
         $messages = array_values($form->getMessages('serial_number'));
 
-        $this->assertEquals('Enter a valid serial number', reset($messages));
+        $this->assertEquals('must be less than or equal to 16 characters', reset($messages));
+        $this->assertCount(1, $messages);
+    }
+
+    public function test_whenSerialNumberIsBlank_shouldProduceErrorMessage()
+    {
+        $form = new SecurityCardActivationForm();
+        $data = ['serial_number' => '', 'pin' => '123456'];
+
+        $form->setData($data);
+        $form->isValid();
+
+        $messages = array_values($form->getMessages('serial_number'));
+        $this->assertEquals('Enter a serial number', $messages[0]);
         $this->assertCount(1, $messages);
     }
 
@@ -89,7 +102,7 @@ class SecurityCardActivationFormTest extends \PHPUnit_Framework_TestCase
     public function test_givenSerialNumberAndPinAreIncorrect_shouldHave2Messages()
     {
         $form = new SecurityCardActivationForm();
-        $data = ['serial_number' => 'STTA123', 'pin' => '1456'];
+        $data = ['serial_number' => 'STTA123456789012345', 'pin' => '1456'];
 
         $form->setData($data);
         $form->isValid();

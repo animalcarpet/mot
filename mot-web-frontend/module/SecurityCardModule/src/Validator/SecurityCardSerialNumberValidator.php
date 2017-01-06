@@ -7,22 +7,34 @@ use Zend\Validator\Exception;
 
 class SecurityCardSerialNumberValidator extends AbstractValidator
 {
-    const SERIAL_NUMBER_FORMAT = "/^[a-zA-Z]{4}[0-9]{8}$/";
+    const MSG_KEY_SN_BLANK = "snBlank";
 
-    const MSG_KEY_SERIAL_NUMBER = "Enter a valid serial number";
+    const MSG_KEY_SN_LENGTH = "snLength";
+
+    const MAX_SERIAL_NUMBER_LENGTH = 16;
+
 
     /** @var SecurityCardSerialNumberValidationCallback */
     private $validationCallback;
 
     protected $messageTemplates = [
-        self::MSG_KEY_SERIAL_NUMBER => 'Enter a valid serial number',
+        self::MSG_KEY_SN_BLANK => 'Enter a serial number',
+        self::MSG_KEY_SN_LENGTH => 'must be less than or equal to 16 characters'
     ];
 
     public function isValid($value, $context = null)
     {
         $serialNumber = $value;
-        if (!preg_match(self::SERIAL_NUMBER_FORMAT, $serialNumber)) {
-            $this->error(self::MSG_KEY_SERIAL_NUMBER);
+        if (strlen($serialNumber) == 0) {
+            $this->error(self::MSG_KEY_SN_BLANK);
+            if ($this->validationCallback) {
+                $this->validationCallback->onInvalidFormat();
+            }
+            return false;
+        }
+
+        if (strlen($serialNumber) > self::MAX_SERIAL_NUMBER_LENGTH) {
+            $this->error(self::MSG_KEY_SN_LENGTH);
             if ($this->validationCallback) {
                 $this->validationCallback->onInvalidFormat();
             }

@@ -29,8 +29,8 @@ class SecurityCardActivationForm extends Form
             ->setAttribute('required', false)
             ->setAttribute('group', true)
             ->setAttribute('divModifier', 'form-group')
-            ->setAttribute('inputModifier', '1-4')
-            ->setAttribute('help', 'For example: STTA12345678')
+            ->setAttribute('inputModifier', '1-2')
+            ->setAttribute('help', 'For example: 210812345689012')
             ->setAttribute('autoCompleteOff', true)
         );
         $this->add((new Text())
@@ -46,19 +46,6 @@ class SecurityCardActivationForm extends Form
     );
 
         $filter = new InputFilter();
-
-
-//        $filter->add([
-//            'name' => self::SERIAL_NUMBER,
-//            'required' => true,
-//            'validators' => [
-//                [
-//                    'name' => SecurityCardSerialNumberValidator::class
-//                ]
-//            ],
-//            'continue_if_empty' => true,
-//            'allow_empty' => true
-//        ]);
 
         $serialNumberInput = new Input(self::SERIAL_NUMBER);
         $serialNumberInput
