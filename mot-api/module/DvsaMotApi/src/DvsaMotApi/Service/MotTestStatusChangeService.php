@@ -8,6 +8,7 @@
 namespace DvsaMotApi\Service;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityNotFoundException;
 use DvsaAuthentication\Service\Exception\OtpException;
 use DvsaAuthentication\Service\OtpService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
@@ -41,6 +42,7 @@ use DvsaCommonApi\Transaction\TransactionAwareTrait;
 use DvsaEntities\Entity\BrakeTestResult;
 use DvsaEntities\Entity\Comment;
 use DvsaEntities\Entity\MotTest;
+use DvsaEntities\Entity\MotTestCancelled;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\SiteTestingDailySchedule;
@@ -325,7 +327,10 @@ class MotTestStatusChangeService implements TransactionAwareInterface
 
         // Checking for Site ID is mandatory only for Non-MOT inspection.
         if ($motTest->getMotTestType()->getCode() == MotTestTypeCode::NON_MOT_TEST && !in_array($newStatus, self::$MOT_TEST_ABORTED_STATUSES)) {
-            $this->motTestStatusChangeValidator->checkSiteIdHasBeenEntered($motTest);
+            $this->motTestStatusChangeValidator->hasSiteIdBeenEntered($motTest);
+            if($motTest->getOrganisation() === null) {
+                $motTest->setOrganisation($motTest->getVehicleTestingStation()->getOrganisation());
+            }
         }
 
         $this->inTransaction(
@@ -418,6 +423,7 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         $motTest->setExpiryDate($this->motTestDateHelper->getExpiryDate($motTest));
 
         $this->updateExpiryDateIfMysteryShopper($motTest);
+        $motTest->setSubmittedDate(new \DateTime('now'));
     }
 
     // NOTE: there should be a cancel status from client point of view that
@@ -426,15 +432,24 @@ class MotTestStatusChangeService implements TransactionAwareInterface
     {
         $this->motTestStatusChangeValidator->checkMotTestCanBeCancelled($motTest);
 
-        if ($isAbandoned) {
-            RequiredFieldException::CheckIfRequiredFieldsNotEmpty([self::FIELD_CANCEL_COMMENT], $data);
-            $motTest->setReasonForTerminationComment($data[self::FIELD_CANCEL_COMMENT]);
-        }
-
         $reasonForCancelId = $data[self::FIELD_REASON_FOR_CANCEL];
         $reasonForCancel = $this->reasonForCancelRepository->get($reasonForCancelId);
 
-        $motTest->setMotTestReasonForCancel($reasonForCancel);
+        $person = $this->motIdentityProvider->getIdentity()->getPerson();
+
+        $motTestCancelled = new MotTestCancelled();
+        $motTestCancelled->setMotTestReasonForCancel($reasonForCancel);
+
+        if ($isAbandoned) {
+            RequiredFieldException::CheckIfRequiredFieldsNotEmpty([self::FIELD_CANCEL_COMMENT], $data);
+
+            $comment = new Comment();
+            $comment->setComment($data[self::FIELD_CANCEL_COMMENT])
+                ->setCommentAuthor($person);
+            $motTestCancelled->setComment($comment);
+        }
+
+        $motTest->setMotTestCancelled($motTestCancelled);
 
         // ReasonsForRejection that were flagged as "repaired" should now be permanently removed.
         $this->removeMotTestReasonsForRejectionMarkedForRepair($motTest);
@@ -451,7 +466,19 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         RequiredFieldException::CheckIfRequiredFieldsNotEmpty([self::FIELD_REASON_FOR_ABORT], $data);
         $reasonForAbort = $data[self::FIELD_REASON_FOR_ABORT];
         $this->motTestStatusChangeValidator->checkMotTestCanBeAbortedByVe($motTest);
-        $motTest->setReasonForTerminationComment($reasonForAbort);
+
+        $person = $this->motIdentityProvider->getIdentity()->getPerson();
+
+        $motTestCancelled = new MotTestCancelled();
+        $motTestCancelled->setLastUpdatedOn(new \DateTime('now'))
+            ->setLastUpdatedBy($person);
+
+        $comment = new Comment();
+        $comment->setComment($reasonForAbort)
+            ->setCommentAuthor($person);
+        $motTestCancelled->setComment($comment);
+
+        $motTest->setMotTestCancelled($motTestCancelled);
 
         // ReasonsForRejection that were flagged as "repaired" should now be permanently removed.
         $this->removeMotTestReasonsForRejectionMarkedForRepair($motTest);
@@ -495,8 +522,27 @@ class MotTestStatusChangeService implements TransactionAwareInterface
 
             $this->updateExpiryDateIfMysteryShopper($passedMotTest);
 
+            if ($passedMotTest->getMotTestEmergencyReason()) {
+                try{
+                    $clonedMotTestEmergencyReason = clone $passedMotTest->getMotTestEmergencyReason();
+                    $clonedMotTestEmergencyReason->setId(null);
+                    $passedMotTest->setMotTestEmergencyReason(null);
+                }catch(EntityNotFoundException $e) {
+                    $clonedMotTestEmergencyReason = false;
+                    $passedMotTest->setMotTestEmergencyReason(null);
+                }catch(\Exception $e){
+                    throw $e;
+                }
+            }
+
             $this->motTestRepository->save($passedMotTest);
             $passedMotTest->setNumber(MotTestNumberGenerator::generateMotTestNumber($passedMotTest->getId()));
+
+            if (isset($clonedMotTestEmergencyReason) && $clonedMotTestEmergencyReason instanceof MotTestEmergencyReason) {
+                $clonedMotTestEmergencyReason->setId($passedMotTest->getId());
+                $passedMotTest->setMotTestEmergencyReason($clonedMotTestEmergencyReason);
+            }
+
             $this->motTestRepository->save($passedMotTest);
 
             $motTest->setPrsMotTest($passedMotTest);
@@ -506,7 +552,7 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         if ($this->shouldAmendVehicleWeight($motTest)) {
             $brakeTestVehicleWeight = $motTest->getBrakeTestResultClass3AndAbove()->getVehicleWeight();
             if (!$motTest->getMotTestType()->getIsDemo()) {
-                $motTest->getVehicle()->setWeight($brakeTestVehicleWeight);
+                $motTest->setVehicleWeight($brakeTestVehicleWeight);
             }
         }
 
@@ -517,6 +563,7 @@ class MotTestStatusChangeService implements TransactionAwareInterface
 
     private function createPassedMotTestWithoutPrs(MotTest $motTest)
     {
+
         $passedMotTest = MotTestCloneHelper::motTestDeepCloneNoCollections($motTest);
         $passedMotTest->setStatus($this->getMotTestStatus(MotTestStatusName::PASSED));
         $this->copyAdvisoryRfrItems($motTest, $passedMotTest);

@@ -88,7 +88,7 @@ class VehicleCatalogService
      */
     public function getMakes()
     {
-        return $this->makeRepository()->findBy([ 'isVerified' => 1, 'isSelectable' => 1 ], ['name' => 'ASC']);
+        return $this->makeRepository()->findBy([ 'isVerified' => 1], ['name' => 'ASC']);
     }
 
     /**

@@ -18,6 +18,8 @@ use DvsaEntities\Entity\BrakeTestResultClass12;
 use DvsaEntities\Entity\BrakeTestResultClass3AndAbove;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestReasonForRejection;
+use DvsaEntities\Entity\MotTestReasonForRejectionComment;
+use DvsaEntities\Entity\MotTestReasonForRejectionDescription;
 use DvsaEntities\Entity\Vehicle;
 use DvsaMotApi\Mapper\BrakeTestResultClass12Mapper;
 use DvsaMotApi\Mapper\BrakeTestResultClass3AndAboveMapper;
@@ -164,7 +166,25 @@ class BrakeTestResultService extends AbstractService
             $rfr = $this->motTestReasonForRejectionService->createRfrFromData($rfrData, $motTest);
             $rfr->setGenerated(true);
             $motTest->addMotTestReasonForRejection($rfr);
+
+            $tempComment = $rfr->popComment();
+            $tempDescription = $rfr->popDescription();
+
             $this->entityManager->persist($rfr);
+            $this->entityManager->flush();
+
+            if ($tempComment instanceof MotTestReasonForRejectionComment) {
+                $tempComment->setId($rfr->getId());
+                $this->entityManager->persist($tempComment);
+                $this->entityManager->flush();
+            }
+
+            if ($tempDescription instanceof MotTestReasonForRejectionDescription) {
+                $tempDescription->setId($rfr->getId());
+                $this->entityManager->persist($tempDescription);
+                $this->entityManager->flush();
+            }
+
         }
 
         $this->entityManager->persist($motTest);

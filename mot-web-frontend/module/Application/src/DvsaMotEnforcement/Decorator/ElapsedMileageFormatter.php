@@ -3,7 +3,7 @@
 namespace DvsaMotEnforcement\Decorator;
 
 use DvsaCommon\Constants\OdometerReadingResultType;
-use DvsaCommon\Dto\Common\OdometerReadingDTO;
+use DvsaCommon\Dto\Common\OdometerReadingDto;
 
 class ElapsedMileageFormatter
 {
@@ -17,8 +17,8 @@ class ElapsedMileageFormatter
      * @return string
      */
     public static function formatElapsedMileage(
-        OdometerReadingDTO $odometerFromTester,
-        OdometerReadingDTO $odometerFromExaminer
+        OdometerReadingDto $odometerFromTester,
+        OdometerReadingDto $odometerFromExaminer
     ) {
         if (self::bothSameNonNumeric($odometerFromTester->getResultType(), $odometerFromExaminer->getResultType())) {
             $differenceMsg = self::formattedMileage($odometerFromTester);
@@ -54,7 +54,7 @@ class ElapsedMileageFormatter
         return $readingType1 === $readingType2 && $readingType1 !== OdometerReadingResultType::OK;
     }
 
-    private static function formattedMileage(OdometerReadingDTO $odometer)
+    private static function formattedMileage(OdometerReadingDto $odometer)
     {
         switch ($odometer->getResultType()) {
             case OdometerReadingResultType::OK:

@@ -20,7 +20,7 @@ public enum VehicleDetails {
     SUZUKI_CAPPUCCINO(100201,"188C2","SUZUKI",107077,"01EBA","CAPPUCCINO"),
     VAUXHALL_ASTRA(100217,"188D2","VAUXHALL",107390,"01FF3","ASTRA"),
     VOLKSWAGEN_PASSAT(100220,"188D5","VOLKSWAGEN",107458,"02037","PASSAT"),
-    OTHER(-1,"other","OTHER",-1,"other","OTHER"); // todo (ABN) this isn't right
+    OTHER(-1,"other","OTHER",-1,"other","OTHER");
 
     private Integer makeId;
     private final String makeCode;

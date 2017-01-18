@@ -30,9 +30,12 @@ class NationalComponentStatisticsRepository extends ComponentStatisticsRepositor
         $rsm->addScalarResult('testCount', 'testCount');
 
         $sql = "SELECT COUNT(*) AS `testCount`
-            FROM `mot_test` `mt`
-              USE INDEX (`mot_test_completed_date_idx`)
-              JOIN `vehicle_class` `vc` ON `mt`.`vehicle_class_id` = `vc`.`id`
+            FROM `mot_test_current` `mt`
+              USE INDEX (`ix_mot_test_current_completed_date`)
+              LEFT JOIN `vehicle` ON (`vehicle`.`id` = `mt`.`vehicle_id`) AND (`vehicle`.`version` = `mt`.`vehicle_version`)
+              LEFT JOIN `vehicle_hist` ON (`vehicle_hist`.`id` = `mt`.`vehicle_id`) AND (`vehicle_hist`.`version` = `mt`.`vehicle_version`)
+              JOIN `model_detail` `md` ON `md`.`id` = COALESCE (`vehicle`.`model_detail_id`, `vehicle_hist`.`model_detail_id`)
+              JOIN `vehicle_class` `vc` ON `vc`.`id` = `md`.`vehicle_class_id`
               JOIN `vehicle_class_group` `vcg` ON `vc`.`vehicle_class_group_id` = `vcg`.`id`
               JOIN `mot_test_status` `mts` ON `mt`.`status_id` = `mts`.`id`
             WHERE `vcg`.`code` = :groupCode

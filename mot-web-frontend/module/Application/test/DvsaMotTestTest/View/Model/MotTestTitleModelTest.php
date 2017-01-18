@@ -1,10 +1,10 @@
 <?php
 namespace DvsaMotTestTest\View\Model;
 
-use DvsaCommon\Dto\Common\MotTestDto;
-use DvsaCommon\Dto\Common\MotTestTypeDto;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaMotTest\View\Model\MotTestTitleModel;
+use DvsaMotTestTest\TestHelper\Fixture;
 
 class MotTestTitleModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,24 +28,21 @@ class MotTestTitleModelTest extends \PHPUnit_Framework_TestCase
 
     public function testMotTestIsNotTrainingReturnsDefaultTitle()
     {
-        $motTest = new MotTestDto();
-        $motTest->setTestType(
-            (new MotTestTypeDto())->setCode(MotTestTypeCode::NORMAL_TEST)
-        );
+        $motTestData = Fixture::getDvsaVehicleTestDataVehicleClass4(true);
+        $motTestData->testTypeCode = MotTestTypeCode::NORMAL_TEST;
 
+        $motTest = new MotTest($motTestData);
         $title = $this->motTestTitleModel->getTitle($motTest);
         $this->assertEquals(self::MOT_TESTING_TITLE, $title);
     }
 
     public function testMotTestIsTrainingReturnsTrainingTitle()
     {
-        $motTest = new MotTestDto();
-        $motTest->setTestType(
-            (new MotTestTypeDto())->setCode(MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING)
-        );
+        $motTestData = Fixture::getDvsaVehicleTestDataVehicleClass4(true);
+        $motTestData->testTypeCode = MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING;
 
+        $motTest = new MotTest($motTestData);
         $title = $this->motTestTitleModel->getTitle($motTest);
         $this->assertEquals(self::MOT_TRAINING_TEST_TITLE, $title);
     }
-
 }

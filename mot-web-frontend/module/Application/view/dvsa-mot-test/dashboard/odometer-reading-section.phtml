@@ -86,6 +86,6 @@ use DvsaMotTest\Model\OdometerReadingViewObject;
     [
         'sectionId'    => 'odometer',
         'actionName'   => 'updateOdometer',
-        'bodyVisible'  => $odometerReading->getModifiable()
+        'bodyVisible'  => $odometerReading->isModifiable()
     ]
 );

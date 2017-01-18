@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApiTest\Service\ReplacementCertificate;
 
@@ -9,7 +14,9 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\CountryOfRegistration;
 use DvsaEntities\Entity\Make;
 use DvsaEntities\Entity\Model;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTestStatus;
+use DvsaEntities\Entity\Vehicle;
 use DvsaMotApi\Service\MotTestSecurityService;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateDraftCreator;
 use DvsaMotApiTest\Factory\MotTestObjectsFactory;
@@ -58,11 +65,17 @@ class ReplacementCertificateDraftCreatorTest extends PHPUnit_Framework_TestCase
     {
         $make = (new Make())->setCode("BT")->setName("Bat");
         $model = (new Model())->setCode("MB")->setName("Mobil");
+        $model->setMake($make);
+
+        $modelDetail = new ModelDetail();
+        $modelDetail->setModel($model);
+
+        $vehicle = new Vehicle();
+        $vehicle->setModelDetail($modelDetail);
+        $vehicle->setCountryOfRegistration(new CountryOfRegistration());
 
         $motTest = MotTestObjectsFactory::motTest();
-        $motTest->setCountryOfRegistration(new CountryOfRegistration());
-        $motTest->setMake($make);
-        $motTest->setModel($model);
+        $motTest->setVehicle($vehicle);
         $this->userAssignedToVts();
         $this->permissionsGranted(
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
@@ -72,21 +85,28 @@ class ReplacementCertificateDraftCreatorTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($motTest->getVersion(), $draft->getMotTestVersion());
         $this->assertEquals($motTest->getExpiryDate(), $draft->getExpiryDate());
-        $this->assertEquals($motTest->getOdometerReading()->getValue(), $draft->getOdometerReading()->getValue());
-        $this->assertEquals($motTest->getOdometerReading()->getUnit(), $draft->getOdometerReading()->getUnit());
-        $this->assertEquals(
-            $motTest->getOdometerReading()->getResultType(), $draft->getOdometerReading()->getResultType()
-        );
+        $this->assertEquals($motTest->getOdometerValue(), $draft->getOdometerValue());
+        $this->assertEquals($motTest->getOdometerUnit(), $draft->getOdometerUnit());
+        $this->assertEquals($motTest->getOdometerResultType(), $draft->getOdometerResultType());
         $this->assertEquals($motTest->getMake(), $draft->getMake());
         $this->assertEquals($motTest->getModel(), $draft->getModel());
     }
 
     public function testCreatedGivenMotTestWithModelOtherAndMakeOtherShouldCreateValidDraft()
     {
+        $make = (new Make())->setCode("BT")->setName("Bat");
+        $model = (new Model())->setCode("MB")->setName("Mobil");
+        $model->setMake($make);
+
+        $modelDetail = new ModelDetail();
+        $modelDetail->setModel($model);
+
+        $vehicle = new Vehicle();
+        $vehicle->setModelDetail($modelDetail);
+        $vehicle->setCountryOfRegistration(new CountryOfRegistration());
+
         $motTest = MotTestObjectsFactory::motTest();
-        $motTest->setCountryOfRegistration(new CountryOfRegistration());
-        $motTest->setFreeTextMakeName("Bat");
-        $motTest->setFreeTextModelName("Mobile");
+        $motTest->setVehicle($vehicle);
         $this->userAssignedToVts();
         $this->permissionsGranted(
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
@@ -100,36 +120,9 @@ class ReplacementCertificateDraftCreatorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($motTest->getMakeName(), $draft->getMakeName());
         $this->assertEquals($motTest->getVersion(), $draft->getMotTestVersion());
         $this->assertEquals($motTest->getExpiryDate(), $draft->getExpiryDate());
-        $this->assertEquals($motTest->getOdometerReading()->getValue(), $draft->getOdometerReading()->getValue());
-        $this->assertEquals($motTest->getOdometerReading()->getUnit(), $draft->getOdometerReading()->getUnit());
-        $this->assertEquals(
-            $motTest->getOdometerReading()->getResultType(), $draft->getOdometerReading()->getResultType()
-        );
-    }
-
-    public function testCreatedModelOtherAndMakeOtherShouldBeIgnoredWhenModelAndMakeExists()
-    {
-        $make = (new Make())->setCode("BT")->setName("Bat");
-        $model = (new Model())->setCode("MB")->setName("Mobil");
-
-        $motTest = MotTestObjectsFactory::motTest();
-        $motTest->setCountryOfRegistration(new CountryOfRegistration());
-        $motTest->setMake($make);
-        $motTest->setModel($model);
-        $motTest->setFreeTextMakeName("Bat");
-        $motTest->setFreeTextModelName("Mobile");
-
-        $this->userAssignedToVts();
-        $this->permissionsGranted(
-            [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
-        );
-
-        $draft = $this->createSut()->create($motTest);
-
-        $this->assertEquals($motTest->getModel(), $draft->getModel());
-        $this->assertEquals(null, $draft->getModelName());
-        $this->assertEquals($motTest->getMake(), $draft->getMake());
-        $this->assertEquals(null, $draft->getMakeName());
+        $this->assertEquals($motTest->getOdometerValue(), $draft->getOdometerValue());
+        $this->assertEquals($motTest->getOdometerUnit(), $draft->getOdometerUnit());
+        $this->assertEquals($motTest->getOdometerResultType(), $draft->getOdometerResultType());
     }
 
     private function createSut()

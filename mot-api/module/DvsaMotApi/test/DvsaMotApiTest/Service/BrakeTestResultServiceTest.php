@@ -290,12 +290,18 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
                 ],
                 [
                     self::AT     => 2,
+                    self::METHOD => 'flush',
+                    self::WITH   => null,
+                    self::WILL   => $this->returnValue(null),
+                ],
+                [
+                    self::AT     => 3,
                     self::METHOD => 'persist',
                     self::WITH   => $this->isInstanceOf(\DvsaEntities\Entity\MotTest::class),
                     self::WILL   => $this->returnValue(null),
                 ],
                 [
-                    self::AT     => 3,
+                    self::AT     => 4,
                     self::METHOD => 'flush',
                     self::WITH   => null,
                     self::WILL   => $this->returnValue(null),
@@ -516,15 +522,16 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
         $modelDetail = new ModelDetail();
         $modelDetail->setVehicleClass($vehicleClass);
 
+        $motTestStatus = new MotTestStatus();
+        $motTestStatus->setName(MotTestStatusName::ACTIVE);
+
         $vehicle = new Vehicle();
         $vehicle->setModelDetail($modelDetail);
         $vehicle->setFirstUsedDate(new \DateTime('2000-01-01'));
         $motTest = new MotTest();
+        $motTest->setVehicleVersion($vehicle->getVersion());
         $motTest->setVehicle($vehicle);
-        $motTestStatus = new MotTestStatus();
-        $motTestStatus->setName(MotTestStatusName::ACTIVE);
         $motTest->setStatus($motTestStatus);
-        $motTest->setVehicleClass($vehicleClass);
         
         return $motTest;
     }

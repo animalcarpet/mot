@@ -1,8 +1,14 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApiTest\Model\OutputFormat;
 
 use DvsaCommon\Constants\OdometerReadingResultType;
+use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
@@ -10,13 +16,15 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Colour;
 use DvsaEntities\Entity\Make;
 use DvsaEntities\Entity\Model;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
+use DvsaEntities\Entity\MotTestCancelled;
 use DvsaEntities\Entity\MotTestReasonForCancel;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
-use DvsaEntities\Entity\OdometerReading;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Site;
+use DvsaEntities\Entity\Vehicle;
 use DvsaMotApi\Model\OutputFormat\OutputFormatDataTablesMotTest;
 use PHPUnit_Framework_TestCase;
 
@@ -28,6 +36,11 @@ use PHPUnit_Framework_TestCase;
 class OutputFormatDataTablesMotTestTest extends \PHPUnit_Framework_TestCase
 {
     const SITE_ID = 9999;
+    const COLOUR = 'Black';
+    const VIN = '1M8GDM9AXKP042788';
+    const REG = 'FNZ6110';
+    const MAKE = 'Renault';
+    const MODEL = 'Clio';
 
     /* @var \DvsaMotApi\Model\OutputFormat\OutputFormatDataTablesMotTest */
     protected $outputFormat;
@@ -51,6 +64,7 @@ class OutputFormatDataTablesMotTestTest extends \PHPUnit_Framework_TestCase
     {
         $result = [];
         $this->outputFormat->extractItem($result, 1, $this->getMotTest());
+
         $this->assertEquals($this->getMotTestJsonDataTable(), $result);
     }
 
@@ -85,15 +99,15 @@ class OutputFormatDataTablesMotTestTest extends \PHPUnit_Framework_TestCase
                 'motTestNumber'       => '1',
                 'status'              => 'ABORTED',
                 'number'              => '1234567890005',
-                'primaryColour'       => 'Black',
+                'primaryColour'       => self::COLOUR,
                 'hasRegistration'     => true,
                 'odometerType'        => OdometerReadingResultType::OK,
                 'odometerValue'       => 10000,
                 'odometerUnit'        => 'mi',
-                'vin'                 => '1M8GDM9AXKP042788',
-                'registration'        => 'FNZ6110',
-                'make'                => 'Renault',
-                'model'               => 'Clio',
+                'vin'                 => self::VIN,
+                'registration'        => self::REG,
+                'make'                => self::MAKE,
+                'model'               => self::MODEL,
                 'testType'            => 'Normal Test',
                 'siteId'              => self::SITE_ID,
                 'siteNumber'          => 'V1234',
@@ -101,30 +115,40 @@ class OutputFormatDataTablesMotTestTest extends \PHPUnit_Framework_TestCase
                 'completedDate'       => '2011-01-01T11:11:11Z',
                 'testerUsername'      => 'tester1',
                 'testDate'            => '2011-01-01T11:11:11Z',
-                'reasonsForRejection' => [],
+                'reasonsForRejection' => null,
             ]
         ];
     }
 
     protected function getMotTest()
     {
+        $modelDetail = new ModelDetail();
+        $modelDetail->setModel(
+            (new Model())->setName(self::MODEL)->setMake(
+                (new Make())->setName(self::MAKE)
+            )
+        );
+
+        $vehicle = new Vehicle();
+        $vehicle->setColour((new Colour())->setName(self::COLOUR));
+        $vehicle->setRegistration(self::REG);
+        $vehicle->setVin(self::VIN);
+        $vehicle->setModelDetail($modelDetail);
+        $vehicle->setVersion(1);
+
+        $motTestCancelled = new MotTestCancelled();
+
         $motTest = new MotTest();
         $motTest
+            ->setVehicle($vehicle)
+            ->setVehicleVersion(1)
             ->setId(1)
             ->setNumber('1234567890005')
             ->setStatus($this->createMotTestAbortedStatus())
-            ->setPrimaryColour((new Colour())->setName('Black'))
             ->setHasRegistration(1)
-            ->setOdometerReading(
-                (new OdometerReading())
-                    ->setResultType(OdometerReadingResultType::OK)
-                    ->setValue(10000)
-                    ->setUnit('mi')
-            )
-            ->setVin('1M8GDM9AXKP042788')
-            ->setRegistration('FNZ6110')
-            ->setMake((new Make())->setName('Renault'))
-            ->setModel((new Model())->setName('Clio'))
+            ->setOdometerValue(10000)
+            ->setOdometerUnit(OdometerUnit::MILES)
+            ->setOdometerResultType(OdometerReadingResultType::OK)
             ->setMotTestType((new MotTestType())->setDescription('Normal Test'))
             ->setVehicleTestingStation(
                 (new Site())
@@ -133,7 +157,7 @@ class OutputFormatDataTablesMotTestTest extends \PHPUnit_Framework_TestCase
             )
             ->setTester((new Person())->setUsername('tester1'))
             ->setStartedDate(DateUtils::toDateTime('2011-01-01T11:11:11Z'))
-            ->setMotTestReasonForCancel((new MotTestReasonForCancel())->setReason([]))
+            ->setMotTestCancelled($motTestCancelled)
         ;
 
         return $motTest;
@@ -145,13 +169,13 @@ class OutputFormatDataTablesMotTestTest extends \PHPUnit_Framework_TestCase
             '1234567890005' => [
                 'status'              => 'ABORTED',
                 'motTestNumber'       => '1234567890005',
-                'primaryColour'       => 'Black',
+                'primaryColour'       => self::COLOUR,
                 'hasRegistration'     => 1,
                 'odometer'            => '10000 mi',
-                'vin'                 => '1M8GDM9AXKP042788',
-                'registration'        => 'FNZ6110',
-                'make'                => 'Renault',
-                'model'               => 'Clio',
+                'vin'                 => self::VIN,
+                'registration'        => self::REG,
+                'make'                => self::MAKE,
+                'model'               => self::MODEL,
                 'testType'            => 'Normal Test',
                 'siteId'              => self::SITE_ID,
                 'siteNumber'          => 'V1234',
@@ -159,7 +183,7 @@ class OutputFormatDataTablesMotTestTest extends \PHPUnit_Framework_TestCase
                 'completedDate'       => '2011-01-01T11:11:11Z',
                 'testerUsername'      => 'tester1',
                 'testDate'            => '2011-01-01T11:11:11Z',
-                'reasonsForRejection' => [],
+                'reasonsForRejection' => null,
             ]
         ];
     }

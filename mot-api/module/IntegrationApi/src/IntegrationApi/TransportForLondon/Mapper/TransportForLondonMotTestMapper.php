@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace IntegrationApi\TransportForLondon\Mapper;
 
@@ -30,8 +35,8 @@ class TransportForLondonMotTestMapper extends AbstractMotTestMapper
             'tstExpiryDt'       => $this->returnFormattedDateOrNull($motTest->getExpiryDate()),
             'siteNo'            => $motTest->getVehicleTestingStation()->getSiteNumber(),
             'locTelNo'          => $this->extractPhoneNumber($motTest->getVehicleTestingStation()),
-            'recMiles'          => $motTest->getOdometerReading()->getValue(),
-            'recMilesType'      => $motTest->getOdometerReading()->getUnit(),
+            'recMiles'          => $motTest->getOdometerValue(),
+            'recMilesType'      => $motTest->getOdometerUnit(),
             'expiredWarning'    =>
                 ($motTest->isPassed() && $this->isInPast($motTest->getExpiryDate())) ? self::FLAG_YES : self::FLAG_NO,
             'laterTestInScope'  => $isLaterTestInScope,

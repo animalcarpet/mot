@@ -1,0 +1,43 @@
+{
+  "id" : 1,
+  "amendedOn" : "2015-12-18",
+  "registration" : "A1 BCD",
+  "vin" : "1M7GDM9AXKP042777",
+  "emptyVrmReason" : null,
+  "emptyVinReason" : null,
+  "make" : {
+    "id" : 1,
+    "name" : "PORSCHE"
+  },
+  "model" : {
+    "id" : 2,
+    "name" : "BOXSTER"
+  },
+  "colour" : {
+    "code" : "C",
+    "name" : "Red"
+  },
+  "colourSecondary" : {
+    "code" : "W",
+    "name" : "Not Stated"
+  },
+  "countryOfRegistrationId" : 10,
+  "fuelType" : {
+    "code" : "PE",
+    "name" : "Petrol"
+  },
+  "vehicleClass" : {
+    "code" : "4",
+    "name" : "4"
+  },
+  "bodyType" : "2 Door Saloon",
+  "cylinderCapacity" : 1700,
+  "transmissionType" : "Automatic",
+  "firstRegistrationDate" : "2015-12-18",
+  "firstUsedDate" : "2015-12-18",
+  "manufactureDate" : "2015-12-18",
+  "isNewAtFirstReg" : false,
+  "isIncognito" : false,
+  "weight" : 0,
+  "version" : 1
+}

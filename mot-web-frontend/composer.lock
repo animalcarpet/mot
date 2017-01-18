@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a51ed886abd4ec84d753f41c78d35754",
-    "content-hash": "3d20f4bd5f4034adf25ebebdd773eb03",
+    "hash": "bff35235b01622a79d34573ef6b98ad9",
+    "content-hash": "4f4d2a0cf03e32f53172db088626ae3c",
     "packages": [
         {
             "name": "cpms/client",
@@ -1717,17 +1717,17 @@
         },
         {
             "name": "mot/api-client-php",
-            "version": "11.1.0",
+            "version": "12.0.0",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/api-client-php.git",
-                "reference": "75962a3d50ebcfab2ebfdb7fe7cb884f5dc32448"
+                "reference": "b721433a53f2c7336f59bf9ab98e41faf4d7fd54"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-11.1.0-4f2f21.tar",
-                "reference": "75962a3d50ebcfab2ebfdb7fe7cb884f5dc32448",
-                "shasum": "0aed0561478eacee89a23f0ba98d6a7d823ada38"
+                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-12.0.0-4e19e6.tar",
+                "reference": "b721433a53f2c7336f59bf9ab98e41faf4d7fd54",
+                "shasum": "feb12902be6470042b0d545f04866beef970de6e"
             },
             "require": {
                 "guzzlehttp/guzzle": "~6.1",
@@ -1774,17 +1774,7 @@
                     "./vendor/bin/phpunit --group integration"
                 ]
             },
-            "authors": [
-                {
-                    "name": "Ben Tadiar",
-                    "email": "b.tadiar@kainos.com"
-                },
-                {
-                    "name": "Ali Bahman",
-                    "email": "a.bahman@kainos.com"
-                }
-            ],
-            "time": "2016-12-05 19:48:04"
+            "time": "2017-01-20 09:59:40"
         },
         {
             "name": "noiselabs/zf-debug-utils",

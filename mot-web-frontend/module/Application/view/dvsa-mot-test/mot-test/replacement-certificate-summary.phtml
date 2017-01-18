@@ -1,16 +1,19 @@
 <?php
 /**
- * @var MotTestDto $motTest
+ * @var MotTest $motTest
+ * @var \DvsaMotTest\Controller\DvsaVehicleViewModel $vehicleViewModel
  * @var integer    $draftId
  * @var boolean    $isOriginalTester
  * @var boolean    $isAdmin
  * @var array      $differentTesterReasons
  */
 
-use DvsaCommon\Dto\Common\MotTestDto;
+use \Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\UrlBuilder\UrlBuilderWeb;
 
 $motTest = $this->motTest;
+$vehicleViewModel = $this->vehicleViewModel;
+$siteDto = $this->siteDto;
 $draftId = $this->draftId;
 $isOriginalTester = (boolean)$this->isOriginalTester;
 $isAdmin = (boolean)$this->isAdmin;
@@ -42,11 +45,13 @@ $this->headScript()->appendFile('/js/dvsa-mot-test/display-test-summary.js');
 echo $this->partial('infoMessages', ['getFromFlash' => true]);
 echo $this->partial('errorMessages', ['getFromFlash' => true]);
 
-if ($motTest instanceof MotTestDto) :
+if ($motTest instanceof MotTest) :
     echo $this->partial(
         'partials/mot-test-summary/test-summary',
         [
             'motTest'         => $motTest,
+            'siteDto'         => $siteDto,
+            'vehicle' => $vehicleViewModel,
             'odometerReading' => $odometerReading,
             'expiryDate' => $expiryDate
         ]

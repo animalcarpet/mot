@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApi\Factory\Service;
 
@@ -10,12 +15,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class OdometerReadingQueryServiceFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new OdometerReadingQueryService(
             $serviceLocator->get('OdometerReadingDeltaAnomalyChecker'),
-            $serviceLocator->get('OdometerReadingRepository'),
             $serviceLocator->get('DvsaAuthorisationService'),
             $serviceLocator->get(ReadMotTestAssertion::class),
             $serviceLocator->get(MotTestRepository::class),

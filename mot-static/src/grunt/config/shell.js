@@ -21,9 +21,6 @@ module.exports = function(grunt, config) {
         env_dvsa_hotfix: {
             command: '$scripts_workspace/env/dvsa_hotfix.sh'
         },
-        config_reload: {
-            command: './mot-static/src/scripts/reload_config_files_from_dist.sh'
-        },
         expand_vagrant_puppet: {
             command: 'cd $WORKSPACE/../puppet-code && rm -Rf work && bash build vagrant'
         },
@@ -65,10 +62,6 @@ module.exports = function(grunt, config) {
             command: function () {
                 return 'curl -s ' + grunt.config.get('url.testsupport') + '/testsupport/clear-statistics-amazon-cache';
             }
-        },
-        fix_testsupport_config: {
-            command:'sed "s/warden:8080/dev2.motdev.org.uk:9095/" ' +
-                'mot-testsupport/config/autoload/global.php.dist > mot-testsupport/config/autoload/global.php'
         }
     });
 };

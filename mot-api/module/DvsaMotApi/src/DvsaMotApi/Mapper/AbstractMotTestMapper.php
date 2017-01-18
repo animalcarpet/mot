@@ -6,7 +6,7 @@ use DataCatalogApi\Service\DataCatalogService;
 use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Dto\Common\ColourDto;
-use DvsaCommon\Dto\Common\OdometerReadingDTO;
+use DvsaCommon\Dto\Common\OdometerReadingDto;
 use DvsaCommon\Dto\Common\ReasonForCancelDto;
 use DvsaCommon\Dto\Common\ReasonForRefusalDto;
 use DvsaCommon\Dto\Vehicle\CountryDto;
@@ -372,27 +372,27 @@ abstract class AbstractMotTestMapper extends AbstractMapper
     /**
      * Format the odometer reading
      *
-     * @param OdometerReadingDTO $odometerReading
+     * @param OdometerReadingDto $odometerReading
      *
      * @return string
      */
-    protected function formatOdometer(OdometerReadingDTO $odometerReading = null)
+    protected function formatOdometer($value, $unit, $resultType)
     {
-        $isDualLang = $this->isDualLanguage();
-
-        $type = $odometerReading === null ? null : $odometerReading->getResultType();
-
-        if ($type == OdometerReadingResultType::OK) {
-            $result = $odometerReading->getValue() . ' ' . $odometerReading->getUnit();
-        } elseif ($type == OdometerReadingResultType::NOT_READABLE) {
-            $result = self::TEXT_NOT_READABLE .
-                ($isDualLang ? '/' . self::TEXT_NOT_READABLE_CY : '');
-        } elseif ($type == OdometerReadingResultType::NO_ODOMETER) {
-            $result = self::TEXT_NO_ODOMETER .
-                ($isDualLang ? '/' . self::TEXT_NO_ODOMETER_CY : '');
-        } else {
-            $result = self::TEXT_NOT_RECORDED .
-                ($isDualLang ? '/' . self::TEXT_NOT_RECORDED_CY : '');
+        switch ($resultType) {
+            case OdometerReadingResultType::OK :
+                $result = sprintf('%d %s', $value, $unit);
+                break;
+            case OdometerReadingResultType::NOT_READABLE :
+                $result = sprintf('%s%s', self::TEXT_NOT_READABLE,
+                    $this->isDualLanguage() ? '/' . self::TEXT_NOT_READABLE_CY : '');
+                break;
+            case OdometerReadingResultType::NO_ODOMETER :
+                $result = sprintf('%s%s', self::TEXT_NO_ODOMETER,
+                    $this->isDualLanguage() ? '/' . self::TEXT_NO_ODOMETER_CY : '');
+                break;
+            default:
+                $result = sprintf('%s%s', self::TEXT_NOT_RECORDED,
+                    $this->isDualLanguage() ? '/' . self::TEXT_NOT_RECORDED_CY : '');
         }
 
         return $result;
@@ -405,25 +405,11 @@ abstract class AbstractMotTestMapper extends AbstractMapper
      */
     protected function mapOdometer()
     {
-        $value = null;
+        $value = ArrayUtils::tryGet($this->getData(), 'odometerValue');
+        $unit = ArrayUtils::tryGet($this->getData(), 'odometerUnit');
+        $resultType = ArrayUtils::tryGet($this->getData(), 'odometerResultType');
 
-        $data = $this->getData();
-
-        $odometerReading = ArrayUtils::tryGet($data, 'odometerReading', false);
-        if ($odometerReading) {
-            $value = $odometerReading;
-        } else {
-            // VM-4432: Unable as I am to locate the underlying bug i.e. why is
-            // workaround by using the most recent value in the readings
-            // sequence, of which position[0] appears to be the most recent.
-            // NOTE: THIS MIGHT ACTUALLY BE "CORRECT" in that the status quo *IS* the bug?!
-            $odometerReadings = ArrayUtils::tryGet($data, 'OdometerReadings', []);
-            if (count($odometerReadings)) {
-                $value = current($odometerReadings);
-            }
-        }
-
-        $this->setValue(self::REP_VAR_ODOMETER, $this->formatOdometer($value));
+        $this->setValue(self::REP_VAR_ODOMETER, $this->formatOdometer($value, $unit, $resultType));
     }
 
     /**

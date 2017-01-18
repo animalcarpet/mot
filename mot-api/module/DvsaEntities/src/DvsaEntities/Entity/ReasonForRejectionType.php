@@ -1,8 +1,14 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaEntities\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
  * ReasonForRejectionType
@@ -13,12 +19,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ReasonForRejectionType
 {
+    use CommonIdentityTrait;
+
     /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=50, nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $reasonForRejectionType;
 
@@ -30,5 +36,23 @@ class ReasonForRejectionType
     public function getReasonForRejectionType()
     {
         return $this->reasonForRejectionType;
+    }
+
+    /**
+     * @param string $reasonForRejectionType
+     * @return ReasonForRejectionType
+     */
+    public function setReasonForRejectionType($reasonForRejectionType)
+    {
+        $this->reasonForRejectionType = $reasonForRejectionType;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getReasonForRejectionType();
     }
 }

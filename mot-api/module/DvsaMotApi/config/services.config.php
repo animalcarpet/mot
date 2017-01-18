@@ -20,7 +20,6 @@ use DvsaMotApi\Factory\Helper\RoleNotificationHelperFactory;
 use DvsaMotApi\Factory\Helper\TesterQualificationStatusChangeEventHelperFactory;
 use DvsaMotApi\Factory\MotTestRepositoryFactory;
 use DvsaMotApi\Factory\MotTestTypeRepositoryFactory;
-use DvsaMotApi\Factory\OdometerReadingRepositoryFactory;
 use DvsaMotApi\Factory\ReplacementCertificateDraftRepositoryFactory;
 use DvsaMotApi\Factory\RfrRepositoryFactory;
 use DvsaMotApi\Factory\Service\BrakeTestResultServiceFactory;
@@ -63,7 +62,6 @@ use DvsaMotApi\Factory\Service\Validator\OdometerReadingDeltaAnomalyCheckerFacto
 use DvsaMotApi\Factory\Service\Validator\ReplacementCertificateDraftChangeValidatorFactory;
 use DvsaMotApi\Factory\Service\Validator\RetestEligibilityValidatorFactory;
 use DvsaMotApi\Factory\Service\VehicleHistoryServiceFactory;
-use DvsaMotApi\Factory\Service\VehicleServiceFactory;
 use DvsaMotApi\Factory\Service\SurveyServiceFactory;
 use DvsaMotApi\Factory\TestItemCategoryRepositoryFactory;
 use DvsaMotApi\Factory\VehicleRepositoryFactory;
@@ -102,7 +100,6 @@ return [
     ],
     'factories'  => [
         UserService::class                                   => UserServiceFactory::class,
-        'VehicleService'                                     => VehicleServiceFactory::class,
         EmergencyService::class                              => EmergencyServiceFactory::class,
         'EnforcementMotTestResultService'                    => EnforcementMotTestResultServiceFactory::class,
         'EnforcementSiteAssessmentService'                   => EnforcementSiteAssessmentServiceFactory::class,
@@ -120,7 +117,6 @@ return [
         MotTestStatusChangeNotificationService::class        => MotTestStatusChangeNotificationFactory::class,
         TestingOutsideOpeningHoursNotificationService::class => TestingOutsideOpeningHoursNotificationServiceFactory::class,
         MotTestDateHelperService::class                      => MotTestDateHelperFactory::class,
-        'TestSlotTransactionService'                         => TestSlotTransactionServiceFactory::class,
         'MotTestTypeService'                                 => MotTestTypeServiceFactory::class,
         'MotTestCompareService'                              => MotTestCompareServiceFactory::class,
         'MotTestValidator'                                   => MotTestValidatorFactory::class,
@@ -133,7 +129,6 @@ return [
         'ConfigurationRepository'                            => ConfigurationRepositoryFactory::class,
         'RfrRepository'                                      => RfrRepositoryFactory::class,
         'OdometerReadingDeltaAnomalyChecker'                 => OdometerReadingDeltaAnomalyCheckerFactory::class,
-        'OdometerReadingRepository'                          => OdometerReadingRepositoryFactory::class,
         'OdometerReadingUpdatingService'                     => OdometerReadingUpdatingServiceFactory::class,
         'OdometerReadingQueryService'                        => OdometerReadingQueryServiceFactory::class,
         'MotTestMapper'                                      => MotTestMapperFactory::class,

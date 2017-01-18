@@ -1,7 +1,13 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApiTest\Service;
 
+use Doctrine\ORM\EntityRepository;
 use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
@@ -12,10 +18,12 @@ use DvsaCommonTest\TestUtils\MockHandler;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestReasonForRejection;
+use DvsaEntities\Entity\MotTestReasonForRejectionLocation;
 use DvsaEntities\Entity\MotTestType;
-use DvsaEntities\Entity\OdometerReading;
 use DvsaEntities\Entity\ReasonForRejection;
+use DvsaEntities\Entity\ReasonForRejectionType;
 use DvsaEntities\Entity\TestItemSelector;
+use DvsaEntities\Repository\MotTestReasonForRejectionLocationRepository;
 use DvsaEntitiesTest\Entity\MotTestReasonForRejectionTest;
 use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Service\MotTestReasonForRejectionService;
@@ -153,6 +161,26 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
 
         $this->prepareMocks();
 
+        $mockRfrLocationRepo = XMock::of(MotTestReasonForRejectionLocationRepository::class);
+        $mockRfrLocationRepo->expects($this->any())
+            ->method('getLocation')
+            ->willReturn(new MotTestReasonForRejectionLocation());
+
+        $this->mockEntityManager->expects($this->at(0))
+            ->method('getRepository')
+            ->with(MotTestReasonForRejectionLocation::class)
+            ->will($this->returnValue($mockRfrLocationRepo));
+
+        $mockRfrTypeRepo = XMock::of(EntityRepository::class);
+        $mockRfrTypeRepo->expects($this->any())
+            ->method('findOneBy')
+            ->willReturn(new ReasonForRejectionType());
+
+        $this->mockEntityManager->expects($this->at(1))
+            ->method('getRepository')
+            ->with(ReasonForRejectionType::class)
+            ->will($this->returnValue($mockRfrTypeRepo));
+
         $this->mockEntityManager->expects($this->once())
             ->method('find')
             ->will($this->returnValue(null));
@@ -278,11 +306,29 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
         $motTest = self::getTestMotTestEntity();
         $motTest
             ->setId($motTestId)
-            ->setOdometerReading(OdometerReading::create()->setUnit(OdometerUnit::KILOMETERS));
+            ->setOdometerUnit(OdometerUnit::KILOMETERS);
 
         $this->prepareMocks();
 
+        $mockRfrLocationRepo = XMock::of(MotTestReasonForRejectionLocationRepository::class);
+        $mockRfrLocationRepo->expects($this->any())
+            ->method('getLocation')
+            ->willReturn(new MotTestReasonForRejectionLocation());
+
         $mockEntityManagerHandler = new MockHandler($this->mockEntityManager, $this);
+
+        $mockEntityManagerHandler->next('getRepository')
+            ->with(MotTestReasonForRejectionLocation::class)
+            ->will($this->returnValue($mockRfrLocationRepo));
+
+        $mockRfrTypeRepo = XMock::of(EntityRepository::class);
+        $mockRfrTypeRepo->expects($this->any())
+            ->method('findOneBy')
+            ->willReturn(new ReasonForRejectionType());
+
+        $mockEntityManagerHandler->next('getRepository')
+            ->with(ReasonForRejectionType::class)
+            ->will($this->returnValue($mockRfrTypeRepo));
 
         if ($shouldSearchForRfr) {
             $testItemSelector = new TestItemSelector();
@@ -319,11 +365,6 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
                     $this->isInstanceOf(MotTestReasonForRejection::class),
                     $this->attributeEqualTo('motTest', $motTest),
                     $this->attributeEqualTo('reasonForRejection', $reasonForRejection),
-                    $this->attributeEqualTo('type', $data['type']),
-                    $this->attributeEqualTo('locationLateral', $data['locationLateral']),
-                    $this->attributeEqualTo('locationLongitudinal', $data['locationLongitudinal']),
-                    $this->attributeEqualTo('locationVertical', $data['locationVertical']),
-                    $this->attributeEqualTo('comment', $data['comment']),
                     $this->attributeEqualTo('failureDangerous', $failureDangerous)
                 )
             );

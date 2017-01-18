@@ -153,14 +153,9 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerReading'             =>
-                        (new OdometerReadingMapper())->toDtoFromArray(
-                            [
-                                'value'      => 10000,
-                                'unit'       => 'mi',
-                                'resultType' => OdometerReadingResultType::OK,
-                            ]
-                        ),
+                    'odometerValue'      => 10000,
+                    'odometerUnit'       => 'mi',
+                    'odometerResultType' => OdometerReadingResultType::OK,
                 ],
                 [
                     'TestStationAddress' => $VtsAddress1,
@@ -259,14 +254,9 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerReading'             =>
-                        (new OdometerReadingMapper())->toDtoFromArray(
-                            [
-                                'value'      => 10000,
-                                'unit'       => 'mi',
-                                'resultType' => OdometerReadingResultType::OK,
-                            ]
-                        ),
+                    'odometerValue'      => 10000,
+                    'odometerUnit'       => 'mi',
+                    'odometerResultType' => OdometerReadingResultType::OK,
                 ],
                 [
                     'TestStationAddress' => $VtsAddress1,
@@ -368,12 +358,9 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerReading'             =>
-                        (new OdometerReadingMapper())->toDtoFromArray(
-                            [
-                                'resultType' => OdometerReadingResultType::NOT_READABLE,
-                            ]
-                        ),
+                    'odometerValue'      => null,
+                    'odometerUnit'       => null,
+                    'odometerResultType' => OdometerReadingResultType::NOT_READABLE,
                 ],
                 [
                     'TestStationAddress' => $VtsAddress1,
@@ -478,14 +465,9 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerReading'             =>
-                        (new OdometerReadingMapper())->toDtoFromArray(
-                            [
-                                'value'      => 8888,
-                                'unit'       => 'mi',
-                                'resultType' => OdometerReadingResultType::OK,
-                            ]
-                        ),
+                    'odometerValue'      => 8888,
+                    'odometerUnit'       => 'mi',
+                    'odometerResultType' => OdometerReadingResultType::OK,
                 ],
                 [
                     'TestStationAddress' => $VtsAddress1,
@@ -601,10 +583,9 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerReading'             =>
-                        (new OdometerReadingMapper())->toDtoFromArray(
-                            ['resultType' => OdometerReadingResultType::NO_ODOMETER]
-                        ),
+                    'odometerValue'      => null,
+                    'odometerUnit'       => null,
+                    'odometerResultType' => OdometerReadingResultType::NO_ODOMETER,
                 ],
                 [
                     'TestStationAddress' => $VtsAddress1,
@@ -731,7 +712,9 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerReading'             => null,
+                    'odometerValue'      => null,
+                    'odometerUnit'       => null,
+                    'odometerResultType' => null,
                 ],
                 [
                     'TestStationAddress' => $VtsAddress1,
@@ -891,14 +874,9 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerReading'             =>
-                        (new OdometerReadingMapper())->toDtoFromArray(
-                            [
-                                'value'      => 10000,
-                                'unit'       => 'mi',
-                                'resultType' => OdometerReadingResultType::NO_ODOMETER,
-                            ]
-                        ),
+                    'odometerValue'      => 10000,
+                    'odometerUnit'       => 'mi',
+                    'odometerResultType' => OdometerReadingResultType::NO_ODOMETER,
                 ],
                 [
                     'TestStationAddress' => $VtsAddress1,
@@ -1067,14 +1045,9 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerReading'             =>
-                        (new OdometerReadingMapper())->toDtoFromArray(
-                            [
-                                'value'      => null,
-                                'unit'       => null,
-                                'resultType' => OdometerReadingResultType::NOT_READABLE,
-                            ]
-                        ),
+                    'odometerValue'      => null,
+                    'odometerUnit'       => null,
+                    'odometerResultType' => OdometerReadingResultType::NOT_READABLE,
                 ],
                 [
                     'TestStationAddress' => $VtsAddress1,
@@ -1253,14 +1226,9 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerReading'             =>
-                        (new OdometerReadingMapper())->toDtoFromArray(
-                            [
-                                'value'      => 10000,
-                                'unit'       => 'mi',
-                                'resultType' => OdometerReadingResultType::NO_ODOMETER,
-                            ]
-                        ),
+                    'odometerValue'      => 10000,
+                    'odometerUnit'       => 'mi',
+                    'odometerResultType' => OdometerReadingResultType::NO_ODOMETER,
                 ],
                 [
                     'TestStationAddress' => $VtsAddress1,
@@ -1432,14 +1400,9 @@ class MotTestFailureMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerReading'             =>
-                        (new OdometerReadingMapper())->toDtoFromArray(
-                            [
-                                'value'      => 10000,
-                                'unit'       => 'mi',
-                                'resultType' => OdometerReadingResultType::NO_ODOMETER,
-                            ]
-                        ),
+                    'odometerValue'      => 10000,
+                    'odometerUnit'       => 'mi',
+                    'odometerResultType' => OdometerReadingResultType::NO_ODOMETER,
                 ],
                 [
                     'TestStationAddress' => $VtsAddress1,

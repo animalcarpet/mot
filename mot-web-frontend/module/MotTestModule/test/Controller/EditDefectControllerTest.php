@@ -4,17 +4,18 @@ namespace DvsaMotTestTest\Controller;
 
 use Application\Service\LoggedInUserManager;
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use Dvsa\Mot\ApiClient\Service\MotTestService;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\EditDefectController;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyContextProvider;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Dto\Common\MotTestDto;
-use DvsaCommon\Dto\Common\MotTestTypeDto;
-use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
-use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommonTest\Bootstrap;
+use DvsaCommonTest\TestUtils\XMock;
+use DvsaMotTestTest\TestHelper\Fixture;
 
 /**
  * Class EditDefectControllerTest.
@@ -41,11 +42,19 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
      */
     private $reasonsForRejection;
 
+    protected $mockMotTestServiceClient;
+
     protected function setUp()
     {
         Bootstrap::setupServiceManager();
         $this->serviceManager = Bootstrap::getServiceManager();
         $this->serviceManager->setAllowOverride(true);
+
+        $this->serviceManager->setService(
+            MotTestService::class,
+            $this->getMockMotTestServiceClient()
+        );
+
         $this->setServiceManager($this->serviceManager);
 
         $this->defectsJourneyContextProviderMock = $this
@@ -71,6 +80,22 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
         parent::setUp();
     }
 
+    private function getMockMotTestServiceClient()
+    {
+        if ($this->mockMotTestServiceClient == null) {
+            $this->mockMotTestServiceClient = XMock::of(MotTestService::class);
+        }
+        return $this->mockMotTestServiceClient;
+    }
+
+    private function getMockVehicleServiceClient()
+    {
+        if ($this->mockVehicleServiceClient == null) {
+            $this->mockVehicleServiceClient = XMock::of(VehicleService::class);
+        }
+        return $this->mockVehicleServiceClient;
+    }
+
     /**
      * Test that the Edit Defect page loads correctly.
      */
@@ -87,28 +112,19 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
             'identifiedDefectId' => $defectId,
         ];
 
-        $motTestTypeMock = $this->getMockBuilder(MotTestTypeDto::class)->getMock();
-        $motTestTypeMock
-            ->expects($this->atLeastOnce())
-            ->method('getCode')
-            ->willReturn(MotTestTypeCode::NORMAL_TEST);
+        $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
 
-        $motTestMock = $this->getMockBuilder(MotTestDto::class)->getMock();
-        $motTestMock
-            ->expects($this->once())
-            ->method('getTestType')
-            ->willReturn($motTestTypeMock);
-        $motTestMock
-            ->expects($this->atLeastOnce())
-            ->method('getReasonsForRejection')
-            ->willReturn($this->getFailuresPrsAndAdvisories(1, 1, 2));
+        $rfrs = $this->getFailuresPrsAndAdvisories(1, 1, 2);
+        $testMotTestData->reasonsForRejection = $rfrs;
 
-        $restClientMock = $this->getRestClientMockForServiceManager();
-        $restClientMock
+        $motTest = new MotTest($testMotTestData);
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
             ->expects($this->once())
-            ->method('get')
-            ->with(MotTestUrlBuilder::motTest($motTestNumber)->toString())
-            ->willReturn(['data' => $motTestMock]);
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($motTest));
 
         $this->getResultForAction2('get', 'edit', $routeParams);
         $this->assertResponseStatus(self::HTTP_OK_CODE);
@@ -141,18 +157,18 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
 
         $this->defectsJourneyUrlGeneratorMock->method('goBack')->willReturn('mot-test');
 
-        $motTestMock = $this->getMockBuilder(MotTestDto::class)->getMock();
-        $motTestMock
-            ->expects($this->atLeastOnce())
-            ->method('getReasonsForRejection')
-            ->willReturn($this->getFailuresPrsAndAdvisories(1, 1, 2));
+        $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
+        $rfrs = $this->getFailuresPrsAndAdvisories(1, 1, 2);
+        $testMotTestData->reasonsForRejection = $rfrs;
 
-        $restClientMock = $this->getRestClientMockForServiceManager();
-        $restClientMock
+        $motTest = new MotTest($testMotTestData);
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
             ->expects($this->once())
-            ->method('get')
-            ->with(MotTestUrlBuilder::motTest($motTestNumber)->toString())
-            ->willReturn(['data' => $motTestMock]);
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($motTest));
 
         $this->getResultForAction2('post', 'edit', $routeParams, [], $postParams);
         $this->assertResponseStatus(self::HTTP_REDIRECT_CODE);
@@ -236,10 +252,13 @@ class EditDefectControllerTest extends AbstractFrontendControllerTestCase
             ++$defectId;
         }
 
-        return $this->reasonsForRejection = [
+        $this->reasonsForRejection = [
             'FAIL' => $failArray,
             'PRS' => $prsArray,
             'ADVISORY' => $advisoryArray,
         ];
+
+        $this->reasonsForRejection = json_decode(json_encode($this->reasonsForRejection), FALSE);
+        return $this->reasonsForRejection;
     }
 }

@@ -3,12 +3,12 @@
 namespace DvsaMotTest\Service;
 
 use Core\Service\MotFrontendIdentityProviderInterface;
-use DvsaCommon\Dto\Common\MotTestDto;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use Dvsa\Mot\ApiClient\Service\MotTestService;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use DvsaCommon\Pdf\Templating\ZendPdf\ZendPdfTemplate;
-use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
-use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaMotTest\Model\MotChecklistPdfField;
 use DvsaMotTest\Presenter\MotChecklistPdfPresenter;
@@ -28,20 +28,25 @@ class MotChecklistPdfService
     protected $pdfService;
     protected $pdfConfig;
     protected $motChecklistPdfPresenter;
-
+    protected $motTestServiceClient;
+    protected $vehicleServiceClient;
 
     public function __construct(
         Client $jsonClient,
         MotFrontendIdentityProviderInterface $authorisationService,
         ZendPdfTemplate $zendPdfTemplate,
         MotChecklistPdfPresenter $motChecklistPdfPresenter,
-        array $pdfConfig
+        MotTestService $motTestServiceClient,
+        array $pdfConfig,
+        VehicleService $vehicleServiceClient
     )
     {
         $this->jsonClient = $jsonClient;
         $this->authorisationService = $authorisationService;
         $this->pdfService = $zendPdfTemplate;
         $this->motChecklistPdfPresenter = $motChecklistPdfPresenter;
+        $this->motTestServiceClient = $motTestServiceClient;
+        $this->vehicleServiceClient = $vehicleServiceClient;
         $this->pdfConfig = $pdfConfig;
     }
 
@@ -54,12 +59,14 @@ class MotChecklistPdfService
     public function getChecklistPdf($motTestNumber)
     {
         try {
-            $motTestDto = $this->getMotTestFromApi($motTestNumber);
+            $motTest = $this->getMotTestFromApi($motTestNumber);
+            $vehicle = $this->vehicleServiceClient->getDvsaVehicleByIdAndVersion($motTest->getVehicleId(), $motTest->getVehicleVersion());
         } catch (GeneralRestException $e) {
             throw new NotFoundException('MOT test');
         }
 
-        $this->motChecklistPdfPresenter->setMotTest($motTestDto);
+        $this->motChecklistPdfPresenter->setMotTest($motTest);
+        $this->motChecklistPdfPresenter->setVehicle($vehicle);
         $this->motChecklistPdfPresenter->setIdentity($this->authorisationService->getIdentity());
 
         $this->configurePdfService();
@@ -70,15 +77,11 @@ class MotChecklistPdfService
 
     /**
      * @param $motTestNumber
-     * @return MotTestDto
+     * @return MotTest
      */
     protected function getMotTestFromApi($motTestNumber)
     {
-        $apiUrl = MotTestUrlBuilder::motTest($motTestNumber)->toString();
-        $result = $this->jsonClient->get($apiUrl);
-
-        $data = ArrayUtils::tryGet($result, 'data');
-
+        $data = $this->motTestServiceClient->getMotTestByTestNumber($motTestNumber);
         return $data;
     }
 

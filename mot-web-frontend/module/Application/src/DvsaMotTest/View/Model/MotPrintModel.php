@@ -2,10 +2,9 @@
 
 namespace DvsaMotTest\View\Model;
 
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Domain\MotTestType;
-use DvsaCommon\Dto\Common\MotTestDto;
-use DvsaCommon\Dto\Common\MotTestTypeDto;
-use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilderWeb;
@@ -25,20 +24,18 @@ class MotPrintModel extends ViewModel
     {
         $code = $prsMotTestNumber = null;
 
-        /** @var MotTestDto $motDetails */
+        /** @var MotTest $motDetails */
         $motDetails  = $variables['motDetails'];
+        /** @var DvsaVehicle $vehicle */
+        $vehicle     = $variables['vehicle'];
         $motTestNumber = $motDetails->getMotTestNumber();
 
         if ($motDetails !== null) {
-            /** @var MotTestTypeDto $motTestType */
-            $motTestType        = $motDetails->getTestType();
-            $status             = $motDetails->getStatus();
+            /** @var MotTest $motTestType */
+            $motTestType        = $motDetails->getTestTypeCode();
             $prsMotTestNumber   = $motDetails->getPrsMotTestNumber();
-            $code               = $motTestType->getCode();
+            $code               = $motTestType;
         }
-
-        /** @var VehicleDto $vehicle */
-        $vehicle = $motDetails === null ? new VehicleDto() : $motDetails->getVehicle();
 
         $isReinspection = MotTestType::isReinspection($code);
         $isNonMotTest = ($code === MotTestTypeCode::NON_MOT_TEST);
@@ -54,20 +51,18 @@ class MotPrintModel extends ViewModel
         $abandonedMotTestNumber = null;
         $abortedMotTestNumber = null;
 
-        if (isset($status)) {
-            if ($status === MotTestStatusName::PASSED) {
-                $passedMotTestNumber = $motDetails->getMotTestNumber();
-                if ($prsMotTestNumber) {
-                    $failedMotTestNumber = $prsMotTestNumber;
-                }
-            } elseif ($status === MotTestStatusName::FAILED) {
-                $failedMotTestNumber = $motDetails->getMotTestNumber();
-                if ($prsMotTestNumber) {
-                    $passedMotTestNumber = $prsMotTestNumber;
-                }
-            } elseif ($status === MotTestStatusName::ABANDONED) {
-                $abandonedMotTestNumber = $motDetails->getMotTestNumber();
+        if ($motDetails->getStatus() === MotTestStatusName::PASSED) {
+            $passedMotTestNumber = $motDetails->getMotTestNumber();
+            if ($prsMotTestNumber) {
+                $failedMotTestNumber = $prsMotTestNumber;
             }
+        } elseif ($motDetails->getStatus() === MotTestStatusName::FAILED) {
+            $failedMotTestNumber = $motDetails->getMotTestNumber();
+            if ($prsMotTestNumber) {
+                $passedMotTestNumber = $prsMotTestNumber;
+            }
+        } elseif ($motDetails->getStatus() === MotTestStatusName::ABANDONED) {
+            $abandonedMotTestNumber = $motDetails->getMotTestNumber();
         }
 
         // Title and header
@@ -85,7 +80,7 @@ class MotPrintModel extends ViewModel
             $printUrl =  MotTestUrlBuilderWeb::printCertificate($motTestNumber);
         }
 
-        $vtsId =  $motDetails->getVehicleTestingStation() ? $motDetails->getVehicleTestingStation()['id'] : null;
+        $vtsId =  $motDetails->getSiteId();
 
         $extraVariables = [
             'passedMotTestId'     => $passedMotTestNumber,

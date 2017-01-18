@@ -118,10 +118,6 @@ def composer_install(path){
   }
 }
 
-def copy_configs(path){
-  sh 'for x in ' + path + '/config/autoload/*.dist; do mv "$x" "${x%.*}" ; done'
-}
-
 def run_phpunit_independent(path) {
   sh 'cd ' + path + ' && ./vendor/bin/phpunit --group independent'
 }
@@ -271,7 +267,6 @@ node(FB) {
     )
     dir('mot') {
       stage 'Independent unit tests'
-      //copy_configs('mot-web-frontend')
       //run_phpunit_independent('mot-web-frontend')
     }
 
@@ -358,8 +353,6 @@ node(FB) {
     
     dir('mot') {
       stage 'Unit tests'
-      copy_configs('mot-api')
-      copy_configs('mot-testsupport')
       run_phpunit('mot-api')
       run_phpunit('mot-common-web-module')
       run_phpunit('mot-web-frontend')

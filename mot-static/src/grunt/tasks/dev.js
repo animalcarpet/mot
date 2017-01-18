@@ -12,7 +12,6 @@ module.exports = function (grunt, config) {
                 'sshexec:reset_database',
                 'amazon:cache:clear:national-statistics',
                 'sshexec:xdebug_disable',
-                'sshexec:doctrine_optimised_develop_dist',
                 'sshexec:server_mod_prod',
                 'doctrine:proxy',
                 'apache:restart:all'
@@ -20,7 +19,6 @@ module.exports = function (grunt, config) {
         );
         grunt.registerTask('dev:std', 'Switches the environment into standard development mode',
             [
-                'sshexec:fix_db_configs',
                 'apache:restart:all', // reset DB requires a clean class cache, hence reset happens twice
                 'sshexec:reset_database',
                 'amazon:cache:clear:national-statistics',
@@ -36,8 +34,6 @@ module.exports = function (grunt, config) {
         );
         grunt.registerTask('dev:dvsa_logger_enable', 'Enables the DVSA Logger',
             [
-                'sshexec:enable_dvsa_logger_api',
-                'sshexec:enable_dvsa_logger_web',
                 'apache:restart:all'
             ]
         );

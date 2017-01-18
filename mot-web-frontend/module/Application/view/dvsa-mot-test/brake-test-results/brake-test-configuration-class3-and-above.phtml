@@ -7,9 +7,9 @@ use DvsaCommon\Enum\VehicleClassCode;
 use DvsaMotTest\Model\BrakeTestConfigurationClass3AndAboveHelper as ConfigHelper;
 
 /**
- * @var \DvsaCommon\Dto\Common\MotTestDto      $motTest
+ * @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest      $motTest
+ * @var \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle $vehicle
  * @var boolean    $showVehicleType
- * @var VehicleDto $vehicle
  * @var ConfigHelper $configHelper
  */
 
@@ -26,8 +26,7 @@ echo $this->partial(
 );
 $this->placeholder('progressBar')->captureEnd();
 
-$vehicle = $motTest->getVehicle();
-$vehicleClass = $vehicle->getClassCode();
+$vehicleClass = $vehicle->getVehicleClass()->getCode();
 
 function getWeightTypes($vehicleClass)
 {

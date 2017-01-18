@@ -87,15 +87,6 @@ Feature: MOT Test
     Then the "Service brake performance" - "efficiency below requirements" RFR should not have been added
 
   @brake-test
-  Scenario: Putting vehicle weight in brake test updates vehicle record for MOT test
-    Given I am logged in as a Tester
-    And I start an MOT Test
-    And the Tester adds an Odometer Reading
-    When the Tester adds a Class 3-7 Plate Brake Test
-    And the Tester Passes the Mot Test
-    Then vehicle weight is updated
-
-  @brake-test
   Scenario: Putting vehicle weight in brake test does not update vehicle record for demo test
     Given I am logged in as a Tester
     And I start a Demo MOT Test

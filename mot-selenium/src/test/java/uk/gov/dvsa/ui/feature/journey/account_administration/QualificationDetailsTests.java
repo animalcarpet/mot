@@ -27,7 +27,7 @@ public class QualificationDetailsTests extends DslTest {
         testSite2 = siteData.createNewSite(aeDetails.getId(), "Test_Site2");
     }
 
-    @Test(groups = {"BVT", "Regression"},
+    @Test(groups = {"Regression"},
             testName = "2fa",
             description = "test that a user with no qualification can add their qualification details")
     public void userCanAddNewQualificationDetails() throws IOException
@@ -58,7 +58,7 @@ public class QualificationDetailsTests extends DslTest {
             .isOrderCardLinkDisplayed(), is(false));
     }
 
-    @Test(testName = "2fa", groups = {"BVT", "Regression"})
+    @Test(testName = "2fa", groups = {"Regression"})
     public void userWithNoSecurityCardOrdersSeesOrderSectionOnConfirmation() throws IOException {
 
         step("Given I am a user who has a new certificate with no security card orders");

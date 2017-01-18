@@ -19,7 +19,7 @@ class MotService
     }
 
     /**
-     * Update the mot_test entry with the associated $id with $data
+     * Update the mot_test_current entry with the associated $id with $data
      *
      * @param int $id
      * @param array $data
@@ -28,12 +28,12 @@ class MotService
     {
         //update vehicle with new data
         $this->entityManager->getConnection()->update(
-            'mot_test', $data, ['id' => $id]
+            'mot_test_current', $data, ['id' => $id]
         );
     }
 
     /**
-     * Updates the latest mot_test entry associated with $vehicleId with $data
+     * Updates the latest mot_test_current entry associated with $vehicleId with $data
      * @param $vehicleId
      * @param array $data
      */
@@ -68,7 +68,7 @@ class MotService
     public function changeDate($motNumber, \DateTime $startedDate, \DateTime $completedDate)
     {
         $this->entityManager->getConnection()->update(
-            'mot_test',
+            'mot_test_current',
             [
                 'started_date' => $startedDate->format("Y-m-d H:i:s"),
                 'completed_date' => $completedDate->format("Y-m-d H:i:s")

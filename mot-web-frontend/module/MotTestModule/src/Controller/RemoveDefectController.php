@@ -7,15 +7,14 @@
 
 namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyContextProvider;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
 use Dvsa\Mot\Frontend\MotTestModule\View\FlashMessageBuilder;
-use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Defect;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Exception\IdentifiedDefectNotFoundException;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefect;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefectCollection;
 use DvsaCommon\Domain\MotTestType;
-use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\HttpRestJson\Exception\RestServiceUnexpectedContentTypeException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
@@ -67,7 +66,7 @@ class RemoveDefectController extends AbstractDvsaMotTestController
     {
         $motTestNumber = (int) $this->params()->fromRoute('motTestNumber');
         $identifiedDefectId = (int) $this->params()->fromRoute('identifiedDefectId');
-        /** @var MotTestDto $motTest */
+        /** @var MotTest $motTest */
         $motTest = null;
         $isReinspection = false;
         $isDemoTest = false;
@@ -77,10 +76,10 @@ class RemoveDefectController extends AbstractDvsaMotTestController
 
         try {
             $motTest = $this->getMotTestFromApi($motTestNumber);
-            $testType = $motTest->getTestType();
-            $isDemoTest = MotTestType::isDemo($testType->getCode());
-            $isReinspection = MotTestType::isReinspection($testType->getCode());
-            $isNonMotTest = MotTestType::isNonMotTypes($testType->getCode());
+            $testType = $motTest->getTestTypeCode();
+            $isDemoTest = MotTestType::isDemo($testType);
+            $isReinspection = MotTestType::isReinspection($testType);
+            $isNonMotTest = MotTestType::isNonMotTypes($testType);
         } catch (RestApplicationException $e) {
             $this->addErrorMessages($e->getDisplayMessages());
         }
@@ -152,13 +151,13 @@ class RemoveDefectController extends AbstractDvsaMotTestController
      * is displayed above the defect name on the Remove Defect form).
      *
      * @param int        $identifiedDefectId
-     * @param MotTestDto $motTest
+     * @param MotTest $motTest
      *
      * @return IdentifiedDefect
      */
-    private function getIdentifiedDefect($identifiedDefectId, MotTestDto $motTest)
+    private function getIdentifiedDefect($identifiedDefectId, MotTest $motTest)
     {
-        return IdentifiedDefectCollection::fromMotApiData($motTest)->getDefectById($identifiedDefectId);
+         return IdentifiedDefectCollection::fromMotApiData($motTest)->getDefectById($identifiedDefectId);
     }
 
     /**

@@ -89,7 +89,7 @@ public class ReplacementCertificatesTest extends DslTest {
         assertThat(motUI.certificate.isReprintButtonDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression"})
+    @Test(groups = {"Regression"})
     public void pinBoxNotShownWhenTwoFactorUserEditCertificate() throws IOException, URISyntaxException {
 
         //Given I create a test as a 2FA user

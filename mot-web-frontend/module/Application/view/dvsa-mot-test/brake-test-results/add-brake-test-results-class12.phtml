@@ -1,15 +1,14 @@
 <?php
-use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaMotTest\Model\BrakeTestResultClass1And2ViewModel;
 use DvsaMotTest\View\Model\MotTestTitleModel;
 
 /**
  * @var int $motTestNumber
- * @var DvsaCommon\Dto\Vehicle\VehicleDto $vehicle
+ * @var \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle $vehicle
  * @var BrakeTestResultClass1And2ViewModel $brakeTestResult
  * @var \DvsaMotTest\Model\BrakeTestConfigurationClass1And2Helper $brakeTestConfiguration
  * @var MotTestTitleModel $motTestTitleViewModel
- * @var MotTestDto $motTest
+ * @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motTest
  */
 
 /** @var MotTestTitleModel $motTestTitleViewModel */
@@ -21,7 +20,7 @@ $this->layout()->setVariable('pageSubTitle', $pageSubtTitle);
 $this->layout()->setVariable('pageTitle', "Brake test results");
 
 $isSidecarAttached = $brakeTestConfiguration->isSidecarAttached();
-$vehicleClass = $vehicle->getClassCode();
+$vehicleClass = $vehicle->getVehicleClass()->getCode();
 
 $this->placeholder('progressBar')->captureStart();
 echo $this->partial(

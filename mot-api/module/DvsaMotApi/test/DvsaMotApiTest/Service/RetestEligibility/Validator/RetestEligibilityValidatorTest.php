@@ -11,11 +11,13 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Address;
 use DvsaEntities\Entity\ContactDetail;
 use DvsaEntities\Entity\CountryOfRegistration;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\NonWorkingDayCountry;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\SiteContactType;
+use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaMotApi\Helper\MysteryShopperHelper;
@@ -258,6 +260,12 @@ class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
         $vehicleClass->setId(1);
         $vehicleClass->setCode("1");
 
+        $modelDetail = new ModelDetail();
+        $modelDetail->setVehicleClass($vehicleClass);
+
+        $vehicle = new Vehicle();
+        $vehicle->setModelDetail($modelDetail);
+
         $motTest = new MotTest();
         $motTest
             ->setId(4)
@@ -266,7 +274,7 @@ class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
                 $this->mockMotTestStatus($status ?: MotTestStatusName::FAILED)
             )
             ->setVehicleTestingStation($site)
-            ->setVehicleClass($vehicleClass)
+            ->setVehicle($vehicle)
         ;
 
         return $motTest;

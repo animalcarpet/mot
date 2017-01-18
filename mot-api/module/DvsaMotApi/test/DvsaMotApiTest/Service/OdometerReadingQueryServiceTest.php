@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApiTest\Service;
 
@@ -6,13 +11,14 @@ use DvsaAuthentication\Identity;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use Api\Check\CheckMessage;
 use Api\Check\CheckResult;
+use DvsaCommon\Constants\OdometerReadingResultType;
+use DvsaCommon\Constants\OdometerUnit;
+use DvsaCommon\Dto\Common\OdometerReadingDto;
 use DvsaCommonApi\Authorisation\Assertion\ReadMotTestAssertion;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestType;
-use DvsaEntities\Entity\OdometerReading;
-use DvsaEntities\Repository\OdometerReadingRepository;
 use DvsaMotApi\Service\OdometerReadingQueryService;
 use DvsaMotApi\Service\Validator\Odometer\OdometerReadingDeltaAnomalyChecker;
 
@@ -27,9 +33,6 @@ class OdometerReadingQueryServiceTest extends AbstractServiceTestCase
     /** @var  OdometerReadingDeltaAnomalyChecker $anomalyChecker */
     private $anomalyChecker;
 
-    /** @var  OdometerReadingRepository $readingRepository */
-    private $readingRepository;
-
     /** @var AuthorisationServiceInterface $authService */
     private $authorizationService;
 
@@ -41,7 +44,6 @@ class OdometerReadingQueryServiceTest extends AbstractServiceTestCase
 
     public function setUp()
     {
-        $this->readingRepository = XMock::of(OdometerReadingRepository::class);
         $this->authorizationService = XMock::of(\DvsaAuthorisation\Service\AuthorisationServiceInterface::class);
         $this->identityProvider = XMock::of(\Zend\Authentication\AuthenticationService::class);
         $this->identityProvider->expects($this->any())
@@ -56,7 +58,6 @@ class OdometerReadingQueryServiceTest extends AbstractServiceTestCase
 
         $this->queryService = new OdometerReadingQueryService(
             $this->anomalyChecker,
-            $this->readingRepository,
             $this->authorizationService,
             new ReadMotTestAssertion(
                 $this->authorizationService,
@@ -87,7 +88,12 @@ class OdometerReadingQueryServiceTest extends AbstractServiceTestCase
     {
         //given
         $motTestNumber = 33;
-        $anyOdometerReading = OdometerReading::create();
+        $anyOdometerReading = (new OdometerReadingDto())
+            ->setValue(123456)
+            ->setUnit(OdometerUnit::MILES)
+            ->setResultType(OdometerReadingResultType::OK)
+            ->setIssuedDate(new \DateTime());
+
         $anomalyText = OdometerReadingDeltaAnomalyChecker::CURRENT_EQ_PREVIOUS;
         $this->currentReadingOf($anyOdometerReading);
         $this->previousReadingOf($anyOdometerReading);
@@ -104,14 +110,14 @@ class OdometerReadingQueryServiceTest extends AbstractServiceTestCase
 
     private function currentReadingOf($result)
     {
-        $this->readingRepository->expects($this->any())
+        $this->motTestRepository->expects($this->any())
             ->method('findReadingForTest')
             ->will($this->returnValue($result));
     }
 
     private function previousReadingOf($result)
     {
-        $this->readingRepository->expects($this->any())
+        $this->motTestRepository->expects($this->any())
             ->method('findPreviousReading')
             ->will($this->returnValue($result));
     }

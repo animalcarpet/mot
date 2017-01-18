@@ -5,26 +5,25 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 
 /**
- * @var \DvsaCommon\Dto\Common\ReasonForCancelDto $reasonForCancel
+ * @var \Dvsa\Mot\ApiClient\Resource\Item\ReasonForCancel $reasonForCancel
  */
-/** @var \DvsaCommon\Dto\Common\MotTestDto $motTest */
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motTest */
 $motTest = $this->motTest;
 $success = $this->success;
 
 $reasonForCancel = $motTest->getReasonForCancel();
-$vts = $motTest->getVehicleTestingStation();
-/** @var \DvsaCommon\Dto\Person\PersonDto $tester */
+$vts = $motTest->getSiteId();
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\Tester $tester */
 $tester = $motTest->getTester();
 $vtsName = ArrayUtils::tryGet($vts, 'name');
-/** @var \DvsaCommon\Dto\Common\MotTestTypeDto $testType */
-$testType = $motTest->getTestType();
-$testName = AbstractDvsaMotTestController::getTestName($testType->getCode());
+$testType = $motTest->getTestTypeCode();
+$testName = AbstractDvsaMotTestController::getTestName($testType);
 $testStatus = $motTest->getStatus();
 $motTestNumber = $motTest->getMotTestNumber();
 $testerName = $tester->getDisplayName();
 
 $escUrlToPrint = $success ? $this->url('mot-test/print-certificate', ['motTestNumber' => $motTestNumber]) : '#';
-$escUrlToReturnToVts = $this->url('vehicle-testing-station', ['id' => $vts['id']]);
+$escUrlToReturnToVts = $this->url('vehicle-testing-station', ['id' => $vts]);
 
 if ($testStatus === MotTestStatusName::PASSED || $testStatus === MotTestStatusName::FAILED) {
     $testStatus = 'completed';
@@ -53,7 +52,7 @@ $this->layout()->setVariable('pageTitle', 'MOT Test');
             <strong id="mot-test-number"><?php echo $this->escapeHtml($motTestNumber); ?></strong>
             with a reason of
             <strong id="reason-for-aborting-test"><?php
-                echo $this->escapeHtml($reasonForCancel->getReasonInLang());
+                echo $this->escapeHtml($reasonForCancel->getReason());
             ?></strong>.
         </p>
         <p>

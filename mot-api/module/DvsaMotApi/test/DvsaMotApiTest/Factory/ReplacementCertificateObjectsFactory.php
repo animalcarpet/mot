@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApiTest\Factory;
 
@@ -6,7 +11,7 @@ use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Date\DateUtils;
 use DvsaEntities\Entity\CertificateChangeDifferentTesterReason;
-use DvsaEntities\Entity\ReplacementCertificateDraft;
+use DvsaEntities\Entity\CertificateReplacementDraft;
 use DvsaMotApi\Dto\ReplacementCertificateDraftChangeDTO;
 
 /**
@@ -15,22 +20,22 @@ use DvsaMotApi\Dto\ReplacementCertificateDraftChangeDTO;
 class ReplacementCertificateObjectsFactory
 {
     /**
-     * @return ReplacementCertificateDraft
+     * @return CertificateReplacementDraft
      */
     public static function replacementCertificateDraft()
     {
         $motTest = MotTestObjectsFactory::motTest();
 
-        return (new ReplacementCertificateDraft())
+        return (new CertificateReplacementDraft())
             ->setCountryOfRegistration(VehicleObjectsFactory::countryOfRegistration(1, "cor"))
-            ->setPrimaryColour(VehicleObjectsFactory::colour(2, "R", "red"))
-            ->setSecondaryColour(VehicleObjectsFactory::colour(3, "G", "green"))
+            ->setPrimaryColour(VehicleObjectsFactory::colour(1, "R", "Red"))
+            ->setSecondaryColour(VehicleObjectsFactory::colour(2, "G", "Green"))
             ->setExpiryDate(DateUtils::toDate("2014-05-01"))
             ->setMake(VehicleObjectsFactory::make(2, 'BMW', "BMW"))
             ->setModel(VehicleObjectsFactory::model(3, "M3", "M3"))
-            ->setOdometerReading(
-                MotTestObjectsFactory::odometerReading(1, OdometerUnit::MILES, OdometerReadingResultType::OK)
-            )
+            ->setOdometerValue(666)
+            ->setOdometerUnit(OdometerUnit::MILES)
+            ->setOdometerResultType(OdometerReadingResultType::OK)
             ->setVin("vin")
             ->setMotTest($motTest)
             ->setVrm("vrm")
@@ -68,11 +73,9 @@ class ReplacementCertificateObjectsFactory
             ->setPrimaryColour("C" + $idSeed)
             ->setSecondaryColour("D" + $idSeed)
             ->setOdometerReading(
-                MotTestObjectsFactory::odometerReadingDTO(
                     999 + $idSeed,
                     OdometerUnit::KILOMETERS,
                     OdometerReadingResultType::OK
-                )
             );
     }
 

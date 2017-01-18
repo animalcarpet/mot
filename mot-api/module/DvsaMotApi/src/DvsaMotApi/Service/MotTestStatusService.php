@@ -9,6 +9,7 @@ namespace DvsaMotApi\Service;
 
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
+use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Constants\ReasonForRejection;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
@@ -46,7 +47,6 @@ class MotTestStatusService
      */
     public function isIncomplete(MotTest $motTest)
     {
-        $hasOdometerReading = $motTest->getOdometerReading() != null;
         $hasBrakeTestResult = $motTest->hasBrakeTestResults();
         $canTestWithoutBrakeTests = $this->authorisationService->isGranted(PermissionInSystem::TEST_WITHOUT_BRAKE_TESTS);
         $hasUnrepairedBrakePerformanceNotTestedRfr = $this->hasUnrepairedBrakePerformanceNotTestedRfr($motTest);
@@ -57,7 +57,7 @@ class MotTestStatusService
         $isBrakeTestOk = $hasBrakeTestResult || $hasUnrepairedBrakePerformanceNotTestedRfr || $canTestWithoutBrakeTests
             || $hasOriginalBrakeTestPassing;
 
-        return !$hasOdometerReading || !$isBrakeTestOk;
+        return !$this->hasOdometer($motTest) || !$isBrakeTestOk;
     }
 
     /**
@@ -92,5 +92,15 @@ class MotTestStatusService
         }
 
         return $motTest->hasFailures() ? MotTestStatusName::FAILED : MotTestStatusName::PASSED;
+    }
+
+    private function hasOdometer(MotTest $motTest)
+    {
+        $hasOdometerValue = !is_null($motTest->getOdometerValue());
+        $hasOdometerUnit = !is_null($motTest->getOdometerUnit());
+        $hasOdometerResultType = !is_null($motTest->getOdometerResultType()) &&
+            OdometerReadingResultType::OK != $motTest->getOdometerResultType() ;
+
+        return ($hasOdometerValue && $hasOdometerUnit) xor $hasOdometerResultType;
     }
 }

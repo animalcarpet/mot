@@ -265,7 +265,7 @@ class CertificateContext implements Context
         $document = array_shift($this->documents[$motTestToCheck->getId()]);
         $odometerHistory = json_decode($document[MotTestPdfDocumentParams::DOCUMENT_CONTENT], true)[MotTestPdfDocumentParams::ODOMETER_HISTORY];
         foreach ($motTestsPerformedBefore as $testThatShoudBeInHistory) {
-            $expectedOdometerHistory = (string)$testThatShoudBeInHistory->getOdometerReading()->getValue();
+            $expectedOdometerHistory = (string)$testThatShoudBeInHistory->getOdometerValue();
             PHPUnit::assertGreaterThan(
                 0,
                 strpos($odometerHistory, $expectedOdometerHistory),
@@ -284,7 +284,7 @@ class CertificateContext implements Context
         $odometerHistory = json_decode($document[MotTestPdfDocumentParams::DOCUMENT_CONTENT], true)[MotTestPdfDocumentParams::ODOMETER_HISTORY];
         foreach ($testsNotShown as $mot) {
             PHPUnit::assertFalse(
-                strpos($odometerHistory, (string)$mot->getOdometerReading()->getValue()),
+                strpos($odometerHistory, (string)$mot->getOdometerValue()),
                 'one of the odometer readings is from failed or too old test'
             );
         }

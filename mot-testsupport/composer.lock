@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c89b448ae222c9473579563cd4f9bd33",
-    "content-hash": "5c87789e83d1ae1096281a2de007da85",
+    "hash": "bd18ab710777f3a92141d0eeebe096f7",
+    "content-hash": "6eb20472e3079c23f1dc154384ecf2d2",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -801,6 +801,12 @@
                 "url": "git@gitlab.motdev.org.uk:mot/featuretoggle.git",
                 "reference": "2ca85b84d5b20959a5f4fe899fd989f92602403f"
             },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/dvsa-feature-toggle-v1.1.1-fac088.tar",
+                "reference": "2ca85b84d5b20959a5f4fe899fd989f92602403f",
+                "shasum": "69299c57dad3466801f58cfd6027c480900f6b0c"
+            },
             "require": {
                 "php": ">=5.3.3",
                 "zendframework/zendframework": "~2.3"
@@ -995,17 +1001,17 @@
         },
         {
             "name": "mot/api-client-php",
-            "version": "11.0.0",
+            "version": "12.0.0",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/api-client-php.git",
-                "reference": "e07d5ebc4c36bf5b8264b5077cd6064c84d09203"
+                "reference": "b721433a53f2c7336f59bf9ab98e41faf4d7fd54"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-11.0.0-f7adf4.tar",
-                "reference": "e07d5ebc4c36bf5b8264b5077cd6064c84d09203",
-                "shasum": "e098d754b9850b1b6e8470e698596e5aef5196a3"
+                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-12.0.0-4e19e6.tar",
+                "reference": "b721433a53f2c7336f59bf9ab98e41faf4d7fd54",
+                "shasum": "feb12902be6470042b0d545f04866beef970de6e"
             },
             "require": {
                 "guzzlehttp/guzzle": "~6.1",
@@ -1052,17 +1058,7 @@
                     "./vendor/bin/phpunit --group integration"
                 ]
             },
-            "authors": [
-                {
-                    "name": "Ben Tadiar",
-                    "email": "b.tadiar@kainos.com"
-                },
-                {
-                    "name": "Ali Bahman",
-                    "email": "a.bahman@kainos.com"
-                }
-            ],
-            "time": "2016-12-02 09:50:37"
+            "time": "2017-01-20 09:59:40"
         },
         {
             "name": "mtdowling/jmespath.php",

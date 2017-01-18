@@ -1,11 +1,19 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaEntitiesTest\Entity;
 
 use DateInterval;
 use DateTime;
+use DvsaCommon\Constants\OdometerReadingResultType;
+use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
+use DvsaCommon\Enum\ReasonForRejectionTypeName;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaDocument\Entity\Document;
 use DvsaEntities\Entity\BrakeTestResultClass12;
@@ -16,13 +24,16 @@ use DvsaEntities\Entity\CountryOfRegistration;
 use DvsaEntities\Entity\FuelType;
 use DvsaEntities\Entity\Make;
 use DvsaEntities\Entity\Model;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
+use DvsaEntities\Entity\MotTestCancelled;
+use DvsaEntities\Entity\MotTestComplaintRef;
 use DvsaEntities\Entity\MotTestReasonForCancel;
 use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
-use DvsaEntities\Entity\OdometerReading;
 use DvsaEntities\Entity\Person;
+use DvsaEntities\Entity\ReasonForRejectionType;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
@@ -47,7 +58,7 @@ class MotTestTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($motTest->getHasRegistration(), '"hasRegistration" should initially be null');
         $this->assertEmpty($motTest->getBrakeTestResultClass3AndAbove(), '"brakeTestResult" should initially be empty');
         $this->assertNull($motTest->getIssuedDate(), '"issuedDate" should initially be null');
-        $this->assertNull($motTest->getMotTestReasonForCancel(), '"motTestReasonForCancel" should initially be null');
+        $this->assertNull($motTest->getMotTestCancelled(), '"motTestCancelled" should initially be null');
         $this->assertNull(
             $motTest->getReasonForTerminationComment(),
             '"reasonForTerminationComment" should initially be null'
@@ -62,7 +73,6 @@ class MotTestTest extends \PHPUnit_Framework_TestCase
             $motTest->getMotTestReasonForRejections()->toArray(),
             '"motTestReasonForRejections" should initially be empty'
         );
-        $this->assertnull($motTest->getIsPrivate());
         $this->assertNull($motTest->getModel(), 'Model should initially be null');
     }
 
@@ -71,7 +81,7 @@ class MotTestTest extends \PHPUnit_Framework_TestCase
         $number = "1234567";
         $brakeTests12 = new BrakeTestResultClass12();
         $brakeTests3up = new BrakeTestResultClass3AndAbove();
-        $complaintRef = "33333";
+        $complaintRef = (new MotTestComplaintRef())->setComplaintRef("33333");
         $completedDate = new \DateTime();
         $countryOfReg = new CountryOfRegistration();
         $document = new Document();
@@ -84,21 +94,40 @@ class MotTestTest extends \PHPUnit_Framework_TestCase
         $itemsNotTestedComment = new Comment();
         $make = new Make();
         $model = new Model();
+        $model->setMake($make);
         $primaryColour = new Colour();
         $secondaryColour = new Colour();
-        $odometerReading = new OdometerReading();
+        $odometerValue = 666;
         $prsMotTest = $this->createMotTest();
         $vin = "12345678901234567";
         $reg = "FCB1234";
         $vts = new Site();
         $vehClass = new VehicleClass();
-        $veh = new Vehicle();
+
+        $modelDetail = new ModelDetail();
+        $modelDetail->setModel($model);
+        $modelDetail->setVehicleClass($vehClass);
+        $modelDetail->setFuelType($fuelType);
+
+        $vehicle = new Vehicle();
+        $vehicle->setCountryOfRegistration($countryOfReg);
+        $vehicle->setVin($vin);
+        $vehicle->setRegistration($reg);
+        $vehicle->setColour($primaryColour);
+        $vehicle->setSecondaryColour($secondaryColour);
+        $vehicle->setModelDetail($modelDetail);
+        $vehicle->setVersion(1);
+
         $status = $this->createMotTestPassedStatus();
         $startedDate = new \DateTime();
         $tester = new Person();
         $motTestOriginal = $this->createMotTest();
         $reasonForTerminationComment = "comment for termination";
         $reasonForCancel = new MotTestReasonForCancel();
+        $comment = (new Comment())->setComment($reasonForTerminationComment);
+        $motTestCancelled = new MotTestCancelled();
+        $motTestCancelled->setComment($comment)
+            ->setMotTestReasonForCancel($reasonForCancel);
         $partialReinspectionComment = new Comment();
         $onePersonTest = 1;
         $onePersonReinspection = 1;
@@ -112,36 +141,23 @@ class MotTestTest extends \PHPUnit_Framework_TestCase
             ->setBrakeTestResultClass3AndAbove($brakeTests3up)
             ->setComplaintRef($complaintRef)
             ->setCompletedDate($completedDate)
-            ->setCountryOfRegistration($countryOfReg)
             ->setDocument($document)
             ->setExpiryDate($expiryDate)
-            ->setFuelType($fuelType)
-            ->setFullPartialRetest($fullPartialRetest)
             ->setHasRegistration($hasReg)
-            ->setIsPrivate($isPriv)
             ->setIssuedDate($issuedDate)
-            ->setItemsNotTestedComment($itemsNotTestedComment)
-            ->setMake($make)
-            ->setModel($model)
-            ->setPrimaryColour($primaryColour)
-            ->setSecondaryColour($secondaryColour)
-            ->setOdometerReading($odometerReading)
+            ->setOdometerValue($odometerValue)
+            ->setOdometerUnit(OdometerUnit::KILOMETERS)
+            ->setOdometerResultType(OdometerReadingResultType::NOT_READABLE)
             ->setPrsMotTest($prsMotTest)
-            ->setVin($vin)
-            ->setRegistration($reg)
             ->setVehicleTestingStation($vts)
-            ->setVehicleClass($vehClass)
-            ->setVehicle($veh)
+            ->setVehicle($vehicle)
+            ->setVehicleVersion($vehicle->getVersion())
             ->setStatus($status)
             ->setStartedDate($startedDate)
             ->setTester($tester)
             ->setMotTestIdOriginal($motTestOriginal)
-            ->setReasonForTerminationComment($reasonForTerminationComment)
-            ->setMotTestReasonForCancel($reasonForCancel)
-            ->setMotTestType($mtt)
-            ->setOnePersonTest($onePersonTest)
-            ->setonePersonReInspection($onePersonReinspection);
-        $mt->setPartialReinspectionComment($partialReinspectionComment);
+            ->setMotTestCancelled($motTestCancelled)
+            ->setMotTestType($mtt);
 
         $this->assertEquals($number, $mt->getNumber());
         $this->assertEquals($brakeTests12, $mt->getBrakeTestResultClass12());
@@ -152,32 +168,28 @@ class MotTestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($document, $mt->getDocument());
         $this->assertEquals($expiryDate, $mt->getExpiryDate());
         $this->assertEquals($fuelType, $mt->getFuelType());
-        $this->assertEquals($fullPartialRetest, $mt->getFullPartialRetest());
         $this->assertEquals($hasReg, $mt->getHasRegistration());
-        $this->assertEquals($isPriv, $mt->getIsPrivate());
         $this->assertEquals($issuedDate, $mt->getIssuedDate());
-        $this->assertEquals($itemsNotTestedComment, $mt->getItemsNotTestedComment());
         $this->assertEquals($make, $mt->getMake());
         $this->assertEquals($model, $mt->getModel());
         $this->assertEquals($primaryColour, $mt->getPrimaryColour());
         $this->assertEquals($secondaryColour, $mt->getSecondaryColour());
-        $this->assertEquals($odometerReading, $mt->getOdometerReading());
+        $this->assertEquals($odometerValue, $mt->getOdometerValue());
+        $this->assertEquals(OdometerUnit::KILOMETERS, $mt->getOdometerUnit());
+        $this->assertEquals(OdometerReadingResultType::NOT_READABLE, $mt->getOdometerResultType());
         $this->assertEquals($prsMotTest, $mt->getPrsMotTest());
         $this->assertEquals($vin, $mt->getVin());
         $this->assertEquals($reg, $mt->getRegistration());
         $this->assertEquals($vts, $mt->getVehicleTestingStation());
         $this->assertEquals($vehClass, $mt->getVehicleClass());
-        $this->assertEquals($veh, $mt->getVehicle());
+        $this->assertEquals($vehicle, $mt->getVehicle());
         $this->assertEquals($status->getName(), $mt->getStatus());
         $this->assertEquals($startedDate, $mt->getStartedDate());
         $this->assertEquals($tester, $mt->getTester());
         $this->assertEquals($motTestOriginal, $mt->getMotTestIdOriginal());
-        $this->assertEquals($reasonForCancel, $mt->getMotTestReasonForCancel());
+        $this->assertEquals($reasonForCancel, $mt->getMotTestCancelled()->getMotTestReasonForCancel());
         $this->assertEquals($reasonForTerminationComment, $mt->getReasonForTerminationComment());
         $this->assertEquals($mtt, $mt->getMotTestType());
-        $this->assertEquals($partialReinspectionComment, $mt->getPartialReinspectionComment());
-        $this->assertEquals($onePersonTest, $mt->getOnePersonTest());
-        $this->assertEquals($onePersonReinspection, $mt->getOnePersonReInspection());
     }
 
     public function testAddReasonsForRejection()
@@ -272,14 +284,18 @@ class MotTestTest extends \PHPUnit_Framework_TestCase
     public function testHasRfrsOfType()
     {
         $mt = $this->createMotTest();
-        $reason1 = (new MotTestReasonForRejection())->setId(1)->setType("fail");
-        $reason2 = (new MotTestReasonForRejection())->setId(2)->setType("prs");
+        $reason1 = (new MotTestReasonForRejection())->setId(1)->setType(
+            (new ReasonForRejectionType())->setReasonForRejectionType(ReasonForRejectionTypeName::FAIL)
+        );
+        $reason2 = (new MotTestReasonForRejection())->setId(2)->setType(
+            (new ReasonForRejectionType())->setReasonForRejectionType(ReasonForRejectionTypeName::PRS)
+        );
 
         $mt->addMotTestReasonForRejection($reason1);
         $mt->addMotTestReasonForRejection($reason2);
 
-        $this->assertTrue($mt->hasRfrsOfType("prs"));
-        $this->assertTrue($mt->hasRfrsOfType("fail"));
+        $this->assertTrue($mt->hasRfrsOfType(ReasonForRejectionTypeName::PRS));
+        $this->assertTrue($mt->hasRfrsOfType(ReasonForRejectionTypeName::FAIL));
         $this->assertFalse($mt->hasRfrsOfType("advisory"));
     }
 
@@ -291,9 +307,9 @@ class MotTestTest extends \PHPUnit_Framework_TestCase
         $mt = $this->createMotTest();
         $mt->setMotTestType($mtt);
         $reason1 = (new MotTestReasonForRejection())->setId(1)
-            ->setType("fail");
+            ->setType((new ReasonForRejectionType())->setReasonForRejectionType("fail"));
         $reason2 = (new MotTestReasonForRejection())->setId(2)
-            ->setType("prs");
+            ->setType((new ReasonForRejectionType())->setReasonForRejectionType("prs"));
         $mt->addMotTestReasonForRejection($reason1);
         $mt->addMotTestReasonForRejection($reason2);
         $this->assertCount(2, $mt->extractRfrs($hydrator));

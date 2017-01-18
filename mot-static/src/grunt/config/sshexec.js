@@ -130,19 +130,6 @@ module.exports = function (grunt, config) {
                 options: dev_ssh_options,
                 command: 'sudo service <%= service_config.mysqlServiceName %> restart'
             },
-            fix_db_configs: {
-                command: function () {
-                    return [
-                        //temp. fix for testsupport config - remove if https://gitlab.motdev.org.uk/webops/mot-vagrant/issues/45 is resolved
-                        'file=<%= vagrant_config.workspace %>/mot-testsupport/config/autoload/global.php',
-                        'if [ ! -f ${file} ]; then ' +
-                        'cp ${file}.dist ${file}; ' +
-                        'fi',
-                        "sed -i 's/localhost/mysql/g' ${file}"
-                    ].join(' && ');
-                }
-            },
-
             reset_database: {
                 options: dev_ssh_options,
                 command: function () {
@@ -526,9 +513,6 @@ module.exports = function (grunt, config) {
             doctrine_default_develop_dist: {
                 command: 'rm -f <%= vagrant_config.workspace %>/mot-api/config/autoload/optimised.development.php'
             },
-            doctrine_optimised_develop_dist: {
-                command: 'cp <%= vagrant_config.workspace %>/mot-api/config/autoload/optimised.development.php.dist.opt <%= vagrant_config.workspace %>/mot-api/config/autoload/optimised.development.php'
-            },
             jasper_tomcat_restart: {
                 options: {
                     host: '<%= jasper_config.host %>',
@@ -551,12 +535,6 @@ module.exports = function (grunt, config) {
             zend_dev_tools_disable: {
                 options: dev_ssh_options,
                 command: 'sudo rm -f <%= vagrant_config.motConfigDir %>/mot-web-frontend/zenddevelopertools.development.php'
-            },
-            enable_dvsa_logger_api: {
-                command: 'cp <%= vagrant_config.workspace %>/mot-api/config/autoload/z.dvsalogger.development.php.dist.opt <%= vagrant_config.workspace %>/mot-api/config/autoload/z.dvsalogger.development.php'
-            },
-            enable_dvsa_logger_web: {
-                command: 'cp <%= vagrant_config.workspace %>/mot-web-frontend/config/autoload/z.dvsalogger.development.php.dist.opt <%= vagrant_config.workspace %>/mot-web-frontend/config/autoload/z.dvsalogger.development.php'
             },
             disable_dvsa_logger_api: {
                 command: 'rm -f <%= vagrant_config.workspace %>/mot-api/config/autoload/z.dvsalogger.development.php'

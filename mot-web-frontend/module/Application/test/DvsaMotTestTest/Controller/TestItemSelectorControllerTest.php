@@ -1,17 +1,18 @@
 <?php
 namespace DvsaMotTestTest\Controller;
 
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use Dvsa\Mot\ApiClient\Service\MotTestService;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use Dvsa\Mot\Frontend\Plugin\AjaxResponsePlugin;
-use DvsaCommon\Dto\Common\MotTestDto;
-use DvsaCommon\Dto\Common\MotTestTypeDto;
-use DvsaCommon\Dto\Person\PersonDto;
 use DvsaCommon\Enum\MotTestStatusName;
-use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\UrlBuilder;
+use DvsaCommonTest\Bootstrap;
+use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTest\Controller\TestItemSelectorController;
-use Zend\Http\Header\Location;
+use DvsaMotTestTest\TestHelper\Fixture;
 use Zend\Stdlib\Parameters;
 
 /**
@@ -19,13 +20,44 @@ use Zend\Stdlib\Parameters;
  */
 class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
 {
+    protected $mockMotTestServiceClient;
+    protected $mockVehicleServiceClient;
+
     protected function setUp()
     {
         $this->controller = new TestItemSelectorController();
 
+        $serviceManager = Bootstrap::getServiceManager();
+
+        $serviceManager->setService(
+            MotTestService::class,
+            $this->getMockMotTestServiceClient()
+        );
+
+        $serviceManager->setService(
+            VehicleService::class,
+            $this->getMockVehicleServiceClient()
+        );
+
         parent::setUp();
         $this->controller->getPluginManager()
             ->setInvokableClass('ajaxResponse', AjaxResponsePlugin::class);
+    }
+
+    private function getMockMotTestServiceClient()
+    {
+        if ($this->mockMotTestServiceClient == null) {
+            $this->mockMotTestServiceClient = XMock::of(MotTestService::class);
+        }
+        return $this->mockMotTestServiceClient;
+    }
+
+    private function getMockVehicleServiceClient()
+    {
+        if ($this->mockVehicleServiceClient == null) {
+            $this->mockVehicleServiceClient = XMock::of(VehicleService::class);
+        }
+        return $this->mockVehicleServiceClient;
     }
 
     public function testTestItemSelectorsGetData()
@@ -43,6 +75,15 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
             'motTestNumber' => $motTestNumber,
             'tis-id'        => $testItemSelectorId,
         ];
+
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
 
         $result = $this->getResultForAction('testItemSelectors', $routeParams);
 
@@ -73,6 +114,15 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
             'tis-id'        => $testItemSelectorId,
         ];
 
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
+
         $result = $this->getResultForAction('testItemSelectors', $routeParams);
 
         $this->assertResponseStatus(self::HTTP_OK_CODE);
@@ -101,6 +151,15 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
             'tis-id'        => $testItemSelectorId,
         ];
 
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
+
         $result = $this->getResultForAction('testItemSelectors', $routeParams);
 
         $this->assertResponseStatus(self::HTTP_OK_CODE);
@@ -125,6 +184,15 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
             'tis-id'        => $testItemSelectorId,
         ];
 
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
+
         $result = $this->getResultForAction('testItemSelectors', $routeParams);
 
         $this->assertResponseStatus(self::HTTP_OK_CODE);
@@ -138,9 +206,16 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
     public function testTestItemSelectorsShowInfoAboutMissing()
     {
         $testItemSelectorId = 502;
-
-        $this->getRestClientMock('getWithParamsReturnDto', $this->getEmptyTestItemsDto($testItemSelectorId));
         $this->getFlashMessengerMockForAddInfoMessage(TestItemSelectorController::NO_RFRS_FOUND_INFO_MESSAGE);
+
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(0)
+            ->will($this->returnValue($testMotTestData));
 
         $this->routeMatch->setParam('action', 'testItemSelectors');
         $this->routeMatch->setParam('id', '1');
@@ -181,14 +256,25 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
         $start = "0";
         $end = "10";
         $hasMore = true;
+
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
         $rfrs = [['id' => 1], ['id' => 2]];
         $restData = [
             'data' => [
                 'searchDetails'       => ['hasMore' => $hasMore],
                 'reasonsForRejection' => $rfrs,
-                'motTest'             => $this->getMotTest()->setMotTestNumber(1),
+                'motTest'             => $testMotTestData,
             ]
         ];
+
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
 
         $this->getRestClientMock(
             'getWithParamsReturnDto',
@@ -234,14 +320,24 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
         $start = "0";
         $end = "10";
         $hasMore = true;
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
         $rfrs = [['id' => 1], ['id' => 2]];
         $restData = [
             'data' => [
                 'searchDetails'       => ['hasMore' => $hasMore],
                 'reasonsForRejection' => $rfrs,
-                'motTest'             => $this->getMotTest()->setMotTestNumber(1),
+                'motTest'             => $testMotTestData,
             ]
         ];
+
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->any())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
 
         $this->getRestClientMock(
             'getWithParamsReturnDto',
@@ -289,15 +385,24 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
 
     public function testSearchWithNoResultsDisplaysError()
     {
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+
         $motTestNumber = 1;
         $searchString = "No results will be found for this";
         $restData = [
             'data' => [
                 'searchDetails'        => ['hasMore' => false],
                 'reasonsForRejection' => [],
-                'motTest'              => $this->getMotTest()->setMotTestNumber(1),
+                'motTest'              => $testMotTestData,
             ]
         ];
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->any())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
 
         $this->getRestClientMock(
             'getWithParamsReturnDto',
@@ -360,6 +465,15 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
             "mot-test/$motTestNumber/test-item-selector/$testItemSelectorId"
         );
 
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
+
         $this->routeMatch->setParam('action', 'testItemSelectors');
         $this->routeMatch->setParam('motTestNumber', $motTestNumber);
         $this->routeMatch->setParam('tis-id', $testItemSelectorId);
@@ -380,6 +494,15 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
 
         $this->getRestClientMock('getWithParamsReturnDto', $this->getEmptyTestItemsDto($testItemSelectorId));
         $this->getFlashMessengerMockForAddInfoMessage(TestItemSelectorController::NO_RFRS_FOUND_INFO_MESSAGE);
+
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(0)
+            ->will($this->returnValue($testMotTestData));
 
         $this->routeMatch->setParam('action', 'testItemSelectors');
         $this->routeMatch->setParam('id', '1');
@@ -512,6 +635,18 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
             $this->getTestDataItemRfrsDto($testItemSelectorId, 'FAILED'),
             "mot-test/$motTestNumber/test-item-selector/$testItemSelectorId"
         );
+
+        $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
+        $testMotTestData->status = MotTestStatusName::FAILED;
+
+        $motTest = new MotTest($testMotTestData);
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($motTest));
 
         $routeParams = [
             'motTestNumber' => $motTestNumber,
@@ -784,22 +919,25 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
             "testItemSelectors"       => [],
             "parentTestItemSelectors" => [],
             "reasonsForRejection"     => [],
-            "motTest"                 => $this->getMotTest(),
+            "motTest"                 => new MotTest(Fixture::getMotTestDataVehicleClass4(true)),
         ]];
     }
 
     /**
-     * @return MotTestDto
+     * @return MotTest
      */
     private function getMotTest($status = null, $testerId = null)
     {
-        return (new MotTestDto())
-            ->setStatus($status ?: 'ACTIVE')
-            ->setTester(
-                (new PersonDto())->setId($testerId ?: 1)
-            )
-            ->setTestType(
-                (new MotTestTypeDto())->setCode(MotTestTypeCode::NORMAL_TEST)
-            );
+        $data = Fixture::getMotTestDataVehicleClass4(true);
+        if ($status !== null) {
+            $data->status = $status;
+        }
+
+        if($testerId !== null) {
+            $data->tester->id = $testerId;
+        }
+
+        return new MotTest($data);
     }
+
 }

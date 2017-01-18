@@ -1,16 +1,26 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApiTest\Helper\ReplacementCertificate;
 
 use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Date\DateUtils;
+use DvsaEntities\Entity\Colour;
+use DvsaEntities\Entity\CountryOfRegistration;
+use DvsaEntities\Entity\Make;
+use DvsaEntities\Entity\Model;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
-use DvsaEntities\Entity\ReplacementCertificateDraft;
+use DvsaEntities\Entity\CertificateReplacementDraft;
+use DvsaEntities\Entity\Vehicle;
 use DvsaMotApi\Helper\ReplacementCertificate\ReplacementCertificateDraftDiffHelper;
 use DvsaMotApiTest\Factory\MotTestObjectsFactory;
 use DvsaMotApiTest\Factory\VehicleObjectsFactory as VOF;
-use DvsaMotApiTest\Factory\VehicleObjectsFactory;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -33,11 +43,11 @@ class ReplacementCertificateDraftDiffHelperTest extends PHPUnit_Framework_TestCa
      * @param array $draftData
      * @param array $testData
      *
-     * @return ReplacementCertificateDraft
+     * @return CertificateReplacementDraft
      */
     private function mapData($draftData, $testData)
     {
-        $draft = ReplacementCertificateDraft::create();
+        $draft = CertificateReplacementDraft::create();
         $isDraftKey = self::isKey($draftData);
         $isTestKey = self::isKey($testData);
 
@@ -62,8 +72,14 @@ class ReplacementCertificateDraftDiffHelperTest extends PHPUnit_Framework_TestCa
         if ($isDraftKey('vrm')) {
             $draft->setVrm($draftData['vrm']);
         }
-        if ($isDraftKey('odometer')) {
-            $draft->setOdometerReading($draftData['odometer']);
+        if ($isDraftKey('odometerValue')) {
+            $draft->setOdometerValue($draftData['odometerValue']);
+        }
+        if ($isDraftKey('odometerUnit')) {
+            $draft->setOdometerUnit($draftData['odometerUnit']);
+        }
+        if ($isDraftKey('odometerResultType')) {
+            $draft->setOdometerResultType($draftData['odometerResultType']);
         }
         if ($isDraftKey('make')) {
             $draft->setMake($draftData['make']);
@@ -72,36 +88,66 @@ class ReplacementCertificateDraftDiffHelperTest extends PHPUnit_Framework_TestCa
             $draft->setModel($draftData['model']);
         }
 
-        $test = new MotTest();
+        $modelDetail = new ModelDetail();
+
+        if ($isTestKey('model')) {
+
+            $model = new Model();
+            $model->setName($testData['model']);
+
+            if ($isTestKey('make')) {
+                $make = new Make();
+                $make->setName($testData['make']);
+                $model->setMake($make);
+            }
+
+            $modelDetail->setModel($model);
+        }
+
+
+        $vehicle = new Vehicle();
+        $vehicle->setModelDetail($modelDetail);
+        $vehicle->setVersion(1);
+
+
         if ($isTestKey('cor')) {
-            $test->setCountryOfRegistration($testData['cor']);
+            $vehicle->setCountryOfRegistration((new CountryOfRegistration())->setName($testData['cor']));
         }
+
         if ($isTestKey('primaryColour')) {
-            $test->setPrimaryColour($testData['primaryColour']);
+            $vehicle->setColour($testData['primaryColour']);
         }
+
         if ($isTestKey('secondaryColour')) {
-            $test->setSecondaryColour($testData['secondaryColour']);
+            $vehicle->setSecondaryColour($testData['secondaryColour']);
         }
+
+        if ($isTestKey('vin')) {
+            $vehicle->setVin($testData['vin']);
+        }
+
+        if ($isTestKey('vrm')) {
+            $vehicle->setRegistration($testData['vrm']);
+        }
+
+        $test = new MotTest();
+        $test->setVehicle($vehicle);
+        $test->setVehicleVersion($vehicle->getVersion());
+        
         if ($isTestKey('expiryDate')) {
             $test->setExpiryDate($testData['expiryDate']);
         }
         if ($isTestKey('vts')) {
             $test->setVehicleTestingStation($testData['vts']);
         }
-        if ($isTestKey('vin')) {
-            $test->setVin($testData['vin']);
+        if ($isTestKey('odometerValue')) {
+            $test->setOdometerValue($testData['odometerValue']);
         }
-        if ($isTestKey('vrm')) {
-            $test->setRegistration($testData['vrm']);
+        if ($isTestKey('odometerUnit')) {
+            $test->setOdometerUnit($testData['odometerUnit']);
         }
-        if ($isTestKey('odometer')) {
-            $test->setOdometerReading($testData['odometer']);
-        }
-        if ($isTestKey('make')) {
-            $test->setMake($testData['make']);
-        }
-        if ($isTestKey('model')) {
-            $test->setModel($testData['model']);
+        if ($isTestKey('odometerResultType')) {
+            $test->setOdometerResultType($testData['odometerResultType']);
         }
 
         return $draft->setMotTest($test);
@@ -113,11 +159,15 @@ class ReplacementCertificateDraftDiffHelperTest extends PHPUnit_Framework_TestCa
             [
                 "input"  => [
                     "draft" => [
-                        'odometer' => MotTestObjectsFactory::odometerReading(11, OdometerUnit::KILOMETERS),
+                        'odometerValue' => 11,
+                        'odometerUnit' => OdometerUnit::KILOMETERS,
+                        'odometerResultType' => OdometerReadingResultType::OK,
                         'primaryColour'   => VOF::colour(1)
                     ],
                     "test"  => [
-                        'odometer' => MotTestObjectsFactory::odometerReading(11, OdometerUnit::MILES),
+                        'odometerValue' => 11,
+                        'odometerUnit' => OdometerUnit::MILES,
+                        'odometerResultType' => OdometerReadingResultType::OK,
                         'primaryColour'   => VOF::colour(1)
                     ]
                 ],
@@ -128,11 +178,15 @@ class ReplacementCertificateDraftDiffHelperTest extends PHPUnit_Framework_TestCa
             [
                 "input"  => [
                     "draft" => [
-                        'odometer' => MotTestObjectsFactory::odometerReading(11, OdometerUnit::MILES),
+                        'odometerValue' => 11,
+                        'odometerUnit' => OdometerUnit::MILES,
+                        'odometerResultType' => OdometerReadingResultType::OK,
                         'primaryColour'   => VOF::colour(1)
                     ],
                     "test"  => [
-                        'odometer' => MotTestObjectsFactory::odometerReading(11, OdometerUnit::MILES),
+                        'odometerValue' => 11,
+                        'odometerUnit' => OdometerUnit::MILES,
+                        'odometerResultType' => OdometerReadingResultType::OK,
                         'primaryColour'   => VOF::colour(1)
                     ]
                 ],
@@ -152,7 +206,9 @@ class ReplacementCertificateDraftDiffHelperTest extends PHPUnit_Framework_TestCa
                         'vts'             => MotTestObjectsFactory::vts(5),
                         'vrm'             => "VRM",
                         'vin'             => 'VIN',
-                        'odometer'        => MotTestObjectsFactory::odometerReading(12, OdometerUnit::KILOMETERS)
+                        'odometerValue' => 12,
+                        'odometerUnit' => OdometerUnit::KILOMETERS,
+                        'odometerResultType' => OdometerReadingResultType::OK,
                     ],
                     'test'  => [
                         'cor'             => VOF::countryOfRegistration(2),
@@ -164,7 +220,9 @@ class ReplacementCertificateDraftDiffHelperTest extends PHPUnit_Framework_TestCa
                         'vts'             => MotTestObjectsFactory::vts(55),
                         'vrm'             => "XXX",
                         'vin'             => 'YYY',
-                        'odometer'        => MotTestObjectsFactory::odometerReading(1212, OdometerUnit::KILOMETERS)
+                        'odometerValue' => 1212,
+                        'odometerUnit' => OdometerUnit::KILOMETERS,
+                        'odometerResultType' => OdometerReadingResultType::OK,
                     ]
                 ],
                 "output" => [

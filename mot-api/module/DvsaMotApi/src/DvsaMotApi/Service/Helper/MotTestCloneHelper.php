@@ -1,4 +1,10 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
+
 namespace DvsaMotApi\Service\Helper;
 
 use DvsaEntities\Entity\MotTest;
@@ -39,11 +45,7 @@ class MotTestCloneHelper
                 $brakeTestCarsClone->setServiceBrake2Data($brakeTestServiceBrakeData2Clone);
             }
         }
-        if ($clonedMotTest->getOdometerReading()) {
-            $odometerReadingClone = clone $clonedMotTest->getOdometerReading();
-            $odometerReadingClone->setId(null);
-            $clonedMotTest->setOdometerReading($odometerReadingClone);
-        }
+        
         $clonedMotTest->setNumber(null);
 
         return $clonedMotTest;

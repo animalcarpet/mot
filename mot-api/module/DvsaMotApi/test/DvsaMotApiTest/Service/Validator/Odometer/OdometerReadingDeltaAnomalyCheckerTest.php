@@ -1,10 +1,15 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApiTest\Service\Validator\Odometer;
 
 use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Constants\OdometerUnit;
-use DvsaEntities\Entity\OdometerReading;
+use DvsaCommon\Dto\Common\OdometerReadingDto;
 use DvsaEntities\Repository\ConfigurationRepository;
 use DvsaMotApi\Service\Validator\Odometer\OdometerReadingDeltaAnomalyChecker;
 
@@ -31,11 +36,11 @@ class OdometerReadingDeltaAnomalyCheckerTest extends \PHPUnit_Framework_TestCase
     public function testCheck_givenReadingIsOK_and_prevAndCurrReadingsTheSame_shouldProduceAppropriateMessage()
     {
         $value = 123;
-        $reading = OdometerReading::create()
+        $reading = OdometerReadingDto::create()
             ->setValue($value)->setUnit(OdometerUnit::KILOMETERS)
             ->setResultType(OdometerReadingResultType::OK);
 
-        $prevReading = OdometerReading::create()
+        $prevReading = OdometerReadingDto::create()
             ->setValue($value)->setUnit(OdometerUnit::KILOMETERS)
             ->setResultType(OdometerReadingResultType::OK);
 
@@ -50,11 +55,11 @@ class OdometerReadingDeltaAnomalyCheckerTest extends \PHPUnit_Framework_TestCase
     {
         $prevValue = 123;
         $currValue = $prevValue - 2;
-        $reading = OdometerReading::create()
+        $reading = OdometerReadingDto::create()
             ->setValue($currValue)->setUnit(OdometerUnit::KILOMETERS)
             ->setResultType(OdometerReadingResultType::OK);
 
-        $prevReading = OdometerReading::create()
+        $prevReading = OdometerReadingDto::create()
             ->setValue($prevValue)->setUnit(OdometerUnit::KILOMETERS)
             ->setResultType(OdometerReadingResultType::OK);
 
@@ -71,11 +76,11 @@ class OdometerReadingDeltaAnomalyCheckerTest extends \PHPUnit_Framework_TestCase
         $muchHigherLimit = 25000;
         $prevValue = 123;
         $currValue = $prevValue + $muchHigherLimit;
-        $reading = OdometerReading::create()
+        $reading = OdometerReadingDto::create()
             ->setValue($currValue)->setUnit(OdometerUnit::KILOMETERS)
             ->setResultType(OdometerReadingResultType::OK);
 
-        $prevReading = OdometerReading::create()
+        $prevReading = OdometerReadingDto::create()
             ->setValue($prevValue)->setUnit(OdometerUnit::KILOMETERS)
             ->setResultType(OdometerReadingResultType::OK);
 
@@ -93,8 +98,8 @@ class OdometerReadingDeltaAnomalyCheckerTest extends \PHPUnit_Framework_TestCase
     public function testCheck_givenVehicleHasNoOdometer_shouldExpectNoMessage()
     {
         $prevValue = 123;
-        $reading = OdometerReading::create()->setResultType(OdometerReadingResultType::NO_ODOMETER);
-        $prevReading = OdometerReading::create()
+        $reading = OdometerReadingDto::create()->setResultType(OdometerReadingResultType::NO_ODOMETER);
+        $prevReading = OdometerReadingDto::create()
             ->setValue($prevValue)->setUnit(OdometerUnit::KILOMETERS)
             ->setResultType(OdometerReadingResultType::OK);
 
@@ -106,8 +111,8 @@ class OdometerReadingDeltaAnomalyCheckerTest extends \PHPUnit_Framework_TestCase
     public function testCheck_givenOdometerIsNotReadable_shouldExpectNoMessage()
     {
         $prevValue = 123;
-        $reading = OdometerReading::create()->setResultType(OdometerReadingResultType::NOT_READABLE);
-        $prevReading = OdometerReading::create()
+        $reading = OdometerReadingDto::create()->setResultType(OdometerReadingResultType::NOT_READABLE);
+        $prevReading = OdometerReadingDto::create()
             ->setValue($prevValue)->setUnit(OdometerUnit::KILOMETERS)
             ->setResultType(OdometerReadingResultType::OK);
 
@@ -118,8 +123,8 @@ class OdometerReadingDeltaAnomalyCheckerTest extends \PHPUnit_Framework_TestCase
 
     public function testCheck_givenReadingIsOK_prevCurrReadingsDeltaIsNotProvided_shouldExpectNoMessage()
     {
-        $reading = OdometerReading::create()->setResultType(OdometerReadingResultType::OK);
-        $prevReading = OdometerReading::create()
+        $reading = OdometerReadingDto::create()->setResultType(OdometerReadingResultType::OK);
+        $prevReading = OdometerReadingDto::create()
             ->setValue(123)->setUnit(OdometerUnit::KILOMETERS)
             ->setResultType(OdometerReadingResultType::OK);
 

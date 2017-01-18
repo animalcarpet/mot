@@ -3,20 +3,19 @@
 namespace Dvsa\Mot\Frontend\MotTestModuleTest\Controller;
 
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use Dvsa\Mot\ApiClient\Service\MotTestService;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\DefectCategoriesController;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsContentBreadcrumbsBuilder;
 use DvsaAuthorisation\Service\AuthorisationService;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Constants\FeatureToggle;
-use DvsaCommon\Dto\Common\MotTestDto;
-use DvsaCommon\Dto\Common\MotTestTypeDto;
-use DvsaCommon\Dto\Vehicle\VehicleDto;
-use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
 use DvsaCommon\Enum\MotTestTypeCode;
-use DvsaCommon\Enum\VehicleClassCode;
-use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommonTest\Bootstrap;
-use DvsaEntities\Entity\VehicleClass;
+use DvsaCommonTest\TestUtils\XMock;
+use DvsaMotTestTest\TestHelper\Fixture;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -35,9 +34,23 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
      */
     private $defectsContentBreadcrumbsBuilderMock;
 
+    protected $mockMotTestServiceClient;
+    protected $mockVehicleServiceClient;
+
     protected function setUp()
     {
         $this->serviceManager = Bootstrap::getServiceManager();
+
+        $this->serviceManager->setService(
+            MotTestService::class,
+            $this->getMockMotTestServiceClient()
+        );
+
+        $this->serviceManager->setService(
+            VehicleService::class,
+            $this->getMockVehicleServiceClient()
+        );
+
         $this->serviceManager->setAllowOverride(true);
 
         $this->authorisationServiceMock = $this
@@ -58,56 +71,49 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
         parent::setUp();
     }
 
+    private function getMockMotTestServiceClient()
+    {
+        if ($this->mockMotTestServiceClient == null) {
+            $this->mockMotTestServiceClient = XMock::of(MotTestService::class);
+        }
+        return $this->mockMotTestServiceClient;
+    }
+
+    private function getMockVehicleServiceClient()
+    {
+        if ($this->mockVehicleServiceClient == null) {
+            $this->mockVehicleServiceClient = XMock::of(VehicleService::class);
+        }
+        return $this->mockVehicleServiceClient;
+    }
+
     public function testIndex()
     {
         $motTestNumber = 1;
         $testItemSelectorId = 502;
 
-        $vehicleMock = $this->getMockBuilder(VehicleDto::class)->getMock();
-        $vehicleMock
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass1(true));
+        $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
             ->expects($this->once())
-            ->method('getMakeAndModel')
-            ->willReturn('Piaggio, Typhoon');
-        $vehicleMock
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
+
+        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
+        $mockVehicleServiceClient
             ->expects($this->once())
-            ->method('getFirstUsedDate')
-            ->willReturn('2011-07-01');
-
-        $vehicleClassMock = $this->getMockBuilder(VehicleClassDto::class)->getMock();
-        $vehicleClassMock->expects($this->any())
-            ->method('getCode')
-            ->willReturn(VehicleClassCode::CLASS_1);
-
-        $motTestTypeMock = $this->getMockBuilder(MotTestTypeDto::class)->getMock();
-        $motTestTypeMock->expects($this->any())
-            ->method('getCode')
-            ->willReturn(MotTestTypeCode::NORMAL_TEST);
-
-        $this->motTestMock = $this->getMockBuilder(MotTestDto::class)->getMock();
-        $this->motTestMock
-            ->expects($this->any())
-            ->method('getTestType')
-            ->willReturn($motTestTypeMock);
-        $this->motTestMock
-            ->expects($this->any())
-            ->method('getVehicle')
-            ->willReturn($vehicleMock);
-        $this->motTestMock
-            ->expects($this->any())
-            ->method('getVehicleClass')
-            ->willReturn($vehicleClassMock);
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->with(1001, 1)
+            ->will($this->returnValue($vehicleData));
 
         $restClientMock = $this->getRestClientMockForServiceManager();
         $restClientMock
             ->expects($this->any())
             ->method('getWithParamsReturnDto')
             ->willReturn(['data' => $this->getTestItemSelectorsWithRfrs()]);
-
-        $restClientMock
-            ->expects($this->at(0))
-            ->method('get')
-            ->with(MotTestUrlBuilder::motTest($motTestNumber))
-            ->willReturn(['data' => $this->motTestMock]);
 
         $routeParams = [
             'motTestNumber' => $motTestNumber,
@@ -123,54 +129,28 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
         $motTestNumber = 1;
         $testItemSelectorId = 502;
 
-        $vehicleMock = $this->getMockBuilder(VehicleDto::class)->getMock();
-        $vehicleMock
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass1(true));
+        $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
             ->expects($this->once())
-            ->method('getMakeAndModel')
-            ->willReturn('Piaggio, Typhoon');
-        $vehicleMock
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
+
+        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
+        $mockVehicleServiceClient
             ->expects($this->once())
-            ->method('getFirstUsedDate')
-            ->willReturn('2011-07-01');
-
-        $vehicleClassMock = $this
-            ->getMockBuilder(VehicleClass::class)
-            ->getMock();
-        $vehicleClassMock
-            ->expects($this->any())
-            ->method('getCode')
-            ->willReturn('1');
-
-        $motTestTypeMock = $this->getMockBuilder(MotTestTypeDto::class)->getMock();
-        $motTestTypeMock->expects($this->any())
-            ->method('getCode')
-            ->willReturn(MotTestTypeCode::NORMAL_TEST);
-
-        $this->motTestMock = $this->getMockBuilder(MotTestDto::class)->getMock();
-        $this->motTestMock
-            ->expects($this->any())
-            ->method('getTestType')
-            ->willReturn($motTestTypeMock);
-        $this->motTestMock
-            ->expects($this->any())
-            ->method('getVehicle')
-            ->willReturn($vehicleMock);
-        $this->motTestMock
-            ->expects($this->any())
-            ->method('getVehicleClass')
-            ->willReturn($vehicleClassMock);
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->with(1001, 1)
+            ->will($this->returnValue($vehicleData));
 
         $restClientMock = $this->getRestClientMockForServiceManager();
         $restClientMock
             ->expects($this->any())
             ->method('getWithParamsReturnDto')
             ->willReturn(['data' => $this->getTestItemSelectorsWithoutRfrs()]);
-
-        $restClientMock
-            ->expects($this->at(0))
-            ->method('get')
-            ->with(MotTestUrlBuilder::motTest($motTestNumber))
-            ->willReturn(['data' => $this->motTestMock]);
 
         $routeParams = [
             'motTestNumber' => $motTestNumber,
@@ -186,54 +166,28 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
         $motTestNumber = 1;
         $testItemSelectorId = 502;
 
-        $vehicleMock = $this->getMockBuilder(VehicleDto::class)->getMock();
-        $vehicleMock
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass1(true));
+        $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
             ->expects($this->once())
-            ->method('getMakeAndModel')
-            ->willReturn('Piaggio, Typhoon');
-        $vehicleMock
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
+
+        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
+        $mockVehicleServiceClient
             ->expects($this->once())
-            ->method('getFirstUsedDate')
-            ->willReturn('2011-07-01');
-
-        $vehicleClassMock = $this
-            ->getMockBuilder(VehicleClassDto::class)
-            ->getMock();
-        $vehicleClassMock
-            ->expects($this->any())
-            ->method('getCode')
-            ->willReturn('1');
-
-        $motTestTypeMock = $this->getMockBuilder(MotTestTypeDto::class)->getMock();
-        $motTestTypeMock->expects($this->any())
-            ->method('getCode')
-            ->willReturn(MotTestTypeCode::NORMAL_TEST);
-
-        $this->motTestMock = $this->getMockBuilder(MotTestDto::class)->getMock();
-        $this->motTestMock
-            ->expects($this->any())
-            ->method('getTestType')
-            ->willReturn($motTestTypeMock);
-        $this->motTestMock
-            ->expects($this->any())
-            ->method('getVehicle')
-            ->willReturn($vehicleMock);
-        $this->motTestMock
-            ->expects($this->any())
-            ->method('getVehicleClass')
-            ->willReturn($vehicleClassMock);
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->with(1001, 1)
+            ->will($this->returnValue($vehicleData));
 
         $restClientMock = $this->getRestClientMockForServiceManager();
         $restClientMock
             ->expects($this->any())
             ->method('getWithParamsReturnDto')
             ->willReturn(['data' => $this->getTestItemSelectorsWithRfrs()]);
-
-        $restClientMock
-            ->expects($this->at(0))
-            ->method('get')
-            ->with(MotTestUrlBuilder::motTest($motTestNumber))
-            ->willReturn(['data' => $this->motTestMock]);
 
         $routeParams = [
             'motTestNumber' => $motTestNumber,
@@ -269,53 +223,47 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
         $motTestNumber = 1;
         $testItemSelectorId = 502;
 
-        $vehicleMock = $this->getMockBuilder(VehicleDto::class)->getMock();
-        $vehicleMock
-            ->expects($this->once())
-            ->method('getMakeAndModel')
-            ->willReturn('Piaggio, Typhoon');
-        $vehicleMock
-            ->expects($this->once())
-            ->method('getFirstUsedDate')
-            ->willReturn('2011-07-01');
+        switch ($motTestTypeCode) {
+            case MotTestTypeCode::NORMAL_TEST:
+                $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
+                $testMotTestData->testTypeCode = MotTestTypeCode::NORMAL_TEST;
+                break;
+            case MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING:
+                $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
+                $testMotTestData->testTypeCode = MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING;
+                break;
+            case MotTestTypeCode::TARGETED_REINSPECTION:
+                $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
+                $testMotTestData->testTypeCode = MotTestTypeCode::TARGETED_REINSPECTION;
+                break;
+            default:
+                $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
+        }
 
-        $vehicleClassMock = $this
-            ->getMockBuilder(VehicleClassDto::class)
-            ->getMock();
-        $vehicleClassMock
-            ->expects($this->any())
-            ->method('getCode')
-            ->willReturn('1');
+        $motTest = new MotTest($testMotTestData);
 
-        $motTestTypeMock = $this->getMockBuilder(MotTestTypeDto::class)->getMock();
-        $motTestTypeMock->expects($this->any())
-            ->method('getCode')
-            ->willReturn($motTestTypeCode);
-        $this->motTestMock = $this->getMockBuilder(MotTestDto::class)->getMock();
-        $this->motTestMock
-            ->expects($this->any())
-            ->method('getVehicleClass')
-            ->willReturn($vehicleClassMock);
-        $this->motTestMock
-            ->expects($this->any())
-            ->method('getTestType')
-            ->willReturn($motTestTypeMock);
-        $this->motTestMock
-            ->expects($this->any())
-            ->method('getVehicle')
-            ->willReturn($vehicleMock);
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($motTest));
+
+        $vehicleData = Fixture::getDvsaVehicleTestDataVehicleClass4(true);
+        $vehicle = new DvsaVehicle($vehicleData);
+
+        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
+        $mockVehicleServiceClient
+            ->expects($this->once())
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->with(1001, 1)
+            ->will($this->returnValue($vehicle));
 
         $restClientMock = $this->getRestClientMockForServiceManager();
         $restClientMock
             ->expects($this->any())
             ->method('getWithParamsReturnDto')
             ->willReturn(['data' => $this->getTestItemSelectorsWithRfrs()]);
-
-        $restClientMock
-            ->expects($this->at(0))
-            ->method('get')
-            ->with(MotTestUrlBuilder::motTest($motTestNumber))
-            ->willReturn(['data' => $this->motTestMock]);
 
         $routeParams = [
             'motTestNumber' => $motTestNumber,

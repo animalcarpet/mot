@@ -180,6 +180,7 @@ class SurveyService
 
                 $this->entityManager->persist($surveyResult);
                 $this->entityManager->persist($motTestSurvey);
+                $this->injectAppUserId();
                 $this->entityManager->flush();
 
                 return ['satisfaction_rating' => $rating];
@@ -375,6 +376,7 @@ class SurveyService
 
         $motTestSurvey = new MotTestSurvey($motTest);
 
+        $this->injectAppUserId();
         $this->entityManager->persist($motTestSurvey);
         $this->entityManager->flush();
 
@@ -414,5 +416,14 @@ class SurveyService
     private function isValidRating($rating)
     {
         return $rating === null || in_array($rating, $this->validSurveyValues);
+    }
+
+    private function injectAppUserId()
+    {
+        $connection = $this->entityManager->getConnection();
+
+        if($connection !== null) {
+            $connection->exec("SET @app_user_id = (SELECT `id` FROM `person` WHERE `user_reference` = 'Static Data' OR `username` = 'static data' LIMIT 1)");
+        }
     }
 }

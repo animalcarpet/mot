@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace IntegrationApi\DvlaInfo\Mapper;
 
@@ -19,8 +24,8 @@ class DvlaInfoMotHistoryMapper extends AbstractMotTestMapper
             $result[] = [
                 'testDate'        => $this->returnFormattedDateOrNull($motTest->getCompletedDate()),
                 'testResult'      => $this->formattedStatus($motTest->getStatus()),
-                'odometerValue'   => $motTest->getOdometerReading()->getValue(),
-                'odometerUnit'    => $motTest->getOdometerReading()->getUnit(),
+                'odometerValue'   => $motTest->getOdometerValue(),
+                'odometerUnit'    => $motTest->getOdometerUnit(),
                 'testNumber'      => $motTest->getNumber(),
                 'expiryDate'      => $this->returnFormattedDateOrNull($motTest->getExpiryDate())
             ];

@@ -1,37 +1,36 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
+
 namespace DvsaMotApiTest\Service;
 
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Constants\OdometerReadingResultType;
-use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
 use DvsaCommonApi\Service\Exception\DataValidationException;
-use DvsaCommonApi\Service\Exception\ForbiddenException;
-use DvsaCommonTest\TestUtils\ArgCapture;
 use DvsaCommonTest\TestUtils\OverridableExpectationBuilder;
 use DvsaCommonTest\TestUtils\OverridableMockBuilder;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaCommon\Dto\Common\OdometerReadingDTO;
+use DvsaCommon\Dto\Common\OdometerReadingDto;
 use DvsaEntities\Entity\MotTest;
-use DvsaEntities\Entity\OdometerReading;
 use DvsaEntities\Entity\Site;
-use DvsaEntities\Repository\OdometerReadingRepository;
 use DvsaMotApi\Service\MotTestSecurityService;
 use DvsaMotApi\Service\OdometerReadingUpdatingService;
 use DvsaMotApi\Service\Validator\MotTestValidator;
 
 /**
- * Unit test exemplar
- *
  * Class OdometerReadingUpdatingServiceTest
  *
- * @package DvsaMotApiTest\Service
+ * Unit test exemplar
  */
 class OdometerReadingUpdatingServiceTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var OverridableMockBuilder $motTestSecurityService */
-    private $odometerReadingRepositoryMockBuilder;
-
+    /**
+     * @var AuthorisationServiceInterface
+     */
     private $authorizationService;
 
     /** @var OverridableMockBuilder $motTestSecurityService */
@@ -45,8 +44,7 @@ class OdometerReadingUpdatingServiceTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->authorizationService = XMock::of(\DvsaAuthorisation\Service\AuthorisationServiceInterface::class);
-        $this->odometerReadingRepositoryMockBuilder = OverridableMockBuilder::of(OdometerReadingRepository::class);
+        $this->authorizationService = XMock::of(AuthorisationServiceInterface::class);
         $this->motTestSecurityServiceMockBuilder = OverridableMockBuilder::of(MotTestSecurityService::class);
         $this->motTestValidatorMockBuilder = OverridableMockBuilder::of(MotTestValidator::class);
         $this->performMotTestAssertionBuilder = OverridableMockBuilder::of(ApiPerformMotTestAssertion::class);
@@ -62,7 +60,7 @@ class OdometerReadingUpdatingServiceTest extends \PHPUnit_Framework_TestCase
 
         // given
         $test = $this->createMotTest();
-        $invalidReading = OdometerReadingDTO::create()->setResultType(OdometerReadingResultType::OK);
+        $invalidReading = OdometerReadingDto::create()->setResultType(OdometerReadingResultType::OK);
 
         // when
         $this->createService()->updateForMotTest($invalidReading, $test);
@@ -72,26 +70,34 @@ class OdometerReadingUpdatingServiceTest extends \PHPUnit_Framework_TestCase
     {
         // given
         $test = $this->createMotTest();
-        $newReading = OdometerReadingDTO::create()->setResultType(OdometerReadingResultType::NO_ODOMETER);
+        $newReading = OdometerReadingDto::create()->setResultType(OdometerReadingResultType::NO_ODOMETER);
 
         // when
         $this->createService()->updateForMotTest($newReading, $test);
 
         // then
-        $this->assertNotEmpty($test->getOdometerReading(), "Reading has not been saved!");
+        $this->assertEquals(
+            OdometerReadingResultType::NO_ODOMETER,
+            $test->getOdometerResultType(),
+            "Incorrect result type has not been saved!"
+        );
     }
 
     public function testUpdateForMotTest_givenOdometerUnreadable_shouldUpdateReading()
     {
         // given
         $test = $this->createMotTest();
-        $reading = OdometerReadingDTO::create()->setResultType(OdometerReadingResultType::NOT_READABLE);
+        $reading = OdometerReadingDto::create()->setResultType(OdometerReadingResultType::NOT_READABLE);
 
         // when
         $this->createService()->updateForMotTest($reading, $test);
 
         // then
-        $this->assertNotEmpty($test->getOdometerReading(), "Reading has not been saved!");
+        $this->assertEquals(
+            OdometerReadingResultType::NOT_READABLE,
+            $test->getOdometerResultType(),
+            "Incorrect result type has not been saved!"
+        );
     }
 
     private static function createMotTest()
@@ -106,7 +112,6 @@ class OdometerReadingUpdatingServiceTest extends \PHPUnit_Framework_TestCase
     private function createService()
     {
         return new OdometerReadingUpdatingService(
-            $this->odometerReadingRepositoryMockBuilder->build(),
             $this->authorizationService,
             $this->motTestSecurityServiceMockBuilder->build(),
             $this->motTestValidatorMockBuilder->build(),

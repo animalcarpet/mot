@@ -58,7 +58,6 @@ class MakeRepository extends AbstractMutableRepository
         $qb
             ->where($qb->expr()->like("m.name", ":name"))
             ->andWhere($qb->expr()->eq('m.isVerified', 1))
-            ->andWhere($qb->expr()->eq('m.isSelectable', 1))
             ->orderBy("m.name", 'ASC')
             ->setParameter(":name", '%' . $name . '%');
 

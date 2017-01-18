@@ -1,10 +1,13 @@
 <?php
 namespace DvsaEntitiesTest\Entity;
 
+use DvsaCommon\Enum\ReasonForRejectionTypeName;
 use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\MotTest;
+use DvsaEntities\Entity\MotTestReasonForRejectionLocation;
 use DvsaEntities\Entity\ReasonForRejection;
 
+use DvsaEntities\Entity\ReasonForRejectionType;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -62,11 +65,8 @@ class MotTestReasonForRejectionTest extends PHPUnit_Framework_TestCase
     {
         $motTest = new MotTest();
         $motTestId = 3;
-        $rfrId = 1;
-        $name = 'Rear Stop lamp';
         $failureText = 'adversely affected by the operation of another lamp';
-        $inspectionManualReference = '1.2.1f';
-        $type = 'FAIL';
+        $type = ReasonForRejectionTypeName::FAIL;
         $locationLateral = 'nearside';
         $locationLongitudinal = 'front';
         $locationVertical = 'top';
@@ -75,15 +75,18 @@ class MotTestReasonForRejectionTest extends PHPUnit_Framework_TestCase
         $generated = true;
         $canBeDeleted = !$generated;
 
+        $location = new MotTestReasonForRejectionLocation();
+        $location->setLateral($locationLateral)
+            ->setLongitudinal($locationLongitudinal)
+            ->setVertical($locationVertical);
+
         $reasonForRejection = new ReasonForRejection();
         $motTestRfr = new MotTestReasonForRejection();
         $motTestRfr->setMotTest($motTest)
             ->setMotTestId($motTestId)
             ->setReasonForRejection($reasonForRejection)
-            ->setType($type)
-            ->setLocationLateral($locationLateral)
-            ->setLocationLongitudinal($locationLongitudinal)
-            ->setLocationVertical($locationVertical)
+            ->setType((new ReasonForRejectionType())->setReasonForRejectionType($type))
+            ->setLocation($location)
             ->setComment($comment)
             ->setGenerated($generated)
             ->setFailureDangerous($failureDangerous);
@@ -91,7 +94,7 @@ class MotTestReasonForRejectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($motTest, $motTestRfr->getMotTest());
         $this->assertEquals($motTestId, $motTestRfr->getMotTestId());
         $this->assertEquals($reasonForRejection, $motTestRfr->getReasonForRejection());
-        $this->assertEquals($type, $motTestRfr->getType());
+        $this->assertEquals($type, $motTestRfr->getType()->getReasonForRejectionType());
         $this->assertEquals($locationLateral, $motTestRfr->getLocationLateral());
         $this->assertEquals($locationLongitudinal, $motTestRfr->getLocationLongitudinal());
         $this->assertEquals($locationVertical, $motTestRfr->getLocationVertical());
@@ -101,19 +104,19 @@ class MotTestReasonForRejectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($canBeDeleted, $motTestRfr->getCanBeDeleted());
     }
 
-    public static function getTestMotTestReasonForRejection($type = 'FAIL')
+    public static function getTestMotTestReasonForRejection($type = ReasonForRejectionTypeName::FAIL)
     {
         $motTestRfr = new MotTestReasonForRejection();
-        $motTestRfr->setType($type);
+        $motTestRfr->setType((new ReasonForRejectionType())->setReasonForRejectionType($type));
         return $motTestRfr;
     }
 
     public static function getTestMotShortTestReasonForRejection()
     {
         return [
-            'FAIL'     => ["Rear Stop lamp", "Rear Stop lamp"],
-            'PRS'      => ["Rear Stop lamp"],
-            'ADVISORY' => ["Rear Stop lamp"],
+            ReasonForRejectionTypeName::FAIL     => ["Rear Stop lamp", "Rear Stop lamp"],
+            ReasonForRejectionTypeName::PRS      => ["Rear Stop lamp"],
+            ReasonForRejectionTypeName::ADVISORY => ["Rear Stop lamp"],
         ];
     }
 }

@@ -76,8 +76,8 @@ class VehicleObjectsFactory
             ->setTransmissionType(self::transmissionType());
 
         return (new Vehicle())->setId($id)
-            ->setColour(self::colour(1, "G", "Green"))
-            ->setSecondaryColour(self::colour(2, "R", "Red"))
+            ->setColour(self::colour(1, "R", "Red"))
+            ->setSecondaryColour(self::colour(2, "G", "Green"))
             ->setModelDetail($modelDetail)
             ->setManufactureDate(DateUtils::toDate("2004-04-23"))
             ->setFirstRegistrationDate(DateUtils::toDate("2007-08-09"))

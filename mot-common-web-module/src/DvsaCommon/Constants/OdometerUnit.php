@@ -1,9 +1,16 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaCommon\Constants;
 
 /**
- * Holds possible values of odometer units. No database table lookup for it.
+ * Class OdometerUnit
+ *
+ * Enums defined on mot_test_current.odometer_unit and certificate_replacement_draft.odometer_unit
  */
 class OdometerUnit extends BaseEnumeration
 {

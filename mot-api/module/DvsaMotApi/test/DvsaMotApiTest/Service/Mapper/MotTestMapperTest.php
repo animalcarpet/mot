@@ -7,6 +7,7 @@ use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Dto\Common\ColourDto;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Common\MotTestTypeDto;
+use DvsaCommon\Dto\Vehicle\FuelTypeDto;
 use DvsaCommon\Dto\Person\PersonDto;
 use DvsaCommon\Dto\Vehicle\CountryDto;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
@@ -16,6 +17,7 @@ use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\PhoneContactTypeCode;
+use DvsaCommon\Enum\ReasonForRejectionTypeName;
 use DvsaCommon\Enum\SiteContactTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Obfuscate\ParamObfuscator;
@@ -47,6 +49,7 @@ use DvsaEntities\Entity\Phone;
 use DvsaEntities\Entity\PhoneContactType;
 use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Entity\ReasonForRejectionDescription;
+use DvsaEntities\Entity\ReasonForRejectionType;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\SiteContactType;
 use DvsaEntities\Entity\SiteType;
@@ -85,9 +88,10 @@ class MotTestMapperTest extends AbstractServiceTestCase
         $tester = $this->createTester();
         $testType = (new MotTestType())->setCode(MotTestTypeCode::NORMAL_TEST);
 
-        $make = new Make();
-        $model = new Model();
-        $model->setMake($make);
+        $countryOfRegistration = (new CountryOfRegistration())->setName('COR');
+
+        $make = (new Make())->setName('MAKE');
+        $model = (new Model())->setName('MODEL')->setMake($make);
 
         $modelDetail = new ModelDetail();
         $modelDetail
@@ -98,10 +102,11 @@ class MotTestMapperTest extends AbstractServiceTestCase
 
         $vehicle = new Vehicle();
         $vehicle
+            ->setVersion(1)
             ->setModelDetail($modelDetail)
             ->setColour(new Colour())
             ->setNewAtFirstReg(true)
-            ->setCountryOfRegistration((new CountryOfRegistration()));
+            ->setCountryOfRegistration($countryOfRegistration);
 
         $address = new Address();
         $address->setAddressLine1('Johns Garage');
@@ -135,10 +140,7 @@ class MotTestMapperTest extends AbstractServiceTestCase
             ->setTester($tester)
             ->setMotTestType($testType)
             ->setVehicle($vehicle)
-            ->setVehicleClass((new VehicleClass())->setCode($vehicleClass))
-            ->setMake((new Make())->setName('MAKE'))
-            ->setModel((new Model())->setName('MODEL'))
-            ->setCountryOfRegistration((new CountryOfRegistration())->setName('COR'))
+            ->setVehicleVersion($vehicle->getVersion())
             ->setVehicleTestingStation($site)
             ->setBrakeTestResultClass3AndAbove($brakeTestResult)
             ->setBrakeTestResultClass12($brakeTestResultClass12)
@@ -171,6 +173,14 @@ class MotTestMapperTest extends AbstractServiceTestCase
                 (new VehicleParamDto())
                     ->setName($vehicle->getFuelType()->getName())
             )
+            ->setCountryOfRegistration(
+                (new CountryDto())->setCode($countryOfRegistration->getCode())
+                    ->setName($countryOfRegistration->getName())
+                    ->setLicensingCode($countryOfRegistration->getLicensingCopy())
+
+            )
+            ->setMakeName($vehicle->getMakeName())
+            ->setModelName($vehicle->getModelName())
             ->setBodyType(new VehicleParamDto())
             ->setTransmissionType(new VehicleParamDto())
             ->setIsNewAtFirstReg($vehicle->isNewAtFirstReg());
@@ -195,12 +205,14 @@ class MotTestMapperTest extends AbstractServiceTestCase
             'inspectionManualReference'   => '1.2.1f',
             'testItemSelectorId'          => 12,
             'testItemSelectorDescription' => 'aaa',
-            'markedAsRepaired'            => false,
+            'markedAsRepaired' => false,
+            'comment' => null,
+            'type' => ReasonForRejectionTypeName::ADVISORY
         ];
 
         $expectedData->setReasonsForRejection(
             [
-                'ADVISORY' => [$expectedRfr1],
+                ReasonForRejectionTypeName::ADVISORY => [$expectedRfr1],
             ]
         );
 
@@ -223,7 +235,9 @@ class MotTestMapperTest extends AbstractServiceTestCase
             ->setModel('MODEL')
             ->setTesterBrakePerformanceNotTested(false)
             ->setCountryOfRegistration((new CountryDto())->setName('COR'))
-            ->setPrsMotTestNumber(2);
+            ->setPrsMotTestNumber(2)
+            ->setPrimaryColour($vehicleDto->getColour())
+            ->setFuelType((new FuelTypeDto()));
 
         $hydratorCalls = [
             [self::WITH => $site, self::WILL => $vtsData],
@@ -437,7 +451,7 @@ class MotTestMapperTest extends AbstractServiceTestCase
     private function getTestMotTestReasonForRejection($type = 'FAIL')
     {
         $motTestRfr = new MotTestReasonForRejection();
-        $motTestRfr->setType($type);
+        $motTestRfr->setType((new ReasonForRejectionType())->setReasonForRejectionType($type));
 
         $rfr = new ReasonForRejection();
         $rfr->setRfrId(1);
@@ -579,19 +593,18 @@ class MotTestMapperTest extends AbstractServiceTestCase
         $countryOfRegistration = (new CountryOfRegistration())->setName('COR');
 
         $vehicle = new Vehicle();
+        $vehicle->setVersion(1);
         $vehicle->setCountryOfRegistration($countryOfRegistration);
         $vehicle->setModelDetail($modelDetail);
 
         $motTest = new MotTest();
         $motTest
+            ->setVehicleVersion($vehicle->getVersion())
             ->setVehicleTestingStation($site)
             ->setStatus(new MotTestStatus())
             ->setVehicle($vehicle)
-            ->setVehicleClass($vehicleClass)
-            ->setMake((new Make())->setName('MAKE'))
-            ->setModel((new Model())->setName('MODEL'))
-            ->setCountryOfRegistration($countryOfRegistration)
-            ->setPrsMotTest((new MotTest())->setNumber(2));
+            ->setPrsMotTest((new MotTest())->setNumber(2))
+            ;
 
         return $motTest;
     }

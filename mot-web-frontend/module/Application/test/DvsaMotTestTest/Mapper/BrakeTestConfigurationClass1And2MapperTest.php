@@ -2,10 +2,11 @@
 
 namespace DvsaMotTestTest\Mapper;
 
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass1And2Dto;
-use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaMotTest\Mapper\BrakeTestConfigurationClass1And2Mapper;
+use DvsaMotTestTest\TestHelper\Fixture;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -53,7 +54,7 @@ class BrakeTestConfigurationClass1And2MapperTest extends PHPUnit_Framework_TestC
 
     public function testMapToDefaultDto()
     {
-        $motTest = new MotTestDto();
+        $motTest = $this->getMotTestDataBrakeRollr();
         $expected = (new BrakeTestConfigurationClass1And2Dto())
             ->setBrakeTestType(BrakeTestTypeCode::ROLLER)
             ->setVehicleWeightFront('')
@@ -69,9 +70,7 @@ class BrakeTestConfigurationClass1And2MapperTest extends PHPUnit_Framework_TestC
 
     public function testMapToDefaultDtoWithSiteDefault()
     {
-        $motTest = (new MotTestDto())->setVehicleTestingStation(
-            ['defaultBrakeTestClass1And2' => BrakeTestTypeCode::GRADIENT]
-        );
+        $motTest = $this->getMotTestDataBrakeGradt();
         $expected = (new BrakeTestConfigurationClass1And2Dto())
             ->setBrakeTestType(BrakeTestTypeCode::GRADIENT)
             ->setVehicleWeightFront('')
@@ -83,5 +82,25 @@ class BrakeTestConfigurationClass1And2MapperTest extends PHPUnit_Framework_TestC
         $actual = $this->mapper->mapToDefaultDto($motTest);
 
         $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @return MotTest
+     */
+    private function getMotTestDataBrakeRollr()
+    {
+        $data = Fixture::getMotTestDataVehicleClass1(true);
+        $data->brakeTestResult->brakeTestTypeCode = "ROLLR";
+        return new MotTest($data);
+    }
+
+    /**
+     * @return MotTest
+     */
+    private function getMotTestDataBrakeGradt()
+    {
+        $data = Fixture::getMotTestDataVehicleClass1(true);
+        $data->brakeTestResult->brakeTestTypeCode = "GRADT";
+        return new MotTest($data);
     }
 }

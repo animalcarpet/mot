@@ -1,10 +1,14 @@
 package uk.gov.dvsa.domain.service;
 
 import com.jayway.restassured.response.Response;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import uk.gov.dvsa.helper.JsonHandler;
+import uk.gov.dvsa.helper.Utilities;
 
 import java.io.IOException;
+
+import static java.util.Arrays.asList;
 
 public class ServiceResponse {
     private static JsonHandler jsonHandler = new JsonHandler();
@@ -30,6 +34,12 @@ public class ServiceResponse {
 
     private static void handleNon200Response(final Response response) {
         if (response.statusCode() != HttpStatus.SC_OK) {
+            Utilities.Logger.LogError(
+                    StringUtils.join(asList("Body: " + response.getBody().prettyPrint(),
+                                    "Response code: " + response.getStatusCode(),
+                                    "Status line: " + response.getStatusLine()),
+                    "\n"));
+
             throw new IllegalStateException(
                     response.body().path("errors.exception.message").toString());
         }

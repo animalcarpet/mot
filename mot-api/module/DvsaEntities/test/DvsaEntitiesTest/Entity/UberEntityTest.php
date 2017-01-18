@@ -1,10 +1,17 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaEntitiesTest\Entity;
 
 use DvsaEntities\Entity;
 
 /**
+ * Class UberEntityTest
+ *
  * Class run generic tests on entites. Verifies simple getters/setters
  */
 class UberEntityTest extends \PHPUnit_Framework_TestCase
@@ -87,7 +94,6 @@ class UberEntityTest extends \PHPUnit_Framework_TestCase
         $this->stack[] = new Entity\Notification();
         $this->stack[] = new Entity\NotificationTemplateAction();
         $this->stack[] = new Entity\NotificationTemplate();
-        $this->stack[] = new Entity\OdometerReading();
         $this->stack[] = new Entity\Organisation();
         $this->stack[] = new Entity\OrganisationType();
         $this->stack[] = new Entity\Payment();
@@ -97,7 +103,7 @@ class UberEntityTest extends \PHPUnit_Framework_TestCase
         $this->stack[] = new Entity\QualificationType();
         $this->stack[] = new Entity\ReasonForRefusal();
         $this->stack[] = new Entity\ReasonForRejectionType();
-        $this->stack[] = new Entity\ReplacementCertificateDraft();
+        $this->stack[] = new Entity\CertificateReplacementDraft();
         $this->stack[] = new Entity\SiteFacility();
         $this->stack[] = new Entity\SiteType();
         $this->stack[] = new Entity\SpecialNoticeContent();

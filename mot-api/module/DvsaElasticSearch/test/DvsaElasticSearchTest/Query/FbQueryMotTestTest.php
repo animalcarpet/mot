@@ -13,7 +13,9 @@ use DvsaEntities\DqlBuilder\SearchParam\MotTestSearchParam;
 use DvsaEntities\Entity\Colour;
 use DvsaEntities\Entity\Make;
 use DvsaEntities\Entity\Model;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
+use DvsaEntities\Entity\MotTestCancelled;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\Person;
@@ -33,6 +35,8 @@ use Zend\Stdlib\DateTime;
 class FbQueryMotTestTest extends \PHPUnit_Framework_TestCase
 {
     const SITE_ID = 9999;
+    const VIN = 'hdh7htref0gr5greh';
+    const REG = 'FNZ 6JZ';
 
     /** @var  EntityManager */
     private $mockEM;
@@ -113,16 +117,25 @@ class FbQueryMotTestTest extends \PHPUnit_Framework_TestCase
 
         $model = new Model();
         $model->setName('911 Turbo');
+        $model->setMake($make);
+
+        $modelDetail = new ModelDetail();
+        $modelDetail->setModel($model);
+
+        $colour = new Colour();
+        $colour->setName('Blue');
 
         $vehicle = new Vehicle();
         $vehicle->setId(1);
+        $vehicle->setModelDetail($modelDetail);
+        $vehicle->setColour($colour);
+        $vehicle->setVin(self::VIN);
+        $vehicle->setRegistration(self::REG);
+        $vehicle->setVersion(1);
 
         $tester = new Person();
         $tester->setId(1);
         $tester->setUsername('ft-catb');
-
-        $colour = new Colour();
-        $colour->setName('Blue');
 
         $site = new Site();
         $site
@@ -134,20 +147,17 @@ class FbQueryMotTestTest extends \PHPUnit_Framework_TestCase
         $type->setCode('NT');
 
         $motTest->setId(1)
-            ->setRegistration('FNZ 6JZ')
-            ->setMake($make)
-            ->setModel($model)
-            ->setVin('hdh7htref0gr5greh')
             ->setVehicle($vehicle)
+            ->setVehicleVersion($vehicle->getVersion())
             ->setMotTestType($type)
             ->setTester($tester)
             ->setHasRegistration(true)
             ->setStartedDate(null)
-            ->setPrimaryColour($colour)
             ->setVehicleTestingStation($site)
             ->setNumber('123456789012')
             ->setCompletedDate(null)
-            ->setStartedDate(null);
+            ->setStartedDate(null)
+            ->setMotTestCancelled(new MotTestCancelled());
 
         $results[] = $motTest;
 
@@ -169,8 +179,8 @@ class FbQueryMotTestTest extends \PHPUnit_Framework_TestCase
                     'primaryColour'       => 'Blue',
                     'hasRegistration'     => 1,
                     'odometer'            => 'Not recorded',
-                    'vin'                 => 'hdh7htref0gr5greh',
-                    'registration'        => 'FNZ 6JZ',
+                    'vin'                 => self::VIN,
+                    'registration'        => self::REG,
                     'make'                => 'Porshe',
                     'model'               => '911 Turbo',
                     'testType'            => 'Normal Test',

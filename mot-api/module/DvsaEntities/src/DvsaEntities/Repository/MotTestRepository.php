@@ -11,8 +11,10 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use DvsaCommon\Constants\SearchParamConst;
+use DvsaCommon\Dto\Common\OdometerReadingDto;
 use DvsaCommon\Dto\MotTesting\ContingencyTestDto;
 use DvsaCommon\Enum\MotTestStatusCode;
 use DvsaCommon\Enum\MotTestStatusName;
@@ -24,6 +26,7 @@ use DvsaEntities\DqlBuilder\NativeQueryBuilder;
 use DvsaEntities\DqlBuilder\SearchParam\MotTestSearchParam;
 use DvsaEntities\Entity\Make;
 use DvsaEntities\Entity\Model;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\Person;
@@ -32,7 +35,7 @@ use DvsaEntities\Entity\Vehicle;
 use DvsaMotApi\Helper\MysteryShopperHelper;
 
 /**
- * MotTest Repository.
+ * Class MotTestRepository
  */
 class MotTestRepository extends AbstractMutableRepository
 {
@@ -53,11 +56,6 @@ class MotTestRepository extends AbstractMutableRepository
         'TS_FAILED' => MotTestStatusName::FAILED,
         'TS_PASSED' => MotTestStatusName::PASSED,
         'TS_REFUSED' => MotTestStatusName::REFUSED,
-    ];
-
-    public static $testLogOrganisationSiteStatuses = [
-        'OSS_APPLIED' => OrganisationSiteStatusCode::APPLIED,
-        'OSS_UNKNOWN' => OrganisationSiteStatusCode::UNKNOWN,
     ];
 
     /**
@@ -81,8 +79,7 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function findLastNormalTest($vehicleId, $contingencyDto = null, $vtsId = null)
     {
-        $qb = $this
-            ->createQueryBuilder('mt')
+        $qb = $this->createQueryBuilder('mt')
             ->innerJoin('mt.vehicle', 'v')
             ->innerJoin('mt.motTestType', 't')
             ->where('v.id = :vehicleId')
@@ -110,17 +107,16 @@ class MotTestRepository extends AbstractMutableRepository
     }
 
     /**
-     * @param $vehicleId
+     * @param int $vehicleId
      * @param DateTime $from
-     * @param null $contingencyDto
+     * @param ContingencyTestDto|null $contingencyDto
      * @param bool $isMysteryShopper
      *
      * @return int
      */
     public function countNotCancelledTests($vehicleId, DateTime $from, $contingencyDto = null)
     {
-        $qb = $this
-            ->createQueryBuilder('mt')
+        $qb = $this->createQueryBuilder('mt')
             ->select('count(mt.id) AS amount')
             ->innerJoin('mt.vehicle', 'v')
             ->innerJoin('mt.motTestType', 't')
@@ -140,7 +136,7 @@ class MotTestRepository extends AbstractMutableRepository
                 ->setParameter('contingencyDatetime', $contingencyDto->getPerformedAt());
         }
 
-        return (int) $qb->getQuery()->getSingleScalarResult();
+        return (int)$qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -170,8 +166,7 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function findLastCertificateExpiryDate($vehicleId)
     {
-        $qb = $this
-            ->createQueryBuilder('mt')
+        $qb = $this->createQueryBuilder('mt')
             ->innerJoin('mt.motTestType', 't')
             ->innerJoin('mt.status', 'ts')
             ->where('mt.vehicle = :vehicleId')
@@ -193,7 +188,7 @@ class MotTestRepository extends AbstractMutableRepository
      *
      * @param $personId
      *
-     * @return int
+     * @return string
      */
     public function findInProgressTestNumberForPerson($personId)
     {
@@ -211,8 +206,7 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function findInProgressTestForPerson($personId)
     {
-        $qb = $this
-            ->createQueryBuilder('mt')
+        $qb = $this->createQueryBuilder('mt')
             ->innerJoin('mt.motTestType', 't')
             ->innerJoin('mt.status', 'ts')
             ->where('mt.tester = :personId')
@@ -252,8 +246,8 @@ class MotTestRepository extends AbstractMutableRepository
      *
      * @see findInProgressDemoTestForPerson for different type of demo tests
      *
-     * @param int  $personId
-     * @param bool $routine  To set the demo test type
+     * @param int $personId
+     * @param bool $routine To set the demo test type
      *
      * @return string|null
      */
@@ -272,8 +266,8 @@ class MotTestRepository extends AbstractMutableRepository
      *          - Routine Demonstration Test (DR)
      *       this method will return the "Demonstration Test following training" by default
      *
-     * @param int  $personId
-     * @param bool $routine  To set the demo test type
+     * @param int $personId
+     * @param bool $routine To set the demo test type
      *
      * @return MotTest|null
      */
@@ -291,8 +285,7 @@ class MotTestRepository extends AbstractMutableRepository
      */
     private function findInProgressTestOfTypeForPerson($personId, $testTypeCode)
     {
-        $qb = $this
-            ->createQueryBuilder('mt')
+        $qb = $this->createQueryBuilder('mt')
             ->innerJoin('mt.motTestType', 't')
             ->innerJoin('mt.status', 'ts')
             ->where('mt.tester = :personId')
@@ -341,13 +334,12 @@ class MotTestRepository extends AbstractMutableRepository
     {
         $qb = $this->createQueryBuilder('mt');
         $query =
-            $qb
-            ->innerJoin('mt.status', 'ts')
-            ->where('ts.name = :status')
-            ->andWhere('mt.vehicleTestingStation = :vehicleTestingStation')
-            ->setParameter('status', MotTestStatusName::ACTIVE)
-            ->setParameter('vehicleTestingStation', $vtsId)
-            ->getQuery();
+            $qb->innerJoin('mt.status', 'ts')
+                ->where('ts.name = :status')
+                ->andWhere('mt.vehicleTestingStation = :vehicleTestingStation')
+                ->setParameter('status', MotTestStatusName::ACTIVE)
+                ->setParameter('vehicleTestingStation', $vtsId)
+                ->getQuery();
 
         return $query->getResult();
     }
@@ -367,7 +359,7 @@ class MotTestRepository extends AbstractMutableRepository
             ->setParameter(':STATUS', MotTestStatusCode::ACTIVE)
             ->setParameter(':VTS_ID', $vtsId);
 
-        return (int) $qb->getQuery()->getSingleScalarResult();
+        return (int)$qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -377,8 +369,7 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function findRetestForMotTest($motTestNumber)
     {
-        $qb = $this
-            ->createQueryBuilder('mt')
+        $qb = $this->createQueryBuilder('mt')
             ->innerJoin('mt.motTestIdOriginal', 'omt')
             ->innerJoin('mt.motTestType', 't')
             ->innerJoin('mt.status', 'ts')
@@ -403,8 +394,7 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function getLatestMotTestsBySiteNumber($siteNumber, array $optionalMotTestTypes)
     {
-        $mtQb = $this
-            ->createQueryBuilder('it')
+        $mtQb = $this->createQueryBuilder('it')
             ->select('DATE(it.startedDate) AS sort_date')
             ->distinct(true)
             ->innerJoin('it.vehicleTestingStation', 'ivts')
@@ -427,15 +417,13 @@ class MotTestRepository extends AbstractMutableRepository
 
         $minDate = min($dates);
 
-        $qb = $this
-            ->createQueryBuilder('t')
-            ->select(['t', 'v', 'o', 'p', 'vts'])
+        $qb = $this->createQueryBuilder('t')
+            ->select(['t', 'v', 'p', 'vts'])
             ->innerJoin('t.tester', 'p')
             ->innerJoin('t.vehicle', 'v')
             ->innerJoin('t.vehicleTestingStation', 'vts')
             ->innerJoin('t.motTestType', 'tt')
             ->innerJoin('t.status', 'ts')
-            ->leftJoin('t.odometerReading', 'o')
             ->where('vts.siteNumber = :siteNumber')
             ->setParameter('siteNumber', $siteNumber)
             ->orderBy('t.startedDate', 'DESC')
@@ -470,7 +458,7 @@ class MotTestRepository extends AbstractMutableRepository
             ->leftJoin('vts.defaultBrakeTestClass1And2', 'defaultBrakeTestClass1And2')
             ->leftJoin('vts.defaultServiceBrakeTestClass3AndAbove', 'defaultServiceBrakeTestClass3AndAbove')
             ->leftJoin('vts.defaultParkingBrakeTestClass3AndAbove', 'defaultParkingBrakeTestClass3AndAbove')
-            ->where('mt.number = :number')
+            ->andWhere('mt.number = :number')
             ->setParameters(['number' => $motTestNumber])
             ->getQuery()->getOneOrNullResult();
 
@@ -491,13 +479,13 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function findTestByVehicleRegistrationAndTestNumber($registration, $testNumber)
     {
-        $qb = $this
-            ->createQueryBuilder('mt')
+        $qb = $this->createQueryBuilder('mt')
             ->innerJoin('mt.motTestType', 't')
             ->innerJoin('mt.status', 'ts')
-            ->where('ts.name IN (:statuses)')
+            ->innerJoin('mt.vehicle', 'v')
+            ->andWhere('ts.name IN (:statuses)')
             ->andWhere('t.code IN (:testTypes)')
-            ->andWhere('mt.registration = :registration')
+            ->andWhere('v.registration = :registration')
             ->andWhere('mt.number = :number')
             ->setParameter('statuses', [MotTestStatusName::PASSED, MotTestStatusName::FAILED])
             ->setParameter('testTypes', $this->testTypes)
@@ -567,17 +555,17 @@ class MotTestRepository extends AbstractMutableRepository
 
     private function fetchTestsForVehicle($vehicleId, $startDate, $testTypes, $testTypeWhereClauseFunction = null)
     {
+
         $statuses = [
             MotTestStatusName::PASSED,
             MotTestStatusName::FAILED,
             MotTestStatusName::ABANDONED,
         ];
 
-        $qb = $this
-            ->createQueryBuilder('mt')
+        $qb = $this->createQueryBuilder('mt')
             ->innerJoin('mt.motTestType', 't')
             ->innerJoin('mt.status', 'ts')
-            ->where('ts.name IN (:statuses)');
+            ->andWhere('ts.name IN (:statuses)');
 
         $qb = is_callable($testTypeWhereClauseFunction) ?
             $testTypeWhereClauseFunction($qb) : $qb->andWhere('t.code IN (:testTypes)');
@@ -706,11 +694,11 @@ class MotTestRepository extends AbstractMutableRepository
         $vehicleId,
         $status = MotTestStatusName::PASSED,
         $issuedDate = false
-    ) {
+    )
+    {
         $testTypeCodes = \DvsaCommon\Domain\MotTestType::getExpiryDateDefiningTypes();
 
-        $qb = $this
-            ->createQueryBuilder('t')
+        $qb = $this->createQueryBuilder('t')
             ->innerJoin('t.motTestType', 'tt')
             ->innerJoin('t.status', 'ts')
             ->where('t.vehicle = :vehicleId')
@@ -725,7 +713,7 @@ class MotTestRepository extends AbstractMutableRepository
 
         if ($issuedDate) {
             $qb->andWhere('t.issuedDate < :issuedDate')
-               ->setParameter('issuedDate', $issuedDate);
+                ->setParameter('issuedDate', $issuedDate);
         }
 
         $result = $qb->getQuery()->getResult();
@@ -739,7 +727,7 @@ class MotTestRepository extends AbstractMutableRepository
      * @param string $vrm
      * @param string $status
      * @param string $issuedDate
-     * @param array  $excludeCodes
+     * @param array $excludeCodes
      *
      * @return MotTest
      */
@@ -751,7 +739,8 @@ class MotTestRepository extends AbstractMutableRepository
             MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING,
             MotTestTypeCode::ROUTINE_DEMONSTRATION_TEST,
         ]
-    ) {
+    )
+    {
         $qb = $this
             ->createQueryBuilder('t')
             ->innerJoin('t.motTestType', 'tt')
@@ -777,8 +766,8 @@ class MotTestRepository extends AbstractMutableRepository
     /**
      * Retrieve the latest MOT test number of a specific status by vehicle ID.
      *
-     * @param int    $vehicleId Non-obfuscated vehicle ID
-     * @param string $status    Status of MOT test to retrieve, default passed
+     * @param int $vehicleId Non-obfuscated vehicle ID
+     * @param string $status Status of MOT test to retrieve, default passed
      *
      * @throws NotFoundException
      *
@@ -786,8 +775,7 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function getLatestMotTestIdByVehicleId($vehicleId, $status = MotTestStatusName::PASSED)
     {
-        $qb = $this
-            ->createQueryBuilder('t')
+        $qb = $this->createQueryBuilder('t')
             ->select('t.number')
             ->innerJoin('t.motTestType', 'tt')
             ->innerJoin('t.status', 'ts')
@@ -800,12 +788,12 @@ class MotTestRepository extends AbstractMutableRepository
             ->setParameter('status', $status)
             ->setParameter(
                'codes', [
-                MotTestTypeCode::NORMAL_TEST, //'NT'
-                MotTestTypeCode::PARTIAL_RETEST_LEFT_VTS, //'PL'
-                MotTestTypeCode::PARTIAL_RETEST_REPAIRED_AT_VTS, //'PV'
-                MotTestTypeCode::RE_TEST, //'RT'
-                MotTestTypeCode::INVERTED_APPEAL, //'EI'
-                MotTestTypeCode::STATUTORY_APPEAL, //'ES'
+                MotTestTypeCode::NORMAL_TEST,
+                MotTestTypeCode::PARTIAL_RETEST_LEFT_VTS,
+                MotTestTypeCode::PARTIAL_RETEST_REPAIRED_AT_VTS,
+                MotTestTypeCode::RE_TEST,
+                MotTestTypeCode::INVERTED_APPEAL,
+                MotTestTypeCode::STATUTORY_APPEAL,
                ])
             ->setMaxResults(1);
 
@@ -826,8 +814,7 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function getLatestMotTestsByVehicleId($vehicleId, $maxResults = 100)
     {
-        $qb = $this
-            ->createQueryBuilder('mt')
+        $qb = $this->createQueryBuilder('mt')
             ->addSelect('v, vt, t, rfr', 'rfrMarkedAsRepaired')
             ->innerJoin('mt.vehicle', 'v')
             ->innerJoin('mt.vehicleTestingStation', 'vt')
@@ -854,7 +841,20 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function getMotTest($id)
     {
-        $motTest = $this->find($id);
+        $motTest = $this->createQueryBuilder('mt')
+            ->select('mt, rfr, t, v, btr3, btr12, o, vts')
+            ->andWhere('mt.id = :id')
+            ->leftJoin('mt.tester', 't')
+            ->leftJoin('mt.vehicle', 'v')
+            ->leftJoin('mt.vehicleTestingStation', 'vts')
+            ->leftJoin('mt.motTestReasonForRejections', 'rfr')
+            ->leftJoin('mt.brakeTestResultClass3AndAboveHistory', 'btr3')
+            ->leftJoin('mt.brakeTestResultClass12History', 'btr12')
+            ->leftJoin('mt.organisation', 'o')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+
         if (!$motTest) {
             throw new NotFoundException('Mot Test', $id);
         }
@@ -865,10 +865,10 @@ class MotTestRepository extends AbstractMutableRepository
     /**
      * Get the odometer history for a given vehicle id.
      *
-     * @param int                      $vehicleId
-     * @param DateTime                 $dateTo
-     * @param array [MotTestTypeCode]  $optionalMotTestTypeCodes (default = null)
-     * @param int                      $limit (default = 4)
+     * @param int $vehicleId
+     * @param DateTime $dateTo
+     * @param array [MotTestTypeCode] $optionalMotTestTypeCodes (default = null)
+     * @param int $limit (default = 4)
      *
      * @return array
      */
@@ -887,12 +887,18 @@ class MotTestRepository extends AbstractMutableRepository
             $codes = array_merge($codes, $optionalMotTestTypeCodes);
         }
 
-        $qb->select('t.issuedDate, o.value, o.unit, ts.name as status, o.resultType as resultType, DATE(t.issuedDate) as dtIssuedDate')
+        $qb->select(
+            't.issuedDate, 
+            t.odometerValue AS value, 
+            t.odometerUnit AS unit, 
+            ts.name AS status,
+            t.odometerResultType AS resultType,
+            DATE(t.issuedDate) as dtIssuedDate'
+        )
             ->from($this->getEntityName(), 't')
-            ->innerJoin('t.odometerReading', 'o')
             ->innerJoin('t.motTestType', 'tt')
             ->innerJoin('t.status', 'ts')
-            ->where('t.vehicle = :vehicleId')
+            ->andWhere('t.vehicle = :vehicleId')
             ->andWhere('ts.name = :name')
             ->andWhere('tt.code IN (:codes)')
             ->orderBy('t.issuedDate', 'DESC')
@@ -921,9 +927,8 @@ class MotTestRepository extends AbstractMutableRepository
     {
         $qb = $this->_em->createQueryBuilder();
 
-        $qb->select('o.value, o.unit, o.resultType')
+        $qb->select('t.odometerValue AS value, t.odometerUnit AS unit, t.odometerResultType AS resultType')
             ->from($this->getEntityName(), 't')
-            ->innerJoin('t.odometerReading', 'o')
             ->where('t.id = ?0')
             ->setMaxResults(1);
 
@@ -935,21 +940,23 @@ class MotTestRepository extends AbstractMutableRepository
     /**
      * This function allow us to paginate all the database to avoid memory limit.
      *
-     * @param int    $start
-     * @param int    $offset
+     * @param int $start
+     * @param int $offset
      * @param string $orderBy
-     * @param int    $hydrateMode
+     * @param int $hydrateMode
      *
      * @return array
+     *
+     * @todo seems to be not used
      */
     public function getAllDataForEsIngestion(
         $start,
         $offset,
         $orderBy = 'test.id',
         $hydrateMode = Query::HYDRATE_OBJECT
-    ) {
-        $qb = $this
-            ->createQueryBuilder('test')
+    )
+    {
+        $qb = $this->createQueryBuilder('test')
             ->addSelect(['model', 'make'])
             ->leftJoin('test.make', 'make')
             ->leftJoin('test.model', 'model')
@@ -966,29 +973,20 @@ class MotTestRepository extends AbstractMutableRepository
     }
 
     /**
-     * Generic function to get MOT test count through organisation_site_map.
+     * Generic function to get MOT test count.
      *
      * @param $whereString
      * @param $whereParam
      * @param $whereValue
-     * @param bool $getTestLogsForAe
+     * @param bool $getTestLogsForVts
      *
      * @return mixed
      */
-    private function getCountOfMotTests($whereString, $whereParam, $whereValue, $getTestLogsForAe = false)
+    private function getCountOfMotTests($whereString, $whereParam, $whereValue, $getTestLogsForVts = false)
     {
-        $sql = $this->getMotTestCountQuery($whereString, $getTestLogsForAe);
+        $sql = $this->getMotTestCountQuery($whereString, $getTestLogsForVts);
 
-        if (!$getTestLogsForAe) {
-            $sql = $this->addMotTestSpecificConstraints($sql);
-        }
-
-        //fiter out organisation_site_statuses
-        $whereParams = [];
-        foreach (static::$testLogOrganisationSiteStatuses as $key => $val) {
-            $whereParams[] = ':' . $key;
-        }
-        $sql .= ' AND oss.code NOT IN (' . implode(', ', $whereParams) . ')';
+        $sql = $this->addMotTestSpecificConstraints($sql);
 
         //  ----  prepare statement and bind params   ----
         $em = $this->getEntityManager();
@@ -996,14 +994,7 @@ class MotTestRepository extends AbstractMutableRepository
 
         $sql->bindValue($whereParam, $whereValue);
 
-        if (!$getTestLogsForAe) {
-            $this->bindMotTestSpecificConstraints($sql);
-        }
-
-        //  --  bind statuses --
-        foreach (static::$testLogOrganisationSiteStatuses as $key => $val) {
-            $sql->bindValue($key, $val);
-        }
+        $this->bindMotTestSpecificConstraints($sql);
 
         $sql->execute();
 
@@ -1021,10 +1012,10 @@ class MotTestRepository extends AbstractMutableRepository
     public function getCountOfMotTestsSummary($organisationId)
     {
         return $this->getCountOfMotTests(
-            'osm.organisation_id = :ORGANISATION_ID',
+            't.organisation_id = :ORGANISATION_ID',
             'ORGANISATION_ID',
             $organisationId,
-            true
+            false
         );
     }
 
@@ -1035,7 +1026,7 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function getCountOfSiteMotTestsSummary($siteId)
     {
-        return $this->getCountOfMotTests('osm.site_id = :SITE_ID AND osm.organisation_id = s.organisation_id', 'SITE_ID', $siteId);
+        return $this->getCountOfMotTests('t.site_id = :SITE_ID AND t.organisation_id = s.organisation_id', 'SITE_ID', $siteId, true);
     }
 
     /**
@@ -1048,8 +1039,9 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function getCountOfTesterMotTestsSummary($testerId)
     {
-        return $this->getCountOfMotTests('t.person_id = :PERSON_ID', 'PERSON_ID', $testerId);
+        return $this->getCountOfMotTests('t.person_id = :PERSON_ID', 'PERSON_ID', $testerId, false);
     }
+
 
     /**
      * Prepare statement to get mot tests log data.
@@ -1058,79 +1050,30 @@ class MotTestRepository extends AbstractMutableRepository
      *
      * @return NativeQueryBuilder
      */
-    public function prepareMotTestLogQuery(MotTestSearchParam $searchParam)
+    private function prepareMotTestLogCountQuery(MotTestSearchParam $searchParam)
     {
         //  --  prepare sub query   --
         $qb = new NativeQueryBuilder();
-        $qb
-            ->select('*', 'all')
-            ->select(
-                'COALESCE(mt.completed_date, mt.started_date) AS testDate,
-                TIMESTAMPDIFF(SECOND, mt.started_date, COALESCE(mt.completed_date, mt.started_date)) as testDuration
-                ',
-                'additionalFields'
-            )
-            ->from('mot_test', 'mt')
-            ->join('site', 's', 's.id = mt.site_id')
-            ->join('make', 'vma', 'vma.id = mt.make_id', NativeQueryBuilder::JOIN_TYPE_LEFT)
-            ->join('model', 'vmo', 'vmo.id = mt.model_id', NativeQueryBuilder::JOIN_TYPE_LEFT)
-            ->join('mot_test_type', 'tt', 'tt.id = mt.mot_test_type_id')
-            ->join('mot_test_status', 'ts', 'ts.id = mt.status_id')
-            ->join('person', 'p', 'p.id = mt.person_id')
-            ->join('organisation_site_map', 'osm', 'osm.site_id = mt.site_id')
-            ->join('organisation_site_status', 'oss', 'oss.id = osm.status_id');
 
-        if ($searchParam->getSiteNumber()) {
-            $qb->andwhere('s.site_number = :SITE_NR')
-                ->setParameter('SITE_NR', $searchParam->getSiteNumber());
-        }
+        $qb->select('count(mt.id) AS count', 'countPart');
+
+        $qb
+            ->from($this->getClassMetadata()->getTableName(), 'mt')
+            ->join('mot_test_type', 'tt', 'tt.id = mt.mot_test_type_id');
 
         if ($searchParam->getTesterId()) {
             $qb->andwhere('mt.person_id = :TESTER_ID')
                 ->setParameter('TESTER_ID', $searchParam->getTesterId());
         }
 
-        if ($searchParam->getRegistration()) {
-            $qb->andwhere('mt.registration = :VRM')
-                ->setParameter('VRM', $searchParam->getRegistration());
-        }
-
-        if ($searchParam->getVin()) {
-            $qb->andwhere('mt.vin = :VIN')
-                ->setParameter('VIN', $searchParam->getVin());
-        }
-
-        if ($searchParam->getVehicleId()) {
-            $qb->andwhere('mt.vehicle_id = :VEHICLE_ID')
-                ->setParameter('VEHICLE_ID', $searchParam->getVehicleId());
-        }
-
         if ($searchParam->getOrganisationId()) {
-            $qb->andWhere('osm.organisation_id = :OSM_ORGANISATION_ID')
-                ->setParameter('OSM_ORGANISATION_ID', $searchParam->getOrganisationId());
+            $qb->andWhere('mt.organisation_id = :ORGANISATION_ID')
+                ->setParameter('ORGANISATION_ID', $searchParam->getOrganisationId());
         }
 
         if ($searchParam->getSiteId()) {
-            $qb->andWhere('osm.site_id = :OSM_SITE_ID')
-                ->setParameter('OSM_SITE_ID', $searchParam->getSiteId());
-        }
-
-        $qb->andWhere('oss.code NOT IN (:ORGANISATION_SITE_STATUS_ID)')
-                ->setParameter('ORGANISATION_SITE_STATUS_ID', implode(',', [
-                    OrganisationSiteStatusCode::APPLIED,
-                    OrganisationSiteStatusCode::UNKNOWN,
-            ]));
-
-        $statuses = $searchParam->getStatus();
-        if (!empty($statuses)) {
-            $query = [];
-            foreach ($statuses as $key => $item) {
-                $query[] = ':STATUS' . $key;
-
-                $qb->setParameter('STATUS' . $key, $item);
-            }
-
-            $qb->andwhere('ts.name IN (' . implode(',', $query) . ')');
+            $qb->andWhere('mt.site_id = :SITE_ID')
+                ->setParameter('SITE_ID', $searchParam->getSiteId());
         }
 
         $testType = $searchParam->getTestType();
@@ -1145,8 +1088,12 @@ class MotTestRepository extends AbstractMutableRepository
             $qb->andwhere('tt.code IN (' . implode(',', $query) . ')');
         }
 
-        if ($searchParam->getDateFrom() || $searchParam->getDateTo()) {
-            $qb->andwhere('
+        $statuses = $searchParam->getStatus();
+
+         if ($searchParam->getDateFrom() || $searchParam->getDateTo()) {
+            if (in_array(MotTestStatusName::ACTIVE, $statuses, true))
+            {
+                $qb->andwhere('
                 (
                     (
                     mt.completed_date IS NULL
@@ -1158,27 +1105,329 @@ class MotTestRepository extends AbstractMutableRepository
                     )
                 )
                 ')
-                ->andWhere('mt.completed_date >= osm.start_date')
-                ->andWhere('(mt.completed_date <= osm.end_date OR osm.end_date IS NULL)')
-                ->setParameter('DATE_FROM', $searchParam->getDateFrom() ?: new \DateTime('1900-01-01'))
-                ->setParameter('DATE_TO', $searchParam->getDateTo() ?: new \DateTime());
-        }
-
-        //  logical block: define order by statement
-        $orderBy = $searchParam->getSortColumnNameDatabase();
-        if (!empty($orderBy)) {
-            if (!is_array($orderBy)) {
-                $orderBy = [$orderBy];
-            }
-
-            foreach ($orderBy as $order) {
-                $qb->orderBy($order . ' ' . $searchParam->getSortDirection());
+                    ->setParameter('DATE_FROM', $searchParam->getDateFrom() ?: (new \DateTime())->sub(new \DateInterval('P1D')))
+                    ->setParameter('DATE_TO', $searchParam->getDateTo() ?: new \DateTime());}
+            else {
+                $qb->andwhere('mt.completed_date BETWEEN :DATE_FROM AND :DATE_TO ')
+                    ->setParameter('DATE_FROM', $searchParam->getDateFrom() ?: (new \DateTime())->sub(new \DateInterval('P1D')))
+                    ->setParameter('DATE_TO', $searchParam->getDateTo() ?: new \DateTime());
             }
         }
 
-        //  logical block: define pagination statement
-        if ($searchParam->getStart() > 0) {
-            $qb->setOffset($searchParam->getStart());
+        /** Note: Test logs at the minute has no means of searching on:
+         *  Registration, Vin, or Vehicle Id, Site Number or Status
+         * Debatable if the following conditions should even be included
+         * as they only serve to confuse.
+         */
+        if ($searchParam->getRegistration() || $searchParam->getVin()) {
+            $qb
+                ->join('vehicle', 'v', 'v.id = mt.vehicle_id AND v.version = mt.vehicle_version', NativeQueryBuilder::JOIN_TYPE_LEFT)
+                ->join('vehicle_hist', 'vh', 'vh.id = mt.vehicle_id AND vh.version = mt.vehicle_version', NativeQueryBuilder::JOIN_TYPE_LEFT);
+        }
+
+        if ($searchParam->getRegistration()) {
+            $qb->andwhere('(v.registration = :VRM OR vh.registration = :VHVRM)')
+                ->setParameter('VRM', $searchParam->getRegistration())
+                ->setParameter('VHVRM', $searchParam->getRegistration());
+        }
+
+        if ($searchParam->getVin()) {
+            $qb->andwhere('(v.vin = :VIN OR vh.vin = :VHVIN)')
+                ->setParameter('VIN', $searchParam->getVin())
+                ->setParameter('VHVIN', $searchParam->getVin());
+        }
+
+        if ($searchParam->getVehicleId()) {
+            $qb->andwhere('mt.vehicle_id = :VEHICLE_ID')
+                ->setParameter('VEHICLE_ID', $searchParam->getVehicleId());
+        }
+
+        if ($searchParam->getSiteNumber()) {
+            $qb->join('site', 's', 's.id = mt.site_id');
+
+            $qb->andwhere('s.site_number = :SITE_NR')
+                ->setParameter('SITE_NR', $searchParam->getSiteNumber());
+        }
+
+        if (!empty($statuses) && in_array(MotTestStatusName::ACTIVE, $statuses, true)) {
+            // Optimisation : Not including statuses in query unless Active is included,
+            // because likelihood is that search params just includes all completed statues.
+            // Active tests will otherwise be excluded by completed_date section below.
+
+            $qb->join('mot_test_status', 'ts', 'ts.id = mt.status_id');
+
+            $query = [];
+            foreach ($statuses as $key => $item) {
+                $query[] = ':STATUS' . $key;
+
+                $qb->setParameter('STATUS' . $key, $item);
+            }
+
+            $qb->andwhere('ts.name IN (' . implode(',', $query) . ')');
+        }
+
+        return $qb;
+    }
+
+    /**
+     * Prepare statement to get mot tests log data.
+     *
+     * @param MotTestSearchParam $searchParam
+     *
+     * @return NativeQueryBuilder
+     */
+    private function prepareMotTestLogResultQuery(MotTestSearchParam $searchParam)
+    {
+        $useSubQuery = false;
+        $subQuerySql = $this->getClassMetadata()->getTableName();
+
+        if ($searchParam->getFormat() === SearchParamConst::FORMAT_DATA_CSV) {
+            $useSubQuery = false;
+        }
+        else
+        {   $orderBy = $searchParam->getSortColumnNameDatabase();
+            if (!empty($orderBy)) {
+                if (!is_array($orderBy)) {
+                    if ($orderBy === 'testDate' ||
+                        $orderBy === 'mt.id'
+                    ) {
+                        $useSubQuery = true;
+                    }
+                }
+            }
+
+            // Override above to only use subquery for AE level
+            // This is only place where a real benefit has been found in testing
+            // Note: The testing was limited to hand running queries on an inactive
+            // acceptance database so god knows what to expect with an active
+            // DB with specific new indexes where tests are being created during execution.
+            if ($searchParam->getSiteId() || $searchParam->getTesterId() ) {
+                $useSubQuery = false;
+            }
+        }
+
+        if ($useSubQuery) {
+            /**
+             * It has been found to be more efficient to use a cut-down sub-query
+             * for AE level test results with the default testDate order by clause.
+             * The subquery takes care of ordering and paging when the display
+             * ordering involves only fields from the mot_test (current or history)
+             * tables, rather than joining with all the other tables first.
+             */
+
+            /* Re-use the count query to construct the sub-query structure */
+            /** @var NativeQueryBuilder $subQuery */
+            $subQuery = $this->prepareMotTestLogCountQuery($searchParam);
+
+            // take the necessary fields out of mot_test in the sub-query.
+            $subQuery
+                ->resetPart('select', 'countPart')
+                ->select('mt.id')
+                ->select('COALESCE(mt.completed_date, mt.started_date) AS testDate')
+                ->select('mt.number')
+                ->select('mt.client_ip')
+                ->select('mt.status_id')
+                ->select('mt.vehicle_id')
+                ->select('mt.vehicle_version')
+                ->select('mt.organisation_id')
+                ->select('mt.site_id')
+                ->select('mt.completed_date')
+                ->select('mt.started_date')
+                ->select('tt.description')
+                ->select('mt.person_id')
+                ->select('mt.created_by')
+                ->select('mt.created_on')
+                ->select('mt.mot_test_type_id');
+
+            //  logical block: define order by statement
+            $orderBy = $searchParam->getSortColumnNameDatabase();
+            if (!empty($orderBy)) {
+                if (!is_array($orderBy)) {
+                    $orderBy = [$orderBy];
+                }
+
+                foreach ($orderBy as $order) {
+                    $subQuery->orderBy($order . ' ' . $searchParam->getSortDirection());
+                }
+            }
+
+            //  logical block: define pagination statement
+            if ($searchParam->getStart() > 0) {
+                $subQuery->setOffset($searchParam->getStart());
+            }
+
+            // Limit the subquery to the number of rows required for paging.
+            if ($searchParam->getRowCount() > 0) {
+                $subQuery->setLimit($searchParam->getRowCount());
+            }
+
+            $subQuerySql = '(' . $subQuery->getSql() . ')';
+        }
+
+        //  --  prepare main query   --
+        $qb = new NativeQueryBuilder();
+
+        $qb
+            ->select('COALESCE(mt.completed_date, mt.started_date) AS testDate')
+            ->select('TIMESTAMPDIFF(SECOND, mt.started_date, COALESCE(mt.completed_date, mt.started_date)) as testDuration',
+                'additionalFields')
+            ->select('mt.number, mt.client_ip, ts.name AS status')
+            ->select('COALESCE(vh.registration, v.registration) AS registration')
+            ->select('COALESCE(vh.vin,v.vin) AS vin')
+            ->select('COALESCE(vma.name,vhma.name) AS makeName')
+            ->select('COALESCE(vmo.name,vhmo.name) AS modelName')
+            ->select('COALESCE(vc.name,vhvc.name)  AS vehicle_class')
+            ->select('s.site_number AS siteNumber, p.username as userName, tt.description as testTypeName')
+            ->select('emr.emergency_log_id AS emLogId');
+
+        $qb
+            ->from($subQuerySql, 'mt')
+            ->join('mot_test_type', 'tt', 'tt.id = mt.mot_test_type_id')
+            ->join('vehicle', 'v', 'v.id = mt.vehicle_id AND v.version = mt.vehicle_version', NativeQueryBuilder::JOIN_TYPE_LEFT)
+            ->join('vehicle_hist', 'vh', 'vh.id = mt.vehicle_id AND vh.version = mt.vehicle_version', NativeQueryBuilder::JOIN_TYPE_LEFT)
+            ->join('model_detail', 'md', 'md.id = v.model_detail_id', NativeQueryBuilder::JOIN_TYPE_LEFT)
+            ->join('model', 'vmo', 'vmo.id = md.model_id', NativeQueryBuilder::JOIN_TYPE_LEFT)
+            ->join('make', 'vma', 'vma.id = vmo.make_id', NativeQueryBuilder::JOIN_TYPE_LEFT)
+            ->join('model_detail', 'vhmd', 'vhmd.id = vh.model_detail_id', NativeQueryBuilder::JOIN_TYPE_LEFT)
+            ->join('model', 'vhmo', 'vhmo.id = vhmd.model_id', NativeQueryBuilder::JOIN_TYPE_LEFT)
+            ->join('make', 'vhma', 'vhma.id = vhmo.make_id', NativeQueryBuilder::JOIN_TYPE_LEFT)
+            ->join('person', 'p', 'p.id = mt.person_id')
+            ->join('mot_test_emergency_reason', 'emr', 'emr.id = mt.id', NativeQueryBuilder::JOIN_TYPE_LEFT)
+            ->join('emergency_log', 'eml', 'eml.id = emr.emergency_log_id', NativeQueryBuilder::JOIN_TYPE_LEFT)
+            ->join('emergency_reason_lookup', 'emrl', 'emrl.id = emr.emergency_reason_lookup_id', NativeQueryBuilder::JOIN_TYPE_LEFT)
+            ->join('comment', 'emcm', 'emcm.id = emr.emergency_reason_comment_id', NativeQueryBuilder::JOIN_TYPE_LEFT)
+            ->join('vehicle_class', 'vc', 'vc.id = md.vehicle_class_id', NativeQueryBuilder::JOIN_TYPE_LEFT)
+            ->join('vehicle_class', 'vhvc', 'vhvc.id = vhmd.vehicle_class_id', NativeQueryBuilder::JOIN_TYPE_LEFT)
+            ->join('site', 's', 's.id = mt.site_id')
+            ->join('mot_test_status', 'ts', 'ts.id = mt.status_id');
+
+        if ($searchParam->getTesterId()) {
+                    $qb->andwhere('mt.person_id = :TESTER_ID')
+                        ->setParameter('TESTER_ID', $searchParam->getTesterId());
+        }
+
+        if ($searchParam->getOrganisationId()) {
+            $qb->andWhere('mt.organisation_id = :ORGANISATION_ID')
+                ->setParameter('ORGANISATION_ID', $searchParam->getOrganisationId());
+        }
+
+        if ($searchParam->getSiteId()) {
+            $qb->andWhere('mt.site_id = :SITE_ID')
+                ->setParameter('SITE_ID', $searchParam->getSiteId());
+        }
+
+        $testType = $searchParam->getTestType();
+        if (!empty($testType)) {
+            $query = [];
+            foreach ($testType as $key => $item) {
+                $query[] = ':TEST_TYPE' . $key;
+
+                $qb->setParameter('TEST_TYPE' . $key, $item);
+            }
+
+            $qb->andwhere('tt.code IN (' . implode(',', $query) . ')');
+        }
+
+        $statuses = $searchParam->getStatus();
+
+        if ($searchParam->getDateFrom() || $searchParam->getDateTo()) {
+            if (in_array(MotTestStatusName::ACTIVE, $statuses, true)) {
+                $qb->andwhere('
+            (  (  mt.completed_date IS NULL
+                  AND mt.started_date BETWEEN :DATE_FROM AND :DATE_TO
+               )
+            OR ( mt.completed_date IS NOT NULL
+                AND mt.completed_date BETWEEN :DATE_FROM AND :DATE_TO
+               )
+            )
+            ')
+                    ->setParameter('DATE_FROM', $searchParam->getDateFrom() ?: (new \DateTime())->sub(new \DateInterval('P1D')))
+                    ->setParameter('DATE_TO', $searchParam->getDateTo() ?: new \DateTime());
+            } else {
+                $qb->andwhere('mt.completed_date BETWEEN :DATE_FROM AND :DATE_TO ')
+                    ->setParameter('DATE_FROM', $searchParam->getDateFrom() ?: (new \DateTime())->sub(new \DateInterval('P1D')))
+                    ->setParameter('DATE_TO', $searchParam->getDateTo() ?: new \DateTime());
+            }
+        }
+
+        /** Note: Test logs at the minute has no means of using:
+         *  Registration, Vin, or Vehicle Id, SiteNumber or Status for searching.
+         * Debatable if the following conditions should even be included
+         * as they only serve to confuse.
+         */
+
+        if ($searchParam->getRegistration()) {
+            $qb->andwhere('(v.registration = :VRM OR vh.registration = :VHVRM)')
+                ->setParameter('VRM', $searchParam->getRegistration())
+                ->setParameter('VHVRM', $searchParam->getRegistration());
+        }
+
+        if ($searchParam->getVin()) {
+            $qb->andwhere('(v.vin = :VIN OR vh.vin = :VHVIN)')
+                ->setParameter('VIN', $searchParam->getVin())
+                ->setParameter('VHVIN', $searchParam->getVin());
+        }
+
+        if ($searchParam->getVehicleId()) {
+            $qb->andwhere('mt.vehicle_id = :VEHICLE_ID')
+                ->setParameter('VEHICLE_ID', $searchParam->getVehicleId());
+        }
+
+        if ($searchParam->getSiteNumber()) {
+            $qb->join('site', 's', 's.id = mt.site_id');
+
+            $qb->andwhere('s.site_number = :SITE_NR')
+                ->setParameter('SITE_NR', $searchParam->getSiteNumber());
+        }
+
+        if (!empty($statuses) && in_array(MotTestStatusName::ACTIVE, $statuses, true)) {
+            // Optimisation : Not including statuses in query unless Active is included,
+            // because likelihood is that search params just includes all completed statues.
+            // Active tests will otherwise be excluded by completed_date section below.
+
+            $qb->join('mot_test_status', 'ts', 'ts.id = mt.status_id');
+
+            $query = [];
+            foreach ($statuses as $key => $item) {
+                $query[] = ':STATUS' . $key;
+
+                $qb->setParameter('STATUS' . $key, $item);
+            }
+            $qb->andwhere('ts.name IN (' . implode(',', $query) . ')');
+        }
+
+        if ($searchParam->getFormat() === SearchParamConst::FORMAT_DATA_CSV) {
+            $qb
+                ->orderBy('siteNumber ASC')
+                ->orderBy('testDate ASC')
+                ->select(
+                    'CASE WHEN eml.id IS NOT NULL THEN emp.username ELSE NULL END AS emRecTester,
+                    CASE WHEN eml.id IS NOT NULL THEN mt.created_on ELSE NULL END AS emRecDateTime,
+                    COALESCE(emcm.comment, emrl.name) AS emReason,
+                    eml.number AS emCode',
+                    'emergency'
+                )
+                ->join('person', 'emp', 'emp.id = mt.created_by');
+        }
+        else {
+            //  logical block: define order by statement
+            $orderBy = $searchParam->getSortColumnNameDatabase();
+            if (!empty($orderBy)) {
+                if (!is_array($orderBy)) {
+                    $orderBy = [$orderBy];
+                }
+
+                foreach ($orderBy as $order) {
+                    $qb->orderBy($order . ' ' . $searchParam->getSortDirection());
+                }
+            }
+        }
+
+        if (!$useSubQuery) {
+            //Offset gets applied in Sub-Query when it is being used
+            if ($searchParam->getStart() > 0) {
+                $qb->setOffset($searchParam->getStart());
+            }
         }
 
         if ($searchParam->getRowCount() > 0) {
@@ -1190,43 +1439,7 @@ class MotTestRepository extends AbstractMutableRepository
 
     public function getMotTestLogsResult(MotTestSearchParam $searchParam)
     {
-        $qb = $this->prepareMotTestLogQuery($searchParam);
-        $qb
-            ->resetPart('select', 'all')
-            ->select('mt.number, mt.client_ip, ts.name AS status')
-            ->select('mt.registration, mt.vin')
-            ->select('vma.code as make_code, COALESCE(vma.name, mt.make_name) AS makeName')
-            ->select('vma.code as make_code, COALESCE(vmo.name, mt.model_name) AS modelName')
-            ->select('vc.name AS vehicle_class')
-            ->select('s.site_number AS siteNumber, p.username as userName, tt.description as testTypeName')
-            ->select('mt.emergency_log_id AS emLogId')
-            ->join('vehicle_class', 'vc', 'vc.id = mt.vehicle_class_id');
-
-        if ($searchParam->getFormat() === SearchParamConst::FORMAT_DATA_CSV) {
-            $qb
-                ->resetPart('orderBy')
-                ->orderBy('siteNumber ASC')
-                ->orderBy('testDate ASC')
-                ->select(
-                    'CASE WHEN eml.id IS NOT NULL THEN emp.username ELSE NULL END AS emRecTester,
-                    CASE WHEN eml.id IS NOT NULL THEN mt.created_on ELSE NULL END AS emRecDateTime,
-                    COALESCE(emcm.comment, emrl.name) AS emReason,
-                    eml.number AS emCode',
-                    'emergency'
-                )
-                ->join('emergency_log', 'eml', 'eml.id = mt.emergency_log_id', NativeQueryBuilder::JOIN_TYPE_LEFT)
-                ->join(
-                    'emergency_reason_lookup',
-                    'emrl',
-                    'emrl.id = mt.emergency_reason_lookup_id',
-                    NativeQueryBuilder::JOIN_TYPE_LEFT
-                )
-                ->join(
-                    'comment', 'emcm', 'emcm.id = mt.emergency_reason_comment_id', NativeQueryBuilder::JOIN_TYPE_LEFT
-                )
-                ->join('person', 'emp', 'emp.id = mt.created_by');
-        }
-
+        $qb = $this->prepareMotTestLogResultQuery($searchParam);
         $sql = $this->getEntityManager()->getConnection()->prepare($qb->getSql());
         $qb->bindParametersToStatement($sql);
         $sql->execute();
@@ -1241,16 +1454,9 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function getMotTestLogsResultCount(MotTestSearchParam $searchParam)
     {
-        $qb = $this->prepareMotTestLogQuery($searchParam)
-            ->resetPart('select')
-            ->select('count(mt.id) AS count')
-            ->resetPart('orderBy')
-            ->resetPart('offset')
-            ->resetPart('limit');
-
+        $qb = $this->prepareMotTestLogCountQuery($searchParam);
         $sql = $this->getEntityManager()->getConnection()->prepare($qb->getSql());
         $qb->bindParametersToStatement($sql);
-
         $sql->execute();
 
         return $sql->fetch();
@@ -1264,16 +1470,16 @@ class MotTestRepository extends AbstractMutableRepository
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function prepareMotSearch(MotTestSearchParam $searchParam, array $optionalMotTestTypes)
+    private function prepareMotSearch(MotTestSearchParam $searchParam, array $optionalMotTestTypes)
     {
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->createQueryBuilder('test');
 
-        $qb->select('test')
-            ->from(MotTest::class, 'test')
+        $qb
             ->leftJoin(Site::class, 'site', 'WITH', 'site.id = test.vehicleTestingStation')
             ->innerJoin(Vehicle::class, 'vehicle', 'WITH', 'vehicle.id = test.vehicle')
-            ->leftJoin(Make::class, 'make', 'WITH', 'make.id = test.make')
-            ->leftJoin(Model::class, 'model', 'WITH', 'model.id = test.model')
+            ->innerJoin(ModelDetail::class, 'modelDetail', 'WITH', 'modelDetail.id = vehicle.modelDetail')
+            ->leftJoin(Model::class, 'model', 'WITH', 'model.id = modelDetail.model')
+            ->leftJoin(Make::class, 'make', 'WITH', 'make.id = model.make')
             ->innerJoin(MotTestType::class, 'testType', 'WITH', 'test.motTestType = testType.id')
             ->innerJoin(Person::class, 'tester', 'WITH', 'tester.id = test.tester')
             ->andWhere('testType.code IN (:testTypes)')
@@ -1364,7 +1570,7 @@ class MotTestRepository extends AbstractMutableRepository
         $dql = $this->prepareMotSearch($searchParam, $optionalMotTestTypes);
         $dql->select('count(test)');
 
-        return (int) $dql->getQuery()->getSingleScalarResult();
+        return (int)$dql->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -1412,7 +1618,7 @@ class MotTestRepository extends AbstractMutableRepository
         $qb->setParameter('testTypeCode', MotTestTypeCode::NORMAL_TEST);
         $qb->setParameter('lastSurveyMotTestId', $lastSurveyMotTestId);
 
-        $count = (int) $qb->getQuery()->getSingleScalarResult();
+        $count = (int)$qb->getQuery()->getSingleScalarResult();
 
         return $count;
     }
@@ -1422,8 +1628,7 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function getLastMotTestId()
     {
-        $result = $this
-            ->getEntityManager()
+        $result = $this->getEntityManager()
             ->createQueryBuilder()
             ->select('MAX(mt.id)')
             ->from($this->getEntityName(), 'mt')
@@ -1435,7 +1640,77 @@ class MotTestRepository extends AbstractMutableRepository
             return 0;
         }
 
-        return (int) $result;
+        return (int)$result;
+    }
+
+    /**
+     * Finds an odometer reading for a given MOT test
+     *
+     * @param int $motTestNumber
+     *
+     * @return null|OdometerReading
+     */
+    public function findReadingForTest($motTestNumber)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('
+            mt.odometerValue AS value,
+            mt.odometerUnit AS unit,
+            mt.odometerResultType AS resultType,
+            mt.issuedDate AS issuedDate'
+        )
+            ->from(MotTest::class, 'mt')
+            ->where('mt.number = :motTestNumber')
+            ->setParameter('motTestNumber', $motTestNumber);
+
+        $result = $qb->getQuery()->getOneOrNullResult();
+
+        return $this->odometerReadingToDto($result);
+    }
+
+    /**
+     * Searches for a previous test odometer reading looking from a given mot test's perspective.
+     * The test must be a normal test either PASSED or FAILED.
+     *
+     * @param $motTestNumber
+     *
+     * @return OdometerReading
+     */
+    public function findPreviousReading($motTestNumber)
+    {
+        $sql = strtr('
+            SELECT
+                pmt.odometer_value AS  value,
+                pmt.odometer_unit AS unit,
+                pmt.odometer_result_type AS resultType,
+                pmt.issued_date AS issuedDate
+            FROM
+                %TABLE_NAME% AS mt
+                    INNER JOIN
+				mot_test_type AS tt ON tt.id = mt.mot_test_type_id
+                    INNER JOIN
+                %TABLE_NAME% AS pmt ON pmt.vehicle_id = mt.vehicle_id
+            WHERE
+                mt.number = :motTestNumber
+                AND mt.vehicle_id = pmt.vehicle_id
+                AND mt.number <> pmt.number
+                AND tt.code IN (:testTypeNormal, :testTypeRetest)
+            ORDER BY mt.issued_date
+                LIMIT 1
+        ', ['%TABLE_NAME%' => $this->getClassMetadata()->getTableName()]);
+
+        $query = $this->getEntityManager()->getConnection()->prepare($sql);
+
+        $query->bindValue('motTestNumber', $motTestNumber);
+        $query->bindValue("testTypeNormal", MotTestTypeCode::NORMAL_TEST);
+        $query->bindValue("testTypeRetest", MotTestTypeCode::RE_TEST);
+
+        $query->execute();
+
+        $result = $query->fetch();
+
+        return $this->odometerReadingToDto($result);
     }
 
     /**
@@ -1479,72 +1754,45 @@ class MotTestRepository extends AbstractMutableRepository
 
     /**
      * @param string $whereString
-     * @param bool   $isQueryForAe
+     * @param bool $isQueryForVts
      *
      * @return string
      */
-    private function getMotTestCountQuery($whereString, $isQueryForAe)
+    private function getMotTestCountQuery($whereString, $isQueryForVts)
     {
         $joins = '';
-        if (!$isQueryForAe) {
-            $joins = '
-                INNER JOIN mot_test_type AS tt ON
-                    tt.id = t.mot_test_type_id
-
-                INNER JOIN mot_test_status AS ts ON
-                    ts.id = t.status_id
-            ';
+        if ($isQueryForVts) {
+            $joins = 'INNER JOIN site AS s ON s.id = t.site_id ';
         }
 
         return "
         SELECT COUNT(t.id) AS `year`,
-            SUM(CASE 
-               WHEN coalesce(t.completed_date, t.started_date) BETWEEN LAST_DAY(CURRENT_DATE() - INTERVAL 2 MONTH) + INTERVAL 1 DAY
+            SUM(CASE
+               WHEN t.completed_date BETWEEN LAST_DAY(CURRENT_DATE() - INTERVAL 2 MONTH) + INTERVAL 1 DAY
                    AND LAST_DAY(CURRENT_DATE()) - INTERVAL 1 MONTH + INTERVAL 1 DAY
-                   AND (osm.end_date IS NULL OR coalesce(t.completed_date, t.started_date) <= osm.end_date)
-                   AND coalesce(t.completed_date, t.started_date) >= osm.start_date
-               THEN
-                   1
-               ELSE
-                   0
+               THEN 1
+               ELSE 0
                END) AS `month`,
-            SUM(CASE 
-                WHEN coalesce(t.completed_date, t.started_date) BETWEEN CURRENT_DATE() - INTERVAL WEEKDAY(CURRENT_DATE()) + 7 DAY
+            SUM(CASE
+                WHEN t.completed_date BETWEEN CURRENT_DATE() - INTERVAL WEEKDAY(CURRENT_DATE()) + 7 DAY
                      AND CURRENT_DATE() - INTERVAL WEEKDAY(CURRENT_DATE()) DAY
-                     AND (osm.end_date IS NULL OR coalesce(t.completed_date, t.started_date) <= osm.end_date)
-                     AND coalesce(t.completed_date, t.started_date) >= osm.start_date
-                THEN
-                    1
-                ELSE
-                    0
+                THEN 1
+                ELSE 0
                 END ) AS `week`,
             SUM(
             CASE
-            WHEN coalesce(t.completed_date, t.started_date) >= CURRENT_DATE()
-                 AND (osm.end_date IS NULL OR coalesce(t.completed_date, t.started_date) <= osm.end_date)
-                 AND coalesce(t.completed_date, t.started_date) >= osm.start_date
-            THEN 
-                1
-            ELSE
-                0
+            WHEN t.completed_date >= CURRENT_DATE()
+            THEN 1
+            ELSE 0
             END ) AS `today`
-         FROM site AS s
-            INNER JOIN organisation_site_map AS osm     ON osm.site_id = s.id
-            INNER JOIN organisation_site_status AS oss  ON oss.id = osm.status_id
-            INNER JOIN mot_test AS t                    ON t.site_id = s.id
-            {$joins}
-            WHERE 
-                {$whereString}
-                AND 
-                  (
-                    (t.completed_date IS NULL AND t.started_date >= (CURRENT_DATE() - INTERVAL 1 YEAR + INTERVAL 1 DAY)) 
-                    OR (t.completed_date IS NOT NULL AND t.completed_date >= (CURRENT_DATE() - INTERVAL 1 YEAR + INTERVAL 1 DAY))
-                  )
-                AND (coalesce(t.completed_date, t.started_date) <= osm.end_date OR osm.end_date IS NULL)
-                AND coalesce(t.completed_date, t.started_date) >= osm.start_date
+         FROM {$this->getClassMetadata()->getTableName()} AS t
+         INNER JOIN mot_test_type AS tt ON  tt.id = t.mot_test_type_id
+         {$joins}
+         WHERE
+             {$whereString}
+         AND t.completed_date >= (CURRENT_DATE() - INTERVAL 1 YEAR + INTERVAL 1 DAY)
         ";
     }
-
     /**
      * @param string $sql
      *
@@ -1558,13 +1806,6 @@ class MotTestRepository extends AbstractMutableRepository
             $whereParams[] = ':' . $key;
         }
         $sql .= ' AND tt.code IN (' . implode(', ', $whereParams) . ')';
-
-        //  --  add test status where clause --
-        $whereParams = [];
-        foreach (static::$testLogTestStatuses as $key => $val) {
-            $whereParams[] = ':' . $key;
-        }
-        $sql .= ' AND ts.name IN (' . implode(', ', $whereParams) . ')';
 
         return $sql;
     }
@@ -1581,11 +1822,25 @@ class MotTestRepository extends AbstractMutableRepository
             $sql->bindValue($key, $val);
         }
 
-        //  --  bind statuses --
-        foreach (static::$testLogTestStatuses as $key => $val) {
-            $sql->bindValue($key, $val);
+        return $sql;
+    }
+
+    /**
+     * @param $reading
+     * @return OdometerReadingDto|null
+     */
+    private function odometerReadingToDto($reading)
+    {
+        if (!$reading || !array_filter($reading)) {
+            return null;
         }
 
-        return $sql;
+        $odometerReadingDto = new OdometerReadingDto();
+        $odometerReadingDto->setValue($reading['value']);
+        $odometerReadingDto->setUnit($reading['unit']);
+        $odometerReadingDto->setResultType($reading['resultType']);
+        $odometerReadingDto->setIssuedDate($reading['issuedDate']);
+
+        return $odometerReadingDto;
     }
 }

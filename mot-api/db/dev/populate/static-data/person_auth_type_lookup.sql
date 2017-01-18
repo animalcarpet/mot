@@ -1,5 +1,3 @@
--- insert two current forms of supported 2FA
-INSERT into `person_auth_type_lookup` (`id`, `name`, `code`, `created_by`, `version`) VALUES
-  (1, 'Pin', 'PIN', @app_user_id, 1),
-  (2, 'Card', 'CARD', @app_user_id, 1);
-
+INSERT INTO `person_auth_type_lookup` VALUES
+(1,'Pin','PIN',1,'2016-12-20 11:02:12.000000',1,'2016-12-20 11:02:12.000000',1),
+(3,'Card','CARD',1,'2016-12-20 11:02:12.000000',1,'2016-12-20 11:02:12.000000',1);

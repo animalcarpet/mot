@@ -309,6 +309,8 @@ public class PageNavigator {
         if (PageInteractionHelper.isElementDisplayed(logOutLink)) {
             logOutLink.click();
             driver.removeUser(user);
+            driver.manage().deleteCookieNamed("PHPSESSID");
+            driver.manage().deleteCookieNamed("iPlanetDirectoryPro");
         }
     }
 

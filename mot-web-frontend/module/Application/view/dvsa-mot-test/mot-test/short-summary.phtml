@@ -3,23 +3,23 @@
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 
-/** @var \DvsaCommon\Dto\Common\MotTestDto $motTest */
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motTest */
 $motTest = $this->motTest;
 
-$vts = $motTest->getVehicleTestingStation();
-/** @var \DvsaCommon\Dto\Person\PersonDto $tester */
+$vts = $motTest->getSiteId();
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\Tester $tester */
 $tester = $motTest->getTester();
 
-/** @var  \DvsaCommon\Dto\Vehicle\VehicleDto $vehicle */
-$vehicle = $motTest->getVehicle();
+/** @var  \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle $vehicle */
+$vehicle = $this->vehicle;
 
 $testStatus = $motTest->getStatus();
 $motTestNumber = $motTest->getMotTestNumber();
-$testStarted = DateTimeDisplayFormat::textDateTime($motTest->getStartedDate());
+$testStarted = $motTest->getStartedDate();
 $testerName = $tester->getDisplayName();
 
 $urlToReasonForAborting = $this->url('mot-test/reason-for-aborting', ['motTestNumber' => $motTestNumber]);
-$urlToReturnToVts = $this->url('vehicle-testing-station', ['id' => $vts['id']]);
+$urlToReturnToVts = $this->url('vehicle-testing-station', ['id' => $vts]);
 
 $testStatus = AbstractDvsaMotTestController::getTestStatusName($motTest->getStatus());
 
@@ -74,7 +74,7 @@ $this->layout()->setVariable('pageTitle', 'MOT Test');
                         'dtCssClass' => 'visually-hidden',
                     ],
                     ['Vehicle Identification Number', $vehicle->getVin()],
-                    ['Colour', $vehicle->getColoursNames()],
+                    ['Colour', $vehicle->getColour()->getName()],
                 ],
             ]
         );
@@ -83,7 +83,7 @@ $this->layout()->setVariable('pageTitle', 'MOT Test');
 </div>
 
 <nav class="module-content-navigation">
-    <?php if($canAbortTest): ?>
+    <?php if($this->canAbortTest): ?>
         <a class="button-warning" id="sln-action-abort" href="<?php echo $urlToReasonForAborting ?>">Abort MOT Test</a>
     <?php endif; ?>
     <ul class="content-navigation_secondary">

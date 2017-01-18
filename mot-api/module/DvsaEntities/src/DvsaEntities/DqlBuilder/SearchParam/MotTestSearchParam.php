@@ -32,8 +32,8 @@ class MotTestSearchParam extends SearchParam
     static public $dbSortByColumns = [
         "0" => ["test.startedDate", "test.completedDate"], // mot_test
         "2" => "test.status", // mot_test
-        "3" => "test.vin", // mot_test
-        "4" => "test.registration", // mot_test
+        "3" => "vehicle.vin", // vehicle
+        "4" => "vehicle.registration", // vehicle
         "5" => "test.completedDate, test.startedDate", // mot_test
         "6" => "make.name", // make
         "7" => "model.name", // model

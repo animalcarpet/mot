@@ -4,18 +4,27 @@ use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaMotTest\View\Model\MotTestTitleModel;
 
-/** @var \DvsaCommon\Dto\Common\MotTestDto $motTest */
-$motTest = $this->motTest ? $this->motTest : new \DvsaCommon\Dto\Common\MotTestDto();
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motTest */
+$motTest = $this->motTest;
 
 /** @var MotTestTitleModel $motTestTitleViewModel */
 $title = $motTestTitleViewModel->getTitle($motTest);
 
-$motTestNumber = $motTest->getMotTestNumber();
-/** @var \DvsaCommon\Dto\Vehicle\VehicleDto $vehicle */
-$vehicle = $motTest->getVehicle();
-$motTestType = $motTest->getTestType()->getCode();
+/** @var \DvsaMotTest\Controller\DvsaVehicleViewModel $vehicle */
+$vehicle = $this->vehicleViewModel;
 
-$brakeTestResults = $motTest->getBrakeTestResult();
+$motTestNumber = $motTest->getMotTestNumber();
+/** @var string $motTestType */
+$motTestType = $motTest->getTestTypeCode();
+
+$vehicleClass = $vehicle->getVehicleClass()->getCode();
+
+if (in_array($vehicleClass, [VehicleClassCode::CLASS_1, VehicleClassCode::CLASS_2])) {
+    $brakeTestResults = new \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass1And2($motTest->getBrakeTestResult());
+} else {
+    $brakeTestResults = new \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove($motTest->getBrakeTestResult());
+}
+
 if ($motTestType === MotTestTypeCode::RE_TEST && $brakeTestResults === null) {
     $brakeTestResults = $motTest->getMotTestOriginal()->getBrakeTestResult();
 }
@@ -57,7 +66,24 @@ echo $this->partial(
         <div class="col-lg-8">
             <div class="info-notice">
                 <p>Other brake performance related defects like 'grab' or 'judder' can be added as a
-                    <a href="<?php echo $breakPerformanceDefectsUrl ?>">Reason for Rejection</a>
+                    <?php
+                    $vehicleClass = $vehicle->getVehicleClass()->getCode();
+
+                    // FIXME Move this to the model
+                    if (in_array($vehicleClass, [VehicleClassCode::CLASS_1, VehicleClassCode::CLASS_2])) {
+                        $brakeRfrId = 120;
+                    } else {
+                        $brakeRfrId = 5430;
+                    }
+                    ?>
+                    <a href="<?php
+                    echo $this->url(
+                        'mot-test/test-item-selector',
+                        [
+                            'tis-id'        => $brakeRfrId,
+                            'motTestNumber' => $motTestNumber,
+                        ]
+                    ); ?>">Reason for Rejection</a>
                 </p>
             </div>
         </div>

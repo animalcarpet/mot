@@ -2,11 +2,8 @@
 
 namespace Core\Authorisation\Assertion;
 
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Auth\Assertion\PerformMotTestAssertion;
-use DvsaCommon\Dto\Common\MotTestDto;
-use DvsaCommon\Dto\Common\MotTestTypeDto;
-use DvsaCommon\Dto\Person\PersonDto;
-use DvsaCommon\Utility\ArrayUtils;
 
 class WebPerformMotTestAssertion
 {
@@ -17,7 +14,7 @@ class WebPerformMotTestAssertion
         $this->assertion = $assertion;
     }
 
-    public function assertGranted(MotTestDto $motTestData)
+    public function assertGranted(MotTest $motTestData)
     {
         $testType = $this->extractTestType($motTestData);
         $ownerId = $this->extractOwnerId($motTestData);
@@ -36,23 +33,23 @@ class WebPerformMotTestAssertion
     }
 
     /**
-     * @param MotTestDto $motTestData
+     * @param MotTest $motTestData
      *
      * @return string
      */
-    private function extractTestType(MotTestDto $motTestData)
+    private function extractTestType(MotTest $motTestData)
     {
-        $testType = $motTestData->getTestType();
+        $testType = $motTestData->getTestTypeCode();
 
-        return $testType->getCode();
+        return $testType;
     }
 
     /**
-     * @param MotTestDto $motTestData
+     * @param MotTest $motTestData
      *
      * @return int
      */
-    private function extractOwnerId(MotTestDto $motTestData)
+    private function extractOwnerId(MotTest $motTestData)
     {
         $tester = $motTestData->getTester();
 
@@ -60,14 +57,14 @@ class WebPerformMotTestAssertion
     }
 
     /**
-     * @param MotTestDto $motTestData
+     * @param MotTest $motTestData
      *
      * @return int
      */
-    private function extractVtsIdIfExists(MotTestDto $motTestData)
+    private function extractVtsIdIfExists(MotTest $motTestData)
     {
-        $vtsData = $motTestData->getVehicleTestingStation();
+        $vtsId = $motTestData->getSiteId();
 
-        return ArrayUtils::tryGet($vtsData, 'id', null);
+        return $vtsId;
     }
 }

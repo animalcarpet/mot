@@ -2,6 +2,8 @@
 
 namespace DvsaMotTest\Factory\Service;
 
+use Dvsa\Mot\ApiClient\Service\MotTestService;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Configuration\MotConfig;
 use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\Pdf\Templating\ZendPdf\ZendPdfTemplate;
@@ -27,7 +29,9 @@ class MotChecklistPdfServiceFactory implements FactoryInterface
             $serviceLocator->get('MotIdentityProvider'),
             $serviceLocator->get(ZendPdfTemplate::class),
             $serviceLocator->get(MotChecklistPdfPresenter::class),
-            $config->get('pdf', MotChecklistPdfService::MOT_CHECKLIST_CONFIG_KEY_MAIN)
+            $serviceLocator->get(MotTestService::class),
+            $config->get('pdf', MotChecklistPdfService::MOT_CHECKLIST_CONFIG_KEY_MAIN),
+            $serviceLocator->get(VehicleService::class)
         );
     }
 }

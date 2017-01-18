@@ -3,7 +3,7 @@ use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
 
-/** @var  \DvsaCommon\Dto\Vehicle\VehicleDto $vehicle */
+/** @var  \DvsaMotTest\Controller\DvsaVehicleViewModel $vehicle */
 $vehicle = $this->vehicle;
 
 $registration = $vehicle->getRegistration();
@@ -17,10 +17,9 @@ if ($vehicle instanceof VehicleDto) {
     $fuelType = $vehicle->getFuelType()->getName();
     $bodyType = $vehicle->getBodyType()->getName();
 } else {
-    /** @var DvsaVehicle $vehicle */
-    $makeAndModel = $vehicle->getMake()->getName() . ' ' . $vehicle->getModel()->getName();
+    $makeAndModel = $vehicle->getMakeAndModel();
     $transmissionType = $vehicle->getTransmissionType();
-    $fuelType = $vehicle->getFuelType();
+    $fuelType = $vehicle->getFuelType()->getName();
     $bodyType = $vehicle->getBodyType();
 }
 

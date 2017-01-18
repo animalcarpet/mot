@@ -16,6 +16,7 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Transaction\TransactionAwareInterface;
 use DvsaCommonApi\Transaction\TransactionAwareTrait;
 use DvsaEntities\Entity\MotTest;
+use DvsaEntities\Entity\MotTestComplaintRef;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaMotApi\Helper\MysteryShopperHelper;
@@ -59,7 +60,7 @@ class CreateMotTestService implements TransactionAwareInterface
     const FIELD_CONTINGENCY_DTO = 'contingencyDto';
     const FIELD_CLIENT_IP = 'clientIp';
 
-    /** @var EntityManager  */
+    /** @var EntityManager */
     private $entityManager;
     /** @var MotTestRepository */
     private $motTestRepository;
@@ -84,10 +85,10 @@ class CreateMotTestService implements TransactionAwareInterface
     /** @var NewVehicleService */
     private $newVehicleService;
 
-    /** @var MotIdentityProviderInterface  */
+    /** @var MotIdentityProviderInterface */
     private $identityProvider;
 
-    /** @var PersonRepository  */
+    /** @var PersonRepository */
     private $personRepository;
 
     /**
@@ -96,19 +97,19 @@ class CreateMotTestService implements TransactionAwareInterface
     private $mysteryShopperHelper;
 
     /**
-     * @param EntityManager                 $entityManager
-     * @param MotTestValidator              $motTestValidator
+     * @param EntityManager $entityManager
+     * @param MotTestValidator $motTestValidator
      * @param AuthorisationServiceInterface $authService
-     * @param TesterService                 $testerService
-     * @param RetestEligibilityValidator    $retestEligibilityValidator
-     * @param OtpService                    $otpService
-     * @param OrganisationService           $organisationService
-     * @param VehicleApiVehicleService      $vehicleService
-     * @param MotIdentityProviderInterface  $identityProvider
-     * @param NewVehicleService             $newVehicleService
-     * @param PersonRepository              $personRepository
-     * @param MotTestRepository             $motTestRepository
-     * @param MysteryShopperHelper          $mysteryShopperHelper
+     * @param TesterService $testerService
+     * @param RetestEligibilityValidator $retestEligibilityValidator
+     * @param OtpService $otpService
+     * @param OrganisationService $organisationService
+     * @param VehicleApiVehicleService $vehicleService
+     * @param MotIdentityProviderInterface $identityProvider
+     * @param NewVehicleService $newVehicleService
+     * @param PersonRepository $personRepository
+     * @param MotTestRepository $motTestRepository
+     * @param MysteryShopperHelper $mysteryShopperHelper
      */
     public function __construct(
         EntityManager $entityManager,
@@ -152,31 +153,39 @@ class CreateMotTestService implements TransactionAwareInterface
         $person = $this->personRepository->get($userId);
 
         $dvlaVehicleId = ArrayUtils::tryGet($data, self::FIELD_DVLA_VEHICLE_ID);
-        $vehicleId     = ArrayUtils::tryGet($data, self::FIELD_VEHICLE_ID);
+        $vehicleId = ArrayUtils::tryGet($data, self::FIELD_VEHICLE_ID);
 
-        // Unless a new siteid has been specified (for a reinspection) we want to maintain the old value...
+        // Unless a new siteId has been specified (for a reinspection) we want to maintain the old value...
         $vehicleTestingStationId = is_null($data[self::FIELD_VTS_ID]) ? null : (int)$data[self::FIELD_VTS_ID];
-        $primaryColour           = $data[self::FIELD_COLOURS_PRIMARY];
-        $secondaryColour         = ArrayUtils::tryGet($data, self::FIELD_COLOURS_SECONDARY);
-        $fuelTypeCode            = ArrayUtils::tryGet($data, self::FIELD_FUEL_TYPE_CODE);
-        $vehicleClassCode        = ArrayUtils::tryGet($data, self::FIELD_VEHICLE_CLASS_CODE);
-        $hasRegistration         = ArrayUtils::tryGet($data, self::FIELD_HAS_REGISTRATION, false);
-        $motTestNumberOriginal   = ArrayUtils::tryGet($data, self::FIELD_MOT_TEST_NUMBER_ORIGINAL);
-        $complaintRef            = ArrayUtils::tryGet($data, self::FIELD_MOT_TEST_COMPLAINT_REF);
-        $motTestTypeCode         = ArrayUtils::tryGet($data, self::FIELD_MOT_TEST_TYPE, MotTestTypeCode::NORMAL_TEST);
-        $flagPrivate             = ArrayUtils::tryGet($data, self::FIELD_FLAG_PRIVATE, false);
-        $oneTimePassword         = ArrayUtils::tryGet($data, self::FIELD_ONE_TIME_PASSWORD);
-        $contingencyId           = ArrayUtils::tryGet($data, self::FIELD_CONTINGENCY);
-        $contingencyDto          = ArrayUtils::tryGet($data, self::FIELD_CONTINGENCY_DTO);
-        $clientIp                = ArrayUtils::tryGet($data, self::FIELD_CLIENT_IP, Network::DEFAULT_CLIENT_IP);
+        $primaryColour = $data[self::FIELD_COLOURS_PRIMARY];
+        $secondaryColour = ArrayUtils::tryGet($data, self::FIELD_COLOURS_SECONDARY);
+        $fuelTypeCode = ArrayUtils::tryGet($data, self::FIELD_FUEL_TYPE_CODE);
+        $vehicleClassCode = ArrayUtils::tryGet($data, self::FIELD_VEHICLE_CLASS_CODE);
+        $hasRegistration = ArrayUtils::tryGet($data, self::FIELD_HAS_REGISTRATION, false);
+        $motTestNumberOriginal = ArrayUtils::tryGet($data, self::FIELD_MOT_TEST_NUMBER_ORIGINAL);
+        $complaintRef = ArrayUtils::tryGet($data, self::FIELD_MOT_TEST_COMPLAINT_REF);
+        $motTestTypeCode = ArrayUtils::tryGet($data, self::FIELD_MOT_TEST_TYPE, MotTestTypeCode::NORMAL_TEST);
+        $flagPrivate = ArrayUtils::tryGet($data, self::FIELD_FLAG_PRIVATE, false);
+        $oneTimePassword = ArrayUtils::tryGet($data, self::FIELD_ONE_TIME_PASSWORD);
+        $contingencyId = ArrayUtils::tryGet($data, self::FIELD_CONTINGENCY);
+        $contingencyDto = ArrayUtils::tryGet($data, self::FIELD_CONTINGENCY_DTO);
+        $clientIp = ArrayUtils::tryGet($data, self::FIELD_CLIENT_IP, Network::DEFAULT_CLIENT_IP);
 
         if (MotTestTypeCode::NORMAL_TEST === $motTestTypeCode
-            && $this->mysteryShopperHelper->isVehicleMysteryShopper($vehicleId)) {
+            && $this->mysteryShopperHelper->isVehicleMysteryShopper($vehicleId)
+        ) {
             $motTestTypeCode = MotTestTypeCode::MYSTERY_SHOPPER;
         }
 
         if (!is_null($contingencyDto)) {
             $contingencyDto = DtoHydrator::jsonToDto($contingencyDto);
+        }
+
+        if (!empty($complaintRef)) {
+            $motTestComplaintRef = new MotTestComplaintRef();
+            $motTestComplaintRef->setComplaintRef($complaintRef);
+        } else {
+            $motTestComplaintRef = null;
         }
 
         /** @var MotTest $motTest */
@@ -193,7 +202,7 @@ class CreateMotTestService implements TransactionAwareInterface
             $motTestTypeCode,
             $clientIp,
             $motTestNumberOriginal,
-            $complaintRef,
+            $motTestComplaintRef,
             $flagPrivate,
             $oneTimePassword,
             $contingencyId,
@@ -209,28 +218,28 @@ class CreateMotTestService implements TransactionAwareInterface
     }
 
     /**
-     * @param Person                     $person
-     * @param int|null                   $vehicleId               if not given, $dvlaVehicleId required
-     * @param int                        $vehicleTestingStationId
-     * @param string                     $primaryColourCode
-     * @param string                     $secondaryColourCode
-     * @param string                     $fuelTypeCode
-     * @param int                        $vehicleClassCode
-     * @param bool                       $hasRegistration
-     * @param int|null                   $dvlaVehicleId           if given, vehicle is created from DVLA data
-     * @param string                     $motTestTypeCode
-     * @param string                     $clientIp
-     * @param string|null                $motTestNumberOriginal
-     * @param int|null                   $complaintRef
-     * @param bool                       $flagPrivate
-     * @param string|null                $oneTimePassword
-     * @param int|null                   $contingencyId
+     * @param Person $tester
+     * @param int|null $vehicleId if not given, $dvlaVehicleId required
+     * @param int $vehicleTestingStationId
+     * @param string $primaryColourCode
+     * @param string $secondaryColourCode
+     * @param string $fuelTypeCode
+     * @param int $vehicleClassCode
+     * @param bool $hasRegistration
+     * @param int|null $dvlaVehicleId if given, vehicle is created from DVLA data
+     * @param string $motTestTypeCode
+     * @param string $clientIp
+     * @param string|null $motTestNumberOriginal
+     * @param MotTestComplaintRef|null $complaintRef
+     * @param bool $flagPrivate
+     * @param string|null $oneTimePassword
+     * @param int|null $contingencyId
      * @param ContingencyTestDto|null $contingencyDto
      *
      * @return MotTest
      */
     private function save(
-        Person $person,
+        Person $tester,
         $vehicleId,
         $vehicleTestingStationId,
         $primaryColourCode,
@@ -242,14 +251,14 @@ class CreateMotTestService implements TransactionAwareInterface
         $motTestTypeCode,
         $clientIp,
         $motTestNumberOriginal = null,
-        $complaintRef = null,
+        MotTestComplaintRef $complaintRef = null,
         $flagPrivate = false,
         $oneTimePassword = null,
         $contingencyId = null,
         ContingencyTestDto $contingencyDto = null
     )
     {
-        if ((int) $dvlaVehicleId > 0) {
+        if ((int)$dvlaVehicleId > 0) {
             $vehicleId = $this->vehicleService->getVehicleIdIfAlreadyImportedFromDvla($dvlaVehicleId);
             if (!$vehicleId) {
                 $vehicle = $this->vehicleService->createVtrAndV5CFromDvlaVehicle($dvlaVehicleId, $vehicleClassCode);
@@ -267,7 +276,7 @@ class CreateMotTestService implements TransactionAwareInterface
                 $vehicleId = $vehicle->getId();
 
                 $this->vehicleService->logDvlaVehicleImportChanges(
-                    $person,
+                    $tester,
                     $vehicle,
                     $vehicleClassCode,
                     $primaryColourCode,
@@ -283,7 +292,7 @@ class CreateMotTestService implements TransactionAwareInterface
 
         return $this->inTransaction(
             function () use (
-                $person,
+                $tester,
                 $vehicleId,
                 $vehicleTestingStationId,
                 $primaryColourCode,
@@ -313,9 +322,8 @@ class CreateMotTestService implements TransactionAwareInterface
                     $this->newVehicleService
                 ));
 
-
                 return $motTestCreationHelper->createMotTest(
-                    $person,
+                    $tester,
                     $vehicleId,
                     $vehicleTestingStationId,
                     $primaryColourCode,
@@ -325,12 +333,11 @@ class CreateMotTestService implements TransactionAwareInterface
                     $hasRegistration,
                     $motTestTypeCode,
                     $motTestNumberOriginal,
-                    $complaintRef,
-                    $flagPrivate,
                     $oneTimePassword,
-                    $contingencyId,
                     $clientIp,
-                    $contingencyDto
+                    $contingencyId,
+                    $contingencyDto,
+                    $complaintRef
                 );
             }
         );

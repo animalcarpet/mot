@@ -12,10 +12,12 @@ use DvsaCommonTest\TestUtils\MethodSpy;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Language;
 use DvsaEntities\Entity\MotTest;
+use DvsaEntities\Entity\MotTestComplaintRef;
 use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\ReasonForRejection;
+use DvsaEntities\Entity\ReasonForRejectionType;
 use DvsaEntities\Repository\MotTestTypeRepository;
 use DvsaMotApi\Service\MotTestCreationHelper;
 use DvsaMotApi\Service\Validator\RetestEligibility\RetestEligibilityValidator;
@@ -32,7 +34,7 @@ class MotTestCreationHelperTest extends AbstractServiceTestCase
     public function setUp()
     {
         $motTestServiceTest = new MotTestServiceTest();
-        $mocks              = $motTestServiceTest->getMocksForMotTestService();
+        $mocks = $motTestServiceTest->getMocksForMotTestService();
 
         $this->mockTesterService = $mocks['mockTesterService'];
 
@@ -41,7 +43,7 @@ class MotTestCreationHelperTest extends AbstractServiceTestCase
             ->method('personHasRole')
             ->willReturn(false);
 
-        $mockEntityManager     = $mocks['mockEntityManager'];
+        $mockEntityManager = $mocks['mockEntityManager'];
 
         $mockMotTestType = Xmock::of(MotTestType::class);
         $mockMotTestType->expects($this->any())
@@ -90,17 +92,20 @@ class MotTestCreationHelperTest extends AbstractServiceTestCase
     {
         //given
         $rfrFail = $this->prepareMotTestRfrEntity(
-            1, ReasonForRejectionTypeName::FAIL,
+            1,
+            (new ReasonForRejectionType())->setReasonForRejectionType(ReasonForRejectionTypeName::FAIL),
             'RFR fail example'
         );
 
         $rfrPrs = $this->prepareMotTestRfrEntity(
-            1, ReasonForRejectionTypeName::PRS,
+            1,
+            (new ReasonForRejectionType())->setReasonForRejectionType(ReasonForRejectionTypeName::PRS),
             'RFR PRS example'
         );
 
         $rfrAdv = $this->prepareMotTestRfrEntity(
-            1, ReasonForRejectionTypeName::ADVISORY,
+            1,
+            (new ReasonForRejectionType())->setReasonForRejectionType(ReasonForRejectionTypeName::ADVISORY),
             'RFR Advisory example'
         );
 
@@ -153,12 +158,45 @@ class MotTestCreationHelperTest extends AbstractServiceTestCase
 
     public function testCreateMotTestWithNotAllowedClasses()
     {
-        $testerMock = Xmock::of(Person::class);
-        $testerMock->expects($this->any())
+        $tester = Xmock::of(Person::class);
+        $tester->expects($this->any())
             ->method('isTester')
             ->willReturn(true);
 
         $this->setExpectedException(ForbiddenException::class);
-        $this->motTestCreationHelper->createMotTest($testerMock, 1, 1, 1, 1, 1, 1, true, 1, 1, 1, false, 1, null, '127.0.0.1', null);
+
+        $vehicleId = 1;
+        $vehicleTestingStationId = 1;
+        $primaryColourCode = 1;
+        $secondaryColourCode = 1;
+        $fuelTypeCode = 1;
+        $vehicleClassCode = 1;
+        $hasRegistration = true;
+        $motTestTypeCode = 'NT';
+        $motTestNumberOriginal = 1;
+        $oneTimePassword = '123456';
+        $clientIp = '127.0.0.1';
+        $contingencyId = 1;
+        $contingencyDto = null;
+        $complaintRef = (new MotTestComplaintRef())->setComplaintRef(1);
+
+
+        $this->motTestCreationHelper->createMotTest(
+            $tester,
+            $vehicleId,
+            $vehicleTestingStationId,
+            $primaryColourCode,
+            $secondaryColourCode,
+            $fuelTypeCode,
+            $vehicleClassCode,
+            $hasRegistration,
+            $motTestTypeCode,
+            $motTestNumberOriginal,
+            $oneTimePassword,
+            $clientIp,
+            $contingencyId,
+            $contingencyDto,
+            $complaintRef
+        );
     }
 }

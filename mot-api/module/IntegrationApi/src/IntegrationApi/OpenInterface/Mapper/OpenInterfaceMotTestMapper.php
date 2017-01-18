@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace IntegrationApi\OpenInterface\Mapper;
 
@@ -24,8 +29,8 @@ class OpenInterfaceMotTestMapper extends AbstractMotTestMapper
             'colour1'      => null === $colour ? null : $colour->getName(),
             'colourCode2'  => null === $colour2 ? null : $colour2->getCode(),
             'colour2'      => null === $colour2 ? null : $colour2->getName(),
-            'odometer'     => $motTest->getOdometerReading()->getValue(),
-            'odometerUnit' => $motTest->getOdometerReading()->getUnit(),
+            'odometer'     => $motTest->getOdometerValue(),
+            'odometerUnit' => $motTest->getOdometerUnit(),
             'testNumber'   => $motTest->getNumber(),
             'testDate'     => $this->returnFormattedDateOrNull($motTest->getIssuedDate()),
             'expiryDate'   => $this->returnFormattedDateOrNull($motTest->getExpiryDate()),

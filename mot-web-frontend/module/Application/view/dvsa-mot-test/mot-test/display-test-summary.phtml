@@ -18,34 +18,50 @@ $defaultValues = $this->defaultValues;
 $formErrors = $this->formErrors;
 $hasErrors = !empty($this->errorMessages);
 
-/** @var \DvsaCommon\Dto\Common\MotTestDto $motDetails */
-$motDetails = $this->motDetails;
-/** @var \DvsaCommon\Dto\Common\MotTestTypeDto $motTestType */
-$motTestType = $motDetails->getTestType();
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motDetails */
+$motDetails;
+/** @var string $motTestType */
+$motTestType = $motDetails->getTestTypeCode();
 /** @var MotTestTitleModel $motTestTitleViewModel */
 $pageSubTitle = $motTestTitleViewModel->getTitle($motDetails, $isDuplicateCertificate);
 
-$pendingDetails = $motDetails->getPendingDetails();
-$pendingStatus = ArrayUtils::tryGet($pendingDetails, 'currentSubmissionStatus');
+/** @var \DvsaCommon\Dto\Site\VehicleTestingStationDto $siteDto */
+$siteDto = $this->siteDto;
+
+/** @var \DvsaMotTest\Controller\DvsaVehicleViewModel $vehicle */
+$vehicle = $this->vehicleViewModel;
+
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\PendingDetails $pendingDetails */
+$pendingDetails = null;
+
+/** @var string | null $pendingStatus */
+$pendingStatus = null;
+
+$testStatus = $motDetails->getStatus();
+
+$isTestActive = ($testStatus == MotTestStatusName::ACTIVE);
+
+if($isTestActive) {
+    $pendingDetails = $motDetails->getPendingDetails();
+    $pendingStatus = $pendingDetails->getCurrentSubmissionStatus();
+}
 
 $isTestReadyToFail = ($pendingStatus == MotTestStatusName::FAILED);
 $isTestReadyToPass = ($pendingStatus == MotTestStatusName::PASSED);
 
-$testStatus = $motDetails->getStatus();
 $canReprint = (
     ($testStatus == MotTestStatusName::PASSED)
     || ($testStatus == MotTestStatusName::FAILED)
     || ($testStatus == MotTestStatusName::ABANDONED)
 );
-$isTestActive = ($testStatus == MotTestStatusName::ACTIVE);
 
-$isReinspection = MotTestType::isReinspection($motTestType->getCode());
-$isNonMot = ($motTestType->getCode() === MotTestTypeCode::NON_MOT_TEST);
+$isReinspection = MotTestType::isReinspection($motTestType);
+$isNonMot = ($motTestType === MotTestTypeCode::NON_MOT_TEST);
 
 $isReinspectionSummaryPage = ($isReinspection && (($isTestReadyToFail || $isTestReadyToPass) && $isTestActive));
 
 //  --  title and header    --
-$testName = AbstractDvsaMotTestController::getTestName($motTestType->getCode());
+$testName = AbstractDvsaMotTestController::getTestName($motTestType);
 
 $title = $testName . ' Summary';
 $header = $testName . ($isTestActive ? ' summary' : ($isDuplicateCertificate ? ' results' : ' result'));
@@ -78,6 +94,8 @@ echo $this->partial(
     'partials/mot-test-summary/test-summary',
     [
         'motTest' => $motDetails,
+        'vehicle' => $vehicle,
+        'siteDto' => $siteDto,
         'odometerReading' => $odometerReading,
         'isReinspection'=>$isReinspectionSummaryPage,
         'brakeTestTypeCode2Name' => $brakeTestTypeCode2Name,
@@ -167,7 +185,7 @@ echo ($this->prgHelper instanceof PrgHelper ? $this->prgHelper->getHtml() : '');
 <div class="row">
     <div class="col-lg-12 btn-bar">
         <?php
-        $canPrint = ($motTestType->getCode() != MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING);
+        $canPrint = ($motDetails->getTestTypeCode() != MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING);
 
         if (($isTestReadyToFail || $isTestReadyToPass) && $isTestActive) :
             if ($isReinspection) {

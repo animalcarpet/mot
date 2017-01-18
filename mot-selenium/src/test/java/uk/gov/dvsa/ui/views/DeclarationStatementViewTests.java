@@ -129,7 +129,7 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.contingency.isDeclarationStatementDisplayed(), is(true));
     }
 
-    @Test (testName = "2faHardStopDisabled", groups = {"BVT", "Regression"})
+    @Test (testName = "2faHardStopDisabled", groups = {"Regression"})
     public void replacementCertificateDeclarationStatement() throws IOException, URISyntaxException {
 
         //Given I have completed an Mot Test

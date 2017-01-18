@@ -1,32 +1,26 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApi\Service;
 
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
-use DvsaCommon\Auth\PermissionInSystem;
 use Api\Check\CheckResultExceptionTranslator;
 use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
-use DvsaCommon\Dto\Common\OdometerReadingDTO;
+use DvsaCommon\Dto\Common\OdometerReadingDto;
 use DvsaEntities\Entity\MotTest;
-use DvsaEntities\Entity\OdometerReading;
-use DvsaEntities\Repository\OdometerReadingRepository;
 use DvsaMotApi\Service\Validator\MotTestValidator;
 use DvsaMotApi\Service\Validator\Odometer\OdometerReadingValidator;
 
 /**
  *
  * Class OdometerReadingUpdatingService
- *
- * @package DvsaMotApi\Service
  */
 class OdometerReadingUpdatingService
 {
-
-    /**
-     * @var OdometerReadingRepository
-     */
-    private $readingRepository;
-
     /**
      * @var AuthorisationServiceInterface
      */
@@ -42,19 +36,17 @@ class OdometerReadingUpdatingService
     private $performMotTestAssertion;
 
     /**
-     * @param OdometerReadingRepository  $odometerReadingRepository
-     * @param AuthorisationServiceInterface       $authService
-     * @param MotTestSecurityService     $motTestSecurityService
+     * @param AuthorisationServiceInterface $authService
+     * @param MotTestSecurityService $motTestSecurityService
      * @param Validator\MotTestValidator $motTestValidator
      */
     public function __construct(
-        OdometerReadingRepository $odometerReadingRepository,
         AuthorisationServiceInterface $authService,
         MotTestSecurityService $motTestSecurityService,
         MotTestValidator $motTestValidator,
         ApiPerformMotTestAssertion $performMotTestAssertion
-    ) {
-        $this->readingRepository = $odometerReadingRepository;
+    )
+    {
         $this->authService = $authService;
         $this->motTestSecurityService = $motTestSecurityService;
         $this->motTestValidator = $motTestValidator;
@@ -64,35 +56,36 @@ class OdometerReadingUpdatingService
     /**
      * Updates odometer reading for a given MOT test
      *
-     * @param OdometerReadingDTO $newReading
-     * @param MotTest            $motTest
+     * @param OdometerReadingDto $newReading
+     * @param MotTest $motTest
      *
      * @throws \DvsaCommonApi\Service\Exception\ForbiddenException
      */
-    public function updateForMotTest(OdometerReadingDTO $newReading, MotTest $motTest)
+    public function updateForMotTest(OdometerReadingDto $newReading, MotTest $motTest)
     {
         $this->performMotTestAssertion->assertGranted($motTest);
 
         $this->motTestValidator->assertCanBeUpdated($motTest);
         //TODO: dependency should be injected #przemek
-        $checkResult = (new OdometerReadingValidator())->validate($newReading);
+        $checkResult = (new OdometerReadingValidator())->validate(
+            $newReading->getValue(),
+            $newReading->getUnit(),
+            $newReading->getResultType()
+        );
         CheckResultExceptionTranslator::tryThrowDataValidationException($checkResult);
 
         /** NEED TO FIGURE OUT RULES
-        if (!$this->motTestSecurityService->canModifyOdometerForTest($motTest)
-            || !$this->motTestSecurityService->isCurrentTesterAssignedToVts(
-                $motTest->getVehicleTestingStation()->getId()
-            )
-        ) {
-            throw new ForbiddenException("You are not allowed to change odometer reading");
-        }
-        **/
+         * if (!$this->motTestSecurityService->canModifyOdometerForTest($motTest)
+         * || !$this->motTestSecurityService->isCurrentTesterAssignedToVts(
+         * $motTest->getVehicleTestingStation()->getId()
+         * )
+         * ) {
+         * throw new ForbiddenException("You are not allowed to change odometer reading");
+         * }
+         **/
 
-        $newReadingEntity = OdometerReading::create()
-            ->setValue($newReading->getValue())
-            ->setUnit($newReading->getUnit())
-            ->setResultType($newReading->getResultType());
-
-        $motTest->setOdometerReading($newReadingEntity);
+        $motTest->setOdometerValue($newReading->getValue());
+        $motTest->setOdometerUnit($newReading->getUnit());
+        $motTest->setOdometerResultType($newReading->getResultType());
     }
 }

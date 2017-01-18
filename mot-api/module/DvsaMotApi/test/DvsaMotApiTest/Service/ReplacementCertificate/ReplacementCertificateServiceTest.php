@@ -13,7 +13,7 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\MotIdentityInterface;
 use DvsaEntities\Entity\CertificateReplacement;
-use DvsaEntities\Entity\ReplacementCertificateDraft;
+use DvsaEntities\Entity\CertificateReplacementDraft;
 use DvsaEntities\Repository\CertificateReplacementRepository;
 use DvsaEntities\Repository\CertificateTypeRepository;
 use DvsaEntities\Repository\MotTestRepository;
@@ -143,7 +143,7 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
         $draft = $this->createSUT()->createDraft($motTest->getNumber());
 
         $this->assertInstanceOf(
-            ReplacementCertificateDraft::class, $draft,
+            CertificateReplacementDraft::class, $draft,
             "expected draft not returned!"
         );
     }
@@ -171,7 +171,7 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
         $draft = $this->createSUT()->createAndUpdateDraft($motTest->getNumber(), '', $changeData);
 
         $this->assertInstanceOf(
-            ReplacementCertificateDraft::class, $draft,
+            CertificateReplacementDraft::class, $draft,
             "expected draft not returned!"
         );
     }
@@ -204,7 +204,7 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
     {
         $exampleReason = "EXAMPLE_REASON";
         $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft()
-            ->setId(12345)->setReplacementReason($exampleReason);
+            ->setId(12345)->setReasonForReplacement($exampleReason);
         $this->returnsDraftForId($draft->getId(), $draft);
         $certificateReplacementCapture = ArgCapture::create();
 
@@ -239,7 +239,7 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
     {
         $reason = DvlaVehicleUpdatedService::CHERISHED_TRANSFER_REASON;
         $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft()
-            ->setId(12346)->setReplacementReason($reason);
+            ->setId(12346)->setReasonForReplacement($reason);
         $this->returnsDraftForId($draft->getId(), $draft);
         $certificateReplacementCapture = ArgCapture::create();
 
@@ -292,7 +292,7 @@ class ReplacementCertificateServiceTest extends AbstractServiceTestCase
     ) {
         $exampleReason = "EXAMPLE_REASON";
         $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft()
-            ->setId(12345)->setReplacementReason($exampleReason);
+            ->setId(12345)->setReasonForReplacement($exampleReason);
         $this->returnsDraftForId($draft->getId(), $draft);
         $certificateReplacementCapture = ArgCapture::create();
 

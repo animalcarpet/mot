@@ -1,9 +1,15 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaElasticSearchTest\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use DvsaCommon\Constants\OdometerReadingResultType;
+use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Date\DateTimeDisplayFormat;
@@ -16,15 +22,17 @@ use DvsaEntities\Entity\Colour;
 use DvsaEntities\Entity\Language;
 use DvsaEntities\Entity\Make;
 use DvsaEntities\Entity\Model;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
-use DvsaEntities\Entity\OdometerReading;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\ReasonForRejection;
+use DvsaEntities\Entity\ReasonForRejectionType;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\Vehicle;
+use DvsaEntities\Entity\VehicleHistory;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -35,6 +43,8 @@ use PHPUnit_Framework_TestCase;
 class ESDocMotTestTest extends \PHPUnit_Framework_TestCase
 {
     const SITE_ID = 9999;
+    const VIN = 'hdh7htref0gr5greh';
+    const REG = 'FNZ 6JZ';
 
     /** @var ESDocMotTest */
     protected $docMotTest;
@@ -97,7 +107,7 @@ class ESDocMotTestTest extends \PHPUnit_Framework_TestCase
 
         $motTestRfr = new MotTestReasonForRejection();
         $motTestRfr->setId(1);
-        $motTestRfr->setType(1);
+        $motTestRfr->setType((new ReasonForRejectionType())->setId(1));
         $motTestRfr->setReasonForRejection($rfr);
 
         $motTest = $this->getMotEntity();
@@ -153,14 +163,14 @@ class ESDocMotTestTest extends \PHPUnit_Framework_TestCase
         $motTest = $this->getMotEntity();
         $motTestEs = $this->getMotTestData();
 
-        $odometer = new OdometerReading();
-        $odometer->setValue(1000);
-        $odometer->setUnit('mi');
+        $value = 1000;
 
-        $motTest->setOdometerReading($odometer);
+        $motTest->setOdometerValue($value);
+        $motTest->setOdometerUnit(OdometerUnit::MILES);
 
-        $motTestEs['odometerValue'] = 1000;
-        $motTestEs['odometerUnit'] = 'mi';
+
+        $motTestEs['odometerValue'] = $value;
+        $motTestEs['odometerUnit'] = OdometerUnit::MILES;
 
         $this->assertSame($motTestEs, $this->docMotTest->asEsData($motTest));
     }
@@ -250,8 +260,8 @@ class ESDocMotTestTest extends \PHPUnit_Framework_TestCase
             'odometerValue'           => null,
             'odometerUnit'            => null,
             'vehicleId'               => 1,
-            'vin'                     => 'hdh7htref0gr5greh',
-            'registration'            => 'FNZ 6JZ',
+            'vin'                     => self::VIN,
+            'registration'            => self::REG,
             'make'                    => 'Porshe',
             'model'                   => '911 Turbo',
             'testType'                => 'Normal Test',
@@ -281,9 +291,10 @@ class ESDocMotTestTest extends \PHPUnit_Framework_TestCase
 
         $model = new Model();
         $model->setName('911 Turbo');
+        $model->setMake($make);
 
-        $vehicle = new Vehicle();
-        $vehicle->setId(1);
+        $modelDetail = new ModelDetail();
+        $modelDetail->setModel($model);
 
         $tester = new Person();
         $tester->setId(1);
@@ -291,6 +302,14 @@ class ESDocMotTestTest extends \PHPUnit_Framework_TestCase
 
         $colour = new Colour();
         $colour->setName('Blue');
+
+        $vehicle = new Vehicle();
+        $vehicle->setId(1);
+        $vehicle->setVin(self::VIN);
+        $vehicle->setRegistration(self::REG);
+        $vehicle->setModelDetail($modelDetail);
+        $vehicle->setColour($colour);
+        $vehicle->setVersion(1);
 
         $site = new Site();
         $site->setSiteNumber('V1234');
@@ -300,16 +319,12 @@ class ESDocMotTestTest extends \PHPUnit_Framework_TestCase
         $type->setCode('NT');
 
         $motTest->setId(1)
-            ->setRegistration('FNZ 6JZ')
-            ->setMake($make)
-            ->setModel($model)
-            ->setVin('hdh7htref0gr5greh')
             ->setVehicle($vehicle)
+            ->setVehicleVersion($vehicle->getVersion())
             ->setMotTestType($type)
             ->setTester($tester)
             ->setHasRegistration(true)
             ->setStartedDate(null)
-            ->setPrimaryColour($colour)
             ->setVehicleTestingStation($site)
             ->setNumber('123456789012')
             ->setCompletedDate(null)

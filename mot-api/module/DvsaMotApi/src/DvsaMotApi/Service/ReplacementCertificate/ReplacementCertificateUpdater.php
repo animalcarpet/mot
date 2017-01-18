@@ -1,14 +1,19 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApi\Service\ReplacementCertificate;
 
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use Api\Check\CheckResultExceptionTranslator;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaEntities\Entity\MotTest;
-use DvsaEntities\Entity\ReplacementCertificateDraft;
-use DvsaEntities\Entity\Vehicle;
+use DvsaEntities\Entity\CertificateReplacementDraft;
 use DvsaMotApi\Service\MotTestSecurityService;
 use Zend\Authentication\AuthenticationService;
 use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
@@ -44,7 +49,8 @@ class ReplacementCertificateUpdater
         AuthorisationServiceInterface $authService,
         AuthenticationService $motIdentityProvider,
         VehicleService $vehicleService
-    ) {
+    )
+    {
         $this->motTestSecurityService = $motTestSecurityService;
         $this->authService = $authService;
         $this->motIdentityProvider = $motIdentityProvider;
@@ -52,17 +58,17 @@ class ReplacementCertificateUpdater
     }
 
     /**
-     * @param ReplacementCertificateDraft $draft
-     * @param bool $dvlaImportProcess
-     *
+     * @param CertificateReplacementDraft $draft
      * @return MotTest
      * @throws ForbiddenException
+     * @throws \DvsaCommonApi\Service\Exception\BadRequestException
      */
-    public function update(ReplacementCertificateDraft $draft, $dvlaImportProcess = false)
+    public function update(CertificateReplacementDraft $draft)
     {
         $hasFullRights = $this->authService->isGranted(PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS);
 
         $motTest = $draft->getMotTest();
+
         if ($motTest->getVersion() !== $draft->getMotTestVersion()) {
             throw new ForbiddenException(
                 "A previous change to certificate has been detected.
@@ -74,65 +80,27 @@ class ReplacementCertificateUpdater
             CheckResultExceptionTranslator::tryThrowBadRequestException($checkResult);
 
             if (!$this->motTestSecurityService->isCurrentTesterAssignedToMotTest($motTest)
-                && !$draft->getReasonForDifferentTester()
+                && !$draft->getDifferentTesterReason()
             ) {
                 throw new ForbiddenException("Reason for different tester expected");
             }
         } else {
-            if (!$draft->getReplacementReason()) {
+            if (!$draft->getReasonForReplacement()) {
                 throw new ForbiddenException("Reason for replacement expected");
             }
         }
 
-        // Only update vehicle when user initiated from front-end.  Dvla Import has already updated vehicle.
-        if ($dvlaImportProcess) {
-            $motTest = $this->updateMotTestForDvlaImport($draft, $motTest);
-        } else {
-            $motTest = $this->updateMotTestForNotDvlaImport($draft, $motTest, $hasFullRights);
-        }
-
-        return $motTest;
-    }
-
-    /**
-     * @param ReplacementCertificateDraft $draft
-     * @param MotTest $motTest
-     * @return MotTest
-     */
-    private function updateMotTestForDvlaImport(ReplacementCertificateDraft $draft, MotTest $motTest) {
-        $motTest
-            ->setVin($draft->getVin())
-            ->setRegistration($draft->getVrm());
-
-        $prsTest = $motTest->getPrsMotTest();
-        if($prsTest) {
-            $motTest->setPrsMotTest(
-                $prsTest
-                    ->setVin($draft->getVin())
-                    ->setRegistration($draft->getVrm())
-            );
-
-        }
-        return $motTest;
-    }
-
-
-    /** Function for update Test when it is not DVLA Import
-     * @param ReplacementCertificateDraft $draft
-     * @param MotTest $motTest
-     * @param bool $hasFullRights
-     * @return MotTest
-     */
-    private function updateMotTestForNotDvlaImport(
-        ReplacementCertificateDraft $draft,
-        MotTest $motTest,
-        $hasFullRights
-    ) {
-        $this->updateVehicleFromDraftUsingJavaService($draft, $motTest, $hasFullRights);
         $this->updateMotTestFromDraft($draft, $motTest, $hasFullRights);
 
+        $vehicle = $this->updateVehicleFromDraftUsingJavaService($draft, $motTest, $hasFullRights);
+
+        $motTest->setVehicleVersion($vehicle->getVersion());
+
         $prsTest = $motTest->getPrsMotTest();
-        if($prsTest){
+        if ($prsTest) {
+
+            $prsTest->setVehicleVersion($vehicle->getVersion());
+
             $motTest->setPrsMotTest(
                 $this->updateMotTestFromDraft(
                     $draft,
@@ -149,50 +117,43 @@ class ReplacementCertificateUpdater
     /**
      * This method's been used to update both MOT-Test and PRS MOT-Test
      *
-     * @param ReplacementCertificateDraft $draft
+     * @param CertificateReplacementDraft $draft
      * @param MotTest $motTest
      * @param bool $hasFullRights
      * @param bool $isPsrTest
      * @return MotTest
      */
     protected function updateMotTestFromDraft(
-        ReplacementCertificateDraft $draft,
+        CertificateReplacementDraft $draft,
         MotTest $motTest,
         $hasFullRights,
         $isPsrTest = false
     )
     {
-        $motTest->setOdometerReading($draft->getOdometerReading())
-            ->setPrimaryColour($draft->getPrimaryColour())
-            ->setSecondaryColour($draft->getSecondaryColour());
+
+        $motTest->setOdometerValue($draft->getOdometerValue())
+            ->setOdometerUnit($draft->getOdometerUnit())
+            ->setOdometerResultType($draft->getOdometerResultType());
 
         if (!$isPsrTest) {
             $motTest->setExpiryDate($draft->getExpiryDate());
         }
 
         if ($hasFullRights) {
-            $motTest
-                ->setVehicleTestingStation($draft->getVehicleTestingStation())
-                ->setVin($draft->getVin())
-                ->setRegistration($draft->getVrm())
-                ->setModel($draft->getModelName() ? null : $draft->getModel())
-                ->setFreeTextModelName($draft->getModelName())
-                ->setMake($draft->getMakeName() ? null : $draft->getMake())
-                ->setFreeTextMakeName($draft->getMakeName())
-                ->setCountryOfRegistration($draft->getCountryOfRegistration())
-                ->setEmptyVinReason(null)
-                ->setEmptyVrmReason(null);
+            $motTest->setVehicleTestingStation($draft->getVehicleTestingStation());
+
         }
 
         return $motTest;
     }
 
     /**
-     * @param ReplacementCertificateDraft $draft
+     * @param CertificateReplacementDraft $draft
      * @param MotTest $motTest
      * @param bool $hasFullRights
+     * @return \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle
      */
-    private function updateVehicleFromDraftUsingJavaService(ReplacementCertificateDraft $draft, MotTest $motTest, $hasFullRights)
+    private function updateVehicleFromDraftUsingJavaService(CertificateReplacementDraft $draft, MotTest $motTest, $hasFullRights)
     {
         $updateVehicleRequest = new UpdateDvsaVehicleRequest;
 
@@ -225,6 +186,48 @@ class ReplacementCertificateUpdater
             }
         }
 
-        $this->vehicleService->updateDvsaVehicle($motTest->getVehicle()->getId(), $updateVehicleRequest);
+        $vehicle = $this->vehicleService->getDvsaVehicleByIdAndVersion(
+            $motTest->getVehicle()->getId(),
+            $motTest->getVehicleVersion()
+        );
+
+        if ($this->isVehicleModified($updateVehicleRequest, $vehicle)) {
+            $vehicle = $this->vehicleService->updateDvsaVehicleAtVersion(
+                $motTest->getVehicle()->getId(),
+                $motTest->getVehicleVersion(),
+                $updateVehicleRequest
+            );
+        }
+
+        return $vehicle;
+    }
+
+    /**
+     * @param UpdateDvsaVehicleRequest $updateVehicleRequest
+     * @param DvsaVehicle $vehicle
+     * @return bool
+     */
+    private function isVehicleModified(UpdateDvsaVehicleRequest $updateVehicleRequest, DvsaVehicle $vehicle)
+    {
+        $request = $current = [];
+
+        $request['colour'] = $updateVehicleRequest->getColourCode();
+        $request['secondaryColour'] = $updateVehicleRequest->getSecondaryColourCode();
+        $request['vin'] = $updateVehicleRequest->getVin();
+        $request['vrm'] = $updateVehicleRequest->getRegistration();
+        $request['make'] = $updateVehicleRequest->getMakeOther();
+        $request['model'] = $updateVehicleRequest->getModelOther();
+
+
+        $current['colour'] = $vehicle->getColour()->getCode();
+        $current['secondaryColour'] = $vehicle->getColourSecondary()->getCode();
+        $current['vin'] = $vehicle->getVin();
+        $current['vrm'] = $vehicle->getRegistration();
+        $current['make'] = $vehicle->getMake()->getName();
+        $current['model'] = $vehicle->getModel()->getName();
+
+        $isModified = $request != $current;
+
+        return $isModified;
     }
 }

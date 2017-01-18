@@ -78,8 +78,6 @@ class CherishedTransferContext implements Context
         $vehicle = $this->getCreatedVehicle($this->dvlaRegistration, $this->dvlaVin);
 
         $this->vehicleData->update($vehicle->getId(), [VehicleParams::REGISTRATION => $newRegistration]);
-
-        $this->motTestData->updateLatestMotTestWithNewDvlaVehicleDetails($vehicle->getId(), [VehicleParams::REGISTRATION => $newRegistration]);
     }
 
     /**

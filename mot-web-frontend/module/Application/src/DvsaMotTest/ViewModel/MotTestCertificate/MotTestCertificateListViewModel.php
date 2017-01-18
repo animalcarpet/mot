@@ -4,6 +4,7 @@ namespace DvsaMotTest\ViewModel\MotTestCertificate;
 
 use Core\Routing\MotTestRoutes;
 use Zend\Mvc\Controller\Plugin\Url;
+use Zend\View\Renderer\PhpRenderer;
 
 class MotTestCertificateListViewModel
 {
@@ -29,9 +30,13 @@ class MotTestCertificateListViewModel
         return 'Back to search by VIN';
     }
 
-    public function getReturnLink(Url $url)
+    /**
+     * @param PhpRenderer $renderer
+     * @return string|boolean
+     */
+    public function getReturnLink(PhpRenderer $renderer)
     {
-        $motTestRoutes = MotTestRoutes::of($url);
+        $motTestRoutes = MotTestRoutes::of($renderer);
         if ($this->isFoundByRegistration()) {
             return $motTestRoutes->vehicleSearchByRegistration($this->getRegistration());
         }

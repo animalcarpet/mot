@@ -120,13 +120,9 @@ class MotTestAdvisoryNoticeMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerReading' => $odometerReadingMapper->toDtoFromArray(
-                        [
-                            'value'      => 8888,
-                            'unit'       => 'mi',
-                            'resultType' => OdometerReadingResultType::OK,
-                        ]
-                    ),
+                    'odometerValue'      => 8888,
+                    'odometerUnit'       => 'mi',
+                    'odometerResultType' => OdometerReadingResultType::OK,
                 ],
                 [
                     'TestStationAddress' => $VtsAddress1,
@@ -217,13 +213,9 @@ class MotTestAdvisoryNoticeMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerReading' => $odometerReadingMapper->toDtoFromArray(
-                        [
-                            'value'      => 99999,
-                            'unit'       => 'mi',
-                            'resultType' => OdometerReadingResultType::OK,
-                        ]
-                    ),
+                    'odometerValue'      => 99999,
+                    'odometerUnit'       => 'mi',
+                    'odometerResultType' => OdometerReadingResultType::OK,
                 ],
                 [
                     'TestStationAddress' => $VtsAddress1,
@@ -313,13 +305,9 @@ class MotTestAdvisoryNoticeMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerReading' => $odometerReadingMapper->toDtoFromArray(
-                        [
-                            'value'      => 99999,
-                            'unit'       => 'mi',
-                            'resultType' => OdometerReadingResultType::NOT_READABLE,
-                        ]
-                    ),
+                    'odometerValue'      => 99999,
+                    'odometerUnit'       => 'mi',
+                    'odometerResultType' => OdometerReadingResultType::NOT_READABLE,
                 ],
                 [
                     'TestStationAddress' => $VtsAddress1,
@@ -409,13 +397,9 @@ class MotTestAdvisoryNoticeMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerReading' => $odometerReadingMapper->toDtoFromArray(
-                        [
-                            'value'      => 10000,
-                            'unit'       => 'mi',
-                            'resultType' => OdometerReadingResultType::OK
-                        ]
-                    ),
+                    'odometerValue'      => 10000,
+                    'odometerUnit'       => 'mi',
+                    'odometerResultType' => OdometerReadingResultType::OK,
                 ],
                 [
                     'TestStationAddress' => $VtsAddress1,
@@ -500,13 +484,9 @@ class MotTestAdvisoryNoticeMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerReading' => $odometerReadingMapper->toDtoFromArray(
-                        [
-                            'value'      => 10000,
-                            'unit'       => 'mi',
-                            'resultType' => OdometerReadingResultType::NOT_READABLE,
-                        ]
-                    ),
+                    'odometerValue'      => 10000,
+                    'odometerUnit'       => 'mi',
+                    'odometerResultType' => OdometerReadingResultType::NOT_READABLE,
                 ],
                 [
                     'TestStationAddress' => $VtsAddress1,
@@ -614,13 +594,9 @@ class MotTestAdvisoryNoticeMapperTest extends PHPUnit_Framework_TestCase
                     ],
                     'vehicleClass' => (new VehicleClassDto())->setCode(VehicleClassCode::CLASS_4)
                         ->setName(VehicleClassCode::CLASS_4),
-                    'odometerReading' => $odometerReadingMapper->toDtoFromArray(
-                        [
-                            'value'      => 10000,
-                            'unit'       => 'mi',
-                            'resultType' => OdometerReadingResultType::NO_ODOMETER,
-                        ]
-                    ),
+                    'odometerValue'      => 10000,
+                    'odometerUnit'       => 'mi',
+                    'odometerResultType' => OdometerReadingResultType::NO_ODOMETER,
                 ],
                 [
                     'TestStationAddress' => $VtsAddress1,

@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApi\Service\ReplacementCertificate;
 
@@ -82,16 +87,16 @@ class ReplacementCertificateService implements TransactionAwareInterface
     private $motIdentityProvider;
 
     /**
-     * @param \Doctrine\ORM\EntityManager           $entityManager
+     * @param \Doctrine\ORM\EntityManager $entityManager
      * @param ReplacementCertificateDraftRepository $repository
-     * @param ReplacementCertificateDraftCreator    $draftCreator
-     * @param ReplacementCertificateDraftUpdater    $draftUpdater
-     * @param ReplacementCertificateUpdater         $certificateUpdater
-     * @param CertificateReplacementRepository      $certificateReplacementRepository
-     * @param AuthorisationServiceInterface         $authService
-     * @param MotTestRepository                     $motTestRepository
-     * @param OtpService                            $otpService
-     * @param CertificateCreationService            $certificateCreationService
+     * @param ReplacementCertificateDraftCreator $draftCreator
+     * @param ReplacementCertificateDraftUpdater $draftUpdater
+     * @param ReplacementCertificateUpdater $certificateUpdater
+     * @param CertificateReplacementRepository $certificateReplacementRepository
+     * @param AuthorisationServiceInterface $authService
+     * @param MotTestRepository $motTestRepository
+     * @param OtpService $otpService
+     * @param CertificateCreationService $certificateCreationService
      * @param \DvsaCommon\Auth\MotIdentityProviderInterface $motIdentityProvider
      */
     public function __construct(
@@ -106,7 +111,8 @@ class ReplacementCertificateService implements TransactionAwareInterface
         MotTestRepository $motTestRepository,
         OtpService $otpService,
         CertificateCreationService $certificateCreationService
-    ) {
+    )
+    {
         $this->entityManager = $entityManager;
         $this->motIdentityProvider = $motIdentityProvider;
         $this->repository = $repository;
@@ -123,7 +129,7 @@ class ReplacementCertificateService implements TransactionAwareInterface
     /**
      * @param $motTestNumber
      *
-     * @return \DvsaEntities\Entity\ReplacementCertificateDraft
+     * @return \DvsaEntities\Entity\CertificateReplacementDraft
      */
     public function createDraft($motTestNumber, $replacementReason = '')
     {
@@ -150,7 +156,7 @@ class ReplacementCertificateService implements TransactionAwareInterface
      * @param string $replacementReason
      * @param ReplacementCertificateDraftChangeDTO $changeDto
      *
-     * @return \DvsaEntities\Entity\ReplacementCertificateDraft
+     * @return \DvsaEntities\Entity\CertificateReplacementDraft
      * @throws \DvsaCommonApi\Service\Exception\ForbiddenException
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
@@ -158,7 +164,8 @@ class ReplacementCertificateService implements TransactionAwareInterface
         $motTestNumber,
         $replacementReason,
         ReplacementCertificateDraftChangeDTO $changeDto
-    ) {
+    )
+    {
         $this->authService->assertGranted(PermissionInSystem::CERTIFICATE_REPLACEMENT);
         $motTest = $this->motTestRepository->getMotTestByNumber($motTestNumber);
         $draft = $this->draftCreator->create($motTest, $replacementReason);
@@ -170,7 +177,7 @@ class ReplacementCertificateService implements TransactionAwareInterface
     /**
      * @param $draftId
      *
-     * @return \DvsaEntities\Entity\ReplacementCertificateDraft
+     * @return \DvsaEntities\Entity\CertificateReplacementDraft
      */
     public function getDraft($draftId)
     {
@@ -185,12 +192,10 @@ class ReplacementCertificateService implements TransactionAwareInterface
      *
      * @param integer $draftId
      * @param array $data
-     *
-     * @param bool $isDvlaImportProcess
      * @return MotTest
      * @throws \DvsaAuthentication\Service\Exception\OtpException
      */
-    public function applyDraft($draftId, $data, $isDvlaImportProcess = false)
+    public function applyDraft($draftId, $data)
     {
         $this->authService->assertGranted(PermissionInSystem::CERTIFICATE_REPLACEMENT);
 
@@ -201,24 +206,36 @@ class ReplacementCertificateService implements TransactionAwareInterface
             $this->otpService->authenticate($token);
         }
 
+        /** @var CertificateTypeRepository $certTypeRepo */
+        $certTypeRepo = $this->entityManager->getRepository(CertificateType::class);
+        $cherishedTransferReason = self::CHERISHED_TRANSFER_REASON;
+        $certificateReplacementRepository = $this->certificateReplacementRepository;
+        $certificateDraftRepository = $this->repository;
+        $certificateUpdater = $this->certificateUpdater;
+
         $motTest = $this->inTransaction(
-            function () use ($draftId, $isDvlaImportProcess) {
-                $draft = $this->repository->get($draftId);
-                $motTest = $this->certificateUpdater->update($draft, $isDvlaImportProcess);
+
+            function () use (
+                $draftId,
+                $certTypeRepo,
+                $cherishedTransferReason,
+                $certificateReplacementRepository,
+                $certificateDraftRepository,
+                $certificateUpdater
+            ) {
+                $draft = $certificateDraftRepository->get($draftId);
+                $motTest = $certificateUpdater->update($draft);
 
                 $certificateReplacement = (new CertificateReplacement())
                     ->setMotTest($draft->getMotTest())
                     ->setMotTestVersion($draft->getMotTestVersion())
-                    ->setReasonForDifferentTester($draft->getReasonForDifferentTester())
-                    ->setReplacementReason($draft->getReplacementReason())
-                    ->setIsVinVrmExpiryChanged($draft->getIsVinVrmExpiryChanged())
-                    ->includeInMismatchFile($draft->includeInMismatchFile())
-                    ->includeInPassFile($draft->includeInPassFile());
+                    ->setReasonForDifferentTester($draft->getDifferentTesterReason())
+                    ->setReplacementReason($draft->getReasonForReplacement())
+                    ->setIsVinVrmExpiryChanged($draft->isVinVrmExpiryChanged())
+                    ->includeInMismatchFile($draft->isIncludeInMismatchFile())
+                    ->includeInPassFile($draft->isIncludeInPassFile());
 
-                /** @var CertificateTypeRepository $certTypeRepo */
-                $certTypeRepo = $this->entityManager->getRepository(CertificateType::class);
-
-                if ($draft->getReplacementReason() == self::CHERISHED_TRANSFER_REASON) {
+                if ($draft->getReasonForReplacement() == $cherishedTransferReason) {
                     $certificateReplacement->setCertificateType(
                         $certTypeRepo->getByCode(CertificateTypeCode::TRANSFER)
                     );
@@ -228,8 +245,8 @@ class ReplacementCertificateService implements TransactionAwareInterface
                     );
                 }
 
-                $this->certificateReplacementRepository->save($certificateReplacement);
-                $this->repository->remove($draft);
+                $certificateReplacementRepository->save($certificateReplacement);
+                $certificateDraftRepository->remove($draft);
                 return $motTest;
             }
         );
@@ -239,7 +256,7 @@ class ReplacementCertificateService implements TransactionAwareInterface
 
     /**
      * @param string $motTestNumber
-     * @param int    $userId
+     * @param int $userId
      *
      * @return \DvsaCommon\Dto\Common\MotTestDto
      */

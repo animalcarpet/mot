@@ -6,7 +6,7 @@ if (!$env) {
     $env = getenv('APPLICATION_CONFIG_PATH');
 }
 
-$path = $env ?: dirname(__DIR__) . '/config/autoload';
+$path = $env ?: '/etc/dvsa/mot-testsupport';
 
 return [
     // This should be an array of module namespaces used in the application.

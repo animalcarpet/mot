@@ -1,13 +1,17 @@
 <?php
 
-use DvsaCommon\Utility\ArrayUtils;
-
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove | \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass1And2 $brakeResult */
 $brakeResult = $this->brakeResult ? $this->brakeResult : false;
 if (!$brakeResult) {
     return;
 }
 
-$brakeData = ArrayUtils::tryGet($brakeResult, $this->dataKey . 'Data');
+if($this->dataKey === 'serviceBrake1') {
+    $brakeData = $brakeResult->getServiceBrake1Data() !== null ? new \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultServiceBrakeData($brakeResult->getServiceBrake1Data()) : null;
+} elseif($this->dataKey === 'serviceBrake2' && $brakeResult->getServiceBrake2Data() !== null) {
+    $brakeData = $brakeResult->getServiceBrake2Data() !== null ? new \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultServiceBrakeData($brakeResult->getServiceBrake2Data()) : null;
+}
+
 if (!$brakeData) {
     return;
 }
@@ -18,7 +22,14 @@ $isServiceBrake = ($brakeType == BRAKE_TYPE_SERVICE);
 $isParkingBrake = ($brakeType == BRAKE_TYPE_PARKING);
 
 //  --  define brake test type (roller, place or other)     --
-$brakeTestType = ArrayUtils::tryGet($brakeResult, $this->dataKey.'TestType');
+
+if($this->dataKey === 'serviceBrake1') {
+    $brakeTestType = $brakeResult->getServiceBrake1TestType();
+} elseif($this->dataKey === 'serviceBrake2') {
+    $brakeTestType = $brakeResult->getServiceBrake2TestType();
+} elseif($this->dataKey === 'parkingBrake') {
+    $brakeTestType = $brakeResult->getParkingBrakeTestType();
+}
 $canLock = ($brakeTestType == \DvsaCommon\Enum\BrakeTestTypeCode::ROLLER);
 
 //  --
@@ -27,8 +38,12 @@ $isCol2 = false;
 
 
 //  --  define data of single wheel --
-$isSingleInFront = ArrayUtils::tryGet($brakeResult, 'isSingleInFront') === true;
-$effortSingle = ArrayUtils::tryGet($brakeData, 'effortSingle');
+$isSingleInFront = $brakeResult->getSingleInFront() ? false : $brakeResult->getSingleInFront();
+if ($this->dataKey === 'parkingBrake') {
+    $effortSingle = $brakeResult->getParkingBrakeEffortSingle();
+} else {
+    $effortSingle = $brakeData->getEffortSingle();
+}
 
 $rowSingle = null;
 if ($effortSingle) {
@@ -37,7 +52,7 @@ if ($effortSingle) {
         [
             'label1'  => 'Single',
             'val1'    => $effortSingle,
-            'isLock1' => ArrayUtils::tryGet($brakeData, 'lockSingle'),
+            'isLock1' => $brakeData->getLockSingle(),
             'canLock' => $canLock,
         ]
     );
@@ -50,10 +65,50 @@ if ($isSingleInFront && $rowSingle) {
 
 //  --  draw data of other axles    --
 for ($i = 1; $i <= 3; $i++) {
-    $var1 = ArrayUtils::tryGet($brakeData, 'effortNearsideAxle' . $i);
-    $val2 = ArrayUtils::tryGet($brakeData, 'effortOffsideAxle' . $i);
+    if($i === 1){
+        if($this->dataKey === 'parkingBrake') {
+            $effortNearsideAxle = $brakeResult->getParkingBrakeEffortNearside();
+            $effortOffsideAxle = $brakeResult->getParkingBrakeEffortOffside();
 
-    if (!$var1) {
+            $lockNearsideAxle = $brakeResult->getParkingBrakeLockNearside();
+            $lockOffsideAxle = $brakeResult->getParkingBrakeLockOffside();
+            $imbalanceAxle = $brakeResult->getParkingImbalance();
+        } else {
+            $effortNearsideAxle = $brakeData->getEffortNearsideAxel1();
+            $effortOffsideAxle = $brakeData->getEffortOffsideAxel1();
+
+            $lockNearsideAxle = $brakeData->getLockNearsideAxle1();
+            $lockOffsideAxle = $brakeData->getLockOffsideAxle1();
+            $imbalanceAxle = $brakeData->getImbalanceAxle1();
+        }
+    }
+    if($i === 2){
+        if($this->dataKey === 'parkingBrake') {
+            $effortNearsideAxle = $brakeResult->getParkingBrakeEffortSecondaryNearside();
+            $effortOffsideAxle = $brakeResult->getParkingBrakeEffortSecondaryOffside();
+
+            $lockNearsideAxle = $brakeResult->getParkingBrakeLockSecondaryNearside();
+            $lockOffsideAxle = $brakeResult->getParkingBrakeLockSecondaryNearside();
+            $imbalanceAxle = $brakeResult->getParkingBrakeSecondaryImbalance();
+        } else {
+            $effortNearsideAxle = $brakeData->getEffortNearsideAxel2();
+            $effortOffsideAxle = $brakeData->getEffortOffsideAxel2();
+
+            $lockNearsideAxle = $brakeData->getLockNearsideAxle2();
+            $lockOffsideAxle = $brakeData->getLockOffsideAxle2();
+            $imbalanceAxle = $brakeData->getImbalanceAxle2();
+        }
+    }
+    if($i === 3){
+        $effortNearsideAxle = $brakeData->getEffortNearsideAxel3();
+        $effortOffsideAxle = $brakeData->getEffortOffsideAxel3();
+
+        $lockNearsideAxle = $brakeData->getLockNearsideAxle3();
+        $lockOffsideAxle = $brakeData->getLockOffsideAxle3();
+        $imbalanceAxle = $brakeData->getImbalanceAxle3();
+    }
+
+    if (!$effortNearsideAxle) {
         continue;
     }
 
@@ -63,11 +118,11 @@ for ($i = 1; $i <= 3; $i++) {
         'partials/mot-test-summary/brake-values-in-kg-result-by-type-row',
         [
             'index'     => $i,
-            'val1'      => $var1,
-            'isLock1'   => ArrayUtils::tryGet($brakeData, 'lockNearsideAxle' . $i),
-            'val2'      => $val2,
-            'isLock2'   => ArrayUtils::tryGet($brakeData, 'lockOffsideAxle' . $i),
-            'imbalance' => $isParkingBrake ? null : intval(ArrayUtils::tryGet($brakeData, 'imbalanceAxle' . $i)),
+            'val1'      => $effortNearsideAxle,
+            'isLock1'   => $lockNearsideAxle,
+            'val2'      => $effortOffsideAxle,
+            'isLock2'   => $lockOffsideAxle,
+            'imbalance' => $isParkingBrake ? null : intval($imbalanceAxle),
             'canLock'   => $canLock,
         ]
     );

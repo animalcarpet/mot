@@ -28,7 +28,11 @@ use DvsaEntities\Entity\EmergencyLog;
 use DvsaEntities\Entity\EmergencyReason;
 use DvsaEntities\Entity\FuelType;
 use DvsaEntities\Entity\MotTest;
+use DvsaEntities\Entity\MotTestComplaintRef;
+use DvsaEntities\Entity\MotTestEmergencyReason;
 use DvsaEntities\Entity\MotTestReasonForRejection;
+use DvsaEntities\Entity\MotTestReasonForRejectionComment;
+use DvsaEntities\Entity\MotTestReasonForRejectionDescription;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\Person;
@@ -48,7 +52,7 @@ use DvsaMotApi\Service\Validator\RetestEligibility\RetestEligibilityValidator;
 class MotTestCreationHelper
 {
     const COMMENT_EMERGENCY_LOG_TYPE = 'EMERGENCY_LOG';
-    const ONE_TIME_PASSWORD_FIELD    = 'oneTimePassword';
+    const ONE_TIME_PASSWORD_FIELD = 'oneTimePassword';
     const ERROR_MSG_OVERDUE_SPECIAL_NOTICES = 'Your test status is inactive due to overdue acknowledgement of special notice(s). Your test status will become active when overdue special notices have been acknowledged.';
 
     /** @var EntityManager */
@@ -87,44 +91,41 @@ class MotTestCreationHelper
         OtpService $otpService,
         MotIdentityProviderInterface $identityProvider,
         VehicleService $vehicleService
-    ) {
+    )
+    {
         $this->entityManager = $entityManager;
         $this->authService = $authService;
         $this->testerService = $testerService;
         $this->motTestRepository = $motTestRepository;
         $this->motTestValidator = $motTestValidator;
         $this->retestEligibilityValidator = $retestEligibilityValidator;
-        $this->otpService                 = $otpService;
-        $this->identityProvider           = $identityProvider;
+        $this->otpService = $otpService;
+        $this->identityProvider = $identityProvider;
         $this->vehicleService = $vehicleService;
     }
 
     /**
-     * @param \DvsaEntities\Entity\Person $tester
-     * @param $vehicleId
-     * @param $vtsId
-     * @param $primaryColourCode
-     * @param $secondaryColourCode
-     * @param $fuelTypeCode
-     * @param $vehicleClassCode
-     * @param $hasRegistration
-     * @param $motTestTypeCode
-     * @param $motTestNumberOriginal
-     * @param $complaintRef
-     * @param $flagPrivate
-     * @param $oneTimePassword
-     * @param $contingencyId
-     * @param $clientIp
-     * @param \DvsaCommon\Dto\MotTesting\ContingencyTestDto $contingencyDto
-     *
-     * @throws \DvsaCommonApi\Service\Exception\BadRequestException
-     * @throws \DvsaCommonApi\Service\Exception\NotFoundException
+     * @param Person $tester
+     * @param int $vehicleId
+     * @param int $vtsId
+     * @param string $primaryColourCode
+     * @param string $secondaryColourCode
+     * @param string $fuelTypeCode
+     * @param string $vehicleClassCode
+     * @param boolean $hasRegistration
+     * @param string $motTestTypeCode
+     * @param string $motTestNumberOriginal
+     * @param string $oneTimePassword
+     * @param string $clientIp
+     * @param int $contingencyId
+     * @param ContingencyTestDto|null $contingencyDto
+     * @param MotTestComplaintRef|null $complaintRef
+     * @return MotTest
+     * @throws BadRequestException
+     * @throws ForbiddenException
+     * @throws NotFoundException
      * @throws \DvsaAuthentication\Service\Exception\OtpException
-     * @throws \DvsaCommon\Date\Exception\IncorrectDateFormatException
-     * @throws \DvsaCommon\Date\Exception\NonexistentDateTimeException
      * @throws \Exception
-     *
-     * @return \DvsaEntities\Entity\MotTest
      */
     public function createMotTest(
         Person $tester,
@@ -137,13 +138,13 @@ class MotTestCreationHelper
         $hasRegistration,
         $motTestTypeCode,
         $motTestNumberOriginal,
-        $complaintRef,
-        $flagPrivate,
         $oneTimePassword,
-        $contingencyId,
         $clientIp,
-        ContingencyTestDto $contingencyDto = null
-    ) {
+        $contingencyId,
+        ContingencyTestDto $contingencyDto = null,
+        MotTestComplaintRef $complaintRef = null
+    )
+    {
         $isVehicleExaminer = $this->authService->personHasRole($tester, Role::VEHICLE_EXAMINER);
 
         // Assumption, that if we don't pass in an MOT Test Type, then it is a NORMAL (NT) Test?
@@ -201,81 +202,42 @@ class MotTestCreationHelper
             $this->authService->assertGrantedAtSite(PermissionAtSite::MOT_TEST_START_AT_SITE, $vtsId);
         }
 
-        $vts = $motTestType->getIsDemo() || $motTestType->isNonMotTest() ? null : $this->entityManager->find(Site::class, $vtsId);
+        if ($motTestType->getIsDemo() || $motTestType->isNonMotTest()) {
+            $vts = $organisation = null;
+        } else {
+            /** @var Site $vts */
+            $vts = $this->entityManager->find(Site::class, $vtsId);
+            $organisation = $vts->getOrganisation();
+        }
 
         /** @var Vehicle $vehicle */
         $vehicle = $this->entityManager->getRepository(Vehicle::class)->get($vehicleId);
 
-        $primaryColour   = $primaryColourCode ? $this->getColourByCode($primaryColourCode) : null;
+        $primaryColour = $primaryColourCode ? $this->getColourByCode($primaryColourCode) : null;
         $secondaryColour = $secondaryColourCode ? $this->getColourByCode($secondaryColourCode) : null;
 
         /** @var FuelType $fuelType */
-        $fuelType        = $this->entityManager->getRepository(FuelType::class)->findOneByCode($fuelTypeCode);
+        $fuelType = $this->entityManager->getRepository(FuelType::class)->findOneByCode($fuelTypeCode);
 
         /** @var VehicleClass $vehicleClass */
-        $vehicleClass    = $this->entityManager->getRepository(VehicleClass::class)->findOneByCode($vehicleClassCode);
+        $vehicleClass = $this->entityManager->getRepository(VehicleClass::class)->findOneByCode($vehicleClassCode);
 
         /** @var MotTestStatusRepository $motTestStatusRepository */
         $motTestStatusRepository = $this->entityManager->getRepository(MotTestStatus::class);
-        $activeStatus            = $motTestStatusRepository->findActive();
+        $activeStatus = $motTestStatusRepository->findActive();
 
-        $motTest = new MotTest();
-        $motTest
+        $newMotTest = new MotTest();
+        $newMotTest
             ->setStatus($activeStatus)
             ->setTester($tester)
             ->setVehicle($vehicle)
+            ->setVehicleVersion($vehicle->getVersion())
             ->setVehicleTestingStation($vts)
-            ->setPrimaryColour($primaryColour)
-            ->setSecondaryColour($secondaryColour)
-            ->setFuelType($fuelType)
-            ->setVehicleClass($vehicleClass)
-            ->setVin($vehicle->getVin())
-            ->setRegistration($vehicle->getRegistration())
-            ->setCountryOfRegistration($vehicle->getCountryOfRegistration())
             ->setHasRegistration($hasRegistration)
-            ->setIsPrivate($flagPrivate)
             ->setMotTestType($motTestType)
-            ->setEmptyVinReason($vehicle->getEmptyVinReason())
-            ->setEmptyVrmReason($vehicle->getEmptyVrmReason())
             ->setClientIp($clientIp)
-            ->setModelDetail($vehicle->getModelDetail());
-
-        if ($vehicle->getModel()) {
-            $motTest->setModel($vehicle->getModel());
-        } else {
-            $motTest->setFreeTextModelName($vehicle->getModelName());
-        }
-
-        if ($vehicle->getMake()) {
-            $motTest->setMake($vehicle->getMake());
-        } else {
-            $motTest->setFreeTextMakeName($vehicle->getMakeName());
-        }
-
-        if ($contingencyDto instanceof ContingencyTestDto) {
-            $motTest->setStartedDate($contingencyDto->getPerformedAt());
-
-            /** @var \DvsaEntities\Entity\EmergencyLog $contingency */
-            $contingency = $this->entityManager
-                ->getRepository(EmergencyLog::class)->findOneBy(['id' => $contingencyId]);
-
-            /** @var \DvsaEntities\Entity\EmergencyReason $contingencyReason */
-            $contingencyReason = $this->entityManager
-                ->getRepository(EmergencyReason::class)->findOneBy(['code' => $contingencyDto->getReasonCode()]);
-
-            $motTest
-                ->setEmergencyLog($contingency)
-                ->setEmergencyReasonLookup($contingencyReason);
-
-            if (!empty($contingencyDto->getOtherReasonText())) {
-                $comment = new Comment();
-                $comment
-                    ->setComment($contingencyDto->getOtherReasonText())
-                    ->setCommentAuthor($tester);
-
-                $motTest->setEmergencyReasonComment($comment);
-            }
-        }
+            ->setSubmittedDate(new \DateTime('now'))
+            ->setOrganisation($organisation);
 
         $motTestOriginal = null;
 
@@ -283,14 +245,10 @@ class MotTestCreationHelper
             /** @var \DvsaEntities\Entity\MotTest $motTestOriginal */
             $motTestOriginal = $this->entityManager
                 ->getRepository(MotTest::class)->findOneBy(['number' => $motTestNumberOriginal]);
-            $motTest->setMotTestIdOriginal($motTestOriginal);
+            $newMotTest->setMotTestIdOriginal($motTestOriginal);
         }
 
-        if (!empty($complaintRef)) {
-            $motTest->setComplaintRef($complaintRef);
-        }
-
-        $this->motTestValidator->validateNewMotTest($motTest);
+        $this->motTestValidator->validateNewMotTest($newMotTest);
 
         if ($this->isVehicleModified($vehicle, $vehicleClass, $fuelType, $primaryColour, $secondaryColour)
             && !$motTestType->getIsDemo()
@@ -310,25 +268,69 @@ class MotTestCreationHelper
 //              ->setCylinderCapacity($data['CylinderCapacity'])   @todo: API and UI need to consider CC according to the certain fuel type
                 ->setOneTimePassword($oneTimePassword);
 
-            $this->vehicleService->updateDvsaVehicleUnderTest(
+            $updatedVehicle = $this->vehicleService->updateDvsaVehicleUnderTest(
                 $vehicle->getId(),
                 $updateDvsaVehicleUnderTestRequest
             );
+
+            $newMotTest->setVehicleVersion($updatedVehicle->getVersion());
         }
 
-        $this->entityManager->persist($motTest);
+        $this->entityManager->persist($newMotTest);
+        $this->entityManager->flush();
+
+        if (!empty($complaintRef)) {
+            $complaintRef->setId($newMotTest->getId());
+            $newMotTest->setComplaintRef($complaintRef);
+        }
+
         if ($motTestType->getCode() === MotTestTypeCode::RE_TEST) {
-            $this->saveRfrsForRetest($motTestOriginal, $motTest);
+            $this->saveRfrsForRetest($motTestOriginal, $newMotTest);
         }
 
         $this->entityManager->flush();
 
         // Regenerate the Test Number based on the DB row id.
-        $motTest->setNumber(MotTestNumberGenerator::generateMotTestNumber($motTest->getId()));
-        $this->entityManager->persist($motTest);
+        $newMotTest->setNumber(MotTestNumberGenerator::generateMotTestNumber($newMotTest->getId()));
+
+        if ($contingencyDto instanceof ContingencyTestDto) {
+            $newMotTest->setStartedDate($contingencyDto->getPerformedAt());
+
+            /** @var \DvsaEntities\Entity\EmergencyLog $contingency */
+            $contingency = $this->entityManager
+                ->getRepository(EmergencyLog::class)->findOneBy(['id' => $contingencyId]);
+
+            /** @var \DvsaEntities\Entity\EmergencyReason $contingencyReason */
+            $contingencyReason = $this->entityManager
+                ->getRepository(EmergencyReason::class)->findOneBy(['code' => $contingencyDto->getReasonCode()]);
+
+            $motTestEmergencyReason = new MotTestEmergencyReason();
+
+            $motTestEmergencyReason
+                ->setId($newMotTest->getId())
+                ->setLastUpdatedBy($newMotTest->getLastAmendedBy())
+                ->setLastUpdatedOn($newMotTest->getLastAmendedOn())
+                ->setEmergencyLog($contingency)
+                ->setEmergencyReason($contingencyReason);
+
+            if (!empty($contingencyDto->getOtherReasonText())) {
+                $comment = new Comment();
+                $comment
+                    ->setComment($contingencyDto->getOtherReasonText())
+                    ->setCommentAuthor($tester);
+
+                $motTestEmergencyReason->setComment($comment);
+            }
+
+            $this->entityManager->persist($motTestEmergencyReason);
+            $this->entityManager->flush();
+            $newMotTest->setMotTestEmergencyReason($motTestEmergencyReason);
+        }
+
+        $this->entityManager->persist($newMotTest);
         $this->entityManager->flush();
 
-        return $motTest;
+        return $newMotTest;
     }
 
     /**
@@ -343,7 +345,7 @@ class MotTestCreationHelper
         $testExists = $this->motTestRepository->isTestInProgressForVehicle($vehicleId);
         if ($testExists) {
             $exception = BadRequestException::create();
-            $errorMsg  = 'Vehicle already has an in progress test';
+            $errorMsg = 'Vehicle already has an in progress test';
             $exception->addError($errorMsg, '', $errorMsg);
             throw $exception;
         }
@@ -382,7 +384,8 @@ class MotTestCreationHelper
         FuelType $fuelType,
         $primaryColour,
         $secondaryColour
-    ) {
+    )
+    {
         return !$this->isVehicleClassSame($vehicle->getVehicleClass(), $vehicleClass)
         || !$this->isFuelTypeSame($vehicle->getFuelType(), $fuelType)
         || !$this->isColourSame($vehicle->getColour(), $primaryColour)
@@ -446,23 +449,59 @@ class MotTestCreationHelper
         return false;
     }
 
-    public function saveRfrsForRetest(MotTest $motTestOriginal, MotTest $motTest)
+    public function saveRfrsForRetest(MotTest $motTestOriginal, MotTest $newMotTest)
     {
         $rfrArrayOriginal = $motTestOriginal->getMotTestReasonForRejections();
 
         //Save RFRs to retest entity.
         /** @var MotTestReasonForRejection $rfrOriginal */
         foreach ($rfrArrayOriginal as $rfrOriginal) {
-            if ($rfrOriginal->getType() != ReasonForRejectionTypeName::PRS) {
+            if ($rfrOriginal->getType()->getReasonForRejectionType() != ReasonForRejectionTypeName::PRS) {
                 $rfr = clone $rfrOriginal;
-                $rfr->setMotTest($motTest);
-                $rfr->setMotTestId($motTest->getId());
+
+                $originalComment = $originalDescription = null;
+
+                if ($rfr->getMotTestReasonForRejectionComment()) {
+                    $originalComment = clone $rfr->popComment();
+                }
+
+                if ($rfr->getCustomDescription()) {
+                    $originalDescription = clone $rfr->popDescription();
+                }
+
+                $rfr->setMotTest($newMotTest);
+                $rfr->setMotTestId($newMotTest->getId());
                 $rfr->setOnOriginalTest(true);
-                $motTest->addMotTestReasonForRejection($rfr);
+                $newMotTest->addMotTestReasonForRejection($rfr);
+
                 $this->entityManager->persist($rfr);
+                $this->entityManager->flush();
+
+                if ($originalComment instanceof MotTestReasonForRejectionComment) {
+
+                    $newComment = new MotTestReasonForRejectionComment();
+                    $newComment->setComment($originalComment->getComment())
+                        ->setId($rfr->getId());
+
+                    $this->entityManager->persist($newComment);
+                    $this->entityManager->flush();
+                }
+
+                if ($originalDescription instanceof MotTestReasonForRejectionDescription) {
+
+                    $newDescription = new MotTestReasonForRejectionDescription();
+
+                    $newDescription->setCustomDescription($originalDescription->getCustomDescription())
+                        ->setId($rfr->getId());
+
+                    $this->entityManager->persist($newDescription);
+                    $this->entityManager->flush();
+                }
+
+                $this->entityManager->flush();
             }
         }
-        $this->entityManager->persist($motTest);
+        $this->entityManager->persist($newMotTest);
     }
 
     private function getColourByCode($code)

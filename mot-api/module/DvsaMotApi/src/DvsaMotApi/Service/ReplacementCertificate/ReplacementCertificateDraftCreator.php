@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApi\Service\ReplacementCertificate;
 
@@ -6,7 +11,7 @@ use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaEntities\Entity\MotTest;
-use DvsaEntities\Entity\ReplacementCertificateDraft;
+use DvsaEntities\Entity\CertificateReplacementDraft;
 use DvsaMotApi\Service\MotTestSecurityService;
 
 /**
@@ -41,7 +46,7 @@ class ReplacementCertificateDraftCreator
     /**
      * @param MotTest $motTest
      *
-     * @return ReplacementCertificateDraft
+     * @return CertificateReplacementDraft
      * @throws \DvsaCommonApi\Service\Exception\ForbiddenException
      */
     public function create(MotTest $motTest, $replacementReason = '')
@@ -61,13 +66,9 @@ class ReplacementCertificateDraftCreator
             );
         }
 
-        $makeName = $motTest->getMake() ? null : $motTest->getMakeName();
-        $modelName = $motTest->getModel() ? null : $motTest->getModelName();
-
-        $draft = ReplacementCertificateDraft::create()
+        $draft = CertificateReplacementDraft::create()
             ->setMotTest($motTest)
             ->setMotTestVersion($motTest->getVersion())
-            ->setOdometerReading($motTest->getOdometerReading())
             ->setPrimaryColour($motTest->getPrimaryColour())
             ->setSecondaryColour($motTest->getSecondaryColour())
             ->setExpiryDate($motTest->getExpiryDate())
@@ -76,14 +77,17 @@ class ReplacementCertificateDraftCreator
             ->setVin($motTest->getVin())
             ->setEmptyVinReason($motTest->getEmptyVinReason())
             ->setMake($motTest->getMake())
-            ->setMakeName($makeName)
+            ->setMakeName($motTest->getMakeName())
             ->setModel($motTest->getModel())
-            ->setModelName($modelName)
+            ->setModelName($motTest->getModelName())
             ->setCountryOfRegistration($motTest->getCountryOfRegistration())
             ->setExpiryDate($motTest->getExpiryDate())
             ->setVehicleTestingStation($motTest->getVehicleTestingStation())
-            ->setReplacementReason($replacementReason)
-            ->setIsVinVrmExpiryChanged(false);
+            ->setReasonForReplacement($replacementReason)
+            ->setVinVrmExpiryChanged(false)
+            ->setOdometerValue($motTest->getOdometerValue())
+            ->setOdometerUnit($motTest->getOdometerUnit())
+            ->setOdometerResultType($motTest->getOdometerResultType());
 
         return $draft;
     }

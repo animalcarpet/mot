@@ -1,7 +1,7 @@
 <?php
 
-/** @var \DvsaCommon\Dto\Common\MotTestDto $motTest */
-$motTest = $this->motTest ? $this->motTest : new \DvsaCommon\Dto\Common\MotTestDto();
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motTest */
+$motTest = $this->motTest;
 
 $brakeTestResult = $motTest->getBrakeTestResult();
 
@@ -14,11 +14,11 @@ $brakeTestResult = $motTest->getBrakeTestResult();
     <div class="col-sm-8">
         <p class="primary-item">
             <?php
-            if ($motTest->getTesterBrakePerformanceNotTested() == true) {
+            if ($motTest->isTesterBrakePerformanceNotTested() == true) {
                 $escLabel = 'Not tested';
             } elseif ($brakeTestResult == null) {
                 $escLabel = 'None Recorded';
-            } elseif ($brakeTestResult['generalPass']) {
+            } elseif ($brakeTestResult->generalPass) {
                 $escLabel = 'Pass';
             } else {
                 $escLabel = 'Fail';

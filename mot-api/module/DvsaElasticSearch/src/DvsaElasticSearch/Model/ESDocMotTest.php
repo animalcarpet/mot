@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaElasticSearch\Model;
 
@@ -41,16 +46,8 @@ class ESDocMotTest extends ESDocType
             'number'                        => $entity->getNumber(),
             'primaryColour'                 => $entity->getPrimaryColour()->getName(),
             'hasRegistration'               => $entity->getHasRegistration(),
-            'odometerValue'                 =>
-                ($entity->getOdometerReading() !== null
-                    ? $entity->getOdometerReading()->getValue()
-                    : null
-                ),
-            'odometerUnit'                  =>
-                ($entity->getOdometerReading() !== null
-                    ? $entity->getOdometerReading()->getUnit()
-                    : null
-                ),
+            'odometerValue'                 => $entity->getOdometerValue(),
+            'odometerUnit'                  => $entity->getOdometerUnit(),
             'vehicleId'                     => $entity->getVehicle()->getId(),
             'vin'                           => $entity->getVin(),
             'registration'                  => $entity->getRegistration(),
@@ -102,14 +99,14 @@ class ESDocMotTest extends ESDocType
          * @var \DvsaEntities\Entity\MotTestReasonForRejection $motRfr
          */
         foreach ($motRfrs as $motRfr) {
-            if (!array_key_exists($motRfr->getType(), $motRfrsGroupedByTypes)) {
-                $motRfrsGroupedByTypes[$motRfr->getType()] = [];
+            if (!array_key_exists($motRfr->getType()->getId(), $motRfrsGroupedByTypes)) {
+                $motRfrsGroupedByTypes[$motRfr->getType()->getId()] = [];
             }
             $currentRfr = [];
             $currentRfr['id'] = $motRfr->getId();
             $currentRfr['name'] = $motRfr->getEnglishName();
 
-            $motRfrsGroupedByTypes[$motRfr->getType()][] = $currentRfr;
+            $motRfrsGroupedByTypes[$motRfr->getType()->getId()][] = $currentRfr;
         }
 
         return $motRfrsGroupedByTypes;

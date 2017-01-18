@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace IntegrationApi\DvlaVehicle\Service;
 
@@ -42,7 +47,8 @@ class DvlaVehicleUpdatedService implements TransactionAwareInterface
         MotTestRepository $motTestRepository,
         ReplacementCertificateService $replacementCertificateService,
         VehicleService $vehicleService
-    ) {
+    )
+    {
         $this->motTestRepository = $motTestRepository;
         $this->replacementCertificateService = $replacementCertificateService;
         $this->vehicleService = $vehicleService;
@@ -62,17 +68,21 @@ class DvlaVehicleUpdatedService implements TransactionAwareInterface
         $changeDto = new ReplacementCertificateDraftChangeDTO();
         $changeDto->setVrm($vehicle->getRegistration());
         $changeDto->setVin($vehicle->getVin());
-        $changeDto->setIsDvlaImportProcess(true);
 
-        return $this->inTransaction(
+        $transactionResult = $this->inTransaction(
             function () use ($latestMotTestNumber, $userId, $changeDto) {
                 $reason = self::CHERISHED_TRANSFER_REASON;
                 $draftId = $this->replacementCertificateService->createAndUpdateDraft(
                     $latestMotTestNumber, $reason, $changeDto
                 )->getId();
-                $this->replacementCertificateService->applyDraft($draftId, [], true);
-                $this->replacementCertificateService->createCertificate($latestMotTestNumber, $userId);
+                $this->replacementCertificateService->applyDraft($draftId, []);
             }
         );
+
+        if ($transactionResult) {
+            $this->replacementCertificateService->createCertificate($latestMotTestNumber, $userId);
+        }
+
+        return $transactionResult;
     }
 }

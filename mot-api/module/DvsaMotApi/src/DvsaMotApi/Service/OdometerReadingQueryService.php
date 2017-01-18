@@ -1,30 +1,27 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApi\Service;
 
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
+use DvsaCommon\Dto\Common\OdometerReadingDto;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommonApi\Authorisation\Assertion\ReadMotTestAssertion;
-use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Repository\MotTestRepository;
-use DvsaEntities\Repository\OdometerReadingRepository;
 use DvsaMotApi\Service\Validator\Odometer\OdometerReadingDeltaAnomalyChecker;
 use Zend\Authentication\AuthenticationService;
 
 /**
- * Retrieves information on odometer reading
- *
  * Class OdometerReadinQueryService
  *
- * @package DvsaMotApi\Service
+ * Retrieves information on odometer reading
  */
 class OdometerReadingQueryService
 {
-
-    /**
-     * @var OdometerReadingRepository $readingRepository
-     */
-    private $readingRepository;
     /**
      * @var OdometerReadingDeltaAnomalyChecker $anomalyChecker
      */
@@ -50,21 +47,21 @@ class OdometerReadingQueryService
     private $authenticationService;
 
     /**
+     * OdometerReadingQueryService constructor.
      * @param OdometerReadingDeltaAnomalyChecker $odometerReadingDeltaAnomalyChecker
-     * @param OdometerReadingRepository $odometerReadingRepository
      * @param AuthorisationServiceInterface $authorizationService
      * @param ReadMotTestAssertion $readMotTestAssertion
      * @param MotTestRepository $motTestRepository
+     * @param AuthenticationService $authenticationService
      */
     public function __construct(
         OdometerReadingDeltaAnomalyChecker $odometerReadingDeltaAnomalyChecker,
-        OdometerReadingRepository $odometerReadingRepository,
         AuthorisationServiceInterface $authorizationService,
         ReadMotTestAssertion $readMotTestAssertion,
         MotTestRepository $motTestRepository,
         AuthenticationService $authenticationService
-    ) {
-        $this->readingRepository = $odometerReadingRepository;
+    )
+    {
         $this->anomalyChecker = $odometerReadingDeltaAnomalyChecker;
         $this->authService = $authorizationService;
         $this->readMotTestAssertion = $readMotTestAssertion;
@@ -87,15 +84,17 @@ class OdometerReadingQueryService
         if (!$this->motTestRepository->isTesterForMot(
             $this->authenticationService->getIdentity()->getUserId(),
             $motTestNumber
-        )) {
+        )
+        ) {
             throw new UnauthorisedException('You cannot read mot test because you are not the mot test owner');
         }
         $notices = [];
 
-        $currentReading = $this->readingRepository->findReadingForTest($motTestNumber);
-        $previousReading = $this->readingRepository->findPreviousReading($motTestNumber);
-        if ($currentReading && $previousReading) {
-            $notices = $this->anomalyChecker->check($currentReading, $previousReading)->toArrayOfTexts();
+        $currentReadingDto = $this->motTestRepository->findReadingForTest($motTestNumber);
+        $previousReadingDto = $this->motTestRepository->findPreviousReading($motTestNumber);
+
+        if ($currentReadingDto instanceOf OdometerReadingDto && $previousReadingDto instanceOf OdometerReadingDto) {
+            $notices = $this->anomalyChecker->check($currentReadingDto, $previousReadingDto)->toArrayOfTexts();
         }
         return $notices;
     }

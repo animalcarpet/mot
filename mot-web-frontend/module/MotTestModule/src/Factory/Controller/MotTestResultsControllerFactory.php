@@ -9,6 +9,7 @@ namespace Dvsa\Mot\Frontend\MotTestModule\Factory\Controller;
 
 use Dvsa\Mot\Frontend\MotTestModule\Controller\MotTestResultsController;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
+use DvsaMotTest\Model\OdometerReadingViewObject;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -31,6 +32,8 @@ class MotTestResultsControllerFactory implements FactoryInterface
         /** @var MotAuthorisationServiceInterface $authorisationService */
         $authorisationService = $mainServiceManager->get('authorisationHelper');
 
-        return new MotTestResultsController($authorisationService);
+        $odometerViewObject = new OdometerReadingViewObject();
+
+        return new MotTestResultsController($authorisationService, $odometerViewObject);
     }
 }

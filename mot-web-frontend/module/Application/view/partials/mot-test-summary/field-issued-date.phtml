@@ -3,8 +3,8 @@ use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Utility\ArrayUtils;
 
-/** @var \DvsaCommon\Dto\Common\MotTestDto $motTest */
-$motTest = $this->motTest;
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motTest */
+$motTest;
 if (empty($motTest)) {
     return;
 }
@@ -16,7 +16,7 @@ $isTestPassOrFail = ($testStatus == MotTestStatusName::PASSED || $testStatus == 
 
 if (!$isTestPassOrFail) {
     $pendingDetails = $motTest->getPendingDetails();
-    $pendingStatus = ArrayUtils::tryGet($pendingDetails, 'currentSubmissionStatus');
+    $pendingStatus = $pendingDetails->getCurrentSubmissionStatus();
     $isTestReady = ($pendingStatus == MotTestStatusName::PASSED || $pendingStatus == MotTestStatusName::FAILED);
 }
 
@@ -31,13 +31,13 @@ $cssDlClass = !empty(trim($this->cssDlClass)) ? $this->cssDlClass : 'col-sm-4';
 
         if ($isTestPassOrFail && $val = $motTest->getIssuedDate()) {
             $issuedDate = $val;
-        } elseif ($isTestReady && $val = ArrayUtils::tryGet($pendingDetails, 'issuedDate')) {
+        } elseif ($isTestReady && $val = $pendingDetails->getIssuedDate()) {
             $issuedDate = $val;
         }
 
         echo $this->escapeHtml(
             $issuedDate
-            ? DateTimeDisplayFormat::textDate($issuedDate)
+            ? DateTimeDisplayFormat::textDateShort($issuedDate)
             : 'N/A'
         );
         ?>

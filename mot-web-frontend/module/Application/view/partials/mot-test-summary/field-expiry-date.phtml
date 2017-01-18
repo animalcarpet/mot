@@ -3,7 +3,7 @@ use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Utility\ArrayUtils;
 
-/** @var \DvsaCommon\Dto\Common\MotTestDto $motTest */
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motTest */
 $motTest = $this->motTest;
 if (empty($motTest)) {
     return;
@@ -16,7 +16,7 @@ $isTestPass = ($testStatus == MotTestStatusName::PASSED);
 
 if (!$isTestPass) {
     $pendingDetails = $motTest->getPendingDetails();
-    $pendingStatus = ArrayUtils::tryGet($pendingDetails, 'currentSubmissionStatus');
+    $pendingStatus = $pendingDetails->getCurrentSubmissionStatus();
     $isTestReadyToPass = ($pendingStatus == MotTestStatusName::PASSED);
 }
 
@@ -37,7 +37,7 @@ $cssDlClass = !empty(trim($this->cssDlClass)) ? $this->cssDlClass : 'col-sm-4';
             if ($isTestPass) {
                 $expireDate = $motTest->getExpiryDate();
             } elseif ($isTestReadyToPass) {
-                $expireDate = ArrayUtils::tryGet($pendingDetails, 'expiryDate');
+                $expireDate = $pendingDetails->getExpiryDate();
             }
         } else {
             $expireDate = $this->expiryDate;
@@ -45,7 +45,7 @@ $cssDlClass = !empty(trim($this->cssDlClass)) ? $this->cssDlClass : 'col-sm-4';
 
         echo $this->escapeHtml(
             $expireDate
-            ? DateTimeDisplayFormat::textDate($expireDate)
+            ? DateTimeDisplayFormat::textDateShort($expireDate)
             : 'N/A'
         );
         ?>
