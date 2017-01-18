@@ -45,6 +45,7 @@ class EntityAuditListener implements EventSubscriber, ServiceLocatorAwareInterfa
             $uow->getScheduledEntityInsertions(),
             function (Entity $object) use ($em) {
                 $object->setCreatedOn(self::currentTimestamp())->setCreatedBy($this->getUser($em));
+                $object->setLastUpdatedOn(self::currentTimestamp())->setLastUpdatedBy($this->getUser($em));
             }
         );
         $this->handleAuditing(

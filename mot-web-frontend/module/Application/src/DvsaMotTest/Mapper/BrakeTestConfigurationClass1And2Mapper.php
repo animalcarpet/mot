@@ -2,13 +2,13 @@
 
 namespace DvsaMotTest\Mapper;
 
+use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass1And2;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass1And2Dto;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationDtoInterface;
-use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Utility\TypeCheck;
-use DvsaEntities\Repository\BrakeTestTypeRepository;
 
 /**
  * Maps form data to BrakeTestConfigurationClass1And2Dto
@@ -44,11 +44,11 @@ class BrakeTestConfigurationClass1And2Mapper implements BrakeTestConfigurationMa
     }
 
     /**
-     * @param MotTestDto $motTest
+     * @param MotTest $motTest
      *
      * @return BrakeTestConfigurationDtoInterface
      */
-    public function mapToDefaultDto(MotTestDto $motTest)
+    public function mapToDefaultDto(MotTest $motTest, $vehicleClass = null)
     {
         $dto = new BrakeTestConfigurationClass1And2Dto();
 
@@ -59,8 +59,9 @@ class BrakeTestConfigurationClass1And2Mapper implements BrakeTestConfigurationMa
         $dto->setSidecarWeight('');
         $dto->setIsSidecarAttached(false);
 
-        if ($motTest->getVehicleTestingStation() !== null) {
-            $dto->setBrakeTestType($motTest->getVehicleTestingStation()['defaultBrakeTestClass1And2']);
+        if ($motTest->getBrakeTestResult() !== null) {
+            $brakeTestResult = new BrakeTestResultClass1And2($motTest->getBrakeTestResult());
+            $dto->setBrakeTestType($brakeTestResult->getBrakeTestTypeCode());
         }
 
         return $dto;

@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApi\Service\ReplacementCertificate;
 
@@ -10,11 +15,10 @@ use Api\Check\CheckResultExceptionTranslator;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaCommonApi\Transaction\TransactionAwareInterface;
 use DvsaCommonApi\Transaction\TransactionAwareTrait;
-use DvsaEntities\Entity\ReplacementCertificateDraft;
+use DvsaEntities\Entity\CertificateReplacementDraft;
 use DvsaEntities\Repository\CertificateChangeReasonRepository;
 use DvsaEntities\Repository\SiteRepository;
 use DvsaMotApi\Dto\ReplacementCertificateDraftChangeDTO;
-use DvsaMotApi\Helper\Odometer\OdometerHolderUpdater;
 use DvsaMotApi\Service\MotTestSecurityService;
 use DvsaMotApi\Service\Validator\ReplacementCertificateDraftChangeValidator;
 use Zend\Authentication\AuthenticationService;
@@ -26,7 +30,6 @@ use Zend\Authentication\AuthenticationService;
  */
 class ReplacementCertificateDraftUpdater implements TransactionAwareInterface
 {
-
     const EXPIRY_DATE_FORMAT = 'Y-m-d';
 
     use TransactionAwareTrait;
@@ -58,19 +61,13 @@ class ReplacementCertificateDraftUpdater implements TransactionAwareInterface
     private $motIdentityProvider;
 
     /**
-     * @var \DvsaMotApi\Helper\Odometer\OdometerHolderUpdater
-     */
-    private $odometerHolderUpdater;
-
-    /**
-     * @param MotTestSecurityService                     $motTestSecurityService
-     * @param AuthorisationServiceInterface              $authorizationService
-     * @param VehicleCatalogService                      $vehicleCatalog
-     * @param CertificateChangeReasonRepository          $certificateChangeReasonRepository
-     * @param SiteRepository                             $vtsRepository
-     * @param AuthenticationService                      $motIdentityProvider
+     * @param MotTestSecurityService $motTestSecurityService
+     * @param AuthorisationServiceInterface $authorizationService
+     * @param VehicleCatalogService $vehicleCatalog
+     * @param CertificateChangeReasonRepository $certificateChangeReasonRepository
+     * @param SiteRepository $vtsRepository
+     * @param AuthenticationService $motIdentityProvider
      * @param ReplacementCertificateDraftChangeValidator $replacementCertificateDraftChangeValidator
-     * @param OdometerHolderUpdater                      $odometerHolderUpdater
      */
     public function __construct(
         MotTestSecurityService $motTestSecurityService,
@@ -79,9 +76,9 @@ class ReplacementCertificateDraftUpdater implements TransactionAwareInterface
         CertificateChangeReasonRepository $certificateChangeReasonRepository,
         SiteRepository $vtsRepository,
         AuthenticationService $motIdentityProvider,
-        ReplacementCertificateDraftChangeValidator $replacementCertificateDraftChangeValidator,
-        OdometerHolderUpdater $odometerHolderUpdater
-    ) {
+        ReplacementCertificateDraftChangeValidator $replacementCertificateDraftChangeValidator
+    )
+    {
         $this->motTestSecurityService = $motTestSecurityService;
         $this->authorizationService = $authorizationService;
         $this->vehicleCatalog = $vehicleCatalog;
@@ -89,17 +86,16 @@ class ReplacementCertificateDraftUpdater implements TransactionAwareInterface
         $this->certificateChangeReasonRepository = $certificateChangeReasonRepository;
         $this->motIdentityProvider = $motIdentityProvider;
         $this->replacementCertificateDraftChangeValidator = $replacementCertificateDraftChangeValidator;
-        $this->odometerHolderUpdater = $odometerHolderUpdater;
     }
 
     /**
-     * @param ReplacementCertificateDraft          $draft
+     * @param CertificateReplacementDraft $draft
      * @param ReplacementCertificateDraftChangeDTO $draftChange
      *
-     * @return ReplacementCertificateDraft
+     * @return CertificateReplacementDraft
      * @throws \DvsaCommonApi\Service\Exception\ForbiddenException
      */
-    public function updateDraft(ReplacementCertificateDraft $draft, ReplacementCertificateDraftChangeDTO $draftChange)
+    public function updateDraft(CertificateReplacementDraft $draft, ReplacementCertificateDraftChangeDTO $draftChange)
     {
         $validationResult = $this->replacementCertificateDraftChangeValidator->validate($draftChange);
         CheckResultExceptionTranslator::tryThrowBadRequestException($validationResult);
@@ -114,11 +110,14 @@ class ReplacementCertificateDraftUpdater implements TransactionAwareInterface
     }
 
     private function applyChanges(
-        ReplacementCertificateDraft $draft,
+        CertificateReplacementDraft $draft,
         ReplacementCertificateDraftChangeDTO $draftChange
-    ) {
+    )
+    {
         if ($draftChange->isOdometerReadingSet()) {
-            $this->odometerHolderUpdater->update($draft, $draftChange->getOdometerReading());
+            $draft->setOdometerValue($draftChange->getOdometerValue());
+            $draft->setOdometerUnit($draftChange->getOdometerUnit());
+            $draft->setOdometerResultType($draftChange->getOdometerResultType());
         }
         if ($draftChange->isPrimaryColourSet()) {
             $draft->setPrimaryColour($this->vehicleCatalog->getColourByCode($draftChange->getPrimaryColour()));
@@ -144,7 +143,7 @@ class ReplacementCertificateDraftUpdater implements TransactionAwareInterface
                 if (!$isDifferentTester) {
                     $reasonForDifferentTesterNotAllowed = true;
                 } else {
-                    $draft->setReasonForDifferentTester(
+                    $draft->setDifferentTesterReason(
                         $this->certificateChangeReasonRepository->getByCode($draftChange->getReasonForDifferentTester())
                     );
                 }
@@ -156,13 +155,14 @@ class ReplacementCertificateDraftUpdater implements TransactionAwareInterface
     }
 
     /**
-     * @param ReplacementCertificateDraft          $draft
+     * @param CertificateReplacementDraft $draft
      * @param ReplacementCertificateDraftChangeDTO $draftChange
      */
     private function applyChangesSpecialFields(
-        ReplacementCertificateDraft $draft,
+        CertificateReplacementDraft $draft,
         ReplacementCertificateDraftChangeDTO $draftChange
-    ) {
+    )
+    {
         if ($this->isTryingToModifySpecialField($draftChange)) {
             $this->authorizationService->assertGranted(
                 PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS
@@ -177,15 +177,16 @@ class ReplacementCertificateDraftUpdater implements TransactionAwareInterface
      * Perform changes from the ReplacementCertificateDraftChangeDTO which will
      * cause a mismatch or pass to be sent to DVLA
      *
-     * @param ReplacementCertificateDraft          $draft
+     * @param CertificateReplacementDraft $draft
      * @param ReplacementCertificateDraftChangeDTO $updates
-     * @return ReplacementCertificateDraft
+     * @return CertificateReplacementDraft
      * @throws \DvsaCommon\Date\Exception\IncorrectDateFormatException
      */
     private function performMismatchChanges(
-        ReplacementCertificateDraft $draft,
+        CertificateReplacementDraft $draft,
         ReplacementCertificateDraftChangeDTO $updates
-    ) {
+    )
+    {
         $this->setMismatchAndPassFlags($draft, $updates);
 
         $vrmChanged = $this->vrmHasChanged($draft, $updates);
@@ -193,9 +194,9 @@ class ReplacementCertificateDraftUpdater implements TransactionAwareInterface
         $dateChanged = $this->dateHasChanged($draft, $updates);
 
         if ($vrmChanged || $vinChanged || $dateChanged) {
-            $draft->setIsVinVrmExpiryChanged(true);
-        } elseif (!$draft->isVinVrmExpiryChangedIsTrue()) {
-            $draft->setIsVinVrmExpiryChanged(false);
+            $draft->setVinVrmExpiryChanged(true);
+        } elseif (!$draft->isVinVrmExpiryChanged()) {
+            $draft->setVinVrmExpiryChanged(false);
         }
 
         if ($vinChanged) {
@@ -214,14 +215,15 @@ class ReplacementCertificateDraftUpdater implements TransactionAwareInterface
     /**
      * Set the flags to indicate whether the record should be sent to DVLA in the Batch Export mismatch and/or pass file
      *
-     * @param ReplacementCertificateDraft          $draft
+     * @param CertificateReplacementDraft $draft
      * @param ReplacementCertificateDraftChangeDTO $updates
-     * @return ReplacementCertificateDraft
+     * @return CertificateReplacementDraft
      */
     private function setMismatchAndPassFlags(
-        ReplacementCertificateDraft $draft,
+        CertificateReplacementDraft $draft,
         ReplacementCertificateDraftChangeDTO $updates
-    ) {
+    )
+    {
         // refactor into comparison functions in ReplacementCertificateDraftChangeDto
         $vrmChanged = $this->vrmHasChanged($draft, $updates);
         $vinChanged = $this->vinHasChanged($draft, $updates);
@@ -234,11 +236,11 @@ class ReplacementCertificateDraftUpdater implements TransactionAwareInterface
             //update expiry date of replacement certificate
             if ($vrmChanged || $vinChanged || $dateChanged) {
                 $draft->setIncludeInPassFile(true);
-            } elseif (!$draft->includeInPassFileIsTrue()) {
+            } elseif (!$draft->isIncludeInPassFile()) {
                 $draft->setIncludeInPassFile(false);
             }
 
-            if (!$draft->includeInMismatchFileIsTrue()) {
+            if (!$draft->isIncludeInMismatchFile()) {
                 $draft->setIncludeInMismatchFile(false);
             }
         } else {
@@ -253,10 +255,10 @@ class ReplacementCertificateDraftUpdater implements TransactionAwareInterface
                 $draft->setIncludeInPassFile(true);
             }
 
-            if (!$draft->includeInMismatchFileIsTrue()) {
+            if (!$draft->isIncludeInMismatchFile()) {
                 $draft->setIncludeInMismatchFile(false);
             }
-            if (!$draft->includeInPassFileIsTrue()) {
+            if (!$draft->isIncludeInPassFile()) {
                 $draft->setIncludeInPassFile(false);
             }
         }
@@ -265,19 +267,18 @@ class ReplacementCertificateDraftUpdater implements TransactionAwareInterface
     /**
      * Perform all changes to the vehicle which will not trigger a mismatch to be sent to DVLA
      *
-     * @param ReplacementCertificateDraft          $draft
+     * @param CertificateReplacementDraft $draft
      * @param ReplacementCertificateDraftChangeDTO $updates
-     * @return ReplacementCertificateDraft
+     * @return CertificateReplacementDraft
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      */
     private function performNonMismatchChanges(
-        ReplacementCertificateDraft $draft,
+        CertificateReplacementDraft $draft,
         ReplacementCertificateDraftChangeDTO $updates
-    ) {
+    )
+    {
 
-        if (!$updates->isDvlaImportProcess()) {
-            $this->performMakeModelChanges($draft, $updates);
-        }
+        $this->performMakeModelChanges($draft, $updates);
 
         if ($updates->isCountryOfRegistrationSet()) {
             $draft->setCountryOfRegistration(
@@ -294,21 +295,22 @@ class ReplacementCertificateDraftUpdater implements TransactionAwareInterface
         }
 
         if ($updates->isReasonForReplacementSet()) {
-            $draft->setReplacementReason($updates->getReasonForReplacement());
+            $draft->setReasonForReplacement($updates->getReasonForReplacement());
         }
     }
 
     /**
      * Perform all changes in the ReplacementCertificateDraftChangeDTO to do with make and model
      *
-     * @param ReplacementCertificateDraft          $draft
+     * @param CertificateReplacementDraft $draft
      * @param ReplacementCertificateDraftChangeDTO $updates
-     * @return ReplacementCertificateDraft
+     * @return CertificateReplacementDraft
      */
     private function performMakeModelChanges(
-        ReplacementCertificateDraft $draft,
+        CertificateReplacementDraft $draft,
         ReplacementCertificateDraftChangeDTO $updates
-    ) {
+    )
+    {
         if ($updates->isCustomMakeSet()) {
             $draft->setMake(null);
             $draft->setMakeName($updates->getCustomMake());
@@ -373,14 +375,15 @@ class ReplacementCertificateDraftUpdater implements TransactionAwareInterface
      * Returns whether the vrm in the draft change is different to that of the original
      * ReplacementCertificate
      *
-     * @param ReplacementCertificateDraft          $draft
+     * @param CertificateReplacementDraft $draft
      * @param ReplacementCertificateDraftChangeDTO $updated
      * @return bool
      */
     private function vrmHasChanged(
-        ReplacementCertificateDraft $draft,
+        CertificateReplacementDraft $draft,
         ReplacementCertificateDraftChangeDTO $updated
-    ) {
+    )
+    {
         return $updated->isVrmSet() && strcmp($draft->getVrm(), $updated->getVrm()) != 0;
     }
 
@@ -388,14 +391,15 @@ class ReplacementCertificateDraftUpdater implements TransactionAwareInterface
      * Returns whether the vin in the draft change is different to that of the original
      * ReplacementCertificate
      *
-     * @param ReplacementCertificateDraft          $draft
+     * @param CertificateReplacementDraft $draft
      * @param ReplacementCertificateDraftChangeDTO $updated
      * @return bool
      */
     private function vinHasChanged(
-        ReplacementCertificateDraft $draft,
+        CertificateReplacementDraft $draft,
         ReplacementCertificateDraftChangeDTO $updated
-    ) {
+    )
+    {
         return $updated->isVinSet() && strcmp($draft->getVin(), $updated->getVin()) != 0;
     }
 
@@ -403,17 +407,18 @@ class ReplacementCertificateDraftUpdater implements TransactionAwareInterface
      * Returns whether the expiry date in the draft change is different to that of the original
      * ReplacementCertificate
      *
-     * @param ReplacementCertificateDraft          $draft
+     * @param CertificateReplacementDraft $draft
      * @param ReplacementCertificateDraftChangeDTO $updated
      * @return bool
      */
     private function dateHasChanged(
-        ReplacementCertificateDraft $draft,
+        CertificateReplacementDraft $draft,
         ReplacementCertificateDraftChangeDTO $updated
-    ) {
+    )
+    {
         $oldDate = !empty($draft->getExpiryDate()) ? $draft->getExpiryDate()->format(self::EXPIRY_DATE_FORMAT) : '';
 
         return $updated->isExpiryDateSet() &&
-            strcmp($oldDate, $updated->getExpiryDate()) != 0;
+        strcmp($oldDate, $updated->getExpiryDate()) != 0;
     }
 }

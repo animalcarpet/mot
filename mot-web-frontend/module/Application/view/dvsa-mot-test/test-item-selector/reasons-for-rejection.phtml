@@ -2,7 +2,7 @@
 
 $title = 'Test item selector';
 $this->headTitle($title);
-/** @var \DvsaCommon\Dto\Common\MotTestDto $motTestDetails */
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motTestDetails */
 $motTestNumber = $motTestDetails->getMotTestNumber();
 
 $latestRfrs = $motTestDetails->getReasonsForRejection();

@@ -1,7 +1,13 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace MotTestResultTest\TransportForLondon\Service;
 
+use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
@@ -10,7 +16,6 @@ use DvsaEntities\Entity\Make;
 use DvsaEntities\Entity\Model;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestStatus;
-use DvsaEntities\Entity\OdometerReading;
 use DvsaEntities\Entity\Phone;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\SiteContactType;
@@ -191,10 +196,8 @@ class TransportForLondonMotTestServiceTest extends AbstractServiceTestCase
         $vts->setContact($contactDetail, (new SiteContactType()));
 
         $motTest = new MotTest();
-        $motTest->setMake(new Make());
-        $motTest->setModel(new Model());
         $motTest->setVehicleTestingStation($vts);
-        $motTest->setOdometerReading(new OdometerReading());
+        $motTest->setOdometerResultType(OdometerReadingResultType::NO_ODOMETER);
 
         return $motTest;
     }

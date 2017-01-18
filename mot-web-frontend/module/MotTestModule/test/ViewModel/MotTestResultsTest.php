@@ -7,10 +7,9 @@
 
 namespace Dvsa\Mot\Frontend\MotTestModuleTest\ViewModel;
 
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use DvsaMotTestTest\TestHelper\Fixture;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\MotTestResults;
-use DvsaCommon\Domain\MotTestType;
-use DvsaCommon\Dto\Common\MotTestDto;
-use DvsaCommon\Dto\Common\MotTestTypeDto;
 use DvsaCommon\Enum\MotTestTypeCode;
 use PHPUnit_Framework_TestCase;
 
@@ -25,7 +24,6 @@ class MotTestResultsTest extends PHPUnit_Framework_TestCase
             [null, false],
             [[], false],
             [['generalPass' => null], false],
-            [['generalPass' => 'undefined'], false],
             [['generalPass' => false], true],
             [['generalPass' => true], true],
         ];
@@ -39,8 +37,16 @@ class MotTestResultsTest extends PHPUnit_Framework_TestCase
      */
     public function testIsBrakeTestRecorded($brakeTestResult, $expectedResult)
     {
-        $motTestDto = (new MotTestDto())->setBrakeTestResult($brakeTestResult);
-        $motTestResults = new MotTestResults($motTestDto);
+        $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
+        if($brakeTestResult === null || empty($brakeTestResult)){
+            $testMotTestData->brakeTestResult = $brakeTestResult;
+        } else {
+            $testMotTestData->brakeTestResult = (object) $brakeTestResult;
+        }
+
+        $motTest = new MotTest($testMotTestData);
+
+        $motTestResults = new MotTestResults($motTest, null);
         $this->assertEquals($expectedResult, $motTestResults->isBrakeTestRecorded());
     }
 
@@ -56,7 +62,6 @@ class MotTestResultsTest extends PHPUnit_Framework_TestCase
             [['generalPass' => 'undefined'], false, false],
             [['generalPass' => false], false, true],
             [['generalPass' => true], false, true],
-            [null, true, false],
             [[], true, false],
             [['generalPass' => null], true, false],
             [['generalPass' => 'undefined'], true, false],
@@ -74,11 +79,27 @@ class MotTestResultsTest extends PHPUnit_Framework_TestCase
      */
     public function testIsOriginalBrakeTestRecorded($originalBrakeTestResult, $isOriginalMotTest, $expectedResult)
     {
-        $motTestDto = new MotTestDto();
+        $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
+        $testMotTestData->brakeTestResult = new \StdClass();
+
         if (!$isOriginalMotTest) {
-            $motTestDto->setMotTestOriginal((new MotTestDto())->setBrakeTestResult($originalBrakeTestResult));
+            $originalMotTestTest = Fixture::getMotTestDataVehicleClass4(true);
+            if($originalBrakeTestResult === null || empty($originalBrakeTestResult)){
+                $originalMotTestTest->brakeTestResult = $originalBrakeTestResult;
+            } else {
+                $originalMotTestTest->brakeTestResult = (object) $originalBrakeTestResult;
+            }
+            $motTestResults = new MotTestResults(new MotTest($testMotTestData), new MotTest($originalMotTestTest));
+        } else {
+            $originalMotTestTest = Fixture::getMotTestDataVehicleClass4(true);
+            $originalMotTestTest->motTestOriginalNumber = null;
+            if($originalBrakeTestResult === null || empty($originalBrakeTestResult)) {
+                $originalMotTestTest->brakeTestResult = $originalBrakeTestResult;
+            } else {
+                $originalMotTestTest->brakeTestResult = (object) $originalBrakeTestResult;
+            }
+            $motTestResults = new MotTestResults(new MotTest($testMotTestData), new MotTest($originalMotTestTest));
         }
-        $motTestResults = new MotTestResults($motTestDto);
 
         $this->assertEquals($expectedResult, $motTestResults->isOriginalBrakeTestRecorded());
     }
@@ -86,9 +107,9 @@ class MotTestResultsTest extends PHPUnit_Framework_TestCase
     public function testIsBrakePerformanceNotTested()
     {
         foreach ([true, false] as $isBrakePerformanceNotTested) {
-            $motTestDto = new MotTestDto();
-            $motTestDto->setTesterBrakePerformanceNotTested($isBrakePerformanceNotTested);
-            $motTestResults = new MotTestResults($motTestDto);
+            $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
+            $testMotTestData->testerBrakePerformanceNotTested = $isBrakePerformanceNotTested;
+            $motTestResults = new MotTestResults(new MotTest($testMotTestData));
 
             $this->assertEquals($isBrakePerformanceNotTested, $motTestResults->isBrakePerformanceNotTested());
         }
@@ -222,12 +243,27 @@ class MotTestResultsTest extends PHPUnit_Framework_TestCase
     public function testGetBrakeTestOutcome($originalBrakeTestResult, $brakeTestResult, $isBrakePerformanceNotTested,
                                             $motTestTypeCode, $expectedResult)
     {
-        $motTestDto = new MotTestDto();
-        $motTestDto->setBrakeTestResult($brakeTestResult);
-        $motTestDto->setTesterBrakePerformanceNotTested($isBrakePerformanceNotTested);
-        $motTestDto->setMotTestOriginal((new MotTestDto())->setBrakeTestResult($originalBrakeTestResult));
-        $motTestDto->setTestType((new MotTestTypeDto())->setCode($motTestTypeCode));
-        $motTestResults = new MotTestResults($motTestDto);
+        $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
+        $testMotTestData->testerBrakePerformanceNotTested = $isBrakePerformanceNotTested;
+        $testMotTestData->testTypeCode = $motTestTypeCode;
+        if($brakeTestResult === null || empty($brakeTestResult)){
+            $testMotTestData->brakeTestResult = $brakeTestResult;
+        } else {
+            $testMotTestData->brakeTestResult = (object) $brakeTestResult;
+        }
+
+        $originalMotTestTest = Fixture::getMotTestDataVehicleClass4(true);
+
+        $originalMotTestTest->motTestOriginalNumber = "12345";
+        if($originalBrakeTestResult === null || empty($originalBrakeTestResult)) {
+            $originalMotTestTest->brakeTestResult = $originalBrakeTestResult;
+        } else {
+            $originalMotTestTest->brakeTestResult = (object) $originalBrakeTestResult;
+        }
+
+        $motTestData = new MotTest($testMotTestData);
+        $originalMotTestResult = new MotTest($originalMotTestTest);
+        $motTestResults = new MotTestResults($motTestData, $originalMotTestResult);
 
         $this->assertEquals($expectedResult, $motTestResults->getBrakeTestOutcome());
     }

@@ -1,2 +1,2 @@
-INSERT INTO `licence_type` VALUES 
-(1,'Driving Licence','DRIV',2,'2014-12-04 15:59:09.746112',2,'2015-04-02 15:21:05.411179',1);
+INSERT INTO `licence_type` VALUES
+(1,'Driving Licence','DRIV',1,'2016-12-20 11:02:12.000000',1,'2016-12-20 11:02:12.000000',1);

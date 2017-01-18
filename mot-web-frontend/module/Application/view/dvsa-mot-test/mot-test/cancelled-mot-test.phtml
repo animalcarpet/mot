@@ -4,9 +4,9 @@ use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 
 /**
- * @var \DvsaCommon\Dto\Common\ReasonForCancelDto $cancelReason
+ * @var \Dvsa\Mot\ApiClient\Resource\Item\ReasonForCancel $cancelReason
  */
-/** @var \DvsaCommon\Dto\Common\MotTestDto $motTest */
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motTest */
 $motTest = $this->motTest;
 
 $motTestType = null;
@@ -19,8 +19,9 @@ if ($motTest !== null) {
     $status = strtolower($motTest->getStatus());
     $cancelReason = $motTest->getReasonForCancel();
     $cancelReasonComment = $motTest->getReasonForTerminationComment();
-    $vehicle = $motTest->getVehicle();
-    $motTestType = $motTest->getTestType()->getCode();
+    /** @var \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle $vehicle */
+    $vehicle = $this->vehicle;
+    $motTestType = $motTest->getTestTypeCode();
 }
 
 //  --  title and header    --
@@ -50,7 +51,7 @@ if ($vehicle !== null)  {
     <div class="col-lg-12 ">
         <p>The test has been <?php echo $this->escapeHtml($status); ?> with the following reason: </p>
         <?php if ($cancelReason !== null): ?>
-            <p><strong><?php echo $this->escapeHtml($cancelReason->getReasonInLang()); ?></strong></p>
+            <p><strong><?php echo $this->escapeHtml($cancelReason->getReason()); ?></strong></p>
         <?php endif; ?>
         <?php if ($cancelReasonComment !== null) : ?>
             <p><?php echo $this->escapeHtml($cancelReasonComment); ?> </p>

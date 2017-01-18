@@ -8,6 +8,8 @@
 namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 
 use DateTime;
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsContentBreadcrumbsBuilder;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Defect;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\DefectCollection;
@@ -16,11 +18,11 @@ use Dvsa\Mot\Frontend\MotTestModule\ViewModel\ComponentCategoryCollection;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Constants\Role;
 use DvsaCommon\Domain\MotTestType;
-use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
+use DvsaMotTest\Controller\DvsaVehicleViewModel;
 use Zend\Http\Response;
 use Zend\View\Model\ViewModel;
 
@@ -95,8 +97,11 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
         $motTestNumber = (int) $this->params()->fromRoute('motTestNumber');
         $categoryId = (int) $this->params()->fromRoute('categoryId');
 
-        /** @var MotTestDto $motTest */
+        /** @var MotTest $motTest */
         $motTest = null;
+        /** @var DvsaVehicle $vehicle */
+        $vehicle = null;
+
         $defectCategories = null;
 
         $isDemo = false;
@@ -106,24 +111,26 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
 
         try {
             $motTest = $this->getMotTestFromApi($motTestNumber);
-            $testType = $motTest->getTestType();
-            $isDemo = MotTestType::isDemo($testType->getCode());
-            $isReinspection = MotTestType::isReinspection($testType->getCode());
-            $isNonMotTest = MotTestType::isNonMotTypes($testType->getCode());
-            $isRetest = $motTest->getTestType()->getCode() === MotTestTypeCode::RE_TEST;
+            $vehicle = $this->getVehicleServiceClient()->getDvsaVehicleByIdAndVersion($motTest->getVehicleId(), $motTest->getVehicleVersion());
+            $testType = $motTest->getTestTypeCode();
+            $isDemo = MotTestType::isDemo($testType);
+            $isReinspection = MotTestType::isReinspection($testType);
+            $isRetest = MotTestType::isRetest($testType);
             $defectCategories = $this->getDefectCategories($motTestNumber, $categoryId);
+            $isNonMotTest = MotTestType::isNonMotTypes($testType);
         } catch (RestApplicationException $e) {
             $this->addErrorMessages($e->getDisplayMessages());
+
         }
 
         if (true === $this->isDefectsParent($defectCategories)) {
             return $this->defectsForCategoryAction($motTestNumber, $defectCategories,
-                $motTest, $isDemo, $isReinspection, $categoryId, $isRetest, $isNonMotTest);
+                $motTest, $vehicle, $isDemo, $isReinspection, $categoryId, $isRetest, $isNonMotTest);
         }
 
         $this->enableGdsLayout('Defect categories', '');
 
-        $vehicleFirstUsedDate = $motTest->getVehicle()->getFirstUsedDate();
+        $vehicleFirstUsedDate = $vehicle->getFirstUsedDate();
         $vehicleFirstUsedDate = DateTime::createFromFormat('Y-m-d', $vehicleFirstUsedDate)->format('j M Y');
 
         $breadcrumbs = $this->getBreadcrumbs($isDemo, $isReinspection, $isNonMotTest);
@@ -133,8 +140,8 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
 
         return $this->createViewModel('defects/categories.twig', [
             'motTest' => $motTest,
-            'vehicle' => $motTest->getVehicle(),
-            'vehicleMakeAndModel' => ucwords(strtolower($motTest->getVehicle()->getMakeAndModel())),
+            'vehicle' => $vehicle,
+            'vehicleMakeAndModel' => $vehicle->getMakeAndModel(),
             'vehicleFirstUsedDate' => $vehicleFirstUsedDate,
             'identifiedDefects' => $identifiedDefects,
             'defectCategories' => $defectCategories,
@@ -152,7 +159,8 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
      *
      * @param int                         $motTestNumber
      * @param ComponentCategoryCollection $category
-     * @param MotTestDto                  $motTest
+     * @param MotTest                     $motTest
+     * @param DvsaVehicle                 $vehicle
      * @param bool                        $isDemo
      * @param bool                        $isReinspection
      * @param bool                        $categoryId
@@ -164,7 +172,8 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
     public function defectsForCategoryAction(
         $motTestNumber,
         ComponentCategoryCollection $category,
-        MotTestDto $motTest,
+        MotTest $motTest,
+        DvsaVehicle $vehicle,
         $isDemo,
         $isReinspection,
         $categoryId,
@@ -173,7 +182,7 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
     ) {
         $this->enableGdsLayout('Defects', '');
 
-        $vehicleClassCode = $motTest->getVehicleClass()->getCode();
+        $vehicleClassCode = $vehicle->getVehicleClass()->getCode();
 
         $defects = $this->addInspectionManualReferenceUrls($category->getComponentCategory()->getDefectsCollection(), $vehicleClassCode);
         
@@ -183,15 +192,18 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
         $contentBreadcrumbs = $this->breadcrumbsBuilder->getContentBreadcrumbs($category, $motTestNumber);
 
-        $vehicleFirstUsedDate = $motTest->getVehicle()->getFirstUsedDate();
+        $vehicleFirstUsedDate = $vehicle->getFirstUsedDate();
         $vehicleFirstUsedDate = DateTime::createFromFormat('Y-m-d', $vehicleFirstUsedDate)->format('j M Y');
+
+        $dvsaVehicleViewModel = new DvsaVehicleViewModel($vehicle);
+        $vehicleMakeAndModel = $dvsaVehicleViewModel->getMakeAndModel();
 
         return $this->createViewModel('defects/defects-for-category.twig', [
             'motTest' => $motTest,
             'categoryId' => $categoryId,
             'categoryName' => $category->getComponentCategory()->getName(),
-            'vehicle' => $motTest->getVehicle(),
-            'vehicleMakeAndModel' => ucwords(strtolower($motTest->getVehicle()->getMakeAndModel())),
+            'vehicle' => $vehicle,
+            'vehicleMakeAndModel' => $vehicleMakeAndModel,
             'vehicleFirstUsedDate' => $vehicleFirstUsedDate,
             'defects' => $defects->getDefects(),
             'contentBreadcrumbs' => $contentBreadcrumbs,

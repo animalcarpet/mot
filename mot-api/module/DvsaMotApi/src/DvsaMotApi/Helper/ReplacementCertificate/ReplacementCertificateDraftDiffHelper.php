@@ -1,53 +1,29 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApi\Helper\ReplacementCertificate;
 
 use DvsaCommon\Date\DateTimeApiFormat;
-use DvsaEntities\Entity\OdometerReading;
-use DvsaEntities\Entity\ReplacementCertificateDraft;
+use DvsaEntities\Entity\CertificateReplacementDraft;
 
 /**
  * Class ReplacementCertificateDraftDiffHelper
- *
- * @package DvsaMotApi\Helper\ReplacementCertificate
  */
 class ReplacementCertificateDraftDiffHelper
 {
-
-    /**
-     * @param OdometerReading $x
-     * @param OdometerReading $y
-     *
-     * @return bool
-     */
-    private static function areOdometerReadingsEqual(OdometerReading $x = NULL, OdometerReading $y = NULL)
-    {
-        if (!$x && $y) {
-            return FALSE;
-        }
-
-        if ($x && !$y) {
-            return FALSE;
-        }
-
-        if (!$x && !$y) {
-            return TRUE;
-        }
-
-        return $x->getValue() === $y->getValue()
-        && $x->getUnit() === $y->getUnit()
-        && $x->getResultType() === $y->getResultType();
-    }
-
     /**
      * Returns a list of properties on a draft that are different
      * from these on a MOT test associaciated with it
      *
-     * @param ReplacementCertificateDraft $draft
+     * @param CertificateReplacementDraft $draft
      *
      * @return array
      */
-    public static function getDiff(ReplacementCertificateDraft $draft)
+    public static function getDiff(CertificateReplacementDraft $draft)
     {
         $data = [];
         $motTest = $draft->getMotTest();
@@ -61,7 +37,11 @@ class ReplacementCertificateDraftDiffHelper
         if ($draftSecondary !== $testSecondary) {
             $data [] = 'secondaryColour';
         }
-        if (!self::areOdometerReadingsEqual($draft->getOdometerReading(), $motTest->getOdometerReading())) {
+        if (
+            $draft->getOdometerUnit() !== $motTest->getOdometerUnit() ||
+            $draft->getOdometerResultType() !== $motTest->getOdometerResultType() ||
+            $draft->getOdometerValue() !== $motTest->getOdometerValue()
+        ) {
             $data [] = 'odometerReading';
         }
 

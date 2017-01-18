@@ -1,9 +1,14 @@
 <?php
+/**
+ * This file is part of the DVSA MOT Frontend project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotTest\Model;
 
 use DvsaCommon\Constants\OdometerReadingResultType;
-use DvsaCommon\Dto\Common\OdometerReadingDTO;
+use DvsaCommon\Constants\OdometerUnit;
 
 /**
  * Class OdometerReadingViewObject
@@ -15,16 +20,104 @@ class OdometerReadingViewObject
     const IS_NOT_RECORDED = "Not recorded";
     const IS_NOT_READABLE = "Unreadable";
     const IS_NOT_PRESENT = "Missing";
-    const MILES = 'mi';
-    const KILOMETERS = 'km';
 
-    private $readingValuesMap;
+    private $unitMap = [
+      OdometerUnit::MILES => 'miles',
+      OdometerUnit::KILOMETERS => 'km',
+    ];
+
     private $notices = [];
+
+    /**
+     * @var bool
+     */
     private $modifiable = true;
 
-    public static function create()
+    /**
+     * @var integer
+     */
+    private $value;
+
+    /**
+     * @var string
+     */
+    private $unit;
+
+    /**
+     * @var string
+     */
+    private $resultType;
+
+
+    /**
+     * @param int $value
+     * @param string $unit
+     * @param string $resultType
+     * @return OdometerReadingViewObject
+     */
+    public static function create($value, $unit, $resultType = OdometerReadingResultType::OK)
     {
-        return new OdometerReadingViewObject();
+        $odometerViewObject = new OdometerReadingViewObject();
+
+        $odometerViewObject->setValue($value);
+        $odometerViewObject->setUnit($unit);
+        $odometerViewObject->setResultType($resultType);
+
+        return $odometerViewObject;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param int $value
+     * @return OdometerReadingViewObject
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUnit()
+    {
+        return $this->unit;
+    }
+
+    /**
+     * @param string $unit
+     * @return OdometerReadingViewObject
+     */
+    public function setUnit($unit)
+    {
+        $this->unit = $unit;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getResultType()
+    {
+        return $this->resultType;
+    }
+
+    /**
+     * @param string $resultType
+     * @return OdometerReadingViewObject
+     */
+    public function setResultType($resultType)
+    {
+        $this->resultType = $resultType;
+        return $this;
     }
 
     public function setModifiable($modifiable)
@@ -34,21 +127,9 @@ class OdometerReadingViewObject
         return $this;
     }
 
-    public function getModifiable()
+    public function isModifiable()
     {
         return $this->modifiable;
-    }
-
-    /**
-     * @param $valuesMap
-     *
-     * @return $this
-     */
-    public function setOdometerReadingValuesMap($valuesMap)
-    {
-        $this->readingValuesMap = $valuesMap ?: [];
-
-        return $this;
     }
 
     /**
@@ -72,30 +153,7 @@ class OdometerReadingViewObject
     {
         return !empty($this->notices);
     }
-
-    public function getValue()
-    {
-        if (is_object($this->readingValuesMap)) {
-            /** @var OdometerReadingDTO $readingValue */
-            $readingValue = $this->readingValuesMap;
-
-            return $readingValue->getValue();
-        } else {
-            return isset($this->readingValuesMap['value']) ? $this->readingValuesMap['value'] : null;
-        }
-    }
-
-    public function getUnit()
-    {
-        if (is_object($this->readingValuesMap)) {
-            /** @var OdometerReadingDTO $readingValue */
-            $readingValue = $this->readingValuesMap;
-
-            return $readingValue->getUnit();
-        } else {
-            return isset($this->readingValuesMap['unit']) ? $this->readingValuesMap['unit'] : null;
-        }
-    }
+    
 
     public function getUnitName()
     {
@@ -114,18 +172,6 @@ class OdometerReadingViewObject
     public function isInKilometers()
     {
         return $this->getUnit() === self::KILOMETERS;
-    }
-
-    public function getResultType()
-    {
-        if (is_object($this->readingValuesMap)) {
-            /** @var OdometerReadingDTO $readingValue */
-            $readingValue = $this->readingValuesMap;
-
-            return $readingValue->getResultType();
-        } else {
-            return isset($this->readingValuesMap['resultType']) ? $this->readingValuesMap['resultType'] : null;
-        }
     }
 
     public function isNotRecorded()
@@ -150,33 +196,27 @@ class OdometerReadingViewObject
 
     public function getDisplayValue()
     {
-        if ($this->readingValuesMap != null) {
-            if (is_object($this->readingValuesMap)) {
-                /** @var OdometerReadingDTO $readingValue */
-                $readingValue = $this->readingValuesMap;
-                $value = $readingValue->getValue();
-                $unit = $readingValue->getUnit();
-                $type = $readingValue->getResultType();
-            } else {
-                $value = $this->readingValuesMap['value'];
-                $unit = $this->readingValuesMap['unit'];
-                $type = $this->readingValuesMap['resultType'];
-            }
+        if ($this->isOdometerReadingRecoded()) {
 
-            if ($unit == 'mi') {
-                $unit = 'miles';
-            }
-
-            switch ($type) {
+            switch ($this->getResultType()) {
                 case OdometerReadingResultType::NOT_READABLE:
                     return self::IS_NOT_READABLE;
                 case OdometerReadingResultType::NO_ODOMETER:
                     return self::IS_NOT_PRESENT;
                 default:
-                    return "$value $unit";
+                    return sprintf("%s %s", $this->getValue() , $this->unitMap[$this->getUnit()]);
             }
         } else {
             return self::IS_NOT_RECORDED;
         }
+    }
+
+    private function isOdometerReadingRecoded()
+    {
+        $recordedValueAndUnit = !is_null($this->getValue()) && !is_null($this->getUnit());
+        $recordedResultType = !is_null($this->getResultType()) &&
+            $this->getResultType() != OdometerReadingResultType::OK;
+
+        return $recordedValueAndUnit or $recordedResultType;
     }
 }

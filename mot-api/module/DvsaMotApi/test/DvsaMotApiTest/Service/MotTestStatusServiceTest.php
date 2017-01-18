@@ -1,7 +1,14 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
+
 namespace DvsaMotApiTest\Service;
 
 use DvsaCommon\Auth\PermissionInSystem;
+use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Constants\ReasonForRejection as ReasonForRejectionConstants;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
@@ -9,7 +16,6 @@ use DvsaEntities\Entity\BrakeTestResultClass12;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\MotTestType;
-use DvsaEntities\Entity\OdometerReading;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\ReasonForRejection;
 use DvsaMotApi\Service\MotTestStatusService;
@@ -145,7 +151,8 @@ class MotTestStatusServiceTest extends \DvsaCommonApiTest\Service\AbstractServic
         $motTest->setMotTestType((new MotTestType())->setCode(MotTestTypeCode::NORMAL_TEST));
 
         if (!empty($options['odometerReading'])) {
-            $motTest->setOdometerReading(new OdometerReading());
+            $motTest->setOdometerValue(666);
+            $motTest->setOdometerUnit(OdometerUnit::KILOMETERS);
         }
 
         if (!empty($options['hasBrakeTestResult'])) {

@@ -8,13 +8,17 @@ use Doctrine\ORM\EntityRepository;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\FeatureToggle;
+use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaElasticSearch\Service\ElasticSearchService;
 use DvsaEntities\DqlBuilder\SearchParam\MotTestSearchParam;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
+use DvsaEntities\Entity\MotTestCancelled;
 use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\Organisation;
+use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\SiteRepository;
 use DvsaFeature\FeatureToggles;
@@ -224,23 +228,34 @@ class ElasticSearchServiceTest extends PHPUnit_Framework_TestCase
             ->method("getName")
             ->willReturn(MotTestStatusName::ABORTED);
 
+        $model = (new Model())->setName('Clio');
+        $model->setMake((new Make())->setName('Renault'));
+
+        $modelDetail = new ModelDetail();
+        $modelDetail->setModel($model);
+
+        $vehicle = new Vehicle();
+        $vehicle->setVersion(1);
+        $vehicle->setColour((new Colour())->setName('Black'));
+        $vehicle->setRegistration('FNZ6110');
+        $vehicle->setVin('1M8GDM9AXKP042788');
+        $vehicle->setModelDetail($modelDetail);
+
+        $motTestCancelled = new MotTestCancelled();
+        $motTestCancelled->setMotTestReasonForCancel(
+            (new MotTestReasonForCancel())->setReason([])
+        );
+
         $motTest = new MotTest();
         $motTest
+            ->setVehicleVersion(1)
             ->setId(1)
             ->setNumber($motTestNumber)
             ->setStatus($status)
-            ->setPrimaryColour((new Colour())->setName('Black'))
             ->setHasRegistration(1)
-            ->setOdometerReading(
-                (new OdometerReading())
-                    ->setResultType(OdometerReadingResultType::OK)
-                    ->setValue(10000)
-                    ->setUnit('mi')
-            )
-            ->setVin('1M8GDM9AXKP042788')
-            ->setRegistration('FNZ6110')
-            ->setMake((new Make())->setName('Renault'))
-            ->setModel((new Model())->setName('Clio'))
+            ->setOdometerValue(10000)
+            ->setOdometerUnit(OdometerUnit::MILES)
+            ->setOdometerResultType(OdometerReadingResultType::OK)
             ->setMotTestType((new MotTestType())->setDescription($blah))
             ->setVehicleTestingStation(
                 (new Site())
@@ -249,8 +264,9 @@ class ElasticSearchServiceTest extends PHPUnit_Framework_TestCase
             )
             ->setTester((new Person())->setUsername('tester1'))
             ->setStartedDate(DateUtils::toDateTime('2011-01-01T11:11:11Z'))
-            ->setMotTestReasonForCancel((new MotTestReasonForCancel())->setReason([]))
-        ;
+            ->setMotTestCancelled($motTestCancelled)
+            ->setVehicle($vehicle);
+
 
         return $motTest;
     }

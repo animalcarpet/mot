@@ -2,6 +2,8 @@
 namespace DvsaMotTest\Controller;
 
 use Core\Controller\AbstractAuthActionController;
+use Dvsa\Mot\ApiClient\Service\MotTestService;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
@@ -9,7 +11,6 @@ use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaCommon\Utility\ArrayUtils;
-use Zend\Session\Container;
 
 /**
  * Class AbstractDvsaMotTestController
@@ -22,6 +23,42 @@ abstract class AbstractDvsaMotTestController extends AbstractAuthActionControlle
      * @var \Zend\Session\Container
      */
     protected $motSession;
+
+    /**
+     * @var MotTestService
+     */
+    protected $motTestServiceClient;
+
+    /**
+     * @return VehicleService
+     */
+    protected $vehicleServiceClient;
+
+    /**
+     * @return VehicleService
+     */
+    protected function getVehicleServiceClient()
+    {
+        if (!$this->vehicleServiceClient) {
+            $sm = $this->getServiceLocator();
+            $this->vehicleServiceClient = $sm->get(VehicleService::class);
+        }
+
+        return $this->vehicleServiceClient;
+    }
+
+    /**
+     * @return MotTestService
+     */
+    protected function getMotTestServiceClient()
+    {
+        if (!$this->motTestServiceClient) {
+            $sm = $this->getServiceLocator();
+            $this->motTestServiceClient = $sm->get(MotTestService::class);
+        }
+
+        return $this->motTestServiceClient;
+    }
 
     protected function getSession()
     {
@@ -79,18 +116,9 @@ abstract class AbstractDvsaMotTestController extends AbstractAuthActionControlle
         return $name;
     }
 
-    /**
-     * @param $motTestNumber
-     * @return MotTestDto | null
-     */
     protected function getMotTestFromApi($motTestNumber)
     {
-        $apiUrl = MotTestUrlBuilder::motTest($motTestNumber)->toString();
-        $result = $this->getRestClient()->get($apiUrl);
-
-        $data = ArrayUtils::tryGet($result, 'data');
-
-        return $data;
+        return $this->getMotTestServiceClient()->getMotTestByTestNumber($motTestNumber);
     }
 
     protected function getMotTestStatusFromApi($motTestNumber)
@@ -114,7 +142,6 @@ abstract class AbstractDvsaMotTestController extends AbstractAuthActionControlle
     }
 
 
-
     protected function getMotTestShortSummaryFromApi($motTestNumber)
     {
         $urlBuilder = UrlBuilder::of()->motTest()->routeParam("motTestNumber", $motTestNumber)->motTestShortSummary();
@@ -129,7 +156,7 @@ abstract class AbstractDvsaMotTestController extends AbstractAuthActionControlle
 
     /**
      * @param null $motTestNumber
-     * @return MotTestDto | null
+     * @return MotTest | null
      */
     public function tryGetMotTestOrAddErrorMessages($motTestNumber = null)
     {

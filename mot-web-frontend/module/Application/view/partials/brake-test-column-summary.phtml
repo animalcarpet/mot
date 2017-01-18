@@ -3,29 +3,48 @@
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Utility\ArrayUtils;
 
-/** @var \DvsaCommon\Dto\Vehicle\VehicleDto $vehicle */
+/** @var \DvsaMotTest\Controller\DvsaVehicleViewModel $vehicle */
 $vehicle = $this->vehicle;
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass1And2 | \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove $brakeResult */
 $brakeResult = $this->brakeResult;
 
 if (empty($brakeResult)) {
     return;
 }
 
+$vehicleClass = $vehicle->getVehicleClass()->getCode();
+
 $vehicleClasses3plus = [VehicleClassCode::CLASS_3, VehicleClassCode::CLASS_4, VehicleClassCode::CLASS_5, VehicleClassCode::CLASS_7];
 
-$hasTwoServiceBrakes = ArrayUtils::tryGet($brakeResult, 'serviceBrake2Efficiency', false);
+if(!in_array($vehicleClass, [VehicleClassCode::CLASS_1, VehicleClassCode::CLASS_2])){
+    $hasTwoServiceBrakes = !is_null($brakeResult->getServiceBrake2Efficiency()) ? $brakeResult->getServiceBrake2Efficiency() : false;
+    $isSingleInFront = !is_null($brakeResult->getSingleInFront()) ? $brakeResult->getSingleInFront() : false;
+}
 
-$isSingleInFront = ArrayUtils::tryGet($brakeResult, 'isSingleInFront');
 ?>
 
 <div class="row">
 
 <?php
-$vehicleClass = $vehicle->getClassCode();
+$vehicleClass = $vehicle->getVehicleClass()->getCode();
 
 if (in_array($vehicleClass, [VehicleClassCode::CLASS_1, VehicleClassCode::CLASS_2])) :
     for ($brakeNr = 1; $brakeNr <= 2; $brakeNr++) {
         $key = 'control' . $brakeNr;
+
+        $brakeEfficiencyValue = null;
+        $lockPercentValue = null;
+        $testPassValue = null;
+
+        if($brakeNr === 1){
+            $brakeEfficiencyValue = !is_null($brakeResult->getControl1BrakeEfficiency()) ? $brakeResult->getControl1BrakeEfficiency() : null;
+            $lockPercentValue = !is_null($brakeResult->getControl1LockPercent()) ? $brakeResult->getControl1LockPercent() : null;
+            $testPassValue = !is_null($brakeResult->getControl1EfficiencyPass()) ? $brakeResult->getControl1EfficiencyPass() : null;
+        } elseif($brakeNr === 2) {
+            $brakeEfficiencyValue = !is_null($brakeResult->getControl2BrakeEfficiency()) ? $brakeResult->getControl2BrakeEfficiency() : null;
+            $lockPercentValue = !is_null($brakeResult->getControl2LockPercent()) ? $brakeResult->getControl2LockPercent() : null;
+            $testPassValue = !is_null($brakeResult->getControl2BrakeEfficiencyPass()) ? $brakeResult->getControl2BrakeEfficiencyPass() : null;
+        }
 
         echo $this->partial(
             'brakeTestResult',
@@ -36,14 +55,14 @@ if (in_array($vehicleClass, [VehicleClassCode::CLASS_1, VehicleClassCode::CLASS_
                 'rows'        => [
                     [
                         'name'  => 'Brake efficiency',
-                        'value' => ArrayUtils::tryGet($brakeResult, $key . 'BrakeEfficiency'),
+                        'value' => $brakeEfficiencyValue,
                     ],
                     [
                         'name'  => 'Brake lock',
-                        'value' => ArrayUtils::tryGet($brakeResult, $key . 'LockPercent'),
+                        'value' => $lockPercentValue,
                     ],
                 ],
-                'testPass'    => ArrayUtils::tryGet($brakeResult, $key . 'EfficiencyPass'),
+                'testPass'    => $testPassValue,
                 'resultText'  => 'Service brake control ' . $brakeNr . ' test',
             ]
         );
@@ -52,14 +71,33 @@ if (in_array($vehicleClass, [VehicleClassCode::CLASS_1, VehicleClassCode::CLASS_
 elseif (in_array($vehicleClass, $vehicleClasses3plus)) :
     $imbalanceData = [];
 
+    if($brakeResult->getServiceBrake1Data() !== null) {
+        /** @var \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultServiceBrakeData $serviceBrake1Data */
+        $serviceBrake1Data = new \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultServiceBrakeData($brakeResult->getServiceBrake1Data());
+    }
+
+    if($brakeResult->getServiceBrake2Data() !== null) {
+        /** @var \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultServiceBrakeData $serviceBrake2Data */
+        $serviceBrake2Data = new \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultServiceBrakeData($brakeResult->getServiceBrake2Data());
+    }
+
     for ($brakeNr = 1; $brakeNr <= 2; $brakeNr++) {
+        $serviceBrakeEfficiency = null;
+        $lockPercentValue = null;
+        $testPassValue = null;
         //  --  draw service brake result   --
         $key = 'serviceBrake' . $brakeNr;
+        if($brakeNr === 1){
+            $serviceBrakeEfficiency = !is_null($brakeResult->getServiceBrake1Efficiency()) ? $brakeResult->getServiceBrake1Efficiency() : null;
+            $lockPercentValue = !is_null($serviceBrake1Data) ? $serviceBrake1Data->getLockPercent() : null;
+            $testPassValue = !is_null($brakeResult->getServiceBrake1EfficiencyPass()) ? $brakeResult->getServiceBrake1EfficiencyPass() : null;
+        } elseif($brakeResult->getServiceBrake2Data() != null){
+            $serviceBrakeEfficiency = !is_null($brakeResult->getServiceBrake2Efficiency()) ? $brakeResult->getServiceBrake2Efficiency() : null;
+            $lockPercentValue = !is_null($serviceBrake2Data) ? $serviceBrake2Data->getLockPercent() : null;
+            $testPassValue = !is_null($brakeResult->getServiceBrake2EfficiencyPass()) ? $brakeResult->getServiceBrake2EfficiencyPass() : null;
+        }
 
-        $efficiency = ArrayUtils::tryGet($brakeResult, $key . 'Efficiency');
-        $brakeData = ArrayUtils::tryGet($brakeResult, $key. 'Data');
-
-        if ($efficiency !== null) {
+        if ($serviceBrakeEfficiency !== null) {
             $title = 'Service brake' . ($brakeNr > 1 ? ' ' . $brakeNr : '');
 
             echo $this->partial(
@@ -71,14 +109,14 @@ elseif (in_array($vehicleClass, $vehicleClasses3plus)) :
                     'rows'        => [
                         [
                             'name'  => 'Brake efficiency',
-                            'value' => $efficiency,
+                            'value' => $serviceBrakeEfficiency,
                         ],
                         [
                             'name'  => 'Brake lock',
-                            'value' => ArrayUtils::tryGet($brakeData, 'lockPercent'),
+                            'value' => $lockPercentValue,
                         ],
                     ],
-                    'testPass'    => ArrayUtils::tryGet($brakeResult, $key . 'EfficiencyPass'),
+                    'testPass'    => $testPassValue,
                     'resultText'  => 'Service brake test',
                 ]
             );
@@ -89,7 +127,17 @@ elseif (in_array($vehicleClass, $vehicleClasses3plus)) :
             $brakeName = ($hasTwoServiceBrakes ? 'Brake' . ' ' . $brakeNr : '');
 
             for ($axleNr = 1; $axleNr <= 3; $axleNr++) {
-                $isData = ArrayUtils::tryGet($brakeData, 'effortNearsideAxle' . $axleNr) !== null;
+                if($axleNr === 1){
+                    $effortNearsideAxle = !is_null($serviceBrake1Data->getEffortNearsideAxel1()) ? $serviceBrake1Data->getEffortNearsideAxel1() : null;
+                    $imbalanceAxle = !is_null($serviceBrake1Data->getImbalanceAxle1()) ? $serviceBrake1Data->getImbalanceAxle1(): null;
+                } elseif($axleNr === 2) {
+                    $effortNearsideAxle = !is_null($serviceBrake1Data->getEffortNearsideAxel2()) ? $serviceBrake1Data->getEffortNearsideAxel2() : null;
+                    $imbalanceAxle = !is_null($serviceBrake1Data->getImbalanceAxle2()) ? $serviceBrake1Data->getImbalanceAxle2() : null;
+                } else {
+                    $effortNearsideAxle = !is_null($serviceBrake1Data->getEffortNearsideAxel3()) ? $serviceBrake1Data->getEffortNearsideAxel3() : null;
+                    $imbalanceAxle = !is_null($serviceBrake1Data->getImbalanceAxle3()) ? $serviceBrake1Data->getImbalanceAxle3(): null;
+                }
+                $isData = $effortNearsideAxle!== null;
 
                 $isOneWheelAxle = ($isSingleInFront === true && $axleNr === 1)
                     || ($isSingleInFront === false && $axleNr === 2);
@@ -97,7 +145,7 @@ elseif (in_array($vehicleClass, $vehicleClasses3plus)) :
                 if ($isData && !$isOneWheelAxle) {
                     $imbalanceData[] = [
                         'name'  => trim($brakeName . ' ' . 'Axle') . ' ' . $axleNr,
-                        'value' => ArrayUtils::tryGet($brakeData, 'imbalanceAxle' . $axleNr),
+                        'value' => $imbalanceAxle,
                     ];
                 }
             }
@@ -105,32 +153,40 @@ elseif (in_array($vehicleClass, $vehicleClasses3plus)) :
     }
 
     //  --  imbalance:parking   --
-    $showParkingBrakeImbalance = ArrayUtils::tryGet($brakeResult, 'serviceBrakeIsSingleLine', false);
+    $showParkingBrakeImbalance = $brakeResult->getServiceBrakeIsSingleLine();
 
     $showAxleTwoParkingBrakeImbalance = $showParkingBrakeImbalance
-        && !empty($brakeResult['parkingBrakeSecondaryImbalance']);
+        && !empty($brakeResult->getParkingBrakeSecondaryImbalance());
 
     if ($showParkingBrakeImbalance) {
         $imbalanceData [] = [
             'name'  => $showAxleTwoParkingBrakeImbalance ? 'Parking brake axle 1' : 'Parking brake',
-            'value' => ArrayUtils::tryGet($brakeResult, 'parkingBrakeImbalance'),
+            'value' => $brakeResult->getParkingBrakeImbalancePass(),
         ];
     }
 
     if ($showAxleTwoParkingBrakeImbalance) {
         $imbalanceData [] = [
             'name'  => 'Parking brake axle 2',
-            'value' => ArrayUtils::tryGet($brakeResult, 'parkingBrakeSecondaryImbalance'),
+            'value' => $brakeResult->getParkingBrakeSecondaryImbalance(),
         ];
     }
 
     //  --  imbalance:status   --
-    $serviceBrake1Data = ArrayUtils::tryGet($brakeResult, 'serviceBrake1Data');
-    $serviceBrake2Data = ArrayUtils::tryGet($brakeResult, 'serviceBrake2Data');
+    $serviceBrake1ImbalancePass = null;
+    $serviceBrake2ImbalancePass = null;
+    if ($showAxleTwoParkingBrakeImbalance) {
+        $parkingBrakeImbalancePass = $brakeResult->getParkingBrakeImbalancePass();
+    } else {
+        $parkingBrakeImbalancePass = null;
+    }
 
-    $serviceBrake1ImbalancePass = ArrayUtils::tryGet($serviceBrake1Data, 'imbalancePass');
-    $serviceBrake2ImbalancePass = ArrayUtils::tryGet($serviceBrake2Data, 'imbalancePass');
-    $parkingBrakeImbalancePass = ArrayUtils::tryGet($brakeResult, 'parkingBrakeImbalancePass');
+    if($serviceBrake1Data != null) {
+        $serviceBrake1ImbalancePass = $serviceBrake1Data->getImbalancePass();
+    }
+    if($serviceBrake2Data != null) {
+        $serviceBrake2ImbalancePass = $serviceBrake2Data->getImbalancePass();
+    }
 
     $isTestPass = (
         $serviceBrake1ImbalancePass === null
@@ -170,14 +226,14 @@ elseif (in_array($vehicleClass, $vehicleClasses3plus)) :
             'rows'        => [
                 [
                     'name'  => 'Brake efficiency',
-                    'value' => ArrayUtils::tryGet($this->brakeResult, 'parkingBrakeEfficiency'),
+                    'value' => $brakeResult->getParkingBrakeEfficiency(),
                 ],
                 [
                     'name'  => 'Brake lock',
-                    'value' => ArrayUtils::tryGet($this->brakeResult, 'parkingBrakeLockPercent'),
+                    'value' => $brakeResult->getParkingBrakeLockPercent(),
                 ]
             ],
-            'testPass'    => $this->brakeResult['parkingBrakeEfficiencyPass'],
+            'testPass'    => $brakeResult->getParkingBrakeEfficiencyPass(),
             'resultText'  => 'Parking brake test',
         ]
     );

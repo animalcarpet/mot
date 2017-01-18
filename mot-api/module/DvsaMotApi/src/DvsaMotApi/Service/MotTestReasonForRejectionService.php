@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApi\Service;
 
@@ -15,8 +20,12 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonApi\Service\Exception\RequiredFieldException;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestReasonForRejection;
+use DvsaEntities\Entity\MotTestReasonForRejectionComment;
+use DvsaEntities\Entity\MotTestReasonForRejectionDescription;
+use DvsaEntities\Entity\MotTestReasonForRejectionLocation;
 use DvsaEntities\Entity\MotTestReasonForRejectionMarkedAsRepaired;
 use DvsaEntities\Entity\ReasonForRejection;
+use DvsaEntities\Entity\ReasonForRejectionType;
 use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Service\Validator\MotTestValidator;
 
@@ -122,10 +131,24 @@ class MotTestReasonForRejectionService extends AbstractService
         }
 
         if ($this->motTestValidator->validateMotTestReasonForRejection($rfr)) {
+
+            $tempComment = $rfr->popComment();
+            $tempDescription = $rfr->popDescription();
+
             $this->entityManager->persist($rfr);
             $this->entityManager->flush();
 
-            return $rfr->getId();
+            if ($tempComment instanceof MotTestReasonForRejectionComment) {
+                $tempComment->setId($rfr->getId());
+                $this->entityManager->persist($tempComment);
+                $this->entityManager->flush();
+            }
+
+            if ($tempDescription instanceof MotTestReasonForRejectionDescription) {
+                $tempDescription->setId($rfr->getId());
+                $this->entityManager->persist($tempDescription);
+                $this->entityManager->flush();
+            }
         }
 
         return $rfr->getId();
@@ -158,11 +181,11 @@ class MotTestReasonForRejectionService extends AbstractService
         $comment = ArrayUtils::tryGet($data, 'comment');
         $failureDangerous = ArrayUtils::tryGet($data, 'failureDangerous', false);
 
-        $rfr->setLocationLateral($locationLateral)
-            ->setLocationLongitudinal($locationLongitudinal)
-            ->setLocationVertical($locationVertical)
-            ->setComment($comment)
-            ->setFailureDangerous($failureDangerous);
+        $location = $this->fetchLocation($locationLateral, $locationLongitudinal,$locationVertical);
+
+        $rfr->setLocation($location)
+            ->setFailureDangerous($failureDangerous)
+            ->getMotTestReasonForRejectionComment()->setComment($comment);
 
         if (!$this->isTrainingTest($motTest)) {
             $this->checkPermissionsForRfr($rfr);
@@ -201,15 +224,24 @@ class MotTestReasonForRejectionService extends AbstractService
         $failureDangerous = ArrayUtils::tryGet($data, 'failureDangerous', false);
         $generated = ArrayUtils::tryGet($data, 'generated', false);
 
+        $location = $this->fetchLocation($locationLateral, $locationLongitudinal,$locationVertical);
+
+        $rfrType = $this->getEntityManager()->getRepository(ReasonForRejectionType::class)->findOneBy(
+            ['reasonForRejectionType' => $type]
+        );
+
         $motTestRfr = new MotTestReasonForRejection();
         $motTestRfr->setMotTest($motTest)
-            ->setType($type)
-            ->setLocationLateral($locationLateral)
-            ->setLocationLongitudinal($locationLongitudinal)
-            ->setLocationVertical($locationVertical)
-            ->setComment($comment)
+            ->setType($rfrType)
+            ->setLocation($location)
             ->setFailureDangerous($failureDangerous)
             ->setGenerated($generated);
+
+        if (!is_null($comment)) {
+            $motTestRfr->setMotTestReasonForRejectionComment(
+                (new MotTestReasonForRejectionComment())->setComment($comment)
+            );
+        }
 
         // this will be removed in future, when db schema is updated...
         if ($rfrId !== null) {
@@ -224,7 +256,11 @@ class MotTestReasonForRejectionService extends AbstractService
             // "Custom description" field is capped to 100 characters.
             $customDescription = (true === $this->featureToggles->isEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS))
                 ? substr($comment, 0, 100) : $comment;
-            $motTestRfr->setCustomDescription($customDescription);
+
+            $description = new MotTestReasonForRejectionDescription();
+            $description->setCustomDescription($customDescription);
+
+            $motTestRfr->setCustomDescription($description);
         }
 
         return $motTestRfr;
@@ -396,5 +432,28 @@ class MotTestReasonForRejectionService extends AbstractService
         $testTypeCode = $motTest->getMotTestType()->getCode();
 
         return $testTypeCode == MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING ? true : false;
+    }
+
+    /**
+     * @param string $lateral
+     * @param string $longitudinal
+     * @param string $vertical
+     * @return MotTestReasonForRejectionLocation
+     */
+    private function fetchLocation($lateral, $longitudinal, $vertical)
+    {
+        $location = $this->getEntityManager()->getRepository(MotTestReasonForRejectionLocation::class)->getLocation(
+            $lateral, $longitudinal, $vertical
+        );
+
+        if (!$location) {
+
+            $location = new MotTestReasonForRejectionLocation();
+            $location->setLateral($lateral)
+                ->setLongitudinal($longitudinal)
+                ->setVertical($vertical);
+        }
+
+        return $location;
     }
 }

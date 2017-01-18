@@ -48,9 +48,9 @@ class ReplacementCertificateDraftChangeDTOTest extends PHPUnit_Framework_TestCas
         $this->assertEquals($data['model'], $change->getModel());
         $this->assertEquals($data['reasonForReplacement'], $change->getReasonForReplacement());
         $this->assertEquals($data['reasonForDifferentTester'], $change->getReasonForDifferentTester());
-        $this->assertEquals($data['odometerReading']['value'], $change->getOdometerReading()->getValue());
-        $this->assertEquals($data['odometerReading']['unit'], $change->getOdometerReading()->getUnit());
-        $this->assertEquals($data['odometerReading']['resultType'], $change->getOdometerReading()->getResultType());
+        $this->assertEquals($data['odometerReading']['value'], $change->getOdometerValue());
+        $this->assertEquals($data['odometerReading']['unit'], $change->getOdometerUnit());
+        $this->assertEquals($data['odometerReading']['resultType'], $change->getOdometerResultType());
         $this->assertEquals($data['customMake'], $change->getCustomMake());
         $this->assertEquals($data['customModel'], $change->getCustomModel());
     }

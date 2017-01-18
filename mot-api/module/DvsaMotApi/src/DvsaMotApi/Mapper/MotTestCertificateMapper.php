@@ -71,6 +71,7 @@ class MotTestCertificateMapper extends AbstractMotTestMapper
         $this->mapVehicleDetail();
 
         $this->mapOdometers();
+
         $this->mapAdvisories();
 
         $this->mapExpiryDate();
@@ -94,10 +95,14 @@ class MotTestCertificateMapper extends AbstractMotTestMapper
             return;
         }
 
-        /** @var \DvsaCommon\Dto\Common\OdometerReadingDTO $value */
+        /** @var \DvsaCommon\Dto\Common\OdometerReadingDto $reading */
         $result = [];
-        foreach ($readings as $value) {
-            $result[] = $this->formatDate($value->getIssuedDate(), 'j n Y') . ': ' . $this->formatOdometer($value);
+        foreach ($readings as $reading) {
+            $result[] = sprintf(
+                '%s: %s',
+                $this->formatDate($reading->getIssuedDate(), 'j n Y'),
+                $this->formatOdometer($reading->getValue(), $reading->getUnit(), $reading->getResultType())
+            );
         }
 
         $this->setValue(self::REP_VAR_ODOMETER_HISTORY, join(PHP_EOL, $result));

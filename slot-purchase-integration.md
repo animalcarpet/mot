@@ -38,7 +38,6 @@ Follow this steps to integrate the slot purchase backend module to the `mot-api`
             ]
 * Run `composer.phar update` to load dependencies
 * Add `CpmsClient` and `SlotPurchaseApi` to `application.config.php` to enable the modules
-* Copy config file from `vendor\slot-purchase\backend-api\config\autoload\slot-purchase-config.global.php.dist` to `config\autoload`, rename the file to
 `slot-purchase-config.global.php` and provide the require configurations.
 * Run SQL scripts in the scripts directory (integrate with MOT Db setup script
 * Modify DvsaEntities/Entity/TestSlotTransaction.php add attribute `salesReference` with getters and setters
@@ -77,7 +76,6 @@ MOT Organisation module:
             ]
 * Run `composer.phar update` to load dependencies
 * Add `CpmsForm`, `CpmsClient` and `SlotPurchase` to `application.config.php` to enable the modules
-* Copy config file from `vendor\slot-purchase\web-frontend\config\slot-purchase.global.php.dist` to `config\autoload`, rename the file to
 `slot-purchase.global.php`.
 * Add links to buy slot
 

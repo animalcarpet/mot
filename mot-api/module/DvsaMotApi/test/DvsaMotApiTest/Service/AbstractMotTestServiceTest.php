@@ -145,6 +145,7 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
             ->setVehicleClass(new VehicleClass(VehicleClassCode::CLASS_4))
             ->getFuelType(new FuelType());
         $vehicle = new Vehicle();
+        $vehicle->setVersion(1);
         $vehicle->setModelDetail($modelDetail);
         $vehicle->setColour(new Colour());
         $vehicle->setCountryOfRegistration((new CountryOfRegistration()));
@@ -152,7 +153,7 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
         $motTest = new MotTest();
         $motTest
             ->setVehicle($vehicle)
-            ->setVehicleClass($vehicle->getVehicleClass())
+            ->setVehicleVersion($vehicle->getVersion())
             ->setMotTestType($type);
         $motTest->setTester(self::getTestTester());
 

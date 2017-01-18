@@ -5,6 +5,8 @@ namespace DvsaMotApiTest\Service\Validator;
 use Api\Check\CheckMessage;
 use Api\Check\Severity;
 use CensorApi\Service\CensorService;
+use DvsaCommon\Constants\OdometerReadingResultType;
+use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotApi\Dto\ReplacementCertificateDraftChangeDTO;
@@ -56,7 +58,7 @@ class ReplacementCertificateDraftChangeValidatorTest extends PHPUnit_Framework_T
             ->setVin("2343434")->setVrm("VRM")
             ->setVtsSiteNumber("gegreg")
             ->setReasonForDifferentTester("24344")
-            ->setOdometerReading(MotTestObjectsFactory::odometerReadingDTO())
+            ->setOdometerReading(123, OdometerUnit::MILES, OdometerReadingResultType::OK)
             ->setReasonForReplacement("fwegreg")
             ->setMake(4)->setModel(44)
             ->setExpiryDate($currentDate)
@@ -91,7 +93,7 @@ class ReplacementCertificateDraftChangeValidatorTest extends PHPUnit_Framework_T
             ->setVrm("")
             ->setVtsSiteNumber("")
             ->setReasonForDifferentTester("")
-            ->setOdometerReading(MotTestObjectsFactory::odometerReadingDTO()->setValue("INVALID"))
+            ->setOdometerReading("INVALID", OdometerUnit::MILES, OdometerReadingResultType::OK)
             ->setReasonForReplacement("")
             ->setMake("gerg")
             ->setModel("gerg")

@@ -1,10 +1,19 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApiTest\Service\ReplacementCertificate;
 
 use Api\Check\CheckMessage;
 use Api\Check\CheckResult;
 use DateTime;
+use Dvsa\Mot\ApiClient\Resource\Item\Colour;
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\Make as ApiMake;
+use Dvsa\Mot\ApiClient\Resource\Item\Model as ApiModel;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Auth\MotIdentity;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -14,7 +23,7 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Make;
 use DvsaEntities\Entity\Model;
 use DvsaEntities\Entity\MotTest;
-use DvsaEntities\Entity\ReplacementCertificateDraft;
+use DvsaEntities\Entity\CertificateReplacementDraft;
 use DvsaMotApi\Service\MotTestSecurityService;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateUpdater;
 use DvsaMotApiTest\Factory\MotTestObjectsFactory;
@@ -38,6 +47,35 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
         $this->motIdentityService = XMock::of('Zend\Authentication\AuthenticationService', ['getIdentity']);
         $this->motTestSecurityService = XMock::of(MotTestSecurityService::class);
         $this->mockVehicleService = XMock::of(VehicleService::class);
+
+        $colour = new \stdClass();
+        $colour->code = 'p';
+        $colour = new Colour($colour);
+
+        $make = new \stdClass();
+        $make->name = 'makeName';
+        $make = new ApiMake($make);
+
+        $model = (new \stdClass());
+        $model->name = 'makeName';
+        $model = new ApiModel($model);
+
+        $mockDvsaVehicle = XMock::of(DvsaVehicle::class);
+        $mockDvsaVehicle->expects($this->any())->method('getVersion')->willReturn(1);
+        $mockDvsaVehicle->expects($this->any())->method('getColour')->willReturn($colour);
+        $mockDvsaVehicle->expects($this->any())->method('getColourSecondary')->willReturn($colour);
+        $mockDvsaVehicle->expects($this->any())->method('getMake')->willReturn($make);
+        $mockDvsaVehicle->expects($this->any())->method('getModel')->willReturn($model);
+
+        $this->mockVehicleService->expects($this->any())
+            ->method('updateDvsaVehicleAtVersion')
+            ->willReturn($mockDvsaVehicle);
+
+        $this->mockVehicleService->expects($this->any())
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->willReturn($mockDvsaVehicle);
+
+
     }
 
     public function testCreateGivenDraftShouldUpdateCertificate()
@@ -48,7 +86,7 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
         );
         $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft()
-            ->setReplacementReason("Reason");
+            ->setReasonForReplacement("Reason");
 
 //        when
         $motTest = $this->createSut()->update($draft);
@@ -57,18 +95,9 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($draft->getPrimaryColour()->getId(), $motTest->getPrimaryColour()->getId());
         $this->assertEquals($draft->getSecondaryColour()->getId(), $motTest->getSecondaryColour()->getId());
         $this->assertEquals($draft->getExpiryDate(), $motTest->getExpiryDate());
-        $this->assertEquals(
-            $draft->getOdometerReading()->getValue(),
-            $motTest->getOdometerReading()->getValue()
-        );
-        $this->assertEquals(
-            $draft->getOdometerReading()->getUnit(),
-            $motTest->getOdometerReading()->getUnit()
-        );
-        $this->assertEquals(
-            $draft->getOdometerReading()->getResultType(),
-            $motTest->getOdometerReading()->getResultType()
-        );
+        $this->assertEquals($draft->getOdometerValue(), $motTest->getOdometerValue());
+        $this->assertEquals($draft->getOdometerUnit(), $motTest->getOdometerUnit());
+        $this->assertEquals($draft->getOdometerResultType(), $motTest->getOdometerResultType());
     }
 
     public function testCreateGivenDraftShouldUpdateCertificateAndPrs()
@@ -81,26 +110,18 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
 
         $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft();
 
-        $draft->setReplacementReason("Reason")
+        $draft->setReasonForReplacement("Reason")
             ->setVin(rand(0,999999999999))
             ->setVrm(rand(0, 999999));
-        $draft->getOdometerReading()->setValue(rand(0,999999));
+        $draft->setOdometerValue(rand(0,999999));
         $draft->setExpiryDate(new DateTime());
         $draft->getMake()->setCode(rand(0,999999));
         $draft->getMotTest()->setPrsMotTest(MotTestObjectsFactory::motTest());
-        $draft->getPrimaryColour()->setCode(rand(0, 100000));
-        $draft->getSecondaryColour()->setCode(rand(0, 100000));
-        $draft->getMake()->setCode(rand(0, 100000));
-        $draft->getModel()->setCode(rand(0, 100000));
 
         $motTest = $this->createSut()->update($draft);
 
-        $checkIfTestIsUpdatedFromDraft = function(ReplacementCertificateDraft $draft, MotTest $motTest){
-            $this->assertEquals($draft->getOdometerReading(),$motTest->getOdometerReading());
-            $this->assertEquals($draft->getPrimaryColour(), $motTest->getPrimaryColour());
-            $this->assertEquals($draft->getSecondaryColour(), $motTest->getSecondaryColour());
-            $this->assertEquals($draft->getModel(), $motTest->getModel());
-            $this->assertEquals($draft->getMake(), $motTest->getMake());
+        $checkIfTestIsUpdatedFromDraft = function(CertificateReplacementDraft $draft, MotTest $motTest){
+            $this->assertEquals($draft->getOdometerValue(),$motTest->getOdometerValue());
         };
 
         $checkIfTestIsUpdatedFromDraft($draft, $motTest);
@@ -155,7 +176,7 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
         );
         $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft();
-        $draft->setReplacementReason(null);
+        $draft->setReasonForReplacement(null);
 
         $this->createSut()->update($draft);
     }
@@ -167,43 +188,9 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
         $this->outsideOdometerReadingModificationWindow(false);
         $this->permissionsGranted([PermissionInSystem::CERTIFICATE_REPLACEMENT]);
         $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft();
-        $draft->setReasonForDifferentTester(null);
+        $draft->setDifferentTesterReason(null);
 
         $this->createSut()->update($draft);
-    }
-
-    public function testIfMakeNameDefinedThenUnassociateMakeEntityAndSetMotTestMakeFreeText()
-    {
-        $this->userAssignedToVts();
-        $this->userHasId(2);
-        $this->permissionsGranted(
-            [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
-        );
-        $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft()
-            ->setReplacementReason("Reason")
-            ->setMakeName('This is a make');
-
-        $motTest = $this->createSut()->update($draft);
-
-        $this->assertNull($motTest->getMake());
-        $this->assertEquals('This is a make', $motTest->getMakeName());
-    }
-
-    public function testIfModelNameDefinedThenUnassociateModelEntityAndSetMotTestModelFreeText()
-    {
-        $this->userAssignedToVts();
-        $this->userHasId(2);
-        $this->permissionsGranted(
-            [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
-        );
-        $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft()
-            ->setReplacementReason("Reason")
-            ->setModelName('This is a model');
-
-        $motTest = $this->createSut()->update($draft);
-
-        $this->assertNull($motTest->getModel());
-        $this->assertEquals('This is a model', $motTest->getModelName());
     }
 
     private function createSut()
@@ -248,84 +235,5 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
     {
         $this->motIdentityService->expects($this->any())->method("getIdentity")
             ->will($this->returnValue(new MotIdentity($id, null)));
-    }
-
-    public function testUpdateReplacementCertificateWithCustomModelShouldSetCustomModelAndModelIdNullStatus()
-    {
-        $this->userAssignedToVts();
-        $this->userHasId(2);
-        $this->permissionsGranted(
-            [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
-        );
-
-        $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin('123456');
-        $draft->setModel((new Model)->setId(1)->setCode('T')->setName('Model name'));
-        $draft->setModelName(null);
-        $draft->setMake(new Make());
-        $draft->setMakeName('Test');
-
-        $motTest = $this->createSUT()->update($draft);
-
-        $this->assertNotNull($motTest->getModel());
-        $this->assertEquals('Model name', $motTest->getModel()->getName());
-    }
-
-    public function testUpdateReplacementCertificateWithCustomModelShouldNotSetCustomModelAndModelIdNullStatusForDvlaImport()
-    {
-        $this->userAssignedToVts();
-        $this->userHasId(2);
-        $this->permissionsGranted(
-            [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
-        );
-
-        $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin('123456');
-        $draft->setModel((new Model)->setId(1)->setCode('T')->setName('Model name'));
-        $draft->setModelName(null);
-        $draft->setMake(new Make());
-        $draft->setMakeName('Test');
-
-        $motTest = $this->createSUT()->update($draft, true);
-
-        $this->assertNull($motTest->getModel());
-    }
-
-    public function testUpdateReplacementCertificateWithVinAndVrmAndMakeNameShouldSetVinAndVrmShouldNotSetMakeNameForDvlaImport()
-    {
-        $this->userAssignedToVts();
-        $this->userHasId(2);
-        $this->permissionsGranted(
-            [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
-        );
-
-        $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->setVin('123456')->setVrm('ABCDEF')->setMakeName('make name');
-
-        $motTest = $this->createSUT()->update($draft, true);
-
-        $this->assertEquals('123456', $motTest->getVin());
-        $this->assertEquals('ABCDEF', $motTest->getRegistration());
-        $this->assertEmpty($motTest->getMakeName());
-    }
-
-    public function testUpdateReplacementCertificateWithVinAndVrmAndMakeNameForPrsShouldSetVinAndVrmShouldNotSetMakeNameDvlaImport()
-    {
-        $this->userAssignedToVts();
-        $this->userHasId(2);
-        $this->permissionsGranted(
-            [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
-        );
-
-        $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->setVin('123456')->setVrm('ABCDEF')->setMakeName('make name');
-        $prsTest = MotTestObjectsFactory::motTest();
-        $draft->getMotTest()->setPrsMotTest($prsTest);
-
-        $motTest = $this->createSUT()->update($draft, true);
-
-        $this->assertEquals('123456', $motTest->getPrsMotTest()->getVin());
-        $this->assertEquals('ABCDEF', $motTest->getPrsMotTest()->getRegistration());
-        $this->assertEmpty($motTest->getPrsMotTest()->getMakeName());
     }
 }

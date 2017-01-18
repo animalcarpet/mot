@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3b4c80b589f826b8d1cdfab8ab57afef",
-    "content-hash": "413dc52bd7ebaf7910be2f559c55e249",
+    "hash": "cce345ece89b8b82ab2c237160479cc5",
+    "content-hash": "409f1a46c9e503fc5878c5ef847860ce",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -1906,17 +1906,17 @@
         },
         {
             "name": "mot/api-client-php",
-            "version": "11.1.0",
+            "version": "12.0.0",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/api-client-php.git",
-                "reference": "75962a3d50ebcfab2ebfdb7fe7cb884f5dc32448"
+                "reference": "b721433a53f2c7336f59bf9ab98e41faf4d7fd54"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-11.1.0-4f2f21.tar",
-                "reference": "75962a3d50ebcfab2ebfdb7fe7cb884f5dc32448",
-                "shasum": "0aed0561478eacee89a23f0ba98d6a7d823ada38"
+                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-12.0.0-4e19e6.tar",
+                "reference": "b721433a53f2c7336f59bf9ab98e41faf4d7fd54",
+                "shasum": "feb12902be6470042b0d545f04866beef970de6e"
             },
             "require": {
                 "guzzlehttp/guzzle": "~6.1",
@@ -1963,17 +1963,7 @@
                     "./vendor/bin/phpunit --group integration"
                 ]
             },
-            "authors": [
-                {
-                    "name": "Ben Tadiar",
-                    "email": "b.tadiar@kainos.com"
-                },
-                {
-                    "name": "Ali Bahman",
-                    "email": "a.bahman@kainos.com"
-                }
-            ],
-            "time": "2016-12-05 19:48:04"
+            "time": "2017-01-20 09:59:40"
         },
         {
             "name": "mtdowling/jmespath.php",
@@ -2366,17 +2356,17 @@
         },
         {
             "name": "slot-purchase/backend-api",
-            "version": "v4.0.5",
+            "version": "v4.1.0",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/slot-purchase-backend-api.git",
-                "reference": "0ec259d191d3ca63a145e6f7c9097606ef300af2"
+                "reference": "1a63f6aa532f9541973a6044bc4ff86f8d87d3e4"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/slot-purchase-backend-api-v4.0.5-3381f5.tar",
-                "reference": "0ec259d191d3ca63a145e6f7c9097606ef300af2",
-                "shasum": "206290661d3faac39dbde49682c0dcd88c3af465"
+                "url": "https://packages.motdev.org.uk//dist/slot-purchase-backend-api-v4.1.0-1b25b8.tar",
+                "reference": "1a63f6aa532f9541973a6044bc4ff86f8d87d3e4",
+                "shasum": "88cd26f35a1c888f22a352708da54950ba2eb444"
             },
             "require": {
                 "cpms/client": "^1.25.0",
@@ -2447,7 +2437,7 @@
                 "proprietary"
             ],
             "description": "API for slot purchasing and related features",
-            "time": "2016-12-05 09:49:47"
+            "time": "2017-01-20 10:32:55"
         },
         {
             "name": "soflomo/purifier",

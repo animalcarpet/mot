@@ -8,27 +8,22 @@
 namespace Dvsa\Mot\Frontend\MotTestModuleTest\Controller;
 
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use Dvsa\Mot\ApiClient\Service\MotTestService;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\RemoveDefectController;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyContextProvider;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
-use DvsaCommon\Dto\Common\MotTestDto;
-use DvsaCommon\Dto\Common\MotTestTypeDto;
 use DvsaCommon\Dto\MotTesting\DefectDto;
-use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommonTest\Bootstrap;
+use DvsaCommonTest\TestUtils\XMock;
 
 /**
  * Class RemoveDefectControllerTest.
  */
 class RemoveDefectControllerTest extends AbstractFrontendControllerTestCase
 {
-    /**
-     * @var MotTestDto | \PHPUnit_Framework_MockObject_MockObject
-     */
-    private $motTestMock;
-
     /**
      * @var DefectsJourneyContextProvider | \PHPUnit_Framework_MockObject_MockObject
      */
@@ -44,18 +39,10 @@ class RemoveDefectControllerTest extends AbstractFrontendControllerTestCase
      */
     private $reasonsForRejection;
 
+    protected $mockMotTestServiceClient;
+
     protected function setUp()
     {
-        $motTestTypeMock = $this->getMockBuilder(MotTestTypeDto::class)->getMock();
-        $motTestTypeMock->expects($this->any())
-            ->method('getCode')
-            ->willReturn(MotTestTypeCode::NORMAL_TEST);
-        $this->motTestMock = $this->getMockBuilder(MotTestDto::class)->getMock();
-        $this->motTestMock
-            ->expects($this->once())
-            ->method('getTestType')
-            ->willReturn($motTestTypeMock);
-
         $this->defectsJourneyContextProviderMock = $this
             ->getMockBuilder(DefectsJourneyContextProvider::class)
             ->disableOriginalConstructor()
@@ -66,6 +53,11 @@ class RemoveDefectControllerTest extends AbstractFrontendControllerTestCase
             ->getMock();
 
         $this->serviceManager = Bootstrap::getServiceManager();
+        $this->serviceManager->setService(
+            MotTestService::class,
+            $this->getMockMotTestServiceClient()
+        );
+
         $this->serviceManager->setAllowOverride(true);
 
         $this->setServiceManager($this->serviceManager);
@@ -76,6 +68,14 @@ class RemoveDefectControllerTest extends AbstractFrontendControllerTestCase
         parent::setUp();
     }
 
+    private function getMockMotTestServiceClient()
+    {
+        if ($this->mockMotTestServiceClient == null) {
+            $this->mockMotTestServiceClient = XMock::of(MotTestService::class);
+        }
+        return $this->mockMotTestServiceClient;
+    }
+
     /**
      * Test that the Remove a Defect page loads correctly.
      */
@@ -84,11 +84,17 @@ class RemoveDefectControllerTest extends AbstractFrontendControllerTestCase
         $motTestNumber = 1;
         $defectId = 1;
 
-        $this->withFailuresPrsAndAdvisories(1, 2, 3)->setUpMotTestMock();
+        $this->withFailuresPrsAndAdvisories(1, 2, 3);
         $restClientMock = $this->getRestClientMockForServiceManager();
-        $restClientMock->expects($this->at(0))
-            ->method('get')
-            ->willReturn(['data' => $this->motTestMock]);
+
+        $testMotTestData = $this->getMotTestDataClass4();
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
 
         $routeParams = [
             'motTestNumber' => $motTestNumber,
@@ -107,13 +113,18 @@ class RemoveDefectControllerTest extends AbstractFrontendControllerTestCase
         $motTestNumber = 1;
         $defectId = 1;
 
-        $this->withFailuresPrsAndAdvisories(1, 2, 3)->setUpMotTestMock();
+        $this->withFailuresPrsAndAdvisories(1, 2, 3);
         $restClientMock = $this->getRestClientMockForServiceManager();
-        $restClientMock->expects($this->at(0))
-            ->method('get')
-            ->willReturn(['data' => $this->motTestMock]);
+        $testMotTestData = $this->getMotTestDataClass4();
 
-        $restClientMock->expects($this->at(1))
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
+
+        $restClientMock->expects($this->at(0))
             ->method('get')
             ->willReturn(['data' => $this->getDefectDto()]);
 
@@ -132,13 +143,6 @@ class RemoveDefectControllerTest extends AbstractFrontendControllerTestCase
 
         // We should get redirected...
         $this->assertResponseStatus(self::HTTP_REDIRECT_CODE);
-    }
-
-    private function setUpMotTestMock()
-    {
-        $this->motTestMock->expects($this->any())
-            ->method('getReasonsForRejection')
-            ->willReturn($this->reasonsForRejection);
     }
 
     /**
@@ -255,4 +259,156 @@ class RemoveDefectControllerTest extends AbstractFrontendControllerTestCase
 
         return $defectDto;
     }
+
+    /**
+     * @return MotTest
+     */
+    private function getMotTestDataClass4()
+    {
+        $testDataJSON = "{
+  \"id\" : 1,
+  \"brakeTestResult\" : {
+    \"id\" : 999888003,
+    \"generalPass\" : false,
+    \"isLatest\" : true,
+    \"commercialVehicle\" : true,
+    \"numberOfAxles\" : 2,
+    \"parkingBrakeEfficiency\" : 30,
+    \"parkingBrakeEfficiencyPass\" : false,
+    \"parkingBrakeEffortNearside\" : 31,
+    \"parkingBrakeEffortOffside\" : 32,
+    \"parkingBrakeEffortSecondaryNearside\" : 33,
+    \"parkingBrakeEffortSecondaryOffside\" : 34,
+    \"parkingBrakeEffortSingle\" : 35,
+    \"parkingBrakeImbalance\" : 36,
+    \"parkingBrakeImbalancePass\" : true,
+    \"parkingBrakeLockNearside\" : false,
+    \"parkingBrakeLockOffside\" : true,
+    \"parkingBrakeLockPercent\" : 37,
+    \"parkingBrakeLockSecondaryNearside\" : true,
+    \"parkingBrakeLockSecondaryOffside\" : false,
+    \"parkingBrakeLockSingle\" : false,
+    \"parkingBrakeNumberOfAxles\" : 1,
+    \"parkingBrakeSecondaryImbalance\" : 38,
+    \"parkingBrakeTestType\" : \"GRADT\",
+    \"serviceBrake1Data\" : {
+      \"id\" : 999888009,
+      \"effortNearsideAxel1\" : 50,
+      \"effortNearsideAxel2\" : 51,
+      \"effortNearsideAxel3\" : 52,
+      \"effortOffsideAxel1\" : 53,
+      \"effortOffsideAxel2\" : 54,
+      \"effortOffsideAxel3\" : 55,
+      \"effortSingle\" : 56,
+      \"imbalanceAxle1\" : 58,
+      \"imbalanceAxle2\" : 59,
+      \"imbalanceAxle3\" : 60,
+      \"imbalancePass\" : true,
+      \"lockNearsideAxle1\" : false,
+      \"lockNearsideAxle2\" : true,
+      \"lockNearsideAxle3\" : false,
+      \"lockOffsideAxle1\" : true,
+      \"lockOffsideAxle2\" : false,
+      \"lockOffsideAxle3\" : true,
+      \"lockPercent\" : 68,
+      \"lockSingle\" : false
+    },
+    \"serviceBrake1Efficiency\" : 39,
+    \"serviceBrake1EfficiencyPass\" : true,
+    \"serviceBrake1TestType\" : \"PLATE\",
+    \"serviceBrake2Data\" : {
+      \"id\" : 999888009,
+      \"effortNearsideAxel1\" : 50,
+      \"effortNearsideAxel2\" : 51,
+      \"effortNearsideAxel3\" : 52,
+      \"effortOffsideAxel1\" : 53,
+      \"effortOffsideAxel2\" : 54,
+      \"effortOffsideAxel3\" : 55,
+      \"effortSingle\" : 56,
+      \"imbalanceAxle1\" : 58,
+      \"imbalanceAxle2\" : 59,
+      \"imbalanceAxle3\" : 60,
+      \"imbalancePass\" : true,
+      \"lockNearsideAxle1\" : false,
+      \"lockNearsideAxle2\" : true,
+      \"lockNearsideAxle3\" : false,
+      \"lockOffsideAxle1\" : true,
+      \"lockOffsideAxle2\" : false,
+      \"lockOffsideAxle3\" : true,
+      \"lockPercent\" : 68,
+      \"lockSingle\" : false
+    },
+    \"serviceBrake2Efficiency\" : 40,
+    \"serviceBrake2EfficiencyPass\" : true,
+    \"serviceBrake2TestType\" : \"FLOOR\",
+    \"serviceBrakeIsSingleLine\" : true,
+    \"singleInFront\" : false,
+    \"vehicleWeight\" : 5000,
+    \"weightIsUnladen\" : true,
+    \"weightType\" : \"VSI\"
+  },
+  \"completedDate\" : \"2015-12-18\",
+  \"expiryDate\" : \"2015-12-18\",
+  \"issuedDate\" : \"2015-12-18\",
+  \"startedDate\" : \"2015-12-18\",
+  \"motTestNumber\" : \"1\",
+  \"reasonForTerminationComment\" : \"comment\",
+  \"reasonsForRejection\" : {
+    \"ADVISORY\" : [ {
+      \"id\" : 1,
+      \"type\" : \"ADVISORY\",
+      \"locationLateral\" : \"locationLateral\",
+      \"locationLongitudinal\" : \"locationLongitudinal\",
+      \"locationVertical\" : \"locationVertical\",
+      \"comment\" : \"comment\",
+      \"failureDangerous\" : false,
+      \"generated\" : false,
+      \"customDescription\" : \"customDescription\",
+      \"onOriginalTest\" : false,
+      \"rfrId\" : 1,
+      \"name\" : \"advisory\",
+      \"nameCy\" : \"advisory\",
+      \"testItemSelectorDescription\" : \"testItemSelectorDescription\",
+      \"testItemSelectorDescriptionCy\" : null,
+      \"failureText\" : \"advisory\",
+      \"failureTextCy\" : \"advisorycy\",
+      \"testItemSelectorId\" : 1,
+      \"inspectionManualReference\" : \"inspectionManualReference\",
+      \"markedAsRepaired\" : \"FALSE\"
+    } ]
+  },
+  \"statusCode\" : \"ACTIVE\",
+  \"testTypeCode\" : \"NT\",
+  \"tester\" : {
+    \"id\" : 1,
+    \"firstName\" : \"Joe\",
+    \"middleName\" : \"John\",
+    \"lastName\" : \"Bloggs\"
+  },
+  \"testerBrakePerformanceNotTested\" : true,
+  \"hasRegistration\" : true,
+  \"siteId\" : 1,
+  \"vehicleId\" : 1001,
+  \"vehicleVersion\" : 1,
+  \"pendingDetails\" : {
+    \"currentSubmissionStatus\" : \"PASSED\",
+    \"issuedDate\" : \"2015-12-18\",
+    \"expiryDate\" : \"2015-12-18\"
+  },
+  \"reasonForCancel\" : {
+    \"id\" : 1,
+    \"reason\" : \"reason\",
+    \"reasonCy\" : \"reasonCy\",
+    \"abandoned\" : true,
+    \"isDisplayable\" : true
+  },
+  \"motTestOriginalNumber\" : \"12345\",
+  \"prsMotTestNumber\" : \"123456\",
+  \"odometerValue\" : 1000,
+  \"odometerUnit\" : \"mi\",
+  \"odometerResultType\" : \"OK\"
+}";
+        return new MotTest(json_decode($testDataJSON));
+    }
+
 }

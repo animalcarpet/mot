@@ -40,26 +40,6 @@ class EmptyReasonMap extends Entity
     private $emptyVrmReason;
 
     /**
-     * @var \DvsaEntities\Entity\Person
-     *
-     * @ORM\ManyToOne(targetEntity="DvsaEntities\Entity\Person")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="created_by", referencedColumnName="id")
-     * })
-     */
-    protected $createdBy;
-
-    /**
-     * @var \DvsaEntities\Entity\Person
-     *
-     * @ORM\ManyToOne(targetEntity="DvsaEntities\Entity\Person")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="last_updated_by", referencedColumnName="id")
-     * })
-     */
-    protected $lastUpdatedBy;
-
-    /**
      * @return Vehicle
      */
     public function getVehicleId()

@@ -3,8 +3,8 @@
 namespace DvsaMotTestTest\Controller;
 
 use Application\Service\ContingencySessionManager;
-use Dvsa\Mot\ApiClient\Request\Payload;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Service\MotTestService;
 use DvsaClient\Mapper\VehicleMapper;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -52,6 +52,9 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
     /** @var \Dvsa\Mot\Frontend\AuthenticationModule\Model\VehicleTestingStation */
     protected $vts;
 
+    /** @var  MotTestService $mockMotTestServiceClient */
+    protected $mockMotTestServiceClient;
+
     protected function setUp()
     {
         $this->dvsaVehicleBuilder = new DvsaVehicleBuilder();
@@ -76,6 +79,11 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
             $mockVehicleService
         );
 
+        $serviceManager->setService(
+            MotTestService::class,
+            $this->getMockMotTestServiceClient()
+        );
+
         $this->setServiceManager($serviceManager);
 
         $this->setController(new StartTestConfirmationController($this->createParamObfuscator()));
@@ -90,6 +98,14 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
         $identity  = $this->getCurrentIdentity();
         $this->vts = $this->getVtsData();
         $identity->setCurrentVts($this->vts);
+    }
+
+    private function getMockMotTestServiceClient()
+    {
+        if($this->mockMotTestServiceClient == null) {
+            $this->mockMotTestServiceClient = XMock::of(MotTestService::class);
+        }
+        return $this->mockMotTestServiceClient;
     }
 
     protected function tearDown()
@@ -111,14 +127,22 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
         $exceptionValidation = new ValidationException('/', 'post', [], 10, [['displayMessage' => $errorMessage]]);
 
         $restClientMock = $this->getRestClientMockForServiceManager();
-        $this->mockMethod($restClientMock, 'post', $this->at(1), $exceptionValidation);
-        $this->mockMethod($restClientMock, 'post', $this->at(2), $this->getEligibilityforRetestOk());
+        $this->mockMethod($restClientMock, 'post', $this->any(), $exceptionValidation);
+        $this->mockMethod($restClientMock, 'post', $this->any(), $this->getEligibilityforRetestOk());
 
-        $restClientMock->expects($this->any())->method('get')
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->any())
+            ->method('isVehicleUnderTest')
+            ->with(1)
+            ->willReturn(false);
+
+        $restClientMock
+            ->expects($this->any())
+            ->method('get')
             ->will(
                 $this->onConsecutiveCalls(
                     $this->getTestVehicleResult(),
-                    $this->getInProgressTest(),
                     $this->getCertificateExpiryResult()
                 )
             );
@@ -190,7 +214,6 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
     {
         $mock = [
             'vehicle'           => $this->getTestVehicleResult(),
-            'inProgress'        => $this->getInProgressTest(),
             'expire'            => $this->getCertificateExpiryResult(),
             'eligibleForRetest' => isset($mock['resp']) ? $mock['resp'] : null,
             'ctSess'            => isset($mock['ctSess']) ? $mock['ctSess'] : null,
@@ -447,12 +470,12 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
         }
 
         if (!empty($mock['createNew'])) {
-            $this->mockMethod($mockRestClient, 'post', $this->at(++$postIdx), $mock['createNew']);
+            $this->mockMethod($mockRestClient, 'post', $this->any(), $mock['createNew']);
         }
 
         if (isset($mock['eligibleForRetest'])) {
             $this->mockMethod(
-                $mockRestClient, 'post', $this->at(++$postIdx), $mock['eligibleForRetest'], [
+                $mockRestClient, 'post', $this->any(), $mock['eligibleForRetest'], [
                     VehicleUrlBuilder::retestEligibilityCheck(self::VEHICLE_ID, $this->vts->getVtsId()),
                     $postData,
                 ]
@@ -562,7 +585,12 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
 
     protected function getInProgressTest()
     {
-        return ['data' => []];
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->any())
+            ->method('isVehicleUnderTest')
+            ->with($this->anything())
+            ->willReturn(false);
     }
 
     /**

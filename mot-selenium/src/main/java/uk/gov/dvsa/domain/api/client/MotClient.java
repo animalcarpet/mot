@@ -2,10 +2,13 @@ package uk.gov.dvsa.domain.api.client;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
+import org.apache.http.client.params.ClientPNames;
+import org.apache.http.params.CoreConnectionPNames;
 import org.json.JSONObject;
 import org.openqa.selenium.Cookie;
 
 import static com.jayway.restassured.RestAssured.with;
+import static com.jayway.restassured.config.HttpClientConfig.httpClientConfig;
 
 public class MotClient {
 
@@ -13,6 +16,13 @@ public class MotClient {
 
     public MotClient(String endpointUrl) {
         RestAssured.useRelaxedHTTPSValidation();
+        int timeout = 60000;
+        RestAssured.config()
+                .httpClient(httpClientConfig()
+                        .setParam(ClientPNames.CONN_MANAGER_TIMEOUT, timeout)
+                        .setParam(CoreConnectionPNames.CONNECTION_TIMEOUT, timeout)
+                        .setParam(CoreConnectionPNames.SO_TIMEOUT, timeout)
+                );
         this.endpointUrl = endpointUrl;
     }
 

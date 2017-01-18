@@ -15,20 +15,21 @@ class TesterPerformanceQueryBuilder
         return "SELECT {$this->selectFields} SUM(TIMESTAMPDIFF(SECOND, `test`.`started_date`, `test`.`completed_date`))  `totalTime`,
                   SUM(IF(`status`.`code` = :failedStatusCode, 1, 0))                          `failedCount`,
                   COUNT(*)                                                                    `totalCount`,
-                  AVG(
-                    IF(`v`.`manufacture_date` IS NOT NULL,
-                      TIMESTAMPDIFF(MONTH, `v`.`manufacture_date`, `test`.`completed_date`),
-                      NULL
-                    )
-                  ) AS `averageVehicleAgeInMonths`
-                FROM `mot_test` `test` {$this->index}
-                  JOIN `vehicle` `v` ON `test`.`vehicle_id` = `v`.`id`
+                  AVG(TIMESTAMPDIFF(MONTH,
+                    COALESCE(`v`.`manufacture_date`,
+                             `v_hist`.`manufacture_date`),
+                    `test`.`completed_date`)) AS `averageVehicleAgeInMonths`
+                FROM `mot_test_current` `test` {$this->index}
+                  LEFT JOIN `vehicle` `v` ON (`test`.`vehicle_id` = `v`.`id` AND `test`.`vehicle_version` = `v`.`version`)
+                  LEFT JOIN `vehicle_hist` `v_hist` ON (`test`.`vehicle_id` = `v_hist`.`id` AND `test`.`vehicle_version` = `v_hist`.`version`)
                   JOIN `person` `person` ON `person`.`id` = `test`.`person_id`
                   JOIN `mot_test_type` `type` ON `type`.`id` = `test`.`mot_test_type_id`
                   JOIN `mot_test_status` `status` ON `status`.`id` = `test`.`status_id`
-                  JOIN `vehicle_class` `class` ON `class`.`id` = `test`.`vehicle_class_id`
+                  JOIN `model_detail` `md` ON `md`.`id` = COALESCE (`v`.`model_detail_id`, `v_hist`.`model_detail_id`)
+                  JOIN `vehicle_class` `class` ON `class`.`id` = `md`.`vehicle_class_id`
                   JOIN `vehicle_class_group` `class_group` ON `class_group`.`id` = `class`.`vehicle_class_group_id`
                   JOIN `site` `vts` ON `vts`.`id` = `test`.`site_id`
+                  LEFT JOIN mot_test_emergency_reason mter ON mter.id = test.id
                   {$this->join}
                 WHERE `test`.`completed_date` BETWEEN :startDate AND :endData
         -- the only tests we take into account are failures or non PRS passed ones

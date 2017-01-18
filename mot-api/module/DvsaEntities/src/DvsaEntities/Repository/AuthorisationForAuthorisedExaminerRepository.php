@@ -77,12 +77,12 @@ WHERE
                     p.username,
                     count(mt.id) as slots_in_use
                 from
-                    mot.authorisation_for_authorised_examiner ae
-                    join mot.organisation o on ae.organisation_id = o.id
-                    join mot.organisation_business_role_map obrm on o.id = obrm.organisation_id
-                    join mot.person p on obrm.person_id = p.id
-                    left outer join mot.site vts on o.id = vts.organisation_id
-                    left outer join mot.mot_test mt on vts.id = mt.site_id and mt.status = :STATUS_ACTIVE
+                    authorisation_for_authorised_examiner ae
+                    join organisation o on ae.organisation_id = o.id
+                    join organisation_business_role_map obrm on o.id = obrm.organisation_id
+                    join person p on obrm.person_id = p.id
+                    left outer join site vts on o.id = vts.organisation_id
+                    left outer join mot_test_current mt on vts.id = mt.site_id and mt.status = :STATUS_ACTIVE
                     left outer join mot_test_type mtt on mt.mot_test_type_id = mtt.id
                         and mtt.code not in (
                         :ROUTINE_DEMONSTRATION_TEST,

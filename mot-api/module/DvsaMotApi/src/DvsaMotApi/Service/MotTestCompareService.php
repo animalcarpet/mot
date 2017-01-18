@@ -60,7 +60,7 @@ class MotTestCompareService extends AbstractService
         $this->authService->assertGranted(PermissionInSystem::MOT_TEST_COMPARE);
 
         /** @var MotTest $motTest */
-        $motTest = $this->motTestRepository->findOneBy(['number' => $motTestNumber]);
+        $motTest = $this->findMotTest($motTestNumber);
 
         if (!$motTest || ($motTest->getStatus() != 'FAILED' && $motTest->getStatus() != 'PASSED')) {
             $this->errors['motTestNumber'] = new ErrorMessage(
@@ -71,7 +71,7 @@ class MotTestCompareService extends AbstractService
         }
 
         /** @var MotTest $motTest */
-        $originalMotTest = $this->motTestRepository->findOneBy(['number' => $motTestNumberToCompare]);
+        $originalMotTest = $this->findMotTest($motTestNumberToCompare);
 
         if (!$originalMotTest
             || ($originalMotTest->getStatus() != 'FAILED' && $originalMotTest->getStatus() != 'PASSED')
@@ -123,5 +123,18 @@ class MotTestCompareService extends AbstractService
         ksort($rfrCompareGrouped);
 
         return $rfrCompareGrouped;
+    }
+
+    /**
+     * @param string $motTestNumber
+     *
+     * @return null|MotTest
+     */
+    private function findMotTest($motTestNumber)
+    {
+        try {
+            return $this->motTestRepository->getMotTestByNumber($motTestNumber);
+        } catch (NotFoundException $e) {
+        }
     }
 }

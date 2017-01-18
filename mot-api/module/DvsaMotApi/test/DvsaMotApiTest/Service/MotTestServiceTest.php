@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApiTest\Service;
 
@@ -26,25 +31,25 @@ use DvsaEntities\Entity\BrakeTestResultClass12;
 use DvsaEntities\Entity\BrakeTestResultClass3AndAbove;
 use DvsaEntities\Entity\Colour;
 use DvsaEntities\Entity\ContactDetail;
+use DvsaEntities\Entity\EmergencyLog;
 use DvsaEntities\Entity\FuelType;
 use DvsaEntities\Entity\Make;
 use DvsaEntities\Entity\Model;
 use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
+use DvsaEntities\Entity\MotTestEmergencyReason;
 use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
-use DvsaEntities\Entity\OdometerReading;
 use DvsaEntities\Entity\Organisation;
 use DvsaEntities\Entity\Person;
+use DvsaEntities\Entity\ReasonForRejectionType;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\SiteContactType;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
 use DvsaEntitiesTest\Entity\MotTestReasonForRejectionTest;
 use DvsaMotApi\Service\MotTestService;
-use DvsaMotApi\Service\Validator\RetestEligibility\RetestEligibilityCheckCode;
-use DvsaMotApiTest\Factory\PersonObjectsFactory;
 use PHPUnit_Framework_MockObject_MockObject;
 use DvsaEntities\Entity\CertificateReplacement;
 
@@ -87,7 +92,11 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
     public function testGetMotTestDataWithEmergencyNoException()
     {
         $motTest = new MotTest();
-        $motTest->setEmergencyLog(true);
+
+        $motTestEmergencyReason = new MotTestEmergencyReason();
+        $motTestEmergencyReason->setEmergencyLog(new EmergencyLog());
+
+        $motTest->setMotTestEmergencyReason($motTestEmergencyReason);
         $motTest->setStartedDate(new \DateTime('now'));
         $motTest->setIssuedDate((new \DateTime('now'))->add(new \DateInterval('P1D')));
         $mocks = $this->getMocksForMotTestService(null, false);
@@ -106,7 +115,11 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
     public function testMOTRestValidateNoVehicleThrowsForbiddenException()
     {
         $motTest = new MotTest();
-        $motTest->setEmergencyLog(true);
+
+        $motTestEmergencyReason = new MotTestEmergencyReason();
+        $motTestEmergencyReason->setEmergencyLog(new EmergencyLog());
+
+        $motTest->setMotTestEmergencyReason($motTestEmergencyReason);
         $motTest->setStartedDate(new \DateTime('now'));
         $motTest->setIssuedDate((new \DateTime('now'))->add(new \DateInterval('P1D')));
         $testStatus = $this->getMock('\DvsaEntities\Entity\MotTestStatus');
@@ -114,8 +127,6 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $testStatus->expects($this->any())
             ->method('getName')
             ->will($this->returnValue(MotTestStatusName::ACTIVE));
-
-        $vehicle = new Vehicle();
 
         $motTest->setStatus($testStatus);
 
@@ -135,7 +146,11 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
     public function testMOTRestValidateNotFailedThrowsForbiddenException()
     {
         $motTest = new MotTest();
-        $motTest->setEmergencyLog(true);
+
+        $motTestEmergencyReason = new MotTestEmergencyReason();
+        $motTestEmergencyReason->setEmergencyLog(new EmergencyLog());
+
+        $motTest->setMotTestEmergencyReason($motTestEmergencyReason);
         $motTest->setStartedDate(new \DateTime('now'));
         $motTest->setIssuedDate((new \DateTime('now'))->add(new \DateInterval('P1D')));
         $testStatus = $this->getMock('\DvsaEntities\Entity\MotTestStatus');
@@ -165,7 +180,11 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
     public function testMOTRestValidateIsCancelledThrowsForbiddenException()
     {
         $motTest = new MotTest();
-        $motTest->setEmergencyLog(true);
+
+        $motTestEmergencyReason = new MotTestEmergencyReason();
+        $motTestEmergencyReason->setEmergencyLog(new EmergencyLog());
+
+        $motTest->setMotTestEmergencyReason($motTestEmergencyReason);
         $motTest->setStartedDate(new \DateTime('now'));
         $motTest->setIssuedDate((new \DateTime('now'))->add(new \DateInterval('P1D')));
 
@@ -200,7 +219,11 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
     public function testMOTRestValidateNoException()
     {
         $motTest = new MotTest();
-        $motTest->setEmergencyLog(true);
+
+        $motTestEmergencyReason = new MotTestEmergencyReason();
+        $motTestEmergencyReason->setEmergencyLog(new EmergencyLog());
+
+        $motTest->setMotTestEmergencyReason($motTestEmergencyReason);
         $motTest->setStartedDate(new \DateTime('now'));
         $motTest->setIssuedDate((new \DateTime('now'))->add(new \DateInterval('P1D')));
         $testStatus = $this->getMock('\DvsaEntities\Entity\MotTestStatus');
@@ -249,10 +272,8 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $motTestArray = $this->getMotTestArray();
         $motTestArray['pendingDetails']['currentSubmissionStatus'] = $expectedStatus;
         if ($odometerValue) {
-            $motTest->setOdometerReading(
-                OdometerReading::create()
-                    ->setUnit(OdometerUnit::MILES)->setValue($odometerValue)
-            );
+            $motTest->setOdometerValue($odometerValue);
+            $motTest->setOdometerUnit(OdometerUnit::MILES);
         }
         if ($originalMotTest) {
             $motTest->setMotTestIdOriginal($originalMotTest);
@@ -267,7 +288,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         foreach ($rfrIds as $rfrId) {
             $rfr = new MotTestReasonForRejection();
             $rfr->setId($rfrId);
-            $rfr->setType(ReasonForRejectionTypeName::FAIL);
+            $rfr->setType((new ReasonForRejectionType())->setReasonForRejectionType(ReasonForRejectionTypeName::FAIL));
             $motTest->addMotTestReasonForRejection($rfr);
         }
 
@@ -364,11 +385,9 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $motTest = self::getTestMotTestEntity();
         $tester = $this->getTestTester();
         $motTest->setTester($tester);
+        $motTest->setOdometerValue(1000);
+        $motTest->setOdometerUnit(OdometerUnit::MILES);
 
-        $motTest->setOdometerReading(
-            OdometerReading::create()->setUnit(OdometerUnit::MILES)
-                ->setValue(1000)
-        );
         $motTestArray = $this->getMotTestArray();
         $motTestArray['pendingDetails']['currentSubmissionStatus'] = 'PASSED';
 
@@ -410,18 +429,15 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
     public function testGetPendingMotTestStatusFailed()
     {
         $motTestReasonForRejection = new MotTestReasonForRejection();
-        $motTestReasonForRejection->setType('FAIL');
+        $motTestReasonForRejection->setType((new ReasonForRejectionType())->setReasonForRejectionType('FAIL'));
 
         $motTest = self::getTestMotTestEntity();
         $tester = $this->getTestTester();
         $motTest->setTester($tester);
-
-        $motTest->setOdometerReading(
-            OdometerReading::create()->setValue(1000)
-                ->setUnit(OdometerUnit::MILES)
-        )
-            ->setBrakeTestResultClass3AndAbove(new BrakeTestResultClass3AndAbove())
-            ->addMotTestReasonForRejection($motTestReasonForRejection);
+        $motTest->setOdometerValue(1000);
+        $motTest->setOdometerUnit(OdometerUnit::MILES);
+        $motTest->setBrakeTestResultClass3AndAbove(new BrakeTestResultClass3AndAbove());
+        $motTest->addMotTestReasonForRejection($motTestReasonForRejection);
 
         $motTestArray = $this->getMotTestArray();
         $motTestArray['pendingDetails']['currentSubmissionStatus'] = MotTestStatusName::FAILED;

@@ -158,6 +158,10 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
                 }
             );
 
+        $this->motIdentity->expects($this->any())
+            ->method('getPerson')
+            ->willReturn(new Person());
+
         $this->motIdentityProvider->expects($this->any())
             ->method('getIdentity')
             ->willReturn($this->motIdentity);
@@ -329,7 +333,7 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
         $this->createService()->updateStatus($motTestId, $data, 'whatever');
 
         $this->assertEquals(MotTestStatusName::ABORTED, $motTest->getStatus());
-        $this->assertEquals($reasonForCancel, $motTest->getMotTestReasonForCancel());
+        $this->assertEquals($reasonForCancel, $motTest->getMotTestCancelled()->getMotTestReasonForCancel());
         $this->assertEquals($testDate, $motTest->getCompletedDate());
     }
 
@@ -393,7 +397,7 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
         $this->createService()->updateStatus($motTestId, $data, 'whatever');
 
         $this->assertEquals(MotTestStatusName::ABANDONED, $motTest->getStatus());
-        $this->assertEquals($reasonForCancel, $motTest->getMotTestReasonForCancel());
+        $this->assertEquals($reasonForCancel, $motTest->getMotTestCancelled()->getMotTestReasonForCancel());
         $this->assertEquals($cancelComment, $motTest->getReasonForTerminationComment());
         $this->assertEquals($testDate, $motTest->getCompletedDate());
     }
@@ -725,14 +729,20 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
 
         $motTest = MotTestObjectsFactory::activeMotTest()
             ->setId($motTestId)
-            ->setVehicleClass(new VehicleClass(VehicleClassCode::CLASS_4));
+            ->setVehicle(
+                (new Vehicle())
+                    ->setManufactureDate(DateUtils::toDateTime('2012-09-30T16:00:01Z'))
+                    ->setModelDetail(
+                    (new ModelDetail())->setVehicleClass(new VehicleClass(VehicleClassCode::CLASS_4))
+                )
+            );
 
         self::addBrakeTestResultWithUpdatableVehicleWeight($motTest, $oldWeight, $newWeight, WeightSourceFactory::vsi());
         $this->motTestResolvesTo($motTest);
 
         $this->createService()->updateStatus($motTestId, $data, 'whatever');
 
-        $this->assertEquals($newWeight, $motTest->getVehicle()->getWeight());
+        $this->assertEquals($newWeight, $motTest->getVehicleWeight());
     }
 
     /**
@@ -779,7 +789,13 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
 
         $motTest = MotTestObjectsFactory::activeMotTest()
             ->setId($motTestId)
-            ->setVehicleClass(new VehicleClass($class));
+            ->setVehicle(
+                (new Vehicle())
+                    ->setManufactureDate(DateUtils::toDateTime('2012-09-30T16:00:01Z'))
+                    ->setModelDetail(
+                        (new ModelDetail())->setVehicleClass(new VehicleClass($class))
+                    )
+            );
 
         self::addBrakeTestResultWithUpdatableVehicleWeight($motTest, $oldWeight, $newWeight, $weightType);
 
@@ -787,7 +803,7 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
 
         $this->createService()->updateStatus($motTestId, $data, 'whatever');
 
-        $this->assertEquals($isUpdated, $newWeight === $motTest->getVehicle()->getWeight());
+        $this->assertEquals($isUpdated, $newWeight === $motTest->getVehicleWeight());
     }
 
     /**
@@ -1071,9 +1087,9 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
         $brakeTestResult = (new BrakeTestResultClass3AndAbove())
             ->setWeightType($newWeightType)
             ->setVehicleWeight($newWeight);
+
         $motTest->setBrakeTestResultClass3AndAbove($brakeTestResult)
-            ->setVehicleClass($motTest->getVehicleClass())
-            ->getVehicle()->setWeight($oldWeight);
+            ->getVehicleWeight($oldWeight);
     }
 
     private function validateMotTestNewStatusResultIs($response)

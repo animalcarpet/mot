@@ -183,7 +183,7 @@ class TokenService extends AbstractService
             ->setExpiryDate((new \DateTime())->setTimestamp($tokenData['expiry']))
             ->setToken($tokenData['token']);
 
-        $this->setUserIdIfConnectionEstabished($this->entityManager);
+        $this->setUserIdIfConnectionEstablished($this->entityManager);
 
         $this->entityManager->persist($message);
         $this->entityManager->flush();
@@ -354,7 +354,7 @@ class TokenService extends AbstractService
     {
         $message = $this->messageRepository->getHydratedMessageByToken($token);
         $message->setIsAcknowledged(true);
-        $this->setUserIdIfConnectionEstabished($this->entityManager);
+        $this->setUserIdIfConnectionEstablished($this->entityManager);
         $this->entityManager->persist($message);
         $this->entityManager->flush($message);
     }
@@ -438,11 +438,12 @@ class TokenService extends AbstractService
         $this->personRepository->save($person);
     }
 
-    private function setUserIdIfConnectionEstabished(EntityManager $entityManager) {
+    private function setUserIdIfConnectionEstablished(EntityManager $entityManager)
+    {
         $connection = $entityManager->getConnection();
 
         if($connection !== null) {
-            $connection->exec("SET @app_user_id = (SELECT `id` FROM `person` WHERE `user_reference` = 'Static Data' OR `username` = 'static data')");
+            $connection->exec("SET @app_user_id = (SELECT `id` FROM `person` WHERE `user_reference` = 'Static Data' OR `username` = 'static data' LIMIT 1)");
         }
     }
 

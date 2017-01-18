@@ -2,8 +2,10 @@
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Domain\MotTestType;
+use DvsaCommon\Enum\MotTestStatusCode;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
+use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaMotEnforcement\Controller\MotTestSearchController;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
@@ -12,36 +14,42 @@ use DvsaCommon\Auth\PermissionInSystem;
 /** @var $dashboard \Dashboard\Model\Dashboard */
 $dashboard = $this->dashboardDataProvider();
 
-/** @var \DvsaCommon\Dto\Common\MotTestDto $motTest */
-$motTest = !empty($this->motDetails) ? $this->motDetails : new \DvsaCommon\Dto\Common\MotTestDto();
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motTest */
+$motTest = $this->motDetails;
+
+/** @var \DvsaMotTest\Controller\DvsaVehicleViewModel $vehicle */
+$vehicle;
 
 $motTestNumber = $motTest->getMotTestNumber();
 
-/** @var \DvsaCommon\Dto\Person\PersonDto $tester */
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\Tester $tester */
 $tester = $motTest->getTester();
-/** @var \DvsaCommon\Dto\Vehicle\VehicleDto $vehicle */
-$vehicle = $motTest->getVehicle();
-$site = $motTest->getVehicleTestingStation();
 
-$reasonsForRejection = $motTest->getReasonsForRejectionExcludingRepairedDefects();
-$fails = @$reasonsForRejection['FAIL'];
-$prses = @$reasonsForRejection['PRS'];
-$advisories = @$reasonsForRejection['ADVISORY'];
+/** @var \DvsaCommon\Dto\Site\VehicleTestingStationDto $site */
+$site = $this->siteDto;
 
-$pendingDetails = $motTest->getPendingDetails();
-
-$pendingStatus = ArrayUtils::tryGet($pendingDetails, 'currentSubmissionStatus');
-$isTestReadyToFail = ($pendingStatus == MotTestStatusName::FAILED);
-$isTestReadyToPass = ($pendingStatus == MotTestStatusName::PASSED);
+$reasonsForRejection = $motTest->getReasonsForRejection();
+$fails = @$reasonsForRejection->FAIL;
+$prses = @$reasonsForRejection->PRS;
+$advisories = @$reasonsForRejection->ADVISORY;
 
 $testStatus = $motTest->getStatus();
 $isTestPass = ($testStatus == MotTestStatusName::PASSED);
 $isTestFail = ($testStatus == MotTestStatusName::FAILED);
 $isTestActive = ($testStatus == MotTestStatusName::ACTIVE);
 
-/** @var \DvsaCommon\Dto\Common\MotTestTypeDto $motTestType */
-$motTestType = $motTest->getTestType();
-$isReinspection = MotTestType::isReinspection($motTestType->getCode());
+$brakeTestResult = null;
+
+if($motTest->getBrakeTestResult() !== null) {
+    if(!in_array($vehicle->getVehicleClass()->getCode(), [VehicleClassCode::CLASS_1, VehicleClassCode::CLASS_2])) {
+        $brakeTestResult = new \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove($motTest->getBrakeTestResult());
+    } else {
+        $brakeTestResult = new \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass1And2($motTest->getBrakeTestResult());
+    }
+}
+
+$motTestType = $motTest->getTestTypeCode();
+$isReinspection = MotTestType::isReinspection($motTestType);
 
 //  --  prepare back url   --
 if (!empty($this->vehicleId)) {
@@ -55,7 +63,7 @@ if (!empty($this->vehicleId)) {
 }
 
 //  --  title and header    --
-$testName = AbstractDvsaMotTestController::getTestName($motTestType->getCode());
+$testName = AbstractDvsaMotTestController::getTestName($motTestType);
 
 $title = $testName . ' Summary';
 $header = $testName . ' summary';
@@ -197,7 +205,7 @@ echo $this->partial(
 echo $this->partial(
     'partials/mot-test-summary/brake-values-in-kg-block', [
         'vehicle'           => $vehicle,
-        'brakeResult'       => $motTest->getBrakeTestResult(),
+        'brakeResult'       => $brakeTestResult,
         'brakeTestTypeCode2Name' => $brakeTestTypeCode2Name,
         'isEnforcementUser' => true,
     ]

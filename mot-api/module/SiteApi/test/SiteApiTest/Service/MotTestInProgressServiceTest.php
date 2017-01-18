@@ -8,8 +8,10 @@ use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\Make;
 use DvsaEntities\Entity\Model;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\Person;
+use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Repository\MotTestRepository;
 use SiteApi\Service\MotTestInProgressService;
 use Zend\Authentication\AuthenticationService;
@@ -53,37 +55,41 @@ class MotTestInProgressServiceTest extends AbstractServiceTestCase
         $this->assertTrue(is_array($dtoArray));
         $motTestDto = $dtoArray[0];
 
-        $this->assertEquals("1001", $motTestDto->getNumber());
-        $this->assertEquals("John Johnson", $motTestDto->getTesterName());
-        $this->assertEquals("LAMP101", $motTestDto->getVehicleRegisteredNumber());
-        $this->assertEquals("Clio", $motTestDto->getVehicleModel());
-        $this->assertEquals("Renault", $motTestDto->getVehicleMake());
+        $this->assertEquals('1001', $motTestDto->getNumber());
+        $this->assertEquals('John Johnson', $motTestDto->getTesterName());
+        $this->assertEquals('LAMP101', $motTestDto->getVehicleRegisteredNumber());
+        $this->assertEquals('Clio', $motTestDto->getVehicleModel());
+        $this->assertEquals('Renault', $motTestDto->getVehicleMake());
     }
 
     public function setUpRepository()
     {
         $tester = new Person();
-        $tester->setFirstName("John");
-        $tester->setFamilyName("Johnson");
+        $tester->setFirstName('John');
+        $tester->setFamilyName('Johnson');
 
         $vehicleMake = new Make();
         $vehicleMake->setId(1);
-        $vehicleMake->setCode("Renau");
-        $vehicleMake->setName("Renault");
+        $vehicleMake->setCode('Renau');
+        $vehicleMake->setName('Renault');
 
         $vehicleModel = new Model();
         $vehicleModel->setId(2);
-        $vehicleModel->setCode("CLIO");
-        $vehicleModel->setName("Clio");
+        $vehicleModel->setCode('CLIO');
+        $vehicleModel->setName('Clio');
+        $vehicleModel->setMake($vehicleMake);
+
+        $modelDetail = new ModelDetail();
+        $modelDetail->setModel($vehicleModel);
+
+        $vehicle = new Vehicle();
+        $vehicle->setRegistration('LAMP101');
+        $vehicle->setModelDetail($modelDetail);
 
         $motTest = new MotTest();
         $motTest->setTester($tester);
-
-        $motTest->setMake($vehicleMake);
-        $motTest->setModel($vehicleModel);
-
         $motTest->setNumber(1001);
-        $motTest->setRegistration("LAMP101");
+        $motTest->setVehicle($vehicle);
 
         $this->mockMotTestRepo = $this->getMockWithDisabledConstructor(MotTestRepository::class);
         $this->mockMotTestRepo->expects($this->any())->method('findInProgressTestsForVts')->will(

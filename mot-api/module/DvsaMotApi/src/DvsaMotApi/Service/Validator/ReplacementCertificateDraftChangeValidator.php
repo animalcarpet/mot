@@ -70,7 +70,12 @@ class ReplacementCertificateDraftChangeValidator
         }
 
         if ($dto->isOdometerReadingSet()) {
-            $checkResult = (new OdometerReadingValidator())->validate($dto->getOdometerReading(), 'odometerReading');
+            $checkResult = (new OdometerReadingValidator())->validate(
+                $dto->getOdometerValue(),
+                $dto->getOdometerUnit(),
+                $dto->getOdometerResultType(),
+                'odometerReading'
+            );
         }
         if ($dto->isVinSet() && self::isStringEmpty($dto->getVin())) {
             $checkResult->add(CM::withText("Invalid VIN")->field("vin"));

@@ -1,21 +1,28 @@
 <?php
+/**
+ * This file is part of the DVSA MOT Frontend project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotEnforcement\Controller;
 
 use Application\Model\DvsaConfigCatalog;
 use Application\Service\CatalogService;
 use Dashboard\Controller\UserHomeController;
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use Dvsa\Mot\ApiClient\Resource\Item\Tester;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Domain\MotTestType;
-use DvsaCommon\Dto\Common\MotTestDto;
-use DvsaCommon\Dto\Person\PersonDto;
+use DvsaCommon\Enum\ColourCode;
+use DvsaCommon\Enum\FuelTypeCode;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaCommon\Utility\ArrayUtils;
-use DvsaMotEnforcement\Model\MotTest as MotTestModel;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use DvsaMotTest\Model\OdometerReadingViewObject;
 use Zend\View\Model\ViewModel;
@@ -34,10 +41,22 @@ class MotTestController extends AbstractDvsaMotTestController
     /** @var  ParamObfuscator */
     private $paramObfuscator;
 
+    /**
+     * @var OdometerReadingViewObject
+     */
+    private $odometerViewObject;
+
+    /**
+     * MotTestController constructor.
+     * @param ParamObfuscator $paramObfuscator
+     * @param OdometerReadingViewObject $odometerViewObject
+     */
     public function __construct(
-        ParamObfuscator $paramObfuscator
+        ParamObfuscator $paramObfuscator,
+        OdometerReadingViewObject $odometerViewObject
     ) {
         $this->paramObfuscator = $paramObfuscator;
+        $this->odometerViewObject = $odometerViewObject;
     }
 
     /**
@@ -57,19 +76,16 @@ class MotTestController extends AbstractDvsaMotTestController
         $isNonMotTest = false;
         $tester = null;
 
-        /** @var MotTestDto $motDetails */
+        /** @var MotTest $motDetails */
         $motDetails = $this->tryGetMotTestOrAddErrorMessages($motTestNumber);
 
+        /** @var DvsaVehicle $vehicle */
+        $vehicle = $this->getVehicleServiceClient()->getDvsaVehicleByIdAndVersion($motDetails->getVehicleId(), $motDetails->getVehicleVersion());
+
         if (!empty($motDetails)) {
-            /** @var PersonDto $testerDto */
-            $testerDto = $motDetails->getTester();
-            $testerUsername = $testerDto->getUsername();
-            // Fetch the User that did the test
-            $userSearchUrl = sprintf('user/%s', $testerUsername);
-            $userResult = $this->getRestClient()->get($userSearchUrl);
-            $tester = $userResult['data'];
-            $isDemoMotTest = MotTestType::isDemo($motDetails->getTestType()->getCode());
-            $isNonMotTest = MotTestType::isNonMotTypes($motDetails->getTestType()->getCode());
+            /** @var Tester $tester */
+            $tester = $motDetails->getTester();
+            $isDemoMotTest = MotTestType::isDemo($motDetails->getTestTypeCode());
         }
 
         /** @var CatalogService $catalogService */
@@ -83,40 +99,40 @@ class MotTestController extends AbstractDvsaMotTestController
         );
 
         $brakeTestTypeCode2Name = [];
-        foreach ($catalogService->getData()['brakeTestType'] as $breakTestType){
+        foreach ($catalogService->getData()['brakeTestType'] as $breakTestType) {
             $brakeTestTypeCode2Name[$breakTestType['code']] = $breakTestType['name'];
         }
 
-        $odometerReading = OdometerReadingViewObject::create();
-        if ($motDetails->getOdometerReading() !== null) {
-            $odometerReading->setOdometerReadingValuesMap($motDetails->getOdometerReading());
-        }
+        $this->odometerViewObject->setValue($motDetails->getOdometerValue());
+        $this->odometerViewObject->setUnit($motDetails->getOdometerUnit());
+        $this->odometerViewObject->setResultType($motDetails->getOdometerResultType());
 
         //  --  prepare back url    --
         $searchType = $this->params()->fromQuery('type', 'vts');
         $vehicleId = $this->params()->fromQuery('vehicleId', '');
         $summaryParams = [
-            'type'       => $searchType,
-            'search'     => $this->params()->fromQuery('search'),
-            'month1'     => $this->params()->fromQuery('month1'),
-            'year1'      => $this->params()->fromQuery('year1'),
-            'month2'     => $this->params()->fromQuery('month2'),
-            'year2'      => $this->params()->fromQuery('year2'),
-            'backTo'     => $this->params()->fromQuery('backTo'),
-            'oneResult'  => $this->params()->fromQuery('oneResult', false),
+            'type' => $searchType,
+            'search' => $this->params()->fromQuery('search'),
+            'month1' => $this->params()->fromQuery('month1'),
+            'year1' => $this->params()->fromQuery('year1'),
+            'month2' => $this->params()->fromQuery('month2'),
+            'year2' => $this->params()->fromQuery('year2'),
+            'backTo' => $this->params()->fromQuery('backTo'),
+            'oneResult' => $this->params()->fromQuery('oneResult', false),
         ];
 
         return new ViewModel(
             [
-                'tester'                 => $tester,
-                'motDetails'             => $motDetails,
-                'motTestNumber'          => $motTestNumber,
-                'motTestTypes'           => $motTestTypes,
-                'odometerReading'        => $odometerReading,
-                'searchType'             => $searchType,
-                'vehicleId'              => $vehicleId,
-                'summaryParams'          => $summaryParams,
-                'isDemoMotTest'          => $isDemoMotTest,
+                'tester' => $tester,
+                'motDetails' => $motDetails,
+                'motTestNumber' => $motTestNumber,
+                'vehicle' => $vehicle,
+                'motTestTypes' => $motTestTypes,
+                'odometerReading' => $this->odometerViewObject,
+                'searchType' => $searchType,
+                'vehicleId' => $vehicleId,
+                'summaryParams' => $summaryParams,
+                'isDemoMotTest' => $isDemoMotTest,
                 'brakeTestTypeCode2Name' => $brakeTestTypeCode2Name,
                 'isNonMotTest'           => $isNonMotTest,
             ]
@@ -138,7 +154,7 @@ class MotTestController extends AbstractDvsaMotTestController
         $complaintRef = $this->params()->fromPost('complaintRef');
         $motTest = null;
 
-        /** @var MotTestDto $motTest */
+        /** @var MotTest $motTest */
         $motTest = $this->tryGetMotTestOrAddErrorMessages($motTestNumber);
         if ($motTest) {
             $postData = $this->preparePostData($motTest, $motTestType, $complaintRef);
@@ -148,14 +164,14 @@ class MotTestController extends AbstractDvsaMotTestController
                 $result = $this->getRestClient()->post($apiUrl, $postData);
 
                 $createMotTestResult = $result['data'];
-                $newMotTestId = $createMotTestResult['motTestNumber'];
+                $newMotTestNumber = $createMotTestResult['motTestNumber'];
 
                 return $this->redirect()->toRoute(
                     'mot-test',
                     [
-                        'controller'    => 'MotTest',
-                        'action'        => 'index',
-                        'motTestNumber' => $newMotTestId,
+                        'controller' => 'MotTest',
+                        'action' => 'index',
+                        'motTestNumber' => $newMotTestNumber,
                     ]
                 );
             } catch (RestApplicationException $e) {
@@ -166,8 +182,8 @@ class MotTestController extends AbstractDvsaMotTestController
         return $this->redirect()->toRoute(
             'mot-test',
             [
-                'controller'    => 'MotTest',
-                'action'        => 'index',
+                'controller' => 'MotTest',
+                'action' => 'index',
                 'motTestNumber' => $motTestNumber,
             ]
         );
@@ -226,12 +242,12 @@ class MotTestController extends AbstractDvsaMotTestController
         $viewModel = new ViewModel(
             [
                 'defaultValues' => $defaultValues,
-                'tester'        => null,
+                'tester' => null,
                 'compareResult' => $compareResult,
-                'formErrors'    => $formErrorData,
+                'formErrors' => $formErrorData,
                 'configCatalog' => new DvsaConfigCatalog($this->getRestClient()),
-                'saveButton'    => true,
-                'dataCatalog'   => $this->getCatalogService()
+                'saveButton' => true,
+                'dataCatalog' => $this->getCatalogService()
             ]
         );
 
@@ -320,12 +336,12 @@ class MotTestController extends AbstractDvsaMotTestController
         $viewModel = new ViewModel(
             [
                 'defaultValues' => $defaultValues,
-                'tester'        => null,
+                'tester' => null,
                 'compareResult' => $compareResult,
-                'formErrors'    => $formErrorData,
+                'formErrors' => $formErrorData,
                 'configCatalog' => new DvsaConfigCatalog($this->getRestClient()),
-                'saveButton'    => true,
-                'dataCatalog'   => $this->getCatalogService()
+                'saveButton' => true,
+                'dataCatalog' => $this->getCatalogService()
             ]
         );
 
@@ -381,30 +397,69 @@ class MotTestController extends AbstractDvsaMotTestController
     }
 
     /**
-     * @param MotTestDto  $motTest
-     * @param string $motTestType
-     * @param        $complaintRef
+     * @param MotTest $motTest
+     * @param string  $motTestType
+     * @param         $complaintRef
      *
      * @return array
      */
-    protected function preparePostData(MotTestDto $motTest, $motTestType, $complaintRef)
+    protected function preparePostData($motTest, $motTestType, $complaintRef)
     {
-        /** @var \DvsaCommon\Dto\Vehicle\VehicleDto $vehicle */
-        $vehicle = $motTest->getVehicle();
-
+        $vehicle = $this->getVehicleServiceClient()->getDvsaVehicleByIdAndVersion($motTest->getVehicleId(), $motTest->getVehicleVersion());
         $postData = [
-            'vehicleId'               => $vehicle->getId(),
-            'vehicleTestingStationId' => $motTest->getVehicleTestingStation()['id'],
-            'primaryColour'           => $vehicle->getColour()->getCode(),
-            'secondaryColour'         => $vehicle->getColourSecondary()->getCode(),
-            'hasRegistration'         => $motTest->getHasRegistration(),
-            'motTestType'             => $motTestType,
-            'motTestNumberOriginal'   => $motTest->getMotTestNumber(),
-            'complaintRef'            => $complaintRef,
-            'fuelTypeId'              => $vehicle->getFuelType()->getCode(),
-            'vehicleClassCode'        => $vehicle->getClassCode(),
+            'vehicleId' => $motTest->getVehicleId(),
+            'vehicleTestingStationId' => $motTest->getSiteId(),
+            'primaryColour' => $this->evalColourCodeEnumsBasedOnTheColourName($vehicle->getColour()->getName()),
+            'secondaryColour' => $this->evalColourCodeEnumsBasedOnTheColourName($vehicle->getColourSecondary()->getName()),
+            'hasRegistration' => $motTest->hasRegistration(),
+            'motTestType' => $motTestType,
+            'motTestNumberOriginal' => $motTest->getMotTestNumber(),
+            'complaintRef' => $complaintRef,
+            'fuelTypeId' => $this->evalFuelTypeCodeEnumsBasedOnTheFuelName($vehicle->getFuelType()->getName()),
+            'vehicleClassCode' => $vehicle->getVehicleClass()->getCode(),
         ];
 
         return $postData;
+    }
+
+    /**
+     * @TODO (ABN) Once the new API accepts MOT-TEST creation calls all this mess will be gone!
+     *             and hopefully the rest of the useless single dimension enums, or make them smarter
+     *
+     * @param string $enumPath
+     * @param string $enumName
+     * @return string
+     */
+    private function evalEnumByName($enumPath, $enumName)
+    {
+        $enumNameSpecialCharsRemoved = str_replace(['(', ')', ',', ':', '\'', '.', '?'], '', $enumName);
+        $enumNameWithUnderscores = str_replace([' ', ' - ', '-', '/'], '_', $enumNameSpecialCharsRemoved);
+
+        return constant(
+            $enumPath . '::' .
+            strtoupper($enumNameWithUnderscores)
+        );
+    }
+
+    /**
+     * @TODO (ABN) Same as evalEnumByName()!!
+     *
+     * @param string $colorName
+     * @return string enum name from ColourCode
+     */
+    private function evalColourCodeEnumsBasedOnTheColourName($colorName)
+    {
+        return $this->evalEnumByName(ColourCode::class, $colorName);
+    }
+
+    /**
+     * @TODO (ABN) Same as evalEnumByName()!!
+     *
+     * @param string $FuelTypeName
+     * @return string enum name from ColourCode
+     */
+    private function evalFuelTypeCodeEnumsBasedOnTheFuelName($FuelTypeName)
+    {
+        return $this->evalEnumByName(FuelTypeCode::class, $FuelTypeName);
     }
 }

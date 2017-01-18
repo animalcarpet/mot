@@ -7,13 +7,13 @@
 
 namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\Frontend\MotTestModule\Exception\DefectTypeNotFoundException;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyContextProvider;
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
 use Dvsa\Mot\Frontend\MotTestModule\View\FlashMessageBuilder;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Defect;
 use DvsaCommon\Domain\MotTestType;
-use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
@@ -75,7 +75,7 @@ class AddDefectController extends AbstractDvsaMotTestController
         $isReinspection = null;
         $isDemoTest = null;
         $isNonMotTest = false;
-        /** @var MotTestDto $motTest */
+        /** @var MotTest $motTest */
         $motTest = null;
         $defects = null;
         $title = '';
@@ -102,10 +102,11 @@ class AddDefectController extends AbstractDvsaMotTestController
             $type = $this->transformDefectTypeForView($type);
 
             $motTest = $this->getMotTestFromApi($motTestNumber);
-            $testType = $motTest->getTestType();
-            $isDemoTest = MotTestType::isDemo($testType->getCode());
-            $isReinspection = MotTestType::isReinspection($testType->getCode());
-            $isNonMotTest = MotTestType::isNonMotTypes($testType->getCode());
+            $testType = $motTest->getTestTypeCode();
+            $isDemoTest = MotTestType::isDemo($testType);
+            $isReinspection = MotTestType::isReinspection($testType);
+            $testType = $motTest->getTestTypeCode();
+            $isNonMotTest = MotTestType::isNonMotTypes($testType);
             $request = $this->getRequest();
 
             if ($request->isPost()) {

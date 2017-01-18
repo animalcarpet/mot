@@ -1,8 +1,14 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaCommon\Dto\Common;
 
 use DvsaCommon\Dto\AbstractDataTransferObject;
+use DvsaCommon\Dto\Organisation\OrganisationDto;
 use DvsaCommon\Dto\Person\PersonDto;
 use DvsaCommon\Dto\Vehicle\CountryDto;
 use DvsaCommon\Dto\Vehicle\FuelTypeDto;
@@ -112,9 +118,19 @@ class MotTestDto extends AbstractDataTransferObject
     private $motTestNumber;
 
     /**
-     * @var OdometerReadingDTO
+     * @var string
      */
-    private $odometerReading;
+    private $odometerResultType;
+
+    /**
+     * @var string
+     */
+    private $odometerUnit;
+
+    /**
+     * @var integer
+     */
+    private $odometerValue;
 
     /**
      * @var int
@@ -235,6 +251,16 @@ class MotTestDto extends AbstractDataTransferObject
      * @var string
      */
     private $clientIp;
+
+    /**
+     * @var OrganisationDto
+     */
+    private $organisation;
+
+    /**
+     * @var string
+     */
+    private $submittedDate;
 
     /**
      * @return int
@@ -459,26 +485,6 @@ class MotTestDto extends AbstractDataTransferObject
     }
 
     /**
-     * @return array
-     */
-    public function getFullPartialRetest()
-    {
-        return $this->fullPartialRetest;
-    }
-
-    /**
-     * @param array $fullPartialRetest
-     *
-     * @return MotTestDto
-     */
-    public function setFullPartialRetest($fullPartialRetest)
-    {
-        $this->fullPartialRetest = $fullPartialRetest;
-
-        return $this;
-    }
-
-    /**
      * @return boolean
      */
     public function getHasRegistration()
@@ -566,26 +572,6 @@ class MotTestDto extends AbstractDataTransferObject
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getItemsNotTestedComment()
-    {
-        return $this->itemsNotTestedComment;
-    }
-
-    /**
-     * @param array $itemsNotTestedComment
-     *
-     * @return MotTestDto
-     */
-    public function setItemsNotTestedComment($itemsNotTestedComment)
-    {
-        $this->itemsNotTestedComment = $itemsNotTestedComment;
-
-        return $this;
-    }
-
     public function getMake()
     {
         return $this->make;
@@ -631,22 +617,69 @@ class MotTestDto extends AbstractDataTransferObject
     }
 
     /**
-     * @return OdometerReadingDTO
+     * Proxy method
+     * @param OdometerReadingDto $odometerReadingDto
+     * @return $this
      */
-    public function getOdometerReading()
+    public function setOdometerReading(OdometerReadingDto $odometerReadingDto)
     {
-        return $this->odometerReading;
+        $this->setOdometerValue($odometerReadingDto->getValue());
+        $this->setOdometerUnit($odometerReadingDto->getUnit());
+        $this->setOdometerResultType($odometerReadingDto->getResultType());
+        return $this;
     }
 
     /**
-     * @param OdometerReadingDTO $odometerReading
-     *
+     * @return string
+     */
+    public function getOdometerResultType()
+    {
+        return $this->odometerResultType;
+    }
+
+    /**
+     * @param string $odometerResultType
      * @return MotTestDto
      */
-    public function setOdometerReading($odometerReading)
+    public function setOdometerResultType($odometerResultType)
     {
-        $this->odometerReading = $odometerReading;
+        $this->odometerResultType = $odometerResultType;
+        return $this;
+    }
 
+    /**
+     * @return string
+     */
+    public function getOdometerUnit()
+    {
+        return $this->odometerUnit;
+    }
+
+    /**
+     * @param string $odometerUnit
+     * @return MotTestDto
+     */
+    public function setOdometerUnit($odometerUnit)
+    {
+        $this->odometerUnit = $odometerUnit;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOdometerValue()
+    {
+        return $this->odometerValue;
+    }
+
+    /**
+     * @param int $odometerValue
+     * @return MotTestDto
+     */
+    public function setOdometerValue($odometerValue)
+    {
+        $this->odometerValue = $odometerValue;
         return $this;
     }
 
@@ -686,26 +719,6 @@ class MotTestDto extends AbstractDataTransferObject
     public function setOnePersonTest($onePersonTest)
     {
         $this->onePersonTest = $onePersonTest;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getPartialReinspectionComment()
-    {
-        return $this->partialReinspectionComment;
-    }
-
-    /**
-     * @param array $partialReinspectionComment
-     *
-     * @return MotTestDto
-     */
-    public function setPartialReinspectionComment($partialReinspectionComment)
-    {
-        $this->partialReinspectionComment = $partialReinspectionComment;
 
         return $this;
     }
@@ -1148,5 +1161,45 @@ class MotTestDto extends AbstractDataTransferObject
     public function getClientIp()
     {
         return $this->clientIp;
+    }
+
+    /**
+     * @return OrganisationDto
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
+     * @param OrganisationDto $organisation
+     *
+     * @return MotTestDto
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubmittedDate()
+    {
+        return $this->submittedDate;
+    }
+
+    /**
+     * @param \DateTime $submittedDate
+     *
+     * @return MotTestDto
+     */
+    public function setSubmittedDate($submittedDate)
+    {
+        $this->submittedDate = $submittedDate;
+
+        return $this;
     }
 }

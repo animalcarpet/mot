@@ -1,7 +1,15 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace MotTestResultTest\Service\Service;
 
+use DvsaCommon\Constants\OdometerReadingResultType;
+use DvsaCommon\Constants\OdometerUnit;
+use DvsaCommon\Enum\ColourCode;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaEntities\Entity\Colour;
 use DvsaEntities\Entity\ContactDetail;
@@ -13,7 +21,6 @@ use DvsaEntities\Entity\Model;
 use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestStatus;
-use DvsaEntities\Entity\OdometerReading;
 use DvsaEntities\Entity\Phone;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\SiteContactType;
@@ -29,6 +36,10 @@ class OpenInterfaceMotTestServiceTest extends AbstractServiceTestCase
      * @var OpenInterfaceMotTestService
      */
     private $underTest;
+
+    /**
+     * @var PHPUnit_Framework_MockObject_MockObject
+     */
     private $mockRepository;
 
     protected function setUp()
@@ -96,16 +107,12 @@ class OpenInterfaceMotTestServiceTest extends AbstractServiceTestCase
         $make = new Make();
         $model = new Model();
         $primaryColour = (new Colour())->setName("Black");
-        $odometerReading = new OdometerReading();
         $vts = new Site();
         $status = new MotTestStatus();
 
         return (new MotTest())
             ->setNumber($number)
-            ->setMake($make)
-            ->setModel($model)
-            ->setPrimaryColour($primaryColour)
-            ->setOdometerReading($odometerReading)
+            ->setOdometerResultType(OdometerReadingResultType::NO_ODOMETER)
             ->setVehicleTestingStation($vts)
             ->setStatus($status)
             ->setVehicle($this->getMockVehicle());
@@ -122,7 +129,11 @@ class OpenInterfaceMotTestServiceTest extends AbstractServiceTestCase
             ->will($this->returnValue($this->getMockPre1960Vehicle()));
         $this->mockRepository->expects($this->exactly(2))
             ->method('findColourByCode')
-            ->will($this->returnValue($this->getMockColour()));
+            ->will($this->onConsecutiveCalls(
+                    $this->getMockColour(ColourCode::BLACK, 'Black'),
+                    $this->getMockColour(ColourCode::NOT_STATED, 'Not Stated')
+                )
+            );
         $this->mockRepository->expects($this->once())
             ->method('findDvlaMakeByCode')
             ->will($this->returnValue($this->getDvlaMake()));
@@ -152,6 +163,7 @@ class OpenInterfaceMotTestServiceTest extends AbstractServiceTestCase
 
         return (new Vehicle)
             ->setId(1)
+            ->setVersion(1)
             ->setRegistration("GGG455")
             ->setModelDetail($modelDetail)
             ->setColour((new Colour())->setCode("P")->setName("Black"))
@@ -166,7 +178,7 @@ class OpenInterfaceMotTestServiceTest extends AbstractServiceTestCase
             ->setMake((new Make())->setName("FORD"))
             ->setModel((new Model())->setName("MONDEO"))
             ->setPrimaryColour('P')
-            ->setSecondaryColour('P')
+            ->setSecondaryColour('W')
             ->setMakeCode('FORD')
             ->setModelCode('MONDEO');
     }
@@ -181,11 +193,6 @@ class OpenInterfaceMotTestServiceTest extends AbstractServiceTestCase
 
     private function getMockMotTest()
     {
-        $odometerReading = new OdometerReading();
-        $odometerReading->setValue(32000);
-        $odometerReading->setUnit("mi");
-
-
         $phone = new Phone();
         $phone->setNumber("+768-45-4433630");
         $phone->setIsPrimary(true);
@@ -204,61 +211,60 @@ class OpenInterfaceMotTestServiceTest extends AbstractServiceTestCase
             ->setNumber("999999999014")
             ->setIssuedDate((new \DateTime())->setDate(2015, 05, 04))
             ->setExpiryDate((new \DateTime())->setDate(2016, 05, 03))
-            ->setRegistration("FNZ6110")
-            ->setMake((new Make())->setName("RENAULT"))
-            ->setModel((new Model())->setName("CLIO"))
-            ->setPrimaryColour((new Colour())->setCode("L")->setName("Grey"))
-            ->setSecondaryColour((new Colour())->setCode("W")->setName("Not Stated"))
-            ->setOdometerReading($odometerReading)
+            ->setOdometerValue(32000)
+            ->setOdometerUnit(OdometerUnit::MILES)
             ->setVehicleTestingStation($site)
-            ->setVehicle($this->getMockVehicle());
+            ->setVehicle($this->getMockVehicle())
+            ->setVehicleVersion($this->getMockVehicle()->getVersion());
     }
 
     private function expectedVehicleDetails()
     {
         return [
-            "vrm" => "GGG455",
-            "make" => "FORD",
-            "model" => "MONDEO",
-            "colourCode1" => "P",
-            "colour1" => "Black",
-            "colourCode2" => "P",
-            "colour2" => "Black",
-            "odometer" => 1960,
-            "odometerUnit" => "M",
-            "testNumber" => "196019601960",
-            "testDate" => date('Y-01-01'),
-            "expiryDate" => (date('Y') + 1) . '-01-01',
-            "vtsNumber" => "PRE1960",
-            "vtsTelNo" => "PRE1960"
+            'vrm' => 'GGG455',
+            'make' => 'FORD',
+            'model' => 'MONDEO',
+            'colourCode1' => ColourCode::BLACK,
+            'colour1' => 'Black',
+            'colourCode2' => ColourCode::NOT_STATED,
+            'colour2' => 'Not Stated',
+            'odometer' => 1960,
+            'odometerUnit' => 'M',
+            'testNumber' => '196019601960',
+            'testDate' => date('Y-01-01'),
+            'expiryDate' => (date('Y') + 1) . '-01-01',
+            'vtsNumber' => 'PRE1960',
+            'vtsTelNo' => 'PRE1960'
         ];
     }
 
     public function expectedMotTestPassDetails()
     {
+        $vehicleDetail = $this->expectedVehicleDetails();
+
         return [
-            "vrm" => "FNZ6110",
-            "make" => "RENAULT",
-            "model" => "CLIO",
-            "colourCode1" => "L",
-            "colour1" => "Grey",
-            "colourCode2" => "W",
-            "colour2" => "Not Stated",
-            "odometer" => 32000,
-            "odometerUnit" => "mi",
-            "testNumber" => "999999999014",
-            "testDate" => "2015-05-04",
-            "expiryDate" => "2016-05-03",
-            "vtsNumber" => "V1234",
-            "vtsTelNo" => "+768-45-4433630"
+            'vrm' => $vehicleDetail['vrm'],
+            'make' => $vehicleDetail['make'],
+            'model' => $vehicleDetail['model'],
+            'colourCode1' => $vehicleDetail['colourCode1'],
+            'colour1' => $vehicleDetail['colour1'],
+            'colourCode2' => $vehicleDetail['colourCode2'],
+            'colour2' => $vehicleDetail['colour2'],
+            'odometer' => 32000,
+            'odometerUnit' => 'mi',
+            'testNumber' => '999999999014',
+            'testDate' => '2015-05-04',
+            'expiryDate' => '2016-05-03',
+            'vtsNumber' => 'V1234',
+            'vtsTelNo' => '+768-45-4433630'
         ];
     }
 
-    private function getMockColour()
+    private function getMockColour($code = ColourCode::BLACK, $name = 'Black')
     {
         return (new Colour())
-            ->setCode('P')
-            ->setName('Black');
+            ->setCode($code)
+            ->setName($name);
     }
 
     private function getDvlaMake()

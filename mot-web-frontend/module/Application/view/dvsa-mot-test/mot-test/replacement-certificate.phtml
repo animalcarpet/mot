@@ -8,6 +8,7 @@ use DvsaMotTest\View\ReplacementVehicleViewModel;
  * @var ReplacementVehicleViewModel $vehicle
  * @var OdometerReadingViewObject $odometerReading
  * @var ReplacementSiteViewModel $vts
+ * @var \DvsaMotTest\Controller\DvsaVehicleViewModel $dvsaVehicleViewModel
  *
  * @var \DvsaCommon\Dto\Common\MotTestDto $motTest
  *
@@ -96,7 +97,7 @@ echo $this->partial('errorMessages', ['getFromFlash' => true]);
 echo $this->partial('infoMessages', ['getFromFlash' => true]);
 
 if (!$isAdmin) {
-    echo $this->partial('vehicleSummary', ['vehicle' => $motTest->getVehicle()]);
+    echo $this->partial('vehicleSummary', ['vehicle' => $dvsaVehicleViewModel]);
 }
 ?>
 

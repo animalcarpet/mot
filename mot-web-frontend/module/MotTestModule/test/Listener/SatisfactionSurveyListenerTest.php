@@ -8,12 +8,13 @@
 namespace DvsaMotTestTest\Factory\Listener;
 
 use Core\Service\MotEventManager;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\Frontend\AuthenticationModule\Event\SuccessfulSignOutEvent;
 use Dvsa\Mot\Frontend\MotTestModule\Listener\MotEvents;
 use Dvsa\Mot\Frontend\MotTestModule\Listener\SatisfactionSurveyListener;
 use Dvsa\Mot\Frontend\MotTestModule\Service\SurveyService;
 use DvsaApplicationLogger\Log\Logger;
-use DvsaCommon\Dto\Common\MotTestDto;
+use DvsaMotTestTest\TestHelper\Fixture;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use PHPUnit_Framework_TestCase;
 use Zend\EventManager\Event;
@@ -85,33 +86,7 @@ class SatisfactionSurveyListenerTest extends PHPUnit_Framework_TestCase
             ->method('surveyShouldDisplay')
             ->willReturn(true);
 
-        $this->surveyServiceMock->expects($this->once())
-            ->method('generateToken');
-
-        $motDetailsMock = $this->getMockBuilder(MotTestDto::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getTestType', 'getTester', 'getCode', 'getId'])
-            ->getMock();
-
-        $motDetailsMock
-            ->expects($this->once())
-            ->method('getTestType')
-            ->willReturnSelf();
-
-        $motDetailsMock
-            ->expects($this->once())
-            ->method('getCode')
-            ->willReturn('testCode');
-
-        $motDetailsMock
-            ->expects($this->once())
-            ->method('getTester')
-            ->willReturnSelf();
-
-        $motDetailsMock
-            ->expects($this->any())
-            ->method('getId')
-            ->willReturn('testId');
+        $motDetailsMock = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
 
         // returnValueMap must map _all_ arguments, including optional ones
         $valueMap = [
@@ -136,26 +111,7 @@ class SatisfactionSurveyListenerTest extends PHPUnit_Framework_TestCase
             ->method('surveyShouldDisplay')
             ->willReturn(false);
 
-        $motDetailsMock = $this->getMockBuilder(MotTestDto::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getTestType', 'getTester', 'getCode', 'getId'])
-            ->getMock();
-
-        $motDetailsMock->expects($this->once())
-            ->method('getTestType')
-            ->willReturnSelf();
-
-        $motDetailsMock->expects($this->once())
-            ->method('getCode')
-            ->willReturn('testCode');
-
-        $motDetailsMock->expects($this->once())
-            ->method('getTester')
-            ->willReturnSelf();
-
-        $motDetailsMock->expects($this->any())
-            ->method('getId')
-            ->willReturn('testId');
+        $motDetailsMock = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
 
         $this->eventMock->expects($this->any())
             ->method('getParam')

@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApi\Model\OutputFormat;
 
@@ -7,7 +12,7 @@ use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommonApi\Model\OutputFormat;
 use DvsaEntities\Entity\MotTest;
-use DvsaEntities\Entity\OdometerReading;
+use DvsaEntities\Entity\MotTestCancelled;
 
 /**
  * Class OutputFormatDataTablesMotTest
@@ -37,7 +42,6 @@ class OutputFormatDataTablesMotTest extends OutputFormat
         if ($item instanceof MotTest) {
             $testNr = $item->getNumber();
 
-            $reasonForCancel = $item->getMotTestReasonForCancel();
             $testDate = $item->getCompletedDate() !== null ? $item->getCompletedDate() :
                 ($item->getStartedDate() !== null ? $item->getStartedDate() : null);
 
@@ -50,7 +54,11 @@ class OutputFormatDataTablesMotTest extends OutputFormat
                 'motTestNumber'         => $testNr,
                 'primaryColour'         => $item->getPrimaryColour()->getName(),
                 'hasRegistration'       => $item->getHasRegistration(),
-                'odometer'              => $this->getOdometer($item->getOdometerReading()),
+                'odometer'              => $this->getOdometer(
+                    $item->getOdometerValue(),
+                    $item->getOdometerUnit(),
+                    $item->getOdometerResultType()
+                ),
                 'vin'                   => $item->getVin(),
                 'registration'          => $item->getRegistration(),
                 'make'                  => $item->getMakeName(),
@@ -67,7 +75,7 @@ class OutputFormatDataTablesMotTest extends OutputFormat
                         : $item->getStartedDate()
                 ),
                 'testerUsername'        => $item->getTester()->getUsername(),
-                'reasonsForRejection'   => $reasonForCancel ? $reasonForCancel->getReason() : null,
+                'reasonsForRejection'   => $item->getMotTestReasonForCancel(),
                 'testDate'              => DateTimeApiFormat::dateTime($testDate),
             ];
         } else {
@@ -80,7 +88,11 @@ class OutputFormatDataTablesMotTest extends OutputFormat
                 'motTestNumber'       => $testNr,
                 'primaryColour'       => $src['primaryColour'],
                 'hasRegistration'     => $src['hasRegistration'],
-                'odometer'            => $this->getOdometer($src),
+                'odometer'            => $this->getOdometer(
+                    $src['odometerValue'],
+                    $src['odometerUnit'],
+                    $src['odometerType']
+                ),
                 'vin'                 => $src['vin'],
                 'registration'        => $src['registration'],
                 'make'                => $src['make'],
@@ -99,23 +111,8 @@ class OutputFormatDataTablesMotTest extends OutputFormat
         $results[$testNr] = $result;
     }
 
-    private function getOdometer($data)
+    private function getOdometer($value, $unit, $type)
     {
-        if ($data === null) {
-            return self::TEXT_NOT_RECORDED;
-        }
-
-        $type = $value = $unit = null;
-        if ($data instanceof OdometerReading) {
-            $type = $data->getResultType();
-            $value = $data->getValue();
-            $unit = $data->getUnit();
-        } elseif (is_array($data)) {
-            $type = $data['odometerType'];
-            $value = $data['odometerValue'];
-            $unit = $data['odometerUnit'];
-        }
-
         if ($type == OdometerReadingResultType::OK) {
             $result = $value . ' ' . $unit;
         } elseif ($type == OdometerReadingResultType::NOT_READABLE) {

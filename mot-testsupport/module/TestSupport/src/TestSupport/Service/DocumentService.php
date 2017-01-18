@@ -36,7 +36,7 @@ class DocumentService
         /** @var Connection $connection */
         $connection = $this->entityManager->getConnection();
 
-        $connection->executeQuery("UPDATE mot_test SET document_id = NULL WHERE document_id = :id", [
+        $connection->executeQuery("UPDATE mot_test_current SET document_id = NULL WHERE document_id = :id", [
             'id' => $id
         ]);
 

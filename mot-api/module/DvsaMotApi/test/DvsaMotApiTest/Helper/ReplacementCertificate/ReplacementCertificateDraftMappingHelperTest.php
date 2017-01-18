@@ -7,7 +7,7 @@ use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Date\DateUtils;
 use DvsaEntities\Entity\MotTest;
-use DvsaEntities\Entity\ReplacementCertificateDraft;
+use DvsaEntities\Entity\CertificateReplacementDraft;
 use DvsaMotApi\Helper\ReplacementCertificate\ReplacementCertificateDraftMappingHelper;
 use DvsaMotApiTest\Factory\MotTestObjectsFactory;
 use DvsaMotApiTest\Factory\VehicleObjectsFactory as VOF;
@@ -47,7 +47,7 @@ class ReplacementCertificateDraftMappingHelperTest extends PHPUnit_Framework_Tes
             ['model.id', $draft->getModel()->getId(), $arr['model']['id']],
             ['model.code', $draft->getModel()->getCode(), $arr['model']['code']],
             ['model.name', $draft->getModel()->getName(), $arr['model']['name']],
-            ['odometerReading.value', $draft->getOdometerReading()->getValue(), $arr['odometerReading']['value']],
+            ['odometerReading.value', $draft->getOdometerValue(), $arr['odometerReading']['value']],
             ['odometerReading.unit', OdometerUnit::MILES, $arr['odometerReading']['unit']],
             ['odometerReading.resultType', OdometerReadingResultType::OK, $arr['odometerReading']['resultType']],
             ['vin', $draft->getVin(), $arr['vin']],
@@ -81,7 +81,7 @@ class ReplacementCertificateDraftMappingHelperTest extends PHPUnit_Framework_Tes
             ['primaryColour.name', $draft->getPrimaryColour()->getName(), $arr['primaryColour']['name']],
             ['secondaryColour.code', $draft->getSecondaryColour()->getCode(), $arr['secondaryColour']['code']],
             ['secondaryColour.name', $draft->getSecondaryColour()->getName(), $arr['secondaryColour']['name']],
-            ['odometerReading.value', $draft->getOdometerReading()->getValue(), $arr['odometerReading']['value']],
+            ['odometerReading.value', $draft->getOdometerValue(), $arr['odometerReading']['value']],
             ['odometerReading.unit', OdometerUnit::MILES, $arr['odometerReading']['unit']],
             ['odometerReading.resultType', OdometerReadingResultType::OK, $arr['odometerReading']['resultType']],
             ['motTestId', $draft->getMotTest()->getNumber(), $arr['motTestNumber']],
@@ -151,7 +151,7 @@ class ReplacementCertificateDraftMappingHelperTest extends PHPUnit_Framework_Tes
 
     private function buildReplacementCertificateDraft()
     {
-        return (new ReplacementCertificateDraft())
+        return (new CertificateReplacementDraft())
             ->setCountryOfRegistration(VOF::countryOfRegistration(1, "cor"))
             ->setPrimaryColour(VOF::colour(2, "R", "red"))
             ->setSecondaryColour(VOF::colour(3, "G", "green"))
@@ -160,14 +160,11 @@ class ReplacementCertificateDraftMappingHelperTest extends PHPUnit_Framework_Tes
             ->setModel(VOF::model(5, "M3", "M3"))
             ->setMakeName('TOYOTA UK')
             ->setModelName('SUPRA 3')
-            ->setOdometerReading(
-                MotTestObjectsFactory::odometerReading(
-                    333,
-                    OdometerUnit::MILES,
-                    OdometerReadingResultType::OK
-                )
-            )->setReasonForDifferentTester("reasonForDifferentTester")
-            ->setReplacementReason("reasonForReplacement")
+            ->setOdometerValue(333)
+            ->setOdometerUnit(OdometerUnit::MILES)
+            ->setOdometerResultType(OdometerReadingResultType::OK)
+            ->setDifferentTesterReason("reasonForDifferentTester")
+            ->setReasonForReplacement("reasonForReplacement")
             ->setVin("vin")
             ->setMotTest((new MotTest())->setId(1))
             ->setVrm("vrm")

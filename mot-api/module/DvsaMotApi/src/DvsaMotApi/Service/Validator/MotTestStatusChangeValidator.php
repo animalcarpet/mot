@@ -74,7 +74,7 @@ class MotTestStatusChangeValidator extends AbstractValidator
      *
      * @throws BadRequestException
      */
-    public function checkSiteIdHasBeenEntered(MotTest $motTest)
+    public function hasSiteIdBeenEntered(MotTest $motTest)
     {
         if ($motTest->getVehicleTestingStation() == null) {
             throw new BadRequestException(

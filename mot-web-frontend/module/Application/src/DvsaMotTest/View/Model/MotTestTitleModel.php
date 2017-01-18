@@ -2,9 +2,9 @@
 
 namespace DvsaMotTest\View\Model;
 
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Dto\Common\MotTestTypeDto;
 use DvsaCommon\Enum\MotTestTypeCode;
-use DvsaCommon\Dto\Common\MotTestDto;
 
 class MotTestTitleModel
 {
@@ -14,22 +14,21 @@ class MotTestTitleModel
     const DUPLICATE_CERTIFICATE_TITLE = 'Duplicate or replacement certificate';
 
     /**
-     * @param null|MotTestDto $motTestDto
+     * @param null|MotTest $motTest
      * @param bool $isDuplicateCertificate
      * @return string
      */
-    public function getTitle($motTestDto, $isDuplicateCertificate = false)
+    public function getTitle($motTest,  $isDuplicateCertificate = false)
     {
         if($isDuplicateCertificate) {
             return self::DUPLICATE_CERTIFICATE_TITLE;
         }
 
-        if (!is_null($motTestDto) && $motTestDto instanceof MotTestDto) {
-            /** @var $motTestDto MotTestDto */
+        if (!is_null($motTest) && $motTest instanceof MotTest) {
             /** @var $testType MotTestTypeDto */
-            $testType = $motTestDto->getTestType();
+            $testType = $motTest->getTestTypeCode();
 
-            if ($testType->getCode() == MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING) {
+            if ($testType == MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING) {
                 return self::MOT_TRAINING_TEST_TITLE;
             }
         }

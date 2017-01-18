@@ -1,11 +1,13 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApiTest\Factory;
 
-use DvsaCommon\Constants\OdometerReadingResultType;
-use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Date\DateUtils;
-use DvsaCommon\Dto\Common\OdometerReadingDTO;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\SiteContactTypeCode;
@@ -18,11 +20,12 @@ use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
-use DvsaEntities\Entity\OdometerReading;
 use DvsaEntities\Entity\Organisation;
 use DvsaEntities\Entity\Person;
+use DvsaEntities\Entity\ReasonForRejectionType;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\SiteContactType;
+use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
 
 /**
@@ -95,17 +98,25 @@ class MotTestObjectsFactory
     public static function createTest($testTypeCode, $status = MotTestStatusName::PASSED)
     {
         $testCase = new TestCase();
+
+        $vehicle = new Vehicle();
+        $vehicle->setVersion(1);
+
         $motTestStatus = $testCase->getMockBuilder(MotTestStatus::class)->getMock();
         $motTestStatus
             ->expects($testCase->any())
             ->method("getName")
             ->willReturn($status);
 
-        $motTest = new MotTest();
         $motTestType = (new MotTestType())->setCode($testTypeCode);
+
+        $motTest = new MotTest();
         $motTest
+            ->setVehicleVersion($vehicle->getVersion())
             ->setMotTestType($motTestType)
             ->setStatus($motTestStatus);
+
+        $motTest->setVehicle($vehicle);
         self::setTestData($motTest);
 
         return $motTest;
@@ -113,7 +124,9 @@ class MotTestObjectsFactory
 
     public static function addRfr(MotTest $motTest, $rfrType)
     {
-        $reasonForRejectionType = (new MotTestReasonForRejection())->setType($rfrType);
+        $reasonForRejectionType = (new MotTestReasonForRejection())->setType(
+            (new ReasonForRejectionType())->setReasonForRejectionType($rfrType)
+        );
         $motTest->addMotTestReasonForRejection($reasonForRejectionType);
     }
 
@@ -152,31 +165,6 @@ class MotTestObjectsFactory
             ->setOrganisation($org);
     }
 
-    public static function odometerReading(
-        $value = 123,
-        $unit = OdometerUnit::MILES,
-        $resultType = OdometerReadingResultType::OK
-    ) {
-        return OdometerReading::create()->setValue($value)
-            ->setUnit($unit)->setResultType($resultType);
-    }
-
-    /**
-     * @param int    $value
-     * @param string $unit
-     * @param string $resultType
-     *
-     * @return OdometerReadingDTO
-     */
-    public static function odometerReadingDTO(
-        $value = 123,
-        $unit = OdometerUnit::MILES,
-        $resultType = OdometerReadingResultType::OK
-    ) {
-        return OdometerReadingDTO::create()->setValue($value)
-            ->setUnit($unit)->setResultType($resultType);
-    }
-
     private static function setTestData(MotTest $motTest)
     {
         $motTest
@@ -184,15 +172,12 @@ class MotTestObjectsFactory
             ->setExpiryDate(DateUtils::toDate("2015-05-01"))
             ->setIssuedDate(DateUtils::toDate("2014-05-01"))
             ->setCompletedDate(DateUtils::toDate("2014-05-01"))
-            ->setOdometerReading(self::odometerReading())
+            ->setOdometerValue(1000)
             ->setHasRegistration(true)
-            ->setPrimaryColour(VehicleObjectsFactory::colour(22))
-            ->setSecondaryColour(VehicleObjectsFactory::colour(23))
             ->setVehicleTestingStation(self::vts(1))
             ->setNumber("ABC1234XYZ")
             ->setId(12345)
             ->setTester(self::tester())
-            ->setVehicle(VehicleObjectsFactory::vehicle())
-            ->setVehicleClass($motTest->getVehicle()->getVehicleClass());
+            ->setVehicle(VehicleObjectsFactory::vehicle());
     }
 }

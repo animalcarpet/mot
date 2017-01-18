@@ -1,15 +1,20 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvlaInfo\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\NoResultException;
+use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestStatus;
-use DvsaEntities\Entity\OdometerReading;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Repository\MotTestRepository;
@@ -98,14 +103,14 @@ class DvlaInfoMotHistoryServiceTest extends AbstractServiceTestCase
     {
         $number = "1234567";
         $expiryDate = new \DateTime();
-        $odometerReading = new OdometerReading();
         $vts = new Site();
 
         $motTest = (new MotTest())
             ->setStatus($this->createMotTestActiveStatus())
             ->setNumber($number)
             ->setExpiryDate($expiryDate)
-            ->setOdometerReading($odometerReading)
+            ->setOdometerValue(666)
+            ->setOdometerUnit(OdometerUnit::MILES)
             ->setVehicleTestingStation($vts)
             ->setVehicle($vehicle);
 

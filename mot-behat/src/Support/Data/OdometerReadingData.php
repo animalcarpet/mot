@@ -4,9 +4,8 @@ namespace Dvsa\Mot\Behat\Support\Data;
 use Dvsa\Mot\Behat\Support\Api\OdometerReading;
 use Dvsa\Mot\Behat\Support\Api\Session\AuthenticatedUser;
 use Dvsa\Mot\Behat\Support\Data\Params\OdometerReadingParams;
-use Dvsa\Mot\Behat\Support\Response;
 use DvsaCommon\Dto\Common\MotTestDto;
-use DvsaCommon\Dto\Common\OdometerReadingDTO;
+use DvsaCommon\Dto\Common\OdometerReadingDto;
 use Zend\Http\Response as HttpResponse;
 
 class OdometerReadingData
@@ -27,7 +26,7 @@ class OdometerReadingData
     {
         $this->odometerReading->addMeterReading($user->getAccessToken(), $motTest->getMotTestNumber(), $value, $unit);
 
-        $odometerReading = new OdometerReadingDTO();
+        $odometerReading = new OdometerReadingDto();
         $odometerReading->setValue($value);
         $odometerReading->setUnit($unit);
 

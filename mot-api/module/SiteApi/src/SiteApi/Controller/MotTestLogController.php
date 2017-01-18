@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace SiteApi\Controller;
 
@@ -14,18 +19,27 @@ class MotTestLogController extends AbstractDvsaRestfulController
 {
     const ERR_SITE_ID = 'Invalid site Id entered.';
 
-    /** @var MotTestLogService  */
+    /**
+     * @var MotTestLogService
+     */
     private $motTestLogService;
-    /** @var ElasticSearchService  */
+
+    /**
+     * @var ElasticSearchService
+     */
     private $elasticSearchService;
-    /** @var EntityManager  */
+
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     public function __construct(
         MotTestLogService $motTestLogService,
         ElasticSearchService $elasticSearchService,
         EntityManager $entityManager
-    ) {
+    )
+    {
         $this->motTestLogService = $motTestLogService;
         $this->elasticSearchService = $elasticSearchService;
         $this->entityManager = $entityManager;
@@ -48,7 +62,7 @@ class MotTestLogController extends AbstractDvsaRestfulController
      */
     public function logDataAction()
     {
-        $siteId = (int) $this->params()->fromRoute('id');
+        $siteId = (int)$this->params()->fromRoute('id');
         if ($siteId <= 0) {
             return $this->returnBadRequestResponseModel(
                 self::ERR_SITE_ID,
@@ -58,10 +72,11 @@ class MotTestLogController extends AbstractDvsaRestfulController
         }
 
         $postData = $this->processBodyContent($this->getRequest());
+        $motTestSearchParamsDto = DtoHydrator::jsonToDto($postData);
 
         $searchParams = new MotTestLogSearchParam($this->entityManager);
         $searchParams
-            ->fromDto(DtoHydrator::jsonToDto($postData))
+            ->fromDto($motTestSearchParamsDto)
             ->setSiteId($siteId);
 
         return ApiResponse::jsonOk($this->elasticSearchService->findSiteTestsLog($searchParams));

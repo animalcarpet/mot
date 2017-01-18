@@ -9,6 +9,7 @@ namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 
 use Dvsa\Mot\Frontend\MotTestModule\View\DefectsJourneyUrlGenerator;
 use Dvsa\Mot\Frontend\MotTestModule\View\FlashMessageBuilder;
+use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
@@ -69,7 +70,13 @@ class RepairDefectController extends AbstractDvsaMotTestController
 
         if (true === $isAjax){
             $motTest = $this->getMotTestFromApi($motTestNumber);
-            $motTestResults = new MotTestResults($motTest);
+            //Check if it is a retest and get the original mot test
+            if(MotTestType::isRetest($motTest->getTestTypeCode() )){
+                $originalMotTest = $this->getMotTestFromApi($motTest->getMotTestOriginalNumber());
+                $motTestResults = new MotTestResults($motTest, $originalMotTest);
+            } else {
+                $motTestResults = new MotTestResults($motTest);
+            }
 
             $data = array(
                 'success' => $success,
@@ -124,7 +131,13 @@ class RepairDefectController extends AbstractDvsaMotTestController
 
         if (true === $isAjax){
             $motTest = $this->getMotTestFromApi($motTestNumber);
-            $motTestResults = new MotTestResults($motTest);
+            //Check if it is a retest and get the original mot test
+            if(MotTestType::isRetest($motTest->getTestTypeCode() )){
+                $originalMotTest = $this->getMotTestFromApi($motTest->getMotTestOriginalNumber());
+                $motTestResults = new MotTestResults($motTest, $originalMotTest);
+            } else {
+                $motTestResults = new MotTestResults($motTest);
+            }
 
             $data = array(
                 'success' => $success,

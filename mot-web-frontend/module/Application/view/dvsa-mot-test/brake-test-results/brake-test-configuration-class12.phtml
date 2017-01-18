@@ -4,7 +4,8 @@ use DvsaMotTest\Model\BrakeTestConfigurationClass1And2Helper;
 
 /**
  * @var BrakeTestConfigurationClass1And2Helper $configHelper
- * @var \DvsaCommon\Dto\Common\MotTestDto      $motTest
+ * @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest      $motTest
+ * @var \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle $vehicle
  * @var array                                  $brakeTestTypes
  * @var array                                  $brakeTestResult
  * @var string                                 $brakeTestType
@@ -16,8 +17,7 @@ use DvsaMotTest\Model\BrakeTestConfigurationClass1And2Helper;
  */
 
 $title = 'Brake test configuration';
-$vehicle = $motTest->getVehicle();
-$vehicleClass = $vehicle->getClassCode();
+$vehicleClass = $vehicle->getVehicleClass()->getCode();
 $this->headTitle($title);
 $this->layout()->setVariable('pageSubTitle', $motTestTitleViewModel->getTitle($motTest));
 $this->layout()->setVariable('pageTitle', "Brake test configuration");

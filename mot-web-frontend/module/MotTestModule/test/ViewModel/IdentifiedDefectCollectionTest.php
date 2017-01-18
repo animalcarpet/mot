@@ -2,9 +2,10 @@
 
 namespace DvsaMotTestTest\ViewModel;
 
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Exception\IdentifiedDefectNotFoundException;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefectCollection;
-use DvsaCommon\Dto\Common\MotTestDto;
+use DvsaMotTestTest\TestHelper\Fixture;
 
 /**
  * Class IdentifiedDefectCollectionTest.
@@ -14,47 +15,51 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider creationDataProvider
      *
-     * @param array $reasonsForRejection
+     * @param object $reasonsForRejection
      * @param bool  $hasFailures
      * @param bool  $hasPrs
      * @param bool  $hasAdvisories
      */
-    public function testCreation(array $reasonsForRejection, $hasFailures, $hasPrs, $hasAdvisories)
+    public function testCreation($reasonsForRejection, $hasFailures, $hasPrs, $hasAdvisories)
     {
-        $motTestMock = $this->createMotTestDto($reasonsForRejection);
+        $rfrs = $this->getTestData($hasFailures, $hasPrs, $hasAdvisories);
+        $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
 
-        $testCollection = IdentifiedDefectCollection::fromMotApiData($motTestMock);
+        $testMotTestData->reasonsForRejection = $rfrs;
+        $motTest = new MotTest($testMotTestData);
+
+        $testCollection = IdentifiedDefectCollection::fromMotApiData($motTest);
 
         $loopIndex = 0;
         if ($hasFailures) {
-            foreach ($reasonsForRejection['FAIL'] as $fail) {
+            foreach ($reasonsForRejection->FAIL as $fail) {
                 $this->assertEquals(
-                    $fail['locationLateral'],
+                    $fail->locationLateral,
                     $testCollection->getFailures()[$loopIndex]->getLateralLocation()
                 );
 
                 $this->assertEquals(
-                    $fail['locationLongitudinal'],
+                    $fail->locationLongitudinal,
                     $testCollection->getFailures()[$loopIndex]->getLongitudinalLocation()
                 );
 
                 $this->assertEquals(
-                    $fail['locationVertical'],
+                    $fail->locationVertical,
                     $testCollection->getFailures()[$loopIndex]->getVerticalLocation()
                 );
 
                 $this->assertEquals(
-                    $fail['comment'],
+                    $fail->comment,
                     $testCollection->getFailures()[$loopIndex]->getUserComment()
                 );
 
                 $this->assertEquals(
-                    $fail['failureDangerous'],
+                    $fail->failureDangerous,
                     $testCollection->getFailures()[$loopIndex]->isDangerous()
                 );
 
                 $this->assertEquals(
-                    $fail['testItemSelectorDescription'].' '.$fail['failureText'],
+                    $fail->testItemSelectorDescription.' '.$fail->failureText,
                     $testCollection->getFailures()[$loopIndex]->getName()
                 );
 
@@ -64,34 +69,34 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
 
         $loopIndex = 0;
         if ($hasPrs) {
-            foreach ($reasonsForRejection['PRS'] as $prs) {
+            foreach ($reasonsForRejection->PRS as $prs) {
                 $this->assertEquals(
-                    $prs['locationLateral'],
+                    $prs->locationLateral,
                     $testCollection->getPrs()[$loopIndex]->getLateralLocation()
                 );
 
                 $this->assertEquals(
-                    $prs['locationLongitudinal'],
+                    $prs->locationLongitudinal,
                     $testCollection->getPrs()[$loopIndex]->getLongitudinalLocation()
                 );
 
                 $this->assertEquals(
-                    $prs['locationVertical'],
+                    $prs->locationVertical,
                     $testCollection->getPrs()[$loopIndex]->getVerticalLocation()
                 );
 
                 $this->assertEquals(
-                    $prs['comment'],
+                    $prs->comment,
                     $testCollection->getPrs()[$loopIndex]->getUserComment()
                 );
 
                 $this->assertEquals(
-                    $prs['failureDangerous'],
+                    $prs->failureDangerous,
                     $testCollection->getPrs()[$loopIndex]->isDangerous()
                 );
 
                 $this->assertEquals(
-                    $prs['testItemSelectorDescription'].' '.$prs['failureText'],
+                    $prs->testItemSelectorDescription.' '.$prs->failureText,
                     $testCollection->getPrs()[$loopIndex]->getName()
                 );
 
@@ -101,34 +106,34 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
 
         $loopIndex = 0;
         if ($hasAdvisories) {
-            foreach ($reasonsForRejection['ADVISORY'] as $advisory) {
+            foreach ($reasonsForRejection->ADVISORY as $advisory) {
                 $this->assertEquals(
-                    $advisory['locationLateral'],
+                    $advisory->locationLateral,
                     $testCollection->getAdvisories()[$loopIndex]->getLateralLocation()
                 );
 
                 $this->assertEquals(
-                    $advisory['locationLongitudinal'],
+                    $advisory->locationLongitudinal,
                     $testCollection->getAdvisories()[$loopIndex]->getLongitudinalLocation()
                 );
 
                 $this->assertEquals(
-                    $advisory['locationVertical'],
+                    $advisory->locationVertical,
                     $testCollection->getAdvisories()[$loopIndex]->getVerticalLocation()
                 );
 
                 $this->assertEquals(
-                    $advisory['comment'],
+                    $advisory->comment,
                     $testCollection->getAdvisories()[$loopIndex]->getUserComment()
                 );
 
                 $this->assertEquals(
-                    $advisory['failureDangerous'],
+                    $advisory->failureDangerous,
                     $testCollection->getAdvisories()[$loopIndex]->isDangerous()
                 );
 
                 $this->assertEquals(
-                    $advisory['testItemSelectorDescription'].' '.$advisory['failureText'],
+                    $advisory->testItemSelectorDescription.' '.$advisory->failureText,
                     $testCollection->getAdvisories()[$loopIndex]->getName()
                 );
                 $loopIndex += 1;
@@ -146,8 +151,13 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
     public function testGetDefectByIdThrowsExceptionOnNonExistentDefect()
     {
         $this->setExpectedException(IdentifiedDefectNotFoundException::class);
-        $motTestMock = $this->createMotTestDto($this->getTestData(true, false, false));
-        $testCollection = IdentifiedDefectCollection::fromMotApiData($motTestMock);
+        $rfrs = $this->getTestData(true, false, false);
+        $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
+
+        $testMotTestData->reasonsForRejection = $rfrs;
+        $motTest = new MotTest($testMotTestData);
+
+        $testCollection = IdentifiedDefectCollection::fromMotApiData($motTest);
 
         $testCollection->getDefectById(9999);
     }
@@ -173,12 +183,13 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetGeneratedFailures($failures)
     {
-        $motTestMock = $this->getMockBuilder(MotTestDto::class)->getMock();
-        $motTestMock->expects($this->atLeast(3))
-            ->method('getReasonsForRejection')
-            ->willReturn($this->getGeneratedFailures($failures));
+        $rfrs = $this->getGeneratedFailures($failures);
+        $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
 
-        $testCollection = IdentifiedDefectCollection::fromMotApiData($motTestMock);
+        $testMotTestData->reasonsForRejection = $rfrs;
+        $motTest = new MotTest($testMotTestData);
+
+        $testCollection = IdentifiedDefectCollection::fromMotApiData($motTest);
 
         $this->assertEquals($failures, $testCollection->getNumberOfGeneratedFailures());
         if ($failures > 0) {
@@ -196,21 +207,6 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
             [1],
             [2],
         ];
-    }
-
-    /**
-     * @param $reasonsForRejection
-     *
-     * @return MotTestDto|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private function createMotTestDto($reasonsForRejection)
-    {
-        $motTestMock = $this->getMockBuilder(MotTestDto::class)->getMock();
-        $motTestMock->expects($this->atLeast(3))
-            ->method('getReasonsForRejection')
-            ->willReturn($reasonsForRejection);
-
-        return $motTestMock;
     }
 
     /**
@@ -305,7 +301,7 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
             ];
         }
 
-        return $testData;
+        return json_decode(json_encode($testData), FALSE);
     }
 
     /**
@@ -342,6 +338,6 @@ class IdentifiedDefectCollectionTest extends \PHPUnit_Framework_TestCase
             ];
         }
 
-        return $testData;
+        return json_decode(json_encode($testData), FALSE);
     }
 }

@@ -1,13 +1,28 @@
 <?php
+/** @var \DvsaCommon\Dto\Site\VehicleTestingStationDto $site */
+use Core\Formatting\AddressFormatter;
+
 $site = $this->siteData ? $this->siteData : null;
 
 if (empty($site)) {
     return;
 }
 
-$siteNr = !empty($site['siteNumber']) ? $site['siteNumber'] : '';
-$siteName = ($siteNr ? ' - ' : '') . (!empty($site['name']) ? $site['name'] : '');
-$siteAddress = !empty($site['address']) ? $site['address'] : '';
+if($site instanceof \DvsaCommon\Dto\Site\VehicleTestingStationDto) {
+    $siteNr = $site->getSiteNumber();
+    $siteName = $site->getName();
+    $tempContact = null;
+
+    foreach($site->getContacts() as $contactDto){
+        $tempContact = $contactDto;
+    }
+
+    $siteAddress = (new AddressFormatter())->escapedDtoToMultiLine($tempContact->getAddress(), true);
+} else {
+    $siteNr = !empty($site['siteNumber']) ? $site['siteNumber'] : '';
+    $siteName = ($siteNr ? ' - ' : '') . (!empty($site['name']) ? $site['name'] : '');
+    $siteAddress = !empty($site['address']) ? $site['address'] : '';
+}
 
 $cssDlClass = !empty(trim($this->cssDlClass)) ? $this->cssDlClass : 'col-sm-4';
 ?>
@@ -15,8 +30,8 @@ $cssDlClass = !empty(trim($this->cssDlClass)) ? $this->cssDlClass : 'col-sm-4';
 <dl class="<?php echo $this->escapeHtmlAttr($cssDlClass); ?>">
     <dt>VTS name and address</dt>
     <dd id="vtsNameAndAddress">
-        <?php echo $this->escapeHtml($siteNr . $siteName); ?>
+        <?php echo $this->escapeHtml($siteNr . ' ' . $siteName); ?>
         <br/>
-        <?php echo $this->escapeHtml($siteAddress); ?>
+        <?php echo $siteAddress; ?>
     </dd>
 </dl>

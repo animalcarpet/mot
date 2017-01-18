@@ -1,7 +1,7 @@
 <?php
 $this->headTitle('Test item selector search');
 
-/** @var \DvsaCommon\Dto\Common\MotTestDto $motTestDetails */
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motTestDetails */
 $latestRfrs = $motTestDetails->getReasonsForRejection();
 
 $vehicleClassCode = $motTestDetails->getVehicleClass()->getCode();

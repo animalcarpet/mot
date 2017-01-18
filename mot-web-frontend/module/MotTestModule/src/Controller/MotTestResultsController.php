@@ -8,18 +8,23 @@
 namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 
 use Core\Authorisation\Assertion\WebPerformMotTestAssertion;
-use Core\Controller\AbstractAuthActionController;
 use DateTime;
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use Dvsa\Mot\ApiClient\Service\MotTestService;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefectCollection;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\MotTestResults;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
+use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Domain\MotTestType;
-use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
-use DvsaCommon\Utility\ArrayUtils;
+use DvsaMotTest\Controller\AbstractDvsaMotTestController;
+use DvsaMotTest\Controller\DvsaVehicleViewModel;
 use DvsaMotTest\Model\OdometerReadingViewObject;
+use Vehicle\ViewModel\VehicleViewModel;
 use Zend\Http\Response;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\View\Model\ViewModel;
@@ -27,7 +32,7 @@ use Zend\View\Model\ViewModel;
 /**
  * MotTestResultsController handles MOT Test results views.
  */
-class MotTestResultsController extends AbstractAuthActionController
+class MotTestResultsController extends AbstractDvsaMotTestController
 {
     const DATE_FORMAT = 'j F Y';
     const DATETIME_FORMAT = 'd M Y H:i';
@@ -44,13 +49,53 @@ class MotTestResultsController extends AbstractAuthActionController
     private $authorisationService;
 
     /**
+     * @var OdometerReadingViewObject
+     */
+    private $odometerViewObject;
+
+    /**
+     * @var MotTestService $motTestServiceClient
+     */
+    public $motTestServiceClient;
+
+    /**
+     * @var VehicleService $vehicleServiceClient
+     */
+    public $vehicleServiceClient;
+
+    protected function getMotTestServiceClient()
+    {
+        if (!$this->motTestServiceClient) {
+            $sm = $this->getServiceLocator();
+            $this->motTestServiceClient = $sm->get(MotTestService::class);
+        }
+
+        return $this->motTestServiceClient;
+    }
+
+    protected function getVehicleServiceClient()
+    {
+        if (!$this->vehicleServiceClient) {
+            $sm = $this->getServiceLocator();
+            $this->vehicleServiceClient = $sm->get(VehicleService::class);
+        }
+
+        return $this->vehicleServiceClient;
+    }
+
+    /**
      * MotTestResultsController constructor.
      *
      * @param MotAuthorisationServiceInterface $authorisationService
+     * @param OdometerReadingViewObject $odometerViewObject
      */
-    public function __construct(MotAuthorisationServiceInterface $authorisationService)
+    public function __construct(
+        MotAuthorisationServiceInterface $authorisationService,
+        OdometerReadingViewObject $odometerViewObject
+    )
     {
         $this->authorisationService = $authorisationService;
+        $this->odometerViewObject = $odometerViewObject;
     }
 
     /**
@@ -58,22 +103,27 @@ class MotTestResultsController extends AbstractAuthActionController
      */
     public function indexAction()
     {
-        $motTestNumber = (int) $this->params('motTestNumber', 0);
+        $motTestNumber = (int)$this->params('motTestNumber', 0);
 
-        /** @var MotTestDto $motTest */
+        /** @var MotTest $motTest */
         $motTest = null;
-        $odometerReading = new OdometerReadingViewObject();
         $isDemo = false;
         $isReinspection = false;
         $isNonMotTest = false;
+        /** @var DvsaVehicle $vehicle */
+        $vehicle = null;
+        /** @var DvsaVehicleViewModel $vehicleViewModel*/
+        $vehicleViewModel = null;
 
         try {
             $motTest = $this->getMotTestFromApi($motTestNumber);
+            $vehicle = $this->getVehicleServiceClient()->getDvsaVehicleByIdAndVersion($motTest->getVehicleId(), $motTest->getVehicleVersion());
+            $vehicleViewModel = new DvsaVehicleViewModel($vehicle);
             $this->getPerformMotTestAssertion()->assertGranted($motTest);
-            $testType = $motTest->getTestType();
-            $isDemo = MotTestType::isDemo($testType->getCode());
-            $isNonMotTest = MotTestType::isNonMotTypes($testType->getCode());
-            $isReinspection = MotTestType::isReinspection($testType->getCode());
+            $testType = $motTest->getTestTypeCode();
+            $isDemo = MotTestType::isDemo($testType);
+            $isNonMotTest = MotTestType::isNonMotTypes($testType);
+            $isReinspection = MotTestType::isReinspection($testType);
             $isTester = $this->getAuthorizationService()->isTester();
             $currentVts = $this->getIdentity()->getCurrentVts();
 
@@ -87,12 +137,14 @@ class MotTestResultsController extends AbstractAuthActionController
             $this->addErrorMessages($e->getDisplayMessages());
         }
 
-        if ($motTest instanceof MotTestDto && $motTest->getOdometerReading() !== null) {
-            $odometerReading->setOdometerReadingValuesMap($motTest->getOdometerReading());
+        if ($motTest instanceof MotTest) {
+            $this->odometerViewObject->setValue($motTest->getOdometerValue());
+            $this->odometerViewObject->setUnit($motTest->getOdometerUnit());
+            $this->odometerViewObject->setResultType($motTest->getOdometerResultType());
         }
 
         if (!empty($readingNotices)) {
-            $odometerReading->setNotices($readingNotices['data']);
+            $this->odometerViewObject->setNotices($readingNotices['data']);
         }
 
         if ($isDemo) {
@@ -113,25 +165,33 @@ class MotTestResultsController extends AbstractAuthActionController
             $this->layout()->setVariable('pageTitle', 'MOT test results');
         }
 
-        $vehicleFirstUsedDate = DateTime::createFromFormat('Y-m-d',
-            $motTest->getVehicle()->getFirstUsedDate())->format('j M Y');
+        //TODO Change to formatting if its not correct
+//        $vehicleFirstUsedDate = DateTime::createFromFormat('Y-m-d',
+//            $vehicleViewModel->getFirstUsedDate());
 
-        $motTestResults = new MotTestResults($motTest);
-        $vehicleMakeAndModel = ucwords(strtolower($motTest->getVehicle()->getMakeAndModel()));
+        /** @var MotTest $originalMotTest */
+        $originalMotTest = null;
+        if(!empty($motTest->getMotTestOriginalNumber())){
+            $originalMotTest = $this->getMotTestFromApi($motTest->getMotTestOriginalNumber());
+        }
+
+        $motTestResults = new MotTestResults($motTest, $originalMotTest);
+        $vehicleMakeAndModel = $vehicleViewModel->getMakeAndModel();
 
         $identifiedDefects = IdentifiedDefectCollection::fromMotApiData($motTest);
-        $isRetest = $motTest->getTestType()->getCode() === MotTestTypeCode::RE_TEST;
+        $isRetest = $motTest->getTestTypeCode() === MotTestTypeCode::RE_TEST;
 
-        $this->addTestNumberAndTypeToGtmDataLayer($motTest->getMotTestNumber(), $motTest->getTestType()->getId());
+        $this->addTestNumberAndTypeToGtmDataLayer($motTest->getMotTestNumber(), $motTest->getTestTypeCode());
 
         return $this->createViewModel('mot-test/test-results-entry.twig', [
             'isDemo' => $isDemo,
             'motTest' => $motTest,
             'motTestResults' => $motTestResults,
-            'odometerReading' => $odometerReading,
-            'vehicle' => $motTest->getVehicle(),
+            'odometerReading' => $this->odometerViewObject,
+            'vehicle' => $vehicle,
+            'vehicleViewModel' => $vehicleViewModel,
             'vehicleMakeAndModel' => $vehicleMakeAndModel,
-            'vehicleFirstUsedDate' => $vehicleFirstUsedDate,
+            'vehicleFirstUsedDate' => DateTimeDisplayFormat::textDateShort($vehicleViewModel->getFirstUsedDate()),
             'shouldDisableSubmitButton' => $motTestResults->shouldDisableSubmitButton(),
             'identifiedDefects' => $identifiedDefects,
             'isRetest' => $isRetest,
@@ -161,7 +221,7 @@ class MotTestResultsController extends AbstractAuthActionController
 
     /**
      * @param string $template
-     * @param array  $variables
+     * @param array $variables
      *
      * @return ViewModel
      */
@@ -172,21 +232,6 @@ class MotTestResultsController extends AbstractAuthActionController
         $viewModel->setVariables($variables);
 
         return $viewModel;
-    }
-
-    /**
-     * @param $motTestNumber
-     *
-     * @return mixed
-     */
-    private function getMotTestFromApi($motTestNumber)
-    {
-        $apiUrl = MotTestUrlBuilder::motTest($motTestNumber)->toString();
-        $result = $this->getRestClient()->get($apiUrl);
-
-        $data = ArrayUtils::tryGet($result, 'data');
-
-        return $data;
     }
 
     /**
@@ -215,12 +260,12 @@ class MotTestResultsController extends AbstractAuthActionController
 
     /**
      * @param string $motTestNumber
-     * @param int    $testTypeId
+     * @param int $testTypeId
      */
     private function addTestNumberAndTypeToGtmDataLayer($motTestNumber, $testTypeId)
     {
         $this->gtmDataLayer([
-            'testId'   => $motTestNumber,
+            'testId' => $motTestNumber,
             'testType' => $testTypeId,
         ]);
     }

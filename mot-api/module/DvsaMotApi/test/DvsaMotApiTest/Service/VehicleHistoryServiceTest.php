@@ -16,11 +16,13 @@ use DvsaCommonTest\TestUtils\TestCasePermissionTrait;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\AuthorisationForTestingMot;
 use DvsaEntities\Entity\AuthorisationForTestingMotStatus;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Site;
+use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
 use DvsaEntities\Repository\ConfigurationRepository;
 use DvsaEntities\Repository\MotTestRepository;
@@ -39,6 +41,7 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
 
     const VEHICLE_ID = 12345;
     const PERSON_ID = 123;
+    const VEHICLE_VERSION = 1;
 
     private $siteRepository;
 
@@ -440,8 +443,8 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
                     (new Site())
                         ->setId(1)
                 )
-                ->setVehicleClass((new VehicleClass())
-                    ->setCode(1))
+                ->setVehicle($this->getVehicleWithClass(1))
+                ->setVehicleVersion(self::VEHICLE_VERSION)
                 ->setNumber(1)
                 ->setIssuedDate(new \DateTime()),
             (new MotTest())
@@ -454,8 +457,8 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
                     (new Site())
                         ->setId(2)
                 )
-                ->setVehicleClass((new VehicleClass())
-                    ->setCode(2))
+                ->setVehicle($this->getVehicleWithClass(2))
+                ->setVehicleVersion(self::VEHICLE_VERSION)
                 ->setNumber(2)
                 ->setIssuedDate(new \DateTime()),
             (new MotTest())
@@ -464,8 +467,8 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
                     (new MotTestType())
                         ->setCode(MotTestTypeCode::NORMAL_TEST)
                 )
-                ->setVehicleClass((new VehicleClass())
-                    ->setCode(3))
+                ->setVehicle($this->getVehicleWithClass(3))
+                ->setVehicleVersion(self::VEHICLE_VERSION)
                 ->setVehicleTestingStation(
                     (new Site())
                         ->setId(1)
@@ -478,8 +481,8 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
                     (new MotTestType())
                         ->setCode(MotTestTypeCode::OTHER)
                 )
-                ->setVehicleClass((new VehicleClass())
-                    ->setCode(7))
+                ->setVehicle($this->getVehicleWithClass(7))
+                ->setVehicleVersion(self::VEHICLE_VERSION)
                 ->setVehicleTestingStation(
                     (new Site())
                         ->setId(2)
@@ -495,5 +498,24 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
             ->expects($this->any())
             ->method('findForPersonId')
             ->willReturn([]);
+    }
+    
+    /**
+     * @param $classCode
+     * @return Vehicle
+     */
+    private function getVehicleWithClass($classCode)
+    {
+        $vehicleClass = new VehicleClass();
+        $vehicleClass->setCode($classCode);
+
+        $modelDetail = new ModelDetail();
+        $modelDetail->setVehicleClass($vehicleClass);
+
+        $vehicle = new Vehicle();
+        $vehicle->setVersion(self::VEHICLE_VERSION);
+        $vehicle->setModelDetail($modelDetail);
+
+        return $vehicle;
     }
 }

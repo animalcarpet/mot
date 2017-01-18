@@ -156,7 +156,7 @@ class MotTestStatusChangeValidatorTest extends PHPUnit_Framework_TestCase
         $motTest = new MotTest();
         $motTest->setVehicleTestingStation(new Site());
 
-        $this->assertTrue($this->motTestStatusChangeValidator->checkSiteIdHasBeenEntered($motTest));
+        $this->assertTrue($this->motTestStatusChangeValidator->hasSiteIdBeenEntered($motTest));
     }
 
     /**
@@ -166,7 +166,7 @@ class MotTestStatusChangeValidatorTest extends PHPUnit_Framework_TestCase
     public function testCheckSiteIdHasBeenEnteredThrowsWithNoSiteId()
     {
         $motTest = new MotTest();
-        $this->motTestStatusChangeValidator->checkSiteIdHasBeenEntered($motTest);
+        $this->motTestStatusChangeValidator->hasSiteIdBeenEntered($motTest);
     }
 
     private function createMotTestActiveStatus()

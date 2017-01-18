@@ -1,10 +1,19 @@
 <?php
+/**
+ * This file is part of the DVSA MOT Frontend project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotTestTest\Controller;
 
 use Application\Helper\PrgHelper;
 use Core\Service\MotEventManager;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use Dvsa\Mot\ApiClient\Service\MotTestService;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
 use Dvsa\Mot\Frontend\MotTestModule\Service\SurveyService;
 use Dvsa\Mot\Frontend\GoogleAnalyticsModule\ControllerPlugin\DataLayerPlugin;
@@ -12,28 +21,24 @@ use Dvsa\Mot\Frontend\GoogleAnalyticsModule\TagManager\DataLayer;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaCommon\ApiClient\MotTest\DuplicateCertificate\MotTestDuplicateCertificateApiResource;
 use DvsaCommon\Auth\MotIdentityProvider;
+use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\SiteDto;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Constants\OdometerUnit;
-use DvsaCommon\Dto\Common\MotTestDto;
-use DvsaCommon\Dto\Common\MotTestTypeDto;
-use DvsaCommon\Dto\Common\OdometerReadingDTO;
-use DvsaCommon\Dto\Person\PersonDto;
-use DvsaCommon\Dto\Vehicle\VehicleDto;
-use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\HttpRestJson\Exception\OtpApplicationException;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilderWeb;
-use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Controller\MotTestController;
+use DvsaMotTest\Model\OdometerReadingViewObject;
+use DvsaMotTestTest\TestHelper\Fixture;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use Zend\Mvc\Controller\Plugin\Forward;
 use Zend\Session\Container;
@@ -59,6 +64,8 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
 
     /** @var MotTestDuplicateCertificateApiResource|MockObj $motTestDuplicateCertificateApiResourceMock*/
     private $motTestDuplicateCertificateApiResourceMock;
+    protected $mockMotTestServiceClient;
+    protected $mockVehicleServiceClient;
 
     protected function setUp()
     {
@@ -75,6 +82,8 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
             ->setMethods(['trigger'])
             ->getMock();
 
+        $odometerViewObject = XMock::of(OdometerReadingViewObject::class);
+
         /** @var FeatureToggles featureToggles */
         $this->featureToggles = $this->getMockBuilder(FeatureToggles::class)
             ->disableOriginalConstructor()
@@ -88,6 +97,7 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         $this->controller = new MotTestController(
             $this->authServiceMock,
             $this->motEventManagerMock,
+            $odometerViewObject,
             $this->motTestDuplicateCertificateApiResourceMock,
             $this->featureToggles
         );
@@ -95,9 +105,37 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         $dataLayerPlugin = new DataLayerPlugin(new DataLayer());
         $this->getController()->getPluginManager()->setService('gtmDataLayer', $dataLayerPlugin);
 
+        $serviceManager = Bootstrap::getServiceManager();
+        $serviceManager->setService(
+            MotTestService::class,
+            $this->getMockMotTestServiceClient()
+        );
+
+        $serviceManager->setService(
+            VehicleService::class,
+            $this->getMockVehicleServiceClient()
+        );
+        $this->controller->setServiceLocator($serviceManager);
+
         parent::setUp();
 
         $this->setupAuthenticationServiceForIdentity(StubIdentityAdapter::asTester());
+    }
+
+    private function getMockMotTestServiceClient()
+    {
+        if ($this->mockMotTestServiceClient == null) {
+            $this->mockMotTestServiceClient = XMock::of(MotTestService::class);
+        }
+        return $this->mockMotTestServiceClient;
+    }
+
+    private function getMockVehicleServiceClient()
+    {
+        if ($this->mockVehicleServiceClient == null) {
+            $this->mockVehicleServiceClient = XMock::of(VehicleService::class);
+        }
+        return $this->mockVehicleServiceClient;
     }
 
     public function testRequestIsForwardedToMotTestResultsControllerIfFeatureToggleIsEnabled()
@@ -119,24 +157,21 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
 
     public function testMotTestIndexCanBeAccessedForAuthenticatedRequest()
     {
-        $motTestNr = (int) rand(1e12, 1e13 - 1);
-        $motTestData = $this->getTestMotTestDataDto($motTestNr);
+        $motTestNr = 1;
 
-        $restClientMock = $this->getRestClientMockForServiceManager();
-        $restClientMock->expects($this->at(0))
-            ->method('get')
-            ->with(UrlBuilder::of()->motTest()->routeParam('motTestNumber', $motTestNr))
-            ->willReturn(['data' => $motTestData]);
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
 
-        $restClientMock->expects($this->at(1))
-            ->method('get')
-            ->with($this->anything())
-            ->willReturn(['data' => []]);
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
 
         $result = $this->getResultForAction('index', ['motTestNumber' => $motTestNr]);
 
         $this->assertResponseStatus(self::HTTP_OK_CODE);
-        $this->assertEquals($motTestData, $result->motTest);
+        $this->assertEquals($testMotTestData, $result->motTest);
     }
 
     public function testMotTestIndexWithoutIdParameterFails()
@@ -330,7 +365,10 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
             [PermissionInSystem::MOT_TEST_CONFIRM, PermissionAtSite::MOT_TEST_CONFIRM_AT_SITE]
         );
 
-        $motTestNumber = 9999;
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+        $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
+
+        $motTestNumber = 1;
         $status = 'testStatus';
         $siteid = 1;
 
@@ -357,10 +395,20 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
                     ['message' => 'error', 'shortMessage' => 'error']
                 )
             );
-        $restClientMock->expects($this->once())
-            ->method('get')
-            ->with(MotTestUrlBuilder::motTest($motTestNumber))
-            ->willReturn(['data' => $this->getTestMotTestDataDto($motTestNumber)]);
+
+        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
+        $mockVehicleServiceClient
+            ->expects($this->once())
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->with(1001, 1)
+            ->will($this->returnValue($vehicleData));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
 
         $this->getResultForAction2(
             'post', 'displayTestSummary', ['motTestNumber' => $motTestNumber], null, $postParams
@@ -375,7 +423,10 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
             [PermissionInSystem::MOT_TEST_CONFIRM, PermissionAtSite::MOT_TEST_CONFIRM_AT_SITE]
         );
 
-        $motTestNumber = 9999;
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+        $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
+
+        $motTestNumber = 1;
         $status = 'testStatus';
         $siteid = 1;
 
@@ -393,10 +444,20 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
             ->method('post')
             ->with(MotTestUrlBuilder::motTestStatus($motTestNumber), $postParams)
             ->willThrowException(new RestApplicationException('/', 'post', [], 10, [['displayMessage' => 'error']]));
-        $restClientMock->expects($this->once())
-            ->method('get')
-            ->with(MotTestUrlBuilder::motTest($motTestNumber))
-            ->willReturn(['data' => $this->getTestMotTestDataDto($motTestNumber)]);
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
+
+        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
+        $mockVehicleServiceClient
+            ->expects($this->once())
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->with(1001, 1)
+            ->will($this->returnValue($vehicleData));
 
         $this->getResultForAction2(
             'post', 'displayTestSummary', ['motTestNumber' => $motTestNumber], null, $postParams
@@ -411,7 +472,7 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
             [PermissionInSystem::MOT_TEST_CONFIRM, PermissionAtSite::MOT_TEST_CONFIRM_AT_SITE]
         );
 
-        $motTestNumber = 9999;
+        $motTestNumber = 1;
         $status = 'testStatus';
         $siteid = 1;
 
@@ -451,7 +512,7 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
             [PermissionInSystem::MOT_TEST_CONFIRM, PermissionAtSite::MOT_TEST_CONFIRM_AT_SITE]
         );
 
-        $motTestNumber = 9999;
+        $motTestNumber = 1;
         $status = 'testStatus';
         $siteid = 1;
 
@@ -464,11 +525,22 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
             'clientIp' => '0.0.0.0',
         ];
 
-        $restClientMock = $this->getRestClientMockForServiceManager();
-        $restClientMock->expects($this->once())
-            ->method('get')
-            ->with(MotTestUrlBuilder::motTest($motTestNumber))
-            ->willReturn(['data' => $this->getTestMotTestDataDto($motTestNumber)]);
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+        $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
+
+        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
+        $mockVehicleServiceClient
+            ->expects($this->once())
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->with(1001, 1)
+            ->will($this->returnValue($vehicleData));
 
         $this->getResultForAction2(
             'get', 'displayTestSummary', ['motTestNumber' => $motTestNumber], null, $postParams
@@ -483,21 +555,14 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         $status = 'CANCEL';
         $reasonForCancel = 1;
 
-        $expectedRestPostData = [
-            'status' => $status,
-            'reasonForCancel' => $reasonForCancel,
-            'clientIp' => '0.0.0.0',
-        ];
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
 
-        $restClientMock = $this->getRestClientMockForServiceManager();
-        $restClientMock->expects($this->once())
-            ->method('get')
-            ->with(MotTestUrlBuilder::motTest($motTestNumber))
-            ->willReturn(['data' => $this->getTestMotTestDataDto($motTestNumber)]);
-        $restClientMock->expects($this->once())
-            ->method('post')
-            ->with(MotTestUrlBuilder::motTestStatus($motTestNumber), $expectedRestPostData)
-            ->will($this->returnValue(['testType' => 'NT']));
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
 
         //  --  request & check    --
         $postParams = [
@@ -517,22 +582,14 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         $reasonForCancel = 1;
         $oneTimePassword = '123456';
 
-        $expectedRestPostData = [
-            'status' => $status,
-            'reasonForCancel' => $reasonForCancel,
-            'oneTimePassword' => $oneTimePassword,
-            'clientIp' => '0.0.0.0',
-        ];
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
 
-        $restClientMock = $this->getRestClientMockForServiceManager();
-        $restClientMock->expects($this->once())
-            ->method('get')
-            ->with(MotTestUrlBuilder::motTest($motTestNumber))
-            ->willReturn(['data' => $this->getTestMotTestDataDto($motTestNumber)]);
-        $restClientMock->expects($this->once())
-            ->method('post')
-            ->with(MotTestUrlBuilder::motTestStatus($motTestNumber), $expectedRestPostData)
-            ->willReturn(['testType' => 'NT']);
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
 
         //  --  request & check    --
         $postParams = [
@@ -562,10 +619,14 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
 
         $restClientMock = $this->getRestClientMockForServiceManager();
 
-        $restClientMock->expects($this->once())
-            ->method('get')
-            ->with(MotTestUrlBuilder::motTest($motTestNumber))
-            ->willReturn(['data' => $this->getTestMotTestDataDto($motTestNumber)]);
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
 
         $restResourcePath = MotTestUrlBuilder::motTestStatus($motTestNumber);
         $restClientMock->expects($this->once())
@@ -590,18 +651,30 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
      */
     public function testCancelledMotTestCanBeAccessedAuthenticatedRequest($motTestStatus, $expectedTestDocument)
     {
-        $motTestNr = (int) rand(1, 1000);
-
-        $motTestData = $this->getTestMotTestDataDto($motTestNr, $motTestStatus);
+        $motTestNr = 1;
 
         $this->setupAuthorizationService();
 
-        $this->getRestClientMockWithGetMotTest(['data' => $motTestData]);
+        $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
+
+        if ($motTestStatus === MotTestStatusName::ABORTED){
+            $testMotTestData->status = MotTestStatusName::ABORTED;
+        } else {
+            $testMotTestData->status = MotTestStatusName::ABANDONED;
+        }
+
+        $motTest = new MotTest($testMotTestData);
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($motTest));
 
         $result = $this->getResultForAction('cancelledMotTest', ['motTestNumber' => $motTestNr]);
 
         $this->assertResponseStatus(self::HTTP_OK_CODE);
-        $this->assertEquals($motTestData, $result->motTest);
         $this->assertEquals($expectedTestDocument, $result->testDocument);
     }
 
@@ -619,15 +692,29 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
             [PermissionInSystem::MOT_TEST_CONFIRM, PermissionAtSite::MOT_TEST_CONFIRM_AT_SITE]
         );
 
-        $motTestNr = (int) rand(1, 1000);
-        $motTestData = $this->getTestMotTestDataDto($motTestNr);
+        $motTestNr = 1;
 
-        $this->getRestClientMockWithGetMotTest(['data' => $motTestData]);
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
+
+        $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
+
+        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
+        $mockVehicleServiceClient
+            ->expects($this->once())
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->with(1001, 1)
+            ->will($this->returnValue($vehicleData));
 
         $result = $this->getResultForAction('displayTestSummary', ['motTestNumber' => $motTestNr]);
 
         $this->assertResponseStatus(self::HTTP_OK_CODE);
-        $this->assertEquals($motTestData, $result->motDetails);
     }
 
     public function testIndexActionWithMysteryShopperTestType()
@@ -637,23 +724,21 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
             ->willReturn(true);
 
         $motTestNr = (int) rand(1e12, 1e13 - 1);
-        $motTestData = $this->getTestMotTestDataDto($motTestNr);
+        $motTestData = Fixture::getMotTestDataVehicleClass4(true);
+        $motTestData->motTestNumber = $motTestNr;
 
-        $restClientMock = $this->getRestClientMockForServiceManager();
-        $restClientMock->expects($this->at(0))
-            ->method('get')
-            ->with(UrlBuilder::of()->motTest()->routeParam('motTestNumber', $motTestNr))
-            ->willReturn(['data' => $motTestData]);
+        $motTest = new MotTest($motTestData);
 
-        $restClientMock->expects($this->at(1))
-            ->method('get')
-            ->with($this->anything())
-            ->willReturn(['data' => []]);
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with($motTestNr)
+            ->will($this->returnValue($motTest));
 
         $result = $this->getResultForAction('index', ['motTestNumber' => $motTestNr]);
 
         $this->assertResponseStatus(self::HTTP_OK_CODE);
-        $this->assertEquals($motTestData, $result->motTest);
     }
 
     public function testDisplayTestSummaryWithMysteryShopperTestType()
@@ -667,30 +752,63 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         );
 
         $motTestNr = (int) rand(1, 1000);
-        $motTestData = $this->getTestMotTestDataDto($motTestNr);
-        $motTestData->setTestType((new MotTestTypeDto())->setCode(MotTestTypeCode::MYSTERY_SHOPPER));
+        $motTestData = Fixture::getMotTestDataVehicleClass4(true);
+        $motTestData->motTestNumber = $motTestNr;
+        $motTestData->testTypeCode = MotTestTypeCode::MYSTERY_SHOPPER;
 
-        $this->getRestClientMockWithGetMotTest(['data' => $motTestData]);
+        $motTest = new MotTest($motTestData);
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with($motTestNr)
+            ->will($this->returnValue($motTest));
+
+        $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
+
+        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
+        $mockVehicleServiceClient
+            ->expects($this->once())
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->with(1001, 1)
+            ->will($this->returnValue($vehicleData));
 
         $result = $this->getResultForAction('displayTestSummary', ['motTestNumber' => $motTestNr]);
 
         $this->assertResponseStatus(self::HTTP_OK_CODE);
-        $this->assertEquals($motTestData, $result->motDetails);
     }
 
     public function testDisplayCertificateSummary()
     {
         $motTestNr = (int) rand(1, 1000);
-        $motTestData = $this->getTestMotTestDataDto($motTestNr);
+
+        $motTestData = Fixture::getMotTestDataVehicleClass4(true);
+        $motTestData->motTestNumber = $motTestNr;
+        $motTest = new MotTest($motTestData);
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with($motTestNr)
+            ->will($this->returnValue($motTest));
+
+        $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
+
+        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
+        $mockVehicleServiceClient
+            ->expects($this->once())
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->with(1001, 1)
+            ->will($this->returnValue($vehicleData));
 
         $this->setupAuthorizationService([PermissionInSystem::CERTIFICATE_READ]);
-
-        $this->getRestClientMock('get', ['data' => $motTestData], "mot-test-certificate?number=$motTestNr");
 
         $result = $this->getResultForAction('displayCertificateSummary', ['motTestNumber' => $motTestNr]);
 
         $this->assertResponseStatus(self::HTTP_OK_CODE);
-        $this->assertEquals($motTestData, $result->motDetails);
+        $this->assertEquals($motTest, $result->motDetails);
     }
 
     /**
@@ -702,14 +820,13 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
             [PermissionInSystem::MOT_TEST_CONFIRM, PermissionAtSite::MOT_TEST_CONFIRM_AT_SITE]
         );
 
-        $motTestNumber = 99999;
-
-        $motTestDto = $this->getTestMotTestDataDto($motTestNumber);
+        $motTestNumber = 1;
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
 
         $restClient = $this->getRestClientMockForServiceManager();
         $this->mockMethod(
             $restClient, 'get', null,
-            ['data' => $motTestDto],
+            ['data' => $testMotTestData],
             MotTestUrlBuilder::motTest($motTestNumber)->toString()
         );
 
@@ -773,11 +890,28 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
 
     public function testPrintMotTestCanBeAccessedAuthenticatedRequest()
     {
-        $motTestNr = (int) rand(1, 1000);
-        $motTestData = $this->getTestMotTestDataDto($motTestNr);
 
         $this->setupAuthorizationService();
-        $this->getRestClientMockWithGetMotTest(['data' => $motTestData]);
+
+        $motTestNr = 1;
+
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
+
+        $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
+
+        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
+        $mockVehicleServiceClient
+            ->expects($this->once())
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->with(1001, 1)
+            ->will($this->returnValue($vehicleData));
 
         $this->motEventManagerMock->expects($this->once())
             ->method('trigger');
@@ -785,7 +919,7 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         $result = $this->getResultForAction('testResult', ['motTestNumber' => $motTestNr]);
 
         $this->assertResponseStatus(self::HTTP_OK_CODE);
-        $this->assertEquals($motTestData, $result->motDetails);
+        $this->assertEquals($testMotTestData, $result->motDetails);
     }
 
     public function retrievePdfDuplicateDataProvider()
@@ -818,13 +952,23 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         $this->setUpNonMotDependencies($mysteryShopperToggleEnabled, $userHasNonMotTestPermission);
 
         $motTestNr = (int) rand(1, 1000);
-        $motTestData = $this->getTestMotTestDataDto($motTestNr);
+        $motTestData = Fixture::getMotTestDataVehicleClass4(true);
+        $motTestData->motTestNumber = $motTestNr;
 
         if ($testHasNonMotTestType) {
-            $motTestData->setTestType((new MotTestTypeDto())->setCode(MotTestTypeCode::NON_MOT_TEST));
+            $motTestData->testTypeCode = MotTestTypeCode::NON_MOT_TEST;
         }
 
-        $this->getRestClientMockWithGetMotTest(['data' => $motTestData]);
+        $motTest = new MotTest($motTestData);
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with($motTestNr)
+            ->will($this->returnValue($motTest));
+
+        $this->getRestClientMock('get', [ "data" => new SiteDto()], "vehicle-testing-station/1");
 
         $response = $this->getResultForAction('displayTestSummary', ['motTestNumber' => $motTestNr]);
 
@@ -859,29 +1003,20 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         $this->setUpNonMotDependencies($mysteryShopperToggleEnabled, $userHasNonMotTestPermission);
 
         $motTestNr = (int) rand(1, 1000);
-        $motTestData = $this->getTestMotTestDataDto($motTestNr);
+        $motTestData = Fixture::getMotTestDataVehicleClass4(true);
+        $motTestData->motTestNumber = $motTestNr;
+        $motTestData->testTypeCode = MotTestTypeCode::NON_MOT_TEST;
 
-        $motTestData->setTestType((new MotTestTypeDto())->setCode(MotTestTypeCode::NON_MOT_TEST));
+        $motTest = new MotTest($motTestData);
 
-        $this->getRestClientMockWithGetMotTest(['data' => $motTestData]);
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->any())
+            ->method('getMotTestByTestNumber')
+            ->with($motTestNr)
+            ->will($this->returnValue($motTest));
 
-        $exceptionMock = XMock::of(RestApplicationException::class);
-
-        $restClientMock = $this->getRestClientMockForServiceManager();
-        $restClientMock->expects($this->once())
-            ->method('post')
-            ->willThrowException(
-                $exceptionMock
-            );
-
-        $exceptionMock->expects($this->any())
-            ->method('containsError')
-            ->willReturn(false);
-
-        $restClientMock->expects($this->once())
-            ->method('get')
-            ->with(MotTestUrlBuilder::motTest($motTestNr))
-            ->willReturn(['data' => $this->getTestMotTestDataDto($motTestNr)]);
+        $this->getFlashMessengerMockForAddErrorMessage(MotTestController::ERROR_NO_SITE_FOR_NON_MOT_TEST);
 
         $this->getResultForAction2('post', 'displayTestSummary', ['motTestNumber' => $motTestNr], null, []);
     }
@@ -889,13 +1024,30 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
     public function testNoErrorWhenDisplayTestSummarySubmissionForNonMotTestDoesContainSite()
     {
         $motTestNr = (int) rand(1, 1000);
-        $motTestData = $this->getTestMotTestDataDto($motTestNr);
+        $motTestData = Fixture::getMotTestDataVehicleClass4(true);
+        $motTestData->motTestNumber = $motTestNr;
+        $motTestData->testTypeCode = MotTestTypeCode::NON_MOT_TEST;
 
-        $motTestData->setTestType((new MotTestTypeDto())->setCode(MotTestTypeCode::NON_MOT_TEST));
+        $motTest = new MotTest($motTestData);
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with($motTestNr)
+            ->will($this->returnValue($motTest));
 
         $this->getFlashMessengerMockForNoErrorMessage();
 
-        $this->executeDisplayTestSummarySubmission($motTestData, ['siteidentry' => 'VTS1234']);
+        $this->executeDisplayTestSummarySubmission($motTest, ['siteidentry' => 'VTS1234']);
+    }
+
+    private function executeDisplayTestSummarySubmission(MotTest $motTest, array $postData)
+    {
+        $mysteryShopperToggleEnabled = $userHasNonMotTestPermission = true;
+        $this->setUpNonMotDependencies($mysteryShopperToggleEnabled, $userHasNonMotTestPermission);
+
+        $this->getResultForAction2('post', 'displayTestSummary', ['motTestNumber' => $motTest->getMotTestNumber()], null, $postData);
     }
 
     public function testNoErrorWhenDisplayTestSummarySubmissionForNormalTestDoesNotContainSite()
@@ -904,75 +1056,35 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         $this->setUpNonMotDependencies($mysteryShopperToggleEnabled, $userHasNonMotTestPermission);
 
         $motTestNr = (int) rand(1, 1000);
-        $motTestData = $this->getTestMotTestDataDto($motTestNr);
 
-        $this->getRestClientMockWithGetMotTest(['data' => $motTestData]);
+        $motTestData = Fixture::getMotTestDataVehicleClass4(true);
+        $motTestData->motTestNumber = $motTestNr;
+
+        $motTest = new MotTest($motTestData);
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with($motTestNr)
+            ->will($this->returnValue($motTest));
 
         $this->getFlashMessengerMockForNoErrorMessage();
 
         $this->getResultForAction2('post', 'displayTestSummary', ['motTestNumber' => $motTestNr], null, []);
     }
 
-    private function getTestMotTestDataDto($motTestNumber = 1, $status = MotTestStatusName::PASSED)
-    {
-
-        /** @var MotIdentityProvider $mockIdentityProvider */
-        $mockIdentityProvider = $this->getServiceManager()->get('MotIdentityProvider');
-
-        $motTest = (new MotTestDto())
-            ->setMotTestNumber($motTestNumber)
-            ->setTester((new PersonDto())->setId($mockIdentityProvider->getIdentity()->getUserId()))
-            ->setTestType((new MotTestTypeDto())->setCode(MotTestTypeCode::NORMAL_TEST))
-            ->setStatus($status)
-            ->setOdometerReading(
-                (new OdometerReadingDTO())
-                    ->setValue(1234)
-                    ->setUnit(OdometerUnit::KILOMETERS)
-                    ->setResultType(OdometerReadingResultType::OK)
-            )
-            ->setVehicle(
-                (new VehicleDto())
-                    ->setId(1)
-                    ->setRegistration('ELFA 1111')
-                    ->setVin('1M2GDM9AXKP042725')
-                    ->setYear(2011)
-                    ->setVehicleClass(
-                        (new VehicleClassDto())
-                            ->setId(4)
-                            ->setCode(4)
-                    )
-                    ->setMakeName('Volvo')
-                    ->setModelName('S80 GTX')
-            );
-
-        return $motTest;
-    }
-
-    private function getRestClientMockWithGetMotTest($motTestData)
-    {
-        $motTestNumber = is_object($motTestData['data'])
-            ? $motTestData['data']->getMotTestNumber()
-            : $motTestData['data']['motTestNumber'];
-
-        return $this->getRestClientMock(
-            'get',
-            $motTestData,
-            "mot-test/$motTestNumber"
-        );
-    }
-
-    private function executeDisplayTestSummarySubmission(MotTestDto $motTestData, array $postData)
-    {
-        $mysteryShopperToggleEnabled = $userHasNonMotTestPermission = true;
-        $this->setUpNonMotDependencies($mysteryShopperToggleEnabled, $userHasNonMotTestPermission);
-
-        $this->getRestClientMockWithGetMotTest(['data' => $motTestData]);
-
-        $this->getResultForAction2('post', 'displayTestSummary', ['motTestNumber' => $motTestData->getMotTestNumber()], null, $postData);
-    }
-
     private function setUpNonMotDependencies($mysteryShopperToggleEnabled, $userHasNonMotTestPermission)
     {
+        $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
+
+        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
+        $mockVehicleServiceClient
+            ->expects($this->any())
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->with(1001, 1)
+            ->will($this->returnValue($vehicleData));
+
         $permissions = [
             PermissionAtSite::MOT_TEST_CONFIRM_AT_SITE,
             PermissionInSystem::MOT_TEST_CONFIRM

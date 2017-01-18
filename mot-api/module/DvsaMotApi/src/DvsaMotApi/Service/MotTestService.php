@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApi\Service;
 
@@ -7,9 +12,7 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Date\DateTimeHolder;
-use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Common\MotTestTypeDto;
@@ -46,19 +49,21 @@ use DvsaMotApi\Service\Validator\MotTestValidator;
 use DvsaEntities\Repository\SiteStatusRepository;
 
 /**
+ * Class MotTestService
+ *
  * Service with logic for MOT test
  */
 class MotTestService extends AbstractSearchService implements TransactionAwareInterface
 {
     use TransactionAwareTrait;
 
-    const PENDING_INCOMPLETE_STATUS                               = 'INCOMPLETE';
-    const ODOMETER_NOT_READABLE_UNIT                              = 'notRead';
-    const ODOMETER_NO_ODOMETER_UNIT                               = 'noOdometer';
-    const ODOMETER_MILES_UNIT                                     = 'mi';
-    const ODOMETER_KILOMETERS_UNIT                                = 'km';
+    const PENDING_INCOMPLETE_STATUS = 'INCOMPLETE';
+    const ODOMETER_NOT_READABLE_UNIT = 'notRead';
+    const ODOMETER_NO_ODOMETER_UNIT = 'noOdometer';
+    const ODOMETER_MILES_UNIT = 'mi';
+    const ODOMETER_KILOMETERS_UNIT = 'km';
     const CONFIG_PARAM_MAX_VISIBLE_VEHICLE_TEST_HISTORY_IN_MONTHS = "maxVisibleVehicleTestHistoryInMonths";
-    const OFFSITE_INSPECTION_SITE_NAME                            = 'DVSA INSPECTION';
+    const OFFSITE_INSPECTION_SITE_NAME = 'DVSA INSPECTION';
 
     /** @var MotTestRepository */
     private $motTestRepository;
@@ -76,7 +81,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
     private $readMotTestAssertion;
     /** @var MotTest */
     private $motTest;
-    /** @var CreateMotTestService  */
+    /** @var CreateMotTestService */
     private $createMotTestService;
     /** @var MysteryShopperHelper  */
     private $mysteryShopperHelper;
@@ -119,13 +124,14 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
 
     /**
      * @param $motTestNumber
+     * @param bool $clearIdentityMap
      * @return MotTest
      * @throws ForbiddenException
      * @throws NotFoundException
      */
-    private function findMotTest($motTestNumber)
+    private function findMotTest($motTestNumber, $clearIdentityMap = false)
     {
-        $motTest = $this->getMotTest($motTestNumber);
+        $motTest = $this->getMotTest($motTestNumber, $clearIdentityMap);
 
         $this->readMotTestAssertion->assertGranted($motTest);
 
@@ -134,16 +140,17 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
 
     /**
      * @param string $motTestNumber
-     * @oaram bool $minimal optional returns minimal MOT
+     * @param bool $minimal optional returns minimal MOT
+     * @param bool $clearIdentityMap
      *
      * @throws ForbiddenException
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      *
      * @return MotTestDto
      */
-    public function getMotTestData($motTestNumber, $minimal = false)
+    public function getMotTestData($motTestNumber, $minimal = false, $clearIdentityMap = false)
     {
-        $motTest = $this->findMotTest($motTestNumber);
+        $motTest = $this->findMotTest($motTestNumber, $clearIdentityMap);
 
         return $this->extractMotTest($motTest, $minimal);
     }
@@ -198,7 +205,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
         $motTest = $this->getMotTest($motTestNumber);
 
         if ($motTest->getVehicleTestingStation()) {
-            $vts                                          = $motTest->getVehicleTestingStation();
+            $vts = $motTest->getVehicleTestingStation();
             $additionalSnapShotData['TestStationAddress'] = $vts->getAddress();
         }
 
@@ -257,8 +264,12 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
         }
 
         if ($siteid && $motTest) {
+            /** @var Site $vts */
             $vts = $this->entityManager->find(Site::class, $siteid);
             $motTest->setVehicleTestingStation($vts);
+            if($vts->getOrganisation()) {
+                $motTest->setOrganisation($vts->getOrganisation());
+            }
             $this->entityManager->persist($motTest);
             $this->entityManager->flush();
 
@@ -273,7 +284,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
      * at a non-VTS site location.
      *
      * @param string $locationSiteText contains user entered ad-hoc text
-     * @param string $username         the username making the request
+     * @param string $username the username making the request
      * @param string $type
      *
      * @return int|null
@@ -406,17 +417,22 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
      * Get an MotTest entity from the test number. Result will be cached.
      *
      * @param string $motTestNumber
+     * @param bool $clearIdentityMap
      *
      * @throws \DvsaCommonApi\Service\Exception\NotFoundException
      *
      * @return \DvsaEntities\Entity\MotTest
      */
-    public function getMotTest($motTestNumber)
+    public function getMotTest($motTestNumber, $clearIdentityMap = false)
     {
         if ($this->motTest instanceof MotTest
-            && $this->motTest->getNumber() === (string) $motTestNumber
+            && $this->motTest->getNumber() === (string)$motTestNumber
         ) {
             return $this->motTest;
+        }
+
+        if ($clearIdentityMap) {
+            $this->getEntityManager()->clear();
         }
 
         $this->motTest = $this->motTestRepository->getMotTestByNumber($motTestNumber);
@@ -438,7 +454,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
      * Get Mot Tests by Vehicle Registration Mark (vrm or registration).
      *
      * @param string $vrm
-     * @param int    $maxResults
+     * @param int $maxResults
      *
      * @return array|null
      */
@@ -498,7 +514,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
     /**
      * Performs the actual search using the repository.
      *
-     * @param SearchParam  $params
+     * @param SearchParam $params
      * @param OutputFormat $format
      *
      * @return mixed|void
@@ -547,7 +563,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
     public function getLatestPassedTestByVehicleId($vehicleId)
     {
         $lastMotTest = $this->motTestRepository
-                            ->getLatestMotTestByVehicleIdAndResult($vehicleId, MotTestStatusName::PASSED);
+            ->getLatestMotTestByVehicleIdAndResult($vehicleId, MotTestStatusName::PASSED);
 
         return $lastMotTest;
     }

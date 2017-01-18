@@ -1,15 +1,24 @@
 <?php
+/**
+ * This file is part of the DVSA MOT Frontend project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
+
 namespace DvsaMotTest\Controller;
 
 use Application\Helper\PrgHelper;
 use Application\Service\CatalogService;
-use DvsaMotTest\Form\VrmUpdateForm;
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\Make;
+use Dvsa\Mot\ApiClient\Resource\Item\Model;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use Dvsa\Mot\ApiClient\Resource\Item\Tester;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Dto\Common\ColourDto;
-use DvsaCommon\Dto\Common\MotTestDto;
-use DvsaCommon\Dto\Person\PersonDto;
 use DvsaCommon\Dto\Vehicle\CountryDto;
+use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\HttpRestJson\Exception\NotFoundException;
 use DvsaCommon\HttpRestJson\Exception\OtpApplicationException;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
@@ -19,12 +28,14 @@ use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaCommon\UrlBuilder\UrlBuilderWeb;
 use DvsaCommon\Utility\AddressUtils;
 use DvsaCommon\Utility\ArrayUtils;
+use DvsaMotTest\Form\VrmUpdateForm;
 use DvsaMotTest\Model\OdometerReadingViewObject;
 use DvsaMotTest\Model\OdometerUpdate;
 use DvsaMotTest\View\Model\MotPrintModel;
 use DvsaMotTest\View\ReplacementMakeViewModel;
 use DvsaMotTest\View\ReplacementSiteViewModel;
 use DvsaMotTest\View\ReplacementVehicleViewModel;
+use MyProject\Proxies\__CG__\OtherProject\Proxies\__CG__\stdClass;
 use Vehicle\Helper\ColoursContainer;
 use Vehicle\Service\VehicleCatalogService;
 use Zend\View\Model\ViewModel;
@@ -54,11 +65,22 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
     private $vehicleCatalogService;
 
     /**
-     * @param VehicleCatalogService $vehicleCatalogService
+     * @var OdometerReadingViewObject
      */
-    public function __construct(VehicleCatalogService $vehicleCatalogService)
+    private $odometerViewObject;
+
+    /**
+     * ReplacementCertificateController constructor.
+     * @param VehicleCatalogService $vehicleCatalogService
+     * @param OdometerReadingViewObject $odometerViewObject
+     */
+    public function __construct(
+        VehicleCatalogService $vehicleCatalogService,
+        OdometerReadingViewObject $odometerViewObject
+    )
     {
         $this->vehicleCatalogService = $vehicleCatalogService;
+        $this->odometerViewObject= $odometerViewObject;
     }
 
     /**
@@ -107,8 +129,10 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
         $motTestNumber = ArrayUtils::tryGet($draft, 'motTestNumber');
 
         //  --  get mottest data from Api --
-        /** @var MotTestDto $motTest */
+        /** @var MotTest $motTest */
         $motTest = $this->tryGetMotTestOrAddErrorMessages($motTestNumber);
+        /** @var DvsaVehicle $vehicle */
+        $vehicle = $this->getVehicleServiceClient()->getDvsaVehicleByIdAndVersion($motTest->getVehicleId(), $motTest->getVehicleVersion());
         $otpErrorData = null;
 
         if ($request->isPost()) {
@@ -155,39 +179,48 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
         }
 
         /** @var ColourDto $primaryColour */
-        $primaryColour = $motTest->getPrimaryColour();
-        $primaryColour->setName($draft['primaryColour']['name']);
+        $primaryColour = new ColourDto();
+        $primaryColour->setName($vehicle->getColour()->getName());
 
         $secondaryColourDraft = $draft['secondaryColour'];
         /** @var ColourDto $secondaryColour */
-        $secondaryColour = $motTest->getSecondaryColour();
-
-        if (!$secondaryColour) {
-            $secondaryColour = new ColourDto();
-        }
+        $secondaryColour = new ColourDto();
+        $secondaryColour->setName($vehicle->getColourSecondary()->getName());
 
         $secondaryColour
             ->setName(ArrayUtils::tryGet($secondaryColourDraft, 'name'))
             ->setCode(ArrayUtils::tryGet($secondaryColourDraft, 'code'));
 
-        if ($this->hasAdminRights()) {
-            /** @var CountryDto $countryOfRegistration */
-            $countryOfRegistration = $motTest->getCountryOfRegistration();
+        /** @var VehicleDto $vehicleDto */
+        $vehicleViewModel = new DvsaVehicleViewModel($vehicle);
 
-            $motTest->setVin($draft['vin']);
-            $motTest->setRegistration($draft['vrm']);
-            $motTest->setModel($draft['model']['name']);
-            $motTest->setMake($draft['make']['name']);
+        if ($this->hasAdminRights()) {
+            $countryOfRegistration = new CountryDto();
+
+            $vehicleViewModel->setVin($draft['vin']);
+            $vehicleViewModel->setRegistration($draft['vrm']);
+
+            $make = new \stdClass();
+            $make->id = $draft['make']['id'];
+            $make->name = $draft['make']['name'];
+            $vehicleViewModel->setMake(new Make($make));
+
+            $model = new \stdClass();
+            $model->id = $draft['model']['id'];
+            $model->name = $draft['model']['name'];
+            $vehicleViewModel->setModel(new Model($model));
+
             $countryOfRegistration->setName($draft['countryOfRegistration']['name']);
 
             $draft['vts']['address'] = AddressUtils::stringify($draft['vts']['address']);
-            $motTest->setVehicleTestingStation($draft['vts']);
+            //$motTest->setVehicleTestingStation($draft['vts']);
         }
 
-        $odometerReadingVO = OdometerReadingViewObject::create()
-            ->setOdometerReadingValuesMap($draft['odometerReading']);
+        $this->odometerViewObject->setValue($draft['odometerReading']['value']);
+        $this->odometerViewObject->setUnit($draft['odometerReading']['unit']);
+        $this->odometerViewObject->setResultType($draft['odometerReading']['resultType']);
 
-        /** @var PersonDto $tester */
+        /** @var Tester $tester */
         $tester = $motTest->getTester();
         $isOriginalTester = $this->getIdentity()->getUserId() === $tester->getId();
 
@@ -203,7 +236,8 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
         $viewModel = new ViewModel(
             [
                 'motTest' => $motTest,
-                'odometerReading' => $odometerReadingVO,
+                'odometerReading' => $this->odometerViewObject,
+                'vehicleViewModel' => $vehicleViewModel,
                 'isOriginalTester' => $isOriginalTester,
                 'expiryDate' => $draft['expiryDate'],
                 'differentTesterReasons' => $differentTesterReasons,
@@ -228,10 +262,13 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
         $motTestNumber = $this->params("motTestNumber");
         $motTest = $this->tryGetMotTestOrAddErrorMessages($motTestNumber);
 
+        $vehicle = $this->getVehicleServiceClient()->getDvsaVehicleByIdAndVersion($motTest->getVehicleId(), $motTest->getVehicleVersion());
+
         $modelPrintViewModel = new MotPrintModel(
             [
                 'motDetails' => $motTest,
                 'motTestNumber' => $motTestNumber,
+                'vehicle' => $vehicle
             ]
         );
 
@@ -550,8 +587,9 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
      */
     private function buildOdometerReadingViewObject($draft)
     {
-        $odometerVO = new OdometerReadingViewObject();
-        $odometerVO->setOdometerReadingValuesMap($draft['odometerReading']);
+        $this->odometerViewObject->setValue($draft['odometerReading']['value']);
+        $this->odometerViewObject->setUnit($draft['odometerReading']['unit']);
+        $this->odometerViewObject->setResultType($draft['odometerReading']['resultType']);
 
         $apiUrl = MotTestUrlBuilder::odometerReadingModifyCheck($draft['motTestNumber'])->toString();
 
@@ -559,10 +597,10 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
             $apiResult = $this->getRestClient()->get($apiUrl);
 
             $odometerModifiable = $apiResult['data']['modifiable'];
-            $odometerVO->setModifiable($odometerModifiable);
+            $this->odometerViewObject->setModifiable($odometerModifiable);
         }
 
-        return $odometerVO;
+        return $this->odometerViewObject;
     }
 
     /**
@@ -578,6 +616,12 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
         $motTestNumber = ArrayUtils::tryGet($draftData, 'motTestNumber');
 
         $vehicleViewModel = new ReplacementVehicleViewModel($draftData);
+
+        $motTest = $this->tryGetMotTestOrAddErrorMessages();
+
+        $dvsaVehicleViewModel =
+            new DvsaVehicleViewModel($this->getVehicleServiceClient()
+                ->getDvsaVehicleByIdAndVersion($motTest->getVehicleId(), $motTest->getVehicleVersion()));
 
         if ($makeId) {
             $vehicleViewModel->getMake()->setId((int) $makeId);
@@ -602,7 +646,8 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
             [
                 'odometerReading' => $readingVO,
                 'motTestNumber' => $motTestNumber,
-                'motTest' => $this->tryGetMotTestOrAddErrorMessages($motTestNumber),
+                'motTest' => $motTest,
+                'dvsaVehicleViewModel' => $dvsaVehicleViewModel,
                 'vts' => new ReplacementSiteViewModel($draftData),
                 'vehicle' => $vehicleViewModel
             ],

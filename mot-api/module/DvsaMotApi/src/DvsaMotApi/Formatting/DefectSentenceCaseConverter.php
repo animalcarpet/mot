@@ -60,7 +60,7 @@ class DefectSentenceCaseConverter
         ];
 
         $defect = $motTestRfr->getReasonForRejection();
-        $defectType = $motTestRfr->getType();
+        $defectType = (string) $motTestRfr->getType();
         $categoryDetails = $this->getCategoryDetails($defect->getTestItemSelector());
         $defectDescriptions = $this->getDefectDetails($defect);
 

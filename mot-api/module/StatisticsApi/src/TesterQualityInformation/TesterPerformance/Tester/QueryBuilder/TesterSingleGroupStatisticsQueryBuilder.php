@@ -5,7 +5,7 @@ use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Common
 
 class TesterSingleGroupStatisticsQueryBuilder extends TesterPerformanceQueryBuilder
 {
-    protected $index = "USE INDEX (`mot_test_person_id_started_date_completed_date_idx`)";
+    protected $index = "USE INDEX (`ix_mot_test_current_person_id_started_date_completed_date`)";
     protected $where = "AND `person`.`id` = :testerId AND `class_group`.`code` = :groupCode";
     protected $selectFields = "vts.name AS siteName, ";
 }

@@ -17,15 +17,16 @@ $vehicleClasses3plus = [
     VehicleClassCode::CLASS_7
 ];
 
-/**  @var \DvsaCommon\Dto\Vehicle\VehicleDto $vehicle  */
+/**  @var \DvsaMotTest\Controller\DvsaVehicleViewModel $vehicle  */
 $vehicle = $this->vehicle;
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove | \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass1And2 $brakeResult */
 $brakeResult = $this->brakeResult;
 
 if (empty($brakeResult)) {
     return;
 }
 
-$vehicleClass = $vehicle->getClassCode();
+$vehicleClass = $vehicle->getVehicleClass()->getCode();
 
 $vehicleClassGroup = null;
 $brakeTestType = '';
@@ -34,15 +35,14 @@ $parkingBrakeTestType = null;
 
 if (in_array($vehicleClass, [VehicleClassCode::CLASS_1, VehicleClassCode::CLASS_2])) {
     $brakeTestType = 'Brake test type';
-    $serviceBrakeTestType = $brakeTestTypeCode2Name[ArrayUtils::tryGet($brakeResult, 'brakeTestType')];
+    $serviceBrakeTestType = $brakeResult->getBrakeTestTypeCode();
 
     $vehicleClassGroup = VEHICLE_CLASS_GROUP_12;
 
 } elseif (in_array($vehicleClass, $vehicleClasses3plus)) {
     $brakeTestType = 'Service brake test type';
-    $serviceBrakeTestType = $brakeTestTypeCode2Name[ArrayUtils::tryGet($brakeResult, 'serviceBrake1TestType')];
-    $parkingBrakeTestType = $brakeTestTypeCode2Name[ArrayUtils::tryGet($brakeResult, 'parkingBrakeTestType')];
-
+    $serviceBrakeTestType = $brakeResult->getServiceBrake1TestType();
+    $parkingBrakeTestType = $brakeResult->getParkingBrakeTestType();
     $vehicleClassGroup = VEHICLE_CLASS_GROUP_3PLUS;
 }
 
@@ -63,8 +63,8 @@ if (!$vehicleClassGroup) {
             </div>
 
             <?php if ($vehicleClassGroup == VEHICLE_CLASS_GROUP_12) :
-                $front = number_format(ArrayUtils::tryGet($brakeResult, 'vehicleWeightFront'));
-                $rear = number_format(ArrayUtils::tryGet($brakeResult, 'vehicleWeightRear'));
+                $front = number_format($brakeResult->getVehicleWeightFront());
+                $rear = number_format($brakeResult->getVehicleWeightRear());
                 ?>
                 <div class="col-sm-3">
                     <p class="primary-item">
@@ -77,10 +77,10 @@ if (!$vehicleClassGroup) {
                     </p>
                 </div>
             <?php elseif ($vehicleClassGroup == VEHICLE_CLASS_GROUP_3PLUS) :
-                if ($brakeResult['weightType'] == WeightSourceCode::NOT_APPLICABLE) {
+                if ($brakeResult->getWeightType() == WeightSourceCode::NOT_APPLICABLE) {
                     $weight = 'N/A';
                 } else {
-                    $weight = number_format(ArrayUtils::tryGet($brakeResult, 'vehicleWeight'));
+                    $weight = number_format($brakeResult->getVehicleWeight());
                 }
                 ?>
                 <div class="col-sm-9">
@@ -153,21 +153,6 @@ if (!$vehicleClassGroup) {
                     'dataKey'     => 'serviceBrake2',
                 ]
             );
-
-            $brakeResult['parkingBrakeData'] = [
-                'effortNearsideAxle1' => $brakeResult['parkingBrakeEffortNearside'],
-                'effortOffsideAxle1'  => $brakeResult['parkingBrakeEffortOffside'],
-                'effortNearsideAxle2' => $brakeResult['parkingBrakeEffortSecondaryNearside'],
-                'effortOffsideAxle2'  => $brakeResult['parkingBrakeEffortSecondaryOffside'],
-                'effortSingle'        => $brakeResult['parkingBrakeEffortSingle'],
-                'lockNearsideAxle1'   => $brakeResult['parkingBrakeLockNearside'],
-                'lockOffsideAxle1'    => $brakeResult['parkingBrakeLockOffside'],
-                'lockNearsideAxle2'   => $brakeResult['parkingBrakeLockSecondaryNearside'],
-                'lockOffsideAxle2'    => $brakeResult['parkingBrakeLockSecondaryOffside'],
-                'lockSingle'          => $brakeResult['parkingBrakeLockSingle'],
-                'imbalanceAxle1'      => $brakeResult['parkingBrakeImbalance'],
-                'imbalanceAxle2'      => $brakeResult['parkingBrakeSecondaryImbalance'],
-            ];
 
             echo $this->partial(
                 'partials/mot-test-summary/brake-values-in-kg-result-by-type',

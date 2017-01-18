@@ -306,6 +306,14 @@ abstract class AbstractMotTestData extends AbstractData
         return $this->motTest->getLastResponse();
     }
 
+    /**
+     * @param AuthenticatedUser $tester
+     * @param VehicleDto $vehicle
+     * @param int $motTestNumber
+     * @param string $motTestType
+     * @param SiteDto|null $site
+     * @return MotTestDto
+     */
     protected function mapToMotTestDto(
         AuthenticatedUser $tester,
         VehicleDto $vehicle,

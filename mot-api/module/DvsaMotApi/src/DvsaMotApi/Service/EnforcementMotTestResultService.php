@@ -160,8 +160,7 @@ class EnforcementMotTestResultService extends AbstractService
             ->setDecisionOutcome($outcome)
             ->setMotTestInspection($reinspectionMotTest)
             ->setMotTest($motTest)
-            ->setCreatedBy($user)
-            ->setLastUpdatedBy($user);
+            ->setCreatedBy($user);
 
         if ($finalComment) {
             $enfMotTestResult->setComment($finalComment);

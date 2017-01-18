@@ -1,7 +1,13 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaEntities\Entity;
 
+use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Mapping as ORM;
 use DvsaCommon\Enum\LanguageTypeCode;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
@@ -9,9 +15,7 @@ use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * MotTest.
- *
- * @ORM\Table(name="mot_test_rfr_map", options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"})
+ * @ORM\Table(name="mot_test_current_rfr_map", options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"})
  * @ORM\Entity
  */
 class MotTestReasonForRejection extends Entity
@@ -49,39 +53,28 @@ class MotTestReasonForRejection extends Entity
     private $reasonForRejection;
 
     /**
-     * @var string
+     * @var ReasonForRejectionType
      *
-     * @ORM\Column(name="type", type="string", length=10, nullable=false)
+     * @ORM\OneToOne(targetEntity="ReasonForRejectionType", cascade={"persist"})
+     * @ORM\JoinColumn(name="rfr_type_id", referencedColumnName="id", nullable=false)
      */
     private $type;
 
     /**
-     * @var string
+     * @var MotTestReasonForRejectionLocation
      *
-     * @ORM\Column(name="location_lateral", type="string", length=50, nullable=true)
+     * @ORM\OneToOne(targetEntity="MotTestReasonForRejectionLocation", cascade={"persist"}, fetch="EAGER")
+     * @ORM\JoinColumn(name="mot_test_rfr_location_type_id", referencedColumnName="id", nullable=true)
      */
-    private $locationLateral;
+    private $location;
 
     /**
-     * @var string
+     * @var MotTestReasonForRejectionComment
      *
-     * @ORM\Column(name="location_longitudinal", type="string", length=50, nullable=true)
+     * @ORM\OneToOne(targetEntity="MotTestReasonForRejectionComment", cascade={"remove"}, fetch="EAGER")
+     * @ORM\JoinColumn(name="id", referencedColumnName="id", nullable=true)
      */
-    private $locationLongitudinal;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="location_vertical", type="string", length=50, nullable=true)
-     */
-    private $locationVertical;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="comment", type="string", length=255, nullable=true)
-     */
-    private $comment;
+    private $motTestReasonForRejectionComment;
 
     /**
      * @var boolean
@@ -98,9 +91,10 @@ class MotTestReasonForRejection extends Entity
     private $generated;
 
     /**
-     * @var string
+     * @var MotTestReasonForRejectionDescription
      *
-     * @ORM\Column(name="custom_description", type="string", length=100, nullable=true)
+     * @ORM\OneToOne(targetEntity="MotTestReasonForRejectionDescription", cascade={"remove"}, fetch="EAGER")
+     * @ORM\JoinColumn(name="id", referencedColumnName="id", nullable=true)
      */
     private $customDescription;
 
@@ -199,13 +193,10 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * Set type.
-     *
-     * @param string $type
-     *
-     * @return MotTestReasonForRejection
+     * @param ReasonForRejectionType $type
+     * @return $this
      */
-    public function setType($type)
+    public function setType(ReasonForRejectionType $type)
     {
         $this->type = $type;
 
@@ -213,9 +204,7 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * Get type.
-     *
-     * @return string
+     * @return ReasonForRejectionType
      */
     public function getType()
     {
@@ -223,17 +212,21 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * Set locationLateral.
-     *
-     * @param string $locationLateral
-     *
+     * @param MotTestReasonForRejectionLocation $location
      * @return MotTestReasonForRejection
      */
-    public function setLocationLateral($locationLateral)
+    public function setLocation($location)
     {
-        $this->locationLateral = $locationLateral;
-
+        $this->location = $location;
         return $this;
+    }
+
+    /**
+     * @return MotTestReasonForRejectionLocation
+     */
+    public function getLocation()
+    {
+        return $this->location;
     }
 
     /**
@@ -243,21 +236,11 @@ class MotTestReasonForRejection extends Entity
      */
     public function getLocationLateral()
     {
-        return $this->locationLateral;
-    }
+        if (!$this->getLocation()) {
+            return;
+        }
 
-    /**
-     * Set locationLongitudinal.
-     *
-     * @param string $locationLongitudinal
-     *
-     * @return MotTestReasonForRejection
-     */
-    public function setLocationLongitudinal($locationLongitudinal)
-    {
-        $this->locationLongitudinal = $locationLongitudinal;
-
-        return $this;
+        return $this->getLocation()->getLateral();
     }
 
     /**
@@ -267,21 +250,11 @@ class MotTestReasonForRejection extends Entity
      */
     public function getLocationLongitudinal()
     {
-        return $this->locationLongitudinal;
-    }
+        if (!$this->getLocation()) {
+            return;
+        }
 
-    /**
-     * Set locationVertical.
-     *
-     * @param string $locationVertical
-     *
-     * @return MotTestReasonForRejection
-     */
-    public function setLocationVertical($locationVertical)
-    {
-        $this->locationVertical = $locationVertical;
-
-        return $this;
+        return $this->getLocation()->getLongitudinal();
     }
 
     /**
@@ -291,7 +264,51 @@ class MotTestReasonForRejection extends Entity
      */
     public function getLocationVertical()
     {
-        return $this->locationVertical;
+        if (!$this->getLocation()) {
+            return;
+        }
+
+        return $this->getLocation()->getVertical();
+    }
+
+    /**
+     * @return MotTestReasonForRejectionComment
+     */
+    public function getMotTestReasonForRejectionComment()
+    {
+        try {
+            return $this->motTestReasonForRejectionComment;
+        } catch (EntityNotFoundException $e) {
+            return;
+        }
+    }
+
+    /**
+     * @param MotTestReasonForRejectionComment|null $motTestReasonForRejectionComment
+     * @return MotTestReasonForRejection
+     */
+    public function setMotTestReasonForRejectionComment(
+        MotTestReasonForRejectionComment $motTestReasonForRejectionComment
+    )
+    {
+        $this->motTestReasonForRejectionComment = $motTestReasonForRejectionComment;
+        return $this;
+    }
+
+    /**
+     * @return bool|MotTestReasonForRejectionComment
+     */
+    public function popComment()
+    {
+        $comment = $this->getMotTestReasonForRejectionComment();
+
+        if (is_null($comment)) {
+            return false;
+        }
+
+        $this->motTestReasonForRejectionComment = null;
+
+        return $comment;
     }
 
     /**
@@ -303,7 +320,11 @@ class MotTestReasonForRejection extends Entity
      */
     public function setComment($comment)
     {
-        $this->comment = $comment;
+        if (is_null($this->getMotTestReasonForRejectionComment())) {
+            $this->setMotTestReasonForRejectionComment(new MotTestReasonForRejectionComment());
+        }
+
+        $this->getMotTestReasonForRejectionComment()->setComment($comment);
 
         return $this;
     }
@@ -315,7 +336,16 @@ class MotTestReasonForRejection extends Entity
      */
     public function getComment()
     {
-        return $this->comment;
+        if (is_null($this->getMotTestReasonForRejectionComment())) {
+            return;
+        }
+
+        try {
+            return $this->getMotTestReasonForRejectionComment()->getComment();
+        } catch (EntityNotFoundException $e) {
+            return;
+        }
+
     }
 
     /**
@@ -374,23 +404,46 @@ class MotTestReasonForRejection extends Entity
     }
 
     /**
-     * @param string $value
-     *
-     * @return MotTestReasonForRejection
+     * @param MotTestReasonForRejectionDescription $description
+     * @return $this
      */
-    public function setCustomDescription($value)
+    public function setCustomDescription(MotTestReasonForRejectionDescription $description)
     {
-        $this->customDescription = $value;
+        $this->customDescription = $description;
 
         return $this;
     }
 
     /**
-     * @return string
+     * @return MotTestReasonForRejectionDescription|void
      */
     public function getCustomDescription()
     {
-        return $this->customDescription;
+        if (is_null($this->customDescription)) {
+            return;
+        }
+
+        try {
+            return $this->customDescription;
+        } catch (EntityNotFoundException $e) {
+            return;
+        }
+    }
+
+    /**
+     * @return bool|MotTestReasonForRejectionDescription
+     */
+    public function popDescription()
+    {
+        $description = $this->getCustomDescription();
+
+        if (is_null($description)) {
+            return false;
+        }
+
+        $this->customDescription = null;
+
+        return $description;
     }
 
     public function __clone()
@@ -420,7 +473,7 @@ class MotTestReasonForRejection extends Entity
 
     public function isFail()
     {
-        return ($this->getType() === ReasonForRejectionTypeName::FAIL);
+        return ($this->getType()->getReasonForRejectionType() === ReasonForRejectionTypeName::FAIL);
     }
 
     /**

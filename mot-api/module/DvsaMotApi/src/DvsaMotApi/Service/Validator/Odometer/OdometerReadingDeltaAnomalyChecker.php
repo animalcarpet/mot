@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApi\Service\Validator\Odometer;
 
@@ -6,7 +11,7 @@ use Api\Check\CheckMessage;
 use Api\Check\CheckResult;
 use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Constants\OdometerUnit;
-use DvsaEntities\Entity\OdometerReading;
+use DvsaCommon\Dto\Common\OdometerReadingDto;
 use DvsaEntities\Repository\ConfigurationRepository;
 
 /**
@@ -33,12 +38,12 @@ class OdometerReadingDeltaAnomalyChecker
     }
 
     /**
-     * @param OdometerReading $currentReading
-     * @param OdometerReading $previousReading
+     * @param $currentReading
+     * @param $previousReading
      *
      * @return CheckResult
      */
-    public function check(OdometerReading $currentReading, OdometerReading $previousReading)
+    public function check(OdometerReadingDto $currentReading, OdometerReadingDto $previousReading)
     {
         $result = CheckResult::ok();
 
@@ -69,18 +74,18 @@ class OdometerReadingDeltaAnomalyChecker
      */
     private function isMuchHigherThanLastOne($delta)
     {
-        $limit = (int) $this->configurationRepository->getValue(self::CONFIG_PARAM_ODOMETER_DELTA_SIGNIFICANTLY_HIGH);
+        $limit = (int)$this->configurationRepository->getValue(self::CONFIG_PARAM_ODOMETER_DELTA_SIGNIFICANTLY_HIGH);
 
         return $delta >= $limit;
     }
 
     /**
-     * @param OdometerReading $currentReading
-     * @param OdometerReading $previousReading
+     * @param OdometerReadingDto $currentReading
+     * @param OdometerReadingDto $previousReading
      *
      * @return int|null
      */
-    private function calculateDeltaSinceLastReading(OdometerReading $currentReading, OdometerReading $previousReading)
+    private function calculateDeltaSinceLastReading(OdometerReadingDto $currentReading, OdometerReadingDto $previousReading)
     {
         if ($currentReading->getValue() == 0 || $previousReading->getValue() == 0) {
             return;
@@ -90,18 +95,18 @@ class OdometerReadingDeltaAnomalyChecker
             && $previousReading->getResultType() === OdometerReadingResultType::OK
         ) {
             return intval(($this->normaliseReadingToKilometres($currentReading)
-                - $this->normaliseReadingToKilometres($previousReading)) / 1.6);
+                    - $this->normaliseReadingToKilometres($previousReading)) / 1.6);
         }
 
         return;
     }
 
     /**
-     * @param OdometerReading $reading
+     * @param OdometerReadingDto $reading
      *
      * @return int
      */
-    private function normaliseReadingToKilometres(OdometerReading $reading)
+    private function normaliseReadingToKilometres(OdometerReadingDto $reading)
     {
         if ($reading->getUnit() === OdometerUnit::MILES) {
             return $reading->getValue() * 1.6;

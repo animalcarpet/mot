@@ -2,9 +2,10 @@
 
 namespace DvsaMotTest\Mapper;
 
+use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass3AndAboveDto;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationDtoInterface;
-use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Enum\WeightSourceCode;
@@ -52,18 +53,19 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
     }
 
     /**
-     * @param MotTestDto $motTest
+     * @param MotTest $motTest
+     * @param string $vehicleClass
      *
      * @return BrakeTestConfigurationDtoInterface
      */
-    public function mapToDefaultDto(MotTestDto $motTest)
+    public function mapToDefaultDto(MotTest $motTest, $vehicleClass = null)
     {
         $dto = new BrakeTestConfigurationClass3AndAboveDto();
 
         $dto->setServiceBrake1TestType(BrakeTestTypeCode::ROLLER);
         $dto->setServiceBrake2TestType(null);
         $dto->setParkingBrakeTestType(BrakeTestTypeCode::ROLLER);
-        $dto->setWeightType($this->getVehicleWeightType($motTest));
+        $dto->setWeightType($this->getVehicleWeightType($motTest, $vehicleClass));
         $dto->setWeightIsUnladen(false);
         $dto->setServiceBrakeIsSingleLine(false);
         $dto->setIsCommercialVehicle(false);
@@ -72,14 +74,16 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
         $dto->setServiceBrakeControlsCount(1);
         $dto->setNumberOfAxles(2);
         $dto->setParkingBrakeNumberOfAxles(1);
-        $dto->setVehicleWeight($this->getDefaultVehicleWeight($motTest));
+        $dto->setVehicleWeight($this->getDefaultVehicleWeight($motTest, $vehicleClass));
 
-        if ($motTest->getVehicleTestingStation() !== null) {
+        //@TODO Question over this!
+        if ($motTest->getBrakeTestResult() !== null) {
+            $brakeTestResult = new BrakeTestResultClass3AndAbove($motTest->getBrakeTestResult());
             $dto->setParkingBrakeTestType(
-                $motTest->getVehicleTestingStation()['defaultParkingBrakeTestClass3AndAbove']
+                $brakeTestResult->getParkingBrakeTestType()
             );
             $dto->setServiceBrake1TestType(
-                $motTest->getVehicleTestingStation()['defaultServiceBrakeTestClass3AndAbove']
+                $brakeTestResult->getServiceBrake1TestType()
             );
         }
 
@@ -106,19 +110,20 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
     }
 
     /**
-     * @param MotTestDto $motTest
+     * @param MotTest $motTest
+     * @param string $vehicleClass
      *
      * @return int|string
      */
-    private function getDefaultVehicleWeight(MotTestDto $motTest)
+    private function getDefaultVehicleWeight(MotTest $motTest, $vehicleClass)
     {
         $vehicleWeight = '';
-
-        $vehicle = $motTest->getVehicle();
-        if (isset($vehicle)) {
-            $vehicleClass = $vehicle->getClassCode();
-            if (in_array($vehicleClass, VehicleClassCode::getClass3AndAbove())) {
-                $vehicleWeight = $vehicle->getWeight();
+        $brakeTestResult = $motTest->getBrakeTestResult();
+        if($brakeTestResult !== null) {
+            $brakeTestResultClass3AndAbove = new BrakeTestResultClass3AndAbove($motTest->getBrakeTestResult());
+            $applicableClasses = [VehicleClassCode::CLASS_3, VehicleClassCode::CLASS_4, VehicleClassCode::CLASS_5, VehicleClassCode::CLASS_7];
+            if (in_array($vehicleClass, $applicableClasses)) {
+                $vehicleWeight = $brakeTestResultClass3AndAbove->getVehicleWeight();
             }
         }
 
@@ -126,25 +131,24 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
     }
 
     /**
-     * @param MotTestDto $motTest
+     * @param MotTest $motTest
+     * @param string $vehicleClass
      *
      * @return string
      */
-    private function getVehicleWeightType(MotTestDto $motTest)
+    private function getVehicleWeightType(MotTest $motTest, $vehicleClass)
     {
-        $vehicle = $motTest->getVehicle();
-        if (!isset($vehicle)) {
+        if (!is_null($vehicleClass)) {
             return WeightSourceCode::VSI;
         }
 
-        $vehicleClass = $vehicle->getClassCode();
-        if (!isset($vehicleClass)) {
-            return WeightSourceCode::VSI;
-        }
+        $brakeResult = $motTest->getBrakeTestResult();
 
-        $weight = $vehicle->getWeight();
-        if ($vehicleClass == VehicleClassCode::CLASS_7 && !empty($weight)) {
-            return WeightSourceCode::DGW;
+        if(!is_null($brakeResult)){
+            $brakeResultObject = new BrakeTestResultClass3AndAbove($brakeResult);
+            if ($vehicleClass == VehicleClassCode::CLASS_7 && !empty($brakeResultObject->getVehicleWeight())) {
+                return WeightSourceCode::DGW;
+            }
         }
 
         return WeightSourceCode::VSI;

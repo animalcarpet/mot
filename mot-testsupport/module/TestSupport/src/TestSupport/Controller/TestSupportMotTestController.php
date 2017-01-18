@@ -230,29 +230,71 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
         $client->post($rfrUrl, ['rfrId' => self::$RFR_ID_MAP[$vehicleClass], 'type' => $type]);
     }
 
+    /**
+     * @param $comment
+     * @return int|null
+     */
+    private function addRfrCommentToDb($id, $comment)
+    {
+        if (is_null($comment)) {
+            $comment = 'alireza';
+        }
+
+        $sql = 'INSERT INTO `mot_test_rfr_map_comment` (`id`, `comment`) VALUES (:id, :comment)';
+        $params = [
+            'id' => $id,
+            'comment' => $comment
+        ];
+
+        return $this->updateInDb($sql, $params);
+    }
+
     private function addRfrToDb($rfr, $motTestNumber)
     {
-        $sql = 'INSERT INTO mot_test_rfr_map (
-          mot_test_id, rfr_id, type, comment, failure_dangerous, generated, on_original_test, created_by, created_on
+        $sql = 'INSERT INTO mot_test_current_rfr_map (
+          rfr_id,
+          failure_dangerous,
+          generated,
+          on_original_test,
+          created_on,
+          created_by,
+          mot_test_id,
+          rfr_type_id
         ) values (
-          (select id from mot_test where number = :motTestNumber), :rfrId, :type, :comment,
-          :dangerous, :generated, 0,
-          (select person_id from mot_test where number = :motTestNumber), current_date
+          :rfrId,
+          :dangerous,
+          :generated,
+          0,
+          current_date,
+          (SELECT person_id FROM mot_test_current WHERE number = :motTestNumber),
+          (SELECT id FROM mot_test_current WHERE number = :motTestNumber),
+          (SELECT id FROM reason_for_rejection_type WHERE name = :type)
         )';
+
         $values = [
             'motTestNumber' => $motTestNumber,
             'rfrId' => ArrayUtils::tryGet($rfr, 'id'),
             'type' => ArrayUtils::tryGet($rfr, 'type', ReasonForRejectionTypeName::FAIL),
-            'comment' => ArrayUtils::tryGet($rfr, 'comment'),
             'dangerous' => ArrayUtils::tryGet($rfr, 'dangerous', 0),
             'generated' => ArrayUtils::tryGet($rfr, 'generated', 0),
         ];
+
         if(empty($values['rfrId'])){
             $values['rfrId'] = ArrayUtils::get($rfr, 'reasonId');
         }
-        $this->updateInDb($sql, $values);
+
+        $id = $this->updateInDb($sql, $values);
+
+        $comment = ArrayUtils::tryGet($rfr, 'comment');
+
+        $this->addRfrCommentToDb($id, $comment);
     }
 
+    /**
+     * @param string $query
+     * @param array $bindValues
+     * @return int
+     */
     private function updateInDb($query, $bindValues = [])
     {
         $entityManager = $this->getServiceLocator()->get(EntityManager::class);
@@ -261,6 +303,7 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
             $stmt->bindValue($key, $value);
         }
         $stmt->execute();
+        return $entityManager->getConnection()->lastInsertId();
     }
 
     /**
@@ -275,7 +318,7 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
         \DateTime $expiryDate
     ) {
         $stmt = $em->getConnection()->prepare(
-            "UPDATE mot_test m LEFT JOIN mot_test n on n.id = m.prs_mot_test_id "
+            "UPDATE mot_test_current m LEFT JOIN mot_test_current n on n.id = m.prs_mot_test_id "
             . "SET m.started_date = ?, m.completed_date = ?, m.issued_date = ?, m.expiry_date = ? "
             . "WHERE m.number = ?"
         );
@@ -289,7 +332,7 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
         $stmt->execute();
 
         $stmt = $em->getConnection()->prepare(
-            "UPDATE mot_test m LEFT JOIN mot_test n on n.id = m.prs_mot_test_id "
+            "UPDATE mot_test_current m LEFT JOIN mot_test_current n on n.id = m.prs_mot_test_id "
             . "SET m.started_date = ?, m.completed_date = ?, m.issued_date = ?, m.expiry_date = ? "
             . "WHERE n.number=?"
         );

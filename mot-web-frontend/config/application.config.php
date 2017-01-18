@@ -6,8 +6,8 @@ $mods = require_once('modules.list.php');
 # The ability to load config files from a system controlled location (puppet)
 # If the APPLICATION_CONFIG_PATH is set then this location is used to read
 # the configs for the application. If this location is not set then the config
-# files are loaded from the standard locaiton within the source tree.
-$path = getenv('APPLICATION_CONFIG_PATH');
+# files are loaded from the standard location within the respective vagrant box.
+$path = getenv('APPLICATION_CONFIG_PATH')?: '/etc/dvsa/mot-web-frontend';
 
 if ($env === 'development') {
     $mods[] = 'ZendDeveloperTools';

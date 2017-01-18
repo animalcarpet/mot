@@ -1,4 +1,10 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
+
 namespace DvsaMotApi\Controller;
 
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
@@ -8,7 +14,7 @@ use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Service\Exception\RequiredFieldException;
 use DvsaCommonApi\Transaction\TransactionAwareInterface;
 use DvsaCommonApi\Transaction\TransactionAwareTrait;
-use DvsaEntities\Entity\ReplacementCertificateDraft;
+use DvsaEntities\Entity\CertificateReplacementDraft;
 use DvsaMotApi\Dto\ReplacementCertificateDraftChangeDTO;
 use DvsaMotApi\Helper\ReplacementCertificate\ReplacementCertificateDraftDiffHelper;
 use DvsaMotApi\Helper\ReplacementCertificate\ReplacementCertificateDraftMappingHelper;
@@ -18,8 +24,6 @@ use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateService;
 
 /**
  * Class ReplacementCertificateDraftController
- *
- * @package DvsaMotApi\Controller
  */
 class ReplacementCertificateDraftController extends AbstractDvsaRestfulController implements TransactionAwareInterface
 {
@@ -119,12 +123,14 @@ class ReplacementCertificateDraftController extends AbstractDvsaRestfulControlle
 
             $motTestNumber = $motEntity->getNumber();
 
+            $motTest = $this->motTestService->getMotTestData($motTestNumber, false, true);
+
             // I know it looks a bit heavy handed asking for the MOT data again when we've got
             // a perfectly good mot entity; but internally the MOT Test Service uses a private mapper
             // to return the expected array, so it's safer to pump it back through that
             $this->certificateCreationService->create(
                 $motTestNumber,
-                $this->motTestService->getMotTestData($motTestNumber),
+                $motTest,
                 $this->getUserId()
             );
 
@@ -140,14 +146,16 @@ class ReplacementCertificateDraftController extends AbstractDvsaRestfulControlle
     {
         $draftId = $this->params()->fromRoute("id");
         $draft = $this->replacementCertificateService->getDraft($draftId);
-        return ApiResponse::jsonOk(ReplacementCertificateDraftDiffHelper::getDiff($draft));
+        $diff = ReplacementCertificateDraftDiffHelper::getDiff($draft);
+        
+        return ApiResponse::jsonOk($diff);
     }
 
     /**
-     * @param ReplacementCertificateDraft $draft
+     * @param CertificateReplacementDraft $draft
      * @return bool
      */
-    private function isLatestPassedMotTest(ReplacementCertificateDraft $draft)
+    private function isLatestPassedMotTest(CertificateReplacementDraft $draft)
     {
         $lastMotTest = $this->motTestService->getLatestPassedTestByVehicleId(
             $draft->getMotTest()->getVehicle()->getId()
@@ -169,5 +177,4 @@ class ReplacementCertificateDraftController extends AbstractDvsaRestfulControlle
     {
         return $this->authorisationService->isGranted(PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS);
     }
-
 }

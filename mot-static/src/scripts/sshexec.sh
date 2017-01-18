@@ -58,11 +58,6 @@ function mot__delete_doctrine_cache_folders() {
 # Generates Doctrine proxies.
 function mot__doctrine_proxy_gen() {
     echo "Generating Doctrine Proxies..."
-    file=${workspace}/mot-api/config/autoload/doctrine.development.php
-    if [ ! -f ${file} ]; then
-        cp ${file}.dist ${file}
-    fi
-    sed -i 's/localhost/mysql/g' ${file}
     ${workspace}/mot-api/vendor/dvsa/scripts/jenkins/generate-proxies.sh
 }
 
@@ -75,11 +70,6 @@ function mot__doctrine_proxy() {
 function mot__doctrine_default_develop_dist() {
     echo "Removing ${workspace}/mot-api/config/autoload/optimised.development.php"
     rm -f ${workspace}/mot-api/config/autoload/optimised.development.php
-}
-
-function mot__doctrine_optimised_develop_dist() {
-    cp ${workspace}/mot-api/config/autoload/optimised.development.php.dist.opt \
-    ${workspace}/mot-api/config/autoload/optimised.development.php
 }
 
 function mot__xdebug_disable() {
@@ -235,41 +225,6 @@ function mot__server_mod_dev() {
     sudo sed -i.bak "s/^opcache.validate_timestamps.*/;opcache.validate_timestamps=0/g" ${phpRootDir}/etc/php.d/opcache.ini
 }
 
-# This script drops all .php files from config/autoload/ (web and api)
-# and copies *.dist files to replace dropped ones.
-#
-# Used by: mot-static/src/grunt/config/shell.js::build_dist_update
-#   example: `grunt build:config-reload`
-#
-# Reloads config from *.dist files
-# There must be given ONE argument
-#   string dir
-function __config_reload() {
-    local dir=$1
-
-    pushd ${dir} 1>/dev/null && \
-    echo "Switched to ${dir}"
-    echo "Removing all *.php config scripts"
-    rm -f "./*.php"
-
-    for distfile in *.dist; do
-        configfile=${distfile%.dist}
-        if [[ -f $configfile ]]; then
-            echo "- ${distfile} -> ${configfile}"
-            cp ${distfile} ${configfile}
-        fi
-    done
-    echo "Done for ${dir}"
-    popd 1>/dev/null
-}
-
-# Modifies config files (replace by .dist scripts).
-function mot__config_reload() {
-    __config_reload ${workspace}/mot-api/config/autoload
-    echo ""
-    __config_reload ${workspace}/mot-web-frontend/config/autoload
-}
-
 # Switches the environment into optimised mode.
 function mot__dev_optimise() {
     mot__is_api_node;
@@ -279,7 +234,6 @@ function mot__dev_optimise() {
 
     if [ $is_frontend -eq 0 ]; then mot__reset_database; fi;
     mot__xdebug_disable;
-    if [ $is_api -eq 0 ]; then mot__doctrine_optimised_develop_dist; fi;
     mot__server_mod_prod;
     if [ $is_api -eq 0 ]; then mot__doctrine_proxy; fi;
     mot__apache_restart;
@@ -334,7 +288,6 @@ function mot__switch_branch() {
 
     mot__apache_restart
     mot__composer
-    mot__config_reload
     if [ $is_frontend -eq 0 ]; then mot__mysql_proc_fix; fi;
     if [ $is_frontend -eq 0 ]; then mot__reset_database; fi;
     mot__server_mod_dev

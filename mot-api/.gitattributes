@@ -1,1 +1,4 @@
 * text eol=lf
+
+# zip files will corrupt without this
+*.tgz binary

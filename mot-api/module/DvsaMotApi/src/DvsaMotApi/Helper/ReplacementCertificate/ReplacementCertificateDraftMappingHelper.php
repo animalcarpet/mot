@@ -4,7 +4,7 @@ namespace DvsaMotApi\Helper\ReplacementCertificate;
 
 use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Utility\Hydrator;
-use DvsaEntities\Entity\ReplacementCertificateDraft;
+use DvsaEntities\Entity\CertificateReplacementDraft;
 
 /**
  * Class ReplacementCertificateMappingHelper
@@ -17,12 +17,12 @@ class ReplacementCertificateDraftMappingHelper
     const MODEL_UNKNOWN = 'Unknown';
 
     /**
-     * @param ReplacementCertificateDraft $draft
+     * @param CertificateReplacementDraft $draft
      * @param                             $isFullRights
      *
      * @return array
      */
-    public static function toJsonArray(ReplacementCertificateDraft $draft, $isFullRights, $isLatestPassedMotTest = false)
+    public static function toJsonArray(CertificateReplacementDraft $draft, $isFullRights, $isLatestPassedMotTest = false)
     {
         $vts = $draft->getVehicleTestingStation();
 
@@ -36,13 +36,11 @@ class ReplacementCertificateDraftMappingHelper
 
         $json['isLatestPassedMotTest'] = $isLatestPassedMotTest;
 
-        $json['odometerReading'] = $draft->getOdometerReading()
-            ? [
-                'value'      => $draft->getOdometerReading()->getValue(),
-                'unit'       => $draft->getOdometerReading()->getUnit(),
-                'resultType' => $draft->getOdometerReading()->getResultType()
-            ]
-            : NULL;
+        $json['odometerReading'] = [
+                'value'      => $draft->getOdometerValue(),
+                'unit'       => $draft->getOdometerUnit(),
+                'resultType' => $draft->getOdometerResultType(),
+            ];
 
 
         $json['secondaryColour'] = $draft->getSecondaryColour()
@@ -76,7 +74,7 @@ class ReplacementCertificateDraftMappingHelper
                         "id"   => $draft->getCountryOfRegistration()->getId(),
                         "name" => $draft->getCountryOfRegistration()->getName()
                     ],
-                    'reasonForReplacement'  => $draft->getReplacementReason(),
+                    'reasonForReplacement'  => $draft->getReasonForReplacement(),
                     'vin'                   => $draft->getVin(),
                     'vrm'                   => $draft->getVrm(),
                     'vts'                   => [
@@ -85,9 +83,9 @@ class ReplacementCertificateDraftMappingHelper
                         "name"       => $vts->getName(),
                         "address"    => $address,
                     ],
-                    'isVinVrmExpiryChanged' => $draft->getIsVinVrmExpiryChanged(),
-                    'includeInMismatchFile' => $draft->includeInMismatchFile(),
-                    'includeInPassFile'     => $draft->includeInPassFile()
+                    'isVinVrmExpiryChanged' => $draft->isVinVrmExpiryChanged(),
+                    'includeInMismatchFile' => $draft->isIncludeInMismatchFile(),
+                    'includeInPassFile'     => $draft->isIncludeInPassFile()
                 ]
             );
         }
@@ -96,7 +94,7 @@ class ReplacementCertificateDraftMappingHelper
     }
 
     /**
-     * @param ReplacementCertificateDraft $draft
+     * @param CertificateReplacementDraft $draft
      *
      * @return string
      */
@@ -120,7 +118,7 @@ class ReplacementCertificateDraftMappingHelper
     }
 
     /**
-     * @param ReplacementCertificateDraft $draft
+     * @param CertificateReplacementDraft $draft
      *
      * @return string
      */

@@ -3,14 +3,13 @@ namespace DvsaMotTest\Controller;
 
 use Application\Service\ContingencySessionManager;
 use Core\Authorisation\Assertion\WebPerformMotTestAssertion;
-use DvsaCommon\Dto\Common\MotTestDto;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\Messages\InvalidTestStatus;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaCommon\Utility\ArrayUtils;
-use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -58,11 +57,10 @@ class TestItemSelectorController extends AbstractDvsaMotTestController
                     $this->testItemSelectorId
                 )
             );
+            /** @var MotTest $motTest */
+            $motTest = $this->getMotTestFromApi($this->motTestNumber);
 
-            $this->getPerformMotTestAssertion()->assertGranted($resultData['motTest']);
-
-            /** @var MotTestDto $motTest */
-            $motTest = $resultData['motTest'];
+            $this->getPerformMotTestAssertion()->assertGranted($motTest);
 
             if ($motTest->getStatus() !== MotTestStatusName::ACTIVE) {
                 $this->addErrorMessages([InvalidTestStatus::getMessage($motTest->getStatus())]);
@@ -113,7 +111,10 @@ class TestItemSelectorController extends AbstractDvsaMotTestController
 
                 $resultData = $this->getDataFromApi($endPoint, $params);
 
-                $this->getPerformMotTestAssertion()->assertGranted($resultData['motTest']);
+                /** @var MotTest $motTest */
+                $motTest = $this->getMotTestFromApi($this->motTestNumber);
+
+                $this->getPerformMotTestAssertion()->assertGranted($motTest);
 
                 $rfrs = $this->getReasonsForRejection($resultData);
                 if (empty($rfrs)) {

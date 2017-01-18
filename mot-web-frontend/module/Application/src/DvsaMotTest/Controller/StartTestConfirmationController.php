@@ -28,7 +28,6 @@ use Vehicle\Helper\ColoursContainer;
 use Zend\Http\Request;
 use Zend\View\Model\ViewModel;
 use DvsaMotTest\ViewModel\StartTestConfirmationViewModel;
-use Dvsa\Mot\ApiClient\Service\VehicleService;
 
 /**
  * Class StartTestConfirmationController.
@@ -548,12 +547,7 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
             return;
         }
 
-        $apiUrl = VehicleUrlBuilder::vehicle($this->vehicleId)->testInProgressCheck();
-        $apiResult = $this->getRestClient()->get($apiUrl);
-
-        if (!empty($apiResult['data'])) {
-            $this->inProgressTestExists = $apiResult['data'];
-        }
+        $this->inProgressTestExists  = $this->getMotTestServiceClient()->isVehicleUnderTest($this->vehicleId);
     }
 
     /**
@@ -660,14 +654,6 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
     protected function getContingencySessionManager()
     {
         return $this->serviceLocator->get(ContingencySessionManager::class);
-    }
-
-    /**
-     * @return VehicleService
-     */
-    private function getVehicleServiceClient()
-    {
-        return $this->getServiceLocator()->get(VehicleService::class);
     }
 
     private function isNotMotTest()

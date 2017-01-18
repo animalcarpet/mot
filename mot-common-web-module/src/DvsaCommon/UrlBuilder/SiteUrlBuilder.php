@@ -55,4 +55,10 @@ class SiteUrlBuilder extends UrlBuilder
     {
         return $this->appendRoutesAndParams(self::VALIDATE);
     }
+
+    public function getVts($id)
+    {
+        return $this->appendRoutesAndParams(self::VEHICLE_TESTING_STATION)->routeParam('id', $id);
+
+    }
 }

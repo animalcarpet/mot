@@ -177,4 +177,14 @@ abstract class Entity
     {
         return ($this->lastUpdatedOn ? : $this->createdOn);
     }
+
+    /**
+     * Return person whom last amend the record (created or modified)
+     *
+     * @return Person
+     */
+    public function getLastAmendedBy()
+    {
+        return ($this->lastUpdatedBy ? : $this->createdBy);
+    }
 }

@@ -1,81 +1,89 @@
 <?php
+/**
+ * This file is part of the DVSA MOT Frontend project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
+
 namespace DvsaMotTest\Model;
 
+use DvsaCommon\Constants\OdometerReadingResultType;
+use DvsaCommon\Constants\OdometerUnit;
 use PHPUnit_Framework_TestCase;
 
 class OdometerReadingViewObjectTest extends PHPUnit_Framework_TestCase
 {
     public function testInitialState()
     {
-        $odometerReadingViewObject = new OdometerReadingViewObject();
+        $readingViewObject = new OdometerReadingViewObject();
 
         $this->assertTrue(
-            $odometerReadingViewObject->getModifiable(),
+            $readingViewObject->isModifiable(),
             '"modifiable" should initially be true'
         );
 
         $this->assertNull(
-            $odometerReadingViewObject->getNotice(),
+            $readingViewObject->getNotice(),
             '"notice" should initially be a value'
         );
 
         $this->assertFalse(
-            $odometerReadingViewObject->hasNotice(),
+            $readingViewObject->hasNotice(),
             '"hasNotice" should initially be false'
         );
 
         $this->assertNull(
-            $odometerReadingViewObject->getValue(),
+            $readingViewObject->getValue(),
             '"value" should initially be a value'
         );
 
         $this->assertNull(
-            $odometerReadingViewObject->getUnit(),
+            $readingViewObject->getUnit(),
             '"unit" should initially be a value'
         );
 
         $this->assertNull(
-            $odometerReadingViewObject->getResultType(),
+            $readingViewObject->getResultType(),
             '"resultType" should initially be a value'
         );
 
         $this->assertTrue(
-            $odometerReadingViewObject->isNotRecorded(),
+            $readingViewObject->isNotRecorded(),
             '"isNotRecorded" should initially be true'
         );
 
         $this->assertEquals(
             'Not recorded',
-            $odometerReadingViewObject->getDisplayValue(),
+            $readingViewObject->getDisplayValue(),
             '"displayValue" should initially be "not recorded"'
         );
     }
 
+    public function testDisplayValues_incorrectEntryWithOkResult()
+    {
+        $readingViewObject = OdometerReadingViewObject::create(null, null);
+
+        $this->assertEquals(OdometerReadingViewObject::IS_NOT_RECORDED, $readingViewObject->getDisplayValue());
+    }
+
     public function testDisplayValues_givenReadingValuesMap_shouldReturnValueUnit()
     {
-        $readingValueMap = $this->getReadingValueMapData(23000, 'mi');
+        $readingViewObject = OdometerReadingViewObject::create(23000, OdometerUnit::MILES);
 
-        $odometerReadingViewObject = new OdometerReadingViewObject();
-        $odometerReadingViewObject->setOdometerReadingValuesMap($readingValueMap);
-
-        $odometerReadingViewObject->getDisplayValue();
+        $this->assertEquals('23000 miles', $readingViewObject->getDisplayValue());
     }
 
     public function testDisplayValues_givenOdometerNotReadable_shouldReturnNotReadable()
     {
-        $readingValueMap = $this->getReadingValueMapData(null, null, 'NOT_READ');
+        $odometerViewObject = OdometerReadingViewObject::create(null, null, OdometerReadingResultType::NOT_READABLE);
 
-        $odometerReadingViewObject = new OdometerReadingViewObject();
-        $odometerReadingViewObject->setOdometerReadingValuesMap($readingValueMap);
-        $this->assertEquals('Unreadable', $odometerReadingViewObject->getDisplayValue());
+        $this->assertEquals(OdometerReadingViewObject::IS_NOT_READABLE, $odometerViewObject->getDisplayValue());
     }
 
     public function testDisplayValues_givenNoOdometer_shouldReturnNoOdometer()
     {
-        $readingValueMap = $this->getReadingValueMapData(null, null, 'NO_METER');
-        $odometerReadingViewObject = new OdometerReadingViewObject();
-        $odometerReadingViewObject->setOdometerReadingValuesMap($readingValueMap);
-        $this->assertEquals('Missing', $odometerReadingViewObject->getDisplayValue());
+        $odometerViewObject = OdometerReadingViewObject::create(null, null, OdometerReadingResultType::NO_ODOMETER);
+        $this->assertEquals(OdometerReadingViewObject::IS_NOT_PRESENT, $odometerViewObject->getDisplayValue());
     }
 
     private function getReadingValueMapData($value = null, $unit = null, $resultType = null)

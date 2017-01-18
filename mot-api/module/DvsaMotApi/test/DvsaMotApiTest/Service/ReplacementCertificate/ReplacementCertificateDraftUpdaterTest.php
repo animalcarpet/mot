@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApiTest\Service\ReplacementCertificate;
 
@@ -18,7 +23,6 @@ use DvsaEntities\Entity\Model;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Repository\CertificateChangeReasonRepository;
 use DvsaEntities\Repository\SiteRepository;
-use DvsaMotApi\Helper\Odometer\OdometerHolderUpdater;
 use DvsaMotApi\Service\MotTestSecurityService;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateDraftUpdater;
 use DvsaMotApi\Service\Validator\ReplacementCertificateDraftChangeValidator;
@@ -30,6 +34,7 @@ use DvsaCommonApiTest\Transaction\TestTransactionExecutor;
 use DvsaCommon\Date\DateUtils;
 
 /**
+ * Class ReplacementCertificateDraftUpdaterTest
  * Test for {@link ReplacementCertificateDraftUpdater}
  */
 class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
@@ -45,7 +50,6 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
     /** @var  MotIdentityProviderInterface $motIdentityProvider */
     private $motIdentityProvider;
     private $replacementCertificateDraftChangeValidator;
-    private $odometerHolderUpdater;
 
     public function setUp()
     {
@@ -58,7 +62,6 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $this->replacementCertificateDraftChangeValidator = XMock::of(
             ReplacementCertificateDraftChangeValidator::class
         );
-        $this->odometerHolderUpdater = XMock::of(OdometerHolderUpdater::class);
 
         $replacementChange = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED);
 
@@ -94,10 +97,10 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin($vin);
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
-        $draft->getMotTest()->setRegistration($vrm);
+        $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
@@ -109,7 +112,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
         //then
-        $this->assertFalse($updatedDraft->includeInMismatchFile());
+        $this->assertFalse($updatedDraft->isIncludeInMismatchFile());
     }
 
     public function testSetIncludeInPassFile_isAlwaysTrue_forDVLAChangePermission_Only_Vin_Changed()
@@ -128,10 +131,10 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin($vin);
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
-        $draft->getMotTest()->setRegistration($vrm);
+        $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
@@ -143,7 +146,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
         //then
-        $this->assertTrue($updatedDraft->includeInPassFile());
+        $this->assertTrue($updatedDraft->isIncludeInPassFile());
     }
 
     public function testSetIncludeInMismatchFile_isAlwaysFalse_forDVLAChangePermission_Only_Vin_Changed()
@@ -162,10 +165,10 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin($vin);
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
-        $draft->getMotTest()->setRegistration($vrm);
+        $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
@@ -177,7 +180,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
         //then
-        $this->assertFalse($updatedDraft->includeInMismatchFile());
+        $this->assertFalse($updatedDraft->isIncludeInMismatchFile());
     }
 
     public function testSetIncludeInPassFile_isAlwaysTrue_forDVLAChangePermission_Only_Vrm_Changed()
@@ -196,10 +199,10 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin($vin);
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
-        $draft->getMotTest()->setRegistration($vrm);
+        $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
@@ -211,7 +214,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
         //then
-        $this->assertTrue($updatedDraft->includeInPassFile());
+        $this->assertTrue($updatedDraft->isIncludeInPassFile());
     }
 
     public function testSetIncludeInMismatchFile_isAlwaysFalse_forDVLAChangePermission_Only_Make_Changed()
@@ -230,10 +233,10 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin($vin);
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
-        $draft->getMotTest()->setRegistration($vrm);
+        $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)
@@ -247,7 +250,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
         //then
-        $this->assertFalse($updatedDraft->includeInMismatchFile());
+        $this->assertFalse($updatedDraft->isIncludeInMismatchFile());
     }
 
     public function testSetIncludeInPassFile_isAlwaysFalse_forDVLAChangePermission_Only_Make_Changed()
@@ -266,10 +269,10 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin($vin);
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
-        $draft->getMotTest()->setRegistration($vrm);
+        $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)
@@ -283,7 +286,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
         //then
-        $this->assertFalse($updatedDraft->includeInPassFile());
+        $this->assertFalse($updatedDraft->isIncludeInPassFile());
     }
 
     public function testSetIncludeInMismatchFile_isAlwaysTrue_forDVSAuser_Only_VRM_Changed()
@@ -301,10 +304,10 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin($vin);
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
-        $draft->getMotTest()->setRegistration($vrm);
+        $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)
@@ -317,7 +320,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
         //then
-        $this->assertTrue($updatedDraft->includeInMismatchFile());
+        $this->assertTrue($updatedDraft->isIncludeInMismatchFile());
     }
 
     public function testSetIncludeInPassFile_isAlwaysTrue_forDVSAUser_Only_VRM_Changed()
@@ -335,10 +338,10 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin($vin);
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
-        $draft->getMotTest()->setRegistration($vrm);
+        $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)
@@ -351,7 +354,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
         //then
-        $this->assertTrue($updatedDraft->includeInPassFile());
+        $this->assertTrue($updatedDraft->isIncludeInPassFile());
     }
 
     public function testSetIncludeInMismatchFile_isAlwaysTrue_forDVSAUser_Only_Vin_Changed()
@@ -369,10 +372,10 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin($vin);
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
-        $draft->getMotTest()->setRegistration($vrm);
+        $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)
@@ -385,7 +388,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
         //then
-        $this->assertTrue($updatedDraft->includeInMismatchFile());
+        $this->assertTrue($updatedDraft->isIncludeInMismatchFile());
     }
 
     public function testSetIncludeInPassFile_isAlwaysFalse_forDVSAUser_Only_Vin_Changed()
@@ -403,10 +406,10 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin($vin);
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
-        $draft->getMotTest()->setRegistration($vrm);
+        $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)
@@ -419,7 +422,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
         //then
-        $this->assertFalse($updatedDraft->includeInPassFile());
+        $this->assertFalse($updatedDraft->isIncludeInPassFile());
     }
 
     public function testSetIncludeInMismatchFile_isAlwaysFalse_forDVSAUser_Only_Expiry_changed()
@@ -437,10 +440,10 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin($vin);
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
-        $draft->getMotTest()->setRegistration($vrm);
+        $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)
@@ -454,7 +457,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
         //then
-        $this->assertFalse($updatedDraft->includeInMismatchFile());
+        $this->assertFalse($updatedDraft->isIncludeInMismatchFile());
     }
 
     public function testSetIncludeInPassFile_isAlwaysTrue_forDVSAUser_Only_Expiry_changed()
@@ -472,10 +475,10 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin($vin);
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
-        $draft->getMotTest()->setRegistration($vrm);
+        $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)
@@ -489,7 +492,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
         //then
-        $this->assertTrue($updatedDraft->includeInPassFile());
+        $this->assertTrue($updatedDraft->isIncludeInPassFile());
     }
 
     public function testSetIncludeInMismatchFile_isAlwaysFalse_forDVSAUser_Only_Make_Changed()
@@ -507,10 +510,10 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin($vin);
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
-        $draft->getMotTest()->setRegistration($vrm);
+        $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)
@@ -524,7 +527,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
         //then
-        $this->assertFalse($updatedDraft->includeInMismatchFile());
+        $this->assertFalse($updatedDraft->isIncludeInMismatchFile());
     }
 
     public function testSetIncludeInPassFile_isAlwaysFalse_forDVSAUser_Only_Make_Changed()
@@ -542,10 +545,10 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin($vin);
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
-        $draft->getMotTest()->setRegistration($vrm);
+        $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)
@@ -559,7 +562,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
         //then
-        $this->assertFalse($updatedDraft->includeInPassFile());
+        $this->assertFalse($updatedDraft->isIncludeInPassFile());
     }
 
     public function testSetIsVinVrmExpiryChanged_isAlwaysTrue_forDVLAChangePermission_Only_VIN_Changed()
@@ -578,10 +581,10 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin($vin);
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
-        $draft->getMotTest()->setRegistration($vrm);
+        $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::partialReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
@@ -597,7 +600,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
         //then
-        $this->assertTrue($updatedDraft->getIsVinVrmExpiryChanged());
+        $this->assertTrue($updatedDraft->isVinVrmExpiryChanged());
     }
 
     public function testSetIsVinVrmExpiryChanged_isAlwaysFalse_forDVLAChangePermission_Only_VRM_Changed()
@@ -616,10 +619,10 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $vin = '123456';
         $vrm = '123456';
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin($vin);
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->getVehicle()->setVin($vin);
         $draft->setVin($vin);
-        $draft->getMotTest()->setRegistration($vrm);
+        $draft->getMotTest()->getVehicle()->setRegistration($vrm);
         $draft->setVrm($vrm);
 
         $change = RCOF::partialReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
@@ -635,7 +638,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
         //then
-        $this->assertTrue($updatedDraft->getIsVinVrmExpiryChanged());
+        $this->assertTrue($updatedDraft->isVinVrmExpiryChanged());
     }
 
     public function testUpdate_givenFullRights_and_reasonForDifferentTester_shouldForbidAction()
@@ -643,7 +646,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $this->returnsOkCheckResult();
 
         $this->setExpectedException(ForbiddenException::class);
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForDifferentTester("NEW_REASON");
         $this->permissionsGranted(
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
@@ -662,7 +665,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
         $this->assertEquals(
             $change->getReasonForDifferentTester(),
-            $updatedDraft->getReasonForDifferentTester()->getCode()
+            $updatedDraft->getDifferentTesterReason()->getCode()
         );
     }
 
@@ -670,7 +673,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
     {
         $this->returnsOkCheckResult();
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
         $this->permissionsGranted(
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
@@ -687,10 +690,10 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             $change->getExpiryDate(),
             DateTimeApiFormat::date($updatedDraft->getExpiryDate())
         );
-        $this->assertEquals($change->getReasonForReplacement(), $updatedDraft->getReplacementReason());
+        $this->assertEquals($change->getReasonForReplacement(), $updatedDraft->getReasonForReplacement());
         $this->assertEquals(
-            $change->getOdometerReading()->getResultType(),
-            $updatedDraft->getOdometerReading()->getResultType()
+            $change->getOdometerResultType(),
+            $updatedDraft->getOdometerResultType()
         );
         $this->assertEquals($change->getVin(), $updatedDraft->getVin());
         $this->assertEquals($change->getVrm(), $updatedDraft->getVrm());
@@ -705,8 +708,8 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
         );
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setRegistration('123456');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->getVehicle()->setRegistration('123456');
         $draft->setVrm('123456');
         $draft->setVin('123456');
 
@@ -716,7 +719,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
 
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
-        $this->assertEquals(1, $updatedDraft->getIsVinVrmExpiryChanged());
+        $this->assertEquals(1, $updatedDraft->isVinVrmExpiryChanged());
     }
 
     public function testUpdateReplacementCertificateWithUpdatedExpiryDate()
@@ -727,7 +730,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
         );
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->setExpiryDate(DateUtils::toDate("2014-01-01"));
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
@@ -735,7 +738,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
 
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
-        $this->assertEquals(1, $updatedDraft->getIsVinVrmExpiryChanged());
+        $this->assertEquals(1, $updatedDraft->isVinVrmExpiryChanged());
     }
 
     public function testUpdateReplacementCertificateWithUpdatedVin()
@@ -746,12 +749,12 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
         );
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin('123456');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->getVehicle()->setVin('123456');
         $draft->setVin('123456');
         $draft->setVrm('123456');
         $draft->setExpiryDate(DateUtils::toDate("2014-01-01"));
-        $draft->setIsVinVrmExpiryChanged(false);
+        $draft->isVinVrmExpiryChanged(false);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
         $change->setVin('7891011');
@@ -760,7 +763,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
 
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
-        $this->assertTrue($updatedDraft->getIsVinVrmExpiryChanged());
+        $this->assertTrue($updatedDraft->isVinVrmExpiryChanged());
     }
 
     public function testUpdateReplacementCertificateWithSameVinAndVrmAndExpiryDateShouldNotUpdateRegistrationChangedStatus()
@@ -771,23 +774,23 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
         );
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin('123456');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->getVehicle()->setVin('123456');
         $draft->getMotTest()->setExpiryDate(DateUtils::toDate("2014-01-01"));
         $draft->setExpiryDate(DateUtils::toDate("2014-01-01"));
         $draft->setVin('123456');
         $draft->setVrm('123456');
-        $draft->setIsVinVrmExpiryChanged(false);
+        $draft->setVinVrmExpiryChanged(false);
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
-        $draft->getMotTest()->setRegistration('123456');
+        $draft->getMotTest()->getVehicle()->setRegistration('123456');
         $change->setExpiryDate("2014-01-01");
         $change->setVin('123456');
         $change->setVrm('123456');
 
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
-        $this->assertEquals(0, $updatedDraft->getIsVinVrmExpiryChanged());
+        $this->assertEquals(0, $updatedDraft->isVinVrmExpiryChanged());
     }
 
     public function testUpdateReplacementCertificateWithCustomMakeShouldSetCustomMakeAndMakeIdNullStatus()
@@ -798,8 +801,8 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
         );
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin('123456');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->getVehicle()->setVin('123456');
         $draft->setMake(
             (new Make())->setId(1)->setCode('test')->setName('test2')
         );
@@ -826,8 +829,8 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
         );
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
-        $draft->getMotTest()->setVin('123456');
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
+        $draft->getMotTest()->getVehicle()->setVin('123456');
         $draft->setModel((new Model)->setId(1)->setCode('T')->setName('B'));
         $draft->setModelName(null);
         $draft->setMake(false);
@@ -852,10 +855,10 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             [PermissionInSystem::CERTIFICATE_REPLACEMENT, PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS]
         );
 
-        $draft = RCOF::replacementCertificateDraft()->setReplacementReason("REASON");
+        $draft = RCOF::replacementCertificateDraft()->setReasonForReplacement("REASON");
         $draft->getMotTest()->setExpiryDate(DateUtils::toDate("2013-12-01"));
-        $draft->getMotTest()->setVin('123456');
-        $draft->getMotTest()->setRegistration('123456');
+        $draft->getMotTest()->getVehicle()->setVin('123456');
+        $draft->getMotTest()->getVehicle()->setRegistration('123456');
 
         $change = RCOF::fullReplacementCertificateDraftChange(self::ID_SEED)->setReasonForReplacement("NEW_REASON");
         $change->setExpiryDate("2014-01-01");
@@ -866,7 +869,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
         $updatedDraft = $this->createSUT()->updateDraft($draft, $change);
 
         //then
-        $this->assertEquals(1, $updatedDraft->getIsVinVrmExpiryChanged());
+        $this->assertEquals(1, $updatedDraft->isVinVrmExpiryChanged());
     }
 
     private function returnsMakeById(Make $make)
@@ -944,8 +947,7 @@ class ReplacementCertificateDraftUpdaterTest extends PHPUnit_Framework_TestCase
             $this->certificateChangeReasonRepository,
             $this->vtsRepository,
             $this->motIdentityProvider,
-            $this->replacementCertificateDraftChangeValidator,
-            $this->odometerHolderUpdater
+            $this->replacementCertificateDraftChangeValidator
         );
 
         TestTransactionExecutor::inject($service);

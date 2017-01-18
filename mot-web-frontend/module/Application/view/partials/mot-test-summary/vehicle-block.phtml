@@ -1,17 +1,9 @@
 <?php
 
-use DvsaCommon\Enum\ColourCode;
 use DvsaCommon\Date\DateTimeDisplayFormat;
-use DvsaMotTest\Model\VehicleClass;
 
-/** @var \DvsaCommon\Dto\Common\MotTestDto $motTest */
-$motTest = $this->motTest;
-/** @var \DvsaCommon\Dto\Vehicle\VehicleDto $vehicle */
-$vehicle = $this->vehicle;
-
-$hasRegistration = $motTest->getHasRegistration();
-
-$motTestVehicleClass = new VehicleClass($motTest->getVehicleClass());
+/** @var \DvsaMotTest\Controller\DvsaVehicleViewModel $vehicle */
+$vehicle;
 
 ?>
 
@@ -27,13 +19,11 @@ $motTestVehicleClass = new VehicleClass($motTest->getVehicleClass());
                 'items'    => [
                     [
                         'label' => 'Registration number',
-                        'value' => $hasRegistration
-                            ? strtoupper($motTest->getRegistration())
-                            : 'N/A',
+                        'value' => $vehicle->getRegistration(),
                         'id'    => 'registrationNumber',
                     ],
-                    ['VIN/Chassis number', strtoupper($motTest->getVin()), 'id' => 'vinChassisNumber'],
-                    ['Test class', $motTestVehicleClass->getCode(), 'id' => 'testClass'],
+                    ['VIN/Chassis number', $vehicle->getVin(), 'id' => 'vinChassisNumber'],
+                    ['Test class', $vehicle->getVehicleClass()->getName(), 'id' => 'testClass'],
                     [
                         'label' => 'Approximate first use',
                         'value' => !empty($vehicle->getFirstUsedDate())
@@ -49,21 +39,23 @@ $motTestVehicleClass = new VehicleClass($motTest->getVehicleClass());
 
     <div class="col-sm-4">
         <?php
-        /** @var \DvsaCommon\Dto\Common\ColourDto $primaryColour */
-        $primaryColour = $motTest->getPrimaryColour();
+
+        /** @var \Dvsa\Mot\ApiClient\Resource\Item\Colour $primaryColour */
+        $primaryColour = $vehicle->getColour();
         $colour = $primaryColour->getName();
 
-        /** @var \DvsaCommon\Dto\Common\ColourDto $secondaryColour */
-        $secondaryColour = $motTest->getSecondaryColour();
+        /** @var \Dvsa\Mot\ApiClient\Resource\Item\Colour $primaryColour */
+        $secondaryColour = $vehicle->getColourSecondary();
         $secondaryColourName = $secondaryColour ? $secondaryColour->getName() : NULL;
 
-        if ($secondaryColour && $secondaryColour->getCode() !== ColourCode::NOT_STATED && !empty($secondaryColourName)) {
-            $colour .= ' and ' . $secondaryColourName;
-        }
-        $make = $motTest->getMake();
-        $model = $motTest->getModel();
-        /** @var \DvsaCommon\Dto\Vehicle\FuelTypeDto $fuelType */
-        $fuelType = $motTest->getFuelType();
+        /** @var \Dvsa\Mot\ApiClient\Resource\Item\Make $make */
+        $make = $vehicle->getMake()->getName();
+
+        /** @var \Dvsa\Mot\ApiClient\Resource\Item\Model $make */
+        $model = $vehicle->getModel()->getName();
+
+        /** @var \Dvsa\Mot\ApiClient\Resource\Item\FuelType $fuelType */
+        $fuelType = $vehicle->getFuelType()->getName();
 
         echo $this->partial(
             'dldtdd', [
@@ -74,9 +66,7 @@ $motTestVehicleClass = new VehicleClass($motTest->getVehicleClass());
                     ['Colour', $colour, 'id' => 'colour'],
                     [
                         'label' => 'Fuel type',
-                        'value' => !empty($fuelType)
-                            ? $fuelType->getName()
-                            : null,
+                        'value' => $fuelType,
                         'id'    => 'fuel-type',
                     ],
                 ],

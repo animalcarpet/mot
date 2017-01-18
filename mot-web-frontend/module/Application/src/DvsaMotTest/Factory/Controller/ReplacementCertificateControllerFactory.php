@@ -1,8 +1,14 @@
 <?php
+/**
+ * This file is part of the DVSA MOT Frontend project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotTest\Factory\Controller;
 
 use DvsaMotTest\Controller\ReplacementCertificateController;
+use DvsaMotTest\Model\OdometerReadingViewObject;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Vehicle\Service\VehicleCatalogService;
@@ -21,6 +27,8 @@ class ReplacementCertificateControllerFactory implements FactoryInterface
         /* @var ServiceLocatorInterface $serviceLocator */
         $serviceLocator = $controllerManager->getServiceLocator();
         $vehicleCatalogService = $serviceLocator->get(VehicleCatalogService::class);
-        return new ReplacementCertificateController($vehicleCatalogService);
+        $odometerViewObject = new OdometerReadingViewObject();
+
+        return new ReplacementCertificateController($vehicleCatalogService, $odometerViewObject);
     }
 }

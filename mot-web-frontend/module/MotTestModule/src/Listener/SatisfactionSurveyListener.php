@@ -7,10 +7,10 @@
 
 namespace Dvsa\Mot\Frontend\MotTestModule\Listener;
 
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\Frontend\AuthenticationModule\Event\SuccessfulSignOutEvent;
 use Dvsa\Mot\Frontend\MotTestModule\Service\SurveyService;
 use DvsaApplicationLogger\Log\Logger;
-use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use OutOfBoundsException;
 use Zend\EventManager\Event;
@@ -67,11 +67,11 @@ class SatisfactionSurveyListener
      */
     public function generateSurveyTokenIfEligible(Event $event)
     {
-        /** @var MotTestDto $motDetails */
+        /** @var MotTest $motDetails */
         $motDetails = $event->getParam('motDetails');
 
         $motTestId = $motDetails->getId();
-        $motTestTypeCode = $motDetails->getTestType()->getCode();
+        $motTestTypeCode = $motDetails->getTestTypeCode();
         $testerId = $motDetails->getTester()->getId();
 
         try {

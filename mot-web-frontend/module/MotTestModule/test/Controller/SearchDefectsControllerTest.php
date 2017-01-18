@@ -8,53 +8,33 @@
 namespace Dvsa\Mot\Frontend\MotTestModuleTest\Controller;
 
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use Dvsa\Mot\ApiClient\Service\MotTestService;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\SearchDefectsController;
-use DvsaCommon\Dto\Common\MotTestDto;
-use DvsaCommon\Dto\Common\MotTestTypeDto;
-use DvsaCommon\Dto\Vehicle\VehicleDto;
-use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
-use DvsaCommon\Enum\MotTestTypeCode;
-use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommonTest\Bootstrap;
+use DvsaCommonTest\TestUtils\XMock;
+use DvsaMotTestTest\TestHelper\Fixture;
 
 class SearchDefectsControllerTest extends AbstractFrontendControllerTestCase
 {
-    /**
-     * @var MotTestDto | \PHPUnit_Framework_MockObject_MockObject
-     */
-    private $motTestMock;
+    protected $mockMotTestServiceClient;
+    protected $mockVehicleServiceClient;
 
     protected function setUp()
     {
-        $this->motTestMock = $this
-            ->getMockBuilder(MotTestDto::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $motTestTypeMock = $this->getMockBuilder(MotTestTypeDto::class)->getMock();
-        $motTestTypeMock->expects($this->any())
-            ->method('getCode')
-            ->willReturn(MotTestTypeCode::NORMAL_TEST);
-        $this->motTestMock
-            ->expects($this->exactly(2))
-            ->method('getTestType')
-            ->willReturn($motTestTypeMock);
-        $vehicleClassMock = $this->getMockBuilder(VehicleClassDto::class)->getMock();
-        $vehicleClassMock->expects($this->any())
-            ->method('getCode')
-            ->willReturn(VehicleClassCode::CLASS_1);
-        $this->motTestMock
-            ->expects($this->any())
-            ->method('getVehicleClass')
-            ->willReturn($vehicleClassMock);
-
-        $vehicleMock = $this->getMockBuilder(VehicleDto::class)->disableOriginalConstructor()->getMock();
-        $vehicleMock->expects($this->any())->method('getFirstUsedDate')->willReturn('2004-01-02');
-
-        $this->motTestMock->expects($this->any())->method('getVehicle')->willReturn($vehicleMock);
-
         $this->serviceManager = Bootstrap::getServiceManager();
         $this->serviceManager->setAllowOverride(true);
+        $this->serviceManager->setService(
+            MotTestService::class,
+            $this->getMockMotTestServiceClient()
+        );
+
+        $this->serviceManager->setService(
+            VehicleService::class,
+            $this->getMockVehicleServiceClient()
+        );
 
         $this->setServiceManager($this->serviceManager);
         $this->setController(
@@ -64,14 +44,25 @@ class SearchDefectsControllerTest extends AbstractFrontendControllerTestCase
         parent::setUp();
     }
 
+    private function getMockMotTestServiceClient()
+    {
+        if ($this->mockMotTestServiceClient == null) {
+            $this->mockMotTestServiceClient = XMock::of(MotTestService::class);
+        }
+        return $this->mockMotTestServiceClient;
+    }
+
+    private function getMockVehicleServiceClient()
+    {
+        if ($this->mockVehicleServiceClient == null) {
+            $this->mockVehicleServiceClient = XMock::of(VehicleService::class);
+        }
+        return $this->mockVehicleServiceClient;
+    }
+
     public function testLoadIndex()
     {
         $motTestNumber = 1;
-
-        $restClientMock = $this->getRestClientMockForServiceManager();
-        $restClientMock->expects($this->at(0))
-            ->method('get')
-            ->willReturn(['data' => $this->motTestMock]);
 
         $routeParams = [
             'motTestNumber' => $motTestNumber,
@@ -81,6 +72,26 @@ class SearchDefectsControllerTest extends AbstractFrontendControllerTestCase
             'q' => '',
             'p' => 0,
         ];
+
+        $vehicleData = Fixture::getDvsaVehicleTestDataVehicleClass4(true);
+        $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
+
+        $motTest = new MotTest($testMotTestData);
+        $vehicle = new DvsaVehicle($vehicleData);
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($motTest));
+
+        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
+        $mockVehicleServiceClient
+            ->expects($this->once())
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->with(1001, 1)
+            ->will($this->returnValue($vehicle));
 
         $this->getResultForAction2('get', 'index', $routeParams, $queryParams);
 
@@ -92,9 +103,6 @@ class SearchDefectsControllerTest extends AbstractFrontendControllerTestCase
         $motTestNumber = 1;
 
         $restClientMock = $this->getRestClientMockForServiceManager();
-        $restClientMock->expects($this->at(0))
-            ->method('get')
-            ->willReturn(['data' => $this->motTestMock]);
 
         $restClientMock->expects($this->any())
             ->method('getWithParamsReturnDto')
@@ -108,6 +116,26 @@ class SearchDefectsControllerTest extends AbstractFrontendControllerTestCase
             'q' => 'door',
             'p' => 0,
         ];
+
+        $vehicleData = Fixture::getDvsaVehicleTestDataVehicleClass4(true);
+        $testMotTestData = Fixture::getMotTestDataVehicleClass4(true);
+
+        $motTest = new MotTest($testMotTestData);
+        $vehicle = new DvsaVehicle($vehicleData);
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($motTest));
+
+        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
+        $mockVehicleServiceClient
+            ->expects($this->once())
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->with(1001, 1)
+            ->will($this->returnValue($vehicle));
 
         $this->getResultForAction2('get', 'index', $routeParams, $queryParams);
 

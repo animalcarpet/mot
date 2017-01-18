@@ -80,7 +80,7 @@ class CertificateCreationService
     {
         return $this->create(
             $motTestNumber,
-            $this->motTestService->getMotTestData($motTestNumber),
+            $this->motTestService->getMotTestData($motTestNumber, false, true),
             $userId
         );
     }

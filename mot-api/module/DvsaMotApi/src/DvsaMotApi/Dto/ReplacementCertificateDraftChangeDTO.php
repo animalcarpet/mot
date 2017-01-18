@@ -1,8 +1,12 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaMotApi\Dto;
 
-use DvsaCommon\Dto\Common\OdometerReadingDTO;
 use DvsaCommon\Utility\ArrayUtils;
 
 /**
@@ -31,10 +35,22 @@ class ReplacementCertificateDraftChangeDTO
      * @var string $vin
      */
     private $vin;
+
     /**
-     * @var OdometerReadingDTO $odometerReading
+     * @var integer
      */
-    private $odometerReading;
+    private $odometerValue;
+
+    /**
+     * @var string
+     */
+    private $odometerUnit;
+
+    /**
+     * @var string
+     */
+    private $odometerResultType;
+
     /**
      * @var string $model
      */
@@ -91,11 +107,6 @@ class ReplacementCertificateDraftChangeDTO
      */
     private $includeInPassFile;
 
-    /**
-     * @var boolean $isDvlaImportProcess
-     */
-    private $isDvlaImportProcess = false;
-
     public static function create()
     {
         return new static();
@@ -147,10 +158,9 @@ class ReplacementCertificateDraftChangeDTO
         }
         if ($hasKey('odometerReading')) {
             $d->setOdometerReading(
-                OdometerReadingDTO::create()
-                    ->setValue(ArrayUtils::tryGet($data['odometerReading'], 'value'))
-                    ->setUnit(ArrayUtils::tryGet($data['odometerReading'], 'unit'))
-                    ->setResultType(ArrayUtils::tryGet($data['odometerReading'], 'resultType'))
+                ArrayUtils::tryGet($data['odometerReading'], 'value'),
+                ArrayUtils::tryGet($data['odometerReading'], 'unit'),
+                ArrayUtils::tryGet($data['odometerReading'], 'resultType')
             );
         }
 
@@ -287,23 +297,42 @@ class ReplacementCertificateDraftChangeDTO
     }
 
     /**
-     * @param \DvsaCommon\Dto\Common\OdometerReadingDTO $odometerReading
-     *
+     * @param $value
+     * @param $unit
+     * @param $resultType
      * @return $this
      */
-    public function setOdometerReading($odometerReading)
+    public function setOdometerReading($value, $unit, $resultType)
     {
-        $this->odometerReading = $odometerReading;
+        $this->odometerValue = $value;
+        $this->odometerUnit = $unit;
+        $this->odometerResultType = $resultType;
         $this->setAsChanged('odometerReading');
         return $this;
     }
 
     /**
-     * @return \DvsaCommon\Dto\Common\OdometerReadingDTO
+     * @return integer
      */
-    public function getOdometerReading()
+    public function getOdometerValue()
     {
-        return $this->odometerReading;
+        return $this->odometerValue;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOdometerUnit()
+    {
+        return $this->odometerUnit;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOdometerResultType()
+    {
+        return $this->odometerResultType;
     }
 
     /**
@@ -631,23 +660,4 @@ class ReplacementCertificateDraftChangeDTO
     {
         return $this->includeInPassFile;
     }
-
-    /**
-     * @param boolean $isDvlaImportProcess
-     * @return $this
-     */
-    public function setIsDvlaImportProcess($isDvlaImportProcess)
-    {
-        $this->isDvlaImportProcess = $isDvlaImportProcess;
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isDvlaImportProcess()
-    {
-        return $this->isDvlaImportProcess;
-    }
-
 }

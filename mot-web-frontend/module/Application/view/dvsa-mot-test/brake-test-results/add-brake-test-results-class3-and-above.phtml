@@ -7,7 +7,7 @@ use DvsaMotTest\View\Model\MotTestTitleModel;
  * @var int $motTestNumber
  * @var \DvsaMotTest\Model\BrakeTestResultClass3AndAboveViewModel $brakeTestResult
  * @var \DvsaMotTest\Model\BrakeTestConfigurationClass3AndAboveHelper $brakeTestConfiguration
- * @var \DvsaCommon\Dto\Vehicle\VehicleDto $vehicle
+ * @var \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle $vehicle
  */
 
 /** @var MotTestTitleModel $motTestTitleViewModel */
@@ -31,7 +31,7 @@ echo $this->partial('infoMessages', ['getFromFlash' => true]);
 $vehicleClass = '';
 if ($vehicle) {
     echo $this->partial('vehicleSummary', ['vehicle' => $vehicle]);
-    $vehicleClass = $vehicle->getClassCode();
+    $vehicleClass = $vehicle->getVehicleClass()->getCode();
 }
 ?>
 

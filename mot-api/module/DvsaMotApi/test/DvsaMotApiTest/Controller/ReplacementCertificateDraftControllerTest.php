@@ -137,8 +137,8 @@ class ReplacementCertificateDraftControllerTest extends AbstractMotApiController
     {
         // given
         $returnedDraft = ReplacementCertificateObjectsFactory::replacementCertificateDraft();
-        $returnedDraft->getPrimaryColour()->setCode("Y");
-        $returnedDraft->getMotTest()->getPrimaryColour()->setCode("Z");
+        $returnedDraft->getPrimaryColour()->setCode("Y")->setId(1);
+        $returnedDraft->getMotTest()->getPrimaryColour()->setCode("Z")->setId(2);
         $draftIdCapture = ArgCapture::create();
         $draftId = 4;
 

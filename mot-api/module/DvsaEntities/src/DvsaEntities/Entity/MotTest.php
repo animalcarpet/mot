@@ -9,6 +9,7 @@ namespace DvsaEntities\Entity;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Mapping as ORM;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use DvsaCommon\Enum\LanguageTypeCode;
@@ -21,10 +22,10 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
  * MotTest.
  *
  * @ORM\Table(
- *  name="mot_test",
+ *  name="mot_test_current",
  *  options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"}
  * )
- * @ORM\Entity(repositoryClass="DvsaEntities\Repository\MotTestRepository")
+ * @ORM\Entity(repositoryClass="DvsaEntities\Repository\MotTestHistoryRepository")
  */
 class MotTest extends Entity
 {
@@ -60,6 +61,13 @@ class MotTest extends Entity
     private $vehicle;
 
     /**
+     * @var Int
+     *
+     * @ORM\Column(name="vehicle_version", type="integer", nullable=false)
+     */
+    private $vehicleVersion;
+
+    /**
      * @var Site
      *
      * @ORM\ManyToOne(targetEntity="DvsaEntities\Entity\Site", fetch="EAGER", inversedBy="tests")
@@ -68,124 +76,6 @@ class MotTest extends Entity
      * })
      */
     private $vehicleTestingStation;
-
-    /**
-     * @var \DvsaEntities\Entity\Colour
-     *
-     * @ORM\ManyToOne(targetEntity="DvsaEntities\Entity\Colour")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="primary_colour_id", referencedColumnName="id")
-     * })
-     */
-    private $primaryColour;
-
-    /**
-     * @var \DvsaEntities\Entity\Colour
-     *
-     * @ORM\ManyToOne(targetEntity="DvsaEntities\Entity\Colour")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="secondary_colour_id", referencedColumnName="id")
-     * })
-     */
-    private $secondaryColour;
-
-    /**
-     * @var FuelType
-     *
-     * @ORM\ManyToOne(targetEntity="FuelType")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tested_as_fuel_type_id", referencedColumnName="id")
-     * })
-     */
-    private $fuelType;
-
-    /**
-     * @var VehicleClass
-     *
-     * @ORM\ManyToOne(targetEntity="VehicleClass")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="vehicle_class_id", referencedColumnName="id")
-     * })
-     */
-    private $vehicleClass;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=20, nullable=false)
-     */
-    private $registration;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=30, nullable=false)
-     */
-    private $vin;
-
-    /**
-     * @var EmptyVrmReason
-     *
-     * @ORM\ManyToOne(targetEntity="EmptyVrmReason")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="empty_vrm_reason_id", referencedColumnName="id")
-     * })
-     */
-    private $emptyVrmReason;
-
-    /**
-     * @var EmptyVinReason
-     *
-     * @ORM\ManyToOne(targetEntity="EmptyVinReason")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="empty_vin_reason_id", referencedColumnName="id")
-     * })
-     */
-    private $emptyVinReason;
-
-    /**
-     * @var Make
-     *
-     * @ORM\ManyToOne(targetEntity="Make")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="make_id", referencedColumnName="id")
-     * })
-     */
-    private $make;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="make_name", type="string", nullable=true)
-     */
-    private $makeName;
-
-    /**
-     * @var Model
-     *
-     * @ORM\ManyToOne(targetEntity="Model")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="model_id", referencedColumnName="id"),
-     * })
-     */
-    private $model;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="model_name", type="string", nullable=true)
-     */
-    private $modelName;
-
-    /**
-     * @var CountryOfRegistration
-     *
-     * @ORM\ManyToOne(targetEntity="CountryOfRegistration")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="country_of_registration_id", referencedColumnName="id")
-     * })
-     */
-    private $countryOfRegistration;
 
     /**
      * @var boolean
@@ -275,6 +165,23 @@ class MotTest extends Entity
     private $brakeTestResultClass12History;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="vehicle_weight", type="integer", length=10, nullable=true)
+     */
+    private $vehicleWeight;
+
+    /**
+     * @var WeightSource
+     *
+     * @ORM\ManyToOne(targetEntity="WeightSource")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="vehicle_weight_source_lookup_id", referencedColumnName="id", nullable=true)
+     * })
+     */
+    private $vehicleWeightSource;
+
+    /**
      * @var \DvsaEntities\Entity\MotTestType
      *
      * @ORM\ManyToOne(targetEntity="DvsaEntities\Entity\MotTestType", cascade={"persist"})
@@ -303,69 +210,42 @@ class MotTest extends Entity
     private $prsMotTest;
 
     /**
-     * @var \DvsaEntities\Entity\MotTestReasonForCancel
+     * @var MotTestCancelled
      *
-     * @ORM\ManyToOne(targetEntity="DvsaEntities\Entity\MotTestReasonForCancel")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="mot_test_reason_for_cancel_id", referencedColumnName="id")
-     * })
+     * @ORM\OneToOne(targetEntity="MotTestCancelled", cascade={"persist"})
+     * @ORM\JoinColumn(name="id", referencedColumnName="id", nullable=true)
      */
-    private $motTestReasonForCancel;
+    private $motTestCancelled;
 
     /**
-     * @var string
+     * @var MotTestComplaintRef
      *
-     * @ORM\Column(name="reason_for_termination_comment", type="string", length=240, nullable=true)
-     */
-    private $reasonForTerminationComment;
-
-    /**
-     * @var EnforcementFullPartialRetest
-     *
-     * @ORM\ManyToOne(targetEntity="DvsaEntities\Entity\EnforcementFullPartialRetest")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="full_partial_retest_id", referencedColumnName="id", nullable=true)
-     * })
-     */
-    private $fullPartialRetest;
-
-    /**
-     * @var Comment
-     *
-     * @ORM\JoinColumn(name="partial_reinspection_comment_id", referencedColumnName="id")
-     * @ORM\OneToOne(targetEntity="DvsaEntities\Entity\Comment", cascade={"PERSIST"})
-     */
-    protected $partialReinspectionComment;
-
-    /**
-     * @var Comment
-     *
-     * @ORM\JoinColumn(name="items_not_tested_comment_id", referencedColumnName="id")
-     * @ORM\OneToOne(targetEntity="DvsaEntities\Entity\Comment", cascade={"PERSIST"})
-     */
-    protected $itemsNotTestedComment;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="complaint_ref", type="string", length=30, nullable=true)
+     * @ORM\OneToOne(targetEntity="MotTestComplaintRef", cascade={"persist"})
+     * @ORM\JoinColumn(name="id", referencedColumnName="id", nullable=true)
      */
     private $complaintRef;
 
-    /**
-     * @var OdometerReading
-     *
-     * @ORM\OneToOne(targetEntity="DvsaEntities\Entity\OdometerReading", cascade={"persist"})
-     * @ORM\JoinColumn(name="odometer_reading_id", referencedColumnName="id")
-     */
-    private $odometerReading;
 
     /**
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(name="private", type="smallint", nullable=false)
+     * @ORM\Column(name="odometer_result_type", type="string", length=10, nullable=true)
      */
-    private $isPrivate;
+    private $odometerResultType;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="odometer_unit", type="string", length=2, nullable=true)
+     */
+    private $odometerUnit;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="odometer_value", type="integer", length=11, nullable=true)
+     */
+    private $odometerValue;
 
     /**
      * @var integer
@@ -375,41 +255,12 @@ class MotTest extends Entity
     private $document;
 
     /**
-     * @var boolean
+     * @var MotTestEmergencyReason
      *
-     * @ORM\Column(name="one_person_test", type="smallint", nullable=true)
+     * @ORM\OneToOne(targetEntity="MotTestEmergencyReason", cascade={"persist"})
+     * @ORM\JoinColumn(name="id", referencedColumnName="id", nullable=true)
      */
-    private $onePersonTest;
-
-    /**
-     * @var boolean
-     * @ORM\Column(name="one_person_reinspection", type="smallint", nullable=true)
-     */
-    private $onePersonReInspection;
-
-    /**
-     * @var \DvsaEntities\Entity\EmergencyLog
-     *
-     * @ORM\ManyToOne(targetEntity="DvsaEntities\Entity\EmergencyLog")
-     * @ORM\JoinColumn(name="emergency_log_id", referencedColumnName="id")
-     */
-    private $emergencyLog;
-
-    /**
-     * @var \DvsaEntities\Entity\EmergencyReason
-     *
-     * @ORM\ManyToOne(targetEntity="DvsaEntities\Entity\EmergencyReason")
-     * @ORM\JoinColumn(name="emergency_reason_lookup_id", referencedColumnName="id")
-     */
-    private $emergencyReasonLookup;
-
-    /**
-     * @var Comment
-     *
-     * @ORM\OneToOne(targetEntity="DvsaEntities\Entity\Comment", cascade={"PERSIST"})
-     * @ORM\JoinColumn(name="emergency_reason_comment_id", referencedColumnName="id", nullable=true)
-     */
-    private $emergencyReasonComment;
+    private $motTestEmergencyReason;
 
     /**
      * @var string
@@ -419,19 +270,27 @@ class MotTest extends Entity
     private $clientIp;
 
     /**
+     * @var Organisation
+     *
+     * @ORM\OneToOne(targetEntity="Organisation", fetch="EAGER")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
+     */
+    private $organisation;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="submitted_date", type="datetime", nullable=true)
+     */
+    private $submittedDate;
+
+    /**
      * @var integer
      *
      * @ORM\Column(type="integer", nullable=false)
      */
     protected $version = 1;
 
-    /**
-     * @var \DvsaEntities\Entity\ModelDetail
-     *
-     * @ORM\ManyToOne(targetEntity="DvsaEntities\Entity\ModelDetail")
-     * @ORM\JoinColumn(name="model_detail_id", referencedColumnName="id")
-     */
-    private $modelDetail;
     /**
      * Constructor.
      */
@@ -442,18 +301,6 @@ class MotTest extends Entity
         $this->motTestReasonForRejections = new ArrayCollection();
         $this->brakeTestResultClass12History = new ArrayCollection();
         $this->brakeTestResultClass3AndAboveHistory = new ArrayCollection();
-    }
-
-    /**
-     * @param string $makeName
-     *
-     * @return $this
-     */
-    public function setFreeTextMakeName($makeName)
-    {
-        $this->makeName = $makeName;
-
-        return $this;
     }
 
     /**
@@ -609,6 +456,24 @@ class MotTest extends Entity
     }
 
     /**
+     * @return Int
+     */
+    public function getVehicleVersion()
+    {
+        return $this->vehicleVersion;
+    }
+
+    /**
+     * @param Int $vehicleVersion
+     * @return MotTest
+     */
+    public function setVehicleVersion($vehicleVersion)
+    {
+        $this->vehicleVersion = $vehicleVersion;
+        return $this;
+    }
+
+    /**
      * Set Site.
      *
      * @param Site $vehicleTestingStation
@@ -633,200 +498,146 @@ class MotTest extends Entity
     }
 
     /**
-     * @param Colour $primaryColour
-     *
-     * @return MotTest
-     */
-    public function setPrimaryColour($primaryColour)
-    {
-        $this->primaryColour = $primaryColour;
-
-        return $this;
-    }
-
-    /**
+     * Proxy method
      * @return Colour
      */
     public function getPrimaryColour()
     {
-        return $this->primaryColour;
+        if (!$this->getVehicle()) {
+            return;
+        }
+
+        return $this->getVehicle()->getColourDuringTest($this);
     }
 
     /**
-     * @param Colour $secondaryColour
-     *
-     * @return MotTest
-     */
-    public function setSecondaryColour($secondaryColour)
-    {
-        $this->secondaryColour = $secondaryColour;
-
-        return $this;
-    }
-
-    /**
+     * Proxy method
      * @return Colour
      */
     public function getSecondaryColour()
     {
-        return $this->secondaryColour;
+        if (!$this->getVehicle()) {
+            return;
+        }
+
+        return $this->getVehicle()->getSecondaryColourDuringTest($this);
     }
 
     /**
-     * @param FuelType $fuelType
-     *
-     * @return MotTest
-     */
-    public function setFuelType(FuelType $fuelType = null)
-    {
-        $this->fuelType = $fuelType;
-
-        return $this;
-    }
-
-    /**
+     * Proxy method
      * @return FuelType
      */
     public function getFuelType()
     {
-        return $this->fuelType;
+        if (!$this->getVehicle()) {
+            return;
+        }
+
+        return $this->getVehicle()->getFuelTypeDuringTest($this);
     }
 
     /**
-     * @param \DvsaEntities\Entity\VehicleClass $vehicleClass
-     *
-     * @return MotTest
-     */
-    public function setVehicleClass($vehicleClass)
-    {
-        $this->vehicleClass = $vehicleClass;
-
-        return $this;
-    }
-
-    /**
+     * Proxy method
      * @return \DvsaEntities\Entity\VehicleClass
      */
     public function getVehicleClass()
     {
-        return $this->vehicleClass;
+        if (!$this->getVehicle()) {
+            return;
+        }
+
+        return $this->getVehicle()->getVehicleClassDuringTest($this);
     }
 
     /**
-     * @param CountryOfRegistration $value
-     *
-     * @return MotTest
-     */
-    public function setCountryOfRegistration(CountryOfRegistration $value)
-    {
-        $this->countryOfRegistration = $value;
-
-        return $this;
-    }
-
-    /**
+     * Proxy method
      * @return CountryOfRegistration
      */
     public function getCountryOfRegistration()
     {
-        return $this->countryOfRegistration;
+        if (!$this->getVehicle()) {
+            return;
+        }
+
+        return $this->getVehicle()->getCountryOfRegistration();
     }
 
     /**
-     * @param Make $make
-     *
-     * @return MotTest
-     */
-    public function setMake($make)
-    {
-        $this->make = $make;
-
-        return $this;
-    }
-
-    /**
+     * Proxy method
      * @return \DvsaEntities\Entity\Make
      */
     public function getMake()
     {
-        return $this->make;
+        if (!$this->getVehicle()) {
+            return;
+        }
+
+        return $this->getVehicle()->getMake();
     }
 
+    /**
+     * Proxy method
+     * @return Make|string
+     */
     public function getMakeName()
     {
-        return $this->make ? $this->make->getName() : $this->makeName;
+        if (!$this->getVehicle()) {
+            return;
+        }
+
+        return $this->getVehicle()->getMakeName();
     }
 
     /**
-     * @param Model $model
-     *
-     * @return MotTest
-     */
-    public function setModel($model)
-    {
-        $this->model = $model;
-
-        return $this;
-    }
-
-    /**
+     * Proxy method
      * @return Model
      */
     public function getModel()
     {
-        return $this->model;
+        if (!$this->getVehicle()) {
+            return;
+        }
+
+        return $this->getVehicle()->getModel();
     }
 
+    /**
+     * Proxy method
+     * @return Model|string
+     */
     public function getModelName()
     {
-        return $this->model ? $this->model->getName() : $this->modelName;
-    }
+        if (!$this->getVehicle()) {
+            return;
+        }
 
-    public function setFreeTextModelName($modelName)
-    {
-        $this->modelName = $modelName;
-
-        return $this;
+        return $this->getVehicle()->getModelName();
     }
 
     /**
-     * @param string $registration
-     *
-     * @return MotTest
-     */
-    public function setRegistration($registration)
-    {
-        $this->registration = $registration;
-
-        return $this;
-    }
-
-    /**
+     * Proxy method
      * @return string
      */
     public function getRegistration()
     {
-        return $this->registration;
+        if (!$this->getVehicle()) {
+            return;
+        }
+
+        return $this->getVehicle()->getRegistration();
     }
 
     /**
-     * @param string $vin
-     *
-     * @return MotTest
-     */
-    public function setVin($vin)
-    {
-        $this->vin = $vin;
-
-        return $this;
-    }
-
-    /**
+     * Proxy method
      * @return string
      */
     public function getVin()
     {
-        return $this->vin;
+        if (!$this->getVehicle()) {
+            return;
+        }
+
+        return $this->getVehicle()->getVin();
     }
 
     /**
@@ -838,7 +649,7 @@ class MotTest extends Entity
      */
     public function setHasRegistration($hasRegistration)
     {
-        $this->hasRegistration = (int) $hasRegistration;
+        $this->hasRegistration = (int)$hasRegistration;
 
         return $this;
     }
@@ -985,6 +796,45 @@ class MotTest extends Entity
     }
 
     /**
+     * @return Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
+     * @param Organisation $organisation
+     * @return MotTest
+     */
+    public function setOrganisation(Organisation $organisation = null)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getSubmittedDate()
+    {
+        return $this->submittedDate;
+    }
+
+    /**
+     * @param DateTime $submittedDate
+     *
+     * @return MotTest
+     */
+    public function setSubmittedDate(\DateTime $submittedDate)
+    {
+        $this->submittedDate = $submittedDate;
+
+        return $this;
+    }
+
+    /**
      * @return bool
      */
     public function hasFailures()
@@ -1021,7 +871,7 @@ class MotTest extends Entity
             array_filter(
                 $this->motTestReasonForRejections->toArray(),
                 function (MotTestReasonForRejection $rfr) use ($type) {
-                    return $rfr->getType() === $type;
+                    return $rfr->getType()->getReasonForRejectionType() === $type;
                 }
             );
     }
@@ -1089,115 +939,102 @@ class MotTest extends Entity
     }
 
     /**
-     * Set MotTestReasonForCancel.
-     *
-     * @param \DvsaEntities\Entity\MotTestReasonForCancel $motTestReasonForCancel
-     *
+     * @return int
+     */
+    public function getVehicleWeight()
+    {
+        return $this->vehicleWeight;
+    }
+
+    /**
+     * @param int $vehicleWeight
      * @return MotTest
      */
-    public function setMotTestReasonForCancel(MotTestReasonForCancel $motTestReasonForCancel = null)
+    public function setVehicleWeight($vehicleWeight)
     {
-        $this->motTestReasonForCancel = $motTestReasonForCancel;
-
+        $this->vehicleWeight = $vehicleWeight;
         return $this;
     }
 
     /**
-     * @return \DvsaEntities\Entity\MotTestReasonForCancel
+     * @return WeightSource
+     */
+    public function getVehicleWeightSource()
+    {
+        return $this->vehicleWeightSource;
+    }
+
+    /**
+     * @param WeightSource $vehicleWeightSource
+     * @return MotTest
+     */
+    public function setVehicleWeightSource($vehicleWeightSource)
+    {
+        $this->vehicleWeightSource = $vehicleWeightSource;
+        return $this;
+    }
+
+    /**
+     * Proxy method to try to fetch test's reason for cancel
+     *
+     * @return MotTestReasonForCancel|void
      */
     public function getMotTestReasonForCancel()
     {
-        return $this->motTestReasonForCancel;
+        if (!$this->getMotTestCancelled()) {
+            return;
+        }
+
+        try {
+            return $this->getMotTestCancelled()->getMotTestReasonForCancel();
+        } catch (EntityNotFoundException $e) {
+            return;
+        }
     }
 
     /**
-     * @return string
+     * @return MotTestCancelled
+     */
+    public function getMotTestCancelled()
+    {
+        return $this->motTestCancelled;
+    }
+
+    /**
+     * @param MotTestCancelled $motTestCancelled
+     * @return MotTest
+     */
+    public function setMotTestCancelled(MotTestCancelled $motTestCancelled)
+    {
+        $this->motTestCancelled = $motTestCancelled;
+        $this->motTestCancelled->setId($this->getId());
+        return $this;
+    }
+
+    /**
+     * Proxy method to try to fetch test's reason for temination's comment
+     *
+     * @return string|void
      */
     public function getReasonForTerminationComment()
     {
-        return $this->reasonForTerminationComment;
+        try {
+            if ($this->getMotTestCancelled() && $this->getMotTestCancelled()->getComment()) {
+                $comment = $this->getMotTestCancelled()->getComment();
+                if ($comment instanceof Comment) {
+                    return $comment->getComment();
+                }
+            }
+        } catch (EntityNotFoundException $e) {
+            return;
+        }
     }
 
     /**
-     * @param string $value
-     *
-     * @return MotTest
+     * @param MotTestComplaintRef $complaintRef
+     * @return $this
      */
-    public function setReasonForTerminationComment($value)
-    {
-        $this->reasonForTerminationComment = $value;
-
-        return $this;
-    }
-
-    /**
-     * @return EnforcementFullPartialRetest
-     */
-    public function getFullPartialRetest()
-    {
-        return $this->fullPartialRetest;
-    }
-
-    /**
-     * @param $fullPartialRetest
-     *
-     * @return MotTest
-     */
-    public function setFullPartialRetest($fullPartialRetest)
-    {
-        $this->fullPartialRetest = $fullPartialRetest;
-
-        return $this;
-    }
-
-    /**
-     * @param Comment $comment
-     *
-     * @return MotTest
-     */
-    public function setPartialReinspectionComment($comment)
-    {
-        $this->partialReinspectionComment = $comment;
-
-        return $this;
-    }
-
-    /**
-     * @return Comment
-     */
-    public function getPartialReinspectionComment()
-    {
-        return $this->partialReinspectionComment;
-    }
-
-    /**
-     * @param Comment $comment
-     *
-     * @return MotTest
-     */
-    public function setItemsNotTestedComment($comment)
-    {
-        $this->itemsNotTestedComment = $comment;
-
-        return $this;
-    }
-
-    /**
-     * @return Comment
-     */
-    public function getItemsNotTestedComment()
-    {
-        return $this->itemsNotTestedComment;
-    }
-
-    /**
-     * Set complaintRef.
-     *
-     * @param string $complaintRef
-     *
-     * @return MotTest
-     */
-    public function setComplaintRef($complaintRef)
+    public function setComplaintRef(MotTestComplaintRef $complaintRef)
     {
         $this->complaintRef = $complaintRef;
 
@@ -1205,9 +1042,7 @@ class MotTest extends Entity
     }
 
     /**
-     * Get complaintRef.
-     *
-     * @return string
+     * @return MotTestComplaintRef
      */
     public function getComplaintRef()
     {
@@ -1243,22 +1078,56 @@ class MotTest extends Entity
     }
 
     /**
-     * @return OdometerReading
+     * @return string
      */
-    public function getOdometerReading()
+    public function getOdometerResultType()
     {
-        return $this->odometerReading;
+        return $this->odometerResultType;
     }
 
     /**
-     * @param OdometerReading $value
-     *
+     * @param string $odometerResultType
      * @return MotTest
      */
-    public function setOdometerReading($value)
+    public function setOdometerResultType($odometerResultType)
     {
-        $this->odometerReading = $value;
+        $this->odometerResultType = $odometerResultType;
+        return $this;
+    }
 
+    /**
+     * @return string
+     */
+    public function getOdometerUnit()
+    {
+        return $this->odometerUnit;
+    }
+
+    /**
+     * @param string $odometerUnit
+     * @return MotTest
+     */
+    public function setOdometerUnit($odometerUnit)
+    {
+        $this->odometerUnit = $odometerUnit;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOdometerValue()
+    {
+        return $this->odometerValue;
+    }
+
+    /**
+     * @param int $odometerValue
+     * @return MotTest
+     */
+    public function setOdometerValue($odometerValue)
+    {
+        $this->odometerValue = $odometerValue;
         return $this;
     }
 
@@ -1321,7 +1190,7 @@ class MotTest extends Entity
     public function hasRfrsOfType($rfrType)
     {
         foreach ($this->getMotTestReasonForRejections() as $rfr) {
-            if ($rfr->getType() === $rfrType) {
+            if ($rfr->getType()->getReasonForRejectionType() === $rfrType) {
                 return true;
             }
         }
@@ -1394,6 +1263,9 @@ class MotTest extends Entity
                         $results[$key]['advisoryText'] = $rfrDescription->getAdvisoryText();
                     }
                 }
+
+                $results[$key]['type'] = $testRfr->getType()->getReasonForRejectionType();
+
                 $results[$key]['inspectionManualReference'] =
                     $testRfr->getReasonForRejection()->getInspectionManualReference();
             } else {
@@ -1433,26 +1305,6 @@ class MotTest extends Entity
     }
 
     /**
-     * @param boolean $val
-     *
-     * @return MotTest
-     */
-    public function setIsPrivate($val)
-    {
-        $this->isPrivate = $val;
-
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function getIsPrivate()
-    {
-        return $this->isPrivate;
-    }
-
-    /**
      * @param Document $document
      *
      * @return MotTest
@@ -1470,46 +1322,6 @@ class MotTest extends Entity
     public function getDocument()
     {
         return $this->document;
-    }
-
-    /**
-     * @param int $onePersonTest
-     *
-     * @return MotTest
-     */
-    public function setOnePersonTest($onePersonTest)
-    {
-        $this->onePersonTest = $onePersonTest;
-
-        return $this;
-    }
-
-    /**
-     * @return int onePersonTest status
-     */
-    public function getOnePersonTest()
-    {
-        return $this->onePersonTest;
-    }
-
-    /**
-     * @param int $onePersonReInspection
-     *
-     * @return MotTest
-     */
-    public function setonePersonReInspection($onePersonReInspection)
-    {
-        $this->onePersonReInspection = $onePersonReInspection;
-
-        return $this;
-    }
-
-    /**
-     * @return int onePersonReInspection status
-     */
-    public function getOnePersonReInspection()
-    {
-        return $this->onePersonReInspection;
     }
 
     private function updateOldBrakeTestResults()
@@ -1535,22 +1347,48 @@ class MotTest extends Entity
     }
 
     /**
-     * @return mixed
+     * @param MotTestEmergencyReason $motTestEmergencyReason
+     * @return $this
+     */
+    public function setMotTestEmergencyReason(MotTestEmergencyReason $motTestEmergencyReason = null)
+    {
+        $this->motTestEmergencyReason = $motTestEmergencyReason;
+        return $this;
+    }
+
+    /**
+     * @return MotTestEmergencyReason
+     */
+    public function getMotTestEmergencyReason()
+    {
+        return $this->motTestEmergencyReason;
+    }
+
+    /**
+     * @return EmergencyLog
      */
     public function getEmergencyLog()
     {
-        return $this->emergencyLog;
+        if (!$this->getMotTestEmergencyReason()) {
+            return;
+        }
+
+        try {
+            return $this->getMotTestEmergencyReason()->getEmergencyLog();
+        } catch (EntityNotFoundException $e) {
+            return null;
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 
     /**
      * @param EmergencyLog $emergencyLog
-     *
-     * @return MotTest
+     * @return $this
      */
-    public function setEmergencyLog($emergencyLog)
+    public function setEmergencyLog(EmergencyLog $emergencyLog)
     {
-        $this->emergencyLog = $emergencyLog;
-
+        $this->getMotTestEmergencyReason()->setEmergencyLog($emergencyLog);
         return $this;
     }
 
@@ -1559,97 +1397,90 @@ class MotTest extends Entity
      */
     public function getEmergencyReasonComment()
     {
-        return $this->emergencyReasonComment;
+        if (!$this->getMotTestEmergencyReason()) {
+            return;
+        }
+
+        try {
+            return $this->getMotTestEmergencyReason()->getComment();
+        } catch (EntityNotFoundException $e) {
+            return null;
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 
     /**
-     * @param mixed $emergencyReasonComment
-     *
-     * @return MotTest
+     * @param Comment $comment
+     * @return $this
      */
-    public function setEmergencyReasonComment($emergencyReasonComment)
+    public function setEmergencyReasonComment(Comment $comment)
     {
-        $this->emergencyReasonComment = $emergencyReasonComment;
-
+        $this->getMotTestEmergencyReason()->setComment($comment);
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return EmergencyReason
      */
     public function getEmergencyReasonLookup()
     {
-        return $this->emergencyReasonLookup;
+        if (!$this->getMotTestEmergencyReason()) {
+            return;
+        }
+
+        try {
+            return $this->getMotTestEmergencyReason()->getEmergencyReason();
+        } catch (EntityNotFoundException $e) {
+            return;}
     }
 
     /**
-     * @param mixed $emergencyReasonLookup
-     *
-     * @return MotTest
-     */
-    public function setEmergencyReasonLookup($emergencyReasonLookup)
-    {
-        $this->emergencyReasonLookup = $emergencyReasonLookup;
-
-        return $this;
-    }
-    /**
-     * @param EmptyVrmReason $reason
-     *
+     * @param EmergencyReason $emergencyReason
      * @return $this
      */
-    public function setEmptyVrmReason($reason)
+    public function setEmergencyReasonLookup(EmergencyReason $emergencyReason)
     {
-        $this->emptyVrmReason = $reason;
-
+        $this->getMotTestEmergencyReason()->setEmergencyReason($emergencyReason);
         return $this;
     }
 
     /**
+     * Proxy method
      * @return EmptyVrmReason
      */
     public function getEmptyVrmReason()
     {
-        return $this->emptyVrmReason;
+        if (!$this->getVehicle() || is_null($this->getVehicle()->getEmptyReasons())) {
+            return;
+        }
+
+        return $this->getVehicle()->getEmptyReasons()->getEmptyVrmReason();
     }
 
     /**
-     * @param EmptyVinReason $reason
-     *
-     * @return $this
-     */
-    public function setEmptyVinReason($reason)
-    {
-        $this->emptyVinReason = $reason;
-
-        return $this;
-    }
-
-    /**
+     * Proxy method
      * @return EmptyVinReason
      */
     public function getEmptyVinReason()
     {
-        return $this->emptyVinReason;
+        if (!$this->getVehicle() || is_null($this->getVehicle()->getEmptyReasons())) {
+            return;
+        }
+
+        return $this->getVehicle()->getEmptyReasons()->getEmptyVinReason();
     }
 
     /**
+     * Proxy method
      * @return ModelDetail
      */
     public function getModelDetail()
     {
-        return $this->modelDetail;
-    }
+        if (!$this->getVehicle()) {
+            return;
+        }
 
-    /**
-     * @param ModelDetail $modelDetail
-     *
-     * @return MotTest
-     */
-    public function setModelDetail($modelDetail)
-    {
-        $this->modelDetail = $modelDetail;
-
-        return $this;
+        return $this->getVehicle()->getModelDetail();
     }
 }

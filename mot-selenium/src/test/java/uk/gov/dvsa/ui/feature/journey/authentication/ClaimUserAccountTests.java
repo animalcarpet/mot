@@ -31,7 +31,7 @@ public class ClaimUserAccountTests extends DslTest {
         assertThat(motUI.claimAccount.isPinDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "Regression"}, description="2Fa user should see different confirmation page for claim account")
+    @Test(groups = {"Regression"}, description="2Fa user should see different confirmation page for claim account")
     public void whenIClaimAccountAs2FaUserIShouldNotSeePin() throws Exception {
 
         // Given I am 2FA user

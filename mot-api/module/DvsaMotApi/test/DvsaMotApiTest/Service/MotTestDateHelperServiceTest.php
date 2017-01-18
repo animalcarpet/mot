@@ -9,7 +9,9 @@ use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\Date\TestDateTimeHolder;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaEntities\Entity\EmergencyLog;
 use DvsaEntities\Entity\ModelDetail;
+use DvsaEntities\Entity\MotTestEmergencyReason;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
@@ -72,7 +74,12 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
         $motTest = $this->getMockMotTest($testType, $status);
 
         if ($emergency === true) {
-            $motTest->setEmergencyLog($emergency);
+            $emergencyLog = new EmergencyLog();
+
+            $motTestEmergencyReason = new MotTestEmergencyReason();
+            $motTestEmergencyReason->setEmergencyLog($emergencyLog);
+
+            $motTest->setMotTestEmergencyReason($motTestEmergencyReason);
         }
 
         $pendingStatus = null;
@@ -188,7 +195,6 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
         );
 
         $motTest->setVehicle($vehicle);
-        $motTest->setVehicleClass($vehicleClassObj);
         $generatedExpiryDate = $motTestDateHelper->getExpiryDate($motTest);
 
         $this->assertEquals($expiryDate, $generatedExpiryDate->format('Y-m-d'));
@@ -255,7 +261,6 @@ class MotTestDateHelperServiceTest extends AbstractServiceTestCase
         $motTest->setIssuedDate($now->getCurrentDate()); // don't matter for
         $motTest->setExpiryDate($now->getCurrentDate()); // this test!
         $motTest->setVehicle($vehicle);
-        $motTest->setVehicleClass($vehicleClass);
 
         // Set up the PREVIOUS Mot test...
         $motTestPrevious = $this->getMockMotTest(MotTestTypeCode::NORMAL_TEST, self::TEST_STATUS_PASS);

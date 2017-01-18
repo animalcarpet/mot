@@ -12,6 +12,10 @@ class ApiServicesConfigOptions extends AbstractOptions
     /** @var string */
     private $vehicleServiceUrl;
 
+    /** @var string */
+    private $motTestServiceUrl;
+
+
     /**
      * @param $serviceUrl
      * @return $this
@@ -46,5 +50,23 @@ class ApiServicesConfigOptions extends AbstractOptions
     public function getVehicleServiceUrl()
     {
         return $this->vehicleServiceUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMotTestServiceUrl()
+    {
+        return $this->motTestServiceUrl;
+    }
+
+    /**
+     * @param $motTestServiceUrl
+     * @return $this
+     */
+    public function setMotTestServiceUrl($motTestServiceUrl)
+    {
+        $this->motTestServiceUrl = $motTestServiceUrl;
+        return $this;
     }
 }

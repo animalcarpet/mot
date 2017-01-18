@@ -117,7 +117,7 @@ class AbstractPersistableService implements TransactionAwareInterface
 
     private function persistAndFlush($entity)
     {
-        $this->entityManager->getConnection()->exec("SET @app_user_id = (SELECT `id` FROM `person` WHERE `user_reference` = 'Static Data' OR `username` = 'static data')");
+        $this->entityManager->getConnection()->exec("SET @app_user_id = (SELECT `id` FROM `person` WHERE `user_reference` = 'Static Data' OR `username` = 'static data' LIMIT 1)");
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
     }

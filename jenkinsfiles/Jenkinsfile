@@ -96,10 +96,6 @@ def run_behat(tags){
     '''
 }
 
-def copy_configs(path){
-    sh 'for x in ' + path + '/config/autoload/*.dist; do mv "$x" "${x%.*}" ; done'
-}
-
 def prepare_selenium(hub){
     sh """
     mkdir -p selenium-screenshots/error
@@ -199,7 +195,6 @@ wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
     dir('mot'){
         stage 'Independent unit tests'
         sh 'set +x; echo -e "\033[34mIndependent unit tests\033[0m"'
-        copy_configs(mot_web_frontend)
         run_phpunit_independent(mot_web_frontend)
     }
     stage 'Static Code Analysis'
@@ -269,8 +264,6 @@ wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
     dir('mot'){
         stage 'Unit tests'
         sh 'set +x; echo -e "\033[34mUnit tests\033[0m"'
-        copy_configs(mot_api)
-        copy_configs(mot_testsupport)
         run_phpunit(mot_api)
         run_phpunit(mot_common_web_module)
         run_phpunit(mot_web_frontend)

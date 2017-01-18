@@ -7,7 +7,9 @@
 
 namespace DvsaMotApi\Service\Mapper;
 
+use Doctrine\ORM\EntityNotFoundException;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
+use OrganisationApi\Service\Mapper\OrganisationMapper;
 use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Dto\Common\MotTestDto;
@@ -17,7 +19,6 @@ use DvsaCommon\Utility\AddressUtils;
 use DvsaCommonApi\Service\Mapper\ColourMapper;
 use DvsaCommonApi\Service\Mapper\FuelTypeMapper;
 use DvsaCommonApi\Service\Mapper\MotTestTypeMapper;
-use DvsaCommonApi\Service\Mapper\OdometerReadingMapper;
 use DvsaCommonApi\Service\Mapper\ReasonForCancelMapper;
 use DvsaCommonApi\Service\Mapper\VehicleClassMapper;
 use DvsaEntities\Entity\MotTest;
@@ -156,31 +157,14 @@ class MotTestMapper
         );
 
         if ($motTest->getMotTestReasonForCancel()) {
-            $reasonForCancel = $motTest->getMotTestReasonForCancel();
-            $result->setReasonForCancel((new ReasonForCancelMapper())->toDto($reasonForCancel));
+            $result->setReasonForCancel(
+                (new ReasonForCancelMapper())->toDto(
+                    $motTest->getMotTestReasonForCancel()
+                )
+            );
         }
 
         $result->setReasonForTerminationComment($motTest->getReasonForTerminationComment());
-
-        if ($motTest->getFullPartialRetest()) {
-            $result->setFullPartialRetest($this->objectHydrator->extract($motTest->getFullPartialRetest()));
-        }
-
-        if ($motTest->getPartialReinspectionComment()) {
-            $result->setPartialReinspectionComment(
-                $this->objectHydrator->extract(
-                    $motTest->getPartialReinspectionComment()
-                )
-            );
-        }
-
-        if ($motTest->getItemsNotTestedComment()) {
-            $result->setItemsNotTestedComment(
-                $this->objectHydrator->extract(
-                    $motTest->getItemsNotTestedComment()
-                )
-            );
-        }
 
         if (is_null($motTest->getEmergencyLog()) === false) {
             $result->setEmergencyLog(
@@ -212,6 +196,14 @@ class MotTestMapper
             }
         }
 
+        if ($motTest->getOrganisation()) {
+            $result->setOrganisation((new OrganisationMapper())->toDto($motTest->getOrganisation()));
+        }
+
+        if ($motTest->getSubmittedDate()) {
+            $result->setSubmittedDate($motTest->getSubmittedDate());
+        }
+
         return $result;
     }
 
@@ -227,6 +219,7 @@ class MotTestMapper
     {
         /** @var MotTestDto $result */
         $result = (new MotTestDto())
+            ->setVehicle($motTest->getVehicle() ? (new VehicleMapper())->toDto($motTest->getVehicle()) : null)
             ->setComplaintRef($motTest->getComplaintRef())
             ->setCountryOfRegistration(
                 $motTest->getCountryOfRegistration()
@@ -241,16 +234,11 @@ class MotTestMapper
             )
             ->setHasRegistration($motTest->getHasRegistration())
             ->setId($motTest->getId())
-            ->setIsPrivate($motTest->getIsPrivate())
             ->setMake($motTest->getMakeName())
             ->setModel($motTest->getModelName())
-            ->setOdometerReading(
-                $motTest->getOdometerReading()
-                    ? (new OdometerReadingMapper())->toDto($motTest->getOdometerReading())
-                    : null
-            )
-            ->setOnePersonReInspection($motTest->getOnePersonReInspection())
-            ->setOnePersonTest($motTest->getOnePersonTest())
+            ->setOdometerValue($motTest->getOdometerValue())
+            ->setOdometerUnit($motTest->getOdometerUnit())
+            ->setOdometerResultType($motTest->getOdometerResultType())
             ->setPrimaryColour(
                 $motTest->getPrimaryColour()
                     ? (new ColourMapper())->toDto($motTest->getPrimaryColour())
@@ -269,7 +257,6 @@ class MotTestMapper
                     : null
             )
             ->setTester($motTest->getTester() ? (new PersonMapper())->toDto($motTest->getTester()) : null)
-            ->setVehicle($motTest->getVehicle() ? (new VehicleMapper())->toDto($motTest->getVehicle()) : null)
             ->setVehicleClass(
                 $motTest->getVehicleClass() !== null
                     ? (new VehicleClassMapper())->toDto($motTest->getVehicleClass())
@@ -377,14 +364,14 @@ class MotTestMapper
         $motRfrsGroupedByTypes = [];
 
         foreach ($motRfrs as $motRfr) {
-            if (!array_key_exists($motRfr->getType(), $motRfrsGroupedByTypes)) {
-                $motRfrsGroupedByTypes[$motRfr->getType()] = [];
+            if (!array_key_exists($motRfr->getType()->getReasonForRejectionType(), $motRfrsGroupedByTypes)) {
+                $motRfrsGroupedByTypes[$motRfr->getType()->getReasonForRejectionType()] = [];
             }
             if ($short) {
-                $motRfrsGroupedByTypes[$motRfr->getType()][] = $motRfr->getEnglishName();
+                $motRfrsGroupedByTypes[$motRfr->getType()->getReasonForRejectionType()][] = $motRfr->getEnglishName();
             } else {
                 $currentRfr = $this->hydrateTestRfr($motRfr);
-                $motRfrsGroupedByTypes[$motRfr->getType()][] = $currentRfr;
+                $motRfrsGroupedByTypes[$motRfr->getType()->getReasonForRejectionType()][] = $currentRfr;
             }
         }
 
@@ -400,6 +387,18 @@ class MotTestMapper
     {
         $hydratedTestRfr = $this->objectHydrator->extract($motTestRfr);
         $hydratedTestRfr['markedAsRepaired'] = $motTestRfr->isMarkedAsRepaired();
+        $hydratedTestRfr['comment'] = $motTestRfr->getComment();
+
+        if ($motTestRfr->getLocation()) {
+            $hydratedTestRfr['locationLateral'] = $motTestRfr->getLocation()->getLateral();
+            $hydratedTestRfr['locationLongitudinal'] = $motTestRfr->getLocation()->getLongitudinal();
+            $hydratedTestRfr['locationVertical'] = $motTestRfr->getLocation()->getVertical();
+        }
+
+        $hydratedTestRfr['type'] = $motTestRfr->getType()->getReasonForRejectionType();
+
+        unset($hydratedTestRfr['location']);
+        unset($hydratedTestRfr['motTestReasonForRejectionComment']);
         unset($hydratedTestRfr['motTest']);
         unset($hydratedTestRfr['motTestId']);
         ExtractionHelper::unsetAuditColumns($hydratedTestRfr);

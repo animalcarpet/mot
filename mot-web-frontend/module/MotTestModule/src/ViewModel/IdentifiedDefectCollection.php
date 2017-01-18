@@ -7,8 +7,8 @@
 
 namespace Dvsa\Mot\Frontend\MotTestModule\ViewModel;
 
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Exception\IdentifiedDefectNotFoundException;
-use DvsaCommon\Dto\Common\MotTestDto;
 
 /**
  * Contains the information required for the list of identified defects in an MOT
@@ -70,22 +70,22 @@ class IdentifiedDefectCollection
     }
 
     /**
-     * @param MotTestDto $motTestData
+     * @param MotTest $motTestData
      *
      * @return IdentifiedDefectCollection
      */
-    public static function fromMotApiData(MotTestDto $motTestData)
+    public static function fromMotApiData(MotTest $motTestData)
     {
-        $failuresFromApi = isset($motTestData->getReasonsForRejection()[self::FAILURE_KEY])
-            ? $motTestData->getReasonsForRejection()[self::FAILURE_KEY]
+        $failuresFromApi = isset($motTestData->getReasonsForRejection()->FAIL)
+            ? $motTestData->getReasonsForRejection()->FAIL
             : [];
 
-        $prsFromApi = isset($motTestData->getReasonsForRejection()[self::PRS_KEY])
-            ? $motTestData->getReasonsForRejection()[self::PRS_KEY]
+        $prsFromApi = isset($motTestData->getReasonsForRejection()->PRS)
+            ? $motTestData->getReasonsForRejection()->PRS
             : [];
 
-        $advisoriesFromApi = isset($motTestData->getReasonsForRejection()[self::ADVISORY_KEY])
-            ? $motTestData->getReasonsForRejection()[self::ADVISORY_KEY]
+        $advisoriesFromApi = isset($motTestData->getReasonsForRejection()->ADVISORY)
+            ? $motTestData->getReasonsForRejection()->ADVISORY
             : [];
 
         $failures = [];
@@ -96,20 +96,20 @@ class IdentifiedDefectCollection
         foreach ($failuresFromApi as $failure) {
             $identifiedDefect = new IdentifiedDefect(
                 self::FAILURE,
-                $failure['locationLateral'],
-                $failure['locationLongitudinal'],
-                $failure['locationVertical'],
-                $failure['comment'],
-                $failure['failureDangerous'],
-                $failure['testItemSelectorDescription'].' '.$failure['failureText'],
-                $failure['id'],
-                $failure['rfrId'],
-                $failure['onOriginalTest'],
-                $failure['generated'],
-                $failure['markedAsRepaired']
+                $failure->locationLateral,
+                $failure->locationLongitudinal,
+                $failure->locationVertical,
+                $failure->comment,
+                $failure->failureDangerous,
+                $failure->testItemSelectorDescription . ' ' . $failure->failureText,
+                $failure->id,
+                $failure->rfrId,
+                $failure->onOriginalTest,
+                $failure->generated,
+                $failure->markedAsRepaired
             );
 
-            if (isset($failure['generated']) && $failure['generated']) {
+            if (isset($failure->generated) && $failure->generated) {
                 array_push($generatedFailures, $identifiedDefect);
             } else {
                 array_push($failures, $identifiedDefect);
@@ -119,17 +119,17 @@ class IdentifiedDefectCollection
         foreach ($prsFromApi as $loopPrs) {
             $identifiedDefect = new IdentifiedDefect(
                 self::PRS,
-                $loopPrs['locationLateral'],
-                $loopPrs['locationLongitudinal'],
-                $loopPrs['locationVertical'],
-                $loopPrs['comment'],
-                $loopPrs['failureDangerous'],
-                $loopPrs['testItemSelectorDescription'].' '.$loopPrs['failureText'],
-                $loopPrs['id'],
-                $loopPrs['rfrId'],
-                $loopPrs['onOriginalTest'],
-                $loopPrs['generated'],
-                $loopPrs['markedAsRepaired']
+                $loopPrs->locationLateral,
+                $loopPrs->locationLongitudinal,
+                $loopPrs->locationVertical,
+                $loopPrs->comment,
+                $loopPrs->failureDangerous,
+                $loopPrs->testItemSelectorDescription . ' ' . $loopPrs->failureText,
+                $loopPrs->id,
+                $loopPrs->rfrId,
+                $loopPrs->onOriginalTest,
+                $loopPrs->generated,
+                $loopPrs->markedAsRepaired
             );
 
             array_push($prs, $identifiedDefect);
@@ -137,22 +137,22 @@ class IdentifiedDefectCollection
 
         foreach ($advisoriesFromApi as $advisory) {
             $defectName = array_key_exists('testItemSelectorDescription', $advisory)
-                ? sprintf('%s ', $advisory['testItemSelectorDescription']) : '';
-            $defectName .= array_key_exists('failureText', $advisory) ? $advisory['failureText'] : '';
+                ? sprintf('%s ', $advisory->testItemSelectorDescription) : '';
+            $defectName .= array_key_exists('failureText', $advisory) ? $advisory->failureText : '';
 
             $identifiedDefect = new IdentifiedDefect(
                 self::ADVISORY,
-                $advisory['locationLateral'],
-                $advisory['locationLongitudinal'],
-                $advisory['locationVertical'],
-                $advisory['comment'],
-                $advisory['failureDangerous'],
+                $advisory->locationLateral,
+                $advisory->locationLongitudinal,
+                $advisory->locationVertical,
+                $advisory->comment,
+                $advisory->failureDangerous,
                 $defectName,
-                $advisory['id'],
-                $advisory['rfrId'],
-                $advisory['onOriginalTest'],
-                $advisory['generated'],
-                $advisory['markedAsRepaired']
+                $advisory->id,
+                $advisory->rfrId,
+                $advisory->onOriginalTest,
+                $advisory->generated,
+                $advisory->markedAsRepaired
             );
 
             array_push($advisories, $identifiedDefect);
@@ -283,7 +283,9 @@ class IdentifiedDefectCollection
          * This is only ever going to return one value as we're comparing
          * the primary keys of elements.
          */
-        $defect = array_filter($defects, function (IdentifiedDefect $e) use ($id) {return $e->getId() === $id;});
+        $defect = array_filter($defects, function (IdentifiedDefect $e) use ($id) {
+            return $e->getId() === $id;
+        });
 
         if (empty($defect)) {
             throw new IdentifiedDefectNotFoundException($id);

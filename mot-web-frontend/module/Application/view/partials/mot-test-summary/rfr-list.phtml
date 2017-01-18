@@ -7,27 +7,27 @@ $items = is_array($this->items) && !empty($this->items) ? $this->items : false;
 <ul class="list-unstyled list-separator">
     <?php if ($items) : ?>
         <?php foreach ($items as $item): ?>
-            <li class="primary-item" id="rfr-<?php echo $this->escapeHtmlAttr($item['id']); ?>">
+            <li class="primary-item" id="rfr-<?php echo $this->escapeHtmlAttr($item->id); ?>">
                 <?php
                 echo $this->escapeHtml(
                     join(
                         ' ', [
-                            ArrayUtils::tryGet($item, 'testItemSelectorDescription', ''),
-                            $item['failureText'],
+                            $item->testItemSelectorDescription,
+                            $item->failureText,
                             (
-                            !empty($item['inspectionManualReference'])
-                                ? '[' . $item['inspectionManualReference'] . ']'
+                            !empty($item->inspectionManualReference)
+                                ? '[' . $item->inspectionManualReference . ']'
                                 : ''
                             ),
-                            $item['locationLateral'],
-                            $item['locationLongitudinal'],
-                            $item['locationVertical'],
-                            (!empty($item['comment']) ? '(' . $item['comment'] . ')' : ''),
+                            $item->locationLateral,
+                            $item->locationLongitudinal,
+                            $item->locationVertical,
+                            (!empty($item->comment) ? '(' . $item->comment . ')' : ''),
                         ]
                     )
                 );
 
-                if ($item['failureDangerous']): ?>
+                if ($item->failureDangerous): ?>
                     <span class="label label-danger pull-right"
                         >Dangerous</span>
                 <?php endif ?>

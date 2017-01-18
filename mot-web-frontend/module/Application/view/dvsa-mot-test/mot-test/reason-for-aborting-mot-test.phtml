@@ -9,13 +9,13 @@ use DvsaMotTest\Controller\MotTestController;
  * @var \DvsaCommon\Dto\Common\ReasonForCancelDto   $reason
  * @var int                                         $selectedReasonId
  */
-/** @var \DvsaCommon\Dto\Common\MotTestDto $motTest */
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motTest */
 $motTest = $this->motTest;
 $reasons = $this->reasonsForCancel;
 $selectedReasonId = $this->selectedReasonId;
 
-$vts = $motTest->getVehicleTestingStation();
-/** @var \DvsaCommon\Dto\Person\PersonDto $tester */
+$vts = $motTest->getSiteId();
+/** @var \Dvsa\Mot\ApiClient\Resource\Item\Tester $tester */
 $tester = $motTest->getTester();
 
 $vtsName = ArrayUtils::tryGet($vts, 'name');
@@ -27,9 +27,8 @@ $testerName = $tester->getDisplayName();
 
 $testStatusName = MotTestController::getTestStatusName($testStatus);
 
-/** @var \DvsaCommon\Dto\Common\MotTestTypeDto $testType */
-$testType = $motTest->getTestType();
-$title = 'Abort' . MotTestController::getTestName($testType->getCode());
+$testType = $motTest->getTestTypeCode();
+$title = 'Abort' . MotTestController::getTestName($testType);
 $this->headTitle($title);
 
 $title = 'Vehicle Testing Station';

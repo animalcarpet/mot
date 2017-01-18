@@ -8,15 +8,18 @@
 namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 
 use DateTime;
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use Dvsa\Mot\ApiClient\Resource\Item\VehicleClass;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\Defect;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\DefectCollection;
 use Dvsa\Mot\Frontend\MotTestModule\ViewModel\IdentifiedDefectCollection;
 use DvsaCommon\Domain\MotTestType;
-use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
+use DvsaMotTest\Controller\DvsaVehicleViewModel;
 use Zend\Paginator\Adapter\ArrayAdapter;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
@@ -56,8 +59,10 @@ class SearchDefectsController extends AbstractDvsaMotTestController
 
         $vehicleClassCode = 0;
 
-        /** @var MotTestDto $motTest */
+        /** @var MotTest $motTest */
         $motTest = null;
+        /** @var DvsaVehicle $vehicle */
+        $vehicle = null;
         $isReinspection = false;
         $isDemoTest = false;
         $isNonMotTest = false;
@@ -66,19 +71,22 @@ class SearchDefectsController extends AbstractDvsaMotTestController
 
         try {
             $motTest = $this->getMotTestFromApi($motTestNumber);
-            $testType = $motTest->getTestType();
-            $isDemoTest = MotTestType::isDemo($testType->getCode());
-            $isReinspection = MotTestType::isReinspection($testType->getCode());
-            $isNonMotTest = MotTestType::isNonMotTypes($testType->getCode());
-            $vehicleClassCode = $motTest->getVehicleClass()->getCode();
+            $vehicle = $this->getVehicleServiceClient()->getDvsaVehicleByIdAndVersion($motTest->getVehicleId(), $motTest->getVehicleVersion());
+            $testType = $motTest->getTestTypeCode();
+            $isDemoTest = MotTestType::isDemo($testType);
+            $isReinspection = MotTestType::isReinspection($testType);
+            /** @var VehicleClass $vehicleClassCode */
+            $vehicleClassCode = $vehicle->getVehicleClass();
+            $isNonMotTest = MotTestType::isNonMotTypes($testType);
         } catch (RestApplicationException $e) {
             $this->addErrorMessages($e->getDisplayMessages());
         }
 
         $identifiedDefects = IdentifiedDefectCollection::fromMotApiData($motTest);
         $vehicleFirstUsedDate = DateTime::createFromFormat('Y-m-d',
-            $motTest->getVehicle()->getFirstUsedDate())->format('j M Y');
-        $vehicleMakeAndModel = ucwords(strtolower($motTest->getVehicle()->getMakeAndModel()));
+            $vehicle->getFirstUsedDate())->format('j M Y');
+        $dvsaVehicleViewModel = new DvsaVehicleViewModel($vehicle);
+        $vehicleMakeAndModel = $dvsaVehicleViewModel->getMakeAndModel();
 
         $breadcrumbs = $this->getBreadcrumbs($isDemoTest, $isReinspection, $isNonMotTest);
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
@@ -97,12 +105,12 @@ class SearchDefectsController extends AbstractDvsaMotTestController
         }
 
         $hasResults = !empty($defects);
-        $isRetest = $motTest->getTestType()->getCode() === MotTestTypeCode::RE_TEST;
+        $isRetest = $motTest->getTestTypeCode() === MotTestTypeCode::RE_TEST;
 
         return $this->createViewModel('defects/search.twig', [
             'motTestNumber' => $motTestNumber,
             'identifiedDefects' => $identifiedDefects,
-            'vehicle' => $motTest->getVehicle(),
+            'vehicle' => $vehicle,
             'vehicleMakeAndModel' => $vehicleMakeAndModel,
             'vehicleFirstUsedDate' => $vehicleFirstUsedDate,
             'searchTerm' => $searchTerm,
@@ -223,7 +231,7 @@ class SearchDefectsController extends AbstractDvsaMotTestController
 
     /**
      * @param DefectCollection $defects
-     * @param string           $vehicleClassCode
+     * @param VehicleClass           $vehicleClassCode
      *
      * @return DefectCollection
      */
@@ -233,7 +241,7 @@ class SearchDefectsController extends AbstractDvsaMotTestController
             /* @var Defect $defect */
             // Generate inspection manual reference URL for each defect
             $inspectionManualReference = trim($defect->getInspectionManualReference());
-            $vehicleClass = (intval($vehicleClassCode) > 2) ? 4 : 1;
+            $vehicleClass = (intval($vehicleClassCode->getCode()) > 2) ? 4 : 1;
 
             if (strlen($inspectionManualReference)) {
                 $inspectionManualReferenceParts = explode('.', $inspectionManualReference);

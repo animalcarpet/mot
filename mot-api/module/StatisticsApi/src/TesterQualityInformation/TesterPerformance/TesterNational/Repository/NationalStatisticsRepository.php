@@ -79,17 +79,21 @@ class NationalStatisticsRepository extends AbstractStatisticsRepository implemen
     private function getSqlForNumberOfTesters()
     {
         return "SELECT COUNT(DISTINCT `test`.`person_id`) `numberOfTesters`
-                  FROM `mot_test` `test` USE INDEX (`mot_test_completed_date_idx`)
+                  FROM `mot_test_current` `test` USE INDEX (`ix_mot_test_current_completed_date`)
                   JOIN `mot_test_status` `status` ON `status`.`id` = `test`.`status_id`
                   JOIN `mot_test_type` `type` ON `type`.`id` = `test`.`mot_test_type_id`
-                  JOIN `vehicle_class` `class` ON `class`.`id` = `test`.`vehicle_class_id`
+                  LEFT JOIN `vehicle` ON (`vehicle`.`id` = `test`.`vehicle_id`) AND (`vehicle`.`version` = `test`.`vehicle_version`)
+                  LEFT JOIN `vehicle_hist` ON (`vehicle_hist`.`id` = `test`.`vehicle_id`) AND (`vehicle_hist`.`version` = `test`.`vehicle_version`)
+                  JOIN `model_detail` `md` ON `md`.`id` = COALESCE (`vehicle`.`model_detail_id`, `vehicle_hist`.`model_detail_id`)        
+                  JOIN `vehicle_class` `class` ON `class`.`id` = `md`.`vehicle_class_id`                  
                   JOIN `vehicle_class_group` `classGroup` ON `classGroup`.`id` = `class`.`vehicle_class_group_id`
+                  LEFT JOIN mot_test_emergency_reason AS mter ON mter.id = test.id
                   WHERE `test`.`completed_date` BETWEEN :startDate AND :endDate
                   AND (`type`.`code` = :normalTestCode OR `type`.`code` = :mysteryShopperTestCode)
                   -- the only tests we take into account are failures or non PRS passed ones
                   AND (`status`.`code` = :failedStatusCode OR (`status`.`code` = :passStatusCode AND `test`.`prs_mot_test_id` IS NULL))
-                AND `test`.`emergency_log_id` IS NULL
-                AND `classGroup`.`code` = :classGroupCode";
+                  AND `mter`.`emergency_log_id` IS NULL
+                  AND `classGroup`.`code` = :classGroupCode";
     }
 
     private function getSqlForStatistics()
@@ -98,34 +102,37 @@ class NationalStatisticsRepository extends AbstractStatisticsRepository implemen
               sum(IF(`classGroup`.`code` = :groupACode, 1, 0))                                        `totalACount`,
               sum(IF(`classGroup`.`code` = :groupACode AND `status`.`code` = :failedStatusCode, 1, 0)) `totalAFailCount`,
               sum(IF(`classGroup`.`code` = :groupACode, TIMESTAMPDIFF(SECOND , `test`.`started_date`, `test`.`completed_date`), 0)) `totalATestTime`,
-              AVG(
-                  -- count average age only for vehicles with manufacture date set
-                  IF(`classGroup`.`code` = 'A', IF(`v`.`manufacture_date` IS NOT NULL,
-                     TIMESTAMPDIFF(MONTH, `v`.`manufacture_date`, `test`.`completed_date`),
-                     NULL
-                  ), NULL)
-              ) AS `totalAVehicleAgeInMonths`,
+              -- count average age only for vehicles with manufacture date set
+              AVG(IF(`classGroup`.`code` = 'A',
+                  TIMESTAMPDIFF(MONTH,
+                      COALESCE(`v`.`manufacture_date`,
+                               `v_hist`.`manufacture_date`),
+                      `test`.`completed_date`),
+                  NULL)) AS `totalAVehicleAgeInMonths`,
               sum(IF(`classGroup`.`code` = :groupBCode, 1, 0))                                        `totalBCount`,
               sum(IF(`classGroup`.`code` = :groupBCode AND `status`.`code` = :failedStatusCode, 1, 0)) `totalBFailCount`,
               sum(IF(`classGroup`.`code` = :groupBCode, TIMESTAMPDIFF(SECOND , `test`.`started_date`, `test`.`completed_date`), 0)) `totalBTestTime`,
               AVG(
-                  IF(`classGroup`.`code` = 'B', IF(`v`.`manufacture_date` IS NOT NULL,
-                     TIMESTAMPDIFF(MONTH, `v`.`manufacture_date`, `test`.`completed_date`),
+                  IF(`classGroup`.`code` = 'B', IF(COALESCE (`v`.`manufacture_date`, `v_hist`.`manufacture_date`) IS NOT NULL,
+                     TIMESTAMPDIFF(MONTH, COALESCE (`v`.`manufacture_date`, `v_hist`.`manufacture_date`), `test`.`completed_date`),
                      NULL
                   ), NULL)
               ) AS `totalBVehicleAgeInMonths`
-            FROM `mot_test` `test` USE INDEX (`mot_test_completed_date_idx`)
-              JOIN `vehicle` `v` ON `test`.`vehicle_id` = `v`.`id`
+            FROM `mot_test_current` `test` USE INDEX (`ix_mot_test_current_completed_date`)
+              LEFT JOIN `vehicle` `v` ON (`test`.`vehicle_id` = `v`.`id`) AND (`test`.`vehicle_version` = `v`.`version`)
+              LEFT JOIN `vehicle_hist` `v_hist` ON (`test`.`vehicle_id` = `v_hist`.`id`) AND (`test`.`vehicle_version` = `v_hist`.`version`)
               JOIN `mot_test_status` `status` ON `status`.`id` = `test`.`status_id`
               JOIN `mot_test_type` `type` ON `type`.`id` = `test`.`mot_test_type_id`
-              JOIN `vehicle_class` `class` ON `class`.`id` = `test`.`vehicle_class_id`
+              JOIN `model_detail` `md` ON `md`.`id` = COALESCE (`v`.`model_detail_id`, `v_hist`.`model_detail_id`)              
+              JOIN `vehicle_class` `class` ON `class`.`id` = `md`.`vehicle_class_id`
               JOIN `vehicle_class_group` `classGroup` ON `classGroup`.`id` = `class`.`vehicle_class_group_id`
+              LEFT JOIN mot_test_emergency_reason AS mter ON mter.id = test.id
                 WHERE (`type`.`code` = :normalTestCode OR `type`.`code` = :mysteryShopperTestCode)
                   -- the only tests we take into account are failures or non PRS passed ones
                   AND (`status`.`code` = :failedStatusCode OR (`status`.`code` = :passStatusCode AND `test`.`prs_mot_test_id` IS NULL))
                   AND `test`.`completed_date` IS NOT NULL
                   AND `test`.`completed_date` BETWEEN :startDate AND :endDate
-                  AND `test`.`emergency_log_id` IS NULL";
+                  AND `mter`.`emergency_log_id` IS NULL";
     }
 
 }

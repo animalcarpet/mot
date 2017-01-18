@@ -5,9 +5,10 @@ namespace DvsaMotTest\Presenter;
 
 
 use DateTime;
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
 use DvsaCommon\Date\DateTimeDisplayFormat;
-use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Model\VehicleClassGroup;
 use DvsaMotTest\Model\MotChecklistPdfField;
@@ -29,13 +30,18 @@ class MotChecklistPdfPresenter implements AutoWireableInterface
     protected $fourthColumnX = 433;
 
     /**
-     * @var MotTestDto
+     * @var MotTest
      */
     protected $motTest;
     /**
      * @var MotFrontendIdentityInterface
      */
     protected $identity;
+
+    /**
+     * @var DvsaVehicle
+     */
+    protected $vehicle;
 
     /**
      * @return string
@@ -45,9 +51,15 @@ class MotChecklistPdfPresenter implements AutoWireableInterface
         return $this->fontColor;
     }
 
-    public function setMotTest(MotTestDto $motTestDto)
+    public function setMotTest(MotTest $motTest)
     {
-        $this->motTest = $motTestDto;
+        $this->motTest = $motTest;
+        return $this;
+    }
+
+    public function setVehicle(DvsaVehicle $vehicle)
+    {
+        $this->vehicle = $vehicle;
         return $this;
     }
 
@@ -62,29 +74,28 @@ class MotChecklistPdfPresenter implements AutoWireableInterface
      */
     public function getDataFields()
     {
-        $startDate = new DateTime($this->motTest->getStartedDate());
-        $firstUseDate = $this->motTest->getVehicle()->getFirstUsedDate();
+        $startDate = new DateTime($this->motTest->getStartedDate());;
+        $firstUseDate = $this->vehicle->getFirstUsedDate();
         if(!is_null($firstUseDate)){
-            $firstUseDate = new DateTime($this->motTest->getVehicle()->getFirstUsedDate());
+            $firstUseDate = new DateTime($this->vehicle->getFirstUsedDate());
         }
-        $vehicle = $this->motTest->getVehicle();
-        $site = $this->motTest->getVehicleTestingStation();
+        $site = $this->motTest->getSiteId();
 
         $fields = [
             new MotChecklistPdfField(mb_substr($this->identity->getDisplayName(), 0, static::TESTER_NAME_LENGTH), 365, 768, static::FONT_SIZE_8),
             new MotChecklistPdfField(DateTimeDisplayFormat::dateShort($startDate), 330, $this->firstLineY, static::FONT_SIZE_8),
             new MotChecklistPdfField(DateTimeDisplayFormat::time($startDate), 412, $this->firstLineY, static::FONT_SIZE_8),
             new MotChecklistPdfField(!is_null($site) ? $site['siteNumber'] : '', 496, $this->firstLineY, static::FONT_SIZE_8),
-            new MotChecklistPdfField($vehicle->getRegistration(), $this->firstColumnX, $this->secondLineY, static::FONT_SIZE_9),
-            new MotChecklistPdfField($vehicle->getVin(), $this->secondColumnX, $this->secondLineY, static::FONT_SIZE_9),
-            new MotChecklistPdfField(mb_substr($vehicle->getMakeName(), 0, static::NORMAL_BOX_LENGTH), $this->thirdColumnX, $this->secondLineY, static::FONT_SIZE_9),
-            new MotChecklistPdfField(mb_substr($vehicle->getModelName(), 0, static::NORMAL_BOX_LENGTH), $this->fourthColumnX, $this->secondLineY, static::FONT_SIZE_9),
+            new MotChecklistPdfField($this->vehicle->getRegistration(), $this->firstColumnX, $this->secondLineY, static::FONT_SIZE_9),
+            new MotChecklistPdfField($this->vehicle->getVin(), $this->secondColumnX, $this->secondLineY, static::FONT_SIZE_9),
+            new MotChecklistPdfField(mb_substr($this->vehicle->getMakeName(), 0, static::NORMAL_BOX_LENGTH), $this->thirdColumnX, $this->secondLineY, static::FONT_SIZE_9),
+            new MotChecklistPdfField(mb_substr($this->vehicle->getModelName(), 0, static::NORMAL_BOX_LENGTH), $this->fourthColumnX, $this->secondLineY, static::FONT_SIZE_9),
             new MotChecklistPdfField(!is_null($firstUseDate) ? DateTimeDisplayFormat::dateShort($firstUseDate) : '', $this->thirdColumnX, $this->thirdLineY, static::FONT_SIZE_9),
-            new MotChecklistPdfField($vehicle->getCylinderCapacity(), $this->firstColumnX, $this->thirdLineY, static::FONT_SIZE_9),
+            new MotChecklistPdfField($this->vehicle->getCylinderCapacity(), $this->firstColumnX, $this->thirdLineY, static::FONT_SIZE_9),
         ];
 
         if(!$this->isClass1or2Vehicle()){
-            $fields[] = new MotChecklistPdfField($vehicle->getWeight(), $this->fourthColumnX, $this->thirdLineY, static::FONT_SIZE_9);
+            $fields[] = new MotChecklistPdfField($this->vehicle->getWeight(), $this->fourthColumnX, $this->thirdLineY, static::FONT_SIZE_9);
         }
 
         return $fields;
@@ -92,7 +103,7 @@ class MotChecklistPdfPresenter implements AutoWireableInterface
 
     public function isClass1or2Vehicle()
     {
-        return in_array($this->motTest->getVehicleClass()->getCode(), VehicleClassGroup::getGroupAClasses());
+        return in_array($this->vehicle->getVehicleClass()->getCode(), VehicleClassGroup::getGroupAClasses());
     }
 
 }

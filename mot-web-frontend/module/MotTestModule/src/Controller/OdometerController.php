@@ -3,6 +3,8 @@
 namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 
 use DateTime;
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
@@ -11,9 +13,6 @@ use DvsaMotTest\Model\OdometerUpdate;
 use Zend\View\Model\ViewModel;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommon\Domain\MotTestType;
-use DvsaCommon\Dto\Common\MotTestDto;
-use Zend\Http\Response;
-use Zend\Session\Container;
 
 class OdometerController extends AbstractDvsaMotTestController
 {
@@ -71,15 +70,19 @@ class OdometerController extends AbstractDvsaMotTestController
         $isReinspection = false;
         $isNonMotTest = false;
 
-        /** @var MotTestDto $motTest */
+        /** @var MotTest $motTest */
         $motTest = null;
+
+        /** @var DvsaVehicle $vehicle*/
+        $vehicle = null;
 
         try {
             $motTest = $this->getMotTestFromApi($motTestNumber);
-            $testType = $motTest->getTestType();
-            $isDemo = MotTestType::isDemo($testType->getCode());
-            $isReinspection = MotTestType::isReinspection($testType->getCode());
-            $isNonMotTest = MotTestType::isNonMotTypes($testType->getCode());
+            $vehicle = $this->getVehicleServiceClient()->getDvsaVehicleByIdAndVersion($motTest->getVehicleId(), $motTest->getVehicleVersion());
+            $testType = $motTest->getTestTypeCode();
+            $isDemo = MotTestType::isDemo($testType);
+            $isReinspection = MotTestType::isReinspection($testType);
+            $isNonMotTest = MotTestType::isNonMotTypes($testType);
         } catch (ValidationException $e) {
             $this->addErrorMessages($e->getDisplayMessages());
         }
@@ -92,9 +95,9 @@ class OdometerController extends AbstractDvsaMotTestController
 
         return $this->createViewModel('mot-test/index.twig', [
             'motTest' => $motTest,
-            'vehicle' => $motTest->getVehicle(),
-            'vehicleMakeAndModel' => ucwords($motTest->getVehicle()->getMakeAndModel()),
-            'vehicleFirstUsedDate' => DateTime::createFromFormat('Y-m-d', $motTest->getVehicle()->getFirstUsedDate())->format('j M Y'),
+            'vehicle' => $vehicle,
+            'vehicleMakeAndModel' => $vehicle->getMakeAndModel(),
+            'vehicleFirstUsedDate' => DateTime::createFromFormat('Y-m-d', $vehicle->getFirstUsedDate())->format('j M Y'),
             'isDemo' => $isDemo,
         ]);
     }

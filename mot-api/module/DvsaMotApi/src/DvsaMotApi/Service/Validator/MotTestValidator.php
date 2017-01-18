@@ -15,6 +15,7 @@ use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonApi\Service\Exception\RequiredFieldException;
 use DvsaCommonApi\Service\Validator\AbstractValidator;
+use DvsaEntities\Entity\FuelType;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\VehicleClass;
@@ -114,7 +115,7 @@ class MotTestValidator extends AbstractValidator
     public function validateMotTestReasonForRejection(MotTestReasonForRejection $rfr)
     {
         if ($rfr->getReasonForRejection() === null
-            && ($rfr->getCustomDescription() === null || strlen($rfr->getCustomDescription()) == 0)
+            && ($rfr->getCustomDescription() === null || strlen($rfr->getCustomDescription()->getCustomDescription()) == 0)
         ) {
             $message = (true === $this->featureToggles->isEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)) ?
                 'You must give a description' : 'Either RFR Id or description has to be provided';
@@ -122,7 +123,9 @@ class MotTestValidator extends AbstractValidator
             throw new BadRequestException($message, BadRequestException::ERROR_CODE_INVALID_DATA);
         }
 
-        if ($this->censorService->containsProfanity($rfr->getCustomDescription())
+        $description = ($rfr->getCustomDescription()) ? $rfr->getCustomDescription()->getCustomDescription() : '';
+
+        if ($this->censorService->containsProfanity($description)
             || $this->censorService->containsProfanity($rfr->getComment())
         ) {
             if ($this->featureToggles->isEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)) {
@@ -150,7 +153,7 @@ class MotTestValidator extends AbstractValidator
                 );
             }
         } else {
-            if ((strlen($rfr->getCustomDescription()) > ReasonForRejection::MAX_DESCRIPTION_LENGTH)
+            if ((strlen($rfr->getCustomDescription()->getCustomDescription()) > ReasonForRejection::MAX_DESCRIPTION_LENGTH)
                 || (strlen($rfr->getComment()) > ReasonForRejection::MAX_DESCRIPTION_LENGTH)
             ) {
                 throw new BadRequestException(
@@ -218,7 +221,7 @@ class MotTestValidator extends AbstractValidator
         }
     }
 
-    private function checkRequiredTester($motTest)
+    private function checkRequiredTester(MotTest $motTest)
     {
         if ($this->isNull($motTest->getTester())) {
             $this->errors->add(self::ERROR_MSG_REQUIRED_TESTER);
@@ -232,7 +235,7 @@ class MotTestValidator extends AbstractValidator
         }
     }
 
-    private function checkRequiredVehicleTestingStation($motTest)
+    private function checkRequiredVehicleTestingStation(MotTest $motTest)
     {
         if ($this->isNull($motTest->getVehicleTestingStation())
             && !($motTest->getMotTestType()->getIsDemo() || $motTest->getMotTestType()->isNonMotTest())
@@ -241,17 +244,17 @@ class MotTestValidator extends AbstractValidator
         }
     }
 
-    private function checkRequiredFuelType($motTest)
+    private function checkRequiredFuelType(MotTest $motTest)
     {
-        if ($this->isNull($motTest->getFuelType())) {
+        if (!$motTest->getFuelType() instanceof FuelType) {
             $this->errors->add(self::ERROR_MSG_REQUIRED_FUEL_TYPE, 'fuelTypeId');
             throw new BadRequestException(self::ERROR_MSG_NOT_FOUND_FUEL_TYPE, NotFoundException::ERROR_CODE_NOT_FOUND);
         }
     }
 
-    private function checkRequiredVehicleClass($motTest)
+    private function checkRequiredVehicleClass(MotTest $motTest)
     {
-        if ($this->isNull($motTest->getVehicleClass())) {
+        if (!$motTest->getVehicleClass() instanceof VehicleClass) {
             $this->errors->add(self::ERROR_MSG_REQUIRED_VEHICLE_CLASS, 'vehicleClassCode');
         }
     }

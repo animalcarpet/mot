@@ -31,8 +31,11 @@ class TesterExpiryService extends AbstractService
              JOIN vehicle_class_group vcg ON (vc.vehicle_class_group_id = vcg.id)
              where vc.id = a.vehicle_class_id) = :vehicleClassGroup
         and  (select max(m.completed_date)
-              from mot_test m
-              JOIN vehicle_class vc ON (m.vehicle_class_id = vc.id)
+              from mot_test_current m
+              LEFT JOIN vehicle ON (vehicle.id = m.vehicle_id) AND (vehicle.version = m.vehicle_version)
+              LEFT JOIN vehicle_hist ON (vehicle_hist.id = m.vehicle_id) AND (vehicle_hist.version = m.vehicle_version)
+              JOIN model_detail md ON md.id = COALESCE (vehicle.model_detail_id, vehicle_hist.model_detail_id)
+              JOIN vehicle_class vc ON (md.vehicle_class_id = vc.id)
               JOIN mot_test_type tt ON (m.mot_test_type_id = tt.id)
               JOIN vehicle_class_group vcg ON (vc.vehicle_class_group_id = vcg.id)
               where

@@ -1,4 +1,10 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
+
 namespace DvsaMotApi\Controller;
 
 use DvsaCommon\Utility\ArrayUtils;
@@ -6,7 +12,7 @@ use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Transaction\TransactionAwareInterface;
 use DvsaCommonApi\Transaction\TransactionAwareTrait;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
-use DvsaCommon\Dto\Common\OdometerReadingDTO;
+use DvsaCommon\Dto\Common\OdometerReadingDto;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaMotApi\Service\MotTestSecurityService;
 use DvsaMotApi\Service\OdometerReadingQueryService;
@@ -15,8 +21,6 @@ use Zend\View\Model\JsonModel;
 
 /**
  * Class MotTestOdometerController
- *
- * @package DvsaMotApi\Controller
  */
 class MotTestOdometerController extends AbstractDvsaRestfulController implements TransactionAwareInterface
 {
@@ -38,7 +42,7 @@ class MotTestOdometerController extends AbstractDvsaRestfulController implements
         $value = ArrayUtils::tryGet($data, 'value');
         $unit = ArrayUtils::tryGet($data, 'unit');
         $resultType = ArrayUtils::tryGet($data, 'resultType');
-        $odometerReading = OdometerReadingDTO::create()
+        $odometerReading = OdometerReadingDto::create()
             ->setValue($value)->setUnit($unit)->setResultType($resultType);
 
         $motTest = $this->getMotTest($motTestNumber);

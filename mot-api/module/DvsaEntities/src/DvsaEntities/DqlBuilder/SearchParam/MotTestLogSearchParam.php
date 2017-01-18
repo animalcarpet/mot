@@ -8,8 +8,8 @@ class MotTestLogSearchParam extends MotTestSearchParam
 
     private static $sortCriteria
         = [
-            'testDateTime' => ['testDate'],
-            'vehicleVRM'   => 'mt.registration',
+            'testDateTime' => 'testDate',
+            'vehicleVRM'   => 'registration',
             'makeModel'    => ['makeName', 'modelName'],
             'tester'       => ['userName', 'siteNumber'],
             'statusType'   => ['status', 'testTypeName'],

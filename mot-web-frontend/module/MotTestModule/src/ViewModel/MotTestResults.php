@@ -7,7 +7,8 @@
 
 namespace Dvsa\Mot\Frontend\MotTestModule\ViewModel;
 
-use DvsaCommon\Dto\Common\MotTestDto;
+use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResult;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Utility\ArrayUtils;
 
@@ -24,18 +25,25 @@ class MotTestResults
     const INITIAL_BRAKE_TEST_OUTCOME_PASSED = 'Initial test passed';
 
     /**
-     * @var MotTestDto
+     * @var MotTest
      */
-    private $motTestDto;
+    private $motTest;
+
+    /**
+     * @var MotTest
+     */
+    private $originalMotTest;
 
     /**
      * MotTestResults constructor.
      *
-     * @param MotTestDto $motTestDto
+     * @param MotTest $motTest
+     * @param MotTest $originalMotTest
      */
-    public function __construct(MotTestDto $motTestDto)
+    public function __construct(MotTest $motTest, MotTest $originalMotTest = null)
     {
-        $this->motTestDto = $motTestDto;
+        $this->motTest = $motTest;
+        $this->originalMotTest = $originalMotTest;
     }
 
     /**
@@ -43,8 +51,8 @@ class MotTestResults
      */
     public function shouldDisableSubmitButton()
     {
-        $submissionStatus = isset($this->motTestDto->getPendingDetails()['currentSubmissionStatus'])
-            ? $this->motTestDto->getPendingDetails()['currentSubmissionStatus'] : null;
+        $submissionStatus = !is_null($this->motTest->getPendingDetails()->getCurrentSubmissionStatus())
+            ? $this->motTest->getPendingDetails()->getCurrentSubmissionStatus() : null;
 
         return $submissionStatus == 'INCOMPLETE';
     }
@@ -54,15 +62,15 @@ class MotTestResults
      */
     public function isBrakeTestRecorded()
     {
-        if (null === $this->motTestDto->getBrakeTestResult()) {
+        if (null === $this->motTest->getBrakeTestResult()) {
             return false;
         }
 
-        $brakeTestResult = $this->motTestDto->getBrakeTestResult();
+        $brakeTestResult = $this->motTest->getBrakeTestResult();
 
         return (!empty($brakeTestResult)
-            && ArrayUtils::tryGet($brakeTestResult, 'generalPass') !== 'undefined')
-            && ArrayUtils::tryGet($brakeTestResult, 'generalPass') !== null;
+            && $brakeTestResult->generalPass !== 'undefined')
+            && $brakeTestResult->generalPass !== null;
     }
 
     /**
@@ -70,15 +78,15 @@ class MotTestResults
      */
     public function isOriginalBrakeTestRecorded()
     {
-        if (null === $this->motTestDto->getMotTestOriginal()) {
+        if (null === $this->originalMotTest->getMotTestOriginalNumber()) {
             return false;
         }
 
-        $brakeTestResult = $this->motTestDto->getMotTestOriginal()->getBrakeTestResult();
+        $brakeTestResult = $this->originalMotTest->getBrakeTestResult();
 
         return (!empty($brakeTestResult)
-            && ArrayUtils::tryGet($brakeTestResult, 'generalPass') !== 'undefined')
-            && ArrayUtils::tryGet($brakeTestResult, 'generalPass') !== null;
+            && $brakeTestResult->generalPass !== 'undefined')
+            && $brakeTestResult->generalPass !== null;
     }
 
     /**
@@ -86,7 +94,7 @@ class MotTestResults
      */
     public function isBrakePerformanceNotTested()
     {
-        return $this->motTestDto->getTesterBrakePerformanceNotTested();
+        return $this->motTest->isTesterBrakePerformanceNotTested();
     }
 
     /**
@@ -127,10 +135,10 @@ class MotTestResults
      */
     private function isBrakeTestResultPass()
     {
-        $brakeResult = $this->motTestDto->getBrakeTestResult();
+        $brakeResult = $this->motTest->getBrakeTestResult();
 
-        return true === (ArrayUtils::tryGet($brakeResult, 'generalPass')
-            && ArrayUtils::tryGet($brakeResult, 'generalPass') !== "undefined");
+        return true === $brakeResult->generalPass
+            && $brakeResult->generalPass !== "undefined";
     }
 
     /**
@@ -138,21 +146,21 @@ class MotTestResults
      */
     private function isOriginalBrakeTestResultPass()
     {
-        $brakeResult = $this->motTestDto->getMotTestOriginal()->getBrakeTestResult();
+        $brakeResult = $this->originalMotTest->getBrakeTestResult();
 
-        return true === (ArrayUtils::tryGet($brakeResult, 'generalPass')
-            && ArrayUtils::tryGet($brakeResult, 'generalPass') !== 'undefined');
+        return true === $brakeResult->generalPass
+            && $brakeResult->generalPass !== 'undefined';
     }
 
     /**
-     * @return array
+     * @return BrakeTestResult
      */
     private function getBrakeTestResult()
     {
-        $brakeTestResult = $this->motTestDto->getBrakeTestResult();
+        $brakeTestResult = $this->motTest->getBrakeTestResult();
 
         return ($this->isRetest() && !$brakeTestResult) ?
-            $this->motTestDto->getMotTestOriginal()->getBrakeTestResult() : $brakeTestResult;
+            $this->originalMotTest->getBrakeTestResult() : $brakeTestResult;
     }
 
     /**
@@ -160,6 +168,6 @@ class MotTestResults
      */
     private function isRetest()
     {
-        return MotTestTypeCode::RE_TEST === $this->motTestDto->getTestType()->getCode();
+        return MotTestTypeCode::RE_TEST === $this->motTest->getTestTypeCode();
     }
 }

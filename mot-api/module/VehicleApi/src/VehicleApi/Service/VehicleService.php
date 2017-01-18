@@ -16,6 +16,7 @@ use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Database\Transaction;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Dto\Vehicle\VehicleCreatedDto;
+use DvsaCommon\Enum\ColourCode;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\WeightSourceCode;
 use DvsaCommon\Model\FuelTypeAndCylinderCapacity;
@@ -377,7 +378,7 @@ class VehicleService
         $colourCode = $colour ? $colour->getCode() : null;
 
         $secondaryColour = $this->vehicleCatalog->findColourByCode($dvlaVehicle->getSecondaryColour());
-        $secondaryColourCode = $secondaryColour ? $secondaryColour->getCode() : null;
+        $secondaryColourCode = $secondaryColour ? $secondaryColour->getCode() : ColourCode::NOT_STATED;
 
 
         $countryOfRegistrationId = $this->vehicleCatalog->getCountryOfRegistrationByCode(
@@ -418,7 +419,9 @@ class VehicleService
 
         if (is_array($weightAndSource)) {
             $dvlaVehicleRequest->setWeight($weightAndSource[self::KEY_WIGHT]);
-            $dvlaVehicleRequest->setWeightSourceId($weightAndSource[self::KEY_WIGHT_SOURCE_ID]);
+            if (!empty($weightAndSource[self::KEY_WIGHT_SOURCE_ID])) {
+                $dvlaVehicleRequest->setWeightSourceId($weightAndSource[self::KEY_WIGHT_SOURCE_ID]);
+            }
         }
 
         $dvlaVehicle = $this->newVehicleService->createVehicleFromDvla($dvlaVehicleRequest);

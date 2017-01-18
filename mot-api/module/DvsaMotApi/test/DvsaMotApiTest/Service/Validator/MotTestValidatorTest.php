@@ -1,33 +1,36 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
+
 namespace DvsaMotApiTest\Service\Validator;
 
 use CensorApi\Service\CensorService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentity;
-use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Constants\ReasonForRejection as ReasonForRejectionConstants;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
-use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaEntities\Entity\AuthorisationForTestingMotAtSite;
 use DvsaEntities\Entity\Colour;
 use DvsaEntities\Entity\FuelType;
+use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestReasonForRejection;
+use DvsaEntities\Entity\MotTestReasonForRejectionDescription;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
-use DvsaEntities\Entity\Organisation;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
-use DvsaEntitiesTest\Entity\SiteTest;
 use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Service\Validator\MotTestValidator;
 use DvsaMotApiTest\Factory\MotTestObjectsFactory;
@@ -96,7 +99,7 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
      */
     public function testValidateNewMotTestThrowsRequiredFieldExceptionForNullPrimaryColour()
     {
-        $motTest = $this->setupMotTest(new Person(), new Vehicle(), new Site(), true, null);
+        $motTest = $this->setupMotTest(new Person(), new Site(), true, null, null);
         $this->motTestValidator->validateNewMotTest($motTest);
     }
 
@@ -106,31 +109,38 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
      */
     public function testValidateNewMotTestThrowsRequiredFieldExceptionForNullSecondaryColour()
     {
-        $motTest = $this->setupMotTest(new Person(), new Vehicle(), new Site(), true, 'B', true, null);
+        $motTest = $this->setupMotTest(new Person(), new Site(), true, true, 'B', null);
         $this->motTestValidator->validateNewMotTest($motTest);
     }
 
     public function testValidateMotTestReasonForRejectionPassesWithValidRfr()
     {
+        $motTest = new MotTest();
+
+        $vehicle = $this->getVehicle();
+
+        $motTest->setVehicle($vehicle);
+        $motTest->setVehicleVersion($vehicle->getVersion());
+
+
         $rfr = (new MotTestReasonForRejection())
+            ->setCustomDescription(new MotTestReasonForRejectionDescription())
             ->setReasonForRejection(
                 (new ReasonForRejection())
                     ->addVehicleClass(
                         (new VehicleClass(VehicleClassCode::CLASS_4))
                     )
-            )->setMotTest(
-                (new MotTest())
-                    ->setVehicleClass(
-                        (new VehicleClass(VehicleClassCode::CLASS_4))
-                    )
-            );
+            )->setMotTest($motTest);
         $this->motTestValidator->validateMotTestReasonForRejection($rfr);
     }
 
     public function testValidateMotTestReasonForRejectionPassesWithCustomRfr()
     {
+        $description = new MotTestReasonForRejectionDescription();
+        $description->setCustomDescription('Manual advisory description');
+
         $rfr = (new MotTestReasonForRejection())
-            ->setCustomDescription('Manual advisory description');
+            ->setCustomDescription($description);
 
         $this->motTestValidator->validateMotTestReasonForRejection($rfr);
     }
@@ -155,6 +165,7 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
         $rfr = new MotTestReasonForRejection();
         $rfr->setReasonForRejection(new ReasonForRejection());
         $rfr->setComment(str_repeat("X", ReasonForRejectionConstants::MAX_DESCRIPTION_LENGTH + 1));
+        $rfr->setCustomDescription(new MotTestReasonForRejectionDescription());
 
         $this->motTestValidator->validateMotTestReasonForRejection($rfr);
     }
@@ -167,7 +178,11 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
     {
         $rfr = new MotTestReasonForRejection();
         $rfr->setReasonForRejection(new ReasonForRejection());
-        $rfr->setCustomDescription(str_repeat("X", ReasonForRejectionConstants::MAX_DESCRIPTION_LENGTH + 1));
+
+        $description = new MotTestReasonForRejectionDescription();
+        $description->setCustomDescription(str_repeat("X", ReasonForRejectionConstants::MAX_DESCRIPTION_LENGTH + 1));
+
+        $rfr->setCustomDescription($description);
 
         $this->motTestValidator->validateMotTestReasonForRejection($rfr);
     }
@@ -180,8 +195,11 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
     {
         $textUnderProfanityTest = "badword";
 
+        $description = new MotTestReasonForRejectionDescription();
+        $description->setCustomDescription($textUnderProfanityTest);
+
         $rfr = new MotTestReasonForRejection();
-        $rfr->setCustomDescription($textUnderProfanityTest);
+        $rfr->setCustomDescription($description);
         $this->profanityCheckResult($textUnderProfanityTest, self::PROFANITY_DETECTED);
         $this->motTestValidator->validateMotTestReasonForRejection($rfr);
     }
@@ -193,6 +211,7 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
     public function test_validateMotTestReasonForRejection_throws_an_exception_for_original_Rfrs()
     {
         $rfr = (new MotTestReasonForRejection())
+            ->setCustomDescription(new MotTestReasonForRejectionDescription())
             ->setReasonForRejection(new ReasonForRejection())
             ->setOnOriginalTest(true);
 
@@ -201,26 +220,36 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
 
     public function test_validateMotTestReasonForRejection_passes_with_null_end_date()
     {
+        $vehicle = $this->getVehicle();
+
         $rfr = (new MotTestReasonForRejection())
+            ->setCustomDescription(new MotTestReasonForRejectionDescription())
             ->setReasonForRejection(
                 (new ReasonForRejection())
                     ->setEndDate(null)
                     ->addVehicleClass((new VehicleClass(VehicleClassCode::CLASS_4)))
             )
-            ->setMotTest((new MotTest())->setVehicleClass((new VehicleClass(VehicleClassCode::CLASS_4))));
+            ->setMotTest(
+                (new MotTest())->setVehicle($vehicle)->setVehicleVersion($vehicle->getVersion())
+            );
 
         $this->motTestValidator->validateMotTestReasonForRejection($rfr);
     }
 
     public function test_validateMotTestReasonForRejection_passes_with_end_date_in_future()
     {
+        $vehicle = $this->getVehicle();
+
         $rfr = (new MotTestReasonForRejection())
+            ->setCustomDescription(new MotTestReasonForRejectionDescription())
             ->setReasonForRejection(
                 (new ReasonForRejection())
                     ->setEndDate(DateUtils::today()->modify('+1 day'))
                     ->addVehicleClass((new VehicleClass(VehicleClassCode::CLASS_4)))
             )
-            ->setMotTest((new MotTest())->setVehicleClass((new VehicleClass(VehicleClassCode::CLASS_4))));
+            ->setMotTest(
+                (new MotTest())->setVehicle($vehicle)->setVehicleVersion($vehicle->getVersion())
+            );
 
         $this->motTestValidator->validateMotTestReasonForRejection($rfr);
     }
@@ -232,6 +261,7 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
     public function test_validateMotTestReasonForRejection_throws_an_exception_for_an_end_dated_Rfr()
     {
         $rfr = (new MotTestReasonForRejection())
+            ->setCustomDescription(new MotTestReasonForRejectionDescription())
             ->setReasonForRejection((new ReasonForRejection())->setEndDate(DateUtils::toDate('2000-06-15')));
 
         $this->motTestValidator->validateMotTestReasonForRejection($rfr);
@@ -243,17 +273,17 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
      */
     public function test_validateMotTestReasonForRejection_throws_an_exception_for_adding_wrong_class_rfr_to_vehicle()
     {
+        $vehicle = $this->getVehicle();
+        
         $rfr = (new MotTestReasonForRejection())
+            ->setCustomDescription(new MotTestReasonForRejectionDescription())
             ->setReasonForRejection(
                 (new ReasonForRejection())
                     ->addVehicleClass(
                         (new VehicleClass(VehicleClassCode::CLASS_1))
                     )
             )->setMotTest(
-                (new MotTest())
-                    ->setVehicleClass(
-                        (new VehicleClass(VehicleClassCode::CLASS_4))
-                    )
+                (new MotTest())->setVehicle($vehicle)->setVehicleVersion($vehicle->getVersion())
             );
 
         $this->motTestValidator->validateMotTestReasonForRejection($rfr);
@@ -298,7 +328,7 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
         $site = new Site();
         $site->setId(1);
 
-        $motTest = $this->setupMotTest(new Person(), new Vehicle(), $site, false);
+        $motTest = $this->setupMotTest(new Person(), $site, false);
 
         $this->motTestValidator->validateNewMotTest($motTest);
     }
@@ -314,16 +344,16 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
             ->method("countOverdueSpecialNoticesForClass")
             ->willReturn(1);
 
-        $motTest = $this->setupMotTest(new Person(), new Vehicle(), new Site());
+        $motTest = $this->setupMotTest(new Person(), new Site());
         $this->motTestValidator->validateNewMotTest($motTest);
     }
 
     /**
-     * @expectedException DvsaCommonApi\Service\Exception\BadRequestException
+     * @expectedException \DvsaCommonApi\Service\Exception\BadRequestException
      */
     public function testValidateNewMotTestThrowsBadRequestIfNoVehicleTestingStation()
     {
-        $motTest = $this->setupMotTest(new Person(), new Vehicle(), null, false);
+        $motTest = $this->setupMotTest(new Person(), null, null, false);
 
         $this->motTestValidator->validateNewMotTest($motTest);
     }
@@ -336,7 +366,7 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
             ->setCode(MotTestTypeCode::NON_MOT_TEST)
             ->setIsSlotConsuming(false);
 
-        $motTest = $this->setupMotTest(new Person(), new Vehicle(), null, false);
+        $motTest = $this->setupMotTest(new Person(), new Site(), null, false);
         $motTest->setMotTestType($nonMotTestType);
 
         $this->motTestValidator->validateNewMotTest($motTest);
@@ -344,22 +374,36 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
 
     protected function setupMotTest(
         Person $nominatedTester,
-        $vehicle,
         $vehicleTestingStation,
         $isSlotConsuming = true,
-        $primaryColourCode = 'B',
         $hasRegistration = 1,
-        $secondaryColourCode = 'X'
+        $primaryColourCode = 'B',
+        $secondaryColourCode = 'X',
+        $fuelTypeCode = 'P',
+        $vehicleClass = VehicleClassCode::CLASS_1
     ) {
+        $modelDetail = new ModelDetail();
+        $modelDetail->setFuelType((new FuelType())->setCode($fuelTypeCode));
+        $modelDetail->setVehicleClass((new VehicleClass())->setCode($vehicleClass));
+
+        $vehicle = new Vehicle();
+        $vehicle->setVersion(1);
+        $vehicle->setModelDetail($modelDetail);
+
+        if ($primaryColourCode) {
+            $vehicle->setColour((new Colour())->setCode($primaryColourCode));
+        }
+
+        if ($secondaryColourCode) {
+            $vehicle->setSecondaryColour((new Colour())->setCode($secondaryColourCode));
+        }
+
         $motTest = new MotTest();
         $motTest->setTester($nominatedTester)
             ->setMotTestType((new MotTestType())->setCode('UT-CODE')->setIsSlotConsuming($isSlotConsuming))
             ->setVehicle($vehicle)
+            ->setVehicleVersion($vehicle->getVersion())
             ->setVehicleTestingStation($vehicleTestingStation)
-            ->setPrimaryColour($primaryColourCode === null ? null : (new Colour())->setCode($primaryColourCode))
-            ->setSecondaryColour($secondaryColourCode === null ? null : (new Colour())->setCode($secondaryColourCode))
-            ->setFuelType(new FuelType())
-            ->setVehicleClass(new VehicleClass('4', '4'))
             ->setHasRegistration($hasRegistration);
 
         return $motTest;
@@ -423,11 +467,6 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    private function newAuthForTesting($code = '4')
-    {
-        return SiteTest::newAuthForTesting($code);
-    }
-
     private function createMotTestStatus($name)
     {
         $status = XMock::of(MotTestStatus::class);
@@ -437,5 +476,21 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
             ->willReturn($name);
 
         return $status;
+    }
+
+    /**
+     * @param string $class
+     * @return Vehicle
+     */
+    private function getVehicle($class = VehicleClassCode::CLASS_4){
+        $vehicleClass = new VehicleClass($class);
+        $modelDetail = new ModelDetail();
+        $vehicle = new Vehicle();
+        $vehicle->setVersion(1);
+
+        $modelDetail->setVehicleClass($vehicleClass);
+        $vehicle->setModelDetail($modelDetail);
+
+        return $vehicle;
     }
 }

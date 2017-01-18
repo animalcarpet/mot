@@ -3,6 +3,10 @@ namespace DvsaMotTestTest\Controller;
 
 use Application\Helper\PrgHelper;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use Dvsa\Mot\ApiClient\Service\MotTestService;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Constants\OdometerUnit;
@@ -16,21 +20,23 @@ use DvsaCommon\HttpRestJson\Exception\NotFoundException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaCommon\UrlBuilder\UrlBuilderWeb;
+use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\MethodSpy;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTest\Controller\ReplacementCertificateController;
+use DvsaMotTest\Model\OdometerReadingViewObject;
+use DvsaMotTestTest\TestHelper\Fixture;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
+
 use Vehicle\Service\VehicleCatalogService;
-use Zend\Http\Response;
 use Zend\Session\Container;
-use Zend\Stdlib\Parameters;
 
 /**
  * Class ReplacementCertificateControllerTest
  */
 class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
 {
-    const EXAMPLE_MOT_TEST_NUMBER = 4;
+    const EXAMPLE_MOT_TEST_NUMBER = 1;
     const EXAMPLE_DRAFT_ID = 5;
 
     /** @var VehicleCatalogService */
@@ -39,6 +45,9 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
     /** @var MotFrontendAuthorisationServiceInterface */
     private $authorisationService;
 
+    protected $mockMotTestServiceClient;
+    protected $mockVehicleServiceClient;
+
     protected function setUp()
     {
         $this->vehicleCatalogService = XMock::of(VehicleCatalogService::class);
@@ -46,15 +55,46 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
             ->method('findMake')
             ->willReturn([]);
 
+        $odometerViewObject = XMock::of(OdometerReadingViewObject::class);
+
         $this->controller = new ReplacementCertificateController(
-            $this->vehicleCatalogService
+            $this->vehicleCatalogService,
+            $odometerViewObject
         );
+
+        $serviceManager = Bootstrap::getServiceManager();
+        $serviceManager->setService(
+            MotTestService::class,
+            $this->getMockMotTestServiceClient()
+        );
+
+        $serviceManager->setService(
+            VehicleService::class,
+            $this->getMockVehicleServiceClient()
+        );
+        $this->controller->setServiceLocator($serviceManager);
 
         parent::setUp();
 
         $this->givenIsAdmin(false);
         $this->routeMatch->setParam('id', self::EXAMPLE_DRAFT_ID);
         $this->routeMatch->setParam('motTestNumber', self::EXAMPLE_MOT_TEST_NUMBER);
+    }
+
+    private function getMockMotTestServiceClient()
+    {
+        if ($this->mockMotTestServiceClient == null) {
+            $this->mockMotTestServiceClient = XMock::of(MotTestService::class);
+        }
+        return $this->mockMotTestServiceClient;
+    }
+
+    private function getMockVehicleServiceClient()
+    {
+        if ($this->mockVehicleServiceClient == null) {
+            $this->mockVehicleServiceClient = XMock::of(VehicleService::class);
+        }
+        return $this->mockVehicleServiceClient;
     }
 
     public static function dataProviderUpdateDraftActionToUpdateDataMapping()
@@ -94,6 +134,15 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
             ]
         );
 
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
+
         $this->givenPostAction("review");
     }
 
@@ -109,6 +158,16 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
                     },
             ]
         );
+
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
+
         $restClient->expects($this->any())->method('put')->with(
             $this->pathReplacementCertificateDraft(),
             ['reasonForDifferentTester' => 'REASON']
@@ -131,6 +190,15 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
             ]
         );
 
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
+
         $this->givenPostAction("review");
     }
 
@@ -146,6 +214,24 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
                     },
             ]
         );
+
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
+
+        $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
+
+        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
+        $mockVehicleServiceClient
+            ->expects($this->once())
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->with(1001, 1)
+            ->will($this->returnValue($vehicleData));
 
         $viewModel = $this->getResultForAction('review');
         $this->assertReviewViewModelProperties($viewModel);
@@ -165,6 +251,24 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
             ]
         );
 
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
+
+        $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
+
+        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
+        $mockVehicleServiceClient
+            ->expects($this->once())
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->with(1001, 1)
+            ->will($this->returnValue($vehicleData));
+
         $viewModel = $this->getResultForAction('review');
         $this->assertReviewViewModelProperties($viewModel);
     }
@@ -181,6 +285,24 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
                     },
             ]
         );
+
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
+
+        $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
+
+        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
+        $mockVehicleServiceClient
+            ->expects($this->once())
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->with(1001, 1)
+            ->will($this->returnValue($vehicleData));
 
         $viewModel = $this->getResultForAction('review');
         $this->assertReviewViewModelProperties($viewModel);
@@ -218,6 +340,23 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
             ]
         );
 
+        $testVehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
+
+        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
+        $mockVehicleServiceClient
+            ->expects($this->once())
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->will($this->returnValue($testVehicleData));
+
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
+
         $vars = $this->getResultForAction('replacementCertificate')->getVariables();
 
         $this->assertTesterShowDraftViewModelProperties($vars);
@@ -237,6 +376,23 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
                     }
             ]
         );
+
+        $testVehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
+
+        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
+        $mockVehicleServiceClient
+            ->expects($this->once())
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->will($this->returnValue($testVehicleData));
+
+        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
 
         $vars = $this->getResultForAction('replacementCertificate')->getVariables();
 
@@ -519,7 +675,8 @@ class ReplacementCertificateControllerTest extends AbstractDvsaMotTestTestCase
     private function pathReplacementCertificateDraft(
         $id = self::EXAMPLE_DRAFT_ID,
         $motTestNumber = self::EXAMPLE_MOT_TEST_NUMBER
-    ) {
+    )
+    {
         return UrlBuilder::replacementCertificateDraft($id, $motTestNumber)->toString();
     }
 

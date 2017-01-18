@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace DvsaEntities\Entity;
 
@@ -8,12 +13,12 @@ use DvsaCommon\Enum\VehicleClassCode;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
 
 /**
- * Vehicle.
+ * Class Vehicle.
  *
  * @ORM\Table(name="vehicle")
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\VehicleRepository")
  */
-class Vehicle extends Entity implements VehicleInterface
+class Vehicle extends VehicleAbstract implements VehicleInterface
 {
     use CommonIdentityTrait;
 
@@ -27,170 +32,6 @@ class Vehicle extends Entity implements VehicleInterface
     const VEHICLE_CLASS_7 = VehicleClassCode::CLASS_7;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="registration", type="string", length=20, nullable=true)
-     */
-    private $registration;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="registration_collapsed", type="string", length=20, nullable=true)
-     */
-    private $registrationCollapsed;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="vin", type="string", length=30, nullable=true)
-     */
-    private $vin;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="vin_collapsed", type="string", length=30, nullable=true)
-     */
-    private $vinCollapsed;
-
-    /**
-     * @var ModelDetail
-     *
-     * @ORM\ManyToOne(targetEntity="ModelDetail", fetch="EAGER")
-     * @ORM\JoinColumn(name="model_detail_id", referencedColumnName="id", nullable=true)
-     */
-    private $modelDetail;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="year", type="smallint", length=4, nullable=true)
-     */
-    private $year;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="manufacture_date", type="datetime", nullable=true)
-     */
-    private $manufactureDate;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="first_registration_date", type="date", nullable=true)
-     */
-    private $firstRegistrationDate;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="first_used_date", type="date", nullable=true)
-     */
-    private $firstUsedDate;
-
-    /**
-     * @var Colour
-     *
-     * @ORM\ManyToOne(targetEntity="Colour")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="primary_colour_id", referencedColumnName="id")
-     * })
-     */
-    private $colour;
-
-    /**
-     * @var Colour
-     *
-     * @ORM\ManyToOne(targetEntity="Colour")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="secondary_colour_id", referencedColumnName="id")
-     * })
-     */
-    private $secondaryColour;
-
-    /**
-     * VSI weight for brake tests.
-     *
-     * @var integer
-     *
-     * @ORM\Column(name="weight", type="integer", nullable=true)
-     */
-    private $weight;
-
-    /**
-     * @var WeightSource
-     *
-     * @ORM\ManyToOne(targetEntity="WeightSource")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="weight_source_id", referencedColumnName="id")
-     * })
-     */
-    private $weightSource;
-
-    /**
-     * @var CountryOfRegistration
-     *
-     * @ORM\ManyToOne(targetEntity="CountryOfRegistration")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="country_of_registration_id", referencedColumnName="id")
-     * })
-     */
-    private $countryOfRegistration;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="engine_number", type="string", length=30, nullable=true)
-     */
-    private $engineNumber;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="chassis_number", type="string", length=30, nullable=true)
-     */
-    private $chassisNumber;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_new_at_first_reg", type="boolean", nullable=false)
-     */
-    private $newAtFirstReg = 0;
-
-    /**
-     * Unique DVLA reference.
-     *
-     * @var int
-     *
-     * @ORM\Column(name="dvla_vehicle_id", type="integer", length=11, nullable=true)
-     */
-    private $dvlaVehicleId;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_damaged", type="boolean", nullable=false)
-     */
-    private $isDamaged = 0;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_destroyed", type="boolean", nullable=false)
-     */
-    private $isDestroyed = 0;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_incognito", type="boolean", nullable=false)
-     */
-    private $isIncognito = 0;
-
-    /**
      * @var EmptyReasonMap
      *
      * @ORM\OneToOne(targetEntity="EmptyReasonMap", mappedBy="vehicleId")
@@ -198,413 +39,29 @@ class Vehicle extends Entity implements VehicleInterface
     private $emptyReasons;
 
     /**
-     * @return string
+     * @var VehicleHistory[]
+     * @ORM\OneToMany(targetEntity="VehicleHistory", mappedBy="vehicle")
      */
-    public function getRegistration()
-    {
-        return $this->registration;
-    }
+    private $vehicleHistory = [];
 
     /**
-     * @param string $registration
-     * @return Vehicle
-     */
-    public function setRegistration($registration)
-    {
-        $this->registration = $registration;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRegistrationCollapsed()
-    {
-        return $this->registrationCollapsed;
-    }
-
-    /**
-     * @param string $registrationCollapsed
-     * @return Vehicle
-     */
-    public function setRegistrationCollapsed($registrationCollapsed)
-    {
-        $this->registrationCollapsed = $registrationCollapsed;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getVin()
-    {
-        return $this->vin;
-    }
-
-    /**
-     * @param string $vin
-     * @return Vehicle
-     */
-    public function setVin($vin)
-    {
-        $this->vin = $vin;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getVinCollapsed()
-    {
-        return $this->vinCollapsed;
-    }
-
-    /**
-     * @param string $vinCollapsed
-     * @return Vehicle
-     */
-    public function setVinCollapsed($vinCollapsed)
-    {
-        $this->vinCollapsed = $vinCollapsed;
-        return $this;
-    }
-
-    /**
-     * @return ModelDetail
-     */
-    public function getModelDetail()
-    {
-        return $this->modelDetail;
-    }
-
-    /**
-     * @param ModelDetail $modelDetail
-     * @return Vehicle
-     */
-    public function setModelDetail($modelDetail)
-    {
-        $this->modelDetail = $modelDetail;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getYear()
-    {
-        return $this->year;
-    }
-
-    /**
-     * @param int $year
-     * @return Vehicle
-     */
-    public function setYear($year)
-    {
-        $this->year = $year;
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getManufactureDate()
-    {
-        return $this->manufactureDate;
-    }
-
-    /**
-     * @param \DateTime $manufactureDate
-     * @return Vehicle
-     */
-    public function setManufactureDate($manufactureDate)
-    {
-        $this->manufactureDate = $manufactureDate;
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getFirstRegistrationDate()
-    {
-        return $this->firstRegistrationDate;
-    }
-
-    /**
-     * @param \DateTime $firstRegistrationDate
-     * @return Vehicle
-     */
-    public function setFirstRegistrationDate($firstRegistrationDate)
-    {
-        $this->firstRegistrationDate = $firstRegistrationDate;
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getFirstUsedDate()
-    {
-        return $this->firstUsedDate;
-    }
-
-    /**
-     * @param \DateTime $firstUsedDate
-     * @return Vehicle
-     */
-    public function setFirstUsedDate($firstUsedDate)
-    {
-        $this->firstUsedDate = $firstUsedDate;
-        return $this;
-    }
-
-    /**
+     * @param MotTest $motTest
      * @return Colour
+     * @throws \Exception
      */
-    public function getColour()
+    public function getColourDuringTest(MotTest $motTest)
     {
-        return $this->colour;
+        return $this->getVehicleDetailAtVersion($motTest->getVehicleVersion())->getColour();
     }
 
     /**
-     * @param Colour $colour
-     * @return Vehicle
-     */
-    public function setColour($colour)
-    {
-        $this->colour = $colour;
-        return $this;
-    }
-
-    /**
+     * @param MotTest $motTest
      * @return Colour
+     * @throws \Exception
      */
-    public function getSecondaryColour()
+    public function getSecondaryColourDuringTest(MotTest $motTest)
     {
-        return $this->secondaryColour;
-    }
-
-    /**
-     * @param Colour $secondaryColour
-     * @return Vehicle
-     */
-    public function setSecondaryColour($secondaryColour)
-    {
-        $this->secondaryColour = $secondaryColour;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getWeight()
-    {
-        return $this->weight;
-    }
-
-    /**
-     * @param int $weight
-     * @return Vehicle
-     */
-    public function setWeight($weight)
-    {
-        $this->weight = $weight;
-        return $this;
-    }
-
-    /**
-     * @return WeightSource
-     */
-    public function getWeightSource()
-    {
-        return $this->weightSource;
-    }
-
-    /**
-     * @param WeightSource $weightSource
-     * @return Vehicle
-     */
-    public function setWeightSource($weightSource)
-    {
-        $this->weightSource = $weightSource;
-        return $this;
-    }
-
-    /**
-     * @return CountryOfRegistration
-     */
-    public function getCountryOfRegistration()
-    {
-        return $this->countryOfRegistration;
-    }
-
-    /**
-     * @param CountryOfRegistration $countryOfRegistration
-     * @return Vehicle
-     */
-    public function setCountryOfRegistration($countryOfRegistration)
-    {
-        $this->countryOfRegistration = $countryOfRegistration;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEngineNumber()
-    {
-        return $this->engineNumber;
-    }
-
-    /**
-     * @param string $engineNumber
-     * @return Vehicle
-     */
-    public function setEngineNumber($engineNumber)
-    {
-        $this->engineNumber = $engineNumber;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getChassisNumber()
-    {
-        return $this->chassisNumber;
-    }
-
-    /**
-     * @param string $chassisNumber
-     * @return Vehicle
-     */
-    public function setChassisNumber($chassisNumber)
-    {
-        $this->chassisNumber = $chassisNumber;
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isNewAtFirstReg()
-    {
-        return (bool)$this->newAtFirstReg;
-    }
-
-    /**
-     * @param boolean $newAtFirstReg
-     * @return Vehicle
-     */
-    public function setNewAtFirstReg($newAtFirstReg)
-    {
-        $this->newAtFirstReg = $newAtFirstReg;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDvlaVehicleId()
-    {
-        return $this->dvlaVehicleId;
-    }
-
-    /**
-     * @param int $dvlaVehicleId
-     * @return Vehicle
-     */
-    public function setDvlaVehicleId($dvlaVehicleId)
-    {
-        $this->dvlaVehicleId = $dvlaVehicleId;
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isDamaged()
-    {
-        return $this->isDamaged;
-    }
-
-    /**
-     * @param boolean $isDamaged
-     * @return Vehicle
-     */
-    public function setDamaged($isDamaged)
-    {
-        $this->isDamaged = $isDamaged;
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isDestroyed()
-    {
-        return $this->isDestroyed;
-    }
-
-    /**
-     * @param boolean $isDestroyed
-     * @return Vehicle
-     */
-    public function setDestroyed($isDestroyed)
-    {
-        $this->isDestroyed = $isDestroyed;
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isIncognito()
-    {
-        return $this->isIncognito;
-    }
-
-    /**
-     * @param boolean $isIncognito
-     * @return Vehicle
-     */
-    public function setIncognito($isIncognito)
-    {
-        $this->isIncognito = $isIncognito;
-        return $this;
-    }
-
-    /**
-     * @return Make|null
-     */
-    public function getMake()
-    {
-        return $this->getModelDetail()->getModel()->getMake();
-    }
-
-    /**
-     * @return Model|null
-     */
-    public function getModel()
-    {
-        return $this->getModelDetail()->getModel();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isVehicleNewAtFirstRegistration()
-    {
-        return $this->isNewAtFirstReg();
-    }
-
-    /**     
-     * @return bool
-     */
-    public function isDvla()
-    {
-        return false;
+        return $this->getVehicleDetailAtVersion($motTest->getVehicleVersion())->getSecondaryColour();
     }
 
     /**
@@ -620,7 +77,8 @@ class Vehicle extends Entity implements VehicleInterface
      */
     public function getMakeName()
     {
-        if ($this->getModelDetail()->getModel() instanceof Model &&
+        if ($this->getModelDetail() &&
+            $this->getModelDetail()->getModel() instanceof Model &&
             $this->getModelDetail()->getModel()->getMake() instanceof Make
         ) {
             return $this->getModelDetail()->getModel()->getMake()->getName();
@@ -632,7 +90,9 @@ class Vehicle extends Entity implements VehicleInterface
      */
     public function getModelName()
     {
-        if ($this->getModelDetail()->getModel() instanceof Model) {
+        if ($this->getModelDetail() &&
+            $this->getModelDetail()->getModel() instanceof Model
+        ) {
             return $this->getModelDetail()->getModel()->getName();
         }
     }
@@ -642,6 +102,9 @@ class Vehicle extends Entity implements VehicleInterface
         return $this->getModelDetail()->getCylinderCapacity();
     }
 
+    /**
+     * @return EmptyVrmReason
+     */
     public function getEmptyVrmReason()
     {
         if ($this->getEmptyReasons() instanceof EmptyReasonMap) {
@@ -649,6 +112,9 @@ class Vehicle extends Entity implements VehicleInterface
         }
     }
 
+    /**
+     * @return EmptyVinReason
+     */
     public function getEmptyVinReason()
     {
         if ($this->getEmptyReasons() instanceof EmptyReasonMap) {
@@ -661,18 +127,307 @@ class Vehicle extends Entity implements VehicleInterface
         return $this->getModelDetail()->getTransmissionType();
     }
 
+    /**
+     * @param MotTest $motTest
+     * @return VehicleClass
+     * @throws \Exception
+     */
+    public function getVehicleClassDuringTest(MotTest $motTest)
+    {
+        return $this->getVehicleDetailAtVersion($motTest->getVehicleVersion())->getModelDetail()->getVehicleClass();
+    }
+
+    /**
+     * @return VehicleClass
+     */
     public function getVehicleClass()
     {
         return $this->getModelDetail()->getVehicleClass();
     }
 
+    /**
+     * @return BodyType
+     */
     public function getBodyType()
     {
         return $this->getModelDetail()->getBodyType();
     }
 
+    /**
+     * @param MotTest $motTest
+     * @return FuelType|void
+     * @throws \Exception
+     */
+    public function getFuelTypeDuringTest(MotTest $motTest)
+    {
+        if (!$this->getModelDetail()) {
+            return;
+        }
+
+        return $this->getVehicleDetailAtVersion($motTest->getVehicleVersion())->getModelDetail()->getFuelType();
+    }
+
+    /**
+     * @return FuelType|void
+     */
     public function getFuelType()
     {
+        if (!$this->getModelDetail()) {
+            return;
+        }
+
         return $this->getModelDetail()->getFuelType();
+    }
+
+    /**
+     * @return VehicleHistory[]
+     */
+    public function getVehicleHistory()
+    {
+        return $this->vehicleHistory;
+    }
+
+    /**
+     * @param int $version
+     * @return VehicleHistory
+     * @throws \Exception
+     */
+    private function getVehicleDetailAtVersion($version)
+    {
+        if ($this->getVersion() == $version) {
+            return $this;
+        }
+
+        $triedIds = [];
+
+        foreach ($this->getVehicleHistory() as $vehicle) {
+            if ($vehicle->getVersion() == $version) {
+                return $vehicle;
+            }
+
+            $triedIds[] = $vehicle->getId();
+        }
+
+        $historyChecked = empty($triedIds) ? '.' :
+            sprintf(', also checked vehicle_hist with ID (%s)', implode(',', $triedIds));
+
+        throw new \Exception(
+            sprintf(
+                'Failed to retrieve version %d for vehicle with ID %d%s',
+                $version,
+                $this->getId(),
+                $historyChecked
+            )
+        );
+    }
+
+    /**
+     * @param string $chassisNumber
+     * @return VehicleAbstract
+     */
+    public function setChassisNumber($chassisNumber)
+    {
+        $this->chassisNumber = $chassisNumber;
+        return $this;
+    }
+
+    /**
+     * @param Colour $colour
+     * @return VehicleAbstract
+     */
+    public function setColour($colour)
+    {
+        $this->colour = $colour;
+        return $this;
+    }
+
+    /**
+     * @param CountryOfRegistration $countryOfRegistration
+     * @return VehicleAbstract
+     */
+    public function setCountryOfRegistration($countryOfRegistration)
+    {
+        $this->countryOfRegistration = $countryOfRegistration;
+        return $this;
+    }
+
+    /**
+     * @param string $engineNumber
+     * @return VehicleAbstract
+     */
+    public function setEngineNumber($engineNumber)
+    {
+        $this->engineNumber = $engineNumber;
+        return $this;
+    }
+
+    /**
+     * @param \DateTime $firstRegistrationDate
+     * @return VehicleAbstract
+     */
+    public function setFirstRegistrationDate($firstRegistrationDate)
+    {
+        $this->firstRegistrationDate = $firstRegistrationDate;
+        return $this;
+    }
+
+    /**
+     * @param \DateTime $firstUsedDate
+     * @return VehicleAbstract
+     */
+    public function setFirstUsedDate($firstUsedDate)
+    {
+        $this->firstUsedDate = $firstUsedDate;
+        return $this;
+    }
+
+    /**
+     * @param boolean $isDamaged
+     * @return VehicleAbstract
+     */
+    public function setIsDamaged($isDamaged)
+    {
+        $this->isDamaged = $isDamaged;
+        return $this;
+    }
+
+    /**
+     * @param boolean $isDestroyed
+     * @return VehicleAbstract
+     */
+    public function setIsDestroyed($isDestroyed)
+    {
+        $this->isDestroyed = $isDestroyed;
+        return $this;
+    }
+    
+    /**
+     * @param int $dvla_vehicle_id
+     * @return VehicleAbstract
+     */
+    public function setDvlaVehicleId($dvla_vehicle_id)
+    {
+        $this->dvla_vehicle_id = $dvla_vehicle_id;
+        return $this;
+    }
+
+    /**
+     * @param boolean $isIncognito
+     * @return VehicleAbstract
+     */
+    public function setIsIncognito($isIncognito)
+    {
+        $this->isIncognito = $isIncognito;
+        return $this;
+    }
+
+    /**
+     * @param boolean $newAtFirstReg
+     * @return VehicleAbstract
+     */
+    public function setNewAtFirstReg($newAtFirstReg)
+    {
+        $this->newAtFirstReg = $newAtFirstReg;
+        return $this;
+    }
+
+    /**
+     * @param \DateTime $manufactureDate
+     * @return VehicleAbstract
+     */
+    public function setManufactureDate($manufactureDate)
+    {
+        $this->manufactureDate = $manufactureDate;
+        return $this;
+    }
+
+    /**
+     * @param ModelDetail $modelDetail
+     * @return VehicleAbstract
+     */
+    public function setModelDetail($modelDetail)
+    {
+        $this->modelDetail = $modelDetail;
+        return $this;
+    }
+
+    /**
+     * @param string $registration
+     * @return VehicleAbstract
+     */
+    public function setRegistration($registration)
+    {
+        $this->registration = $registration;
+        return $this;
+    }
+
+    /**
+     * @param string $registrationCollapsed
+     * @return VehicleAbstract
+     */
+    public function setRegistrationCollapsed($registrationCollapsed)
+    {
+        $this->registrationCollapsed = $registrationCollapsed;
+        return $this;
+    }
+
+    /**
+     * @param Colour $secondaryColour
+     * @return VehicleAbstract
+     */
+    public function setSecondaryColour($secondaryColour)
+    {
+        $this->secondaryColour = $secondaryColour;
+        return $this;
+    }
+
+    /**
+     * @param string $vin
+     * @return VehicleAbstract
+     */
+    public function setVin($vin)
+    {
+        $this->vin = $vin;
+        return $this;
+    }
+
+    /**
+     * @param string $vinCollapsed
+     * @return VehicleAbstract
+     */
+    public function setVinCollapsed($vinCollapsed)
+    {
+        $this->vinCollapsed = $vinCollapsed;
+        return $this;
+    }
+
+    /**
+     * @param int $weight
+     * @return VehicleAbstract
+     */
+    public function setWeight($weight)
+    {
+        $this->weight = $weight;
+        return $this;
+    }
+
+    /**
+     * @param WeightSource $weightSource
+     * @return VehicleAbstract
+     */
+    public function setWeightSource($weightSource)
+    {
+        $this->weightSource = $weightSource;
+        return $this;
+    }
+
+    /**
+     * @param int $year
+     * @return VehicleAbstract
+     */
+    public function setYear($year)
+    {
+        $this->year = $year;
+        return $this;
     }
 }
