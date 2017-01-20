@@ -30,7 +30,7 @@ class SecurityCardActivationForm extends Form
             ->setAttribute('group', true)
             ->setAttribute('divModifier', 'form-group')
             ->setAttribute('inputModifier', '1-2')
-            ->setAttribute('help', 'For example: 210812345689012')
+            ->setAttribute('help', 'For example: 1234567898765432')
             ->setAttribute('autoCompleteOff', true)
         );
         $this->add((new Text())
