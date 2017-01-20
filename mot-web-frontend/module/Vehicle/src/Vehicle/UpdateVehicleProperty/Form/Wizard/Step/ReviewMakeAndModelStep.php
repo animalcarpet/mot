@@ -239,7 +239,11 @@ class ReviewMakeAndModelStep extends AbstractWizardStep implements AutoWireableI
             $updateRequest->setModelId($this->getModelId());
         }
 
-        $this->vehicleService->updateDvsaVehicle($this->context->getVehicle()->getId(), $updateRequest);
+        $this->vehicleService->updateDvsaVehicleAtVersion(
+            $this->context->getVehicle()->getId(),
+            $this->context->getVehicle()->getVersion(),
+            $updateRequest
+        );
     }
 
     private function getNextRoute()

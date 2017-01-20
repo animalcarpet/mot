@@ -18,6 +18,7 @@ class DvsaVehicleBuilder
         $vehicle->vin = null;
         $vehicle->colour = null;
         $vehicle->colourSecondary = null;
+        $vehicle->version = 10000;
 
         return $vehicle;
     }

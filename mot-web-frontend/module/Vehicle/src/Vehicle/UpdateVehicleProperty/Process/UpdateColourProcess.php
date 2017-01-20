@@ -63,8 +63,9 @@ class UpdateColourProcess implements SingleStepProcessInterface, AutoWireableInt
         $request->setColourCode($formData[UpdateColourForm::FIELD_COLOUR]);
         $request->setSecondaryColourCode($formData[UpdateColourForm::FIELD_SECONDARY_COLOUR]);
 
-        $this->vehicleService->updateDvsaVehicle(
+        $this->vehicleService->updateDvsaVehicleAtVersion(
             $this->context->getVehicleId(),
+            $this->context->getVehicle()->getVersion(),
             $request
         );
     }

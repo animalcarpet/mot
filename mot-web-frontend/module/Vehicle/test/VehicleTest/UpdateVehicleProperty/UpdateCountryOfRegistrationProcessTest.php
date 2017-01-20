@@ -39,7 +39,7 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
         $this->dvsaVehicleBuilder = new DvsaVehicleBuilder();
 
         $vehicleService = XMock::of(VehicleService::class);
-        $this->vehicleServiceUpdateSpy = new MethodSpy($vehicleService, 'updateDvsaVehicle');
+        $this->vehicleServiceUpdateSpy = new MethodSpy($vehicleService, 'updateDvsaVehicleAtVersion');
         $this->vehicleServiceGetSpy = new MethodSpy($vehicleService, 'getDvsaVehicleById');
 
         $this->process = new UpdateCountryOfRegistrationProcess(
@@ -51,6 +51,7 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
 
         $vehicleStd = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
         $vehicleStd->id = 15;
+        $vehicleStd->version = 10000;
         $emptyResource = new \stdClass();
         $emptyResource->id = null;
         $emptyResource->name = null;
@@ -77,8 +78,9 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->vehicle->getId(), $this->vehicleServiceUpdateSpy->paramsForLastInvocation()[0]);
 
         // with correct country
+        $list = $this->vehicleServiceUpdateSpy->paramsForLastInvocation();
         /** @var UpdateDvsaVehicleRequest $updateRequest */
-        $updateRequest = $this->vehicleServiceUpdateSpy->paramsForLastInvocation()[1];
+        $updateRequest = end($list);
         $this->assertEquals($countryId , $updateRequest->getCountryOfRegistrationId());
     }
 

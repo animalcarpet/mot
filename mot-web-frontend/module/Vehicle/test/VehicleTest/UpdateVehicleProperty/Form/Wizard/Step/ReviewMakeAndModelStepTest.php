@@ -138,6 +138,7 @@ class ReviewMakeAndModelStepTest extends \PHPUnit_Framework_TestCase
 
         $std = new stdClass();
         $std->id = 283;
+        $std->version = 10000;
         $std->make = $make;
         $std->model = $model;
         $std->registration = "reg123XSW";

@@ -70,7 +70,11 @@ class UpdateEngineProcess implements SingleStepProcessInterface, AutoWireableInt
         $request = new UpdateDvsaVehicleRequest();
         $request->setFuelTypeCode($formData[UpdateEngineForm::FIELD_FUEL_TYPE]);
         $request->setCylinderCapacity($formData[UpdateEngineForm::FIELD_CAPACITY]);
-        $this->vehicleService->updateDvsaVehicle($this->context->getVehicleId(), $request);
+        $this->vehicleService->updateDvsaVehicleAtVersion(
+            $this->context->getVehicleId(),
+            $this->context->getVehicle()->getVersion(),
+            $request
+        );
     }
 
     /**
