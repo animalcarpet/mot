@@ -60,7 +60,11 @@ class UpdateFirstUsedDateProcess implements SingleStepProcessInterface, AutoWire
             $formData[FirstUsedDateForm::FIELD_DATE_DAY]
         );
         $updateRequest->setFirstUsedDate($date);
-        $this->vehicleService->updateDvsaVehicle($this->context->getVehicleId(), $updateRequest);
+        $this->vehicleService->updateDvsaVehicleAtVersion(
+            $this->context->getVehicleId(),
+            $this->context->getVehicle()->getVersion(),
+            $updateRequest
+        );
     }
 
     public function getPrePopulatedData()

@@ -38,7 +38,7 @@ class UpdateFirstUsedDateProcessTest extends \PHPUnit_Framework_TestCase
         $this->dvsaVehicleBuilder = new DvsaVehicleBuilder();
 
         $vehicleService = XMock::of(VehicleService::class);
-        $this->vehicleServiceUpdateSpy = new MethodSpy($vehicleService, 'updateDvsaVehicle');
+        $this->vehicleServiceUpdateSpy = new MethodSpy($vehicleService, 'updateDvsaVehicleAtVersion');
         $this->vehicleServiceGetSpy = new MethodSpy($vehicleService, 'getDvsaVehicleById');
 
         $this->process = new UpdateFirstUsedDateProcess(
@@ -49,6 +49,7 @@ class UpdateFirstUsedDateProcessTest extends \PHPUnit_Framework_TestCase
 
         $vehicleStd = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
         $vehicleStd->id = 15;
+        $vehicleStd->version = 10000;
         $vehicleStd->vehicleClass = new \stdClass();
 
         $this->vehicle = new DvsaVehicle($vehicleStd);
@@ -73,7 +74,8 @@ class UpdateFirstUsedDateProcessTest extends \PHPUnit_Framework_TestCase
 
         // with correct first used date
         /** @var UpdateDvsaVehicleRequest $updateRequest */
-        $updateRequest = $this->vehicleServiceUpdateSpy->paramsForLastInvocation()[1];
+        $updateRequest = $this->vehicleServiceUpdateSpy->paramsForLastInvocation();
+        $updateRequest = end($updateRequest);
         $this->assertEquals($date, $updateRequest->getFirstUsedDate());
         $this->assertEquals($date->format('Y-m-d'), $updateRequest->getFirstUsedDate()->format('Y-m-d'));
     }

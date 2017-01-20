@@ -59,7 +59,11 @@ class UpdateCountryOfRegistrationProcess implements SingleStepProcessInterface, 
     {
         $updateRequest = new UpdateDvsaVehicleRequest();
         $updateRequest->setCountryOfRegistrationId($formData['country-of-registration']);
-        $this->vehicleService->updateDvsaVehicle($this->context->getVehicleId(), $updateRequest);
+        $this->vehicleService->updateDvsaVehicleAtVersion(
+            $this->context->getVehicleId(),
+            $this->context->getVehicle()->getVersion(),
+            $updateRequest
+        );
     }
 
     public function getPrePopulatedData()

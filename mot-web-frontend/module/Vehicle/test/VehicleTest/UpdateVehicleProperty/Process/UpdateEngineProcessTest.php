@@ -21,6 +21,7 @@ use Zend\View\Helper\Url;
 class UpdateEngineProcessTest extends \PHPUnit_Framework_TestCase
 {
     const VEHICLE_ID = 1;
+    const VEHICLE_VERSION = 10000;
     const VEHICLE_CAPACITY = '1223';
     const FUEL_TYPE = FuelTypeCode::DIESEL;
 
@@ -69,10 +70,12 @@ class UpdateEngineProcessTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->vehicleService->expects($this->once())
-            ->method("updateDvsaVehicle")
-            ->with(self::VEHICLE_ID, (new UpdateDvsaVehicleRequest())
-                ->setFuelTypeCode(self::FUEL_TYPE)
-                ->setCylinderCapacity(self::VEHICLE_CAPACITY)
+            ->method("updateDvsaVehicleAtVersion")
+            ->with(
+                self::VEHICLE_ID,
+                self::VEHICLE_VERSION,
+                (new UpdateDvsaVehicleRequest())->setFuelTypeCode(self::FUEL_TYPE)
+                    ->setCylinderCapacity(self::VEHICLE_CAPACITY)
             );
 
         $this->sut->update($formData);

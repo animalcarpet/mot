@@ -19,6 +19,7 @@ class UpdateClassProcessTest extends \PHPUnit_Framework_TestCase
 {
     const VEHICLE_CLASS = VehicleClassCode::CLASS_3;
     const VEHICLE_ID = 1;
+    const VEHICLE_VERSION = 10000;
 
     /** @var  DvsaVehicleBuilder */
     private $dvsaVehicleBuilder;
@@ -60,8 +61,12 @@ class UpdateClassProcessTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->vehicleService->expects($this->once())
-            ->method("updateDvsaVehicle")
-            ->with(self::VEHICLE_ID, (new UpdateDvsaVehicleRequest())->setVehicleClassCode(self::VEHICLE_CLASS));
+            ->method("updateDvsaVehicleAtVersion")
+            ->with(
+                self::VEHICLE_ID,
+                self::VEHICLE_VERSION,
+                (new UpdateDvsaVehicleRequest())->setVehicleClassCode(self::VEHICLE_CLASS)
+            );
 
         $this->sut->update($formData);
     }

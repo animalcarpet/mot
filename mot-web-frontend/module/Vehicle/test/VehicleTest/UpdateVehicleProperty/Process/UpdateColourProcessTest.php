@@ -21,6 +21,7 @@ use Zend\View\Helper\Url;
 class UpdateColourProcessTest extends \PHPUnit_Framework_TestCase
 {
     const VEHICLE_ID = 12;
+    const VEHICLE_VERSION = 10000;
     const VEHICLE_CLASS = VehicleClassCode::CLASS_1;
     const COLOUR_CODE = ColourCode::BEIGE;
     //const COLOUR_NAME = "Beige";
@@ -71,8 +72,11 @@ class UpdateColourProcessTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->vehicleService->expects($this->once())
-            ->method("updateDvsaVehicle")
-            ->with(self::VEHICLE_ID, (new UpdateDvsaVehicleRequest())
+            ->method("updateDvsaVehicleAtVersion")
+            ->with(
+                self::VEHICLE_ID,
+                self::VEHICLE_VERSION,
+                (new UpdateDvsaVehicleRequest())
                 ->setColourCode(self::COLOUR_CODE)
                 ->setSecondaryColourCode(self::SECONDARY_COLOUR_CODE)
             );

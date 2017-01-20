@@ -60,8 +60,9 @@ class UpdateClassProcess implements SingleStepProcessInterface, AutoWireableInte
         $vehicleClassCode = $formData[UpdateClassForm::FIELD_CLASS];
         $request->setVehicleClassCode($vehicleClassCode);
 
-        $this->vehicleService->updateDvsaVehicle(
+        $this->vehicleService->updateDvsaVehicleAtVersion(
             $this->context->getVehicleId(),
+            $this->context->getVehicle()->getVersion(),
             $request
         );
     }
