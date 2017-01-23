@@ -42,6 +42,33 @@ class MotTestRoutes extends AbstractRoutes
         return $this->url(MotTestRouteList::MOT_TEST_CERTIFICATE_VIEW, ['motTestNumber' => $testNumber], ['query' => $searchParams]);
     }
 
+    public function vehicleMotTestStartTest($obfuscatedVehicleId, $noRegistration, $source)
+    {
+        return $this->url(MotTestRouteList::MOT_TEST_START_TEST, ['id' => $obfuscatedVehicleId, 'noRegistration' => $noRegistration, 'source' => $source]);
+    }
+
+    /**
+     * @param $baseUrl
+     * @param $obfuscatedVehicleId
+     * @param $noRegistration
+     * @param $source
+     * @param $property
+     *
+     * @return mixed
+     */
+    public function vehicleMotTest($baseUrl, $obfuscatedVehicleId, $noRegistration, $source, $property)
+    {
+        return $this->url(
+            $baseUrl,
+            [
+                'id' => $obfuscatedVehicleId,
+                'noRegistration' => $noRegistration,
+                'source' => $source,
+                'property' => $property
+            ]
+        );
+    }
+
     public function printDuplicateTestResult($motTest)
     {
        return $this->url(MotTestRouteList::MOT_TEST_PRINT_DUPLICATE_TEST_RESULT, ['motTestNumber' => $motTest]);

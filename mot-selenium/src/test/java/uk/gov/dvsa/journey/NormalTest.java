@@ -129,14 +129,47 @@ public class NormalTest {
         confirmationPage = pageNavigator.goToStartTestConfirmationPage(user, vehicle);
     }
 
+    public String startTestForVehicleUnderTest(User user, Vehicle vehicle) throws IOException, URISyntaxException {
+        return pageNavigator.goToStartTestConfirmationPage(user, vehicle).getVehicleUnderTestBanner();
+    }
+
+    public void confirmAndStartTest(User user, Vehicle vehicle) throws IOException, URISyntaxException {
+        confirmationPage = pageNavigator.goToStartTestConfirmationPage(user, vehicle);
+        confirmationPage.clickStartMotTest();
+    }
+
     public void startTestConfirmationPage(User user, DvlaVehicle dvlaVehicle) throws IOException, URISyntaxException {
         confirmationPage = pageNavigator.goToStartTestConfirmationPage(user, dvlaVehicle);
     }
 
-    public void changeClass(String classNumber) {
-        VehicleDetailsChangedPage changedPage = confirmationPage.selectClass(classNumber)
-                .clickStartMotTest(VehicleDetailsChangedPage.class);
-        setDeclarationStatementStatus(changedPage);
+    public String startMotTestForDvlaVehicle(User user, DvlaVehicle dvlaVehicle) throws IOException, URISyntaxException {
+        return pageNavigator.goToStartTestConfirmationPage(user, dvlaVehicle).noTestClassValidation();
+    }
+
+    public String changeColour() {
+        StartTestConfirmationPage changeVehicleColour = confirmationPage.clickChangeColour().selectColour(Colours.Blue).selectSecondaryColour(Colours.Bronze).submit();
+        return changeVehicleColour.getSuccessMessage();
+    }
+
+    public String changeEngine() {
+        StartTestConfirmationPage changeVehicleEngine = confirmationPage.clickChangeEngne().selectFuelType(FuelTypes.Diesel).fillCylinderCapacity("2200").submit();
+        return changeVehicleEngine.getSuccessMessage();
+    }
+
+    public String changeClass() {
+        StartTestConfirmationPage changeVehicleClass = confirmationPage.clickChangeClass().chooseClass(VehicleClass.five).submit();
+        return changeVehicleClass.getSuccessMessage();
+    }
+
+    public String changeMakeAndModel() {
+        StartTestConfirmationPage changeVehicleMakeAndModel = confirmationPage.clickChangeMakeAndModel().selectMake(Make.BMW).submit().selectModel(Model.BMW_ALPINA).submit();
+        return changeVehicleMakeAndModel.getSuccessMessage();
+    }
+
+    public String changeMakeAndModelWithOther() {
+        StartTestConfirmationPage changeVehicleMakeAndModel =
+                confirmationPage.clickChangeMakeAndModel().selectMakeOther().enterOtherMakeField("TEST1234").submit().enterOtherModelField("test 567890").submit();
+        return changeVehicleMakeAndModel.getSuccessMessage();
     }
 
     public TestSummaryPage conductTrainingTest(User tester, Vehicle vehicle) throws IOException, URISyntaxException {
@@ -195,6 +228,13 @@ public class NormalTest {
 
     public String getVin() {
         return new StartTestConfirmationPage(driver).getVin();
+    }
+
+    public String getVehicleUnderTestBanner() {
+        return confirmationPage.getVehicleUnderTestBanner();
+    }
+    public String getNoTestClassValidation() {
+        return new StartTestConfirmationPage(driver).getNoTestClassValidation();
     }
 
     public String getRegistration() {

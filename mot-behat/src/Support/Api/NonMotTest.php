@@ -24,7 +24,7 @@ class NonMotTest extends AbstractMotTest
             'fuelTypeId' => 'PE',
             'vehicleClassCode' => $testClass,
             'hasRegistration' => '1',
-            'oneTimePassword' => Authentication::ONE_TIME_PASSWORD,
+            'cylinderCapacity' => 1700,
             'motTestType' => MotTestTypeCode::NON_MOT_TEST
         ];
 

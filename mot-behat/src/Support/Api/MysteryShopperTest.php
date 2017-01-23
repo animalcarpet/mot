@@ -48,7 +48,7 @@ class MysteryShopperTest extends AbstractMotTest
             'fuelTypeId' => FuelTypeCode::PETROL,
             'vehicleClassCode' => $testClass,
             'hasRegistration' => '1',
-            'oneTimePassword' => Authentication::ONE_TIME_PASSWORD,
+            'cylinderCapacity' => 1700,
         ];
 
         $params = array_replace($defaults, $params);

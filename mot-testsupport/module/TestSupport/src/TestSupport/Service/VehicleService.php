@@ -81,7 +81,6 @@ class VehicleService
             'dateOfRegistration' => '1980-01-01',
             'dateOfManufacture' => '1980-01-01',
             'dateOfFirstUse' => '1980-01-01',
-            'oneTimePassword' => '123456'
         ];
 
         $data = array_merge($defaults, $overrideData);
@@ -101,7 +100,6 @@ class VehicleService
             -> setFuelTypeCode($data['fuelTypeCode'])
             -> setFirstUsedDate(new \DateTime($data['dateOfFirstUse']))
             -> setCylinderCapacity($data['cylinderCapacity'])
-            -> setOneTimePassword($data['oneTimePassword'])
             -> setVehicleClassCode($data['testClass']);
 
         $vehicleId = $vehicleService->createDvsaVehicle($createDvsaVehicleRequest)->getId();

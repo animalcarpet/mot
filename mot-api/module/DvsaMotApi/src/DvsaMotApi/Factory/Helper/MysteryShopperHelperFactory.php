@@ -8,10 +8,10 @@
 namespace DvsaMotApi\Factory\Helper;
 
 use Dvsa\Mot\ApiClient\Service\VehicleService;
-use DvsaApplicationLogger\Log\Logger;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Helper\MysteryShopperHelper;
+use Zend\Log\LoggerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

@@ -9,6 +9,7 @@ use DvsaCommon\Enum\ColourCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommonTest\Builder\DvsaVehicleBuilder;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaMotTest\Service\StartTestChangeService;
 use stdClass;
 use Vehicle\UpdateVehicleProperty\Context\UpdateVehicleContext;
 use Vehicle\UpdateVehicleProperty\Form\UpdateColourForm;
@@ -24,9 +25,9 @@ class UpdateColourProcessTest extends \PHPUnit_Framework_TestCase
     const VEHICLE_VERSION = 10000;
     const VEHICLE_CLASS = VehicleClassCode::CLASS_1;
     const COLOUR_CODE = ColourCode::BEIGE;
-    //const COLOUR_NAME = "Beige";
+    const SESSION_COLOUR_CODE = ColourCode::PURPLE;
     const SECONDARY_COLOUR_CODE = ColourCode::NOT_STATED;
-    //const SECONDARY_COLOUR_NAME = "Not Stated";
+    const SESSION_SECONDARY_COLOUR_CODE = ColourCode::BEIGE;
 
     /** @var  DvsaVehicleBuilder */
     private $dvsaVehicleBuilder;
@@ -45,6 +46,9 @@ class UpdateColourProcessTest extends \PHPUnit_Framework_TestCase
     /** @var UpdateColourProcess */
     private $sut;
 
+    /** @var  StartTestChangeService */
+    private $startTestChangeService;
+
     public function setUp()
     {
         $this->dvsaVehicleBuilder = new DvsaVehicleBuilder();
@@ -54,14 +58,15 @@ class UpdateColourProcessTest extends \PHPUnit_Framework_TestCase
         $this->breadcrumbsBuilder = XMock::of(VehicleEditBreadcrumbsBuilder::class);
         $this->tertiaryTitleBuilder = XMock::of(VehicleTertiaryTitleBuilder::class);
         $this->catalogService = XMock::of(CatalogService::class);
+        $this->startTestChangeService = XMock::of(StartTestChangeService::class);
 
         $this->sut = new UpdateColourProcess(
             $this->urlHelper,
             $this->vehicleService,
             $this->breadcrumbsBuilder,
-            $this->catalogService
+            $this->catalogService,
+            $this->startTestChangeService
         );
-        $this->sut->setContext($this->buildContext());
     }
 
     public function testUpdateRunsVehicleService()
@@ -70,6 +75,7 @@ class UpdateColourProcessTest extends \PHPUnit_Framework_TestCase
             UpdateColourForm::FIELD_COLOUR => self::COLOUR_CODE,
             UpdateColourForm::FIELD_SECONDARY_COLOUR => self::SECONDARY_COLOUR_CODE,
         ];
+        $this->sut->setContext($this->buildContext('change'));
 
         $this->vehicleService->expects($this->once())
             ->method("updateDvsaVehicleAtVersion")
@@ -86,21 +92,69 @@ class UpdateColourProcessTest extends \PHPUnit_Framework_TestCase
 
     public function testGetPrePopulatedData()
     {
+        $this->sut->setContext($this->buildContext('change'));
+        $this->startTestChangeService
+            ->expects($this->once())
+            ->method('isValueChanged')
+            ->with(StartTestChangeService::CHANGE_COLOUR)
+            ->willReturn(false);
+        $this->startTestChangeService
+            ->expects($this->once())
+            ->method('getChangedValue')
+            ->with(StartTestChangeService::CHANGE_COLOUR)
+            ->willReturn([
+                'primaryColour' => 'K',
+                'secondaryColour' => 'S'
+            ]);
         $data = $this->sut->getPrePopulatedData();
         $this->assertSame(self::COLOUR_CODE, $data[UpdateColourForm::FIELD_COLOUR]);
         $this->assertSame(self::SECONDARY_COLOUR_CODE, $data[UpdateColourForm::FIELD_SECONDARY_COLOUR]);
     }
 
+    public function testGetPrePopulatedDataFromSession()
+    {
+        $this->sut->setContext($this->buildContext('change-under-test'));
+        $this->startTestChangeService
+            ->expects($this->once())
+            ->method('isValueChanged')
+            ->with(StartTestChangeService::CHANGE_COLOUR)
+            ->willReturn(true);
+        $this->startTestChangeService
+            ->expects($this->once())
+            ->method('getChangedValue')
+            ->with(StartTestChangeService::CHANGE_COLOUR)
+            ->willReturn([
+                'primaryColour' => 'K',
+                'secondaryColour' => 'S'
+            ]);
+        $data = $this->sut->getPrePopulatedData();
+        $this->assertSame(self::SESSION_COLOUR_CODE, $data[UpdateColourForm::FIELD_COLOUR]);
+        $this->assertSame(self::SESSION_SECONDARY_COLOUR_CODE, $data[UpdateColourForm::FIELD_SECONDARY_COLOUR]);
+    }
+
     public function testBuildEditStepViewModel()
     {
         $form = new UpdateColourForm([]);
+        $this->sut->setContext($this->buildContext('change'));
         $viewModel = $this->sut->buildEditStepViewModel($form);
         $this->assertInstanceOf(UpdateVehiclePropertyViewModel::class, $viewModel);
     }
 
-    private function buildContext()
+    public function testBuildEditStepViewModel_whileVehicleUnderTestContext_shouldHaveCorrectLabels()
     {
-        return new UpdateVehicleContext($this->buildDvsaVehicle(), "abc");
+        $form = new UpdateColourForm([]);
+        $this->sut->setContext($this->buildContext('change-under-test'));
+        /** @var UpdateVehiclePropertyViewModel $viewModel */
+        $viewModel = $this->sut->buildEditStepViewModel($form);
+
+        $this->assertInstanceOf(UpdateVehiclePropertyViewModel::class, $viewModel);
+        $this->assertSame('Back', $viewModel->getBackLinkText());
+        $this->assertSame('Continue', $viewModel->getSubmitButtonText());
+    }
+
+    private function buildContext($routeContext)
+    {
+        return new UpdateVehicleContext($this->buildDvsaVehicle(), "abc", $routeContext);
     }
 
     private function buildDvsaVehicle()

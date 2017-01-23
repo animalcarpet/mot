@@ -205,6 +205,9 @@ class CreateNewVehicleServiceTest extends \PHPUnit_Framework_TestCase
         $fuelType = new \stdClass();
         $fuelType->code = FuelTypeCode::PETROL;
         $data->fuelType = $fuelType;
+        $cylinderCapacity = new \stdClass();
+        $cylinderCapacity->code = 1200;
+        $data->cylinderCapacity = $cylinderCapacity;
 
         $vehicle = new DvsaVehicle($data);
 

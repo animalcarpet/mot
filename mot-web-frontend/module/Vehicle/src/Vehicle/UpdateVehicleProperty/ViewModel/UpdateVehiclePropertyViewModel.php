@@ -74,7 +74,7 @@ class UpdateVehiclePropertyViewModel
     /**
      * @return string
      */
-    public function getBackLinkLabel()
+    public function getBackLinkText()
     {
         return $this->backLinkLabel;
     }
@@ -131,7 +131,7 @@ class UpdateVehiclePropertyViewModel
      * @param string $backLinkLabel
      * @return UpdateVehiclePropertyViewModel
      */
-    public function setBackLinkLabel($backLinkLabel)
+    public function setBackLinkText($backLinkLabel)
     {
         $this->backLinkLabel = $backLinkLabel;
         return $this;

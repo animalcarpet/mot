@@ -138,8 +138,8 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
             'primaryColour'           => $vehicle->getColour()->getCode(),
             'secondaryColour'         => $vehicle->getColourSecondary()->getCode(),
             'fuelTypeId'              => $vehicle->getFuelType()->getCode(),
+            'cylinderCapacity'        => $vehicle->getCylinderCapacity(),
             'vehicleClassCode'        => $vehicleClass,
-            'oneTimePassword'         => self::OTP,
             'hasRegistration'         => true
         ];
 

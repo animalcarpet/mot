@@ -2,13 +2,22 @@
 
 namespace DvsaMotTestTest\Controller;
 
+use Application\Service\CatalogService;
 use Application\Service\ContingencySessionManager;
+use Core\Catalog\CountryOfRegistration\CountryOfRegistrationCatalog;
+use Dvsa\Mot\ApiClient\Request\Payload;
+use Dvsa\Mot\ApiClient\Request\TypeConversion\DateTimeConverter;
+use Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Service\MotTestService;
 use DvsaClient\Mapper\VehicleMapper;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\FeatureToggle;
+use DvsaCommon\Enum\ColourCode;
+use DvsaCommon\Enum\FuelTypeCode;
+use Dvsa\Mot\ApiClient\Resource\Item\FuelType;
+use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
@@ -25,11 +34,14 @@ use DvsaCommonTest\Builder\DvsaVehicleBuilder;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTest\Constants\VehicleSearchSource;
 use DvsaMotTest\Controller\StartTestConfirmationController;
+use DvsaMotTest\Service\StartTestChangeService;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use Zend\Session\Container;
 use Application\Helper\PrgHelper;
 use DvsaMotTest\ViewModel\StartTestConfirmationViewModel;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
+use DvsaCommon\HttpRestJson\Client;
+use Application\Factory\ApplicationWideCacheFactory;
 
 /**
  * Class StartTestConfirmationControllerTest.
@@ -52,32 +64,19 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
     /** @var \Dvsa\Mot\Frontend\AuthenticationModule\Model\VehicleTestingStation */
     protected $vts;
 
+    private $vehicleService;
+
     /** @var  MotTestService $mockMotTestServiceClient */
     protected $mockMotTestServiceClient;
 
     protected function setUp()
     {
         $this->dvsaVehicleBuilder = new DvsaVehicleBuilder();
+
         $serviceManager = Bootstrap::getServiceManager();
         $serviceManager->setAllowOverride(true);
 
-        $dummyVehicleDetail = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
-        $dummyVehicleDetail->id = '1';
-
-        $dummyVehicle = new DvsaVehicle($dummyVehicleDetail);
-        $mockVehicleService = $this->getMock(
-            VehicleService::class,
-            [],
-            [$this->getMockHttpClientFactory(['response'=>'here we have something'])],
-            'VehicleService',
-            false
-        );
-        $mockVehicleService->expects($this->any())->method('getVehicleById')->willReturn($dummyVehicle);
-
-        $serviceManager->setService(
-            VehicleService::class,
-            $mockVehicleService
-        );
+        $this->vehicleService = XMock::of(VehicleService::class);
 
         $serviceManager->setService(
             MotTestService::class,
@@ -86,7 +85,13 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
 
         $this->setServiceManager($serviceManager);
 
-        $this->setController(new StartTestConfirmationController($this->createParamObfuscator()));
+        $this->setController(
+            new StartTestConfirmationController($this->createParamObfuscator(),
+            $this->createCountryOfRegistrationCatalog(),
+            $this->vehicleService,
+            XMock::of(StartTestChangeService::class)
+            )
+        );
 
         $mockMapperFactory = $this->getMapperFactoryMock();
         $serviceManager->setService(MapperFactory::class, $mockMapperFactory);
@@ -95,7 +100,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
 
         $this->withFeatureToggles([FeatureToggle::MYSTERY_SHOPPER => true]);
 
-        $identity  = $this->getCurrentIdentity();
+        $identity = $this->getCurrentIdentity();
         $this->vts = $this->getVtsData();
         $identity->setCurrentVts($this->vts);
     }
@@ -130,6 +135,9 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
         $this->mockMethod($restClientMock, 'post', $this->any(), $exceptionValidation);
         $this->mockMethod($restClientMock, 'post', $this->any(), $this->getEligibilityforRetestOk());
 
+        $this->getMockDvsaVehicle();
+
+        $restClientMock->expects($this->any())->method('get');
         $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
         $mockMotTestServiceClient
             ->expects($this->any())
@@ -171,6 +179,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
      */
     public function testNoRegistrationParam($action, $params, $expect)
     {
+        $this->getMockDvsaVehicle();
         $mock = [
             'vehicle'    => $this->getTestVehicleResult(),
             'inProgress' => $this->getInProgressTest(),
@@ -212,6 +221,8 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
      */
     public function testCheckEligibilityForRetest($action, $params, array $mock, $expect)
     {
+        $this->getMockDvsaVehicle();
+
         $mock = [
             'vehicle'           => $this->getTestVehicleResult(),
             'expire'            => $this->getCertificateExpiryResult(),
@@ -337,6 +348,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
      */
     public function testAccess($method, $action, $permissions, $mock, $expect)
     {
+        $this->getMockDvsaVehicle();
         $user = ['permissions' => $permissions];
 
         $params = [
@@ -650,6 +662,7 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
      */
     public function testDoublePost($action)
     {
+        $this->getMockDvsaVehicle();
         $this->setupAuthorizationService(
             [PermissionInSystem::MOT_TEST_WITHOUT_OTP, PermissionInSystem::MOT_TEST_START]
         );
@@ -697,6 +710,32 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
         return new ParamObfuscator($paramEncrypter, $paramEncoder, $config);
     }
 
+    /**
+     * @return CountryOfRegistrationCatalog
+     */
+    protected function createCountryOfRegistrationCatalog()
+    {
+        $fixture = json_decode(
+            file_get_contents(
+                __DIR__ . '/../../DvsaMotEnforcementTest/Controller/fixtures/catalog.json'
+            ),
+            true
+        );
+
+        $client = \DvsaCommonTest\TestUtils\XMock::of(Client::class);
+        $client
+            ->expects($this->any())
+            ->method('get')
+            ->willReturn($fixture);
+
+        $appCacheFactory = new ApplicationWideCacheFactory();
+        $appCache = $appCacheFactory->createService(Bootstrap::getServiceManager());
+        $this->service = new CatalogService($appCache, $client);
+
+        $catalogService = new CatalogService($appCache, $client);
+        return new CountryOfRegistrationCatalog($catalogService);
+    }
+
     private function getDefaultPostParams($isTrainingMotTest = false)
     {
         return [
@@ -706,5 +745,47 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
             'vehicleClassId' => 3,
             'oneTimePassword' => 'something'
         ];
+    }
+
+    private function mockDvsaVehicleResponse($weight = 1000, $class = VehicleClassCode::CLASS_3)
+    {
+        $testVehicleDetails = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
+        $testVehicleDetails->id = '1';
+
+        $colour = new \stdClass();
+        $colour->code = ColourCode::BEIGE;
+        $colour->name = ColourCode::BEIGE;
+        $testVehicleDetails->colour = $colour;
+
+        $secondaryColour = new \stdClass();
+        $secondaryColour->code = ColourCode::NOT_STATED;
+        $secondaryColour->name = ColourCode::NOT_STATED;
+        $testVehicleDetails->colourSecondary = $secondaryColour;
+
+        $fuelType = new \stdClass();
+        $fuelType->name = FuelTypeCode::ELECTRIC;
+        $fuelType->code = FuelTypeCode::ELECTRIC;
+        $testVehicleDetails->fuelType = $fuelType;
+
+        $vehicleClassData = new \stdClass();
+        $vehicleClassData->code = $class;
+        $vehicleClassData->name = $class;
+
+        $testVehicleDetails->vehicleClass = $vehicleClassData;
+        $testVehicleDetails->cylinderCapacity = '1700';
+        $testVehicleDetails->firstUsedDate = DateTimeConverter::dateTimeToString(new \DateTime());
+        $testVehicleDetails->weight = $weight;
+        $testVehicleDetails->countryOfRegistrationId = 36;
+        $testVehicleDetails->isIncognito = false;
+
+        return new DvsaVehicle($testVehicleDetails);
+    }
+
+    private function getMockDvsaVehicle()
+    {
+        $this->vehicleService
+            ->expects($this->any())
+            ->method('getDvsaVehicleById')
+            ->willReturn($this->mockDvsaVehicleResponse());
     }
 }

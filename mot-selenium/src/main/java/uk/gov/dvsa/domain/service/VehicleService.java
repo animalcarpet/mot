@@ -48,7 +48,6 @@ public class VehicleService extends Service {
 
     protected Vehicle createVehicle(
             User user,
-            String oneTimePasswordPin,
             String colourCode,
             String countryOfRegistrationId,
             String cylinderCapacity,
@@ -63,7 +62,6 @@ public class VehicleService extends Service {
             String transmissionTypeId
     ) throws IOException {
         Map<String, Map<String, String>> vehicleDataMap = prepareDvsaVehiclePayloadMap(
-                oneTimePasswordPin,
                 colourCode,
                 countryOfRegistrationId,
                 cylinderCapacity,
@@ -87,7 +85,6 @@ public class VehicleService extends Service {
     }
 
     private Map<String, Map<String, String>> prepareDvsaVehiclePayloadMap(
-            String oneTimePasswordPin,
             String colourCode,
             String countryOfRegistrationId,
             String cylinderCapacity,
@@ -116,12 +113,8 @@ public class VehicleService extends Service {
         vehicleDataMap.put("vehicleClassCode", vehicleClassCode);
         vehicleDataMap.put("transmissionTypeId", transmissionTypeId);
 
-        Map<String, String> oneTimePasswordPinMap = new HashMap<>();
-        oneTimePasswordPinMap.put("pin", oneTimePasswordPin);
-
         Map<String, Map<String, String>> payloadMap = new HashMap<>();
         payloadMap.put("vehicle", vehicleDataMap);
-        payloadMap.put("oneTimePassword", oneTimePasswordPinMap);
 
         return payloadMap;
     }

@@ -4,13 +4,12 @@ namespace Vehicle\UpdateVehicleProperty\Process;
 
 use Core\Action\RedirectToRoute;
 use Core\Catalog\CountryOfRegistration\CountryOfRegistrationCatalog;
+use Core\Routing\VehicleRouteList;
 use Core\TwoStepForm\FormContextInterface;
-use Core\TwoStepForm\SingleStepProcessInterface;
 use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Exception\NotImplementedException;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Utility\TypeCheck;
 use Vehicle\UpdateVehicleProperty\Context\UpdateVehicleContext;
@@ -20,7 +19,7 @@ use Vehicle\UpdateVehicleProperty\ViewModel\Builder\VehicleTertiaryTitleBuilder;
 use Vehicle\UpdateVehicleProperty\ViewModel\UpdateVehiclePropertyViewModel;
 use Zend\View\Helper\Url;
 
-class UpdateCountryOfRegistrationProcess implements SingleStepProcessInterface, AutoWireableInterface
+class UpdateCountryOfRegistrationProcess implements UpdateVehicleInterface, AutoWireableInterface
 {
     /** @var UpdateVehicleContext */
     private $context;
@@ -133,6 +132,16 @@ class UpdateCountryOfRegistrationProcess implements SingleStepProcessInterface, 
         return new RedirectToRoute("vehicle/detail",
             ['id' => $this->context->getObfuscatedVehicleId()]
         );
+    }
+
+    public function redirectToStartUnderTestPage()
+    {
+        return new RedirectToRoute(VehicleRouteList::VEHICLE_CHANGE_UNDER_TEST_CLASS,
+            [
+                'id' => $this->context->getObfuscatedVehicleId(),
+                'noRegistration' => 0,
+                'source' => 1
+            ]);
     }
 
     public function isAuthorised(MotAuthorisationServiceInterface $authorisationService)

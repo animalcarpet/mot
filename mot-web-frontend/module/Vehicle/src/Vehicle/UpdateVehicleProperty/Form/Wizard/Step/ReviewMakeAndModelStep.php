@@ -6,6 +6,7 @@ use Core\FormWizard\AbstractStep as AbstractWizardStep;
 use Core\FormWizard\LayoutData;
 use Core\FormWizard\StepResult;
 use Core\FormWizard\WizardContextInterface;
+use Core\Routing\MotTestRouteList;
 use Core\Routing\VehicleRouteList;
 use Core\Routing\VehicleRoutes;
 use Core\ViewModel\Gds\Table\GdsTable;
@@ -15,6 +16,8 @@ use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Utility\TypeCheck;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
+use DvsaMotTest\Service\StartTestChangeService;
+use Vehicle\UpdateVehicleProperty\Context\UpdateVehicleContext;
 use Vehicle\UpdateVehicleProperty\Form\MakeForm;
 use Vehicle\UpdateVehicleProperty\Form\ModelForm;
 use Vehicle\UpdateVehicleProperty\Form\Wizard\Context;
@@ -33,11 +36,22 @@ class ReviewMakeAndModelStep extends AbstractWizardStep implements AutoWireableI
     private $tertiaryTitleBuilder;
     private $vehicleService;
     private $formUuid;
+    /** @var  StartTestChangeService */
+    private $startTestChangeService;
 
+    /**
+     * ReviewMakeAndModelStep constructor.
+     *
+     * @param Url                           $url
+     * @param VehicleEditBreadcrumbsBuilder $breadcrumbsBuilder
+     * @param VehicleService                $vehicleService
+     * @param StartTestChangeService        $startTestChangeService
+     */
     public function __construct(
         Url $url,
         VehicleEditBreadcrumbsBuilder $breadcrumbsBuilder,
-        VehicleService $vehicleService
+        VehicleService $vehicleService,
+        StartTestChangeService $startTestChangeService
     )
     {
         parent::__construct();
@@ -46,10 +60,11 @@ class ReviewMakeAndModelStep extends AbstractWizardStep implements AutoWireableI
         $this->breadcrumbsBuilder = $breadcrumbsBuilder;
         $this->vehicleService = $vehicleService;
         $this->tertiaryTitleBuilder = new VehicleTertiaryTitleBuilder();
+        $this->startTestChangeService = $startTestChangeService;
     }
 
     /**
-     * @var Context
+     * @var UpdateVehicleContext
      */
     protected $context;
 
@@ -60,7 +75,7 @@ class ReviewMakeAndModelStep extends AbstractWizardStep implements AutoWireableI
 
     public function setContext(WizardContextInterface $context)
     {
-        TypeCheck::assertInstance($context, Context::class);
+        TypeCheck::assertInstance($context, UpdateVehicleContext::class);
         return parent::setContext($context);
     }
 
@@ -217,6 +232,20 @@ class ReviewMakeAndModelStep extends AbstractWizardStep implements AutoWireableI
 
     public function getRoute(array $queryParams = [])
     {
+        if ($this->context->isUpdateVehicleDuringTest()) {
+            $route = new RedirectToRoute(
+                $this->startTestChangeService->getChangedValue(StartTestChangeService::URL)['url'],
+                [
+                    'id' => $this->context->getObfuscatedVehicleId(),
+                    'noRegistration' => $this->startTestChangeService->getChangedValue(StartTestChangeService::NO_REGISTRATION)['noRegistration'],
+                    'source' => $this->startTestChangeService->getChangedValue(StartTestChangeService::SOURCE)['source'],
+                    'property' => self::NAME,
+                ]
+            );
+            $route->addSuccessMessage('Vehicle make and model has been successfully changed');
+            return $route;
+        }
+
         return new RedirectToRoute(
             VehicleRouteList::VEHICLE_CHANGE_MAKE_AND_MODEL,
             ["id" => $this->context->getObfuscatedVehicleId(), "property" => self::NAME],
@@ -252,5 +281,17 @@ class ReviewMakeAndModelStep extends AbstractWizardStep implements AutoWireableI
         $route->addSuccessMessage("Vehicle make and model has been successfully changed.");
 
         return $route;
+    }
+
+    /**
+     * @return \Core\ViewModel\Header\HeaderTertiaryList|string
+     */
+    private function getTertiaryTitleForVehicle()
+    {
+        if ($this->context->isUpdateVehicleDuringTest()) {
+            return '';
+        }
+
+        return $this->tertiaryTitleBuilder->getTertiaryTitleForVehicle($this->context->getVehicle());
     }
 }

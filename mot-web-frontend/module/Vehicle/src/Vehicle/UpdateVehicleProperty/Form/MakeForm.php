@@ -23,7 +23,7 @@ class MakeForm extends Form
     const FIELD_OTHER_MAKE_NAME = 'otherMake';
     const FIELD_OTHER_MAKE_ID = 'otherMake';
     const DATA_TARGET_ID = "other-make-field";
-    const MAX_OTHER_MAKE_LENGTH = 30;
+    const MAX_OTHER_MAKE_LENGTH = 39;
     const FIELD_OTHER_MAKE_LABEL = 'If other, please specify';
 
     /**
@@ -157,7 +157,7 @@ class MakeForm extends Form
         $notEmptyValidator = (new NotEmpty())->setMessage(" Enter a name for the unknown make", NotEmpty::IS_EMPTY);
         $stringLengthValidator = new StringLength();
         $stringLengthValidator->setMax(self::MAX_OTHER_MAKE_LENGTH);
-        $stringLengthValidator->setMessage(sprintf("The vehicle make must be %s characters or shorter", self::MAX_OTHER_MAKE_LENGTH));
+        $stringLengthValidator->setMessage("Must be shorter than 40 characters");
 
         $input = new Input(self::FIELD_OTHER_MAKE_ID);
         $input
