@@ -9,7 +9,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 
 class BrakeTestTypeConfigurationTest extends TestCase
 {
-    public function dataProviderForAllVehicleClassesAndServiceIsAnyAndParkingIsRollerOrPlate()
+    public function dataProviderForAllVehicleClassesAndServiceIsNotDecelerometerAndParkingIsRollerOrPlate()
     {
         $vehicleClassCodes = [
             VehicleClassCode::CLASS_3,
@@ -17,7 +17,7 @@ class BrakeTestTypeConfigurationTest extends TestCase
             VehicleClassCode::CLASS_5,
             VehicleClassCode::CLASS_7
         ];
-        $serviceBrakeTestTypes = BrakeTestTypeCode::getAll();
+        $serviceBrakeTestTypes = [BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::PLATE, BrakeTestTypeCode::GRADIENT];
         $parkingBrakeTestTypes = [BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::PLATE];
 
         return $this->getDataForLocksAreApplicableToFirstServiceBrakeTests(
@@ -28,14 +28,47 @@ class BrakeTestTypeConfigurationTest extends TestCase
     }
 
     /**
-     * @dataProvider dataProviderForAllVehicleClassesAndServiceIsAnyAndParkingIsRollerOrPlate
+     * @dataProvider dataProviderForAllVehicleClassesAndServiceIsNotDecelerometerAndParkingIsRollerOrPlate
      */
-    public function testLocksAreAlwaysApplicableToFirstServiceBrakeIfParkingBrakeIsRollerOrPlate(
+    public function testLocksAreAlwaysApplicableToFirstServiceBrakeIfServiceIsNotDecelerometerAndParkingBrakeIsRollerOrPlate(
         $vehicleClassCode,
         $serviceBrake1TestType,
         $parkingBrakeTestType
     ) {
         $this->assertTrue(BrakeTestTypeConfiguration::areServiceBrakeLocksApplicable(
+            $vehicleClassCode,
+            $serviceBrake1TestType,
+            $parkingBrakeTestType
+        ));
+    }
+
+    public function dataProviderForAllVehicleClassesAndServiceIsDecelerometerAndParkingIsRollerOrPlate()
+    {
+        $vehicleClassCodes = [
+            VehicleClassCode::CLASS_3,
+            VehicleClassCode::CLASS_4,
+            VehicleClassCode::CLASS_5,
+            VehicleClassCode::CLASS_7
+        ];
+        $serviceBrakeTestTypes = [BrakeTestTypeCode::DECELEROMETER];
+        $parkingBrakeTestTypes = [BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::PLATE];
+
+        return $this->getDataForLocksAreApplicableToFirstServiceBrakeTests(
+            $vehicleClassCodes,
+            $serviceBrakeTestTypes,
+            $parkingBrakeTestTypes
+        );
+    }
+
+    /**
+     * @dataProvider dataProviderForAllVehicleClassesAndServiceIsDecelerometerAndParkingIsRollerOrPlate
+     */
+    public function testLocksAreNotApplicableToFirstServiceBrakeIfServiceIsDecelerometerAndParkingBrakeIsRollerOrPlate(
+        $vehicleClassCode,
+        $serviceBrake1TestType,
+        $parkingBrakeTestType
+    ) {
+        $this->assertFalse(BrakeTestTypeConfiguration::areServiceBrakeLocksApplicable(
             $vehicleClassCode,
             $serviceBrake1TestType,
             $parkingBrakeTestType
