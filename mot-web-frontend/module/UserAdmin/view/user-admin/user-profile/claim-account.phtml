@@ -11,11 +11,13 @@
 
 <div id="reclaim-account-notification" class="text">
     <p class="lede">
-        You are about to reset an account for user <strong><?php echo $this->escapeHtml($presenter->displayUserName()) ?></strong> which will need to be reclaimed.
+        You are about to reset an account for user <strong><?php echo $this->escapeHtml($presenter->displayFullName()) ?></strong>.
     </p>
-
-    <p>You should only start this process if <strong><?php echo $this->escapeHtml($presenter->displayTitleAndFullName()); ?></strong> has forgotten their security questions and password.
-        Instructions will be sent via email to <strong><?php echo $this->escapeHtml($presenter->displayEmail()); ?></strong>
+    <p>
+        They will be emailed at <strong><?php echo $this->escapeHtml($presenter->displayEmail()); ?></strong> with a temporary password to sign in to their account.
+    </p>
+    <p>
+        They will then be prompted to choose a new password and security questions.
     </p>
 
     <?php echo $this->partial('partial/gds/general/system-message',
@@ -36,7 +38,7 @@
             [
                 'id'            => 'reclaim-account-submit',
                 'class'         => 'button-warning',
-                'value'         => 'Reclaim account by email',
+                'value'         => 'Reset account security',
                 'navigation'    => [
                     'Cancel and return to user profile' => $userProfileUrl,
                 ]

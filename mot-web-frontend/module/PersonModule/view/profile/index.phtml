@@ -44,8 +44,8 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $errorM
 endif ?>
 <?php if (!$displayResetAccountError) { ?>
     <div class="banner--error">
-        <span class="banner__heading-large">This account needs an email</span>
-        <span>You must <a href="<?php echo $emailUrl ?>">add an email address</a> if you need to reset the account.</span>
+        <span class="banner__heading-large">No email address</span>
+        <span><a href="<?php echo $emailUrl ?>">Add email address</a> to be able to reset account security</span>
     </div>
 <?php }
 

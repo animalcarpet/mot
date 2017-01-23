@@ -228,7 +228,7 @@ class PersonProfileSidebar extends GeneralSidebar
                 $accountManagementBox->addLink(
                     new GeneralSidebarLink(
                         'reset-by-email',
-                        'Reset account by email',
+                        'Reset account security by email',
                         '/' . self::USER_ADMIN_PROFILE_URL . $this->personId . '/claim-reset',
                         'related-button--warning'
                     )
