@@ -334,7 +334,7 @@ class PersonProfileSidebarTest extends \PHPUnit_Framework_TestCase
         $linkTexts = $this->getTextFromSidebarLinks($sidebarLinks);
 
         $this->assertSame(2, count($linkTexts));
-        $this->assertSame('Reset account by email', $linkTexts[0]);
+        $this->assertSame('Reset account security by email', $linkTexts[0]);
         $this->assertSame('Reset account by post', $linkTexts[1]);
     }
 

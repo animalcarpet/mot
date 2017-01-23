@@ -209,23 +209,11 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
                         'params' => [self::PERSON_ID],
                         'result' => $this->createPersonHelpDeskProfileDtoWithUsername(),
                     ],
-                    [
-                        'class'  => 'twoFaFeatureToggleMock',
-                        'method' => 'isEnabled',
-                        'params' => [],
-                        'result' => true,
-                    ],
-                    [
-                        'class'  => 'registeredCardServiceMock',
-                        'method' => 'is2faActiveUser',
-                        'params' => [self::TEST_USERNAME],
-                        'result' => true,
-                    ],
                 ],
                 'expect' => [
                     'viewModel' => true,
                     'viewModelVariables' => [
-                        'reclaimSystemMessage' => UserProfileController::RECLAIM_ACCOUNT_SYSTEM_MESSAGE_2FA_USER,
+                        'reclaimSystemMessage' => UserProfileController::RESET_ACCOUNT_SYSTEM_MESSAGE,
                     ],
                 ],
             ],
@@ -248,23 +236,11 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
                         'params' => [self::PERSON_ID],
                         'result' => $this->createPersonHelpDeskProfileDtoWithUsername(),
                     ],
-                    [
-                        'class'  => 'twoFaFeatureToggleMock',
-                        'method' => 'isEnabled',
-                        'params' => [],
-                        'result' => true,
-                    ],
-                    [
-                        'class'  => 'registeredCardServiceMock',
-                        'method' => 'is2faActiveUser',
-                        'params' => [self::TEST_USERNAME],
-                        'result' => false,
-                    ],
                 ],
                 'expect' => [
                     'viewModel' => true,
                     'viewModelVariables' => [
-                        'reclaimSystemMessage' => UserProfileController::RECLAIM_ACCOUNT_SYSTEM_MESSAGE_NON_2FA_USER,
+                        'reclaimSystemMessage' => UserProfileController::RESET_ACCOUNT_SYSTEM_MESSAGE,
                     ],
                 ],
             ],
@@ -287,17 +263,11 @@ class UserProfileControllerTest extends AbstractFrontendControllerTestCase
                         'params' => [self::PERSON_ID],
                         'result' => $this->createPersonHelpDeskProfileDtoWithUsername(),
                     ],
-                    [
-                        'class'  => 'twoFaFeatureToggleMock',
-                        'method' => 'isEnabled',
-                        'params' => [],
-                        'result' => false,
-                    ],
                 ],
                 'expect' => [
                     'viewModel' => true,
                     'viewModelVariables' => [
-                        'reclaimSystemMessage' => UserProfileController::RECLAIM_ACCOUNT_SYSTEM_MESSAGE_NON_2FA_USER,
+                        'reclaimSystemMessage' => UserProfileController::RESET_ACCOUNT_SYSTEM_MESSAGE,
                     ],
                 ],
             ],

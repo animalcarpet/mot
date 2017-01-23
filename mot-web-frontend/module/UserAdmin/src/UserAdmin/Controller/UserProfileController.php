@@ -34,10 +34,10 @@ use Zend\View\Model\ViewModel;
 class UserProfileController extends AbstractDvsaMotTestController
 {
     const PAGE_SUBTITLE_INDEX = 'User profile';
-    const RECLAIM_ACCOUNT_SUCCESS = 'Account reclaim by email was requested';
-    const RECLAIM_ACCOUNT_FAILURE = 'Account reclaim by email has failed';
-    const RECLAIM_ACCOUNT_SYSTEM_MESSAGE_NON_2FA_USER = 'This will reset the user\'s password and require them to set up their security questions and PIN when they next sign in.';
-    const RECLAIM_ACCOUNT_SYSTEM_MESSAGE_2FA_USER = 'This will reset the user\'s password and require them to set up their security questions when they next sign in.';
+    const RESET_ACCOUNT_SUCCESS_FLASH_MSG = 'Email sent to reset account security';
+    const RESET_ACCOUNT_FAILURE_FLASH_MSG = 'Account reclaim by email has failed';
+    const RESET_ACCOUNT_SYSTEM_MESSAGE = 'Only continue if the user has forgotten both their password and security questions.';
+    const RESET_ACCOUNT_PAGE_TITLE = 'Reset account security';
 
     /**
      * @var HelpdeskAccountAdminService
@@ -252,13 +252,9 @@ class UserProfileController extends AbstractDvsaMotTestController
             $this->catalogService
         );
 
-        $pageTitle = 'Reclaim account';
+        $pageTitle = self::RESET_ACCOUNT_PAGE_TITLE;
 
-        /* @var bool */
-        $is2faActiveUser =$this->twoFaFeatureToggle->isEnabled() &&
-            $this->registeredCardService->is2faActiveUser($person->getUserName());
-
-        $view = $this->createViewModel($personId, $pageTitle, $presenter, false, $is2faActiveUser);
+        $view = $this->createViewModel($personId, $pageTitle, $presenter, false);
 
         return $view->setVariable('prgHelper', $prgHelper);
     }
@@ -277,9 +273,9 @@ class UserProfileController extends AbstractDvsaMotTestController
 
         try {
             $this->userAccountAdminService->resetClaimAccount($personId);
-            $this->addSuccessMessage(self::RECLAIM_ACCOUNT_SUCCESS);
+            $this->addSuccessMessage(self::RESET_ACCOUNT_SUCCESS_FLASH_MSG);
         } catch (\Exception $e) {
-            $this->addErrorMessage(self::RECLAIM_ACCOUNT_FAILURE);
+            $this->addErrorMessage(self::RESET_ACCOUNT_FAILURE_FLASH_MSG);
         }
 
         $prgHelper->setRedirectUrl($url);
@@ -294,12 +290,11 @@ class UserProfileController extends AbstractDvsaMotTestController
      * @param string               $pageTitle
      * @param UserProfilePresenter $presenter
      * @param bool                 $isProfile
-     * @param bool                 $isFor2FaEnabledUser
      *
      * @return ViewModel
      */
     private function createViewModel($personId, $pageTitle, UserProfilePresenter $presenter,
-                                     $isProfile = false, $isFor2FaEnabledUser = false)
+                                     $isProfile = false)
     {
         $this->layout()->setVariable('pageSubTitle', self::PAGE_SUBTITLE_INDEX);
         $this->layout()->setVariable('pageTitle', $pageTitle);
@@ -315,7 +310,7 @@ class UserProfileController extends AbstractDvsaMotTestController
             $presenter->displayTitleAndFullName() => $userProfileUrl,
         ];
 
-        $breadcrumbs += ['Reclaim account' => ''];
+        $breadcrumbs += [self::RESET_ACCOUNT_PAGE_TITLE => ''];
 
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
         $this->layout('layout/layout-govuk.phtml');
@@ -340,10 +335,7 @@ class UserProfileController extends AbstractDvsaMotTestController
                     UserAdminUrlBuilderWeb::userProfileClaimAccountPost($personId)
                 ),
                 'userProfileUrl' => $this->url()->fromRoute('newProfileUserAdmin', ['id' => $personId]),
-                'reclaimSystemMessage' => $isFor2FaEnabledUser ?
-                    self::RECLAIM_ACCOUNT_SYSTEM_MESSAGE_2FA_USER :
-                    self::RECLAIM_ACCOUNT_SYSTEM_MESSAGE_NON_2FA_USER,
-
+                'reclaimSystemMessage' =>  self::RESET_ACCOUNT_SYSTEM_MESSAGE,
             ]
         );
 
