@@ -7,151 +7,134 @@ use DvsaCommon\Enum\VehicleClassCode;
 
 class BrakeTestTypeConfiguration
 {
-    private static $brakeTestCombinations = [
+    private static $validBrakeTestCombinations = [
         VehicleClassCode::CLASS_3 => [
             BrakeTestTypeCode::ROLLER        => [
-                BrakeTestTypeCode::ROLLER        => true,
-                BrakeTestTypeCode::PLATE         => false,
-                BrakeTestTypeCode::DECELEROMETER => true,
-                BrakeTestTypeCode::GRADIENT      => true
+                BrakeTestTypeCode::ROLLER,
+                BrakeTestTypeCode::DECELEROMETER,
+                BrakeTestTypeCode::GRADIENT
             ],
             BrakeTestTypeCode::PLATE         => [
-                BrakeTestTypeCode::ROLLER        => false,
-                BrakeTestTypeCode::PLATE         => true,
-                BrakeTestTypeCode::DECELEROMETER => false,
-                BrakeTestTypeCode::GRADIENT      => false
+                BrakeTestTypeCode::PLATE
             ],
             BrakeTestTypeCode::DECELEROMETER => [
-                BrakeTestTypeCode::ROLLER        => true,
-                BrakeTestTypeCode::PLATE         => false,
-                BrakeTestTypeCode::DECELEROMETER => true,
-                BrakeTestTypeCode::GRADIENT      => true
-            ],
-            BrakeTestTypeCode::GRADIENT      => [
-                BrakeTestTypeCode::ROLLER        => false,
-                BrakeTestTypeCode::PLATE         => false,
-                BrakeTestTypeCode::DECELEROMETER => false,
-                BrakeTestTypeCode::GRADIENT      => false
-            ],
+                BrakeTestTypeCode::ROLLER,
+                BrakeTestTypeCode::DECELEROMETER,
+                BrakeTestTypeCode::GRADIENT
+            ]
         ],
         VehicleClassCode::CLASS_4 => [
             BrakeTestTypeCode::ROLLER        => [
-                BrakeTestTypeCode::ROLLER        => true,
-                BrakeTestTypeCode::PLATE         => false,
-                BrakeTestTypeCode::DECELEROMETER => true,
-                BrakeTestTypeCode::GRADIENT      => true
+                BrakeTestTypeCode::ROLLER,
+                BrakeTestTypeCode::DECELEROMETER,
+                BrakeTestTypeCode::GRADIENT
             ],
             BrakeTestTypeCode::PLATE         => [
-                BrakeTestTypeCode::ROLLER        => false,
-                BrakeTestTypeCode::PLATE         => true,
-                BrakeTestTypeCode::DECELEROMETER => true,
-                BrakeTestTypeCode::GRADIENT      => true
+                BrakeTestTypeCode::PLATE,
+                BrakeTestTypeCode::DECELEROMETER,
+                BrakeTestTypeCode::GRADIENT
             ],
             BrakeTestTypeCode::DECELEROMETER => [
-                BrakeTestTypeCode::ROLLER        => true,
-                BrakeTestTypeCode::PLATE         => false,
-                BrakeTestTypeCode::DECELEROMETER => true,
-                BrakeTestTypeCode::GRADIENT      => true
-            ],
-            BrakeTestTypeCode::GRADIENT      => [
-                BrakeTestTypeCode::ROLLER        => false,
-                BrakeTestTypeCode::PLATE         => false,
-                BrakeTestTypeCode::DECELEROMETER => false,
-                BrakeTestTypeCode::GRADIENT      => false
-            ],
+                BrakeTestTypeCode::ROLLER,
+                BrakeTestTypeCode::DECELEROMETER,
+                BrakeTestTypeCode::GRADIENT
+            ]
         ],
         VehicleClassCode::CLASS_5 => [
             BrakeTestTypeCode::ROLLER        => [
-                BrakeTestTypeCode::ROLLER        => true,
-                BrakeTestTypeCode::PLATE         => false,
-                BrakeTestTypeCode::DECELEROMETER => true,
-                BrakeTestTypeCode::GRADIENT      => true
-            ],
-            BrakeTestTypeCode::PLATE         => [
-                BrakeTestTypeCode::ROLLER        => false,
-                BrakeTestTypeCode::PLATE         => false,
-                BrakeTestTypeCode::DECELEROMETER => false,
-                BrakeTestTypeCode::GRADIENT      => false
+                BrakeTestTypeCode::ROLLER,
+                BrakeTestTypeCode::DECELEROMETER,
+                BrakeTestTypeCode::GRADIENT
             ],
             BrakeTestTypeCode::DECELEROMETER => [
-                BrakeTestTypeCode::ROLLER        => true,
-                BrakeTestTypeCode::PLATE         => false,
-                BrakeTestTypeCode::DECELEROMETER => true,
-                BrakeTestTypeCode::GRADIENT      => true
-            ],
-            BrakeTestTypeCode::GRADIENT      => [
-                BrakeTestTypeCode::ROLLER        => false,
-                BrakeTestTypeCode::PLATE         => false,
-                BrakeTestTypeCode::DECELEROMETER => false,
-                BrakeTestTypeCode::GRADIENT      => false
-            ],
+                BrakeTestTypeCode::ROLLER,
+                BrakeTestTypeCode::DECELEROMETER,
+                BrakeTestTypeCode::GRADIENT
+            ]
         ],
         VehicleClassCode::CLASS_7 => [
             BrakeTestTypeCode::ROLLER        => [
-                BrakeTestTypeCode::ROLLER        => true,
-                BrakeTestTypeCode::PLATE         => false,
-                BrakeTestTypeCode::DECELEROMETER => true,
-                BrakeTestTypeCode::GRADIENT      => true
+                BrakeTestTypeCode::ROLLER,
+                BrakeTestTypeCode::DECELEROMETER,
+                BrakeTestTypeCode::GRADIENT
             ],
             BrakeTestTypeCode::PLATE         => [
-                BrakeTestTypeCode::ROLLER        => false,
-                BrakeTestTypeCode::PLATE         => true,
-                BrakeTestTypeCode::DECELEROMETER => true,
-                BrakeTestTypeCode::GRADIENT      => true
+                BrakeTestTypeCode::PLATE,
+                BrakeTestTypeCode::DECELEROMETER,
+                BrakeTestTypeCode::GRADIENT
             ],
             BrakeTestTypeCode::DECELEROMETER => [
-                BrakeTestTypeCode::ROLLER        => true,
-                BrakeTestTypeCode::PLATE         => true,
-                BrakeTestTypeCode::DECELEROMETER => true,
-                BrakeTestTypeCode::GRADIENT      => true
-            ],
-            BrakeTestTypeCode::GRADIENT      => [
-                BrakeTestTypeCode::ROLLER        => false,
-                BrakeTestTypeCode::PLATE         => false,
-                BrakeTestTypeCode::DECELEROMETER => false,
-                BrakeTestTypeCode::GRADIENT      => false
-            ],
+                BrakeTestTypeCode::ROLLER,
+                BrakeTestTypeCode::PLATE,
+                BrakeTestTypeCode::DECELEROMETER,
+                BrakeTestTypeCode::GRADIENT
+            ]
         ],
+    ];
+
+    private static $serviceBrakeLockApplicableCombinations = [
+        VehicleClassCode::CLASS_3 => [
+            BrakeTestTypeCode::PLATE => [
+                BrakeTestTypeCode::PLATE
+            ],
+            BrakeTestTypeCode::ROLLER => [
+                BrakeTestTypeCode::ROLLER
+            ]
+        ],
+        VehicleClassCode::CLASS_4 => [
+            BrakeTestTypeCode::PLATE => [
+                BrakeTestTypeCode::DECELEROMETER,
+                BrakeTestTypeCode::GRADIENT,
+                BrakeTestTypeCode::PLATE
+            ],
+            BrakeTestTypeCode::ROLLER => [
+                BrakeTestTypeCode::DECELEROMETER,
+                BrakeTestTypeCode::GRADIENT,
+                BrakeTestTypeCode::ROLLER
+            ]
+        ],
+        VehicleClassCode::CLASS_5 => [
+            BrakeTestTypeCode::ROLLER => [
+                BrakeTestTypeCode::DECELEROMETER,
+                BrakeTestTypeCode::GRADIENT,
+                BrakeTestTypeCode::ROLLER
+            ]
+        ],
+        VehicleClassCode::CLASS_7 => [
+            BrakeTestTypeCode::PLATE => [
+                BrakeTestTypeCode::DECELEROMETER,
+                BrakeTestTypeCode::GRADIENT,
+                BrakeTestTypeCode::PLATE
+            ],
+            BrakeTestTypeCode::ROLLER => [
+                BrakeTestTypeCode::DECELEROMETER,
+                BrakeTestTypeCode::GRADIENT,
+                BrakeTestTypeCode::ROLLER
+            ]
+        ]
     ];
 
     public static function isValid($vehicleClass, $serviceBrakeType, $parkingBrakeType)
     {
         if (
-            isset(self::$brakeTestCombinations[$vehicleClass]) &&
-            isset(self::$brakeTestCombinations[$vehicleClass][$serviceBrakeType]) &&
-            isset(self::$brakeTestCombinations[$vehicleClass][$serviceBrakeType][$parkingBrakeType])
+            !isset(self::$validBrakeTestCombinations[$vehicleClass]) ||
+            !isset(self::$validBrakeTestCombinations[$vehicleClass][$serviceBrakeType])
         ) {
-            return self::$brakeTestCombinations[$vehicleClass][$serviceBrakeType][$parkingBrakeType];
+            return false;
         }
 
-        return false;
+        return in_array($parkingBrakeType, self::$validBrakeTestCombinations[$vehicleClass][$serviceBrakeType]);
     }
 
     public static function areServiceBrakeLocksApplicable($vehicleClass, $serviceBrakeType, $parkingBrakeType)
     {
-        if (!self::isValid($vehicleClass, $serviceBrakeType, $parkingBrakeType)) {
+        if (
+            !isset(self::$serviceBrakeLockApplicableCombinations[$vehicleClass]) ||
+            !isset(self::$serviceBrakeLockApplicableCombinations[$vehicleClass][$serviceBrakeType])
+        ) {
             return false;
         }
 
-        if (
-            in_array($vehicleClass, [VehicleClassCode::CLASS_4, VehicleClassCode::CLASS_7]) &&
-            in_array($serviceBrakeType, [BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::PLATE]) &&
-            in_array($parkingBrakeType, [BrakeTestTypeCode::DECELEROMETER, BrakeTestTypeCode::GRADIENT])
-        ) {
-            return true;
-        }
-
-        if (
-            in_array($vehicleClass, [VehicleClassCode::CLASS_5]) &&
-            in_array($serviceBrakeType, [BrakeTestTypeCode::ROLLER]) &&
-            in_array($parkingBrakeType, [BrakeTestTypeCode::DECELEROMETER, BrakeTestTypeCode::GRADIENT])
-        ) {
-            return true;
-        }
-
-        return in_array( // any vehicle class, any service brake type
-            $parkingBrakeType,
-            [BrakeTestTypeCode::ROLLER, BrakeTestTypeCode::PLATE]
-        );
+        return in_array($parkingBrakeType, self::$serviceBrakeLockApplicableCombinations[$vehicleClass][$serviceBrakeType]);
     }
 }
