@@ -47,10 +47,9 @@ class VehicleServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $this->mockMethod($mockServiceLocator, 'get', $this->at(0), $entityManager);
         $this->mockMethod($mockServiceLocator, 'get', $this->at(1), XMock::of(AuthorisationService::class));
         $this->mockMethod($mockServiceLocator, 'get', $this->at(2), XMock::of(VehicleCatalogService::class));
-        $this->mockMethod($mockServiceLocator, 'get', $this->at(3), XMock::of(OtpService::class));
-        $this->mockMethod($mockServiceLocator, 'get', $this->at(4), XMock::of(ParamObfuscator::class));
-        $this->mockMethod($mockServiceLocator, 'get', $this->at(5), XMock::of(MotIdentityProviderInterface::class));
-        $this->mockMethod($mockServiceLocator, 'get', $this->at(6), XMock::of(NewVehicleService::class));
+        $this->mockMethod($mockServiceLocator, 'get', $this->at(3), XMock::of(ParamObfuscator::class));
+        $this->mockMethod($mockServiceLocator, 'get', $this->at(4), XMock::of(MotIdentityProviderInterface::class));
+        $this->mockMethod($mockServiceLocator, 'get', $this->at(5), XMock::of(NewVehicleService::class));
 
         $this->assertInstanceOf(
             VehicleService::class,

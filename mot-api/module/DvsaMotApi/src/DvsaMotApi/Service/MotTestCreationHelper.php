@@ -10,7 +10,6 @@ namespace DvsaMotApi\Service;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleUnderTestRequest;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
-use DvsaAuthentication\Service\OtpService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\PermissionAtSite;
@@ -19,6 +18,7 @@ use DvsaCommon\Constants\Role;
 use DvsaCommon\Dto\MotTesting\ContingencyTestDto;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
+use DvsaCommon\Model\FuelTypeAndCylinderCapacity;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaCommonApi\Service\Exception\NotFoundException;
@@ -73,14 +73,24 @@ class MotTestCreationHelper
     /** @var RetestEligibilityValidator */
     private $retestEligibilityValidator;
 
-    /** @var OtpService */
-    private $otpService;
     /** @var MotIdentityProviderInterface */
     private $identityProvider;
 
     /** @var VehicleService */
     private $vehicleService;
 
+    /**
+     * MotTestCreationHelper constructor.
+     *
+     * @param EntityManager                 $entityManager
+     * @param AuthorisationServiceInterface $authService
+     * @param TesterService                 $testerService
+     * @param                               $motTestRepository
+     * @param MotTestValidator              $motTestValidator
+     * @param RetestEligibilityValidator    $retestEligibilityValidator
+     * @param MotIdentityProviderInterface  $identityProvider
+     * @param VehicleService                $vehicleService
+     */
     public function __construct(
         EntityManager $entityManager,
         AuthorisationServiceInterface $authService,
@@ -88,7 +98,6 @@ class MotTestCreationHelper
         $motTestRepository,
         MotTestValidator $motTestValidator,
         RetestEligibilityValidator $retestEligibilityValidator,
-        OtpService $otpService,
         MotIdentityProviderInterface $identityProvider,
         VehicleService $vehicleService
     )
@@ -99,32 +108,31 @@ class MotTestCreationHelper
         $this->motTestRepository = $motTestRepository;
         $this->motTestValidator = $motTestValidator;
         $this->retestEligibilityValidator = $retestEligibilityValidator;
-        $this->otpService = $otpService;
         $this->identityProvider = $identityProvider;
         $this->vehicleService = $vehicleService;
     }
 
     /**
-     * @param Person $tester
-     * @param int $vehicleId
-     * @param int $vtsId
-     * @param string $primaryColourCode
-     * @param string $secondaryColourCode
-     * @param string $fuelTypeCode
-     * @param string $vehicleClassCode
-     * @param boolean $hasRegistration
-     * @param string $motTestTypeCode
-     * @param string $motTestNumberOriginal
-     * @param string $oneTimePassword
-     * @param string $clientIp
-     * @param int $contingencyId
-     * @param ContingencyTestDto|null $contingencyDto
+     * @param Person                   $tester
+     * @param                          $vehicleId
+     * @param                          $vtsId
+     * @param                          $primaryColourCode
+     * @param                          $secondaryColourCode
+     * @param                          $fuelTypeCode
+     * @param                          $cylinderCapacity
+     * @param                          $vehicleMake
+     * @param                          $vehicleModel
+     * @param                          $vehicleClassCode
+     * @param                          $hasRegistration
+     * @param                          $motTestTypeCode
+     * @param                          $motTestNumberOriginal
+     * @param                          $clientIp
+     * @param                          $contingencyId
+     * @param ContingencyTestDto|null  $contingencyDto
      * @param MotTestComplaintRef|null $complaintRef
+     *
      * @return MotTest
-     * @throws BadRequestException
-     * @throws ForbiddenException
      * @throws NotFoundException
-     * @throws \DvsaAuthentication\Service\Exception\OtpException
      * @throws \Exception
      */
     public function createMotTest(
@@ -134,11 +142,13 @@ class MotTestCreationHelper
         $primaryColourCode,
         $secondaryColourCode,
         $fuelTypeCode,
+        $cylinderCapacity,
+        $vehicleMake,
+        $vehicleModel,
         $vehicleClassCode,
         $hasRegistration,
         $motTestTypeCode,
         $motTestNumberOriginal,
-        $oneTimePassword,
         $clientIp,
         $contingencyId,
         ContingencyTestDto $contingencyDto = null,
@@ -226,6 +236,11 @@ class MotTestCreationHelper
         $motTestStatusRepository = $this->entityManager->getRepository(MotTestStatus::class);
         $activeStatus = $motTestStatusRepository->findActive();
 
+        // imported dvla vehicles will default to null for secondary colour
+        if (is_null($vehicle->getSecondaryColour())) {
+            $vehicle->setSecondaryColour($secondaryColour);
+        }
+
         $newMotTest = new MotTest();
         $newMotTest
             ->setStatus($activeStatus)
@@ -250,23 +265,36 @@ class MotTestCreationHelper
 
         $this->motTestValidator->validateNewMotTest($newMotTest);
 
-        if ($this->isVehicleModified($vehicle, $vehicleClass, $fuelType, $primaryColour, $secondaryColour)
+        if ($this->isVehicleModified($vehicle, $vehicleClass, $fuelType, $primaryColour, $secondaryColour, $cylinderCapacity, $vehicleMake, $vehicleModel)
             && !$motTestType->getIsDemo()
         ) {
-            if (!$this->identityProvider->getIdentity()->isSecondFactorRequired() &&
-                !$this->authService->isGranted(PermissionInSystem::MOT_TEST_WITHOUT_OTP)
-            ) {
-                $this->otpService->authenticate($oneTimePassword);
-            }
 
             // update vehicle with specified field values
             $updateDvsaVehicleUnderTestRequest = new UpdateDvsaVehicleUnderTestRequest();
             $updateDvsaVehicleUnderTestRequest->setColourCode($primaryColour->getCode())
                 ->setSecondaryColourCode($secondaryColour->getCode())
                 ->setVehicleClassCode($vehicleClass->getCode())
-                ->setFuelTypeCode($fuelTypeCode)
-//              ->setCylinderCapacity($data['CylinderCapacity'])   @todo: API and UI need to consider CC according to the certain fuel type
-                ->setOneTimePassword($oneTimePassword);
+                ->setFuelTypeCode($fuelTypeCode);
+
+            if (FuelTypeAndCylinderCapacity::isCylinderCapacityCompulsoryForFuelTypeCode($fuelTypeCode)) {
+                $updateDvsaVehicleUnderTestRequest->setCylinderCapacity($cylinderCapacity);
+            }
+
+            if (!is_null($vehicleMake)) {
+                if ($vehicleMake['makeId'] == 'other') {
+                    $updateDvsaVehicleUnderTestRequest->setMakeOther($vehicleMake['makeName']);
+                } else {
+                    $updateDvsaVehicleUnderTestRequest->setMakeId($vehicleMake['makeId']);
+                }
+            }
+
+            if (!is_null($vehicleModel)) {
+                if ($this->shouldUpdateModelOther($vehicleModel)) {
+                    $updateDvsaVehicleUnderTestRequest->setModelOther($vehicleModel['modelName']);
+                } else {
+                    $updateDvsaVehicleUnderTestRequest->setModelId($vehicleModel['modelId']);
+                }
+            }
 
             $updatedVehicle = $this->vehicleService->updateDvsaVehicleUnderTest(
                 $vehicle->getId(),
@@ -383,13 +411,18 @@ class MotTestCreationHelper
         VehicleClass $vehicleClass,
         FuelType $fuelType,
         $primaryColour,
-        $secondaryColour
-    )
-    {
+        $secondaryColour,
+        $cylinderCapacity,
+        $vehicleMake,
+        $vehicleModel
+    ) {
         return !$this->isVehicleClassSame($vehicle->getVehicleClass(), $vehicleClass)
         || !$this->isFuelTypeSame($vehicle->getFuelType(), $fuelType)
         || !$this->isColourSame($vehicle->getColour(), $primaryColour)
-        || !$this->isColourSame($vehicle->getSecondaryColour(), $secondaryColour);
+        || !$this->isColourSame($vehicle->getSecondaryColour(), $secondaryColour)
+        || !$this->isCylinderCapacitySame($vehicle->getCylinderCapacity(), $cylinderCapacity)
+        || !$this->isMakeSame($vehicle->getMakeName(), $vehicleMake['makeName'])
+        || !$this->isModelSame($vehicle->getModelName(), $vehicleModel['modelName']);
     }
 
     /**
@@ -448,6 +481,59 @@ class MotTestCreationHelper
 
         return false;
     }
+
+    /**
+     * @param $original
+     * @param $changedValue
+     *
+     * @return bool
+     */
+    private function isCylinderCapacitySame($original, $changedValue)
+    {
+        return $this->isSame($original, $changedValue);
+    }
+
+    /**
+     * @param $original
+     * @param $changedValue
+     *
+     * @return bool
+     */
+    private function isMakeSame($original, $changedValue)
+    {
+        return $this->isSame($original, $changedValue);
+    }
+
+    /**
+     * @param $original
+     * @param $changedValue
+     *
+     * @return bool
+     */
+    private function isModelSame($original, $changedValue)
+    {
+        return $this->isSame($original, $changedValue);
+    }
+
+    /**
+     * @param $original
+     * @param $changedValue
+     *
+     * @return bool
+     */
+    private function isSame($original, $changedValue)
+    {
+        if ($original == null || $changedValue == null) {
+            return true;
+        }
+
+        if ($original != null && $changedValue != null) {
+            return $original == $changedValue;
+        }
+
+        return false;
+    }
+
 
     public function saveRfrsForRetest(MotTest $motTestOriginal, MotTest $newMotTest)
     {
@@ -510,5 +596,17 @@ class MotTestCreationHelper
         $colourRepository = $this->entityManager->getRepository(Colour::class);
 
         return $colourRepository->getByCode($code);
+    }
+
+    /**
+     * @param array $vehicleModel
+     *
+     * @return bool
+     */
+    private function shouldUpdateModelOther($vehicleModel)
+    {
+        return ($vehicleModel['modelId'] == 'other'
+            || $vehicleModel['modelId'] == 'otherModel'
+        );
     }
 }

@@ -63,7 +63,7 @@ class ContingencyTest extends MotApi
             'fuelTypeId'              => FuelTypeCode::PETROL,
             'vehicleClassCode'        => $vehicleClass,
             'hasRegistration'         => true,
-            'oneTimePassword'         => Authentication::ONE_TIME_PASSWORD,
+            'cylinderCapacity'        => 1700,
             'contingencyId'           => $contingencyId,
             'contingencyDto'          => [
                     'contingencyCode'   => Authentication::CONTINGENCY_CODE_DEFAULT,

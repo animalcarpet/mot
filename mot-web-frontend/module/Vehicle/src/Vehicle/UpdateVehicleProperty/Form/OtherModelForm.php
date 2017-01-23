@@ -16,7 +16,7 @@ class OtherModelForm extends Form
 {
     const FIELD_OTHER_MODEL_NAME = 'otherModel';
     const FIELD_OTHER_MODEL_ID = 'otherModel';
-    const MAX_OTHER_MODEL_LENGTH = 30;
+    const MAX_OTHER_MODEL_LENGTH = 39;
 
     private $modelOtherElement;
 
@@ -59,7 +59,7 @@ class OtherModelForm extends Form
         $notEmptyValidator = (new NotEmpty())->setMessage(" Enter the model name of the vehicle", NotEmpty::IS_EMPTY);
         $stringLengthValidator = new StringLength();
         $stringLengthValidator->setMax(self::MAX_OTHER_MODEL_LENGTH);
-        $stringLengthValidator->setMessage(sprintf("The vehicle model must be %s characters or shorter", self::MAX_OTHER_MODEL_LENGTH));
+        $stringLengthValidator->setMessage("Must be shorter than 40 characters");
 
         $input = new Input(self::FIELD_OTHER_MODEL_ID);
         $input

@@ -6,7 +6,9 @@ use Core\FormWizard\StepResult;
 use CoreTest\FormWizard\Fake\FakeStep;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaMotTest\Service\StartTestChangeService;
 use stdClass;
+use Vehicle\UpdateVehicleProperty\Context\UpdateVehicleContext;
 use Vehicle\UpdateVehicleProperty\Form\Wizard\Context;
 use Vehicle\UpdateVehicleProperty\Form\Wizard\Step\ReviewMakeAndModelStep;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
@@ -22,12 +24,15 @@ class ReviewMakeAndModelStepTest extends \PHPUnit_Framework_TestCase
     private $vehicleEditBreadcrumbsBuilder;
     private $formUuid;
 
+    /** @var  StartTestChangeService */
+    private $startTestChangeService;
+
     protected function setUp()
     {
         $this->url = XMock::of(Url::class);
         $this->vehicleService = XMock::of(VehicleService::class);
         $this->vehicleEditBreadcrumbsBuilder = XMock::of(VehicleEditBreadcrumbsBuilder::class);
-
+        $this->startTestChangeService = XMock::of(StartTestChangeService::class);
         $this->vehicleEditBreadcrumbsBuilder->expects($this->any())->method("getVehicleEditBreadcrumbs")->willReturn(["vehicle", "change"]);
         $this->formUuid = uniqid();
     }
@@ -67,7 +72,7 @@ class ReviewMakeAndModelStepTest extends \PHPUnit_Framework_TestCase
 
     public function testExecuteGetReturnsStepResult()
     {
-        $reviewStep = $this->createReviewStepWithMakeAMdModelSteps();
+        $reviewStep = $this->createReviewStepWithMakeAndModelSteps();
         $result = $reviewStep->executeGet($this->formUuid);
 
         $this->assertInstanceOf(StepResult::class, $result);
@@ -75,21 +80,62 @@ class ReviewMakeAndModelStepTest extends \PHPUnit_Framework_TestCase
 
     public function testExecutePostReturnsRoute()
     {
-        $reviewStep = $this->createReviewStepWithMakeAMdModelSteps();
+        $reviewStep = $this->createReviewStepWithMakeAndModelSteps();
         $result = $reviewStep->executePost([], $this->formUuid);
 
         $this->assertInstanceOf(RedirectToRoute::class, $result);
     }
 
-    private function createReviewStep()
+    public function testExecutePost_changeUnderTest_returnsRoute()
     {
-        return new ReviewMakeAndModelStep($this->url, $this->vehicleEditBreadcrumbsBuilder, $this->vehicleService);
+        $this->startTestChangeService
+            ->expects($this->at(0))
+            ->method('getChangedValue')
+            ->with(StartTestChangeService::URL)
+            ->willReturn([
+                'url' => 'start-test-confirmation'
+            ]);
+
+        $this->startTestChangeService
+            ->expects($this->at(1))
+            ->method('getChangedValue')
+            ->with(StartTestChangeService::NO_REGISTRATION)
+            ->willReturn([
+                'noRegistration' => '0'
+            ]);
+
+        $this->startTestChangeService
+            ->expects($this->at(2))
+            ->method('getChangedValue')
+            ->with(StartTestChangeService::SOURCE)
+            ->willReturn([
+                'source' => '1'
+            ]);
+        $reviewStep = $this->createReviewStepWithMakeAndModelSteps('change-under-test');
+
+        $result = $reviewStep->executePost([], $this->formUuid);
+
+        $this->assertInstanceOf(RedirectToRoute::class, $result);
+        $this->assertSame(
+            'start-test-confirmation',
+            $reviewStep->getRoute()->getRouteName()
+        );
     }
 
-    private function createReviewStepWithMakeAMdModelSteps()
+    private function createReviewStep()
+    {
+        return new ReviewMakeAndModelStep(
+            $this->url,
+            $this->vehicleEditBreadcrumbsBuilder,
+            $this->vehicleService,
+            $this->startTestChangeService
+        );
+    }
+
+    private function createReviewStepWithMakeAndModelSteps($route = 'change')
     {
         $dvsaVehicle = $this->createDvsaVehicle();
-        $context = new Context($dvsaVehicle, "1w");
+        $context = new UpdateVehicleContext($dvsaVehicle, "1w", $route);
 
         $makeStep = $this->createStep(UpdateMakeStep::NAME, true);
         $modelStep = $this->createStep(UpdateModelStep::NAME, true);

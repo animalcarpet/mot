@@ -40,7 +40,6 @@ public class VehicleData extends VehicleService {
         }
         return createVehicle(
                 user,
-                DEFAULT_PIN,
                 Colours.Blue.getCode(),
                 CountryOfRegistration.Great_Britain.getRegistrationId(),
                 DEFAULT_CC,

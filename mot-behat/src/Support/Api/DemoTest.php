@@ -26,7 +26,7 @@ class DemoTest extends AbstractMotTest
             'fuelTypeId' => FuelTypeCode::PETROL,
             'vehicleClassCode' => $testClass,
             'hasRegistration' => '1',
-            'oneTimePassword' => '',
+            'cylinderCapacity' => 1700,
         ];
 
         return parent::createMotWithParams($token, $params);

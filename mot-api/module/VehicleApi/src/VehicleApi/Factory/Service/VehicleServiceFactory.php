@@ -47,7 +47,6 @@ class VehicleServiceFactory implements FactoryInterface
             $em->getRepository(DvlaMakeModelMap::class),
             $serviceLocator->get('VehicleCatalogService'),
             new VehicleValidator(),
-            $serviceLocator->get(OtpService::class),
             $serviceLocator->get(ParamObfuscator::class),
             new MotTestServiceProvider($serviceLocator),
             $serviceLocator->get(MotIdentityProviderInterface::class),

@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
 public class VehicleInformationViewTests extends DslTest {
@@ -90,19 +91,6 @@ public class VehicleInformationViewTests extends DslTest {
 
         //Then I should see its weight displayed as "Unknown"
         assertThat("Correct weight is Displayed", motUI.normalTest.getVehicleWeight(), is("Unknown"));
-    }
-
-    @Test(groups = {"Regression"})
-    public void editVehicleClass() throws IOException, URISyntaxException {
-
-        //Given I am on the StartTestConfirmation Page
-        motUI.normalTest.startTestConfirmationPage(tester, vehicle);
-
-        //When I edit the vehicle class
-        motUI.normalTest.changeClass("5");
-
-        //Then I submit the new class successfully
-        assertThat(motUI.normalTest.isDeclarationStatementFor2FaDisplayed(), is(true));
     }
 
     @Test(groups = {"Regression"})

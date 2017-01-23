@@ -11,7 +11,6 @@ use \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle as NewDvsaVehicle;
 use \Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
-use DvsaCommon\Auth\MotIdentityInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Database\Transaction;
 use DvsaCommon\Date\DateTimeApiFormat;
@@ -24,7 +23,6 @@ use DvsaCommon\Enum\WeightSourceCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Enum\VehicleClassId;
 use DvsaCommon\Obfuscate\ParamObfuscator;
-use DvsaAuthentication\Service\Exception\OtpException;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\ArgCapture;
 use DvsaCommonTest\TestUtils\MultiCallStubBuilder;
@@ -45,12 +43,10 @@ use DvsaEntities\Repository\VehicleV5CRepository;
 use Doctrine\ORM\EntityRepository;
 use DvsaMotApi\Service\MotTestService;
 use DvsaMotApi\Service\MotTestServiceProvider;
-use DvsaAuthentication\Service\OtpService;
 use DvsaMotApi\Service\Validator\VehicleValidator;
 use DvsaMotApiTest\Factory\VehicleObjectsFactory as VOF;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use VehicleApi\Service\VehicleService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use DvsaAuthentication\Identity;
 
 /**
@@ -89,9 +85,6 @@ class VehicleServiceTest extends AbstractServiceTestCase
 
     /** @var VehicleValidator|MockObj */
     private $mockValidator;
-
-    /** @var  OtpService|MockObj */
-    private $mockOtpService;
 
     /** @var ParamObfuscator */
     private $paramObfuscator;
@@ -141,14 +134,6 @@ class VehicleServiceTest extends AbstractServiceTestCase
 
         $this->paramObfuscator = XMock::of(ParamObfuscator::class);
         $this->mockValidator = new VehicleValidator();
-        $this->mockOtpService = XMock::of(OtpService::class);
-        $this->mockOtpService->expects($this->any())->method('authenticate')->will(
-            MultiCallStubBuilder::of()
-                ->add(self::OTP_INVALID, $this->throwException(new OtpException(0, 5)))
-                ->add(null, $this->throwException(new OtpException(5, 5)))
-                ->add(self::OTP_VALID, true)
-                ->build()
-        );
         $this->motTestServiceProvider = XMock::of(MotTestServiceProvider::class);
         $this->motTestServiceProvider->expects($this->any())->method('getService')->willReturn($this->mockMotTestService);
     }
@@ -503,7 +488,6 @@ class VehicleServiceTest extends AbstractServiceTestCase
     public function testCreateGivenVehicleDataShouldSaveIt()
     {
         $inputData = self::dataCreateVehicle();
-        $inputData['oneTimePassword'] = self::OTP_VALID;
 
         $colourId = 1;
         $fuelTypeCode = FuelTypeCode::PETROL;
@@ -578,32 +562,10 @@ class VehicleServiceTest extends AbstractServiceTestCase
         $expectedRequest->setVehicleClassCode($vehicleClassCode);
         $expectedRequest->setFuelTypeCode($fuelTypeCode);
         $expectedRequest->setTransmissionTypeId($transTypeId);
-        $expectedRequest->setOneTimePassword('123456');
 
         $actualRequest = $vehicleCapture->get();
 
         $this->assertEquals($expectedRequest, $actualRequest);
-    }
-
-    /**
-     * @expectedException \DvsaAuthentication\Service\Exception\OtpException
-     */
-    public function testCreateCalledByUserWithoutPermissionAndInvalidOtpThrowsAnException()
-    {
-        $input = $this->dataCreateVehicle();
-        $input['oneTimePassword'] = self::OTP_INVALID;
-
-        $this->createService()->create($input);
-    }
-
-    /**
-     * @expectedException \DvsaAuthentication\Service\Exception\OtpException
-     */
-    public function testCreateCalledByUserWithoutPermissionRequiresOneTimePassword()
-    {
-        $input = $this->dataCreateVehicle();
-
-        $this->createService()->create($input);
     }
 
     private static function dataCreateVehicle()
@@ -641,7 +603,6 @@ class VehicleServiceTest extends AbstractServiceTestCase
             $this->mockDvlaMakeModelMapRepository,
             $this->mockVehicleCatalog,
             $this->mockValidator,
-            $this->mockOtpService,
             $this->paramObfuscator,
             $this->motTestServiceProvider,
             $this->motIdentityProviderInterface,

@@ -9,7 +9,6 @@ use Dvsa\Mot\ApiClient\Request\CreateDvsaVehicleRequest;
 use Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle as VehicleFromDvla;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
-use DvsaAuthentication\Service\OtpService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -67,8 +66,6 @@ class VehicleService
     private $vehicleCatalog;
     /** @var  VehicleValidator */
     private $validator;
-    /** @var  OtpService */
-    private $otpService;
 
     private $motTestServiceProvider;
 
@@ -93,7 +90,6 @@ class VehicleService
         EntityRepository $dvlaMakeModelMapRepository,
         VehicleCatalogService $vehicleCatalog,
         VehicleValidator $validator,
-        OtpService $otpService,
         ParamObfuscator $paramObfuscator,
         MotTestServiceProvider $motTestServiceProvider,
         MotIdentityProviderInterface $identityProvider,
@@ -110,7 +106,6 @@ class VehicleService
         $this->dvlaMakeModelMapRepository = $dvlaMakeModelMapRepository;
         $this->vehicleCatalog = $vehicleCatalog;
         $this->validator = $validator;
-        $this->otpService = $otpService;
         $this->paramObfuscator = $paramObfuscator;
         $this->motTestServiceProvider = $motTestServiceProvider;
         $this->identityProvider = $identityProvider;
@@ -125,15 +120,9 @@ class VehicleService
 
         $this->validator->validate($data);
 
-        if ($this->isPinRequired())
-        {
-            $token = ArrayUtils::tryGet($data, 'oneTimePassword');
-            $this->otpService->authenticate($token);
-        }
-
         $vehicle = $this->mapVehicle($data);
 
-        $dvsaVehicleCreatedUsingJavaService = $this->createDvsaVehicleUsingJavaService($vehicle, $token);
+        $dvsaVehicleCreatedUsingJavaService = $this->createDvsaVehicleUsingJavaService($vehicle);
 
         $this->transaction->begin();
 
@@ -176,7 +165,6 @@ class VehicleService
         $motTestData[CreateMotTestService::FIELD_VEHICLE_CLASS_CODE] = ArrayUtils::tryGet($data, 'testClass');
         $motTestData[CreateMotTestService::FIELD_MOT_TEST_TYPE] = MotTestTypeCode::NORMAL_TEST;
         $motTestData[CreateMotTestService::FIELD_FUEL_TYPE_CODE] = ArrayUtils::tryGet($data, 'fuelType');
-        $motTestData[CreateMotTestService::FIELD_ONE_TIME_PASSWORD] = ArrayUtils::tryGet($data, 'oneTimePassword');
         $motTestData[CreateMotTestService::FIELD_CLIENT_IP] = ArrayUtils::tryGet($data, 'clientIp');
 
         // Contingency Data
@@ -431,19 +419,16 @@ class VehicleService
 
     /**
      * @param Vehicle $dvsaVehicle
-     * @param string $oneTimePassword
      *
      * @return DvsaVehicle
      */
     private function createDvsaVehicleUsingJavaService(
-        Vehicle $dvsaVehicle,
-        $oneTimePassword
+        Vehicle $dvsaVehicle
     ) {
         $fuelTypeCode = $dvsaVehicle->getModelDetail()->getFuelType() ? $dvsaVehicle->getModelDetail()->getFuelType()->getCode() : null;
 
         $dvsaVehicleRequest = new CreateDvsaVehicleRequest();
         $dvsaVehicleRequest
-            ->setOneTimePassword($oneTimePassword)
             ->setRegistration($dvsaVehicle->getRegistration())
             ->setVin($dvsaVehicle->getVin())
             ->setMakeId($dvsaVehicle->getModelDetail()->getModel()->getMake()->getId())

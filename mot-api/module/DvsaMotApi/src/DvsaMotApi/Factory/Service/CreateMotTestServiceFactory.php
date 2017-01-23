@@ -29,7 +29,6 @@ class CreateMotTestServiceFactory implements FactoryInterface
             $serviceLocator->get('DvsaAuthorisationService'),
             $serviceLocator->get('TesterService'),
             $serviceLocator->get(RetestEligibilityValidator::class),
-            $serviceLocator->get(OtpService::class),
             $serviceLocator->get(OrganisationService::class),
             $serviceLocator->get(VehicleService::class),
             $serviceLocator->get(MotIdentityProviderInterface::class),

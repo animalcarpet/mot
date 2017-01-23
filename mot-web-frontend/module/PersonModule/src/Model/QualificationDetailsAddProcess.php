@@ -226,5 +226,4 @@ class QualificationDetailsAddProcess extends QualificationDetailsAbstractProcess
     {
         return null;
     }
-
 }

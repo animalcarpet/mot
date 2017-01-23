@@ -12,6 +12,7 @@ use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\Model\FuelTypeAndCylinderCapacity;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommon\Utility\DtoHydrator;
+use DvsaMotApi\Service\CreateMotTestService;
 use DvsaMotTest\Service\AuthorisedClassesService;
 use Vehicle\CreateVehicle\Form\MakeForm;
 use Vehicle\CreateVehicle\Form\ModelForm;
@@ -190,7 +191,12 @@ class CreateNewVehicleService
             'primaryColour' => $primaryColour,
             'secondaryColour' => $secondaryColour,
             'vehicleClassCode' => $vehicle->getVehicleClass()->getName(),
+            'vehicleMake' => $this->getVehicleMakeIdAndName($vehicle),
+            'vehicleModel' => $this->getVehicleModelIdAndName($vehicle),
             'fuelTypeId' => $fuelTypeCode,
+            'cylinderCapacity' => FuelTypeAndCylinderCapacity::isCylinderCapacityCompulsoryForFuelTypeCode($fuelTypeCode)
+                ? $vehicle->getCylinderCapacity()
+                : null,
             'vehicleTestingStationId' => $vehicleTestingStationId,
             'hasRegistration' => $hasRegistration,
             'motTestType' => MotTestTypeCode::NORMAL_TEST,
@@ -205,6 +211,22 @@ class CreateNewVehicleService
         }
 
         return $data;
+    }
+
+    private function getVehicleMakeIdAndName(DvsaVehicle $vehicle)
+    {
+        return [
+            'makeId' => $vehicle->getMake()->getId(),
+            'makeName' => $vehicle->getMakeName()
+        ];
+    }
+
+    private function getVehicleModelIdAndName(DvsaVehicle $vehicle)
+    {
+        return [
+            'modelId' => $vehicle->getModel()->getId(),
+            'modelName' => $vehicle->getModelName()
+        ];
     }
 
     private function createMotTestForVehicle(DvsaVehicle $vehicle)
