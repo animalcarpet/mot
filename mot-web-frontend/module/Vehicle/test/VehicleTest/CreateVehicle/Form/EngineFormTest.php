@@ -26,16 +26,17 @@ class EngineFormTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $form->getMessages());
     }
 
-    public function test_formShouldNotShowError_when_validDataEnteredAllFuelTypes()
+    /**
+     * @dataProvider validDataDataProvider
+     */
+    public function test_formShouldNotShowError_when_validDataEnteredAllFuelTypes($fuelType, $cylinderCapacity)
     {
         $form = $this->buildForm($this->withFuelTypes(), null);
 
-        foreach ($this->validData() as $validFuelType => $validCapacity) {
-            $form->setData($this->setDataValues($validFuelType, $validCapacity));
+        $form->setData($this->setDataValues($fuelType, $cylinderCapacity));
 
-            $this->assertTrue($form->isValid());
-            $this->assertCount(0, $form->getMessages());
-        }
+        $this->assertTrue($form->isValid());
+        $this->assertCount(0, $form->getMessages());
     }
 
     public function test_formShouldShowError_when_fuelTypeIsNotSelected()
@@ -68,49 +69,49 @@ class EngineFormTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(self::ERROR_CAPACITY_MUST_BE_SHORTER_THAN_SIX_DIGITS, $form->getMessages()[EngineForm::FIELD_CAPACITY][0]);
     }
 
-    public function test_formShouldShowError_when_cylinderCapacityContainsNonNumericCharacters()
+    /**
+     * @dataProvider nonNumericInputsDataProvider
+     */
+    public function test_formShouldShowError_when_cylinderCapacityContainsNonNumericCharacters($cylinderCapacity)
     {
         $form = $this->buildForm($this->withFuelTypes(), null);
 
-        foreach ($this->nonNumericInputs() as $nonNumericInput) {
-            $form->setData($this->setDataValues(FuelTypeCode::PETROL, $nonNumericInput));
+        $form->setData($this->setDataValues(FuelTypeCode::PETROL, $cylinderCapacity));
 
-            $this->assertFalse($form->isValid());
-            $this->assertCount(1, $form->getMessages());
-            $this->assertSame(self::ERROR_CAPACITY_MUST_BE_NUMERIC, $form->getMessages()[EngineForm::FIELD_CAPACITY][0]);
-        }
+        $this->assertFalse($form->isValid());
+        $this->assertCount(1, $form->getMessages());
+        $this->assertSame(self::ERROR_CAPACITY_MUST_BE_NUMERIC, $form->getMessages()[EngineForm::FIELD_CAPACITY][0]);
     }
 
-    private function nonNumericInputs() {
+    public function nonNumericInputsDataProvider() {
         return [
-            'A',
-            'a',
-            '1400 cc',
-            'aaaB',
-            '£',
-            '$',
-            ' ',
-            '-200',
-            '1.2',
+            ['A'],
+            ['a'],
+            ['1400 cc'],
+            ['aaaB'],
+            ['£'],
+            ['$'],
+            ['-200'],
+            ['1.2'],
         ];
     }
 
-    private function validData() {
+    public function validDataDataProvider() {
         return [
-            FuelTypeCode::PETROL => '1400',
-            FuelTypeCode::DIESEL => '1400',
-            FuelTypeCode::ELECTRIC => '',
-            FuelTypeCode::CNG => '1400',
-            FuelTypeCode::ELECTRIC_DIESEL => '1400',
-            FuelTypeCode::FUEL_CELLS => '',
-            FuelTypeCode::GAS => '1400',
-            FuelTypeCode::GAS_BI_FUEL => '1400',
-            FuelTypeCode::GAS_DIESEL => '1400',
-            FuelTypeCode::HYBRID_ELECTRIC_CLEAN => '1400',
-            FuelTypeCode::LNG => '1400',
-            FuelTypeCode::LPG => '1400',
-            FuelTypeCode::STEAM => '',
-            FuelTypeCode::OTHER => '1400',
+            [FuelTypeCode::PETROL, '1400'],
+            [FuelTypeCode::DIESEL, '1400'],
+            [FuelTypeCode::ELECTRIC, ''],
+            [FuelTypeCode::CNG, '1400'],
+            [FuelTypeCode::ELECTRIC_DIESEL, '1400'],
+            [FuelTypeCode::FUEL_CELLS, ''],
+            [FuelTypeCode::GAS, '1400'],
+            [FuelTypeCode::GAS_BI_FUEL, '1400'],
+            [FuelTypeCode::GAS_DIESEL, '1400'],
+            [FuelTypeCode::HYBRID_ELECTRIC_CLEAN, '1400'],
+            [FuelTypeCode::LNG, '1400'],
+            [FuelTypeCode::LPG, '1400'],
+            [FuelTypeCode::STEAM, ''],
+            [FuelTypeCode::OTHER, '1400'],
         ];
     }
 
@@ -137,12 +138,12 @@ class EngineFormTest extends \PHPUnit_Framework_TestCase
             FuelTypeCode::DIESEL => 'Diesel',
             FuelTypeCode::ELECTRIC => 'Electric',
             FuelTypeCode::CNG => 'CNG',
-            FuelTypeCode::ELECTRIC_DIESEL => 'Eletric Diesel',
+            FuelTypeCode::ELECTRIC_DIESEL => 'Electric Diesel',
             FuelTypeCode::FUEL_CELLS => 'Fuel Cells',
             FuelTypeCode::GAS => 'Gas',
             FuelTypeCode::GAS_BI_FUEL => 'Gas Bi-Fuel',
-            FuelTypeCode::GAS_DIESEL => 'Gas Diseal',
-            FuelTypeCode::HYBRID_ELECTRIC_CLEAN => 'Hybrid Electic (Clean)',
+            FuelTypeCode::GAS_DIESEL => 'Gas Diesel',
+            FuelTypeCode::HYBRID_ELECTRIC_CLEAN => 'Hybrid Electric (Clean)',
             FuelTypeCode::LNG => 'LNG',
             FuelTypeCode::LPG => 'LPG',
             FuelTypeCode::STEAM => 'Steam',

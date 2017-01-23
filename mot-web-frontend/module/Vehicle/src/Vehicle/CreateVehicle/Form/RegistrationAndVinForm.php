@@ -12,16 +12,16 @@ class RegistrationAndVinForm extends Form
 {
     const REGISTRATION_FIELD = 'reg-input';
     const VIN_FIELD = 'vin-input';
-    const REGISTATION_CHECKBOX = 'leavingRegBlank';
+    const REGISTRATION_CHECKBOX = 'leavingRegBlank';
     const VIN_CHECKBOX = 'leavingVINBlank';
-    const ERROR_EMPTY_REGISTRATION = 'Enter the registration or select ‘I can’t provide a registration mark’';
-    const ERROR_EMPTY_VIN = 'Enter the VIN or select ‘I can’t provide a VIN’';
+    const ERROR_EMPTY_REGISTRATION = 'Enter the registration or select ‘I can’t provide the registration mark’';
+    const ERROR_EMPTY_VIN = 'Enter the VIN or select ‘I can’t provide the VIN’';
     const ERROR_MUST_CONTAIN_ONE_ALPHANUMERIC = 'Must contain at least one number or letter';
     const ERROR_NON_ALLOWED_VALUES = 'Can only contain numbers, letters, spaces, hyphens and full stops';
     const ERROR_REGISTRATION_GREATER_THAN_THIRTEEN_CHARACTERS = 'Must be shorter than 14 characters';
-    const ERROR_NOTHING_ENTERED = 'You must enter a registration mark or a VIN';
-    const ERROR_CANNOT_SELECT_AND_ENTER_REGISTRATION = 'Either enter the registration or select ‘I can’t provide a registration mark’';
-    const ERROR_CANNOT_SELECT_AND_ENTER_VIN = 'Either enter the VIN or select ‘I can’t provide a VIN’';
+    const ERROR_NOTHING_ENTERED = 'You must enter the registration mark or the VIN';
+    const ERROR_CANNOT_SELECT_AND_ENTER_REGISTRATION = 'Either enter the registration or select ‘I can’t provide the registration mark’';
+    const ERROR_CANNOT_SELECT_AND_ENTER_VIN = 'Either enter the VIN or select ‘I can’t provide the VIN’';
     const ERROR_VIN_GREATER_THAN_20_CHARACTERS = 'Must be shorter than 21 characters';
 
     private $errorMessages = [];
@@ -52,9 +52,9 @@ class RegistrationAndVinForm extends Form
         );
 
         $this->add((new Checkbox())
-            ->setLabel(self::REGISTATION_CHECKBOX)
-            ->setName(self::REGISTATION_CHECKBOX)
-            ->setAttribute('id', self::REGISTATION_CHECKBOX)
+            ->setLabel(self::REGISTRATION_CHECKBOX)
+            ->setName(self::REGISTRATION_CHECKBOX)
+            ->setAttribute('id', self::REGISTRATION_CHECKBOX)
             ->setAttribute('checked', $registrationCheckboxValue)
         );
 
@@ -86,7 +86,7 @@ class RegistrationAndVinForm extends Form
         $emptyVinField = !strlen($vinFieldValue) > 0;
 
         if ($regCheckboxValue && $vinCheckboxValue && $emptyRegistrationField && $emptyVinField) {
-            $this->addErrorMessage('You must enter a registration mark or a VIN');
+            $this->addErrorMessage('You must enter the registration mark or the VIN');
             return false;
         }
 
@@ -131,7 +131,7 @@ class RegistrationAndVinForm extends Form
 
     public function getRegistrationCheckbox()
     {
-        return $this->get(self::REGISTATION_CHECKBOX);
+        return $this->get(self::REGISTRATION_CHECKBOX);
     }
 
     public function getErrorMessages()
@@ -144,7 +144,7 @@ class RegistrationAndVinForm extends Form
         $isValid = true;
 
         if ($this->getVINCheckbox()->getAttributes()['checked'] && (strlen($this->getVINField()->getValue()) > 0)) {
-            $this->addErrorMessage('VIN - either enter the VIN or select ‘I can’t provide a VIN’');
+            $this->addErrorMessage('VIN - either enter the VIN or select ‘I can’t provide the VIN’');
             $this->setCustomError($this->getVINField(), self::ERROR_CANNOT_SELECT_AND_ENTER_VIN);
             $this->setLabelOnError(self::VIN_FIELD, 'VIN');
             $isValid = false;
@@ -159,7 +159,7 @@ class RegistrationAndVinForm extends Form
 
         if ($this->getRegistrationCheckbox()->getAttributes()['checked']
             && (strlen($this->getRegistrationField()->getValue()) > 0)) {
-            $this->addErrorMessage('Registration mark - either enter the registration or select ‘I can’t provide a registration mark’');
+            $this->addErrorMessage('Registration mark - either enter the registration or select ‘I can’t provide the registration mark’');
             $this->setCustomError($this->getRegistrationField(), self::ERROR_CANNOT_SELECT_AND_ENTER_REGISTRATION);
             $this->setLabelOnError(self::REGISTRATION_FIELD, 'Registration mark');
             $isValid = false;
@@ -237,7 +237,7 @@ class RegistrationAndVinForm extends Form
         $isValid = true;
 
         if ((!strlen($this->getRegistrationField()->getValue()) > 0) && !$this->getRegistrationCheckbox()->getAttributes()['checked']) {
-            $this->addErrorMessage('Registration mark - enter the registration or select ‘I can’t provide a registration mark’');
+            $this->addErrorMessage('Registration mark - enter the registration or select ‘I can’t provide the registration mark’');
             $this->setCustomError($this->getRegistrationField(), self::ERROR_EMPTY_REGISTRATION);
             $this->setLabelOnError(self::REGISTRATION_FIELD, 'Registration mark');
             $isValid = false;
@@ -251,7 +251,7 @@ class RegistrationAndVinForm extends Form
         $isValid = true;
 
         if (!strlen($this->getVINField()->getValue()) > 0 && !$this->getVINCheckbox()->getAttributes()['checked']) {
-            $this->addErrorMessage('VIN - enter the VIN or select ‘I can’t provide a VIN’');
+            $this->addErrorMessage('VIN - enter the VIN or select ‘I can’t provide the VIN’');
             $this->setCustomError($this->getVINField(), self::ERROR_EMPTY_VIN);
             $this->setLabelOnError(self::VIN_FIELD, 'VIN');
             $isValid = false;

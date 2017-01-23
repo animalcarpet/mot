@@ -14,7 +14,7 @@ class DateOfFirstUseForm extends Form
     const FIELD_MONTH = 'dateMonth';
     const FIELD_YEAR = 'dateYear';
 
-    const ERROR_MUST_BE_NUMBERIC = 'Can only contain numbers';
+    const ERROR_MUST_BE_NUMERIC = 'Can only contain numbers';
     const ERROR_ENTER_VALID_DATE = 'Enter a valid date';
     const ERROR_DATE_IS_IN_FUTURE = 'Enter a date in the past';
 
@@ -103,7 +103,7 @@ class DateOfFirstUseForm extends Form
 
         if (!is_numeric($day) || !is_numeric($month) || !is_numeric($year)) {
             $this->addErrorMessage('Date of first use - can only contain numbers');
-            $this->setCustomError($this->getDayElement(), self::ERROR_MUST_BE_NUMBERIC);
+            $this->setCustomError($this->getDayElement(), self::ERROR_MUST_BE_NUMERIC);
 
             return false;
         }

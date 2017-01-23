@@ -8,7 +8,7 @@ class ModelFormTest extends \PHPUnit_Framework_TestCase
 {
     public function testWhenUserSelectsPleaseSelect_validationMessageIsShown()
     {
-        $form = new ModelForm($this->mockModels());
+        $form = new ModelForm($this->getMockModels());
 
         $modelData = [
             ModelForm::MODEL => 'Please select',
@@ -22,7 +22,7 @@ class ModelFormTest extends \PHPUnit_Framework_TestCase
 
     public function testWhenUserSelectsOtherButEmpty_validationMessageIsShown()
     {
-        $form = new ModelForm($this->mockModels());
+        $form = new ModelForm($this->getMockModels());
 
         $modelData = [
             ModelForm::MODEL => 'Other',
@@ -36,7 +36,7 @@ class ModelFormTest extends \PHPUnit_Framework_TestCase
 
     public function testWhenUserEntersValidOtherData_validationPasses()
     {
-        $form = new ModelForm($this->mockModels(), 'Other');
+        $form = new ModelForm($this->getMockModels(), 'Other');
 
         $modelData = [
             ModelForm::MODEL => 'Other',
@@ -48,34 +48,20 @@ class ModelFormTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($form->getOther()->getMessages());
     }
 
-    public function testWhenUserEntersInValidOtherData_validationWillFail()
+    public function testWhenUserEntersOtherOverMaxLengthOfCharacters_validationWillFail()
     {
-        $form = new ModelForm($this->mockModels(), 'Other');
+        $form = new ModelForm($this->getMockModels(), 'Other');
 
         $modelData = [
             ModelForm::MODEL => 'Other',
-            ModelForm::OTHER => 'Something-Invalid',
+            ModelForm::OTHER => 'TprWULx4hPzeKwHpPLyKZh48CA7EIPq68nNscASf',
         ];
 
         $form->setData($modelData);
         $this->assertFalse($form->isValid());
     }
 
-    public function testWhenUserEntersInValidOtherDataWithNoCharacters_validationWillFail()
-    {
-        $form = new ModelForm($this->mockModels(), 'Other');
-
-        $modelData = [
-            ModelForm::MODEL => 'Other',
-            ModelForm::OTHER => '',
-        ];
-
-        $form->setData($modelData);
-        $this->assertFalse($form->isValid());
-    }
-
-
-    private function mockModels()
+    private function getMockModels()
     {
         return [
             ['id' => '1111', 'name' => 'A1'],

@@ -69,9 +69,10 @@ class RegistrationAndVinActionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('vehicle/create-vehicle/registrationAndVin.twig', $actual->getTemplate());
         /** @var ViewModel $viewModel */
         $viewModel = $actual->getViewModel();
+        /** @var RegistrationAndVinForm $form */
         $form = $viewModel->getVariable('form');
         $this->assertCount(1, $form->getMessages());
-        $this->assertSame('Either enter the registration or select ‘I can’t provide a registration mark’', $form->getMessages()['reg-input'][0]);
+        $this->assertSame($form::ERROR_CANNOT_SELECT_AND_ENTER_REGISTRATION, $form->getMessages()['reg-input'][0]);
     }
 
     private function mockPostData
