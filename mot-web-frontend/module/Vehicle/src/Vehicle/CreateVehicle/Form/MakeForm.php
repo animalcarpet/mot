@@ -12,15 +12,15 @@ class MakeForm extends Form
     const MODEL = 'vehicleMake';
     const OTHER = 'Other';
 
-    const LABEL_OTHER_MAX_LENGTH = 30;
+    const LABEL_OTHER_MAX_LENGTH = 39;
 
     const LABEL_PLEASE_SELECT = 'Please select';
     const ERROR_MESSAGE_INVALID_OTHER_ENTRY = 'Make, if other - enter the make';
     const ERROR_MESSAGE_EMPTY_SELECTION = 'Make - select an option';
-    const ERROR_MESSAGE_INVALID_OTHER_ALPHANUMERIC = 'Make, if other - can only contain numbers and letters';
-
-    const ERROR_FIELD_INVALID_OTHER_ALPHANUMERIC = 'Can only contain numbers and letters';
     const ERROR_FIELD_EMPTY = 'Enter the make';
+
+    const ERROR_FIELD_TOO_LONG = 'Must be shorter than 40 characters';
+    const ERROR_MESSAGE_TOO_LONG = 'Make, if other - must be shorter than 40 characters';
 
     private $errorMessages = [];
 
@@ -48,7 +48,6 @@ class MakeForm extends Form
             ->setAttribute('class', 'form-control')
             ->setAttribute('id', 'other-make')
             ->setAttribute('required', true)
-            ->setAttribute('maxLength', self::LABEL_OTHER_MAX_LENGTH)
             ->setAttribute('group', true)
         );
     }
@@ -71,9 +70,9 @@ class MakeForm extends Form
         }
 
         if (!empty($this->getOther()->getValue()) && $this->getVehicleMake()->getValue() === self::OTHER &&
-            !ctype_alnum($this->getOther()->getValue())) {
-            $this->addErrorMessage(self::ERROR_MESSAGE_INVALID_OTHER_ALPHANUMERIC);
-            $this->addLabelError($this->getOther(), [self::ERROR_FIELD_INVALID_OTHER_ALPHANUMERIC]);
+            strlen($this->getOther()->getValue()) > self::LABEL_OTHER_MAX_LENGTH) {
+            $this->addErrorMessage(self::ERROR_MESSAGE_TOO_LONG);
+            $this->addLabelError($this->getOther(), [self::ERROR_FIELD_TOO_LONG]);
             $fieldsValid = false;
         }
 

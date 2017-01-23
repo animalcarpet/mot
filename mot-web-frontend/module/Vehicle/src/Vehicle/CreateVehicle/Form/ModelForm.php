@@ -14,13 +14,15 @@ class ModelForm extends Form
 
     const LABEL_PLEASE_SELECT = 'Please select';
     const LABEL_OTHER = 'Other';
-    const OTHER_MAX_LENGTH = 30;
+    const OTHER_MAX_LENGTH = 39;
 
     const MODEL_EMPTY_MSG = 'Model - select an option';
     const MODEL_EMPTY_FIELD_MSG = 'Select a model';
     const OTHER_EMPTY_MSG = 'Model, if other - enter the model';
     const OTHER_EMPTY_FIELD_MSG = 'Enter the model';
-    const OTHER_FIELD_INVALID_ALPHANUMERIC = 'Can only contain numbers and letters';
+
+    const ERROR_FIELD_TOO_LONG = 'Must be shorter than 40 characters';
+    const ERROR_MESSAGE_TOO_LONG = 'Model, if other - must be shorter than 40 characters';
 
     private $errorMessages = [];
 
@@ -48,7 +50,6 @@ class ModelForm extends Form
             ->setAttribute('class', 'form-control')
             ->setAttribute('id', 'other-model')
             ->setAttribute('required', true)
-            ->setAttribute('maxLength', self::OTHER_MAX_LENGTH)
             ->setAttribute('group', true)
         );
     }
@@ -70,10 +71,10 @@ class ModelForm extends Form
             $fieldsValid = false;
         }
 
-        if (!empty($this->getOther()->getValue()) && $this->getModel()->getValue() === self::LABEL_OTHER &&
-            !ctype_alnum($this->getOther()->getValue())) {
-            $this->addErrorMessage(self::OTHER_EMPTY_MSG);
-            $this->addLabelError($this->getOther(), [self::OTHER_FIELD_INVALID_ALPHANUMERIC]);
+        if (!empty($this->getOther()->getValue()) && $this->getModel()->getValue() === self::OTHER &&
+            strlen($this->getOther()->getValue()) > self::OTHER_MAX_LENGTH) {
+            $this->addErrorMessage(self::ERROR_MESSAGE_TOO_LONG);
+            $this->addLabelError($this->getOther(), [self::ERROR_FIELD_TOO_LONG]);
             $fieldsValid = false;
         }
 

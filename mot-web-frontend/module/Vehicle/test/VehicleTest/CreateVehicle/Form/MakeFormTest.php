@@ -47,26 +47,13 @@ class MakeFormTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($form->isValid());
     }
 
-    public function testWhenUserEntersInValidOtherData_validationWillFail()
+    public function testWhenUserEntersOtherOverMaxLengthOfCharacters_validationWillFail()
     {
         $form = new MakeForm($this->getMockMakes(), 'Other');
 
         $modelData = [
             MakeForm::MODEL => 'Other',
-            MakeForm::OTHER => 'Zon-InvalidChar-da',
-        ];
-
-        $form->setData($modelData);
-        $this->assertFalse($form->isValid());
-    }
-
-    public function testWhenUserEntersInValidOtherDataWithNoCharacters_validationWillFail()
-    {
-        $form = new MakeForm($this->getMockMakes(), 'Other');
-
-        $modelData = [
-            MakeForm::MODEL => 'Other',
-            MakeForm::OTHER => '',
+            MakeForm::OTHER => 'TprWULx4hPzeKwHpPLyKZh48CA7EIPq68nNscASf',
         ];
 
         $form->setData($modelData);

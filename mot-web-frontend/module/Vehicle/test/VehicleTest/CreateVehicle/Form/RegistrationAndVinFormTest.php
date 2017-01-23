@@ -4,14 +4,14 @@ namespace Vehicle\CreateVehicle\Form;
 
 class RegistrationAndVinFormTest extends \PHPUnit_Framework_TestCase
 {
-    const ERROR_EMPTY_REGISTRATION = 'Enter the registration or select ‘I can’t provide a registration mark’';
-    const ERROR_EMPTY_VIN = 'Enter the VIN or select ‘I can’t provide a VIN’';
+    const ERROR_EMPTY_REGISTRATION = 'Enter the registration or select ‘I can’t provide the registration mark’';
+    const ERROR_EMPTY_VIN = 'Enter the VIN or select ‘I can’t provide the VIN’';
     const ERROR_MUST_CONTAIN_ONE_ALPHANUMERIC = 'Must contain at least one number or letter';
     const ERROR_NON_ALLOWED_VALUES = 'Can only contain numbers, letters, spaces, hyphens and full stops';
     const ERROR_REGISTRATION_GREATER_THAN_THIRTEEN_CHARACTERS = 'Must be shorter than 14 characters';
-    const ERROR_NOTHING_ENTERED = 'You must enter a registration mark or a VIN';
-    const ERROR_CANNOT_SELECT_AND_ENTER_REGISTRATION = 'Either enter the registration or select ‘I can’t provide a registration mark’';
-    const ERROR_CANNOT_SELECT_AND_ENTER_VIN = 'Either enter the VIN or select ‘I can’t provide a VIN’';
+    const ERROR_NOTHING_ENTERED = 'You must enter the registration mark or the VIN';
+    const ERROR_CANNOT_SELECT_AND_ENTER_REGISTRATION = 'Either enter the registration or select ‘I can’t provide the registration mark’';
+    const ERROR_CANNOT_SELECT_AND_ENTER_VIN = 'Either enter the VIN or select ‘I can’t provide the VIN’';
     const ERROR_VIN_GREATER_THAN_20_CHARACTERS = 'Must be shorter than 21 characters';
 
     public function setUp()

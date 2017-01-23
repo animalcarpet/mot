@@ -6,7 +6,7 @@ use Vehicle\CreateVehicle\Form\DateOfFirstUseForm;
 
 class DateOfFirstUseFormTest extends \PHPUnit_Framework_TestCase
 {
-    const ERROR_MUST_BE_NUMBERIC = 'Can only contain numbers';
+    const ERROR_MUST_BE_NUMERIC = 'Can only contain numbers';
     const ERROR_ENTER_VALID_DATE = 'Enter a valid date';
     const ERROR_DATE_IS_IN_FUTURE = 'Enter a date in the past';
 
@@ -50,13 +50,13 @@ class DateOfFirstUseFormTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($form->isValid());
         $this->assertCount(1, $form->getMessages());
-        $this->assertSame(self::ERROR_MUST_BE_NUMBERIC, $form->getMessages()[DateOfFirstUseForm::FIELD_DAY][0]);
+        $this->assertSame(self::ERROR_MUST_BE_NUMERIC, $form->getMessages()[DateOfFirstUseForm::FIELD_DAY][0]);
     }
 
     /**
      * @dataProvider invalidDataProvider
      */
-    public function testwhenInvalidDateisEntered_validationWillFail($day, $month, $year)
+    public function testWhenInvalidDateIsEntered_validationWillFail($day, $month, $year)
     {
         $form = $this->buildForm(null);
         $form->setData($this->setDataValues($day, $month, $year));
