@@ -367,7 +367,7 @@ class SpecialNoticeService extends AbstractService
         $this->authService->assertGranted(PermissionInSystem::SPECIAL_NOTICE_ACKNOWLEDGE);
         $username = $this->motIdentityProvider->getIdentity()->getUsername();
         $specialNotice = $this->getCurrentSpecialNoticeForUser($id, $username);
-        $specialNotice->setIsAcknowledged(true);
+        $specialNotice->markAcknowledged();
         $personRepository = $this->entityManager->getRepository(Person::class);
         $person = $personRepository->findOneBy(['username' => $specialNotice->getUsername()]);
 

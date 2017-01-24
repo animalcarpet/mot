@@ -47,6 +47,12 @@ class SpecialNotice extends Entity
     private $isAcknowledged = false;
 
     /**
+     * @var \DateTime
+     * @ORM\Column(name="acknowledged_on", type="datetime", nullable=true)
+     */
+    private $acknowledgedOn;
+
+    /**
      * @var boolean
      *
      * @ORM\Column(name="is_deleted", type="boolean", nullable=false)
@@ -115,18 +121,6 @@ class SpecialNotice extends Entity
     }
 
     /**
-     * @param boolean $isAcknowledged
-     *
-     * @return SpecialNotice
-     */
-    public function setIsAcknowledged($isAcknowledged)
-    {
-        $this->isAcknowledged = $isAcknowledged;
-
-        return $this;
-    }
-
-    /**
      * @return boolean
      */
     public function getIsAcknowledged()
@@ -148,6 +142,14 @@ class SpecialNotice extends Entity
     public function setContentId($contentId)
     {
         $this->contentId = $contentId;
+        return $this;
+    }
+
+    public function markAcknowledged()
+    {
+        $this->isAcknowledged = true;
+        $this->acknowledgedOn = new \DateTime();
+
         return $this;
     }
 }
