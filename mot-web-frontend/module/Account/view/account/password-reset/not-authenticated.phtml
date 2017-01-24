@@ -1,12 +1,10 @@
 <?php
-
-$errorMessages  = $this->layout()->flashMessenger->getErrorMessages();
-
+$errorMessages = $this->layout()->flashMessenger->getErrorMessages();
 ?>
 
 <?php echo $this->partial('partial/gds/general/system-message', ['messages' => $errorMessages, 'type' => 'failure']); ?>
 
-<p class="lede">You can reset your account if you have forgotten your security answers and password.</p>
+<p class="lede">Contact the DVSA helpdesk to reset your account security.</p>
 
 <div>
     <?php echo $this->partial('partial/gds/general/contactHelpdesk', ['config' => $viewModel['helpdesk']]); ?>
