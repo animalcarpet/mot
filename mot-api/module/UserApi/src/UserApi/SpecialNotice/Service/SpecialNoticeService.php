@@ -153,7 +153,7 @@ class SpecialNoticeService extends AbstractService
     {
         $this->authService->assertGranted(PermissionInSystem::SPECIAL_NOTICE_READ);
 
-        $specialNotices = $this->getSpecialNoticesForUser($username);
+        $specialNotices = $this->getAllCurrentSpecialNoticesForUser($username);
 
         return array_map([$this, 'extract'], $specialNotices);
     }
@@ -273,7 +273,7 @@ class SpecialNoticeService extends AbstractService
 
     public function isUserOverdue(Person $person)
     {
-        $specialNotices = $this->getSpecialNoticesForUser($person->getUsername());
+        $specialNotices = $this->getAllCurrentSpecialNoticesForUser($person->getUsername());
         foreach ($specialNotices as $specialNotice) {
             if ($this->isOverdue($specialNotice)) {
                 return true;
@@ -318,11 +318,6 @@ class SpecialNoticeService extends AbstractService
         $this->entityManager->persist($specialNoticeContent);
         $this->specialNoticeRepository->removeSpecialNoticeContent($id);
         $this->entityManager->flush();
-    }
-
-    protected function getSpecialNoticesForUser($username)
-    {
-        return $this->specialNoticeRepository->getSpecialNoticesForUser($username);
     }
 
     /**

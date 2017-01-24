@@ -21,24 +21,9 @@ class SpecialNoticeContext implements Context
     private $specialNotice;
 
     /**
-     * @var SessionContext
-     */
-    private $sessionContext;
-
-    /**
      * @var Response
      */
     private $specialNoticeResponse;
-
-    /**
-     * @var TestSupportHelper
-     */
-    private $testSupportHelper;
-
-    /**
-     * @var Session
-     */
-    private $session;
 
     /**
      * @var AuthenticatedUser
@@ -57,31 +42,21 @@ class SpecialNoticeContext implements Context
 
     private $siteData;
     private $userData;
+    private $specialNoticeId;
 
     /**
      * @param SpecialNotice $specialNotice
      */
     public function __construct(
         SpecialNotice $specialNotice,
-        TestSupportHelper $testSupportHelper,
         Session $session,
         SiteData $siteData,
         UserData $userData
     )
     {
         $this->specialNotice = $specialNotice;
-        $this->testSupportHelper = $testSupportHelper;
-        $this->session = $session;
         $this->siteData = $siteData;
         $this->userData = $userData;
-    }
-
-    /**
-     * @BeforeScenario
-     */
-    public function gatherContexts(BeforeScenarioScope $scope)
-    {
-        $this->sessionContext = $scope->getEnvironment()->getContext(SessionContext::class);
     }
 
     /**
@@ -155,12 +130,12 @@ class SpecialNoticeContext implements Context
     }
 
     /**
-     * @When the Special Notice is broadcasted
+     * @When the Special Notice is broadcast
      */
-    public function theSpecialNoticeIsBroadcasted()
+    public function theSpecialNoticeIsBroadcast()
     {
-        $this->sessionContext->iAmLoggedInAsAnCronUser();
-        $response = $this->specialNotice->sendBroadcast($this->userData->getCurrentLoggedUser()->getAccessToken());
+        $cronUser = $this->userData->createCronUser();
+        $response = $this->specialNotice->sendBroadcast($cronUser->getAccessToken());
 
         PHPUnit_Framework_Assert::assertTrue($response);
     }
@@ -262,5 +237,76 @@ class SpecialNoticeContext implements Context
         PHPUnit_Framework_Assert::assertNotEmpty($this->specialNoticeResponse->getBody()->getData()['id'], 'Special Notice Id was not returned in response');
         PHPUnit_Framework_Assert::assertTrue(is_int($this->specialNoticeResponse->getBody()->getData()['id']), 'Special Notice Id is not a number');
         PHPUnit_Framework_Assert::assertEquals(HttpResponse::STATUS_CODE_200, $this->specialNoticeResponse->getStatusCode(), 'Incorrect Status Code returned');
+    }
+
+    /**
+     * @Given Special Notice has been broadcast to testers
+     */
+    public function specialNoticeHasBeenBroadcastToTesters()
+    {
+        $data = [];
+
+        $date = (new \DateTime())->format("Y-m-d");
+
+        $data["noticeTitle"] = "Warning!";
+        $data["targetRoles"] = ["TESTER-CLASS-4"];
+        $data["internalPublishDate"] = $date;
+        $data["externalPublishDate"] = $date;
+
+        $schemeUser = $this->userData->createSchemeUser();
+
+        $this->specialNoticeResponse = $this->specialNotice->createSpecialNotice($schemeUser->getAccessToken(), $data);
+        $this->theSpecialNoticeIsCreated();
+
+        $id = $this->specialNoticeResponse->getBody()->getData()["id"];
+        $this->specialNoticeId = $id;
+
+        $response = $this->specialNotice->publish($schemeUser->getAccessToken(), $id);
+        PHPUnit_Framework_Assert::assertEquals(HttpResponse::STATUS_CODE_200, $response->getStatusCode());
+
+        $cronUser = $this->userData->createCronUser();
+        $response = $this->specialNotice->sendBroadcast($cronUser->getAccessToken());
+        PHPUnit_Framework_Assert::assertTrue($response);
+    }
+
+    /**
+     * @When Schemeuser removes Special Notice
+     */
+    public function schemeuserRemovesSpecialNoticeWithTitle()
+    {
+        $schemeuser = $this->userData->createSchemeUser();
+        $response = $this->specialNotice->getAllSpecialNotices($schemeuser->getAccessToken());
+
+        $specialNotice = null;
+        $specialNotices = $response->getBody()->getData();
+        foreach ($specialNotices as $sn) {
+            if ($this->specialNoticeId === $sn["id"]) {
+                $specialNotice = $sn;
+                break;
+            }
+        }
+
+        PHPUnit_Framework_Assert::assertNotNull($specialNotice);
+
+        $this->specialNotice->removeSpecialNotices($schemeuser->getAccessToken(), $specialNotice["id"]);
+    }
+
+    /**
+     * @Then :tester does not see Special Notice
+     */
+    public function doesNotSeeSpecialNoticeWithTitle(AuthenticatedUser $tester)
+    {
+        $response = $this->specialNotice->getSpecialNotices($tester->getAccessToken(), $tester->getUserId());
+
+        $specialNotice = null;
+        $specialNotices = $response->getBody()->getData();
+        foreach ($specialNotices as $sn) {
+            if ($this->specialNoticeId === $sn["contentId"]) {
+                $specialNotice = $sn;
+                break;
+            }
+        }
+
+        PHPUnit_Framework_Assert::assertNull($specialNotice);
     }
 }

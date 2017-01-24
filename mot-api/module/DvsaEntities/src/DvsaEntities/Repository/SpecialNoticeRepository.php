@@ -9,9 +9,9 @@ use DvsaCommon\Enum\OrganisationBusinessRoleCode;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommon\Enum\SpecialNoticeAudienceTypeId;
 use Doctrine\DBAL\Connection;
-use DvsaCommon\Utility\ArrayUtils;
 use DvsaEntities\Entity\SpecialNotice;
 use DvsaCommonApi\Service\Exception\NotFoundException;
+
 /**
  * Class SpecialNoticeRepository
  * @package DvsaEntities\Repository
@@ -23,14 +23,14 @@ class SpecialNoticeRepository extends AbstractMutableRepository
     const GET_LATEST_ISSUE_NUMBER_QUERY =
         'SELECT MAX(snc.issueNumber) FROM DvsaEntities\Entity\SpecialNoticeContent snc WHERE snc.issueYear = ?1';
 
-    const QUERY_BY_USERNAME = 'SELECT sn FROM DvsaEntities\Entity\SpecialNotice sn WHERE sn.username = ?1';
-
     const QUERY_GET_ALL_CURRENT = 'SELECT snc FROM DvsaEntities\Entity\SpecialNoticeContent snc
-                                    WHERE snc.isPublished = 1 AND snc.externalPublishDate <= CURRENT_DATE()';
+                                    JOIN DvsaEntities\Entity\SpecialNotice sn WITH sn.contentId = snc.id
+                                    WHERE snc.isPublished = 1 AND snc.externalPublishDate <= CURRENT_DATE()
+                                    AND snc.isDeleted = 0
+                                    AND sn.isDeleted = 0
+                                    ';
 
     const REMOVE_QUERY = 'UPDATE DvsaEntities\Entity\SpecialNotice sn SET sn.isDeleted = true WHERE sn.content = ?1';
-
-    const DVSA_ORG_NAME = 'dvsa';
 
     public function getAll()
     {
@@ -62,15 +62,6 @@ class SpecialNoticeRepository extends AbstractMutableRepository
         }
     }
 
-    public function getSpecialNoticesForUser($username)
-    {
-        return $this
-            ->getEntityManager()
-            ->createQuery(self::QUERY_BY_USERNAME)
-            ->setParameter(1, $username)
-            ->getResult();
-    }
-
     /**
      * @param string $username
      * @return SpecialNotice[]
@@ -84,9 +75,12 @@ class SpecialNoticeRepository extends AbstractMutableRepository
             ->where("c.isPublished = :isPublished")
             ->andWhere("sn.username = :username")
             ->andWhere("c.externalPublishDate <= :publishDate OR c.internalPublishDate <= :publishDate")
+            ->andWhere("sn.isDeleted = :isDeleted")
+            ->andWhere("c.isDeleted = :isDeleted")
             ->setParameter("isPublished", 1)
             ->setParameter("username", $username)
             ->setParameter("publishDate", new \DateTime())
+            ->setParameter("isDeleted", 0)
         ;
 
         return $qb->getQuery()->getResult();
@@ -104,6 +98,7 @@ class SpecialNoticeRepository extends AbstractMutableRepository
             ->andWhere("c.expiryDate <= :expiryDate")
             ->andWhere("sn.isAcknowledged = :isAcknowledged")
             ->andWhere("sn.isDeleted = :isDeleted")
+            ->andWhere("c.isDeleted = :isDeleted")
             ->groupBy("a.vehicleClassId")
             ->setParameter("isPublished", 1)
             ->setParameter("username", $username)
@@ -141,10 +136,14 @@ class SpecialNoticeRepository extends AbstractMutableRepository
             ->andWhere("sn.username = :username")
             ->andWhere("sn.id = :id")
             ->andWhere("c.externalPublishDate <= :publishDate OR c.internalPublishDate <= :publishDate")
+            ->andWhere("sn.isDeleted = :isDeleted")
+            ->andWhere("c.isDeleted = :isDeleted")
             ->setParameter("publishDate", new \DateTime())
             ->setParameter("username", $username)
             ->setParameter("id", $id)
-            ->setParameter("isPublished", 1);
+            ->setParameter("isPublished", 1)
+            ->setParameter("isDeleted", 0)
+        ;
 
         $sn = $qb->getQuery()->getOneOrNullResult();
 
@@ -170,9 +169,14 @@ class SpecialNoticeRepository extends AbstractMutableRepository
             ->where("c.isPublished = :isPublished")
             ->andWhere("sn.username = :username")
             ->andWhere("c.id = :contentId")
+            ->andWhere("sn.isDeleted = :isDeleted")
+            ->andWhere("c.isDeleted = :isDeleted")
             ->setParameter("username", $username)
             ->setParameter("contentId", $contentId)
-            ->setParameter("isPublished", 1);
+            ->setParameter("isPublished", 1)
+            ->setParameter("isPublished", 1)
+            ->setParameter("isDeleted", 0)
+        ;
 
         $sn = $qb->getQuery()->getOneOrNullResult();
 
