@@ -209,7 +209,7 @@ class SpecialNoticeServiceTest extends AbstractServiceTestCase
     {
         //given
         $acknowledgedExpiredSpecialNotice = $this->createTestSpecialNotice();
-        $acknowledgedExpiredSpecialNotice->setIsAcknowledged(true);
+        $acknowledgedExpiredSpecialNotice->markAcknowledged();
         $acknowledgedExpiredSpecialNotice->getContent()->setExpiryDate(new DateTime('2013-01-01'));
         $this->mockEntityManagerForSpecialNotices([$acknowledgedExpiredSpecialNotice]);
 
@@ -385,7 +385,6 @@ class SpecialNoticeServiceTest extends AbstractServiceTestCase
         $specialNotice = new SpecialNotice();
         $specialNotice->setId(1);
         $specialNotice->setUsername('username');
-        $specialNotice->setIsAcknowledged(false);
 
         $content = new SpecialNoticeContent();
         $content->setId(1);

@@ -16,8 +16,16 @@ class SpecialNoticeTest extends BaseEntityTestCase
         $expectedProperties = [
             'username',
             'content',
-            'isAcknowledged',
         ];
         $this->checkGettersAndSetters($expectedProperties, new SpecialNotice());
     }
+
+    public function testAcknowledgedDateAndFlagIsSetWhenAcknowledged()
+    {
+        $specialNotice = new SpecialNotice();
+        $specialNotice->markAcknowledged();
+        $this->assertAttributeInstanceOf(\DateTime::class, 'acknowledgedOn', $specialNotice);
+        $this->assertTrue($specialNotice->getIsAcknowledged());
+    }
+
 }
