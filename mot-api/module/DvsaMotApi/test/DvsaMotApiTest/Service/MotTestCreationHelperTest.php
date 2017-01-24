@@ -43,6 +43,7 @@ class MotTestCreationHelperTest extends AbstractServiceTestCase
     const TEST_CLIENT_IP = '127.0.0.1';
     const TEST_CONTINGENCY_ID = 1;
     const TEST_CONTINGENCY_DTO = null;
+    const COUNTRY_OF_REGISTRATION = 1;
 
     private $motTestServiceTest;
 

@@ -98,7 +98,7 @@ class UpdateModelStep extends AbstractStep implements AutoWireableInterface
         $formActionUrl = $this->getRoute(["formUuid" => $formUuid])->toString($this->url);
         $backUrl = $this->getBackUrl($formUuid);
 
-        $tertiaryTitle = $this->tertiaryTitleBuilder->getTertiaryTitleForVehicle($this->context->getVehicle());
+        $tertiaryTitle = $this->getTertiaryTitleForVehicle();
 
         if ($this->hasOtherMakeId()) {
             $partial = self::PARTIAL_EDIT_OTHER_MODEL;
@@ -113,7 +113,7 @@ class UpdateModelStep extends AbstractStep implements AutoWireableInterface
             ->setBackUrl($backUrl)
             ->setBackLinkText("Back")
             ->setFormActionUrl($formActionUrl)
-            ->setPageTertiaryTitle($isUpdateUnderTest ? '' : $tertiaryTitle);
+            ->setPageTertiaryTitle($tertiaryTitle);
     }
 
     protected function createForm(array $formData = [])
@@ -193,17 +193,18 @@ class UpdateModelStep extends AbstractStep implements AutoWireableInterface
     protected function getPrePopulatedData()
     {
         $isUpdateUnderTest = $this->context->isUpdateVehicleDuringTest();
-        $makeId = ($this->context->getVehicle()->getMake() === null)? null : $this->context->getVehicle()->getMake()->getId();
-        $modelId = ($this->context->getVehicle()->getModel() === null)? null : $this->context->getVehicle()->getModel()->getId();
-
-        $modelId = $this->getMakeId() == $makeId ? $modelId : null;
 
         if ($isUpdateUnderTest) {
             // need to default to please select when updating under test
             return [ModelForm::FIELD_MODEL_NAME => ''];
-        }
+        } else {
+            $makeId = ($this->context->getVehicle()->getMake() === null)? null : $this->context->getVehicle()->getMake()->getId();
+            $modelId = ($this->context->getVehicle()->getModel() === null)? null : $this->context->getVehicle()->getModel()->getId();
 
-        return [ModelForm::FIELD_MODEL_NAME => $modelId];
+            $modelId = $this->getMakeId() == $makeId ? $modelId : null;
+
+            return [ModelForm::FIELD_MODEL_NAME => $modelId];
+        }
     }
 
     private function hasOtherMakeId()

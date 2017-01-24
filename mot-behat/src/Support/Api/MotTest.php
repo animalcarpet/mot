@@ -5,6 +5,7 @@ namespace Dvsa\Mot\Behat\Support\Api;
 use Dvsa\Mot\Behat\Datasource\Authentication;
 use Dvsa\Mot\Behat\Support\HttpClient;
 use DvsaCommon\Enum\ColourCode;
+use DvsaCommon\Enum\CountryOfRegistrationId;
 use DvsaCommon\Enum\FuelTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
 
@@ -51,6 +52,7 @@ class MotTest extends AbstractMotTest
             'secondaryColour' => ColourCode::GREY,
             'fuelTypeId' => FuelTypeCode::PETROL,
             'vehicleClassCode' => $testClass,
+            'countryOfRegistration' => CountryOfRegistrationId::GB_UK_ENG_CYM_SCO_UK_GREAT_BRITAIN,
             'hasRegistration' => '1',
             'cylinderCapacity' => 1700,
         ];

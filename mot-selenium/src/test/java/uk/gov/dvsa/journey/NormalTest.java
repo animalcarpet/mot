@@ -172,6 +172,12 @@ public class NormalTest {
         return changeVehicleMakeAndModel.getSuccessMessage();
     }
 
+    public String changeCountryOfRegistration() {
+        StartTestConfirmationPage changeCountryOfRegistration =
+                confirmationPage.clickChangeCountryOfRegistration().selectCountryOfRegistration(CountryOfRegistration.Ireland).submit();
+        return changeCountryOfRegistration.getSuccessMessage();
+    }
+
     public TestSummaryPage conductTrainingTest(User tester, Vehicle vehicle) throws IOException, URISyntaxException {
         TestResultsEntryGroupAPageInterface testResultsEntryPage = pageNavigator.gotoTrainingTestResultsEntryPage(tester, vehicle);
         testResultsEntryPage.completeTestDetailsWithPassValues(false);

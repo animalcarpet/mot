@@ -109,7 +109,7 @@ class UpdateClassProcess implements UpdateVehicleInterface , AutoWireableInterfa
     }
 
     /**
-     * What should be displayed on the submit button control.
+     * What should be displayed on the back button control.
      *
      * @return string
      */

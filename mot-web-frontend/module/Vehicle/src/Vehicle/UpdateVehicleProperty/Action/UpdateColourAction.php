@@ -5,6 +5,7 @@ use Core\TwoStepForm\EditStepAction;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Obfuscate\ParamObfuscator;
+use DvsaMotTest\Service\StartTestChangeService;
 use Vehicle\UpdateVehicleProperty\Process\UpdateColourProcess;
 
 class UpdateColourAction extends AbstractUpdateVehicleAction implements AutoWireableInterface
@@ -13,9 +14,10 @@ class UpdateColourAction extends AbstractUpdateVehicleAction implements AutoWire
         EditStepAction $editStepAction,
         UpdateColourProcess $process,
         VehicleService $vehicleService,
-        ParamObfuscator $paramObfuscator
+        ParamObfuscator $paramObfuscator,
+        StartTestChangeService $startTestChangeService
     )
     {
-        parent::__construct($editStepAction, $process, $vehicleService, $paramObfuscator);
+        parent::__construct($editStepAction, $process, $vehicleService, $paramObfuscator, $startTestChangeService);
     }
 }

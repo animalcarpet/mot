@@ -193,7 +193,6 @@ public class ConductMotTests extends DslTest {
 
     @Test(groups = {"BVT"})
     public void conductRetestSuccessfully() throws IOException, URISyntaxException {
-
         //Given I have a vehicle with a failed MOT test
         motApi.createTest(tester, site.getId(), vehicle, TestOutcome.FAILED, 12345, DateTime.now());
 

@@ -8,10 +8,7 @@ import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
-import uk.gov.dvsa.ui.pages.vehicleinformation.ChangeClassUnderTestPage;
-import uk.gov.dvsa.ui.pages.vehicleinformation.ChangeColourUnderTestPage;
-import uk.gov.dvsa.ui.pages.vehicleinformation.ChangeEngineUnderTestPage;
-import uk.gov.dvsa.ui.pages.vehicleinformation.ChangeMakeUnderTestPage;
+import uk.gov.dvsa.ui.pages.vehicleinformation.*;
 
 public class StartTestConfirmationPage extends Page {
     public static final String path = "/start-test-confirmation/";
@@ -29,6 +26,7 @@ public class StartTestConfirmationPage extends Page {
     @FindBy(id = "change-vehicle-colour") private WebElement changeColourButton;
     @FindBy(id = "change-vehicle-engine") private WebElement changeEngineButton;
     @FindBy(id = "change-vehicle-make") private WebElement changeMakeAndModelButton;
+    @FindBy(id = "change-vehicle-country-of-registration") private WebElement changeCountryOfRegistrationButton;
     @FindBy(id = "fuel-type-select") private WebElement fuelType;
     @FindBy(id = "refuse-to-test") private WebElement refuseToTestVehicle;
     @FindBy(id = "motExpiryDate") private WebElement motExpireDate;
@@ -86,6 +84,11 @@ public class StartTestConfirmationPage extends Page {
     public ChangeMakeUnderTestPage clickChangeMakeAndModel(){
         changeMakeAndModelButton.click();
         return new ChangeMakeUnderTestPage (driver);
+    }
+
+    public ChangeCountryOfRegistrationUnderTestPage clickChangeCountryOfRegistration(){
+        changeCountryOfRegistrationButton.click();
+        return new ChangeCountryOfRegistrationUnderTestPage (driver);
     }
 
     public String getVehicleWeight() {

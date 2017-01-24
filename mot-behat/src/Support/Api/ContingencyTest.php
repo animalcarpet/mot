@@ -6,6 +6,7 @@ use Dvsa\Mot\Behat\Datasource\Authentication;
 use Dvsa\Mot\Behat\Support\Request;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Enum\ColourCode;
+use DvsaCommon\Enum\CountryOfRegistrationId;
 use DvsaCommon\Enum\FuelTypeCode;
 
 class ContingencyTest extends MotApi
@@ -64,6 +65,7 @@ class ContingencyTest extends MotApi
             'vehicleClassCode'        => $vehicleClass,
             'hasRegistration'         => true,
             'cylinderCapacity'        => 1700,
+            'countryOfRegistration'   => CountryOfRegistrationId::GB_UK_ENG_CYM_SCO_UK_GREAT_BRITAIN,
             'contingencyId'           => $contingencyId,
             'contingencyDto'          => [
                     'contingencyCode'   => Authentication::CONTINGENCY_CODE_DEFAULT,

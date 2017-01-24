@@ -46,6 +46,7 @@ class CreateMotTestService implements TransactionAwareInterface
     const FIELD_COLOURS = 'colours';
     const FIELD_COLOURS_PRIMARY = 'primaryColour';
     const FIELD_COLOURS_SECONDARY = 'secondaryColour';
+    const FIELD_COUNTRY_OF_REGISTRATION = 'countryOfRegistration';
     const FIELD_FUEL_TYPE_CODE = 'fuelTypeId';
     const FIELD_CYLINDER_CAPACITY = 'cylinderCapacity';
     const FIELD_VEHICLE_MAKE = 'vehicleMake';
@@ -161,6 +162,7 @@ class CreateMotTestService implements TransactionAwareInterface
         $fuelTypeCode            = ArrayUtils::tryGet($data, self::FIELD_FUEL_TYPE_CODE);
         $cylinderCapacity        = ArrayUtils::tryGet($data, self::FIELD_CYLINDER_CAPACITY);
         $vehicleMake             = ArrayUtils::tryGet($data, self::FIELD_VEHICLE_MAKE);
+        $countryOfRegistration   = ArrayUtils::tryGet($data, self::FIELD_COUNTRY_OF_REGISTRATION);
         $vehicleModel            = ArrayUtils::tryGet($data, self::FIELD_VEHICLE_MODEL);
         $vehicleClassCode        = ArrayUtils::tryGet($data, self::FIELD_VEHICLE_CLASS_CODE);
         $hasRegistration         = ArrayUtils::tryGet($data, self::FIELD_HAS_REGISTRATION, false);
@@ -200,6 +202,7 @@ class CreateMotTestService implements TransactionAwareInterface
             $vehicleMake,
             $vehicleModel,
             $vehicleClassCode,
+            $countryOfRegistration,
             $hasRegistration,
             $dvlaVehicleId,
             $motTestTypeCode,
@@ -229,6 +232,7 @@ class CreateMotTestService implements TransactionAwareInterface
      * @param                          $vehicleMake
      * @param                          $vehicleModel
      * @param                          $vehicleClassCode
+     * @param                          $countryOfRegistrationId
      * @param                          $hasRegistration
      * @param                          $dvlaVehicleId
      * @param                          $motTestTypeCode
@@ -251,6 +255,7 @@ class CreateMotTestService implements TransactionAwareInterface
         $vehicleMake,
         $vehicleModel,
         $vehicleClassCode,
+        $countryOfRegistrationId,
         $hasRegistration,
         $dvlaVehicleId,
         $motTestTypeCode,
@@ -313,6 +318,7 @@ class CreateMotTestService implements TransactionAwareInterface
             $fuelTypeCode,
             $primaryColourCode,
             $secondaryColourCode,
+            $countryOfRegistrationId,
             $motTestTypeCode
         );
 
@@ -323,6 +329,7 @@ class CreateMotTestService implements TransactionAwareInterface
                 $vehicleId,
                 $vehicleTestingStationId,
                 $vehicleClassCode,
+                $countryOfRegistrationId,
                 $hasRegistration,
                 $dvlaVehicleId,
                 $motTestTypeCode,

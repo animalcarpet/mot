@@ -23,7 +23,8 @@ class CountryOfRegistrationMapper extends AbstractApiMapper
         $dto = new CountryDto();
         $dto->setCode($countryOfReg->getCode())
             ->setName($countryOfReg->getName())
-            ->setLicensingCode($countryOfReg->getLicensingCopy());
+            ->setLicensingCode($countryOfReg->getLicensingCopy())
+            ->setId($countryOfReg->getId());
 
         return $dto;
     }

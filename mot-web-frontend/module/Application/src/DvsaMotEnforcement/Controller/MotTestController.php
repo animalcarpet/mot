@@ -418,6 +418,7 @@ class MotTestController extends AbstractDvsaMotTestController
             'fuelTypeId' => $this->evalFuelTypeCodeEnumsBasedOnTheFuelName($vehicle->getFuelType()->getName()),
             'vehicleClassCode' => $vehicle->getVehicleClass()->getCode(),
             'cylinderCapacity' => $vehicle->getCylinderCapacity(),
+            'countryOfRegistration' => $vehicle->getCountryOfRegistrationId(),
         ];
 
         return $postData;

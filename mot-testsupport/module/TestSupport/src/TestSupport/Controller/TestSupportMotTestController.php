@@ -135,6 +135,7 @@ class TestSupportMotTestController extends BaseTestSupportRestfulController
             'motTestType'             => isset($motTest['testType']) ? $motTest['testType'] : null,
             'vehicleId'               => $vehicle->getId(),
             'vehicleTestingStationId' => $vtsId,
+            'countryOfRegistration'   => $vehicle->getCountryOfRegistration()->getId(),
             'primaryColour'           => $vehicle->getColour()->getCode(),
             'secondaryColour'         => $vehicle->getColourSecondary()->getCode(),
             'fuelTypeId'              => $vehicle->getFuelType()->getCode(),

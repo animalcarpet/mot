@@ -10,6 +10,8 @@ class VehicleRouteList
     const VEHICLE_SEARCH_RESULTS = 'vehicle/result';
     const VEHICLE_CHANGE_ENGINE = 'vehicle/detail/change/engine';
     const VEHICLE_CHANGE_CLASS = 'vehicle/detail/change/class';
+    const VEHICLE_CHANGE_COUNTRY_OF_REGISTRATION = 'vehicle/detail/change/country-of-registration';
+    const VEHICLE_CHANGE_UNDER_TEST_COUNTRY_OF_REGISTRATION = 'vehicle/detail/change-under-test/country-of-registration';
     const VEHICLE_CHANGE_UNDER_TEST_ENGINE = 'vehicle/detail/change-under-test/engine';
     const VEHICLE_CHANGE_UNDER_TEST_CLASS = 'vehicle/detail/change-under-test/class';
     const VEHICLE_CHANGE_UNDER_TEST_COLOUR = 'vehicle/detail/change-under-test/colour';

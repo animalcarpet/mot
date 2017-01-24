@@ -9,6 +9,11 @@ use Vehicle\UpdateVehicleProperty\ViewModel\UpdateVehiclePropertyViewModel;
 /** @var CountryOfRegistrationForm $form */
 $form = $viewModel->getForm();
 ?>
+
+<div class="text">
+    <p class="lede">This should be the country where the car is registered, not the country of origin.</p>
+</div>
+
 <fieldset>
     <?php echo $this->partial(
         'partial/gds/form/control',

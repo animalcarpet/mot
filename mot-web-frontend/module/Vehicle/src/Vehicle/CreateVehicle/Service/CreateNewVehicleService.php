@@ -194,6 +194,7 @@ class CreateNewVehicleService
             'vehicleMake' => $this->getVehicleMakeIdAndName($vehicle),
             'vehicleModel' => $this->getVehicleModelIdAndName($vehicle),
             'fuelTypeId' => $fuelTypeCode,
+            'countryOfRegistration' => $vehicle->getCountryOfRegistrationId(),
             'cylinderCapacity' => FuelTypeAndCylinderCapacity::isCylinderCapacityCompulsoryForFuelTypeCode($fuelTypeCode)
                 ? $vehicle->getCylinderCapacity()
                 : null,
