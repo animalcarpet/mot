@@ -47,7 +47,7 @@ class NationalComponentStatisticsService implements AutoWireableInterface
 
     private function validate($year, $month, $group)
     {
-        $validator = new GroupStatisticsParameterCheck($this->dateTimeHolder);
+        $validator = new GroupStatisticsParameterCheck();
         if (!$validator->isValid($year, $month, $group)) {
             throw new NotFoundException("National Component Statistics");
         }

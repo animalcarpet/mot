@@ -8,7 +8,6 @@ use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Tester
 use DvsaCommon\Auth\Assertion\ViewTesterTestQualityAssertion;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtSite;
-use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use PersonApi\Service\Mapper\TesterGroupAuthorisationMapper;
@@ -23,23 +22,19 @@ class TesterStatisticsService implements AutoWireableInterface
 
     private $testerGroupAuthorisationMapper;
 
-    private $dateTimeHolder;
-
     private $mapper;
 
     function __construct(
         TesterStatisticsRepository $repository,
         MotAuthorisationServiceInterface $authorisationService,
         ViewTesterTestQualityAssertion $viewTesterTestQualityAssertion,
-        TesterGroupAuthorisationMapper $testerGroupAuthorisationMapper,
-        DateTimeHolder $dateTimeHolder
+        TesterGroupAuthorisationMapper $testerGroupAuthorisationMapper
     )
     {
         $this->repository = $repository;
         $this->authorisationService = $authorisationService;
         $this->viewTesterTestQualityAssertion = $viewTesterTestQualityAssertion;
         $this->testerGroupAuthorisationMapper = $testerGroupAuthorisationMapper;
-        $this->dateTimeHolder = $dateTimeHolder;
         $this->mapper = new TesterStatisticsMapper();
     }
 
@@ -47,7 +42,7 @@ class TesterStatisticsService implements AutoWireableInterface
     {
         $this->authorisationService->assertGrantedAtSite(PermissionAtSite::VTS_VIEW_TEST_QUALITY, $siteId);
 
-        $validator = new StatisticsParameterCheck($this->dateTimeHolder);
+        $validator = new StatisticsParameterCheck();
         if (!$validator->isValid($year, $month)) {
             throw new NotFoundException("Site Statistics");
         }
@@ -62,7 +57,7 @@ class TesterStatisticsService implements AutoWireableInterface
         $authorisation = $this->testerGroupAuthorisationMapper->getAuthorisation($testerId);
         $this->viewTesterTestQualityAssertion->assertGranted($testerId, $authorisation);
 
-        $validator = new StatisticsParameterCheck($this->dateTimeHolder);
+        $validator = new StatisticsParameterCheck();
         if (!$validator->isValid($year, $month)) {
             throw new NotFoundException("Tester Statistics");
         }

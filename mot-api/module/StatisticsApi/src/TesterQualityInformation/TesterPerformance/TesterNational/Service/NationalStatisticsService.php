@@ -40,7 +40,6 @@ class NationalStatisticsService
     public function get($year, $month)
     {
         $this->validateParams($year, $month);
-
         $generator = new NationalStatisticsReportGenerator(
             $this->repository,
             $this->storage,
@@ -58,7 +57,7 @@ class NationalStatisticsService
 
     private function validateParams($year, $month)
     {
-        $validator = new StatisticsParameterCheck($this->dateTimeHolder);
+        $validator = new StatisticsParameterCheck();
         if (!$validator->isValid($year, $month)) {
             throw new NotFoundException("National Statistics");
         }

@@ -7,7 +7,6 @@ use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Teste
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Tester\Repository\TesterSingleGroupStatisticsRepository;
 use DvsaCommon\Auth\Assertion\ViewTesterTestQualityAssertion;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
-use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use PersonApi\Service\Mapper\TesterGroupAuthorisationMapper;
@@ -16,7 +15,6 @@ use PersonApi\Service\PersonalDetailsService;
 class TesterComponentStatisticsService implements AutoWireableInterface
 {
     private $componentStatisticsRepository;
-    private $dateTimeHolder;
     private $testerStatisticsRepository;
     private $authorisationService;
     private $personContactService;
@@ -27,7 +25,6 @@ class TesterComponentStatisticsService implements AutoWireableInterface
     public function __construct(
         TesterComponentStatisticsRepository $componentStatisticsRepository,
         TesterSingleGroupStatisticsRepository $testerStatisticsRepository,
-        DateTimeHolder $dateTimeHolder,
         MotAuthorisationServiceInterface $authorisationService,
         PersonalDetailsService $personalDetailsService,
         ViewTesterTestQualityAssertion $assertion,
@@ -36,11 +33,9 @@ class TesterComponentStatisticsService implements AutoWireableInterface
     )
     {
         $this->componentStatisticsRepository = $componentStatisticsRepository;
-        $this->dateTimeHolder = $dateTimeHolder;
         $this->testerStatisticsRepository = $testerStatisticsRepository;
         $this->authorisationService = $authorisationService;
         $this->personContactService = $personalDetailsService;
-        $this->dateTimeHolder = $dateTimeHolder;
         $this->dtoMapper = $dtoMapper;
         $this->testerGroupAuthorisationMapper = $testerGroupAuthorisationMapper;
         $this->assertion = $assertion;
@@ -51,7 +46,7 @@ class TesterComponentStatisticsService implements AutoWireableInterface
         $authorisation = $this->testerGroupAuthorisationMapper->getAuthorisation($testerId);
         $this->assertion->assertGranted($testerId, $authorisation);
 
-        $validator = new GroupStatisticsParameterCheck($this->dateTimeHolder);
+        $validator = new GroupStatisticsParameterCheck();
         if (!$validator->isValid($year, $month, $group)) {
             throw new NotFoundException("Tester Component Statistics");
         }

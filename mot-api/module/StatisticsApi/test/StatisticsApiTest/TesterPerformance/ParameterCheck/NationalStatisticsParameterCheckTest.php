@@ -3,8 +3,7 @@
 namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\ParameterCheck;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\ParameterCheck\StatisticsParameterCheck;
-use DvsaCommon\Date\DateTimeHolder;
-use DvsaCommonTest\TestUtils\XMock;
+use DvsaCommon\Date\DateUtils;
 
 class NationalStatisticsParameterCheckTest extends \PHPUnit_Framework_TestCase
 {
@@ -13,7 +12,7 @@ class NationalStatisticsParameterCheckTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->sut = new StatisticsParameterCheck($this->getDateTimeHolder());
+        $this->sut = new StatisticsParameterCheck();
     }
 
     /**
@@ -55,7 +54,7 @@ class NationalStatisticsParameterCheckTest extends \PHPUnit_Framework_TestCase
                 $month,
             ],
             [
-                $this->getCurrentDate()->format("Y"),
+                $this->getFirstOfThisMonth()->format("Y"),
                 $month,
             ],
         ];
@@ -94,7 +93,7 @@ class NationalStatisticsParameterCheckTest extends \PHPUnit_Framework_TestCase
                 "XI",
             ],
             [
-                $year,
+                $this->getCurrentYear(),
                 $this->getCurrentMonth(),
             ],
             [
@@ -142,31 +141,16 @@ class NationalStatisticsParameterCheckTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return DateTimeHolder
-     */
-    private function getDateTimeHolder()
-    {
-        $dateTimeHolder = XMock::of(DateTimeHolder::class);
-        $dateTimeHolder
-            ->expects($this->any())
-            ->method("getCurrentDate")
-            ->willReturnCallback(function () {
-                return new \DateTime("2016-06-21");
-            });
-        return $dateTimeHolder;
-    }
-
-    /**
      * @return \DateTime
      */
-    private function getCurrentDate()
+    private function getFirstOfThisMonth()
     {
-        return $this->getDateTimeHolder()->getCurrentDate();
+        return DateUtils::firstOfThisMonth();
     }
 
     private function getDateInThePast($dateInterval)
     {
-        return $this->getCurrentDate()->sub(new \DateInterval($dateInterval));
+        return DateUtils::firstOfThisMonth()->sub(new \DateInterval($dateInterval));
     }
 
     private function getYearInThePast($dateInterval)
@@ -181,7 +165,7 @@ class NationalStatisticsParameterCheckTest extends \PHPUnit_Framework_TestCase
 
     private function getDateInTheFuture($dateInterval)
     {
-        return $this->getCurrentDate()->add(new \DateInterval($dateInterval));
+        return DateUtils::firstOfThisMonth()->add(new \DateInterval($dateInterval));
     }
 
     private function getYearInTheFuture($dateInterval)
@@ -196,6 +180,11 @@ class NationalStatisticsParameterCheckTest extends \PHPUnit_Framework_TestCase
 
     private function getCurrentMonth()
     {
-        return (int)$this->getCurrentDate()->format("m");
+        return (int)DateUtils::firstOfThisMonth()->format("m");
+    }
+
+    private function getCurrentYear()
+    {
+        return (int)DateUtils::firstOfThisMonth()->format("Y");
     }
 }

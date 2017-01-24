@@ -6,12 +6,11 @@ use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Commo
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Tester\Repository\TesterComponentStatisticsRepository;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Tester\Repository\TesterSingleGroupStatisticsRepository;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterAtSitePerformanceResult;
-use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterPerformanceResult;
 use DvsaCommon\Auth\Assertion\ViewTesterTestQualityAssertion;
 use DvsaCommon\Auth\PermissionInSystem;
+use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommon\Model\TesterAuthorisation;
-use DvsaCommonTest\Date\TestDateTimeHolder;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\MethodSpy;
 use DvsaCommonTest\TestUtils\XMock;
@@ -57,7 +56,6 @@ class TesterComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->sut = new \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Tester\Service\TesterComponentStatisticsService($this->componentStatisticsRepositoryMock,
             $this->testerStatisticsRepositoryMock,
-            $this->getDateTimeHolder(),
             $this->authorisationService,
             $this->personalDetailsService,
             $this->assertion,
@@ -71,7 +69,7 @@ class TesterComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetThrowsExceptionForInvalidData()
     {
-        $date = $this->getDateTimeHolder()->getCurrentDate()->sub(new \DateInterval("P1M"));
+        $date = $this->getFirstOfThisMonth()->sub(new \DateInterval("P1M"));
         $year = (int)$date->format("Y");
         $month = (int)$date->format("m");
 
@@ -91,7 +89,7 @@ class TesterComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
     public function testGroupPerformanceCalculation($failedCount, $totalCount, $totalTime, $averageVehicleAge,
                                                     $expectedAverageTime, $expectedPercentageFailed, $expectedAverageVehicleAge)
     {
-        $date = $this->getDateTimeHolder()->getCurrentDate()->sub(new \DateInterval("P1M"));
+        $date = $this->getFirstOfThisMonth()->sub(new \DateInterval("P1M"));
         $year = (int)$date->format("Y");
         $month = (int)$date->format("m");
 
@@ -130,7 +128,7 @@ class TesterComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testComponentFailRateCalculation($failedCount, $expectedPercentage)
     {
-        $date = $this->getDateTimeHolder()->getCurrentDate()->sub(new \DateInterval("P1M"));
+        $date = $this->getFirstOfThisMonth()->sub(new \DateInterval("P1M"));
         $year = (int)$date->format("Y");
         $month = (int)$date->format("m");
 
@@ -189,7 +187,7 @@ class TesterComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testLastMonthStatisticsAreFetchedFromRepository()
     {
-        $date = $this->getDateTimeHolder()->getCurrentDate()->sub(new \DateInterval("P1M"));
+        $date = $this->getFirstOfThisMonth()->sub(new \DateInterval("P1M"));
         $year = (int)$date->format("Y");
         $month = (int)$date->format("m");
 
@@ -219,7 +217,7 @@ class TesterComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
             ->willReturn(new TesterAtSitePerformanceResult());
         $testerStatisticsRepositorySpy = new MethodSpy($this->testerStatisticsRepositoryMock, 'get');
 
-        $date = $this->getDateTimeHolder()->getCurrentDate();
+        $date = $this->getFirstOfThisMonth();
         $date->sub(new \DateInterval("P3M"));
 
         $year = (int)$date->format("Y");
@@ -242,8 +240,8 @@ class TesterComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(VehicleClassGroupCode::BIKES, $repositoryGroup);
     }
 
-    private function getDateTimeHolder()
+    private function getFirstOfThisMonth()
     {
-        return new TestDateTimeHolder(new \DateTime("2016-06-21"));
+       return DateUtils::firstOfThisMonth();
     }
 }

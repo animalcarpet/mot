@@ -8,7 +8,6 @@ use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\Tester
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Auth\PermissionAtSite;
-use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use PersonApi\Service\PersonalDetailsService;
@@ -16,7 +15,6 @@ use PersonApi\Service\PersonalDetailsService;
 class TesterAtSiteComponentStatisticsService implements AutoWireableInterface
 {
     private $componentStatisticsRepository;
-    private $dateTimeHolder;
     private $testerStatisticsRepository;
     private $authorisationService;
     private $personContactService;
@@ -26,18 +24,15 @@ class TesterAtSiteComponentStatisticsService implements AutoWireableInterface
     public function __construct(
         TesterAtSiteComponentStatisticsRepository $componentStatisticsRepository,
         TesterAtSiteSingleGroupStatisticsRepository $testerStatisticsRepository,
-        DateTimeHolder $dateTimeHolder,
         MotAuthorisationServiceInterface $authorisationService,
         PersonalDetailsService $personalDetailsService,
         ComponentBreakdownDtoMapper $dtoMapper,
         MotIdentityProviderInterface $identityProvider
     ) {
         $this->componentStatisticsRepository = $componentStatisticsRepository;
-        $this->dateTimeHolder = $dateTimeHolder;
         $this->testerStatisticsRepository = $testerStatisticsRepository;
         $this->authorisationService = $authorisationService;
         $this->personContactService = $personalDetailsService;
-        $this->dateTimeHolder = $dateTimeHolder;
         $this->dtoMapper = $dtoMapper;
         $this->identityProvider = $identityProvider;
     }
@@ -48,7 +43,7 @@ class TesterAtSiteComponentStatisticsService implements AutoWireableInterface
             $this->authorisationService->assertGrantedAtSite(PermissionAtSite::VTS_VIEW_TEST_QUALITY, $siteId);
         }
 
-        $validator = new GroupStatisticsParameterCheck($this->dateTimeHolder);
+        $validator = new GroupStatisticsParameterCheck();
         if (!$validator->isValid($year, $month, $group)) {
             throw new NotFoundException("Tester Component Statistics");
         }
