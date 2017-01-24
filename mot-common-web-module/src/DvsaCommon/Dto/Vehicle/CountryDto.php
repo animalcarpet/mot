@@ -2,14 +2,14 @@
 
 namespace DvsaCommon\Dto\Vehicle;
 
-use DvsaCommon\Dto\AbstractDataTransferObject;
+use DvsaCommon\Dto\Common\AbstractStaticDataDto;
 
 /**
  * Class CountryDto
  *
  * @package DvsaCommon\Dto\Vehicle
  */
-class CountryDto extends AbstractDataTransferObject
+class CountryDto extends AbstractStaticDataDto
 {
     /** @var string */
     private $code;

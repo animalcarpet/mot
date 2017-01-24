@@ -4,6 +4,7 @@ namespace DvsaMotTest\Service;
 
 use Core\Routing\MotTestRoutes;
 use Core\Routing\VehicleRoutes;
+use DvsaMotTest\Constants\VehicleSearchSource;
 use Zend\View\Helper\Url;
 
 class StartTestChangeService
@@ -166,6 +167,15 @@ class StartTestChangeService
     {
         if ($this->isValueChanged(self::CHANGE_MAKE) &&
             $this->isValueChanged(self::CHANGE_MODEL)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isDvlaVehicle()
+    {
+        if ($this->getChangedValue(StartTestChangeService::SOURCE)['source'] == VehicleSearchSource::DVLA) {
             return true;
         }
 

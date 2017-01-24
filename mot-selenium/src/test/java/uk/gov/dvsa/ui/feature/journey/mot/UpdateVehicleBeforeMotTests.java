@@ -116,6 +116,21 @@ public class UpdateVehicleBeforeMotTests extends DslTest {
     }
 
     @Test(groups = {"BVT"},
+            description = "Tester can update the make and model of a DVLA vehicle at the start of a mot test")
+    public void testerCanUpdateDvlaVehicleMakeAndModelWhenStartingMotTest() throws IOException, URISyntaxException {
+
+        step("Given I am logged into MOT2 as a Tester");
+        step("And I select a DVLA vehicle to start a MOT test");
+        motUI.normalTest.startTestConfirmationPage(tester, vehicleData.getNewDvlaVehicle(tester));
+
+        step("When I update the make and model of a DVLA vehicle");
+        String message = motUI.normalTest.changeMakeAndModel();
+
+        step("Then the vehicle make and model is updated");
+        assertThat(message, containsString("Vehicle make and model has been successfully changed"));
+    }
+
+    @Test(groups = {"BVT"},
             description = "Tester cannot start a MOT test for a vehicle that is currently under test")
     public void testerCannotStartMotForVehicleWhenItIsCurrentlyUnderTest() throws IOException, URISyntaxException {
 
@@ -144,5 +159,20 @@ public class UpdateVehicleBeforeMotTests extends DslTest {
 
         step("Then I advised to enter the vehicle Class");
         assertThat(motUI.normalTest.getNoTestClassValidation(), containsString("You must set the test class"));
+    }
+
+    @Test(groups = {"BVT"},
+            description = "Tester can update the make and model of a vehicle at the start of a mot test")
+    public void testerCanUpdateVehicleCountryOfRegistrationWhenStartingMotTest() throws IOException, URISyntaxException {
+
+        step("Given I am logged into MOT2 as a Tester");
+        step("And I select a vehicle to start a MOT test");
+        motUI.normalTest.startTestConfirmationPage(tester, vehicleData.getNewVehicle(tester));
+
+        step("When I update the country of registration of a vehicle");
+        String message = motUI.normalTest.changeCountryOfRegistration();
+
+        step("Then the vehicle country of registration is updated");
+        assertThat(message, containsString("Country of registration has been successfully changed"));
     }
 }

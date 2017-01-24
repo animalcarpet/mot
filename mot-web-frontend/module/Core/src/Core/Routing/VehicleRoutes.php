@@ -110,6 +110,26 @@ class VehicleRoutes extends AbstractRoutes
     }
 
     /**
+     * @param $obfuscatedVehicleId
+     *
+     * @return mixed
+     */
+    public function changeUnderTestCountryOfRegistration($obfuscatedVehicleId)
+    {
+        return $this->url(VehicleRouteList::VEHICLE_CHANGE_UNDER_TEST_COUNTRY_OF_REGISTRATION, ['id' => $obfuscatedVehicleId]);
+    }
+
+    /**
+     * @param $obfuscatedVehicleId
+     *
+     * @return mixed
+     */
+    public function changeCountryOfRegistration($obfuscatedVehicleId)
+    {
+        return $this->url(VehicleRouteList::VEHICLE_CHANGE_COUNTRY_OF_REGISTRATION, ['id' => $obfuscatedVehicleId]);
+    }
+
+    /**
      * @param string $obfuscatedVehicleId
      *
      * @return string

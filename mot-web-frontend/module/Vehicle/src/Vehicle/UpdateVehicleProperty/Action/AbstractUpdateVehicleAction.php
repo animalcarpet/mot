@@ -8,6 +8,7 @@ use Core\TwoStepForm\SingleStepProcessInterface;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Obfuscate\ParamObfuscator;
+use DvsaMotTest\Service\StartTestChangeService;
 use Vehicle\UpdateVehicleProperty\Context\UpdateVehicleContext;
 
 class AbstractUpdateVehicleAction implements AutoWireableInterface
@@ -16,6 +17,8 @@ class AbstractUpdateVehicleAction implements AutoWireableInterface
     private $process;
     private $vehicleService;
     private $paramObfuscator;
+    /** @var  StartTestChangeService */
+    private $startTestChangeService;
 
     protected $template = 'vehicle/update-vehicle-property/edit';
 
@@ -26,18 +29,21 @@ class AbstractUpdateVehicleAction implements AutoWireableInterface
      * @param SingleStepProcessInterface $engineProcess
      * @param VehicleService             $vehicleService
      * @param ParamObfuscator            $paramObfuscator
+     * @param StartTestChangeService     $startTestChangeService
      */
     public function __construct(
         EditStepAction $editStepAction,
         SingleStepProcessInterface $engineProcess,
         VehicleService $vehicleService,
-        ParamObfuscator $paramObfuscator
+        ParamObfuscator $paramObfuscator,
+        StartTestChangeService $startTestChangeService
     )
     {
         $this->editStepAction = $editStepAction;
         $this->process = $engineProcess;
         $this->vehicleService = $vehicleService;
         $this->paramObfuscator = $paramObfuscator;
+        $this->startTestChangeService = $startTestChangeService;
     }
 
     public function execute($isPost, $obfuscatedVehicleId, $formData, $requestUrl)
@@ -73,15 +79,15 @@ class AbstractUpdateVehicleAction implements AutoWireableInterface
     private function getVehicle($vehicleId)
     {
         try {
-            $vehicle = $this->vehicleService->getDvsaVehicleById($vehicleId);
-        } catch (\Exception $exception) {
-            try {
+            if ($this->startTestChangeService->isDvlaVehicle()) {
                 $vehicle = $this->vehicleService->getDvlaVehicleById($vehicleId);
-            } catch (\Exception $exception) {
-                throw new \Exception(
-                    'No vehicle with id ' . $vehicleId . ' found'
-                );
+            } else {
+                $vehicle = $this->vehicleService->getDvsaVehicleById($vehicleId);
             }
+        } catch (\Exception $exception) {
+            throw new \Exception(
+                'No vehicle with id ' . $vehicleId . ' found'
+            );
         }
 
         return $vehicle;

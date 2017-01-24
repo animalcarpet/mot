@@ -6,8 +6,10 @@ use Core\Action\RedirectToRoute;
 use Core\Catalog\CountryOfRegistration\CountryOfRegistrationCatalog;
 use CoreTest\Service\StubCatalogService;
 use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
+use DvsaCommon\Enum\CountryOfRegistrationId;
 use DvsaCommonTest\Builder\DvsaVehicleBuilder;
 use DvsaCommonTest\TestUtils\MethodSpy;
+use DvsaMotTest\Service\StartTestChangeService;
 use stdClass;
 use Vehicle\UpdateVehicleProperty\Context\UpdateVehicleContext;
 use Vehicle\UpdateVehicleProperty\Process\UpdateCountryOfRegistrationProcess;
@@ -51,6 +53,9 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
 
     private $obfuscatedId = "OBF-15-SCATED";
 
+    /** @var  StartTestChangeService */
+    private $startTestChangeService;
+
     public function setUp()
     {
         $this->dvsaVehicleBuilder = new DvsaVehicleBuilder();
@@ -58,12 +63,14 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
         $vehicleService = XMock::of(VehicleService::class);
         $this->vehicleServiceUpdateSpy = new MethodSpy($vehicleService, 'updateDvsaVehicleAtVersion');
         $this->vehicleServiceGetSpy = new MethodSpy($vehicleService, 'getDvsaVehicleById');
+        $this->startTestChangeService = XMock::of(StartTestChangeService::class);
 
         $this->updateCountryRegistrationProcess = new UpdateCountryOfRegistrationProcess(
             new CountryOfRegistrationCatalog(new StubCatalogService()),
             XMock::of(Url::class),
             $vehicleService,
-            XMock::of(VehicleEditBreadcrumbsBuilder::class)
+            XMock::of(VehicleEditBreadcrumbsBuilder::class),
+            $this->startTestChangeService
         );
 
         $this->countryCatalog = XMock::of(CountryOfRegistrationCatalog::class);
@@ -89,20 +96,12 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
     public function test_WhenGettingPrepopulatedData_ReturnsArrayWithCorrectKey()
     {
         $this->createUpdateCountryOfRegistrationProcess();
-        $vehicle = XMock::of(DvsaVehicle::class);
-        $vehicle->expects($this->once())
-            ->method('getCountryOfRegistrationId')
-            ->willReturn(321);
-
-        $this->vehicleService->expects($this->once())
-            ->method('getDvsaVehicleById')
-            ->willReturn($vehicle);
 
         /* @var UpdateVehicleContext $updateVehicleContext */
         $updateVehicleContext = XMock::of(UpdateVehicleContext::class);
         $updateVehicleContext->expects($this->once())
-            ->method('getVehicleId')
-            ->willReturn(self::TEST_VEHICLE_ID);
+            ->method('getVehicle')
+            ->willReturn($this->buildDvsaVehicle());
 
         $this->updateCountryRegistrationProcess->setContext($updateVehicleContext);
         $prepopulatedData = $this->updateCountryRegistrationProcess->getPrePopulatedData();
@@ -120,8 +119,8 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
             ->willReturn($formActionUrl);
 
         $backUrl = 'test_back_url';
-        $this->url->expects($this->at(1))
-            ->method('__invoke')
+        $this->startTestChangeService->expects($this->once())
+            ->method('vehicleExaminerReturnUrl')
             ->willReturn($backUrl);
 
         /* @var UpdateVehicleContext $updateVehicleContext */
@@ -135,22 +134,6 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame('test_back_url', $viewModel->getBackUrl());
         $this->assertSame('test_formaction_url', $viewModel->getFormActionUrl());
-    }
-
-    public function test_WhenRedirectToStartUnderTest_ThenRedirectionRouteContainsCorrectVehicleId()
-    {
-        $this->createUpdateCountryOfRegistrationProcess();
-
-        /* @var UpdateVehicleContext $updateVehicleContext */
-        $updateVehicleContext = XMock::of(UpdateVehicleContext::class);
-        $updateVehicleContext->expects($this->once())
-            ->method('getObfuscatedVehicleId')
-            ->willReturn('test_obfuscated_id_for_start_under_test');
-        $this->updateCountryRegistrationProcess->setContext($updateVehicleContext);
-
-        /* @var RedirectToRoute $redirectToRoute */
-        $redirectToRoute = $this->updateCountryRegistrationProcess->redirectToStartUnderTestPage();
-        $this->assertSame('test_obfuscated_id_for_start_under_test', $redirectToRoute->getRouteParams()['id']);
     }
 
     public function test_WhenRedirectToStart_TheRedirectRouteContainsCorrectVehicleId()
@@ -187,7 +170,7 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($countryId , $updateRequest->getCountryOfRegistrationId());
     }
 
-    public function testPrePopulatedData()
+    public function testPrePopulatedData_vehicleExaminerChange()
     {
         // GIVEN the vehicle has a country of registration
         $countryId = 18;
@@ -199,6 +182,188 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
 
         $this->vehicleServiceGetSpy->mock()
             ->willReturn($vehicle);
+        /* @var UpdateVehicleContext $updateVehicleContext */
+        $updateVehicleContext = XMock::of(UpdateVehicleContext::class);
+        $updateVehicleContext->expects($this->once())
+            ->method('getVehicle')
+            ->willReturn($vehicle);
+
+        $this->updateCountryRegistrationProcess->setContext($updateVehicleContext);
+
+        // WHEN the process retrieves pre-populated data
+        $data = $this->updateCountryRegistrationProcess->getPrePopulatedData();
+
+        // THEN I can see it in the form
+        $this->assertArrayHasKey('country-of-registration', $data);
+        $this->assertEquals($countryId, $data['country-of-registration']);
+    }
+
+    public function testPrePopulatedData_whenNotDvlaVehicle_valuesNotChangedInSession()
+    {
+        // GIVEN the vehicle has a country of registration
+        $countryId = CountryOfRegistrationId::GB_UK_ENG_CYM_SCO_UK_GREAT_BRITAIN;
+
+        $stdClass = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
+        $stdClass->countryOfRegistrationId = $countryId;
+
+        $vehicle = new DvsaVehicle($stdClass);
+
+        $this->vehicleServiceGetSpy->mock()
+            ->willReturn($vehicle);
+        /* @var UpdateVehicleContext $updateVehicleContext */
+        $updateVehicleContext = XMock::of(UpdateVehicleContext::class);
+        $updateVehicleContext->expects($this->once())
+            ->method('getVehicle')
+            ->willReturn($vehicle);
+
+        $updateVehicleContext->expects($this->once())
+            ->method('isUpdateVehicleDuringTest')
+            ->willReturn(true);
+
+        $this->startTestChangeService
+            ->expects($this->once())
+            ->method('isValueChanged')
+            ->with(StartTestChangeService::CHANGE_COUNTRY)
+            ->willReturn(false);
+
+        $this->startTestChangeService
+            ->expects($this->once())
+            ->method('isDvlaVehicle')
+            ->willReturn(false);
+
+        $this->updateCountryRegistrationProcess->setContext($updateVehicleContext);
+
+        // WHEN the process retrieves pre-populated data
+        $data = $this->updateCountryRegistrationProcess->getPrePopulatedData();
+
+        // THEN I can see it in the form
+        $this->assertArrayHasKey('country-of-registration', $data);
+        $this->assertEquals($countryId, $data['country-of-registration']);
+    }
+
+    public function testPrePopulatedData_whenDvlaVehicle_prepopulatedAsGB()
+    {
+        // GIVEN the vehicle has a country of registration
+        $countryId = CountryOfRegistrationId::GB_UK_ENG_CYM_SCO_UK_GREAT_BRITAIN;
+
+        $stdClass = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
+        $stdClass->countryOfRegistrationId = $countryId;
+
+        $vehicle = new DvsaVehicle($stdClass);
+
+        $this->vehicleServiceGetSpy->mock()
+            ->willReturn($vehicle);
+        /* @var UpdateVehicleContext $updateVehicleContext */
+        $updateVehicleContext = XMock::of(UpdateVehicleContext::class);
+
+        $updateVehicleContext->expects($this->once())
+            ->method('isUpdateVehicleDuringTest')
+            ->willReturn(true);
+
+        $this->startTestChangeService
+            ->expects($this->once())
+            ->method('isValueChanged')
+            ->with(StartTestChangeService::CHANGE_COUNTRY)
+            ->willReturn(false);
+
+        $this->startTestChangeService
+            ->expects($this->once())
+            ->method('isDvlaVehicle')
+            ->willReturn(true);
+
+        $this->updateCountryRegistrationProcess->setContext($updateVehicleContext);
+
+        // WHEN the process retrieves pre-populated data
+        $data = $this->updateCountryRegistrationProcess->getPrePopulatedData();
+
+        // THEN I can see it in the form
+        $this->assertArrayHasKey('country-of-registration', $data);
+        $this->assertEquals($countryId, $data['country-of-registration']);
+    }
+
+    public function testPrePopulatedData_whenDvlaVehicle_valueChangedInSession()
+    {
+        // GIVEN the vehicle has a country of registration
+        $countryId = CountryOfRegistrationId::CY_CY_CYPRUS;
+
+        $stdClass = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
+        $stdClass->countryOfRegistrationId = $countryId;
+
+        $vehicle = new DvsaVehicle($stdClass);
+
+        $this->vehicleServiceGetSpy->mock()
+            ->willReturn($vehicle);
+        /* @var UpdateVehicleContext $updateVehicleContext */
+        $updateVehicleContext = XMock::of(UpdateVehicleContext::class);
+
+        $updateVehicleContext->expects($this->once())
+            ->method('isUpdateVehicleDuringTest')
+            ->willReturn(true);
+
+        $this->startTestChangeService
+            ->expects($this->once())
+            ->method('isValueChanged')
+            ->with(StartTestChangeService::CHANGE_COUNTRY)
+            ->willReturn(true);
+
+        $this->startTestChangeService
+            ->expects($this->once())
+            ->method('isDvlaVehicle')
+            ->willReturn(true);
+
+        $this->startTestChangeService
+            ->expects($this->once())
+            ->method('getChangedValue')
+            ->with(StartTestChangeService::CHANGE_COUNTRY)
+            ->willReturn(CountryOfRegistrationId::CY_CY_CYPRUS);
+
+        $this->updateCountryRegistrationProcess->setContext($updateVehicleContext);
+
+        // WHEN the process retrieves pre-populated data
+        $data = $this->updateCountryRegistrationProcess->getPrePopulatedData();
+
+        // THEN I can see it in the form
+        $this->assertArrayHasKey('country-of-registration', $data);
+        $this->assertEquals($countryId, $data['country-of-registration']);
+    }
+
+    public function testPrePopulatedData_whenNotDvlaVehicle_valueChangedInSession()
+    {
+        // GIVEN the vehicle has a country of registration
+        $countryId = CountryOfRegistrationId::CY_CY_CYPRUS;
+
+        $stdClass = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
+        $stdClass->countryOfRegistrationId = $countryId;
+
+        $vehicle = new DvsaVehicle($stdClass);
+
+        $this->vehicleServiceGetSpy->mock()
+            ->willReturn($vehicle);
+        /* @var UpdateVehicleContext $updateVehicleContext */
+        $updateVehicleContext = XMock::of(UpdateVehicleContext::class);
+
+        $updateVehicleContext->expects($this->once())
+            ->method('isUpdateVehicleDuringTest')
+            ->willReturn(true);
+
+        $this->startTestChangeService
+            ->expects($this->once())
+            ->method('isValueChanged')
+            ->with(StartTestChangeService::CHANGE_COUNTRY)
+            ->willReturn(true);
+
+        $this->startTestChangeService
+            ->expects($this->once())
+            ->method('isDvlaVehicle')
+            ->willReturn(false);
+
+        $this->startTestChangeService
+            ->expects($this->any())
+            ->method('getChangedValue')
+            ->with(StartTestChangeService::CHANGE_COUNTRY)
+            ->willReturn(CountryOfRegistrationId::CY_CY_CYPRUS);
+
+        $this->updateCountryRegistrationProcess->setContext($updateVehicleContext);
 
         // WHEN the process retrieves pre-populated data
         $data = $this->updateCountryRegistrationProcess->getPrePopulatedData();
@@ -249,7 +414,8 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
             $this->countryCatalog,
             $this->url,
             $this->vehicleService,
-            $this->breadcrumbsBuilder
+            $this->breadcrumbsBuilder,
+            $this->startTestChangeService
         );
     }
 
@@ -264,5 +430,16 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
         $vehicleStd->make = $emptyResource;
 
         return new DvsaVehicle($vehicleStd);
+    }
+
+    private function buildDvsaVehicle()
+    {
+        $data = $this->dvsaVehicleBuilder->getEmptyVehicleStdClass();
+
+        $data->countryOfRegistrationId = 321;
+
+        $vehicle = new DvsaVehicle($data);
+
+        return $vehicle;
     }
 }

@@ -144,7 +144,7 @@ class UpdateMakeStep extends AbstractStep implements AutoWireableInterface
     protected function getPrePopulatedData()
     {
         $isUpdateUnderTest = $this->context->isUpdateVehicleDuringTest();
-        $makeId = ($this->context->getVehicle()->getMake() !== null)? $this->context->getVehicle()->getMake()->getId() : null;
+        $makeId = $this->getMakeId();
 
         if ($isUpdateUnderTest) {
             $makeIdFromSession = $this->startTestChangeService
@@ -199,18 +199,17 @@ class UpdateMakeStep extends AbstractStep implements AutoWireableInterface
         return "Cancel and return to vehicle";
     }
 
-    /**
-     * @param MakeForm $form
-     *
-     * @return bool
-     */
-    private function isOtherMakeSelected(MakeForm $form)
+    private function getMakeId()
     {
-        $isOtherMakeSelected = false;
-        if ($form->getMakeElement()->getValue() === 'other') {
-            $isOtherMakeSelected = true;
+        if ($this->startTestChangeService->isDvlaVehicle()) {
+            return null;
         }
-        return $isOtherMakeSelected;
+
+        if ($this->context->getVehicle()->getMake() !== null) {
+            return $this->context->getVehicle()->getMake()->getId();
+        }
+
+        return null;
     }
 
     /**

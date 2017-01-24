@@ -17,6 +17,7 @@ use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Dto\MotTesting\ContingencyTestDto;
 use DvsaCommon\Enum\ColourCode;
+use DvsaCommon\Enum\CountryOfRegistrationId;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
@@ -271,6 +272,7 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         $isMakeAndModelChanged = $this->startTestChangeService->isMakeAndModelChanged();
         $makeDetailsFromSession = $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_MAKE);
         $modelDetailsFromSession = $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_MODEL);
+        $isCountryOfRegistationChangedInSession = $this->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_COUNTRY);
 
         $primaryColour = $isColourChangedInSession
             ? $colourDetailsFromSession[StartTestChangeService::PRIMARY_COLOUR]
@@ -294,6 +296,9 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         $vehicleModel = $isMakeAndModelChanged
             ? $modelDetailsFromSession
             : null;
+        $countryOfRegistration = $isCountryOfRegistationChangedInSession
+            ? $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_COUNTRY)
+            : $this->vehicleDetails->getCountryOfRegistrationId();
 
         if (is_null($secondaryColour) || empty($secondaryColour)) {
             $secondaryColour = ColourCode::NOT_STATED;
@@ -306,6 +311,7 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
             'secondaryColour' => $secondaryColour,
             'fuelTypeId' => $fuelTypeId,
             'cylinderCapacity' => $cylinderCapacity,
+            'countryOfRegistration' => $countryOfRegistration,
             'vehicleMake' => $vehicleMake,
             'vehicleModel' => $vehicleModel,
             'vehicleClassCode' => intval($vehicleClassCode),
@@ -403,11 +409,17 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
             $viewModel->setMotTestClass($this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS));
         }
 
-        $country = $this->countryOfRegistrationCatalog->getByCode($this->vehicleDetails->getCountryOfRegistrationId());
+        $isCountryOfRegistrationChanged = $this->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_COUNTRY);
+        $countryOfRegistrationFromSession = $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_COUNTRY);
+        $country = $this->countryOfRegistrationCatalog->getByCode(
+            $isCountryOfRegistrationChanged
+                ? $countryOfRegistrationFromSession
+                : $this->vehicleDetails->getCountryOfRegistrationId()
+        );
         if (isset($country)) {
             $viewModel->setCountryOfRegistration($country->getName());
         } else {
-            $viewModel->setCountryOfRegistration(self::UNKNOWN_TEST);
+            $viewModel->setCountryOfRegistration($this->countryOfRegistrationCatalog->getByCode(CountryOfRegistrationId::GB_UK_ENG_CYM_SCO_UK_GREAT_BRITAIN)->getName());
         }
 
         $motContingency = $this->getContingencySessionManager()->isMotContingency();

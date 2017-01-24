@@ -189,6 +189,7 @@ if (!empty($checkExpiryResults)) {
             <td class="table-summary__value">
                 <?php echo $viewModel->getCountryOfRegistration(); ?>
                 <?php if ($viewModel->shouldShowChangeLinks()): ?>
+                    <a href="<?php echo $this->url(VehicleRouteList::VEHICLE_CHANGE_UNDER_TEST_COUNTRY_OF_REGISTRATION, ['id' => $viewModel->getObfuscatedVehicleId()]) ?>" id="change-vehicle-country-of-registration" class="table-summary__action">Change<span class="visuallyhidden"> country of registration</span></a>
                 <?php endif; ?>
             </td>
         </tr>

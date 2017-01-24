@@ -129,7 +129,7 @@ class MotTestCreationHelper
      *
      * @return MotTest
      * @throws NotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function createMotTest(
         Person $tester,
@@ -294,13 +294,14 @@ class MotTestCreationHelper
      * @param string $fuelTypeCode
      * @param string $primaryColourCode
      * @param string $secondaryColourCode
+     * @param $updatedCountryOfRegistrationId
      * @param string $motTestTypeCode
      *
      * @return DvsaVehicle
      *
      * @throws Exception
      */
-    public function updateVehicleIfChanged($fuelTypeCode, $cylinderCapacity, $vehicleMake, $vehicleModel, $vehicleId, $vehicleClassCode, $fuelTypeCode, $primaryColourCode, $secondaryColourCode, $motTestTypeCode)
+    public function updateVehicleIfChanged($fuelTypeCode, $cylinderCapacity, $vehicleMake, $vehicleModel, $vehicleId, $vehicleClassCode, $fuelTypeCode, $primaryColourCode, $secondaryColourCode, $updatedCountryOfRegistrationId, $motTestTypeCode)
     {
         $vehicle = $this->entityManager->getRepository(Vehicle::class)->get($vehicleId);
         $vehicleClass = $this->entityManager->getRepository(VehicleClass::class)->findOneByCode($vehicleClassCode);
@@ -308,19 +309,16 @@ class MotTestCreationHelper
         $primaryColour = $primaryColourCode ? $this->getColourByCode($primaryColourCode) : null;
         $secondaryColour = $secondaryColourCode ? $this->getColourByCode($secondaryColourCode) : null;
         $motTestType = $this->getMotTestType($motTestTypeCode);
+        $countryOfRegistrationId = $updatedCountryOfRegistrationId ? $updatedCountryOfRegistrationId : $vehicle->getCountryOfRegistration()->getId();
 
-        // imported dvla vehicles will default to null for secondary colour
-        if (is_null($vehicle->getSecondaryColour())) {
-            $vehicle->setSecondaryColour($secondaryColour);
-        }
-
-        if ($this->isVehicleModified($vehicle, $vehicleClass, $fuelType, $primaryColour, $secondaryColour, $cylinderCapacity, $vehicleMake, $vehicleModel) && !$motTestType->getIsDemo()) {
+        if ($this->isVehicleModified($vehicle, $vehicleClass, $fuelType, $primaryColour, $secondaryColour, $cylinderCapacity, $vehicleMake, $vehicleModel, $updatedCountryOfRegistrationId) && !$motTestType->getIsDemo()) {
             // update vehicle with specified field values
             $updateDvsaVehicleUnderTestRequest = new UpdateDvsaVehicleUnderTestRequest();
             $updateDvsaVehicleUnderTestRequest->setColourCode($primaryColour->getCode())
                 ->setSecondaryColourCode($secondaryColour->getCode())
                 ->setVehicleClassCode($vehicleClass->getCode())
-                ->setFuelTypeCode($fuelTypeCode);
+                ->setFuelTypeCode($fuelTypeCode)
+                ->setCountryOfRegistrationId($countryOfRegistrationId);
 
             if (FuelTypeAndCylinderCapacity::isCylinderCapacityCompulsoryForFuelTypeCode($fuelTypeCode)) {
                 $updateDvsaVehicleUnderTestRequest->setCylinderCapacity($cylinderCapacity);
@@ -407,7 +405,8 @@ class MotTestCreationHelper
         $secondaryColour,
         $cylinderCapacity,
         $vehicleMake,
-        $vehicleModel
+        $vehicleModel,
+        $countryOfRegistration
     ) {
         return !$this->isVehicleClassSame($vehicle->getVehicleClass(), $vehicleClass)
         || !$this->isFuelTypeSame($vehicle->getFuelType(), $fuelType)
@@ -415,7 +414,8 @@ class MotTestCreationHelper
         || !$this->isColourSame($vehicle->getSecondaryColour(), $secondaryColour)
         || !$this->isCylinderCapacitySame($vehicle->getCylinderCapacity(), $cylinderCapacity)
         || !$this->isMakeSame($vehicle->getMakeName(), $vehicleMake['makeName'])
-        || !$this->isModelSame($vehicle->getModelName(), $vehicleModel['modelName']);
+        || !$this->isModelSame($vehicle->getModelName(), $vehicleModel['modelName'])
+        || !$this->isCountryOfRegistrationSame($vehicle->getCountryOfRegistration()->getId(), $countryOfRegistration);
     }
 
     /**
@@ -525,6 +525,17 @@ class MotTestCreationHelper
         }
 
         return false;
+    }
+
+    /**
+     * @param $original
+     * @param $changedValue
+     *
+     * @return bool
+     */
+    private function isCountryOfRegistrationSame($original, $changedValue)
+    {
+        $this->isSame($original, $changedValue);
     }
 
 

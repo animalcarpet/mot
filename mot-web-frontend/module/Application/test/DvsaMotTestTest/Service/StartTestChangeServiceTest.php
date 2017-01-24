@@ -3,6 +3,7 @@
 namespace DvsaMotTestTest\Service;
 
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaMotTest\Constants\VehicleSearchSource;
 use DvsaMotTest\Service\StartTestChangeService;
 use DvsaMotTest\Service\StartTestSessionService;
 use Zend\View\Helper\Url;
@@ -240,6 +241,26 @@ class StartTestChangeServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($actual);
     }
 
+    public function testIsDvlaVehicle_whenNotDvlaVehicle_shouldReturnFalse()
+    {
+        $this->startTestSessionService
+            ->expects($this->once())
+            ->method('load')
+            ->willReturn($this->mockLoadedValues(false, false, false, 1));
+        $result = $this->buildService()->isDvlaVehicle();
+        $this->assertFalse($result);
+    }
+
+    public function testIsDvlaVehicle_whenDvlaVehicle_shouldReturnTrue()
+    {
+        $this->startTestSessionService
+            ->expects($this->once())
+            ->method('load')
+            ->willReturn($this->mockLoadedValues(false, false, false, 2));
+        $result = $this->buildService()->isDvlaVehicle();
+        $this->assertTrue($result);
+    }
+
     private function mockVehicleChangeStatus()
     {
         return [
@@ -257,7 +278,7 @@ class StartTestChangeServiceTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    private function mockLoadedValues($classChanged = false, $makeChanged = false, $modelChanged = false)
+    private function mockLoadedValues($classChanged = false, $makeChanged = false, $modelChanged = false, $source = 1)
     {
         return [
             StartTestSessionService::VEHICLE_CHANGE_STATUS => [
@@ -276,7 +297,7 @@ class StartTestChangeServiceTest extends \PHPUnit_Framework_TestCase
                     'noRegistration' => '0',
                 ],
                 'source' => [
-                    'source' => '1',
+                    'source' => $source,
                 ],
                 'class' => '4',
                 'colour' => [

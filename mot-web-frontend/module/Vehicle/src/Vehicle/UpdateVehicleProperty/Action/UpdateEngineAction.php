@@ -6,6 +6,7 @@ use Core\TwoStepForm\EditStepAction;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Obfuscate\ParamObfuscator;
+use DvsaMotTest\Service\StartTestChangeService;
 use Vehicle\UpdateVehicleProperty\Process\UpdateEngineProcess;
 
 class UpdateEngineAction extends AbstractUpdateVehicleAction implements AutoWireableInterface
@@ -14,9 +15,10 @@ class UpdateEngineAction extends AbstractUpdateVehicleAction implements AutoWire
         EditStepAction $editStepAction,
         UpdateEngineProcess $engineProcess,
         VehicleService $vehicleService,
-        ParamObfuscator $paramObfuscator
+        ParamObfuscator $paramObfuscator,
+        StartTestChangeService $startTestChangeService
     )
     {
-        parent::__construct($editStepAction, $engineProcess, $vehicleService, $paramObfuscator);
+        parent::__construct($editStepAction, $engineProcess, $vehicleService, $paramObfuscator, $startTestChangeService);
     }
 }

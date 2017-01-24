@@ -208,6 +208,7 @@ class CreateNewVehicleServiceTest extends \PHPUnit_Framework_TestCase
         $cylinderCapacity = new \stdClass();
         $cylinderCapacity->code = 1200;
         $data->cylinderCapacity = $cylinderCapacity;
+        $data->countryOfRegistrationId = 1;
 
         $vehicle = new DvsaVehicle($data);
 
