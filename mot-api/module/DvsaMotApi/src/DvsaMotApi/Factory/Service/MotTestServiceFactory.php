@@ -7,6 +7,7 @@ use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommonApi\Authorisation\Assertion\ReadMotTestAssertion;
 use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Service\MotTestService;
+use DvsaMotApi\Service\TestingOutsideOpeningHoursNotificationService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use DvsaMotApi\Service\CreateMotTestService;
@@ -31,7 +32,8 @@ class MotTestServiceFactory implements FactoryInterface
             $serviceLocator->get(ReadMotTestAssertion::class),
             $serviceLocator->get(CreateMotTestService::class),
             $entityManager->getRepository(MotTest::class),
-            $serviceLocator->get(MysteryShopperHelper::class)
+            $serviceLocator->get(MysteryShopperHelper::class),
+            $serviceLocator->get(TestingOutsideOpeningHoursNotificationService::class)
         );
     }
 }

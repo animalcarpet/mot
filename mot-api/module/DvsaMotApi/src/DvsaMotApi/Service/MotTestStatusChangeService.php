@@ -26,6 +26,7 @@ use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\OrganisationBusinessRoleCode;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
+use DvsaCommon\Enum\RoleCode;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Enum\WeightSourceCode;
@@ -45,6 +46,8 @@ use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestCancelled;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
+use DvsaEntities\Entity\OrganisationBusinessRoleMap;
+use DvsaEntities\Entity\SiteBusinessRoleMap;
 use DvsaEntities\Entity\SiteTestingDailySchedule;
 use DvsaEntities\Repository\EnforcementFullPartialRetestRepository;
 use DvsaEntities\Repository\MotTestReasonForCancelRepository;
@@ -55,6 +58,7 @@ use DvsaMotApi\Service\Helper\MotTestCloneHelper;
 use DvsaMotApi\Service\Mapper\MotTestMapper;
 use DvsaMotApi\Service\Validator\MotTestStatusChangeValidator;
 use DvsaMotApi\Service\Validator\MotTestValidator;
+use NotificationApi\Service\UserOrganisationNotificationService;
 use OrganisationApi\Service\OrganisationService;
 
 /**
@@ -195,11 +199,6 @@ class MotTestStatusChangeService implements TransactionAwareInterface
     private $fullPartialRetestRepository;
 
     /**
-     * @var TestingOutsideOpeningHoursNotificationService
-     */
-    private $outsideHoursNotificationService;
-
-    /**
      * @var MotIdentityProviderInterface
      */
     private $motIdentityProvider;
@@ -224,7 +223,6 @@ class MotTestStatusChangeService implements TransactionAwareInterface
      * @param MotTestRepository                             $motTestRepository
      * @param MotTestReasonForCancelRepository              $reasonForCancelRepository
      * @param EnforcementFullPartialRetestRepository        $fullPartialRetestRepository
-     * @param TestingOutsideOpeningHoursNotificationService $outsideHoursNotificationService
      * @param MotTestDateHelperService                      $motTestDateHelper
      * @param EntityManager                                 $entityManager
      * @param MotIdentityProviderInterface                  $motIdentityProvider
@@ -241,7 +239,6 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         MotTestRepository $motTestRepository,
         MotTestReasonForCancelRepository $reasonForCancelRepository,
         EnforcementFullPartialRetestRepository $fullPartialRetestRepository,
-        TestingOutsideOpeningHoursNotificationService $outsideHoursNotificationService,
         MotTestDateHelperService $motTestDateHelper,
         EntityManager $entityManager,
         MotIdentityProviderInterface $motIdentityProvider,
@@ -253,7 +250,6 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         $this->motTestStatusChangeValidator = $motTestStatusChangeValidator;
         $this->dateTimeHolder = new DateTimeHolder();
         $this->otpService = $otpService;
-        $this->outsideHoursNotificationService = $outsideHoursNotificationService;
         $this->organisationService = $organisationService;
         $this->motTestMapper = $motTestMapper;
         $this->motTestRepository = $motTestRepository;
@@ -556,8 +552,6 @@ class MotTestStatusChangeService implements TransactionAwareInterface
             }
         }
 
-        $this->notifyAboutTestingOutsideHoursIfApplicable($motTest);
-
         return $newStatus;
     }
 
@@ -621,58 +615,6 @@ class MotTestStatusChangeService implements TransactionAwareInterface
     {
         return in_array($motTest->getVehicleClass(), self::$VEHICLE_WEIGHT_FROM_DGW_VEHICLE_CLASSES)
             && $brakeTestResult->getWeightType()->getCode() === WeightSourceCode::DGW;
-    }
-
-    /**
-     * notify only when performed by a qualifier tester (excl. VE, demo tests, and so on).
-     *
-     * @param MotTest $motTest
-     */
-    private function notifyAboutTestingOutsideHoursIfApplicable(MotTest $motTest)
-    {
-        if ($motTest->getMotTestType()->getIsDemo() || $motTest->getMotTestType()->isNonMotTest()) {
-            return;
-        }
-
-        // notify only when performed by a qualifier tester (excl. VE, demo tests, and so on)
-        $schedule = $motTest->getVehicleTestingStation()->getSiteTestingSchedule();
-
-        if ($motTest->getTester()->isQualifiedTester()
-            && SiteTestingDailySchedule::isOutsideSchedule(
-                Time::fromDateTime(DateUtils::toUserTz($motTest->getCompletedDate())),
-                $schedule
-            )
-        ) {
-            $site = $motTest->getVehicleTestingStation();
-            $siteBusRoleMapRepository = $this->entityManager->getRepository(
-                \DvsaEntities\Entity\SiteBusinessRoleMap::class
-            );
-            $siteManagerRole = $this->entityManager->getRepository(
-                \DvsaEntities\Entity\SiteBusinessRole::class
-            )->findOneBy(['code' => SiteBusinessRoleCode::SITE_MANAGER]);
-            $roleMap = $siteBusRoleMapRepository->findOneBy(
-                ['site' => $site, 'siteBusinessRole' => $siteManagerRole]
-            );
-            if (!$roleMap) {
-                $org = $motTest->getVehicleTestingStation()->getOrganisation();
-                /* @var \DvsaEntities\Entity\OrganisationBusinessRoleMap $orgPosRepository */
-                $orgBusRoleMapRepository = $this->entityManager->getRepository(
-                    \DvsaEntities\Entity\OrganisationBusinessRoleMap::class
-                );
-                $aedmRole = $this->entityManager->getRepository(
-                    \DvsaEntities\Entity\OrganisationBusinessRole::class
-                )->findOneBy(['name' => OrganisationBusinessRoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER]);
-                $roleMap = $orgBusRoleMapRepository->findOneBy(
-                    ['organisation' => $org, 'organisationBusinessRole' => $aedmRole]
-                );
-            }
-            $this->outsideHoursNotificationService->notify(
-                $motTest->getVehicleTestingStation(),
-                $motTest->getTester(),
-                $motTest->getCompletedDate(),
-                $roleMap->getPerson()
-            );
-        }
     }
 
     /**

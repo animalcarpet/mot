@@ -92,9 +92,6 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
     /** @var MotTestMapper|\PHPUnit_Framework_MockObject_MockObject */
     private $motTestMapper;
 
-    /** @var TestingOutsideOpeningHoursNotificationService $outsideOpeningHoursNotifier */
-    private $outsideOpeningHoursNotifier;
-
     /** @var MotTestDateHelperService */
     private $motTestDateHelper;
 
@@ -143,7 +140,6 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
         $this->otpService = XMock::of(OtpService::class);
         $this->organisationService = XMock::of(OrganisationService::class);
         $this->motTestMapper = XMock::of(MotTestMapper::class);
-        $this->outsideOpeningHoursNotifier = XMock::of(TestingOutsideOpeningHoursNotificationService::class);
         $this->mockMotTestStatusService = XMock::of(MotTestStatusService::class);
 
         $this->motIdentity = XMock::of(\DvsaAuthentication\Identity::class);
@@ -228,7 +224,6 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
                 $this->motTestRepository,
                 $this->reasonForCancelRepository,
                 $this->enforcementFullPartialRetestRepository,
-                $this->outsideOpeningHoursNotifier,
                 $this->motTestDateHelper,
                 $this->entityManager,
                 $this->motIdentityProvider,
@@ -806,115 +801,6 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
         $this->assertEquals($isUpdated, $newWeight === $motTest->getVehicleWeight());
     }
 
-    /**
-     * @return array
-     */
-    public function dataProviderGivenTestFailedOutsideSiteOpeningHoursShouldNotify()
-    {
-        return [
-            [MotTestStatusName::PASSED, MotTestStatusName::FAILED],
-        ];
-    }
-
-    /**
-     * @param string $status
-     *
-     * @dataProvider dataProviderGivenTestFailedOutsideSiteOpeningHoursShouldNotify
-     */
-    public function testUpdateStatusGivenTestFailedOutsideSiteOpeningHoursShouldNotify($status)
-    {
-        $motTest = $this->setUpForTestUpdateStatusOutsideOpeningHours(MotTestTypeCode::NORMAL_TEST);
-
-        list($siteCap, $personCap, $completionDateCap) = $this->notificationOnTestOutsideOpeningHoursExpected();
-
-        $this->executeUpdateStatus($status, $motTest->getId());
-
-        $this->assertEquals($motTest->getVehicleTestingStation(), $siteCap->get());
-        $this->assertEquals($motTest->getTester(), $personCap->get());
-        $this->assertEquals($motTest->getCompletedDate(), $completionDateCap->get());
-    }
-
-    public function dataProviderShouldStatusUpdateOutsideOpeningHoursSendNotification()
-    {
-        $shouldNotify = true;
-        $shouldNotNotify = false;
-
-        return [
-            [MotTestTypeCode::NORMAL_TEST, $shouldNotify],
-            [MotTestTypeCode::NON_MOT_TEST, $shouldNotNotify],
-        ];
-    }
-
-    /**
-     * @dataProvider dataProviderShouldStatusUpdateOutsideOpeningHoursSendNotification
-     */
-    public function testUpdateStatusOutsideOpeningHoursShouldNotNotify($motTestTypeCode, $shouldNotify)
-    {
-        $motTest = $this->setUpForTestUpdateStatusOutsideOpeningHours($motTestTypeCode);
-
-        if ($shouldNotify) {
-            $this->notificationOnTestOutsideOpeningHoursExpected();
-        } else {
-            $this->notificationOnTestOutsideOpeningHoursNotExpected();
-        }
-
-        $this->executeUpdateStatus(MotTestStatusName::PASSED, $motTest->getId());
-    }
-
-    private function executeUpdateStatus($status, $motTestId)
-    {
-        $otp = '123456';
-        $data = [
-            MotTestStatusChangeService::FIELD_STATUS => $status,
-            MotTestStatusChangeService::FIELD_OTP => $otp,
-        ];
-
-        $dateHolder = new InvalidTestDateTimeHolder(DateUtils::toDateTime('2012-09-30T16:00:01Z'));
-
-        $this->createService()->setDateTimeHolder($dateHolder)->updateStatus($motTestId, $data, 'whatever');
-    }
-
-    private function setUpForTestUpdateStatusOutsideOpeningHours($motTestTypeCode)
-    {
-        $siteBusRoleMap = new SiteBusinessRoleMap();
-        $siteBusRoleMap->setPerson(new Person());
-
-        $repo = $this->getMock('\stdClass', ['findOneBy']);
-        $repo->expects($this->any())
-            ->method('findOneBy')
-            ->will($this->returnValue($siteBusRoleMap));
-
-        $getRepositoryCallback = $this->getRepositoryCallback;
-
-        $this->entityManager = XMock::of('Doctrine\ORM\EntityManager');
-        $this->entityManager->expects($this->any())
-            ->method('getRepository')
-            ->will(
-                $this->returnCallback(
-                    function ($name) use ($repo, $getRepositoryCallback) {
-                        if ($repository = $getRepositoryCallback($name)) {
-                            return $repository;
-                        }
-
-                        return $repo;
-                    }
-                )
-            );
-
-        $motTest = MotTestObjectsFactory::createTest($motTestTypeCode, MotTestStatusName::ACTIVE);
-        $motTest->setId(1);
-
-        MotTestObjectsFactory::addTestAuthorisationForClass(
-            $motTest,
-            '4',
-            AuthorisationForTestingMotStatusCode::QUALIFIED
-        );
-        self::addSiteOpeningHours($motTest);
-        $this->motTestResolvesTo($motTest);
-
-        return $motTest;
-    }
-
     private function helperGivenConfirmRequestByAnotherUserShouldThrowError($status)
     {
         $data = [
@@ -1123,21 +1009,6 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
     private function reasonForCancel($id, $isAbandoned)
     {
         return (new MotTestReasonForCancel())->setAbandoned($isAbandoned)->setId($id)->setReason('reason');
-    }
-
-    private function notificationOnTestOutsideOpeningHoursExpected()
-    {
-        list($site, $person, $completionDate) = [ArgCapture::create(), ArgCapture::create(), ArgCapture::create()];
-        $this->outsideOpeningHoursNotifier->expects($this->once())
-            ->method('notify')->with($site(), $person(), $completionDate());
-
-        return [$site, $person, $completionDate];
-    }
-
-    private function notificationOnTestOutsideOpeningHoursNotExpected()
-    {
-        $this->outsideOpeningHoursNotifier->expects($this->never())
-            ->method('notify');
     }
 
     private function verifySlotReturned()
