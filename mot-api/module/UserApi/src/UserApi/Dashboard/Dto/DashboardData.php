@@ -40,12 +40,14 @@ class DashboardData
 
     /** @var $authorisationService MotAuthorisationServiceInterface */
     private $authorisationService;
+    private $unreadNotificationsCount;
 
     /**
      * @param AuthorisationForAuthorisedExaminer[] $authorisedExaminers
      * @param                                      $specialNotice
      * @param                                      $overdueSpecialNotices
      * @param Notification[]                       $notifications
+     * @param int                                  $unreadNotificationsCount
      * @param                                      $inProgressTestNumber
      * @param                                      $inProgressDemoTestNumber
      * @param                                      $inProgressNonMotTestNumber
@@ -59,6 +61,7 @@ class DashboardData
         $specialNotice,
         $overdueSpecialNotices,
         $notifications,
+        $unreadNotificationsCount,
         $inProgressTestNumber,
         $inProgressDemoTestNumber,
         $inProgressNonMotTestNumber,
@@ -71,6 +74,7 @@ class DashboardData
         $this->setSpecialNotice(new SpecialNotice($specialNotice));
         $this->setOverdueSpecialNotices($overdueSpecialNotices);
         $this->setNotifications($notifications);
+        $this->unreadNotificationsCount = $unreadNotificationsCount;
         $this->setInProgressTestNumber($inProgressTestNumber);
         $this->setInProgressDemoTestNumber($inProgressDemoTestNumber);
         $this->setInProgressNonMotTestNumber($inProgressNonMotTestNumber);
@@ -103,6 +107,7 @@ class DashboardData
             'specialNotice'          => $this->getSpecialNotice()->toArray(),
             'overdueSpecialNotices'  => $this->overdueSpecialNotices,
             'notifications'          => $notificationExtractedList,
+            'unreadNotificationsCount' => $this->unreadNotificationsCount,
             'inProgressTestNumber'   => $this->inProgressTestNumber,
             'inProgressTestTypeCode' => $this->inProgressTestTypeCode,
             'inProgressDemoTestNumber' => $this->inProgressDemoTestNumber,

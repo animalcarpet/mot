@@ -1,6 +1,7 @@
 <?php
 namespace NotificationApi\Controller;
 
+use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use NotificationApi\Mapper\NotificationMapper;
@@ -11,23 +12,29 @@ use NotificationApi\Service\NotificationService;
  *
  * @package NotificationApi\Controller
  */
-class NotificationController extends AbstractDvsaRestfulController
+class NotificationController extends AbstractDvsaRestfulController implements AutoWireableInterface
 {
+    /**
+     * @var NotificationService
+     */
+    private $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
 
     public function update($id, $data)
     {
-        $service = $this->getNotificationService();
-        $result = $service->markAsRead($id);
-
+        $result = $this->notificationService->markAsRead($id);
         $extractor = new NotificationMapper();
+
         return ApiResponse::jsonOk($extractor->toArray($result));
     }
 
     public function get($id)
     {
-        $service = $this->getNotificationService();
-        $result = $service->get($id);
-
+        $result = $this->notificationService->get($id);
         $extractor = new NotificationMapper();
 
         return ApiResponse::jsonOk($extractor->toArray($result));
@@ -35,25 +42,17 @@ class NotificationController extends AbstractDvsaRestfulController
 
     public function delete($id)
     {
-        $service = $this->getNotificationService();
-        $result = $service->delete($id);
-
-        return ApiResponse::jsonOk($result);
+        return ApiResponse::jsonOk($this->notificationService->delete($id));
     }
 
     public function create($data)
     {
-        $service = $this->getNotificationService();
-        $result = $service->add($data);
-
-        return ApiResponse::jsonOk($result);
+        return ApiResponse::jsonOk($this->notificationService->add($data));
     }
 
-    /**
-     * @return NotificationService
-     */
-    private function getNotificationService()
+    public function archiveAction()
     {
-        return $this->getServiceLocator()->get(NotificationService::class);
+        $id = $this->params()->fromRoute($this->identifierName);
+        return ApiResponse::jsonOk($this->notificationService->archive((int)$id));
     }
 }

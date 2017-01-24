@@ -29,9 +29,14 @@ class ApiNotificationResourceTest extends \PHPUnit_Framework_TestCase
         $this->resource->get(1);
     }
 
+    public function testArchive()
+    {
+        $this->resource->archive(1);
+    }
+
     public function testGetList()
     {
-        $this->resource->getList(1);
+        $this->resource->getInboxNotifications(1);
     }
 
     public function testMarkAsRead()

@@ -18,6 +18,8 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
     const CONTENT = 'aaa';
     const SUBJECT = 'bbb';
 
+    const IS_ARCHIVED = true;
+
     public function test_getList_emptyArray()
     {
         $result = Notification::createList([]);
@@ -48,6 +50,7 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(self::UPDATED_ON, $notification->getUpdatedOn());
         $this->assertEquals(self::CONTENT, $notification->getContent());
         $this->assertEquals(self::SUBJECT, $notification->getSubject());
+        $this->assertEquals(self::IS_ARCHIVED, $notification->getIsArchived());
         $this->assertEquals(self::ID, $notification->getId());
     }
 
@@ -100,6 +103,7 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
             'readOn'    => self::READ_ON,
             'content'   => self::CONTENT,
             'subject'   => self::SUBJECT,
+            'isArchived' => self::IS_ARCHIVED,
             'fields' => [],
             'templateId' => 1
         ];

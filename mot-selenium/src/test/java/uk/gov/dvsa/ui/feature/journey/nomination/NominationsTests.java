@@ -1,15 +1,13 @@
 package uk.gov.dvsa.ui.feature.journey.nomination;
 
 import org.testng.annotations.Test;
-
+import ru.yandex.qatools.allure.annotations.Description;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.shared.role.OrganisationBusinessRoleCodes;
 import uk.gov.dvsa.domain.shared.role.TradeRoles;
 import uk.gov.dvsa.ui.DslTest;
 
 import java.io.IOException;
-
-import ru.yandex.qatools.allure.annotations.Description;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -138,7 +136,7 @@ public class NominationsTests extends DslTest {
         motUI.nominations.orderAndActivateSecurityCard(activatedUser);
 
         step("When I activate a card via the nomination activate your security card link");
-        motUI.nominations.viewActivateCardNotification(activatedUser).clickActivateCard();
+        motUI.nominations.viewActivateCardNotificationOnInboxPage(activatedUser).clickActivateCard();
         String message = motUI.authentication.securityCard.getAlreadyActivatedCardErrorMessage();
 
         step("Then I should see the Already Activated a Card alert page");

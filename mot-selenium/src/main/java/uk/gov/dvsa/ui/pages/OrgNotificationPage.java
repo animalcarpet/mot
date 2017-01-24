@@ -10,11 +10,11 @@ import uk.gov.dvsa.ui.pages.nominations.AlreadyOrderedCardPage;
 public class OrgNotificationPage extends Page implements Notification {
 
     public static final String path = "/notification/%s";
-    private static final String PAGE_TITLE = "Notifications";
     private static final String NOTIFICATION_STATUS_ACCEPTED = "Nomination accepted";
 
     @FindBy(id = "action-organisation-nomination-accepted") private WebElement acceptButton;
     @FindBy(id = "action-organisation-nomination-rejected") private WebElement rejectButton;
+    @FindBy(id = "action-archive") private WebElement archiveButton;
     @FindBy(id = "orderCard") private WebElement orderCardButton;
     @FindBy(id = "activateCard") private WebElement activateCardButton;
     @FindBy(id = "notification-decision") private WebElement confirmationText;
@@ -34,7 +34,7 @@ public class OrgNotificationPage extends Page implements Notification {
 
     @Override
     protected boolean selfVerify() {
-        return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
+        return true;
     }
 
     public void clickOrderCard() {
@@ -86,6 +86,13 @@ public class OrgNotificationPage extends Page implements Notification {
         acceptButton.click();
 
         return this;
+    }
+
+    @Override
+    public InboxNotificationPage archiveNomination() {
+        archiveButton.click();
+
+        return new InboxNotificationPage(driver);
     }
 
     public boolean isAcceptButtonDisplayed() {

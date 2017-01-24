@@ -12,8 +12,10 @@ class NotificationUrlBuilder extends UrlBuilder
     const NOTIFICATION = 'notification';
     const NOTIFICATION_WITH_ID = 'notification/:id';
     const PERSON = '/person/:personId';
+    const UNREAD_COUNT = '/unread-count';
     const READ = '/read';
     const ACTION = '/action';
+    const ARCHIVE = '/archive';
     const CREATE_NOTIFICATION = "/create";
 
     protected $routesStructure
@@ -21,12 +23,14 @@ class NotificationUrlBuilder extends UrlBuilder
             self::NOTIFICATION_WITH_ID => [
                 self::READ   => '',
                 self::ACTION => '',
+                self::ARCHIVE => '',
             ],
             self::NOTIFICATION         =>
                 [
                     self::PERSON =>
                         [
                             self::READ => '',
+                            self::UNREAD_COUNT => '',
                         ],
                     self::CREATE_NOTIFICATION
                 ],
@@ -46,6 +50,16 @@ class NotificationUrlBuilder extends UrlBuilder
         return $urlBuilder->appendRoutesAndParams(self::NOTIFICATION)->appendRoutesAndParams(self::PERSON);
     }
 
+    public static function unreadNotificationsCountForPerson($personId)
+    {
+        $urlBuilder = new self();
+
+        return $urlBuilder
+            ->appendRoutesAndParams(self::NOTIFICATION)
+            ->appendRoutesAndParams(self::PERSON)->routeParam('personId', $personId)
+            ->appendRoutesAndParams(self::UNREAD_COUNT);
+    }
+
     public static function newNotification()
     {
         $urlBuilder = new self();
@@ -61,5 +75,10 @@ class NotificationUrlBuilder extends UrlBuilder
     public function action()
     {
         return $this->appendRoutesAndParams(self::ACTION);
+    }
+
+    public function archive()
+    {
+        return $this->appendRoutesAndParams(self::ARCHIVE);
     }
 }

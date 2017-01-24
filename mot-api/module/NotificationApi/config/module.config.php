@@ -8,9 +8,7 @@ use NotificationApi\Controller\PersonReadNotificationController;
 return [
     'controllers' => [
         'invokables' => [
-            NotificationController::class           => NotificationController::class,
             NotificationActionController::class     => NotificationActionController::class,
-            PersonNotificationController::class     => PersonNotificationController::class,
             PersonReadNotificationController::class => PersonReadNotificationController::class,
         ],
     ],
@@ -49,13 +47,23 @@ return [
                                 ],
                                 'may_terminate' => true,
                             ],
-
                             'action' => [
                                 'type'          => 'segment',
                                 'options'       => [
                                     'route'    => '/action',
                                     'defaults' => [
                                         'controller' => NotificationActionController::class,
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'archive' => [
+                                'type' => 'segment',
+                                'options' => [
+                                    'route' => '/archive',
+                                    'defaults' => [
+                                        'controller' => NotificationController::class,
+                                        'action' => 'archive',
                                     ],
                                 ],
                                 'may_terminate' => true,
@@ -80,6 +88,17 @@ return [
                                     'route'    => '/read',
                                     'defaults' => [
                                         'controller' => PersonReadNotificationController::class,
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'unread-count' => [
+                                'type'          => 'segment',
+                                'options'       => [
+                                    'route'    => '/unread-count',
+                                    'defaults' => [
+                                        'controller' => PersonNotificationController::class,
+                                        'action' => 'unreadCount',
                                     ],
                                 ],
                                 'may_terminate' => true,

@@ -1,13 +1,13 @@
 <?php
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use Dashboard\Controller\NotificationController;
-use Dashboard\Controller\UserHomeController;
 
 /* SINGLE NOTIFICATION VIEW */
 
 /** @var $notification \Dashboard\Model\Notification */
 
 $fields = $notification->getFields();
+$backTo = ($backLinkUrl === NotificationController::ROUTE_USER_HOME)? NotificationController::BACK_TO_HOME_PARAM : null;
 
 ?>
 
@@ -27,9 +27,6 @@ $fields = $notification->getFields();
                 You <?php echo $this->escapeHtml($notification->getFriendlyAction()); ?> this role on  <?php echo DateTimeDisplayFormat::textDateTime($notification->getUpdatedOn()); ?>
             </p>
         </div>
-        <div class="text">
-            <p>The nomination was sent on <?php echo DateTimeDisplayFormat::textDateTime($notification->getCreatedOn()); ?></p>
-        </div>
 
         <div class="text">
             <p class="lede" id="notification-decision">
@@ -38,10 +35,16 @@ $fields = $notification->getFields();
                 <?php endif; ?>
             </p>
         </div>
-
+    <?php
+        if(!$notification->getIsArchived()){
+            echo $this->partial('dashboard/notification/archive-notification-button.phtml', [
+                'notificationId' => $notification->getId(),
+            ]);
+        }
+    ?>
         <ul class="content-navigation__secondary">
             <li>
-                <a href="<?php echo $this->url(UserHomeController::ROUTE) ?>" id="link-back-to-home">Return home</a>
+                <a href="<?php echo $this->url($backLinkUrl) ?>" id="link-back-to-home"><?php echo $backLinkLabel; ?></a>
             </li>
         </ul>
     <?php else: ?>
@@ -49,9 +52,6 @@ $fields = $notification->getFields();
             <p id="notification-content">
                 <?php echo $this->escapeHtml($notification->getContent()); ?>
             </p>
-        </div>
-        <div class="text">
-            <p>Nomination sent <?php echo DateTimeDisplayFormat::textDateTime($notification->getCreatedOn()); ?></p>
         </div>
 
         <form class="form-horizontal"
@@ -72,7 +72,8 @@ $fields = $notification->getFields();
                     [
                         'name'  => 'url',
                         'value' => $this->url(
-                                NotificationController::ROUTE_NOTIFICATION, ['notificationId' => $notificationId]
+                                NotificationController::ROUTE_NOTIFICATION, ['notificationId' => $notificationId],
+                                ["query" => ["backTo" => $backTo]]
                             )
                     ]
                 ); ?>
@@ -95,7 +96,7 @@ $fields = $notification->getFields();
         </form>
         <ul class="content-navigation__secondary">
             <li>
-                <a href="<?php echo $this->url(UserHomeController::ROUTE) ?>" id="link-back-to-home">Cancel and return to Home</a>
+                <a href="<?php echo $this->url($backLinkUrl) ?>" id="link-back-to-home"><?php echo $backLinkLabel; ?></a>
             </li>
         </ul>
     <?php endif; ?>

@@ -2,6 +2,7 @@
 namespace NotificationApiTest\Service;
 
 use Doctrine\ORM\EntityManager;
+use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\MockHandler;
 use DvsaCommonTest\TestUtils\XMock;
@@ -16,6 +17,7 @@ use NotificationApi\Service\BusinessLogic\PositionInOrganisationNominationHandle
 use NotificationApi\Service\NotificationService;
 use NotificationApi\Service\Validator\NotificationValidator;
 use NotificationApiTest\Entity\NotificationCreatorTrait;
+use PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount;
 use Zend\ServiceManager\ServiceManager;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 
@@ -29,6 +31,11 @@ use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 class NotificationServiceTest extends AbstractServiceTestCase
 {
     use NotificationCreatorTrait;
+
+    /**
+     * @var PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount
+     */
+    private $notificationRepositorySpy;
 
     /** @expectedException \DvsaCommon\Exception\UnauthorisedException */
     public function testGetNotificationThrowsExceptionOnNonAuth()
@@ -47,6 +54,27 @@ class NotificationServiceTest extends AbstractServiceTestCase
         $mocks = $this->prepSoNotificationGetUsesNotificationAndPersonIdValues(999, null);
         $notificationService = $this->getMockNotificationService($mocks);
         $notificationService->get(123);
+    }
+
+    public function testArchivization()
+    {
+        $notificationId = 999;
+        $mocks = $this->prepSoNotificationGetUsesNotificationAndPersonIdValues($notificationId, $notificationId);
+        $notificationService = $this->getMockNotificationService($mocks);
+        $notificationService->archive($notificationId);
+        /** @var \PHPUnit_Framework_MockObject_Invocation_Object $saveInvocation */
+        $saveInvocation = $this->notificationRepositorySpy->getInvocations()[0];
+        /** @var Notification $notification */
+        $notification = $saveInvocation->parameters[0];
+        $this->assertEquals(true, $notification->getIsArchived());
+    }
+
+    /** @expectedException \DvsaCommonApi\Service\Exception\ForbiddenException */
+    public function testArchivizationThrowsExceptionIfUserTriesToModifySomeoneElsesNotification()
+    {
+        $mocks = $this->prepSoNotificationGetUsesNotificationAndPersonIdValues(999, 111);
+        $notificationService = $this->getMockNotificationService($mocks);
+        $notificationService->archive(222);
     }
 
     public function test_get_notification_works_when_user_can_see_same_id()
@@ -79,43 +107,50 @@ class NotificationServiceTest extends AbstractServiceTestCase
     public function test_getAllByUserId_validId_shouldReturnArray()
     {
         $personId = 42;
-        /** @var \DvsaEntities\Entity\Person $mockIdentity */
-        $mockIdentity = XMock::of(Person::class, ['getUserId', 'getId']);
-        $mockIdentity->expects($this->once())->method('getUserId')->willReturn($personId);
+        /** @var \DvsaEntities\Entity\Person | \PHPUnit_Framework_MockObject_MockObject $mockIdentity */
+        $mockIdentity = $this->getMockIdentity($personId);
 
+        /** @var NotificationValidator | \PHPUnit_Framework_MockObject_MockObject $mockValidator */
+        $mockValidator = $this->getMockWithDisabledConstructor(NotificationValidator::class);
 
-        /** @var \Zend\ServiceManager\ServiceManager $mockServiceManager */
-        $mockServiceManager = $this->getMockWithDisabledConstructor(ServiceManager::class);
-
-        // Ensure first call to get() is mocked entity-manager
-        $mockEntityManager = $this->getMockEntityManager();
-        $mockEntityManager
-            ->expects($this->at(0))
-            ->method('find')
-            ->with(Person::class, $personId)
-            ->willReturn($mockIdentity);
-        $mockServiceManager
-            ->expects($this->at(0))
-            ->method('get')
-            ->with(EntityManager::class)
-            ->willReturn($mockEntityManager);
-
-        $authorisation = $this->mockAuthorisation();
-
-        $mockServiceManager
-            ->expects($this->at(1))
-            ->method('get')
-            ->willReturn($authorisation);
-
+        /** @var NotificationRepository | \PHPUnit_Framework_MockObject_MockObject $repository */
         $repository = XMock::of(NotificationRepository::class);
         $repository
             ->expects($this->any())
             ->method("findAllByPersonId")
             ->willReturn(['blah blah', 'and more blah']);
 
+        $notificationService = new NotificationService(
+            $this->getMockServiceManager($mockIdentity, $personId),
+            $mockValidator,
+            $repository
+        );
+        $result = $notificationService->getAllInboxByPersonId($personId);
+        $this->assertEquals(['blah blah', 'and more blah'], $result);
+    }
+
+    public function test_getUnreadByUserId_validId_shouldReturnArray()
+    {
+        $personId = 42;
+        /** @var \DvsaEntities\Entity\Person | \PHPUnit_Framework_MockObject_MockObject $mockIdentity */
+        $mockIdentity = $this->getMockIdentity($personId);
+
+        /** @var NotificationValidator | \PHPUnit_Framework_MockObject_MockObject $mockValidator */
         $mockValidator = $this->getMockWithDisabledConstructor(NotificationValidator::class);
-        $notificationService = new NotificationService($mockServiceManager, $mockValidator, $repository);
-        $result = $notificationService->getAllByPersonId($mockIdentity->getUserId());
+
+        /** @var NotificationRepository | \PHPUnit_Framework_MockObject_MockObject $repository */
+        $repository = XMock::of(NotificationRepository::class);
+        $repository
+            ->expects($this->any())
+            ->method("findUnreadByPersonId")
+            ->willReturn(['blah blah', 'and more blah']);
+
+        $notificationService = new NotificationService(
+            $this->getMockServiceManager($mockIdentity, $personId),
+            $mockValidator,
+            $repository
+        );
+        $result = $notificationService->getUnreadByPersonId($personId);
         $this->assertEquals(['blah blah', 'and more blah'], $result);
     }
 
@@ -465,10 +500,14 @@ class NotificationServiceTest extends AbstractServiceTestCase
             );
 
         $notificationRepository = XMock::of(NotificationRepository::class);
+        $this->notificationRepositorySpy = $this->any();
+
         $notificationRepository
             ->expects($this->any())
             ->method("get")
             ->willReturn($dataNotification);
+
+        $notificationRepository->expects($this->notificationRepositorySpy)->method("save");
 
         return (Object)[
             'serviceManager' => $mockServiceManager,
@@ -501,5 +540,40 @@ class NotificationServiceTest extends AbstractServiceTestCase
     private function getMockNotificationService($mocks)
     {
         return new NotificationService($mocks->serviceManager, $mocks->validator, $mocks->notificationRepository);
+    }
+
+    private function getMockServiceManager($mockIdentity, $personId)
+    {
+        /** @var \Zend\ServiceManager\ServiceManager | \PHPUnit_Framework_MockObject_MockObject $mockServiceManager */
+        $mockServiceManager = $this->getMockWithDisabledConstructor(ServiceManager::class);
+
+        // Ensure first call to get() is mocked entity-manager
+        $mockEntityManager = $this->getMockEntityManager();
+        $mockEntityManager
+            ->expects($this->at(0))
+            ->method('find')
+            ->with(Person::class, $personId)
+            ->willReturn($mockIdentity);
+        $mockServiceManager
+            ->expects($this->at(0))
+            ->method('get')
+            ->with(EntityManager::class)
+            ->willReturn($mockEntityManager);
+
+        $authorisation = $this->mockAuthorisation();
+
+        $mockServiceManager
+            ->expects($this->at(1))
+            ->method('get')
+            ->willReturn($authorisation);
+
+        return $mockServiceManager;
+    }
+
+    private function getMockIdentity($personId)
+    {
+        $mockIdentity = XMock::of(Person::class, ['getUserId', 'getId']);
+
+        return $mockIdentity;
     }
 }

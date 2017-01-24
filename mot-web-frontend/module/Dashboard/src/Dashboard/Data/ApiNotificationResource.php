@@ -36,13 +36,45 @@ class ApiNotificationResource extends ApiResources
     }
 
     /**
+     * @param int $notificationId
+     *
+     * @return array
+     */
+    public function archive($notificationId)
+    {
+        $path = $this->notificationResource($notificationId)->archive()->toString();
+        return $this->restUpdate($path, []);
+    }
+
+    /**
      * @param int $personId
      *
      * @return array
      */
-    public function getList($personId)
+    public function getInboxNotifications($personId)
     {
         $path = $this->notificationForPersonResource($personId)->toString();
+        return $this->restGet($path)['data'];
+    }
+
+    /**
+     * @param int $personId
+     *
+     * @return array
+     */
+    public function getUnreadCount($personId)
+    {
+        $path = $this->notificationUnreadCountForPerson($personId)->toString();
+        return $this->restGet($path)['data'];
+    }
+    /**
+     * @param int $personId
+     *
+     * @return array
+     */
+    public function getArchivedNotifications($personId)
+    {
+        $path = $this->notificationForPersonResource($personId)->queryParam('archived', 1)->toString();
         return $this->restGet($path)['data'];
     }
 
@@ -64,6 +96,16 @@ class ApiNotificationResource extends ApiResources
         ];
 
         return $this->restUpdate($path, $data)['data'];
+    }
+
+    /**
+     * @param int $personId
+     *
+     * @return NotificationUrlBuilder
+     */
+    private function notificationUnreadCountForPerson($personId)
+    {
+        return NotificationUrlBuilder::unreadNotificationsCountForPerson($personId);
     }
 
     /**

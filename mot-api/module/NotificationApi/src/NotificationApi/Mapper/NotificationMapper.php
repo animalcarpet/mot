@@ -39,6 +39,7 @@ class NotificationMapper
             'content'   => $this->parseTemplate($notification->getNotificationTemplate()->getContent(), $fields),
             'readOn'    => $this->extractDate($notification->getReadOn()),
             'createdOn' => $this->extractDate($notification->getCreatedOn()),
+            'isArchived' => $notification->getIsArchived(),
             'fields' => $fields
         ];
 

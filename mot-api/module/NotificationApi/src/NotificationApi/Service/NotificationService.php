@@ -108,6 +108,23 @@ class NotificationService extends AbstractService
     }
 
     /**
+     * @param int $id notification ID
+     *
+     * @return bool
+     * @throws ForbiddenException
+     * @throws \DvsaCommonApi\Service\Exception\NotFoundException
+     * @throws \Exception
+     */
+    public function archive($id)
+    {
+        $notification = $this->get($id);
+        $this->notificationRepository->save($notification->setIsArchived(true));
+        $this->notificationRepository->flush();
+
+        return true;
+    }
+
+    /**
      * Return Notifictation message# "$id" but IFF the recipient ID is the same
      * as the requesting sessions user id, otherwise we must throw an exception.
      *
@@ -144,15 +161,70 @@ class NotificationService extends AbstractService
      * Gets all notifications (and nominations) by personId
      *
      * @param int $personId
-     *
-     * @return Notification[]
+     * @param bool $archived
+     * @return \DvsaEntities\Entity\Notification[]
      */
-    public function getAllByPersonId($personId)
+    private function getByPersonId($personId, $archived = false)
     {
         $this->authService->assertGranted(PermissionInSystem::NOTIFICATION_READ);
         $person = $this->findOrThrowException(Person::class, $personId, Person::ENTITY_NAME);
 
-        return $this->notificationRepository->findAllByPersonId($person->getId());
+        return $this->notificationRepository->findAllByPersonId($person->getId(), $archived);
+    }
+
+    /**
+     * @param int $personId
+     * @return \DvsaEntities\Entity\Notification[]
+     */
+    public function getAllArchivedByPersonId($personId)
+    {
+        return $this->getByPersonId($personId, true);
+    }
+
+    /**
+     * @param int $personId
+     * @return \DvsaEntities\Entity\Notification[]
+     */
+    public function getAllInboxByPersonId($personId)
+    {
+        return $this->getByPersonId($personId, false);
+    }
+
+    public function getUnreadCountByPersonId($personId)
+    {
+        $this->authService->assertGranted(PermissionInSystem::NOTIFICATION_READ);
+        $person = $this->findOrThrowException(Person::class, $personId, Person::ENTITY_NAME);
+
+        return $this->notificationRepository->countUnreadByPersonId($person->getId());
+    }
+
+    /**
+     * Gets unread notifications by personId
+     *
+     * @param $personId
+     * @param int $limit
+     * @return Notification[]
+     * @throws \DvsaCommonApi\Service\Exception\NotFoundException
+     */
+    public function getUnreadByPersonId($personId, $limit = null)
+    {
+        $this->authService->assertGranted(PermissionInSystem::NOTIFICATION_READ);
+        $person = $this->findOrThrowException(Person::class, $personId, Person::ENTITY_NAME);
+
+        return $this->notificationRepository->findUnreadByPersonId($person->getId(), $limit);
+    }
+
+    /**
+     * @param int $personId
+     * @return int
+     * @throws \DvsaCommonApi\Service\Exception\NotFoundException
+     */
+    public function countUnreadByPersonId($personId)
+    {
+        $this->authService->assertGranted(PermissionInSystem::NOTIFICATION_READ);
+        $person = $this->findOrThrowException(Person::class, $personId, Person::ENTITY_NAME);
+
+        return $this->notificationRepository->countUnreadByPersonId($person->getId());
     }
 
     /**

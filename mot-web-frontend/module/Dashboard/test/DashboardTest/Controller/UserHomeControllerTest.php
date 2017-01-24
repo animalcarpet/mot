@@ -634,6 +634,7 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
             ],
             'overdueSpecialNotices' => array_combine(VehicleClassCode::getAll(), array_fill(0, count(VehicleClassCode::getAll()), 0)),
             'notifications'          => [],
+            'unreadNotificationsCount' => 0,
             'inProgressTestNumber'   => null,
             'inProgressTestTypeCode' => null,
             'authorisedExaminers'    => [],

@@ -414,6 +414,22 @@ final class DateUtils
     }
 
     /**
+     * Checks if date is today
+     *
+     * @param string|DateTime $date
+     * @return bool
+     */
+    public static function isToday($date)
+    {
+        $date = $date instanceof DateTime ? $date : DateUtils::toDateTime($date, false);
+        $today = DateUtils::nowAsUserDateTime();
+        $today->setTime(0, 0, 0);
+        $date->setTime(0, 0, 0);
+
+        return $date == $today;
+    }
+
+    /**
      * Returns current date and time in user timezone.
      *
      * @return \DateTime

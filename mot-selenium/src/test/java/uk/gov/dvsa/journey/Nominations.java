@@ -3,10 +3,7 @@ package uk.gov.dvsa.journey;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.shared.MotUI;
-import uk.gov.dvsa.ui.pages.HomePage;
-import uk.gov.dvsa.ui.pages.Notification;
-import uk.gov.dvsa.ui.pages.OrgNotificationPage;
-import uk.gov.dvsa.ui.pages.SiteNotificationPage;
+import uk.gov.dvsa.ui.pages.*;
 
 import java.io.IOException;
 
@@ -39,6 +36,13 @@ public class Nominations {
     public SiteNotificationPage viewActivateCardNotification(User user) throws IOException {
         HomePage homePage = pageNavigator.gotoHomePage(user);
         homePage.clickActivateCardNotificationLink();
+
+        return new SiteNotificationPage(pageNavigator.getDriver());
+    }
+
+    public SiteNotificationPage viewActivateCardNotificationOnInboxPage(User user) throws IOException {
+        InboxNotificationPage inboxNotificationPage = pageNavigator.navigateToPage(user, InboxNotificationPage.PATH, InboxNotificationPage.class);
+        inboxNotificationPage.clickNotificationLink("activate your security card");
 
         return new SiteNotificationPage(pageNavigator.getDriver());
     }

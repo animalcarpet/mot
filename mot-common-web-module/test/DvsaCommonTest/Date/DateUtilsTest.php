@@ -1,13 +1,12 @@
 <?php
 namespace DvsaCommonTest\Date;
 
+use DateTime;
 use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Date\Exception\DateException;
 use DvsaCommon\Date\Exception\IncorrectDateFormatException;
 use PHPUnit_Framework_TestCase;
-use Zend\Form\Element\Date;
-use Zend\Form\Element\DateTime;
 
 /**
  * Tests for DateUtils class
@@ -97,6 +96,25 @@ class DateUtilsTest extends PHPUnit_Framework_TestCase
             new \DateTime('2005-09-30 03:18:23'),
             DateUtils::nextDay(new \DateTime('2005-09-29 03:18:23'), true)
         );
+    }
+
+    /**
+     * @dataProvider providerIsToday
+     */
+    public function testIsToday($isToday, $date)
+    {
+        $this->assertEquals($isToday, DateUtils::isToday($date));
+    }
+
+    public function providerIsToday()
+    {
+        return [
+            [true, new DateTime('now')],
+            [false, (new DateTime('now'))->sub(new \DateInterval("P1D"))],
+            [false, (new DateTime('now'))->add(new \DateInterval("P1D"))],
+            [false, (new DateTime('now'))->add(new \DateInterval("P1Y"))],
+            [false, (new DateTime('now'))->sub(new \DateInterval("P1Y"))],
+        ];
     }
 
     public function testNextDayDoNotPreserveTime()

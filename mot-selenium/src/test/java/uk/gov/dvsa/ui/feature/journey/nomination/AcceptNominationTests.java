@@ -1,16 +1,17 @@
 package uk.gov.dvsa.ui.feature.journey.nomination;
 
 import org.testng.annotations.Test;
-
+import ru.yandex.qatools.allure.annotations.Description;
+import ru.yandex.qatools.allure.annotations.Features;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.shared.role.OrganisationBusinessRoleCodes;
 import uk.gov.dvsa.domain.shared.role.TradeRoles;
 import uk.gov.dvsa.ui.DslTest;
+import uk.gov.dvsa.ui.pages.ArchiveNotificationPage;
+import uk.gov.dvsa.ui.pages.InboxNotificationPage;
+import uk.gov.dvsa.ui.pages.Notification;
 
 import java.io.IOException;
-
-import ru.yandex.qatools.allure.annotations.Description;
-import ru.yandex.qatools.allure.annotations.Features;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -107,16 +108,24 @@ public class AcceptNominationTests extends DslTest {
     }
 
     @Test(groups = {"BVT"})
-    void tradeUserAcceptTesterNomination() throws IOException {
+    void tradeUserAcceptTesterNominationAndArchiveIt() throws IOException {
         step("Given I am nominated as a tester");
         User nominee = motApi.user.createTester(siteData.createSite().getId());
         motApi.nominations.nominateSiteRole(nominee,siteData.createSite().getId(), TradeRoles.TESTER);
 
-        step("When I accept the nomination");
-        String message = motUI.nominations.viewMostRecent(nominee).acceptNomination().getConfirmationText();
-
-        step("Then I am given the tester role");
+        step("And I accept the nomination");
+        Notification notification = motUI.nominations.viewMostRecent(nominee).acceptNomination();
+        String message = notification.getConfirmationText();
+        String title = notification.getTitle();
         assertThat("Tester Role Confirmation", message, containsString("You have accepted the role of Tester"));
+
+        step("When I archive this notification");
+        InboxNotificationPage inboxNotificationPage = notification.archiveNomination();
+        assertThat("Inbox is empty", 0 == inboxNotificationPage.countNotifications());
+
+        step("Then notification is archived");
+        ArchiveNotificationPage archiveNotificationPage = inboxNotificationPage.clickArchiveTab();
+        assertThat("Notification was archived successfully", archiveNotificationPage.hasNotification(title));
     }
 
     @Test(groups = {"BVT"})
