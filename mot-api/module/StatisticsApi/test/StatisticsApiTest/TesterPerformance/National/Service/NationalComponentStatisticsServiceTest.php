@@ -8,6 +8,7 @@ use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Teste
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterNational\Storage\NationalComponentFailRateStorage;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\ComponentDto;
 use DvsaCommon\ApiClient\Statistics\ComponentFailRate\Dto\NationalComponentStatisticsDto;
+use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommonTest\Date\TestDateTimeHolder;
 use DvsaCommonTest\Mocking\KeyValueStorage\KeyValueStorageFake;
@@ -63,7 +64,7 @@ class NationalComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetThrowsExceptionIfValidationFailed()
     {
-        $currentYear = (int)$this->getDateTimeHolder()->getCurrentDate()->format("Y");
+        $currentYear = (int)DateUtils::firstOfThisMonth()->format("Y");
         $date = $this->getDateTimeHolder()->getCurrentDate();
         $nextMonth = (int)$date->modify("next month")->format("m");
 

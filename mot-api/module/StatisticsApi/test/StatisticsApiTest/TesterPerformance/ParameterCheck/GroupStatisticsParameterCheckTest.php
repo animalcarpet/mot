@@ -2,17 +2,17 @@
 namespace Dvsa\Mot\Api\StatisticsApiTest\TesterPerformance\ParameterCheck;
 
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\ParameterCheck\GroupStatisticsParameterCheck;
+use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Enum\VehicleClassGroupCode;
-use DvsaCommonTest\Date\TestDateTimeHolder;
 
 class GroupStatisticsParameterCheckTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\ParameterCheck\GroupStatisticsParameterCheck */
+    /** @var GroupStatisticsParameterCheck */
     private $sut;
 
     protected function setUp()
     {
-        $this->sut = new \Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Common\ParameterCheck\GroupStatisticsParameterCheck($this->getDateTimeHolder());
+        $this->sut = new GroupStatisticsParameterCheck();
     }
 
     /**
@@ -130,18 +130,13 @@ class GroupStatisticsParameterCheckTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedResponse, $this->sut->isValid($year, $month, $group));
     }
 
-    private function getDateTimeHolder()
-    {
-        return new TestDateTimeHolder(new \DateTime("2016-06-21"));
-    }
-
     private function getYear()
     {
-        return (int)$this->getDateTimeHolder()->getCurrentDate()->sub(new \DateInterval("P1M"))->format("Y");
+        return (int)DateUtils::firstOfThisMonth()->sub(new \DateInterval("P1M"))->format("Y");
     }
 
     private function getMonth()
     {
-        return (int)$this->getDateTimeHolder()->getCurrentDate()->sub(new \DateInterval("P1M"))->format("m");
+        return (int)DateUtils::firstOfThisMonth()->sub(new \DateInterval("P1M"))->format("m");
     }
 }

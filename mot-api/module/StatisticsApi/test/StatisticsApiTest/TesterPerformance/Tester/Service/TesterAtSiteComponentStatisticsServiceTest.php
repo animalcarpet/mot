@@ -6,13 +6,12 @@ use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\Commo
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterAtSite\Repository\TesterAtSiteComponentStatisticsRepository;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\ComponentBreakdown\TesterAtSite\Service\TesterAtSiteComponentStatisticsService;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterAtSitePerformanceResult;
-use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\QueryResult\TesterPerformanceResult;
 use Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\TesterPerformance\TesterAtSite\Repository\TesterAtSiteSingleGroupStatisticsRepository;
 use DvsaCommon\Auth\PermissionAtSite;
+use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommonApiTest\Stub\ApiIdentityProviderStub;
 use DvsaCommonApiTest\Stub\IdentityStub;
-use DvsaCommonTest\Date\TestDateTimeHolder;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\MethodSpy;
 use DvsaCommonTest\TestUtils\XMock;
@@ -56,7 +55,6 @@ class TesterAtSiteComponentStatisticsServiceTest extends \PHPUnit_Framework_Test
 
         $this->sut = new TesterAtSiteComponentStatisticsService($this->componentStatisticsRepositoryMock,
             $this->testerStatisticsRepositoryMock,
-            $this->getDateTimeHolder(),
             $this->authorisationService,
             $this->personalDetailsService,
             new ComponentBreakdownDtoMapper(),
@@ -69,7 +67,7 @@ class TesterAtSiteComponentStatisticsServiceTest extends \PHPUnit_Framework_Test
      */
     public function testGetThrowsExceptionForInvalidData()
     {
-        $date = $this->getDateTimeHolder()->getCurrentDate()->sub(new \DateInterval("P1M"));
+        $date = $this->getFirstOfThisMonth()->sub(new \DateInterval("P1M"));
         $year = (int)$date->format("Y");
         $month = (int)$date->format("m");
 
@@ -95,7 +93,7 @@ class TesterAtSiteComponentStatisticsServiceTest extends \PHPUnit_Framework_Test
         $expectedPercentageFailed,
         $expectedAverageVehicleAge
     ) {
-        $date = $this->getDateTimeHolder()->getCurrentDate()->sub(new \DateInterval("P1M"));
+        $date = $this->getFirstOfThisMonth()->sub(new \DateInterval("P1M"));
         $year = (int)$date->format("Y");
         $month = (int)$date->format("m");
 
@@ -134,7 +132,7 @@ class TesterAtSiteComponentStatisticsServiceTest extends \PHPUnit_Framework_Test
      */
     public function testComponentFailRateCalculation($failedCount, $expectedPercentage)
     {
-        $date = $this->getDateTimeHolder()->getCurrentDate()->sub(new \DateInterval("P1M"));
+        $date = $this->getFirstOfThisMonth()->sub(new \DateInterval("P1M"));
         $year = (int)$date->format("Y");
         $month = (int)$date->format("m");
 
@@ -193,7 +191,7 @@ class TesterAtSiteComponentStatisticsServiceTest extends \PHPUnit_Framework_Test
 
     public function testLastMonthStatisticsAreFetchedFromRepository()
     {
-        $date = $this->getDateTimeHolder()->getCurrentDate()->sub(new \DateInterval("P1M"));
+        $date = $this->getFirstOfThisMonth()->sub(new \DateInterval("P1M"));
         $year = (int)$date->format("Y");
         $month = (int)$date->format("m");
 
@@ -224,7 +222,7 @@ class TesterAtSiteComponentStatisticsServiceTest extends \PHPUnit_Framework_Test
             ->willReturn(new TesterAtSitePerformanceResult());
         $testerStatisticsRepositorySpy = new MethodSpy($this->testerStatisticsRepositoryMock, 'get');
 
-        $date = $this->getDateTimeHolder()->getCurrentDate();
+        $date = $this->getFirstOfThisMonth();
         $date->sub(new \DateInterval("P3M"));
 
         $year = (int)$date->format("Y");
@@ -245,7 +243,7 @@ class TesterAtSiteComponentStatisticsServiceTest extends \PHPUnit_Framework_Test
         // GIVEN I do not have any permissions
         $this->authorisationService->clearAll();
 
-        $date = $this->getDateTimeHolder()->getCurrentDate();
+        $date = $this->getFirstOfThisMonth();
         $year = (int)$date->format("Y");
         $month = (int)$date->format("m");
 
@@ -263,8 +261,8 @@ class TesterAtSiteComponentStatisticsServiceTest extends \PHPUnit_Framework_Test
         $this->assertEquals(VehicleClassGroupCode::BIKES, $repositoryGroup);
     }
 
-    private function getDateTimeHolder()
+    private function getFirstOfThisMonth()
     {
-        return new TestDateTimeHolder(new \DateTime("2016-06-21"));
+        return DateUtils::firstOfThisMonth();
     }
 }

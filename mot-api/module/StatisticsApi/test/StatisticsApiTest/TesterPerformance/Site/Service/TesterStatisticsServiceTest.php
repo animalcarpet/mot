@@ -10,10 +10,10 @@ use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\SitePerformanceDto;
 use DvsaCommon\ApiClient\Statistics\TesterPerformance\Dto\TesterPerformanceDto;
 use DvsaCommon\Auth\Assertion\ViewTesterTestQualityAssertion;
 use DvsaCommon\Auth\PermissionAtSite;
+use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Date\TimeSpan;
 use DvsaCommon\Enum\VehicleClassGroupCode;
 use DvsaCommon\Model\TesterAuthorisation;
-use DvsaCommonTest\Date\TestDateTimeHolder;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\XMock;
 use PersonApi\Service\Mapper\TesterGroupAuthorisationMapper;
@@ -60,8 +60,7 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
             $this->repository,
             $this->authorisationService,
             $this->viewTesterTestQualityAssertion,
-            $this->testerGroupAuthorisationMapper,
-            $this->getDateTimeHolder()
+            $this->testerGroupAuthorisationMapper
         );
     }
 
@@ -211,23 +210,18 @@ class TesterStatisticsServiceTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    private function getDateTimeHolder()
+    private function getFirstOfCurrentMonth()
     {
-        return new TestDateTimeHolder(new \DateTime("first day of this month"));
-    }
-
-    private function getCurrentDate()
-    {
-        return $this->getDateTimeHolder()->getCurrentDate();
+        return DateUtils::firstOfThisMonth();
     }
 
     private function getPrevMonth()
     {
-        return (int)$this->getCurrentDate()->sub(new \DateInterval("P1M"))->format("m");
+        return (int)$this->getFirstOfCurrentMonth()->sub(new \DateInterval("P1M"))->format("m");
     }
 
     private function getYear()
     {
-        return (int)$this->getCurrentDate()->sub(new \DateInterval("P1M"))->format("Y");
+        return (int)$this->getFirstOfCurrentMonth()->sub(new \DateInterval("P1M"))->format("Y");
     }
 }

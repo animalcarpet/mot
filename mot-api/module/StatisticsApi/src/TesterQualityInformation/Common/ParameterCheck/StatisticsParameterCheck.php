@@ -2,7 +2,7 @@
 
 namespace Dvsa\Mot\Api\StatisticsApi\TesterQualityInformation\Common\ParameterCheck;
 
-use DvsaCommon\Date\DateTimeHolderInterface;
+use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Date\Month;
 use DvsaCommon\Validator\BetweenDatesValidator;
 use Zend\Validator\Date;
@@ -10,17 +10,14 @@ use Zend\Validator\Date;
 class StatisticsParameterCheck
 {
     private $betweenDateValidator;
-    private $dateTimeHolder;
 
-    public function __construct(DateTimeHolderInterface $dateTimeHolder)
+    public function __construct()
     {
-        $this->dateTimeHolder = $dateTimeHolder;
-
-        $pastDate = $dateTimeHolder->getCurrentDate()->sub(new \DateInterval("P13M"));
+        $pastDate = DateUtils::firstOfThisMonth()->sub(new \DateInterval("P13M"));
         $min = new Month($pastDate->format("Y"), $pastDate->format("m"));
 
-        $currentDate = $dateTimeHolder->getCurrentDate();
-        $max = new Month($currentDate->format("Y"), $currentDate->format("m"));
+        $firstOfThisMonth = DateUtils::firstOfThisMonth();
+        $max = new Month($firstOfThisMonth->format("Y"), $firstOfThisMonth->format("m"));
 
         $this->betweenDateValidator = new BetweenDatesValidator($min->getEndDate(), $max->getStartDate());
     }
@@ -36,7 +33,7 @@ class StatisticsParameterCheck
             return false;
         }
 
-        $date = $this->dateTimeHolder->getCurrentDate();
+        $date = new \DateTime();
         $date->setDate($year, $month, 1);
         if (!$this->betweenDateValidator->isValid($date)) {
             return false;
