@@ -9,20 +9,28 @@ namespace DvsaMotApiTest\Service;
 
 use DateTime;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
+use DvsaClient\Entity\SitePosition;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Constants\Role;
+use DvsaCommon\Date\DateUtils;
+use DvsaCommon\Date\Time;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Common\MotTestTypeDto;
+use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
+use DvsaCommon\Enum\ColourCode;
+use DvsaCommon\Enum\FuelTypeCode;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
+use DvsaCommon\Enum\RoleCode;
 use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Mapper\OdometerReadingMapper;
+use DvsaCommonTest\TestUtils\ArgCapture;
 use DvsaCommonTest\TestUtils\MockHandler;
 use DvsaCommonTest\TestUtils\TestCasePermissionTrait;
 use DvsaCommonTest\TestUtils\XMock;
@@ -45,11 +53,15 @@ use DvsaEntities\Entity\Organisation;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\ReasonForRejectionType;
 use DvsaEntities\Entity\Site;
+use DvsaEntities\Entity\SiteBusinessRole;
+use DvsaEntities\Entity\SiteBusinessRoleMap;
 use DvsaEntities\Entity\SiteContactType;
+use DvsaEntities\Entity\SiteTestingDailySchedule;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
 use DvsaEntitiesTest\Entity\MotTestReasonForRejectionTest;
 use DvsaMotApi\Service\MotTestService;
+use DvsaMotApiTest\Factory\MotTestObjectsFactory;
 use PHPUnit_Framework_MockObject_MockObject;
 use DvsaEntities\Entity\CertificateReplacement;
 
@@ -71,6 +83,7 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
     // 12 digits number
     const MOT_TEST_NUMBER = "123456789012";
 
+    const SITE_ID = 1;
     const VEHICLE_ID = 9999;
     const VEHICLE_ID_ENC = 'jq33IixSpBsx4rglOvxByg';
 
@@ -1044,5 +1057,141 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
             ->expects($this->any())
             ->method("getRepository")
             ->willReturnCallback($callback);
+    }
+
+
+
+    private function notificationOnTestOutsideOpeningHoursExpected()
+    {
+        list($site, $person, $startedDate) = [ArgCapture::create(), ArgCapture::create(), ArgCapture::create()];
+        $this->mockTestingOutsideOpeningHoursNotificationService->expects($this->once())
+            ->method('notify')->with($site(), $person(), $startedDate());
+
+        return [$site, $person, $startedDate];
+    }
+
+    private function notificationOnTestOutsideOpeningHoursNotExpected()
+    {
+        $this->mockTestingOutsideOpeningHoursNotificationService->expects($this->never())
+            ->method('notify');
+    }
+
+
+    private function setStartedTestOutsideOpeningHours(MotTest $motTest, $testStartedHour)
+    {
+        $year = "2016";
+        $month = "09";
+        $day = "05";
+
+            $startedDate = DateUtils::toDateTimeFromParts($year,$month,$day,$testStartedHour);
+
+        $motTest->setStartedDate($startedDate);
+
+        return $motTest;
+    }
+
+    private static function addSiteOpeningHours(MotTest $motTest)
+    {
+        list($openingTime, $closingTime) = [Time::fromIso8601('08:00:00'), Time::fromIso8601('16:00:00')];
+        $weekOpeningHours = [];
+        for ($i = 1; $i <= 7; $i++) {
+            $dailySchedule = (new SiteTestingDailySchedule())
+                ->setOpenTime($openingTime)
+                ->setCloseTime($closingTime)
+                ->setWeekday($i);
+            $weekOpeningHours [] = $dailySchedule;
+        }
+        $motTest->getVehicleTestingStation()->setSiteTestingSchedule($weekOpeningHours);
+    }
+
+    private function setUpForTestUpdateStatusOutsideOpeningHours(MotTest $motTest, $testStartedHour)
+    {
+        $siteBusinesRole = new SiteBusinessRole();
+        $siteBusinesRole->setCode(RoleCode::SITE_MANAGER);
+        $siteManager = new Person();
+        $siteBusinessRoleMap = (new SiteBusinessRoleMap())->setPerson($siteManager)->setSiteBusinessRole($siteBusinesRole);
+
+        $motTest->getVehicleTestingStation()->setPositions([$siteBusinessRoleMap]);
+
+        MotTestObjectsFactory::addTestAuthorisationForClass(
+            $motTest,
+            '4',
+            AuthorisationForTestingMotStatusCode::QUALIFIED
+        );
+
+        self::addSiteOpeningHours($motTest);
+        $motTest = $this->setStartedTestOutsideOpeningHours($motTest, $testStartedHour);
+
+        return $motTest;
+    }
+
+    /**
+     * @return array
+     */
+    public function dataProviderGivenTestOutsideSiteOpeningHoursShouldNotifyOrNot()
+    {
+        return [
+            ["02", true],
+            ["05", true],
+            ["11", false],
+            ["13", false],
+            ["19", true],
+            ["21", true],
+        ];
+    }
+
+    /**
+     * @param $testStartedHour
+     * @param $shouldNotify
+     *
+     * @dataProvider dataProviderGivenTestOutsideSiteOpeningHoursShouldNotifyOrNot
+     */
+    public function testForTestOutsideSiteOpeningHoursShouldNotifyOrNot($testStartedHour, $shouldNotify)
+    {
+        $mocks = $this->getMocksForMotTestService();
+        $service = $this->constructMotTestServiceWithMocks($mocks);
+        $this->mockCreateMotTest($this->mockCreateMotTestService, $this->getTestData(), $testStartedHour);
+
+        if ($shouldNotify) {
+            $this->notificationOnTestOutsideOpeningHoursExpected();
+        } else {
+            $this->notificationOnTestOutsideOpeningHoursNotExpected();
+        }
+        $service->createMotTest($this->getTestData());
+    }
+
+    private function mockCreateMotTest(
+        PHPUnit_Framework_MockObject_MockObject $mockCreateTestRepository,
+        array $data,
+        $testStartedHour
+    )
+    {
+        $mockCreateTestRepository
+            ->expects($this->any())
+            ->method('create')
+            ->with($data)
+            ->willReturn(
+                $this->setUpForTestUpdateStatusOutsideOpeningHours(
+                    self::getMotTestEntity('1'),
+                    $testStartedHour
+                )
+            );
+    }
+
+    /**
+     * @return array
+     */
+    protected function getTestData()
+    {
+        return [
+            "vehicleId" => self::VEHICLE_ID,
+            "vehicleTestingStationId" => self::SITE_ID,
+            "primaryColour" => ColourCode::GREY,
+            "secondaryColour" => ColourCode::NOT_STATED,
+            "fuelTypeId" => FuelTypeCode::PETROL,
+            "vehicleClassCode" => VehicleClassCode::CLASS_4,
+            "hasRegistration" => true,
+            "oneTimePassword" => null
+        ];
     }
 }

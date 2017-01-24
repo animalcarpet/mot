@@ -17,7 +17,6 @@ use DvsaEntities\Entity\MotTestReasonForCancel;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaMotApi\Service\MotTestDateHelperService;
 use DvsaMotApi\Service\MotTestStatusChangeService;
-use DvsaMotApi\Service\TestingOutsideOpeningHoursNotificationService;
 use DvsaMotApi\Service\Validator\MotTestStatusChangeValidator;
 use OrganisationApi\Service\OrganisationService;
 use Zend\ServiceManager\FactoryInterface;
@@ -48,7 +47,6 @@ class MotTestStatusChangeServiceFactory implements FactoryInterface
             $serviceLocator->get(MotTestRepository::class),
             $entityManager->getRepository(MotTestReasonForCancel::class),
             $entityManager->getRepository(EnforcementFullPartialRetest::class),
-            $serviceLocator->get(TestingOutsideOpeningHoursNotificationService::class),
             $serviceLocator->get(MotTestDateHelperService::class),
             $entityManager,
             $serviceLocator->get(MotIdentityProviderInterface::class),

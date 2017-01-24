@@ -13,6 +13,7 @@ use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Service\CreateMotTestService;
 use DvsaMotApi\Service\Mapper\MotTestMapper;
 use DvsaMotApi\Service\MotTestService;
+use DvsaMotApi\Service\TestingOutsideOpeningHoursNotificationService;
 use DvsaMotApi\Service\Validator\MotTestValidator;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use DvsaEntities\Repository\MotTestRepository;
@@ -35,6 +36,7 @@ class MotTestServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $this->mockMethod($mockServiceLocator, 'get', $this->at(5), XMock::of(ReadMotTestAssertion::class));
         $this->mockMethod($mockServiceLocator, 'get', $this->at(6), XMock::of(CreateMotTestService::class));
         $this->mockMethod($mockServiceLocator, 'get', $this->at(7), XMock::of(MysteryShopperHelper::class));
+        $this->mockMethod($mockServiceLocator, 'get', $this->at(8), XMock::of(TestingOutsideOpeningHoursNotificationService::class));
 
         $this->assertInstanceOf(
             MotTestService::class,

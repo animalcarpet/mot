@@ -13,12 +13,17 @@ use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Date\DateTimeHolder;
+use DvsaCommon\Date\DateUtils;
+use DvsaCommon\Date\Time;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Common\MotTestTypeDto;
 use DvsaCommon\Enum\MotTestTypeCode;
+use DvsaCommon\Enum\RoleCode;
 use DvsaCommon\Enum\SiteStatusCode;
 use DvsaCommonApi\Service\Exception\NotFoundException;
+use DvsaEntities\Entity\OrganisationBusinessRoleMap;
+use DvsaEntities\Entity\SiteBusinessRoleMap;
 use DvsaEntities\Entity\SiteStatus;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\SiteTypeCode;
@@ -38,6 +43,7 @@ use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\SiteComment;
+use DvsaEntities\Entity\SiteTestingDailySchedule;
 use DvsaEntities\Entity\SiteType;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Repository\ConfigurationRepository;
@@ -85,6 +91,8 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
     private $createMotTestService;
     /** @var MysteryShopperHelper  */
     private $mysteryShopperHelper;
+    /** @var TestingOutsideOpeningHoursNotificationService */
+    private $outsideHoursNotificationService;
 
     /**
      * MotTestService constructor.
@@ -97,6 +105,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
      * @param CreateMotTestService $createMotTestService
      * @param MotTestRepository $motTestRepository
      * @param MysteryShopperHelper $mysteryShopperHelper
+     * @param TestingOutsideOpeningHoursNotificationService $outsideHoursNotificationService
      */
     public function __construct(
         EntityManager $entityManager,
@@ -107,7 +116,8 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
         ReadMotTestAssertion $readMotTestAssertion,
         CreateMotTestService $createMotTestService,
         MotTestRepository $motTestRepository,
-        MysteryShopperHelper $mysteryShopperHelper
+        MysteryShopperHelper $mysteryShopperHelper,
+        TestingOutsideOpeningHoursNotificationService $outsideHoursNotificationService
     ) {
         parent::__construct($entityManager);
 
@@ -120,6 +130,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
         $this->readMotTestAssertion       = $readMotTestAssertion;
         $this->createMotTestService       = $createMotTestService;
         $this->mysteryShopperHelper       = $mysteryShopperHelper;
+        $this->outsideHoursNotificationService = $outsideHoursNotificationService;
     }
 
     /**
@@ -240,7 +251,53 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
      */
     public function createMotTest(array $data)
     {
-        return $this->createMotTestService->create($data);
+        $motTest = $this->createMotTestService->create($data);
+        $this->notifyAboutTestingOutsideHoursIfApplicable($motTest);
+
+        return $motTest;
+    }
+
+
+    /**
+     * notify only when performed by a qualifier tester (excl. VE, demo tests, and so on).
+     *
+     * @param MotTest $motTest
+     */
+    private function notifyAboutTestingOutsideHoursIfApplicable(MotTest $motTest)
+    {
+        if ($motTest->getMotTestType()->getIsDemo() || $motTest->getMotTestType()->isNonMotTest()) {
+            return;
+        }
+
+        $schedule = $motTest->getVehicleTestingStation()->getSiteTestingSchedule();
+
+        if ($motTest->getTester()->isQualifiedTester()
+            && SiteTestingDailySchedule::isOutsideSchedule(
+                Time::fromDateTime(DateUtils::toUserTz($motTest->getStartedDate())),
+                $schedule
+            )
+        ) {
+            $positions = $motTest->getVehicleTestingStation()->getPositions();
+            /** @var SiteBusinessRoleMap|OrganisationBusinessRoleMap $roleMap */
+            $roleMap = ArrayUtils::firstOrNull($positions, function (SiteBusinessRoleMap $position) {
+                return $position->getSiteBusinessRole()->getCode() == RoleCode::SITE_MANAGER;
+            });
+            if (empty($roleMap)) {
+                $positions = $motTest->getVehicleTestingStation()->getOrganisation()->getPositions();
+                $roleMap = ArrayUtils::firstOrNull($positions, function (OrganisationBusinessRoleMap $position) {
+                    return $position->getOrganisationBusinessRole()->getRole()->getCode() == RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER;
+                });
+            }
+            
+            if (!empty($roleMap)) {
+                $this->outsideHoursNotificationService->notify(
+                    $motTest->getVehicleTestingStation(),
+                    $motTest->getTester(),
+                    $motTest->getStartedDate(),
+                    $roleMap->getPerson()
+                );
+            }
+        }
     }
 
     /**
