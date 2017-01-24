@@ -1,25 +1,20 @@
 <?php
 use Dashboard\Controller\NotificationController;
-use Dashboard\Controller\UserHomeController;
+use Dashboard\Model\Notification;
 use DvsaCommon\Date\DateTimeDisplayFormat;
 
-$notifications = (isset($notifications)) ? $notifications : [];
-$limit = (isset($limit)) ? $limit : -1;
-$unread = 0;
-$count = 0;
-
-foreach ($notifications as $notification) {
-    if (null === $notification->getReadOn()) {
-        $unread++;
-    }
-}
+/** @var Notification[] $notifications */
+/** @var int $count */
+$count = count($notifications);
+/** @var int $unread */
+/** @var int $limit */
+$limit = 5;
 ?>
 
 <section class="module-pivot-panel" id="notification-list">
-
     <header class="pivot-panel_header">
         <h2 class="pivot-panel_title">
-            <?php if ($limit > 0 && count($notifications) > $limit) : ?>
+            <?php if ($unread > $limit) : ?>
                 <a id="action-view-all-notifications"
                    href="<?php echo $this->url(NotificationController::ROUTE_NOTIFICATION_LIST); ?>">
                     Notifications
@@ -29,7 +24,7 @@ foreach ($notifications as $notification) {
             <?php endif; ?>
         </h2>
     </header>
-    <?php if ($limit > 0 && count($notifications) > 0) : ?>
+    <?php if ($unread > 0) : ?>
         <a href="<?php echo $this->url(NotificationController::ROUTE_NOTIFICATION_LIST); ?>"
            class="mailbox-status" id="unread-notification-count">
             <span class="mega-number">
@@ -45,18 +40,16 @@ foreach ($notifications as $notification) {
     <?php endif ?>
 
     <?php
-    /** @var $notification \Dashboard\Model\Notification */
     foreach ($notifications as $notification) :
-
-        $escUrl = $this->url(NotificationController::ROUTE_NOTIFICATION, ['notificationId' => $notification->getId()]);
+        $escUrl = $this->url(NotificationController::ROUTE_NOTIFICATION, ['notificationId' => $notification->getId()], ["query" => ["backTo" => NotificationController::BACK_TO_HOME_PARAM]]);
         $date = DateTimeDisplayFormat::textDateTime($notification->getCreatedOn());
-        $cssclass = (null === $notification->getReadOn()) ? "is-unread" : "is-read";
+        $cssClass = (null === $notification->getReadOn()) ? "is-unread" : "is-read";
         if ($notification->isActionRequired()) {
-            $cssclass .= ' is-nomination';
+            $cssClass .= ' is-nomination';
         }
 
         ?>
-        <article class="module-notification <?php echo $this->escapeHtmlAttr($cssclass); ?>">
+        <article class="module-notification <?php echo $this->escapeHtmlAttr($cssClass); ?>">
             <header>
                 <p class="notification_subject">
                     <a href="<?php echo $escUrl; ?>" class="notification_link" title="<?php echo $this->escapeHtmlAttr($notification->getSubject()); ?>">
@@ -70,24 +63,5 @@ foreach ($notifications as $notification) {
             </header>
         </article>
 
-        <?php
-        $count++;
-
-        if ($limit === $count) {
-            break;
-        }
-
-    endforeach;
-    ?>
-
-    <?php if ($limit === -1): ?>
-
-        <!--   FULL VIEW    -->
-        <footer>
-            <a id="link-back-to-home" href="<?php echo $this->url(UserHomeController::ROUTE); ?>">
-                Back to your home
-            </a>
-        </footer>
-
-    <?php endif; ?>
+        <?php endforeach; ?>
 </section>

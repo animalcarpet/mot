@@ -130,4 +130,24 @@ class DateTimeDisplayFormatTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInternalType('string', DateTimeDisplayFormat::nowAsDateTime());
     }
+
+    /**
+     * @dataProvider provider_shortGds
+     */
+    public function test_dateShortGds($dateString, $date)
+    {
+        $this->assertEquals($dateString, DateTimeDisplayFormat::textDateShortGds($date));
+    }
+
+    public function provider_shortGds()
+    {
+        $now = new \DateTime();
+        $format = 'Y-m-d';
+        return [
+            ['Today', $now->format($format)],
+            ['5 Jan 2013', "2013-01-05"],
+            ['1 Jan 2016', "2016-01-01"],
+            ['31 Dec 2016', "2016-12-31"],
+        ];
+    }
 }

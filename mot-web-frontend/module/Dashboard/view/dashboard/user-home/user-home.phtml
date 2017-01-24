@@ -13,14 +13,18 @@ use DvsaCommon\Auth\PermissionAtSite;
 <div class="row">
     <div class="col-sm-6">
         <?php echo $this->partial('dashboard/specialNotice', $specialNotice); ?>
-            <?php echo $this->partial(
-                'notification/list',
-                [
-                    'notifications' => $dashboard->getNotifications(),
-                    'limit'         => NotificationController::SHORT_LIST_LIMIT
-                ]
-            );
-            ?>
+        <?php echo $this->partial(
+            'notification/list',
+            [
+                'notifications' => $dashboard->getNotifications(),
+                'limit'         => NotificationController::SHORT_LIST_LIMIT,
+                'unread'        => $dashboard->getUnreadNotificationsCount(),
+            ]
+        );
+        ?>
+        <a href="<?php echo $this->url(NotificationController::ROUTE_NOTIFICATION_LIST); ?>">
+            View all notifications
+        </a>
     </div>
     <div class="col-sm-6">
         <?php if ($dashboard->getHero() === 'vehicle-examiner'): ?>

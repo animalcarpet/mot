@@ -59,6 +59,7 @@ class NotificationMapperTest extends PHPUnit_Framework_TestCase
             ->setId(2)
             ->setRecipient(5)
             ->setReadOn(DateUtils::toDateTime(self::FAKE_DATE_TIME))
+            ->setIsArchived(true)
             ->setNotificationTemplate($template)
             ->setFields($array);
 
@@ -75,6 +76,7 @@ class NotificationMapperTest extends PHPUnit_Framework_TestCase
             'content' => $content,
             'readOn' => self::FAKE_DATE_TIME,
             'createdOn' => '',
+            'isArchived' => true,
             'fields' => [
                 'name' => 'John'
             ],

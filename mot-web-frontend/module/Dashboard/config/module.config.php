@@ -18,7 +18,6 @@ return [
         'invokables' => [
             MyApplicationsController::class => MyApplicationsController::class,
             UserStatsController::class      => UserStatsController::class,
-            NotificationController::class   => NotificationController::class
         ],
         'factories'  => [
             UserHomeControllerFactory::class         => UserHomeControllerFactory::class,
@@ -60,40 +59,63 @@ return [
                             ],
                         ],
                     ],
-                    'notification'    => [
-                        'type'         => 'segment',
-                        'options'      => [
-                            'route'         => 'notification',
+                    'notification' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route' => 'notification',
                             'may_terminate' => false,
                         ],
                         'child_routes' => [
-                            'item'   => [
-                                'type'    => 'segment',
+                            'item' => [
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'    => '/:notificationId',
+                                    'route' => '/:notificationId',
                                     'defaults' => [
                                         'controller' => NotificationController::class,
-                                        'action'     => 'notification',
+                                        'action' => 'notification',
                                     ],
                                 ],
                             ],
-                            'list'   => [
-                                'type'    => 'segment',
+                            'list' => [
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'    => '/list',
+                                    'route' => '/list',
                                     'defaults' => [
                                         'controller' => NotificationController::class,
-                                        'action'     => 'list',
+                                        'action' => 'inbox',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                                'child_routes' => [
+                                    'archive' => [
+                                        'type' => 'segment',
+                                        'options' => [
+                                            'route' => '/archive',
+                                            'defaults' => [
+                                                'controller' => NotificationController::class,
+                                                'action' => 'archive',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'archive'   => [
+                                'type'    => 'segment',
+                                'options' => [
+                                    'route'    => '/archive',
+                                    'defaults' => [
+                                        'controller' => NotificationController::class,
+                                        'action'     => 'archiveNotification',
                                     ],
                                 ],
                             ],
                             'action' => [
-                                'type'    => 'segment',
+                                'type' => 'segment',
                                 'options' => [
-                                    'route'    => '/action',
+                                    'route' => '/action',
                                     'defaults' => [
                                         'controller' => NotificationController::class,
-                                        'action'     => 'confirmNomination',
+                                        'action' => 'confirmNomination',
                                     ],
                                 ],
                             ],

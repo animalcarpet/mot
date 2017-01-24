@@ -29,15 +29,27 @@ class NotificationUrlBuilderTest extends PHPUnit_Framework_TestCase
         $this->assertSame($this->url . '1/read', NotificationUrlBuilder::notification(1)->read()->toString());
     }
 
-
     public function test_notification_action_shouldBeOk()
     {
         $this->assertSame($this->url . '1/action', NotificationUrlBuilder::notification(1)->action()->toString());
     }
 
+    public function test_notification_archive_shouldBeOk()
+    {
+        $this->assertSame($this->url . '1/archive', NotificationUrlBuilder::notification(1)->archive()->toString());
+    }
+
     public function test_notificationForPerson_withId_shouldBeOk()
     {
         $this->assertSame($this->getUrlForPerson(1), $this->createUrlBuilder(1));
+    }
+
+    public function test_notificationUnreadCount_withId_shouldBeOk()
+    {
+        $this->assertSame(
+            $this->url . 'person/1/unread-count',
+            NotificationUrlBuilder::unreadNotificationsCountForPerson(1)->toString()
+        );
     }
 
     public function test_notificationForPerson_read_shouldBeOk()

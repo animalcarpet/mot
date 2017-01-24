@@ -26,6 +26,14 @@ class Notification extends Entity
      */
     private $readOn;
 
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_archived", type="boolean", nullable=false)
+     */
+    private $isArchived = false;
+
     /**
      * @var \DvsaEntities\Entity\NotificationTemplate
      *
@@ -236,7 +244,7 @@ class Notification extends Entity
     /**
      * @param NotificationAction $action
      *
-     * @return NotificationAction
+     * @return Notification
      */
     public function setAction(NotificationAction $action)
     {
@@ -245,4 +253,21 @@ class Notification extends Entity
         return $this;
     }
 
+    /**
+     * @return boolean
+     */
+    public function getIsArchived()
+    {
+        return $this->isArchived;
+    }
+
+    /**
+     * @param boolean $isArchived
+     * @return Notification
+     */
+    public function setIsArchived($isArchived)
+    {
+        $this->isArchived = $isArchived;
+        return $this;
+    }
 }

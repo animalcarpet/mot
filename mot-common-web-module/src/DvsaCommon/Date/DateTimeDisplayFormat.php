@@ -16,6 +16,7 @@ class DateTimeDisplayFormat
     const FORMAT_TIME = 'g:ia';
     const FORMAT_MONTH_YEAR = 'M Y';
     const FORMAT_DAY_MONTH = 'j F';
+    const DATE_TODAY = 'Today';
 
     /**
      * Outputs date and time according to GDS UX guidelines
@@ -53,7 +54,6 @@ class DateTimeDisplayFormat
         return is_null($dateTime) ? '' : DateUtils::toUserTz($dateTime)->format(self::FORMAT_DATE_SHORT);
     }
 
-
     /**
      * Outputs date and time according to GDS UX guidelines
      *
@@ -76,6 +76,28 @@ class DateTimeDisplayFormat
     public static function textDateShort($textDateTime)
     {
         return is_null($textDateTime) ? '' : self::dateShort(DateUtils::toDateTime($textDateTime, false));
+    }
+
+    /**
+     * Outputs short date according to GDS UX guidelines
+     *
+     * @param string $textDateTime parsable date time representation (see DateUtils::toDate)
+     *
+     * @return string
+     */
+    public static function textDateShortGds($textDateTime)
+    {
+        if(is_null($textDateTime)){
+            return '';
+        }
+
+        $date = DateUtils::toDateTime($textDateTime, false);
+
+        if(DateUtils::isToday($date)){
+            return self::DATE_TODAY;
+        } else {
+            return self::dateShort($date);
+        }
     }
 
 

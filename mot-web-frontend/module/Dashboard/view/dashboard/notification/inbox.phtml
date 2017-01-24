@@ -1,0 +1,45 @@
+<?php
+    use Dashboard\Controller\UserHomeController;
+    use Dashboard\ViewModel\Notification\NotificationListViewModel;
+
+    /** @var $viewModel NotificationListViewModel */
+?>
+<?php
+    echo $this->partial('partial/gds/general/system-message', [
+        'messages' => $this->layout()->flashMessenger->getSuccessMessages(),
+        'type' => 'success',
+    ]);
+?>
+<div class="c-tab-list">
+    <ul class="c-tab-list__tabs">
+        <li><?php echo $viewModel->getInboxTab() ?></li>
+        <li><?php echo $viewModel->getArchiveTab() ?></li>
+    </ul>
+    <ul class="c-tab-list__items">
+        <li class="c-tab-list__row c-tab-list__row--header">
+            <div class="c-tab-list__item-left">
+                <strong>Title</strong>
+            </div>
+            <div class="c-tab-list__item-right">
+                <strong>Date received</strong>
+            </div>
+        </li>
+        <?php
+            foreach ($viewModel->getNotifications() as $notification){
+                echo $this->partial('dashboard/notification/list-item.phtml', [
+                    'notification' => $notification,
+                ]);
+            }
+        ?>
+    </ul>
+    <?php if($viewModel->notificationsAreEmpty()): ?>
+        <p class="c-tab-list__no-new"><?php echo $viewModel->getEmptyNotificationsMessage() ?></p>
+    <?php endif ?>
+</div>
+<nav class="content-navigation">
+    <ul class="content-navigation__secondary">
+        <li>
+            <a id="link-back-to-home" href="<?php echo $this->url(UserHomeController::ROUTE); ?>">Return to home page</a>
+        </li>
+    </ul>
+</nav>

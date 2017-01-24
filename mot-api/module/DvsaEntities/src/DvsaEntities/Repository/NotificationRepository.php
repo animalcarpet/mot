@@ -44,18 +44,62 @@ class NotificationRepository extends AbstractMutableRepository
 
     /**
      * @param int $personId
-     * @return Notification[]
+     * @param bool $archived
+     * @return \DvsaEntities\Entity\Notification[]
      */
-    public function findAllByPersonId($personId)
+    public function findAllByPersonId($personId, $archived = false)
     {
         return $this
             ->createQueryBuilder("n")
             ->where("n.recipient = :personId")
-            ->orderBy("n.readOn", "ASC")
+            ->andWhere("n.isArchived = :archived")
             ->addOrderBy("n.createdOn", "DESC")
-            ->addOrderBy("n.id", "DESC")
-            ->setParameter("personId", $personId)
+            ->setParameters(["personId" => $personId, "archived" => $archived])
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @param int $personId
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function buildUnreadByPersonIdQueryBuilder($personId)
+    {
+        return $this
+            ->createQueryBuilder("n")
+            ->where("n.recipient = :personId")
+            ->andWhere("n.readOn IS NULL")
+            ->andWhere("n.isArchived = 0")
+            ->setParameter("personId", $personId);
+    }
+
+    /**
+     * @param int $personId
+     * @param int $limit
+     * @return Notification[]
+     */
+    public function findUnreadByPersonId($personId, $limit = null)
+    {
+        $qb = $this->buildUnreadByPersonIdQueryBuilder($personId)
+            ->orderBy("n.createdOn", "DESC")
+            ->addOrderBy("n.id", "DESC");
+
+        if(is_int($limit)) {
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param int $personId
+     * @return int
+     */
+    public function countUnreadByPersonId($personId)
+    {
+        $qb = $this->buildUnreadByPersonIdQueryBuilder($personId);
+        $qb->select("count(n)");
+
+        return $qb->getQuery()->getSingleScalarResult();
     }
 }

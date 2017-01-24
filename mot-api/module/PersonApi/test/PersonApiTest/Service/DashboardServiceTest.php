@@ -176,7 +176,7 @@ class DashboardServiceTest extends AbstractServiceTestCase
 
         $this->notificationService
             ->expects($this->any())
-            ->method('getAllByPersonId')
+            ->method('getUnreadByPersonId')
             ->willReturn([$notification]);
 
         $this->testerService

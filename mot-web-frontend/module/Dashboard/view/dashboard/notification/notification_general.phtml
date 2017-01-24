@@ -24,12 +24,16 @@ $displayButton = isset($fields['buttonLink']) && isset($fields['buttonText']);
 
     <?php echo $this->notificationLink($notification); ?>
 </div>
-<div class="text">
-    <p id="notification-sent">Notification sent <?php echo DateTimeDisplayFormat::textDateTime($notification->getCreatedOn()); ?></p>
-</div>
 
+<?php
+    if(!$notification->getIsArchived()){
+        echo $this->partial('dashboard/notification/archive-notification-button.phtml', [
+            'notificationId' => $notification->getId(),
+        ]);
+    }
+?>
 <ul class="content-navigation__secondary">
     <li>
-        <a href="<?php echo $this->url(UserHomeController::ROUTE) ?>" id="link-back-to-home">Return home</a>
+        <a href="<?php echo $this->url($backLinkUrl) ?>" id="link-back-to-home"><?php echo $backLinkLabel; ?></a>
     </li>
 </ul>

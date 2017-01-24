@@ -1,6 +1,7 @@
 <?php
 namespace NotificationApi\Controller;
 
+use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use NotificationApi\Mapper\NotificationMapper;
@@ -11,26 +12,33 @@ use NotificationApi\Service\NotificationService;
  *
  * @package NotificationApi\Controller
  */
-class PersonNotificationController extends AbstractDvsaRestfulController
+class PersonNotificationController extends AbstractDvsaRestfulController implements AutoWireableInterface
 {
+    private $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
 
     public function create($data)
     {
-        $service = $this->getNotificationService();
-        $result = $service->add($data);
-
+        $result = $this->notificationService->add($data);
         $extractor = new NotificationMapper();
 
-        return ApiResponse::jsonOk($extractor->toArray($service->get($result)));
+        return ApiResponse::jsonOk($extractor->toArray($this->notificationService->get($result)));
     }
 
     public function getList()
     {
-        $personId = $this->params()->fromRoute('personId', null);
-        $service = $this->getNotificationService();
-        $notifications = $service->getAllByPersonId($personId);
-
+        $personId = (int) $this->params()->fromRoute('personId', null);
+        $fetchArchived = (bool) $this->params()->fromQuery('archived', false);
         $extractedResult = [];
+
+        $notifications = $fetchArchived
+            ? $this->notificationService->getAllArchivedByPersonId($personId)
+            : $this->notificationService->getAllInboxByPersonId($personId);
+
 
         if (is_array($notifications)) {
             $extractor = new NotificationMapper();
@@ -42,11 +50,10 @@ class PersonNotificationController extends AbstractDvsaRestfulController
         return ApiResponse::jsonOk($extractedResult);
     }
 
-    /**
-     * @return NotificationService
-     */
-    private function getNotificationService()
+    public function unreadCountAction()
     {
-        return $this->getServiceLocator()->get(NotificationService::class);
+        $personId = (int) $this->params()->fromRoute('personId', null);
+
+        return ApiResponse::jsonOk((int) $this->notificationService->getUnreadCountByPersonId($personId));
     }
 }

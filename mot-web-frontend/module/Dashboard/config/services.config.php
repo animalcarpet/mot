@@ -10,6 +10,7 @@ use Dashboard\Service\PasswordService;
 use Dashboard\Service\PersonTradeRoleSorterService;
 use Dashboard\Service\TradeRolesAssociationsService;
 use Dashboard\Factory\Service\TradeRolesAssociationsServiceFactory;
+use DvsaCommon\Factory\AutoWire\AutoWireFactory;
 
 return [
     'factories' => [
@@ -20,5 +21,8 @@ return [
         ViewTradeRolesAssertion::class       => ViewTradeRolesAssertionFactory::class,
         TradeRolesAssociationsService::class => TradeRolesAssociationsServiceFactory::class,
         PersonTradeRoleSorterService::class  => PersonTradeRoleSorterServiceFactory::class,
+    ],
+    'abstract_factories' => [
+        AutoWireFactory::class,
     ],
 ];

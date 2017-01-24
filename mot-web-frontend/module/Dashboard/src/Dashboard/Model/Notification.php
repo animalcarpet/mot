@@ -33,6 +33,8 @@ class Notification
     private $fields;
     /** @var $templateId int */
     private $templateId;
+    /** @var $isArchived bool */
+    private $isArchived;
 
     public function __construct($data)
     {
@@ -45,6 +47,7 @@ class Notification
             ->setSubject(ArrayUtils::get($data, 'subject'))
             ->setUpdatedOn(ArrayUtils::get($data, 'updatedOn'))
             ->setFields(ArrayUtils::get($data, 'fields'))
+            ->setIsArchived(ArrayUtils::get($data, 'isArchived'))
             ->setTemplateId(ArrayUtils::get($data, 'templateId'));
 
         if (!empty($data['readOn'])) {
@@ -337,5 +340,23 @@ class Notification
     public function getTemplateId()
     {
         return $this->templateId;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsArchived()
+    {
+        return $this->isArchived;
+    }
+
+    /**
+     * @param boolean $isArchived
+     * @return Notification
+     */
+    public function setIsArchived($isArchived)
+    {
+        $this->isArchived = $isArchived;
+        return $this;
     }
 }

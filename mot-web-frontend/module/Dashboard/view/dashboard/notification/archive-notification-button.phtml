@@ -1,0 +1,36 @@
+<?php
+use Dashboard\Controller\NotificationController;
+use Dashboard\Model\Notification;
+/** @var Notification $notification */
+/** @var int $notificationId */
+
+?>
+<form class="form-horizontal" method="POST"
+      action="<?php echo $this->url(NotificationController::ROUTE_NOTIFICATION_ACTION_ARCHIVE); ?>">
+    <nav class="content-navigation">
+        <?php
+        echo $this->csrfToken();
+        echo $this->partial(
+            'hiddenElement',
+            [
+                'name' => 'notificationId',
+                'value' => $notificationId
+            ]
+        );
+        echo $this->partial(
+            'hiddenElement',
+            [
+                'name' => 'url',
+                'value' => $this->url(NotificationController::ROUTE_NOTIFICATION_LIST),
+            ]
+        );
+
+        echo $this->partial('submitElement', [
+            'value' => 'archive',
+            'label' => 'Archive',
+            'name' => 'action',
+            'id' => 'action-archive',
+            'cssClass' => 'button'
+        ]); ?>
+    </nav>
+</form>

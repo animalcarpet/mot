@@ -21,7 +21,7 @@ class DashboardDataTest extends AbstractServiceTestCase
         $authorisationMock = new GrantAllAuthorisationServiceStub();
         $motTestType = MotTestTypeCode::NORMAL_TEST;
 
-        $dashboard = new DashboardData([], $specialNotice, $overdueSpecialNotices, [], 3, 4, 5, true, true, $motTestType, $authorisationMock);
+        $dashboard = new DashboardData([], $specialNotice, $overdueSpecialNotices, [], 0, 3, 4, 5, true, true, $motTestType, $authorisationMock);
         $this->assertWellFormedData($dashboard->toArray());
     }
 

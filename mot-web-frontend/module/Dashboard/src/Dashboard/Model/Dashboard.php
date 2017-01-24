@@ -32,6 +32,9 @@ class Dashboard
     /** @var $notifications array */
     private $notifications;
 
+    /** @var $unreadNotificationsCount integer */
+    private $unreadNotificationsCount;
+
     /** @var  $inProgressTestId integer */
     private $inProgressTestNumber;
 
@@ -51,6 +54,7 @@ class Dashboard
         $this->setSpecialNotice(new SpecialNotice(ArrayUtils::get($data, 'specialNotice')));
         $this->setOverdueSpecialNotices(ArrayUtils::get($data, 'overdueSpecialNotices'));
         $this->setNotifications(Notification::createList(ArrayUtils::get($data, 'notifications')));
+        $this->setUnreadNotificationsCount(ArrayUtils::get($data, 'unreadNotificationsCount'));
         $this->setInProgressTestNumber(ArrayUtils::get($data, 'inProgressTestNumber'));
         $this->setInProgressTestTypeCode(ArrayUtils::get($data, 'inProgressTestTypeCode'));
         $this->setInProgressDemoTestNumber(ArrayUtils::tryGet($data, 'inProgressDemoTestNumber'));
@@ -373,5 +377,21 @@ class Dashboard
         } else {
             return "Enter test results";
         }
+    }
+
+    /**
+     * @return integer
+     */
+    public function getUnreadNotificationsCount()
+    {
+        return $this->unreadNotificationsCount;
+    }
+
+    /**
+     * @param integer $count
+     */
+    private function setUnreadNotificationsCount($count)
+    {
+        $this->unreadNotificationsCount = $count;
     }
 }

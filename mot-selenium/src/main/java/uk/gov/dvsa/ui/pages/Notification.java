@@ -4,8 +4,10 @@ public interface Notification {
 
     Notification acceptNomination();
     Notification rejectNomination();
+    InboxNotificationPage archiveNomination();
     String getConfirmationText();
     String getNotificationText();
+    String getTitle();
     boolean isAcceptButtonDisplayed();
     boolean isRejectButtonDisplayed();
     void clickActivateCard();
