@@ -3,9 +3,6 @@
 namespace DvsaMotApiTest\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityNotFoundException;
-use DvsaAuthentication\Identity;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
 use DvsaCommonApi\Service\Exception\BadRequestException;
@@ -21,7 +18,6 @@ use DvsaEntities\Entity\MotTestReasonForRejectionComment;
 use DvsaEntities\Entity\MotTestReasonForRejectionDescription;
 use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\Person;
-use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Entity\ReasonForRejectionType;
 use DvsaEntities\Repository\MotTestTypeRepository;
@@ -47,15 +43,6 @@ class MotTestCreationHelperTest extends AbstractServiceTestCase
     const TEST_CLIENT_IP = '127.0.0.1';
     const TEST_CONTINGENCY_ID = 1;
     const TEST_CONTINGENCY_DTO = null;
-
-    private $testVehicleMake = [
-        'makeId' => 'other',
-        'makeName' => 'TestMake',
-    ];
-    private $testVehicleModel = [
-        'modelId' => 'otherModel',
-        'modelName' => 'TestModel'
-    ];
 
     private $motTestServiceTest;
 
@@ -213,12 +200,6 @@ class MotTestCreationHelperTest extends AbstractServiceTestCase
             $tester,
             self::TEST_VEHICLE_ID,
             self::TEST_VEHICLE_TESTING_STATION_ID,
-            self::TEST_PRIMARY_COLOUR_CODE,
-            self::SECONDARY_COLOUR_CODE,
-            self::TEST_FUEL_TYPE_CODE,
-            self::TEST_CYLINDER_CAPACITY,
-            $this->testVehicleMake,
-            $this->testVehicleModel,
             self::TEST_VEHICLE_CLASS_CODE,
             self::TEST_HAS_REGISTRATION,
             $motTestTypeCode,
@@ -418,12 +399,6 @@ class MotTestCreationHelperTest extends AbstractServiceTestCase
             $tester,
             self::TEST_VEHICLE_ID,
             self::TEST_VEHICLE_TESTING_STATION_ID,
-            self::TEST_PRIMARY_COLOUR_CODE,
-            self::SECONDARY_COLOUR_CODE,
-            self::TEST_FUEL_TYPE_CODE,
-            self::TEST_CYLINDER_CAPACITY,
-            $this->testVehicleMake,
-            $this->testVehicleModel,
             self::TEST_VEHICLE_CLASS_CODE,
             self::TEST_HAS_REGISTRATION,
             self::TEST_MOT_TEST_TYPE_CODE,

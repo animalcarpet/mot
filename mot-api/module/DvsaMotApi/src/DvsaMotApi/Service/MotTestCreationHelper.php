@@ -9,6 +9,7 @@ namespace DvsaMotApi\Service;
 
 use Doctrine\ORM\EntityManager;
 use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleUnderTestRequest;
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
@@ -45,6 +46,7 @@ use DvsaEntities\Repository\MotTestStatusRepository;
 use DvsaMotApi\Generator\MotTestNumberGenerator;
 use DvsaMotApi\Service\Validator\MotTestValidator;
 use DvsaMotApi\Service\Validator\RetestEligibility\RetestEligibilityValidator;
+use Exception;
 
 /**
  * Validates input data and creates MOT tests within the DB.
@@ -116,12 +118,6 @@ class MotTestCreationHelper
      * @param Person                   $tester
      * @param                          $vehicleId
      * @param                          $vtsId
-     * @param                          $primaryColourCode
-     * @param                          $secondaryColourCode
-     * @param                          $fuelTypeCode
-     * @param                          $cylinderCapacity
-     * @param                          $vehicleMake
-     * @param                          $vehicleModel
      * @param                          $vehicleClassCode
      * @param                          $hasRegistration
      * @param                          $motTestTypeCode
@@ -133,18 +129,12 @@ class MotTestCreationHelper
      *
      * @return MotTest
      * @throws NotFoundException
-     * @throws \Exception
+     * @throws Exception
      */
     public function createMotTest(
         Person $tester,
         $vehicleId,
         $vtsId,
-        $primaryColourCode,
-        $secondaryColourCode,
-        $fuelTypeCode,
-        $cylinderCapacity,
-        $vehicleMake,
-        $vehicleModel,
         $vehicleClassCode,
         $hasRegistration,
         $motTestTypeCode,
@@ -156,21 +146,7 @@ class MotTestCreationHelper
     )
     {
         $isVehicleExaminer = $this->authService->personHasRole($tester, Role::VEHICLE_EXAMINER);
-
-        // Assumption, that if we don't pass in an MOT Test Type, then it is a NORMAL (NT) Test?
-        if (!$motTestTypeCode) {
-            throw new \Exception('No MOT Test Type Code supplied');
-        }
-
-        /** @var \DvsaEntities\Repository\MotTestTypeRepository $motTestTypeRepository */
-        $motTestTypeRepository = $this->entityManager->getRepository(MotTestType::class);
-
-        /** @var \DvsaEntities\Entity\MotTestType $motTestType */
-        $motTestType = $motTestTypeRepository->findOneByCode($motTestTypeCode);
-
-        if (!$motTestType) {
-            throw new \Exception('MOT Test Type not found by code: ' . $motTestTypeCode);
-        }
+        $motTestType = $this->getMotTestType($motTestTypeCode);
 
         if (!$isVehicleExaminer && !$motTestType->getIsDemo()) {
             if ($tester->isTester()) {
@@ -223,23 +199,9 @@ class MotTestCreationHelper
         /** @var Vehicle $vehicle */
         $vehicle = $this->entityManager->getRepository(Vehicle::class)->get($vehicleId);
 
-        $primaryColour = $primaryColourCode ? $this->getColourByCode($primaryColourCode) : null;
-        $secondaryColour = $secondaryColourCode ? $this->getColourByCode($secondaryColourCode) : null;
-
-        /** @var FuelType $fuelType */
-        $fuelType = $this->entityManager->getRepository(FuelType::class)->findOneByCode($fuelTypeCode);
-
-        /** @var VehicleClass $vehicleClass */
-        $vehicleClass = $this->entityManager->getRepository(VehicleClass::class)->findOneByCode($vehicleClassCode);
-
         /** @var MotTestStatusRepository $motTestStatusRepository */
         $motTestStatusRepository = $this->entityManager->getRepository(MotTestStatus::class);
         $activeStatus = $motTestStatusRepository->findActive();
-
-        // imported dvla vehicles will default to null for secondary colour
-        if (is_null($vehicle->getSecondaryColour())) {
-            $vehicle->setSecondaryColour($secondaryColour);
-        }
 
         $newMotTest = new MotTest();
         $newMotTest
@@ -264,45 +226,6 @@ class MotTestCreationHelper
         }
 
         $this->motTestValidator->validateNewMotTest($newMotTest);
-
-        if ($this->isVehicleModified($vehicle, $vehicleClass, $fuelType, $primaryColour, $secondaryColour, $cylinderCapacity, $vehicleMake, $vehicleModel)
-            && !$motTestType->getIsDemo()
-        ) {
-
-            // update vehicle with specified field values
-            $updateDvsaVehicleUnderTestRequest = new UpdateDvsaVehicleUnderTestRequest();
-            $updateDvsaVehicleUnderTestRequest->setColourCode($primaryColour->getCode())
-                ->setSecondaryColourCode($secondaryColour->getCode())
-                ->setVehicleClassCode($vehicleClass->getCode())
-                ->setFuelTypeCode($fuelTypeCode);
-
-            if (FuelTypeAndCylinderCapacity::isCylinderCapacityCompulsoryForFuelTypeCode($fuelTypeCode)) {
-                $updateDvsaVehicleUnderTestRequest->setCylinderCapacity($cylinderCapacity);
-            }
-
-            if (!is_null($vehicleMake)) {
-                if ($vehicleMake['makeId'] == 'other') {
-                    $updateDvsaVehicleUnderTestRequest->setMakeOther($vehicleMake['makeName']);
-                } else {
-                    $updateDvsaVehicleUnderTestRequest->setMakeId($vehicleMake['makeId']);
-                }
-            }
-
-            if (!is_null($vehicleModel)) {
-                if ($this->shouldUpdateModelOther($vehicleModel)) {
-                    $updateDvsaVehicleUnderTestRequest->setModelOther($vehicleModel['modelName']);
-                } else {
-                    $updateDvsaVehicleUnderTestRequest->setModelId($vehicleModel['modelId']);
-                }
-            }
-
-            $updatedVehicle = $this->vehicleService->updateDvsaVehicleUnderTest(
-                $vehicle->getId(),
-                $updateDvsaVehicleUnderTestRequest
-            );
-
-            $newMotTest->setVehicleVersion($updatedVehicle->getVersion());
-        }
 
         $this->entityManager->persist($newMotTest);
         $this->entityManager->flush();
@@ -359,6 +282,76 @@ class MotTestCreationHelper
         $this->entityManager->flush();
 
         return $newMotTest;
+    }
+
+    /**
+     * @param string $fuelTypeCode
+     * @param string $cylinderCapacity
+     * @param string $vehicleMake
+     * @param string $vehicleModel
+     * @param int    $vehicleId
+     * @param string $vehicleClassCode
+     * @param string $fuelTypeCode
+     * @param string $primaryColourCode
+     * @param string $secondaryColourCode
+     * @param string $motTestTypeCode
+     *
+     * @return DvsaVehicle
+     *
+     * @throws Exception
+     */
+    public function updateVehicleIfChanged($fuelTypeCode, $cylinderCapacity, $vehicleMake, $vehicleModel, $vehicleId, $vehicleClassCode, $fuelTypeCode, $primaryColourCode, $secondaryColourCode, $motTestTypeCode)
+    {
+        $vehicle = $this->entityManager->getRepository(Vehicle::class)->get($vehicleId);
+        $vehicleClass = $this->entityManager->getRepository(VehicleClass::class)->findOneByCode($vehicleClassCode);
+        $fuelType = $this->entityManager->getRepository(FuelType::class)->findOneByCode($fuelTypeCode);
+        $primaryColour = $primaryColourCode ? $this->getColourByCode($primaryColourCode) : null;
+        $secondaryColour = $secondaryColourCode ? $this->getColourByCode($secondaryColourCode) : null;
+        $motTestType = $this->getMotTestType($motTestTypeCode);
+
+        // imported dvla vehicles will default to null for secondary colour
+        if (is_null($vehicle->getSecondaryColour())) {
+            $vehicle->setSecondaryColour($secondaryColour);
+        }
+
+        if ($this->isVehicleModified($vehicle, $vehicleClass, $fuelType, $primaryColour, $secondaryColour, $cylinderCapacity, $vehicleMake, $vehicleModel) && !$motTestType->getIsDemo()) {
+            // update vehicle with specified field values
+            $updateDvsaVehicleUnderTestRequest = new UpdateDvsaVehicleUnderTestRequest();
+            $updateDvsaVehicleUnderTestRequest->setColourCode($primaryColour->getCode())
+                ->setSecondaryColourCode($secondaryColour->getCode())
+                ->setVehicleClassCode($vehicleClass->getCode())
+                ->setFuelTypeCode($fuelTypeCode);
+
+            if (FuelTypeAndCylinderCapacity::isCylinderCapacityCompulsoryForFuelTypeCode($fuelTypeCode)) {
+                $updateDvsaVehicleUnderTestRequest->setCylinderCapacity($cylinderCapacity);
+            }
+
+            if (!is_null($vehicleMake)) {
+                if ($vehicleMake['makeId'] == 'other') {
+                    $updateDvsaVehicleUnderTestRequest->setMakeOther($vehicleMake['makeName']);
+                } else {
+                    $updateDvsaVehicleUnderTestRequest->setMakeId($vehicleMake['makeId']);
+                }
+            }
+
+            if (!is_null($vehicleModel)) {
+                if ($this->shouldUpdateModelOther($vehicleModel)) {
+                    $updateDvsaVehicleUnderTestRequest->setModelOther($vehicleModel['modelName']);
+                } else {
+                    $updateDvsaVehicleUnderTestRequest->setModelId($vehicleModel['modelId']);
+                }
+            }
+
+            $updatedVehicle = $this->vehicleService->updateDvsaVehicleUnderTest(
+                $vehicle->getId(),
+                $updateDvsaVehicleUnderTestRequest
+            );
+
+            // The vehicle was changed in an external call and we need to refresh it locally.
+            $this->entityManager->refresh($vehicle);
+
+            return $updatedVehicle;
+        }
     }
 
     /**
@@ -608,5 +601,27 @@ class MotTestCreationHelper
         return ($vehicleModel['modelId'] == 'other'
             || $vehicleModel['modelId'] == 'otherModel'
         );
+    }
+
+    /**
+     * @param string $motTestTypeCode
+     *
+     * @return MotTestType
+     *
+     * @throws Exception
+     */
+    private function getMotTestType($motTestTypeCode)
+    {
+        if (!$motTestTypeCode) {
+            throw new Exception('No MOT Test Type Code supplied');
+        }
+
+        $motTestType = $this->entityManager->getRepository(MotTestType::class)->findOneByCode($motTestTypeCode);
+
+        if (!$motTestType) {
+            throw new Exception('MOT Test Type not found by code: ' . $motTestTypeCode);
+        }
+
+        return $motTestType;
     }
 }

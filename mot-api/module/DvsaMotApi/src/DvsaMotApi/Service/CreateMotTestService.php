@@ -9,27 +9,27 @@ namespace DvsaMotApi\Service;
 
 use Doctrine\ORM\EntityManager;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
+use DvsaCommon\Auth\MotIdentityProviderInterface;
+use DvsaCommon\Constants\Network;
 use DvsaCommon\Dto\MotTesting\ContingencyTestDto;
+use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Utility\ArrayUtils;
+use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonApi\Transaction\TransactionAwareInterface;
 use DvsaCommonApi\Transaction\TransactionAwareTrait;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestComplaintRef;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Repository\MotTestRepository;
+use DvsaEntities\Repository\PersonRepository;
+use DvsaMotApi\Controller\Validator\CreateMotTestRequestValidator;
 use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Service\Validator\MotTestValidator;
 use DvsaMotApi\Service\Validator\RetestEligibility\RetestEligibilityValidator;
 use OrganisationApi\Service\OrganisationService;
 use VehicleApi\Service\VehicleService as VehicleApiVehicleService;
-use DvsaMotApi\Controller\Validator\CreateMotTestRequestValidator;
-use DvsaCommon\Enum\MotTestTypeCode;
-use DvsaCommon\Utility\DtoHydrator;
-use DvsaCommon\Auth\MotIdentityProviderInterface;
-use DvsaEntities\Repository\PersonRepository;
-use DvsaCommon\Constants\Network;
-use Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
 
 class CreateMotTestService implements TransactionAwareInterface
 {
@@ -293,17 +293,35 @@ class CreateMotTestService implements TransactionAwareInterface
             throw new \RuntimeException('At this point we should have a vehicle id');
         }
 
+        $motTestCreationHelper = (new MotTestCreationHelper(
+            $this->entityManager,
+            $this->authService,
+            $this->testerService,
+            $this->motTestRepository,
+            $this->motTestValidator,
+            $this->retestEligibilityValidator,
+            $this->identityProvider,
+            $this->newVehicleService
+        ));
+        $motTestCreationHelper->updateVehicleIfChanged(
+            $fuelTypeCode,
+            $cylinderCapacity,
+            $vehicleMake,
+            $vehicleModel,
+            $vehicleId,
+            $vehicleClassCode,
+            $fuelTypeCode,
+            $primaryColourCode,
+            $secondaryColourCode,
+            $motTestTypeCode
+        );
+
+
         return $this->inTransaction(
             function () use (
                 $tester,
                 $vehicleId,
                 $vehicleTestingStationId,
-                $primaryColourCode,
-                $secondaryColourCode,
-                $fuelTypeCode,
-                $cylinderCapacity,
-                $vehicleMake,
-                $vehicleModel,
                 $vehicleClassCode,
                 $hasRegistration,
                 $dvlaVehicleId,
@@ -312,29 +330,13 @@ class CreateMotTestService implements TransactionAwareInterface
                 $complaintRef,
                 $contingencyId,
                 $contingencyDto,
-                $clientIp
+                $clientIp,
+                $motTestCreationHelper
             ) {
-                $motTestCreationHelper = (new MotTestCreationHelper(
-                    $this->entityManager,
-                    $this->authService,
-                    $this->testerService,
-                    $this->motTestRepository,
-                    $this->motTestValidator,
-                    $this->retestEligibilityValidator,
-                    $this->identityProvider,
-                    $this->newVehicleService
-                ));
-
                 return $motTestCreationHelper->createMotTest(
                     $tester,
                     $vehicleId,
                     $vehicleTestingStationId,
-                    $primaryColourCode,
-                    $secondaryColourCode,
-                    $fuelTypeCode,
-                    $cylinderCapacity,
-                    $vehicleMake,
-                    $vehicleModel,
                     $vehicleClassCode,
                     $hasRegistration,
                     $motTestTypeCode,
