@@ -195,10 +195,7 @@ class PasswordResetController extends AbstractAuthActionController
 
         $this->view = $this->config;
 
-        return $this->initViewModelInformation(
-            self::PAGE_TITLE_FAILURE,
-            self::PAGE_SUBTITLE
-        );
+        return $this->initViewModelInformation(self::PAGE_TITLE_FAILURE);
     }
 
     /**
@@ -356,7 +353,7 @@ class PasswordResetController extends AbstractAuthActionController
      *
      * @return ViewModel
      */
-    private function initViewModelInformation($title, $subtitle, $step = null)
+    private function initViewModelInformation($title, $subtitle = null, $step = null)
     {
         $this->layout('layout/layout-govuk.phtml');
 
