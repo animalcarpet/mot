@@ -21,7 +21,7 @@ if($canRecieveSpecialNotice):
             <strong class="number"><?php echo intval($unreadCount); ?></strong>
             <span class="super-text">
                 unread 
-                <?php if($unreadCount && $canAcknowledge) : ?>
+                <?php if($unreadCount && $overdueCount === 0 && $canAcknowledge) : ?>
                     <span class="meta"><?php echo $this->escapeHtml($daysLeftToView); ?> days left to view</span>
                 <?php endif; ?>
             </span>

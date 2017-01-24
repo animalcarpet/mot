@@ -249,13 +249,14 @@ class SpecialNoticeService extends AbstractService
                 if (!$specialNotice->getIsAcknowledged()) {
                     if ($this->isExpired($specialNotice)) {
                         $overdueCount++;
-                    } else {
-                        $unreadCount++;
-                        $expiryDate = $specialNotice->getContent()->getExpiryDate();
-                        if ($acknowledgementDeadline == null || $acknowledgementDeadline > $expiryDate) {
-                            $acknowledgementDeadline = $expiryDate;
-                        }
                     }
+
+                    $expiryDate = $specialNotice->getContent()->getExpiryDate();
+                    if ($acknowledgementDeadline == null || $acknowledgementDeadline > $expiryDate) {
+                        $acknowledgementDeadline = $expiryDate;
+                    }
+
+                    $unreadCount++;
                 }
             }
 
