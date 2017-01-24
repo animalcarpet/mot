@@ -1077,6 +1077,8 @@ return [
                 __DIR__ . '/../view/partials/dashboard/non-mot-test-box.phtml',
             'dashboard/motActivity'                                                      =>
                 __DIR__ . '/../view/partials/dashboard/mot-activity.phtml',
+            'dashboard/overdueSpecialNoticeHeader'                                       =>
+                __DIR__ . '/../view/partials/dashboard/overdue-special-notice-header.phtml',
             'vehicle/history'                                                            =>
                 __DIR__ . '/../view/partials/vehicle-history/history.phtml',
             'vehicle/history-item'                                                       => __DIR__ .

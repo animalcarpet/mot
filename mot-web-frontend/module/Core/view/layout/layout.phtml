@@ -22,7 +22,8 @@ $mastheadPresenter = new MastheadPresenter;
     <!-- Base Styles -->
     <?php echo $this->headLink()->appendStylesheet($this->basePath('css/bootstrap.min.css'))
         ->appendStylesheet($this->basePath('css/font-awesome.min.css'))
-        ->appendStylesheet($this->basePath('css/app.css'));
+        ->appendStylesheet($this->basePath('css/app.css'))
+        ->appendStylesheet($this->basePath('css/refactor.css'));
     ?>
 
     <link type="image/x-icon" rel="shortcut icon"
@@ -113,6 +114,10 @@ $mastheadPresenter = new MastheadPresenter;
         <a id="feedback-link" target="_blank" href="<?php echo $this->escapeHtmlAttr($mastheadPresenter->getFeedbackUrl()) ?>">feedback</a>
         will help us to improve it.
     </p>
+</div>
+
+<div class="container">
+    <?php echo $this->placeholder('banner'); ?>
 </div>
 
 <?php echo $this->placeholder('hero'); ?>

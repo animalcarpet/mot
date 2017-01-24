@@ -4,6 +4,11 @@ use Dashboard\Controller\NotificationController;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Auth\PermissionAtSite;
 
+if (!$this->canPerformTest & $this->authorisationHelper()->isGranted(PermissionInSystem::MOT_TEST_START)):
+    $this->placeholder('banner')
+        ->set($this->partial('dashboard/overdueSpecialNoticeHeader'));
+endif;
+
     $this->placeholder('hero')
         ->set($this->partial('primaryAction/' . $dashboard->getHero(), ['dashboard' => $dashboard, 'canPerformTest' => $canPerformTest]));
 ?>
