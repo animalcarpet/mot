@@ -348,4 +348,15 @@ class PersonAuthorization
 
         return $isGrantedAtOrganisation;
     }
+
+    public function hasRoleAtAnySite($role)
+    {
+        $result = false;
+
+        foreach($this->siteRoles as $listOfRolesAndPermissions) {
+            $result |= $listOfRolesAndPermissions->includesRole($role);
+        }
+
+        return $result;
+    }
 }
