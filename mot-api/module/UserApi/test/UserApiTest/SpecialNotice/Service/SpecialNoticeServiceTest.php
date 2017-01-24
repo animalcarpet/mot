@@ -202,7 +202,7 @@ class SpecialNoticeServiceTest extends AbstractServiceTestCase
 
         //then
         $this->assertEquals(2, $summary['overdueCount']);
-        $this->assertEquals(0, $summary['unreadCount']);
+        $this->assertEquals(2, $summary['unreadCount']);
     }
 
     public function testSpecialNoticeSummaryForUserWhenNoticeIsExpiredButAcknowledgedShouldNotCountIt()
