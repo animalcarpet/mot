@@ -16,7 +16,7 @@ Feature: Special Notices
       | targetRoles    | internalPublishDate   | externalPublishDate |
       | <target_roles> | <internal_date>       | <external_date>     |
     And I publish Special Notice
-    When the Special Notice is broadcasted
+    When the Special Notice is broadcast
     Then users received Special Notice
     Examples:
       | target_roles              | internal_date   | external_date   |
@@ -30,3 +30,10 @@ Feature: Special Notices
       | VTS, TESTER-CLASS-1       | tomorrow        | tomorrow        |
       | VTS, TESTER-CLASS-2       | tomorrow        | now             |
       | VTS, TESTER-CLASS-2       | tomorrow        | tomorrow        |
+
+  @special-notice
+  @create-tester("John Smith")
+  Scenario: Remove a Special Notice
+  Given Special Notice has been broadcast to testers
+  When Schemeuser removes Special Notice
+  Then "John Smith" does not see Special Notice

@@ -64,4 +64,20 @@ class SpecialNotice extends MotApi
             str_replace("{person_id}", $personId, self::PATH_SN_PERSON)
         );
     }
+
+    public function getAllSpecialNotices($token)
+    {
+        return $this->sendGetRequest(
+            $token,
+            self::PATH_SN_CONTENT . "?" . http_build_query(["listAll" => true])
+        );
+    }
+
+    public function removeSpecialNotices($token, $id)
+    {
+        return $this->sendDeleteRequest(
+            $token,
+            self::PATH_SN_CONTENT . "/" . $id
+        );
+    }
 }
