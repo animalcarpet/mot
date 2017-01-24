@@ -147,7 +147,7 @@ class AuthorisationService extends AbstractMotAuthorisationService implements Au
             return self::HERO_DVSA_ADMIN;
         }
 
-        if ($this->personIdHasRole($personId, Role::TESTER_ACTIVE)) {
+        if ($this->personIdHasRole($personId, Role::TESTER_ACTIVE) && $personAuthorisation->hasRoleAtAnySite(Role::TESTER)) {
             return self::HERO_TESTER;
         } else {
             if ($this->personIdHasRole($personId, Role::TESTER_APPLICANT_INITIAL_TRAINING_REQUIRED)
