@@ -119,7 +119,7 @@ class ReplacementCertificateDraftController extends AbstractDvsaRestfulControlle
             $draftId = $this->params()->fromRoute("id");
             $data = $this->processBodyContent($this->getRequest());
 
-            $motEntity = $this->replacementCertificateService->applyDraft($draftId, $data);
+            $motEntity = $this->replacementCertificateService->applyDraft($draftId, $data, false);
 
             $motTestNumber = $motEntity->getNumber();
 

@@ -60,7 +60,7 @@ class DvlaVehicleUpdatedService implements TransactionAwareInterface
      * @param int $userId
      * @return bool
      */
-    public function createReplacementCertificate($vehicleId, $userId)
+    public function createReplacementCertificate($vehicleId, $userId, $isDvlaImport)
     {
         $latestMotTestNumber = $this->motTestRepository->getLatestMotTestIdByVehicleId($vehicleId);
 
@@ -70,12 +70,12 @@ class DvlaVehicleUpdatedService implements TransactionAwareInterface
         $changeDto->setVin($vehicle->getVin());
 
         $transactionResult = $this->inTransaction(
-            function () use ($latestMotTestNumber, $userId, $changeDto) {
+            function () use ($latestMotTestNumber, $userId, $changeDto, $isDvlaImport) {
                 $reason = self::CHERISHED_TRANSFER_REASON;
                 $draftId = $this->replacementCertificateService->createAndUpdateDraft(
                     $latestMotTestNumber, $reason, $changeDto
                 )->getId();
-                $this->replacementCertificateService->applyDraft($draftId, []);
+                $this->replacementCertificateService->applyDraft($draftId, [], $isDvlaImport);
             }
         );
 
