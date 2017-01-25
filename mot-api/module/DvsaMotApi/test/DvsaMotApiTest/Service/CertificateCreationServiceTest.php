@@ -3,9 +3,7 @@
 namespace DvsaMotApiTest\Service;
 
 use DataCatalogApi\Service\DataCatalogService;
-use DateInterval;
 use DvsaCommon\Constants\FeatureToggle;
-use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Dto\Common\ColourDto;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Common\MotTestTypeDto;
@@ -16,17 +14,18 @@ use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\MysteryShopper\MysteryShopperExpiryDateGenerator;
-use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaDocument\Service\Document\DocumentService;
 use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Domain\DvsaContactDetails\DvsaContactDetailsConfiguration;
 use DvsaMotApi\Mapper\AbstractMotTestMapper;
 use DvsaMotApi\Service\CertificateCreationService;
+use DvsaMotApi\Service\MotTestDate;
 use DvsaMotApi\Service\MotTestService;
 use DvsaMotApiTest\Test\ReasonForRejectionBuilder;
 use NumberFormatter;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
+use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 
 /**
  * Class CertificateCreationServiceTest
@@ -717,7 +716,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             'Make' => '',
             'Model' => '',
             'CountryOfRegistration' => 'UK',
-            'TestClass' => '4',
+            'TestClass' => VehicleClassCode::CLASS_4,
             'Colour' => 'Primary and Secondary',
             'AdvisoryInformation' => '',
         ];
@@ -817,13 +816,14 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
         ];
 
         $expiryDate = (new MysteryShopperExpiryDateGenerator())->getCertificateExpiryDate();
-        $expiryDateFormatted = date_format($expiryDate,"j F Y");
+        $expiryDateFormatted = $expiryDate->format("j F Y");
         $numberFormatter = new NumberFormatter("en", NumberFormatter::SPELLOUT);
-        $year = date_format($expiryDate,"y");
+        $year = $expiryDate->format("y");
         $yearFormatted = $numberFormatter->format((int) $year);
 
         $expiryDateOnCert = $expiryDateFormatted . ' (' . strtoupper($yearFormatted) . ')';
-        $renewalDateOnCert = date_format($expiryDate->sub(new DateInterval('P1M'))->add(new DateInterval('P1D')),"j F Y");
+        //custom logic for preservation date is used so we need to use direct calculation method
+        $renewalDateOnCert = MotTestDate::preservationDate($expiryDate)->format("j F Y");
 
         $certificateDataAfterAmendedDuringMysteryShopper = [
             'TestNumber' => '',
@@ -837,7 +837,7 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             'Make' => '',
             'Model' => '',
             'CountryOfRegistration' => 'UK',
-            'TestClass' => '4',
+            'TestClass' => VehicleClassCode::CLASS_4,
             'Colour' => 'Primary and Secondary',
             'AdvisoryInformation' => '',
             'ExpiryDate' => $expiryDateOnCert,
