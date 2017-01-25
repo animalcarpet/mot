@@ -381,7 +381,8 @@ class MotTestController extends AbstractDvsaMotTestController
         }
 
         $apiUrl = UrlBuilder::of()->vehicleTestingStation()->routeParam('id',$motTest->getSiteId());
-        $siteDto = $this->getRestClient()->get($apiUrl);
+        $siteResponse = $this->getRestClient()->get($apiUrl);
+        $siteDto = ArrayUtils::tryGet($siteResponse, 'data');
 
         return (new ViewModel(
             [
