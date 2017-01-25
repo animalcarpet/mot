@@ -7,10 +7,16 @@
 
 namespace DvsaMotApiTest\Service\ReplacementCertificate;
 
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
+use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Enum\MotTestStatusName;
+use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaCommonTest\TestUtils\XMock;
+use DvsaEntities\Entity\Colour;
 use DvsaEntities\Entity\CountryOfRegistration;
 use DvsaEntities\Entity\Make;
 use DvsaEntities\Entity\Model;
@@ -27,14 +33,53 @@ use PHPUnit_Framework_TestCase;
  */
 class ReplacementCertificateDraftCreatorTest extends PHPUnit_Framework_TestCase
 {
+    const MAKE_NAME = 'Bat';
+    const MAKE_CODE = 'BT';
+    const MODEL_NAME = 'Mobil';
+    const MODEL_CODE = 'MB';
+    const VIN = '1M8GDM9AXKP042788';
+    const REGISTRATION = 'FNZ6110';
 
     private $authService;
     private $motTestSecurityService;
+    private $vehicleService;
+    private $entityManager;
 
     public function setUp()
     {
         $this->authService = XMock::of('DvsaAuthorisation\Service\AuthorisationServiceInterface', ['isGranted', 'getUserId']);
         $this->motTestSecurityService = XMock::of(MotTestSecurityService::class);
+
+        $mockVehicle = new DvsaVehicle($this->getVehicleData());
+
+        $this->vehicleService = XMock::of(VehicleService::class);
+        $this->vehicleService->expects($this->any())
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->willReturn($mockVehicle);
+
+        $mockMake = (new Make())->setName(self::MAKE_NAME)->setCode(self::MAKE_CODE);
+        $mockModel = (new Model())->setName(self::MODEL_NAME)->setCode(self::MODEL_CODE)->setMake($mockMake);
+
+        $this->entityManager = XMock::of(EntityManager::class);
+        $this->entityManager->expects($this->any())
+            ->method('getRepository')
+            ->willReturnCallback(function ($className) use ($mockModel) {
+                switch ($className) {
+                    case Make::class:
+                        $expectedEntity = $mockModel->getMake();
+                        break;
+                    case Model::class:
+                        $expectedEntity = $mockModel;
+                        break;
+                    default;
+                        $expectedEntity = new Colour();
+                }
+
+                $repo = XMock::of(EntityRepository::class);
+                $repo->expects($this->any())->method('findOneBy')->willReturn($expectedEntity);
+
+                return $repo;
+            });
     }
 
     public function testCreateGivenMotTestNotBeingCertificateShouldThrowForbiddenException()
@@ -63,8 +108,8 @@ class ReplacementCertificateDraftCreatorTest extends PHPUnit_Framework_TestCase
 
     public function testCreateGivenMotTestShouldCreateValidDraft()
     {
-        $make = (new Make())->setCode("BT")->setName("Bat");
-        $model = (new Model())->setCode("MB")->setName("Mobil");
+        $make = (new Make())->setCode(self::MAKE_CODE)->setName(self::MAKE_NAME);
+        $model = (new Model())->setCode(self::MODEL_CODE)->setName(self::MODEL_NAME);
         $model->setMake($make);
 
         $modelDetail = new ModelDetail();
@@ -94,8 +139,8 @@ class ReplacementCertificateDraftCreatorTest extends PHPUnit_Framework_TestCase
 
     public function testCreatedGivenMotTestWithModelOtherAndMakeOtherShouldCreateValidDraft()
     {
-        $make = (new Make())->setCode("BT")->setName("Bat");
-        $model = (new Model())->setCode("MB")->setName("Mobil");
+        $make = (new Make())->setCode(self::MAKE_CODE)->setName(self::MAKE_NAME);
+        $model = (new Model())->setCode(self::MODEL_CODE)->setName(self::MODEL_NAME);
         $model->setMake($make);
 
         $modelDetail = new ModelDetail();
@@ -114,9 +159,9 @@ class ReplacementCertificateDraftCreatorTest extends PHPUnit_Framework_TestCase
 
         $draft = $this->createSut()->create($motTest);
 
-        $this->assertEquals($motTest->getModel(), $draft->getModel());
+        $this->assertEquals($motTest->getModel()->getName(), $draft->getModel()->getName());
         $this->assertEquals($motTest->getModelName(), $draft->getModelName());
-        $this->assertEquals($motTest->getMake(), $draft->getMake());
+        $this->assertEquals($motTest->getMake()->getName(), $draft->getMake()->getName());
         $this->assertEquals($motTest->getMakeName(), $draft->getMakeName());
         $this->assertEquals($motTest->getVersion(), $draft->getMotTestVersion());
         $this->assertEquals($motTest->getExpiryDate(), $draft->getExpiryDate());
@@ -129,7 +174,9 @@ class ReplacementCertificateDraftCreatorTest extends PHPUnit_Framework_TestCase
     {
         return new ReplacementCertificateDraftCreator(
             $this->motTestSecurityService,
-            $this->authService
+            $this->authService,
+            $this->vehicleService,
+            $this->entityManager
         );
     }
 
@@ -163,5 +210,48 @@ class ReplacementCertificateDraftCreatorTest extends PHPUnit_Framework_TestCase
             ->willReturn(MotTestStatusName::ACTIVE);
 
         return $status;
+    }
+
+    private function getVehicleData()
+    {
+        return json_decode(json_encode([
+            'id' => 1,
+            'amendedOn' => '2004-01-11',
+            'registration' => self::REGISTRATION,
+            'vin' => self::VIN,
+            'emptyVrmReason' => NULL,
+            'emptyVinReason' => NULL,
+            'make' => [
+                'id' => 5,
+                'name' => self::MAKE_NAME
+            ],
+            'model' => [
+                'id' => 6,
+                'name' => self::MODEL_NAME
+            ],
+            'colour' => [
+                'code' => 'L',
+                'name' => 'Grey',
+            ],
+            'colourSecondary' => [
+                'code' => 'P',
+                'name' => 'Black',
+            ],
+            'countryOfRegistrationId' => 1,
+            'vehicleClass' => ['code' => VehicleClassCode::CLASS_4, 'name' => '4'],
+            'fuelType' => [
+                'code' => 'PE',
+                'name' => 'Petrol',
+            ],
+            'bodyType' => '2 Door Saloon',
+            'cylinderCapacity' => 1700,
+            'transmissionType' => 'Automatic',
+            'firstRegistrationDate' => '2004-01-03',
+            'firstUsedDate' => '2004-01-04',
+            'manufactureDate' => '2004-01-02',
+            'isNewAtFirstReg' => true,
+            'weight' => 12467,
+            'version' => 2,
+        ]));
     }
 }

@@ -7,11 +7,17 @@
 
 namespace DvsaMotApi\Service\ReplacementCertificate;
 
+use Doctrine\ORM\EntityManager;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
-use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\CertificateReplacementDraft;
+use DvsaEntities\Entity\Colour;
+use DvsaEntities\Entity\Entity;
+use DvsaEntities\Entity\Make;
+use DvsaEntities\Entity\Model;
+use DvsaEntities\Entity\MotTest;
 use DvsaMotApi\Service\MotTestSecurityService;
 
 /**
@@ -31,16 +37,29 @@ class ReplacementCertificateDraftCreator
      */
     private $motTestSecurityService;
 
+    /** @var VehicleService */
+    private $vehicleService;
+
+    /** @var EntityManager */
+    private $entityManager;
+
     /**
-     * @param MotTestSecurityService                $motTestSecurityService
-     * @param AuthorisationServiceInterface                  $authorizationService
+     * @param MotTestSecurityService $motTestSecurityService
+     * @param AuthorisationServiceInterface $authorizationService
+     * @param VehicleService $vehicleService
+     * @param EntityManager $entityManager
      */
     public function __construct(
         MotTestSecurityService $motTestSecurityService,
-        AuthorisationServiceInterface $authorizationService
-    ) {
+        AuthorisationServiceInterface $authorizationService,
+        VehicleService $vehicleService,
+        EntityManager $entityManager
+    )
+    {
         $this->motTestSecurityService = $motTestSecurityService;
         $this->authorizationService = $authorizationService;
+        $this->vehicleService = $vehicleService;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -66,20 +85,32 @@ class ReplacementCertificateDraftCreator
             );
         }
 
+        $vehicle = $this->vehicleService->getDvsaVehicleByIdAndVersion(
+            $motTest->getVehicle()->getId(),
+            $motTest->getVehicleVersion()
+        );
+
+        $primaryColour = $this->getColourByCode($vehicle->getColour()->getCode());
+        $secondaryColour = $this->getColourByCode($vehicle->getColourSecondary()->getCode());
+        $make = $this->fetchOneFromEntityBy(Make::class, ['id' => $vehicle->getMake()->getId()]);
+        $model = $this->fetchOneFromEntityBy(Model::class, ['id' => $vehicle->getModel()->getId()]);
+
+        $this->assertInstanceOf(Entity::class, [$make, $model, $primaryColour, $secondaryColour]);
+
         $draft = CertificateReplacementDraft::create()
             ->setMotTest($motTest)
             ->setMotTestVersion($motTest->getVersion())
-            ->setPrimaryColour($motTest->getPrimaryColour())
-            ->setSecondaryColour($motTest->getSecondaryColour())
+            ->setPrimaryColour($primaryColour)
+            ->setSecondaryColour($secondaryColour)
             ->setExpiryDate($motTest->getExpiryDate())
-            ->setVrm($motTest->getRegistration())
-            ->setEmptyVrmReason($motTest->getEmptyVrmReason())
-            ->setVin($motTest->getVin())
-            ->setEmptyVinReason($motTest->getEmptyVinReason())
-            ->setMake($motTest->getMake())
-            ->setMakeName($motTest->getMakeName())
-            ->setModel($motTest->getModel())
-            ->setModelName($motTest->getModelName())
+            ->setVrm($vehicle->getRegistration())
+            ->setEmptyVrmReason($vehicle->getEmptyVrmReason())
+            ->setVin($vehicle->getVin())
+            ->setEmptyVinReason($vehicle->getEmptyVinReason())
+            ->setMake($make)
+            ->setMakeName($vehicle->getMakeName())
+            ->setModel($model)
+            ->setModelName($vehicle->getModelName())
             ->setCountryOfRegistration($motTest->getCountryOfRegistration())
             ->setExpiryDate($motTest->getExpiryDate())
             ->setVehicleTestingStation($motTest->getVehicleTestingStation())
@@ -90,5 +121,42 @@ class ReplacementCertificateDraftCreator
             ->setOdometerResultType($motTest->getOdometerResultType());
 
         return $draft;
+    }
+
+    /**
+     * @param string $code
+     * @return null|Colour
+     */
+    private function getColourByCode($code)
+    {
+        return $this->fetchOneFromEntityBy(Colour::class, ['code' => $code]);
+    }
+
+    /**
+     * @param $entityClassName
+     * @param $criteria
+     * @return null|object
+     * @throws \InvalidArgumentException
+     */
+    private function fetchOneFromEntityBy($entityClassName, $criteria)
+    {
+        if (!is_array($criteria) || empty($criteria)) {
+            throw new \InvalidArgumentException('$criteria must be a nonempty array');
+        }
+
+        return $this->entityManager->getRepository($entityClassName)->findOneBy($criteria);
+    }
+
+    private function assertInstanceOf($class, $objects)
+    {
+        foreach ($objects as $object) {
+            if (!$object instanceof $class) {
+                throw new \RuntimeException(sprintf(
+                    'Expected instance of %s, but received %s',
+                    $class,
+                    get_class($object)
+                ));
+            }
+        }
     }
 }

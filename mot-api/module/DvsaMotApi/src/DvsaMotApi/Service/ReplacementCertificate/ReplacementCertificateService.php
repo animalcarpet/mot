@@ -192,10 +192,11 @@ class ReplacementCertificateService implements TransactionAwareInterface
      *
      * @param integer $draftId
      * @param array $data
+     * @param bool $isDvlaImport
      * @return MotTest
      * @throws \DvsaAuthentication\Service\Exception\OtpException
      */
-    public function applyDraft($draftId, $data)
+    public function applyDraft($draftId, $data, $isDvlaImport = false)
     {
         $this->authService->assertGranted(PermissionInSystem::CERTIFICATE_REPLACEMENT);
 
@@ -221,10 +222,11 @@ class ReplacementCertificateService implements TransactionAwareInterface
                 $cherishedTransferReason,
                 $certificateReplacementRepository,
                 $certificateDraftRepository,
-                $certificateUpdater
+                $certificateUpdater,
+                $isDvlaImport
             ) {
                 $draft = $certificateDraftRepository->get($draftId);
-                $motTest = $certificateUpdater->update($draft);
+                $motTest = $certificateUpdater->update($draft, $isDvlaImport);
 
                 $certificateReplacement = (new CertificateReplacement())
                     ->setMotTest($draft->getMotTest())

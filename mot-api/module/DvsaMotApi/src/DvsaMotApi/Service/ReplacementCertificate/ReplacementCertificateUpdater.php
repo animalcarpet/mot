@@ -59,11 +59,12 @@ class ReplacementCertificateUpdater
 
     /**
      * @param CertificateReplacementDraft $draft
+     * @param bool $isDvlaImport
      * @return MotTest
      * @throws ForbiddenException
      * @throws \DvsaCommonApi\Service\Exception\BadRequestException
      */
-    public function update(CertificateReplacementDraft $draft)
+    public function update(CertificateReplacementDraft $draft, $isDvlaImport = false)
     {
         $hasFullRights = $this->authService->isGranted(PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS);
 
@@ -92,7 +93,11 @@ class ReplacementCertificateUpdater
 
         $this->updateMotTestFromDraft($draft, $motTest, $hasFullRights);
 
-        $vehicle = $this->updateVehicleFromDraftUsingJavaService($draft, $motTest, $hasFullRights);
+        if($isDvlaImport) {
+            $vehicle = $this->vehicleService->getDvsaVehicleById($motTest->getVehicle()->getId());
+        } else {
+            $vehicle = $this->updateVehicleFromDraftUsingJavaService($draft, $motTest, $hasFullRights);
+        }
 
         $motTest->setVehicleVersion($vehicle->getVersion());
 

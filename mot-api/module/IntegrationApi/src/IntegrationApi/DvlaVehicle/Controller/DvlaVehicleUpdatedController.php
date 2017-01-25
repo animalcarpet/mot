@@ -31,7 +31,9 @@ class DvlaVehicleUpdatedController extends AbstractDvsaRestfulController
             throw new NotFoundException('vehicleId');
         }
 
-        $this->dvlaVehicleUpdatedService->createReplacementCertificate($data['vehicleId'], $this->getUserId());
+        $isDvlaImport = true;
+
+        $this->dvlaVehicleUpdatedService->createReplacementCertificate($data['vehicleId'], $this->getUserId(), $isDvlaImport);
         return ApiResponse::jsonOk();
     }
 }
