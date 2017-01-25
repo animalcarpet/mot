@@ -1,28 +1,30 @@
 <?php
 
+use DvsaCommon\Dto\Common\MotTestDto;
+use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaMotTest\Model\BrakeTestConfigurationClass1And2Helper;
+use DvsaMotTest\View\Model\MotTestTitleModel;
 
 /**
- * @var BrakeTestConfigurationClass1And2Helper $configHelper
- * @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest      $motTest
+ * @var BrakeTestConfigurationClass1And2Helper        $configHelper
+ * @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest     $motTest
  * @var \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle $vehicle
- * @var array                                  $brakeTestTypes
- * @var array                                  $brakeTestResult
- * @var string                                 $brakeTestType
- * @var string                                 $vehicleWeightFront
- * @var string                                 $vehicleWeightRear
- * @var string                                 $riderWeight
- * @var string                                 $sidecarWeight
- * @var boolean                                $isSidecarAttached
+ * @var array                                         $brakeTestTypes
+ * @var MotTestDto                                    $motTest
+ * @var BrakeTestConfigurationClass1And2Helper        $configHelper
+ * @var MotTestTitleModel                             $motTestTitleViewModel
+ * @var string                                        $title
+ * @var string                                        $vehicleWeightFront
+ * @var string                                        $vehicleWeightRear
+ * @var string                                        $riderWeight
+ * @var string                                        $sidecarWeight
+ * @var boolean                                       $isSidecarAttached
+ * @var string                                        $brakeTestType
+ * @var string                                        $vehicleClass
  */
 
-$title = 'Brake test configuration';
-$vehicleClass = $vehicle->getVehicleClass()->getCode();
-$this->headTitle($title);
 $this->layout()->setVariable('pageSubTitle', $motTestTitleViewModel->getTitle($motTest));
-$this->layout()->setVariable('pageTitle', "Brake test configuration");
-
-$brakeTestResult = $motTest->getBrakeTestResult();
+$this->layout()->setVariable('pageTitle', $title);
 
 $this->placeholder('progressBar')->captureStart();
 echo $this->partial(
@@ -34,7 +36,6 @@ $this->placeholder('progressBar')->captureEnd();
 
 <?php echo $this->partial('errorMessages', ['getFromFlash' => true]); ?>
 <?php echo $this->partial('infoMessages', ['getFromFlash' => true]); ?>
-
 <?php echo $this->partial('vehicleSummary', ['vehicle' => $vehicle]); ?>
 
 <form method="POST" role="form">

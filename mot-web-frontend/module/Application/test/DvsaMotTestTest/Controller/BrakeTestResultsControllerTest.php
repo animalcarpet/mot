@@ -73,6 +73,13 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
     }
 
     /**
+     * @param      $motTestNumber
+     * @param      $vehicleClass
+     * @param      $isPost
+     * @param      $postParams
+     * @param      $expectedTemplate
+     * @param null $expectedLocation
+     *
      * @dataProvider brakeTestConfigurationTestItems
      */
     public function testBrakeTestConfigurationGetOk(
@@ -267,7 +274,8 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
             'vehicleClass' => VehicleClassCode::CLASS_4
         ];
 
-        $this->brakeTestConfigurationContainerMock->expects($this->any())
+        $this->brakeTestConfigurationContainerMock
+            ->expects($this->any())
             ->method('fetchConfig')
             ->willReturn($queryData);
 
@@ -402,12 +410,14 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
             ->method('save')
             ->with($motTestNumber, $expectedRestPostData);
 
-        $result = $this->getResultForAction('addBrakeTestResults', ['motTestNumber' => $motTestNumber]);
+        $this->getResultForAction('addBrakeTestResults', ['motTestNumber' => $motTestNumber]);
 
         $this->assertRedirectLocation2("/mot-test/$motTestNumber/brake-test-summary");
     }
 
     /**
+     * @param $vehicleClass
+     *
      * @dataProvider provideVehicleClasses
      */
     public function testBrakeTestResultsPostWithInvalidData($vehicleClass)
@@ -456,7 +466,6 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
                 ->with(1001, 1)
                 ->will($this->returnValue($vehicleData));
         }
-
 
         $this->getBrakeTestResultsResourcesMock()
             ->expects($this->at(0))->method('save')
@@ -630,6 +639,8 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
     }
 
     /**
+     * @param $testCase
+     *
      * @dataProvider gradientTestsForClass12
      */
     public function testGradientBrakeTestResultsPostClass12($testCase)
@@ -660,7 +671,8 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
             'isSidecarAttached' => '0',
             'brakeTestType'     => BrakeTestTypeCode::GRADIENT,
         ];
-        $this->brakeTestConfigurationContainerMock->expects($this->any())
+        $this->brakeTestConfigurationContainerMock
+            ->expects($this->any())
             ->method('fetchConfig')
             ->willReturn($queryData);
 
