@@ -1,20 +1,23 @@
 <?php
 
+use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
-use DvsaCommon\Enum\BrakeTestTypeCode;
-use DvsaCommon\Enum\WeightSourceCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaMotTest\Model\BrakeTestConfigurationClass3AndAboveHelper as ConfigHelper;
+use DvsaMotTest\View\Model\MotTestTitleModel;
 
 /**
- * @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest      $motTest
+ * @var array                                         $brakeTestTypes
+ * @var ConfigHelper                                  $configHelper
+ * @var MotTestTitleModel                             $motTestTitleViewModel
+ * @var string                                        $title
+ * @var boolean                                       $showVehicleType
+ * @var array                                         $weightTypes
+ * @var bool                                          $preselectBrakeTestWeight
+ * @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest     $motTest
  * @var \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle $vehicle
- * @var boolean    $showVehicleType
- * @var ConfigHelper $configHelper
+ * @var string                                        $vehicleClass
  */
-
-$title = 'Brake test configuration';
-$this->headTitle($title);
 
 $this->layout()->setVariable('pageSubTitle', $motTestTitleViewModel->getTitle($motTest));
 $this->layout()->setVariable('pageTitle', $title);
@@ -22,48 +25,16 @@ $this->layout()->setVariable('pageTitle', $title);
 $this->placeholder('progressBar')->captureStart();
 echo $this->partial(
     'motTestProgress',
-    ['currentStep' => 2, 'isMotContingency' => $this->isMotContingency]
+    [
+        'currentStep' => 2,
+        'isMotContingency' => $this->isMotContingency
+    ]
 );
 $this->placeholder('progressBar')->captureEnd();
-
-$vehicleClass = $vehicle->getVehicleClass()->getCode();
-
-function getWeightTypes($vehicleClass)
-{
-    switch ($vehicleClass) {
-        case VehicleClassCode::CLASS_3:
-        case VehicleClassCode::CLASS_4:
-            return [
-                WeightSourceCode::VSI            => 'Brake test weight',
-                WeightSourceCode::PRESENTED      => 'Presented weight',
-                WeightSourceCode::NOT_APPLICABLE => 'Not known',
-            ];
-        case VehicleClassCode::CLASS_5:
-            return [
-                WeightSourceCode::DGW_MAM    => 'DGW/MAM',
-                WeightSourceCode::CALCULATED => 'Calculated weight'
-            ];
-        case VehicleClassCode::CLASS_7:
-            return [
-                WeightSourceCode::DGW       => 'DGW',
-                WeightSourceCode::PRESENTED => 'Presented weight',
-            ];
-    }
-}
-
-$brakeTestTypes = [
-    BrakeTestTypeCode::ROLLER        => 'Roller',
-    BrakeTestTypeCode::PLATE         => 'Plate',
-    BrakeTestTypeCode::DECELEROMETER => 'Decelerometer',
-    BrakeTestTypeCode::GRADIENT      => 'Gradient'
-];
-
-$weightTypes = getWeightTypes($vehicleClass);
-
 ?>
+
 <?php echo $this->partial('errorMessages', ['getFromFlash' => true]); ?>
 <?php echo $this->partial('infoMessages', ['getFromFlash' => true]); ?>
-
 <?php echo $this->partial('vehicleSummary', ['vehicle' => $vehicle]); ?>
 
 <form method="POST" role="form">
@@ -94,7 +65,12 @@ $weightTypes = getWeightTypes($vehicleClass);
 
             <div class="form-group" id="vehicleWeightFields">
                 <fieldset>
-                    <legend class="form-label">Vehicle weight type</legend>
+                    <label class="form-label">
+                        Vehicle weight type
+                        <?php if ($vehicleClass === VehicleClassCode::CLASS_3 || $vehicleClass === VehicleClassCode::CLASS_4) : ?>
+                            <span class="help-block">If using brake test weight, check that the figure is correct against manufacturer or other reliable data.</span>
+                        <?php endif; ?>
+                    </label>
 
                     <div class="form-group form-group-related label-reg">
                         <?php foreach ($weightTypes as $weightType => $weightTypeName):
@@ -118,7 +94,6 @@ $weightTypes = getWeightTypes($vehicleClass);
                         <?php endforeach; ?>
                     </div>
                     <div id="weightInputPanel" class="panel-indent">
-                        <!-- need pattern attribute for FF27 -->
                         <label for="vehicleWeight">Vehicle Weight in kilograms</label>
                         <?php echo $this->partial(
                             'inputElement',
