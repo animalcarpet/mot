@@ -280,7 +280,7 @@ class MotTestHistoryRepository extends MotTestRepository
 
     }
 
-    private function switchToHistory()
+    public function switchToHistory()
     {
         $this->getClassMetadata()->setTableName(
             str_replace(self::SUFFIX_CURRENT, self::SUFFIX_HISTORY, $this->getClassMetadata()->getTableName())
@@ -290,7 +290,7 @@ class MotTestHistoryRepository extends MotTestRepository
         );
     }
 
-    private function switchToCurrent()
+    public function switchToCurrent()
     {
         $this->getClassMetadata()->setTableName(
             str_replace(self::SUFFIX_HISTORY, self::SUFFIX_CURRENT, $this->getClassMetadata()->getTableName())

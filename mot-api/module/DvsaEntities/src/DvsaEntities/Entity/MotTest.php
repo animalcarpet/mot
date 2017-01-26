@@ -10,6 +10,8 @@ namespace DvsaEntities\Entity;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use DvsaCommon\Enum\LanguageTypeCode;
@@ -17,6 +19,7 @@ use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaDocument\Entity\Document;
 use DvsaEntities\EntityTrait\CommonIdentityTrait;
+use DvsaEntities\Repository\MotTestHistoryRepository;
 
 /**
  * MotTest.
@@ -26,6 +29,7 @@ use DvsaEntities\EntityTrait\CommonIdentityTrait;
  *  options={"collate"="utf8_general_ci", "charset"="utf8", "engine"="InnoDB"}
  * )
  * @ORM\Entity(repositoryClass="DvsaEntities\Repository\MotTestHistoryRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class MotTest extends Entity
 {
@@ -290,6 +294,13 @@ class MotTest extends Entity
      * @ORM\Column(type="integer", nullable=false)
      */
     protected $version = 1;
+
+    /**
+     * Indicates if the record comes from the history table or not.
+     *
+     * @var bool
+     */
+    private $isHistoricRecord = false;
 
     /**
      * Constructor.
@@ -1482,5 +1493,25 @@ class MotTest extends Entity
         }
 
         return $this->getVehicle()->getModelDetail();
+    }
+
+    /**
+     * @ORM\PostLoad
+     */
+    public function checkIfIsHistoricRecord(LifecycleEventArgs $event)
+    {
+        $this->isHistoricRecord = false !== strpos($event->getEntityManager()->getClassMetadata(self::class)->getTableName(), MotTestHistoryRepository::SUFFIX_HISTORY);
+    }
+
+    /**
+     * @ORM\PreFlush
+     */
+    public function switchToHistory(PreFlushEventArgs $event)
+    {
+        if ($this->isHistoricRecord) {
+            $event->getEntityManager()->getRepository(self::class)->switchToHistory();
+        } else {
+            $event->getEntityManager()->getRepository(self::class)->switchToCurrent();
+        }
     }
 }
