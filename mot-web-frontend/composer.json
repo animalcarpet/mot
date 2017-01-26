@@ -18,7 +18,7 @@
         "dvsa/dvsa-doctrine-module": "~1.1",
         "zendframework/zendpdf": "2.0.2",
         "zf-commons/zfc-twig": "^1.2",
-        "mot/api-client-php": "13.1.0",
+        "mot/api-client-php": "13.2.1",
         "noiselabs/zf-debug-utils": "^0.3"
     },
     "autoload" : {

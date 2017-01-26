@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "048617596699a35f2c9f65b60c77f411",
+    "content-hash": "e8983f3fe572ccec2fbc6d8e7e3f04b1",
     "packages": [
         {
             "name": "cpms/client",
@@ -1716,17 +1716,17 @@
         },
         {
             "name": "mot/api-client-php",
-            "version": "13.1.0",
+            "version": "13.2.1",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/api-client-php.git",
-                "reference": "4fcb6c94f7550856bc80ba0b65b8294448d15e6e"
+                "reference": "3669827be79a2e4db57773ad2e800d4959b4f075"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-13.1.0-b81417.tar",
-                "reference": "4fcb6c94f7550856bc80ba0b65b8294448d15e6e",
-                "shasum": "d9bf32d34a03076d3b40cead900e87e443015830"
+                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-13.2.1-2520f4.tar",
+                "reference": "3669827be79a2e4db57773ad2e800d4959b4f075",
+                "shasum": "4151b6642eb5e27ea2b717551a954dac96447fa8"
             },
             "require": {
                 "guzzlehttp/guzzle": "~6.1",
@@ -1773,7 +1773,7 @@
                     "./vendor/bin/phpunit --group integration"
                 ]
             },
-            "time": "2017-01-25T09:44:30+00:00"
+            "time": "2017-01-27T13:35:10+00:00"
         },
         {
             "name": "noiselabs/zf-debug-utils",
