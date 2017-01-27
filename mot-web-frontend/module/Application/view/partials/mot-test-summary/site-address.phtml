@@ -30,7 +30,7 @@ $cssDlClass = !empty(trim($this->cssDlClass)) ? $this->cssDlClass : 'col-sm-4';
 <dl class="<?php echo $this->escapeHtmlAttr($cssDlClass); ?>">
     <dt>VTS name and address</dt>
     <dd id="vtsNameAndAddress">
-        <?php echo $this->escapeHtml($siteNr . ' ' . $siteName); ?>
+        <?php echo $this->escapeHtml($siteNr . ' - ' . $siteName); ?>
         <br/>
         <?php echo $siteAddress; ?>
     </dd>

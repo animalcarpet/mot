@@ -37,7 +37,7 @@ $cssDlClass = !empty(trim($this->cssDlClass)) ? $this->cssDlClass : 'col-sm-4';
 
         echo $this->escapeHtml(
             $issuedDate
-            ? DateTimeDisplayFormat::textDateShort($issuedDate)
+            ? DateTimeDisplayFormat::textDate($issuedDate)
             : 'N/A'
         );
         ?>
