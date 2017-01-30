@@ -2,7 +2,7 @@ package uk.gov.dvsa.ui.pages.accountclaim;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-
+import uk.gov.dvsa.domain.model.SecurityQuestion;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.FormDataHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
@@ -37,10 +37,10 @@ public class AccountClaimSecurityQuestionsPage extends Page {
     }
 
     public AccountClaimSecurityQuestionsPage setSecurityQuestionsAndAnswers(String answerOne, String answerTwo) {
-        FormDataHelper.selectFromDropDownByValue(questionOneDropdown, "2");
+        FormDataHelper.selectFromDropDownByValue(questionOneDropdown, SecurityQuestion.FIRST_KISS.optionValue);
         FormDataHelper.enterText(answerOneField, answerOne);
 
-        FormDataHelper.selectFromDropDownByValue(questionTwoDropdown, "6");
+        FormDataHelper.selectFromDropDownByValue(questionTwoDropdown, SecurityQuestion.FIRST_SCHOOL_TRIP.optionValue);
         FormDataHelper.enterText(answerTwoField, answerTwo);
 
         return this;
