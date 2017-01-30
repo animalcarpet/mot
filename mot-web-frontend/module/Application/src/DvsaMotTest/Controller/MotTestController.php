@@ -525,10 +525,7 @@ class MotTestController extends AbstractDvsaMotTestController
         if ($this->isMysteryShopper($motTest)) {
             $mysteryShopperExpiryDate = (new MysteryShopperExpiryDateGenerator())->getCertificateExpiryDate();
             $mysteryShopperExpiryDate = DateTimeApiFormat::date($mysteryShopperExpiryDate);
-            $motTest->expiryDate= $mysteryShopperExpiryDate;
-            $pendingDetails = $motTest->getPendingDetails();
-            $pendingDetails->expiryDate = $mysteryShopperExpiryDate;
-            $motTest->pendingDetails = $pendingDetails;
+            $motTest->updateExpiryDate($mysteryShopperExpiryDate);
         }
 
         return (new ViewModel(
