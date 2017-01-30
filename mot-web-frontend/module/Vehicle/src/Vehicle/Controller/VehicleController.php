@@ -161,7 +161,6 @@ class VehicleController extends AbstractAuthActionController implements AutoWire
             return $this->redirect()->toUrl(VehicleUrlBuilderWeb::search());
         }
 
-        $results = $vehicleSearchService->getVehicleResults();
         if ($results->getCount() === 1) {
             /** @var SearchVehicle $vehicle */
             $vehicle = $results->getItem(0);

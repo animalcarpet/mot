@@ -19,16 +19,6 @@ $motTestType = $motTest->getTestTypeCode();
 
 $vehicleClass = $vehicle->getVehicleClass()->getCode();
 
-if (in_array($vehicleClass, [VehicleClassCode::CLASS_1, VehicleClassCode::CLASS_2])) {
-    $brakeTestResults = new \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass1And2($motTest->getBrakeTestResult());
-} else {
-    $brakeTestResults = new \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove($motTest->getBrakeTestResult());
-}
-
-if ($motTestType === MotTestTypeCode::RE_TEST && $brakeTestResults === null) {
-    $brakeTestResults = $motTest->getMotTestOriginal()->getBrakeTestResult();
-}
-
 $viewOnly = isset($this->viewOnly) ? $this->viewOnly : false;
 
 $title = 'Brake Test Summary';
@@ -56,7 +46,7 @@ echo $this->partial(
     'partials/brake-test-column-summary.phtml',
     [
         'vehicle'     => $vehicle,
-        'brakeResult' => $brakeTestResults,
+        'motTest' => $motTest,
     ]
 );
 ?>

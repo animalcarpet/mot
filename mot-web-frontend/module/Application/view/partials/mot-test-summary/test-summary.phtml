@@ -37,12 +37,6 @@ $isTestPass = ($testStatus == MotTestStatusCode::PASSED);
 $isTestFail = ($testStatus == MotTestStatusCode::FAILED);
 
 $isReinspection = \DvsaCommon\Domain\MotTestType::isReinspection($motTestType);
-
-if($vehicle->getVehicleClass()->getCode() >= 3) {
-    $brakeResultObject = new \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove($motTest->getBrakeTestResult());
-} else {
-    $brakeResultObject = new \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass1And2($motTest->getBrakeTestResult());
-}
 ?>
 
 <div class="row" id="testInformation">
@@ -121,7 +115,7 @@ if (isset($isReinspection) && $isReinspection && $motTest->getBrakeTestResult() 
     echo $this->partial(
         'partials/mot-test-summary/brake-values-in-kg-block', [
             'vehicle'           => $vehicle,
-            'brakeResult'       => $brakeResultObject,
+            'motTest'       => $motTest,
             'isEnforcementUser' => false,
             'brakeTestTypeCode2Name' => $brakeTestTypeCode2Name,
         ]

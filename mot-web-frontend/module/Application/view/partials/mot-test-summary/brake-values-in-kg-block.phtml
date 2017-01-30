@@ -2,7 +2,7 @@
 
 use DvsaCommon\Enum\WeightSourceCode;
 use DvsaCommon\Enum\VehicleClassCode;
-use DvsaCommon\Utility\ArrayUtils;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 
 const VEHICLE_CLASS_GROUP_12 = '12';
 const VEHICLE_CLASS_GROUP_3PLUS = '3plus';
@@ -17,10 +17,22 @@ $vehicleClasses3plus = [
     VehicleClassCode::CLASS_7
 ];
 
-/**  @var \DvsaMotTest\Controller\DvsaVehicleViewModel $vehicle  */
+/** @var MotTest */
+$motTest;
+
+if (is_null($motTest->getBrakeTestResult())) {
+    return;
+}
+/**  @var \DvsaMotTest\Controller\DvsaVehicleViewModel $vehicle */
 $vehicle = $this->vehicle;
+
+// @todo: To be removed
 /** @var \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove | \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass1And2 $brakeResult */
-$brakeResult = $this->brakeResult;
+if ($vehicle->getVehicleClass()->getCode() >= 3) {
+    $brakeResult = new \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove($motTest->getBrakeTestResult());
+} else {
+    $brakeResult = new \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass1And2($motTest->getBrakeTestResult());
+}
 
 if (empty($brakeResult)) {
     return;
@@ -117,14 +129,14 @@ if (!$vehicleClassGroup) {
         <?php endif; ?>
 
 
-        <?php if(!empty($brakeResult)) : ?>
+        <?php if (!empty($brakeResult)) : ?>
             <div class="row" style="padding-bottom: 20px;">
                 <?php
                 echo $this->partial(
                     'partials/brake-test-column-summary.phtml',
                     [
-                        'vehicle'     => $vehicle,
-                        'brakeResult' => $brakeResult,
+                        'vehicle' => $vehicle,
+                        'motTest' => $motTest,
                     ]
                 );
                 ?>
@@ -137,30 +149,30 @@ if (!$vehicleClassGroup) {
             echo $this->partial(
                 'partials/mot-test-summary/brake-values-in-kg-result-by-type',
                 [
-                    'label'       => 'Service brake',
-                    'brakeType'   => BRAKE_TYPE_SERVICE,
+                    'label' => 'Service brake',
+                    'brakeType' => BRAKE_TYPE_SERVICE,
                     'brakeResult' => $brakeResult,
-                    'dataKey'     => 'serviceBrake1',
+                    'dataKey' => 'serviceBrake1',
                 ]
             );
 
             echo $this->partial(
                 'partials/mot-test-summary/brake-values-in-kg-result-by-type',
                 [
-                    'label'       => 'Service brake 2',
+                    'label' => 'Service brake 2',
                     'brakeResult' => $brakeResult,
-                    'brakeType'   => BRAKE_TYPE_SERVICE,
-                    'dataKey'     => 'serviceBrake2',
+                    'brakeType' => BRAKE_TYPE_SERVICE,
+                    'dataKey' => 'serviceBrake2',
                 ]
             );
 
             echo $this->partial(
                 'partials/mot-test-summary/brake-values-in-kg-result-by-type',
                 [
-                    'label'       => 'Parking brake',
-                    'brakeType'   => BRAKE_TYPE_PARKING,
+                    'label' => 'Parking brake',
+                    'brakeType' => BRAKE_TYPE_PARKING,
                     'brakeResult' => $brakeResult,
-                    'dataKey'     => 'parkingBrake',
+                    'dataKey' => 'parkingBrake',
                 ]
             );
             ?>

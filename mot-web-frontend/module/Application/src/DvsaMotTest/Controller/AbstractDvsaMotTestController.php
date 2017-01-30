@@ -4,7 +4,6 @@ namespace DvsaMotTest\Controller;
 use Core\Controller\AbstractAuthActionController;
 use Dvsa\Mot\ApiClient\Service\MotTestService;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
-use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
