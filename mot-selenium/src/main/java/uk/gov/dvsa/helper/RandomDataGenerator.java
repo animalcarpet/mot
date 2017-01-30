@@ -76,16 +76,16 @@ public class RandomDataGenerator {
     }
 
     public static String generateEmail(int length, long seed) {
-        String emailDomain = "@example.com";
+        String emailDomain = "@simulator.amazonses.com";
         String temp = generateStringWithAllowedSpecialChars(length, "-_", seed);
 
-        return temp.substring(0, temp.length() - emailDomain.length()) + emailDomain;
+        return "success+" + temp.substring(0, temp.length() - emailDomain.length()) + emailDomain;
     }
 
-    public static String generateEmail(int length) {
-        String emailDomain = "@example.com";
+    public static String generateEmail() {
+        String emailDomain = "@simulator.amazonses.com";
 
-        return generateRandomString() + emailDomain;
+        return "success+" + generateRandomString() + emailDomain;
     }
 
     private static String generatePasswordPrefix(){
