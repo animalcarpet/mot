@@ -34,7 +34,7 @@ public class HelpDeskTests extends DslTest {
     public void successfullyUpdateAUsersEmailAddress() throws IOException {
         User csco = motApi.user.createCustomerServiceOfficer(false);
         User bob = motApi.user.createAedm(false);
-        String email = RandomDataGenerator.generateEmail(15);
+        String email = RandomDataGenerator.generateEmail();
 
         //Given that I am on Bob's profile page as a Customer Service Centre Operative
         motUI.helpDesk.viewUserProfile(csco, bob.getId());

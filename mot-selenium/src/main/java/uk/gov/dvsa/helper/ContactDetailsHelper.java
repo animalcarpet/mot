@@ -27,7 +27,7 @@ public class ContactDetailsHelper {
     }
 
     public static String getEmail() {
-        return  RandomDataGenerator.generateEmail(20, System.nanoTime());
+        return  RandomDataGenerator.generateEmail(35, System.nanoTime());
     }
 
     public static String generateUniqueName() {return RandomDataGenerator.generateRandomString(8, 9);}

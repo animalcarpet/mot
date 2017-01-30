@@ -86,7 +86,7 @@ public class ChangePersonEmailTests extends DslTest {
         motUI.profile.dvsaViewUserProfile(user, tester);
 
         // When I am changing a email for a person
-        String emailAddress = RandomDataGenerator.generateEmail(20, System.nanoTime());
+        String emailAddress = RandomDataGenerator.generateEmail(35, System.nanoTime());
         motUI.profile.changeUserEmailAsDvsaTo(emailAddress);
 
         // Then the success message should be displayed

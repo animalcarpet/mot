@@ -103,7 +103,7 @@ public class DVSAManagingUserRolesTests extends DslTest {
         pageNavigator.navigateToPage(areaOffice1User, UserSearchPage.PATH, UserSearchPage.class);
 
         //When I search for user by invalid email
-        motUI.searchUser.searchForUserByUserEmail(RandomDataGenerator.generateEmail(20, System.nanoTime()), true, UserSearchPage.class);
+        motUI.searchUser.searchForUserByUserEmail(RandomDataGenerator.generateEmail(35, System.nanoTime()), true, UserSearchPage.class);
 
         //Then I should see a Validation message
         assertThat(motUI.searchUser.isNoResultsMessageDisplayed(), is(true));
