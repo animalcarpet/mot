@@ -1,0 +1,67 @@
+<?php
+use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass1And2;
+use DvsaCommon\Enum\VehicleClassCode;
+use DvsaMotTest\Controller\DvsaVehicleViewModel;
+
+/** @var DvsaVehicleViewModel $vehicle */
+$vehicle;
+
+/** @var BrakeTestResultClass1And2 $brakeResult*/
+$brakeResult;
+
+$vehicleClass = $vehicle->getVehicleClass()->getCode();
+
+if (!in_array($vehicle->getVehicleClass()->getCode(), VehicleClassCode::getGroupAClasses())) {
+    throw new RuntimeException(sprintf('Vehicle class "%s" should not use this template', $vehicleClass));
+}
+
+if (!$brakeResult instanceof BrakeTestResultClass1And2) {
+    throw new RuntimeException(sprintf(
+        'This template expects brake result of type "%s", %s given',
+        BrakeTestResultClass1And2::class,
+        get_class($brakeResult)
+    ));
+}
+
+echo '<div class="row">';
+
+for ($brakeNr = 1; $brakeNr <= 2; $brakeNr++) {
+    $key = 'control' . $brakeNr;
+
+    $brakeEfficiencyValue = null;
+    $lockPercentValue = null;
+    $testPassValue = null;
+
+    if ($brakeNr === 1) {
+        $brakeEfficiencyValue = !is_null($brakeResult->getControl1BrakeEfficiency()) ? $brakeResult->getControl1BrakeEfficiency() : null;
+        $lockPercentValue = !is_null($brakeResult->getControl1LockPercent()) ? $brakeResult->getControl1LockPercent() : null;
+        $testPassValue = !is_null($brakeResult->getControl1EfficiencyPass()) ? $brakeResult->getControl1EfficiencyPass() : null;
+    } elseif ($brakeNr === 2) {
+        $brakeEfficiencyValue = !is_null($brakeResult->getControl2BrakeEfficiency()) ? $brakeResult->getControl2BrakeEfficiency() : null;
+        $lockPercentValue = !is_null($brakeResult->getControl2LockPercent()) ? $brakeResult->getControl2LockPercent() : null;
+        $testPassValue = !is_null($brakeResult->getControl2BrakeEfficiencyPass()) ? $brakeResult->getControl2BrakeEfficiencyPass() : null;
+    }
+
+    echo $this->partial(
+        'brakeTestResult',
+        [
+            'title' => 'Service brake control ' . $brakeNr,
+            'idPrefix' => 'control-' . $brakeNr,
+            'columnTitle' => 'Service brake item',
+            'rows' => [
+                [
+                    'name' => 'Brake efficiency',
+                    'value' => $brakeEfficiencyValue,
+                ],
+                [
+                    'name' => 'Brake lock',
+                    'value' => $lockPercentValue,
+                ],
+            ],
+            'testPass' => $testPassValue,
+            'resultText' => 'Service brake control ' . $brakeNr . ' test',
+        ]
+    );
+}
+
+echo '</div>';

@@ -9,7 +9,6 @@ use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use VehicleApi\Service\VehicleSearchService;
 use VehicleApi\Service\VehicleService;
-use Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
 
 /**
  * Class VehicleController.

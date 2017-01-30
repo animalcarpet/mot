@@ -1,0 +1,225 @@
+<?php
+use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove;
+use DvsaCommon\Enum\VehicleClassCode;
+use DvsaMotTest\Controller\DvsaVehicleViewModel;
+use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultServiceBrakeData;
+
+/** @var DvsaVehicleViewModel $vehicle */
+$vehicle;
+
+/** @var BrakeTestResultClass3AndAbove */
+$brakeResult;
+
+$vehicleClass = $vehicle->getVehicleClass()->getCode();
+
+if (!in_array($vehicleClass, VehicleClassCode::getGroupBClasses())) {
+    throw new RuntimeException(sprintf('Vehicle class "%s" should not use this template', $vehicleClass));
+}
+
+if (!$brakeResult instanceof BrakeTestResultClass3AndAbove) {
+    throw new RuntimeException(sprintf(
+        'This template expects brake result of type "%s", %s given',
+        BrakeTestResultClass3AndAbove::class,
+        get_class($brakeResult)
+    ));
+}
+
+$imbalanceData = [];
+
+$hasTwoServiceBrakes = (boolean)$brakeResult->getServiceBrake2Efficiency();
+
+$isSingleInFront = (boolean)$brakeResult->getSingleInFront();
+
+$serviceBrake1Data = is_null($brakeResult->getServiceBrake1Data()) ? null :
+    new BrakeTestResultServiceBrakeData($brakeResult->getServiceBrake1Data());
+
+$serviceBrake2Data = is_null($brakeResult->getServiceBrake2Data()) ? null :
+    new BrakeTestResultServiceBrakeData($brakeResult->getServiceBrake2Data());
+
+echo '<div class="row service-brake">';
+
+
+/***********************************************************
+ * calculate and render the first column-set "Service brake"
+ **********************************************************/
+for ($brakeNumber = 1; $brakeNumber <= 2; $brakeNumber++) {
+    $serviceBrakeEfficiency = null;
+    $lockPercentValue = null;
+    $testPassValue = null;
+    //  --  draw service brake result   --
+    $key = 'serviceBrake' . $brakeNumber;
+    if ($brakeNumber === 1) {
+        $serviceBrakeEfficiency = is_null($brakeResult->getServiceBrake1Efficiency()) ? null :
+            $brakeResult->getServiceBrake1Efficiency();
+
+        $lockPercentValue = is_null($serviceBrake1Data) ? null :
+            $serviceBrake1Data->getLockPercent();
+
+        $testPassValue = is_null($brakeResult->getServiceBrake1EfficiencyPass()) ? null :
+            $brakeResult->getServiceBrake1EfficiencyPass();
+
+    } elseif ($brakeResult->getServiceBrake2Data() != null) {
+        $serviceBrakeEfficiency = is_null($brakeResult->getServiceBrake2Efficiency()) ? null :
+            $brakeResult->getServiceBrake2Efficiency();
+
+        $lockPercentValue = is_null($serviceBrake2Data) ? null :
+            $serviceBrake2Data->getLockPercent();
+
+        $testPassValue = is_null($brakeResult->getServiceBrake2EfficiencyPass()) ? null :
+            $brakeResult->getServiceBrake2EfficiencyPass();
+    }
+
+    if ($serviceBrakeEfficiency !== null) {
+        $title = 'Service brake' . ($brakeNumber > 1 ? ' ' . $brakeNumber : '');
+
+        echo $this->partial(
+            'brakeTestResult',
+            [
+                'title' => $title,
+                'idPrefix' => strtolower(str_replace(' ', '-', $title)),
+                'columnTitle' => $title . ' item',
+                'rows' => [
+                    [
+                        'name' => 'Brake efficiency',
+                        'value' => $serviceBrakeEfficiency,
+                    ],
+                    [
+                        'name' => 'Brake lock',
+                        'value' => $lockPercentValue,
+                    ],
+                ],
+                'testPass' => $testPassValue,
+                'resultText' => 'Service brake test',
+            ]
+        );
+    }
+
+    /***********************************************************
+     * calculate the "Imbalance" data
+     **********************************************************/
+    for ($axleNumber = 1; $axleNumber <= 3; $axleNumber++) {
+        if ($axleNumber === 1) {
+            $effortNearsideAxle = is_null($serviceBrake1Data) || is_null($serviceBrake1Data->getEffortNearsideAxel1()) ?
+                null :
+                $serviceBrake1Data->getEffortNearsideAxel1();
+            $imbalanceAxle = is_null($serviceBrake1Data) || is_null($serviceBrake1Data->getImbalanceAxle1()) ?
+                null :
+                $serviceBrake1Data->getImbalanceAxle1();
+        } elseif ($axleNumber === 2) {
+            $effortNearsideAxle = is_null($serviceBrake1Data) || is_null($serviceBrake1Data->getEffortNearsideAxel2()) ?
+                null :
+                $serviceBrake1Data->getEffortNearsideAxel2();
+            $imbalanceAxle = is_null($serviceBrake1Data) || is_null($serviceBrake1Data->getImbalanceAxle2()) ?
+                null :
+                $serviceBrake1Data->getImbalanceAxle2();
+        } else {
+            $effortNearsideAxle = is_null($serviceBrake1Data) || is_null($serviceBrake1Data->getEffortNearsideAxel3()) ?
+                null :
+                $serviceBrake1Data->getEffortNearsideAxel3();
+            $imbalanceAxle = is_null($serviceBrake1Data) || is_null($serviceBrake1Data->getImbalanceAxle3()) ?
+                null :
+                $serviceBrake1Data->getImbalanceAxle3();
+        }
+
+        // @todo (ABN) : knwoing the old API used to respond with null value for $isSingleInFront as well,
+        //               we need make sure if this condition is still valid
+        $isOneWheelAxle = ($isSingleInFront === true && $axleNumber === 1) ||
+            (!$isSingleInFront === false && $axleNumber === 2);
+
+        if (!empty($effortNearsideAxle) && !$isOneWheelAxle) {
+
+            $brakeName = $hasTwoServiceBrakes ? 'Brake ' . $brakeNumber : '';
+
+            $imbalanceData[$axleNumber] = [
+                'name' => trim($brakeName) . ' Axle ' . $axleNumber,
+                'value' => $imbalanceAxle,
+            ];
+        }
+    }
+}
+
+
+//  --  imbalance:parking   --
+$showParkingBrakeImbalance = $brakeResult->getServiceBrakeIsSingleLine();
+
+$showAxleTwoParkingBrakeImbalance = $showParkingBrakeImbalance
+    && !empty($brakeResult->getParkingBrakeSecondaryImbalance());
+
+if ($showParkingBrakeImbalance) {
+    $imbalanceData [] = [
+        'name' => $showAxleTwoParkingBrakeImbalance ? 'Parking brake axle 1' : 'Parking brake',
+        'value' => $brakeResult->getParkingBrakeImbalancePass(),
+    ];
+}
+
+if ($showAxleTwoParkingBrakeImbalance) {
+    $imbalanceData [] = [
+        'name' => 'Parking brake axle 2',
+        'value' => $brakeResult->getParkingBrakeSecondaryImbalance(),
+    ];
+}
+
+//  --  imbalance:status   --
+$serviceBrake1ImbalancePass = null;
+$serviceBrake2ImbalancePass = null;
+if ($showAxleTwoParkingBrakeImbalance) {
+    $parkingBrakeImbalancePass = $brakeResult->getParkingBrakeImbalancePass();
+} else {
+    $parkingBrakeImbalancePass = null;
+}
+
+if ($serviceBrake1Data != null) {
+    $serviceBrake1ImbalancePass = $serviceBrake1Data->getImbalancePass();
+}
+if ($serviceBrake2Data != null) {
+    $serviceBrake2ImbalancePass = $serviceBrake2Data->getImbalancePass();
+}
+
+$isTestPass = (
+    $serviceBrake1ImbalancePass === null
+    && $serviceBrake2ImbalancePass === null
+    && $parkingBrakeImbalancePass === null
+) ? null
+    : (
+        (isset($serviceBrake1ImbalancePass) ? $serviceBrake1ImbalancePass : true)
+        && (isset($serviceBrake2ImbalancePass) ? $serviceBrake2ImbalancePass : true)
+        && (isset($parkingBrakeImbalancePass) ? $parkingBrakeImbalancePass : true)
+    );
+
+echo $this->partial(
+    'brakeTestResult', [
+        'title' => 'Imbalance',
+        'idPrefix' => 'brake-imbalance',
+        'columnTitle' => 'Brake imbalance',
+        'rows' => $imbalanceData,
+        'testPass' => $isTestPass,
+        'resultText' => 'Brake imbalance test'
+    ]
+);
+
+if ($hasTwoServiceBrakes) {
+    echo '</div>';
+    echo '<div class="row">';
+}
+
+
+echo $this->partial(
+    'brakeTestResult', [
+        'title' => 'Parking brake',
+        'idPrefix' => 'parking-brake',
+        'columnTitle' => 'Parking brake item',
+        'rows' => [
+            [
+                'name' => 'Brake efficiency',
+                'value' => $brakeResult->getParkingBrakeEfficiency(),
+            ],
+            [
+                'name' => 'Brake lock',
+                'value' => $brakeResult->getParkingBrakeLockPercent(),
+            ]
+        ],
+        'testPass' => $brakeResult->getParkingBrakeEfficiencyPass(),
+        'resultText' => 'Parking brake test',
+    ]
+);
+echo '</div>';

@@ -46,6 +46,25 @@ class VehicleClassCode
     }
 
     /**
+     * @return array of values of the type VehicleClassCode for group A classes
+     */
+    public static function getGroupAClasses()
+    {
+        return [
+            self::CLASS_1,
+            self::CLASS_2,
+        ];
+    }
+
+    /**
+     * @return array of values of the type VehicleClassCode for group B classes
+     */
+    public static function getGroupBClasses()
+    {
+        return self::getClass3AndAbove();
+    }
+
+    /**
      * @param mixed $key a candidate VehicleClassCode value
      *
      * @return true if $key is in the list of known values for the type

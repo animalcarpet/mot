@@ -6,7 +6,6 @@ use Dvsa\Mot\ApiClient\Resource\Collection;
 use Dvsa\Mot\ApiClient\Resource\Item\SearchVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Obfuscate\ParamObfuscator;
-use DvsaCommon\UrlBuilder\VehicleUrlBuilder;
 use DvsaCommon\UrlBuilder\VehicleUrlBuilderWeb;
 use Vehicle\Controller\VehicleController;
 use Zend\View\Model\ViewModel;
