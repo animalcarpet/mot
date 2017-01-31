@@ -1,6 +1,5 @@
 package uk.gov.dvsa.ui.pages.accountclaim;
 
-
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -11,7 +10,7 @@ import uk.gov.dvsa.ui.pages.Page;
 
 public class AccountClaimReviewPage extends Page {
 
-    private static final String PAGE_TITLE = "Review account details";
+    private static final String PAGE_TITLE = "Review your new account security";
 
     @FindBy(id = "btSubmitForm") private WebElement claimYourAccountButton;
 

@@ -20,16 +20,13 @@ class ClaimAccountControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $mockClaimAccountSrv = XMock::of(ClaimAccountService::class);
         $serviceManager->setService(ClaimAccountService::class, $mockClaimAccountSrv);
 
-        $serviceManager->setService('config', []);
-
         $plugins = $this->getMock(ControllerManager::class);
         $plugins->expects($this->any())
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));
 
         $serviceManager->setService('MotIdentityProvider', XMock::of(MotIdentityProviderInterface::class));
-
-        // Create the factory
+        
         $factory = new ClaimAccountControllerFactory();
         $factoryResult = $factory->createService($plugins);
 

@@ -10,7 +10,7 @@ import uk.gov.dvsa.ui.pages.login.LoginPage;
 
 public class TwoFaAccountClaimConfirmationPage extends Page {
 
-    private static final String PAGE_TITLE = "Your account has been claimed";
+    private static final String PAGE_TITLE = "You have reset your account security";
 
     @FindBy(id = "go-to-sign-in") private WebElement goToSignIn;
 
@@ -19,6 +19,8 @@ public class TwoFaAccountClaimConfirmationPage extends Page {
     @FindBy(className = "lead") private WebElement leadHeading;
 
     @FindBy(className = "text") private WebElement pageContentText;
+
+    @FindBy(id = "reset-confirmation-title") private WebElement resetAccountSecurityConfirmationTitle;
 
     public TwoFaAccountClaimConfirmationPage(MotAppDriver driver) {
         super(driver);
@@ -45,5 +47,9 @@ public class TwoFaAccountClaimConfirmationPage extends Page {
 
     public String getPageContentText() {
         return pageContentText.getText();
+    }
+
+    public Boolean isConfirmationPage() {
+        return PageInteractionHelper.isElementDisplayed(resetAccountSecurityConfirmationTitle);
     }
 }
