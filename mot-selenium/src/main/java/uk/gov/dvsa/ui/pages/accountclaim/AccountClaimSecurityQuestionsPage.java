@@ -12,7 +12,7 @@ import uk.gov.dvsa.ui.pages.Page;
 public class AccountClaimSecurityQuestionsPage extends Page {
 
     public static final String PATH = "/account/claim";
-    private static final String PAGE_TITLE = "Claim your account";
+    private static final String PAGE_TITLE = "Choose new security questions";
 
     @FindBy(id = "btSubmitForm") private WebElement submitFormButton;
     @FindBy(id = "question_a") private WebElement questionOneDropdown;

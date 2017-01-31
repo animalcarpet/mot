@@ -5,7 +5,6 @@ namespace Account\Factory\Controller;
 use Account\Controller\ClaimController;
 use Account\Service\ClaimAccountService;
 use Account\Validator\ClaimValidator;
-use DvsaCommon\Auth\MotIdentityProvider;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
@@ -25,8 +24,7 @@ class ClaimAccountControllerFactory implements FactoryInterface
         return new ClaimController(
             $serviceLocator->get(ClaimAccountService::class),
             new ClaimValidator(),
-            $serviceLocator->get('MotIdentityProvider'),
-            $serviceLocator->get('config')
+            $serviceLocator->get('MotIdentityProvider')
         );
     }
 }

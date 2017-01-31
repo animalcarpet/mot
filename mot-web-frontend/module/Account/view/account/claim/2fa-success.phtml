@@ -1,59 +1,20 @@
-<style>
+<header class="transaction-header">
+    <h1 id="reset-confirmation-title" class="transaction-header__title">You have reset your account security</h1>
+    <p class="transaction-header__next-step">Keep your new password and security questions hidden</p>
+</header>
 
-.banner--confirmation {
-    background: #28a197;
-    color: #FFFFFF;
-    text-align: center;
-    padding: 15px;
-    margin-top: 0;
-    margin-bottom: 30px;
-
-}
-
-.banner__heading {
-    font-weight: bold;
-    font-size: 24px;
-    margin-bottom: 0;
-}
-
-.banner__heading-large {
-    font-size: 36px;
-    font-weight: bold;
-    display: block;
-}
-
-
-</style>
-<div class="row">
-    <div class="col-lg-12">
-        <header class="module-content-header">
-            <h1>
-                <span class="content-header_title">Your account has been claimed</span>
-            </h1>
-        </header>
-    </div>
+<div class="text">
+    <h2 class="heading-medium">What happens next?</h2>
+    <p>Sign in with your user ID and new password.</p>
+    <p>You can reset your password and security questions at any time from your profile.</p>
 </div>
 
-<div class="row">
-    <div class="col-md-8">
-        <div class="text">
-            
-            <div class="banner--confirmation">
-
-                <span class="banner__heading-large" id="claim-account-pin">Your account has been claimed</span>
-            </div>
-
-            <h4>What happens next?</h4>
-            <p>Sign in using your user ID and new password.</p>
-            <p>You can reset your password in your profile.</p>
-        </div>
-
-    </div>
-</div>
-<div class="row">
-    <nav class="module-content-navigation col-sm-12">
-        <a href="<?php echo $this->url('logout'); ?>" class="button" id="go-to-sign-in">
-            Sign In
-        </a>
-    </nav>
-</div>
+<nav class="content-navigation">
+    <ul class="content-navigation__secondary">
+        <li>
+            <a href="<?php echo $this->url('logout'); ?>" id="go-to-sign-in">
+                Sign In
+            </a>
+        </li>
+    </ul>
+</nav>

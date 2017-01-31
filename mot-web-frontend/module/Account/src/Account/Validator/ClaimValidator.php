@@ -16,23 +16,18 @@ use Zend\Validator\Regex;
  */
 class ClaimValidator
 {
+    // Step 1 (Confirm password) validation messages for Reset Account Security process
+    const ERR_MSG_PASSWORD_EMPTY = 'enter a password';
+    const ERR_MSG_PASSWORD_SAME_AS_USERNAME = 'password must not match your username';
+    const ERR_MSG_PASSWORD_CONFIRM_EMPTY = 're-type your password';
+    const ERR_MSG_PASSWORD_CONFIRM_MATCH = 'the passwords you have entered don\'t match';
     const MIN_PASSWORD_LENGTH = 8;
     const MAX_PASSWORD_LENGTH = 32;
+
+    // Step 2 (Set security questions) validation messages for Reset Account Security process
+    const ERR_MSG_ANSWER_EMPTY = 'enter a memorable answer';
+    const ERR_MSG_ANSWER_MAX = 'must be less than %s characters long';
     const MAX_ANSWER = 70;
-
-    const ERR_MSG_PASSWORD_EMPTY = 'You must enter a password';
-    const ERR_MSG_PASSWORD_LENGTH_TOO_SHORT = 'Password must be %s, or more, characters long';
-    const ERR_MSG_PASSWORD_LENGTH_TOO_LONG = 'Password must be %s, or less, characters long';
-    const ERR_MSG_PASSWORD_FORMAT = 'Password must contain both upper and lower case letters and a digit at least';
-    const ERR_MSG_PASSWORD_CONFIRM = 'Provided passwords are not matching';
-    const ERR_MSG_PASSWORD_SAME_AS_USERNAME = 'Password must not match your username';
-
-    const ERR_MSG_PASSWORD_CONFIRM_EMPTY = 'You must confirm your password';
-    const ERR_MSG_PASSWORD_CONFIRM_MATCH = 'The passwords you have entered don\'t match';
-
-    const ERR_MSG_QUESTION = 'You must choose a question';
-    const ERR_MSG_ANSWER_EMPTY = 'You must enter a memorable answer';
-    const ERR_MSG_ANSWER_MAX = 'Memorable answer must be less than %s characters long';
 
     private $isValid;
 
@@ -48,9 +43,6 @@ class ClaimValidator
                 break;
             case ClaimController::STEP_2_NAME:
                 $validationResult = $this->validateSetSecurityQuestion($data, $forceToResetFlag);
-                break;
-            case ClaimController::STEP_3_NAME:
-                $validationResult = $this->validateGeneratePin($data, $forceToResetFlag);
                 break;
             default:
                 throw new \InvalidArgumentException(sprintf('Unknown step name "%s".', $stepName));
@@ -179,21 +171,6 @@ class ClaimValidator
         $filter = new InputFilter();
 
         foreach (['a', 'b'] as $letter) {
-            $filter->add(
-                [
-                    'name' => "question_$letter",
-                    'required' => true,
-                    'validators' => [
-                        [
-                            'name' => 'not_empty',
-                            'options' => [
-                                'message' => self::ERR_MSG_QUESTION
-                            ]
-                        ],
-                    ],
-                ]
-            );
-
             $filter->add(
                 [
                     'name' => "answer_$letter",

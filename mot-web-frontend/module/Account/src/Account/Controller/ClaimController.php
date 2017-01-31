@@ -5,8 +5,6 @@ namespace Account\Controller;
 use Account\Service\ClaimAccountService;
 use Account\Validator\ClaimValidator;
 use Core\Controller\AbstractAuthActionController;
-use Core\Service\MotFrontendIdentityProviderInterface;
-use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use DvsaCommon\UrlBuilder\AccountUrlBuilderWeb;
@@ -30,33 +28,46 @@ class ClaimController extends AbstractAuthActionController
 
     const PIN_ARRAY_KEY = 'pin';
 
-    /** @var ClaimAccountService  */
+    // Field names to display in Error Message Page Header for Reset Account Security process
+    const NEW_PASSWORD_ERROR_MESSAGE_FIELD_NAME = 'New password - ';
+    const RETYPE_YOUR_NEW_PASSWORD_ERROR_MESSAGE__FIELD_NAME = 'Re-type your new password - ';
+    const FIRST_MEMORABLE_ANSWER_ERROR_MESSAGE_FIELD_NAME = 'Your first memorable answer - ';
+    const SECOND_MEMORABLE_ANSWER_ERROR_MESSAGE_FIELD_NAME = 'Your second memorable answer - ';
+
+    // Fields for Reset Account Security process
+    const PASSWORD_FIELD = 'password';
+    const CONFIRM_PASSWORD_FIELD = 'confirm_password';
+    const FIRST_MEMORABLE_ANSWER_FIELD = 'answer_a';
+    const SECOND_MEMORABLE_ANSWER_FIELD = 'answer_b';
+
+    /** @var ClaimAccountService $claimAccountService */
     private $claimAccountService;
-    /** @var  ClaimValidator */
+
+    /** @var ClaimValidator $claimValidator */
     private $claimValidator;
-    /** @var MotIdentityProviderInterface  */
+
+    /** @var MotIdentityProviderInterface $motIdentityProvider */
     private $motIdentityProvider;
-    /** @var  array */
-    private $config;
 
     public function __construct(
         ClaimAccountService $claimAccountService,
         ClaimValidator $claimValidator,
-        MotIdentityProviderInterface $motIdentityProvider,
-        $config
+        MotIdentityProviderInterface $motIdentityProvider
     ) {
         $this->claimAccountService = $claimAccountService;
         $this->claimValidator = $claimValidator;
         $this->motIdentityProvider = $motIdentityProvider;
-        $this->config = $config;
     }
-
+    
     public function resetAction()
     {
         $this->claimAccountService->clearSession();
         $this->redirectToStep(self::STEP_1_NAME);
     }
 
+    /**
+     * @return ViewModel
+     */
     public function confirmPasswordAction()
     {
         /** @var \Zend\Http\Request $request */
@@ -81,9 +92,14 @@ class ClaimController extends AbstractAuthActionController
                 [array_map('nl2br', $this->flashMessenger()->getErrorMessages())]);
         }
 
+        $this->layout('layout/layout-govuk.phtml');
+
         return new ViewModel($stepData);
     }
 
+    /**
+     * @return Response|ViewModel
+     */
     public function setSecurityQuestionAction()
     {
         /** @var \Zend\Http\Request $request */
@@ -99,13 +115,18 @@ class ClaimController extends AbstractAuthActionController
         }
 
         $stepData = $this->getStepData(self::STEP_2_NAME);
+        $stepData['summaryMessages'] = $this->getSummaryMessages();
         $stepData['messages'] = $this->claimValidator->getMessages();
         $stepData['questions'] = $this->claimAccountService->getSecurityQuestions();
-        $stepData['helpdeskCfg'] = $this->config['helpdesk'];
+
+        $this->layout('layout/layout-govuk.phtml');
 
         return new ViewModel($stepData);
     }
 
+    /**
+     * @return Response|ViewModel
+     */
     public function reviewAction()
     {
         $messages = [];
@@ -118,7 +139,7 @@ class ClaimController extends AbstractAuthActionController
 
             $data = $this->claimAccountService->getSession()->getArrayCopy();
 
-            //  --  check step 1 (email & password) --
+            // Validate step 1 (Confirm Password)
             $isStepOneValid = $this->claimValidator->validateStep(
                 self::STEP_1_NAME,
                 $data[self::STEP_1_NAME],
@@ -126,7 +147,7 @@ class ClaimController extends AbstractAuthActionController
             );
             $messages += $this->claimValidator->getMessages();
 
-            //  --  check step 2 (security questions) --
+            // Validate step 2 (Security questions)
             $isStepTwoValid = $this->claimValidator->validateStep(
                 self::STEP_2_NAME,
                 $data[self::STEP_2_NAME],
@@ -134,17 +155,16 @@ class ClaimController extends AbstractAuthActionController
             );
             $messages += $this->claimValidator->getMessages();
 
-            //  --  send to api for store    --
             if ($isStepOneValid && $isStepTwoValid) {
                 try {
                     $this->claimAccountService->sendToApi($data);
                 } catch (GeneralRestException $e) {
-                    // Data coming from the API is a serialized array due to Frontend API client limitations.
+                    // Data coming from the API is a serialized array due to Frontend API client limitations
                     $apiMessage = unserialize($e->getMessage());
                     if (is_array($apiMessage)
                         && isset($apiMessage['displayMessage'])
                         && isset($apiMessage['step'])
-                        && ('confirmPassword' == $apiMessage['step'])) {
+                        && (self::STEP_1_NAME == $apiMessage['step'])) {
                         $this->flashMessenger()->addErrorMessage($apiMessage['displayMessage']);
                     }
 
@@ -161,9 +181,6 @@ class ClaimController extends AbstractAuthActionController
         $stepData = $this->getStepData(self::STEP_3_NAME) + $sessionAsArray;
         $stepData['messages'] = $messages;
         $stepData['fullReview'] = $sessionAsArray;
-        $stepData['isStepOneInvalid'] = isset($isStepOneValid) && !$isStepOneValid;
-        $stepData['isStepTwoInvalid'] = isset($isStepTwoValid) && !$isStepTwoValid;
-        $stepData['helpdeskCfg'] = $this->config['helpdesk'];
 
         $reviewViewModel = new ReviewViewModel();
         $reviewViewModel->setData($stepData);
@@ -171,19 +188,24 @@ class ClaimController extends AbstractAuthActionController
 
         $stepData['reviewViewModel'] = $reviewViewModel;
 
+        $this->layout('layout/layout-govuk.phtml');
+
         return new ViewModel($stepData);
     }
 
-
+    /**
+     * @return ViewModel
+     */
     public function successAction()
     {
         $sessionAsArray = $this->claimAccountService->sessionToArray() ?: [];
         $stepData = $this->getStepData(self::STEP_3_NAME) + $sessionAsArray;
 
-        $is2FA = $this->motIdentityProvider->getIdentity()->isSecondFactorRequired();
+        $this->layout('layout/layout-govuk.phtml');
 
         $vm = new ViewModel($stepData);
-        $vm->setTemplate($is2FA ? 'account/claim/2fa-success' : 'account/claim/pin-success');
+        $vm->setTemplate('account/claim/2fa-success');
+
         return $vm;
     }
 
@@ -206,6 +228,9 @@ class ClaimController extends AbstractAuthActionController
         return $stepData;
     }
 
+    /**
+     * @param $requestedStep
+     */
     private function checkIfPreviousStepsBeenTaken($requestedStep)
     {
         $steps = [
@@ -255,6 +280,7 @@ class ClaimController extends AbstractAuthActionController
     /**
      * A workaround for our inconsistent validation messages to keep the correct format in the main validator
      * Claim account will be deprecated or we need to improve at least its validation summary messages
+     *
      * @return array
      */
     private function getSummaryMessages()
@@ -266,8 +292,19 @@ class ClaimController extends AbstractAuthActionController
         foreach ($genericErrors as $fieldName => $messages) {
             $errorsSummary[$fieldName] = [];
             foreach ($messages as $validator => $message) {
-                if ('password' == $fieldName) {
-                    $message = 'Password ' . $message;
+                switch ($fieldName) {
+                    case self::PASSWORD_FIELD:
+                        $message = self::NEW_PASSWORD_ERROR_MESSAGE_FIELD_NAME . $message;
+                        break;
+                    case self::CONFIRM_PASSWORD_FIELD:
+                        $message = self::RETYPE_YOUR_NEW_PASSWORD_ERROR_MESSAGE__FIELD_NAME . $message;
+                        break;
+                    case self::FIRST_MEMORABLE_ANSWER_FIELD:
+                        $message = self::FIRST_MEMORABLE_ANSWER_ERROR_MESSAGE_FIELD_NAME . $message;
+                        break;
+                    case self::SECOND_MEMORABLE_ANSWER_FIELD:
+                        $message = self::SECOND_MEMORABLE_ANSWER_ERROR_MESSAGE_FIELD_NAME . $message;
+                        break;
                 }
                 $errorsSummary[$fieldName][$validator] = $message;
             }

@@ -28,15 +28,13 @@ use Zend\View\Model\ViewModel;
  */
 class ClaimControllerTest extends AbstractFrontendControllerTestCase
 {
-    /** @var  ClaimAccountService|MockObj */
+    /** @var ClaimAccountService|MockObj $mockClaimAccountSrv */
     private $mockClaimAccountSrv;
-    /** @var  ClaimValidator|MockObj */
+
+    /** @var ClaimValidator|MockObj $mockClaimValidator */
     private $mockClaimValidator;
-    /** @var  array */
-    private $config;
-    /**
-     * @var  Container
-     */
+
+    /** @var Container|MockObj $mockSession */
     private $mockSession;
 
     protected function setUp()
@@ -55,10 +53,6 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
             ->method('getMessages')
             ->willReturn([]);
 
-        $this->config = [
-            'helpdesk' => [],
-        ];
-
         $identityProvider = XMock::of(MotIdentityProviderInterface::class);
         $identity = new Identity();
         $identity->setSecondFactorRequired(false);
@@ -69,8 +63,7 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
             new ClaimController(
                 $this->mockClaimAccountSrv,
                 $this->mockClaimValidator,
-                $identityProvider,
-                $this->config
+                $identityProvider
             )
         );
 
@@ -92,6 +85,12 @@ class ClaimControllerTest extends AbstractFrontendControllerTestCase
 
     /**
      * @dataProvider dataProviderTestActionsResultAndAccess
+     *
+     * @param $method
+     * @param $action
+     * @param $params
+     * @param $mocks
+     * @param $expect
      */
     public function testActionsResultAndAccess($method, $action, $params, $mocks, $expect)
     {
