@@ -85,11 +85,13 @@ class MotTestInProgressServiceTest extends AbstractServiceTestCase
         $vehicle = new Vehicle();
         $vehicle->setRegistration('LAMP101');
         $vehicle->setModelDetail($modelDetail);
+        $vehicle->setVersion(1);
 
         $motTest = new MotTest();
         $motTest->setTester($tester);
         $motTest->setNumber(1001);
         $motTest->setVehicle($vehicle);
+        $motTest->setVehicleVersion(1);
 
         $this->mockMotTestRepo = $this->getMockWithDisabledConstructor(MotTestRepository::class);
         $this->mockMotTestRepo->expects($this->any())->method('findInProgressTestsForVts')->will(

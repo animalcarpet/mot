@@ -86,6 +86,32 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     }
 
     /**
+     * @param MotTest $motTest
+     * @return Model|null
+     */
+    public function getMakeDuringTest(MotTest $motTest)
+    {
+        $model = $this->getModelDuringTest($motTest);
+
+        if ($model instanceof Model) {
+            return $model->getMake();
+        }
+    }
+
+    /**
+     * @param MotTest $motTest
+     * @return string|null
+     */
+    public function getMakeNameDuringTest(MotTest $motTest)
+    {
+        $make = $this->getMakeDuringTest($motTest);
+
+        if ($make instanceof Make) {
+            return $make->getName();
+        }
+    }
+
+    /**
      * @return string
      */
     public function getModelName()
@@ -95,6 +121,28 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
         ) {
             return $this->getModelDetail()->getModel()->getName();
         }
+    }
+
+    /**
+     * @param MotTest $motTest
+     * @return string|null
+     */
+    public function getModelNameDuringTest(MotTest $motTest)
+    {
+        $model = $this->getModelDuringTest($motTest);
+
+        if ($model instanceof Model) {
+            return $model->getName();
+        }
+    }
+
+    /**
+     * @param MotTest $motTest
+     * @return Model|null
+     */
+    public function getModelDuringTest(MotTest $motTest)
+    {
+        return $this->getVehicleDetailAtVersion($motTest->getVehicleVersion())->getModelDetail()->getModel();
     }
 
     public function getCylinderCapacity()
@@ -177,6 +225,16 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
         }
 
         return $this->getModelDetail()->getFuelType();
+    }
+
+    /**
+     * @param MotTest $motTest
+     *
+     * @return string
+     */
+    public function getRegistrationDuringTest(MotTest $motTest)
+    {
+        return $this->getVehicleDetailAtVersion($motTest->getVehicleVersion())->getRegistration();
     }
 
     /**
