@@ -91,17 +91,22 @@ class ReplacementCertificateDraftCreator
         );
 
         $primaryColour = $this->getColourByCode($vehicle->getColour()->getCode());
-        $secondaryColour = $this->getColourByCode($vehicle->getColourSecondary()->getCode());
         $make = $this->fetchOneFromEntityBy(Make::class, ['id' => $vehicle->getMake()->getId()]);
         $model = $this->fetchOneFromEntityBy(Model::class, ['id' => $vehicle->getModel()->getId()]);
 
-        $this->assertInstanceOf(Entity::class, [$make, $model, $primaryColour, $secondaryColour]);
+        $fetchedEntities = [$make, $model, $primaryColour];
+
+        if (!is_null($vehicle->getColourSecondary()->getCode())) {
+            $secondaryColour = $this->getColourByCode($vehicle->getColourSecondary()->getCode());
+            $fetchedEntities[] = $secondaryColour;
+        }
+
+        $this->assertInstanceOf(Entity::class, $fetchedEntities);
 
         $draft = CertificateReplacementDraft::create()
             ->setMotTest($motTest)
             ->setMotTestVersion($motTest->getVersion())
             ->setPrimaryColour($primaryColour)
-            ->setSecondaryColour($secondaryColour)
             ->setExpiryDate($motTest->getExpiryDate())
             ->setVrm($vehicle->getRegistration())
             ->setEmptyVrmReason($vehicle->getEmptyVrmReason())
@@ -119,6 +124,10 @@ class ReplacementCertificateDraftCreator
             ->setOdometerValue($motTest->getOdometerValue())
             ->setOdometerUnit($motTest->getOdometerUnit())
             ->setOdometerResultType($motTest->getOdometerResultType());
+
+        if (isset($secondaryColour)) {
+            $draft->setSecondaryColour($secondaryColour);
+        }
 
         return $draft;
     }
