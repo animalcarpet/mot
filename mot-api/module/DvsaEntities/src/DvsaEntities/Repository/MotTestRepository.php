@@ -32,6 +32,7 @@ use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\Vehicle;
+use DvsaEntities\Entity\VehicleHistory;
 use DvsaMotApi\Helper\MysteryShopperHelper;
 
 /**
@@ -1476,7 +1477,8 @@ class MotTestRepository extends AbstractMutableRepository
 
         $qb
             ->leftJoin(Site::class, 'site', 'WITH', 'site.id = test.vehicleTestingStation')
-            ->innerJoin(Vehicle::class, 'vehicle', 'WITH', 'vehicle.id = test.vehicle')
+            ->leftJoin(Vehicle::class, 'vehicle', 'WITH', 'vehicle.id = test.vehicle')
+            ->leftJoin(VehicleHistory::class, 'vh', 'WITH', 'vh.vehicle = vehicle.id AND vh.version = test.vehicleVersion')
             ->innerJoin(ModelDetail::class, 'modelDetail', 'WITH', 'modelDetail.id = vehicle.modelDetail')
             ->leftJoin(Model::class, 'model', 'WITH', 'model.id = modelDetail.model')
             ->leftJoin(Make::class, 'make', 'WITH', 'make.id = model.make')
@@ -1505,7 +1507,7 @@ class MotTestRepository extends AbstractMutableRepository
         }
 
         if ($searchParam->getRegistration()) {
-            $qb->andwhere('vehicle.registration = :VRM')
+            $qb->andwhere('vehicle.registration = :VRM OR vh.registration = :VRM')
                 ->setParameter('VRM', $searchParam->getRegistration());
         }
 

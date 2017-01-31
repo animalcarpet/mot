@@ -575,7 +575,7 @@ class MotTest extends Entity
 
     /**
      * Proxy method
-     * @return \DvsaEntities\Entity\Make
+     * @return Make|null
      */
     public function getMake()
     {
@@ -583,12 +583,12 @@ class MotTest extends Entity
             return;
         }
 
-        return $this->getVehicle()->getMake();
+        return $this->getVehicle()->getMakeDuringTest($this);
     }
 
     /**
      * Proxy method
-     * @return Make|string
+     * @return string
      */
     public function getMakeName()
     {
@@ -596,12 +596,12 @@ class MotTest extends Entity
             return;
         }
 
-        return $this->getVehicle()->getMakeName();
+        return $this->getVehicle()->getMakeNameDuringTest($this);
     }
 
     /**
      * Proxy method
-     * @return Model
+     * @return Model|null
      */
     public function getModel()
     {
@@ -609,7 +609,7 @@ class MotTest extends Entity
             return;
         }
 
-        return $this->getVehicle()->getModel();
+        return $this->getVehicle()->getModelDuringTest($this);
     }
 
     /**
@@ -622,7 +622,7 @@ class MotTest extends Entity
             return;
         }
 
-        return $this->getVehicle()->getModelName();
+        return $this->getVehicle()->getModelNameDuringTest($this);
     }
 
     /**
@@ -635,7 +635,7 @@ class MotTest extends Entity
             return;
         }
 
-        return $this->getVehicle()->getRegistration();
+        return $this->getVehicle()->getRegistrationDuringTest($this);
     }
 
     /**
