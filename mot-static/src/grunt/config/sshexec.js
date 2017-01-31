@@ -133,13 +133,13 @@ module.exports = function (grunt, config) {
             reset_database: {
                 options: dev_ssh_options,
                 command: function () {
-                    return 'export dev_workspace="<%= vagrant_config.workspace %>"; cd <%= vagrant_config.workspace %>/mot-api/db && sudo ./reset_db_with_test_data.sh <%= mysql_config.user %> <%= mysql_config.password %> <%= mysql_config.host %> <%= mysql_config.grantuser %> N && echo "DB Reset"';
+                    return 'export dev_workspace="<%= vagrant_config.workspace %>"; cd <%= vagrant_config.workspace %>/mot-api/db && sudo ./reset_db_with_test_data.sh <%= mysql_config.user %> <%= mysql_config.password %> <%= mysql_config.host %> <%= mysql_config.grantuser %> synthetic && echo "DB Reset"';
                 }
             },
             reset_database_no_hist: {
                 options: dev_ssh_options,
                 command: function () {
-                    return 'export dev_workspace="<%= vagrant_config.workspace %>"; cd <%= vagrant_config.workspace %>/mot-api/db && sudo ./reset_db_with_test_data.sh <%= mysql_config.user %> <%= mysql_config.password %> <%= mysql_config.host %> <%= mysql_config.grantuser %> N N && echo "DB Reset without *_hist tables"';
+                    return 'export dev_workspace="<%= vagrant_config.workspace %>"; cd <%= vagrant_config.workspace %>/mot-api/db && sudo ./reset_db_with_test_data.sh <%= mysql_config.user %> <%= mysql_config.password %> <%= mysql_config.host %> <%= mysql_config.grantuser %> synthetic && echo "DB Reset without *_hist tables"';
                 }
             },
             dump_database: {
@@ -151,7 +151,7 @@ module.exports = function (grunt, config) {
             reset_database_full: {
                 options: dev_ssh_options,
                 command: function () {
-                    return 'export dev_workspace="<%= vagrant_config.workspace %>"; cd <%= vagrant_config.workspace %>/mot-api/db && sudo ./reset_db_with_test_data.sh <%= mysql_config.user %> <%= mysql_config.password %> <%= mysql_config.host %> <%= mysql_config.grantuser %> Y && echo "DB Full Reset"';
+                    return 'export dev_workspace="<%= vagrant_config.workspace %>"; cd <%= vagrant_config.workspace %>/mot-api/db && sudo ./reset_db_with_test_data.sh <%= mysql_config.user %> <%= mysql_config.password %> <%= mysql_config.host %> <%= mysql_config.grantuser %> synthetic && echo "DB Full Reset"';
                 }
             },
             mysql_proc_fix: {
