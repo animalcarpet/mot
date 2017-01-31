@@ -648,7 +648,7 @@ class MotTest extends Entity
             return;
         }
 
-        return $this->getVehicle()->getVin();
+        return $this->getVehicle()->getVinDuringTest($this);
     }
 
     /**
@@ -1492,7 +1492,7 @@ class MotTest extends Entity
             return;
         }
 
-        return $this->getVehicle()->getModelDetail();
+        return $this->getVehicle()->getModelDetailDuringTest($this);
     }
 
     /**

@@ -238,6 +238,26 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     }
 
     /**
+     * @param MotTest $motTest
+     *
+     * @return string
+     */
+    public function getVinDuringTest(MotTest $motTest)
+    {
+        return $this->getVehicleDetailAtVersion($motTest->getVehicleVersion())->getVin();
+    }
+
+    /**
+     * @param MotTest $motTest
+     *
+     * @return ModelDetail
+     */
+    public function getModelDetailDuringTest(MotTest $motTest)
+    {
+        return $this->getVehicleDetailAtVersion($motTest->getVehicleVersion())->getModelDetail();
+    }
+
+    /**
      * @return VehicleHistory[]
      */
     public function getVehicleHistory()
