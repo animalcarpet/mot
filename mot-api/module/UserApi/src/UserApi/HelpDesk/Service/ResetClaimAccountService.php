@@ -12,6 +12,7 @@ use DvsaCommon\Constants\EventDescription;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Dto\Mailer\MailerDto;
 use DvsaCommon\Enum\EventTypeCode;
+use DvsaCommon\Utility\ArrayUtils;
 use DvsaEntities\Entity\EventPersonMap;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Repository\PersonRepository;
@@ -36,6 +37,8 @@ class ResetClaimAccountService
     const CFG_HELPDESK = 'helpdesk';
 
     const CONFIG_KEY_MOT_WEB_FRONTEND_URL = 'mot-web-frontend-url';
+    const CONFIG_KEY_MAILER_SECTION = 'mailer';
+    const MTS_PROD_URL_DEFAULT = 'https://www.mot-testing.service.gov.uk/';
 
     /** @var  PersonRepository */
     private $personRepository;
@@ -197,13 +200,15 @@ class ResetClaimAccountService
             $this->config[self::CFG_HELPDESK],
             $this->mailerService,
             $mailerDto,
-            $emailAddress,
-            $person->getAuthenticationMethod()->isCard()
+            $emailAddress
         );
+
+        $motTestingServiceUrl = ArrayUtils::tryGet($this->config[self::CONFIG_KEY_MAILER_SECTION], self::CONFIG_KEY_MOT_WEB_FRONTEND_URL, self::MTS_PROD_URL_DEFAULT);
 
         return $passwordReminder->send(
             [
                 'newPassword' => $newPassword,
+                'motTestingServiceUrl' => $motTestingServiceUrl,
             ]
         );
     }
