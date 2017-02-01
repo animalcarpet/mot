@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ee8e5122f43dfe112305bc3f20acd169",
+    "content-hash": "e4c2ae9da509468b9a5ad0177ee35bb3",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -800,6 +800,12 @@
                 "url": "git@gitlab.motdev.org.uk:mot/featuretoggle.git",
                 "reference": "2ca85b84d5b20959a5f4fe899fd989f92602403f"
             },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.motdev.org.uk//dist/dvsa-feature-toggle-v1.1.1-fac088.tar",
+                "reference": "2ca85b84d5b20959a5f4fe899fd989f92602403f",
+                "shasum": "69299c57dad3466801f58cfd6027c480900f6b0c"
+            },
             "require": {
                 "php": ">=5.3.3",
                 "zendframework/zendframework": "~2.3"
@@ -994,17 +1000,17 @@
         },
         {
             "name": "mot/api-client-php",
-            "version": "13.3.1",
+            "version": "13.3.4",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/api-client-php.git",
-                "reference": "c54c620e834def7d5b8bdbce20cecf57649a9cca"
+                "reference": "220a07d29e8bb5dbe42f54205d960ee60f752899"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-13.3.1-95074a.tar",
-                "reference": "c54c620e834def7d5b8bdbce20cecf57649a9cca",
-                "shasum": "cd241ab27f766eae697af16ca27cd332198461b4"
+                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-13.3.4-9d1163.tar",
+                "reference": "220a07d29e8bb5dbe42f54205d960ee60f752899",
+                "shasum": "5f5444f73e0ef4885bc038a3e39e04bdcd5fdb61"
             },
             "require": {
                 "guzzlehttp/guzzle": "~6.1",
@@ -1051,7 +1057,7 @@
                     "./vendor/bin/phpunit --group integration"
                 ]
             },
-            "time": "2017-01-28T08:57:46+00:00"
+            "time": "2017-01-31T14:48:56+00:00"
         },
         {
             "name": "mtdowling/jmespath.php",
