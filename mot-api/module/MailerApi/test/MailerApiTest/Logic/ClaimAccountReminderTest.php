@@ -64,8 +64,7 @@ class ClaimAccountReminderTest extends PHPUnit_Framework_TestCase
             $this->config['helpdesk'],
             $this->mockMailerService,
             $this->mailDto,
-            $emailAddress,
-            false
+            $emailAddress
         );
 
         $this->assertTrue($logic->send());
@@ -98,8 +97,7 @@ class ClaimAccountReminderTest extends PHPUnit_Framework_TestCase
             $this->config['helpdesk'],
             $this->mockMailerService,
             $this->mailDto,
-            $emailAddress,
-            true
+            $emailAddress
         );
 
         $this->assertTrue($logic->send());

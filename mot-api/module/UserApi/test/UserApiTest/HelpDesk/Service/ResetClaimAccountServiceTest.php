@@ -100,9 +100,6 @@ class ResetClaimAccountServiceTest extends AbstractServiceTestCase
         $mockPerson->expects($this->any())
             ->method('getAuthenticationMethod')
             ->willReturn($mockAuthenticationMethod);
-        $mockAuthenticationMethod->expects($this->once())
-            ->method('isCard')
-            ->willReturn(false);
 
         $this->assertTrue($this->service->resetClaimAccount(self::PERSON_ID, self::PERSON_USERNAME));
     }

@@ -139,7 +139,6 @@ class Reminder
                 'password-reminder'         => __DIR__ . '/../../../view/email/password-reminder/message.phtml',
                 'password-reminder-subject' => __DIR__ . '/../../../view/email/password-reminder/subject.phtml',
                 'claim-account-reset'         => __DIR__ . '/../../../view/email/claim-account-reset/message.phtml',
-                '2fa-claim-account-reset'         => __DIR__ . '/../../../view/email/claim-account-reset/2faUserMessage.phtml',
                 'claim-account-reset-subject' => __DIR__ . '/../../../view/email/claim-account-reset/subject.phtml',
             ]
         );
