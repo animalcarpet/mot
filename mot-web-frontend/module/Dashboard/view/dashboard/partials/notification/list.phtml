@@ -49,7 +49,7 @@ $limit = 5;
         }
 
         ?>
-        <article class="module-notification <?php echo $this->escapeHtmlAttr($cssClass); ?>">
+        <article id="notifications" class="module-notification <?php echo $this->escapeHtmlAttr($cssClass); ?>">
             <header>
                 <p class="notification_subject">
                     <a href="<?php echo $escUrl; ?>" class="notification_link" title="<?php echo $this->escapeHtmlAttr($notification->getSubject()); ?>">

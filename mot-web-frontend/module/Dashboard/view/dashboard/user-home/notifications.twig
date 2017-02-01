@@ -1,0 +1,44 @@
+<section class="c-home-block" id="notification-list">
+
+    <header class="c-home-block__head">
+        <h2 class="c-home-block__title">
+            Notifications
+        </h2>
+    </header>
+
+    {% if notifications.notEmpty %}
+
+        <a class="c-mailbox-status" href="/notification/list" id="unread-notification-count">
+            <strong class="c-mailbox-status__count">{{ notifications.countUnread|e }}</strong>
+            <span class="c-mailbox-status__type">unread</span>
+        </a>
+
+        <ol id="notifications" class="u-space-b15 u-pad-t10">
+            {% for notification in notifications %}
+            <li class="c-notification {{ notification.cssClass|e }}">
+                <h3 class="c-notification__title">
+                    <a href="{{ notification.link.href }}" class="c-notification__link" title="{{ notification.link.text|e }}">
+                        {{ notification.link.text|e }}
+                    </a>
+                </h3>
+                <time pubdate class="c-notification__time">{{ notification.createdOn }}</time>
+            </li>
+            {% endfor %}
+        </ol>
+
+    {% else %}
+
+    <div class="c-mailbox-status" id="unread-notification-count">
+        <strong class="c-mailbox-status__count">0</strong>
+        <span class="c-mailbox-status__type">unread</span>
+    </div>
+
+    {% endif %}
+
+    <div class="u-space-b15 u-pad-t10">
+        <a href="{{ url('user-home/notification/list') }}">
+            View all notifications
+        </a>
+    </div>
+
+</section>

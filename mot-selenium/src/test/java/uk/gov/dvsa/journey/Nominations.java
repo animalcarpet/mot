@@ -17,7 +17,7 @@ public class Nominations {
 
     public Notification viewMostRecent(User user) throws IOException {
         HomePage homePage = pageNavigator.gotoHomePage(user);
-        Notification notification = homePage.clickOnNomination();
+        Notification notification = homePage.clickOnNomination(); // notification is the home page because it can't find the link
 
         if(notification.getNotificationText().contains("Authorised Examiner Delegate")) {
             return new OrgNotificationPage(pageNavigator.getDriver());

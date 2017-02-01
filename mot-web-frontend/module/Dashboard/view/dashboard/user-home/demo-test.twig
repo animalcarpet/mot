@@ -1,0 +1,15 @@
+{% if demoTest.isVisible %}
+<div class="c-home-block">
+    <header class="c-home-block__head">
+        <h2 class="c-home-block__title">Training</h2>
+    </header>
+
+    <p>Practice on any class of vehicle without using slots or recording the outcome.</p>
+
+    <p>
+        <a href="{{ demoTest.link.href }}" class="button" id="{{ demoTest.linkId }}">
+            {{ demoTest.link.text }}
+        </a>
+    </p>
+</div>
+{% endif %}

@@ -62,7 +62,7 @@ $mastheadPresenter = new MastheadPresenter;
                 src="<?php echo $this->basePath('img/logo_mot2.gif'); ?>" alt="MOT"></a>
 
         <?php if ($this->authorisationHelper()->hasRole(Role::USER)): ?>
-            <p class="global-header_name">
+            <p id="header-user-name" class="global-header_name">
                 <?php echo $this->escapeHtml($this->identityHelper()->getDisplayName()); ?>
             </p>
         <?php endif; ?>

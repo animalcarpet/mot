@@ -4,7 +4,7 @@ use DvsaCommon\Constants\Role;
 
 ?>
 <?php if ($this->authorisationHelper()->hasRole(Role::USER)): ?>
-    <span class="header-user__name">
+    <span id="header-user-name" class="header-user__name">
     <?php echo $this->escapeHtml($this->identityHelper()->getDisplayName()); ?>
     </span>
 <?php endif; ?>
