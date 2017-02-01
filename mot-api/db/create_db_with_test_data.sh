@@ -72,7 +72,7 @@ run_each_release_db_update_script() {
             fi
 
             echo "$(date) Loading schema or data update $UPDATE"
-            mysql -u $MyUSER -p$MyPASS -h $MyHOST -D mot2 -f < $UPDATE
+            mysql -u $MyUSER -p$MyPASS -h $MyHOST -D mot2 < $UPDATE
         done
     done
 }
