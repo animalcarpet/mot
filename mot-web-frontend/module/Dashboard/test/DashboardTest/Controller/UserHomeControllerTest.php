@@ -19,7 +19,6 @@ use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use Dvsa\OpenAM\OpenAMClient;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
-use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\RoleCode;
@@ -40,38 +39,42 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
 {
     const USER_ID = 9999;
 
-    private static $CONFIG
-        = [
-            'dvsa_authentication' => [
-                'openAM' => [
-                    'realm' => [],
-                ],
+    private static $CONFIG = [
+        'dvsa_authentication' => [
+            'openAM' => [
+                'realm' => [],
             ],
-        ];
+        ],
+    ];
 
-    /**  @var ApiPersonalDetails|MockObj */
+    /** @var ApiPersonalDetails|MockObj $mockPersonalDetailsSrv */
     private $mockPersonalDetailsSrv;
-    /**  @var |MockObj */
+
+    /** @var HttpRestJsonClient|MockObj $mockRestClient */
     private $mockRestClient;
-    /**  @var OpenAMClient|MockObj */
+
+    /** @var OpenAMClient|MockObj $mockOpenAMClient */
     private $mockOpenAMClient;
-    /** @var  ApiDashboardResource|MockObj */
+
+    /** @var ApiDashboardResource|MockObj $mockDashboardSrv */
     private $mockDashboardSrv;
-    /** @var  LoggedInUserManager|MockObj */
+
+    /** @var LoggedInUserManager|MockObj $loggedInUserManagerMock */
     private $loggedInUserManagerMock;
-    /** @var  PersonStore|MockObj */
+
+    /** @var PersonStore|MockObj $mockPersonStoreSrv */
     private $mockPersonStoreSrv;
-    /** @var  CatalogService|MockObj */
+
+    /** @var CatalogService|MockObj $mockCatalogSrv */
     private $mockCatalogSrv;
-    /** @var  SecurityQuestionService|MockObj */
-    private $mockSecurityQuestionSrv;
-    /** @var  UserAdminSessionManager|MockObj */
+
+    /** @var UserAdminSessionManager|MockObj $mockUserAdminSessionSrv */
     private $mockUserAdminSessionSrv;
 
-    /** @var AuthorisationServiceMock */
+    /** @var AuthorisationServiceMock $authorisationService*/
     private $authorisationService;
 
-    /** @var FrontendIdentityProviderStub */
+    /** @var FrontendIdentityProviderStub $identityProvider */
     private $identityProvider;
 
     public function setUp()
@@ -81,9 +84,8 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
 
         $this->setServiceManager($sm);
 
-        //  --  mocks   --
         $this->mockDashboardSrv = XMock::of(ApiDashboardResource::class, ['get']);
-        $this->mockMethod($this->mockDashboardSrv, 'get', null, $this->getDashboarhData());
+        $this->mockMethod($this->mockDashboardSrv, 'get', null, $this->getDashboardData());
 
         $this->mockPersonalDetailsSrv = XMock::of(ApiPersonalDetails::class);
 
@@ -95,7 +97,6 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
         $this->mockCatalogSrv = XMock::of(CatalogService::class);
         $this->mockMethod($this->mockCatalogSrv, 'getCountriesOfRegistrationByCode', null, ['uk' => 'ukLong']);
 
-        $this->mockSecurityQuestionSrv = XMock::of(SecurityQuestionService::class);
         $this->mockUserAdminSessionSrv = XMock::of(UserAdminSessionManager::class);
 
         $catalogMockOrgData = $this->buildBusinessRolesData();
@@ -115,7 +116,6 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
         $this->identityProvider->setIdentity(new Identity());
         $this->identityProvider->getIdentity()->setUserId(self::USER_ID);
 
-        //  --  create controller instance --
         $this->setController(
             new UserHomeController(
                 $this->loggedInUserManagerMock,
@@ -124,7 +124,6 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
                 $this->mockDashboardSrv,
                 $this->mockCatalogSrv,
                 XMock::of(WebAcknowledgeSpecialNoticeAssertion::class),
-                $this->mockSecurityQuestionSrv,
                 $this->mockUserAdminSessionSrv,
                 XMock::of(TesterGroupAuthorisationMapper::class),
                 $this->authorisationService,
@@ -134,7 +133,6 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
             )
         );
 
-        //  --
         parent::setUp();
 
         $this->mockRestClient = XMock::of(HttpRestJsonClient::class, ['put']);
@@ -220,11 +218,11 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
     }
 
     /**
-     * @param $hasPermissionToViewOtherProfiles
-     * @param $profileSubjectIsDvsa
-     * @param $profileSubjectHasTradeRoles
-     * @param $isViewingOwnProfile
-     * @param $shouldSeeLink
+     * @param bool $hasPermissionToViewOtherProfiles
+     * @param bool $profileSubjectIsDvsa
+     * @param bool $profileSubjectHasTradeRoles
+     * @param bool $isViewingOwnProfile
+     * @param bool $shouldSeeLink
      *
      * @dataProvider dataProviderTestSidebarIsShown
      */
@@ -241,6 +239,11 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
         }
     }
 
+    /**
+     * @param bool $hasPermissionToViewOtherProfiles
+     * @param bool $profileSubjectIsDvsa
+     * @param bool $profileSubjectHasTradeRoles
+     */
     private function setUpTestSidebarIsShown($hasPermissionToViewOtherProfiles, $profileSubjectIsDvsa, $profileSubjectHasTradeRoles)
     {
         $personalDetailsData = $this->getPersonalDetailsData();
@@ -322,7 +325,7 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
             }
         }
 
-        //  --  set expected exception  --
+        // Set expected exception
         if (!empty($expect['exception'])) {
             $exception = $expect['exception'];
             $this->setExpectedException(
@@ -334,7 +337,6 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
             $method, $action, ArrayUtils::tryGet($params, 'route'), null, ArrayUtils::tryGet($params, 'post')
         );
 
-        //  --  check   --
         if (!empty($expect['viewModel'])) {
             $this->assertInstanceOf(ViewModel::class, $result);
             $this->assertResponseStatus(self::HTTP_OK_CODE);
@@ -366,7 +368,8 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
     }
 
     /**
-     * Mock for Catalog System Roles Data - if you change this please change $this->setMockRoles
+     * Mock for Catalog System Roles Data - if you change this please change $this->setMockRoles.
+     *
      * @return array
      */
     private function buildPersonSystemCatalog()
@@ -391,7 +394,8 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
     }
 
     /**
-     * Mock for Catalog Business Roles Data - if you change this please change $this->setMockRoles
+     * Mock for Catalog Business Roles Data - if you change this please change $this->setMockRoles.
+     *
      * @return array
      */
     private function buildBusinessRolesData()
@@ -417,64 +421,10 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
 
     public function dataProviderTestActionsResultAndAccess()
     {
-        $exceptionMessage = 'Some exception happens in service';
-
         $newPin = 'unit_newPin';
 
         return [
-            //  --  edit: success update    --
-//            [
-//                'method' => 'post',
-//                'action' => 'edit',
-//                'params' => [
-//                    'post' => [
-//                        'fieldX'       => 'unitA1',
-//                    ],
-//                ],
-//                'mocks'  => [
-//                    [
-//                        'class'  => 'mockPersonStoreSrv',
-//                        'method' => 'update',
-//                        'params' => [
-//                            self::USER_ID,
-//                            ['fieldX' => 'unitA1']
-//                        ],
-//                        'result' => true,
-//                    ],
-//
-//                ],
-//                'expect' => [
-//                    'url' => PersonUrlBuilderWeb::profile(),
-//                ],
-//            ],
-//            //  --  edit: api thrown exception  --
-//            [
-//                'method' => 'post',
-//                'action' => 'edit',
-//                'params' => [
-//                    'post' => [
-//                        'phoneNumber'  => '00123',
-//                    ],
-//                ],
-//                'mocks'  => [
-//                    [
-//                        'class'  => 'mockPersonStoreSrv',
-//                        'method' => 'update',
-//                        'params' => [
-//                            self::USER_ID,
-//                            ['phoneNumber' => '00123']
-//                        ],
-//                        'result' => new ValidationException(
-//                            '/', 'post', [], 999, [['displayMessage' => $exceptionMessage]]
-//                        ),
-//                    ],
-//                ],
-//                'expect' => [
-//                    'flashError' => $exceptionMessage,
-//                ],
-//            ],
-
-            //  --  securitySettings: success  --
+            // SecuritySettings: success
             [
                 'method' => 'post',
                 'action' => 'securitySettings',
@@ -507,7 +457,7 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
                     ],
                 ],
             ],
-            //  --  securitySettings: fail GeneralRestException --
+            // SecuritySettings: fail (GeneralRestException)
             [
                 'method' => 'post',
                 'action' => 'securitySettings',
@@ -539,7 +489,7 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
                     ],
                 ],
             ],
-            //  --  securitySettings: fail --
+            // SecuritySettings: fail
             [
                 'method' => 'post',
                 'action' => 'securitySettings',
@@ -622,7 +572,10 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
         ];
     }
 
-    private function getDashboarhData()
+    /**
+     * @return array
+     */
+    private function getDashboardData()
     {
         return [
             'hero'                   => null,
@@ -674,13 +627,11 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
             $this->assertArrayHasKey($key, $actual);
         }
 
-        //Test will fail if any more keys are added to the returned value
+        // Test will fail if any more keys are added to the returned value
         $count = count($actual);
         $this->assertEquals(count($arrayKeys), $count);
 
         $this->assertEquals(new PersonalDetails($this->getPersonalDetailsData()), $actual['personalDetails']);
-        //Removed assert due to lack of mocks.
-        //$this->assertEquals(true, $actual['isAllowEdit']);
         $this->assertEquals($authResult, $actual['motAuthorisations']);
         $this->assertEquals(true, $actual['isViewingOwnProfile']);
         $this->assertEquals(['uk' => 'ukLong'], $actual['countries']);

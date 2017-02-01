@@ -16,7 +16,7 @@ public class HomePage extends Page {
     public static final String PATH = "/";
     private static final String PAGE_TITLE = "Your home";
 
-    @FindBy(className = "global-header_name") private WebElement userNameHeader;
+    @FindBy(id = "header-user-name") private WebElement userNameHeader;
     @FindBy(className = "hero-actions") private WebElement heroSideBar;
     @FindBy(css = ".pivot-panel_title a[href*=authorised]") private WebElement aeTitle;
     @FindBy(css = ".pivot-panel_header p") private WebElement aeNumber;
@@ -27,7 +27,7 @@ public class HomePage extends Page {
     @FindBy(id = "user-profile") private WebElement profileLink;
     @FindBy(id = "mot-test-certificates-list") private WebElement motCertificateList;
     @FindBy(id = "action-start-certificate-reissue") private WebElement StartCertificateReissue;
-    @FindBy(className = "notification_link") private WebElement notificationMessage;
+    @FindBy(css = "#notifications a") private WebElement notificationMessage;
     @FindBy(id = "action-start-user-search") private WebElement userSearchLink;
     @FindBy(id = "action-start-survey-reports") private WebElement generateSurveyReportsLink;
     @FindBy(id = "action-security-card-order-report-list") private WebElement securityCardOrderListLink;
@@ -38,7 +38,7 @@ public class HomePage extends Page {
     @FindBy(id = "action-start-non-mot") private WebElement startNonMotTestButton;
     @FindBy(linkText = "vehicle information") private WebElement vehicleInformationLink;
 
-    private static final By ROLE_NOMINATION_LIST = By.cssSelector(".notification_subject > a");
+    private static final By ROLE_NOMINATION_LIST = By.cssSelector("#notifications a");
 
     private List<WebElement> getTesterNominationElements() {
         return driver.findElements(ROLE_NOMINATION_LIST);

@@ -49,6 +49,16 @@ return [
                             ],
                         ],
                     ],
+                    'refactor'           => [
+                        'type'    => 'segment',
+                        'options' => [
+                            'route'    => 'refactor',
+                            'defaults' => [
+                                'controller' => UserHomeControllerFactory::class,
+                                'action'     => 'userHomeRefactor',
+                            ],
+                        ],
+                    ],
                     'my-applications' => [
                         'type'    => 'segment',
                         'options' => [

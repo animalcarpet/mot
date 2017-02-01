@@ -1,0 +1,24 @@
+{% do placeholder('hero').captureStart() %}
+<section class="c-home-hero">
+    <div class="o-wrapper u-clearfix">
+        <div class="c-home-hero__content">
+            <h1 class="c-home-hero__title">
+                Your home
+            </h1>
+        </div>
+    </div>
+
+    {% include '/dashboard/user-home/hero-action.twig' with {'heroAction': dashboard.heroActionViewModel} %}
+
+</section>
+{% do placeholder('hero').captureEnd() %}
+
+<div class="grid-row">
+    <div class="column-half">
+        {% include '/dashboard/user-home/notifications.twig' with {'notifications': dashboard.notificationsViewModel} %}
+    </div>
+
+    <div class="column-half">
+        {% include '/dashboard/user-home/demo-test.twig' with {'demoTest': dashboard.demoTestViewModel} %}
+    </div>
+</div>

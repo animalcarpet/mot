@@ -3,7 +3,6 @@
 namespace Dashboard\Factory\Controller;
 
 use Application\Data\ApiPersonalDetails;
-use Account\Service\SecurityQuestionService;
 use Dashboard\Authorisation\ViewTradeRolesAssertion;
 use Dashboard\Controller\UserHomeController;
 use Dashboard\Data\ApiDashboardResource;
@@ -30,7 +29,6 @@ class UserHomeControllerFactory implements FactoryInterface
             $serviceLocator->get(ApiDashboardResource::class),
             $serviceLocator->get('CatalogService'),
             $serviceLocator->get(WebAcknowledgeSpecialNoticeAssertion::class),
-            $serviceLocator->get(SecurityQuestionService::class),
             $serviceLocator->get(UserAdminSessionManager::class),
             $serviceLocator->get(TesterGroupAuthorisationMapper::class),
             $serviceLocator->get('AuthorisationService'),

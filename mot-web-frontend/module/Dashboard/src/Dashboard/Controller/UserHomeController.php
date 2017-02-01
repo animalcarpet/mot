@@ -1,4 +1,5 @@
 <?php
+
 namespace Dashboard\Controller;
 
 use Account\Service\SecurityQuestionService;
@@ -8,13 +9,16 @@ use Application\Service\CatalogService;
 use Application\Service\LoggedInUserManager;
 use Core\Authorisation\Assertion\WebAcknowledgeSpecialNoticeAssertion;
 use Core\Controller\AbstractAuthActionController;
+use Dashboard\Authorisation\ViewNewHomepageAssertion;
 use Dashboard\Authorisation\ViewTradeRolesAssertion;
 use Dashboard\Data\ApiDashboardResource;
+use Dashboard\Factory\Controller\UserHomeControllerFactory;
 use Dashboard\Model\Dashboard;
-use DvsaMotTest\Service\OverdueSpecialNoticeAssertion;
 use Dashboard\Model\PersonalDetails;
 use Dashboard\PersonStore;
+use Dashboard\Security\DashboardGuard;
 use Dashboard\Service\TradeRolesAssociationsService;
+use Dashboard\ViewModel\DashboardViewModelBuilder;
 use Dashboard\ViewModel\Sidebar\ProfileSidebar;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
@@ -27,45 +31,53 @@ use DvsaCommon\Model\DvsaRole;
 use DvsaCommon\Model\TradeRole;
 use DvsaCommon\UrlBuilder\PersonUrlBuilder;
 use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
+use DvsaMotTest\Service\OverdueSpecialNoticeAssertion;
 use UserAdmin\Service\UserAdminSessionManager;
+use Zend\View\Model\ViewModel;
 
 /**
- * Controller for dashboard
+ * Controller for dashboard.
  */
 class UserHomeController extends AbstractAuthActionController
 {
     const ROUTE = 'user-home';
     const ROUTE_PROFILE = 'user-home/profile/byId';
-
-    const PAGE_TITLE    = 'Reset PIN';
+    const PAGE_TITLE = 'Reset PIN';
     const PAGE_SUBTITLE = 'MOT Testing Service';
-
     const ERR_PIN_UPDATE_FAIL = 'There was a problem updating your PIN.';
     const ERR_COMMON_API = 'Something went wrong.';
 
-    /** @var  LoggedInUserManager */
+    /** @var LoggedInUserManager $loggedIdUserManager */
     private $loggedIdUserManager;
-    /** @var  ApiPersonalDetails */
+
+    /** @var ApiPersonalDetails $personalDetailsService */
     private $personalDetailsService;
-    /** @var  PersonStore */
+
+    /** @var PersonStore $personStoreService */
     private $personStoreService;
-    /** @var  ApiDashboardResource */
+
+    /** @var ApiDashboardResource $dashboardResourceService */
     private $dashboardResourceService;
-    /** @var CatalogService  */
+
+    /** @var CatalogService $catalogService */
     private $catalogService;
-    /** @var WebAcknowledgeSpecialNoticeAssertion  */
+
+    /** @var WebAcknowledgeSpecialNoticeAssertion $acknowledgeSpecialNoticeAssertion */
     private $acknowledgeSpecialNoticeAssertion;
-    /** @var SecurityQuestionService */
-    private $service;
-    /** @var UserAdminSessionManager */
+
+    /** @var UserAdminSessionManager $userAdminSessionManager */
     private $userAdminSessionManager;
-    /** @var TesterGroupAuthorisationMapper */
+
+    /** @var TesterGroupAuthorisationMapper $testerGroupAuthorisationMapper */
     private $testerGroupAuthorisationMapper;
-    /** @var MotAuthorisationServiceInterface */
+
+    /** @var MotAuthorisationServiceInterface $authorisationService */
     private $authorisationService;
 
+    /** @var viewTradeRolesAssertion $viewTradeRolesAssertion */
     private $viewTradeRolesAssertion;
-    /** @var TradeRolesAssociationsService */
+
+    /** @var TradeRolesAssociationsService $tradeRolesAssociationsService */
     protected $tradeRolesAssociationsService;
 
     public function __construct(
@@ -75,7 +87,6 @@ class UserHomeController extends AbstractAuthActionController
         ApiDashboardResource $dashboardResourceService,
         CatalogService $catalogService,
         WebAcknowledgeSpecialNoticeAssertion $acknowledgeSpecialNoticeAssertion,
-        SecurityQuestionService $securityQuestionService,
         UserAdminSessionManager $userAdminSessionManager,
         TesterGroupAuthorisationMapper $testerGroupAuthorisationMapper,
         MotAuthorisationServiceInterface $authorisationService,
@@ -89,7 +100,6 @@ class UserHomeController extends AbstractAuthActionController
         $this->dashboardResourceService = $dashboardResourceService;
         $this->catalogService = $catalogService;
         $this->acknowledgeSpecialNoticeAssertion = $acknowledgeSpecialNoticeAssertion;
-        $this->service = $securityQuestionService;
         $this->userAdminSessionManager = $userAdminSessionManager;
         $this->testerGroupAuthorisationMapper = $testerGroupAuthorisationMapper;
         $this->authorisationService = $authorisationService;
@@ -97,12 +107,18 @@ class UserHomeController extends AbstractAuthActionController
         $this->tradeRolesAssociationsService = $tradeRolesAssociationsService;
     }
 
+    /**
+     * @return array|ViewModel
+     */
     public function userHomeAction()
     {
+        if ($this->shouldShowNewHomepage()) {
+            return $this->redirectToNewHomepage();
+        }
+
         $identity = $this->getIdentity();
         $personId = $identity->getUserId();
 
-        // TODO this should be moved to loginAction
         $this->loggedIdUserManager->discoverCurrentLocation($identity->getCurrentVts());
 
         $dashboard = $this->getDashboardDetails($personId);
@@ -112,15 +128,15 @@ class UserHomeController extends AbstractAuthActionController
             [
                 'canRead' => $authenticatedData['canRead'],
                 'canAcknowledge' => $authenticatedData['canAcknowledge'],
-                'canRecieveSpecialNotice'  => $authenticatedData['canRecieveSpecialNotice'],
+                'canRecieveSpecialNotice' => $authenticatedData['canRecieveSpecialNotice'],
             ]
         );
-        
+
         $canPerformTest = true;
         if ($this->getAuthorizationService()->isTester()) {
             $loggedInUserManager = $this->getServiceLocator()->get('LoggedInUserManager');
             $tester = $loggedInUserManager->getTesterData();
-            $authorisationsForTestingMot = (!is_null($tester["authorisationsForTestingMot"]))? $tester["authorisationsForTestingMot"]: [];
+            $authorisationsForTestingMot = (!is_null($tester['authorisationsForTestingMot'])) ? $tester['authorisationsForTestingMot'] : [];
 
             $overdueSpecialNoticeAssertion = new OverdueSpecialNoticeAssertion($dashboard->getOverdueSpecialNotices(), $authorisationsForTestingMot);
             $canPerformTest = $overdueSpecialNoticeAssertion->canPerformTest();
@@ -138,13 +154,44 @@ class UserHomeController extends AbstractAuthActionController
             [
                 'specialNotice' => $specialNotice,
                 'canPerformTest' => $canPerformTest,
-                'canPerformNonMotTest' => $canPerformNonMotTest
+                'canPerformNonMotTest' => $canPerformNonMotTest,
             ]
         );
 
         return $return;
     }
 
+    /**
+     * @return ViewModel
+     */
+    public function userHomeRefactorAction()
+    {
+        $identity = $this->getIdentity();
+        $personId = $identity->getUserId();
+
+        $this->loggedIdUserManager->discoverCurrentLocation($identity->getCurrentVts());
+
+        $authenticatedData = $this->getAuthenticatedData();
+
+        $dashboardViewModelBuilder = new DashboardViewModelBuilder(
+            $this->getDashboardDetails($personId),
+            new DashboardGuard($this->authorisationService),
+            $authenticatedData['personalDetails'],
+            $this->url()
+        );
+
+        $vm = new ViewModel();
+        $vm->dashboard = $dashboardViewModelBuilder->build();
+        $vm->setTemplate('/dashboard/user-home/user-home-refactor.twig');
+
+        $this->layout('layout/layout-govuk.phtml');
+
+        return $vm;
+    }
+
+    /**
+     * @return array
+     */
     public function profileAction()
     {
         $this->userAdminSessionManager->deleteUserAdminSession();
@@ -167,6 +214,9 @@ class UserHomeController extends AbstractAuthActionController
         return $data;
     }
 
+    /**
+     * @return array
+     */
     public function securitySettingsAction()
     {
         $userId = $this->getIdentity()->getUserId();
@@ -182,19 +232,16 @@ class UserHomeController extends AbstractAuthActionController
 
         $returnData = [
             'fullName' => $personalDetails->getFullName(),
-            'config'   => $this->getConfig(),
-            'userId'   => $userId,
+            'config' => $this->getConfig(),
+            'userId' => $userId,
         ];
 
         if ($this->getRequest()->isPost()) {
-
             try {
-
                 $apiUrl = PersonUrlBuilder::resetPin($userId);
                 $responseData = $this->getRestClient()->put($apiUrl, null);
 
                 $returnData['pin'] = $responseData['data']['pin'];
-
             } catch (\Exception $e) {
                 if ($e instanceof GeneralRestException) {
                     $errMsg = self::ERR_PIN_UPDATE_FAIL;
@@ -203,7 +250,6 @@ class UserHomeController extends AbstractAuthActionController
                 }
                 $this->flashMessenger()->addErrorMessage($errMsg);
             }
-
         } else {
             $this->layout('layout/layout-govuk.phtml');
         }
@@ -214,6 +260,9 @@ class UserHomeController extends AbstractAuthActionController
         return $returnData;
     }
 
+    /**
+     * @return array|\Zend\Http\Response
+     */
     public function editAction()
     {
         $identity = $this->getIdentity();
@@ -227,19 +276,20 @@ class UserHomeController extends AbstractAuthActionController
             $data = $request->getPost()->toArray();
             try {
                 $this->personStoreService->update($identity->getUserId(), $data);
-                return $this->redirect()->toUrl(PersonUrlBuilderWeb::profile());
 
+                return $this->redirect()->toUrl(PersonUrlBuilderWeb::profile());
             } catch (ValidationException $e) {
                 $this->addErrorMessages($e->getDisplayMessages());
                 $data['phone'] = $data['phoneNumber']; // fixing field naming inconcistency
                 return $this->getAuthenticatedData($data);
             }
         }
+
         return $this->getAuthenticatedData();
     }
 
     /**
-     * @param $personId int
+     * @param int $personId
      *
      * @return Dashboard
      */
@@ -257,7 +307,7 @@ class UserHomeController extends AbstractAuthActionController
     {
         $allCountries = $this->catalogService->getCountriesOfRegistrationByCode();
 
-        $countries=[];
+        $countries = [];
         foreach ($allCountries as $code => $country) {
             $countries[$code] = $country;
 
@@ -271,6 +321,7 @@ class UserHomeController extends AbstractAuthActionController
 
     /**
      * @param null $personalDetailsData
+     *
      * @return array
      */
     private function getAuthenticatedData($personalDetailsData = null)
@@ -297,25 +348,28 @@ class UserHomeController extends AbstractAuthActionController
             && !$isViewingOwnProfile;
 
         return [
-            'personalDetails'      => $personalDetails,
-            'isAllowEdit'          => $isAllowEdit,
-            'motAuthorisations'    => $authorisations,
-            'isViewingOwnProfile'  => $isViewingOwnProfile,
-            'countries'            => $this->getCountries(),
-            'canAcknowledge'       => $this->acknowledgeSpecialNoticeAssertion->isGranted(),
-            'canRead'              => $this->authorisationService->isGranted(PermissionInSystem::SPECIAL_NOTICE_READ),
-            'authorisation'        => $this->testerGroupAuthorisationMapper->getAuthorisation($personId),
+            'personalDetails' => $personalDetails,
+            'isAllowEdit' => $isAllowEdit,
+            'motAuthorisations' => $authorisations,
+            'isViewingOwnProfile' => $isViewingOwnProfile,
+            'countries' => $this->getCountries(),
+            'canAcknowledge' => $this->acknowledgeSpecialNoticeAssertion->isGranted(),
+            'canRead' => $this->authorisationService->isGranted(PermissionInSystem::SPECIAL_NOTICE_READ),
+            'authorisation' => $this->testerGroupAuthorisationMapper->getAuthorisation($personId),
             'rolesAndAssociations' => $this->tradeRolesAssociationsService->prepareRolesAndAssociations($personalDetails),
-            'canViewUsername'      => $canViewUsername,
-            'systemRoles'          => $this->getSystemRoles($personalDetails),
-            'roleNiceNameList'     => $this->getRoleNiceNameList($personalDetails),
-            'canRecieveSpecialNotice' => $this->authorisationService->isGranted(PermissionInSystem::SPECIAL_NOTICE_READ_CURRENT)
+            'canViewUsername' => $canViewUsername,
+            'systemRoles' => $this->getSystemRoles($personalDetails),
+            'roleNiceNameList' => $this->getRoleNiceNameList($personalDetails),
+            'canRecieveSpecialNotice' => $this->authorisationService->isGranted(PermissionInSystem::SPECIAL_NOTICE_READ_CURRENT),
         ];
     }
 
+    /**
+     * @return int
+     */
     private function getPersonIdFromRequest()
     {
-        $personId = (int)$this->params()->fromRoute('id', null);
+        $personId = (int) $this->params()->fromRoute('id', null);
         $identity = $this->getIdentity();
 
         if ($personId == 0) {
@@ -326,9 +380,12 @@ class UserHomeController extends AbstractAuthActionController
     }
 
     /**
-     * Gets and returns an array of System (internal) DVLA/DVSA roles
+     * Gets and returns an array of System (internal) DVLA/DVSA roles.
+     *
      * @param PersonalDetails $personalDetails
+     *
      * @return array
+     *
      * @throws \Exception
      */
     private function getSystemRoles(PersonalDetails $personalDetails)
@@ -352,7 +409,9 @@ class UserHomeController extends AbstractAuthActionController
 
     /**
      * @param PersonalDetails $personalDetails
+     *
      * @return array
+     *
      * @throws \Exception
      */
     private function getRoleNiceNameList(PersonalDetails $personalDetails)
@@ -374,22 +433,47 @@ class UserHomeController extends AbstractAuthActionController
 
     /**
      * @param int $role
-     * @param $nicename
-     * @param $roletype
+     * @param string $nicename
+     * @param string $roletype
      * @param string $id
      * @param string $name
      * @param string $address
+     *
      * @return array
      */
-    private function createRoleData($role, $nicename, $roletype, $id = "", $name = "", $address = "")
+    private function createRoleData($role, $nicename, $roletype, $id = '', $name = '', $address = '')
     {
         return [
-            'id'       => $id,
-            'role'     => $role,
+            'id' => $id,
+            'role' => $role,
             'nicename' => $nicename,
-            'name'     => $name,
-            'address'  => $address,
+            'name' => $name,
+            'address' => $address,
             'roletype' => $roletype,
         ];
+    }
+
+    /**
+     * @return bool
+     */
+    private function shouldShowNewHomepage()
+    {
+        $isFeatureEnabled = $this->isFeatureEnabled(FeatureToggle::NEW_HOMEPAGE);
+        $viewNewHomepageAssertion = new ViewNewHomepageAssertion(
+            $this->authorisationService,
+            $this->getIdentity(),
+            $this->personalDetailsService
+        );
+        $canUserViewNewHomepage = $viewNewHomepageAssertion->canViewNewHomepage();
+
+        return $isFeatureEnabled && $canUserViewNewHomepage;
+    }
+
+    /**
+     * @return ViewModel
+     */
+    private function redirectToNewHomepage()
+    {
+        return $this->userHomeRefactorAction();
     }
 }

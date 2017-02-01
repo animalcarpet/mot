@@ -97,6 +97,7 @@ use Core\ViewModel\Sidebar\SidebarInterface;
     <!--end global-cookie-message-->
 
     <?php
+    // if the user nav should be shown
     if ($this->hideUserNav != true):
         echo $this->partial('partial/fragments/header-govuk');
     else :
@@ -114,12 +115,13 @@ use Core\ViewModel\Sidebar\SidebarInterface;
     </div>
 </div>
 
+<?php echo $this->partial('partial/fragments/phase-banner'); ?>
+
 <?php echo $this->placeholder('banner'); ?>
 
 <?php echo $this->placeholder('hero'); ?>
 
 <main id="content" role="main">
-    <?php echo $this->partial('partial/fragments/phase-banner'); ?>
 
     <div class="container">
 
