@@ -3,7 +3,7 @@ module.exports = function(grunt, config) {
         user: 'motdbuser',
         password: 'password',
         host: 'localhost',
-        database: 'mot',
+        database: 'mot2',
         grantuser: 'motdbuser'
     });
 };
