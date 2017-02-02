@@ -121,8 +121,8 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
         $brakeTestResult = $motTest->getBrakeTestResult();
         if($brakeTestResult !== null) {
             $brakeTestResultClass3AndAbove = new BrakeTestResultClass3AndAbove($motTest->getBrakeTestResult());
-            $applicableClasses = [VehicleClassCode::CLASS_3, VehicleClassCode::CLASS_4, VehicleClassCode::CLASS_5, VehicleClassCode::CLASS_7];
-            if (in_array($vehicleClass, $applicableClasses)) {
+
+            if (in_array($vehicleClass, VehicleClassCode::getGroupBClasses())) {
                 $vehicleWeight = $brakeTestResultClass3AndAbove->getVehicleWeight();
             }
         }

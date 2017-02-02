@@ -116,7 +116,7 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
 
         if (!$request->isPost()) {
             $configDtoMapper = $this->getBrakeTestMapperService($isVehicleBikeType);
-            $dto = $configDtoMapper->mapToDefaultDto($motTest);
+            $dto = $configDtoMapper->mapToDefaultDto($motTest, $vehicle->getVehicleClass()->getCode());
         }
 
         $configHelper = $this->getConfigHelperService($isVehicleBikeType);
