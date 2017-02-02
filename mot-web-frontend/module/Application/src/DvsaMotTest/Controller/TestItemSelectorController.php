@@ -56,7 +56,7 @@ class TestItemSelectorController extends AbstractDvsaMotTestController
                     $this->motTestNumber,
                     $this->testItemSelectorId
                 )
-            );
+            )[0];
             /** @var MotTest $motTest */
             $motTest = $this->getMotTestFromApi($this->motTestNumber);
 

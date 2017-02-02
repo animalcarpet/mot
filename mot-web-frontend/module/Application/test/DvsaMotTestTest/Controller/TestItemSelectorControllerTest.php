@@ -199,7 +199,7 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
 
         $variables = $result->getVariables();
         $testData = $this->getEmptyTestItemsDto();
-        $motTestData = $testData['data']['motTest'];
+        $motTestData = $testData['data'][0]['motTest'];
         $this->assertEquals($motTestData, $variables['motTestDetails']);
     }
 
@@ -722,6 +722,7 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
     private function getTestDataItemSelectorsDto($id)
     {
         return ["data" => [
+            [
             "testItemSelector"        => [
                 "id"                        => 0,
                 "name"                      => "Vehicle",
@@ -752,6 +753,7 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
             "reasonsForRejection" => [],
             "motTest"                 => $this->getMotTest(MotTestStatusName::ACTIVE, 1),
         ],
+        ],
         ];
     }
 
@@ -759,6 +761,7 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
     {
         return [
             "data" => [
+                [
                 "testItemSelector"        => [
                     "id"                        => 0,
                     "name"                      => "Vehicle",
@@ -789,6 +792,7 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
                     ],
                 ],
                 "motTest"                 => $this->getMotTest($status, $testerId),
+            ]
             ]
         ];
     }
@@ -843,7 +847,8 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
     protected function getSingleResultTestItemSelectorsData()
     {
         $items = $this->getEmptyTestItems();
-        $items['data']['testItemSelector'] = [
+
+        $items['data'][0]['testItemSelector'] = [
             [
                 'name' => 'RFR Home',
                 'nameCy' => '' ,
@@ -861,7 +866,7 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
     private function getSingleResultTestItemSelectorsDataDto()
     {
         $items = $this->getEmptyTestItemsDto();
-        $items['data']['testItemSelector'] = [
+        $items['data'][0]['testItemSelector'] = [
             [
                 'name' => 'RFR Home',
                 'nameCy' => '' ,
@@ -886,7 +891,7 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
     {
         $items = $this->getSingleResultTestItemSelectorsData();
         // make it look like we are 2 levels deep
-        $items['data']['parentTestItemSelectors'][] = $items['data']['testItemSelector'];
+        $items['data'][0]['parentTestItemSelectors'][] = $items['data'][0]['testItemSelector'];
         return $items;
     }
 
@@ -894,13 +899,14 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
     {
         $items = $this->getSingleResultTestItemSelectorsDataDto();
         // make it look like we are 2 levels deep
-        $items['data']['parentTestItemSelectors'][] = $items['data']['testItemSelector'];
+        $items['data'][0]['parentTestItemSelectors'][] = $items['data'][0]['testItemSelector'];
         return $items;
     }
 
     protected function getEmptyTestItems()
     {
         return ["data" => [
+            [
             "testItemSelector"        => [],
             "testItemSelectors"       => [],
             "parentTestItemSelectors" => [],
@@ -909,18 +915,18 @@ class TestItemSelectorControllerTest extends AbstractDvsaMotTestTestCase
                 "status" => 'ACTIVE',
                 'tester' => ['userId' => 1]
             ],
-        ]];
+        ]]];
     }
 
     private function getEmptyTestItemsDto()
     {
-        return ["data" => [
+        return ["data" => [[
             "testItemSelector"        => [],
             "testItemSelectors"       => [],
             "parentTestItemSelectors" => [],
             "reasonsForRejection"     => [],
             "motTest"                 => new MotTest(Fixture::getMotTestDataVehicleClass4(true)),
-        ]];
+        ]]];
     }
 
     /**
