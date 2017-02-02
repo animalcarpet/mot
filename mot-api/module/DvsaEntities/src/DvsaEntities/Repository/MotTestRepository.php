@@ -1698,7 +1698,7 @@ class MotTestRepository extends AbstractMutableRepository
                 AND mt.vehicle_id = pmt.vehicle_id
                 AND mt.number <> pmt.number
                 AND tt.code IN (:testTypeNormal, :testTypeRetest)
-            ORDER BY mt.issued_date
+            ORDER BY pmt.issued_date DESC
                 LIMIT 1
         ', ['%TABLE_NAME%' => $this->getClassMetadata()->getTableName()]);
 
