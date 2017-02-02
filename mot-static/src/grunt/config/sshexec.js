@@ -45,6 +45,7 @@ module.exports = function (grunt, config) {
         var trace_command = 'sudo tail -n 40 -f ';
         var trace_file_var_log = trace_command + '<%= vagrant_config.logDir %>';
         var trace_file_opt_dvsa = trace_command + '<%= vagrant_config.motAppDir %>';
+        var exportAppConfigLocation = 'export APPLICATION_CONFIG_PATH="/opt/dvsa/mot-api/config/autoload"';
 
         grunt.config('sshexec', {
             options: {
@@ -508,7 +509,9 @@ module.exports = function (grunt, config) {
                     '
             },
             doctrine_proxy_gen: {
-                command: '<%= vagrant_config.workspace %>/Jenkins_Scripts/generate-proxies.sh <%= grunt.option("output") || "" %>'
+                command: 
+                    exportAppConfigLocation + ' && ' +
+                    '<%= vagrant_config.workspace %>/Jenkins_Scripts/generate-proxies.sh <%= grunt.option("output") || "" %>'
             },
             doctrine_default_develop_dist: {
                 command: 'rm -f <%= vagrant_config.workspace %>/mot-api/config/autoload/optimised.development.php'
