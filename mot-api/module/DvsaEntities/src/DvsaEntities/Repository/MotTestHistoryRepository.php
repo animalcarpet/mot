@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\ORM\NoResultException;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\DqlBuilder\SearchParam\MotTestSearchParam;
+use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaMotApi\Helper\MysteryShopperHelper;
 
@@ -122,18 +123,14 @@ class MotTestHistoryRepository extends MotTestRepository
             $historyDate = new DateTime();
             $historyDate->sub(new \DateInterval('P4Y'));
 
-            if ($searchParam->getDateFrom())
-            {
-                if ($searchParam->getDateFrom() < $historyDate)
-                {
+            if ($searchParam->getDateFrom()) {
+                if ($searchParam->getDateFrom() < $historyDate) {
                     $searchHistory = true;
                 }
             }
 
-            if ($searchParam->getDateTo())
-            {
-                if ($searchParam->getDateTo() < $historyDate)
-                {
+            if ($searchParam->getDateTo()) {
+                if ($searchParam->getDateTo() < $historyDate) {
                     $searchCurrent = false;
                 }
             }
@@ -168,18 +165,14 @@ class MotTestHistoryRepository extends MotTestRepository
             $historyDate = new DateTime();
             $historyDate->sub(new \DateInterval('P4Y'));
 
-            if ($searchParam->getDateFrom())
-            {
-                if ($searchParam->getDateFrom() < $historyDate)
-                {
+            if ($searchParam->getDateFrom()) {
+                if ($searchParam->getDateFrom() < $historyDate) {
                     $searchHistory = true;
                 }
             }
 
-            if ($searchParam->getDateTo())
-            {
-                if ($searchParam->getDateTo() < $historyDate)
-                {
+            if ($searchParam->getDateTo()) {
+                if ($searchParam->getDateTo() < $historyDate) {
                     $searchCurrent = false;
                 }
             }
@@ -298,5 +291,25 @@ class MotTestHistoryRepository extends MotTestRepository
         $this->_em->getClassMetadata(MotTestReasonForRejection::class)->setTableName(
             str_replace(self::SUFFIX_HISTORY, self::SUFFIX_CURRENT, $this->_em->getClassMetadata(MotTestReasonForRejection::class)->getTableName())
         );
+    }
+
+    /**
+     * @return string
+     */
+    protected function getVehicleIndexName()
+    {
+        if ($this->isOnCurrent()) {
+            return parent::getVehicleIndexName();
+        }
+
+        return 'fk_mot_test_history_vehicle';
+    }
+
+    /**
+     * @return bool
+     */
+    private function isOnCurrent()
+    {
+        return false !== strpos($this->getClassMetadata()->getTableName(), self::SUFFIX_CURRENT);
     }
 }
