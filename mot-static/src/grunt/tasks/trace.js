@@ -5,7 +5,6 @@
  * @param config
  */
 module.exports = function(grunt, config) {
-    if (config.environment === config.ENV_DEVELOPMENT) {
         grunt.registerTask('trace:api', 'Trace the API logs', 'sshexec:trace_api_log');
         grunt.registerTask('trace:api:access', 'Trace the API apache access log', 'sshexec:trace_api_access_log');
         grunt.registerTask('trace:api:error', 'Trace the API apache error log', 'sshexec:trace_api_error_log');
@@ -20,5 +19,4 @@ module.exports = function(grunt, config) {
         grunt.registerTask('trace:jasper:access', 'Trace the jasper access log', 'sshexec:trace_jasper_access_log');
         grunt.registerTask('trace:vehicle-service:access', 'Trace the vehicle service access log', 'sshexec:trace_vehicle_service_access_log');
         grunt.registerTask('trace:vehicle-service:error', 'Trace the vehicle service error log', 'sshexec:trace_vehicle_service_error_log');
-    }
 };

@@ -1,8 +1,5 @@
 module.exports = function (grunt, config) {
-
-    if (config.environment === config.ENV_DEVELOPMENT) {
-
-        var execSync = require('exec-sync');
+        var execSync = require('child_process').execSync;
         var util = require('util');
 
         var workspace = process.env['dvsa_workspace'];
@@ -22,7 +19,7 @@ module.exports = function (grunt, config) {
                     workspace + '/mot-vagrant',
                     vmName
                 )
-            );
+            ).toString().trim();
             var result = (file.length > 0) ? grunt.file.read(file) : '';
             grunt.file.write(cacheFile, JSON.stringify({privateKey: result}));
             return result;
@@ -63,5 +60,4 @@ module.exports = function (grunt, config) {
             workspace: '/home/vagrant/mot',
             mysqlConfigDir: ''
         });
-    }
 };

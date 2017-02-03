@@ -6,11 +6,5 @@
  * @param config
  */
 module.exports = function(grunt, config) {
-
-    if (config.environment === config.ENV_DEVELOPMENT) {
-        grunt.registerTask('ldap:usersync', 'Synchronize the Database to the LDAP Database for authentication', 'sshexec:user_sync');
-
-    } else if (config.environment === config.ENV_PRODUCTION) {
-        // ToDo
-    }
+    grunt.registerTask('openam:refresh-users-db', 'Runs /vagrant/scripts/import-data.sh', 'sshexec:openam_refresh_users_db');
 };
