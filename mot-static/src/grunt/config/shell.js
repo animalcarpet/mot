@@ -12,15 +12,6 @@ module.exports = function(grunt, config) {
                 return 'printf "\n>> Updating: \'' + dir + '\'\n" && cd ' + dir + ' && composer install && composer dump-autoload -o '
             }).join('; ')
         },
-        install_devtools: {
-            command: "./Jenkins_Scripts/install_devtools.sh"
-        },
-        env_dvsa_update_check: {
-            command: '$scripts_workspace/env/dvsa_update_check.sh'
-        },
-        env_dvsa_hotfix: {
-            command: '$scripts_workspace/env/dvsa_hotfix.sh'
-        },
         expand_vagrant_puppet: {
             command: 'cd $WORKSPACE/../puppet-code && rm -Rf work && bash build vagrant'
         },
@@ -49,12 +40,16 @@ module.exports = function(grunt, config) {
                     console.log('Broadcasting special notices. API output:');
 
                     var apiUrl = grunt.config.get('url.api');
-                    var execSync = require('exec-sync');
-                    var snOutput = execSync('curl -s -H \'Content-Type: application/json\' -H "Authorization: ' + token[0] +
+                    var command = 'curl -s -H \'Content-Type: application/json\' -H "Authorization: ' + token[0] +
                         '"' +
-                    ' -X POST "' + apiUrl + '/special-notice-broadcast"');
-                    console.log(snOutput);
+                    ' -X POST "' + apiUrl + '/special-notice-broadcast"';
+                    var snOutput = require('child_process').execSync(command).toString();
 
+                    console.log(command);
+                    console.log(snOutput);
+                    if (snOutput.match(/errors/g)){
+                        grunt.fatal("Failed to send special notices");
+                    }
                 }
             }
         },

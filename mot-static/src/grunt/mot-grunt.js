@@ -1,7 +1,5 @@
 'use strict';
 
-var _ = require( 'lodash' );
-
 /**
  * Allows environment aware loading of grunt configuration(s)
  *

@@ -5,9 +5,6 @@
  * @param config
  */
 module.exports = function(grunt, config) {
-
-    if (config.environment === config.ENV_DEVELOPMENT) {
-
         grunt.registerTask(
             'jasper:sync',
             'Reset The jasper template with the new one',
@@ -25,8 +22,4 @@ module.exports = function(grunt, config) {
                 'sshexec:jasper_tomcat_restart'
             ]
         );
-
-    } else if (config.environment === config.ENV_PRODUCTION) {
-        // load our production specific Elasticsearch processing here (NO sshexex commands in production!!!)
-    }
 };

@@ -4,7 +4,6 @@
  * @param grunt
  */
 module.exports = function(grunt, config) {
-    if (config.environment === config.ENV_DEVELOPMENT) {
     	/**
     	 * XBDEBUG :: LOAD
     	 *
@@ -59,5 +58,4 @@ module.exports = function(grunt, config) {
         		'sshexec:xdebug_off_dev2',
         		'apache:restart:all'
         	]);
-    }
 };

@@ -5,7 +5,6 @@
  * @param config
  */
 module.exports = function(grunt, config) {
-    if (config.environment === config.ENV_DEVELOPMENT) {
         grunt.registerTask('apache:restart', 'See apache:restart:all', 'apache:restart:all');
         grunt.registerTask('apache:restart:frontend', 'Restart the apache server on the dev VM', 'sshexec:apache_restart_dev');
         grunt.registerTask('apache:restart:api', 'Restart the apache server on the dev2 VM', 'sshexec:apache_restart_dev2');
@@ -17,5 +16,4 @@ module.exports = function(grunt, config) {
             'sshexec:apache_clear_php_sessions_dev',
             'sshexec:apache_clear_php_sessions_dev2'
         ]);
-    }
 };

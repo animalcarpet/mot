@@ -1,6 +1,4 @@
 module.exports = function (grunt, config) {
-    if (config.environment === config.ENV_DEVELOPMENT) {
-
         function handleCoverageOptions(coverageOptions, coverageType, coveragePath) {
 
             coverageType = coverageType || coverageOptions.defaultCoverageType;
@@ -23,6 +21,24 @@ module.exports = function (grunt, config) {
             return cmd;
         }
 
+        function toggleFeature(inConfig, toggleState) {
+            var util = require('util');
+            var configFile = '<%= vagrant_config.motConfigDir %>/' + inConfig;
+            var toggle = grunt.option('ft');
+            return util.format(
+                'sudo grep %s %s && sudo perl -pi -e "s/.*%s.*/\'%s\' => %s,/g" %s',
+                toggle, configFile, toggle, toggle, toggleState, configFile
+            );
+        }
+
+        function featureToggleEnable(config) {
+            return toggleFeature(config, 'true');
+        }
+
+        function featureToggleDisable(config) {
+            return toggleFeature(config, 'false');
+        }
+
         var dev_ssh_options = {
             host: '<%= dev_config.host %>',
             username: '<%= dev_config.username %>',
@@ -41,6 +57,9 @@ module.exports = function (grunt, config) {
         var php_extension_disable = 'sudo sed -i.bak "s/.*zend_ext/;zend_ext/g" <%= vagrant_config.phpRootDir %>/etc/php.d/';
         var opcache_ini_file = 'opcache.ini';
         var xdebug_ini_file = 'xdebug.ini';
+        var testsupportConfigFile = 'mot-testsupport/global.php';
+        var frontendConfigFile = 'mot-web-frontend/global.php';
+        var apiConfigFile = 'mot-api/global.php';
 
         var trace_command = 'sudo tail -n 40 -f ';
         var trace_file_var_log = trace_command + '<%= vagrant_config.logDir %>';
@@ -131,28 +150,34 @@ module.exports = function (grunt, config) {
                 options: dev_ssh_options,
                 command: 'sudo service <%= service_config.mysqlServiceName %> restart'
             },
+            ft_enable_testsupport: {
+                options: dev_ssh_options,
+                command: featureToggleEnable(testsupportConfigFile)
+            },
+            ft_disable_testsupport: {
+                options: dev_ssh_options,
+                command: featureToggleDisable(testsupportConfigFile)
+            },
+            ft_enable_frontend: {
+                options: dev_ssh_options,
+                command: featureToggleEnable(frontendConfigFile)
+            },
+            ft_disable_frontend: {
+                options: dev_ssh_options,
+                command: featureToggleDisable(frontendConfigFile)
+            },
+            ft_enable_api: {
+                options: dev2_ssh_options,
+                command: featureToggleEnable(apiConfigFile)
+            },
+            ft_disable_api: {
+                options: dev2_ssh_options,
+                command: featureToggleDisable(apiConfigFile)
+            },
             reset_database: {
                 options: dev_ssh_options,
                 command: function () {
                     return 'export dev_workspace="<%= vagrant_config.workspace %>"; cd <%= vagrant_config.workspace %>/mot-api/db && sudo ./reset_db_with_test_data.sh <%= mysql_config.user %> <%= mysql_config.password %> <%= mysql_config.host %> <%= mysql_config.grantuser %> synthetic && echo "DB Reset"';
-                }
-            },
-            reset_database_no_hist: {
-                options: dev_ssh_options,
-                command: function () {
-                    return 'export dev_workspace="<%= vagrant_config.workspace %>"; cd <%= vagrant_config.workspace %>/mot-api/db && sudo ./reset_db_with_test_data.sh <%= mysql_config.user %> <%= mysql_config.password %> <%= mysql_config.host %> <%= mysql_config.grantuser %> synthetic && echo "DB Reset without *_hist tables"';
-                }
-            },
-            dump_database: {
-                options: dev_ssh_options,
-                command: function () {
-                    return 'export dev_workspace="<%= vagrant_config.workspace %>"; cd <%= vagrant_config.workspace %>/mot-api/db/dev/bin && php ./dump_db.php && mysqldump -d --skip-add-drop-table -h <%= mysql_config.host %> -u <%= mysql_config.user %> -p<%= mysql_config.password %> <%= mysql_config.database %> > $dev_workspace/mot-api/db/dev/schema/create_dev_db_schema.sql && echo "DB dump"';
-                }
-            },
-            reset_database_full: {
-                options: dev_ssh_options,
-                command: function () {
-                    return 'export dev_workspace="<%= vagrant_config.workspace %>"; cd <%= vagrant_config.workspace %>/mot-api/db && sudo ./reset_db_with_test_data.sh <%= mysql_config.user %> <%= mysql_config.password %> <%= mysql_config.host %> <%= mysql_config.grantuser %> synthetic && echo "DB Full Reset"';
                 }
             },
             mysql_proc_fix: {
@@ -508,10 +533,14 @@ module.exports = function (grunt, config) {
                     sudo ./ldapmodify -h localhost -p 1389 -D"cn=directory manager" --bindPassword cangetinam -c -f /tmp/passwordpolicy && sudo rm /tmp/passwordpolicy \
                     '
             },
+            openam_refresh_users_db: {
+                options: dev_ssh_options,
+                command: "sudo sh /vagrant/scripts/import-data.sh"
+            },
             doctrine_proxy_gen: {
                 command: 
                     exportAppConfigLocation + ' && ' +
-                    '<%= vagrant_config.workspace %>/Jenkins_Scripts/generate-proxies.sh <%= grunt.option("output") || "" %>'
+                    '<%= vagrant_config.workspace %>/Jenkins_Scripts/generate-proxies.sh'
             },
             doctrine_default_develop_dist: {
                 command: 'rm -f <%= vagrant_config.workspace %>/mot-api/config/autoload/optimised.development.php'
@@ -539,15 +568,8 @@ module.exports = function (grunt, config) {
                 options: dev_ssh_options,
                 command: 'sudo rm -f <%= vagrant_config.motConfigDir %>/mot-web-frontend/zenddevelopertools.development.php'
             },
-            disable_dvsa_logger_api: {
-                command: 'rm -f <%= vagrant_config.workspace %>/mot-api/config/autoload/z.dvsalogger.development.php'
-            },
-            disable_dvsa_logger_web: {
-                command: 'rm -f <%= vagrant_config.workspace %>/mot-web-frontend/config/autoload/z.dvsalogger.development.php'
-            },
             delete_doctrine_cache_folders: {
                 command: 'cd <%= vagrant_config.workspace %>/mot-api/data/ && rm -fr DoctrineModule && rm -fr DoctrineORMModule'
             }
         });
-    }
 };
