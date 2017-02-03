@@ -142,7 +142,11 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
      */
     public function getModelDuringTest(MotTest $motTest)
     {
-        return $this->getVehicleDetailAtVersion($motTest->getVehicleVersion())->getModelDetail()->getModel();
+        $modelDetail = $this->getVehicleDetailAtVersion($motTest->getVehicleVersion())->getModelDetail();
+
+        if ($modelDetail instanceof ModelDetail) {
+            return $modelDetail->getModel();
+        }
     }
 
     public function getCylinderCapacity()
