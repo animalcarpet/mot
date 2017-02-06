@@ -307,7 +307,7 @@ class MotTestMapper
 
         $brakeTestResult = null;
 
-        switch ($motTest->getModelDetail()->getVehicleClass()->getCode()) {
+        switch ($motTest->getVehicleClass()->getCode()) {
             case Vehicle::VEHICLE_CLASS_1:
             case Vehicle::VEHICLE_CLASS_2:
                 $brakeTestResult = $motTest->getBrakeTestResultClass12();
