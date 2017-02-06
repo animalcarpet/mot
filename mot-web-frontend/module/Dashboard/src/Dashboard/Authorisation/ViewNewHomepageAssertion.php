@@ -2,10 +2,7 @@
 
 namespace Dashboard\Authorisation;
 
-use Application\Data\ApiPersonalDetails;
 use Dashboard\Model\PersonalDetails;
-use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
-use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Enum\RoleCode;
 
 class ViewNewHomepageAssertion
@@ -14,30 +11,17 @@ class ViewNewHomepageAssertion
         RoleCode::USER
     ];
 
-    /** @var MotAuthorisationServiceInterface $authorisationService */
-    private $authorisationService;
-
-    /** @var MotFrontendIdentityInterface $identity */
-    private $identity;
-
-    /** @var ApiPersonalDetails $personalDetailsService */
-    private $personalDetailsService;
+    /** @var PersonalDetails $personalDetails */
+    private $personalDetails;
 
     /**
      * UserAuthorisationHelper constructor.
      *
-     * @param MotAuthorisationServiceInterface $authorisationService
-     * @param MotFrontendIdentityInterface     $identity
-     * @param ApiPersonalDetails               $personalDetailsService
+     * @param PersonalDetails $personalDetails
      */
-    public function __construct(
-        MotAuthorisationServiceInterface $authorisationService,
-        MotFrontendIdentityInterface $identity,
-        ApiPersonalDetails $personalDetailsService
-    ) {
-        $this->authorisationService = $authorisationService;
-        $this->identity = $identity;
-        $this->personalDetailsService = $personalDetailsService;
+    public function __construct(PersonalDetails $personalDetails)
+    {
+        $this->personalDetails = $personalDetails;
     }
 
     /**
@@ -45,7 +29,7 @@ class ViewNewHomepageAssertion
      */
     public function canViewNewHomepage()
     {
-        $userRoles = $this->getUserRoles();
+        $userRoles = $this->personalDetails->getRoles();
         if (empty($userRoles)) {
             return true;
         }
@@ -56,32 +40,5 @@ class ViewNewHomepageAssertion
         }
 
         return true;
-    }
-
-    /**
-     * @return array
-     */
-    private function getUserRoles()
-    {
-        return $this->getUserPersonalDetails()->getRoles();
-    }
-
-    /**
-     * @return PersonalDetails
-     */
-    private function getUserPersonalDetails()
-    {
-        $userId = $this->getUserId();
-        $personalDetailsData = $this->personalDetailsService->getPersonalDetailsData($userId);
-
-        return new PersonalDetails($personalDetailsData);
-    }
-
-    /**
-     * @return int
-     */
-    private function getUserId()
-    {
-        return $this->identity->getUserId();
     }
 }

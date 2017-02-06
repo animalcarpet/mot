@@ -112,7 +112,9 @@ class UserHomeController extends AbstractAuthActionController
      */
     public function userHomeAction()
     {
-        if ($this->shouldShowNewHomepage()) {
+        $authenticatedData = $this->getAuthenticatedData();
+
+        if ($this->shouldShowNewHomepage($authenticatedData['personalDetails'])) {
             return $this->redirectToNewHomepage();
         }
 
@@ -122,7 +124,7 @@ class UserHomeController extends AbstractAuthActionController
         $this->loggedIdUserManager->discoverCurrentLocation($identity->getCurrentVts());
 
         $dashboard = $this->getDashboardDetails($personId);
-        $authenticatedData = $this->getAuthenticatedData();
+
         $specialNotice = array_merge(
             $dashboard->getSpecialNotice()->toArray(),
             [
@@ -454,19 +456,19 @@ class UserHomeController extends AbstractAuthActionController
     }
 
     /**
+     * @param PersonalDetails $personalDetails
+     *
      * @return bool
      */
-    private function shouldShowNewHomepage()
+    private function shouldShowNewHomepage(PersonalDetails $personalDetails)
     {
-        $isFeatureEnabled = $this->isFeatureEnabled(FeatureToggle::NEW_HOMEPAGE);
-        $viewNewHomepageAssertion = new ViewNewHomepageAssertion(
-            $this->authorisationService,
-            $this->getIdentity(),
-            $this->personalDetailsService
-        );
-        $canUserViewNewHomepage = $viewNewHomepageAssertion->canViewNewHomepage();
+        if (!$this->isFeatureEnabled(FeatureToggle::NEW_HOMEPAGE)) {
+            return false;
+        }
 
-        return $isFeatureEnabled && $canUserViewNewHomepage;
+        $viewNewHomepageAssertion = new ViewNewHomepageAssertion($personalDetails);
+
+        return $viewNewHomepageAssertion->canViewNewHomepage();
     }
 
     /**
