@@ -450,10 +450,11 @@ class MotTestRepository extends AbstractMutableRepository
     {
         $result = $this->createQueryBuilder('mt')
             ->addSelect(['rfr', 'rfrMarkedAsRepaired', 'vts', 'defaultBrakeTestClass1And2',
-                         'defaultServiceBrakeTestClass3AndAbove', 'defaultParkingBrakeTestClass3AndAbove'])
+                         'defaultServiceBrakeTestClass3AndAbove', 'defaultParkingBrakeTestClass3AndAbove', 'prs'])
             ->innerJoin('mt.motTestType', 'tt')
             ->innerJoin('mt.status', 's')
             ->leftJoin('mt.motTestReasonForRejections', 'rfr')
+            ->leftJoin('mt.prsMotTest', 'prs')
             ->leftJoin('rfr.markedAsRepaired', 'rfrMarkedAsRepaired')
             ->leftJoin('mt.vehicleTestingStation', 'vts')
             ->leftJoin('vts.defaultBrakeTestClass1And2', 'defaultBrakeTestClass1And2')

@@ -186,7 +186,13 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
      */
     public function getVehicleClassDuringTest(MotTest $motTest)
     {
-        return $this->getVehicleDetailAtVersion($motTest->getVehicleVersion())->getModelDetail()->getVehicleClass();
+        $modelDetail = $this->getVehicleDetailAtVersion($motTest->getVehicleVersion())->getModelDetail();
+
+        if (!$modelDetail) {
+            return;
+        }
+
+        return $modelDetail->getVehicleClass();
     }
 
     /**
@@ -212,11 +218,13 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
      */
     public function getFuelTypeDuringTest(MotTest $motTest)
     {
-        if (!$this->getModelDetail()) {
+        $modelDetail = $this->getVehicleDetailAtVersion($motTest->getVehicleVersion())->getModelDetail();
+
+        if (!$modelDetail) {
             return;
         }
 
-        return $this->getVehicleDetailAtVersion($motTest->getVehicleVersion())->getModelDetail()->getFuelType();
+        return $modelDetail->getFuelType();
     }
 
     /**
