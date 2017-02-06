@@ -13,7 +13,6 @@ public class VehicleData extends VehicleService {
 
     public VehicleData() {}
 
-    private static final String DEFAULT_PIN = "123456";
     private static final String DEFAULT_TRANSMISSION_TYPE_ID = "1";
     private static final String DEFAULT_CC = "888";
 

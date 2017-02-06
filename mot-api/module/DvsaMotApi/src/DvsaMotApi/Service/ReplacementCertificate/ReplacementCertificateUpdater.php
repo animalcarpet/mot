@@ -7,17 +7,18 @@
 
 namespace DvsaMotApi\Service\ReplacementCertificate;
 
+use Api\Check\CheckResultExceptionTranslator;
+use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
-use Api\Check\CheckResultExceptionTranslator;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
-use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\CertificateReplacementDraft;
+use DvsaEntities\Entity\MotTest;
+use DvsaEntities\Repository\MotTestRepository;
 use DvsaMotApi\Service\MotTestSecurityService;
 use Zend\Authentication\AuthenticationService;
-use Dvsa\Mot\ApiClient\Request\UpdateDvsaVehicleRequest;
-use Dvsa\Mot\ApiClient\Service\VehicleService;
 
 /**
  * Class ReplacementCertificateUpdater
@@ -37,24 +38,30 @@ class ReplacementCertificateUpdater
     /** @var VehicleService */
     private $vehicleService;
 
+    /** @var  MotTestRepository */
+    private $motTestRepository;
+
     /**
      * ReplacementCertificateUpdater constructor.
      * @param MotTestSecurityService $motTestSecurityService
      * @param AuthorisationServiceInterface $authService
      * @param AuthenticationService $motIdentityProvider
      * @param VehicleService $vehicleService
+     * @param MotTestRepository $motTestRepository
      */
     public function __construct(
         MotTestSecurityService $motTestSecurityService,
         AuthorisationServiceInterface $authService,
         AuthenticationService $motIdentityProvider,
-        VehicleService $vehicleService
+        VehicleService $vehicleService,
+        MotTestRepository $motTestRepository
     )
     {
         $this->motTestSecurityService = $motTestSecurityService;
         $this->authService = $authService;
         $this->motIdentityProvider = $motIdentityProvider;
         $this->vehicleService = $vehicleService;
+        $this->motTestRepository = $motTestRepository;
     }
 
     /**
@@ -197,6 +204,11 @@ class ReplacementCertificateUpdater
         );
 
         if ($this->isVehicleModified($updateVehicleRequest, $vehicle)) {
+
+            if (!$this->motTestRepository->isVehicleLatestTest($motTest)) {
+                $updateVehicleRequest->setUpdateHistoricVehicleOnly();
+            }
+
             $vehicle = $this->vehicleService->updateDvsaVehicleAtVersion(
                 $motTest->getVehicle()->getId(),
                 $motTest->getVehicleVersion(),

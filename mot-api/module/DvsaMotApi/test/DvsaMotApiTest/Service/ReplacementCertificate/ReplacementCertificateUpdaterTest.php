@@ -20,10 +20,9 @@ use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaEntities\Entity\Make;
-use DvsaEntities\Entity\Model;
-use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\CertificateReplacementDraft;
+use DvsaEntities\Entity\MotTest;
+use DvsaEntities\Repository\MotTestRepository;
 use DvsaMotApi\Service\MotTestSecurityService;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateUpdater;
 use DvsaMotApiTest\Factory\MotTestObjectsFactory;
@@ -40,6 +39,7 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
     private $motTestSecurityService;
     private $motIdentityService;
     private $mockVehicleService ;
+    private $mockMotTestRepository ;
 
     public function setUp()
     {
@@ -47,6 +47,7 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
         $this->motIdentityService = XMock::of('Zend\Authentication\AuthenticationService', ['getIdentity']);
         $this->motTestSecurityService = XMock::of(MotTestSecurityService::class);
         $this->mockVehicleService = XMock::of(VehicleService::class);
+        $this->mockMotTestRepository = XMock::of(MotTestRepository::class);
 
         $colour = new \stdClass();
         $colour->code = 'p';
@@ -199,7 +200,8 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
             $this->motTestSecurityService,
             $this->authorizationService,
             $this->motIdentityService,
-            $this->mockVehicleService
+            $this->mockVehicleService,
+            $this->mockMotTestRepository
         );
     }
 

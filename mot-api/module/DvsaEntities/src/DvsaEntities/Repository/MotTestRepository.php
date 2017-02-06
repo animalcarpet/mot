@@ -1726,6 +1726,28 @@ class MotTestRepository extends AbstractMutableRepository
     }
 
     /**
+     * To check if this is the latest test for the given vehicle at specific version
+     *
+     * @param MotTest $motTest
+     * @return bool
+     */
+    public function isVehicleLatestTest(MotTest $motTest)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('mtc.number')
+            ->from(MotTest::class, 'mtc')
+            ->where('mtc.vehicle = :vehicleId')
+            ->orderBy('mtc.completedDate', 'DESC')
+            ->setMaxResults(1)
+            ->setParameter('vehicleId', $motTest->getVehicle()->getId());
+
+        $latestTestNumber = $qb->getQuery()->getSingleScalarResult();
+
+        return $latestTestNumber == $motTest->getNumber();
+    }
+
+    /**
      * @param $vehicleId
      * @param $selectClause
      *
