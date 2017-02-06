@@ -2,10 +2,9 @@
 
 namespace DashboardTest\Authorisation;
 
-use Application\Data\ApiPersonalDetails;
 use Dashboard\Authorisation\ViewNewHomepageAssertion;
+use Dashboard\Model\PersonalDetails;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
-use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Enum\RoleCode;
 use DvsaCommonTest\TestUtils\XMock;
 
@@ -14,21 +13,6 @@ use DvsaCommonTest\TestUtils\XMock;
  */
 class ViewNewHomepageAssertionTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var MotAuthorisationServiceInterface|\PHPUnit_Framework_MockObject_MockObject */
-    protected $mockAuthorisationService;
-
-    /** @var MotFrontendIdentityInterface|\PHPUnit_Framework_MockObject_MockObject */
-    protected $mockIdentity;
-
-    /** @var ApiPersonalDetails|\PHPUnit_Framework_MockObject_MockObject */
-    protected $mockPersonalDetailsService;
-
-    protected function setUp()
-    {
-        $this->mockAuthorisationService = XMock::of(MotAuthorisationServiceInterface::class);
-        $this->mockIdentity = XMock::of(MotFrontendIdentityInterface::class);
-    }
-
     /**
      * @dataProvider testUserCanViewNewHomepageDataProvider
      *
@@ -39,17 +23,14 @@ class ViewNewHomepageAssertionTest extends \PHPUnit_Framework_TestCase
      */
     public function testUserWithSpecificRolesCanViewNewHomepage($systemRoles, $organisationsRoles, $sitesRoles, $canUserViewNewHomepage)
     {
-        $this->mockPersonalDetailsService = $this->buildPersonalDetailsServiceMock(
+        $personalDetails = $this->buildPersonalDetails(
             $systemRoles,
             $organisationsRoles,
             $sitesRoles
         );
 
-        $viewNewHomepageAssertion = new ViewNewHomepageAssertion(
-            $this->mockAuthorisationService,
-            $this->mockIdentity,
-            $this->mockPersonalDetailsService
-        );
+        $viewNewHomepageAssertion = new ViewNewHomepageAssertion($personalDetails);
+
         $canUserViewNewHomepageFromApi = $viewNewHomepageAssertion->canViewNewHomepage();
 
         $this->assertEquals($canUserViewNewHomepageFromApi, $canUserViewNewHomepage);
@@ -81,39 +62,34 @@ class ViewNewHomepageAssertionTest extends \PHPUnit_Framework_TestCase
      * @param array $organisationsRoles
      * @param array $sitesRoles
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return PersonalDetails
      *
      * @throws \Exception
      */
-    protected function buildPersonalDetailsServiceMock($systemRoles, $organisationsRoles, $sitesRoles)
+    protected function buildPersonalDetails($systemRoles, $organisationsRoles, $sitesRoles)
     {
-        $personalDetailsServiceMock = Xmock::of(ApiPersonalDetails::class);
-        $personalDetailsServiceMock
-            ->method('getPersonalDetailsData')
-            ->willReturn([
-                'id' => 1,
-                'firstName' => 'foo',
-                'middleName' => 'bar',
-                'surname' => 'baz',
-                'username' => 'tester1',
-                'dateOfBirth' => '1979-12-20',
-                'title' => 'Mr',
-                'gender' => 'male',
-                'addressLine1' => 'foo',
-                'addressLine2' => 'foo',
-                'addressLine3' => 'foo',
-                'town' => 'foo',
-                'postcode' => 'AA11 1AA',
-                'email' => 'foo',
-                'emailConfirmation' => null,
-                'phone' => 1234,
-                'drivingLicenceNumber' => 'foo',
-                'drivingLicenceRegion' => 'bar',
-                'positions' => [],
-                'roles' => $this->setMockRoles($systemRoles, $organisationsRoles, $sitesRoles),
-            ]);
-
-        return $personalDetailsServiceMock;
+        return new PersonalDetails([
+            'id' => 1,
+            'firstName' => 'foo',
+            'middleName' => 'bar',
+            'surname' => 'baz',
+            'username' => 'tester1',
+            'dateOfBirth' => '1979-12-20',
+            'title' => 'Mr',
+            'gender' => 'male',
+            'addressLine1' => 'foo',
+            'addressLine2' => 'foo',
+            'addressLine3' => 'foo',
+            'town' => 'foo',
+            'postcode' => 'AA11 1AA',
+            'email' => 'foo',
+            'emailConfirmation' => null,
+            'phone' => 1234,
+            'drivingLicenceNumber' => 'foo',
+            'drivingLicenceRegion' => 'bar',
+            'positions' => [],
+            'roles' => $this->setMockRoles($systemRoles, $organisationsRoles, $sitesRoles),
+        ]);
     }
 
     /**
