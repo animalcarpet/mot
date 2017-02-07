@@ -113,36 +113,12 @@ class MotTestHistoryRepository extends MotTestRepository
      */
     public function getMotTestLogsResult(MotTestSearchParam $searchParam)
     {
-        $searchCurrent = true;
-        $searchHistory = false;
-
         try {
+            $current = parent::getMotTestLogsResult($searchParam);
 
-            // Work out based on the search dates what mot_test tables
-            // need to be searched.
-            $historyDate = new DateTime();
-            $historyDate->sub(new \DateInterval('P4Y'));
+            $this->switchToHistory();
 
-            if ($searchParam->getDateFrom()) {
-                if ($searchParam->getDateFrom() < $historyDate) {
-                    $searchHistory = true;
-                }
-            }
-
-            if ($searchParam->getDateTo()) {
-                if ($searchParam->getDateTo() < $historyDate) {
-                    $searchCurrent = false;
-                }
-            }
-            $current = [];
-            if ($searchCurrent) {
-                $current = parent::getMotTestLogsResult($searchParam);
-            }
-            $history = [];
-            if ($searchHistory) {
-                $this->switchToHistory();
-                $history = parent::getMotTestLogsResult($searchParam);
-            }
+            $history = parent::getMotTestLogsResult($searchParam);
 
             return array_merge($current, $history);
         } finally {
@@ -155,38 +131,12 @@ class MotTestHistoryRepository extends MotTestRepository
      */
     public function getMotTestLogsResultCount(MotTestSearchParam $searchParam)
     {
-        $searchCurrent = true;
-        $searchHistory = false;
-
         try {
+            $count = parent::getMotTestLogsResultCount($searchParam);
 
-            // Work out based on the search dates what mot_test tables
-            // need to be searched.
-            $historyDate = new DateTime();
-            $historyDate->sub(new \DateInterval('P4Y'));
+            $this->switchToHistory();
 
-            if ($searchParam->getDateFrom()) {
-                if ($searchParam->getDateFrom() < $historyDate) {
-                    $searchHistory = true;
-                }
-            }
-
-            if ($searchParam->getDateTo()) {
-                if ($searchParam->getDateTo() < $historyDate) {
-                    $searchCurrent = false;
-                }
-            }
-
-            $count = ['count' => 0];
-
-            if ($searchCurrent) {
-                $count = parent::getMotTestLogsResultCount($searchParam);
-            }
-
-            if ($searchHistory) {
-                $this->switchToHistory();
-                $count['count'] += parent::getMotTestLogsResultCount($searchParam)['count'];
-            }
+            $count['count'] += parent::getMotTestLogsResultCount($searchParam)['count'];
 
             return $count;
         } finally {
