@@ -40,7 +40,7 @@ public class SiteTestLogsView extends DslTest {
     public void permittedUserCanViewTestLogs(User user) throws IOException, URISyntaxException {
 
         //Given I performed 1 MOT  test Last week
-        motApi.createTest(tester, testSite.getId(), vehicleData.getNewVehicle(tester), TestOutcome.PASSED, 123456, DateTime.now().minusWeeks(1));
+        motApi.createTest(tester, testSite.getId(), vehicleData.getNewVehicle(tester), TestOutcome.PASSED, 123456, DateTime.now().minusDays(6));
 
         //When I go to the Site Log page as <permitted user>
         motUI.testLog.siteLogPage(user, testSite.getId());
