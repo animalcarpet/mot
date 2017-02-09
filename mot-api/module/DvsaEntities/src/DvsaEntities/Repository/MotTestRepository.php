@@ -571,9 +571,11 @@ class MotTestRepository extends AbstractMutableRepository
         $qb = is_callable($testTypeWhereClauseFunction) ?
             $testTypeWhereClauseFunction($qb) : $qb->andWhere('t.code IN (:testTypes)');
 
-        // note: sort ordering is now applied in-memory, see compareTests
         $qb = $qb
             ->andWhere('mt.vehicle = :vehicleId')
+            ->orderBy('mt.issuedDate', 'DESC')
+            ->addOrderBy('mt.completedDate', 'DESC')
+            ->addOrderBy('mt.vehicleTestingStation', 'ASC')
             ->setParameter('statuses', $statuses)
             ->setParameter('testTypes', $testTypes)
             ->setParameter('vehicleId', $vehicleId);
@@ -588,11 +590,7 @@ class MotTestRepository extends AbstractMutableRepository
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, MotTestIndexSqlWalker::class);
         $query->setHint(MotTestIndexSqlWalker::HINT_USE_INDEX, $this->getVehicleIndexName());
 
-        $result = $query->getResult();
-
-        usort($result, [$this, 'compareTests']);
-
-        return $result;
+        return $query->getResult();
     }
 
     /**
@@ -622,6 +620,9 @@ class MotTestRepository extends AbstractMutableRepository
             ->where('ts.name IN (:statuses)')
             ->andWhere('t.code IN (:testTypes)')
             ->andWhere('mt.vehicle = :vehicleId')
+            ->orderBy('mt.issuedDate', 'DESC')
+            ->addOrderBy('mt.completedDate', 'DESC')
+            ->addOrderBy('mt.vehicleTestingStation', 'ASC')
             ->setParameter('statuses', $statuses)
             ->setParameter('testTypes', $testTypes)
             ->setParameter('vehicleId', $vehicleId);
@@ -646,11 +647,7 @@ class MotTestRepository extends AbstractMutableRepository
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, MotTestIndexSqlWalker::class);
         $query->setHint(MotTestIndexSqlWalker::HINT_USE_INDEX, $this->getVehicleIndexName());
 
-        $result = $query->getResult();
-
-        usort($result, [$this, 'compareTests']);
-
-        return $result;
+        return $query->getResult();
     }
 
     /**
@@ -1885,46 +1882,5 @@ class MotTestRepository extends AbstractMutableRepository
     protected function getVehicleIndexName()
     {
         return 'fk_mot_test_current_vehicle';
-    }
-
-    /**
-     * comparator function used to sort tests by issued date, completed date, site
-     * intended to be used with call to usort passing in two arrays of MotTest entities
-     * sorting performed in-memory to reduce impact on DB query
-     * @param MotTest $testOne
-     * @param MotTest $testTwo
-     *
-     * @return int
-     * */
-    private function compareTests($testOne, $testTwo)
-    {
-        $firstIssuedDate = $testOne->getIssuedDate()->getTimestamp();
-        $secondIssuedDate = $testTwo->getIssuedDate()->getTimestamp();
-
-        $firstCompletedDate = $testOne->getCompletedDate()->getTimestamp();
-        $secondCompletedDate = $testTwo->getCompletedDate()->getTimestamp();
-
-        $firstSite = $testOne->getVehicleTestingStation()->getSiteNumber();
-        $secondSite = $testTwo->getVehicleTestingStation()->getSiteNumber();
-
-        if ($firstIssuedDate === $secondIssuedDate) {
-            if ($firstCompletedDate === $secondCompletedDate) {
-                if ($firstSite === $secondSite) {
-                    return 0;
-                } else if ($firstSite > $secondSite) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            } else if ($firstCompletedDate > $secondCompletedDate) {
-                return 1;
-            } else {
-                return -1;
-            }
-        } else if ($firstIssuedDate > $secondIssuedDate) {
-            return 1;
-        } else {
-            return -1;
-        }
     }
 }
