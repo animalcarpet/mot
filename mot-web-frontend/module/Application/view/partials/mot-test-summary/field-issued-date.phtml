@@ -2,6 +2,7 @@
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Utility\ArrayUtils;
+use DvsaMotTest\Adapter\MotTestServiceResponseAdapter;
 
 /** @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motTest */
 $motTest;
@@ -29,7 +30,10 @@ $cssDlClass = !empty(trim($this->cssDlClass)) ? $this->cssDlClass : 'col-sm-4';
         <?php
         $issuedDate = null;
 
-        if ($isTestPassOrFail && $val = $motTest->getIssuedDate()) {
+        $responseAdapter = new MotTestServiceResponseAdapter($motTest);
+        $responseAdaptedIssueDate = $responseAdapter->getIssuedDate();
+
+        if ($isTestPassOrFail && $val = $responseAdaptedIssueDate) {
             $issuedDate = $val;
         } elseif ($isTestReady && $val = $pendingDetails->getIssuedDate()) {
             $issuedDate = $val;

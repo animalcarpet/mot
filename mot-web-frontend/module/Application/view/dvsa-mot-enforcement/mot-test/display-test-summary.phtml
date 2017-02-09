@@ -8,6 +8,7 @@ use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaMotEnforcement\Controller\MotTestSearchController;
+use DvsaMotTest\Adapter\MotTestServiceResponseAdapter;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use DvsaCommon\Auth\PermissionInSystem;
 
@@ -28,10 +29,11 @@ $tester = $motTest->getTester();
 /** @var \DvsaCommon\Dto\Site\VehicleTestingStationDto $site */
 $site = $this->siteDto;
 
-$reasonsForRejection = $motTest->getReasonsForRejection();
-$fails = @$reasonsForRejection->FAIL;
-$prses = @$reasonsForRejection->PRS;
-$advisories = @$reasonsForRejection->ADVISORY;
+$responseAdapter = new MotTestServiceResponseAdapter($motTest);
+$reasonsForRejection = $responseAdapter->getReasonsForRejectionExcludingRepairedDefects();
+$fails = $reasonsForRejection->FAIL;
+$prses = $reasonsForRejection->PRS;
+$advisories = $reasonsForRejection->ADVISORY;
 
 $testStatus = $motTest->getStatus();
 $isTestPass = ($testStatus == MotTestStatusName::PASSED);

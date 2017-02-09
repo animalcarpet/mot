@@ -89,7 +89,7 @@ public class BrakeTestResultsTest extends DslTest {
                                                             .clickAddDefectButton()
                                                             .clickFinishAndReturnButton();
 
-        // Then the Add brake test button is displayed
-        assertThat(resultsEntryNewPage.isAddBrakeTestButtonDisplayed(), is(true));
+        // Then the Add brake test button is not displayed
+        assertThat(resultsEntryNewPage.isAddBrakeTestButtonDisplayed(), is(false));
     }
 }
