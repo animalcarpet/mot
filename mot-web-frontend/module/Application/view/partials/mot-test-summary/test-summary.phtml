@@ -2,6 +2,7 @@
 use DvsaCommon\Enum\MotTestStatusCode;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Utility\ArrayUtils;
+use DvsaMotTest\Adapter\MotTestServiceResponseAdapter;
 
 /** @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motTest */
 $motTest;
@@ -14,10 +15,11 @@ $siteDto;
 
 /** @var string $motTestType */
 $motTestType = $motTest->getTestTypeCode();
-$reasonsForRejection = $motTest->getReasonsForRejection();
-$fails = $motTest->getReasonsForRejection()->FAIL;
-$prses = $motTest->getReasonsForRejection()->PRS;
-$advisories = $motTest->getReasonsForRejection()->ADVISORY;
+$responseAdapter = new MotTestServiceResponseAdapter($motTest);
+$reasonsForRejection = $responseAdapter->getReasonsForRejectionExcludingRepairedDefects();
+$fails = $reasonsForRejection->FAIL;
+$prses = $reasonsForRejection->PRS;
+$advisories = $reasonsForRejection->ADVISORY;
 
 $pendingStatus = null;
 
