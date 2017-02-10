@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS `model_technical_data_category` (
   CONSTRAINT `fk_model_technical_data_category_last_updated_by_person_id` FOREIGN KEY (`last_updated_by`) REFERENCES `person` (`id`)
 );
 
+
 CREATE TABLE IF NOT EXISTS `model_technical_data_content` (
   `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `short_description` VARCHAR(50) NOT NULL COMMENT 'Short summary of model technical data description',    
@@ -34,6 +35,7 @@ CREATE TABLE IF NOT EXISTS `model_technical_data_content` (
   CONSTRAINT `fk_model_technical_data_content_model_technical_data_category_id` FOREIGN KEY (`model_technical_data_category_id`) REFERENCES `model_technical_data_category` (`id`)
 );
 
+
 CREATE TABLE IF NOT EXISTS `model_technical_data` (
   `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `sub_model_name`  VARCHAR(100) DEFAULT NULL COMMENT 'Additional info to differentiate technical data within a model range',    
@@ -50,10 +52,13 @@ CREATE TABLE IF NOT EXISTS `model_technical_data` (
   KEY `ix_model_technical_data_created_by` (`created_by`),
   KEY `ix_model_technical_data_last_updated_by` (`last_updated_by`),
   KEY `ix_model_technical_data_fuel_type_id` (`fuel_type_id`),
+  KEY `ix_model_technical_data_model_id` (`model_id`),
   KEY `ix_model_technical_data_model_id_manufacture_date` (`model_id`,`manufacture_start_date`),
   CONSTRAINT `fk_model_technical_data_created_by_person_id` FOREIGN KEY (`created_by`) REFERENCES `person` (`id`),
+  CONSTRAINT `fk_model_technical_data_model_id_model_id` FOREIGN KEY (`model_id`) REFERENCES `model` (`id`),
   CONSTRAINT `fk_model_technical_data_last_updated_by_person_id` FOREIGN KEY (`last_updated_by`) REFERENCES `person` (`id`)
 );
+
 
 CREATE TABLE IF NOT EXISTS `model_technical_data_content_map` (
   `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,   
@@ -74,6 +79,7 @@ CREATE TABLE IF NOT EXISTS `model_technical_data_content_map` (
   CONSTRAINT `fk_model_technical_data_content_map_model_technical_data_id` FOREIGN KEY (`model_technical_data_id`) REFERENCES `model_technical_data` (`id`),
   CONSTRAINT `fk_model_technical_data_content_map_mtd_content_id` FOREIGN KEY (`model_technical_data_content_id`) REFERENCES `model_technical_data_content` (`id`)
 );
+
 
 CREATE TABLE IF NOT EXISTS `vehicle_model_technical_data_map` (
   `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,   
