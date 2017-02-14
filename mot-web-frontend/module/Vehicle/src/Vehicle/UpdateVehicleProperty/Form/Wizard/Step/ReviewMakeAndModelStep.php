@@ -89,7 +89,6 @@ class ReviewMakeAndModelStep extends AbstractWizardStep implements AutoWireableI
     public function executePost(array $formData, $formUuid = null)
     {
         $this->formUuid = $formUuid;
-        $this->saveData();
 
         try {
             $this->saveData();
