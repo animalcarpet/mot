@@ -25,10 +25,7 @@ $motTestType = $motDetails->getTestTypeCode();
 /** @var MotTestTitleModel $motTestTitleViewModel */
 $pageSubTitle = $motTestTitleViewModel->getTitle($motDetails, $isDuplicateCertificate);
 
-/** @var \DvsaCommon\Dto\Site\VehicleTestingStationDto $siteDto */
-$siteDto = $this->siteDto;
-
-/** @var \DvsaMotTest\Controller\DvsaVehicleViewModel $vehicle */
+/** @var DvsaVehicleViewModel $vehicle */
 $vehicle = $this->vehicleViewModel;
 
 /** @var \Dvsa\Mot\ApiClient\Resource\Item\PendingDetails $pendingDetails */
@@ -95,7 +92,6 @@ echo $this->partial(
     [
         'motTest' => $motDetails,
         'vehicle' => $vehicle,
-        'siteDto' => $siteDto,
         'odometerReading' => $odometerReading,
         'isReinspection'=>$isReinspectionSummaryPage,
         'brakeTestTypeCode2Name' => $brakeTestTypeCode2Name,

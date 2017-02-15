@@ -68,7 +68,22 @@
   },
   "testerBrakePerformanceNotTested" : true,
   "hasRegistration" : true,
-  "siteId" : 1,
+  "site": {
+    "id": 1,
+    "number": "24045",
+    "name": "FAIRWAY MOTORS",
+    "address": [
+      {
+        "addressLine1": "71-79 CHINGFORD MOUNT ROAD",
+        "addressLine2": "CHINGFORD",
+        "addressLine3": null,
+        "addressLine4": null,
+        "postcode": "E4 8LU",
+        "town": "LONDON",
+        "country": "UK"
+      }
+    ]
+  },
   "vehicleId" : 1001,
   "vehicleVersion" : 1,
   "pendingDetails" : {

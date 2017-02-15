@@ -1,5 +1,5 @@
 <?php
-/** @var \DvsaCommon\Dto\Site\VehicleTestingStationDto $site */
+
 use Core\Formatting\AddressFormatter;
 
 $site = $this->siteData ? $this->siteData : null;
@@ -8,7 +8,22 @@ if (empty($site)) {
     return;
 }
 
-if($site instanceof \DvsaCommon\Dto\Site\VehicleTestingStationDto) {
+if ($site instanceof \Dvsa\Mot\ApiClient\Resource\Item\Site) {
+    $siteNr = $site->getNumber();
+    $siteName = ($siteNr ? ' - ' : '') . $site->getName();
+    $siteAddress = '';
+    if ($address = $site->getFirstAddress()) {
+        $siteAddress = (new AddressFormatter())->escapeAddressToMultiLine(
+            $address->getLine1(),
+            $address->getLine2(),
+            $address->getLine3(),
+            $address->getLine4(),
+            $address->getCountry(),
+            $address->getTown(),
+            $address->getPostcode()
+        );
+    }
+} else if ($site instanceof \DvsaCommon\Dto\Site\VehicleTestingStationDto) {
     $siteNr = $site->getSiteNumber();
     $siteName = $site->getName();
     $tempContact = null;
