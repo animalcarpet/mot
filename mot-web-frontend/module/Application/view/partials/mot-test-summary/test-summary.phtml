@@ -1,4 +1,6 @@
 <?php
+
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Enum\MotTestStatusCode;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Utility\ArrayUtils;
@@ -9,9 +11,6 @@ $motTest;
 
 /** @var \DvsaMotTest\Controller\DvsaVehicleViewModel $vehicle */
 $vehicle;
-
-/** @var \DvsaCommon\Dto\Site\SiteDto $siteDto */
-$siteDto;
 
 /** @var string $motTestType */
 $motTestType = $motTest->getTestTypeCode();
@@ -65,7 +64,7 @@ $isReinspection = \DvsaCommon\Domain\MotTestType::isReinspection($motTestType);
                 'partials/mot-test-summary/site-address',
                 [
                     'cssDlClass' => 'col-sm-6 no-bot-marg',
-                    'siteData'   => $siteDto,
+                    'siteData'   => $motTest->getSite(),
                 ]
             );
             ?>

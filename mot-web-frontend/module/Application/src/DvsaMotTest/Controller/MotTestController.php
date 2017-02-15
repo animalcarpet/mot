@@ -380,17 +380,12 @@ class MotTestController extends AbstractDvsaMotTestController
             );
         }
 
-        $apiUrl = UrlBuilder::of()->vehicleTestingStation()->routeParam('id',$motTest->getSiteId());
-        $siteResponse = $this->getRestClient()->get($apiUrl);
-        $siteDto = ArrayUtils::tryGet($siteResponse, 'data');
-
         return (new ViewModel(
             [
                 'isMotContingency' => $this->getContingencySessionManager()->isMotContingency(),
                 'motDetails' => $motTest,
                 'vehicleViewModel' => $vehicleViewModel,
                 'odometerReading' => $this->odometerViewObject,
-                'siteDto' => $siteDto,
                 'isDemo' => $isDemo,
                 'brakeTestTypeCode2Name' => $this->getBrakeTestTypeCode2Name(),
                 'motTestTitleViewModel' => (new MotTestTitleModel()),
