@@ -3,10 +3,9 @@
 namespace DashboardTest\Authorisation;
 
 use Dashboard\Authorisation\ViewNewHomepageAssertion;
-use Dashboard\Model\PersonalDetails;
-use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
+use DvsaCommon\Model\ListOfRolesAndPermissions;
+use DvsaCommon\Model\PersonAuthorization;
 use DvsaCommon\Enum\RoleCode;
-use DvsaCommonTest\TestUtils\XMock;
 
 /**
  * ViewNewHomepageAssertionTest Test.
@@ -23,7 +22,7 @@ class ViewNewHomepageAssertionTest extends \PHPUnit_Framework_TestCase
      */
     public function testUserWithSpecificRolesCanViewNewHomepage($systemRoles, $organisationsRoles, $sitesRoles, $canUserViewNewHomepage)
     {
-        $personalDetails = $this->buildPersonalDetails(
+        $personalDetails = $this->buildPersonAuthorization(
             $systemRoles,
             $organisationsRoles,
             $sitesRoles
@@ -62,65 +61,16 @@ class ViewNewHomepageAssertionTest extends \PHPUnit_Framework_TestCase
      * @param array $organisationsRoles
      * @param array $sitesRoles
      *
-     * @return PersonalDetails
+     * @return PersonAuthorization
      *
      * @throws \Exception
      */
-    protected function buildPersonalDetails($systemRoles, $organisationsRoles, $sitesRoles)
+    protected function buildPersonAuthorization($systemRoles, $organisationsRoles, $sitesRoles)
     {
-        return new PersonalDetails([
-            'id' => 1,
-            'firstName' => 'foo',
-            'middleName' => 'bar',
-            'surname' => 'baz',
-            'username' => 'tester1',
-            'dateOfBirth' => '1979-12-20',
-            'title' => 'Mr',
-            'gender' => 'male',
-            'addressLine1' => 'foo',
-            'addressLine2' => 'foo',
-            'addressLine3' => 'foo',
-            'town' => 'foo',
-            'postcode' => 'AA11 1AA',
-            'email' => 'foo',
-            'emailConfirmation' => null,
-            'phone' => 1234,
-            'drivingLicenceNumber' => 'foo',
-            'drivingLicenceRegion' => 'bar',
-            'positions' => [],
-            'roles' => $this->setMockRoles($systemRoles, $organisationsRoles, $sitesRoles),
-        ]);
-    }
-
-    /**
-     * @param array $systemRoles
-     * @param array $organisationsRoles
-     * @param array $sitesRoles
-     *
-     * @return array
-     */
-    private function setMockRoles($systemRoles, $organisationsRoles, $sitesRoles)
-    {
-        return [
-            'system' => [
-                'roles' => $systemRoles,
-            ],
-            'organisations' => [
-                10 => [
-                    'name' => 'testing',
-                    'number' => 'VTESTING',
-                    'address' => '34 Test Road',
-                    'roles' => $organisationsRoles,
-                ]
-            ],
-            'sites' => [
-                20 => [
-                    'name' => 'testing',
-                    'number' => 'VTESTING',
-                    'address' => '34 Test Road',
-                    'roles' => $sitesRoles,
-                ]
-            ],
-        ];
+        return new PersonAuthorization(
+            new ListOfRolesAndPermissions($systemRoles, []),
+            $organisationsRoles,
+            $sitesRoles
+        );
     }
 }

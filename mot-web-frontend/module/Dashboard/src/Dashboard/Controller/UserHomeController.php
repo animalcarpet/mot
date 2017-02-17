@@ -2,7 +2,6 @@
 
 namespace Dashboard\Controller;
 
-use Account\Service\SecurityQuestionService;
 use Application\Data\ApiPersonalDetails;
 use Application\Helper\DataMappingHelper;
 use Application\Service\CatalogService;
@@ -12,7 +11,6 @@ use Core\Controller\AbstractAuthActionController;
 use Dashboard\Authorisation\ViewNewHomepageAssertion;
 use Dashboard\Authorisation\ViewTradeRolesAssertion;
 use Dashboard\Data\ApiDashboardResource;
-use Dashboard\Factory\Controller\UserHomeControllerFactory;
 use Dashboard\Model\Dashboard;
 use Dashboard\Model\PersonalDetails;
 use Dashboard\PersonStore;
@@ -29,6 +27,7 @@ use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommon\Model\DvsaRole;
 use DvsaCommon\Model\TradeRole;
+use DvsaCommon\Model\PersonAuthorization;
 use DvsaCommon\UrlBuilder\PersonUrlBuilder;
 use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
 use DvsaMotTest\Service\OverdueSpecialNoticeAssertion;
@@ -112,13 +111,13 @@ class UserHomeController extends AbstractAuthActionController
      */
     public function userHomeAction()
     {
-        $authenticatedData = $this->getAuthenticatedData();
+        $identity = $this->getIdentity();
 
-        if ($this->shouldShowNewHomepage($authenticatedData['personalDetails'])) {
+        if ($this->shouldShowNewHomepage($identity->getPersonAuthorization())) {
             return $this->redirectToNewHomepage();
         }
 
-        $identity = $this->getIdentity();
+        $authenticatedData = $this->getAuthenticatedData();
         $personId = $identity->getUserId();
 
         $this->loggedIdUserManager->discoverCurrentLocation($identity->getCurrentVts());
@@ -456,11 +455,11 @@ class UserHomeController extends AbstractAuthActionController
     }
 
     /**
-     * @param PersonalDetails $personalDetails
+     * @param PersonAuthorization $personalDetails
      *
      * @return bool
      */
-    private function shouldShowNewHomepage(PersonalDetails $personalDetails)
+    private function shouldShowNewHomepage(PersonAuthorization $personalDetails)
     {
         if (!$this->isFeatureEnabled(FeatureToggle::NEW_HOMEPAGE)) {
             return false;

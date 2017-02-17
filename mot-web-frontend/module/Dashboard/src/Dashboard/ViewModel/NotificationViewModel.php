@@ -57,7 +57,8 @@ class NotificationViewModel
             $notification->getSubject(),
             $url->fromRoute(
                 NotificationController::ROUTE_NOTIFICATION,
-                ['notificationId' => $notification->getId()]
+                ['notificationId' => $notification->getId()],
+                ["query" => ["backTo" => NotificationController::BACK_TO_HOME_PARAM]]
             )
         );
 

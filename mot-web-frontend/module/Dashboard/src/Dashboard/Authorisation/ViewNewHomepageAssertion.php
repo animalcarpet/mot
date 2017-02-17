@@ -2,26 +2,28 @@
 
 namespace Dashboard\Authorisation;
 
-use Dashboard\Model\PersonalDetails;
+use DvsaCommon\Model\PersonAuthorization;
 use DvsaCommon\Enum\RoleCode;
 
 class ViewNewHomepageAssertion
 {
     const ROLES_ALLOWED_TO_VIEW_NEW_HOMEPAGE = [
-        RoleCode::USER
+        RoleCode::USER,
+        RoleCode::TESTER_ACTIVE,
+        RoleCode::TESTER_APPLICANT_INITIAL_TRAINING_REQUIRED,
     ];
 
-    /** @var PersonalDetails $personalDetails */
-    private $personalDetails;
+    /** @var PersonAuthorization $personAuthorization */
+    private $personAuthorization;
 
     /**
      * UserAuthorisationHelper constructor.
      *
-     * @param PersonalDetails $personalDetails
+     * @param PersonAuthorization $personAuthorization
      */
-    public function __construct(PersonalDetails $personalDetails)
+    public function __construct(PersonAuthorization $personAuthorization)
     {
-        $this->personalDetails = $personalDetails;
+        $this->personAuthorization = $personAuthorization;
     }
 
     /**
@@ -29,7 +31,7 @@ class ViewNewHomepageAssertion
      */
     public function canViewNewHomepage()
     {
-        $userRoles = $this->personalDetails->getRoles();
+        $userRoles = $this->personAuthorization->getAllRoles();
         if (empty($userRoles)) {
             return true;
         }
