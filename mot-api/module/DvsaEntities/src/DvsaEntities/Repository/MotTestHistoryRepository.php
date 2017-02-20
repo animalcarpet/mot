@@ -116,9 +116,19 @@ class MotTestHistoryRepository extends MotTestRepository
         try {
             $current = parent::getMotTestLogsResult($searchParam);
 
-            $this->switchToHistory();
+            // Work out based on the search dates if the
+            // mot_test_history needs to be searched.
+            $historyDate = new DateTime();
+            $historyDate->sub(new \DateInterval('P4Y'));
+            $history = [];
 
-            $history = parent::getMotTestLogsResult($searchParam);
+            if ($searchParam->getDateFrom()) {
+                if ($searchParam->getDateFrom() < $historyDate) {
+
+                    $this->switchToHistory();
+                    $history = parent::getMotTestLogsResult($searchParam);
+                }
+            }
 
             return array_merge($current, $history);
         } finally {
@@ -134,9 +144,18 @@ class MotTestHistoryRepository extends MotTestRepository
         try {
             $count = parent::getMotTestLogsResultCount($searchParam);
 
-            $this->switchToHistory();
+            // Work out based on the search dates if the
+            // mot_test_history needs to be counted.
+            $historyDate = new DateTime();
+            $historyDate->sub(new \DateInterval('P4Y'));
 
-            $count['count'] += parent::getMotTestLogsResultCount($searchParam)['count'];
+            if ($searchParam->getDateFrom()) {
+                if ($searchParam->getDateFrom() < $historyDate) {
+                    $this->switchToHistory();
+
+                    $count['count'] += parent::getMotTestLogsResultCount($searchParam)['count'];
+                }
+            }
 
             return $count;
         } finally {
