@@ -2,27 +2,22 @@
 use Dashboard\Controller\UserHomeController;
 use Dvsa\Mot\Frontend\AuthenticationModule\Controller\LogoutController;
 use DvsaCommon\Constants\Role;
-use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
+use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 
 if ($this->authorisationHelper()->hasRole(Role::USER)):
-?>
-<ul class="header-user__menu">
-    <li>
-        <a href="<?php echo $this->url(UserHomeController::ROUTE); ?>"
-           class="selected" id="homepage">
-            Home
-        </a>
-    </li>
-    <li>
-        <a href="<?php echo $this->url('newProfile',
-                [], []
-            ); ?>" id="user-profile">Your profile</a>
-    </li>
-    <li>
-        <a href="<?php echo $this->url(LogoutController::ROUTE_LOGOUT); ?>" id="logout">
-            Sign out
-        </a>
-    </li>
-</ul>
-<?php endif;
+    ?>
 
+    <ul class="header-user__menu">
+        <li>
+            <a href="<?php echo $this->url(UserHomeController::ROUTE); ?>" <?php if(!empty($isHomePage)): ?>class="is-active" <?php endif; ?> id="homepage">Home</a>
+        </li>
+        <li>
+            <a href="<?php echo $this->url(ContextProvider::YOUR_PROFILE_PARENT_ROUTE); ?>" <?php if(!empty($isYourProfile)): ?>class="is-active" <?php endif; ?>id="user-profile">Your profile</a>
+        </li>
+        <li>
+            <a href="<?php echo $this->url(LogoutController::ROUTE_LOGOUT); ?>" id="logout">
+                Sign out
+            </a>
+        </li>
+    </ul>
+<?php endif;

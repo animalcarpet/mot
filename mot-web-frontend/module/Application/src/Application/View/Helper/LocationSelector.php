@@ -60,7 +60,7 @@ class LocationSelector extends AbstractHtmlElement
                 'href' => $this->getView()->url(LocationSelectController::ROUTE)
             ];
             $attribs = $this->htmlAttribs($attribs);
-            return '<a '.$attribs.'>Change Site</a>';
+            return '<div><a '.$attribs.'>Change site</a></div>';
         } else {
             return '';
         }

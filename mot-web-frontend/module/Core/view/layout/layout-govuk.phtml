@@ -96,19 +96,13 @@ use Core\ViewModel\Sidebar\SidebarInterface;
     </div>
     <!--end global-cookie-message-->
 
-    <?php
-    // if the user nav should be shown
-    if ($this->hideUserNav != true):
-        echo $this->partial('partial/fragments/header-govuk');
-    else :
-        echo $this->partial(
-            'partial/fragments/header-govuk',
-            [
-                'hideUserNav' => $this->hideUserNav,
-            ]
-        );
-    endif;
-    ?>
+<?php echo $this->partial('partial/fragments/header-govuk',
+    [
+        'hideUserNav' => $this->hideUserNav,
+        'isHomePage' => $this->isHomePage,
+        'isYourProfile' => $this->isYourProfile
+    ]); ?>
+
 <div id="global-header-bar">
     <div class="inner-block">
         <div class="header-bar"></div>

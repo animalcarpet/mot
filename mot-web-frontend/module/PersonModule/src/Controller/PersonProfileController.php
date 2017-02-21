@@ -136,6 +136,10 @@ class PersonProfileController extends AbstractAuthActionController
         $context = $this->contextProvider->getContext();
         $personProfileGuard = $this->personProfileGuardBuilder->createPersonProfileGuard($personDetails, $context);
 
+        if($context === ContextProvider::YOUR_PROFILE_CONTEXT) {
+            $this->layout()->setVariable('isYourProfile', true);
+        }
+
         $profileSidebar = $this->createProfileSidebar($personId, $personProfileGuard);
         $this->setSidebar($profileSidebar);
 
@@ -229,6 +233,7 @@ class PersonProfileController extends AbstractAuthActionController
      */
     private function createViewModel($template, array $variables)
     {
+
         $viewModel = new ViewModel();
         $viewModel->setTemplate($template);
         $viewModel->setVariables($variables);
@@ -417,7 +422,7 @@ class PersonProfileController extends AbstractAuthActionController
             $personProfileGuard,
             $testerAuthorisation,
             $currentUrl,
-            new PersonProfileRoutes($this->contextProvider), 
+            new PersonProfileRoutes($this->contextProvider),
             $this->url(),
             $this->canTestWithoutOtpService->canTestWithoutOtp(),
             $twoFactorAuthEnabled,

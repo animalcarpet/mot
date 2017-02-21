@@ -1,24 +1,32 @@
-<header role="banner" id="global-header" class="with-proposition">
-    <div class="header-wrapper">
-        <div class="header-global">
+<header role="banner" class="with-proposition" id="global-header">
+    <div class="container header-wrapper u-clearfix">
+        <div class="header-global <?php if($this->identity()): ?>header-global--internal <?php endif; ?>u-clearfix" >
             <div class="header-logo">
-                <a href="<?php $test = $this->hideUserNav ; echo $this->basePath('/'); ?>"
-                   title="Go to the homepage" id="logo" class="content">
-                    <img src="<?php echo $this->basePath('img/logo_mot2.gif'); ?>"
-                    width="56" height="53" alt=""></a>
+                <?php if($this->identity()): ?>
+                    <a href="<?php echo $this->basePath('/'); ?>" title="Go to MOT testing service homepage" id="logo" class="content">
+                        <img src="<?php echo $this->basePath('assets/images/dvsa-crest.png'); ?>" width="35" height="31" alt=""> MOT testing service
+                    </a>
+                <?php else: ?>
+                    <a href="https://www.gov.uk/" title="Go to the GOV.UK homepage" id="logo" class="content">
+                        <img src="<?php echo $this->basePath('assets/images/gov.uk_logotype_crown.png'); ?>" width="35" height="31" alt=""> GOV.UK
+                    </a>
+                <?php endif; ?>
             </div>
+            <!-- inside_header -->
         </div>
-        
         <div class="header-proposition">
             <div class="content">
                 <nav id="proposition-menu">
-                    <?php if($this->hideUserNav != true) : ?>
-                        <?php echo $this->partial('partial/fragments/user-header.phtml'); ?>
-                        <?php echo $this->partial('partial/fragments/user-menu.phtml'); ?>
+                    <?php if($this->identity()): ?>
+                        <?php if($this->hideUserNav != true) : ?>
+                            <?php echo $this->partial('partial/fragments/user-header.phtml'); ?>
+                            <?php echo $this->partial('partial/fragments/user-menu.phtml'); ?>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <span id="proposition-name">MOT testing service</span>
                     <?php endif; ?>
                 </nav>
             </div>
         </div>
     </div>
 </header>
-

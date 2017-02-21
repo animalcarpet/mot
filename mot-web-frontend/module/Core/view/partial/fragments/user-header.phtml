@@ -4,8 +4,8 @@ use DvsaCommon\Constants\Role;
 
 ?>
 <?php if ($this->authorisationHelper()->hasRole(Role::USER)): ?>
-    <span id="header-user-name" class="header-user__name">
-    <?php echo $this->escapeHtml($this->identityHelper()->getDisplayName()); ?>
+    <span class="header-user__name" id="header-user-name">
+        <?php echo $this->escapeHtml($this->identityHelper()->getDisplayName()); ?>
     </span>
 <?php endif; ?>
 
@@ -14,11 +14,10 @@ use DvsaCommon\Constants\Role;
     /** @var $vts \Dvsa\Mot\Frontend\AuthenticationModule\Model\VehicleTestingStation */
     $vts = $this->identityHelper()->getCurrentVts(); ?>
     <?php if (null !== $vts): ?>
-    <span id="current-site" class="header-user__address">
+    <div id="current-site" class="header-user__address">
         <?php echo $this->escapeHtml($vts->getName()); ?> -
         <?php echo $this->escapeHtml($vts->getAddress()); ?>
         <?php echo $this->locationSelector() ?>
-    </span>
+    </div>
     <?php endif; ?>
 <?php endif;
-
