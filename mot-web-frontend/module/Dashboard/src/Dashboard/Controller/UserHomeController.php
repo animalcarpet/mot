@@ -159,6 +159,8 @@ class UserHomeController extends AbstractAuthActionController
             ]
         );
 
+        $this->layout()->setVariable('isHomePage', true);
+
         return $return;
     }
 
@@ -186,6 +188,7 @@ class UserHomeController extends AbstractAuthActionController
         $vm->setTemplate('/dashboard/user-home/user-home-refactor.twig');
 
         $this->layout('layout/layout-govuk.phtml');
+        $this->layout()->setVariable('isHomePage', true);
 
         return $vm;
     }

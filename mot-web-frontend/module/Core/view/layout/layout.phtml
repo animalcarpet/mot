@@ -56,57 +56,20 @@ $mastheadPresenter = new MastheadPresenter;
     })(window,document,'script','dataLayer','GTM-PS5VXQ');</script>
 <!-- End Google Tag Manager -->
 <script type="text/javascript">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
-<header class="module-global-header">
-    <div class="container" id="user-info">
-        <a class="global-header_home-link" href="<?php echo $this->basePath('/'); ?>"><img
-                src="<?php echo $this->basePath('img/logo_mot2.gif'); ?>" alt="MOT"></a>
 
-        <?php if ($this->authorisationHelper()->hasRole(Role::USER)): ?>
-            <p id="header-user-name" class="global-header_name">
-                <?php echo $this->escapeHtml($this->identityHelper()->getDisplayName()); ?>
-            </p>
-        <?php endif; ?>
 
-        <?php if ($this->authorisationHelper()->isGranted(PermissionInSystem::MOT_TEST_READ)): ?>
-            <p class="global-header_address" id="current-site">
-                <?php
-                /** @var $vts \Dvsa\Mot\Frontend\AuthenticationModule\Model\VehicleTestingStation */
-                $vts = $this->identityHelper()->getCurrentVts(); ?>
-                <?php if (null !== $vts): ?>
-                    <span><?php echo $this->escapeHtml($vts->getName()); ?></span>,
-                    <span><?php echo $this->escapeHtml($vts->getAddress()); ?></span>
-                    <?php echo $this->locationSelector(); ?>
-                <?php endif; ?>
-            </p>
-        <?php endif; ?>
+<?php echo $this->partial('partial/fragments/header-govuk',
+    [
+        'hideUserNav' => $this->hideUserNav,
+        'isHomePage' => $this->isHomePage,
+        'isYourProfile' => $this->isYourProfile
+    ]); ?>
 
-        <?php if ($this->authorisationHelper()->hasRole(Role::USER)): ?>
-            <nav class="global-header_navigation">
-                <ul>
-                    <li>
-                        <a href="<?php echo $this->url(UserHomeController::ROUTE); ?>" class="selected" id="homepage">
-                            Home
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<?php
-                        echo $this->url('newProfile', [],[]);
-                        ?>" id="user-profile">Your profile</a>
-                    </li>
-                    <li>
-                        <a href="<?php echo $this->url(LogoutController::ROUTE_LOGOUT); ?>" id="logout">
-                            Sign out
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        <?php endif; ?>
-    </div>
-</header>
 <div class="container">
     <div class="module-colour-flash">
     </div>
 </div>
+
 <div class="container">
     <p class="module-phase">
         <strong class="phase-name is-beta">BETA</strong>

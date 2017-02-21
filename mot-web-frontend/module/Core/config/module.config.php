@@ -2,6 +2,7 @@
 
 use Core\View\Helper\Factory\GetReleaseTagFactory;
 use DvsaFeature\Factory\View\Helper\FeatureToggleViewHelperFactory;
+use Core\View\Helper\Factory\MatchCurrentRouteViewHelperFactory;
 
 return [
     'view_manager' => [
@@ -18,7 +19,8 @@ return [
         'factories' => [
             'getReleaseTag' => GetReleaseTagFactory::class,
             'googleAnalyticsHelper' => \Core\Factory\GoogleAnalyticsHelperFactory::class,
-            'featureToggle' => FeatureToggleViewHelperFactory::class
+            'featureToggle' => FeatureToggleViewHelperFactory::class,
+            'MatchCurrentRouteViewHelper' => MatchCurrentRouteViewHelperFactory::class,
         ]
     ]
 ];
