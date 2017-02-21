@@ -49,6 +49,11 @@ class FormsController extends AbstractAuthActionController
             ]
         );
 
+        $this->layout('layout/layout-govuk.phtml');
+        $this->layout()->setVariable("breadcrumbs", ["breadcrumbs" => ["MOT forms" => ""]]);
+        $this->layout()->setVariable('pageTitle', 'MOT forms');
+        $this->layout()->setVariable('pageLede', 'Download and print blank copies of common forms.');
+
         $view->setTemplate('application/index/forms.phtml');
 
         return $view;
