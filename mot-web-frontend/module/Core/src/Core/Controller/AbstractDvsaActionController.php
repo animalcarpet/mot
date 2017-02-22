@@ -333,4 +333,15 @@ abstract class AbstractDvsaActionController
 
         throw new \InvalidArgumentException();
     }
+
+    /**
+     * Setting head title of page
+     *
+     * @param $title
+     */
+    protected function setHeadTitle($title)
+    {
+        $headTitleHelper = $this->getServiceLocator()->get('ViewHelperManager')->get('headTitle');
+        $headTitleHelper($title);
+    }
 }
