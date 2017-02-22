@@ -13,6 +13,9 @@ class DashboardViewModel
     /** @var DemoTestViewModel $demoTestViewModel */
     private $demoTestViewModel;
 
+    /** @var bool $showDemoMessage */
+    private $showDemoMessage = false;
+
     /**
      * DashboardViewModel constructor.
      *
@@ -52,5 +55,21 @@ class DashboardViewModel
     public function getNotificationsViewModel()
     {
         return $this->notificationsViewModel;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getShowDemoMessage()
+    {
+        return $this->showDemoMessage;
+    }
+
+    /**
+     * @param $showDemoMessage
+     */
+    public function setShowDemoMessage($showDemoMessage)
+    {
+        $this->showDemoMessage = $showDemoMessage;
     }
 }

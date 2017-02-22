@@ -15,12 +15,12 @@ class ViewNewHomepageAssertionTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider testUserCanViewNewHomepageDataProvider
      *
-     * @param $systemRoles
-     * @param $organisationsRoles
-     * @param $sitesRoles
-     * @param $canUserViewNewHomepage
+     * @param array $systemRoles
+     * @param array $organisationsRoles
+     * @param array $sitesRoles
+     * @param bool $canUserViewNewHomepage
      */
-    public function testUserWithSpecificRolesCanViewNewHomepage($systemRoles, $organisationsRoles, $sitesRoles, $canUserViewNewHomepage)
+    public function testUserWithSpecificRolesCanViewNewHomepage(array $systemRoles, array $organisationsRoles, array $sitesRoles, $canUserViewNewHomepage)
     {
         $personalDetails = $this->buildPersonAuthorization(
             $systemRoles,
@@ -52,6 +52,12 @@ class ViewNewHomepageAssertionTest extends \PHPUnit_Framework_TestCase
                 [],
                 [],
                 false,
+            ],
+            [
+                [RoleCode::USER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED],
+                [],
+                [],
+                true,
             ],
         ];
     }
