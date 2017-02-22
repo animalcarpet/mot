@@ -10,6 +10,7 @@ class ViewNewHomepageAssertion
     const ROLES_ALLOWED_TO_VIEW_NEW_HOMEPAGE = [
         RoleCode::USER,
         RoleCode::TESTER_ACTIVE,
+        RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED,
         RoleCode::TESTER_APPLICANT_INITIAL_TRAINING_REQUIRED,
     ];
 

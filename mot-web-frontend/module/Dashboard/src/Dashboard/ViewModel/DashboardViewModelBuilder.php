@@ -82,6 +82,14 @@ class DashboardViewModelBuilder
     }
 
     /**
+     * @return bool
+     */
+    public function shouldShowDemoMessage()
+    {
+        return $this->dashboardGuard->isDemoTestNeeded();
+    }
+
+    /**
      * @return DashboardViewModel
      */
     public function build()
@@ -91,6 +99,8 @@ class DashboardViewModelBuilder
             $this->buildNotificationsViewModel(),
             $this->buildDemoTestViewModel()
         );
+
+        $dashboardViewModel->setShowDemoMessage($this->shouldShowDemoMessage());
 
         return $dashboardViewModel;
     }
