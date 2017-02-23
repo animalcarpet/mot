@@ -1,5 +1,0 @@
-This folder is the internal webroot for nigels html mockups.
-
-We are going to fire up a temporary express server to host the mocks.
-
-The files were previously moved into the public folder and I am cleaning this out.
