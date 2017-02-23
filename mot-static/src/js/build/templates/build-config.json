@@ -1,5 +1,0 @@
-{
-    "id": "<%= buildId %>",
-    "datetime": "<%= buildDateTime %>",
-    "environment": "<%= environment %>"
-}
