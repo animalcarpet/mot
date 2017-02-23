@@ -18,7 +18,7 @@ use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 </p>
 <p>Now sign out and inspect the vehicle.</p>
 <?php if ($presenter->isNonMotTest()): ?>
-<form action="/<?php echo MotTestUrlBuilder::motTest($presenter->getMotTestNumber()); ?>" method="GET" role="form" novalidate>
+<form action="/<?php echo MotTestUrlBuilder::motTest($presenter->getMotTestNumber()); ?>" method="GET" novalidate>
     <div class="form-group">
         <?php echo $this->partial('partial/forms/submitElement.phtml', ['id' => 'enter-test-results', 'label' => 'Enter non-MOT test results']); ?>
     </div>
@@ -31,7 +31,7 @@ use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
     </ul>
 </nav>
 <?php else: ?>
-<form action="<?php echo $this->url(LogoutController::ROUTE_LOGOUT); ?>" method="GET" role="form" novalidate>
+<form action="<?php echo $this->url(LogoutController::ROUTE_LOGOUT); ?>" method="GET" novalidate>
     <div class="form-group">
         <?php echo $this->partial('partial/forms/submitElement.phtml', ['id' => 'sign-out', 'label' => 'Sign out']); ?>
     </div>
