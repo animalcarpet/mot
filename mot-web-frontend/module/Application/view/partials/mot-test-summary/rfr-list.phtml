@@ -28,14 +28,11 @@ $items = is_array($this->items) && !empty($this->items) ? $this->items : false;
                 );
 
                 if ($item->failureDangerous): ?>
-                    <span class="label label-danger pull-right"
-                        >Dangerous</span>
+                    <span class="label label-danger pull-right">Dangerous</span>
                 <?php endif ?>
             </li>
         <?php endforeach; ?>
     <?php else : ?>
-        <li class="primary-item" id="rfrNoneRecorded">
-            None recorded
-        </li>
+        <li class="primary-item">None recorded</li>
     <?php endif; ?>
 </ul>
