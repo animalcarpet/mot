@@ -16,13 +16,13 @@ $backButtonUrl = $this->url(
     <tbody>
     <tr>
         <th scope="col" class="key-value-list__key">Driving licence number</th>
-        <td scope="col" id="drivingLicenceNumber" class="key-value-list__value">
+        <td id="drivingLicenceNumber" class="key-value-list__value">
             <?php echo strtoupper($drivingLicenceNumber) ?>
         </td>
     </tr>
     <tr>
         <th scope="col" class="key-value-list__key">Issuing country</th>
-        <td scope="col" id="drivingLicenceRegion" class="key-value-list__value">
+        <td id="drivingLicenceRegion" class="key-value-list__value">
             <?php echo $presenter->getCountryDescriptionByCode($drivingLicenceRegion) ?>
         </td>
     </tr>

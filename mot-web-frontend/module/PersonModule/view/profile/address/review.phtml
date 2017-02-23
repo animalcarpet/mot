@@ -21,11 +21,11 @@
     <tbody>
         <tr>
             <th scope="col" class="key-value-list__key">User profile</th>
-            <td scope="col" class="key-value-list__value"><?php echo $personName?></td>
+            <td class="key-value-list__value"><?php echo $personName?></td>
         </tr>
         <tr>
             <th scope="col" class="key-value-list__key">Address</th>
-            <td scope="col" class="key-value-list__value">
+            <td class="key-value-list__value">
                 <?php
                 echo $this->escapeHtml($firstLine) . '<br>';
                 echo ($secondLine != '') ? $this->escapeHtml($secondLine) . '<br>' : '';

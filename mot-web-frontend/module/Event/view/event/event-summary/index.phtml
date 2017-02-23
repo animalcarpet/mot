@@ -9,31 +9,31 @@
         <tbody>
         <tr>
             <th scope="col" class="key-value-list__key">Date of event</th>
-            <td scope="col" class="key-value-list__value">
+            <td class="key-value-list__value">
                 <?php echo $this->escapeHtmlAttr($eventDate) ?>
             </td>
-            <td scope="col" class="key-value-list__item-action">
+            <td class="key-value-list__item-action">
                 <a href="<?php echo $this->escapeHtmlAttr($this->url($routes['RECORD'], array('type' => $type, 'id' => $id))); ?>">Change<span class="visuallyhidden"> event</span></a>
             </td>
         </tr>
         <tr>
             <th scope="col" class="key-value-list__key">Event</th>
-            <td scope="col" class="key-value-list__value">
+            <td class="key-value-list__value">
                 <?php echo $this->escapeHtmlAttr($eventTypeName) ?>
             </td>
-            <td scope="col" class="key-value-list__item-action">
+            <td class="key-value-list__item-action">
                 <a href="<?php echo $this->escapeHtmlAttr($this->url($routes['RECORD'], array('type' => $type, 'id' => $id))); ?>">Change<span class="visuallyhidden"> event</span></a>
             </td>
         </tr>
         <tr>
             <th scope="col" class="key-value-list__key">Outcome</th>
-            <td scope="col" class="key-value-list__value">
+            <td class="key-value-list__value">
                 <?php echo $this->escapeHtmlAttr($eventOutcomeCodeName) ?>
                 <span class="key-value-list__meta">
                     <?php echo $this->escapeHtmlAttr($notes) ?>
                 </span>
             </td>
-            <td scope="col" class="key-value-list__item-action">
+            <td class="key-value-list__item-action">
                 <a href="<?php echo $this->escapeHtmlAttr($this->url($routes['OUTCOME'], array('type' => $type, 'id' => $id))); ?>">Change<span class="visuallyhidden"> event outcome</span></a>
             </td>
         </tr>
