@@ -16,11 +16,11 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardOrder\ViewModel\CardOrderReviewView
                 <tbody>
                 <tr>
                     <th scope="col" class="key-value-list__key">Name</th>
-                    <td scope="col" class="key-value-list__value"><?php echo $this->escapeHtml($viewModel->getName()) ?></td>
+                    <td class="key-value-list__value"><?php echo $this->escapeHtml($viewModel->getName()) ?></td>
                 </tr>
                 <tr>
                     <th scope="col" class="key-value-list__key">Address</th>
-                    <td scope="col" class="key-value-list__value">
+                    <td class="key-value-list__value">
                         <?php if (!empty($viewModel->getVtsName())): ?>
                             <?php echo $this->escapeHtml($viewModel->getVtsName()) ?>,<br/>
                         <?php endif ?>

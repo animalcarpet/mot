@@ -23,7 +23,7 @@
         <th scope="col" class="key-value-list__key">
             Password
         </th>
-        <td scope="col" class="key-value-list__value">
+        <td class="key-value-list__value">
             <span class="masked-text"><?php echo $reviewViewModel->getHiddenPassword(); ?></span>
         </td>
     </tr>
@@ -31,7 +31,7 @@
         <th scope="col" class="key-value-list__key">
             First security question
         </th>
-        <td scope="col" class="key-value-list__value">
+        <td class="key-value-list__value">
             <?php echo $reviewViewModel->getSecurityQuestionGroupAText(); ?><br>
             <span class="font-small"><?php echo $this->escapeHtmlAttr($reviewViewModel->getAnswerA()); ?></span>
         </td>
@@ -40,7 +40,7 @@
         <th scope="col" class="key-value-list__key">
             Second security question
         </th>
-        <td scope="col" class="key-value-list__value">
+        <td class="key-value-list__value">
             <?php echo $reviewViewModel->getSecurityQuestionGroupBText(); ?><br>
             <span class="font-small"><?php echo $this->escapeHtmlAttr($reviewViewModel->getAnswerB()); ?></span>
         </td>

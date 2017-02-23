@@ -16,10 +16,10 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
         <th scope="col" class="key-value-list__key">
             Email address
         </th>
-        <td id="emailAddress" scope="col" class="key-value-list__value">
+        <td id="emailAddress" class="key-value-list__value">
             <?php echo $this->escapeHtmlAttr($emailAddress) ?>
         </td>
-        <td scope="col" class="key-value-list__item-action">
+        <td class="key-value-list__item-action">
             <a id="change-email" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->emailStep());?>">Change<span class="visuallyhidden"> email address</span></a>
         </td>
     </tr>
@@ -27,10 +27,10 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
         <th scope="col" class="key-value-list__key">
             Name
         </th>
-        <td id="displayName" scope="col" class="key-value-list__value">
+        <td id="displayName" class="key-value-list__value">
             <?php echo $this->escapeHtmlAttr($displayName) ?>
         </td>
-        <td scope="col" class="key-value-list__item-action">
+        <td class="key-value-list__item-action">
             <a id="change-name" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->detailsStep());?>">Change<span class="visuallyhidden"> name</span></a>
         </td>
     </tr>
@@ -38,10 +38,10 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
         <th scope="col" class="key-value-list__key">
             Date of birth
         </th>
-        <td id="date-of-birth" scope="col" class="key-value-list__value">
+        <td id="date-of-birth" class="key-value-list__value">
             <?php echo $this->escapeHtmlAttr($dateOfBirth); ?>
         </td>
-        <td scope="col" class="key-value-list__item-action">
+        <td class="key-value-list__item-action">
             <a id="change-phone" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->detailsStep());?>">Change<span class="visuallyhidden"> date of birth</span></a>
         </td>
     </tr>
@@ -49,7 +49,7 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
         <th scope="col" class="key-value-list__key">
             Address
         </th>
-        <td id="address" scope="col" class="key-value-list__value">
+        <td id="address" class="key-value-list__value">
             <?php
                 if (is_array($address) && count($address)) {
                     foreach ($address as $key => $value) {
@@ -58,7 +58,7 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
                 }
             ?>
         </td>
-        <td scope="col" class="key-value-list__item-action">
+        <td class="key-value-list__item-action">
             <a id="change-address" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->contactDetailsStep());?>">Change<span class="visuallyhidden"> address</span></a>
         </td>
     </tr>
@@ -66,10 +66,10 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
         <th scope="col" class="key-value-list__key">
             Phone number
         </th>
-        <td id="phone" scope="col" class="key-value-list__value">
+        <td id="phone" class="key-value-list__value">
             <?php echo $this->escapeHtmlAttr($phone) ?>
         </td>
-        <td scope="col" class="key-value-list__item-action">
+        <td class="key-value-list__item-action">
             <a id="change-phone" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->contactDetailsStep());?>">Change<span class="visuallyhidden"> phone number</span></a>
         </td>
     </tr>
@@ -85,12 +85,12 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
         <th scope="col" class="key-value-list__key">
             First security question
         </th>
-        <td id="firstQuestion" scope="col" class="key-value-list__value">
+        <td id="firstQuestion" class="key-value-list__value">
             <?php echo $this->escapeHtmlAttr($firstQuestion) ?>
             <br>
             <span id="answer1Obfuscated" class="masked-text"><?php echo $answer1Obfuscated ?></span>
         </td>
-        <td scope="col" class="key-value-list__item-action">
+        <td class="key-value-list__item-action">
             <a id="change-security-one" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->securityQuestionStepOne());?>">Change<span class="visuallyhidden"> first security question</span></a>
         </td>
     </tr>
@@ -98,12 +98,12 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
         <th scope="col" class="key-value-list__key">
             Second security question
         </th>
-        <td id="secondQuestion" scope="col" class="key-value-list__value">
+        <td id="secondQuestion" class="key-value-list__value">
             <?php echo $this->escapeHtmlAttr($secondQuestion) ?>
             <br>
             <span id="answer2Obfuscated" class="masked-text"><?php echo $answer2Obfuscated ?></span>
         </td>
-        <td scope="col" class="key-value-list__item-action">
+        <td class="key-value-list__item-action">
             <a id="change-security-two" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->securityQuestionStepTwo());?>">Change<span class="visuallyhidden"> second security question</span></a>
         </td>
     </tr>
@@ -111,10 +111,10 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
         <th scope="col" class="key-value-list__key">
             Password
         </th>
-        <td id="passwordObfuscated" scope="col" class="key-value-list__value">
+        <td id="passwordObfuscated" class="key-value-list__value">
             <span class="masked-text"><?php echo $passwordObfuscated ?></span>
         </td>
-        <td scope="col" class="key-value-list__item-action">
+        <td class="key-value-list__item-action">
             <a id="change-password" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->passwordStep());?>">Change<span class="visuallyhidden"> password</span></a>
         </td>
     </tr>
