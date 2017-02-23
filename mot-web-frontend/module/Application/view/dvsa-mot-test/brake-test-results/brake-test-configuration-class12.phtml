@@ -38,7 +38,7 @@ $this->placeholder('progressBar')->captureEnd();
 <?php echo $this->partial('infoMessages', ['getFromFlash' => true]); ?>
 <?php echo $this->partial('vehicleSummary', ['vehicle' => $vehicle]); ?>
 
-<form method="POST" role="form">
+<form method="POST">
     <?php echo $this->csrfToken() ?>
     <div class="row">
         <div class="col-sm-8">

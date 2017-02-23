@@ -37,7 +37,7 @@ echo $this->partial(
     <div class="column-half">
         <h2 class="heading-large">Password <span class="font-large">reset</span></h2>
         <p>Send password reset instructions by:</p>
-        <form action="<?php echo $this->escapeHtmlAttr($passwordResetUrl); ?>" method="POST" role="form" novalidate>
+        <form action="<?php echo $this->escapeHtmlAttr($passwordResetUrl); ?>" method="POST" novalidate>
             <div class="form-group">
                 <?php
                 echo $this->csrfToken();
@@ -57,7 +57,7 @@ echo $this->partial(
     <div class="column-half">
         <h2 class="heading-large">Username <span class="font-large">recovery</span></h2>
         <p>Send the username by:</p>
-        <form action="<?php echo $this->escapeHtmlAttr($usernameRecoverUrl); ?>" method="POST" role="form" novalidate>
+        <form action="<?php echo $this->escapeHtmlAttr($usernameRecoverUrl); ?>" method="POST" novalidate>
             <div class="form-group">
                 <?php echo $this->csrfToken() ?>
                 <?php echo $this->partial(
