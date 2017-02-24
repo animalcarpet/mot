@@ -53,144 +53,129 @@ endif ?>
 <h3 class="summary-heading">Personal details</h3>
 <table class="table-summary" id="personal_details">
     <tbody>
-    <tr>
-        <th class="table-summary__key">
-            Name
-        </th>
-        <td class="table-summary__value" id="display-name">
-            <?php echo $this->escapeHtml($personalDetails->getFullName()); ?>
-            <?php if ($personProfileGuard->canEditName()) {
-                $url = $this->personProfileUrl()->fromPersonProfile('change-person-name');
-                echo '<a href="' . $url .
-                    '" class="table-summary__action">Change<span class="visuallyhidden"> Name </span></a>';
-            } ?>
-        </td>
-    </tr>
-    <tr>
-        <th class="table-summary__key">
-            User ID
-        </th>
-        <td class="table-summary__value" id="display-username">
-            <?php echo $this->escapeHtml($personalDetails->getUsername()); ?>
-        </td>
-    </tr>
-    <?php if (true === $personProfileGuard->canViewDateOfBirth()) : ?>
-    <tr>
-        <th class="table-summary__key">
-            Date of birth
-        </th>
-        <td class="table-summary__value" id="date-of-birth">
-            <?php echo !empty($personalDetails->getDateOfBirth()) ? DateTimeDisplayFormat::textDate($personalDetails->getDateOfBirth())
-                : '<span class="table-summary__meta">Unknown</span>'; ?>
+        <tr>
+            <th class="table-summary__key">Name</th>
+            <td class="table-summary__value" id="display-name">
+                <?php echo $this->escapeHtml($personalDetails->getFullName()); ?>
+                <?php if ($personProfileGuard->canEditName()) {
+                    $url = $this->personProfileUrl()->fromPersonProfile('change-person-name');
+                    echo '<a href="' . $url .
+                        '" class="table-summary__action">Change<span class="visuallyhidden"> Name </span></a>';
+                } ?>
+            </td>
+        </tr>
+        <tr>
+            <th class="table-summary__key">User ID</th>
+            <td class="table-summary__value" id="display-username">
+                <?php echo $this->escapeHtml($personalDetails->getUsername()); ?>
+            </td>
+        </tr>
+        <?php if (true === $personProfileGuard->canViewDateOfBirth()) : ?>
+        <tr>
+            <th class="table-summary__key">Date of birth</th>
+            <td class="table-summary__value" id="date-of-birth">
+                <?php echo !empty($personalDetails->getDateOfBirth()) ? DateTimeDisplayFormat::textDate($personalDetails->getDateOfBirth())
+                    : '<span class="table-summary__meta">Unknown</span>'; ?>
 
-            <?php if($personProfileGuard->canChangeDateOfBirth()){
-                $url = $this->personProfileUrl()->fromPersonProfile('change-person-date-of-birth');
-                echo '<a href="' . $url .
-                    '" class="table-summary__action">Change<span class="visuallyhidden"> Date of birth </span></a>';
-            } ?>
-        </td>
-    </tr>
-    <?php endif ?>
-    <?php if (true === $personProfileGuard->canViewDrivingLicence()) : ?>
-    <tr>
-        <th class="table-summary__key">
-            Driving licence
-        </th>
-        <td class="table-summary__value" id="drivingLicence">
-            <?php
-            $licenceRegionCode = $personalDetails->getDrivingLicenceRegion();
-            if ($licenceRegionCode === 'NU') {
-                $licenceRegionCode = 'Non-UK';
-            }
-            echo !empty($personalDetails->getDrivingLicenceNumber())
-                    ? $this->escapeHtml($personalDetails->getDrivingLicenceNumber())
-                        . '<br>'
-                        . '<span class="table-summary__meta">' .  $this->escapeHtml($licenceRegionCode) .' licence</span>'
-                    : '<span class="table-summary__meta">None recorded</span>'; ?>
-            <?php if (true === $personProfileGuard->canChangeDrivingLicence()) :
-                $url = $this->personProfileUrl()->fromPersonProfile('driving-licence-change');
-                echo '<a href="' . $url .
-                    '" class="table-summary__action">Change<span class="visuallyhidden"> Driving licence </span></a>';
-            endif ?>
-        </td>
-    </tr>
-    <?php endif ?>
+                <?php if($personProfileGuard->canChangeDateOfBirth()){
+                    $url = $this->personProfileUrl()->fromPersonProfile('change-person-date-of-birth');
+                    echo '<a href="' . $url .
+                        '" class="table-summary__action">Change<span class="visuallyhidden"> Date of birth </span></a>';
+                } ?>
+            </td>
+        </tr>
+        <?php endif ?>
+        <?php if (true === $personProfileGuard->canViewDrivingLicence()) : ?>
+        <tr>
+            <th class="table-summary__key">Driving licence</th>
+            <td class="table-summary__value" id="drivingLicence">
+                <?php
+                $licenceRegionCode = $personalDetails->getDrivingLicenceRegion();
+                if ($licenceRegionCode === 'NU') {
+                    $licenceRegionCode = 'Non-UK';
+                }
+                echo !empty($personalDetails->getDrivingLicenceNumber())
+                        ? $this->escapeHtml($personalDetails->getDrivingLicenceNumber())
+                            . '<br>'
+                            . '<span class="table-summary__meta">' .  $this->escapeHtml($licenceRegionCode) .' licence</span>'
+                        : '<span class="table-summary__meta">None recorded</span>'; ?>
+                <?php if (true === $personProfileGuard->canChangeDrivingLicence()) :
+                    $url = $this->personProfileUrl()->fromPersonProfile('driving-licence-change');
+                    echo '<a href="' . $url .
+                        '" class="table-summary__action">Change<span class="visuallyhidden"> Driving licence </span></a>';
+                endif ?>
+            </td>
+        </tr>
+        <?php endif ?>
     </tbody>
 </table>
 
 <h3 class="heading-medium">Contact details</h3>
 <table class="table-summary__key" id="contact_details">
     <tbody>
-    <tr>
-        <th class="table-summary__key">
-            Email
-        </th>
-        <td class="table-summary__value" id="email-address">
-            <?php echo !empty($personalDetails->getEmail()) ? $this->escapeHtml($personalDetails->getEmail())
-                : '<span class="table-summary__meta">Unknown</span>'; ?>
+        <tr>
+            <th class="table-summary__key">Email</th>
+            <td class="table-summary__value" id="email-address">
+                <?php echo !empty($personalDetails->getEmail()) ? $this->escapeHtml($personalDetails->getEmail())
+                    : '<span class="table-summary__meta">Unknown</span>'; ?>
+                <?php
+                    echo '<a href="' . $emailUrl . '" class="table-summary__action">Change<span class="visuallyhidden"> Email</span></a>';
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <th class="table-summary__key">Address</th>
+            <td class="table-summary__value" id="full-address">
+                <?php if (!empty($fullAddressArray)) : ?>
+                    <?php echo ($personalDetails->getAddressLine1() != '') ? $this->escapeHtml($personalDetails->getAddressLine1()) . ', <br>'
+                        : ''; ?>
+                    <?php echo ($personalDetails->getAddressLine2() != '') ? $this->escapeHtml($personalDetails->getAddressLine2()) . ', <br>'
+                        : ''; ?>
+                    <?php echo ($personalDetails->getAddressLine3() != '') ? $this->escapeHtml($personalDetails->getAddressLine3()) . ', <br>'
+                        : ''; ?>
+                    <?php echo ($personalDetails->getTown() != '') ? $this->escapeHtml($personalDetails->getTown()) . ', <br>'
+                        : ''; ?>
+                    <?php echo ($personalDetails->getPostcode() != '') ? $this->escapeHtml($personalDetails->getPostcode()) . '<br>'
+                        : ''; ?>
+                <?php else :
+                    echo '<span class="table-summary__meta">Unknown</span>';
+                endif;
 
-            <?php
-                echo '<a href="' . $emailUrl . '" class="table-summary__action">Change<span class="visuallyhidden"> Email</span></a>';
-            ?>
-        </td>
-    </tr>
-    <tr>
-        <th class="table-summary__key">
-            Address
-        </th>
-        <td class="table-summary__value" id="full-address">
-            <?php if (!empty($fullAddressArray)) : ?>
-                <?php echo ($personalDetails->getAddressLine1() != '') ? $this->escapeHtml($personalDetails->getAddressLine1()) . ', <br>'
-                    : ''; ?>
-                <?php echo ($personalDetails->getAddressLine2() != '') ? $this->escapeHtml($personalDetails->getAddressLine2()) . ', <br>'
-                    : ''; ?>
-                <?php echo ($personalDetails->getAddressLine3() != '') ? $this->escapeHtml($personalDetails->getAddressLine3()) . ', <br>'
-                    : ''; ?>
-                <?php echo ($personalDetails->getTown() != '') ? $this->escapeHtml($personalDetails->getTown()) . ', <br>'
-                    : ''; ?>
-                <?php echo ($personalDetails->getPostcode() != '') ? $this->escapeHtml($personalDetails->getPostcode()) . '<br>'
-                    : ''; ?>
-            <?php else :
-                echo '<span class="table-summary__meta">Unknown</span>';
-            endif;
-
-            if ($personProfileGuard->canChangeAddress()) {
-                $url = $personProfileGuard->isViewingHimself() ? $this->url('newProfile/address/change-address', ['id' => $personalDetails->getId()])
-                    : $this->personProfileUrl()->fromPersonProfile('address/change-address');
-                echo '<a href="' . $url . '" class="table-summary__action">Change</a>';
-            }
-            ?>
-
-        </td>
-    </tr>
-    <tr>
-        <th class="table-summary__key">
-            Telephone
-        </th>
-        <td class="table-summary__value" id="telephone-number">
-            <?php echo (null !== $personalDetails->getPhoneNumber() && '' !== $personalDetails->getPhoneNumber()) ? $this->escapeHtml($personalDetails->getPhoneNumber())
-                : '<span class="table-summary__meta">Unknown</span>';
-                if ($personProfileGuard->canChangeTelephoneNumber()) {
-                    $url = $this->personProfileUrl()->fromPersonProfile('change-telephone-number');
-                    echo '<a href="' . $url .'" class="table-summary__action" title="Change Telephone">Change<span class="visuallyhidden"> Telephone</span>';
+                if ($personProfileGuard->canChangeAddress()) {
+                    $url = $personProfileGuard->isViewingHimself() ? $this->url('newProfile/address/change-address', ['id' => $personalDetails->getId()])
+                        : $this->personProfileUrl()->fromPersonProfile('address/change-address');
+                    echo '<a href="' . $url . '" class="table-summary__action">Change</a>';
                 }
-            ?>
-        </td>
-    </tr>
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <th class="table-summary__key">Telephone</th>
+            <td class="table-summary__value" id="telephone-number">
+                <?php echo (null !== $personalDetails->getPhoneNumber() && '' !== $personalDetails->getPhoneNumber()) ? $this->escapeHtml($personalDetails->getPhoneNumber())
+                    : '<span class="table-summary__meta">Unknown</span>';
+                    if ($personProfileGuard->canChangeTelephoneNumber()) {
+                        $url = $this->personProfileUrl()->fromPersonProfile('change-telephone-number');
+                        echo '<a href="' . $url .'" class="table-summary__action" title="Change Telephone">Change<span class="visuallyhidden"> Telephone</span></a>';
+                    }
+                ?>
+            </td>
+        </tr>
     </tbody>
 </table>
 
 <?php  if (!empty($systemRoles)) : ?>
 
-<h3 class="heading-medium">Roles</h3>
-<table class="table-summary__key" id="dvsa_roles">
-    <tbody>
-    <?php foreach ($systemRoles as $role) : ?>
-        <tr>
-            <th class="table-summary__key" id="role"> <?php echo $role["nicename"]; ?> </th>
-    </tbody>
-    <?php endforeach ?>
-</table>
+    <h3 class="heading-medium">Roles</h3>
+    <table class="table-summary__key" id="dvsa_roles">
+        <tbody>
+        <?php foreach ($systemRoles as $role) : ?>
+            <tr>
+                <th class="table-summary__key" id="role"> <?php echo $role["nicename"]; ?> </th>
+            </tr>
+        </tbody>
+        <?php endforeach ?>
+    </table>
 
 <?php endif ?>
 
@@ -198,22 +183,22 @@ endif ?>
 <h3 class="heading-medium">Security card</h3>
 <table class="table-summary__key" id="security-card">
     <tbody>
-    <tr>
-        <th class="table-summary__key">
-            Activation date
-        </th>
-        <td class="table-summary__value" id="activation_date">
-            <?php echo DateTimeDisplayFormat::textDate($securityCard->getActivationDate()) ?>
-        </td>
-    </tr>
-    <tr>
-        <th class="table-summary__key">
-            Serial number
-        </th>
-        <td class="table-summary__value" id="serial_number">
-            <?php echo $securityCard->getSerialNumber() ?>
-        </td>
-    </tr>
+        <tr>
+            <th class="table-summary__key">
+                Activation date
+            </th>
+            <td class="table-summary__value" id="activation_date">
+                <?php echo DateTimeDisplayFormat::textDate($securityCard->getActivationDate()) ?>
+            </td>
+        </tr>
+        <tr>
+            <th class="table-summary__key">
+                Serial number
+            </th>
+            <td class="table-summary__value" id="serial_number">
+                <?php echo $securityCard->getSerialNumber() ?>
+            </td>
+        </tr>
     </tbody>
 </table>
 <?php endif; ?>
@@ -230,4 +215,3 @@ endif ?>
         </li>
     </ul>
 </nav>
-
