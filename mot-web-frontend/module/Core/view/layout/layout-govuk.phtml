@@ -181,11 +181,13 @@ use Core\ViewModel\Sidebar\SidebarInterface;
 
         <?php if (isset($sidebar) && !empty($sidebar)): ?>
 
-            </div>
+                </div>
 
-            <div class="column-third">
+                <div class="column-third">
 
-                <?php  echo $this->partial($sidebar->getPartialTemplate(), ['sidebar' => $sidebar]); ?>
+                    <?php  echo $this->partial($sidebar->getPartialTemplate(), ['sidebar' => $sidebar]); ?>
+
+                </div>
 
             </div>
 
