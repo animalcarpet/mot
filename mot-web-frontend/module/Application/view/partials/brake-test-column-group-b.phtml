@@ -1,7 +1,7 @@
 <?php
 use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove;
 use DvsaCommon\Enum\VehicleClassCode;
-use DvsaMotTest\Controller\DvsaVehicleViewModel;
+use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultServiceBrakeData;
 
 /** @var DvsaVehicleViewModel $vehicle */
@@ -28,7 +28,7 @@ $imbalanceData = [];
 
 $hasTwoServiceBrakes = (boolean)$brakeResult->getServiceBrake2Efficiency();
 
-$isSingleInFront = (boolean)$brakeResult->getSingleInFront();
+$isSingleInFront = $brakeResult->getSingleInFront();
 
 $serviceBrake1Data = is_null($brakeResult->getServiceBrake1Data()) ? null :
     new BrakeTestResultServiceBrakeData($brakeResult->getServiceBrake1Data());
@@ -48,26 +48,22 @@ for ($brakeNumber = 1; $brakeNumber <= 2; $brakeNumber++) {
     $testPassValue = null;
     //  --  draw service brake result   --
     $key = 'serviceBrake' . $brakeNumber;
-    if ($brakeNumber === 1) {
-        $serviceBrakeEfficiency = is_null($brakeResult->getServiceBrake1Efficiency()) ? null :
-            $brakeResult->getServiceBrake1Efficiency();
 
-        $lockPercentValue = is_null($serviceBrake1Data) ? null :
-            $serviceBrake1Data->getLockPercent();
+    // to be $serviceBrake1Data or $serviceBrake2Data
+    $serviceBrakeData = $brakeNumber == 1 ? $serviceBrake1Data: $serviceBrake2Data;
+    // to be getServiceBrake1Efficiency or getServiceBrake2Efficiency
+    $getServiceBrakeEfficiency = sprintf('getServiceBrake%sEfficiency', $brakeNumber);
+    // to be getServiceBrake1EfficiencyPass or getServiceBrake2EfficiencyPass
+    $getServiceBrakeEfficiencyPass = sprintf('getServiceBrake%sEfficiencyPass', $brakeNumber);
 
-        $testPassValue = is_null($brakeResult->getServiceBrake1EfficiencyPass()) ? null :
-            $brakeResult->getServiceBrake1EfficiencyPass();
+    $serviceBrakeEfficiency = is_null($brakeResult->$getServiceBrakeEfficiency()) ? null :
+        $brakeResult->$getServiceBrakeEfficiency();
 
-    } elseif ($brakeResult->getServiceBrake2Data() != null) {
-        $serviceBrakeEfficiency = is_null($brakeResult->getServiceBrake2Efficiency()) ? null :
-            $brakeResult->getServiceBrake2Efficiency();
+    $lockPercentValue = is_null($serviceBrakeData) ? null :
+        $serviceBrakeData->getLockPercent();
 
-        $lockPercentValue = is_null($serviceBrake2Data) ? null :
-            $serviceBrake2Data->getLockPercent();
-
-        $testPassValue = is_null($brakeResult->getServiceBrake2EfficiencyPass()) ? null :
-            $brakeResult->getServiceBrake2EfficiencyPass();
-    }
+    $testPassValue = is_null($brakeResult->$getServiceBrakeEfficiencyPass()) ? null :
+        $brakeResult->$getServiceBrakeEfficiencyPass();
 
     if ($serviceBrakeEfficiency !== null) {
         $title = 'Service brake' . ($brakeNumber > 1 ? ' ' . $brakeNumber : '');
@@ -99,39 +95,40 @@ for ($brakeNumber = 1; $brakeNumber <= 2; $brakeNumber++) {
      **********************************************************/
     for ($axleNumber = 1; $axleNumber <= 3; $axleNumber++) {
         if ($axleNumber === 1) {
-            $effortNearsideAxle = is_null($serviceBrake1Data) || is_null($serviceBrake1Data->getEffortNearsideAxel1()) ?
+            $effortNearsideAxle = is_null($serviceBrakeData) || is_null($serviceBrakeData->getEffortNearsideAxel1()) ?
                 null :
-                $serviceBrake1Data->getEffortNearsideAxel1();
-            $imbalanceAxle = is_null($serviceBrake1Data) || is_null($serviceBrake1Data->getImbalanceAxle1()) ?
+                $serviceBrakeData->getEffortNearsideAxel1();
+            $imbalanceAxle = is_null($serviceBrakeData) || is_null($serviceBrakeData->getImbalanceAxle1()) ?
                 null :
-                $serviceBrake1Data->getImbalanceAxle1();
+                $serviceBrakeData->getImbalanceAxle1();
         } elseif ($axleNumber === 2) {
-            $effortNearsideAxle = is_null($serviceBrake1Data) || is_null($serviceBrake1Data->getEffortNearsideAxel2()) ?
+            $effortNearsideAxle = is_null($serviceBrakeData) || is_null($serviceBrakeData->getEffortNearsideAxel2()) ?
                 null :
-                $serviceBrake1Data->getEffortNearsideAxel2();
-            $imbalanceAxle = is_null($serviceBrake1Data) || is_null($serviceBrake1Data->getImbalanceAxle2()) ?
+                $serviceBrakeData->getEffortNearsideAxel2();
+            $imbalanceAxle = is_null($serviceBrakeData) || is_null($serviceBrakeData->getImbalanceAxle2()) ?
                 null :
-                $serviceBrake1Data->getImbalanceAxle2();
+                $serviceBrakeData->getImbalanceAxle2();
         } else {
-            $effortNearsideAxle = is_null($serviceBrake1Data) || is_null($serviceBrake1Data->getEffortNearsideAxel3()) ?
+            $effortNearsideAxle = is_null($serviceBrakeData) || is_null($serviceBrakeData->getEffortNearsideAxel3()) ?
                 null :
-                $serviceBrake1Data->getEffortNearsideAxel3();
-            $imbalanceAxle = is_null($serviceBrake1Data) || is_null($serviceBrake1Data->getImbalanceAxle3()) ?
+                $serviceBrakeData->getEffortNearsideAxel3();
+            $imbalanceAxle = is_null($serviceBrakeData) || is_null($serviceBrakeData->getImbalanceAxle3()) ?
                 null :
-                $serviceBrake1Data->getImbalanceAxle3();
+                $serviceBrakeData->getImbalanceAxle3();
         }
 
-        // @todo (ABN) : knwoing the old API used to respond with null value for $isSingleInFront as well,
-        //               we need make sure if this condition is still valid
-        $isOneWheelAxle = ($isSingleInFront === true && $axleNumber === 1) ||
-            (!$isSingleInFront === false && $axleNumber === 2);
+        $singleInFrontOnAxleOne = $isSingleInFront === true && $axleNumber === 1;
+        $notSingleInFrontOnAxleTwo = $isSingleInFront === false && $axleNumber === 2;
 
-        if (!empty($effortNearsideAxle) && !$isOneWheelAxle) {
+        $operatingOnOneWheelAxle = $singleInFrontOnAxleOne || $notSingleInFrontOnAxleTwo;
+
+        if (!empty($effortNearsideAxle) && !$operatingOnOneWheelAxle) {
 
             $brakeName = $hasTwoServiceBrakes ? 'Brake ' . $brakeNumber : '';
+            $axelName = trim($brakeName) . ' Axle ' . $axleNumber;
 
-            $imbalanceData[$axleNumber] = [
-                'name' => trim($brakeName) . ' Axle ' . $axleNumber,
+            $imbalanceData[$brakeName.$axleNumber] = [
+                'name' => $axelName,
                 'value' => $imbalanceAxle,
             ];
         }
@@ -148,7 +145,7 @@ $showAxleTwoParkingBrakeImbalance = $showParkingBrakeImbalance
 if ($showParkingBrakeImbalance) {
     $imbalanceData [] = [
         'name' => $showAxleTwoParkingBrakeImbalance ? 'Parking brake axle 1' : 'Parking brake',
-        'value' => $brakeResult->getParkingBrakeImbalancePass(),
+        'value' => $brakeResult->getData()->parkingBrakeImbalance,
     ];
 }
 
@@ -162,11 +159,8 @@ if ($showAxleTwoParkingBrakeImbalance) {
 //  --  imbalance:status   --
 $serviceBrake1ImbalancePass = null;
 $serviceBrake2ImbalancePass = null;
-if ($showAxleTwoParkingBrakeImbalance) {
-    $parkingBrakeImbalancePass = $brakeResult->getParkingBrakeImbalancePass();
-} else {
-    $parkingBrakeImbalancePass = null;
-}
+
+$parkingBrakeImbalancePass = $brakeResult->getParkingBrakeImbalancePass();
 
 if ($serviceBrake1Data != null) {
     $serviceBrake1ImbalancePass = $serviceBrake1Data->getImbalancePass();

@@ -12,6 +12,7 @@ use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationDtoInterface;
 use DvsaCommon\Enum\BrakeTestTypeCode;
 use DvsaCommon\Enum\MotTestStatusName;
+use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Enum\WeightSourceCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
@@ -69,11 +70,11 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
         $motTest = $this->tryGetMotTestOrAddErrorMessages($motTestNumber);
         /** @var DvsaVehicle $vehicle */
         $vehicle = $this->getVehicleServiceClient()->getDvsaVehicleByIdAndVersion($motTest->getVehicleId(), $motTest->getVehicleVersion());
-        $isVehicleBikeType = $this->isMotTestVehicleBikeType($vehicle->getVehicleClass()->getCode());
+        $isGroupA = in_array($vehicle->getVehicleClass()->getCode(), VehicleClassCode::getGroupAClasses());
         $brakeTestResult = null;
 
         if ($request->isPost()) {
-            $configDtoMapper = $this->getBrakeTestMapperService($isVehicleBikeType);
+            $configDtoMapper = $this->getBrakeTestMapperService($isGroupA);
 
             $data = $request->getPost()->getArrayCopy();
             $dto = $configDtoMapper->mapToDto($data);
@@ -101,10 +102,10 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
         $brakeTestResultData = $motTest->getBrakeTestResult();
 
         if ($brakeTestResultData !== null) {
-            if ($vehicle->getVehicleClass()->getCode() !== VehicleClassCode::CLASS_1 && $vehicle->getVehicleClass()->getCode() !== VehicleClassCode::CLASS_2) {
-                $brakeTestResult = new BrakeTestResultClass3AndAbove($brakeTestResultData);
-            } else {
+            if ($isGroupA) {
                 $brakeTestResult = new BrakeTestResultClass1And2($brakeTestResultData);
+            } else {
+                $brakeTestResult = new BrakeTestResultClass3AndAbove($brakeTestResultData);
             }
         }
 
@@ -115,15 +116,32 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
         }
 
         if (!$request->isPost()) {
-            $configDtoMapper = $this->getBrakeTestMapperService($isVehicleBikeType);
+            $configDtoMapper = $this->getBrakeTestMapperService($isGroupA);
+
             $dto = $configDtoMapper->mapToDefaultDto($motTest, $vehicle->getVehicleClass()->getCode());
+
+            // (temp) Inject missing fields
+            // inject BrakeTestConfigurationClass3AndAboveDto with BrakeTestResult fields from mot-test-service
+            if (!$isGroupA && $brakeTestResult) {
+                $dto->setServiceBrakeIsSingleLine($brakeTestResult->getServiceBrakeIsSingleLine());
+                $dto->setNumberOfAxles($brakeTestResult->getNumberOfAxles());
+                $dto->setParkingBrakeNumberOfAxles($brakeTestResult->getParkingBrakeNumberOfAxles());
+                $dto->setWeightType($brakeTestResult->getWeightType());
+                $dto->setServiceBrake1TestType($brakeTestResult->getServiceBrake1TestType());
+                $dto->setServiceBrake2TestType($brakeTestResult->getServiceBrake2TestType());
+                $dto->setParkingBrakeTestType($brakeTestResult->getParkingBrakeTestType());
+                $dto->setVehicleWeight($brakeTestResult->getVehicleWeight());
+                $dto->setWeightIsUnladen($brakeTestResult->getWeightIsUnladen());
+                $dto->setIsCommercialVehicle($brakeTestResult->getCommercialVehicle());
+                $dto->setIsSingleInFront($brakeTestResult->getSingleInFront());
+            }
         }
 
-        $configHelper = $this->getConfigHelperService($isVehicleBikeType);
+        $configHelper = $this->getConfigHelperService($isGroupA);
         $configHelper->setConfigDto($dto);
 
         $preselectBrakeTestWeight = false;
-        if ($brakeTestResult !== null && $vehicle->getVehicleClass()->getCode() !== VehicleClassCode::CLASS_1 && $vehicle->getVehicleClass()->getCode() !== VehicleClassCode::CLASS_2) {
+        if (!$isGroupA && !is_null($brakeTestResult)) {
             $hasCorrectService1BrakeTestType = in_array($brakeTestResult->getServiceBrake1TestType(), [BrakeTestTypeCode::PLATE, BrakeTestTypeCode::ROLLER]);
             $hasCorrectService2BrakeTestType = in_array($brakeTestResult->getServiceBrake2TestType(), [BrakeTestTypeCode::PLATE, BrakeTestTypeCode::ROLLER]);
             $hasCorrectParkingBrakeTestType = in_array($brakeTestResult->getParkingBrakeTestType(), [BrakeTestTypeCode::PLATE, BrakeTestTypeCode::ROLLER]);
@@ -145,7 +163,7 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
             'title' => self::PAGE_TITLE__BRAKE_TEST_CONFIGURATION,
         ]);
 
-        if ($isVehicleBikeType && $brakeTestResult !== null) {
+        if ($isGroupA && !is_null($brakeTestResult)) {
             $brakeTestConfigurationViewModel->setVariables([
                 'brakeTestType' => $brakeTestResult->getBrakeTestTypeCode(),
                 'vehicleWeightFront' => $brakeTestResult->getVehicleWeightFront(),
@@ -157,7 +175,7 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
         }
 
         // If this is a Group A vehicle (Class 1 or 2)
-        if ($isVehicleBikeType) {
+        if ($isGroupA) {
             $brakeTestConfigurationViewModel->setTemplate(self::TEMPLATE_CONFIG_CLASS_1_2);
         }
         // Else if this is a Group B vehicle (Class 3, 4, 5 or 7)
@@ -244,8 +262,8 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
 
         if ($request->isPost()) {
             $vehicleClass = $request->getPost()->get('vehicleClass');
-        }
-        else {
+        } else {
+
             if (!$motTest) {
                 return $this->getFlashErrorViewModel();
             }
@@ -254,7 +272,7 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
             $vehicleClass = $vehicle->getVehicleClass()->getCode();
         }
 
-        if ($this->isMotTestVehicleBikeType($vehicleClass)) {
+        if (in_array($vehicleClass, VehicleClassCode::getGroupAClasses())) {
             return $this->addBrakeTestResultsClass12($motTest, $vehicle);
         }
 
@@ -303,6 +321,10 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
                 null,
                 null
             );
+
+            // (temp) Inject missing fields
+            // Inject serviceBrake1Data, fetched from mot-test-service to the old "Brake Test Result" model
+            $brakeTestResult->setServiceBrake1Data($motTest);
         }
 
         if (!$motTest) {
@@ -310,16 +332,21 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
             $motTest = $this->tryGetMotTestOrAddErrorMessages($motTestNumber);
         }
 
-        return $this->createViewModel(self::TEMPLATE_ADD_CLASS_3_AND_ABOVE, [
-                'isMotContingency'       => $this->getContingencySessionManager()->isMotContingency(),
-                'motTestNumber'          => $motTestNumber,
-                'vehicle'                => $vehicle,
-                'brakeTestResult'        => $brakeTestResult,
+        $viewModel = new ViewModel(
+            [
+                'isMotContingency' => $this->getContingencySessionManager()->isMotContingency(),
+                'motTestNumber' => $motTestNumber,
+                'vehicle' => $vehicle,
+                'brakeTestResult' => $brakeTestResult,
                 'brakeTestConfiguration' => $brakeTestResult->getBrakeTestConfiguration(),
                 'motTestTitleViewModel' => (new MotTestTitleModel()),
                 'motTest' => $motTest,
             ]
         );
+
+        $viewModel->setTemplate(self::TEMPLATE_ADD_CLASS_3_AND_ABOVE);
+
+        return $viewModel;
     }
 
     /**
@@ -361,6 +388,10 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
                 $configDto,
                 null,
                 $request->getPost()->getArrayCopy());
+
+            // (temp) Inject missing fields
+            // Inject brake test result, fetched from mot-test-service to the old model
+            $brakeTestResult->setBrakeTestResult($motTest);
         }
 
         if (!$motTest) {
@@ -368,16 +399,21 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
             $motTest = $this->tryGetMotTestOrAddErrorMessages($motTestNumber);
         }
 
-        return $this->createViewModel(self::TEMPLATE_ADD_CLASS_1_2, [
-                'isMotContingency'       => $this->getContingencySessionManager()->isMotContingency(),
-                'motTestNumber'          => $motTestNumber,
-                'vehicle'                => $vehicle,
-                'brakeTestResult'        => $brakeTestResult,
+        $viewModel = new ViewModel(
+            [
+                'isMotContingency' => $this->getContingencySessionManager()->isMotContingency(),
+                'motTestNumber' => $motTestNumber,
+                'vehicle' => $vehicle,
+                'brakeTestResult' => $brakeTestResult,
                 'brakeTestConfiguration' => $brakeTestResult->getBrakeTestConfiguration(),
                 'motTestTitleViewModel' => (new MotTestTitleModel()),
                 'motTest' => $motTest,
             ]
         );
+
+        $viewModel->setTemplate(self::TEMPLATE_ADD_CLASS_1_2);
+
+        return $viewModel;
     }
 
     public function displayBrakeTestSummaryAction()
@@ -394,11 +430,24 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
 
         $this->getPerformMotTestAssertion()->assertGranted($motTest);
 
-        if (in_array($vehicleViewModel->getVehicleClass()->getCode(), [VehicleClassCode::CLASS_1, VehicleClassCode::CLASS_2])) {
+        if($motTest->getTestTypeCode() === MotTestTypeCode::RE_TEST) {
+            /** @var MotTest $previousMotTest */
+            $previousMotTest = $this->tryGetMotTestOrAddErrorMessages($motTest->getMotTestOriginalNumber());
+            $motTest->setPreviousMotTest($previousMotTest);
+        }
+
+        if (in_array($vehicleViewModel->getVehicleClass()->getCode(), VehicleClassCode::getGroupAClasses())) {
             $showParkingBrakeImbalance = false;
             $showAxleTwoParkingBrakeImbalance = false;
         } else {
-            $brakeTestResultClass3 = new BrakeTestResultClass3AndAbove($motTest->getBrakeTestResult());
+
+            if(!is_null($motTest->getPreviousMotTest())) {
+                $brakeTestResultClass3 = new BrakeTestResultClass3AndAbove(
+                    $motTest->getPreviousMotTest()->getBrakeTestResult()
+                );
+            } else {
+                $brakeTestResultClass3 = new BrakeTestResultClass3AndAbove($motTest->getBrakeTestResult());
+            }
 
             $showParkingBrakeImbalance = $brakeTestResultClass3->getServiceBrakeIsSingleLine();
 
@@ -411,10 +460,10 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
 
         return new ViewModel(
             [
-                'isMotContingency'                 => $this->getContingencySessionManager()->isMotContingency(),
-                'vehicleViewModel'                 => $vehicleViewModel,
-                'motTest'                          => $motTest,
-                'showParkingBrakeImbalance'        => $showParkingBrakeImbalance,
+                'isMotContingency' => $this->getContingencySessionManager()->isMotContingency(),
+                'vehicleViewModel' => $vehicleViewModel,
+                'motTest' => $motTest,
+                'showParkingBrakeImbalance' => $showParkingBrakeImbalance,
                 'showAxleTwoParkingBrakeImbalance' => $showAxleTwoParkingBrakeImbalance,
                 'motTestTitleViewModel' => (new MotTestTitleModel()),
                 'breakPerformanceDefectsUrl' => $breakPerformanceDefectsUrl,
@@ -428,19 +477,8 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
     }
 
     /**
-     * @param string $vehicleClass
-     *
-     * @return bool
-     */
-    protected function isMotTestVehicleBikeType($vehicleClass)
-    {
-        return $vehicleClass == VehicleClassCode::CLASS_1
-            || $vehicleClass == VehicleClassCode::CLASS_2;
-    }
-
-    /**
-     * @param DvsaVehicle $vehicle
-     * @param string      $expectedVehicleClassCode
+     * @param DvsaVehicle $motTest
+     * @param string $expectedVehicleClassCode
      *
      * @return bool
      */
@@ -561,7 +599,7 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
     /**
      * Determinate the defects category ID based on vehicle class.
      *
-     * @param MotTest     $motTest
+     * @param MotTest $motTest
      * @param DvsaVehicle $dvsaVehicle
      *
      * @return int
@@ -575,20 +613,5 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
         }
 
         return self::BREAKS_PERFORMANCE_CATEGORY_ID;
-    }
-
-    /**
-     * @param string $template
-     * @param array  $variables
-     *
-     * @return ViewModel
-     */
-    private function createViewModel($template, array $variables)
-    {
-        $viewModel = new ViewModel();
-        $viewModel->setTemplate($template);
-        $viewModel->setVariables($variables);
-
-        return $viewModel;
     }
 }
