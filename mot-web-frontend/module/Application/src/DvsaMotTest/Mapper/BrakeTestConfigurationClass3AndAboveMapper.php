@@ -56,7 +56,7 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
      * @param MotTest $motTest
      * @param string $vehicleClass
      *
-     * @return BrakeTestConfigurationDtoInterface
+     * @return BrakeTestConfigurationClass3AndAboveDto
      */
     public function mapToDefaultDto(MotTest $motTest, $vehicleClass = null)
     {
@@ -74,7 +74,7 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
         $dto->setServiceBrakeControlsCount(1);
         $dto->setNumberOfAxles(2);
         $dto->setParkingBrakeNumberOfAxles(1);
-        $dto->setVehicleWeight($this->getDefaultVehicleWeight($motTest, $vehicleClass));
+        $dto->setVehicleWeight($this->pickVehicleWeight($motTest, $vehicleClass));
 
         //@TODO Question over this!
         if ($motTest->getBrakeTestResult() !== null) {
@@ -115,15 +115,19 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
      *
      * @return int|string
      */
-    private function getDefaultVehicleWeight(MotTest $motTest, $vehicleClass)
+    private function pickVehicleWeight(MotTest $motTest, $vehicleClass)
     {
         $vehicleWeight = '';
-        $brakeTestResult = $motTest->getBrakeTestResult();
-        if($brakeTestResult !== null) {
-            $brakeTestResultClass3AndAbove = new BrakeTestResultClass3AndAbove($motTest->getBrakeTestResult());
 
-            if (in_array($vehicleClass, VehicleClassCode::getGroupBClasses())) {
+        if (in_array($vehicleClass, VehicleClassCode::getGroupBClasses())) {
+
+            $brakeTestResult = $motTest->getBrakeTestResult();
+
+            if (!is_null($brakeTestResult)) {
+                $brakeTestResultClass3AndAbove = new BrakeTestResultClass3AndAbove($brakeTestResult);
                 $vehicleWeight = $brakeTestResultClass3AndAbove->getVehicleWeight();
+            } else {
+                $vehicleWeight = $motTest->getPreviousTestVehicleWight();
             }
         }
 
@@ -144,7 +148,7 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
 
         $brakeResult = $motTest->getBrakeTestResult();
 
-        if(!is_null($brakeResult)){
+        if (!is_null($brakeResult)) {
             $brakeResultObject = new BrakeTestResultClass3AndAbove($brakeResult);
             if ($vehicleClass == VehicleClassCode::CLASS_7 && !empty($brakeResultObject->getVehicleWeight())) {
                 return WeightSourceCode::DGW;

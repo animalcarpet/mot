@@ -4,6 +4,7 @@ namespace DvsaMotTest\Model;
 
 use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResult;
 use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass1And2;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass1And2Dto;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Utility\DtoHydrator;
@@ -56,12 +57,12 @@ class BrakeTestResultClass1And2ViewModel
     /**
      * @param BrakeTestConfigurationClass1And2Dto $brakeTestConfigurationClass1And2Dto
      * @param BrakeTestResultClass1And2 $brakeTestResult
-     * @param array|null                          $postData
+     * @param array|null $postData
      */
     public function __construct(BrakeTestConfigurationClass1And2Dto $brakeTestConfigurationClass1And2Dto,
                                 BrakeTestResultClass1And2 $brakeTestResult = null, $postData)
     {
-        if($brakeTestConfigurationClass1And2Dto !== null || !isEmpty($brakeTestConfigurationClass1And2Dto)){
+        if ($brakeTestConfigurationClass1And2Dto !== null || !isEmpty($brakeTestConfigurationClass1And2Dto)) {
             $this->brakeTestConfiguration = new BrakeTestConfigurationClass1And2Helper($brakeTestConfigurationClass1And2Dto);
 
             $this->effortFront1 = ArrayUtils::tryGet(
@@ -151,11 +152,11 @@ class BrakeTestResultClass1And2ViewModel
     private function getLocalArray()
     {
         return [
-            BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_EFFORT_FRONT   => $this->getEffortFront1(),
-            BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_EFFORT_REAR    => $this->getEffortRear1(),
+            BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_EFFORT_FRONT => $this->getEffortFront1(),
+            BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_EFFORT_REAR => $this->getEffortRear1(),
             BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_EFFORT_SIDECAR => $this->getEffortSidecar1(),
-            BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_EFFORT_FRONT   => $this->getEffortFront2(),
-            BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_EFFORT_REAR    => $this->getEffortRear2(),
+            BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_EFFORT_FRONT => $this->getEffortFront2(),
+            BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_EFFORT_REAR => $this->getEffortRear2(),
             BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_EFFORT_SIDECAR => $this->getEffortSidecar2(),
         ];
     }
@@ -170,9 +171,9 @@ class BrakeTestResultClass1And2ViewModel
         if ($this->brakeTestConfiguration->locksApplicableToTestType()) {
             $locks = [
                 BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_LOCK_FRONT => $this->getLockFront1(),
-                BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_LOCK_REAR  => $this->getLockRear1(),
+                BrakeTestResultClass1And2ViewModel::ID_CONTROL_1_LOCK_REAR => $this->getLockRear1(),
                 BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_LOCK_FRONT => $this->getLockFront2(),
-                BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_LOCK_REAR  => $this->getLockRear2(),
+                BrakeTestResultClass1And2ViewModel::ID_CONTROL_2_LOCK_REAR => $this->getLockRear2(),
             ];
         }
 
@@ -190,8 +191,8 @@ class BrakeTestResultClass1And2ViewModel
             $gradientResults = [
                 'gradientControl1AboveUpperMinimum' => false,
                 'gradientControl2AboveUpperMinimum' => false,
-                'gradientControl1BelowMinimum'      => false,
-                'gradientControl2BelowMinimum'      => false,
+                'gradientControl1BelowMinimum' => false,
+                'gradientControl2BelowMinimum' => false,
             ];
 
             if (BrakeTestResultClass1And2ViewModel::EFFICIENCY_ABOVE_30 === $this->gradient1) {
@@ -312,5 +313,29 @@ class BrakeTestResultClass1And2ViewModel
     public function getBrakeTestConfiguration()
     {
         return $this->brakeTestConfiguration;
+    }
+
+    /**
+     * This is to inject the brake test result data-set, coming from mot-test-service to the existing model, until a
+     * proper refactoring is possible
+     *
+     * @param MotTest $motTest
+     */
+    public function setBrakeTestResult(MotTest $motTest)
+    {
+        $brakeTestResult = $motTest->getBrakeTestResult();
+
+        $this->effortFront1 = $brakeTestResult->control1EffortFront;
+        $this->effortRear1 = $brakeTestResult->control1EffortRear;
+        $this->lockFront1 = $brakeTestResult->control1LockFront;
+        $this->lockRear1 = $brakeTestResult->control1LockRear;
+
+        $this->effortFront2 = $brakeTestResult->control2EffortFront;
+        $this->effortRear2 = $brakeTestResult->control2EffortRear;
+        $this->lockFront2 = $brakeTestResult->control2LockFront;
+        $this->lockRear2 = $brakeTestResult->control2LockRear;
+
+        $this->effortSidecar1 = $brakeTestResult->control1EffortSidecar;
+        $this->effortSidecar2 = $brakeTestResult->control2EffortSidecar;
     }
 }

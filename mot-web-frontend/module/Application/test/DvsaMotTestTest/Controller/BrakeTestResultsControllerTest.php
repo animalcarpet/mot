@@ -92,40 +92,25 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
     ) {
         if ($vehicleClass === VehicleClassCode::CLASS_4) {
             $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
-
-            $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
-            $mockMotTestServiceClient
-                ->expects($this->once())
-                ->method('getMotTestByTestNumber')
-                ->with(1)
-                ->will($this->returnValue($testMotTestData));
-
             $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
-            $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
-            $mockVehicleServiceClient
-                ->expects($this->once())
-                ->method('getDvsaVehicleByIdAndVersion')
-                ->with(1001, 1)
-                ->will($this->returnValue($vehicleData));
         } else {
             $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass1(true));
-
-            $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
-            $mockMotTestServiceClient
-                ->expects($this->once())
-                ->method('getMotTestByTestNumber')
-                ->with(1)
-                ->will($this->returnValue($testMotTestData));
-
             $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass1(true));
-
-            $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
-            $mockVehicleServiceClient
-                ->expects($this->once())
-                ->method('getDvsaVehicleByIdAndVersion')
-                ->with(1001, 1)
-                ->will($this->returnValue($vehicleData));
         }
+
+        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
+        $mockMotTestServiceClient
+            ->expects($this->once())
+            ->method('getMotTestByTestNumber')
+            ->with(1)
+            ->will($this->returnValue($testMotTestData));
+
+        $mockVehicleServiceClient = $this->getMockVehicleServiceClient();
+        $mockVehicleServiceClient
+            ->expects($this->once())
+            ->method('getDvsaVehicleByIdAndVersion')
+            ->with(1001, 1)
+            ->will($this->returnValue($vehicleData));
 
         if ($isPost) {
             $this->setPostAndPostParams($postParams);

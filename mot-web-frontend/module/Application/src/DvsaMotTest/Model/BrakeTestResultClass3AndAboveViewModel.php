@@ -3,6 +3,7 @@
 namespace DvsaMotTest\Model;
 
 use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Dto\BrakeTest\BrakeTestConfigurationClass3AndAboveDto;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Utility\DtoHydrator;
@@ -139,7 +140,7 @@ class BrakeTestResultClass3AndAboveViewModel
     public function __construct(BrakeTestConfigurationClass3AndAboveDto $brakeTestConfigurationClass3AndAboveDto,
                                 BrakeTestResultClass3AndAbove $brakeTestResult = null, $apiData, $postData)
     {
-        if($brakeTestConfigurationClass3AndAboveDto !== null){
+        if ($brakeTestConfigurationClass3AndAboveDto !== null) {
             $data = $postData === null ? $apiData : $postData;
 
             $this->brakeTestConfiguration = new BrakeTestConfigurationClass3AndAboveHelper($brakeTestConfigurationClass3AndAboveDto);
@@ -682,5 +683,45 @@ class BrakeTestResultClass3AndAboveViewModel
     public function getParkingBrakeAxles()
     {
         return $this->parkingBrakeAxles;
+    }
+
+    /**
+     * This is to inject the brake test result's serviceBrake1Data data-set, coming from mot-test-service to
+     * the existing model, until a proper refactoring is possible
+     *
+     * @param MotTest $motTest
+     */
+    public function setServiceBrake1Data(MotTest $motTest)
+    {
+        $brakeTestResult =$motTest->getBrakeTestResult();
+        $serviceBrake1Data = $brakeTestResult->serviceBrake1Data;
+        $parkingBrakeEfficiency = $motTest->getBrakeTestResult()->parkingBrakeEfficiency;
+
+        $this->serviceBrakeEffortNearsideAxle1 = $serviceBrake1Data->effortNearsideAxel1;
+        $this->serviceBrakeEffortNearsideAxle2 = $serviceBrake1Data->effortNearsideAxel2;
+        $this->serviceBrakeEffortNearsideAxle3 = $serviceBrake1Data->effortNearsideAxel3;
+        $this->serviceBrakeEffortOffsideAxle1 = $serviceBrake1Data->effortOffsideAxel1;
+        $this->serviceBrakeEffortOffsideAxle2 = $serviceBrake1Data->effortOffsideAxel2;
+        $this->serviceBrakeEffortOffsideAxle3 = $serviceBrake1Data->effortOffsideAxel3;
+        $this->serviceBrakeEffortSingle = $serviceBrake1Data->effortSingle;
+        $this->serviceBrakeLockNearsideAxle1 = $serviceBrake1Data->lockNearsideAxle1;
+        $this->serviceBrakeLockNearsideAxle2 = $serviceBrake1Data->lockNearsideAxle2;
+        $this->serviceBrakeLockNearsideAxle3 = $serviceBrake1Data->lockNearsideAxle3;
+        $this->serviceBrakeLockOffsideAxle1 = $serviceBrake1Data->lockOffsideAxle1;
+        $this->serviceBrakeLockOffsideAxle2 = $serviceBrake1Data->lockOffsideAxle2;
+        $this->serviceBrakeLockOffsideAxle3 = $serviceBrake1Data->lockOffsideAxle3;
+        $this->serviceBrakeLockSingle = $serviceBrake1Data->lockSingle;
+
+        $this->parkingBrakeEffortNearside =  $brakeTestResult->parkingBrakeEffortNearside;
+        $this->parkingBrakeEffortOffside =  $brakeTestResult->parkingBrakeEffortOffside;
+        $this->parkingBrakeLockNearside=  $brakeTestResult->parkingBrakeLockNearside;
+        $this->parkingBrakeLockOffside=  $brakeTestResult->parkingBrakeLockOffside;
+
+        $this->parkingBrakeEffortSecondaryNearside =  $brakeTestResult->parkingBrakeEffortSecondaryNearside;
+        $this->parkingBrakeEffortSecondaryOffside =  $brakeTestResult->parkingBrakeEffortSecondaryOffside;
+        $this->parkingBrakeLockSecondaryNearside =  $brakeTestResult->parkingBrakeLockSecondaryNearside;
+        $this->parkingBrakeLockSecondaryOffside =  $brakeTestResult->parkingBrakeLockSecondaryOffside;
+
+        $this->parkingBrakeEfficiency = $parkingBrakeEfficiency;
     }
 }

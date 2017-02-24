@@ -102,5 +102,7 @@
   "prsMotTestNumber" : "123456",
   "odometerValue" : 1000,
   "odometerUnit" : "mi",
-  "odometerResultType" : "OK"
+  "odometerResultType" : "OK",
+  "vehicleWeight": 1800,
+  "previousTestVehicleWeight": 1111.0
 }
