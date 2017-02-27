@@ -4,6 +4,7 @@ namespace DvsaEntities\Repository;
 
 use DateTime;
 use Doctrine\ORM\NoResultException;
+use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\DqlBuilder\SearchParam\MotTestSearchParam;
 use DvsaEntities\Entity\MotTest;
@@ -113,27 +114,50 @@ class MotTestHistoryRepository extends MotTestRepository
      */
     public function getMotTestLogsResult(MotTestSearchParam $searchParam)
     {
-        try {
-            $current = parent::getMotTestLogsResult($searchParam);
+        $qb = $this->prepareMotTestLogResultQuery($searchParam);
+        $sql = $qb->getSql();
 
-            // Work out based on the search dates if the
-            // mot_test_history needs to be searched.
+        if ($searchParam->getDateFrom()) {
             $historyDate = new DateTime();
             $historyDate->sub(new \DateInterval('P4Y'));
-            $history = [];
 
-            if ($searchParam->getDateFrom()) {
-                if ($searchParam->getDateFrom() < $historyDate) {
+            if ($searchParam->getDateFrom() < $historyDate) {
 
-                    $this->switchToHistory();
-                    $history = parent::getMotTestLogsResult($searchParam);
-                }
+                $tableName = $this->getClassMetadata()->getTableName();
+
+                $sql = sprintf(
+                    '(%s) UNION (%s)',
+                    $sql,
+                    str_replace($tableName, str_replace(self::SUFFIX_CURRENT, self::SUFFIX_HISTORY, $tableName), $sql)
+                );
             }
-
-            return array_merge($current, $history);
-        } finally {
-            $this->switchToCurrent();
         }
+
+        if ($searchParam->getFormat() !== SearchParamConst::FORMAT_DATA_CSV) {
+            $orderBy = $searchParam->getSortColumnNameDatabase();
+            if (!empty($orderBy)) {
+                if (!is_array($orderBy)) {
+                    $orderBy = [$orderBy];
+                }
+
+                $sql.= ' ORDER BY ';
+                $sql.= implode(', ', array_map(function ($order) use ($searchParam) {
+                    return sprintf('%s %s', $order, $searchParam->getSortDirection());
+                }, $orderBy));
+            }
+        }
+        if ($searchParam->getRowCount() > 0) {
+            $sql.= sprintf(' LIMIT %d', $searchParam->getRowCount());
+            if ($searchParam->getStart() > 0) {
+                $sql.= sprintf(' OFFSET %d', $searchParam->getStart());
+            }
+        }
+
+        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $qb->bindParametersToStatement($statement);
+        $statement->execute();
+
+        return $statement->fetchAll();
     }
 
     /**

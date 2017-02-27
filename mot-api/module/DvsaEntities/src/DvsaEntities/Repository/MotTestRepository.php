@@ -449,13 +449,15 @@ class MotTestRepository extends AbstractMutableRepository
     public function getMotTestByNumber($motTestNumber)
     {
         $result = $this->createQueryBuilder('mt')
-            ->addSelect(['rfr', 'rfrMarkedAsRepaired', 'vts', 'defaultBrakeTestClass1And2',
-                         'defaultServiceBrakeTestClass3AndAbove', 'defaultParkingBrakeTestClass3AndAbove', 'prs'])
+            ->addSelect(['rfr', 'rfrCustomDescription', 'rfrMarkedAsRepaired', 'vts', 'defaultBrakeTestClass1And2',
+                         'defaultServiceBrakeTestClass3AndAbove', 'defaultParkingBrakeTestClass3AndAbove', 'prs', 'originalMt'])
             ->innerJoin('mt.motTestType', 'tt')
             ->innerJoin('mt.status', 's')
             ->leftJoin('mt.motTestReasonForRejections', 'rfr')
             ->leftJoin('mt.prsMotTest', 'prs')
+            ->leftJoin('mt.motTestIdOriginal', 'originalMt')
             ->leftJoin('rfr.markedAsRepaired', 'rfrMarkedAsRepaired')
+            ->leftJoin('rfr.customDescription', 'rfrCustomDescription')
             ->leftJoin('mt.vehicleTestingStation', 'vts')
             ->leftJoin('vts.defaultBrakeTestClass1And2', 'defaultBrakeTestClass1And2')
             ->leftJoin('vts.defaultServiceBrakeTestClass3AndAbove', 'defaultServiceBrakeTestClass3AndAbove')
@@ -883,7 +885,7 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function getOdometerHistoryForVehicleId($vehicleId, DateTime $dateTo = null, array $optionalMotTestTypeCodes = null, $limit = 4)
     {
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->createQueryBuilder('t');
 
         $codes = [
             MotTestTypeCode::RE_TEST,
@@ -904,7 +906,6 @@ class MotTestRepository extends AbstractMutableRepository
             t.odometerResultType AS resultType,
             DATE(t.issuedDate) as dtIssuedDate'
         )
-            ->from($this->getEntityName(), 't')
             ->innerJoin('t.motTestType', 'tt')
             ->innerJoin('t.status', 'ts')
             ->andWhere('t.vehicle = :vehicleId')
@@ -934,10 +935,9 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function getOdometerReadingForId($id)
     {
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->createQueryBuilder('t');
 
         $qb->select('t.odometerValue AS value, t.odometerUnit AS unit, t.odometerResultType AS resultType')
-            ->from($this->getEntityName(), 't')
             ->where('t.id = ?0')
             ->setMaxResults(1);
 
@@ -1185,21 +1185,18 @@ class MotTestRepository extends AbstractMutableRepository
      *
      * @return NativeQueryBuilder
      */
-    private function prepareMotTestLogResultQuery(MotTestSearchParam $searchParam)
+    protected function prepareMotTestLogResultQuery(MotTestSearchParam $searchParam)
     {
         $useSubQuery = false;
         $subQuerySql = $this->getClassMetadata()->getTableName();
 
         if ($searchParam->getFormat() === SearchParamConst::FORMAT_DATA_CSV) {
             $useSubQuery = false;
-        }
-        else
-        {   $orderBy = $searchParam->getSortColumnNameDatabase();
+        } else {
+            $orderBy = $searchParam->getSortColumnNameDatabase();
             if (!empty($orderBy)) {
                 if (!is_array($orderBy)) {
-                    if ($orderBy === 'testDate' ||
-                        $orderBy === 'mt.id'
-                    ) {
+                    if ($orderBy === 'testDate' || $orderBy === 'mt.id') {
                         $useSubQuery = true;
                     }
                 }
@@ -1210,7 +1207,7 @@ class MotTestRepository extends AbstractMutableRepository
             // Note: The testing was limited to hand running queries on an inactive
             // acceptance database so god knows what to expect with an active
             // DB with specific new indexes where tests are being created during execution.
-            if ($searchParam->getSiteId() || $searchParam->getTesterId() ) {
+            if ($searchParam->getSiteId() || $searchParam->getTesterId()) {
                 $useSubQuery = false;
             }
         }
@@ -1311,8 +1308,8 @@ class MotTestRepository extends AbstractMutableRepository
             ->join('mot_test_status', 'ts', 'ts.id = mt.status_id');
 
         if ($searchParam->getTesterId()) {
-                    $qb->andwhere('mt.person_id = :TESTER_ID')
-                        ->setParameter('TESTER_ID', $searchParam->getTesterId());
+            $qb->andwhere('mt.person_id = :TESTER_ID')
+                ->setParameter('TESTER_ID', $searchParam->getTesterId());
         }
 
         if ($searchParam->getOrganisationId()) {
@@ -1366,26 +1363,26 @@ class MotTestRepository extends AbstractMutableRepository
          */
 
         if ($searchParam->getRegistration()) {
-            $qb->andwhere('(v.registration = :VRM OR vh.registration = :VHVRM)')
+            $qb->andWhere('(v.registration = :VRM OR vh.registration = :VHVRM)')
                 ->setParameter('VRM', $searchParam->getRegistration())
                 ->setParameter('VHVRM', $searchParam->getRegistration());
         }
 
         if ($searchParam->getVin()) {
-            $qb->andwhere('(v.vin = :VIN OR vh.vin = :VHVIN)')
+            $qb->andWhere('(v.vin = :VIN OR vh.vin = :VHVIN)')
                 ->setParameter('VIN', $searchParam->getVin())
                 ->setParameter('VHVIN', $searchParam->getVin());
         }
 
         if ($searchParam->getVehicleId()) {
-            $qb->andwhere('mt.vehicle_id = :VEHICLE_ID')
+            $qb->andWhere('mt.vehicle_id = :VEHICLE_ID')
                 ->setParameter('VEHICLE_ID', $searchParam->getVehicleId());
         }
 
         if ($searchParam->getSiteNumber()) {
             $qb->join('site', 's', 's.id = mt.site_id');
 
-            $qb->andwhere('s.site_number = :SITE_NR')
+            $qb->andWhere('s.site_number = :SITE_NR')
                 ->setParameter('SITE_NR', $searchParam->getSiteNumber());
         }
 
@@ -1402,7 +1399,7 @@ class MotTestRepository extends AbstractMutableRepository
 
                 $qb->setParameter('STATUS' . $key, $item);
             }
-            $qb->andwhere('ts.name IN (' . implode(',', $query) . ')');
+            $qb->andWhere('ts.name IN (' . implode(',', $query) . ')');
         }
 
         if ($searchParam->getFormat() === SearchParamConst::FORMAT_DATA_CSV) {
@@ -1418,42 +1415,13 @@ class MotTestRepository extends AbstractMutableRepository
                 )
                 ->join('person', 'emp', 'emp.id = mt.created_by');
         }
-        else {
-            //  logical block: define order by statement
-            $orderBy = $searchParam->getSortColumnNameDatabase();
-            if (!empty($orderBy)) {
-                if (!is_array($orderBy)) {
-                    $orderBy = [$orderBy];
-                }
-
-                foreach ($orderBy as $order) {
-                    $qb->orderBy($order . ' ' . $searchParam->getSortDirection());
-                }
-            }
-        }
-
-        if (!$useSubQuery) {
-            //Offset gets applied in Sub-Query when it is being used
-            if ($searchParam->getStart() > 0) {
-                $qb->setOffset($searchParam->getStart());
-            }
-        }
-
-        if ($searchParam->getRowCount() > 0) {
-            $qb->setLimit($searchParam->getRowCount());
-        }
 
         return $qb;
     }
 
     public function getMotTestLogsResult(MotTestSearchParam $searchParam)
     {
-        $qb = $this->prepareMotTestLogResultQuery($searchParam);
-        $sql = $this->getEntityManager()->getConnection()->prepare($qb->getSql());
-        $qb->bindParametersToStatement($sql);
-        $sql->execute();
-
-        return $sql->fetchAll();
+        throw new \BadMethodCallException('This method is only implemented in the MotTestHistoryRepository.');
     }
 
     /**
@@ -1594,11 +1562,10 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function isTesterForMot($testerId, $motTestNumber)
     {
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->createQueryBuilder('mt');
 
         $qb->select('mt.number')
-            ->from(MotTest::class, 'mt')
-            ->andwhere('mt.tester = :tester')
+            ->andWhere('mt.tester = :tester')
             ->andWhere('mt.number = :motTestNumber')
             ->setMaxResults(1);
 
@@ -1617,12 +1584,11 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function getNormalMotTestCountSinceLastSurvey($lastSurveyMotTestId)
     {
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->createQueryBuilder('mt');
 
         $qb->select('COUNT(mt.id)')
-            ->from(MotTest::class, 'mt')
             ->join('mt.motTestType', 't')
-            ->where('t.code = :testTypeCode')
+            ->andWhere('t.code = :testTypeCode')
             ->andWhere('mt.id > :lastSurveyMotTestId');
 
         $qb->setParameter('testTypeCode', MotTestTypeCode::NORMAL_TEST);
@@ -1662,7 +1628,7 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function findReadingForTest($motTestNumber)
     {
-        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb = $this->createQueryBuilder('mt');
 
         $qb->select('
             mt.odometerValue AS value,
@@ -1670,8 +1636,7 @@ class MotTestRepository extends AbstractMutableRepository
             mt.odometerResultType AS resultType,
             mt.issuedDate AS issuedDate'
         )
-            ->from(MotTest::class, 'mt')
-            ->where('mt.number = :motTestNumber')
+            ->andWhere('mt.number = :motTestNumber')
             ->setParameter('motTestNumber', $motTestNumber);
 
         $result = $qb->getQuery()->getOneOrNullResult();
@@ -1731,11 +1696,10 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function isVehicleLatestTest(MotTest $motTest)
     {
-        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb = $this->createQueryBuilder('mtc');
 
         $qb->select('mtc.number')
-            ->from(MotTest::class, 'mtc')
-            ->where('mtc.vehicle = :vehicleId')
+            ->andWhere('mtc.vehicle = :vehicleId')
             ->orderBy('mtc.completedDate', 'DESC')
             ->setMaxResults(1)
             ->setParameter('vehicleId', $motTest->getVehicle()->getId());
@@ -1757,14 +1721,13 @@ class MotTestRepository extends AbstractMutableRepository
             MotTestTypeCode::ROUTINE_DEMONSTRATION_TEST,
             MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING,
         ];
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->createQueryBuilder('mt');
         $testNotADemo = $qb->expr()->notIn('t.code', $demoTestTypes);
 
         return $qb->select($selectClause)
-            ->from(MotTest::class, 'mt')
             ->join('mt.motTestType', 't')
             ->join('mt.status', 'ts')
-            ->where($testNotADemo)
+            ->andWhere($testNotADemo)
             ->andWhere('ts.name = :status')
             ->andWhere('mt.vehicle = :vehicleId')
             ->getQuery()

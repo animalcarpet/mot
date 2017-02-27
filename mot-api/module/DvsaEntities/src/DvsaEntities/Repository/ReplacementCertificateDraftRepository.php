@@ -45,6 +45,9 @@ class ReplacementCertificateDraftRepository extends AbstractMutableRepository
         try {
             // getting a property will trigger lazy loading
             $draft->getMotTest()->getNumber();
+            if ($draft->getMotTest()->getPrsMotTest()) {
+                $draft->getMotTest()->getPrsMotTest()->getNumber();
+            }
 
             return;
         } catch (EntityNotFoundException $e) {
@@ -56,6 +59,9 @@ class ReplacementCertificateDraftRepository extends AbstractMutableRepository
                 str_replace(MotTestHistoryRepository::SUFFIX_CURRENT, MotTestHistoryRepository::SUFFIX_HISTORY, $classMetadata->getTableName())
             );
             $draft->getMotTest()->getNumber();
+            if ($draft->getMotTest()->getPrsMotTest()) {
+                $draft->getMotTest()->getPrsMotTest()->getNumber();
+            }
         } finally {
             $classMetadata->setTableName(
                 str_replace(MotTestHistoryRepository::SUFFIX_HISTORY, MotTestHistoryRepository::SUFFIX_CURRENT, $classMetadata->getTableName())

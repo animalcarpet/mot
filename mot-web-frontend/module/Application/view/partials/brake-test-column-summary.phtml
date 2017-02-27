@@ -15,18 +15,18 @@ $motTest;
 /** @var DvsaVehicleViewModel $vehicle */
 $vehicle;
 
-if (in_array($vehicle->getVehicleClass()->getCode(), VehicleClassCode::getGroupAClasses())) {
-    $templatePath = 'partials/brake-test-column-group-a.phtml';
-    $brakeResult = new BrakeTestResultClass1And2($motTest->getBrakeTestResult());
+if ($motTest->getTestTypeCode() === MotTestTypeCode::RE_TEST) {
+    $brakeTestResults = $motTest->getPreviousMotTest()->getBrakeTestResult();
 } else {
-    $templatePath = 'partials/brake-test-column-group-b.phtml';
-    $brakeResult = new BrakeTestResultClass3AndAbove($motTest->getBrakeTestResult());
+    $brakeTestResults = $motTest->getBrakeTestResult();
 }
 
-
-// @todo (ABN) to be checked in a retest journey, not sure if getMotTestOriginal was ever linked!
-if ($brakeResult === null && $motTestType === MotTestTypeCode::RE_TEST) {
-    $brakeTestResults = $motTest->getMotTestOriginal()->getBrakeTestResult();
+if (in_array($vehicle->getVehicleClass()->getCode(), VehicleClassCode::getGroupAClasses())) {
+    $templatePath = 'partials/brake-test-column-group-a.phtml';
+    $brakeResult = new BrakeTestResultClass1And2($brakeTestResults);
+} else {
+    $templatePath = 'partials/brake-test-column-group-b.phtml';
+    $brakeResult = new BrakeTestResultClass3AndAbove($brakeTestResults);
 }
 
 echo $this->partial(

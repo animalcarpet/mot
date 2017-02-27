@@ -214,6 +214,16 @@ class MotTestStatusChangeService implements TransactionAwareInterface
     protected $xssFilter;
 
     /**
+     * @var array
+     */
+    private $rfrComments = [];
+
+    /**
+     * @var array
+     */
+    private $rfrDescriptions = [];
+
+    /**
      * @param AuthorisationServiceInterface                 $authService
      * @param MotTestValidator                              $motTestValidator
      * @param MotTestStatusChangeValidator                  $motTestStatusChangeValidator
@@ -532,6 +542,7 @@ class MotTestStatusChangeService implements TransactionAwareInterface
             }
 
             $this->motTestRepository->save($passedMotTest);
+            $this->persistRfrCommentsAndDescriptions();
             $passedMotTest->setNumber(MotTestNumberGenerator::generateMotTestNumber($passedMotTest->getId()));
 
             if (isset($clonedMotTestEmergencyReason) && $clonedMotTestEmergencyReason instanceof MotTestEmergencyReason) {
@@ -568,14 +579,48 @@ class MotTestStatusChangeService implements TransactionAwareInterface
     private function copyAdvisoryRfrItems(MotTest $sourceMotTest, MotTest &$targetMotTest)
     {
         foreach ($sourceMotTest->getMotTestReasonForRejections() as $rfr) {
-            if ($rfr->getType() === ReasonForRejectionTypeName::ADVISORY) {
+            if (!is_null($rfr->getType()) && $rfr->getType()->getReasonForRejectionType() === ReasonForRejectionTypeName::ADVISORY) {
                 $cloneRfr = clone $rfr;
                 $cloneRfr->setId(null)
                     ->setMotTestId(null)
                     ->setMotTest($targetMotTest);
                 $targetMotTest->addMotTestReasonForRejection($cloneRfr);
+
+                $comment = $cloneRfr->getMotTestReasonForRejectionComment() ? clone $cloneRfr->popComment() : null;
+                if ($comment) {
+                    $this->rfrComments[] = [$cloneRfr, $comment];
+                }
+                $description = $cloneRfr->getCustomDescription() ? clone $cloneRfr->popDescription() : null;
+                if ($description) {
+                    $this->rfrDescriptions[] = [$cloneRfr, $description];
+                }
             }
         }
+    }
+
+    /**
+     * This method handles a delayed saving of RFR comments and descriptions.
+     *
+     * These cannot be persisted with RFRs, since we need RFR ID to be generated first.
+     */
+    private function persistRfrCommentsAndDescriptions()
+    {
+        foreach ($this->rfrComments as $rfrComment) {
+            list($rfr, $comment) = $rfrComment;
+            $comment->setId($rfr->getId());
+            $this->entityManager->persist($comment);
+        }
+        $this->entityManager->flush();
+
+        foreach ($this->rfrDescriptions as $rfrDescription) {
+            list($rfr, $description) = $rfrDescription;
+            $description->setId($rfr->getId());
+            $this->entityManager->persist($description);
+        }
+        $this->entityManager->flush();
+
+        $this->rfrComments = [];
+        $this->rfrDescriptions = [];
     }
 
     /**

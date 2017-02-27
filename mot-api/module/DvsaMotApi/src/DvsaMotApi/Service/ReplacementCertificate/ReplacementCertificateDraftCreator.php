@@ -91,8 +91,8 @@ class ReplacementCertificateDraftCreator
         );
 
         $primaryColour = $this->getColourByCode($vehicle->getColour()->getCode());
-        $make = $this->fetchOneFromEntityBy(Make::class, ['id' => $vehicle->getMake()->getId()]);
-        $model = $this->fetchOneFromEntityBy(Model::class, ['id' => $vehicle->getModel()->getId()]);
+        $make = $this->getMakeById($vehicle->getMake()->getId());
+        $model = $this->getModelById($vehicle->getModel()->getId());
 
         $fetchedEntities = [$make, $model, $primaryColour];
 
@@ -136,22 +136,35 @@ class ReplacementCertificateDraftCreator
      */
     private function getColourByCode($code)
     {
-        return $this->fetchOneFromEntityBy(Colour::class, ['code' => $code]);
+        return $this->entityManager->getRepository(Colour::class)->getByCode($code);
     }
 
     /**
-     * @param $entityClassName
-     * @param $criteria
-     * @return null|object
-     * @throws \InvalidArgumentException
+     * @param int $id
+     *
+     * @return Make|null
      */
-    private function fetchOneFromEntityBy($entityClassName, $criteria)
+    private function getMakeById($id)
     {
-        if (!is_array($criteria) || empty($criteria)) {
-            throw new \InvalidArgumentException('$criteria must be a nonempty array');
+        if (null === $id) {
+            return;
         }
 
-        return $this->entityManager->getRepository($entityClassName)->findOneBy($criteria);
+        return $this->entityManager->getRepository(Make::class)->get($id);
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return Model|null
+     */
+    private function getModelById($id)
+    {
+        if (null === $id) {
+            return;
+        }
+
+        return $this->entityManager->getRepository(Model::class)->get($id);
     }
 
     private function assertInstanceOf($class, $objects)
