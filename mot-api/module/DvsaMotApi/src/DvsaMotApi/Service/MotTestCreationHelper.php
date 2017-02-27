@@ -17,6 +17,7 @@ use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\Role;
 use DvsaCommon\Dto\MotTesting\ContingencyTestDto;
+use DvsaCommon\Enum\ColourCode;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
 use DvsaCommon\Model\FuelTypeAndCylinderCapacity;
@@ -307,7 +308,8 @@ class MotTestCreationHelper
         $vehicleClass = $this->entityManager->getRepository(VehicleClass::class)->findOneByCode($vehicleClassCode);
         $fuelType = $this->entityManager->getRepository(FuelType::class)->findOneByCode($fuelTypeCode);
         $primaryColour = $primaryColourCode ? $this->getColourByCode($primaryColourCode) : null;
-        $secondaryColour = $secondaryColourCode ? $this->getColourByCode($secondaryColourCode) : null;
+        $secondaryColour = $secondaryColourCode ? $this->getColourByCode($secondaryColourCode) :
+            $this->getColourByCode(ColourCode::NOT_STATED);
         $motTestType = $this->getMotTestType($motTestTypeCode);
         $countryOfRegistrationId = $updatedCountryOfRegistrationId ? $updatedCountryOfRegistrationId : $vehicle->getCountryOfRegistration()->getId();
 

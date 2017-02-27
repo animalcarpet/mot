@@ -23,6 +23,9 @@ use DvsaEntities\Entity\Model;
 use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\Vehicle;
+use DvsaEntities\Repository\ColourRepository;
+use DvsaEntities\Repository\MakeRepository;
+use DvsaEntities\Repository\ModelRepository;
 use DvsaMotApi\Service\MotTestSecurityService;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateDraftCreator;
 use DvsaMotApiTest\Factory\MotTestObjectsFactory;
@@ -67,18 +70,25 @@ class ReplacementCertificateDraftCreatorTest extends PHPUnit_Framework_TestCase
                 switch ($className) {
                     case Make::class:
                         $expectedEntity = $mockModel->getMake();
-                        break;
+                        $repo = XMock::of(MakeRepository::class);
+                        $repo->expects($this->any())->method('get')->willReturn($expectedEntity);
+
+                        return $repo;
                     case Model::class:
                         $expectedEntity = $mockModel;
-                        break;
-                    default;
+                        $repo = XMock::of(ModelRepository::class);
+                        $repo->expects($this->any())->method('get')->willReturn($expectedEntity);
+
+                        return $repo;
+                    case Colour::class;
                         $expectedEntity = new Colour();
+                        $repo = XMock::of(ColourRepository::class);
+                        $repo->expects($this->any())->method('getByCode')->willReturn($expectedEntity);
+
+                        return $repo;
+                    default:
+                        throw new \RuntimeException(sprintf('Repository for "%s" was not specified.', $className));
                 }
-
-                $repo = XMock::of(EntityRepository::class);
-                $repo->expects($this->any())->method('findOneBy')->willReturn($expectedEntity);
-
-                return $repo;
             });
     }
 

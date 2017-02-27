@@ -111,7 +111,7 @@ abstract class AbstractMotTestMapper extends AbstractMapper
         /** @var CountryDto $draftCountryOfRegistration */
         $draftCountryOfRegistration = $this->getData()['countryOfRegistration'];
         /** @var VehicleClassDto $draftVehicleClass */
-        $draftVehicleClass = $this->getData()['vehicleClass'];
+        $draftVehicleClass = isset($this->getData()['vehicleClass']) ? $this->getData()['vehicleClass']->getCode() : null;
         $draftVin = ArrayUtils::tryGet($this->getData(), 'vin');
         $draftVrm = ArrayUtils::tryGet($this->getData(), 'registration');
         $draftReasonForEmptyVin = ArrayUtils::tryGet($this->getData(), 'emptyVinReason');
@@ -124,7 +124,7 @@ abstract class AbstractMotTestMapper extends AbstractMapper
         $this->setValue('Make', $draftMake);
         $this->setValue('Model', $draftModel);
         $this->setValue('CountryOfRegistration', $draftCountryOfRegistration->getName(), 'CountryRegistration');
-        $this->setValue('TestClass', $draftVehicleClass->getCode());
+        $this->setValue('TestClass', $draftVehicleClass);
 
         $this->mapColour();
     }

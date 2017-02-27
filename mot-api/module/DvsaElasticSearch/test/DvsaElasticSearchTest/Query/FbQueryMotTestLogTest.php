@@ -8,6 +8,7 @@ use DvsaCommonTest\TestUtils\XMock;
 use DvsaElasticSearch\Query\FbQueryMotTestLog;
 use DvsaEntities\DqlBuilder\SearchParam\MotTestSearchParam;
 use DvsaEntities\Entity\MotTest;
+use DvsaEntities\Repository\MotTestRepository;
 use \PHPUnit_Framework_TestCase;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\DateTime;
@@ -27,7 +28,7 @@ class FbQueryMotTestLogTest extends \PHPUnit_Framework_TestCase
         $fbQueryMotTestLog = new FbQueryMotTestLog();
 
         //  --  mock   --
-        $mockRepo = XMock::of(MotTest::class, ['getMotTestLogsResultCount', 'getMotTestLogsResult']);
+        $mockRepo = XMock::of(MotTestRepository::class, ['getMotTestLogsResultCount', 'getMotTestLogsResult']);
         $mockRepo->expects($this->once())
             ->method('getMotTestLogsResultCount')
             ->willReturn(['count' => 10]);

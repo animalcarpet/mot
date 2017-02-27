@@ -440,11 +440,14 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
             $showParkingBrakeImbalance = false;
             $showAxleTwoParkingBrakeImbalance = false;
         } else {
+            if($motTest->getTestTypeCode() === MotTestTypeCode::RE_TEST) {
+                /** @var MotTest $previousMotTest */
+                $previousMotTest = $this->tryGetMotTestOrAddErrorMessages($motTest->getMotTestOriginalNumber());
+                $motTest->setPreviousMotTest($previousMotTest);
+            }
 
-            if(!is_null($motTest->getPreviousMotTest())) {
-                $brakeTestResultClass3 = new BrakeTestResultClass3AndAbove(
-                    $motTest->getPreviousMotTest()->getBrakeTestResult()
-                );
+            if($motTest->getPreviousMotTest() !== null) {
+                $brakeTestResultClass3 = new BrakeTestResultClass3AndAbove($motTest->getPreviousMotTest()->getBrakeTestResult());
             } else {
                 $brakeTestResultClass3 = new BrakeTestResultClass3AndAbove($motTest->getBrakeTestResult());
             }

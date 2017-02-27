@@ -142,7 +142,7 @@ class CertificateCreationService
 
         $this->createPassCertificate(
             $motTestNumber,
-            $this->motTestService->getMotTestData($motTestNumber),
+            $this->motTestService->getMotTestData($motTestNumber, false, true),
             $userId
         );
 
