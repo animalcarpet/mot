@@ -60,7 +60,13 @@
                         {% for componentCategory in column.componentCategories %}
                             <li>
                                 <a href="{{ url('mot-test-defects/categories/category', {'motTestNumber' : motTest.motTestNumber, 'categoryId' : componentCategory.getCategoryId}) }}"
-                                   class="{% if componentCategory.categoryId in defectCategories.categoryPathIds %} browse__slctd {% endif %}">{{ componentCategory.getName }}</a>
+                                   class="{% if componentCategory.categoryId in defectCategories.categoryPathIds %} browse__slctd {% endif %}">
+                                    {% if componentCategory.categoryId in defectCategories.categoryPathIds %}
+                                        <span class="visuallyhidden">Category selected: </span>
+                                    {% endif %}
+                                    {{ componentCategory.getName }}
+
+                                </a>
                             </li>
                         {% endfor %}
                     </ul>
@@ -72,7 +78,12 @@
                         {% for componentCategory in column.componentCategories %}
                             <li>
                                 <a href="{{ url('mot-test-defects/categories/category', {'motTestNumber' : motTest.motTestNumber, 'categoryId' : componentCategory.getCategoryId}) }}"
-                                   class="{% if componentCategory.categoryId in defectCategories.categoryPathIds %} browse__slctd {% endif %}">{{ componentCategory.getName }}</a>
+                                   class="{% if componentCategory.categoryId in defectCategories.categoryPathIds %} browse__slctd {% endif %}">
+                                    {% if componentCategory.categoryId in defectCategories.categoryPathIds %}
+                                        <span class="visuallyhidden">Category selected: </span>
+                                    {% endif %}
+                                   {{ componentCategory.getName }}
+                                </a>
                             </li>
                         {% endfor %}
                     </ul>
