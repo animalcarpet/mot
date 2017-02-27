@@ -28,7 +28,9 @@ use Site\ViewModel\TestQuality\GroupStatisticsTable;
     </thead>
     <tbody>
     <tr class="table-reference__row--primary">
-        <th scope="row">Site statistics</th>
+        <td>
+            Site statistics
+        </td>
 
         <?php echo $this->partial('site/site/partials/test-quality-group-not-available-check', [
             'hasTests'          => $group->hasTests(),
