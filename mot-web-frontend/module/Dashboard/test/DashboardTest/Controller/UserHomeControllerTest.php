@@ -617,7 +617,7 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
             "authorisation",
             "canRead",
             "canAcknowledge",
-            "canRecieveSpecialNotice",
+            "canReceiveSpecialNotice",
             "countries",
             "roleNiceNameList",
             "canViewUsername",

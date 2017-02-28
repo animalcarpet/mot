@@ -20,8 +20,8 @@ foreach ($dashboard->getAuthorisedExaminers() as $authorisedExaminer) :
     $currentIndex++;
     ?>
     <section class="module-pivot-panel" id="ae-vts-list_<?php echo $this->escapeHtmlAttr($currentIndex); ?>">
-        <header class="pivot-panel_header">
-            <h2 class="pivot-panel_title">
+        <header class="pivot-panel_header ae-header">
+            <h2 class="pivot-panel_title ae-title">
                 <a href="<?php echo $escUrlAEView ?>"><?php echo $this->escapeHtml($authorisedExaminer->getName()); ?></a>
             </h2>
             <p class="pivot-panel_subtitle">
@@ -33,7 +33,7 @@ foreach ($dashboard->getAuthorisedExaminers() as $authorisedExaminer) :
             <p>You are not currently assigned to any Vehicle Testing Stations</p>
         <?php elseif ($vtsCount <= 5) : ?>
             <p>Your vehicle testing stations</p>
-            <ul class="pivot-panel_meta-list">
+            <ul class="pivot-panel_meta-list vts-list">
                 <?php /** @var $site \Dashboard\Model\Site */ ?>
                 <?php foreach ($authorisedExaminer->getSites() as $site) : ?>
                     <li>
@@ -41,7 +41,7 @@ foreach ($dashboard->getAuthorisedExaminers() as $authorisedExaminer) :
                            class="site-link" title="">
                             <?php echo $this->escapeHtml('(' . $site->getSiteNumber() . ') ' . $site->getName()); ?>
                         </a>
-                        <span class="pivot-panel_subtitle">
+                        <span class="pivot-panel_subtitle vts-roles">
                             <?php echo $this->escapeHtml(implode(', ', $site->getPositions())); ?>
                         </span>
                     </li>

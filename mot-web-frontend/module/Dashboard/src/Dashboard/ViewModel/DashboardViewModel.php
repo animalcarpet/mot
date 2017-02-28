@@ -13,24 +13,36 @@ class DashboardViewModel
     /** @var DemoTestViewModel $demoTestViewModel */
     private $demoTestViewModel;
 
+    /** @var AuthorisedExaminersViewModel $authorisedExaminersViewModel */
+    private $authorisedExaminersViewModel;
+
+    /** @var SpecialNoticesViewModel $specialNoticesViewModel */
+    private $specialNoticesViewModel;
+
     /** @var bool $showDemoMessage */
     private $showDemoMessage = false;
 
     /**
      * DashboardViewModel constructor.
      *
-     * @param HeroActionViewModel    $heroActionViewModel
+     * @param HeroActionViewModel $heroActionViewModel
      * @param NotificationsViewModel $notificationsViewModel
-     * @param DemoTestViewModel      $demoTestViewModel
+     * @param DemoTestViewModel $demoTestViewModel
+     * @param AuthorisedExaminersViewModel $authorisedExaminersViewModel
+     * @param SpecialNoticesViewModel $specialNoticesViewModel
      */
     public function __construct(
         HeroActionViewModel $heroActionViewModel,
         NotificationsViewModel $notificationsViewModel,
-        DemoTestViewModel $demoTestViewModel
+        DemoTestViewModel $demoTestViewModel,
+        AuthorisedExaminersViewModel $authorisedExaminersViewModel,
+        SpecialNoticesViewModel $specialNoticesViewModel
     ) {
         $this->heroActionViewModel = $heroActionViewModel;
         $this->notificationsViewModel = $notificationsViewModel;
         $this->demoTestViewModel = $demoTestViewModel;
+        $this->authorisedExaminersViewModel = $authorisedExaminersViewModel;
+        $this->specialNoticesViewModel = $specialNoticesViewModel;
     }
 
     /**
@@ -58,6 +70,22 @@ class DashboardViewModel
     }
 
     /**
+     * @return AuthorisedExaminersViewModel
+     */
+    public function getAuthorisedExaminersViewModel()
+    {
+        return $this->authorisedExaminersViewModel;
+    }
+
+    /**
+     * @return SpecialNoticesViewModel
+     */
+    public function getSpecialNoticeViewModel()
+    {
+        return $this->specialNoticesViewModel;
+    }
+
+    /**
      * @return bool
      */
     public function getShowDemoMessage()
@@ -66,7 +94,7 @@ class DashboardViewModel
     }
 
     /**
-     * @param $showDemoMessage
+     * @param bool $showDemoMessage
      */
     public function setShowDemoMessage($showDemoMessage)
     {

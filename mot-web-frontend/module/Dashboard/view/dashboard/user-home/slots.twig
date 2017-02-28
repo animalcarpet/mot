@@ -1,0 +1,9 @@
+<div class="c-slots">
+    <h2 class="c-slots__title">Slot balance</h2>
+    <div class="c-slots__count c-slots__count--lg" id="slot-count">{{ slotBalanceAction.getOverallSlotCount() }}</div>
+    {% if slotBalanceAction.getOverallSiteCount() > 1 %}
+        <div class="c-slots__subtext">
+            for {{ slotBalanceAction.getOverallSiteCount() }} sites
+        </div>
+    {% endif %}
+</div>

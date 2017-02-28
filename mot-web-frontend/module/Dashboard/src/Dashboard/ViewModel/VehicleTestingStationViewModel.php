@@ -1,0 +1,68 @@
+<?php
+
+namespace Dashboard\ViewModel;
+
+use DvsaCommon\UrlBuilder\VehicleTestingStationUrlBuilderWeb;
+
+class VehicleTestingStationViewModel
+{
+    /** @var VehicleTestingStationUrlBuilderWeb $url */
+    private $url;
+
+    /** @var int $siteNumber */
+    private $siteNumber;
+
+    /** @var string $name */
+    private $name;
+
+    /** @var array $positions */
+    private $positions;
+
+    /**
+     * VehicleTestingStationViewModel constructor.
+     *
+     * @param VehicleTestingStationUrlBuilderWeb $url
+     * @param int                                $siteNumber
+     * @param string                             $name
+     * @param array                              $positions
+     */
+    public function __construct($url, $siteNumber, $name, $positions)
+    {
+        $this->url = $url;
+        $this->siteNumber = $siteNumber;
+        $this->name = $name;
+        $this->positions = $positions;
+    }
+
+    /**
+     * @return VehicleTestingStationUrlBuilderWeb
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSiteNumber()
+    {
+        return $this->siteNumber;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPositions()
+    {
+        return $this->positions;
+    }
+}

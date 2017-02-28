@@ -17,10 +17,10 @@ public class HomePage extends Page {
     private static final String PAGE_TITLE = "Your home";
 
     @FindBy(id = "header-user-name") private WebElement userNameHeader;
-    @FindBy(className = "hero-actions") private WebElement heroSideBar;
-    @FindBy(css = ".pivot-panel_title a[href*=authorised]") private WebElement aeTitle;
-    @FindBy(css = ".pivot-panel_header p") private WebElement aeNumber;
-    @FindBy(css = ".pivot-panel_meta-list span") private WebElement roleType;
+    @FindBy(id = "hero-actions") private WebElement heroSideBar;
+    @FindBy(css = ".ae-title a[href*=authorised]") private WebElement aeTitle;
+    @FindBy(css = ".ae-header p") private WebElement aeNumber;
+    @FindBy(css = ".vts-list .vts-roles") private WebElement roleType;
     @FindBy(css = ".site-link") private WebElement siteName;
     @FindBy(id = "action-resume-mot-test") private WebElement resumeMotTestButton;
     @FindBy(id = "header_title") private WebElement vtsActivityLabel;

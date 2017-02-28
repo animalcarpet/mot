@@ -3,11 +3,11 @@
 $unreadCount = isset($unreadCount) ? $unreadCount : 0;
 $daysLeftToView = isset($daysLeftToView) ? $daysLeftToView : 0;
 $overdueCount = isset($overdueCount) ? $overdueCount : 0;
-$canRecieveSpecialNotice = isset($canRecieveSpecialNotice) ? $canRecieveSpecialNotice : false;
+$canReceiveSpecialNotice = isset($canReceiveSpecialNotice) ? $canReceiveSpecialNotice : false;
 
 $escViewLink = $canRead ? $this->url('special-notices/all') : $this->url('special-notices');
 
-if($canRecieveSpecialNotice):
+if($canReceiveSpecialNotice):
 ?>
 
 <section class="module-pivot-panel" id="special-notice-list">
