@@ -111,6 +111,7 @@ class UserHomeController extends AbstractAuthActionController
      */
     public function userHomeAction()
     {
+        /** @var \Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity $identity */
         $identity = $this->getIdentity();
 
         if ($this->shouldShowNewHomepage($identity->getPersonAuthorization())) {
@@ -129,7 +130,7 @@ class UserHomeController extends AbstractAuthActionController
             [
                 'canRead' => $authenticatedData['canRead'],
                 'canAcknowledge' => $authenticatedData['canAcknowledge'],
-                'canRecieveSpecialNotice' => $authenticatedData['canRecieveSpecialNotice'],
+                'canReceiveSpecialNotice' => $authenticatedData['canReceiveSpecialNotice'],
             ]
         );
 
@@ -174,12 +175,9 @@ class UserHomeController extends AbstractAuthActionController
 
         $this->loggedIdUserManager->discoverCurrentLocation($identity->getCurrentVts());
 
-        $authenticatedData = $this->getAuthenticatedData();
-
         $dashboardViewModelBuilder = new DashboardViewModelBuilder(
             $this->getDashboardDetails($personId),
             new DashboardGuard($this->authorisationService),
-            $authenticatedData['personalDetails'],
             $this->url()
         );
 
@@ -364,7 +362,7 @@ class UserHomeController extends AbstractAuthActionController
             'canViewUsername' => $canViewUsername,
             'systemRoles' => $this->getSystemRoles($personalDetails),
             'roleNiceNameList' => $this->getRoleNiceNameList($personalDetails),
-            'canRecieveSpecialNotice' => $this->authorisationService->isGranted(PermissionInSystem::SPECIAL_NOTICE_READ_CURRENT),
+            'canReceiveSpecialNotice' => $this->authorisationService->isGranted(PermissionInSystem::SPECIAL_NOTICE_READ_CURRENT),
         ];
     }
 

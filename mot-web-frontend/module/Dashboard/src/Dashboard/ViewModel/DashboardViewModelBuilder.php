@@ -3,50 +3,57 @@
 namespace Dashboard\ViewModel;
 
 use Dashboard\Model\Dashboard;
-use Dashboard\Model\PersonalDetails;
 use Dashboard\Security\DashboardGuard;
 use Zend\Mvc\Controller\Plugin\Url;
 
 class DashboardViewModelBuilder
 {
-    /**
-     * @var Dashboard $dashboard
-     */
+    /** @var Dashboard $dashboard */
     private $dashboard;
 
-    /**
-     * @var DashboardGuard $dashboardGuard
-     */
+    /** @var DashboardGuard $dashboardGuard */
     private $dashboardGuard;
 
-    /**
-     * @var PersonalDetails $personalDetails
-     */
-    private $personalDetails;
-
-    /**
-     * @var Url $url
-     */
+    /** @var Url $url */
     private $url;
+
+    /** @var SlotsViewModel $slotsViewModel */
+    private $slotsViewModel;
 
     /**
      * DashboardViewModelBuilder constructor.
      *
-     * @param Dashboard       $dashboard
-     * @param DashboardGuard  $dashboardGuard
-     * @param PersonalDetails $personalDetails
-     * @param Url             $url
+     * @param Dashboard $dashboard
+     * @param DashboardGuard $dashboardGuard
+     * @param Url $url
      */
     public function __construct(
         Dashboard $dashboard,
         DashboardGuard $dashboardGuard,
-        PersonalDetails $personalDetails,
         Url $url
+
     ) {
         $this->dashboard = $dashboard;
         $this->dashboardGuard = $dashboardGuard;
-        $this->personalDetails = $personalDetails;
         $this->url = $url;
+    }
+
+    /**
+     * @return DashboardViewModel
+     */
+    public function build()
+    {
+        $dashboardViewModel = new DashboardViewModel(
+            $this->buildHeroActionViewModel(),
+            $this->buildNotificationsViewModel(),
+            $this->buildDemoTestViewModel(),
+            $this->buildAuthorisedExaminersViewModel(),
+            $this->buildSpecialNoticesViewModel()
+        );
+
+        $dashboardViewModel->setShowDemoMessage($this->shouldShowDemoMessage());
+
+        return $dashboardViewModel;
     }
 
     /**
@@ -54,7 +61,13 @@ class DashboardViewModelBuilder
      */
     private function buildHeroActionViewModel()
     {
-        $heroActionViewModel = new HeroActionViewModel();
+        $this->slotsViewModel = $this->buildSlotsViewModel();
+
+        $heroActionViewModel = new HeroActionViewModel(
+            $this->dashboard->getHero(),
+            $this->slotsViewModel,
+            $this->dashboardGuard
+        );
 
         return $heroActionViewModel;
     }
@@ -90,18 +103,39 @@ class DashboardViewModelBuilder
     }
 
     /**
-     * @return DashboardViewModel
+     * @return AuthorisedExaminersViewModel
      */
-    public function build()
+    private function buildAuthorisedExaminersViewModel()
     {
-        $dashboardViewModel = new DashboardViewModel(
-            $this->buildHeroActionViewModel(),
-            $this->buildNotificationsViewModel(),
-            $this->buildDemoTestViewModel()
+        return AuthorisedExaminersViewModel::fromAuthorisedExaminers($this->dashboardGuard,
+                                                                      $this->dashboard->getAuthorisedExaminers());
+    }
+
+    /**
+     * @return SpecialNoticesViewModel
+     */
+    private function buildSpecialNoticesViewModel()
+    {
+        $specialNoticesViewModel = new SpecialNoticesViewModel(
+            $this->dashboard->getSpecialNotice()->getUnreadCount(),
+            $this->dashboard->getSpecialNotice()->getOverdueCount(),
+            $this->dashboard->getSpecialNotice()->getDaysLeftToView(),
+            $this->dashboardGuard
         );
 
-        $dashboardViewModel->setShowDemoMessage($this->shouldShowDemoMessage());
+        return $specialNoticesViewModel;
+    }
 
-        return $dashboardViewModel;
+    /**
+     * @return SlotsViewModel
+     */
+    private function buildSlotsViewModel()
+    {
+        $slotsViewModel = new SlotsViewModel(
+            $this->dashboard->getOverallSlotCount(),
+            $this->dashboard->getOverallSiteCount()
+        );
+
+        return $slotsViewModel;
     }
 }

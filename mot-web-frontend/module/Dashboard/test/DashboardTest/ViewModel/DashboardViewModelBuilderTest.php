@@ -21,9 +21,13 @@ class DashboardViewModelBuilderTest extends PHPUnit_Framework_TestCase
     /** @var AuthorisationServiceMock $authorisationServiceMock */
     private $authorisationServiceMock;
 
+    /** @var  array $authenticatedData */
+    private $authenticatedData;
+
     public function setUp()
     {
         $this->dashboardData = [];
+        $this->authenticatedData = [];
         $this->authorisationServiceMock = new AuthorisationServiceMock();
     }
 
@@ -118,9 +122,8 @@ class DashboardViewModelBuilderTest extends PHPUnit_Framework_TestCase
 
         $dashboard = new Dashboard(array_merge($dashboardDataDefaults, $this->dashboardData));
         $dashboardGuard = new DashboardGuard($this->authorisationServiceMock);
-        $personalDetails = new PersonalDetails([]);
         $url = XMock::of(Url::class);
 
-        return new DashboardViewModelBuilder($dashboard, $dashboardGuard, $personalDetails, $url);
+        return new DashboardViewModelBuilder($dashboard, $dashboardGuard, $url);
     }
 }

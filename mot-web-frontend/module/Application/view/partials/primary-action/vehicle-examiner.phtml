@@ -12,7 +12,7 @@ $hasInProgressTest = $this->dashboardDataProvider()->hasTestInProgress();
                 </h1>
                 <p>Vehicle Examiner view</p>
             </div>
-            <div class="col-md-4 hero-actions hero-actions-ve">
+            <div id="hero-actions" class="col-md-4 hero-actions hero-actions-ve">
                 <?php if ($hasInProgressTest): ?>
                     <a href="<?php echo $this->url(
                         'mot-test',

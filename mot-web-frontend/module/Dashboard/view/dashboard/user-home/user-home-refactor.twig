@@ -10,19 +10,24 @@
                 <p>Your access is restricted to the demo mode. Only fully qualified testers employed at a VTS have access to the full system.</p>
             {% endif %}
         </div>
-    </div>
 
-    {% include '/dashboard/user-home/hero-action.twig' with {'heroAction': dashboard.heroActionViewModel} %}
+        {% include '/dashboard/user-home/hero-action.twig' with {'heroAction': dashboard.heroActionViewModel} %}
+
+    </div>
 
 </section>
 {% do placeholder('hero').captureEnd() %}
 
 <div class="grid-row">
     <div class="column-half">
+        {% include '/dashboard/user-home/special-notices.twig' with {'specialNotice': dashboard.specialNoticeViewModel} %}
+
         {% include '/dashboard/user-home/notifications.twig' with {'notifications': dashboard.notificationsViewModel} %}
     </div>
 
     <div class="column-half">
+        {% include '/dashboard/user-home/authorised-examiner.twig' with {'authorisedExaminers': dashboard.authorisedExaminersViewModel} %}
+
         {% include '/dashboard/user-home/demo-test.twig' with {'demoTest': dashboard.demoTestViewModel} %}
     </div>
 </div>

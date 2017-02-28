@@ -23,7 +23,7 @@ $hasInProgressTest = $this->dashboardDataProvider()->hasTestInProgress();
                 </h1>
                 <p>Tester view</p>
             </div>
-            <div class="col-md-4 hero-actions">
+            <div id="hero-actions" class="col-md-4 hero-actions">
                 <?php if ($this->dashboardDataProvider()->isTesterAtAnySite()): ?>
                     <?php if ($isTestingEnabled) : ?>
                         <?php if ($hasInProgressTest) : ?>

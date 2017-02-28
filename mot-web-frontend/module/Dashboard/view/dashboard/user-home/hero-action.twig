@@ -1,6 +1,15 @@
-{% if heroAction.isVisible %}
-    <div class="col-md-4 hero-actions">
-        <ul class="list-unstyled">
+{% if heroAction.isHeroActionVisible %}
+    <div id="hero-actions" class="c-home-hero__actions">
+        {% if heroAction.isSlotCountVisible %}
+            {% include '/dashboard/user-home/slots.twig' with {'slotBalanceAction': dashboard.heroActionViewModel} %}
+        {% endif %}
+
+        <ul class="c-action-list">
+            {% if heroAction.isReplacementDuplicateCertificateLinkVisible %}
+                {% include '/dashboard/user-home/replacement-duplicate-certificate.twig'
+                with {'replacementDuplicateCertificateAction': dashboard.heroActionViewModel} %}
+            {% endif %}
         </ul>
+
     </div>
 {% endif %}

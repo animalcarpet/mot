@@ -1,0 +1,46 @@
+{% if authorisedExaminers.isVisible %}
+    {% for authorisedExaminer in authorisedExaminers %}
+        <section class="c-home-block" id="ae-vts-list_{{ authorisedExaminers.key }}">
+            <header class="c-home-block__header ae-header">
+                <h2 class="c-home-block__title ae-title">
+                    <a href="{{ authorisedExaminer.url }}">{{ authorisedExaminer.name }}</a>
+                </h2>
+                <p class="c-home-block__subtitle">
+                    Authorised Examiner number: {{ authorisedExaminer.reference }}
+                </p>
+            </header>
+
+            <div class="u-space-b15">
+                {% if authorisedExaminer.vtsCount == 0 %}
+                    <p>You are not currently assigned to any Vehicle Testing Stations</p>
+                {% elseif authorisedExaminer.vtsCount <= 5 %}
+                    <p>Your vehicle testing stations</p>
+                    <ul class="o-bordered-list vts-list">
+                        {% for vts in authorisedExaminer.vts %}
+                            <li class="o-bordered-list__item">
+                                <a href="{{ vts.url }}" class="site-link">
+                                    ({{ vts.siteNumber }}) {{ vts.name }}
+                                </a>
+                                <div class="u-text-meta vts-roles">
+                                    {{ vts.positions }}
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <a class="c-vts-count" href="{{ authorisedExaminer.url }}">
+                        <strong class="c-vts-count__number">{{ authorisedExaminer.vtsCount }}</strong>
+                        <span class="c-vts-count__text"> vehicle testing stations</span>
+                    </a>
+                {% endif %}
+            </div>
+
+            <div class="c-slots">
+                <strong class="c-slots__count c-slots__count--sm">{{ authorisedExaminer.slots }}</strong>
+                <span class="c-slots__subtext">
+                    slots available
+                </span>
+            </div>
+        </section>
+    {% endfor %}
+{% endif %}
