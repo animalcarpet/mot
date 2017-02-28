@@ -11,8 +11,8 @@ public class VehicleSearchPage extends AbstractVehicleSearchPage {
     public static final String TRAINING_TEST_PATH = "/training-test-vehicle-search";
 
     @FindBy(xpath = "//span[contains(@class, 'summary')]") private WebElement unableToProvideRegSection;
-    @FindBy(xpath = "//h4[contains(., 'Registration mark is missing')]") private WebElement registrationMissingHeader;
-    @FindBy(xpath = "//h4[contains(., 'VIN is missing')]") private WebElement vinMissingHeader;
+    @FindBy(xpath = "//h2[contains(., 'Registration mark is missing')]") private WebElement registrationMissingHeader;
+    @FindBy(xpath = "//h2[contains(., 'VIN is missing')]") private WebElement vinMissingHeader;
 
     public VehicleSearchPage(MotAppDriver driver) {
         super(driver);
