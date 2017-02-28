@@ -8,7 +8,7 @@ use DvsaCommon\Utility\ArrayUtils;
 
 class AddressFormatter
 {
-    protected $addressPartsGlue = ',</br>';
+    protected $addressPartsGlue = ',<br />';
 
     public function escapedDtoToMultiLine(AddressDto $dto, $showCountry = false)
     {

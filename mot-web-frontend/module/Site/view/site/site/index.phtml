@@ -106,7 +106,7 @@ echo $this->partial(
                     <span class="table-summary__meta">Pending</span>
                 <?php endif; ?>
                 <?php if ($permission->canRemovePositionAtSite($position->getRole()->getCode())): ?>
-                    <a id="remove-role" class="table-summary__action" href="<?php echo $this->url(
+                    <a class="table-summary__action" href="<?php echo $this->url(
                         \Site\Controller\RoleController::ROUTE_REMOVE_ROLE,
                         [
                             'siteId' => $site->getId(),
