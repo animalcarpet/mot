@@ -138,6 +138,7 @@
   },
   "vehicleId" : 1001,
   "vehicleVersion" : 1,
+  "vehicleClass": 4,
   "pendingDetails" : {
     "currentSubmissionStatus" : "PASSED",
     "issuedDate" : "2015-12-18",

@@ -42,3 +42,6 @@ test-output/
 
 # Allure reporting, result folder
 allure-results/
+
+#jenv configuration files
+.java-version

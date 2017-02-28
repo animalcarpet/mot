@@ -48,7 +48,7 @@ class BrakeTestConfigurationClass1And2Mapper implements BrakeTestConfigurationMa
      *
      * @return BrakeTestConfigurationDtoInterface
      */
-    public function mapToDefaultDto(MotTest $motTest, $vehicleClass = null)
+    public function mapToDefaultDto(MotTest $motTest)
     {
         $dto = new BrakeTestConfigurationClass1And2Dto();
 
@@ -59,10 +59,8 @@ class BrakeTestConfigurationClass1And2Mapper implements BrakeTestConfigurationMa
         $dto->setSidecarWeight('');
         $dto->setIsSidecarAttached(false);
 
-        if ($motTest->getBrakeTestResult() !== null) {
-            $brakeTestResult = new BrakeTestResultClass1And2($motTest->getBrakeTestResult());
-            $dto->setBrakeTestType($brakeTestResult->getBrakeTestTypeCode());
-        }
+        // the defaults for brake test type from VTS will be populated in controller (BrakeTestResultsController)
+        // because MotTest response obj don't have access to VTS data as it was before with DTO
 
         return $dto;
     }
