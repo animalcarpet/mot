@@ -58,14 +58,38 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
         $this->mapper->mapToDto(null);
     }
 
-    public function testMapToDefaultDto()
+    public function testMapToDefaultDto_withMotTestWithoutBrakeTestResult()
     {
         $motTestData = Fixture::getMotTestDataVehicleClass4(true);
-        $motTestData->brakeTestResult->serviceBrake1TestType = "ROLLR";
-        $motTestData->brakeTestResult->parkingBrakeTestType = "ROLLR";
+        /**
+         * this is the case when a new MOT Test does not have brake test submitted
+         * vehicle weight should be empty in the dto because there is no source of brake tests
+         * to populate the field in DTO
+         *
+         * @see BrakeTestConfigurationClass3AndAboveMapper @ mapToDefaultDto()
+         */
+        $motTestData->brakeTestResult = null;
 
         $motTest = new MotTest($motTestData);
-        $expected = $this->getDefaultDto();
+        $expected = $this->getDefaultDto()
+                        ->setVehicleWeight('1111.0'); // vehicle weight from previous mot test (see fixture file)
+
+        $actual = $this->mapper->mapToDefaultDto($motTest);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testMapToDefaultDto_withMotTestContainingDefaultBreakTestValues()
+    {
+        $vehicleWeight = '3000';
+        $motTestData = Fixture::getMotTestDataVehicleClass4(true);
+        $motTestData->brakeTestResult->serviceBrake1TestType = BrakeTestTypeCode::ROLLER;
+        $motTestData->brakeTestResult->parkingBrakeTestType = BrakeTestTypeCode::ROLLER;
+        $motTestData->brakeTestResult->vehicleWeight = $vehicleWeight;
+
+        $motTest = new MotTest($motTestData);
+        $expected = $this->getDefaultDto()
+            ->setVehicleWeight($vehicleWeight);
 
         $actual = $this->mapper->mapToDefaultDto($motTest);
 
@@ -77,30 +101,14 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
         $vehicleWeight = '1800';
         $motTestData = Fixture::getMotTestDataVehicleClass4(true);
         $motTestData->brakeTestResult->vehicleWeight = $vehicleWeight;
-        $motTestData->brakeTestResult->serviceBrake1TestType = "ROLLR";
-        $motTestData->brakeTestResult->parkingBrakeTestType = "ROLLR";
+        $motTestData->brakeTestResult->serviceBrake1TestType = BrakeTestTypeCode::ROLLER;
+        $motTestData->brakeTestResult->parkingBrakeTestType = BrakeTestTypeCode::ROLLER;
+        $motTestData->vehicleClass = VehicleClassCode::CLASS_3;
 
         $motTest = new MotTest($motTestData);
         $expected = $this->getDefaultDto()->setVehicleWeight($vehicleWeight);
 
-        $actual = $this->mapper->mapToDefaultDto($motTest, 3);
-
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function testMapToDefaultDtoWithSiteDefault()
-    {
-        $motTestData = Fixture::getMotTestDataVehicleClass4(true);
-        $motTestData->brakeTestResult->vehicleWeight = "";
-        $motTestData->brakeTestResult->serviceBrake1TestType = "DECEL";
-        $motTestData->brakeTestResult->parkingBrakeTestType = "GRADT";
-
-        $motTest = new MotTest($motTestData);
-        $expected = $this->getDefaultDto()
-            ->setServiceBrake1TestType(BrakeTestTypeCode::DECELEROMETER)
-            ->setParkingBrakeTestType(BrakeTestTypeCode::GRADIENT);
-
-        $actual = $this->mapper->mapToDefaultDto($motTest, 3);
+        $actual = $this->mapper->mapToDefaultDto($motTest);
 
         $this->assertEquals($expected, $actual);
     }
@@ -114,13 +122,14 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
         $motTestData = Fixture::getMotTestDataVehicleClass4(true);
 
         $motTestData->brakeTestResult->vehicleWeight = $vehicleWeight;
-        $motTestData->brakeTestResult->serviceBrake1TestType = "ROLLR";
-        $motTestData->brakeTestResult->parkingBrakeTestType = "ROLLR";
+        $motTestData->brakeTestResult->serviceBrake1TestType = BrakeTestTypeCode::ROLLER;
+        $motTestData->brakeTestResult->parkingBrakeTestType = BrakeTestTypeCode::ROLLER;
         $motTestData->brakeTestResult->weightType = WeightSourceCode::DGW;
+        $motTestData->vehicleClass = VehicleClassCode::CLASS_7;
 
         $motTest = new MotTest($motTestData);
 
-        $actual = $this->mapper->mapToDefaultDto($motTest, VehicleClassCode::CLASS_7);
+        $actual = $this->mapper->mapToDefaultDto($motTest);
         $this->assertEquals($expected, $actual);
     }
 
@@ -135,13 +144,14 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
         $motTestData = Fixture::getMotTestDataVehicleClass4(true);
 
         $motTestData->brakeTestResult->vehicleWeight = $vehicleWeight;
-        $motTestData->brakeTestResult->serviceBrake1TestType = "ROLLR";
-        $motTestData->brakeTestResult->parkingBrakeTestType = "ROLLR";
+        $motTestData->brakeTestResult->serviceBrake1TestType = BrakeTestTypeCode::ROLLER;
+        $motTestData->brakeTestResult->parkingBrakeTestType = BrakeTestTypeCode::ROLLER;
         $motTestData->brakeTestResult->weightType = WeightSourceCode::VSI;
+        $motTestData->vehicleClass = VehicleClassCode::CLASS_7;
 
         $motTest = new MotTest($motTestData);
 
-        $actual = $this->mapper->mapToDefaultDto($motTest, VehicleClassCode::CLASS_7);
+        $actual = $this->mapper->mapToDefaultDto($motTest);
         $this->assertEquals($expected, $actual);
     }
 
@@ -152,9 +162,10 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
         $motTestData = Fixture::getMotTestDataVehicleClass4(true);
 
         $motTestData->brakeTestResult->vehicleWeight = $vehicleWeight;
-        $motTestData->brakeTestResult->serviceBrake1TestType = "ROLLR";
-        $motTestData->brakeTestResult->parkingBrakeTestType = "ROLLR";
+        $motTestData->brakeTestResult->serviceBrake1TestType = BrakeTestTypeCode::ROLLER;
+        $motTestData->brakeTestResult->parkingBrakeTestType = BrakeTestTypeCode::ROLLER;
         $motTestData->brakeTestResult->weightType = WeightSourceCode::VSI;
+        $motTestData->vehicleClass = VehicleClassCode::CLASS_7;
 
         $motTest = new MotTest($motTestData);
 
@@ -162,7 +173,7 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
             ->setVehicleWeight(null)
             ->setWeightType(WeightSourceCode::VSI);
 
-        $actual = $this->mapper->mapToDefaultDto($motTest, VehicleClassCode::CLASS_7);
+        $actual = $this->mapper->mapToDefaultDto($motTest);
         $this->assertEquals($expected, $actual);
     }
 
@@ -173,15 +184,16 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
         $motTestData = Fixture::getMotTestDataVehicleClass4(true);
 
         $motTestData->brakeTestResult->vehicleWeight = $vehicleWeight;
-        $motTestData->brakeTestResult->serviceBrake1TestType = "ROLLR";
-        $motTestData->brakeTestResult->parkingBrakeTestType = "ROLLR";
+        $motTestData->brakeTestResult->serviceBrake1TestType = BrakeTestTypeCode::ROLLER;
+        $motTestData->brakeTestResult->parkingBrakeTestType = BrakeTestTypeCode::ROLLER;
         $motTestData->brakeTestResult->weightType = WeightSourceCode::VSI;
+        $motTestData->vehicleClass = VehicleClassCode::CLASS_4;
 
         $motTest = new MotTest($motTestData);
 
         $expected = $this->getDefaultDto()->setWeightType(WeightSourceCode::VSI);
 
-        $actual = $this->mapper->mapToDefaultDto($motTest, VehicleClassCode::CLASS_4);
+        $actual = $this->mapper->mapToDefaultDto($motTest);
         $this->assertEquals($expected, $actual);
     }
 
@@ -230,6 +242,9 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
     }
 
     /**
+     * This returns the default DTO generated by
+     * BrakeTestConfigurationClass3AndAboveMapper @ mapToDefaultDto()
+     *
      * @return BrakeTestConfigurationClass3AndAboveDto
      */
     private function getDefaultDto()

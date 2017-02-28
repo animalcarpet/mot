@@ -69,6 +69,27 @@ class BrakeTestResultClass3AndAboveViewModel
 
     const ID_PARKING_EFFICIENCY = 'parkingBrakeEfficiency';
 
+    const API_SERVICE_SERVICE_EFFORT_NEARSIDE_AXLE_1 = 'effortNearsideAxle1';
+    const API_SERVICE_LOCK_NEARSIDE_AXLE_1 = 'lockNearsideAxle1';
+    const API_SERVICE_EFFORT_OFFSIDE_AXLE_1 = 'effortOffsideAxle1';
+    const API_SERVICE_LOCK_OFFSIDE_AXLE_1  = 'lockOffsideAxle1';
+
+    const API_SERVICE_EFFORT_NEARSIDE_AXLE_2 = 'effortNearsideAxle2';
+    const API_SERVICE_LOCK_NEARSIDE_AXLE_2 = 'lockNearsideAxle2';
+    const API_SERVICE_EFFORT_OFFSIDE_AXLE_2 = 'effortOffsideAxle2';
+    const API_SERVICE_LOCK_OFFSIDE_AXLE_2 = 'lockOffsideAxle2';
+
+    const API_SERVICE_EFFORT_NEARSIDE_AXLE_3 = 'effortNearsideAxle3';
+    const API_SERVICE_LOCK_NEARSIDE_AXLE_3 = 'lockNearsideAxle3';
+    const API_SERVICE_EFFORT_OFFSIDE_AXLE_3 = 'effortOffsideAxle3';
+    const API_SERVICE_LOCK_OFFSIDE_AXLE_3 = 'lockOffsideAxle3';
+
+    const API_SERVICE_LOCK_SINGLE = 'lockSingle';
+    const API_SERVICE_EFFORT_SINGLE = 'effortSingle';
+
+    const API_SERVICE_BRAKE_1_DATA_KEY = 'serviceBrake1Data';
+    const API_SERVICE_BRAKE_2_DATA_KEY = 'serviceBrake2Data';
+
     private $parkingBrakeEffortSingle;
     private $parkingBrakeLockSingle;
 
@@ -140,7 +161,6 @@ class BrakeTestResultClass3AndAboveViewModel
     public function __construct(BrakeTestConfigurationClass3AndAboveDto $brakeTestConfigurationClass3AndAboveDto,
                                 BrakeTestResultClass3AndAbove $brakeTestResult = null, $apiData, $postData)
     {
-        if ($brakeTestConfigurationClass3AndAboveDto !== null) {
             $data = $postData === null ? $apiData : $postData;
 
             $this->brakeTestConfiguration = new BrakeTestConfigurationClass3AndAboveHelper($brakeTestConfigurationClass3AndAboveDto);
@@ -173,31 +193,15 @@ class BrakeTestResultClass3AndAboveViewModel
 
             $this->serviceBrake1Efficiency = ArrayUtils::tryGet($data, self::ID_SERVICE_1_EFFICIENCY);
             $this->serviceBrake2Efficiency = ArrayUtils::tryGet($data, self::ID_SERVICE_2_EFFICIENCY);
-            $this->serviceBrakeAxles = $brakeTestConfigurationClass3AndAboveDto->getNumberOfAxles();
-            $this->parkingBrakeAxles = $brakeTestConfigurationClass3AndAboveDto->getParkingBrakeNumberOfAxles();
-        } else {
-            $this->parkingBrakeEffortSingle = $brakeTestResult->getParkingBrakeEffortSingle();
-            $this->parkingBrakeLockSingle = $brakeTestResult->getParkingBrakeLockSingle();
 
-            $this->parkingBrakeEffortNearside = $brakeTestResult->getParkingBrakeEffortNearside();
-            $this->parkingBrakeLockNearside = $brakeTestResult->getParkingBrakeLockNearside();
-            $this->parkingBrakeEffortOffside = $brakeTestResult->getParkingBrakeEffortOffside();
-            $this->parkingBrakeLockOffside = $brakeTestResult->getParkingBrakeLockOffside();
-
-            $this->parkingBrakeEffortSecondaryNearside = $brakeTestResult->getParkingBrakeEffortSecondaryNearside();
-            $this->parkingBrakeLockSecondaryNearside = $brakeTestResult->getParkingBrakeLockSecondaryNearside();
-            $this->parkingBrakeEffortSecondaryOffside = $brakeTestResult->getParkingBrakeEffortSecondaryOffside();
-            $this->parkingBrakeLockSecondaryOffside = $brakeTestResult->getParkingBrakeLockSecondaryOffside();
-
-            $this->parkingBrakeEfficiencyPass = $brakeTestResult->getParkingBrakeEfficiencyPass();
-
-            $this->parkingBrakeEfficiency = $brakeTestResult->getParkingBrakeEfficiency();
-
-            $this->serviceBrake1Efficiency = $brakeTestResult->getServiceBrake1Efficiency();
-            $this->serviceBrake2Efficiency = $brakeTestResult->getServiceBrake2Efficiency();
-            $this->serviceBrakeAxles = $brakeTestResult->getNumberOfAxles();
-            $this->parkingBrakeAxles = $brakeTestResult->getParkingBrakeNumberOfAxles();
-        }
+            if (null !== $brakeTestConfigurationClass3AndAboveDto) {
+                $this->serviceBrakeAxles = $brakeTestConfigurationClass3AndAboveDto->getNumberOfAxles();
+                $this->parkingBrakeAxles = $brakeTestConfigurationClass3AndAboveDto->getParkingBrakeNumberOfAxles();
+            }
+            elseif (null !== $brakeTestResult) {
+                $this->serviceBrakeAxles = $brakeTestResult->getNumberOfAxles();
+                $this->parkingBrakeAxles = $brakeTestResult->getParkingBrakeNumberOfAxles();
+            }
 
         if ($postData !== null) {
             $this->serviceBrakeLockSingle = ArrayUtils::tryGet($postData, self::ID_SERVICE_LOCK_SINGLE);
@@ -290,7 +294,7 @@ class BrakeTestResultClass3AndAboveViewModel
                 self::ID_SERVICE_2_LOCK_OFFSIDE_AXLE_3
             );
         } elseif ($apiData !== null) {
-            $serviceBrake1Data = ArrayUtils::tryGet($apiData, 'serviceBrake1Data');
+            $serviceBrake1Data = ArrayUtils::tryGet($apiData, self::API_SERVICE_BRAKE_1_DATA_KEY);
 
             $this->serviceBrakeLockSingle = ArrayUtils::tryGet($serviceBrake1Data, 'lockSingle');
             $this->serviceBrakeEffortSingle = ArrayUtils::tryGet($serviceBrake1Data, 'effortSingle');
@@ -310,7 +314,7 @@ class BrakeTestResultClass3AndAboveViewModel
             $this->serviceBrakeEffortOffsideAxle3 = ArrayUtils::tryGet($serviceBrake1Data, 'effortOffsideAxle3');
             $this->serviceBrakeLockOffsideAxle3 = ArrayUtils::tryGet($serviceBrake1Data, 'lockOffsideAxle3');
 
-            $serviceBrake2Data = ArrayUtils::tryGet($apiData, 'serviceBrake2Data');
+            $serviceBrake2Data = ArrayUtils::tryGet($apiData, self::API_SERVICE_BRAKE_2_DATA_KEY );
 
             $this->serviceBrake2LockSingle = ArrayUtils::tryGet($serviceBrake2Data, 'lockSingle');
             $this->serviceBrake2EffortSingle = ArrayUtils::tryGet($serviceBrake2Data, 'effortSingle');
@@ -385,7 +389,7 @@ class BrakeTestResultClass3AndAboveViewModel
         }
 
         if ($this->brakeTestConfiguration->hasTwoServiceBrakes()) {
-            $sb2Data = &$data['serviceBrake2Data'];
+            $sb2Data = &$data[self::API_SERVICE_BRAKE_2_DATA_KEY];
             if ($this->brakeTestConfiguration->effortsApplicableToFirstServiceBrake()) {
                 if ($this->brakeTestConfiguration->isSingleWheelInFront()) {
                     $sb2Data['effortSingle'] = $this->serviceBrake2EffortSingle;

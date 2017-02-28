@@ -337,5 +337,8 @@ class BrakeTestResultClass1And2ViewModel
 
         $this->effortSidecar1 = $brakeTestResult->control1EffortSidecar;
         $this->effortSidecar2 = $brakeTestResult->control2EffortSidecar;
+
+        $this->efficiency1 = $brakeTestResult->control1BrakeEfficiency;
+        $this->efficiency2 = $brakeTestResult->control2BrakeEfficiency;
     }
 }

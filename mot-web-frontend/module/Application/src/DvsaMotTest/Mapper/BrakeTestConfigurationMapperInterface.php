@@ -12,11 +12,10 @@ interface BrakeTestConfigurationMapperInterface
 {
     /**
      * @param MotTest $motTest
-     * @param string $vehicleClass
      *
      * @return BrakeTestConfigurationDtoInterface
      */
-    public function mapToDefaultDto(MotTest $motTest, $vehicleClass = null);
+    public function mapToDefaultDto(MotTest $motTest);
 
     /**
      * @param array $data

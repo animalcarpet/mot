@@ -81,6 +81,12 @@ class BrakeTestResultsControllerTest extends AbstractDvsaMotTestTestCase
      * @param null $expectedLocation
      *
      * @dataProvider brakeTestConfigurationTestItems
+     * @param $motTestNumber
+     * @param $vehicleClass
+     * @param $isPost
+     * @param $postParams
+     * @param $expectedTemplate
+     * @param null $expectedLocation
      */
     public function testBrakeTestConfigurationGetOk(
         $motTestNumber,

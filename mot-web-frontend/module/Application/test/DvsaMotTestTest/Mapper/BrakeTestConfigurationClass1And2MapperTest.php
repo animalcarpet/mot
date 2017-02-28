@@ -54,7 +54,7 @@ class BrakeTestConfigurationClass1And2MapperTest extends PHPUnit_Framework_TestC
 
     public function testMapToDefaultDto()
     {
-        $motTest = $this->getMotTestDataBrakeRollr();
+        $motTest = $this->getMotTestDataWithSpecifiBrakeTestType(BrakeTestTypeCode::ROLLER);
         $expected = (new BrakeTestConfigurationClass1And2Dto())
             ->setBrakeTestType(BrakeTestTypeCode::ROLLER)
             ->setVehicleWeightFront('')
@@ -68,39 +68,24 @@ class BrakeTestConfigurationClass1And2MapperTest extends PHPUnit_Framework_TestC
         $this->assertEquals($expected, $actual);
     }
 
-    public function testMapToDefaultDtoWithSiteDefault()
-    {
-        $motTest = $this->getMotTestDataBrakeGradt();
-        $expected = (new BrakeTestConfigurationClass1And2Dto())
-            ->setBrakeTestType(BrakeTestTypeCode::GRADIENT)
-            ->setVehicleWeightFront('')
-            ->setVehicleWeightRear('')
-            ->setRiderWeight('')
-            ->setSidecarWeight('')
-            ->setIsSidecarAttached(false);
-
-        $actual = $this->mapper->mapToDefaultDto($motTest);
-
-        $this->assertEquals($expected, $actual);
-    }
-
     /**
      * @return MotTest
      */
-    private function getMotTestDataBrakeRollr()
+    private function getMotTestWithoutBrakeTestType()
     {
         $data = Fixture::getMotTestDataVehicleClass1(true);
-        $data->brakeTestResult->brakeTestTypeCode = "ROLLR";
+        $data->brakeTestResult->brakeTestTypeCode =  null;
         return new MotTest($data);
     }
 
     /**
      * @return MotTest
      */
-    private function getMotTestDataBrakeGradt()
+    private function getMotTestDataWithSpecifiBrakeTestType($brakeTestType = BrakeTestTypeCode::ROLLER)
     {
         $data = Fixture::getMotTestDataVehicleClass1(true);
-        $data->brakeTestResult->brakeTestTypeCode = "GRADT";
+        $data->brakeTestResult->brakeTestTypeCode = $brakeTestType;
         return new MotTest($data);
     }
+
 }
