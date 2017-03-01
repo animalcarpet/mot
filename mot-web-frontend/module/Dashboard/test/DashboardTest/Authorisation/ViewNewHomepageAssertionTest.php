@@ -99,7 +99,7 @@ class ViewNewHomepageAssertionTest extends \PHPUnit_Framework_TestCase
                 [RoleCode::TESTER], [], [], false,
             ],
             [
-                [RoleCode::TESTER_ACTIVE], [], [], false,
+                [RoleCode::TESTER_ACTIVE], [], [], true,
             ],
             [
                 [RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], [], [], true,
