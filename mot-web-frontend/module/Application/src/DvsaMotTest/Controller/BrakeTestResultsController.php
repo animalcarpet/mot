@@ -36,7 +36,7 @@ use DvsaMotTest\Model\BrakeTestConfigurationHelperInterface;
 use DvsaMotTest\Model\BrakeTestResultClass1And2ViewModel;
 use DvsaMotTest\Model\BrakeTestResultClass3AndAboveViewModel;
 use DvsaMotTest\View\Model\MotTestTitleModel;
-use DvsaMotTest\Controller\DvsaVehicleViewModel;
+use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -156,12 +156,15 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
         $configHelper->setConfigDto($dto);
 
         $preselectBrakeTestWeight = false;
-        if (!$isGroupA && !is_null($brakeTestResult)) {
-            $hasCorrectService1BrakeTestType = in_array($brakeTestResult->getServiceBrake1TestType(), [BrakeTestTypeCode::PLATE, BrakeTestTypeCode::ROLLER]);
-            $hasCorrectService2BrakeTestType = in_array($brakeTestResult->getServiceBrake2TestType(), [BrakeTestTypeCode::PLATE, BrakeTestTypeCode::ROLLER]);
-            $hasCorrectParkingBrakeTestType = in_array($brakeTestResult->getParkingBrakeTestType(), [BrakeTestTypeCode::PLATE, BrakeTestTypeCode::ROLLER]);
+        if (!$isGroupA) {
+            $hasCorrectServiceBrakeTestType = in_array($configHelper->getServiceBrakeTestType(), [BrakeTestTypeCode::PLATE, BrakeTestTypeCode::ROLLER]);
+            $hasCorrectParkingBrakeTestType = in_array($configHelper->getParkingBrakeTestType(), [BrakeTestTypeCode::PLATE, BrakeTestTypeCode::ROLLER]);
 
-            if ($brakeTestResult->getVehicleWeight() && ($hasCorrectService1BrakeTestType || $hasCorrectService2BrakeTestType || $hasCorrectParkingBrakeTestType)) {
+
+            if (($configHelper->getVehicleWeight() || $motTest->getPreviousTestVehicleWight())
+                && ( $hasCorrectServiceBrakeTestType || $hasCorrectParkingBrakeTestType
+                )
+            ) {
                 $preselectBrakeTestWeight = true;
             }
         }
@@ -455,12 +458,6 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
             $showParkingBrakeImbalance = false;
             $showAxleTwoParkingBrakeImbalance = false;
         } else {
-            if($motTest->getTestTypeCode() === MotTestTypeCode::RE_TEST) {
-                /** @var MotTest $previousMotTest */
-                $previousMotTest = $this->tryGetMotTestOrAddErrorMessages($motTest->getMotTestOriginalNumber());
-                $motTest->setPreviousMotTest($previousMotTest);
-            }
-
             if($motTest->getPreviousMotTest() !== null) {
                 $brakeTestResultClass3 = new BrakeTestResultClass3AndAbove($motTest->getPreviousMotTest()->getBrakeTestResult());
             } else {
@@ -641,11 +638,11 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
         /** @var VehicleTestingStationDto $site */
         $site = $this->getVehicleTestingStationDtoById($motTest->getSiteId());
 
-        if (!$site) { 
+        if (!$site) {
             // no data to populate from
             return;
         }
-            
+
         if(VehicleClassGroup::isGroupA($vehicleClass)) {
             if (!empty($site->getDefaultBrakeTestClass1And2())) {
                 $dto->setBrakeTestType($site->getDefaultBrakeTestClass1And2()->getCode());
@@ -654,7 +651,7 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
             if (!empty($site->getDefaultParkingBrakeTestClass3AndAbove())) {
                 $dto->setParkingBrakeTestType($site->getDefaultParkingBrakeTestClass3AndAbove()->getCode());
             }
-            
+
             if (!empty($site->getDefaultServiceBrakeTestClass3AndAbove())) {
                 $dto->setServiceBrake1TestType($site->getDefaultServiceBrakeTestClass3AndAbove()->getCode());
             }

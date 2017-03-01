@@ -113,14 +113,13 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
         $brakeTestResult = $motTest->getBrakeTestResult();
 
         if (VehicleClassGroup::isGroupA($vehicleClass)) {
-           return $vehicleWeight;
+            return $vehicleWeight;
         }
 
-        if($brakeTestResult !== null) {
+        if ($brakeTestResult !== null) {
             $brakeTestResultClass3AndAbove = new BrakeTestResultClass3AndAbove($motTest->getBrakeTestResult());
             $vehicleWeight = $brakeTestResultClass3AndAbove->getVehicleWeight();
-        }
-        else {
+        } else {
             $vehicleWeight = $motTest->getPreviousTestVehicleWight();
         }
 
@@ -136,16 +135,28 @@ class BrakeTestConfigurationClass3AndAboveMapper implements BrakeTestConfigurati
     {
         $vehicleClass = $motTest->getVehicleClass();
 
-        if (!is_null($vehicleClass)) {
+        if (is_null($vehicleClass)) {
             return WeightSourceCode::VSI;
         }
 
         $brakeResult = $motTest->getBrakeTestResult();
 
-        if (!is_null($brakeResult)) {
-            $brakeResultObject = new BrakeTestResultClass3AndAbove($brakeResult);
-            if ($vehicleClass == VehicleClassCode::CLASS_7 && !empty($brakeResultObject->getVehicleWeight())) {
-                return WeightSourceCode::DGW;
+        if ($vehicleClass == VehicleClassCode::CLASS_7) {
+
+            if (is_null($brakeResult)) {
+
+                if (!empty($motTest->getPreviousTestVehicleWight())) {
+                    return WeightSourceCode::DGW;
+                }
+
+            } else {
+
+                $brakeResultObject = new BrakeTestResultClass3AndAbove($brakeResult);
+
+                if (!empty($brakeResultObject->getVehicleWeight())) {
+                    return WeightSourceCode::DGW;
+                }
+
             }
         }
 

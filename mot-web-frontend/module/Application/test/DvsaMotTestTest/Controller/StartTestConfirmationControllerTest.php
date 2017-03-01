@@ -82,6 +82,10 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
             MotTestService::class,
             $this->getMockMotTestServiceClient()
         );
+        $serviceManager->setService(
+            VehicleService::class,
+            $this->vehicleService
+        );
 
         $this->setServiceManager($serviceManager);
 
@@ -144,6 +148,12 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
             ->method('isVehicleUnderTest')
             ->with(1)
             ->willReturn(false);
+
+        $mockMotTestServiceClient
+            ->expects($this->any())
+            ->method('getVehicleTestWeight')
+            ->with(1)
+            ->willReturn(10.0);
 
         $restClientMock
             ->expects($this->any())

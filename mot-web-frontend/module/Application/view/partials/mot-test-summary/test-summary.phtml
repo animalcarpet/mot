@@ -3,14 +3,15 @@
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Enum\MotTestStatusCode;
 use DvsaCommon\Enum\MotTestStatusName;
-use DvsaCommon\Utility\ArrayUtils;
+use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 use DvsaMotTest\Adapter\MotTestServiceResponseAdapter;
 
-/** @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motTest */
+/** @var MotTest $motTest */
 $motTest;
 
-/** @var \DvsaMotTest\Controller\DvsaVehicleViewModel $vehicle */
+/** @var DvsaVehicleViewModel $vehicle */
 $vehicle;
+
 
 /** @var string $motTestType */
 $motTestType = $motTest->getTestTypeCode();

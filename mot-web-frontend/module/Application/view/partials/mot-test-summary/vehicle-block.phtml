@@ -1,8 +1,9 @@
 <?php
 
 use DvsaCommon\Date\DateTimeDisplayFormat;
+use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 
-/** @var \DvsaMotTest\Controller\DvsaVehicleViewModel $vehicle */
+/** @var DvsaVehicleViewModel $vehicle */
 $vehicle;
 
 ?>
@@ -40,13 +41,7 @@ $vehicle;
     <div class="col-sm-4">
         <?php
 
-        /** @var \Dvsa\Mot\ApiClient\Resource\Item\Colour $primaryColour */
-        $primaryColour = $vehicle->getColour();
-        $colour = $primaryColour->getName();
-
-        /** @var \Dvsa\Mot\ApiClient\Resource\Item\Colour $primaryColour */
-        $secondaryColour = $vehicle->getColourSecondary();
-        $secondaryColourName = $secondaryColour ? $secondaryColour->getName() : NULL;
+        $colours = $vehicle->getColours();
 
         /** @var \Dvsa\Mot\ApiClient\Resource\Item\Make $make */
         $make = $vehicle->getMake()->getName();
@@ -63,7 +58,7 @@ $vehicle;
                 'items'    => [
                     ['Make', $make ? $make : '', 'id' => 'make'],
                     ['Model', $model, 'id' => 'model'],
-                    ['Colour', $colour, 'id' => 'colour'],
+                    ['Colour', $colours, 'id' => 'colour'],
                     [
                         'label' => 'Fuel type',
                         'value' => $fuelType,

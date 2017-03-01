@@ -1,6 +1,6 @@
 <?php
 
-namespace DvsaMotTest\Controller;
+namespace DvsaMotTest\ViewModel;
 
 
 use Dvsa\Mot\ApiClient\Resource\Item\Colour;
@@ -9,6 +9,7 @@ use Dvsa\Mot\ApiClient\Resource\Item\FuelType;
 use Dvsa\Mot\ApiClient\Resource\Item\Make;
 use Dvsa\Mot\ApiClient\Resource\Item\Model;
 use Dvsa\Mot\ApiClient\Resource\Item\VehicleClass;
+use DvsaCommon\Enum\ColourCode;
 
 class DvsaVehicleViewModel
 {
@@ -205,7 +206,7 @@ class DvsaVehicleViewModel
      */
     public function getRegistration()
     {
-        if($this->registration !== null || empty($this->registration)){
+        if ($this->registration !== null || empty($this->registration)) {
             return strtoupper($this->registration);
         } else {
             return 'N/A';
@@ -298,6 +299,32 @@ class DvsaVehicleViewModel
     public function setColourSecondary($colourSecondary)
     {
         $this->colourSecondary = $colourSecondary;
+    }
+
+    /**
+     * @return string|null
+     */
+    private function getSecondaryColourName()
+    {
+        if (is_null($this->getColourSecondary()) ||
+            ColourCode::NOT_STATED == $this->getColourSecondary()->getCode()
+        ) {
+            return;
+        }
+
+        return $this->getColourSecondary()->getName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getColours()
+    {
+        $primaryColourName = $this->getColour()->getName();
+        $secondaryColourName = $this->getSecondaryColourName();
+
+        return !empty($secondaryColourName) ? $primaryColourName . ' and ' . $secondaryColourName :
+            $primaryColourName;
     }
 
     /**

@@ -1,15 +1,16 @@
 <?php
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use DvsaCommon\UrlBuilder\UrlBuilderWeb;
+use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
+
 /**
  * @var MotTest $motTest
- * @var \DvsaMotTest\Controller\DvsaVehicleViewModel $vehicleViewModel
+ * @var DvsaVehicleViewModel $vehicleViewModel
  * @var integer    $draftId
  * @var boolean    $isOriginalTester
  * @var boolean    $isAdmin
  * @var array      $differentTesterReasons
  */
-
-use \Dvsa\Mot\ApiClient\Resource\Item\MotTest;
-use DvsaCommon\UrlBuilder\UrlBuilderWeb;
 
 $motTest = $this->motTest;
 $vehicleViewModel = $this->vehicleViewModel;

@@ -117,7 +117,7 @@ class BrakeTestConfigurationClass3AndAboveMapperTest extends PHPUnit_Framework_T
     {
         $vehicleWeight = 3000;
 
-        $expected = $this->getDefaultDto()->setVehicleWeight($vehicleWeight);
+        $expected = $this->getDefaultDto()->setVehicleWeight($vehicleWeight)->setWeightType(WeightSourceCode::DGW);
 
         $motTestData = Fixture::getMotTestDataVehicleClass4(true);
 

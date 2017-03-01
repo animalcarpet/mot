@@ -73,9 +73,9 @@ $expiryDate = DateTimeDisplayFormat::textDate($this->expiryDate);
                             ),
                             (
                                 method_exists($vehicle, 'getWeight')
-                                    ?  null === $vehicle->getWeight()
-                                        ? ['Vehicle weight', 'Unknown', 'id' => 'vehicleWeight']
-                                        : ['Vehicle weight', $vehicle->getWeight() . ' kg', 'id' => 'vehicleWeight']
+                                    ? $vehicle->getWeight() > 0
+                                      ? ['Vehicle weight', $vehicle->getWeight() . ' kg', 'id' => 'vehicleWeight']
+                                      : ['Vehicle weight', 'Unknown', 'id' => 'vehicleWeight']
                                     : null
                             ),
                             ($expiryDate ? ['MOT expiry date', $expiryDate, 'id' => 'motExpiryDate'] : null)

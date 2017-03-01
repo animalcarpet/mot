@@ -35,6 +35,7 @@ use DvsaMotTest\View\Model\MotPrintModel;
 use DvsaMotTest\View\ReplacementMakeViewModel;
 use DvsaMotTest\View\ReplacementSiteViewModel;
 use DvsaMotTest\View\ReplacementVehicleViewModel;
+use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 use MyProject\Proxies\__CG__\OtherProject\Proxies\__CG__\stdClass;
 use Vehicle\Helper\ColoursContainer;
 use Vehicle\Service\VehicleCatalogService;
@@ -191,7 +192,6 @@ class ReplacementCertificateController extends AbstractDvsaMotTestController
             ->setName(ArrayUtils::tryGet($secondaryColourDraft, 'name'))
             ->setCode(ArrayUtils::tryGet($secondaryColourDraft, 'code'));
 
-        /** @var VehicleDto $vehicleDto */
         $vehicleViewModel = new DvsaVehicleViewModel($vehicle);
 
         if ($this->hasAdminRights()) {

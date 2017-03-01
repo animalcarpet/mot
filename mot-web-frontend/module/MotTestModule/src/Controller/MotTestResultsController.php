@@ -8,7 +8,6 @@
 namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 
 use Core\Authorisation\Assertion\WebPerformMotTestAssertion;
-use DateTime;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\ApiClient\Service\MotTestService;
@@ -22,9 +21,8 @@ use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
-use DvsaMotTest\Controller\DvsaVehicleViewModel;
 use DvsaMotTest\Model\OdometerReadingViewObject;
-use Vehicle\ViewModel\VehicleViewModel;
+use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 use Zend\Http\Response;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\View\Model\ViewModel;

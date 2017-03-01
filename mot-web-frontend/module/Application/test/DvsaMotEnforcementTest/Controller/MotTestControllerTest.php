@@ -81,6 +81,9 @@ class MotTestControllerTest extends AbstractDvsaMotTestTestCase
     {
         if ($this->mockVehicleServiceClient == null) {
             $this->mockVehicleServiceClient = XMock::of(VehicleService::class);
+            $this->mockVehicleServiceClient->expects($this->any())
+                ->method('getDvsaVehicleByIdAndVersion')
+                ->willReturn(new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true)));
         }
         return $this->mockVehicleServiceClient;
     }

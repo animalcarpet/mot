@@ -1,13 +1,13 @@
 <?php
 // @todo: (ABN) These templates need some deep cleaning,
-//        Way too much logic handled here which must to be moved elsewhere, at least to some view models
+//        Way too much logic handled here which must be moved elsewhere, at least to some view models
 
 use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass1And2;
 use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
-use DvsaMotTest\Controller\DvsaVehicleViewModel;
+use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 
 /** @var MotTest */
 $motTest;
@@ -15,10 +15,9 @@ $motTest;
 /** @var DvsaVehicleViewModel $vehicle */
 $vehicle;
 
-if ($motTest->getTestTypeCode() === MotTestTypeCode::RE_TEST) {
+$brakeTestResults = $motTest->getBrakeTestResult();
+if (is_null($brakeTestResults) && $motTest->getTestTypeCode() === MotTestTypeCode::RE_TEST) {
     $brakeTestResults = $motTest->getPreviousMotTest()->getBrakeTestResult();
-} else {
-    $brakeTestResults = $motTest->getBrakeTestResult();
 }
 
 if (in_array($vehicle->getVehicleClass()->getCode(), VehicleClassCode::getGroupAClasses())) {

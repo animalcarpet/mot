@@ -4,7 +4,6 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7c21a223e66c1e7f8cf14f357cafe509",
     "content-hash": "4dc410b168799144b1314a11fc1f9b5a",
     "packages": [],
     "packages-dev": [
@@ -64,7 +63,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2016-09-27 07:57:59"
+            "time": "2016-09-27T07:57:59+00:00"
         },
         {
             "name": "psr/log",
@@ -111,7 +110,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-09-19 16:02:08"
+            "time": "2016-09-19T16:02:08+00:00"
         },
         {
             "name": "sebastian/diff",
@@ -163,7 +162,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2015-12-08 07:14:41"
+            "time": "2015-12-08T07:14:41+00:00"
         },
         {
             "name": "symfony/console",
@@ -224,7 +223,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-28 00:11:12"
+            "time": "2016-09-28T00:11:12+00:00"
         },
         {
             "name": "symfony/debug",
@@ -281,7 +280,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-06 11:02:40"
+            "time": "2016-09-06T11:02:40+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -341,7 +340,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-19 10:45:57"
+            "time": "2016-07-19T10:45:57+00:00"
         },
         {
             "name": "symfony/filesystem",
@@ -390,7 +389,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-14 00:18:46"
+            "time": "2016-09-14T00:18:46+00:00"
         },
         {
             "name": "symfony/finder",
@@ -439,7 +438,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-28 00:11:12"
+            "time": "2016-09-28T00:11:12+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -498,7 +497,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-05-18 14:26:46"
+            "time": "2016-05-18T14:26:46+00:00"
         },
         {
             "name": "symfony/process",
@@ -547,7 +546,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-29 14:13:09"
+            "time": "2016-09-29T14:13:09+00:00"
         },
         {
             "name": "symfony/stopwatch",
@@ -596,7 +595,7 @@
             ],
             "description": "Symfony Stopwatch Component",
             "homepage": "https://symfony.com",
-            "time": "2016-06-29 05:41:56"
+            "time": "2016-06-29T05:41:56+00:00"
         }
     ],
     "aliases": [],

@@ -1,32 +1,34 @@
 <?php
+use Dashboard\Model\Dashboard;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use Dvsa\Mot\ApiClient\Resource\Item\Tester;
+use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Domain\MotTestType;
-use DvsaCommon\Enum\MotTestStatusCode;
+use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
-use DvsaCommon\Enum\VehicleClassCode;
-use DvsaCommon\Utility\ArrayUtils;
 use DvsaMotEnforcement\Controller\MotTestSearchController;
 use DvsaMotTest\Adapter\MotTestServiceResponseAdapter;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
-use DvsaCommon\Auth\PermissionInSystem;
+use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 
-/** @var $dashboard \Dashboard\Model\Dashboard */
+/** @var Dashboard $dashboard */
 $dashboard = $this->dashboardDataProvider();
 
-/** @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motTest */
+/** @var MotTest $motTest */
 $motTest = $this->motDetails;
 
-/** @var \DvsaMotTest\Controller\DvsaVehicleViewModel $vehicle */
+/** @var DvsaVehicleViewModel $vehicle */
 $vehicle;
 
 $motTestNumber = $motTest->getMotTestNumber();
 
-/** @var \Dvsa\Mot\ApiClient\Resource\Item\Tester $tester */
+/** @var Tester $tester */
 $tester = $motTest->getTester();
 
-/** @var \DvsaCommon\Dto\Site\VehicleTestingStationDto $site */
+/** @var VehicleTestingStationDto $site */
 $site = $this->siteDto;
 
 $responseAdapter = new MotTestServiceResponseAdapter($motTest);

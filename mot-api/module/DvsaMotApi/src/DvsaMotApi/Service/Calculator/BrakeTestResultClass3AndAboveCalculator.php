@@ -73,7 +73,7 @@ class BrakeTestResultClass3AndAboveCalculator extends BrakeTestResultClass3AndAb
             //check efficiency
             $efficiencyPassing = $checkedEfficiency >= $efficiencyThreshold;
             //check locks
-            $locksPassing = $lockCheckApplicable ?
+            $locksPassing = $lockCheckApplicable && $checkedServiceBrake != null ?
                 $this->isPassingOnLocks($checkedServiceBrake, $brakeTestResult) : false;
             $serviceBrakeEfficiencyPassing = $serviceBrakeEfficiencyPassing || $locksPassing || $efficiencyPassing;
             //check locks on class 7

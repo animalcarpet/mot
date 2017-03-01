@@ -18,11 +18,10 @@ use Dvsa\Mot\Frontend\MotTestModule\ViewModel\ComponentCategoryCollection;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Constants\Role;
 use DvsaCommon\Domain\MotTestType;
-use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
-use DvsaMotTest\Controller\DvsaVehicleViewModel;
+use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 use Zend\Http\Response;
 use Zend\View\Model\ViewModel;
 
