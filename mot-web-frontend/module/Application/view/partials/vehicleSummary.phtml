@@ -2,8 +2,9 @@
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
+use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 
-/** @var  \DvsaMotTest\Controller\DvsaVehicleViewModel $vehicle */
+/** @var  DvsaVehicleViewModel $vehicle */
 $vehicle = $this->vehicle;
 
 $registration = $vehicle->getRegistration();

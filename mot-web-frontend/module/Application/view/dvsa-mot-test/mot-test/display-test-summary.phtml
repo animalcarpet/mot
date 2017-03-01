@@ -1,14 +1,18 @@
 <?php
 use Application\Helper\PrgHelper;
 use Core\Routing\MotTestRoutes;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use Dvsa\Mot\ApiClient\Resource\Item\PendingDetails;
 use DvsaCommon\ApiClient\MotTest\DuplicateCertificate\Dto\MotTestDuplicateCertificateEditAllowedDto;
 use DvsaCommon\Domain\MotTestType;
+use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilderWeb;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use DvsaMotTest\View\Model\MotTestTitleModel;
+use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 
 /** @var bool $isDuplicateCertificate */
 /** @var array $duplicateCertRouteSearchParams */
@@ -18,7 +22,7 @@ $defaultValues = $this->defaultValues;
 $formErrors = $this->formErrors;
 $hasErrors = !empty($this->errorMessages);
 
-/** @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motDetails */
+/** @var MotTest $motDetails */
 $motDetails;
 /** @var string $motTestType */
 $motTestType = $motDetails->getTestTypeCode();
@@ -28,7 +32,7 @@ $pageSubTitle = $motTestTitleViewModel->getTitle($motDetails, $isDuplicateCertif
 /** @var DvsaVehicleViewModel $vehicle */
 $vehicle = $this->vehicleViewModel;
 
-/** @var \Dvsa\Mot\ApiClient\Resource\Item\PendingDetails $pendingDetails */
+/** @var PendingDetails $pendingDetails */
 $pendingDetails = null;
 
 /** @var string | null $pendingStatus */
@@ -214,7 +218,7 @@ echo ($this->prgHelper instanceof PrgHelper ? $this->prgHelper->getHtml() : '');
             }
 
             ?>
-            
+
             <nav class="module-content-navigation">
                 <input type="submit" class="button" value="<?php echo $escButtonText; ?>" id="confirm_test_result">
                 <ul class="content-navigation_secondary">

@@ -180,9 +180,9 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         $this->vehicleSource = $this->params()->fromRoute(self::ROUTE_PARAM_SOURCE);
         $this->startTestChangeService->saveChange(StartTestChangeService::SOURCE, ['source' => $this->vehicleSource]);
 
-        if($this->isFeatureEnabled(FeatureToggle::MYSTERY_SHOPPER) &&
-            $this->method === MotTestTypeCode::NON_MOT_TEST)
-        {
+        if ($this->isFeatureEnabled(FeatureToggle::MYSTERY_SHOPPER) &&
+            $this->method === MotTestTypeCode::NON_MOT_TEST
+        ) {
             $this->vtsId = null;
 
             return;
@@ -244,7 +244,7 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
             $apiUrl = MotTestUrlBuilder::retest();
         } elseif ($this->method === MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING) {
             $apiUrl = MotTestUrlBuilder::demoTest();
-        } elseif($this->isNotMotTest()){
+        } elseif ($this->isNotMotTest()) {
             $apiUrl = MotTestUrlBuilder::nonMotTest();
         } else {
             $apiUrl = MotTestUrlBuilder::motTest();
@@ -493,7 +493,7 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
 
         if ($this->method == MotTestTypeCode::DEMONSTRATION_TEST_FOLLOWING_TRAINING) {
             $this->layout()->setVariable('pageSubTitle', 'Training test');
-        } elseif($this->method == MotTestTypeCode::NON_MOT_TEST) {
+        } elseif ($this->method == MotTestTypeCode::NON_MOT_TEST) {
             $this->layout()->setVariable('pageSubTitle', 'Non-MOT test');
         } else {
             if (!$this->startTestConfirmationViewModel->isInProgressTestExists()) {
@@ -518,9 +518,13 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
     {
         if ($flush || is_null($this->vehicleDetails)) {
             if ($this->isVehicleSource($source)) {
-                $this->vehicleDetails = $this->vehicleService->getDvlaVehicleById((int)$this->vehicleId);
+                $this->vehicleDetails = $this->getVehicleServiceClient()->getDvlaVehicleById((int)$this->vehicleId);
             } else {
-                $this->vehicleDetails = $this->vehicleService->getDvsaVehicleById((int)$this->vehicleId);
+                $this->vehicleDetails = $this->getVehicleServiceClient()->getDvsaVehicleById((int)$this->vehicleId);
+
+                if ($this->vehicleDetails !== null) {
+                    $this->vehicleDetails->setWeight($this->getMotTestServiceClient()->getVehicleTestWeight((int)$this->vehicleId));
+                }
             }
         }
 
@@ -535,7 +539,7 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
             return;
         }
 
-        $this->inProgressTestExists  = $this->getMotTestServiceClient()->isVehicleUnderTest($this->vehicleId);
+        $this->inProgressTestExists = $this->getMotTestServiceClient()->isVehicleUnderTest($this->vehicleId);
     }
 
     /**

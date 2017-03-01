@@ -28,11 +28,8 @@ use DvsaCommon\Constants\Network;
 use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Domain\MotTestType;
-use DvsaCommon\Dto\Common\MotTestDto;
-use DvsaCommon\Dto\Common\MotTestTypeDto;
 use DvsaCommon\Dto\Common\ReasonForCancelDto;
 use DvsaCommon\Dto\Person\PersonDto;
-use DvsaCommon\Dto\Site\SiteDto;
 use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
@@ -41,8 +38,6 @@ use DvsaCommon\HttpRestJson\Exception\NotFoundException;
 use DvsaCommon\HttpRestJson\Exception\OtpApplicationException;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException as HttpRestJsonValidationException;
-use DvsaCommon\Validation\ValidationResult;
-use DvsaCommon\Validation\ValidationException;
 use DvsaCommon\Messages\InvalidTestStatus;
 use DvsaCommon\MysteryShopper\MysteryShopperExpiryDateGenerator;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
@@ -50,12 +45,15 @@ use DvsaCommon\UrlBuilder\MotTestUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\ReportUrlBuilder;
 use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaCommon\Utility\ArrayUtils;
+use DvsaCommon\Validation\ValidationException;
+use DvsaCommon\Validation\ValidationResult;
 use DvsaCommonApi\Service\Exception\UnauthenticatedException;
 use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Model\OdometerReadingViewObject;
 use DvsaMotTest\Model\OdometerUpdate;
 use DvsaMotTest\View\Model\MotPrintModel;
 use DvsaMotTest\View\Model\MotTestTitleModel;
+use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 use Zend\EventManager\EventManager;
 use Zend\Http\Response;
 use Zend\View\Model\ViewModel;
@@ -351,14 +349,20 @@ class MotTestController extends AbstractDvsaMotTestController
         $duplicateCertSearchByVrm = $this->params()->fromQuery(DuplicateCertificateSearchType::SEARCH_TYPE_VRM);
         $duplicateCertSearchByVin = $this->params()->fromQuery(DuplicateCertificateSearchType::SEARCH_TYPE_VIN);
 
-        $duplicateCertRouteSearchParams = $this->generateParamsForSearchBy($duplicateCertSearchByVrm, $duplicateCertSearchByVin);
+        $duplicateCertRouteSearchParams = $this->generateParamsForSearchBy(
+            $duplicateCertSearchByVrm,
+            $duplicateCertSearchByVin
+        );
         $isDuplicateCertificate = $duplicateCertRouteSearchParams != null;
 
         /** @var MotTest $motTest */
         $motTest = $this->getMotTestFromApi($number);
 
         /** @var DvsaVehicle $vehicle */
-        $vehicle = $this->getVehicleServiceClient()->getDvsaVehicleByIdAndVersion($motTest->getVehicleId(), $motTest->getVehicleVersion());
+        $vehicle = $this->getVehicleServiceClient()->getDvsaVehicleByIdAndVersion(
+            $motTest->getVehicleId(),
+            $motTest->getVehicleVersion()
+        );
 
         /** @var DvsaVehicleViewModel $vehicleViewModel */
         $vehicleViewModel = new DvsaVehicleViewModel($vehicle);
@@ -827,7 +831,7 @@ class MotTestController extends AbstractDvsaMotTestController
             return $this->authorisationService->isGranted(PermissionInSystem::VE_MOT_TEST_ABORT);
         }
 
-        return $this->canAbortTestAtSite($motTest);
+        return $this->canAbortTestAtSite($motTest->getSiteId());
     }
 
     protected function assertCanAbortTestAtSite(MotTest $motTest)

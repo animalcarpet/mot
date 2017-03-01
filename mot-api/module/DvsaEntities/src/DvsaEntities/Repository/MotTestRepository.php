@@ -450,7 +450,7 @@ class MotTestRepository extends AbstractMutableRepository
     {
         $result = $this->createQueryBuilder('mt')
             ->addSelect(['rfr', 'rfrCustomDescription', 'rfrMarkedAsRepaired', 'vts', 'defaultBrakeTestClass1And2',
-                         'defaultServiceBrakeTestClass3AndAbove', 'defaultParkingBrakeTestClass3AndAbove', 'prs', 'originalMt'])
+                'defaultServiceBrakeTestClass3AndAbove', 'defaultParkingBrakeTestClass3AndAbove', 'prs', 'originalMt'])
             ->innerJoin('mt.motTestType', 'tt')
             ->innerJoin('mt.status', 's')
             ->leftJoin('mt.motTestReasonForRejections', 'rfr')
@@ -513,7 +513,8 @@ class MotTestRepository extends AbstractMutableRepository
         $startDate,
         MysteryShopperHelper $mysteryShopperHelper,
         array $mysteryShopperSiteIds = []
-    ) {
+    )
+    {
         $mysteryShopperToggleEnabled = $mysteryShopperHelper->isMysteryShopperToggleEnabled();
         $canViewAllMysteryShopperTests = $mysteryShopperHelper->hasPermissionToViewMysteryShopperTests();
 
@@ -525,7 +526,7 @@ class MotTestRepository extends AbstractMutableRepository
         if ($canViewAllMysteryShopperTests) {
             $testTypes[] = MotTestTypeCode::MYSTERY_SHOPPER;
         } else if ($mysteryShopperToggleEnabled && !empty($mysteryShopperSiteIds)) {
-            $testTypeWhereClauseFunction = function($qb) use ($mysteryShopperSiteIds) {
+            $testTypeWhereClauseFunction = function ($qb) use ($mysteryShopperSiteIds) {
                 return $qb->andWhere('(
                         t.code IN (:testTypes)
                         OR (
@@ -533,8 +534,7 @@ class MotTestRepository extends AbstractMutableRepository
                             AND mt.vehicleTestingStation IN (:mysteryShopperSites)
                         ))')
                     ->setParameter('mysteryShopperCode', MotTestTypeCode::MYSTERY_SHOPPER)
-                    ->setParameter('mysteryShopperSites', $mysteryShopperSiteIds)
-                    ;
+                    ->setParameter('mysteryShopperSites', $mysteryShopperSiteIds);
             };
         }
 
@@ -599,9 +599,9 @@ class MotTestRepository extends AbstractMutableRepository
      * Returns a list of Mystery Shopper test type mot tests for a given vehicle as of a specified date and vts.
      *
      * @param int $vehicleId
-     * @param DateTime $startDate      (optional)
-     * @param int $limit               (optional)
-     * @param int $siteId              (optional)
+     * @param DateTime $startDate (optional)
+     * @param int $limit (optional)
+     * @param int $siteId (optional)
      *
      * @return MotTest[]
      */
@@ -798,14 +798,14 @@ class MotTestRepository extends AbstractMutableRepository
             ->setParameter('vehicleId', $vehicleId)
             ->setParameter('status', $status)
             ->setParameter(
-               'codes', [
+                'codes', [
                 MotTestTypeCode::NORMAL_TEST,
                 MotTestTypeCode::PARTIAL_RETEST_LEFT_VTS,
                 MotTestTypeCode::PARTIAL_RETEST_REPAIRED_AT_VTS,
                 MotTestTypeCode::RE_TEST,
                 MotTestTypeCode::INVERTED_APPEAL,
                 MotTestTypeCode::STATUTORY_APPEAL,
-               ])
+            ])
             ->setMaxResults(1);
 
         if ($result = $qb->getQuery()->getResult()) {
@@ -1099,9 +1099,8 @@ class MotTestRepository extends AbstractMutableRepository
 
         $statuses = $searchParam->getStatus();
 
-         if ($searchParam->getDateFrom() || $searchParam->getDateTo()) {
-            if (in_array(MotTestStatusName::ACTIVE, $statuses, true))
-            {
+        if ($searchParam->getDateFrom() || $searchParam->getDateTo()) {
+            if (in_array(MotTestStatusName::ACTIVE, $statuses, true)) {
                 $qb->andwhere('
                 (
                     (
@@ -1115,8 +1114,8 @@ class MotTestRepository extends AbstractMutableRepository
                 )
                 ')
                     ->setParameter('DATE_FROM', $searchParam->getDateFrom() ?: (new \DateTime())->sub(new \DateInterval('P1D')))
-                    ->setParameter('DATE_TO', $searchParam->getDateTo() ?: new \DateTime());}
-            else {
+                    ->setParameter('DATE_TO', $searchParam->getDateTo() ?: new \DateTime());
+            } else {
                 $qb->andwhere('mt.completed_date BETWEEN :DATE_FROM AND :DATE_TO ')
                     ->setParameter('DATE_FROM', $searchParam->getDateFrom() ?: (new \DateTime())->sub(new \DateInterval('P1D')))
                     ->setParameter('DATE_TO', $searchParam->getDateTo() ?: new \DateTime());
@@ -1467,9 +1466,11 @@ class MotTestRepository extends AbstractMutableRepository
             $qb->andwhere('test.startedDate >= :DATE_FROM')
                 ->setParameter('DATE_FROM', $searchParam->getDateFrom());
         }
+
         if ($searchParam->getDateTo()) {
+            $endDate = clone($searchParam->getDateTo());
             $qb->andwhere('test.startedDate <= :DATE_TO')
-                ->setParameter('DATE_TO', $searchParam->getDateTo()->add(new \DateInterval('P1M')));
+                ->setParameter('DATE_TO', $endDate->add(new \DateInterval('P1M')));
         }
 
         if ($searchParam->getSiteNumber()) {
@@ -1483,7 +1484,7 @@ class MotTestRepository extends AbstractMutableRepository
         }
 
         if ($searchParam->getRegistration()) {
-            $qb->andwhere('vehicle.registration = :VRM OR vh.registration = :VRM')
+            $qb->andwhere('vehicle.registration = :VRM')
                 ->setParameter('VRM', $searchParam->getRegistration());
         }
 
@@ -1656,16 +1657,16 @@ class MotTestRepository extends AbstractMutableRepository
     {
         $sql = strtr('
             SELECT
-                pmt.odometer_value AS  value,
+                pmt.odometer_value AS value,
                 pmt.odometer_unit AS unit,
                 pmt.odometer_result_type AS resultType,
                 pmt.issued_date AS issuedDate
             FROM
                 %TABLE_NAME% AS mt
-                    INNER JOIN
-				mot_test_type AS tt ON tt.id = mt.mot_test_type_id
-                    INNER JOIN
+                  INNER JOIN
                 %TABLE_NAME% AS pmt ON pmt.vehicle_id = mt.vehicle_id
+                  INNER JOIN
+                mot_test_type AS tt ON tt.id = pmt.mot_test_type_id
             WHERE
                 mt.number = :motTestNumber
                 AND mt.vehicle_id = pmt.vehicle_id
@@ -1788,6 +1789,7 @@ class MotTestRepository extends AbstractMutableRepository
          AND t.completed_date >= (CURRENT_DATE() - INTERVAL 1 YEAR + INTERVAL 1 DAY)
         ";
     }
+
     /**
      * @param string $sql
      *

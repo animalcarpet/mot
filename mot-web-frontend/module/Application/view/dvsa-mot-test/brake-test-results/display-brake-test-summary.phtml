@@ -1,16 +1,17 @@
 <?php
 
-use DvsaCommon\Enum\MotTestTypeCode;
+use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaMotTest\View\Model\MotTestTitleModel;
+use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 
-/** @var \Dvsa\Mot\ApiClient\Resource\Item\MotTest $motTest */
-$motTest = $this->motTest;
+/** @var MotTest $motTest */
+$motTest;
 
 /** @var MotTestTitleModel $motTestTitleViewModel */
 $title = $motTestTitleViewModel->getTitle($motTest);
 
-/** @var \DvsaMotTest\Controller\DvsaVehicleViewModel $vehicle */
+/** @var DvsaVehicleViewModel $vehicle */
 $vehicle = $this->vehicleViewModel;
 
 $motTestNumber = $motTest->getMotTestNumber();

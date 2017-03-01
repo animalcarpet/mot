@@ -78,7 +78,7 @@ class MotTestResults
      */
     public function isOriginalBrakeTestRecorded()
     {
-        if (null === $this->originalMotTest->getMotTestOriginalNumber()) {
+        if (null === $this->originalMotTest || null === $this->originalMotTest->getMotTestNumber()) {
             return false;
         }
 

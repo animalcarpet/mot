@@ -5,6 +5,7 @@ namespace Vehicle\Controller;
 use Application\Service\CatalogService;
 use Core\Controller\AbstractAuthActionController;
 use Dvsa\Mot\ApiClient\Resource\Item\SearchVehicle;
+use Dvsa\Mot\ApiClient\Service\MotTestService;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaClient\Mapper\VehicleExpiryMapper;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
@@ -39,6 +40,8 @@ class VehicleController extends AbstractAuthActionController implements AutoWire
 
     protected $paramObfuscator;
     private $vehicleService;
+    /** @var  MotTestService */
+    private $motTestServiceClient;
     private $vehicleTableBuilder;
     private $catalogService;
     private $authorisationService;
@@ -71,6 +74,7 @@ class VehicleController extends AbstractAuthActionController implements AutoWire
      */
     public function indexAction()
     {
+        $this->motTestServiceClient = $this->getServiceLocator()->get(MotTestService::class);
         $this->authorisationService->assertGranted(PermissionInSystem::FULL_VEHICLE_MOT_TEST_HISTORY_VIEW);
 
         $obfuscatedVehicleId = (string)$this->params('id');
@@ -84,6 +88,10 @@ class VehicleController extends AbstractAuthActionController implements AutoWire
         try {
             /** @var VehicleService $vehicleService */
             $vehicle = $this->vehicleService->getDvsaVehicleById($vehicleId);
+            $mostRecentWeight = $this->motTestServiceClient->getVehicleTestWeight($vehicleId);
+            if($mostRecentWeight !== 0) {
+                $vehicle->setWeight($mostRecentWeight);
+            }
             $expiryDateForVehicle = $this->vehicleExpiryMapper->getExpiryForVehicle($vehicleId);
         } catch (ValidationException $e) {
             return $this->notFoundAction();

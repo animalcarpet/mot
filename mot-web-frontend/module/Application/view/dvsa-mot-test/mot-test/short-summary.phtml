@@ -15,7 +15,7 @@ $vehicle = $this->vehicle;
 
 $testStatus = $motTest->getStatus();
 $motTestNumber = $motTest->getMotTestNumber();
-$testStarted = $motTest->getStartedDate();
+$testStarted = DateTimeDisplayFormat::textDateTime($motTest->getStartedDate());
 $testerName = $tester->getDisplayName();
 
 $urlToReasonForAborting = $this->url('mot-test/reason-for-aborting', ['motTestNumber' => $motTestNumber]);

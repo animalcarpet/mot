@@ -3,6 +3,7 @@
 use DvsaCommon\Enum\WeightSourceCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 
 const VEHICLE_CLASS_GROUP_12 = '12';
 const VEHICLE_CLASS_GROUP_3PLUS = '3plus';
@@ -17,14 +18,14 @@ $vehicleClasses3plus = [
     VehicleClassCode::CLASS_7
 ];
 
-/** @var MotTest */
+/** @var MotTest $motTest*/
 $motTest;
 
 if (is_null($motTest->getBrakeTestResult())) {
     return;
 }
-/**  @var \DvsaMotTest\Controller\DvsaVehicleViewModel $vehicle */
-$vehicle = $this->vehicle;
+/**  @var DvsaVehicleViewModel $vehicle */
+$vehicle;
 
 // @todo: To be removed
 /** @var \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove | \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass1And2 $brakeResult */

@@ -5,10 +5,12 @@ namespace DvsaMotTest\Presenter;
 
 
 use DateTime;
+use Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultClass3AndAbove;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
 use DvsaCommon\Date\DateTimeDisplayFormat;
+use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Model\VehicleClassGroup;
 use DvsaMotTest\Model\MotChecklistPdfField;
@@ -95,7 +97,7 @@ class MotChecklistPdfPresenter implements AutoWireableInterface
         ];
 
         if(!$this->isClass1or2Vehicle()){
-            $fields[] = new MotChecklistPdfField($this->vehicle->getWeight(), $this->fourthColumnX, $this->thirdLineY, static::FONT_SIZE_9);
+            $fields[] = new MotChecklistPdfField($this->pickVehicleWeight(), $this->fourthColumnX, $this->thirdLineY, static::FONT_SIZE_9);
         }
 
         return $fields;
@@ -104,6 +106,25 @@ class MotChecklistPdfPresenter implements AutoWireableInterface
     public function isClass1or2Vehicle()
     {
         return in_array($this->vehicle->getVehicleClass()->getCode(), VehicleClassGroup::getGroupAClasses());
+    }
+
+    public function pickVehicleWeight()
+    {
+        $vehicleWeight = '';
+
+        if (in_array($this->vehicle->getVehicleClass()->getCode(), VehicleClassCode::getGroupBClasses())) {
+
+            $brakeTestResult = $this->motTest->getBrakeTestResult();
+
+            if(!is_null($brakeTestResult)) {
+                $brakeTestResultClass3ndAbove = new BrakeTestResultClass3AndAbove($brakeTestResult);
+                $vehicleWeight = $brakeTestResultClass3ndAbove->getVehicleWeight();
+            } else {
+                $vehicleWeight = $this->motTest->getPreviousTestVehicleWight();
+            }
+        }
+
+        return $vehicleWeight;
     }
 
 }

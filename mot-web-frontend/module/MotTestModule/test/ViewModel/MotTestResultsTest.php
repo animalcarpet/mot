@@ -65,8 +65,8 @@ class MotTestResultsTest extends PHPUnit_Framework_TestCase
             [[], true, false],
             [['generalPass' => null], true, false],
             [['generalPass' => 'undefined'], true, false],
-            [['generalPass' => false], true, false],
-            [['generalPass' => true], true, false],
+            [['generalPass' => false], true, true],
+            [['generalPass' => true], true, true],
         ];
     }
 
@@ -102,6 +102,13 @@ class MotTestResultsTest extends PHPUnit_Framework_TestCase
         }
 
         $this->assertEquals($expectedResult, $motTestResults->isOriginalBrakeTestRecorded());
+    }
+
+    public function testIsOriginalBrakeTestRecordedWhereOriginalTestIsNull()
+    {
+        $motTestResults = new MotTestResults(new MotTest(new \StdClass()), null);
+
+        $this->assertEquals(false, $motTestResults->isOriginalBrakeTestRecorded());
     }
 
     public function testIsBrakePerformanceNotTested()

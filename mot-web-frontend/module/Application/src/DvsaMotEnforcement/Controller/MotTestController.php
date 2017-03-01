@@ -25,6 +25,7 @@ use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use DvsaMotTest\Model\OdometerReadingViewObject;
+use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -126,7 +127,7 @@ class MotTestController extends AbstractDvsaMotTestController
                 'tester' => $tester,
                 'motDetails' => $motDetails,
                 'motTestNumber' => $motTestNumber,
-                'vehicle' => $vehicle,
+                'vehicle' => new DvsaVehicleViewModel($vehicle),
                 'motTestTypes' => $motTestTypes,
                 'odometerReading' => $this->odometerViewObject,
                 'searchType' => $searchType,

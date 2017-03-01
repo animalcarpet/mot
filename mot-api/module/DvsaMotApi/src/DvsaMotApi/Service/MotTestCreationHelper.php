@@ -116,16 +116,16 @@ class MotTestCreationHelper
     }
 
     /**
-     * @param Person                   $tester
-     * @param                          $vehicleId
-     * @param                          $vtsId
-     * @param                          $vehicleClassCode
-     * @param                          $hasRegistration
-     * @param                          $motTestTypeCode
-     * @param                          $motTestNumberOriginal
-     * @param                          $clientIp
-     * @param                          $contingencyId
-     * @param ContingencyTestDto|null  $contingencyDto
+     * @param Person $tester
+     * @param int $vehicleId
+     * @param int $vtsId
+     * @param string $vehicleClassCode
+     * @param boolean $hasRegistration
+     * @param string $motTestTypeCode
+     * @param string $motTestNumberOriginal
+     * @param string $clientIp
+     * @param int $contingencyId
+     * @param ContingencyTestDto|null $contingencyDto
      * @param MotTestComplaintRef|null $complaintRef
      *
      * @return MotTest
