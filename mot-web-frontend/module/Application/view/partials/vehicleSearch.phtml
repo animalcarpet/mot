@@ -36,7 +36,7 @@ if ($this->form->has('contingency')) {
 ?>
 
 <?php if ($searchResultMessage): ?>
-    <h2 id="main-message" class="result__group-heading"><?php echo $searchResultMessage->getMainMessage(); ?></h2>
+    <p id="main-message" class="result__group-heading"><?php echo $searchResultMessage->getMainMessage(); ?></p>
     <?php if ($noMatches): ?>
         <div class="text">
             <p>
