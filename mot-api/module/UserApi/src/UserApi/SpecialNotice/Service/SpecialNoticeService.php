@@ -262,7 +262,7 @@ class SpecialNoticeService extends AbstractService
 
             $acknowledgementDeadlineValue = DateTimeApiFormat::date($acknowledgementDeadline);
         } else {
-            $unreadCount = count($this->getAllCurrentSpecialNotices());
+            $unreadCount = $this->getCountAllCurrentSpecialNotices();
         }
 
         return [
@@ -299,6 +299,14 @@ class SpecialNoticeService extends AbstractService
             return [];
         }
         return array_map([$this, 'extractContent'], $this->specialNoticeRepository->getAllCurrentSpecialNotices());
+    }
+
+    public function getCountAllCurrentSpecialNotices()
+    {
+        if($this->authService->assertGranted(PermissionInSystem::SPECIAL_NOTICE_READ_CURRENT)){
+            return [];
+        }
+        return $this->specialNoticeRepository->getCountAllCurrentSpecialNotices();
     }
 
     public function getRemovedSpecialNotices()
