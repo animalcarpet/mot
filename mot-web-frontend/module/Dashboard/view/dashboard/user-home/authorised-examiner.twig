@@ -29,14 +29,14 @@
                     </ul>
                 {% else %}
                     <a class="c-vts-count" href="{{ authorisedExaminer.url }}">
-                        <strong class="c-vts-count__number">{{ authorisedExaminer.vtsCount }}</strong>
+                        <span class="c-vts-count__number">{{ authorisedExaminer.vtsCount }}</span>
                         <span class="c-vts-count__text"> vehicle testing stations</span>
                     </a>
                 {% endif %}
             </div>
 
             <div class="c-slots">
-                <strong class="c-slots__count c-slots__count--sm">{{ authorisedExaminer.slots }}</strong>
+                <span class="c-slots__count c-slots__count--sm">{{ authorisedExaminer.slots }}</span>
                 <span class="c-slots__subtext">
                     slots available
                 </span>

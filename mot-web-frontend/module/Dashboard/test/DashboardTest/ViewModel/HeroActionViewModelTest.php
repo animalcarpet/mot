@@ -37,18 +37,18 @@ class HeroActionViewModelTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($heroAction->isHeroActionVisible());
     }
 
-    public function testIfHeroActionIsNotVisibleForUserWithUserRoleOnly()
-    {
-        $heroAction = $this->createHeroActionViewModel(self::USER_ROLE);
-
-        $this->assertFalse($heroAction->isHeroActionVisible());
-    }
-
     public function testIfHeroActionIsVisibleForAedmRole()
     {
         $heroAction = $this->createHeroActionViewModel(self::AEDM_ROLE);
 
         $this->assertTrue($heroAction->isHeroActionVisible());
+    }
+
+    public function testIfHeroActionIsNotVisibleForUserWithUserRoleOnly()
+    {
+        $heroAction = $this->createHeroActionViewModel(self::USER_ROLE);
+
+        $this->assertFalse($heroAction->isHeroActionVisible());
     }
 
     public function testIfSlotCountIsVisibleForAedmRole()

@@ -7,18 +7,18 @@
         </header>
 
         <a href="{{ specialNotice.getUrl }}" class="c-mailbox-status" id="unread-special-notice-link">
-            <strong class="c-mailbox-status__count">{{ specialNotice.getNumberOfUnreadNotices }}</strong>
-        <span class="c-mailbox-status__type">
-            unread
-            {% if specialNotice.isDaysLeftToViewVisible %}
-                <span class="c-mailbox-status__info">{{ specialNotice.getNumberOfDaysLeftToView }} days left to view</span>
-            {% endif %}
-        </span>
+            <span class="c-mailbox-status__count">{{ specialNotice.getNumberOfUnreadNotices }}</span>
+            <span class="c-mailbox-status__type">
+                unread
+                {% if specialNotice.isDaysLeftToViewVisible %}
+                    <span class="c-mailbox-status__info">{{ specialNotice.getNumberOfDaysLeftToView }} days left to view</span>
+                {% endif %}
+            </span>
         </a>
 
         {% if specialNotice.isOverdue %}
             <a href="{{ specialNotice.getUrl }}" class="c-mailbox-status is-overdue" id="overdue-unread-special-notice-link">
-                <strong class="c-mailbox-status__count">{{ specialNotice.numberOfOverdueSpecialNotices }}</strong>
+                <span class="c-mailbox-status__count">{{ specialNotice.numberOfOverdueSpecialNotices }}</span>
                 <span class="c-mailbox-status__type">
                     overdue
                 </span>
