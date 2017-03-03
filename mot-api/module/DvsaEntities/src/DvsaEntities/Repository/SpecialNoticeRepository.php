@@ -23,7 +23,16 @@ class SpecialNoticeRepository extends AbstractMutableRepository
     const GET_LATEST_ISSUE_NUMBER_QUERY =
         'SELECT MAX(snc.issueNumber) FROM DvsaEntities\Entity\SpecialNoticeContent snc WHERE snc.issueYear = ?1';
 
+    // following query has reference in code and is available in API but most likely nothing hit it
     const QUERY_GET_ALL_CURRENT = 'SELECT snc FROM DvsaEntities\Entity\SpecialNoticeContent snc
+                                    JOIN DvsaEntities\Entity\SpecialNotice sn WITH sn.contentId = snc.id
+                                    WHERE snc.isPublished = 1 AND snc.externalPublishDate <= CURRENT_DATE()
+                                    AND snc.isDeleted = 0
+                                    AND sn.isDeleted = 0
+                                    ORDER BY snc.id DESC
+                                    LIMIT 100
+                                    ';
+    const QUERY_GET_COUNT_ALL_CURRENT = 'SELECT COUNT(snc.id) FROM DvsaEntities\Entity\SpecialNoticeContent snc
                                     JOIN DvsaEntities\Entity\SpecialNotice sn WITH sn.contentId = snc.id
                                     WHERE snc.isPublished = 1 AND snc.externalPublishDate <= CURRENT_DATE()
                                     AND snc.isDeleted = 0
@@ -194,6 +203,14 @@ class SpecialNoticeRepository extends AbstractMutableRepository
             ->getEntityManager()
             ->createQuery(self::QUERY_GET_ALL_CURRENT)
             ->getResult();
+    }
+
+    public function getCountAllCurrentSpecialNotices()
+    {
+        return $this
+            ->getEntityManager()
+            ->createQuery(self::QUERY_GET_COUNT_ALL_CURRENT)
+            ->getSingleScalarResult();
     }
 
     public function removeSpecialNoticeContent($id)
