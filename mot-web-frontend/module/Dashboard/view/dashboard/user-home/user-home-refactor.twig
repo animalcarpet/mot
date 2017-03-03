@@ -28,6 +28,14 @@
     <div class="column-half">
         {% include '/dashboard/user-home/authorised-examiner.twig' with {'authorisedExaminers': dashboard.authorisedExaminersViewModel} %}
 
+        {% if dashboard.showYourPerformance %}
+            {% include '/dashboard/user-home/your-performance.twig' %}
+        {% endif %}
+
         {% include '/dashboard/user-home/demo-test.twig' with {'demoTest': dashboard.demoTestViewModel} %}
+
+        {% if dashboard.showContingencyTests %}
+            {% include '/dashboard/user-home/contingency-tests.twig' %}
+        {% endif %}
     </div>
 </div>

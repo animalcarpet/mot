@@ -12,6 +12,8 @@ class ViewNewHomepageAssertion
         RoleCode::TESTER_ACTIVE,
         RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED,
         RoleCode::TESTER_APPLICANT_INITIAL_TRAINING_REQUIRED,
+        RoleCode::TESTER,
+        RoleCode::TESTER_ACTIVE,
         RoleCode::SITE_ADMIN,
         RoleCode::SITE_MANAGER,
         RoleCode::AUTHORISED_EXAMINER_DELEGATE,
@@ -42,6 +44,10 @@ class ViewNewHomepageAssertion
             return true;
         }
 
+        if ($this->isQualifiedTesterAndAssignedToVts($userRoles)) {
+            return false;
+        }
+
         foreach ($userRoles as $role) {
             if (!in_array($role, self::ROLES_ALLOWED_TO_VIEW_NEW_HOMEPAGE)) {
                 return false;
@@ -59,5 +65,15 @@ class ViewNewHomepageAssertion
     private function doesUserHaveNoRoles(array $userRoles)
     {
         return count($userRoles) == 1 && in_array(RoleCode::USER, $userRoles);
+    }
+
+    /**
+     * @param array $userRoles
+     *
+     * @return bool
+     */
+    private function isQualifiedTesterAndAssignedToVts(array $userRoles)
+    {
+        return in_array(RoleCode::TESTER, $userRoles) && in_array(RoleCode::TESTER_ACTIVE, $userRoles);
     }
 }

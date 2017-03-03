@@ -22,14 +22,20 @@ class DashboardViewModel
     /** @var bool $showDemoMessage */
     private $showDemoMessage = false;
 
+    /** @var bool $showYourPerformance */
+    private $showYourPerformance = false;
+
+    /** @var bool $showContingencyTests */
+    private $showContingencyTests = false;
+
     /**
      * DashboardViewModel constructor.
      *
-     * @param HeroActionViewModel $heroActionViewModel
-     * @param NotificationsViewModel $notificationsViewModel
-     * @param DemoTestViewModel $demoTestViewModel
+     * @param HeroActionViewModel          $heroActionViewModel
+     * @param NotificationsViewModel       $notificationsViewModel
+     * @param DemoTestViewModel            $demoTestViewModel
      * @param AuthorisedExaminersViewModel $authorisedExaminersViewModel
-     * @param SpecialNoticesViewModel $specialNoticesViewModel
+     * @param SpecialNoticesViewModel      $specialNoticesViewModel
      */
     public function __construct(
         HeroActionViewModel $heroActionViewModel,
@@ -99,5 +105,37 @@ class DashboardViewModel
     public function setShowDemoMessage($showDemoMessage)
     {
         $this->showDemoMessage = $showDemoMessage;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getShowYourPerformance()
+    {
+        return $this->showYourPerformance;
+    }
+
+    /**
+     * @param bool $showYourPerformance
+     */
+    public function setShowYourPerformance($showYourPerformance)
+    {
+        $this->showYourPerformance = $showYourPerformance;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getShowContingencyTests()
+    {
+        return $this->showContingencyTests;
+    }
+
+    /**
+     * @param bool $showContingencyTests
+     */
+    public function setShowContingencyTests($showContingencyTests)
+    {
+        $this->showContingencyTests = $showContingencyTests;
     }
 }

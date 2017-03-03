@@ -7,29 +7,34 @@ use Dashboard\Security\DashboardGuard;
 class HeroActionViewModel
 {
     const AEDM_USER_ROLE = 'aedm';
+    const TESTER = 'tester';
+    const USER = 'user';
 
-    /** @var bool */
+    /** @var bool $isRDCertificateLinkVisible */
     private $isRDCertificateLinkVisible = false;
 
-    /** @var bool */
+    /** @var bool $isSlotCountVisible */
     private $isSlotCountVisible = false;
 
-    /** @var bool */
+    /** @var bool $isSiteCountVisible */
     private $isSiteCountVisible = false;
+
+    /** @var bool $isMotFormsLinkVisible */
+    private $isMotFormsLinkVisible = false;
 
     /** @var DashboardGuard $dashboardGuard */
     private $dashboardGuard;
 
-    /** @var string */
+    /** @var string $userRole */
     private $userRole;
 
-    /** @var SlotsViewModel */
+    /** @var SlotsViewModel $slotsViewModel */
     private $slotsViewModel;
 
     /**
      * HeroActionViewModel constructor.
      *
-     * @param $userRole
+     * @param string         $userRole
      * @param SlotsViewModel $slotsViewModel
      * @param DashboardGuard $dashboardGuard
      */
@@ -50,9 +55,15 @@ class HeroActionViewModel
     public function isHeroActionVisible()
     {
         // Other roles can be added here
-        $roles = array(self::AEDM_USER_ROLE);
+        $roles = array(self::AEDM_USER_ROLE, self::TESTER, self::USER);
 
-        if (in_array($this->userRole, $roles)) {
+        // User with no roles assigned
+        if ($this->userRole === self::USER && !$this->dashboardGuard->canPerformMotTest())
+        {
+            return false;
+        }
+        else if (in_array($this->userRole, $roles))
+        {
             $this->buildHeroAction();
             return true;
         }
@@ -93,6 +104,14 @@ class HeroActionViewModel
     }
 
     /**
+     * @return bool
+     */
+    public function isMotFormsLinkVisible()
+    {
+        return $this->dashboardGuard->isTester();
+    }
+
+    /**
      * @return int
      */
     public function getOverallSlotCount()
@@ -118,6 +137,12 @@ class HeroActionViewModel
                 $this->isRDCertificateLinkVisible = true;
                 $this->isSlotCountVisible = true;
                 $this->isSiteCountVisible = true;
+                break;
+            case self::TESTER;
+                $this->isRDCertificateLinkVisible = true;
+                break;
+            case self::USER;
+                $this->isRDCertificateLinkVisible = $this->dashboardGuard->canViewReplacementDuplicateCertificateLink();
                 break;
             default:
         }

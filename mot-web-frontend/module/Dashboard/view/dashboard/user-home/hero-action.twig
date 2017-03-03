@@ -9,7 +9,9 @@
                 {% include '/dashboard/user-home/replacement-duplicate-certificate.twig'
                 with {'replacementDuplicateCertificateAction': dashboard.heroActionViewModel} %}
             {% endif %}
+            {% if heroAction.isMotFormsLinkVisible %}
+                {% include '/dashboard/user-home/mot-forms.twig' %}
+            {% endif %}
         </ul>
-
     </div>
 {% endif %}

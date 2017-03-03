@@ -6,11 +6,15 @@ use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Enum\RoleCode;
+use DvsaMotTest\Service\OverdueSpecialNoticeAssertion;
 
 class DashboardGuard
 {
     /** @var MotAuthorisationServiceInterface $authorisationService */
     protected $authorisationService;
+
+    /** @var bool $overdueSpecialNoticeAssertionFailure */
+    private $overdueSpecialNoticeAssertionFailure = false;
 
     /**
      * DashboardGuard constructor.
@@ -20,6 +24,23 @@ class DashboardGuard
     public function __construct(MotAuthorisationServiceInterface $authorisationService)
     {
         $this->authorisationService = $authorisationService;
+    }
+
+    /**
+     * OverdueSpecialNoticeAssertion setter
+     *
+     * Ideally we could just pass a boolean in here, rather than the assertion object. However, the method
+     * canPerformTest does not definitively confirm that a tester can perform a test, and it also doesn't just check for
+     * overdue special notices (also does some AuthorisationForTestingMotStatusCode stuff).
+     *
+     * @param OverdueSpecialNoticeAssertion $overdueSpecialNoticeAssertion
+     * @return $this
+     */
+    public function setOverdueSpecialNoticeAssertion(OverdueSpecialNoticeAssertion $overdueSpecialNoticeAssertion)
+    {
+        $this->overdueSpecialNoticeAssertionFailure = !$overdueSpecialNoticeAssertion->canPerformTest();
+
+        return $this;
     }
 
     /**
@@ -93,7 +114,41 @@ class DashboardGuard
      */
     public function isDemoTestNeeded()
     {
-        return ($this->authorisationService->hasRole(RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED)
-               && !$this->authorisationService->hasRole(RoleCode::TESTER_ACTIVE));
+        return $this->authorisationService->hasRole(RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED);
+    }
+
+    /**
+     * @return bool
+     */
+    public function canViewYourPerformance()
+    {
+        return $this->authorisationService->isGranted(PermissionInSystem::DISPLAY_TESTER_STATS_BOX);
+    }
+
+    /**
+     * @return bool
+     */
+    public function canViewContingencyTests()
+    {
+        return $this->authorisationService->isGranted(PermissionInSystem::DISPLAY_TESTER_CONTINGENCY_BOX) &&
+               $this->authorisationService->hasRole(RoleCode::TESTER_ACTIVE);
+
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTester()
+    {
+        return in_array(RoleCode::TESTER, $this->authorisationService->getAllRoles());
+    }
+
+    /**
+     * @return bool
+     */
+    public function canPerformMotTest()
+    {
+        return $this->authorisationService->isGranted(PermissionInSystem::MOT_TEST_PERFORM) &&
+        !$this->overdueSpecialNoticeAssertionFailure;
     }
 }

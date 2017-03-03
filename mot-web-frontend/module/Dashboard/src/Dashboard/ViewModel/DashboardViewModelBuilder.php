@@ -52,6 +52,8 @@ class DashboardViewModelBuilder
         );
 
         $dashboardViewModel->setShowDemoMessage($this->shouldShowDemoMessage());
+        $dashboardViewModel->setShowYourPerformance($this->shouldShowYourPerformance());
+        $dashboardViewModel->setShowContingencyTests($this->shouldShowContingencyTests());
 
         return $dashboardViewModel;
     }
@@ -103,6 +105,22 @@ class DashboardViewModelBuilder
     }
 
     /**
+     * @return bool
+     */
+    public function shouldShowYourPerformance()
+    {
+        return $this->dashboardGuard->canViewYourPerformance();
+    }
+
+    /**
+     * @return bool
+     */
+    public function shouldShowContingencyTests()
+    {
+        return $this->dashboardGuard->canViewContingencyTests();
+    }
+
+    /**
      * @return AuthorisedExaminersViewModel
      */
     private function buildAuthorisedExaminersViewModel()
@@ -137,5 +155,25 @@ class DashboardViewModelBuilder
         );
 
         return $slotsViewModel;
+    }
+
+    /**
+     * @return YourPerformanceViewModel
+     */
+    private function buildYourPerformanceViewModel()
+    {
+        $yourPerformanceViewModel = new YourPerformanceViewModel($this->dashboardGuard);
+
+        return $yourPerformanceViewModel;
+    }
+
+    /**
+     * @return YourPerformanceViewModel
+     */
+    private function buildContingencyTestsViewModel()
+    {
+        $contingencyTestsViewModel = new ContingencyTestsViewModel($this->dashboardGuard);
+
+        return $contingencyTestsViewModel;
     }
 }
