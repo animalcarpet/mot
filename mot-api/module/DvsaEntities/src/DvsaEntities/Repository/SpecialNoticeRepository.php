@@ -25,18 +25,12 @@ class SpecialNoticeRepository extends AbstractMutableRepository
 
     // following query has reference in code and is available in API but most likely nothing hit it
     const QUERY_GET_ALL_CURRENT = 'SELECT snc FROM DvsaEntities\Entity\SpecialNoticeContent snc
-                                    JOIN DvsaEntities\Entity\SpecialNotice sn WITH sn.contentId = snc.id
                                     WHERE snc.isPublished = 1 AND snc.externalPublishDate <= CURRENT_DATE()
                                     AND snc.isDeleted = 0
-                                    AND sn.isDeleted = 0
-                                    ORDER BY snc.id DESC
-                                    LIMIT 100
                                     ';
     const QUERY_GET_COUNT_ALL_CURRENT = 'SELECT COUNT(snc.id) FROM DvsaEntities\Entity\SpecialNoticeContent snc
-                                    JOIN DvsaEntities\Entity\SpecialNotice sn WITH sn.contentId = snc.id
                                     WHERE snc.isPublished = 1 AND snc.externalPublishDate <= CURRENT_DATE()
                                     AND snc.isDeleted = 0
-                                    AND sn.isDeleted = 0
                                     ';
 
     const REMOVE_QUERY = 'UPDATE DvsaEntities\Entity\SpecialNotice sn SET sn.isDeleted = true WHERE sn.content = ?1';
