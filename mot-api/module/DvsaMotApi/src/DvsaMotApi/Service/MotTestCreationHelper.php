@@ -322,7 +322,7 @@ class MotTestCreationHelper
                 ->setFuelTypeCode($fuelTypeCode)
                 ->setCountryOfRegistrationId($countryOfRegistrationId);
 
-            if (FuelTypeAndCylinderCapacity::isCylinderCapacityCompulsoryForFuelTypeCode($fuelTypeCode)) {
+            if (FuelTypeAndCylinderCapacity::isCylinderCapacityCompulsoryForFuelTypeCode($fuelTypeCode) && isset($cylinderCapacity)) {
                 $updateDvsaVehicleUnderTestRequest->setCylinderCapacity($cylinderCapacity);
             }
 
