@@ -9,8 +9,6 @@ use Core\ViewModel\Sidebar\GeneralSidebarLinkList;
 use Core\ViewModel\Sidebar\SidebarButton;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
-use DvsaFeature\FeatureToggles;
 use Zend\Stdlib\ParametersInterface;
 use Zend\View\Helper\Url;
 
@@ -24,13 +22,11 @@ class VehicleSidebar extends GeneralSidebar
      * @param string                           $obfuscatedVehicleId
      * @param bool                             $isVehicleMasked
      * @param MotAuthorisationServiceInterface $authorisationService
-     * @param FeatureToggles                   $featureToggles
      */
     public function __construct(Url $urlHelperPlugin, ParametersInterface $searchParams, $obfuscatedVehicleId,
-                                $isVehicleMasked, MotAuthorisationServiceInterface $authorisationService,
-                                FeatureToggles $featureToggles)
+                                $isVehicleMasked, MotAuthorisationServiceInterface $authorisationService)
     {
-        if (true === $featureToggles->isEnabled(FeatureToggle::MYSTERY_SHOPPER) && !$isVehicleMasked
+        if (!$isVehicleMasked
             && $authorisationService->isGranted(PermissionInSystem::ENFORCEMENT_CAN_MASK_AND_UNMASK_VEHICLES)) {
             $this->addMaskVehicleButton($urlHelperPlugin, $obfuscatedVehicleId);
         }

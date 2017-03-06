@@ -3,7 +3,6 @@
 namespace DvsaMotApi\Factory\Service;
 
 use DataCatalogApi\Service\DataCatalogService;
-use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Domain\DvsaContactDetails\DvsaContactDetailsConfiguration;
 use DvsaMotApi\Service\CertificateCreationService;
 use UnexpectedValueException;
@@ -25,8 +24,7 @@ class CertificateCreationServiceFactory implements FactoryInterface
             $serviceLocator->get('MotTestService'),
             $serviceLocator->get('DocumentService'),
             $serviceLocator->get(DataCatalogService::class),
-            $dvsaContactDetailsConfiguration,
-            $serviceLocator->get('Feature\FeatureToggles')
+            $dvsaContactDetailsConfiguration
         );
     }
 }

@@ -6,15 +6,12 @@ use Application\Service\ContingencySessionManager;
 use Application\Service\LoggedInUserManager;
 use Core\Service\MotFrontendIdentityProviderInterface;
 use CoreTest\Service\StubCatalogService;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaApplicationLogger\Log\Logger;
-use DvsaClient\MapperFactory;
 use DvsaClient\Mapper\VehicleMapper;
-use DvsaCommon\Constants\FeatureToggle;
+use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
-use DvsaCommonTest\Bootstrap;
-use DvsaCommonTest\TestUtils\XMock;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Dto\Vehicle\History\VehicleHistoryDto;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
 use DvsaCommon\Enum\VehicleClassCode;
@@ -23,16 +20,15 @@ use DvsaCommon\Obfuscate\EncryptionKey;
 use DvsaCommon\Obfuscate\ParamEncoder;
 use DvsaCommon\Obfuscate\ParamEncrypter;
 use DvsaCommon\Obfuscate\ParamObfuscator;
+use DvsaCommonTest\Bootstrap;
+use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTest\Action\DuplicateCertificateSearchByRegistrationAction;
 use DvsaMotTest\Action\DuplicateCertificateSearchByVinAction;
-use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Constants\VehicleSearchSource;
 use DvsaMotTest\Controller\VehicleSearchController;
 use DvsaMotTest\Model\VehicleSearchResult;
 use DvsaMotTest\Service\StartTestChangeService;
 use DvsaMotTest\Service\VehicleSearchService;
-use Dvsa\Mot\ApiClient\Service\VehicleService;
-use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
@@ -54,9 +50,6 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
 
     private $mockVehicleSearchService;
     private $mockMapperFactory;
-
-    /** @var  FeatureToggles|MockObj */
-    private $mockMysteryShopperToggle;
 
     /** @var  MotAuthorisationServiceInterface|MockObj */
     private $mockAuthorisationService;
@@ -115,12 +108,6 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
             ->method('get')
             ->willReturn($overdueSecurityNotices);
 
-        $this->mockMysteryShopperToggle = XMock::of(FeatureToggles::class);
-        $this->mockMysteryShopperToggle
-            ->expects($this->any())
-            ->method('isGranted')
-            ->willReturn(true);
-
         $this->mockAuthorisationService = XMock::of(MotAuthorisationServiceInterface::class);
         $this->mockAuthorisationService
             ->expects($this->any())
@@ -139,7 +126,6 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
                 XMock::of(MotFrontendIdentityProviderInterface::class),
                 XMock::of(DuplicateCertificateSearchByRegistrationAction::class),
                 XMock::of(DuplicateCertificateSearchByVinAction::class),
-                $this->mockMysteryShopperToggle,
                 XMock::of(StartTestChangeService::class)
             )
         );
@@ -508,22 +494,11 @@ class VehicleSearchControllerTest extends AbstractVehicleSearchControllerTest
         $this->assertResponseStatus(self::HTTP_REDIRECT_CODE);
     }
 
-    public function testNonMotVehicleSearchActionReturns404WhenMysteryShopperToggleIsOff()
-    {
-        $this->withFeatureToggles([FeatureToggle::MYSTERY_SHOPPER => false]);
-
-        $this->getResponseForAction('non-mot-vehicle-search');
-
-        $this->assertResponseStatus(self::HTTP_ERR_404);
-    }
-
     /**
      * @expectedException \DvsaCommon\Exception\UnauthorisedException
      */
     public function testNonMotVehicleSearchActionThrowsForbiddenWhenPermissionNotGranted()
     {
-        $this->withFeatureToggles([FeatureToggle::MYSTERY_SHOPPER => true]);
-
         $this->getResponseForAction('non-mot-vehicle-search');
     }
 

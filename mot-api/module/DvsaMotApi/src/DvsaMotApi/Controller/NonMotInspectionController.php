@@ -4,7 +4,6 @@ namespace DvsaMotApi\Controller;
 
 use DvsaCommon\Auth\AbstractMotAuthorisationService;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
@@ -36,10 +35,6 @@ class NonMotInspectionController extends AbstractDvsaRestfulController
      */
     public function create($data)
     {
-        if(!$this->isFeatureEnabled(FeatureToggle::MYSTERY_SHOPPER)){
-            return $this->notFoundAction();
-        }
-
         if(!$this->authorisationService->isGranted(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM)){
             throw new ForbiddenException('Only VE user can create Non MOT inspection');
         }

@@ -12,7 +12,6 @@ use DvsaApplicationLogger\Log\Logger;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Factory\Helper\MysteryShopperHelperFactory;
 use DvsaMotApi\Helper\MysteryShopperHelper;
 
@@ -25,11 +24,6 @@ class MysteryShopperHelperFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $serviceManager = Bootstrap::getServiceManager();
         $serviceManager->setAllowOverride(true);
-        $featureToggleMock = $this
-            ->getMockBuilder(FeatureToggles::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $serviceManager->setService('Feature\FeatureToggles', $featureToggleMock);
         $serviceManager->setService(VehicleService::class, XMock::of(VehicleService::class));
         $serviceManager->setService(MotAuthorisationServiceInterface::class, XMock::of(MotAuthorisationServiceInterface::class));
         $serviceManager->setService(Logger::class, XMock::of(Logger::class));

@@ -41,7 +41,7 @@ public class EnforcementsTests extends DslTest {
         vehicleExaminer = motApi.user.createVehicleExaminer("ve", false);
     }
 
-    @Test(testName = "MysteryShopper", groups = {"Regression", "BL-3655"},
+    @Test(groups = {"Regression", "BL-3655"},
             description = "Verifies that vehicle examiner can mask a vehicle for enforcement activities")
     public void veCanMaskVehicleSuccessfully() throws IOException, URISyntaxException {
 
@@ -59,7 +59,7 @@ public class EnforcementsTests extends DslTest {
         assertThat(vehicleInformationPage.isVehicleStatusBannerDisplayed(), is(true));
     }
 
-    @Test(testName = "MysteryShopper", groups = {"Regression", "BL-3658"},
+    @Test(groups = {"Regression", "BL-3658"},
             description = "Verifies that vehicle examiner can unmask a vehicle and exclude that from enforcement activities")
     public void veCanUnmaskVehicleSuccessfully() throws IOException, URISyntaxException {
 
@@ -73,7 +73,7 @@ public class EnforcementsTests extends DslTest {
         assertThat(vehicleInformationPage.isVehicleStatusBannerDisplayed(), is(false));
     }
 
-    @Test(testName = "MysteryShopper", groups = {"Regression", "BL-3655"},
+    @Test(groups = {"Regression", "BL-3655"},
             description = "Verifies that vehicle examiner can navigate back from mask a vehicle page")
     public void veCanNavigateBackFromMaskVehiclePageSuccessfully() throws IOException, URISyntaxException {
 
@@ -89,7 +89,7 @@ public class EnforcementsTests extends DslTest {
         assertThat(vehicleInformationPage.isVehicleStatusBannerDisplayed(), is(false));
     }
 
-    @Test(testName = "MysteryShopper", groups = {"Regression", "BL-3658"},
+    @Test(groups = {"Regression", "BL-3658"},
             description = "Verifies that vehicle examiner can navigate back from unmask a vehicle page")
     public void veCanNavigateBackFromUnmaskVehiclePageSuccessfully() throws IOException, URISyntaxException {
 
@@ -103,7 +103,7 @@ public class EnforcementsTests extends DslTest {
         assertThat(vehicleInformationPage.isVehicleStatusBannerDisplayed(), is(true));
     }
 
-    @Test(testName = "MysteryShopper", groups = {"Regression", "BL-2489"},
+    @Test(groups = {"Regression", "BL-2489"},
             description = "Verifies that VE can perform Non_MOT inspection")
     public void veCanPerformNonMotInspectionSuccessfully() throws IOException, URISyntaxException {
 
@@ -117,7 +117,7 @@ public class EnforcementsTests extends DslTest {
         assertThat(testCompletePage.isPrintDocumentButtonDisplayed(), is(true));
     }
 
-    @Test(testName = "MysteryShopper", groups = {"Regression", "BL-2489"},
+    @Test(groups = {"Regression", "BL-2489"},
             description = "Verifies that vehicle examiner can see non mot test on vehicle test history page")
     public void veCanSeeNonMotTestOnVehicleHistoryPage() throws IOException, URISyntaxException {
 
@@ -136,7 +136,7 @@ public class EnforcementsTests extends DslTest {
         assertThat(vehicleMotTestHistoryPage.isNonMotTestDisplayed(), is(true));
     }
 
-    @Test(testName = "MysteryShopper", groups = {"Regression", "BL-2489"},
+    @Test(groups = {"Regression", "BL-2489"},
             description = "Verifies that VE must provide a vts number during Non MOT inspection")
     public void veMustProvideVtsNumberDuringNonMotInspection() throws IOException, URISyntaxException {
 
@@ -153,7 +153,7 @@ public class EnforcementsTests extends DslTest {
         assertThat(testSummaryPage.isValidationMessageDisplayed(), is(true));
     }
 
-    @Test(testName = "MysteryShopper", groups = {"Regression", "BL-3659"},
+    @Test(groups = {"Regression", "BL-3659"},
             description = "Verify that tester can conduct normal test on masked vehicle")
     public void testerCanConductMysteryShopperTest() throws IOException, URISyntaxException {
 
@@ -170,7 +170,7 @@ public class EnforcementsTests extends DslTest {
         assertThat(testCompletePage.isReturnToHomepageLinkDisplayed(), is(true));
     }
 
-    @Test(testName = "MysteryShopper", groups = {"Regression", "BL-3659"},
+    @Test(groups = {"Regression", "BL-3659"},
             description = "Verify that tester sees in his Test logs mystery shopper test as Normal test")
     public void testerSeeMysteryShopperTestAsNormalInHisTestLogs() throws IOException, URISyntaxException {
 

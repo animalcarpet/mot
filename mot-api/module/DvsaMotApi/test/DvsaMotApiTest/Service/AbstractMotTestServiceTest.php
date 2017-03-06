@@ -3,7 +3,9 @@
 namespace DvsaMotApiTest\Service;
 
 use Doctrine\ORM\EntityManager;
+use Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
 use DvsaAuthentication\Identity;
+use DvsaAuthentication\Service\OtpService;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommonApi\Authorisation\Assertion\ReadMotTestAssertion;
@@ -30,12 +32,10 @@ use DvsaEntities\Repository\ConfigurationRepository;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\MotTestTypeRepository;
 use DvsaEntities\Repository\PersonRepository;
-use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Service\CertificateCreationService;
 use DvsaMotApi\Service\CreateMotTestService;
 use DvsaMotApi\Service\Mapper\MotTestMapper;
 use DvsaMotApi\Service\MotTestService;
-use DvsaAuthentication\Service\OtpService;
 use DvsaMotApi\Service\TesterService;
 use DvsaMotApi\Service\TestingOutsideOpeningHoursNotificationService;
 use DvsaMotApi\Service\Validator\MotTestValidator;
@@ -43,8 +43,7 @@ use DvsaMotApi\Service\Validator\RetestEligibility\RetestEligibilityValidator;
 use OrganisationApi\Service\OrganisationService;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use VehicleApi\Service\VehicleService;
-use Zend\Authentication\AuthenticationService;
-use Dvsa\Mot\ApiClient\Service\VehicleService as NewVehicleService;
+
 /**
  * Base for unit tests for classes inherited from AbstractMotTestService
  */
@@ -109,9 +108,6 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
     /** @var NewVehicleService */
     protected $mockNewVehicleService;
 
-    /** @var  MysteryShopperHelper|MockObj */
-    protected $mockMysteryShopperHelper;
-
     /** @var  TestingOutsideOpeningHoursNotificationService|MockObj */
     protected $mockTestingOutsideOpeningHoursNotificationService;
 
@@ -133,7 +129,6 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
             $this->mockMotTestTypeRepository,
             $this->mockCreateMotTestService,
             $this->mockNewVehicleService,
-            $this->mockMysteryShopperHelper,
             $this->mockTestingOutsideOpeningHoursNotificationService
         );
 
@@ -227,7 +222,6 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
         $this->mockCreateMotTestService = XMock::of(CreateMotTestService::class);
 
         $this->mockNewVehicleService = XMock::of(NewVehicleService::class);
-        $this->mockMysteryShopperHelper = XMock::of(MysteryShopperHelper::class);
         $this->mockTestingOutsideOpeningHoursNotificationService = XMock::of(TestingOutsideOpeningHoursNotificationService::class);
 
         return [
@@ -248,7 +242,6 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
             'mockReadMotTestAssertion' => $this->mockReadMotTestAssertion,
             'mockCreateMotTestService' => $this->mockCreateMotTestService,
             'mockNewVehicleService' => $this->mockNewVehicleService,
-            'mockMysteryShopperHelper' => $this->mockMysteryShopperHelper,
             'mockTestingOutsideOpeningHoursNotificationService' => $this->mockTestingOutsideOpeningHoursNotificationService
         ];
     }
@@ -269,7 +262,6 @@ abstract class AbstractMotTestServiceTest extends AbstractServiceTestCase
             $this->mockReadMotTestAssertion,
             $this->mockCreateMotTestService,
             $this->mockMotTestRepository,
-            $this->mockMysteryShopperHelper,
             $this->mockTestingOutsideOpeningHoursNotificationService
         );
 

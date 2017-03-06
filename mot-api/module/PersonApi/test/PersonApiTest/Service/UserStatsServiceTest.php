@@ -14,7 +14,6 @@ use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Repository\MotTestRepository;
-use DvsaMotApi\Helper\MysteryShopperHelper;
 use UserApi\Dashboard\Dto\DayStats;
 use UserApi\Dashboard\Dto\MonthStats;
 use PersonApi\Service\UserStatsService;
@@ -32,9 +31,6 @@ class UserStatsServiceTest extends AbstractServiceTestCase
     /** @var MotTestRepository | \PHPUnit_Framework_MockObject_MockObject $mockRepository */
     private $mockRepository;
 
-    /** @var MysteryShopperHelper | \PHPUnit_Framework_MockObject_MockObject $mockMysteryShopperHelper */
-    private $mockMysteryShopperHelper;
-
     /** @var EntityManager | \PHPUnit_Framework_MockObject_MockObject $mockEntityManager */
     private $mockEntityManager;
 
@@ -46,8 +42,7 @@ class UserStatsServiceTest extends AbstractServiceTestCase
         $this->setUpMocks($motTests);
         $this->statsService = new UserStatsService(
             $this->mockEntityManager,
-            $this->mockRepository,
-            $this->mockMysteryShopperHelper
+            $this->mockRepository
         );
 
         $this->assertEquals(get_class($this->statsService), UserStatsService::class);
@@ -60,8 +55,7 @@ class UserStatsServiceTest extends AbstractServiceTestCase
         $this->setUpMocks($motTests);
         $this->statsService = new UserStatsService(
             $this->mockEntityManager,
-            $this->mockRepository,
-            $this->mockMysteryShopperHelper
+            $this->mockRepository
         );
 
         //when
@@ -86,8 +80,7 @@ class UserStatsServiceTest extends AbstractServiceTestCase
         $this->setUpMocks($motTests);
         $this->statsService = new UserStatsService(
             $this->mockEntityManager,
-            $this->mockRepository,
-            $this->mockMysteryShopperHelper
+            $this->mockRepository
         );
 
         //when
@@ -160,9 +153,6 @@ class UserStatsServiceTest extends AbstractServiceTestCase
         $this->mockRepository = $this->getMockRepository(MotTestRepository::class);
         $this->setupMockForCalls($this->mockRepository, 'matching', $motTests);
         $this->setupMockForCalls($this->mockRepository, 'createQueryBuilder', $mockQueryBuilder, 't');
-
-        /** @var MysteryShopperHelper $mockMysteryShopperHelper */
-        $this->mockMysteryShopperHelper = XMock::of(MysteryShopperHelper::class);
 
         /** @var EntityManager $mockEntityManager */
         $this->mockEntityManager = $this->getMockEntityManager();

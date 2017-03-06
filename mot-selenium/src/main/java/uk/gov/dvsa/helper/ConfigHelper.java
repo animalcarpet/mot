@@ -13,9 +13,5 @@ public class ConfigHelper {
         return service.getToggleValue("test_result_entry_improvements");
     }
 
-    public static boolean isMysteryShopperEnabled() {
-        return service.getToggleValue("mystery_shopper");
-    }
-
     public static boolean is2faHardStopEnabled() { return service.getToggleValue("2fa.hardstop.enabled"); }
 }

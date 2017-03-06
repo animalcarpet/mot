@@ -9,7 +9,6 @@ namespace Vehicle\Controller;
 
 use Core\Routing\VehicleRoutes;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use Zend\Http\Response;
 use Zend\View\Model\ViewModel;
 
@@ -20,10 +19,6 @@ class MaskVehicleController extends BaseMaskUnmaskVehicleController
      */
     public function maskAction()
     {
-        if (true !== $this->featureToggles->isEnabled(FeatureToggle::MYSTERY_SHOPPER)) {
-            return $this->notFoundAction();
-        }
-
         $this->authorisationService->assertGranted(PermissionInSystem::ENFORCEMENT_CAN_MASK_AND_UNMASK_VEHICLES);
 
         $obfuscatedVehicleId = (string) $this->params('id');
@@ -54,10 +49,6 @@ class MaskVehicleController extends BaseMaskUnmaskVehicleController
      */
     public function maskedSuccessfullyAction()
     {
-        if (true !== $this->featureToggles->isEnabled(FeatureToggle::MYSTERY_SHOPPER)) {
-            return $this->notFoundAction();
-        }
-
         $this->authorisationService->assertGranted(PermissionInSystem::ENFORCEMENT_CAN_MASK_AND_UNMASK_VEHICLES);
 
         $obfuscatedVehicleId = (string) $this->params('id');

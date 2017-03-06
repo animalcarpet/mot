@@ -11,7 +11,6 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommon\Dto\Common\OdometerReadingDto;
@@ -19,7 +18,6 @@ use DvsaCommon\Dto\MotTesting\ContingencyTestDto;
 use DvsaCommon\Enum\MotTestStatusCode;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
-use DvsaCommon\Enum\OrganisationSiteStatusCode;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonApi\Service\Exception\ServiceException;
 use DvsaEntities\DqlBuilder\NativeQueryBuilder;
@@ -513,9 +511,7 @@ class MotTestRepository extends AbstractMutableRepository
         $startDate,
         MysteryShopperHelper $mysteryShopperHelper,
         array $mysteryShopperSiteIds = []
-    )
-    {
-        $mysteryShopperToggleEnabled = $mysteryShopperHelper->isMysteryShopperToggleEnabled();
+    ) {
         $canViewAllMysteryShopperTests = $mysteryShopperHelper->hasPermissionToViewMysteryShopperTests();
 
         $testTypes = $this->testTypes;
@@ -525,7 +521,7 @@ class MotTestRepository extends AbstractMutableRepository
 
         if ($canViewAllMysteryShopperTests) {
             $testTypes[] = MotTestTypeCode::MYSTERY_SHOPPER;
-        } else if ($mysteryShopperToggleEnabled && !empty($mysteryShopperSiteIds)) {
+        } else if (!empty($mysteryShopperSiteIds)) {
             $testTypeWhereClauseFunction = function ($qb) use ($mysteryShopperSiteIds) {
                 return $qb->andWhere('(
                         t.code IN (:testTypes)

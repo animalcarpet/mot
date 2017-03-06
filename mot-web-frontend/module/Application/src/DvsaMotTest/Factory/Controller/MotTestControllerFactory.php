@@ -9,11 +9,9 @@ namespace DvsaMotTest\Factory\Controller;
 
 use Application\View\Helper\AuthorisationHelper;
 use Core\Service\MotEventManager;
-use DvsaFeature\FeatureToggles;
 use DvsaCommon\ApiClient\MotTest\DuplicateCertificate\MotTestDuplicateCertificateApiResource;
 use DvsaMotTest\Controller\MotTestController;
 use DvsaMotTest\Model\OdometerReadingViewObject;
-use Zend\EventManager\EventManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -34,17 +32,13 @@ class MotTestControllerFactory implements FactoryInterface
 
         $odometerViewObject = new OdometerReadingViewObject();
 
-        /** @var FeatureToggles $featureToggles */
-        $featureToggles = $serviceLocator->get('Feature\FeatureToggles');
-
         $duplicateCertificateApiResource = $serviceLocator->get(MotTestDuplicateCertificateApiResource::class);
 
         return new MotTestController(
             $authService, 
             $eventManager, 
             $odometerViewObject, 
-            $duplicateCertificateApiResource, 
-            $featureToggles
+            $duplicateCertificateApiResource
         );
     }
 }

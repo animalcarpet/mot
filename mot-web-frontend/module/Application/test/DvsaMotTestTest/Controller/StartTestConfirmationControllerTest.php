@@ -2,23 +2,24 @@
 
 namespace DvsaMotTestTest\Controller;
 
+use Application\Factory\ApplicationWideCacheFactory;
+use Application\Helper\PrgHelper;
 use Application\Service\CatalogService;
 use Application\Service\ContingencySessionManager;
 use Core\Catalog\CountryOfRegistration\CountryOfRegistrationCatalog;
-use Dvsa\Mot\ApiClient\Request\Payload;
 use Dvsa\Mot\ApiClient\Request\TypeConversion\DateTimeConverter;
-use Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Service\MotTestService;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
+use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaClient\Mapper\VehicleMapper;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\ColourCode;
 use DvsaCommon\Enum\FuelTypeCode;
-use Dvsa\Mot\ApiClient\Resource\Item\FuelType;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\Exception\UnauthorisedException;
+use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommon\Obfuscate\EncryptionKey;
@@ -29,19 +30,14 @@ use DvsaCommon\UrlBuilder\MotTestUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\VehicleUrlBuilder;
 use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonTest\Bootstrap;
-use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaCommonTest\Builder\DvsaVehicleBuilder;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaMotTest\Constants\VehicleSearchSource;
 use DvsaMotTest\Controller\StartTestConfirmationController;
 use DvsaMotTest\Service\StartTestChangeService;
+use DvsaMotTest\ViewModel\StartTestConfirmationViewModel;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use Zend\Session\Container;
-use Application\Helper\PrgHelper;
-use DvsaMotTest\ViewModel\StartTestConfirmationViewModel;
-use Dvsa\Mot\ApiClient\Service\VehicleService;
-use DvsaCommon\HttpRestJson\Client;
-use Application\Factory\ApplicationWideCacheFactory;
 
 /**
  * Class StartTestConfirmationControllerTest.
@@ -101,8 +97,6 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
         $serviceManager->setService(MapperFactory::class, $mockMapperFactory);
 
         parent::setUp();
-
-        $this->withFeatureToggles([FeatureToggle::MYSTERY_SHOPPER => true]);
 
         $identity = $this->getCurrentIdentity();
         $this->vts = $this->getVtsData();

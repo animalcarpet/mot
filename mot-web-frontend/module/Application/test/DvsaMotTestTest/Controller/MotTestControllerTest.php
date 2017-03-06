@@ -10,17 +10,16 @@ namespace DvsaMotTestTest\Controller;
 use Application\Helper\PrgHelper;
 use Core\Service\MotEventManager;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
+use CoreTest\Controller\AbstractFrontendControllerTestCase;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\ApiClient\Service\MotTestService;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
-use CoreTest\Controller\AbstractFrontendControllerTestCase;
-use Dvsa\Mot\Frontend\MotTestModule\Service\SurveyService;
 use Dvsa\Mot\Frontend\GoogleAnalyticsModule\ControllerPlugin\DataLayerPlugin;
 use Dvsa\Mot\Frontend\GoogleAnalyticsModule\TagManager\DataLayer;
+use Dvsa\Mot\Frontend\MotTestModule\Service\SurveyService;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaCommon\ApiClient\MotTest\DuplicateCertificate\MotTestDuplicateCertificateApiResource;
-use DvsaCommon\Auth\MotIdentityProvider;
 use DvsaCommon\ApiClient\Statistics\AePerformance\Dto\SiteDto;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -35,7 +34,6 @@ use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilderWeb;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Controller\MotTestController;
 use DvsaMotTest\Model\OdometerReadingViewObject;
 use DvsaMotTestTest\TestHelper\Fixture;
@@ -56,11 +54,6 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
 
     /** @var MotEventManager|MockObj $eventManagerMock*/
     private $motEventManagerMock;
-
-    /**
-     * @var FeatureToggles
-     */
-    private $featureToggles;
 
     /** @var MotTestDuplicateCertificateApiResource|MockObj $motTestDuplicateCertificateApiResourceMock*/
     private $motTestDuplicateCertificateApiResourceMock;
@@ -84,11 +77,6 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
 
         $odometerViewObject = XMock::of(OdometerReadingViewObject::class);
 
-        /** @var FeatureToggles featureToggles */
-        $this->featureToggles = $this->getMockBuilder(FeatureToggles::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
         $this->motTestDuplicateCertificateApiResourceMock = $this->getMockBuilder(MotTestDuplicateCertificateApiResource::class)
             ->disableOriginalConstructor()
             ->setMethods(['getEditAllowed'])
@@ -98,8 +86,7 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
             $this->authServiceMock,
             $this->motEventManagerMock,
             $odometerViewObject,
-            $this->motTestDuplicateCertificateApiResourceMock,
-            $this->featureToggles
+            $this->motTestDuplicateCertificateApiResourceMock
         );
 
         $dataLayerPlugin = new DataLayerPlugin(new DataLayer());
@@ -719,10 +706,6 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
 
     public function testIndexActionWithMysteryShopperTestType()
     {
-        $this->featureToggles
-            ->method('isEnabled')
-            ->willReturn(true);
-
         $motTestNr = (int) rand(1e12, 1e13 - 1);
         $motTestData = Fixture::getMotTestDataVehicleClass4(true);
         $motTestData->motTestNumber = $motTestNr;
@@ -743,10 +726,6 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
 
     public function testDisplayTestSummaryWithMysteryShopperTestType()
     {
-        $this->featureToggles
-            ->method('isEnabled')
-            ->willReturn(true);
-
         $this->setupAuthorizationService(
             [PermissionInSystem::MOT_TEST_CONFIRM, PermissionAtSite::MOT_TEST_CONFIRM_AT_SITE]
         );
@@ -945,11 +924,10 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
      */
     public function testIsNonMotFlagOnTestSummaryResponse(
         $expectedNonMotFlag,
-        $mysteryShopperToggleEnabled,
         $userHasNonMotTestPermission,
         $testHasNonMotTestType
     ) {
-        $this->setUpNonMotDependencies($mysteryShopperToggleEnabled, $userHasNonMotTestPermission);
+        $this->setUpNonMotDependencies($userHasNonMotTestPermission);
 
         $motTestNr = (int) rand(1, 1000);
         $motTestData = Fixture::getMotTestDataVehicleClass4(true);
@@ -968,7 +946,8 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
             ->with($motTestNr)
             ->will($this->returnValue($motTest));
 
-        $this->getRestClientMock('get', [ "data" => new SiteDto()], "vehicle-testing-station/1");
+        $siteId = $motTestData->site->id;
+        $this->getRestClientMock('get', [ "data" => new SiteDto()], 'vehicle-testing-station/' . $siteId);
 
         $response = $this->getResultForAction('displayTestSummary', ['motTestNumber' => $motTestNr]);
 
@@ -980,9 +959,6 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         $isNonMotShouldBeTrue = true;
         $isNonMotShouldBeFalse = false;
 
-        $mysteryShopperToggleEnabled = true;
-        $mysteryShopperToggleDisabled = false;
-
         $userHasNonMotTestPermission = true;
         $userDoesNotHaveNonMotTestPermission = false;
 
@@ -990,10 +966,9 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         $testDoesNotHaveNonMotTestType = false;
 
         return [
-            [$isNonMotShouldBeTrue, $mysteryShopperToggleEnabled, $userHasNonMotTestPermission, $testHasNonMotTestType],
-            [$isNonMotShouldBeFalse, $mysteryShopperToggleDisabled, $userHasNonMotTestPermission, $testHasNonMotTestType],
-            [$isNonMotShouldBeFalse, $mysteryShopperToggleEnabled, $userDoesNotHaveNonMotTestPermission, $testHasNonMotTestType],
-            [$isNonMotShouldBeFalse, $mysteryShopperToggleEnabled, $userHasNonMotTestPermission, $testDoesNotHaveNonMotTestType]
+            [$isNonMotShouldBeTrue, $userHasNonMotTestPermission, $testHasNonMotTestType],
+            [$isNonMotShouldBeFalse, $userDoesNotHaveNonMotTestPermission, $testHasNonMotTestType],
+            [$isNonMotShouldBeFalse, $userHasNonMotTestPermission, $testDoesNotHaveNonMotTestType]
         ];
     }
 
@@ -1074,7 +1049,7 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         $this->getResultForAction2('post', 'displayTestSummary', ['motTestNumber' => $motTestNr], null, []);
     }
 
-    private function setUpNonMotDependencies($mysteryShopperToggleEnabled, $userHasNonMotTestPermission)
+    private function setUpNonMotDependencies($userHasNonMotTestPermission)
     {
         $vehicleData = new DvsaVehicle(Fixture::getDvsaVehicleTestDataVehicleClass4(true));
 
@@ -1099,7 +1074,5 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
             ->method('isGranted')
             ->with(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM)
             ->willReturn($userHasNonMotTestPermission);
-
-        $this->withFeatureToggles([FeatureToggle::MYSTERY_SHOPPER => $mysteryShopperToggleEnabled]);
     }
 }

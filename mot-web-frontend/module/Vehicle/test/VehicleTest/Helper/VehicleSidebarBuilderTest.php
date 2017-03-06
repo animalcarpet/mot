@@ -4,8 +4,6 @@ namespace VehicleTest\Helper;
 
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
-use DvsaFeature\FeatureToggles;
 use InvalidArgumentException;
 use Vehicle\Controller\VehicleController;
 use Vehicle\Helper\VehicleSidebarBuilder;
@@ -53,17 +51,7 @@ class VehicleSidebarBuilderTest extends \PHPUnit_Framework_TestCase
             ->with(PermissionInSystem::ENFORCEMENT_CAN_MASK_AND_UNMASK_VEHICLES)
             ->willReturn(true);
 
-        $featureToggles = $this
-            ->getMockBuilder(FeatureToggles::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $featureToggles
-            ->expects($this->atLeastOnce())
-            ->method('isEnabled')
-            ->with(FeatureToggle::MYSTERY_SHOPPER)
-            ->willReturn(true);
-
-        $helper = new VehicleSidebarBuilder($url, $authorisationService, $featureToggles);
+        $helper = new VehicleSidebarBuilder($url, $authorisationService);
 
         $searchData = new Parameters($searchData);
         $helper->setSearchData($searchData);

@@ -5,40 +5,29 @@ namespace DvsaMotTest\Controller;
 use Application\Service\CatalogService;
 use Application\Service\ContingencySessionManager;
 use Core\Service\MotFrontendIdentityProviderInterface;
-use Dvsa\Mot\ApiClient\Service\VehicleService;
-use DvsaCommon\Auth\MotAuthorisationServiceInterface;
-use DvsaCommon\Constants\FeatureToggle;
-use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
-use DvsaMotTest\Action\VehicleCertificatesAction;
-use DvsaMotTest\Action\DuplicateCertificateSearchByRegistrationAction;
-use DvsaMotTest\Action\DuplicateCertificateSearchByVinAction;
-use DvsaFeature\FeatureToggles;
-use DvsaMotTest\Service\OverdueSpecialNoticeAssertion;
 use DvsaClient\MapperFactory;
+use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Dto\Vehicle\History\VehicleHistoryDto;
-use DvsaCommon\Dto\Vehicle\History\VehicleHistoryMapper;
+use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
+use DvsaCommon\HttpRestJson\Client;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\Obfuscate\ParamObfuscator;
-use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\UrlBuilder;
-use DvsaCommon\UrlBuilder\VehicleUrlBuilder;
-use DvsaCommon\UrlBuilder\VehicleUrlBuilderWeb;
-use DvsaCommon\Utility\AddressUtils;
-use DvsaCommon\Utility\ArrayUtils;
+use DvsaMotTest\Action\DuplicateCertificateSearchByRegistrationAction;
+use DvsaMotTest\Action\DuplicateCertificateSearchByVinAction;
+use DvsaMotTest\Action\VehicleCertificatesAction;
 use DvsaMotTest\Form\VehicleSearch;
 use DvsaMotTest\Model\VehicleSearchResult;
+use DvsaMotTest\Service\OverdueSpecialNoticeAssertion;
 use DvsaMotTest\Service\StartTestChangeService;
 use DvsaMotTest\Service\VehicleSearchService;
 use DvsaMotTest\View\VehicleSearchResult\VehicleSearchResultMessage;
 use DvsaMotTest\View\VehicleSearchResult\VehicleSearchResultUrlTemplateInterface;
 use Zend\Escaper\Escaper;
 use Zend\Form\Element\Hidden;
-use Zend\Http\Response;
 use Zend\I18n\Filter\Alnum;
 use Zend\View\Model\ViewModel;
-use DvsaCommon\HttpRestJson\Client;
 
 /**
  * VehicleSearch Controller.
@@ -120,9 +109,6 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
     private $duplicateCertificateSearchByRegistrationAction;
     private $duplicateCertificateSearchByVinAction;
 
-    /** @var FeatureToggles */
-    protected $featureToggles;
-
     /** @var MotAuthorisationServiceInterface */
     protected $authorisationService;
 
@@ -136,7 +122,6 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
      * @param VehicleSearchResult $vehicleSearchResultModel
      * @param MapperFactory $mapperFactory
      * @param Client $client
-     * @param FeatureToggles $featureToggles
      * @param MotAuthorisationServiceInterface $authorisationService
      * @param StartTestChangeService $startTestChangeService
      */
@@ -151,7 +136,6 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
         MotFrontendIdentityProviderInterface $motFrontendIdentity,
         DuplicateCertificateSearchByRegistrationAction $duplicateCertificateSearchByRegistrationAction,
         DuplicateCertificateSearchByVinAction $duplicateCertificateSearchByVinAction,
-        FeatureToggles $featureToggles,
         StartTestChangeService $startTestChangeService
     ) {
         $this->paramObfuscator = $paramObfuscator;
@@ -164,7 +148,6 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
         $this->motFrontendIdentity = $motFrontendIdentity;
         $this->duplicateCertificateSearchByRegistrationAction = $duplicateCertificateSearchByRegistrationAction;
         $this->duplicateCertificateSearchByVinAction = $duplicateCertificateSearchByVinAction;
-        $this->featureToggles = $featureToggles;
         $this->startTestChangeService = $startTestChangeService;
     }
 
@@ -239,10 +222,6 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
      */
     public function nonMotVehicleSearchAction()
     {
-        if (!$this->isFeatureEnabled(FeatureToggle::MYSTERY_SHOPPER)) {
-            return $this->notFoundAction();
-        }
-
         $this->getAuthorizationService()->assertGranted(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM);
 
         return $this->vehicleSearch(VehicleSearchService::SEARCH_TYPE_NON_MOT);
@@ -474,9 +453,6 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
      */
     private function hideIncognitoVehicles()
     {
-        if (!$this->featureToggles->isEnabled(FeatureToggle::MYSTERY_SHOPPER)) {
-            return false;
-        }
         if ($this->authorisationService->isGranted(PermissionInSystem::ENFORCEMENT_CAN_MASK_AND_UNMASK_VEHICLES)) {
             return false;
         }
@@ -498,7 +474,7 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
             $this->layout()->setVariable('pageSubTitle', 'Training test');
         }
 
-        if ($this->isFeatureEnabled(FeatureToggle::MYSTERY_SHOPPER) && $this->vehicleSearchService->isNonMotSearchType()) {
+        if ($this->vehicleSearchService->isNonMotSearchType()) {
             $this->layout()->setVariable('pageSubTitle', 'Non-MOT test');
         }
     }

@@ -6,14 +6,13 @@ use Application\Helper\PrgHelper;
 use Application\Service\ContingencySessionManager;
 use Core\Catalog\CountryOfRegistration\CountryOfRegistrationCatalog;
 use Core\Routing\MotTestRouteList;
+use Core\Service\RemoteAddress;
 use Dvsa\Mot\ApiClient\Resource\Item\AbstractVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Auth\Assertion\RefuseToTestAssertion;
 use DvsaCommon\Auth\PermissionInSystem;
-use Core\Service\RemoteAddress;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Dto\MotTesting\ContingencyTestDto;
 use DvsaCommon\Enum\ColourCode;
@@ -29,9 +28,9 @@ use DvsaCommon\Utility\DtoHydrator;
 use DvsaMotTest\Constants\VehicleSearchSource;
 use DvsaMotTest\Helper\DvsaVehicleBuilder;
 use DvsaMotTest\Service\StartTestChangeService;
+use DvsaMotTest\ViewModel\StartTestConfirmationViewModel;
 use Zend\Http\Request;
 use Zend\View\Model\ViewModel;
-use DvsaMotTest\ViewModel\StartTestConfirmationViewModel;
 
 /**
  * Class StartTestConfirmationController.
@@ -126,7 +125,6 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
 
     public function nonMotTestAction()
     {
-        $this->assertFeatureEnabled(FeatureToggle::MYSTERY_SHOPPER);
         $this->assertGranted(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM);
 
         $this->startTestChangeService->saveChange(StartTestChangeService::URL, ['url' => MotTestRouteList::MOT_TEST_START_NON_MOT_TEST]);
@@ -180,9 +178,7 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         $this->vehicleSource = $this->params()->fromRoute(self::ROUTE_PARAM_SOURCE);
         $this->startTestChangeService->saveChange(StartTestChangeService::SOURCE, ['source' => $this->vehicleSource]);
 
-        if ($this->isFeatureEnabled(FeatureToggle::MYSTERY_SHOPPER) &&
-            $this->method === MotTestTypeCode::NON_MOT_TEST
-        ) {
+        if ($this->method === MotTestTypeCode::NON_MOT_TEST) {
             $this->vtsId = null;
 
             return;
@@ -646,9 +642,6 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
      */
     private function isMysteryShopper()
     {
-        if (true !== $this->isFeatureEnabled(FeatureToggle::MYSTERY_SHOPPER)) {
-            return false;
-        }
         if (null === $this->getVehicleDetails()) {
             return false;
         }

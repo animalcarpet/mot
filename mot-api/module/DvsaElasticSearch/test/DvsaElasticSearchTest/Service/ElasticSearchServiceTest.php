@@ -4,36 +4,34 @@ namespace DvsaElasticSearchTest\Service;
 
 use DateTime;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
+use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Constants\OdometerUnit;
 use DvsaCommon\Constants\SearchParamConst;
+use DvsaCommon\Date\DateUtils;
+use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaElasticSearch\Service\ElasticSearchService;
 use DvsaEntities\DqlBuilder\SearchParam\MotTestSearchParam;
+use DvsaEntities\Entity\Colour;
+use DvsaEntities\Entity\Make;
+use DvsaEntities\Entity\Model;
 use DvsaEntities\Entity\ModelDetail;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestCancelled;
+use DvsaEntities\Entity\MotTestReasonForCancel;
+use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
+use DvsaEntities\Entity\OdometerReading;
 use DvsaEntities\Entity\Organisation;
+use DvsaEntities\Entity\Person;
+use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\SiteRepository;
 use DvsaFeature\FeatureToggles;
 use PHPUnit_Framework_TestCase;
-use DvsaEntities\Entity\Make;
-use DvsaEntities\Entity\Model;
-use DvsaCommon\Constants\OdometerReadingResultType;
-use DvsaCommon\Date\DateUtils;
-use DvsaCommon\Enum\MotTestStatusName;
-use DvsaEntities\Entity\Colour;
-use DvsaEntities\Entity\MotTestReasonForCancel;
-use DvsaEntities\Entity\MotTestStatus;
-use DvsaEntities\Entity\OdometerReading;
-use DvsaEntities\Entity\Person;
-use DvsaEntities\Entity\Site;
 
 class ElasticSearchServiceTest extends PHPUnit_Framework_TestCase
 {
@@ -88,12 +86,6 @@ class ElasticSearchServiceTest extends PHPUnit_Framework_TestCase
             ->expects($this->at(2))
             ->method('isGranted')
             ->with(PermissionInSystem::VIEW_NON_MOT_TESTS)
-            ->willReturn(true);
-
-        $this->featureToggles
-            ->expects($this->any())
-            ->method('isEnabled')
-            ->with(FeatureToggle::MYSTERY_SHOPPER)
             ->willReturn(true);
 
         $resultDto = $this->buildService()->findTests($this->buildSearchParams());

@@ -10,8 +10,6 @@ namespace DvsaMotTest\Controller;
 use Application\Helper\PrgHelper;
 use Application\Service\ContingencySessionManager;
 use Core\Authorisation\Assertion\WebPerformMotTestAssertion;
-use Dvsa\Mot\ApiClient\Request\Validator\Exception;
-use Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\Frontend\MotTestModule\Controller\MotTestResultsController;
@@ -104,20 +102,17 @@ class MotTestController extends AbstractDvsaMotTestController
      * @param EventManager $eventManager
      * @param OdometerReadingViewObject $odometerViewObject
      * @param MotTestDuplicateCertificateApiResource $duplicateCertificateApiResource
-     * @param FeatureToggles $featureToggles
      */
     public function __construct(
         MotAuthorisationServiceInterface $authorisationService,
         EventManager $eventManager,
         OdometerReadingViewObject $odometerViewObject,
-        MotTestDuplicateCertificateApiResource $duplicateCertificateApiResource,
-        FeatureToggles $featureToggles
+        MotTestDuplicateCertificateApiResource $duplicateCertificateApiResource
     ) {
         $this->authorisationService = $authorisationService;
         $this->eventManager = $eventManager;
         $this->odometerViewObject = $odometerViewObject;
         $this->duplicateCertificateApiResource = $duplicateCertificateApiResource;
-        $this->featureToggles = $featureToggles;
     }
 
     public function indexAction()
@@ -300,8 +295,7 @@ class MotTestController extends AbstractDvsaMotTestController
         $theSiteidEntry = isset($data['siteidentry']) ? $data['siteidentry'] : null;
         $theSiteid = isset($data['siteid']) ? $data['siteid'] : null;
         $theLocation = isset($data['location']) ? $data['location'] : null;
-        $isNonMotTest = $this->featureToggles->isEnabled(FeatureToggle::MYSTERY_SHOPPER) &&
-            isset($data['_non_mot_test']) && $data['_non_mot_test'] === $motTestNumber;
+        $isNonMotTest = isset($data['_non_mot_test']) && $data['_non_mot_test'] === $motTestNumber;
 
         if ($theLocation || $theSiteid || $theSiteidEntry || $isNonMotTest) {
             $apiUrl = MotTestUrlBuilder::motTest($motTestNumber)->toString();
@@ -559,7 +553,6 @@ class MotTestController extends AbstractDvsaMotTestController
         $testType = $motTest->getTestTypeCode();
 
         return
-            $this->isFeatureEnabled(FeatureToggle::MYSTERY_SHOPPER) &&
             $this->authorisationService->isGranted(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM) &&
             MotTestType::isNonMotTypes($testType);
     }
@@ -1105,11 +1098,6 @@ class MotTestController extends AbstractDvsaMotTestController
      */
     private function isMysteryShopper(MotTest $data)
     {
-        if (!$this->featureToggles->isEnabled(FeatureToggle::MYSTERY_SHOPPER)) {
-            return false;
-        };
-
-        return ($data->getTestTypeCode() !== null)
-        && ($data->getTestTypeCode() === MotTestTypeCode::MYSTERY_SHOPPER);
+        return ($data->getTestTypeCode() !== null) && ($data->getTestTypeCode() === MotTestTypeCode::MYSTERY_SHOPPER);
     }
 }

@@ -3,7 +3,6 @@
 namespace DvsaMotApi\Service;
 
 use DataCatalogApi\Service\DataCatalogService;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Date\DateTimeApiFormat;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Dto\Common\MotTestDto;
@@ -13,7 +12,6 @@ use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\MysteryShopper\MysteryShopperExpiryDateGenerator;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaDocument\Service\Document\DocumentService;
-use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Domain\DvsaContactDetails\DvsaContactDetailsConfiguration;
 use DvsaMotApi\Mapper;
 use DvsaMotApi\Mapper\AbstractMotTestMapper;
@@ -39,9 +37,6 @@ class CertificateCreationService
     /** @var DvsaContactDetailsConfiguration $dvsaContactDetailsConfig */
     private $dvsaContactDetailsConfig;
 
-    /** @var FeatureToggles $featureToggles */
-    private $featureToggles;
-
     // Used as a label for the DVSA telephone number on a VT32/VE certificate if the test is a non-MOT inspection
     const TELEPHONE_NUMBER_LABEL = 'Telephone number - ';
 
@@ -52,20 +47,17 @@ class CertificateCreationService
      * @param DocumentService $documentService
      * @param DataCatalogService $dataCatalogService
      * @param DvsaContactDetailsConfiguration $dvsaContactDetailsConfig
-     * @param FeatureToggles $featureToggles
      */
     public function __construct(
         MotTestService $motTestService,
         DocumentService $documentService,
         DataCatalogService $dataCatalogService,
-        DvsaContactDetailsConfiguration $dvsaContactDetailsConfig,
-        FeatureToggles $featureToggles
+        DvsaContactDetailsConfiguration $dvsaContactDetailsConfig
     ) {
         $this->motTestService  = $motTestService;
         $this->documentService = $documentService;
         $this->dataCatalogService = $dataCatalogService;
         $this->dvsaContactDetailsConfig = $dvsaContactDetailsConfig;
-        $this->featureToggles = $featureToggles;
     }
 
     /**
@@ -349,10 +341,6 @@ class CertificateCreationService
      */
     private function isMysteryShopper(MotTestDto $data)
     {
-        if (true !== $this->featureToggles->isEnabled(FeatureToggle::MYSTERY_SHOPPER)) {
-            return false;
-        }
-        return ($data->getTestType() !== null)
-        && ($data->getTestType()->getCode() === MotTestTypeCode::MYSTERY_SHOPPER);
+        return $data->getTestType() !== null && $data->getTestType()->getCode() === MotTestTypeCode::MYSTERY_SHOPPER;
     }
 }

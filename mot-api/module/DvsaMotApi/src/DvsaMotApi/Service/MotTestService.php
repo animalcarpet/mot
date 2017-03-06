@@ -8,7 +8,6 @@
 namespace DvsaMotApi\Service;
 
 use Doctrine\ORM\EntityManager;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -18,14 +17,10 @@ use DvsaCommon\Date\Time;
 use DvsaCommon\Domain\MotTestType;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Common\MotTestTypeDto;
+use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\RoleCode;
 use DvsaCommon\Enum\SiteStatusCode;
-use DvsaCommonApi\Service\Exception\NotFoundException;
-use DvsaEntities\Entity\OrganisationBusinessRoleMap;
-use DvsaEntities\Entity\SiteBusinessRoleMap;
-use DvsaEntities\Entity\SiteStatus;
-use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\SiteTypeCode;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Authorisation\Assertion\ReadMotTestAssertion;
@@ -34,25 +29,28 @@ use DvsaCommonApi\Model\SearchParam;
 use DvsaCommonApi\Service\AbstractSearchService;
 use DvsaCommonApi\Service\Exception\BadRequestException;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
+use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaCommonApi\Service\Mapper\OdometerReadingMapper;
 use DvsaCommonApi\Transaction\TransactionAwareInterface;
 use DvsaCommonApi\Transaction\TransactionAwareTrait;
 use DvsaEntities\Entity\CertificateReplacement;
 use DvsaEntities\Entity\Comment;
 use DvsaEntities\Entity\MotTest;
+use DvsaEntities\Entity\OrganisationBusinessRoleMap;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\Site;
+use DvsaEntities\Entity\SiteBusinessRoleMap;
 use DvsaEntities\Entity\SiteComment;
+use DvsaEntities\Entity\SiteStatus;
 use DvsaEntities\Entity\SiteTestingDailySchedule;
 use DvsaEntities\Entity\SiteType;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Repository\ConfigurationRepository;
 use DvsaEntities\Repository\MotTestRepository;
+use DvsaEntities\Repository\SiteStatusRepository;
 use DvsaEntities\Repository\SiteTypeRepository;
-use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Service\Mapper\MotTestMapper;
 use DvsaMotApi\Service\Validator\MotTestValidator;
-use DvsaEntities\Repository\SiteStatusRepository;
 
 /**
  * Class MotTestService
@@ -89,8 +87,6 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
     private $motTest;
     /** @var CreateMotTestService */
     private $createMotTestService;
-    /** @var MysteryShopperHelper  */
-    private $mysteryShopperHelper;
     /** @var TestingOutsideOpeningHoursNotificationService */
     private $outsideHoursNotificationService;
 
@@ -104,7 +100,6 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
      * @param ReadMotTestAssertion $readMotTestAssertion
      * @param CreateMotTestService $createMotTestService
      * @param MotTestRepository $motTestRepository
-     * @param MysteryShopperHelper $mysteryShopperHelper
      * @param TestingOutsideOpeningHoursNotificationService $outsideHoursNotificationService
      */
     public function __construct(
@@ -116,7 +111,6 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
         ReadMotTestAssertion $readMotTestAssertion,
         CreateMotTestService $createMotTestService,
         MotTestRepository $motTestRepository,
-        MysteryShopperHelper $mysteryShopperHelper,
         TestingOutsideOpeningHoursNotificationService $outsideHoursNotificationService
     ) {
         parent::__construct($entityManager);
@@ -129,7 +123,6 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
         $this->motTestMapper              = $motTestMapper;
         $this->readMotTestAssertion       = $readMotTestAssertion;
         $this->createMotTestService       = $createMotTestService;
-        $this->mysteryShopperHelper       = $mysteryShopperHelper;
         $this->outsideHoursNotificationService = $outsideHoursNotificationService;
     }
 
@@ -222,7 +215,7 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
 
         if($motTest->getStatus() !== MotTestStatusName::ABORTED
             && $motTest->getStatus() !== MotTestStatusName::ABANDONED){
-            $isMysteryShopper = $this->mysteryShopperHelper->isMysteryShopperToggleEnabled() && $motTest->getMotTestType()->getCode() === MotTestTypeCode::MYSTERY_SHOPPER;
+            $isMysteryShopper = $motTest->getMotTestType()->getCode() === MotTestTypeCode::MYSTERY_SHOPPER;
             if (!$isMysteryShopper) {
                 $odometerHistoryForVehicle = $this->motTestRepository->getOdometerHistoryForVehicleId(
                     $motTest->getVehicle()->getId(),
