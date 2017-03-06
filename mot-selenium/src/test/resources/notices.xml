@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Special Notices Test" parallel="classes" thread-count="10">
+    <listeners>
+        <listener class-name="uk.gov.dvsa.framework.listeners.FeatureToggleAnnotationTransformer"/>
+    </listeners>
+    <test name="Special Notices Test">
+        <groups>
+            <run>
+                <include name="SpecialNotice"/>
+            </run>
+        </groups>
+        <packages>
+            <package name=".*"/>
+        </packages>
+    </test>
+</suite>
