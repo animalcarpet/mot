@@ -6,8 +6,6 @@ use Core\Controller\AbstractAuthActionController;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\PermissionAtOrganisation;
-use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Dto\Organisation\MotTestLogSummaryDto;
@@ -18,7 +16,6 @@ use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\UrlBuilder\AuthorisedExaminerUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
-use DvsaFeature\FeatureToggles;
 use Organisation\ViewModel\MotTestLog\MotTestLogFormViewModel;
 use Organisation\ViewModel\MotTestLog\MotTestLogViewModel;
 use Zend\Http\Headers;
@@ -67,25 +64,19 @@ class MotTestLogController extends AbstractAuthActionController
     /** @var MotFrontendAuthorisationServiceInterface $authService */
     private $authService;
 
-    /** @var FeatureToggles $featureToggles */
-    private $featureToggles;
-
     /** @var \Zend\Http\Request $request */
     protected $request;
 
     /**
      * @param MotFrontendAuthorisationServiceInterface $authService
      * @param MapperFactory $mapperFactory
-     * @param FeatureToggles $featureToggles
      */
     public function __construct(
         MotFrontendAuthorisationServiceInterface $authService,
-        MapperFactory $mapperFactory,
-        FeatureToggles $featureToggles
+        MapperFactory $mapperFactory
     ) {
         $this->authService = $authService;
         $this->mapperFactory = $mapperFactory;
-        $this->featureToggles = $featureToggles;
     }
 
     /**
@@ -309,11 +300,7 @@ class MotTestLogController extends AbstractAuthActionController
     {
         $queryParams = $this->request->getQuery();
 
-        $optionalMotTestTypes = [];
-
-        if ($this->featureToggles->isEnabled(FeatureToggle::MYSTERY_SHOPPER)) {
-            $optionalMotTestTypes = array_merge($optionalMotTestTypes, [MotTestTypeCode::MYSTERY_SHOPPER]);
-        }
+        $optionalMotTestTypes = [MotTestTypeCode::MYSTERY_SHOPPER];
 
         $dto = new MotTestSearchParamsDto();
         $dto

@@ -8,11 +8,9 @@ use Core\ViewModel\Header\HeaderTertiaryList;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\Vehicle\VehicleExpiryDto;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaFeature\FeatureToggles;
 use UnexpectedValueException;
 use Vehicle\Controller\VehicleController;
 use Vehicle\Helper\VehicleInformationTableBuilder;
@@ -38,22 +36,12 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
 
         $authorisationService = $this->getMock(MotAuthorisationServiceInterface::class);
 
-        $featureToggles = $this
-            ->getMockBuilder(FeatureToggles::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $featureToggles
-            ->method('isEnabled')
-            ->with(FeatureToggle::MYSTERY_SHOPPER)
-            ->willReturn(true);
-
         $helper = new VehicleViewModelBuilder(
             $url,
             XMock::of(VehicleInformationTableBuilder::class),
             XMock::of(VehiclePageTitleBuilder::class),
             XMock::of(VehicleSidebarBuilder::class),
-            $authorisationService,
-            $featureToggles
+            $authorisationService
         );
 
         $searchData = new Parameters($searchData);
@@ -75,22 +63,12 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
 
         $authorisationService = $this->getMock(MotAuthorisationServiceInterface::class);
 
-        $featureToggles = $this
-            ->getMockBuilder(FeatureToggles::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $featureToggles
-            ->method('isEnabled')
-            ->with(FeatureToggle::MYSTERY_SHOPPER)
-            ->willReturn(true);
-
         $helper = new VehicleViewModelBuilder(
             $url,
             XMock::of(VehicleInformationTableBuilder::class),
             XMock::of(VehiclePageTitleBuilder::class),
             XMock::of(VehicleSidebarBuilder::class),
-            $authorisationService,
-            $featureToggles
+            $authorisationService
         );
 
         $helper->setSearchData($params);
@@ -126,22 +104,12 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
             ->with(PermissionInSystem::ENFORCEMENT_CAN_MASK_AND_UNMASK_VEHICLES)
             ->willReturn(true);
 
-        $featureToggles = $this
-            ->getMockBuilder(FeatureToggles::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $featureToggles
-            ->method('isEnabled')
-            ->with(FeatureToggle::MYSTERY_SHOPPER)
-            ->willReturn(true);
-
         $helper = new VehicleViewModelBuilder(
             $url,
             $vehicleInformationTableBuilder,
             new VehiclePageTitleBuilder(),
-            new VehicleSidebarBuilder(XMock::of(Url::class), $authorisationService, $featureToggles),
-            $authorisationService,
-            $featureToggles
+            new VehicleSidebarBuilder(XMock::of(Url::class), $authorisationService),
+            $authorisationService
         );
 
         $helper->setSearchData(new Parameters([]));
@@ -179,19 +147,9 @@ class VehicleViewModelBuilderTest extends \PHPUnit_Framework_TestCase
 
         $authorisationService = $this->getMock(MotAuthorisationServiceInterface::class);
 
-        $featureToggles = $this
-            ->getMockBuilder(FeatureToggles::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $featureToggles
-            ->method('isEnabled')
-            ->with(FeatureToggle::MYSTERY_SHOPPER)
-            ->willReturn(true);
-
         $vehicleViewModelBuilder = new VehicleViewModelBuilder($url, $vehicleInformationTableBuilder,
-            new VehiclePageTitleBuilder(), new VehicleSidebarBuilder(XMock::of(Url::class), $authorisationService,
-                $featureToggles),
-            $authorisationService, $featureToggles);
+            new VehiclePageTitleBuilder(), new VehicleSidebarBuilder(XMock::of(Url::class), $authorisationService),
+            $authorisationService);
 
         $vehicleViewModelBuilder->getViewModel();
     }

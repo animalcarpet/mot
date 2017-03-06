@@ -2,7 +2,6 @@
 
 namespace DashboardTest\Controller;
 
-use Account\Service\SecurityQuestionService;
 use Application\Data\ApiPersonalDetails;
 use Application\Service\CatalogService;
 use Application\Service\LoggedInUserManager;
@@ -20,7 +19,6 @@ use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use Dvsa\OpenAM\OpenAMClient;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\RoleCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
@@ -637,41 +635,24 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
         $this->assertEquals(['uk' => 'ukLong'], $actual['countries']);
     }
 
-    public function testNonMotTestPanelIsDisplayedWhenPermissionIsGrantedAndToggleIsOn()
+    public function testNonMotTestPanelIsDisplayedWhenPermissionIsGranted()
     {
         $this->mockMethod(
             $this->mockPersonalDetailsSrv, 'getPersonalDetailsData', null, $this->getPersonalDetailsData()
         );
 
         $this->authorisationService->granted(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM);
-
-        $this->withFeatureToggles([FeatureToggle::MYSTERY_SHOPPER => true]);
 
         $actual = $this->getResultForAction('userHome');
 
         $this->assertTrue($actual['canPerformNonMotTest']);
     }
 
-    public function testNonMotTestPanelIsNotDisplayedWhenPermissionIsNotGrantedAndToggleIsOn()
+    public function testNonMotTestPanelIsNotDisplayedWhenPermissionIsNotGranted()
     {
         $this->mockMethod(
             $this->mockPersonalDetailsSrv, 'getPersonalDetailsData', null, $this->getPersonalDetailsData()
         );
-
-        $this->withFeatureToggles([FeatureToggle::MYSTERY_SHOPPER]);
-
-        $actual = $this->getResultForAction('userHome');
-
-        $this->assertFalse($actual['canPerformNonMotTest']);
-    }
-
-    public function testNonMotTestPanelIsNotDisplayedWhenPermissionIsGrantedAndToggleIsOff()
-    {
-        $this->mockMethod(
-            $this->mockPersonalDetailsSrv, 'getPersonalDetailsData', null, $this->getPersonalDetailsData()
-        );
-
-        $this->authorisationService->granted(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM);
 
         $actual = $this->getResultForAction('userHome');
 

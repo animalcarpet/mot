@@ -2,8 +2,8 @@
 
 namespace DvsaMotApi\Service;
 
-use DvsaCommon\ApiClient\MotTest\DuplicateCertificate\Dto\MotTestDuplicateCertificateEditAllowedDto;
 use DateTime;
+use DvsaCommon\ApiClient\MotTest\DuplicateCertificate\Dto\MotTestDuplicateCertificateEditAllowedDto;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -14,15 +14,12 @@ use DvsaCommon\Dto\Vehicle\History\VehicleHistoryItemDto;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaEntities\Entity\MotTest;
-use DvsaEntities\Entity\Site;
 use DvsaEntities\Repository\ConfigurationRepository;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\PersonRepository;
 use DvsaEntities\Repository\SiteRepository;
 use DvsaMotApi\Helper\MysteryShopperHelper;
 use DvsaMotApi\Mapper\VehicleHistoryApiMapper;
-use PersonApi\Service\Mapper\TesterGroupAuthorisationMapper;
-use Zend\Stdlib\ArrayUtils;
 
 /**
  * Class VehicleHistoryService.
@@ -177,10 +174,7 @@ class VehicleHistoryService
         $startDate = $this->getStartDate($startDate);
         $siteIdsWherePersonCanViewMysteryShopperTests = [];
 
-        if (
-            $this->mysteryShopperHelper->isMysteryShopperToggleEnabled() &&
-            !$this->mysteryShopperHelper->hasPermissionToViewMysteryShopperTests()
-        ) {
+        if (!$this->mysteryShopperHelper->hasPermissionToViewMysteryShopperTests()) {
             $siteIdsWherePersonCanViewMysteryShopperTests = array_merge(
                 $this->siteRepository->findSiteIdsForPersonId($personId),
                 $this->siteRepository->findSiteIdsForPersonIdViaOrganisation($personId)

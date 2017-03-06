@@ -643,9 +643,11 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         ];
 
         $motTestMock = $this->getMock(MotTest::class);
+        $motTestTypeMock = $this->getMock(MotTestType::class);
         $this->mockMethod($motTestMock, 'getVehicleTestingStation', $this->once(), $vehicleTestStation);
         $this->mockMethod($motTestMock, 'getVehicle', $this->atLeastOnce(), $vehicle);
-        $this->mockMethod($this->mockMysteryShopperHelper, 'isMysteryShopperToggleEnabled', $this->atLeastOnce(), false);
+        $this->mockMethod($motTestMock, 'getMotTestType', $this->atLeastOnce(), $motTestTypeMock);
+        $this->mockMethod($motTestTypeMock, 'getCode', $this->atLeastOnce(), MotTestTypeCode::NORMAL_TEST);
 
         $this->mockMethod(
             $this->mockMotTestRepository, 'getMotTestByNumber', $this->once(), $motTestMock, self::MOT_TEST_NUMBER
@@ -690,7 +692,6 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $this->mockMethod($motTestMock, 'getVehicle', $this->atLeastOnce(), $vehicle);
         $this->mockMethod($motTestMock, 'getMotTestType', $this->atLeastOnce(), $motTestTypeMock);
         $this->mockMethod($motTestTypeMock, 'getCode', $this->atLeastOnce(), MotTestTypeCode::MYSTERY_SHOPPER);
-        $this->mockMethod($this->mockMysteryShopperHelper, 'isMysteryShopperToggleEnabled', $this->atLeastOnce(), true);
 
         $this->mockMethod(
             $this->mockMotTestRepository, 'getMotTestByNumber', $this->once(), $motTestMock, self::MOT_TEST_NUMBER

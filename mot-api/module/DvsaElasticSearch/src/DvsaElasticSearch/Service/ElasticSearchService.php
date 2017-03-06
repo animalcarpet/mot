@@ -2,29 +2,20 @@
 
 namespace DvsaElasticSearch\Service;
 
-use Doctrine\ORM\EntityManager;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
+use DvsaCommon\Auth\PermissionAtOrganisation;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Auth\PermissionAtOrganisation;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\Search\SearchResultDto;
 use DvsaCommon\Enum\MotTestTypeCode;
+use DvsaCommonApi\Model\SearchParam;
 use DvsaElasticSearch\Query\FbQueryMotTest;
 use DvsaElasticSearch\Query\FbQueryMotTestLog;
-use DvsaElasticSearch\Query\FbQuerySite;
-use DvsaElasticSearch\Query\FbQueryVehicle;
 use DvsaElasticSearch\Query\SuperSearchQuery;
 use DvsaEntities\DqlBuilder\SearchParam\MotTestSearchParam;
-use DvsaEntities\DqlBuilder\SearchParam\VehicleTestingStationSearchParam;
 use DvsaEntities\DqlBuilder\SearchParam\VehicleSearchParam;
-use DvsaCommonApi\Model\SearchParam;
 use DvsaEntities\Repository\SiteRepository;
 use DvsaFeature\FeatureToggles;
-use Zend\Di\ServiceLocatorInterface;
-use Zend\Http\Request;
 
 /**
  * Class ElasticSearchService
@@ -84,13 +75,11 @@ class ElasticSearchService
 
         $optionalMotTestTypes = [];
 
-        if ($this->featureToggles->isEnabled(FeatureToggle::MYSTERY_SHOPPER) &&
-            $this->authService->isGranted(PermissionInSystem::VIEW_MYSTERY_SHOPPER_TESTS)) {
+        if ($this->authService->isGranted(PermissionInSystem::VIEW_MYSTERY_SHOPPER_TESTS)) {
             $optionalMotTestTypes = array_merge($optionalMotTestTypes, [MotTestTypeCode::MYSTERY_SHOPPER]);
         }
 
-        if ($this->featureToggles->isEnabled(FeatureToggle::MYSTERY_SHOPPER) &&
-            $this->authService->isGranted(PermissionInSystem::VIEW_NON_MOT_TESTS)) {
+        if ($this->authService->isGranted(PermissionInSystem::VIEW_NON_MOT_TESTS)) {
             $optionalMotTestTypes = array_merge($optionalMotTestTypes, [MotTestTypeCode::NON_MOT_TEST]);
         }
 

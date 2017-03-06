@@ -3,7 +3,6 @@
 namespace DvsaMotApiTest\Service;
 
 use DataCatalogApi\Service\DataCatalogService;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\Common\ColourDto;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Common\MotTestTypeDto;
@@ -14,9 +13,9 @@ use DvsaCommon\Dto\VehicleClassification\VehicleClassDto;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Enum\VehicleClassCode;
 use DvsaCommon\MysteryShopper\MysteryShopperExpiryDateGenerator;
+use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaDocument\Service\Document\DocumentService;
-use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Domain\DvsaContactDetails\DvsaContactDetailsConfiguration;
 use DvsaMotApi\Mapper\AbstractMotTestMapper;
 use DvsaMotApi\Service\CertificateCreationService;
@@ -25,7 +24,6 @@ use DvsaMotApi\Service\MotTestService;
 use DvsaMotApiTest\Test\ReasonForRejectionBuilder;
 use NumberFormatter;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
-use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 
 /**
  * Class CertificateCreationServiceTest
@@ -49,9 +47,6 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
     /** @var CertificateCreationService|MockObj */
     protected $service;
 
-    /** @var FeatureToggles|MockObj */
-    private $mockFeatureToggles;
-
     public function setup()
     {
         $this->mockDocumentService = $this->getMockWithDisabledConstructor(
@@ -69,16 +64,11 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
             'phone' => '03001239000',
         ]);
 
-        $this->mockFeatureToggles = $this->getMockWithDisabledConstructor(
-            FeatureToggles::class
-        );
-
         $this->service = new CertificateCreationService(
             $this->mockMotService,
             $this->mockDocumentService,
             $this->catalog,
-            $this->dvsaContactDetailsConfiguration,
-            $this->mockFeatureToggles
+            $this->dvsaContactDetailsConfiguration
         );
     }
 
@@ -746,12 +736,6 @@ class CertificateCreationServiceTest extends AbstractServiceTestCase
     {
         $motTestId = 1;
         $documentId = 7;
-
-        $this->mockFeatureToggles
-            ->expects($this->any())
-            ->method('isEnabled')
-            ->with(FeatureToggle::MYSTERY_SHOPPER)
-            ->willReturn(true);
 
         $this->mockDocumentService
             ->expects($this->once())

@@ -145,7 +145,6 @@ class UserHomeController extends AbstractAuthActionController
         }
 
         $canPerformNonMotTest =
-            $this->getFeatureToggles()->isEnabled(FeatureToggle::MYSTERY_SHOPPER) &&
             $this->authorisationService->isGranted(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM);
 
         $return = array_merge(

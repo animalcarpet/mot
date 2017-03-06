@@ -6,10 +6,8 @@ use Core\Routing\VehicleRoutes;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle as Vehicle;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\Vehicle\VehicleExpiryDto;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
-use DvsaFeature\FeatureToggles;
 use UnexpectedValueException;
 use Vehicle\Controller\VehicleController;
 use Vehicle\ViewModel\VehicleViewModel;
@@ -49,30 +47,23 @@ class VehicleViewModelBuilder implements AutoWireableInterface
     private $authorisationService;
 
     /**
-     * @var FeatureToggles
-     */
-    private $featureToggles;
-
-    /**
      * VehicleViewModelBuilder constructor.
      *
      * @param Url                            $url
      * @param VehicleInformationTableBuilder $vehicleTableBuilder
      * @param VehiclePageTitleBuilder        $vehiclePageTitleBulder
      * @param VehicleSidebarBuilder          $vehicleSidebarBuilder
-     * @param FeatureToggles                 $featureToggles
      */
     public function __construct(Url $url, VehicleInformationTableBuilder $vehicleTableBuilder,
                                 VehiclePageTitleBuilder $vehiclePageTitleBulder,
                                 VehicleSidebarBuilder $vehicleSidebarBuilder,
-                                MotAuthorisationServiceInterface $authorisationService, FeatureToggles $featureToggles)
+                                MotAuthorisationServiceInterface $authorisationService)
     {
         $this->url = $url;
         $this->vehicleTableBuilder = $vehicleTableBuilder;
         $this->vehiclePageTitleBulder = $vehiclePageTitleBulder;
         $this->vehicleSidebarBuilder = $vehicleSidebarBuilder;
         $this->authorisationService = $authorisationService;
-        $this->featureToggles = $featureToggles;
     }
 
     /**
@@ -144,8 +135,8 @@ class VehicleViewModelBuilder implements AutoWireableInterface
             $this->vehicleSidebarBuilder->setVehicleAsMasked();
         }
 
-        $shouldDisplayVehicleMaskedBanner = (true === $this->featureToggles->isEnabled(FeatureToggle::MYSTERY_SHOPPER))
-            && $this->authorisationService->isGranted(PermissionInSystem::ENFORCEMENT_CAN_MASK_AND_UNMASK_VEHICLES)
+        $shouldDisplayVehicleMaskedBanner =
+            $this->authorisationService->isGranted(PermissionInSystem::ENFORCEMENT_CAN_MASK_AND_UNMASK_VEHICLES)
             && $this->vehicle->getIsIncognito();
 
         return (new VehicleViewModel())

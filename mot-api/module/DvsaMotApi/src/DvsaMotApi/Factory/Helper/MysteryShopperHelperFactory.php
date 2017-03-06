@@ -9,7 +9,6 @@ namespace DvsaMotApi\Factory\Helper;
 
 use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
-use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Helper\MysteryShopperHelper;
 use Zend\Log\LoggerInterface;
 use Zend\ServiceManager\FactoryInterface;
@@ -27,9 +26,6 @@ class MysteryShopperHelperFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var FeatureToggles $featureToggles */
-        $featureToggles = $serviceLocator->get('Feature\FeatureToggles');
-
         /** @var VehicleService $vehicleService */
         $vehicleService = $serviceLocator->get(VehicleService::class);
 
@@ -40,7 +36,6 @@ class MysteryShopperHelperFactory implements FactoryInterface
         $logger = $serviceLocator->get('Application\Logger');
 
         return new MysteryShopperHelper(
-            $featureToggles,
             $vehicleService,
             $authorisationService,
             $logger

@@ -5,9 +5,7 @@ namespace VehicleTest\ViewModel;
 use Core\ViewModel\Sidebar\GeneralSidebarLinkList;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaFeature\FeatureToggles;
 use PHPUnit_Framework_TestCase;
 use Vehicle\Controller\VehicleController;
 use Vehicle\ViewModel\Sidebar\VehicleSidebar;
@@ -38,17 +36,7 @@ class VehicleSidebarTest extends PHPUnit_Framework_TestCase
             ->with(PermissionInSystem::ENFORCEMENT_CAN_MASK_AND_UNMASK_VEHICLES)
             ->willReturn(true);
 
-        $featureToggles = $this
-            ->getMockBuilder(FeatureToggles::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $featureToggles
-            ->method('isEnabled')
-            ->with(FeatureToggle::MYSTERY_SHOPPER)
-            ->willReturn(true);
-
-        $sidebar = new VehicleSidebar($urlHelperPlugin, $searchParameters, self::VEHICLE_ID, true,
-            $authorisationService, $featureToggles);
+        $sidebar = new VehicleSidebar($urlHelperPlugin, $searchParameters, self::VEHICLE_ID, true, $authorisationService);
 
         $linkGroupList = $sidebar->getSidebarItems();
 
@@ -87,17 +75,7 @@ class VehicleSidebarTest extends PHPUnit_Framework_TestCase
             ->with(PermissionInSystem::ENFORCEMENT_CAN_MASK_AND_UNMASK_VEHICLES)
             ->willReturn(true);
 
-        $featureToggles = $this
-            ->getMockBuilder(FeatureToggles::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $featureToggles
-            ->method('isEnabled')
-            ->with(FeatureToggle::MYSTERY_SHOPPER)
-            ->willReturn(true);
-
-        $sidebar = new VehicleSidebar($urlHelperPlugin, $searchParameters, self::VEHICLE_ID, false,
-            $authorisationService, $featureToggles);
+        $sidebar = new VehicleSidebar($urlHelperPlugin, $searchParameters, self::VEHICLE_ID, false, $authorisationService);
 
         $linkGroupList = $sidebar->getSidebarItems();
 

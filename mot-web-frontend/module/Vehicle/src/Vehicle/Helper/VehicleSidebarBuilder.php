@@ -4,7 +4,6 @@ namespace Vehicle\Helper;
 
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
-use DvsaFeature\FeatureToggles;
 use Vehicle\Controller\VehicleController;
 use Vehicle\ViewModel\Sidebar\VehicleSidebar;
 use Zend\Stdlib\ParametersInterface;
@@ -37,22 +36,15 @@ class VehicleSidebarBuilder implements AutoWireableInterface
     private $authorisationService;
 
     /**
-     * @var FeatureToggles
-     */
-    private $featureToggles;
-
-    /**
      * VehicleSidebarBuilder constructor.
      *
      * @param Url $url
      */
-    public function __construct(Url $url, MotAuthorisationServiceInterface $authorisationService,
-                                FeatureToggles $featureToggles)
+    public function __construct(Url $url, MotAuthorisationServiceInterface $authorisationService)
     {
         $this->url = $url;
         $this->isVehicleMasked = false;
         $this->authorisationService = $authorisationService;
-        $this->featureToggles = $featureToggles;
     }
 
     /**
@@ -104,6 +96,6 @@ class VehicleSidebarBuilder implements AutoWireableInterface
         $searchData->set(VehicleController::PARAM_BACK_TO, VehicleController::BACK_TO_DETAIL);
 
         return new VehicleSidebar($this->url, $searchData, $this->obfuscatedVehicleId, $this->isVehicleMasked,
-            $this->authorisationService, $this->featureToggles);
+            $this->authorisationService);
     }
 }

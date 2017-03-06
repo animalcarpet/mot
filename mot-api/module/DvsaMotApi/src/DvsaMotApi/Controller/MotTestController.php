@@ -1,7 +1,6 @@
 <?php
 namespace DvsaMotApi\Controller;
 
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
@@ -175,22 +174,19 @@ class MotTestController extends AbstractDvsaRestfulController implements Transac
         $response = [null, null];
         $motTest = $this->getMotTestService()->getMotTest($motId);
 
-        // Non-MOT checks are only relevant if the Mystery Shopper feature toggle is enabled.
-        $isMysteryShopperFeatureEnabled = true === $this->isFeatureEnabled(FeatureToggle::MYSTERY_SHOPPER);
-
-        if ($motTest && ($motTest->getMotTestType()->getIsReinspection()
-                || ($isMysteryShopperFeatureEnabled && $motTest->getMotTestType()->isNonMotTest()))) {
+        if (
+            $motTest &&
+            ($motTest->getMotTestType()->getIsReinspection() || $motTest->getMotTestType()->isNonMotTest())
+        ) {
             $siteIdExists = array_key_exists(self::FIELD_SITEID, $data) && !empty($data[self::FIELD_SITEID]);
             $locationExists = array_key_exists(self::FIELD_LOCATION, $data) && !empty($data[self::FIELD_LOCATION]);
 
-            if ($isMysteryShopperFeatureEnabled) {
-                if ($motTest->getMotTestType()->isNonMotTest() && !$siteIdExists) {
-                    throw new BadRequestException(
-                        'Site ID - enter the site ID',
-                        BadRequestException::ERROR_CODE_INVALID_DATA,
-                        'enter the site ID'
-                    );
-                }
+            if ($motTest->getMotTestType()->isNonMotTest() && !$siteIdExists) {
+                throw new BadRequestException(
+                    'Site ID - enter the site ID',
+                    BadRequestException::ERROR_CODE_INVALID_DATA,
+                    'enter the site ID'
+                );
             }
 
             if (!$siteIdExists && !$locationExists) {

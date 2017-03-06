@@ -2,11 +2,8 @@
 
 namespace PersonApi\Service;
 
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Collections\Expr\Expression;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
@@ -14,7 +11,6 @@ use DvsaCommonApi\Service\AbstractService;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Repository\MotTestRepository;
-use DvsaMotApi\Helper\MysteryShopperHelper;
 use UserApi\Dashboard\Dto\DayStats;
 use UserApi\Dashboard\Dto\MonthStats;
 
@@ -29,20 +25,13 @@ class UserStatsService extends AbstractService
     private $motTestRepository;
 
     /**
-     * @var MysteryShopperHelper
-     */
-    private $mysteryShopperHelper;
-
-    /**
      * UserStatsService constructor.
      * @param EntityManager $entityManager
      * @param MotTestRepository $repository
-     * @param MysteryShopperHelper $mysteryShopperHelper
      */
-    public function __construct(EntityManager $entityManager, MotTestRepository $repository, MysteryShopperHelper $mysteryShopperHelper)
+    public function __construct(EntityManager $entityManager, MotTestRepository $repository)
     {
         $this->motTestRepository = $repository;
-        $this->mysteryShopperHelper = $mysteryShopperHelper;
         parent::__construct($entityManager);
     }
 
@@ -56,7 +45,7 @@ class UserStatsService extends AbstractService
         //TODO: OPENAM - confirm the current user is allowed to access these stats
         $person = $this->findOrThrowException(Person::class, $personId, Person::ENTITY_NAME);
 
-        $optionalMotTestTypes = ($this->mysteryShopperHelper->isMysteryShopperToggleEnabled()) ? [MotTestTypeCode::MYSTERY_SHOPPER] : [];
+        $optionalMotTestTypes = [MotTestTypeCode::MYSTERY_SHOPPER];
 
         $motTests = $this->getTestsCompletedByTesterFromCompletedDate($person, DateUtils::today(), $optionalMotTestTypes);
 
@@ -75,7 +64,7 @@ class UserStatsService extends AbstractService
         //TODO: OPENAM - confirm the current user is allowed to access these stats
         $person = $this->findOrThrowException(Person::class, $personId, Person::ENTITY_NAME);
 
-        $optionalMotTestTypes = ($this->mysteryShopperHelper->isMysteryShopperToggleEnabled()) ? [MotTestTypeCode::MYSTERY_SHOPPER] : [];
+        $optionalMotTestTypes = [MotTestTypeCode::MYSTERY_SHOPPER];
 
         $motTests = $this->getTestsCompletedByTesterFromCompletedDate($person, DateUtils::firstOfThisMonth(), $optionalMotTestTypes);
 

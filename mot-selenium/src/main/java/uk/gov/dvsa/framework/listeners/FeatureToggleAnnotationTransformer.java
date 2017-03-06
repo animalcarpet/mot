@@ -18,9 +18,6 @@ public class FeatureToggleAnnotationTransformer implements IAnnotationTransforme
         if(iTestAnnotation.getTestName().equals("2fa")){
             iTestAnnotation.setEnabled(ConfigHelper.is2faEnabled());
         }
-        if(iTestAnnotation.getTestName().equals("MysteryShopper")){
-            iTestAnnotation.setEnabled(ConfigHelper.isMysteryShopperEnabled());
-        }
 
         if(iTestAnnotation.getTestName().equals("2faHardStop")) {
             iTestAnnotation.setEnabled(ConfigHelper.is2faHardStopEnabled());

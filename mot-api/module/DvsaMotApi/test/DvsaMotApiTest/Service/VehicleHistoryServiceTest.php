@@ -57,6 +57,7 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
         $testStartDate = new DateTime();
 
         $this->setupStubSiteRepository();
+        $this->setupNoSiteIdsForPersonId();
 
         $this->mockMotTestRepository
             ->expects($this->any())
@@ -75,7 +76,6 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
     {
         $captureSiteIds = ArgCapture::create();
 
-        $this->mockMethod($this->mockMysteryShopperHelper, 'isMysteryShopperToggleEnabled', null, true);
         $this->mockMethod($this->mockMysteryShopperHelper, 'canViewMysteryShopperTests', null, false);
 
         $this->siteRepository
@@ -106,7 +106,6 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
     {
         $captureSiteIds = ArgCapture::create();
 
-        $this->mockMethod($this->mockMysteryShopperHelper, 'isMysteryShopperToggleEnabled', null, true);
         $this->mockMethod($this->mockMysteryShopperHelper, 'hasPermissionToViewMysteryShopperTests', null, true);
 
         $this->siteRepository
@@ -130,8 +129,9 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
     {
         $captureSiteIds = ArgCapture::create();
 
-        $this->mockMethod($this->mockMysteryShopperHelper, 'isMysteryShopperToggleEnabled', null, false);
         $this->mockMethod($this->mockMysteryShopperHelper, 'hasPermissionToViewMysteryShopperTests', null, false);
+
+        $this->setupNoSiteIdsForPersonId();
 
         $this->siteRepository
             ->expects($this->never())
@@ -166,6 +166,7 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
         $this->mockMethod($this->mockConfigurationRepository, "getValue", null, $maxDefaultHistoryLength);
         $this->mockMethod($this->mockAuthService, 'isGranted', null, true);
         $this->setupStubSiteRepository();
+        $this->setupNoSiteIdsForPersonId();
 
         $service = $this->constructVehicleHistoryServiceWithMocks();
         $service->findHistoricalTestsForVehicleSince(self::VEHICLE_ID, self::PERSON_ID);
@@ -212,6 +213,7 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
 
         $this->mockMethod($this->mockMotTestRepository, 'findTestsForVehicle', null, $listOfMotTests);
         $this->setupStubSiteRepository();
+        $this->setupNoSiteIdsForPersonId();
 
         $service = $this->constructVehicleHistoryServiceWithMocks();
         $vehicleHistoryDto = $service->findHistoricalTestsForVehicleSince(self::VEHICLE_ID, self::PERSON_ID, $now);
@@ -236,6 +238,7 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
         $this->mockMethod($this->mockPersonRepository, 'get', null, $this->setPersonMock());
 
         $this->setupStubSiteRepository();
+        $this->setupNoSiteIdsForPersonId();
 
         $service = $this->constructVehicleHistoryServiceWithMocks();
         $editAllowedDto = $service->getEditAllowedPermissionsDto(self::VEHICLE_ID, self::PERSON_ID, $testId, $now);
@@ -497,6 +500,21 @@ class VehicleHistoryServiceTest extends AbstractMotTestServiceTest
         $this->siteRepository
             ->expects($this->any())
             ->method('findForPersonId')
+            ->willReturn([]);
+    }
+
+    protected function setupNoSiteIdsForPersonId()
+    {
+        $this->siteRepository
+            ->expects($this->any())
+            ->method('findSiteIdsForPersonId')
+            ->with(self::PERSON_ID)
+            ->willReturn([]);
+
+        $this->siteRepository
+            ->expects($this->any())
+            ->method('findSiteIdsForPersonIdViaOrganisation')
+            ->with(self::PERSON_ID)
             ->willReturn([]);
     }
     

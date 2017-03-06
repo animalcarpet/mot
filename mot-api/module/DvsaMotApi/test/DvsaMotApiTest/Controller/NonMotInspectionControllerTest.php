@@ -4,11 +4,9 @@ namespace DvsaMotApiTest\Controller;
 
 use DvsaCommon\Auth\AbstractMotAuthorisationService;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\MotTest;
-use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Controller\NonMotInspectionController;
 use DvsaMotApi\Service\MotTestService;
 use Zend\Http\Response;
@@ -27,22 +25,11 @@ class NonMotInspectionControllerTest extends AbstractMotApiControllerTestCase
         parent::setUp();
     }
 
-    public function testNotFoundResponseWhenMysteryShopperToggleIsOff()
-    {
-        $this
-            ->withFeatureToggles([FeatureToggle::MYSTERY_SHOPPER => false])
-            ->buildController()
-            ->dispatchPostRequest([]);
-
-        $this->assertEquals(404, $this->getResponse()->getStatusCode());
-    }
-
     public function testForbiddenThrownWhenNotGrantedNonMotPermission()
     {
         $this->setExpectedException(ForbiddenException::class);
 
         $this
-            ->withFeatureToggles([FeatureToggle::MYSTERY_SHOPPER => true])
             ->withoutPerformNonMotTestPermission()
             ->buildController()
             ->dispatchPostRequest([]);
@@ -53,7 +40,6 @@ class NonMotInspectionControllerTest extends AbstractMotApiControllerTestCase
         $motTestNumber = 12345;
 
         $this
-            ->withFeatureToggles([FeatureToggle::MYSTERY_SHOPPER => true])
             ->withPerformNonMotTestPermission()
             ->withCreatedMotTest((new MotTest())->setNumber($motTestNumber))
             ->buildController();
@@ -71,14 +57,6 @@ class NonMotInspectionControllerTest extends AbstractMotApiControllerTestCase
             ->expects($this->any())
             ->method('createMotTest')
             ->willReturn($motTest);
-
-        return $this;
-    }
-
-    private function withFeatureToggles(array $featureToggles)
-    {
-        $featureToggles = new FeatureToggles($featureToggles);
-        $this->serviceManager->setService('Feature\FeatureToggles', $featureToggles);
 
         return $this;
     }

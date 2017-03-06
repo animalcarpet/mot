@@ -15,10 +15,10 @@ use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\SearchParamConst;
-use DvsaCommon\Dto\Site\MotTestLogSummaryDto;
-use DvsaCommon\Dto\Site\SiteDto;
 use DvsaCommon\Dto\Search\MotTestSearchParamsDto;
 use DvsaCommon\Dto\Search\SearchResultDto;
+use DvsaCommon\Dto\Site\MotTestLogSummaryDto;
+use DvsaCommon\Dto\Site\SiteDto;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
 use DvsaCommon\Utility\ArrayUtils;
@@ -26,9 +26,8 @@ use DvsaCommon\Utility\DtoHydrator;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\TestCasePermissionTrait;
 use DvsaCommonTest\TestUtils\XMock;
-use DvsaFeature\FeatureToggles;
-use Site\ViewModel\MotTestLog\MotTestLogFormViewModel;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
+use Site\ViewModel\MotTestLog\MotTestLogFormViewModel;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
 
@@ -56,9 +55,6 @@ class MotTestLogControllerTest extends AbstractFrontendControllerTestCase
     /** @var SiteMapper|MockObj $mockSiteMapper */
     private $mockSiteMapper;
 
-    /** @var FeatureToggles|MockObj $mockFeatureToggles */
-    private $mockFeatureToggles;
-
     public function setUp()
     {
         $this->dtoHydrator = new DtoHydrator();
@@ -69,13 +65,11 @@ class MotTestLogControllerTest extends AbstractFrontendControllerTestCase
 
         $this->mockAuthSrv = XMock::of(MotFrontendAuthorisationServiceInterface::class);
         $this->mockMapperFactory = $this->getMapperFactory();
-        $this->mockFeatureToggles = XMock::of(FeatureToggles::class);
 
         $this->setController(
             new MotTestLogController(
                 $this->mockAuthSrv,
-                $this->mockMapperFactory,
-                $this->mockFeatureToggles
+                $this->mockMapperFactory
             )
         );
         $this->getController()->setServiceLocator($serviceManager);
