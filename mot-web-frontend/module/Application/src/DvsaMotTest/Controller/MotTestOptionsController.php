@@ -47,7 +47,7 @@ class MotTestOptionsController extends AbstractDvsaMotTestController implements 
         $this->layout()->setVariable('pageTitle', $pageTitle);
         $this->layout()->setVariable('pageSubTitle', $presenter->getPageSubTitle());
 
-        $this->addMotTestLateInfoToGtmDataLayer($dto->getVehicleId());
+        $this->addMotTestLateInfoToGtmDataLayer($dto->getVehicleId(), $dto->getVehicleRegistrationNumber());
 
         $viewModel = new ViewModel(['presenter' => $presenter]);
         $viewModel->setTemplate(self::TEMPLATE_MOT_TEST_OPTIONS);
@@ -70,10 +70,11 @@ class MotTestOptionsController extends AbstractDvsaMotTestController implements 
         return $this->getResponse();
     }
 
-    private function addMotTestLateInfoToGtmDataLayer($vehicleId)
+    private function addMotTestLateInfoToGtmDataLayer($vehicleId, $vrm)
     {
         $gtmData = [];
 
+        $gtmData['vrm'] = $vrm;
         $today = new \DateTime();
         $expiryDate = $this->vehicleExpiryMapper->getExpiryForVehicle($vehicleId)->getExpiryDate();
         $gtmData['expiryDate'] = DateTimeDisplayFormat::dateTime($expiryDate);
