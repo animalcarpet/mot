@@ -1,12 +1,12 @@
 <?php
 use Dashboard\Model\Dashboard;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use Dvsa\Mot\ApiClient\Resource\Item\Site;
 use Dvsa\Mot\ApiClient\Resource\Item\Tester;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Date\DateTimeDisplayFormat;
 use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Domain\MotTestType;
-use DvsaCommon\Dto\Site\VehicleTestingStationDto;
 use DvsaCommon\Enum\MotTestStatusName;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaMotEnforcement\Controller\MotTestSearchController;
@@ -28,8 +28,8 @@ $motTestNumber = $motTest->getMotTestNumber();
 /** @var Tester $tester */
 $tester = $motTest->getTester();
 
-/** @var VehicleTestingStationDto $site */
-$site = $this->siteDto;
+/** @var Site $siteData */
+$siteData;
 
 $responseAdapter = new MotTestServiceResponseAdapter($motTest);
 $reasonsForRejection = $responseAdapter->getReasonsForRejectionExcludingRepairedDefects();
@@ -90,7 +90,7 @@ if (empty($motTest)) {
             <h2>Test station details</h2>
         </div>
 
-        <?php echo $this->partial('partials/mot-test-summary/site-address', ['siteData' => $site]); ?>
+        <?php echo $this->partial('partials/mot-test-summary/site-address', ['siteData' => $siteData]); ?>
 
         <?php
         $testerName = $tester->getDisplayName();
