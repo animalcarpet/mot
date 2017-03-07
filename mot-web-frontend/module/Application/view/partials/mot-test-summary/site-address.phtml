@@ -1,51 +1,62 @@
 <?php
 
 use Core\Formatting\AddressFormatter;
+use Dvsa\Mot\ApiClient\Resource\Item\Site;
 
-$site = $this->siteData ? $this->siteData : null;
+/** @var Site $siteData */
+$siteData;
 
-if (empty($site)) {
+if (empty($siteData->getId())) {
     return;
 }
 
-if ($site instanceof \Dvsa\Mot\ApiClient\Resource\Item\Site) {
-    $siteNr = $site->getNumber();
-    $siteName = ($siteNr ? ' - ' : '') . $site->getName();
+if ($siteData instanceof \Dvsa\Mot\ApiClient\Resource\Item\Site) {
+    $siteNr = $siteData->getNumber();
+    $siteName = $siteData->getName();
     $siteAddress = '';
-    if ($address = $site->getFirstAddress()) {
+    if ($address = $siteData->getFirstAddress()) {
         $siteAddress = (new AddressFormatter())->escapeAddressToMultiLine(
             $address->getLine1(),
             $address->getLine2(),
             $address->getLine3(),
             $address->getLine4(),
-            $address->getCountry(),
+            null,
             $address->getTown(),
             $address->getPostcode()
         );
     }
-} else if ($site instanceof \DvsaCommon\Dto\Site\VehicleTestingStationDto) {
-    $siteNr = $site->getSiteNumber();
-    $siteName = $site->getName();
+} else if ($siteData instanceof \DvsaCommon\Dto\Site\VehicleTestingStationDto) {
+    $siteNr = $siteData->getSiteNumber();
+    $siteName = $siteData->getName();
     $tempContact = null;
 
-    foreach($site->getContacts() as $contactDto){
+    foreach($siteData->getContacts() as $contactDto){
         $tempContact = $contactDto;
     }
 
     $siteAddress = (new AddressFormatter())->escapedDtoToMultiLine($tempContact->getAddress(), true);
 } else {
-    $siteNr = !empty($site['siteNumber']) ? $site['siteNumber'] : '';
-    $siteName = ($siteNr ? ' - ' : '') . (!empty($site['name']) ? $site['name'] : '');
-    $siteAddress = !empty($site['address']) ? $site['address'] : '';
+    $siteNr = !empty($siteData['siteNumber']) ? $siteData['siteNumber'] : '';
+    $siteName = !empty($siteData['name']) ? $siteData['name'] : '';
+    $siteAddress = !empty($siteData['address']) ? $siteData['address'] : '';
 }
 
 $cssDlClass = !empty(trim($this->cssDlClass)) ? $this->cssDlClass : 'col-sm-4';
+
+$siteNameAndNumber = [] ;
+if (!empty($siteNr)) {
+    $siteNameAndNumber[] = $siteNr;
+}
+if (!empty($siteName)) {
+    $siteNameAndNumber[] = $siteName;
+}
+$siteNameAndNumber = implode(' - ', $siteNameAndNumber);
 ?>
 
 <dl class="<?php echo $this->escapeHtmlAttr($cssDlClass); ?>">
     <dt>VTS name and address</dt>
     <dd id="vtsNameAndAddress">
-        <?php echo $this->escapeHtml($siteNr . ' - ' . $siteName); ?>
+        <?php echo $this->escapeHtml($siteNameAndNumber); ?>
         <br/>
         <?php echo $siteAddress; ?>
     </dd>

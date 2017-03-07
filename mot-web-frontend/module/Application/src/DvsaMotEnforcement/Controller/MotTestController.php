@@ -12,6 +12,7 @@ use Application\Service\CatalogService;
 use Dashboard\Controller\UserHomeController;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
+use Dvsa\Mot\ApiClient\Resource\Item\Site;
 use Dvsa\Mot\ApiClient\Resource\Item\Tester;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Domain\MotTestType;
@@ -80,6 +81,9 @@ class MotTestController extends AbstractDvsaMotTestController
         /** @var MotTest $motDetails */
         $motDetails = $this->tryGetMotTestOrAddErrorMessages($motTestNumber);
 
+        /** @var  Site $siteData */
+        $siteData = $motDetails->getSite();
+
         /** @var DvsaVehicle $vehicle */
         $vehicle = $this->getVehicleServiceClient()->getDvsaVehicleByIdAndVersion($motDetails->getVehicleId(), $motDetails->getVehicleVersion());
 
@@ -135,7 +139,8 @@ class MotTestController extends AbstractDvsaMotTestController
                 'summaryParams' => $summaryParams,
                 'isDemoMotTest' => $isDemoMotTest,
                 'brakeTestTypeCode2Name' => $brakeTestTypeCode2Name,
-                'isNonMotTest'           => $isNonMotTest,
+                'isNonMotTest' => $isNonMotTest,
+                'siteData' => $siteData,
             ]
         );
     }
