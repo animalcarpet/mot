@@ -17,13 +17,28 @@ class MotTestReasonForRejectionLocationRepository extends EntityRepository
     {
         $qb = $this
             ->createQueryBuilder("l")
-            ->where("l.lateral = :LATERAL")
-            ->andWhere("l.longitudinal = :LONGITUDINAL")
-            ->andWhere("l.vertical = :VERTICAL")
-            ->setParameter("LATERAL", $lateral)
-            ->setParameter("LONGITUDINAL", $longitudinal)
-            ->setParameter("VERTICAL", $vertical)
             ->setMaxResults(1);
+
+        if (null === $lateral) {
+            $qb->andWhere('l.lateral IS NULL');
+        } else {
+            $qb->andWhere("l.lateral = :LATERAL");
+            $qb->setParameter("LATERAL", $lateral);
+        }
+
+        if (null === $longitudinal) {
+            $qb->andWhere("l.longitudinal IS NULL");
+        } else {
+            $qb->andWhere("l.longitudinal = :LONGITUDINAL");
+            $qb->setParameter("LONGITUDINAL", $longitudinal);
+        }
+
+        if (null === $vertical) {
+            $qb->andWhere("l.vertical IS NULL");
+        } else {
+            $qb->andWhere("l.vertical = :VERTICAL");
+            $qb->setParameter("VERTICAL", $vertical);
+        }
 
         try {
             $location = $qb->getQuery()->getSingleResult();
