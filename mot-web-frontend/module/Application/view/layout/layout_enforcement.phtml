@@ -174,7 +174,7 @@ if ($this->authorisationHelper()->hasRole(\DvsaCommon\Constants\Role::USER)) {
         <div class="row global-footer_links">
             <div class="col-md-8 col-sm-12">
                 <div class="global-footer_resources">
-                    <h3><?php echo $this->resourcesOnGovUkHelper()->getTitle(); ?></h3>
+                    <h2><?php echo $this->resourcesOnGovUkHelper()->getTitle(); ?></h2>
                     <nav class="global-footer_navigation-resources">
                         <ul class="list-unstyled">
                             <?php foreach ($this->resourcesOnGovUkHelper()->getDocuments() as $key => $resource) : ?>
@@ -191,7 +191,7 @@ if ($this->authorisationHelper()->hasRole(\DvsaCommon\Constants\Role::USER)) {
             </div>
             <div class=" col-md-4 col-sm-12">
                 <div class="global-footer_resources">
-                    <h3><?php echo $this->manualsHelper()->getTitle(); ?></h3>
+                    <h2><?php echo $this->manualsHelper()->getTitle(); ?></h2>
                     <nav class="global-footer_navigation-resources">
                         <ul class="list-unstyled">
                             <?php foreach ($this->manualsHelper()->getDocuments() as $key => $resource) : ?>
