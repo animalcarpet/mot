@@ -1,6 +1,6 @@
 {% if identifiedDefects.generatedFailures is not empty %}
     <h3 class="defect-summary__heading">
-        <span class="badge--alert">{{ identifiedDefects.numberOfGeneratedFailures }}</span>
+        <span class="badge--alert" id="numberOfGeneratedFailures">{{ identifiedDefects.numberOfGeneratedFailures }}</span>
         <span class="defect-summary__heading-type">Failures</span>
     </h3>
     <ol>

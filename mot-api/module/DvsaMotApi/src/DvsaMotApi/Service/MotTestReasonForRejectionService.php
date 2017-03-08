@@ -25,9 +25,12 @@ use DvsaEntities\Entity\MotTestReasonForRejectionDescription;
 use DvsaEntities\Entity\MotTestReasonForRejectionLocation;
 use DvsaEntities\Entity\MotTestReasonForRejectionMarkedAsRepaired;
 use DvsaEntities\Entity\ReasonForRejection;
+use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Entity\ReasonForRejectionType;
 use DvsaFeature\FeatureToggles;
+use DvsaMotApi\Service\Helper\BrakeTestResultsHelper;
 use DvsaMotApi\Service\Validator\MotTestValidator;
+use DvsaCommon\Constants\ReasonForRejection as ReasonForRejectionConstants;
 
 /**
  * Class MotTestReasonForRejectionService.
@@ -65,6 +68,11 @@ class MotTestReasonForRejectionService extends AbstractService
     private $featureToggles;
 
     /**
+     * @var MotTestRepository
+     */
+    private $motTestRepository;
+
+    /**
      * MotTestReasonForRejectionService constructor.
      *
      * @param EntityManager                 $entityManager
@@ -73,6 +81,7 @@ class MotTestReasonForRejectionService extends AbstractService
      * @param TestItemSelectorService       $motTestItemSelectorService
      * @param ApiPerformMotTestAssertion    $performMotTestAssertion
      * @param FeatureToggles                $featureToggles
+     * @param MotTestRepository             $motTestRepository
      */
     public function __construct(
         EntityManager $entityManager,
@@ -80,7 +89,8 @@ class MotTestReasonForRejectionService extends AbstractService
         MotTestValidator $motTestValidator,
         TestItemSelectorService $motTestItemSelectorService,
         ApiPerformMotTestAssertion $performMotTestAssertion,
-        FeatureToggles $featureToggles
+        FeatureToggles $featureToggles,
+        MotTestRepository $motTestRepository
     ) {
         parent::__construct($entityManager);
 
@@ -89,6 +99,7 @@ class MotTestReasonForRejectionService extends AbstractService
         $this->testItemSelectorService = $motTestItemSelectorService;
         $this->performMotTestAssertion = $performMotTestAssertion;
         $this->featureToggles = $featureToggles;
+        $this->motTestRepository = $motTestRepository;
     }
 
     /**
@@ -128,6 +139,10 @@ class MotTestReasonForRejectionService extends AbstractService
 
         if (!$this->isTrainingTest($motTest)) {
             $this->checkPermissionsForRfr($rfr);
+        }
+
+        if ($this->isBrakePerformanceNotTestedRfr($rfr)) {
+            $this->clearBrakeTestResults($motTest);
         }
 
         if ($this->motTestValidator->validateMotTestReasonForRejection($rfr)) {
@@ -198,7 +213,7 @@ class MotTestReasonForRejectionService extends AbstractService
             return true;
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -349,6 +364,10 @@ class MotTestReasonForRejectionService extends AbstractService
         }
         $this->assertRfrCanBeRemovedOrRepaired($motTestNumber, $motTestRfr);
 
+        if ($this->isBrakePerformanceNotTestedRfr($motTestRfr)) {
+            $this->clearBrakeTestResults($this->getMotTestFromMotTestNumber($motTestNumber));
+        }
+
         $this->removeReasonForRejectionMarkedAsRepairedRecord($motTestRfr);
         $this->entityManager->flush();
     }
@@ -455,5 +474,73 @@ class MotTestReasonForRejectionService extends AbstractService
         }
 
         return $location;
+    }
+
+    /**
+     * @param MotTestReasonForRejection $motTestRfr
+     *
+     * @return bool
+     */
+    private function isBrakePerformanceNotTestedRfr(MotTestReasonForRejection $motTestRfr)
+    {
+        if ($motTestRfr === null) {
+            return false;
+        }
+        $reasonForRejection = $motTestRfr->getReasonForRejection();
+        if ($reasonForRejection === null) {
+            return false;
+        }
+        $rfrId = $reasonForRejection->getRfrId();
+
+        return $this->isBrakePerformanceNotTestedRfrById($rfrId);
+    }
+
+    /**
+     * @param int $motTestRfrId
+     *
+     * @return bool
+     */
+    private function isBrakePerformanceNotTestedRfrById($motTestRfrId)
+    {
+        if ($motTestRfrId === null) {
+            return false;
+        }
+
+        return (in_array($motTestRfrId, ReasonForRejectionConstants::BRAKE_PERFORMANCE_NOT_TESTED_RFR_IDS)) ? true : false;
+    }
+
+    /**
+     * @param MotTest $motTest
+     */
+    private function clearBrakeTestResults(MotTest $motTest)
+    {
+        $brakeTestsHelper = new BrakeTestResultsHelper($this->entityManager);
+        $brakeTestsHelper->deleteAllBrakeTestResults($motTest);
+        $this->deleteAllGeneratedRfrs($motTest);
+    }
+
+    /**
+     * @param MotTest $motTest
+     */
+    private function deleteAllGeneratedRfrs(MotTest $motTest)
+    {
+        $rfrRepository = $this->entityManager->getRepository(MotTestReasonForRejection::class);
+        $generatedRfrs = $rfrRepository->findBy(['generated' => true, 'motTestId' => $motTest->getId()]);
+        foreach ($generatedRfrs as $rfr) {
+            $this->removeReasonForRejection($rfr);
+        }
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param int $motTestNumber
+     *
+     * @return MotTest
+     */
+    private function getMotTestFromMotTestNumber($motTestNumber)
+    {
+        $motTest = $this->motTestRepository->getMotTestByNumber($motTestNumber);
+
+        return $motTest;
     }
 }

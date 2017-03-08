@@ -84,7 +84,7 @@ class BrakeTestResultClass3AndAboveTest extends \PHPUnit_Framework_TestCase
     {
         $brakeTestResult = new BrakeTestResultClass3AndAbove();
         $data = self::getTestData();
-        return $brakeTestResult
+        $brakeTestResult
             ->setServiceBrake1TestType(BrakeTestTypeFactory::type($data['serviceBrake1TestType']))
             ->setParkingBrakeTestType(BrakeTestTypeFactory::type($data['parkingBrakeTestType']))
             ->setParkingBrakeEffortOffside($data['parkingBrakeEffortOffside'])
@@ -107,6 +107,8 @@ class BrakeTestResultClass3AndAboveTest extends \PHPUnit_Framework_TestCase
             ->setServiceBrake2EfficiencyPass($data['serviceBrake2EfficiencyPass'])
             ->setParkingBrakeEfficiencyPass($data['parkingBrakeEfficiencyPass'])
             ->setGeneralPass($data['generalPass']);
+
+        return $brakeTestResult;
     }
 
     public static function getTestData()
