@@ -537,7 +537,7 @@ class MotTestCreationHelper
      */
     private function isCountryOfRegistrationSame($original, $changedValue)
     {
-        $this->isSame($original, $changedValue);
+        return $this->isSame($original, $changedValue);
     }
 
 
