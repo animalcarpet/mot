@@ -29,7 +29,7 @@
 
 {# Odometer section #}
 <div class="action-panel">
-    <div class="clear-float">
+    <div class="u-clearfix">
         <div class="action-panel__container">
             <h3 class="action-panel__heading">Odometer</h3>
         </div>
@@ -55,7 +55,7 @@
 
 {# Defects section #}
 <div class="action-panel">
-    <div class="clear-float">
+    <div class="u-clearfix">
         <div class="action-panel__container">
             <h3 class="action-panel__heading">Defects</h3>
             <h4 class="action-panel__sub-heading">Failures, PRS and Advisories</h4>
@@ -74,7 +74,7 @@
 
 {# Brake test section #}
 <div class="js-brakeTestActionPanel action-panel">
-    <div class="clear-float">
+    <div class="u-clearfix">
         <div class="action-panel__container">
             <h3 class="action-panel__heading">Brake test</h3>
             <h4 class="action-panel__sub-heading"></h4>
@@ -100,14 +100,14 @@
         </div>
     </div>
 </div>
-<div class="defect-summary">
+<div class="js-brakeTestSummary defect-summary">
     <div id="rfrList" class="">
         {% include '/defects/special-process-failures.twig' with {'identifiedDefects': identifiedDefects} %}
     </div>
 </div>
 
 <nav class="content-navigation">
-    <form action="{% if shouldDisableSubmitButton %}#{% else %}{{ url('mot-test/test-summary', {'motTestNumber' : motTest.motTestNumber}) }}{% endif %}" method="get">
+    <form action="{{ url('mot-test/test-summary', {'motTestNumber' : motTest.motTestNumber}) }}" method="get">
         <input id="reviewTest" type="submit" class="js-reviewTestButton button" value="Review test" {% if shouldDisableSubmitButton %} disabled {% endif %}>
     </form>
     {% if not isDemo %}

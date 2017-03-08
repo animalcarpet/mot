@@ -1,6 +1,7 @@
 package uk.gov.dvsa.ui.feature.journey.mot.brake_test;
 
 import org.joda.time.DateTime;
+import org.openqa.selenium.By;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -11,6 +12,8 @@ import uk.gov.dvsa.domain.model.mot.Defect;
 import uk.gov.dvsa.domain.model.mot.TestOutcome;
 import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.helper.DefectsTestsDataProvider;
+import uk.gov.dvsa.helper.PageInteractionHelper;
+import uk.gov.dvsa.helper.ReasonForRejection;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.mot.DefectsPage;
 import uk.gov.dvsa.ui.pages.mot.TestResultsEntryGroupAPageInterface;
@@ -18,6 +21,8 @@ import uk.gov.dvsa.ui.pages.mot.TestResultsEntryNewPage;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -91,5 +96,59 @@ public class BrakeTestResultsTest extends DslTest {
 
         // Then the Add brake test button is not displayed
         assertThat(resultsEntryNewPage.isAddBrakeTestButtonDisplayed(), is(false));
+    }
+
+    @Test(description = "Verify that brake test result values are removed when adding a 'Brake performance not tested' " +
+                    "defect during an original MOT test")
+    public void removeBrakeTestResultsWhenAddingBrakePerformanceNotTestedDefect() throws IOException, URISyntaxException {
+
+        Defect brakePerformanceNotTested = getBrakePerformanceNotTestedDefect();
+
+        // Given I am on the Test Results Entry Page for an original MOT test
+        TestResultsEntryNewPage testResultsEntryNewPage = pageNavigator.gotoTestResultsEntryNewPage(tester,vehicle);
+
+        // When I add Brake Test values, and add 'Brake performance not tested' defect
+        testResultsEntryNewPage.completeBrakeTestWithPassValues(false)
+                .clickAddDefectButton()
+                .navigateToDefectCategory(brakePerformanceNotTested.getCategoryPath())
+                .navigateToAddDefectPage(brakePerformanceNotTested)
+                .clickAddDefectButton()
+                .clickFinishAndReturnButton();
+
+        // Then the Brake Test values will be removed and the Brake Test status will be 'Not tested'
+        assertThat(testResultsEntryNewPage.isBrakeTestNotTestedNoticeDisplayed(), is(true));
+    }
+
+    @Test(description = "Verify that brake test result values are removed when undoing the 'mark as repaired' action on " +
+                    "a 'Brake performance not tested' defect during an MOT re-test")
+    public void removeBrakeTestResultsWhenUndoingMarkAsRepairedForBrakePerformanceNotTestedDefectDuringRetest() throws IOException, URISyntaxException {
+
+        List<ReasonForRejection> reasonForRejectionsList = new ArrayList<>();
+        reasonForRejectionsList.add(ReasonForRejection.BRAKE_PERFORMANCE_NOT_TESTED);
+        String defectName = "Brake performance not tested";
+
+        // Given I have a vehicle with a failed original MOT test
+        motApi.createTestWithRfr(tester, site.getId(), vehicle, TestOutcome.FAILED, 1000, DateTime.now(), reasonForRejectionsList);
+
+        // When I conduct a retest, click 'mark as repaired' on 'Brake performance not tested' defect,
+        // add failing Brake Test values, and click 'undo'
+        TestResultsEntryNewPage testResultsEntryNewPage = ((TestResultsEntryNewPage)motUI.retest.startRetest(vehicle, tester))
+                .clickRepaired(defectName, TestResultsEntryNewPage.class)
+                .completeBrakeTestWithFailValues(true)
+                .clickUndoRepaired(TestResultsEntryNewPage.class);
+
+        // Then Brake Test status will be 'Not tested' and the summary of generated defects is not present
+        assertThat(testResultsEntryNewPage.isBrakeTestNotTestedNoticeDisplayed(), is(true));
+        assertThat(PageInteractionHelper.isElementPresent(By.id("numberOfGeneratedFailures")), is(false));
+    }
+
+    private Defect getBrakePerformanceNotTestedDefect() {
+        Defect.DefectBuilder builder = new Defect.DefectBuilder();
+        builder.setCategoryPath(new String[] {"Brakes", "Brake performance", "Brake performance not tested"});
+        builder.setDefectName("Brake performance not tested");
+        builder.setDefectType(Defect.DefectType.Failure);
+        builder.setAddOrRemoveName("Brake performance not tested");
+        builder.setIsDangerous(false);
+        return builder.build();
     }
 }

@@ -18,14 +18,6 @@ use DvsaEntities\Entity\MotTest;
 class MotTestStatusService
 {
     /**
-     * @var array
-     */
-    private static $brakePerformanceNotTestedRfrs = [
-        ReasonForRejection::CLASS_12_BRAKE_PERFORMANCE_NOT_TESTED_RFR_ID,
-        ReasonForRejection::CLASS_3457_BRAKE_PERFORMANCE_NOT_TESTED_RFR_ID,
-    ];
-
-    /**
      * @var MotAuthorisationServiceInterface
      */
     private $authorisationService;
@@ -72,7 +64,8 @@ class MotTestStatusService
             if ($rfr->getReasonForRejection() === null) {
                 continue; // TODO solve 'Manual Advisory' Test RFRs which doesn't have linked RFR
             }
-            if (in_array($rfr->getReasonForRejection()->getRfrId(), self::$brakePerformanceNotTestedRfrs) && !$rfr->isMarkedAsRepaired()) {
+            $rfrId = $rfr->getReasonForRejection()->getRfrId();
+            if (in_array($rfrId, ReasonForRejection::BRAKE_PERFORMANCE_NOT_TESTED_RFR_IDS) && !$rfr->isMarkedAsRepaired()) {
                 return true;
             }
         }

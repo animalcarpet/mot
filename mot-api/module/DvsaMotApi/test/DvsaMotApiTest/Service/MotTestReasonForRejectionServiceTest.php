@@ -9,6 +9,7 @@ namespace DvsaMotApiTest\Service;
 
 use Doctrine\ORM\EntityRepository;
 use DvsaCommon\Constants\OdometerUnit;
+use DvsaCommon\Constants\ReasonForRejection as ReasonForRejectionConstants;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
 use DvsaCommonApi\Service\Exception\BadRequestException;
@@ -23,6 +24,7 @@ use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Entity\ReasonForRejectionType;
 use DvsaEntities\Entity\TestItemSelector;
+use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\MotTestReasonForRejectionLocationRepository;
 use DvsaEntitiesTest\Entity\MotTestReasonForRejectionTest;
 use DvsaFeature\FeatureToggles;
@@ -90,6 +92,112 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
         );
     }
 
+    public function testAddReasonForRejectionUsingBrakeTestPerformanceNotTestedRfr()
+    {
+        $data = [
+            'rfrId' => ReasonForRejectionConstants::CLASS_12_BRAKE_PERFORMANCE_NOT_TESTED_RFR_ID,
+            'type' => 'FAIL',
+        ];
+        $expectedNumberOfReposSearchedDuringClearBrakeTestResults = 3;
+        $motTest = self::getTestMotTestEntity();
+        $reasonForRejection = (new ReasonForRejection())
+            ->setRfrId($data['rfrId']);
+
+        $this->prepareMocks();
+
+        $this->mockTestItemSelectorService->expects($this->once())
+            ->method('getReasonForRejectionById')
+            ->with($data['rfrId'])
+            ->willReturn($reasonForRejection);
+
+        $mockRepository = XMock::of(EntityRepository::class);
+        $mockRepository
+            ->expects($invocationRecorder = $this->exactly($expectedNumberOfReposSearchedDuringClearBrakeTestResults))
+            ->method('findBy')
+            ->willReturn($emptyArray = []);
+
+        $mockRepository->expects($this->any())
+            ->method('findOneBy')
+            ->willReturn(new ReasonForRejectionType());
+
+        $this->mockEntityManager
+            ->expects($this->exactly(1))
+            ->method('find')
+            ->with(
+                ReasonForRejection::class,
+                ['rfrId' => $data['rfrId']]
+            )
+            ->willReturn($reasonForRejection);
+
+        $this->mockEntityManager
+            ->method('getRepository')
+            ->willReturn($mockRepository);
+
+        $service = $this->createService();
+        $service->addReasonForRejection($motTest, $data);
+
+        $this->assertEquals(
+            $expectedNumberOfReposSearchedDuringClearBrakeTestResults,
+            $invocationRecorder->getInvocationCount()
+        );
+    }
+
+    public function testUndoMarkReasonForRejectionAsRepairedUsingBrakeTestPerformanceNotTestedCallsClearBrakeTestResults()
+    {
+        $data = [
+            'rfrId' => ReasonForRejectionConstants::CLASS_3457_BRAKE_PERFORMANCE_NOT_TESTED_RFR_ID,
+            'type' => 'FAIL',
+        ];
+        $expectedNumberOfReposSearchedDuringClearBrakeTestResults = 3;
+        $motTest = self::getTestMotTestEntity();
+        $motTest->setNumber('123456');
+        $reasonForRejection = (new ReasonForRejection())
+            ->setRfrId($data['rfrId']);
+
+        $this->prepareMocks();
+
+        $this->mockTestItemSelectorService->expects($this->once())
+            ->method('getReasonForRejectionById')
+            ->with($data['rfrId'])
+            ->willReturn($reasonForRejection);
+
+        $mockMotTestRfR = XMock::of(MotTestReasonForRejection::class);
+        $mockMotTestRfR
+            ->method('getMotTest')
+            ->willReturn($motTest);
+        $mockMotTestRfR
+            ->method('getCanBeDeleted')
+            ->willReturn(true);
+        $mockMotTestRfR
+            ->method('getReasonForRejection')
+            ->willReturn($reasonForRejection);
+
+        $this->mockMotTestRepository
+            ->method('getMotTestByNumber')
+            ->willReturn($motTest);
+
+        $mockRepository = XMock::of(EntityRepository::class);
+        $mockRepository
+            ->method('find')
+            ->willReturn($mockMotTestRfR);
+        $mockRepository
+            ->expects($invocationRecorder = $this->exactly($expectedNumberOfReposSearchedDuringClearBrakeTestResults))
+            ->method('findBy')
+            ->willReturn($emptyArray = []);
+
+        $this->mockEntityManager
+            ->method('getRepository')
+            ->willReturn($mockRepository);
+
+        $service = $this->createService();
+        $service->undoMarkReasonForRejectionAsRepaired((int) $motTest->getNumber(), $data['rfrId']);
+
+        $this->assertEquals(
+            $expectedNumberOfReposSearchedDuringClearBrakeTestResults,
+            $invocationRecorder->getInvocationCount()
+        );
+    }
+
     public function testAddManualAdvisoryOk()
     {
         $data = [
@@ -141,7 +249,7 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
             $this->assertEquals('rfrId', $errors[0]['field']);
             $this->assertEquals('type', $errors[1]['field']);
 
-            return null;
+            return;
         }
 
         $this->fail('An expected exception has not been raised.');
@@ -383,6 +491,7 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
         $this->mockMotTestValidator = $this->getMockTestValidator();
         $this->mockTestItemSelectorService = XMock::of(TestItemSelectorService::class);
         $this->mockPerformMotTestAssertion = XMock::of(ApiPerformMotTestAssertion::class);
+        $this->mockMotTestRepository = XMock::of(MotTestRepository::class);
     }
 
     private function createService()
@@ -393,7 +502,8 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
             $this->mockMotTestValidator,
             $this->mockTestItemSelectorService,
             $this->mockPerformMotTestAssertion,
-            $this->createFeatureToggles(false)
+            $this->createFeatureToggles(false),
+            $this->mockMotTestRepository
         );
     }
 

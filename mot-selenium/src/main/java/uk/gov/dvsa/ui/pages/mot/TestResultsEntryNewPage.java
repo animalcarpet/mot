@@ -43,6 +43,7 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
     @FindBy(xpath = "//*[@id='rfrList']//a[contains(., 'Edit')]") private WebElement editDefectLink;
     @FindBy(id = "brakeTestResultsNotice") private WebElement brakeTestResultsNotice;
     @FindBy(id = "print-inspection-sheet") private WebElement printInspectionSheetLink;
+    @FindBy(id = "numberOfGeneratedFailures") private WebElement numberOfGeneratedFailures;
 
     public TestResultsEntryNewPage(MotAppDriver driver) {
         super(driver);
@@ -136,6 +137,12 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
         return this;
     }
 
+    public TestResultsEntryNewPage completeBrakeTestWithFailValues(boolean isRetest) {
+        addDefaultBrakeTestValues("fail", isRetest);
+
+        return this;
+    }
+
     public DefectCategoriesPage clickAddDefectButton() {
         addDefect.click();
 
@@ -187,6 +194,10 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
 
     public boolean isPassNoticeDisplayed(){
         return brakeTestResultsNotice.getText().contains("Pass");
+    }
+
+    public boolean isBrakeTestNotTestedNoticeDisplayed(){
+        return brakeTestResultsNotice.getText().contains("Not tested");
     }
 
     public TestResultsEntryPageInterface completeTestDetailsWithPassValues(boolean isRetest) {

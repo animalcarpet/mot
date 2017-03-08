@@ -8,6 +8,8 @@ namespace DvsaCommon\Constants;
 interface ReasonForRejection
 {
     const ITEM_NOT_TESTED_SELECTOR_ID = 5800;
+    const ITEM_NOT_TESTED_BRAKE_PERFORMANCE_RFR_ID = 8566;
+
     const CLASS_12_BRAKE_PERFORMANCE_NOT_TESTED_RFR_ID = 10101;
     const CLASS_12_HEADLAMP_AIM_NOT_TESTED_RFR_ID = 10154;
 
@@ -20,4 +22,10 @@ interface ReasonForRejection
 
     const AUDIENCE_TESTER_CODE = 't';
     const AUDIENCE_VEHICLE_EXAMINER_CODE = 'v';
+
+    const BRAKE_PERFORMANCE_NOT_TESTED_RFR_IDS = [
+        self::ITEM_NOT_TESTED_BRAKE_PERFORMANCE_RFR_ID,
+        self::CLASS_12_BRAKE_PERFORMANCE_NOT_TESTED_RFR_ID,
+        self::CLASS_3457_BRAKE_PERFORMANCE_NOT_TESTED_RFR_ID,
+    ];
 }

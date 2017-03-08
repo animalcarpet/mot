@@ -25,6 +25,7 @@ use DvsaMotApi\Mapper\BrakeTestResultClass12Mapper;
 use DvsaMotApi\Mapper\BrakeTestResultClass3AndAboveMapper;
 use DvsaMotApi\Service\Calculator\BrakeTestResultClass1And2Calculator;
 use DvsaMotApi\Service\Calculator\BrakeTestResultClass3AndAboveCalculator;
+use DvsaMotApi\Service\Helper\BrakeTestResultsHelper;
 use DvsaMotApi\Service\Helper\ExtractionHelper;
 use DvsaMotApi\Service\Model\BrakeTestResultSubmissionSummary;
 use DvsaMotApi\Service\Validator\BrakeTestConfigurationValidator;
@@ -191,6 +192,15 @@ class BrakeTestResultService extends AbstractService
         $this->entityManager->flush();
 
         return true;
+    }
+
+    /**
+     * @param MotTest $motTest
+     */
+    public function deleteAllBrakeTestResults(MotTest $motTest)
+    {
+        $brakeTestsHelper = new BrakeTestResultsHelper($this->entityManager);
+        $brakeTestsHelper->deleteAllBrakeTestResults($motTest);
     }
 
     public function validateBrakeTestConfiguration(MotTest $motTest, $brakeTestResultData)

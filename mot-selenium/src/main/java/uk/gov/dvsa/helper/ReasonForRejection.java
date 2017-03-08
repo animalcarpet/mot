@@ -28,6 +28,11 @@ public class ReasonForRejection {
             new ReasonForRejection(114, "Motorcycle lighting and signalling > Stop lamp", "missing",
                     "Test failure", "FAIL");
 
+    //Brakes, Brake performance, Brake performance not tested
+    public static final ReasonForRejection BRAKE_PERFORMANCE_NOT_TESTED =
+            new ReasonForRejection(10102, "Brakes > Brake performance", "not tested",
+                    "Test failure", "FAIL");
+
     //Body, Structure and General Items
     public static final ReasonForRejection BODY_CORROSION =
             new ReasonForRejection(8460, "Body, Structure and General Items > Body condition", "missing",

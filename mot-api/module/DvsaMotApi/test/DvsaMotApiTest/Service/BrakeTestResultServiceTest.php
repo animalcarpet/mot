@@ -32,7 +32,7 @@ use DvsaMotApi\Service\Validator\MotTestValidator;
 use PHPUnit_Framework_MockObject_MockObject;
 
 /**
- * Class BrakeTestResultServiceTest
+ * Class BrakeTestResultServiceTest.
  */
 class BrakeTestResultServiceTest extends AbstractServiceTestCase
 {
@@ -55,7 +55,6 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
     const FAILURE_RFR_ONE_NOT_REACHING_PRIMARY_MIN = 2;
     const FAILURE_RFR_BOTH_UNDER_PRIMARY_MIN = 3;
 
-
     public function testBrakeTestOfAbandonedMotTestThrowsException()
     {
         $this->runBrakeTestWithUnsuitableMotTestStatus(MotTestStatusName::ABANDONED);
@@ -66,14 +65,14 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
         $this->runBrakeTestWithUnsuitableMotTestStatus(MotTestStatusName::FAILED);
     }
 
-    private function runBrakeTestWithUnsuitableMotTestStatus($status) {
+    private function runBrakeTestWithUnsuitableMotTestStatus($status)
+    {
         $mocks = $this->getMocksForBrakeTestResultService();
 
         $motTest = $this->getTestMotTest();
         $motTest->getMotTestStatus()->setName($status);
 
         $data = BrakeTestResultClass3AndAboveTest::getTestData();
-        $brakeTestResultPrototype = new BrakeTestResultClass3AndAbove();
         $brakeTestResult = $this->getTestBrakeTestResultClassAbove3WithEntities();
         $brakeTestResult
             ->setServiceBrake1TestType(BrakeTestTypeFactory::roller())
@@ -208,15 +207,15 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
             ->will($this->returnValue($brakeTestResult));
         $calculatorMockHandler->next('areBothControlsUnderSecondaryMinimum')
             ->with($brakeTestResult)
-            ->will($this->returnValue(!!($rfrFault == self::FAILURE_RFR_BOTH_UNDER_SECONDARY_MIN)));
+            ->will($this->returnValue((bool) ($rfrFault == self::FAILURE_RFR_BOTH_UNDER_SECONDARY_MIN)));
         if ($rfrFault != self::FAILURE_RFR_BOTH_UNDER_SECONDARY_MIN) {
             $calculatorMockHandler->next('noControlReachesPrimaryMinimum')
                 ->with($brakeTestResult)
-                ->will($this->returnValue(!!($rfrFault == self::FAILURE_RFR_BOTH_UNDER_PRIMARY_MIN)));
+                ->will($this->returnValue((bool) ($rfrFault == self::FAILURE_RFR_BOTH_UNDER_PRIMARY_MIN)));
             if ($rfrFault != self::FAILURE_RFR_BOTH_UNDER_PRIMARY_MIN) {
                 $calculatorMockHandler->next('oneControlNotReachingSecondaryMinimum')
                     ->with($brakeTestResult)
-                    ->will($this->returnValue(!!($rfrFault == self::FAILURE_RFR_ONE_NOT_REACHING_PRIMARY_MIN)));
+                    ->will($this->returnValue((bool) ($rfrFault == self::FAILURE_RFR_ONE_NOT_REACHING_PRIMARY_MIN)));
             }
         }
 
@@ -272,39 +271,38 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
             $mockEntityManager,
             [
                 [
-                    self::AT     => 0,
+                    self::AT => 0,
                     self::METHOD => 'getRepository',
-                    self::WITH   => MotTestReasonForRejection::class,
-                    self::WILL   => $this->returnValue($mockRfrRepository),
+                    self::WITH => MotTestReasonForRejection::class,
+                    self::WILL => $this->returnValue($mockRfrRepository),
                 ],
                 [
-                    self::AT     => 1,
+                    self::AT => 1,
                     self::METHOD => 'persist',
-                    self::WITH   =>
-                        $this->logicalAnd(
+                    self::WITH => $this->logicalAnd(
                             $this->isInstanceOf(\DvsaEntities\Entity\MotTestReasonForRejection::class),
                             $this->attributeEqualTo('motTest', $motTest),
                             $this->attributeEqualTo('generated', true)
                         ),
-                    self::WILL   => $this->returnValue(null),
+                    self::WILL => $this->returnValue(null),
                 ],
                 [
-                    self::AT     => 2,
+                    self::AT => 2,
                     self::METHOD => 'flush',
-                    self::WITH   => null,
-                    self::WILL   => $this->returnValue(null),
+                    self::WITH => null,
+                    self::WILL => $this->returnValue(null),
                 ],
                 [
-                    self::AT     => 3,
+                    self::AT => 3,
                     self::METHOD => 'persist',
-                    self::WITH   => $this->isInstanceOf(\DvsaEntities\Entity\MotTest::class),
-                    self::WILL   => $this->returnValue(null),
+                    self::WITH => $this->isInstanceOf(\DvsaEntities\Entity\MotTest::class),
+                    self::WILL => $this->returnValue(null),
                 ],
                 [
-                    self::AT     => 4,
+                    self::AT => 4,
                     self::METHOD => 'flush',
-                    self::WITH   => null,
-                    self::WILL   => $this->returnValue(null),
+                    self::WITH => null,
+                    self::WILL => $this->returnValue(null),
                 ],
             ]
         );
@@ -324,7 +322,7 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
                     $this->getMockAuthorizationService(),
                     $mocks[self::MOCK_MOT_TEST_VALIDATOR],
                     $mocks[self::MOCK_REASON_FOR_REJECTION],
-                    $mocks[self::MOCK_PERFORM_MOT_TEST_ASSERTION]
+                    $mocks[self::MOCK_PERFORM_MOT_TEST_ASSERTION],
                 ]
             )
             ->setMethods(['createBrakeTestResult'])
@@ -366,7 +364,7 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
             $expectedResult = [
                 'control1LockPercent' => 'calculatedControl1',
                 'control2LockPercent' => 'calculatedControl2',
-                'brakeTestType'       => BrakeTestTypeCode::ROLLER,
+                'brakeTestType' => BrakeTestTypeCode::ROLLER,
             ];
             foreach ($calculatorMockParams as $method => $returnValue) {
                 $mockCalculatorHandler
@@ -397,12 +395,12 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
                 ->will($this->returnValue('calculatedService2'));
             $expectedResult = [
                 'parkingBrakeLockPercent' => 'calculatedParkingBrake',
-                'serviceBrake1Data'       => ['lockPercent' => 'calculatedService1'],
-                'serviceBrake2Data'       => ['lockPercent' => 'calculatedService2'],
-                'serviceBrake1TestType'   => BrakeTestTypeCode::ROLLER,
-                'serviceBrake2TestType'   => BrakeTestTypeCode::ROLLER,
-                'parkingBrakeTestType'    => BrakeTestTypeCode::ROLLER,
-                'weightType'              => null,
+                'serviceBrake1Data' => ['lockPercent' => 'calculatedService1'],
+                'serviceBrake2Data' => ['lockPercent' => 'calculatedService2'],
+                'serviceBrake1TestType' => BrakeTestTypeCode::ROLLER,
+                'serviceBrake2TestType' => BrakeTestTypeCode::ROLLER,
+                'parkingBrakeTestType' => BrakeTestTypeCode::ROLLER,
+                'weightType' => null,
             ];
         }
         $mockHydratorHandler = new MockHandler($mocks[self::MOCK_HYDRATOR], $this);
@@ -449,15 +447,15 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
 
         return [
             self::MOCK_CALCULATOR_CLASS_ABOVE_3 => $mockBrakeTestResultCalculator,
-            self::MOCK_CALCULATOR_CLASS_1_2     => $mockBrakeTestResultClass12Calculator,
-            self::MOCK_HYDRATOR                 => $mockHydrator,
-            self::MOCK_VALIDATOR                => $mockBrakeTestResultValidator,
-            self::MOCK_CONFIGURATION_VALIDATOR  => $mockBrakeTestConfigurationValidator,
-            self::MOCK_ENTITY_MANAGER           => $mockEntityManager,
-            self::MOCK_MAPPER_CLASS_ABOVE_3     => $mockBrakeTestResultClass3AndAboveMapper,
-            self::MOCK_MAPPER_CLASS_1_2         => $mockBrakeTestResultClass12Mapper,
-            self::MOCK_MOT_TEST_VALIDATOR       => $mockTestValidator,
-            self::MOCK_REASON_FOR_REJECTION     => $mockReasonForRejectionSrvc,
+            self::MOCK_CALCULATOR_CLASS_1_2 => $mockBrakeTestResultClass12Calculator,
+            self::MOCK_HYDRATOR => $mockHydrator,
+            self::MOCK_VALIDATOR => $mockBrakeTestResultValidator,
+            self::MOCK_CONFIGURATION_VALIDATOR => $mockBrakeTestConfigurationValidator,
+            self::MOCK_ENTITY_MANAGER => $mockEntityManager,
+            self::MOCK_MAPPER_CLASS_ABOVE_3 => $mockBrakeTestResultClass3AndAboveMapper,
+            self::MOCK_MAPPER_CLASS_1_2 => $mockBrakeTestResultClass12Mapper,
+            self::MOCK_MOT_TEST_VALIDATOR => $mockTestValidator,
+            self::MOCK_REASON_FOR_REJECTION => $mockReasonForRejectionSrvc,
             self::MOCK_PERFORM_MOT_TEST_ASSERTION => $mockPerformMotTestAssertion,
         ];
     }
@@ -466,22 +464,22 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
     {
         return [
             [
-                'rfrId'                => '8357',
-                'type'                 => 'FAIL',
+                'rfrId' => '8357',
+                'type' => 'FAIL',
                 'locationLongitudinal' => null,
-                'comment'              => null
+                'comment' => null,
             ],
             [
-                'rfrId'                => '8358',
-                'type'                 => 'FAIL',
+                'rfrId' => '8358',
+                'type' => 'FAIL',
                 'locationLongitudinal' => null,
-                'comment'              => null
+                'comment' => null,
             ],
             [
-                'rfrId'                => '8343',
-                'type'                 => 'FAIL',
+                'rfrId' => '8343',
+                'type' => 'FAIL',
                 'locationLongitudinal' => 'front',
-                'comment'              => null
+                'comment' => null,
             ],
         ];
     }
@@ -490,10 +488,10 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
     {
         return [
             [
-                'rfrId'                => $rfrNumber,
-                'type'                 => 'FAIL',
+                'rfrId' => $rfrNumber,
+                'type' => 'FAIL',
                 'locationLongitudinal' => null,
-                'comment'              => null
+                'comment' => null,
             ],
         ];
     }
@@ -532,7 +530,7 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
         $motTest->setVehicleVersion($vehicle->getVersion());
         $motTest->setVehicle($vehicle);
         $motTest->setStatus($motTestStatus);
-        
+
         return $motTest;
     }
 
@@ -541,6 +539,7 @@ class BrakeTestResultServiceTest extends AbstractServiceTestCase
         $serviceBrake1 = new BrakeTestResultServiceBrakeData();
         $brakeTestResult = new BrakeTestResultClass3AndAbove();
         $brakeTestResult->setServiceBrake1Data($serviceBrake1);
+
         return $brakeTestResult;
     }
 }
