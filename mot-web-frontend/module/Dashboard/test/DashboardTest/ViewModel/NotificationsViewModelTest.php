@@ -13,25 +13,33 @@ class NotificationsViewModelTest extends PHPUnit_Framework_TestCase
 
     public function testNotificationsAreIterable()
     {
-        $notificationsViewModel = new NotificationsViewModel([
-            $this->buildReadNotificationViewModel(),
-            $this->buildReadNotificationViewModel()
-        ]);
+        $notificationsViewModel = new NotificationsViewModel(
+            [
+                $this->buildReadNotificationViewModel(),
+                $this->buildReadNotificationViewModel()
+            ],
+            2
+        );
         
         foreach ($notificationsViewModel as $notificationViewModel) {
             $this->assertInstanceOf(NotificationViewModel::class, $notificationViewModel);
         }
     }
 
-    public function testNotificationsSumUnreadItems()
+    public function testWhenUnreadCountGreaterThanFiveThereAreJustFiveNotifications()
     {
-        $notificationsViewModel = new NotificationsViewModel([
-            $this->buildUnreadNotificationViewModel(),
-            $this->buildReadNotificationViewModel(),
-            $this->buildUnreadNotificationViewModel()
-        ]);
+        $notificationsViewModel = new NotificationsViewModel(
+            [
+                $this->buildUnreadNotificationViewModel(),
+                $this->buildUnreadNotificationViewModel(),
+                $this->buildUnreadNotificationViewModel(),
+                $this->buildUnreadNotificationViewModel(),
+                $this->buildUnreadNotificationViewModel()
+            ],
+            7
+        );
 
-        $this->assertEquals(2, $notificationsViewModel->countUnread());
+        $this->assertEquals(7, $notificationsViewModel->countUnread());
     }
 
     /**

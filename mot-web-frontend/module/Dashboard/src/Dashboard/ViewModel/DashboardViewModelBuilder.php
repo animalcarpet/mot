@@ -79,7 +79,11 @@ class DashboardViewModelBuilder
      */
     private function buildNotificationsViewModel()
     {
-        return NotificationsViewModel::fromNotifications($this->dashboard->getNotifications(), $this->url);
+        return NotificationsViewModel::fromNotifications(
+            $this->dashboard->getNotifications(),
+            $this->dashboard->getUnreadNotificationsCount(),
+            $this->url
+        );
     }
 
     /**
