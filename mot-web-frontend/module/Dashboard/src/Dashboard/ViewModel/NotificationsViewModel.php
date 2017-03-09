@@ -11,6 +11,9 @@ class NotificationsViewModel implements Countable, Iterator
     /** @var NotificationViewModel[] $notificationViewModels */
     private $notificationViewModels;
 
+    /** @var int $totalUnreadCount */
+    private $totalUnreadCount;
+
     /** @var int $currentPosition */
     private $currentPosition = 0;
 
@@ -18,19 +21,22 @@ class NotificationsViewModel implements Countable, Iterator
      * NotificationsViewModel constructor.
      *
      * @param array $notifications
+     * @param int $totalUnreadCount
      */
-    public function __construct(array $notifications)
+    public function __construct(array $notifications, $totalUnreadCount)
     {
         $this->notificationViewModels = $notifications;
+        $this->totalUnreadCount = $totalUnreadCount;
     }
 
     /**
      * @param array $notifications
+     * @param int   $totalUnreadCount
      * @param Url   $url
      *
      * @return NotificationsViewModel
      */
-    public static function fromNotifications(array $notifications, Url $url)
+    public static function fromNotifications(array $notifications, $totalUnreadCount, Url $url)
     {
         $notificationViewModels = [];
 
@@ -38,7 +44,7 @@ class NotificationsViewModel implements Countable, Iterator
             $notificationViewModels[] = NotificationViewModel::fromNotification($notification, $url);
         }
 
-        return new NotificationsViewModel($notificationViewModels);
+        return new NotificationsViewModel($notificationViewModels, $totalUnreadCount);
     }
 
     /**
@@ -46,14 +52,7 @@ class NotificationsViewModel implements Countable, Iterator
      */
     public function countUnread()
     {
-        $count = 0;
-        foreach ($this->notificationViewModels as $notificationViewModel) {
-            if ($notificationViewModel->isUnread()) {
-                $count++;
-            }
-        }
-
-        return $count;
+        return $this->totalUnreadCount;
     }
 
     /**

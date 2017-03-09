@@ -7,21 +7,15 @@ use DvsaCommon\Date\DateTimeDisplayFormat;
 /** @var int $count */
 $count = count($notifications);
 /** @var int $unread */
-/** @var int $limit */
-$limit = 5;
 ?>
 
 <section class="module-pivot-panel" id="notification-list">
     <header class="pivot-panel_header">
         <h2 class="pivot-panel_title">
-            <?php if ($unread > $limit) : ?>
-                <a id="action-view-all-notifications"
-                   href="<?php echo $this->url(NotificationController::ROUTE_NOTIFICATION_LIST); ?>">
-                    Notifications
-                </a>
-            <?php else: ?>
-                Notifications    
-            <?php endif; ?>
+            <a id="action-view-all-notifications"
+               href="<?php echo $this->url(NotificationController::ROUTE_NOTIFICATION_LIST); ?>">
+                Notifications
+            </a>
         </h2>
     </header>
     <?php if ($unread > 0) : ?>
