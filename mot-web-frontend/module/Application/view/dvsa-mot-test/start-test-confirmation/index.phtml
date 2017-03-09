@@ -134,7 +134,7 @@ if (!empty($checkExpiryResults)) {
     <table class="table-summary">
         <tbody>
         <tr>
-            <th scope="col" class="table-summary__key">Make and model</th>
+            <th scope="row" class="table-summary__key">Make and model</th>
             <td class="table-summary__value">
                 <?php echo $viewModel->getMakeAndModel(); ?>
                 <?php if ($viewModel->shouldShowChangeLinks()): ?>
@@ -143,7 +143,7 @@ if (!empty($checkExpiryResults)) {
             </td>
         </tr>
         <tr>
-            <th scope="col" class="table-summary__key">Engine</th>
+            <th scope="row" class="table-summary__key">Engine</th>
             <td class="table-summary__value">
                 <?php echo $viewModel->getEngine(); ?>
                 <?php if ($viewModel->shouldShowChangeLinks()): ?>
@@ -152,7 +152,7 @@ if (!empty($checkExpiryResults)) {
             </td>
         </tr>
         <tr>
-            <th scope="col" class="table-summary__key">Colour</th>
+            <th scope="row" class="table-summary__key">Colour</th>
             <td class="table-summary__value">
                 <?php echo $viewModel->getCompoundedColour(); ?>
                 <?php if ($viewModel->shouldShowChangeLinks()): ?>
@@ -161,7 +161,7 @@ if (!empty($checkExpiryResults)) {
             </td>
         </tr>
         <tr>
-            <th scope="col" class="table-summary__key">Brake test weight</th>
+            <th scope="row" class="table-summary__key">Brake test weight</th>
             <td class="table-summary__value" id="vehicleWeight">
                 <?php echo $viewModel->getBrakeTestWeight(); ?>
             </td>
@@ -173,19 +173,19 @@ if (!empty($checkExpiryResults)) {
     <table class="table-summary">
         <tbody>
         <tr>
-            <th scope="col" class="table-summary__key">Registration mark</th>
+            <th scope="row" class="table-summary__key">Registration mark</th>
             <td class="table-summary__value" id="vehicleRegistrationNumber">
                 <?php echo $vehicleDetails->getRegistration(); ?>
             </td>
         </tr>
         <tr>
-            <th scope="col" class="table-summary__key">VIN</th>
+            <th scope="row" class="table-summary__key">VIN</th>
             <td class="table-summary__value" id="vehicleVINnumber">
                 <?php echo $vehicleDetails->getVin(); ?>
             </td>
         </tr>
         <tr>
-            <th scope="col" class="table-summary__key">Country of registration</th>
+            <th scope="row" class="table-summary__key">Country of registration</th>
             <td class="table-summary__value">
                 <?php echo $viewModel->getCountryOfRegistration(); ?>
                 <?php if ($viewModel->shouldShowChangeLinks()): ?>
@@ -195,7 +195,7 @@ if (!empty($checkExpiryResults)) {
         </tr>
         <tr>
             <?php if (!$viewModel->isNoTestClassSetOnSubmission()): ?>
-                <th scope="col" class="table-summary__key">
+                <th scope="row" class="table-summary__key">
                     MOT test class
                 </th>
                 <td class="table-summary__value">
@@ -210,7 +210,7 @@ if (!empty($checkExpiryResults)) {
             <?php endif; ?>
 
             <?php if ($viewModel->isNoTestClassSetOnSubmission()): ?>
-                <th scope="col" class="table-summary__key table-summary--error">
+                <th scope="row" class="table-summary__key table-summary--error">
                     MOT test class
                     <span class="img-icon img-icon--error"></span>
                 </th>
@@ -224,15 +224,15 @@ if (!empty($checkExpiryResults)) {
             <?php endif; ?>
         </tr>
         <tr>
-            <th scope="col" class="table-summary__key">Date of first use</th>
+            <th scope="row" class="table-summary__key">Date of first use</th>
             <td class="table-summary__value">
                 <?php echo $viewModel->getFirstUsedDate(); ?>
             </td>
         </tr>
         <tr>
-            <th scope="col" class="table-summary__key">MOT expiration date</th>
+            <th scope="row" class="table-summary__key">MOT expiration date</th>
             <td class="table-summary__value">
-                <?php echo DateTimeDisplayFormat::textDate($expiryDate); ?>
+                <?php echo DateTimeDisplayFormat::textDate($expiryDate) ; ?>
             </td>
         </tr>
         </tbody>
