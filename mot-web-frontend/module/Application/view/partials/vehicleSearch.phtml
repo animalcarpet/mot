@@ -28,6 +28,7 @@ $hideIncognitoVehicles = isset($hideIncognitoVehicles) ? $hideIncognitoVehicles 
 
 //  --  html form begin --
 $this->form->setAttribute("method", "get");
+$this->form->setAttribute("action", "#");
 echo $this->form()->openTag($this->form);
 
 if ($this->form->has('contingency')) {
@@ -106,9 +107,9 @@ if ($this->form->has('contingency')) {
 
 <?php if ($results): ?>
     <details>
-    <summary role="button" aria-controls="details-content-1" tabindex="0" aria-expanded="false"><span class="summary"
-                                                                                                      id="search-again">Search again</span>
-    </summary>
+        <summary aria-controls="details-content-1" tabindex="0" aria-expanded="false">
+            <span class="summary" id="search-again">Search again</span>
+        </summary>
     <div class="panel-indent" id="details-content-1" aria-hidden="true">
 <?php endif; ?>
 
@@ -149,8 +150,9 @@ if ($this->form->has('contingency')) {
         <?php if (!$results): ?>
             <div class="form-group">
                 <details>
-                    <summary role="button" aria-controls="details-content-0" tabindex="0" aria-expanded="false"><span
-                            class="summary">Can't provide the registration mark or VIN?</span></summary>
+                    <summary aria-controls="details-content-0" tabindex="0" aria-expanded="false">
+                        <span class="summary">Can't provide the registration mark or VIN?</span>
+                    </summary>
                     <div class="panel-indent" id="details-content-0" aria-hidden="true">
                         <div class="text">
                             <p>If a vehicle has a registration mark and VIN, you must enter both to find it.</p>
@@ -176,7 +178,6 @@ if ($this->form->has('contingency')) {
     </fieldset>
 
 <?php if ($results): ?>
-            </div>
         </div>
     </details>
 <?php endif; ?>
