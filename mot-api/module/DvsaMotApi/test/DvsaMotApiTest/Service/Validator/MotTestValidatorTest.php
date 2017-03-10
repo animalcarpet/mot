@@ -147,7 +147,7 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \DvsaCommonApi\Service\Exception\BadRequestException
-     * @expectedExceptionMessage Either RFR Id or description has to be provided
+     * @expectedExceptionMessage You must give a description
      */
     public function testValidateMotTestReasonForRejectionThrowsExceptionWhenCustomRfrHasNoDescription()
     {
@@ -158,7 +158,7 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \DvsaCommonApi\Service\Exception\BadRequestException
-     * @expectedExceptionMessage Maximum length of description is
+     * @expectedExceptionMessage must be 250 characters or shorter
      */
     public function testValidateMotTestReasonForRejectionThrowsExceptionWhenCommentIsToLong()
     {
@@ -172,7 +172,7 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \DvsaCommonApi\Service\Exception\BadRequestException
-     * @expectedExceptionMessage Maximum length of description is
+     * @expectedExceptionMessage must be 250 characters or shorter
      */
     public function testValidateMotTestReasonForRejectionThrowsExceptionWhenCustomDescriptionIsToLong()
     {
@@ -189,7 +189,7 @@ class MotTestValidatorTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \DvsaCommonApi\Service\Exception\BadRequestException
-     * @expectedExceptionMessage Profanity has been detected in the description of RFR
+     * @expectedExceptionMessage Additional information – must not include any swearwords
      */
     public function testValidateMotTestReasonForRejectionProfanityDetected()
     {

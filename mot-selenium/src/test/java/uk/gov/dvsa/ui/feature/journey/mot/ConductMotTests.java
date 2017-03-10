@@ -96,11 +96,7 @@ public class ConductMotTests extends DslTest {
         TestResultsEntryGroupAPageInterface testResultsEntryPage;
 
         //Given I am on the Test Results Entry Page
-        if (!ConfigHelper.isTestResultEntryImprovementsEnabled()) {
-            testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester, vehicle);
-        } else {
-            testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);
-        }
+        testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);
 
         //When I complete all test details with brake lock boxes checked
         testResultsEntryPage.completeTestWithFloorBrakeTestsWithLockBoxes();
@@ -118,11 +114,7 @@ public class ConductMotTests extends DslTest {
         TestResultsEntryGroupAPageInterface testResultsEntryPage;
 
         //Given I am on the Test Results Entry Page
-        if (ConfigHelper.isTestResultEntryImprovementsEnabled()) {
-            testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);
-        } else {
-            testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester, vehicle);
-        }
+        testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);
 
         //When I complete all test details with brake lock boxes checked
         testResultsEntryPage.completeTestWithRollerBrakeTestsWithLockBoxes();
@@ -260,8 +252,7 @@ public class ConductMotTests extends DslTest {
         assertThat(testResultsEntryPage.isClickReviewTestButtonPresent(), is(true));
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-3478"},
-            description = "Verifies that user is able to repair defect from new test results screen")
+    @Test(groups = {"BVT", "BL-3478"}, description = "Verifies that user is able to repair defect from new test results screen")
     public void repairDefectDuringRetestSuccessfully() throws IOException, URISyntaxException {
         //Given I have a vehicle with a failed MOT test
         motApi.createTestWithRfr(tester, site.getId(), vehicle, TestOutcome.FAILED, 12345, DateTime.now(), reasonForRejectionsList);
@@ -276,7 +267,7 @@ public class ConductMotTests extends DslTest {
         assertThat(testResultsEntryNewPage.isUndoLinkDisplayed(), is(true));
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1423"},
+    @Test(groups = {"BVT", "BL-1423"},
             description = "Verifies that user is able to repair defect from new test results screen and undo repair status")
     public void undoRepairDefectDuringRetestSuccessfully() throws IOException, URISyntaxException {
         //Given I have a vehicle with a failed MOT test
@@ -293,8 +284,7 @@ public class ConductMotTests extends DslTest {
         assertThat(testResultsEntryNewPage.isMarkAsRepairedButtonDisplayed(defectName), is(true));
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1423"},
-            description = "Verifies that user is not able to see defect on a summary page after repairing it")
+    @Test(groups = {"BVT", "BL-1423"}, description = "Verifies that user is not able to see defect on a summary page after repairing it")
     public void statusOfRepairedDefectDuringRetestOnSummaryPage() throws IOException, URISyntaxException {
         //Given I have a vehicle with a failed MOT test
         motApi.createTestWithRfr(tester, site.getId(), vehicle, TestOutcome.FAILED, 12345, DateTime.now(), reasonForRejectionsList);

@@ -29,7 +29,7 @@ public class DeclarationStatementViewNewRfrTests extends DslTest {
         vehicle = vehicleData.getNewVehicle(tester);
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"Regression"})
+    @Test(groups = {"Regression"})
     public void displayStatementAtContingencySummaryPage() throws IOException, URISyntaxException {
 
         //Given I start a contingency test

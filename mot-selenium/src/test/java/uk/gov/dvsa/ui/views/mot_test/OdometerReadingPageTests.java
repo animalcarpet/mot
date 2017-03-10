@@ -26,7 +26,7 @@ public class OdometerReadingPageTests extends DslTest {
         vehicle = vehicleData.getNewVehicle(tester);
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1947"})
+    @Test(groups = {"BVT", "BL-1947"})
     public void addOdometerReadingWithValidValues() throws IOException, URISyntaxException {
         // Given I start an MOT test and I am on the MOT Test Results page
         TestResultsEntryNewPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);
@@ -41,7 +41,7 @@ public class OdometerReadingPageTests extends DslTest {
         assertThat(testResultsEntryPage.isOdometerReadingUpdateSuccessMessageDisplayed(), Is.is(true));
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1947"})
+    @Test(groups = {"BVT", "BL-1947"})
     public void verifyOdometerReadingValue() throws IOException, URISyntaxException {
         // Given I start an MOT test and I am on the MOT Test Results page
         TestResultsEntryNewPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);
@@ -56,7 +56,7 @@ public class OdometerReadingPageTests extends DslTest {
         assert(testResultsEntryPage.getOdometerReading().contains("1,000 km"));
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1947"})
+    @Test(groups = {"BVT", "BL-1947"})
     public void addOdometerReadingWithInvalidValues() throws IOException, URISyntaxException {
         // Given I start an MOT test and I am on the MOT Test Results page
         TestResultsEntryNewPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);

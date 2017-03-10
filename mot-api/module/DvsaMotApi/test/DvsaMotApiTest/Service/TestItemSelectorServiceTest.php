@@ -2,16 +2,16 @@
 
 namespace DvsaMotApiTest\Service;
 
-use DvsaCommon\Constants\FeatureToggle;
+use Doctrine\Common\Collections\ArrayCollection;
 use DvsaCommonTest\TestUtils\MockHandler;
 use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\ReasonForRejection;
+use DvsaEntities\Entity\TestItemCategoryDescription;
 use DvsaEntities\Entity\TestItemSelector;
 use DvsaEntities\Entity\Vehicle;
 use DvsaEntities\Entity\VehicleClass;
 use DvsaEntities\Repository\RfrRepository;
 use DvsaEntities\Repository\TestItemCategoryRepository;
-use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
 use DvsaMotApi\Service\TestItemSelectorService;
 
@@ -33,11 +33,6 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
      */
     private $defectSentenceCaseConverter;
 
-    /**
-     * @var FeatureToggles
-     */
-    private $featureTogglesMock;
-
     public function setUp()
     {
         $this->testItemSelector = $this->getTestItemSelector();
@@ -46,8 +41,6 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
             = $this->getMockWithDisabledConstructor(TestItemCategoryRepository::class);
 
         $this->mockRfrRepository = $this->getMockWithDisabledConstructor(RfrRepository::class);
-
-        $this->withFeatureToggles([FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS => false]);
 
         $this->defectSentenceCaseConverter = $this
             ->getMockBuilder(DefectSentenceCaseConverter::class)
@@ -192,7 +185,7 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
         $expectedHydratedRfr = $this->getTestArrayWithId(1);
         $expectedHydratedRfrData = [$expectedHydratedRfr];
         $expectedData = [
-            'searchDetails' => ['count' => count($expectedReasonsForRejection), 'hasMore' => false],
+            'searchDetails' => ['count' => count($expectedReasonsForRejection)],
             'reasonsForRejection' => $expectedHydratedRfrData,
         ];
 
@@ -200,10 +193,7 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
 
         $this->mockRfrRepository->expects($this->once())
             ->method('findBySearchQuery')
-            ->with(
-                $searchString, $this->vehicleClass, $this->determinedRole, 0,
-                TestItemSelectorService::SEARCH_MAX_COUNT + 1
-            )
+            ->with($searchString, $this->vehicleClass, $this->determinedRole, 0, 9999)
             ->will($this->returnValue($expectedReasonsForRejection));
 
         $mockHydrator = $this->getMockHydrator();
@@ -215,11 +205,13 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
         $testItemSelectorService = $this->getTisServiceWithMocks($mockEntityManager, $mockHydrator);
 
         //when
-        $result = $testItemSelectorService->searchReasonsForRejection($this->vehicleClass, $searchString, 0, 0);
+        $result = $testItemSelectorService->searchReasonsForRejection($this->vehicleClass, $searchString);
         //then
         $this->assertEquals($expectedData, $result);
     }
 
+
+    // failing
     public function testSearchReasonsForRejectionDoNotReturnsDisabledRfrs()
     {
         $searchString = 'stop lamp';
@@ -233,7 +225,7 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
         $expectedHydratedRfr = $this->getTestArrayWithId(1);
 
         $expectedData = [
-            'searchDetails' => ['count' => 1, 'hasMore' => false],
+            'searchDetails' => ['count' => 1],
             'reasonsForRejection' => [],
         ];
 
@@ -241,10 +233,7 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
 
         $this->mockRfrRepository->expects($this->once())
             ->method('findBySearchQuery')
-            ->with(
-                $searchString, $this->vehicleClass, $this->determinedRole, 0,
-                TestItemSelectorService::SEARCH_MAX_COUNT + 1
-            )
+            ->with($searchString, $this->vehicleClass, $this->determinedRole, 0, 9999)
             ->will($this->returnValue($expectedReasonsForRejection));
 
         $mockHydrator = $this->getMockHydrator();
@@ -256,7 +245,7 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
         $testItemSelectorService = $this->getTisServiceWithMocks($mockEntityManager, $mockHydrator, null, [$diabledRfrId]);
 
         //when
-        $result = $testItemSelectorService->searchReasonsForRejection($this->vehicleClass, $searchString, 0, 0);
+        $result = $testItemSelectorService->searchReasonsForRejection($this->vehicleClass, $searchString);
         //then
         $this->assertEquals($expectedData, $result);
     }
@@ -298,7 +287,6 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
             $mockAuthService,
             $this->mockTestItemCategoryRepository,
             $disabledRfrs,
-            $this->featureTogglesMock,
             $this->defectSentenceCaseConverter
         );
     }
@@ -307,31 +295,7 @@ class TestItemSelectorServiceTest extends AbstractMotTestServiceTest
     {
         return (new TestItemSelector())
             ->setId($id)
-            ->setParentTestItemSelectorId($parentId);
-    }
-
-    /**
-     * @param array $featureToggles
-     *
-     * @return $this
-     */
-    public function withFeatureToggles(array $featureToggles = [])
-    {
-        $map = [];
-        foreach ($featureToggles as $name => $value) {
-            $map[] = [(string) $name, (bool) $value];
-        }
-
-        $featureToggles = $this
-            ->getMockBuilder(FeatureToggles::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $featureToggles
-            ->method('isEnabled')
-            ->will($this->returnValueMap($map));
-
-        $this->featureTogglesMock = $featureToggles;
-
-        return $this;
+            ->setParentTestItemSelectorId($parentId)
+            ->setDescriptions(new ArrayCollection([new TestItemCategoryDescription()]));
     }
 }

@@ -48,7 +48,7 @@ public class DefectsPageTests extends DslTest {
         return DefectsTestsDataProvider.getManualAdvisoryDefectWithNoDescription();
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1952"}, dataProvider = "getAdvisoryDefect")
+    @Test(groups = {"BVT", "BL-1952"}, dataProvider = "getAdvisoryDefect")
     public void testCanAddADefectAsTester(Defect defect) throws IOException, URISyntaxException {
         // Given I am on the test results entry screen as a tester
         TestResultsEntryNewPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);
@@ -73,8 +73,7 @@ public class DefectsPageTests extends DslTest {
         assertThat(defectsPage.isDefectAddedSuccessMessageDisplayed(defect), is(true));
     }
 
-    @Test(testName = "TestResultEntryImprovements",
-            groups = {"BVT", "BL-2421"},
+    @Test(groups = {"BVT", "BL-2421"},
             dataProvider = "getManualAdvisoryDefect")
     public void testCanAddManualAdvisoryAsTester(Defect defect) throws IOException, URISyntaxException {
         // Given I am on the test results entry screen as a tester
@@ -91,8 +90,7 @@ public class DefectsPageTests extends DslTest {
         assertThat(defectsPage.isManualAdvisoryDefectSuccessMessageDisplayed(defect), is(true));
     }
 
-    @Test(testName = "TestResultEntryImprovements",
-            groups = {"BVT", "BL-2421"},
+    @Test(groups = {"BVT", "BL-2421"},
             dataProvider = "getManualAdvisoryDefectNoDescription")
     public void testAddingManualAdvisoryWithoutDescriptionShowsValidationError(Defect defect) throws IOException, URISyntaxException {
         // Given I am on the test results entry screen as a tester

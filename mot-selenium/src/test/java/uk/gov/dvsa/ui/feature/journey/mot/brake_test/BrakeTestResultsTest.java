@@ -42,8 +42,7 @@ public class BrakeTestResultsTest extends DslTest {
         vehicle = vehicleData.getNewVehicle(tester);
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT"},
-            description = "Verify that the brake test journey can be performed through the new MOT Test results page")
+    @Test(groups = {"BVT"}, description = "Verify that the brake test journey can be performed through the new MOT Test results page")
     public void saveBrakeTestResultsHappyPath() throws IOException, URISyntaxException {
 
         // Given I am on the Test Results Entry Page
@@ -56,7 +55,7 @@ public class BrakeTestResultsTest extends DslTest {
         assertThat(testResultsEntryNewPage.isPassNoticeDisplayed(), is(true));
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"Regression", "BL-1951"},
+    @Test(groups = {"Regression", "BL-1951"},
             description = "Verifies that tester is unable to see Edit brake test button after adding RFR Brake performance not tested")
     public void testEditBrakeTestButtonBehaviourForTester() throws IOException, URISyntaxException {
         Defect defect = DefectsTestsDataProvider.buildDefect("Brake performance not tested", "Brake performance not tested",
@@ -72,8 +71,7 @@ public class BrakeTestResultsTest extends DslTest {
         assertThat(resultsEntryNewPage.isAddBrakeTestButtonDisplayed(), is(false));
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"Regression", "BL-1951"},
-            description = "Verifies that vehicle examiner still able to see " +
+    @Test(groups = {"Regression", "BL-1951"}, description = "Verifies that vehicle examiner still able to see " +
             "Edit brake test button after adding RFR Brake performance not tested")
     public void testEditBrakeTestButtonBehaviourForVe() throws IOException, URISyntaxException {
         Defect defect = DefectsTestsDataProvider.buildDefect("Brake performance not tested", "Brake performance not tested",

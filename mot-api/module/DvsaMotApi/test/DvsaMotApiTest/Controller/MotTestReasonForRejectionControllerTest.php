@@ -6,7 +6,6 @@ use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommonApi\Service\Exception\ForbiddenException;
 use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Entity\TestItemSelector;
-use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Controller\MotTestReasonForRejectionController;
 use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
 use DvsaMotApi\Service\MotTestReasonForRejectionService;
@@ -19,14 +18,7 @@ class MotTestReasonForRejectionControllerTest extends AbstractMotApiControllerTe
 {
     protected function setUp()
     {
-        $featureToggles = $this
-            ->getMockBuilder(FeatureToggles::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $featureToggles
-            ->method('isEnabled')
-            ->willReturn(true);
-        $defectSentenceCaseConverter = new DefectSentenceCaseConverter($featureToggles);
+        $defectSentenceCaseConverter = new DefectSentenceCaseConverter();
         $this->controller = new MotTestReasonForRejectionController($defectSentenceCaseConverter);
         parent::setUp();
     }

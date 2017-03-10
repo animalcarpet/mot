@@ -27,7 +27,6 @@ use DvsaEntities\Entity\TestItemSelector;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Repository\MotTestReasonForRejectionLocationRepository;
 use DvsaEntitiesTest\Entity\MotTestReasonForRejectionTest;
-use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Service\MotTestReasonForRejectionService;
 use DvsaMotApi\Service\TestItemSelectorService;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
@@ -502,28 +501,7 @@ class MotTestReasonForRejectionServiceTest extends AbstractMotTestServiceTest
             $this->mockMotTestValidator,
             $this->mockTestItemSelectorService,
             $this->mockPerformMotTestAssertion,
-            $this->createFeatureToggles(false),
             $this->mockMotTestRepository
         );
-    }
-
-    /**
-     * @param $testResultEntryImprovements
-     *
-     * @return MockObj|FeatureToggles
-     */
-    private function createFeatureToggles($testResultEntryImprovements)
-    {
-        $featureToggles = $this
-            ->getMockBuilder(FeatureToggles::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $featureToggles
-            ->method('isEnabled')
-            ->with('test_result_entry_improvements')
-            ->will($this->returnValue($testResultEntryImprovements));
-
-        return $featureToggles;
     }
 }

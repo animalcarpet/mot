@@ -2,13 +2,11 @@
 
 namespace DvsaMotApi\Formatting;
 
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\LanguageTypeCode;
 use DvsaCommon\Enum\ReasonForRejectionTypeName;
 use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Entity\TestItemSelector;
-use DvsaFeature\FeatureToggles;
 
 /**
  * DefectSentenceCaseConverter formats defect descriptions into sentence case with acronyms in upper case.
@@ -19,11 +17,6 @@ class DefectSentenceCaseConverter
     const BETWEEN_QUOTES_PATTERN = '/["|\']{1}.*["|\']{1}/';
 
     /**
-     * @var FeatureToggles
-     */
-    private $featureToggles;
-
-    /**
      * @var array
      */
     private static $SPECIAL_CASE_ACRONYMS = [
@@ -32,16 +25,6 @@ class DefectSentenceCaseConverter
         'srs' => 'supplementary restraint system',
         'vin' => 'vehicle identification number',
     ];
-
-    /**
-     * DefectSentenceCaseConverter constructor.
-     *
-     * @param FeatureToggles $featureToggles
-     */
-    public function __construct(FeatureToggles $featureToggles)
-    {
-        $this->featureToggles = $featureToggles;
-    }
 
     /**
      * @param MotTestReasonForRejection $motTestRfr
@@ -73,10 +56,6 @@ class DefectSentenceCaseConverter
         $defectDetails['failureTextCy'] = ($defectType === ReasonForRejectionTypeName::ADVISORY)
             ? $defectDescriptions['advisoryTextCy'] : $defectDescriptions['nameCy'];
 
-        if (true !== $this->isTestResultEntryImprovementsEnabled()) {
-            return $defectDetails;
-        }
-
         // Formatting
         $defectDetails['testItemSelectorDescription'] = ucfirst(self::toFirstOccurrenceOfEachAcronymExpanded(strtolower($defectDetails['testItemSelectorDescription'])));
         $defectDetails['failureText'] = self::toFirstOccurrenceOfEachAcronymExpanded($defectDetails['failureText'], $defectDetails['testItemSelectorDescription']);
@@ -105,10 +84,6 @@ class DefectSentenceCaseConverter
         $defectDetails['description'] = $categoryDetails['description'].' '.$defectDescriptions['name'];
         $defectDetails['advisoryText'] = $categoryDetails['description'].' '.$defectDescriptions['advisoryText'];
 
-        if (true !== $this->isTestResultEntryImprovementsEnabled()) {
-            return $defectDetails;
-        }
-
         // Formatting
         $defectDetails['description'] = ucfirst(self::toFirstOccurrenceOfEachAcronymExpanded(
             $defectDetails['description']));
@@ -136,10 +111,6 @@ class DefectSentenceCaseConverter
         $defectDetails['advisoryText'] = $defectDescriptions['advisoryText'];
         $defectDetails['inspectionManualDescription'] = $defectDescriptions['inspectionManualDescription'];
 
-        if (true !== $this->isTestResultEntryImprovementsEnabled()) {
-            return $defectDetails;
-        }
-
         $categoryDetails = $this->getCategoryDetails($defect->getTestItemSelector());
         $defectDetails['description'] = $categoryDetails['description'].' '.$defectDescriptions['name'];
         $defectDetails['description'] = ucfirst(self::toFirstOccurrenceOfEachAcronymExpanded($defectDetails['description']));
@@ -159,22 +130,10 @@ class DefectSentenceCaseConverter
     {
         $categoryDetails = $this->getCategoryDetails($category);
 
-        if (true !== $this->isTestResultEntryImprovementsEnabled()) {
-            return $categoryDetails;
-        }
-
         // Formatting
         $categoryDetails['name'] = ucfirst(self::toAcronymsInUpperCase($categoryDetails['name']));
 
         return $categoryDetails;
-    }
-
-    /**
-     * @return bool
-     */
-    private function isTestResultEntryImprovementsEnabled()
-    {
-        return $this->featureToggles->isEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS);
     }
 
     /**

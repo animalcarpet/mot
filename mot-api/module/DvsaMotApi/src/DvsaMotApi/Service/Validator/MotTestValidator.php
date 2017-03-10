@@ -117,10 +117,7 @@ class MotTestValidator extends AbstractValidator
         if ($rfr->getReasonForRejection() === null
             && ($rfr->getCustomDescription() === null || strlen($rfr->getCustomDescription()->getCustomDescription()) == 0)
         ) {
-            $message = (true === $this->featureToggles->isEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)) ?
-                'You must give a description' : 'Either RFR Id or description has to be provided';
-
-            throw new BadRequestException($message, BadRequestException::ERROR_CODE_INVALID_DATA);
+            throw new BadRequestException('You must give a description', BadRequestException::ERROR_CODE_INVALID_DATA);
         }
 
         $description = ($rfr->getCustomDescription()) ? $rfr->getCustomDescription()->getCustomDescription() : '';
@@ -128,39 +125,23 @@ class MotTestValidator extends AbstractValidator
         if ($this->censorService->containsProfanity($description)
             || $this->censorService->containsProfanity($rfr->getComment())
         ) {
-            if ($this->featureToggles->isEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)) {
-                throw new BadRequestException(
-                    'Additional information – must not include any swearwords',
-                    BadRequestException::ERROR_CODE_INVALID_DATA,
-                    'Must not include any swearwords'
-                );
-            } else {
-                throw new BadRequestException(
-                    'Profanity has been detected in the description of RFR',
-                    BadRequestException::ERROR_CODE_INVALID_DATA
-                );
-            }
+            throw new BadRequestException(
+                'Additional information – must not include any swearwords',
+                BadRequestException::ERROR_CODE_INVALID_DATA,
+                'Must not include any swearwords'
+            );
         }
 
-        if (true === $this->featureToggles->isEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)) {
-            if ((strlen($rfr->getCustomDescription()) > ReasonForRejection::MAX_USER_COMMENT_LENGTH)
-                || (strlen($rfr->getComment()) > ReasonForRejection::MAX_USER_COMMENT_LENGTH)
-            ) {
-                throw new BadRequestException(
-                    'Additional information – must be 250 characters or shorter',
-                    BadRequestException::ERROR_CODE_INVALID_DATA,
-                    'Must be 250 characters or shorter'
-                );
-            }
-        } else {
-            if ((strlen($rfr->getCustomDescription()->getCustomDescription()) > ReasonForRejection::MAX_DESCRIPTION_LENGTH)
-                || (strlen($rfr->getComment()) > ReasonForRejection::MAX_DESCRIPTION_LENGTH)
-            ) {
-                throw new BadRequestException(
-                    'Maximum length of description is ' . ReasonForRejection::MAX_DESCRIPTION_LENGTH . ' characters',
-                    BadRequestException::ERROR_CODE_INVALID_DATA
-                );
-            }
+        $customDescription = $rfr->getCustomDescription();
+        $isCustomDescriptionTooLong = $customDescription !== null &&
+            strlen($customDescription->getCustomDescription()) > ReasonForRejection::MAX_USER_COMMENT_LENGTH;
+
+        if ($isCustomDescriptionTooLong || strlen($rfr->getComment()) > ReasonForRejection::MAX_USER_COMMENT_LENGTH) {
+            throw new BadRequestException(
+                'Additional information – must be 250 characters or shorter',
+                BadRequestException::ERROR_CODE_INVALID_DATA,
+                'Must be 250 characters or shorter'
+            );
         }
 
         if ($rfr->getOnOriginalTest()) {

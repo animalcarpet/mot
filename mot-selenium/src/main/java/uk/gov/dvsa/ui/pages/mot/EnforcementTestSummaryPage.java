@@ -50,10 +50,7 @@ public class EnforcementTestSummaryPage extends Page {
 
     public TestResultsEntryGroupAPageInterface startReInspection() {
         startReInspectionButton.click();
-        if (ConfigHelper.isTestResultEntryImprovementsEnabled()) {
-            return new TestResultsEntryNewPage(driver);
-        }
-        return new TestResultsEntryReInspectionPage(driver);
+        return new TestResultsEntryNewPage(driver);
     }
 
     public boolean printCertificateButtonExists(String testNumber) {

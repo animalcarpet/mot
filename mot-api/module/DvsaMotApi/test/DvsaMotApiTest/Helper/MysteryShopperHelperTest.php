@@ -83,14 +83,14 @@ class MysteryShopperHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedIsMysteryShopper, $actual);
     }
 
-    public function testCanViewMysteryShopperTestsWhenToggleOnAndPermissionGranted()
+    public function testCanViewMysteryShopperTestsWhenPermissionGranted()
     {
         $this->setPermission(PermissionInSystem::VIEW_MYSTERY_SHOPPER_TESTS, true);
 
         $this->assertTrue($this->mysteryShopperHelper->hasPermissionToViewMysteryShopperTests());
     }
 
-    public function testCanNotViewMysteryShopperTestsWhenToggleOnAndPermissionNotGranted()
+    public function testCanNotViewMysteryShopperTestsWhenPermissionNotGranted()
     {
         $this->setPermission(PermissionInSystem::VIEW_MYSTERY_SHOPPER_TESTS, false);
 

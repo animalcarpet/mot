@@ -11,10 +11,6 @@ public class FeatureToggleAnnotationTransformer implements IAnnotationTransforme
     @Override
     public void transform(ITestAnnotation iTestAnnotation, Class aClass, Constructor constructor, Method method) {
 
-        if (iTestAnnotation.getTestName().equals("TestResultEntryImprovements")) {
-            iTestAnnotation.setEnabled(ConfigHelper.isTestResultEntryImprovementsEnabled());
-        }
-
         if(iTestAnnotation.getTestName().equals("2fa")){
             iTestAnnotation.setEnabled(ConfigHelper.is2faEnabled());
         }

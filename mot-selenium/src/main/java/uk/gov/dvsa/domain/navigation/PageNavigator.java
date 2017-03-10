@@ -12,7 +12,6 @@ import uk.gov.dvsa.domain.model.vehicle.DvlaVehicle;
 import uk.gov.dvsa.domain.service.CookieService;
 import uk.gov.dvsa.framework.config.Configurator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.ConfigHelper;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.HomePage;
 import uk.gov.dvsa.ui.pages.Page;
@@ -33,12 +32,10 @@ import uk.gov.dvsa.ui.pages.mot.SearchForADefectPage;
 import uk.gov.dvsa.ui.pages.mot.StartTestConfirmationPage;
 import uk.gov.dvsa.ui.pages.mot.TestResultsEntryGroupAPageInterface;
 import uk.gov.dvsa.ui.pages.mot.TestResultsEntryNewPage;
-import uk.gov.dvsa.ui.pages.mot.TestResultsEntryPage;
 import uk.gov.dvsa.ui.pages.mot.TestResultsEntryPageInterface;
 import uk.gov.dvsa.ui.pages.mot.TestSummaryPage;
 import uk.gov.dvsa.ui.pages.mot.certificates.ReplacementCertificateResultsPage;
 import uk.gov.dvsa.ui.pages.mot.retest.ConfirmVehicleRetestPage;
-import uk.gov.dvsa.ui.pages.mot.retest.ReTestResultsEntryPage;
 import uk.gov.dvsa.ui.pages.profile.ProfilePage;
 import uk.gov.dvsa.ui.pages.userregistration.CreateAnAccountPage;
 import uk.gov.dvsa.ui.pages.vehicleinformation.CreateVehicleStartPage;
@@ -100,10 +97,7 @@ public class PageNavigator {
         navigateToPath(PageLocator.getVehicleSearchPage(driver).searchVehicle(vehicle).selectVehicle(
                 StartTestConfirmationPage.class).clickStartMotTest().getMotTestPath());
 
-        if (ConfigHelper.isTestResultEntryImprovementsEnabled()) {
-            return new TestResultsEntryNewPage(driver);
-        }
-        return new TestResultsEntryPage(driver);
+        return new TestResultsEntryNewPage(driver);
     }
 
     public TestResultsEntryNewPage gotoTestResultsEntryNewPage(User user, Vehicle vehicle) throws URISyntaxException, IOException {
@@ -142,10 +136,7 @@ public class PageNavigator {
 
         navigateToPath(searchForVehicleForRetest(vehicle).startRetest().getMotTestPath());
 
-        if (ConfigHelper.isTestResultEntryImprovementsEnabled()) {
-            return (T) new TestResultsEntryNewPage(driver);
-        }
-        return (T) new ReTestResultsEntryPage(driver);
+        return (T) new TestResultsEntryNewPage(driver);
     }
 
     private ConfirmVehicleRetestPage searchForVehicleForRetest(Vehicle vehicle) throws URISyntaxException {
@@ -182,10 +173,7 @@ public class PageNavigator {
         navigateToPath(new VehicleSearchPage(driver).searchVehicle(vehicle).selectVehicle(
                 StartTestConfirmationPage.class).clickStartMotTest().getMotTestPath());
 
-        if (ConfigHelper.isTestResultEntryImprovementsEnabled()) {
-            return new TestResultsEntryNewPage(driver);
-        }
-        return new TestResultsEntryPage(driver);
+        return new TestResultsEntryNewPage(driver);
     }
 
     public TestResultsEntryNewPage gotoTrainingTestResultsEntryNewPage(User user, Vehicle vehicle) throws IOException, URISyntaxException {
@@ -298,10 +286,7 @@ public class PageNavigator {
     }
 
     private TestResultsEntryPageInterface getTestResultsEntryPage(User tester, Vehicle vehicle) throws URISyntaxException, IOException {
-        if (ConfigHelper.isTestResultEntryImprovementsEnabled()) {
-            return gotoTestResultsEntryNewPage(tester, vehicle);
-        }
-        return gotoTestResultsEntryPage(tester, vehicle);
+        return gotoTestResultsEntryNewPage(tester, vehicle);
     }
 
     public final void clickLogout(User user) {

@@ -30,11 +30,7 @@ class ReasonForRejectionControllerTest extends AbstractMotApiControllerTestCase
     {
         $this->mockValidAuthorization([SiteBusinessRoleCode::TESTER]);
 
-        $dtoHydrator = new DtoHydrator();
-
         $searchString = 'stop lamp';
-        $startIndex = 0;
-        $endIndex = 25;
 
         $vehicle = (new VehicleDto())->setVehicleClass(
             (new VehicleClassDto())->setCode('1')
@@ -61,16 +57,14 @@ class ReasonForRejectionControllerTest extends AbstractMotApiControllerTestCase
         $mockTestItemSelectorService = $this->getMockItemSelectorService();
         $mockTestItemSelectorService->expects($this->once())
                                     ->method('searchReasonsForRejection')
-                                    ->with(self::MOT_TEST_NUMBER, $searchString, $startIndex, $endIndex)
+                                    ->with(self::MOT_TEST_NUMBER, $searchString)
                                     ->will($this->returnValue($expectedRfrs));
 
         $this->routeMatch->setParam('motTestNumber', self::MOT_TEST_NUMBER);
         $this->request->setQuery(
             new Parameters(
                 [
-                    ReasonForRejectionController::QUERY_PARAM_SEARCH => $searchString,
-                    ReasonForRejectionController::QUERY_PARAM_SEARCH_START_INDEX => $startIndex,
-                    ReasonForRejectionController::QUERY_PARAM_SEARCH_END_INDEX => $endIndex,
+                    ReasonForRejectionController::QUERY_PARAM_SEARCH => $searchString
                 ]
             )
         );

@@ -3,9 +3,8 @@ namespace DvsaMotApi\Controller;
 
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Vehicle\VehicleDto;
-use DvsaCommon\Utility\ArrayUtils;
-use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
+use DvsaCommonApi\Model\ApiResponse;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -19,8 +18,6 @@ class ReasonForRejectionController extends AbstractDvsaRestfulController
     }
 
     const QUERY_PARAM_SEARCH = "search";
-    const QUERY_PARAM_SEARCH_START_INDEX = "start";
-    const QUERY_PARAM_SEARCH_END_INDEX = "end";
 
     const SEARCH_REQUIRED_MESSAGE = "search query string parameter is required";
 
@@ -34,8 +31,6 @@ class ReasonForRejectionController extends AbstractDvsaRestfulController
     public function get($motTestNumber)
     {
         $searchString = (string)$this->getRequest()->getQuery(self::QUERY_PARAM_SEARCH);
-        $start = (int)$this->getRequest()->getQuery(self::QUERY_PARAM_SEARCH_START_INDEX);
-        $end = (int)$this->getRequest()->getQuery(self::QUERY_PARAM_SEARCH_END_INDEX);
 
         if (!$searchString) {
             return $this->returnBadRequestResponseModel(
@@ -58,9 +53,7 @@ class ReasonForRejectionController extends AbstractDvsaRestfulController
         }
 
         //  --  get items   --
-        $data = $this->getTestItemSelectorService()->searchReasonsForRejection(
-            $vehicleClassCode, $searchString, $start, $end
-        );
+        $data = $this->getTestItemSelectorService()->searchReasonsForRejection($vehicleClassCode, $searchString);
 
         return ApiResponse::jsonOk($data + ['motTest' => $motTest]);
     }
