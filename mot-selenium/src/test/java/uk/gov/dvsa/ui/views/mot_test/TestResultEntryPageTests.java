@@ -33,7 +33,7 @@ public class TestResultEntryPageTests extends DslTest {
         vehicle = vehicleData.getNewVehicle(tester);
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1930"})
+    @Test(groups = {"BVT", "BL-1930"})
     public void testVehicleInformationIsShownInHeader() throws IOException, URISyntaxException {
         // Given I start a test and I am on the Test Results Page
         TestResultsEntryNewPage testResultEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);
@@ -55,7 +55,7 @@ public class TestResultEntryPageTests extends DslTest {
 
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1930"})
+    @Test(groups = {"BVT", "BL-1930"})
     public void testElementsAreDisplayed() throws URISyntaxException, IOException {
         // Given I start a test and I am on the Test Results Page
         TestResultsEntryNewPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);
@@ -68,7 +68,7 @@ public class TestResultEntryPageTests extends DslTest {
         assertThat("Review test button is displayed", testResultsEntryPage.reviewTestButtonIsDisplayed());
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1930"})
+    @Test(groups = {"BVT", "BL-1930"})
     public void startAndAbandonTest() throws URISyntaxException, IOException {
 
         //Given I start a test and I am on the Test Results Page
@@ -82,7 +82,7 @@ public class TestResultEntryPageTests extends DslTest {
         assertThat(testAbandonedPage.isVT30messageDisplayed(), Is.is(true));
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1930"})
+    @Test(groups = {"BVT", "BL-1930"})
     public void startAndAbortTestAsTester() throws URISyntaxException, IOException {
 
         //Given I start a test and I am on the Test Results Page
@@ -95,8 +95,7 @@ public class TestResultEntryPageTests extends DslTest {
         assertThat(testAbortedPage.isVT30messageDisplayed(), Is.is(true));
     }
 
-    @Test(testName = "TestResultEntryImprovements",
-            groups = {"Regression", "BL-3395"},
+    @Test(groups = {"Regression", "BL-3395"},
             dataProvider = "getOdometerReadingsAndNotice")
     public void testOdometerReadingNotices(int initialReading,
                                            int secondReading,

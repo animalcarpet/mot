@@ -51,20 +51,11 @@ public class Contingency {
         StartTestConfirmationPage startTestConfirmationPage =
                 vehicleSearchPage.searchVehicle(vehicle).selectVehicle(StartTestConfirmationPage.class);
 
-        if (ConfigHelper.isTestResultEntryImprovementsEnabled()) {
-            TestResultsEntryNewPage testResultsEntryPage =
-                    startTestConfirmationPage.clickStartMotTestWhenConductingContingencyTest(TestResultsEntryNewPage.class);
+        TestResultsEntryNewPage testResultsEntryPage =
+                startTestConfirmationPage.clickStartMotTestWhenConductingContingencyTest(TestResultsEntryNewPage.class);
 
-            testResultsEntryPage = testResultsEntryPage.clickAddReadingButton().addOdometerReading(99999, OdometerUnit.MILES, true);
-            testSummaryPage = testResultsEntryPage.completeBrakeTestWithPassValues(false).clickReviewTestButton();
-        } else {
-            TestResultsEntryPage testResultsEntryPage =
-                    startTestConfirmationPage.clickStartMotTestWhenConductingContingencyTest(TestResultsEntryPage.class);
-
-            testResultsEntryPage.completeTestDetailsWithPassValues(false);
-
-            testSummaryPage = testResultsEntryPage.clickReviewTestButton();
-        }
+        testResultsEntryPage = testResultsEntryPage.clickAddReadingButton().addOdometerReading(99999, OdometerUnit.MILES, true);
+        testSummaryPage = testResultsEntryPage.completeBrakeTestWithPassValues(false).clickReviewTestButton();
 
         if (testSummaryPage.isDeclarationTextDisplayed()) {
             assertThat(testSummaryPage.getDeclarationText(), equalToIgnoringCase(TWOFA_DECLARATION_STATEMENT));
@@ -81,15 +72,9 @@ public class Contingency {
         ConfirmVehicleRetestPage retestPage =
                 vehicleSearchPage.searchVehicle(vehicle).selectVehicle(ConfirmVehicleRetestPage.class);
 
-        ReTestSummaryPage summaryPage;
-        if (ConfigHelper.isTestResultEntryImprovementsEnabled()) {
-            TestResultsEntryNewPage resultsEntryPage = retestPage.startContigencyRetest(TestResultsEntryNewPage.class);
-            resultsEntryPage.completeTestDetailsWithPassValues(true);
-            summaryPage = resultsEntryPage.clickReviewTestButton(true);
-        } else {
-            ReTestResultsEntryPage resultsEntryPage = retestPage.startContigencyRetest(ReTestResultsEntryPage.class);
-            summaryPage = resultsEntryPage.completeTestDetailsWithPassValues().clickReviewTestButton();
-        }
+        TestResultsEntryNewPage resultsEntryPage = retestPage.startContigencyRetest(TestResultsEntryNewPage.class);
+        resultsEntryPage.completeTestDetailsWithPassValues(true);
+        ReTestSummaryPage summaryPage = resultsEntryPage.clickReviewTestButton(true);
 
         if (summaryPage.isDeclarationTextDisplayed()) {
             assertThat(summaryPage.getDeclarationText(), equalToIgnoringCase(TWOFA_DECLARATION_STATEMENT));

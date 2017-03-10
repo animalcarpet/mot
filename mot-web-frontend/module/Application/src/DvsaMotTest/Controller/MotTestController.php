@@ -21,7 +21,6 @@ use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Constants\DuplicateCertificateSearchType;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Constants\Network;
 use DvsaCommon\Constants\OdometerReadingResultType;
 use DvsaCommon\Date\DateTimeApiFormat;
@@ -35,7 +34,6 @@ use DvsaCommon\Exception\UnauthorisedException;
 use DvsaCommon\HttpRestJson\Exception\NotFoundException;
 use DvsaCommon\HttpRestJson\Exception\OtpApplicationException;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
-use DvsaCommon\HttpRestJson\Exception\ValidationException as HttpRestJsonValidationException;
 use DvsaCommon\Messages\InvalidTestStatus;
 use DvsaCommon\MysteryShopper\MysteryShopperExpiryDateGenerator;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
@@ -46,7 +44,6 @@ use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommon\Validation\ValidationException;
 use DvsaCommon\Validation\ValidationResult;
 use DvsaCommonApi\Service\Exception\UnauthenticatedException;
-use DvsaFeature\FeatureToggles;
 use DvsaMotTest\Model\OdometerReadingViewObject;
 use DvsaMotTest\Model\OdometerUpdate;
 use DvsaMotTest\View\Model\MotPrintModel;
@@ -88,11 +85,6 @@ class MotTestController extends AbstractDvsaMotTestController
      */
     private $odometerViewObject;
 
-    /**
-     * @var FeatureToggles
-     */
-    private $featureToggles;
-
     /** @var MotTestDuplicateCertificateApiResource $duplicateCertificateApiResource */
     private $duplicateCertificateApiResource;
 
@@ -119,64 +111,11 @@ class MotTestController extends AbstractDvsaMotTestController
     {
         $motTestNumber = $this->params('motTestNumber', 0);
 
-        if (true === $this->isFeatureEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)) {
-            return $this->forward()->dispatch(
-                MotTestResultsController::class,
-                [
-                    'action' => 'index',
-                    'motTestNumber' => $motTestNumber,
-                ]
-            );
-        }
-
-        $isDemo = false;
-
-        /** @var MotTest $motTest */
-        $motTest = $this->getMotTestFromApi($motTestNumber);
-
-        try {
-            $this->getPerformMotTestAssertion()->assertGranted($motTest);
-            $testType = $motTest->getTestTypeCode();
-            $isDemo = MotTestType::isDemo($testType);
-            $isTester = $this->getAuthorizationService()->isTester();
-            $currentVts = $this->getIdentity()->getCurrentVts();
-
-            if (!$isDemo && $isTester && !$currentVts) {
-                return $this->redirectToSelectLocation($motTestNumber);
-            };
-
-            $apiUrl = MotTestUrlBuilder::odometerReadingNotices($motTestNumber)->toString();
-            $readingNotices = $this->getRestClient()->get($apiUrl);
-
-            $this->addTestNumberAndTypeToGtmDataLayer($motTestNumber, $testType);
-        } catch (HttpRestJsonValidationException $e) {
-            $this->addErrorMessages($e->getDisplayMessages());
-        }
-
-        if ($motTest instanceof MotTest && $motTest->getOdometerValue() !== null) {
-            $this->odometerViewObject->setValue($motTest->getOdometerValue());
-            $this->odometerViewObject->setUnit($motTest->getOdometerUnit());
-            $this->odometerViewObject->setResultType($motTest->getOdometerResultType());
-        }
-
-        if (!empty($readingNotices)) {
-            $this->odometerViewObject->setNotices($readingNotices['data']);
-        }
-
-        if ($this->isMysteryShopper($motTest)) {
-            $mysteryShopperExpiryDate = (new MysteryShopperExpiryDateGenerator())->getCertificateExpiryDate();
-            $mysteryShopperExpiryDate = DateTimeApiFormat::date($mysteryShopperExpiryDate);
-            $motTest->setExpiryDate($mysteryShopperExpiryDate);
-        }
-
-        return $this->createViewModel(
-            'dvsa-mot-test/mot-test/index.phtml',
+        return $this->forward()->dispatch(
+            MotTestResultsController::class,
             [
-                'isMotContingency' => $this->getContingencySessionManager()->isMotContingency(),
-                'motTest' => $motTest,
-                'isDemo' => $isDemo,
-                'odometerReading' => $this->odometerViewObject,
-                'motTestTitleViewModel' => (new MotTestTitleModel()),
+                'action' => 'index',
+                'motTestNumber' => $motTestNumber,
             ]
         );
     }

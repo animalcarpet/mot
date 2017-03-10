@@ -125,10 +125,8 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         return $this->mockVehicleServiceClient;
     }
 
-    public function testRequestIsForwardedToMotTestResultsControllerIfFeatureToggleIsEnabled()
+    public function testRequestIsForwardedToMotTestResultsController()
     {
-        $this->withFeatureToggles([FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS => true]);
-
         $forwardPlugin = $this
             ->getMockBuilder(Forward::class)
             ->disableOriginalConstructor()
@@ -140,25 +138,6 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         $this->getController()->getPluginManager()->setService('forward', $forwardPlugin);
 
         $this->getResultForAction('index', ['motTestNumber' => 656402615654]);
-    }
-
-    public function testMotTestIndexCanBeAccessedForAuthenticatedRequest()
-    {
-        $motTestNr = 1;
-
-        $testMotTestData = new MotTest(Fixture::getMotTestDataVehicleClass4(true));
-
-        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
-        $mockMotTestServiceClient
-            ->expects($this->once())
-            ->method('getMotTestByTestNumber')
-            ->with(1)
-            ->will($this->returnValue($testMotTestData));
-
-        $result = $this->getResultForAction('index', ['motTestNumber' => $motTestNr]);
-
-        $this->assertResponseStatus(self::HTTP_OK_CODE);
-        $this->assertEquals($testMotTestData, $result->motTest);
     }
 
     public function testMotTestIndexWithoutIdParameterFails()
@@ -704,26 +683,6 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
         $this->assertResponseStatus(self::HTTP_OK_CODE);
     }
 
-    public function testIndexActionWithMysteryShopperTestType()
-    {
-        $motTestNr = (int) rand(1e12, 1e13 - 1);
-        $motTestData = Fixture::getMotTestDataVehicleClass4(true);
-        $motTestData->motTestNumber = $motTestNr;
-
-        $motTest = new MotTest($motTestData);
-
-        $mockMotTestServiceClient = $this->getMockMotTestServiceClient();
-        $mockMotTestServiceClient
-            ->expects($this->once())
-            ->method('getMotTestByTestNumber')
-            ->with($motTestNr)
-            ->will($this->returnValue($motTest));
-
-        $result = $this->getResultForAction('index', ['motTestNumber' => $motTestNr]);
-
-        $this->assertResponseStatus(self::HTTP_OK_CODE);
-    }
-
     public function testDisplayTestSummaryWithMysteryShopperTestType()
     {
         $this->setupAuthorizationService(
@@ -974,8 +933,8 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
 
     public function testErrorWhenDisplayTestSummarySubmissionForNonMotTestDoesNotContainSite()
     {
-        $mysteryShopperToggleEnabled = $userHasNonMotTestPermission = true;
-        $this->setUpNonMotDependencies($mysteryShopperToggleEnabled, $userHasNonMotTestPermission);
+        $userHasNonMotTestPermission = true;
+        $this->setUpNonMotDependencies($userHasNonMotTestPermission);
 
         $motTestNr = (int) rand(1, 1000);
         $motTestData = Fixture::getMotTestDataVehicleClass4(true);
@@ -1019,16 +978,16 @@ class MotTestControllerTest extends AbstractFrontendControllerTestCase
 
     private function executeDisplayTestSummarySubmission(MotTest $motTest, array $postData)
     {
-        $mysteryShopperToggleEnabled = $userHasNonMotTestPermission = true;
-        $this->setUpNonMotDependencies($mysteryShopperToggleEnabled, $userHasNonMotTestPermission);
+        $userHasNonMotTestPermission = true;
+        $this->setUpNonMotDependencies($userHasNonMotTestPermission);
 
         $this->getResultForAction2('post', 'displayTestSummary', ['motTestNumber' => $motTest->getMotTestNumber()], null, $postData);
     }
 
     public function testNoErrorWhenDisplayTestSummarySubmissionForNormalTestDoesNotContainSite()
     {
-        $mysteryShopperToggleEnabled = $userHasNonMotTestPermission = true;
-        $this->setUpNonMotDependencies($mysteryShopperToggleEnabled, $userHasNonMotTestPermission);
+        $userHasNonMotTestPermission = true;
+        $this->setUpNonMotDependencies($userHasNonMotTestPermission);
 
         $motTestNr = (int) rand(1, 1000);
 

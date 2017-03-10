@@ -57,10 +57,7 @@ public class TestSummaryPage extends Page {
 
     public TestResultsEntryPageInterface clickBackToResultsEntryLink() {
         backToResultsEntryLink.click();
-        if(ConfigHelper.isTestResultEntryImprovementsEnabled()) {
-            return new TestResultsEntryNewPage(driver);
-        }
-        return new TestResultsEntryPage(driver);
+        return new TestResultsEntryNewPage(driver);
     }
 
     public void clickStartReinspectionButton() {

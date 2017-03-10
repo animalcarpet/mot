@@ -200,12 +200,7 @@ class DefectCategoriesControllerTest extends AbstractFrontendControllerTestCase
 
     public function testCanRedirectToDefectCategoriesPage()
     {
-        $this->markTestSkipped('Due to the route being removed when the FT is off this test is temporarily disabled '.
-            'until the base test class supports FT awareness at Module bootstrap level.');
-
         $motTestNumber = 1;
-
-        $this->withFeatureToggles([FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS => true]);
 
         $this->getResultForAction('redirectToCategoriesIndex', ['motTestNumber' => $motTestNumber]);
         $this->assertRedirectLocation2("/mot-test/$motTestNumber/defects/categories");

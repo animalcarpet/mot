@@ -99,11 +99,7 @@ public class NormalTest {
     }
 
     public String startTest(User tester) throws IOException, URISyntaxException {
-        if (!ConfigHelper.isTestResultEntryImprovementsEnabled()) {
-            testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester, new VehicleData().getNewVehicle(tester));
-        } else {
-            testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, new VehicleData().getNewVehicle(tester));
-        }
+        testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, new VehicleData().getNewVehicle(tester));
 
         return setMotId();
     }
@@ -215,17 +211,12 @@ public class NormalTest {
     }
 
     public boolean addManualAdvisoryWithProfaneDescriptionReturnsWarning(String description) {
-        if (!ConfigHelper.isTestResultEntryImprovementsEnabled()) {
-            ManualAdvisoryModalPage advisoryModalPage = ((TestResultsEntryPage) testResultsEntryPage).clickAddFRFButton().addManualAdvisory();
-            return advisoryModalPage.addAdvisoryWithProfaneDescription(description).isProfanityWarningDisplayed();
-        } else {
-            Defect.DefectBuilder builder = new Defect.DefectBuilder();
-            builder.setDescription(description);
-            Defect defect = builder.build();
+        Defect.DefectBuilder builder = new Defect.DefectBuilder();
+        builder.setDescription(description);
+        Defect defect = builder.build();
 
-            return ((TestResultsEntryNewPage) testResultsEntryPage).clickSearchForADefectButton().navigateToAddAManualAdvisory()
-                    .fillDefectDescription(defect).clickAddDefectButtonExpectingFailure().isProfanityWarningDisplayed();
-        }
+        return ((TestResultsEntryNewPage) testResultsEntryPage).clickSearchForADefectButton().navigateToAddAManualAdvisory()
+                .fillDefectDescription(defect).clickAddDefectButtonExpectingFailure().isProfanityWarningDisplayed();
     }
 
     public String getVehicleWeight() {

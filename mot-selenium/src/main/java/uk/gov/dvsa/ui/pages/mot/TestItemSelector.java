@@ -64,12 +64,6 @@ public class TestItemSelector extends Page {
         return PageInteractionHelper.verifyTitle(this.getTitle(), PAGE_TITLE);
     }
 
-    public TestResultsEntryPage clickDone() {
-        PageInteractionHelper.waitForElementToBeVisible(doneButton, Configurator.defaultFastWebElementTimeout);
-        doneButton.click();
-        return new TestResultsEntryPage(driver);
-    }
-
     public ReTestResultsEntryPage clickRetestDone() {
         PageInteractionHelper.waitForElementToBeVisible(doneButton, Configurator.defaultFastWebElementTimeout);
         doneButton.click();

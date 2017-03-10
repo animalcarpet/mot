@@ -29,7 +29,7 @@ public class SearchForADefectPageTests extends DslTest {
         vehicle = vehicleData.getNewVehicle(tester);
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1932"},
+    @Test(groups = {"BVT", "BL-1932"},
             description = "Checks that the Search for a defect page has the correct page elements")
     public void testSearchForADefectPageElements() throws IOException, URISyntaxException {
 
@@ -43,7 +43,7 @@ public class SearchForADefectPageTests extends DslTest {
         assertThat("Search page elements are not displayed", searchForADefectPage.checkPageElementsDisplayed(), is(true));
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1932"},
+    @Test(groups = {"BVT", "BL-1932"},
             description = "Checks that the defect categories link navigates to the Defect categories screen")
     public void testDefectCategoriesNavigation() throws IOException, URISyntaxException {
 
@@ -56,7 +56,7 @@ public class SearchForADefectPageTests extends DslTest {
         // Then I should be navigated to the Defect categories screen
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1932"},
+    @Test(groups = {"BVT", "BL-1932"},
             description = "Checks that the Finish and return to MOT test results navigates to the MOT test results page")
     public void testFinishAndReturnToMOTTestResultsNavigation() throws IOException, URISyntaxException {
 
@@ -69,7 +69,7 @@ public class SearchForADefectPageTests extends DslTest {
         // Then I should be navigated to the MOT Test results page
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1932"},
+    @Test(groups = {"BVT", "BL-1932"},
             description = "Checks that the Search returns no results for a search string that does not exist")
     public void testSearchForADefectPageNoResults() throws IOException, URISyntaxException {
 
@@ -84,7 +84,7 @@ public class SearchForADefectPageTests extends DslTest {
                 searchForADefectPage.checkSearchSummaryCorrect("foobar", "0"), is(true));
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1932"},
+    @Test(groups = {"BVT", "BL-1932"},
             description = "Checks that the Searching returns the correct results")
     public void testSearchForADefectPageWithResults() throws IOException, URISyntaxException {
 
@@ -99,7 +99,7 @@ public class SearchForADefectPageTests extends DslTest {
                 "10mm", "2", "Windscreen has damage to an area in excess of a 10mm circle within zone 'A'"), is(true));
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-3075"},
+    @Test(groups = {"BVT", "BL-3075"},
             description = "Checks that the Searching returns are not paginated when there are less than 10 results")
     public void testSearchForADefectPageWithNoPagination() throws IOException, URISyntaxException {
 
@@ -113,7 +113,7 @@ public class SearchForADefectPageTests extends DslTest {
         assertThat("Search results should not be paginated", searchForADefectPage.isPaginationDisplayed(), is(false));
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-3075"},
+    @Test(groups = {"BVT", "BL-3075"},
             description = "Checks that the Searching returns are paginated when there are more than 10 results")
     public void testSearchForADefectPageWithPagination() throws IOException, URISyntaxException {
 
@@ -127,7 +127,7 @@ public class SearchForADefectPageTests extends DslTest {
         assertThat("Search results should be paginated", searchForADefectPage.isPaginationDisplayed(), is(true));
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-3075"},
+    @Test(groups = {"BVT", "BL-3075"},
             description = "Checks that the first page pagination does not display a previous link")
     public void testSearchResultsPaginationFirstPage() throws IOException, URISyntaxException {
 
@@ -142,7 +142,7 @@ public class SearchForADefectPageTests extends DslTest {
                 !searchForADefectPage.isPaginationPreviousDisplayed() && searchForADefectPage.isPaginationNextDisplayed(), is(true));
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-3075"},
+    @Test(groups = {"BVT", "BL-3075"},
             description = "Checks that after navigating to the middle page of pagination the previous and next button should be displayed")
     public void testSearchResultsPaginationPage2() throws IOException, URISyntaxException {
 
@@ -157,7 +157,7 @@ public class SearchForADefectPageTests extends DslTest {
                 searchForADefectPage.isPaginationPreviousDisplayed() && searchForADefectPage.isPaginationNextDisplayed(), is(true));
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-3075"},
+    @Test(groups = {"BVT", "BL-3075"},
             description = "Checks that after navigating to the last page of pagination the next link is not displayed")
     public void testSearchResultsPaginationLastPage() throws IOException, URISyntaxException {
 
@@ -172,7 +172,7 @@ public class SearchForADefectPageTests extends DslTest {
                 searchForADefectPage.isPaginationPreviousDisplayed() && !searchForADefectPage.isPaginationNextDisplayed(), is(true));
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-3075"},
+    @Test(groups = {"BVT", "BL-3075"},
             description = "Checks that after navigating to the 5th page of pagination where there are more than 5 displays the correct pagination numbers")
     public void testSearchResultsPaginationMoreThan5Pages() throws IOException, URISyntaxException {
 
@@ -199,8 +199,7 @@ public class SearchForADefectPageTests extends DslTest {
         return DefectsTestsDataProvider.getManualAdvisoryDefectWithNoDescription();
     }
 
-    @Test(testName = "TestResultEntryImprovements",
-            groups = {"BVT", "BL-2421"},
+    @Test(groups = {"BVT", "BL-2421"},
             dataProvider = "getManualAdvisoryDefect")
     public void canAddManualAdvisoryAsTester(Defect defect) throws IOException, URISyntaxException {
         // Given I am on the Search for a defect page
@@ -216,8 +215,7 @@ public class SearchForADefectPageTests extends DslTest {
         assertThat(defectsPage.isManualAdvisoryDefectSuccessMessageDisplayed(defect), is(true));
     }
 
-    @Test(testName = "TestResultEntryImprovements",
-            groups = {"BVT", "BL-2421"},
+    @Test(groups = {"BVT", "BL-2421"},
             dataProvider = "getManualAdvisoryDefectNoDescription")
     public void testAddingManualAdvisoryWithoutDescriptionShowsValidationError(Defect defect) throws IOException, URISyntaxException {
         // Given I am on the Search for a defect page

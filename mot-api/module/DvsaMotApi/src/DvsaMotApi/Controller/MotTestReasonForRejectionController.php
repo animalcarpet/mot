@@ -7,7 +7,6 @@
 
 namespace DvsaMotApi\Controller;
 
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
 use DvsaCommonApi\Service\Exception\BadRequestException;
@@ -108,10 +107,6 @@ class MotTestReasonForRejectionController extends AbstractDvsaRestfulController
      */
     public function markAsRepairedAction()
     {
-        if (true !== $this->isFeatureEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)) {
-            return $this->notFoundAction();
-        }
-
         $motTestNumber = (int) $this->params()->fromRoute('motTestNumber');
         $motTestRfrId = (int) $this->params()->fromRoute('motTestRfrId');
 
@@ -125,10 +120,6 @@ class MotTestReasonForRejectionController extends AbstractDvsaRestfulController
      */
     public function undoMarkAsRepairedAction()
     {
-        if (true !== $this->isFeatureEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)) {
-            return $this->notFoundAction();
-        }
-
         $motTestNumber = (int) $this->params()->fromRoute('motTestNumber');
         $motTestRfrId = (int) $this->params()->fromRoute('motTestRfrId');
 

@@ -49,14 +49,6 @@ public abstract class PageLocator {
         return new TestSummaryPage(driver);
     }
 
-    public static TestResultsEntryPage getTestResultsEntryPage(MotAppDriver driver) {
-        return new TestResultsEntryPage(driver);
-    }
-
-    public static TestResultsEntryReInspectionPage getTestResultsEntryReinspectionPage(MotAppDriver driver) {
-        return new TestResultsEntryReInspectionPage(driver);
-    }
-
     public static TestCompareResultsPage getTestCompareResultsPage(MotAppDriver driver) {
         return new TestCompareResultsPage(driver);
     }

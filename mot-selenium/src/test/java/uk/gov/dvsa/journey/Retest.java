@@ -37,15 +37,9 @@ public class Retest {
     }
 
     public void conductRetestPass(Vehicle vehicle, User tester) throws IOException, URISyntaxException {
-        ReTestSummaryPage summaryPage;
-        if (ConfigHelper.isTestResultEntryImprovementsEnabled()) {
-            TestResultsEntryNewPage resultsEntryPage = pageNavigator.gotoReTestResultsEntryPage(tester, vehicle);
-            resultsEntryPage.completeTestDetailsWithPassValues(true);
-            summaryPage = resultsEntryPage.clickReviewTestButton(true);
-        } else {
-            ReTestResultsEntryPage resultsEntryPage = pageNavigator.gotoReTestResultsEntryPage(tester, vehicle);
-            summaryPage = resultsEntryPage.completeTestDetailsWithPassValues().clickReviewTestButton();
-        }
+        TestResultsEntryNewPage resultsEntryPage = pageNavigator.gotoReTestResultsEntryPage(tester, vehicle);
+        resultsEntryPage.completeTestDetailsWithPassValues(true);
+        ReTestSummaryPage summaryPage = resultsEntryPage.clickReviewTestButton(true);
 
         if (summaryPage.isDeclarationTextDisplayed()) {
             assertThat(summaryPage.getDeclarationText(), equalToIgnoringCase(TWO_FA_DECLARATION_STATEMENT));

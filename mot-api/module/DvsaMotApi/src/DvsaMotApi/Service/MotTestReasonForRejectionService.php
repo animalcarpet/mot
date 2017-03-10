@@ -10,7 +10,6 @@ namespace DvsaMotApi\Service;
 use Doctrine\ORM\EntityManager;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Enum\MotTestTypeCode;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Authorisation\Assertion\ApiPerformMotTestAssertion;
@@ -27,7 +26,6 @@ use DvsaEntities\Entity\MotTestReasonForRejectionMarkedAsRepaired;
 use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Repository\MotTestRepository;
 use DvsaEntities\Entity\ReasonForRejectionType;
-use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Service\Helper\BrakeTestResultsHelper;
 use DvsaMotApi\Service\Validator\MotTestValidator;
 use DvsaCommon\Constants\ReasonForRejection as ReasonForRejectionConstants;
@@ -63,11 +61,6 @@ class MotTestReasonForRejectionService extends AbstractService
     private $performMotTestAssertion;
 
     /**
-     * @var FeatureToggles
-     */
-    private $featureToggles;
-
-    /**
      * @var MotTestRepository
      */
     private $motTestRepository;
@@ -80,7 +73,6 @@ class MotTestReasonForRejectionService extends AbstractService
      * @param MotTestValidator              $motTestValidator
      * @param TestItemSelectorService       $motTestItemSelectorService
      * @param ApiPerformMotTestAssertion    $performMotTestAssertion
-     * @param FeatureToggles                $featureToggles
      * @param MotTestRepository             $motTestRepository
      */
     public function __construct(
@@ -89,7 +81,6 @@ class MotTestReasonForRejectionService extends AbstractService
         MotTestValidator $motTestValidator,
         TestItemSelectorService $motTestItemSelectorService,
         ApiPerformMotTestAssertion $performMotTestAssertion,
-        FeatureToggles $featureToggles,
         MotTestRepository $motTestRepository
     ) {
         parent::__construct($entityManager);
@@ -98,7 +89,6 @@ class MotTestReasonForRejectionService extends AbstractService
         $this->motTestValidator = $motTestValidator;
         $this->testItemSelectorService = $motTestItemSelectorService;
         $this->performMotTestAssertion = $performMotTestAssertion;
-        $this->featureToggles = $featureToggles;
         $this->motTestRepository = $motTestRepository;
     }
 
@@ -269,8 +259,7 @@ class MotTestReasonForRejectionService extends AbstractService
             $motTestRfr->setReasonForRejection($reasonForRejection);
         } else {
             // "Custom description" field is capped to 100 characters.
-            $customDescription = (true === $this->featureToggles->isEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS))
-                ? substr($comment, 0, 100) : $comment;
+            $customDescription = substr($comment, 0, 100);
 
             $description = new MotTestReasonForRejectionDescription();
             $description->setCustomDescription($customDescription);

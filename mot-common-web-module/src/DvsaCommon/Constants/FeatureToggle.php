@@ -11,6 +11,5 @@ class FeatureToggle
     const INFINITY_CONTINGENCY = 'infinity.contingency';
     const TWO_FA = '2fa.enabled';
     const TWO_FA_HARD_STOP = '2fa.hardstop.enabled';
-    const TEST_RESULT_ENTRY_IMPROVEMENTS = 'test_result_entry_improvements';
     const NEW_HOMEPAGE = 'new_homepage';
 }

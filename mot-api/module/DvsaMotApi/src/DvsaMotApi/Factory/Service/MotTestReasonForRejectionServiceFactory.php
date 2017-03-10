@@ -40,9 +40,6 @@ class MotTestReasonForRejectionServiceFactory implements FactoryInterface
         /** @var ApiPerformMotTestAssertion $performMotTestAssertion */
         $performMotTestAssertion = $serviceLocator->get(ApiPerformMotTestAssertion::class);
 
-        /** @var FeatureToggles $featureToggles */
-        $featureToggles = $serviceLocator->get('Feature\FeatureToggles');
-
         /** @var MotTestRepository $motTestRepository */
         $motTestRepository = $serviceLocator->get(MotTestRepository::class);
 
@@ -53,7 +50,6 @@ class MotTestReasonForRejectionServiceFactory implements FactoryInterface
             $motTestValidator,
             $motTestItemSelectorService,
             $performMotTestAssertion,
-            $featureToggles,
             $motTestRepository
         );
     }

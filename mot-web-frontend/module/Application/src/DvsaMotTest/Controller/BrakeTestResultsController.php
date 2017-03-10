@@ -588,24 +588,10 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
      */
     private function getBreaksPerformanceDefectsUrl($brakeRfrId, $motTestNumber)
     {
-        $isNewDefectsFfEnabled = $this->getFeatureToggles()->isEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS);
-
-        // New defect category view
-        if ($isNewDefectsFfEnabled === true) {
-            return $this->url()->fromRoute(
-                'mot-test-defects/categories/category',
-                [
-                    'categoryId' => $brakeRfrId,
-                    'motTestNumber' => $motTestNumber,
-                ]
-            );
-        }
-
-        // Old defect category view
         return $this->url()->fromRoute(
-            'mot-test/test-item-selector',
+            'mot-test-defects/categories/category',
             [
-                'tis-id' => $brakeRfrId,
+                'categoryId' => $brakeRfrId,
                 'motTestNumber' => $motTestNumber,
             ]
         );

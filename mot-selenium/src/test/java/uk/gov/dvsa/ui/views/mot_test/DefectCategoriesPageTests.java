@@ -32,7 +32,7 @@ public class DefectCategoriesPageTests extends DslTest {
         veUser = motApi.user.createVehicleExaminer("VehicleExaminer", false);
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1948"})
+    @Test(groups = {"BVT", "BL-1948"})
     public void navigateToDefectCategoriesPageTest() throws IOException, URISyntaxException {
         // Given I start an MOT test and I am on the MOT Test Results page
         TestResultsEntryNewPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);
@@ -43,7 +43,7 @@ public class DefectCategoriesPageTests extends DslTest {
         // Then I should navigate to the Defect Categories page
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1931"})
+    @Test(groups = {"BVT", "BL-1931"})
     public void testCanNavigateThroughCategoryTreeAsTester() throws IOException, URISyntaxException {
         // Given I am on the test results entry screen as a tester
         TestResultsEntryNewPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);
@@ -58,7 +58,7 @@ public class DefectCategoriesPageTests extends DslTest {
         defectsPage.defectsAreDisplayed();
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"BVT", "BL-1931"})
+    @Test(groups = {"BVT", "BL-1931"})
     public void testCanViewNotTestedItemsAsVE() throws IOException, URISyntaxException {
         // Given I perform a training test as a VE
         TestResultsEntryNewPage testResultsEntryPage = pageNavigator.gotoTrainingTestResultsEntryNewPage(veUser, vehicle);
@@ -70,7 +70,7 @@ public class DefectCategoriesPageTests extends DslTest {
         defectCategoriesPage.navigateToDefectCategory("Items not tested", "Brake performance");
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"Regression", "BL-3565"})
+    @Test(groups = {"Regression", "BL-3565"})
     public void testCategoryWithNoRfrNotDisplayedForVehicle() throws IOException, URISyntaxException {
         // Given I am on the test results entry screen as a tester
         TestResultsEntryNewPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);
@@ -82,7 +82,7 @@ public class DefectCategoriesPageTests extends DslTest {
         assertThat(defectCategoriesPage.isCategoryDisplayed("Windows (old)", "Drivers view of the road"), is(false));
     }
 
-    @Test(testName = "TestResultEntryImprovements", groups = {"Regression", "BL-3565"})
+    @Test(groups = {"Regression", "BL-3565"})
     public void testCategoryWithNoRfrNotDisplayedForMotorcycle() throws IOException, URISyntaxException {
         // Given I am on the test results entry screen as a tester
         TestResultsEntryNewPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, motorcycle);

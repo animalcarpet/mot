@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Constants\ReasonForRejection as ReasonForRejectionConstants;
 use DvsaCommonApi\Service\AbstractService;
 use DvsaCommonApi\Service\Exception\NotFoundException;
@@ -15,7 +14,6 @@ use DvsaEntities\Entity\ReasonForRejection;
 use DvsaEntities\Entity\TestItemSelector;
 use DvsaEntities\Repository\RfrRepository;
 use DvsaEntities\Repository\TestItemCategoryRepository;
-use DvsaFeature\FeatureToggles;
 use DvsaMotApi\Formatting\DefectSentenceCaseConverter;
 
 /**
@@ -44,9 +42,6 @@ class TestItemSelectorService extends AbstractService
      */
     private $defectSentenceCaseConverter;
 
-    /** @var FeatureToggles */
-    private $featureToggles;
-
     public function __construct(
         EntityManager $entityManager,
         DoctrineHydrator $objectHydrator,
@@ -54,7 +49,6 @@ class TestItemSelectorService extends AbstractService
         AuthorisationServiceInterface $authService,
         TestItemCategoryRepository $testItemCategoryRepository,
         array $disabledRfrs,
-        FeatureToggles $featureToggles,
         DefectSentenceCaseConverter $defectSentenceCaseConverter
     ) {
         parent::__construct($entityManager);
@@ -64,7 +58,6 @@ class TestItemSelectorService extends AbstractService
         $this->authService = $authService;
         $this->testItemCategoryRepository = $testItemCategoryRepository;
         $this->disabledRfrs = $disabledRfrs;
-        $this->featureToggles = $featureToggles;
         $this->defectSentenceCaseConverter = $defectSentenceCaseConverter;
     }
 
@@ -244,11 +237,9 @@ class TestItemSelectorService extends AbstractService
 
         $testItemSelectors = $this->testItemCategoryRepository->findByParentIdAndVehicleClass($id, $vehicleClass, $role);
 
-        if (true === $this->featureToggles->isEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)) {
-            foreach ($testItemSelectors as $key => $value) {
-                if ($this->isOldSelector($value)) {
-                    unset($testItemSelectors[$key]);
-                }
+        foreach ($testItemSelectors as $key => $value) {
+            if ($this->isOldSelector($value)) {
+                unset($testItemSelectors[$key]);
             }
         }
 
@@ -289,66 +280,21 @@ class TestItemSelectorService extends AbstractService
     /**
      * @param $vehicleClass
      * @param string $searchString
-     * @param int    $start
-     * @param int    $end
      *
      * @return array
      */
-    public function searchReasonsForRejection($vehicleClass, $searchString, $start, $end)
+    public function searchReasonsForRejection($vehicleClass, $searchString)
     {
-        if (true !== $this->featureToggles->isEnabled(FeatureToggle::TEST_RESULT_ENTRY_IMPROVEMENTS)) {
-            $role = $this->determineRole();
+        $this->authService->assertGranted(PermissionInSystem::RFR_LIST);
 
-            $this->authService->assertGranted(PermissionInSystem::RFR_LIST);
+        $role = $this->determineRole();
+        $reasonsForRejection = $this->rfrRepository->findBySearchQuery($searchString, $vehicleClass, $role, 0, 9999);
+        $rfrCount = count($reasonsForRejection);
 
-            if ($start <= 0 || $end <= 0 || $end <= $start) {
-                $start = 0;
-                $end = self::SEARCH_MAX_COUNT + 1;
-            } else {
-                if (($end - $start) > self::SEARCH_MAX_COUNT) {
-                    $end = $start + self::SEARCH_MAX_COUNT + 1;
-                }
-            }
-
-            $reasonsForRejection = $this->rfrRepository->findBySearchQuery(
-                $searchString, $vehicleClass, $role, $start, $end
-            );
-
-            $hasMore = false;
-            if (count($reasonsForRejection) > self::SEARCH_MAX_COUNT) {
-                $hasMore = true;
-                $reasonsForRejection = array_slice($reasonsForRejection, 0, self::SEARCH_MAX_COUNT);
-            }
-
-            return [
-                'searchDetails' => [
-                    'count' => count($reasonsForRejection),
-                    'hasMore' => $hasMore,
-                ],
-                'reasonsForRejection' => $this->extractReasonsForRejection($reasonsForRejection),
-            ];
-        } else {
-            /*
-             * I had to do this as the code above doesn't actually function
-             * as you'd expect. $end does nothing and the count returned
-             * is broken, it only ever returns 10.
-             *
-             * So I'm just returning all the RFRs corresponding to the search
-             * term and dealing with it in the front end. Searching for 'and'
-             * returns >500 results and takes around half a second to respond
-             * to the front end so it's not too bad.
-             */
-            $this->authService->assertGranted(PermissionInSystem::RFR_LIST);
-
-            $role = $this->determineRole();
-            $reasonsForRejection = $this->rfrRepository->findBySearchQuery($searchString, $vehicleClass, $role, 0, 9999);
-            $rfrCount = count($reasonsForRejection);
-
-            return [
-                'searchDetails' => ['count' => $rfrCount],
-                'reasonsForRejection' => $this->extractReasonsForRejection($reasonsForRejection),
-            ];
-        }
+        return [
+            'searchDetails' => ['count' => $rfrCount],
+            'reasonsForRejection' => $this->extractReasonsForRejection($reasonsForRejection),
+        ];
     }
 
     protected function extractTestItemSelector($testItemSelectors)
