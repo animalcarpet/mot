@@ -15,6 +15,7 @@ MyPASS=${2-"password"}
 MyHOST=${3-"localhost"}
 MyGRANTUSER=${4-"motdbuser"}
 DATASET=${5-"synthetic"}
+DATAFILE=${6-"NA"}
 
 BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -41,20 +42,56 @@ create_with_synthetic_data() {
     create_with_data
 }
 
-create_with_10k_data() {
-    # download 10k data from S3 and unzip the tar
+#Anonymised data on S3 storage
+create_from_data_file() {
+    echo Using data file $DATAFILE
+
+    if [ ! -f ${DATAFILE} ]
+    then
+    	# download anonymised data from S3 and unzip the tar
+        command -v aws >/dev/null 2>&1 || { echo >&2 "aws client not installed" ; }
+        if [ $? != 0 ]
+        then
+            echo $(date) Using aws s3 cp s3://10k-anonymised-data/${DATAFILE} ${DATAFILE} to fetch data file
+            aws s3 cp s3://10k-anonymised-data/${DATAFILE} ${DATAFILE}
+
+            if [ $? != 0 ]
+            then
+                echo $(date) aws s3 cp s3://10k-anonymised-data/${DATAFILE} ${DATAFILE} returned non-zero
+            fi 
+        fi
+    fi
+
+    if [ ! -f ${DATAFILE} ]
+    then
+        echo $(date) Using curl -o ${DATAFILE} -# https://s3-eu-west-1.amazonaws.com/10k-anonymised-data/${DATAFILE} to get data file
+        curl -o ${DATAFILE} -# https://s3-eu-west-1.amazonaws.com/10k-anonymised-data/${DATAFILE}
+
+        if [ $? != 0 ]
+        then
+            echo $(date) curl -o ${DATAFILE} -# https://s3-eu-west-1.amazonaws.com/10k-anonymised-data/${DATAFILE} returned non-zero
+        fi 
+    fi
+
+    if [ ! -f ${DATAFILE} ]
+    then
+        echo $(date) Database load file is not present - ${DATAFILE} check download permissions
+        exit 1
+    fi
+
+    if [ -d temp-dev ]
+    then
+        rm -rf temp-dev/
+    fi
     mkdir temp-dev
-    curl -o dev-10k.tgz -# https://s3-eu-west-1.amazonaws.com/10k-anonymised-data/dev-10k.tgz
-    tar -xzf dev-10k.tgz -C temp-dev
+    tar -xzf ${DATAFILE} -C temp-dev
 
     # run the create scripts from inside the temp folder
     cd temp-dev
     create_with_data
     cd ..;
 
-     rm -rf temp-dev/
-
-    mysql -u $MyUSER -p$MyPASS -h $MyHOST -D mot2 < $BASE_DIR/bring_forward_mot_test_dates.sql
+    rm -rf temp-dev/
 }
 
 run_each_release_db_update_script() {
@@ -82,12 +119,28 @@ case "$DATASET" in
         create_with_synthetic_data
         run_each_release_db_update_script
         ;;
+    anonymised)
+        if [ $DATAFILE == "NA" ]
+        then 
+            DATAFILE="dev-anonymised-R3.0.tgz"
+        fi
+        create_from_data_file
+        run_each_release_db_update_script
+        ;;
     10k)
-        create_with_10k_data
+        if [ $DATAFILE == "NA" ]
+        then 
+            DATAFILE="dev-10k.tgz"
+        fi
+        create_from_data_file
+
+        #Rollforward test dates - not really good practice but retained previous behavior because others may like it.
+        echo "$(date) Rolling forward test dates "
+        mysql -u $MyUSER -p$MyPASS -h $MyHOST -D mot2 < $BASE_DIR/bring_forward_mot_test_dates.sql
         run_each_release_db_update_script
         ;;
     *)
-        printf "\e[1;31mERROR: unrecognised argument: "$DATASET".\e[0m Valid arguments are 'synthetic' and '10k.\n"
+        printf "\e[1;31mERROR: unrecognised argument: "$DATASET".\e[0m Valid arguments are 'synthetic' |  '10k' | 'anonymised' .\n"
         exit 2
         ;;
 esac
