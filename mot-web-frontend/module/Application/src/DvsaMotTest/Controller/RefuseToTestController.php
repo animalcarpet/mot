@@ -25,6 +25,9 @@ class RefuseToTestController extends AbstractDvsaMotTestController
     const PAGE_TITLE    = 'Refuse to test';
     const PAGE_SUBTITLE = 'MOT testing';
 
+    /** @var ParamObfuscator  $paramObfuscator */
+    private $paramObfuscator;
+
     /**
      * @param \DvsaCommon\Obfuscate\ParamObfuscator $paramObfuscator
      */
@@ -175,20 +178,25 @@ class RefuseToTestController extends AbstractDvsaMotTestController
 
     private function createBackToConfirmationLink($id, $noRegistration, $source, $testTypeCode)
     {
+        $isRetest = $testTypeCode === MotTestTypeCode::RE_TEST;
+        $query =  [
+            StartTestConfirmationController::ROUTE_PARAM_NO_REG => $noRegistration,
+            StartTestConfirmationController::ROUTE_PARAM_SOURCE => $source,
+        ];
+
+        if($isRetest) {
+            $query['retest'] = $isRetest;
+        }
+
         return $this->url()->fromRoute(
             (
-                $testTypeCode === MotTestTypeCode::NORMAL_TEST
-                ? StartTestConfirmationController::ROUTE_START_TEST_CONFIRMATION
-                : StartTestConfirmationController::ROUTE_START_RETEST_CONFIRMATION
+                StartTestConfirmationController::ROUTE_START_TEST_CONFIRMATION
             ),
             [
                 'id' => $id,
             ],
             [
-                'query' => [
-                    StartTestConfirmationController::ROUTE_PARAM_NO_REG => $noRegistration,
-                    StartTestConfirmationController::ROUTE_PARAM_SOURCE => $source,
-                ],
+                'query' => $query,
             ]
         );
     }
