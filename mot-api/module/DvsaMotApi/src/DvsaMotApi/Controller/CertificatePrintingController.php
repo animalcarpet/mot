@@ -38,6 +38,8 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
     const JREPORT_PRM_SITE_NR = 'Vts';
     const JREPORT_PRM_INSP_AUTH = 'InspectionAuthority';
 
+    const SNAPSHOT_DATA_KEY = 'snapshotData';
+
     const ISSUER_INFO_ENG = "%s certificate issued by %s on %s";
     const ISSUER_INFO_WEL = "%s wedi ei gyhoeddi gan %s ar %s";
     const ISSUER_DVSA_INFO_WEL = "Anfonwyd %s gan %s ar %s";
@@ -82,6 +84,7 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
         return $this->getReportService()->getReportById(
             $docId, $reportName, [
                 self::JREPORT_PRM_WATERMARK => $this->getInvalidWatermark(),
+                self::SNAPSHOT_DATA_KEY => $this->getSnapshotData($docId),
             ]
         );
     }
@@ -384,5 +387,12 @@ class CertificatePrintingController extends AbstractDvsaRestfulController
     private function getCertificateCreationService()
     {
         return $this->getServiceLocator()->get(CertificateCreationService::class);
+    }
+
+    private function getSnapshotData($certDocId)
+    {
+        $document = $this->documentService->getSnapshotById($certDocId);
+
+        return $document;
     }
 }

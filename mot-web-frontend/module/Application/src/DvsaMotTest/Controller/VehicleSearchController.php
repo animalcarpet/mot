@@ -73,7 +73,6 @@ class VehicleSearchController extends AbstractDvsaMotTestController implements A
     const PRM_TEST_NR = 'testNumber';
 
     const START_TEST_CONFIRMATION_ROUTE = 'start-test-confirmation';
-    const START_RETEST_CONFIRMATION_ROUTE = 'start-retest-confirmation';
     const START_TRAINING_CONFIRMATION_ROUTE = 'start-training-confirmation';
     const REPLACEMENT_CERTIFICATE_SEARCH_PAGE_TITLE = 'Duplicate or replacement certificate';
 

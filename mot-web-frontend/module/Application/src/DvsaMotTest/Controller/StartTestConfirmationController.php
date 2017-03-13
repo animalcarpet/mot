@@ -38,7 +38,6 @@ use Zend\View\Model\ViewModel;
 class StartTestConfirmationController extends AbstractDvsaMotTestController
 {
     const ROUTE_START_TEST_CONFIRMATION = 'start-test-confirmation';
-    const ROUTE_START_RETEST_CONFIRMATION = 'start-retest-confirmation';
 
     const ROUTE_PARAM_NO_REG = 'noRegistration';
     const ROUTE_PARAM_ID = 'id';
