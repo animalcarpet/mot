@@ -26,8 +26,10 @@ $this->layout()->setVariable('pageSubTitle', 'Forgotten your password');
 
 if ($questionNumber == 1):
     $this->layout()->setVariable('pageTitle', 'First security question');
+    $this->headTitle('First security question');
 elseif ($questionNumber == 2):
     $this->layout()->setVariable('pageTitle', 'Second security question');
+    $this->headTitle('Second security question');
 else:
     $this->layout()->setVariable('pageTitle', 'Security question');
 endif;
