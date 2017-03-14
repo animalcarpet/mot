@@ -271,23 +271,30 @@ class MotTestService extends AbstractSearchService implements TransactionAwareIn
             )
         ) {
             $positions = $motTest->getVehicleTestingStation()->getPositions();
-            /** @var SiteBusinessRoleMap|OrganisationBusinessRoleMap $roleMap */
-            $roleMap = ArrayUtils::firstOrNull($positions, function (SiteBusinessRoleMap $position) {
+            /** @var SiteBusinessRoleMap[]|OrganisationBusinessRoleMap[] $roleMap */
+            $roleMap = ArrayUtils::filter($positions, function (SiteBusinessRoleMap $position) {
                 return $position->getSiteBusinessRole()->getCode() == RoleCode::SITE_MANAGER;
             });
+
             if (empty($roleMap)) {
                 $positions = $motTest->getVehicleTestingStation()->getOrganisation()->getPositions();
-                $roleMap = ArrayUtils::firstOrNull($positions, function (OrganisationBusinessRoleMap $position) {
+                $orgRoleMap = ArrayUtils::firstOrNull($positions, function (OrganisationBusinessRoleMap $position) {
                     return $position->getOrganisationBusinessRole()->getRole()->getCode() == RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER;
                 });
+
+                if (empty($orgRoleMap)) {
+                    return;
+                }
+
+                $roleMap[] = $orgRoleMap;
             }
-            
-            if (!empty($roleMap)) {
+
+            foreach ($roleMap as $role) {
                 $this->outsideHoursNotificationService->notify(
                     $motTest->getVehicleTestingStation(),
                     $motTest->getTester(),
                     $motTest->getStartedDate(),
-                    $roleMap->getPerson()
+                    $role->getPerson()
                 );
             }
         }
