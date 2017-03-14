@@ -7,6 +7,7 @@ use Dashboard\Authorisation\ViewTradeRolesAssertion;
 use Dashboard\Controller\UserHomeController;
 use Dashboard\Data\ApiDashboardResource;
 use Dashboard\PersonStore;
+use Dashboard\Security\DashboardGuard;
 use Dashboard\Service\TradeRolesAssociationsService;
 use UserAdmin\Service\UserAdminSessionManager;
 use Zend\ServiceManager\FactoryInterface;
@@ -34,7 +35,8 @@ class UserHomeControllerFactory implements FactoryInterface
             $serviceLocator->get('AuthorisationService'),
             $serviceLocator->get(UserAdminSessionManager::class),
             $serviceLocator->get(ViewTradeRolesAssertion::class),
-            $serviceLocator->get(TradeRolesAssociationsService::class)
+            $serviceLocator->get(TradeRolesAssociationsService::class),
+            $serviceLocator->get(DashboardGuard::class)
         );
     }
 }

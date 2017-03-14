@@ -4,21 +4,35 @@ namespace Dashboard\ViewModel;
 
 class SlotsViewModel
 {
-    /** @var $overallSlotCount */
+    /** @var int $overallSlotCount */
     private $overallSlotCount;
 
-    /** @var $overallSiteCount */
+    /** @var int $overallSiteCount */
     private $overallSiteCount;
+
+    /** @var bool $canViewSlotBalance */
+    private $canViewSlotBalance;
 
     /**
      * SlotsViewModel constructor.
+     *
+     * @param $canViewSlotBalance
      * @param $overallSlotCount
      * @param $overallSiteCount
      */
-    public function __construct($overallSlotCount, $overallSiteCount)
+    public function __construct($canViewSlotBalance, $overallSlotCount, $overallSiteCount)
     {
+        $this->canViewSlotBalance = $canViewSlotBalance;
         $this->overallSlotCount = $overallSlotCount;
         $this->overallSiteCount = $overallSiteCount;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canViewSlotBalance()
+    {
+        return $this->canViewSlotBalance;
     }
 
     /**

@@ -18,6 +18,7 @@ use Dashboard\Security\DashboardGuard;
 use Dashboard\Service\TradeRolesAssociationsService;
 use Dashboard\ViewModel\DashboardViewModelBuilder;
 use Dashboard\ViewModel\Sidebar\ProfileSidebar;
+use Dashboard\ViewModel\UserHomeViewModel;
 use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
@@ -27,11 +28,11 @@ use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use DvsaCommon\HttpRestJson\Exception\ValidationException;
 use DvsaCommon\Model\DvsaRole;
 use DvsaCommon\Model\TradeRole;
-use DvsaCommon\Model\PersonAuthorization;
 use DvsaCommon\UrlBuilder\PersonUrlBuilder;
 use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
 use DvsaMotTest\Service\OverdueSpecialNoticeAssertion;
 use UserAdmin\Service\UserAdminSessionManager;
+use Zend\Mvc\Controller\Plugin\Identity;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -46,8 +47,8 @@ class UserHomeController extends AbstractAuthActionController
     const ERR_PIN_UPDATE_FAIL = 'There was a problem updating your PIN.';
     const ERR_COMMON_API = 'Something went wrong.';
 
-    /** @var LoggedInUserManager $loggedIdUserManager */
-    private $loggedIdUserManager;
+    /** @var LoggedInUserManager $loggedInUserManager */
+    private $loggedInUserManager;
 
     /** @var ApiPersonalDetails $personalDetailsService */
     private $personalDetailsService;
@@ -79,8 +80,11 @@ class UserHomeController extends AbstractAuthActionController
     /** @var TradeRolesAssociationsService $tradeRolesAssociationsService */
     protected $tradeRolesAssociationsService;
 
+    /** @var DashboardGuard $dashboardGuard */
+    protected $dashboardGuard;
+
     public function __construct(
-        LoggedInUserManager $loggedIdUserManager,
+        LoggedInUserManager $loggedInUserManager,
         ApiPersonalDetails $personalDetailsService,
         PersonStore $personStoreService,
         ApiDashboardResource $dashboardResourceService,
@@ -91,9 +95,10 @@ class UserHomeController extends AbstractAuthActionController
         MotAuthorisationServiceInterface $authorisationService,
         UserAdminSessionManager $userAdminSessionManager,
         ViewTradeRolesAssertion $canViewTradeRolesAssertion,
-        TradeRolesAssociationsService $tradeRolesAssociationsService
+        TradeRolesAssociationsService $tradeRolesAssociationsService,
+        DashboardGuard $dashboardGuard
     ) {
-        $this->loggedIdUserManager = $loggedIdUserManager;
+        $this->loggedInUserManager = $loggedInUserManager;
         $this->personalDetailsService = $personalDetailsService;
         $this->personStoreService = $personStoreService;
         $this->dashboardResourceService = $dashboardResourceService;
@@ -104,6 +109,7 @@ class UserHomeController extends AbstractAuthActionController
         $this->authorisationService = $authorisationService;
         $this->viewTradeRolesAssertion = $canViewTradeRolesAssertion;
         $this->tradeRolesAssociationsService = $tradeRolesAssociationsService;
+        $this->dashboardGuard = $dashboardGuard;
     }
 
     /**
@@ -114,14 +120,14 @@ class UserHomeController extends AbstractAuthActionController
         /** @var \Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity $identity */
         $identity = $this->getIdentity();
 
-        if ($this->shouldShowNewHomepage($identity->getPersonAuthorization())) {
+        if ($this->shouldShowNewHomepage($this->authorisationService)) {
             return $this->redirectToNewHomepage();
         }
 
         $authenticatedData = $this->getAuthenticatedData();
         $personId = $identity->getUserId();
 
-        $this->loggedIdUserManager->discoverCurrentLocation($identity->getCurrentVts());
+        $this->loggedInUserManager->discoverCurrentLocation($identity->getCurrentVts());
 
         $dashboard = $this->getDashboardDetails($personId);
 
@@ -136,11 +142,7 @@ class UserHomeController extends AbstractAuthActionController
 
         $canPerformTest = true;
         if ($this->getAuthorizationService()->isTester()) {
-            $loggedInUserManager = $this->getServiceLocator()->get('LoggedInUserManager');
-            $tester = $loggedInUserManager->getTesterData();
-            $authorisationsForTestingMot = (!is_null($tester['authorisationsForTestingMot'])) ? $tester['authorisationsForTestingMot'] : [];
-
-            $overdueSpecialNoticeAssertion = new OverdueSpecialNoticeAssertion($dashboard->getOverdueSpecialNotices(), $authorisationsForTestingMot);
+            $overdueSpecialNoticeAssertion = $this->getOverdueSpecialNoticeAssertion($dashboard);
             $canPerformTest = $overdueSpecialNoticeAssertion->canPerformTest();
         }
 
@@ -170,24 +172,34 @@ class UserHomeController extends AbstractAuthActionController
     public function userHomeRefactorAction()
     {
         $identity = $this->getIdentity();
+
+        $currentVts = $identity->getCurrentVts();
         $personId = $identity->getUserId();
 
-        $this->loggedIdUserManager->discoverCurrentLocation($identity->getCurrentVts());
+        $this->loggedInUserManager->discoverCurrentLocation($currentVts);
+
+        $dashboard = $this->getDashboardDetails($personId);
+
+        if ($this->getAuthorizationService()->isTester()) {
+            $this->dashboardGuard->setOverdueSpecialNoticeAssertion(
+                $this->getOverdueSpecialNoticeAssertion($dashboard)
+            );
+        }
 
         $dashboardViewModelBuilder = new DashboardViewModelBuilder(
-            $this->getDashboardDetails($personId),
-            new DashboardGuard($this->authorisationService),
+            $identity,
+            $dashboard,
+            $this->dashboardGuard,
             $this->url()
         );
 
-        $vm = new ViewModel();
-        $vm->dashboard = $dashboardViewModelBuilder->build();
-        $vm->setTemplate('/dashboard/user-home/user-home-refactor.twig');
+        $userHomeViewModel = new UserHomeViewModel($dashboardViewModelBuilder->build());
+        $userHomeViewModel->setTemplate('/dashboard/user-home/user-home-refactor.twig');
 
         $this->layout('layout/layout-govuk.phtml');
         $this->layout()->setVariable('isHomePage', true);
 
-        return $vm;
+        return $userHomeViewModel;
     }
 
     /**
@@ -281,7 +293,7 @@ class UserHomeController extends AbstractAuthActionController
                 return $this->redirect()->toUrl(PersonUrlBuilderWeb::profile());
             } catch (ValidationException $e) {
                 $this->addErrorMessages($e->getDisplayMessages());
-                $data['phone'] = $data['phoneNumber']; // fixing field naming inconcistency
+                $data['phone'] = $data['phoneNumber']; // fixing field naming inconsistency
                 return $this->getAuthenticatedData($data);
             }
         }
@@ -455,17 +467,48 @@ class UserHomeController extends AbstractAuthActionController
     }
 
     /**
-     * @param PersonAuthorization $personalDetails
+     * @param Dashboard $dashboard
+     *
+     * @return OverdueSpecialNoticeAssertion
+     */
+    private function getOverdueSpecialNoticeAssertion(Dashboard $dashboard)
+    {
+        $tester = $this->loggedInUserManager->getTesterData();
+        $authorisationsForTestingMot = $this->getAuthorisationsForTestingMot($tester);
+        
+        $overdueSpecialNotices = $dashboard->getOverdueSpecialNotices();
+
+        return new OverdueSpecialNoticeAssertion($overdueSpecialNotices, $authorisationsForTestingMot);
+    }
+
+    /**
+     * @param array $tester
+     *
+     * @return array
+     */
+    private function getAuthorisationsForTestingMot(array $tester)
+    {
+        $authorisationsForTestingMot = [];
+
+        if (isset($tester['authorisationsForTestingMot']) && !is_null($tester['authorisationsForTestingMot'])) {
+           return $authorisationsForTestingMot = $tester['authorisationsForTestingMot'];
+        }
+
+        return $authorisationsForTestingMot;
+    }
+
+    /**
+     * @param MotAuthorisationServiceInterface $authorisationService
      *
      * @return bool
      */
-    private function shouldShowNewHomepage(PersonAuthorization $personalDetails)
+    private function shouldShowNewHomepage(MotAuthorisationServiceInterface $authorisationService)
     {
         if (!$this->isFeatureEnabled(FeatureToggle::NEW_HOMEPAGE)) {
             return false;
         }
 
-        $viewNewHomepageAssertion = new ViewNewHomepageAssertion($personalDetails);
+        $viewNewHomepageAssertion = new ViewNewHomepageAssertion($authorisationService);
 
         return $viewNewHomepageAssertion->canViewNewHomepage();
     }

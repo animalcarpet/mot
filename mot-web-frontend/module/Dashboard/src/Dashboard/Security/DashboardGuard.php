@@ -10,6 +10,19 @@ use DvsaMotTest\Service\OverdueSpecialNoticeAssertion;
 
 class DashboardGuard
 {
+    const HIGH_AUTHORITY_TRADE_ROLES = [
+        RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
+        RoleCode::AUTHORISED_EXAMINER_DELEGATE,
+        RoleCode::SITE_MANAGER,
+        RoleCode::SITE_ADMIN,
+    ];
+
+    const TESTER_WITH_DEMO_TEST_NEEDED_ROLES = [
+        RoleCode::USER,
+        RoleCode::TESTER,
+        RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED,
+    ];
+
     /** @var MotAuthorisationServiceInterface $authorisationService */
     protected $authorisationService;
 
@@ -27,13 +40,8 @@ class DashboardGuard
     }
 
     /**
-     * OverdueSpecialNoticeAssertion setter
-     *
-     * Ideally we could just pass a boolean in here, rather than the assertion object. However, the method
-     * canPerformTest does not definitively confirm that a tester can perform a test, and it also doesn't just check for
-     * overdue special notices (also does some AuthorisationForTestingMotStatusCode stuff).
-     *
      * @param OverdueSpecialNoticeAssertion $overdueSpecialNoticeAssertion
+     *
      * @return $this
      */
     public function setOverdueSpecialNoticeAssertion(OverdueSpecialNoticeAssertion $overdueSpecialNoticeAssertion)
@@ -41,14 +49,6 @@ class DashboardGuard
         $this->overdueSpecialNoticeAssertionFailure = !$overdueSpecialNoticeAssertion->canPerformTest();
 
         return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function canPerformDemoTest()
-    {
-        return $this->authorisationService->isGranted(PermissionInSystem::MOT_DEMO_TEST_PERFORM);
     }
 
     /**
@@ -74,7 +74,17 @@ class DashboardGuard
      */
     public function canViewReplacementDuplicateCertificateLink()
     {
-        return $this->authorisationService->isGranted(PermissionInSystem::CERTIFICATE_SEARCH);
+        $userRoles = $this->authorisationService->getAllRoles();
+
+        if ($this->hasHighAuthorityTradeRole($userRoles) || $this->isTester()) {
+            if ($this->isDemoTestNeeded() && !$this->isQualifiedTester($userRoles)) {
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -82,7 +92,22 @@ class DashboardGuard
      */
     public function canViewSlotBalance()
     {
-        return $this->authorisationService->isGranted(PermissionInSystem::SLOTS_VIEW);
+        $roles = $this->authorisationService->getAllRoles();
+
+        $usersHighAuthorityTradeRoles = array_intersect($roles, self::HIGH_AUTHORITY_TRADE_ROLES);
+        if (empty($usersHighAuthorityTradeRoles)) {
+            return false;
+        }
+
+        if (in_array(RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED, $roles)) {
+            return false;
+        }
+
+        if ($this->isQualifiedTester()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -114,25 +139,19 @@ class DashboardGuard
      */
     public function isDemoTestNeeded()
     {
-        return $this->authorisationService->hasRole(RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED);
+        $roles = $this->authorisationService->getAllRoles();
+        $isDemoTestRequired = in_array(RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED, $roles);
+
+        return $this->isTester() ? $isDemoTestRequired && !$this->isTesterActive($roles) : $isDemoTestRequired;
     }
 
     /**
      * @return bool
      */
-    public function canViewYourPerformance()
+    public function isTestingEnabled()
     {
-        return $this->authorisationService->isGranted(PermissionInSystem::DISPLAY_TESTER_STATS_BOX);
-    }
-
-    /**
-     * @return bool
-     */
-    public function canViewContingencyTests()
-    {
-        return $this->authorisationService->isGranted(PermissionInSystem::DISPLAY_TESTER_CONTINGENCY_BOX) &&
-               $this->authorisationService->hasRole(RoleCode::TESTER_ACTIVE);
-
+        return $this->authorisationService->isGranted(PermissionInSystem::MOT_TEST_START) &&
+        !$this->overdueSpecialNoticeAssertionFailure;
     }
 
     /**
@@ -146,9 +165,39 @@ class DashboardGuard
     /**
      * @return bool
      */
-    public function canPerformMotTest()
+    public function canViewYourPerformance()
     {
-        return $this->authorisationService->isGranted(PermissionInSystem::MOT_TEST_PERFORM) &&
-        !$this->overdueSpecialNoticeAssertionFailure;
+        return $this->authorisationService->isGranted(PermissionInSystem::DISPLAY_TESTER_STATS_BOX);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isQualifiedTester()
+    {
+        $roles = $this->authorisationService->getAllRoles();
+
+        return in_array(RoleCode::TESTER, $roles) && $this->isTesterActive($roles);
+    }
+
+    /**
+     * @param $userRoles
+     *
+     * @return bool
+     */
+    private function hasHighAuthorityTradeRole($userRoles)
+    {
+        return !empty(array_intersect($userRoles, self::HIGH_AUTHORITY_TRADE_ROLES));
+    }
+
+    /**
+     * @param $userRoles
+     *
+     * @return bool
+     */
+    public function isTesterActive($userRoles)
+    {
+        return in_array(RoleCode::TESTER_ACTIVE, $userRoles);
     }
 }
+

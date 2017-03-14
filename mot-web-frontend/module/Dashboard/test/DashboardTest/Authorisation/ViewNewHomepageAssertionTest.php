@@ -2,37 +2,43 @@
 
 namespace DashboardTest\Authorisation;
 
+use Core\Service\LazyMotFrontendAuthorisationService;
 use Dashboard\Authorisation\ViewNewHomepageAssertion;
-use DvsaCommon\Model\ListOfRolesAndPermissions;
-use DvsaCommon\Model\PersonAuthorization;
+use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Enum\RoleCode;
+use DvsaCommonTest\TestUtils\XMock;
 
 /**
  * ViewNewHomepageAssertionTest Test.
  */
 class ViewNewHomepageAssertionTest extends \PHPUnit_Framework_TestCase
 {
+
+    /** @var MotAuthorisationServiceInterface|\PHPUnit_Framework_MockObject_MockObject */
+    protected $mockAuthorisationService;
+
+    protected function setup()
+    {
+        $this->mockAuthorisationService = XMock::of(LazyMotFrontendAuthorisationService::class);
+    }
+
     /**
      * @dataProvider testUserCanViewNewHomepageDataProvider
      *
-     * @param array $systemRoles
-     * @param array $organisationsRoles
-     * @param array $sitesRoles
-     * @param bool  $canUserViewNewHomepage
+     * @param array $roles
+     * @param bool $canUserViewNewHomepage
      */
-    public function testUserWithSpecificRolesCanViewNewHomepage(array $systemRoles, array $organisationsRoles, array $sitesRoles, $canUserViewNewHomepage)
+    public function testUserWithSpecificRoleCanViewNewHomepage(array $roles, $canUserViewNewHomepage)
     {
-        $personalAuthorization = $this->buildPersonAuthorization(
-            $systemRoles,
-            $organisationsRoles,
-            $sitesRoles
-        );
+        $this->mockAuthorisationService
+            ->method('getAllRoles')
+            ->willReturn($roles);
 
-        $viewNewHomepageAssertion = new ViewNewHomepageAssertion($personalAuthorization);
+        $viewNewHomepageAssertion = new ViewNewHomepageAssertion($this->mockAuthorisationService);
 
         $canUserViewNewHomepageFromApi = $viewNewHomepageAssertion->canViewNewHomepage();
 
-        $this->assertEquals($canUserViewNewHomepageFromApi, $canUserViewNewHomepage);
+        $this->assertEquals($canUserViewNewHomepage, $canUserViewNewHomepageFromApi);
     }
 
     /**
@@ -41,105 +47,30 @@ class ViewNewHomepageAssertionTest extends \PHPUnit_Framework_TestCase
     public function testUserCanViewNewHomepageDataProvider()
     {
         return [
-            [
-                [RoleCode::ASSESSMENT], [], [], false,
-            ],
-            [
-                [RoleCode::ASSESSMENT_LINE_MANAGER], [], [], false,
-            ],
-            [
-                [RoleCode::AUTHORISED_EXAMINER], [], [], false,
-            ],
-            [
-                [RoleCode::AUTHORISED_EXAMINER_DELEGATE], [], [], true,
-            ],
-            [
-                [RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER], [], [], true,
-            ],
-            [
-                [RoleCode::AUTHORISED_EXAMINER_PRINCIPAL], [], [], false,
-            ],
-            [
-                [RoleCode::AREA_OFFICE_1], [], [], false,
-            ],
-            [
-                [RoleCode::AREA_OFFICE_2], [], [], false,
-            ],
-            [
-                [RoleCode::CUSTOMER_SERVICE_MANAGER], [], [], false,
-            ],
-            [
-                [RoleCode::CUSTOMER_SERVICE_OPERATIVE], [], [], false,
-            ],
-            [
-                [RoleCode::DVLA_MANAGER], [], [], false,
-            ],
-            [
-                [RoleCode::DVLA_OPERATIVE], [], [], false,
-            ],
-            [
-                [RoleCode::FINANCE], [], [], false,
-            ],
-            [
-                [RoleCode::SCHEME_MANAGER], [], [], false,
-            ],
-            [
-                [RoleCode::SCHEME_USER], [], [], false,
-            ],
-            [
-                [RoleCode::SITE_ADMIN], [], [], true,
-            ],
-            [
-                [RoleCode::SITE_MANAGER], [], [], true,
-            ],
-            [
-                [RoleCode::SLOT_PURCHASER], [], [], false,
-            ],
-            [
-                [RoleCode::TESTER], [], [], true,
-            ],
-            [
-                [RoleCode::TESTER_ACTIVE], [], [], true,
-            ],
-            [
-                [RoleCode::TESTER, RoleCode::TESTER_ACTIVE], [], [], false,
-            ],
-            [
-                [RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], [], [], true,
-            ],
-            [
-                [RoleCode::TESTER_APPLICANT_INITIAL_TRAINING_FAILED], [], [], false,
-            ],
-            [
-                [RoleCode::TESTER_APPLICANT_INITIAL_TRAINING_REQUIRED], [], [], true,
-            ],
-            [
-                [RoleCode::TESTER_INACTIVE], [], [], false,
-            ],
-            [
-                [RoleCode::USER], [], [], true,
-            ],
-            [
-                [RoleCode::VEHICLE_EXAMINER], [], [], false,
-            ],
+            [ [RoleCode::USER, RoleCode::AUTHORISED_EXAMINER], false ],
+            [ [RoleCode::USER, RoleCode::AUTHORISED_EXAMINER_DELEGATE], true ],
+            [ [RoleCode::USER, RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER], true ],
+            [ [RoleCode::USER, RoleCode::AUTHORISED_EXAMINER_PRINCIPAL], false ],
+            [ [RoleCode::USER, RoleCode::AREA_OFFICE_1], false ],
+            [ [RoleCode::USER, RoleCode::AREA_OFFICE_2], false ],
+            [ [RoleCode::USER, RoleCode::CUSTOMER_SERVICE_MANAGER], false ],
+            [ [RoleCode::USER, RoleCode::CUSTOMER_SERVICE_OPERATIVE], false ],
+            [ [RoleCode::USER, RoleCode::DVLA_MANAGER], false ],
+            [ [RoleCode::USER, RoleCode::FINANCE], false ],
+            [ [RoleCode::USER, RoleCode::SCHEME_MANAGER], false ],
+            [ [RoleCode::USER, RoleCode::SCHEME_USER], false ],
+            [ [RoleCode::USER, RoleCode::SITE_ADMIN], true ],
+            [ [RoleCode::USER, RoleCode::SITE_MANAGER], true ],
+            [ [RoleCode::USER, RoleCode::TESTER], true ],
+            [ [RoleCode::USER, RoleCode::TESTER_ACTIVE], true ],
+            [ [RoleCode::USER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], true ],
+            [ [RoleCode::USER, RoleCode::TESTER_APPLICANT_INITIAL_TRAINING_FAILED], false ],
+            [ [RoleCode::USER, RoleCode::TESTER_APPLICANT_INITIAL_TRAINING_REQUIRED], true ],
+            [ [RoleCode::USER, RoleCode::TESTER_INACTIVE], false ],
+            [ [RoleCode::USER], true ],
+            [ [RoleCode::USER, RoleCode::VEHICLE_EXAMINER], false ],
+            [ [RoleCode::USER, RoleCode::TESTER, RoleCode::TESTER_ACTIVE], true ],
+            [ [RoleCode::USER, RoleCode::AUTHORISED_EXAMINER_DELEGATE, RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER], true ],
         ];
-    }
-
-    /**
-     * @param array $systemRoles
-     * @param array $organisationsRoles
-     * @param array $sitesRoles
-     *
-     * @return PersonAuthorization
-     *
-     * @throws \Exception
-     */
-    protected function buildPersonAuthorization(array $systemRoles, array $organisationsRoles, array $sitesRoles)
-    {
-        return new PersonAuthorization(
-            new ListOfRolesAndPermissions($systemRoles, []),
-            $organisationsRoles,
-            $sitesRoles
-        );
     }
 }

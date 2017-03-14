@@ -4,8 +4,10 @@ use Dashboard\Authorisation\ViewTradeRolesAssertion;
 use Dashboard\Data\ApiDashboardResource;
 use Dashboard\Data\ApiNotificationResource;
 use Dashboard\Factory\Authorisation\ViewTradeRolesAssertionFactory;
+use Dashboard\Factory\Security\DashboardGuardFactory;
 use Dashboard\Factory\Service\PersonTradeRoleSorterServiceFactory;
 use Dashboard\PersonStore;
+use Dashboard\Security\DashboardGuard;
 use Dashboard\Service\PasswordService;
 use Dashboard\Service\PersonTradeRoleSorterService;
 use Dashboard\Service\TradeRolesAssociationsService;
@@ -21,6 +23,7 @@ return [
         ViewTradeRolesAssertion::class       => ViewTradeRolesAssertionFactory::class,
         TradeRolesAssociationsService::class => TradeRolesAssociationsServiceFactory::class,
         PersonTradeRoleSorterService::class  => PersonTradeRoleSorterServiceFactory::class,
+        DashboardGuard::class                => DashboardGuardFactory::class,
     ],
     'abstract_factories' => [
         AutoWireFactory::class,

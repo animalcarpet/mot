@@ -3,12 +3,12 @@
 namespace DashboardTest\ViewModel;
 
 use Dashboard\Security\DashboardGuard;
-use Dashboard\ViewModel\DemoTestViewModel;
+use Dashboard\ViewModel\TrainingTestViewModel;
 use DvsaCommon\UrlBuilder\VehicleUrlBuilder;
 use DvsaCommonTest\TestUtils\XMock;
 use PHPUnit_Framework_TestCase;
 
-class DemoTestViewModelTest extends PHPUnit_Framework_TestCase
+class TrainingTestViewModelTest extends PHPUnit_Framework_TestCase
 {
     /** @var DashboardGuard | \PHPUnit_Framework_MockObject_MockObject */
     private $mockDashboardGuard;
@@ -19,7 +19,7 @@ class DemoTestViewModelTest extends PHPUnit_Framework_TestCase
 
     public function testViewModelWithoutInProgressTestNumber()
     {
-        $viewModel = new DemoTestViewModel(
+        $viewModel = new TrainingTestViewModel(
             $this->mockDashboardGuard
         );
 
@@ -30,7 +30,7 @@ class DemoTestViewModelTest extends PHPUnit_Framework_TestCase
 
     public function testViewModelWithInProgressTestNumber()
     {
-        $viewModel = new DemoTestViewModel(
+        $viewModel = new TrainingTestViewModel(
             $this->mockDashboardGuard
         );
         $viewModel->setInProgressTestNumber('1010101');

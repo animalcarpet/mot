@@ -6,47 +6,36 @@ use Dashboard\Security\DashboardGuard;
 
 class HeroActionViewModel
 {
-    const AEDM_USER_ROLE = 'aedm';
-    const TESTER = 'tester';
-    const USER = 'user';
-
-    /** @var bool $isRDCertificateLinkVisible */
-    private $isRDCertificateLinkVisible = false;
-
-    /** @var bool $isSlotCountVisible */
-    private $isSlotCountVisible = false;
-
-    /** @var bool $isSiteCountVisible */
-    private $isSiteCountVisible = false;
-
-    /** @var bool $isMotFormsLinkVisible */
-    private $isMotFormsLinkVisible = false;
-
     /** @var DashboardGuard $dashboardGuard */
     private $dashboardGuard;
 
-    /** @var string $userRole */
-    private $userRole;
+    /** @var ReplacementDuplicateCertificateViewModel $replacementDuplicateCertificateViewModel */
+    private $replacementDuplicateCertificateViewModel;
 
-    /** @var SlotsViewModel $slotsViewModel */
+    /** @var SlotsViewModel $slotsViewModel*/
     private $slotsViewModel;
+
+    /** @var StartMotViewModel $startMotViewModel */
+    private $startMotViewModel;
 
     /**
      * HeroActionViewModel constructor.
      *
-     * @param string         $userRole
-     * @param SlotsViewModel $slotsViewModel
      * @param DashboardGuard $dashboardGuard
+     * @param SlotsViewModel $slotsViewModel
+     * @param ReplacementDuplicateCertificateViewModel $replacementDuplicateCertificateViewModel
+     * @param StartMotViewModel $startMotViewModel
      */
     public function __construct(
-        $userRole,
+        DashboardGuard $dashboardGuard,
         SlotsViewModel $slotsViewModel,
-        DashboardGuard $dashboardGuard
-    )
+        ReplacementDuplicateCertificateViewModel $replacementDuplicateCertificateViewModel,
+        StartMotViewModel $startMotViewModel)
     {
-        $this->userRole = $userRole;
-        $this->slotsViewModel = $slotsViewModel;
         $this->dashboardGuard = $dashboardGuard;
+        $this->slotsViewModel = $slotsViewModel;
+        $this->replacementDuplicateCertificateViewModel = $replacementDuplicateCertificateViewModel;
+        $this->startMotViewModel = $startMotViewModel;
     }
 
     /**
@@ -54,53 +43,37 @@ class HeroActionViewModel
      */
     public function isHeroActionVisible()
     {
-        // Other roles can be added here
-        $roles = array(self::AEDM_USER_ROLE, self::TESTER, self::USER);
-
-        // User with no roles assigned
-        if ($this->userRole === self::USER && !$this->dashboardGuard->canPerformMotTest())
-        {
-            return false;
-        }
-        else if (in_array($this->userRole, $roles))
-        {
-            $this->buildHeroAction();
-            return true;
-        }
-
-        return false;
+        /*
+         * If user has permission to view at least one element on the hero action (black box), then display the hero action
+         */
+        return $this->replacementDuplicateCertificateViewModel->canViewReplacementDuplicateCertificateLink() ||
+            $this->slotsViewModel->canViewSlotBalance() ||
+            $this->startMotViewModel->canStartMotTest() ||
+            $this->isMotFormsLinkVisible();
     }
 
     /**
-     * @return bool
+     * @return ReplacementDuplicateCertificateViewModel
      */
-    public function isSlotCountVisible()
+    public function getReplacementDuplicateCertificateViewModel()
     {
-        return $this->isSlotCountVisible;
+        return $this->replacementDuplicateCertificateViewModel;
     }
 
     /**
-     * @return bool
+     * @return StartMotViewModel
      */
-    public function isSiteCountVisible()
+    public function getStartMotViewModel()
     {
-        return $this->isSiteCountVisible;
+        return $this->startMotViewModel;
     }
 
     /**
-     * @return bool
+     * @return SlotsViewModel
      */
-    public function isOverallSiteCountVisible()
+    public function getSlotsViewModel()
     {
-        return $this->slotsViewModel->isOverallSiteCountVisible();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isReplacementDuplicateCertificateLinkVisible()
-    {
-        return $this->isRDCertificateLinkVisible;
+        return $this->slotsViewModel;
     }
 
     /**
@@ -110,41 +83,5 @@ class HeroActionViewModel
     {
         return $this->dashboardGuard->isTester();
     }
-
-    /**
-     * @return int
-     */
-    public function getOverallSlotCount()
-    {
-        return $this->slotsViewModel->getOverallSlotCount();
-    }
-
-    /**
-     * @return int
-     */
-    public function getOverallSiteCount()
-    {
-        return $this->slotsViewModel->getOverallSiteCount();
-    }
-
-    /**
-     * Builds the elements to be displayed in the Hero Action box based on the user's role
-     */
-    private function buildHeroAction()
-    {
-        switch($this->userRole) {
-            case self::AEDM_USER_ROLE;
-                $this->isRDCertificateLinkVisible = true;
-                $this->isSlotCountVisible = true;
-                $this->isSiteCountVisible = true;
-                break;
-            case self::TESTER;
-                $this->isRDCertificateLinkVisible = true;
-                break;
-            case self::USER;
-                $this->isRDCertificateLinkVisible = $this->dashboardGuard->canViewReplacementDuplicateCertificateLink();
-                break;
-            default:
-        }
-    }
 }
+

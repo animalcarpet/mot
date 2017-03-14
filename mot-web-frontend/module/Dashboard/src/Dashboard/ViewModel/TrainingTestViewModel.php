@@ -6,7 +6,7 @@ use Dashboard\Security\DashboardGuard;
 use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaCommon\UrlBuilder\VehicleUrlBuilder;
 
-class DemoTestViewModel
+class TrainingTestViewModel
 {
     /**
      * @var DashboardGuard $dashboardGuard
@@ -19,7 +19,7 @@ class DemoTestViewModel
     private $inProgressTestNumber;
 
     /**
-     * DemoTestViewModel constructor.
+     * TrainingTestViewModel constructor.
      *
      * @param DashboardGuard $dashboardGuard
      */
@@ -34,14 +34,6 @@ class DemoTestViewModel
     public function setInProgressTestNumber($testNumber)
     {
         $this->inProgressTestNumber = $testNumber;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isVisible()
-    {
-        return $this->dashboardGuard->canPerformDemoTest();
     }
 
     /**

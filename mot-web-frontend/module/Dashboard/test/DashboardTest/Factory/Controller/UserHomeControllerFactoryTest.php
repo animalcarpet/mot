@@ -11,6 +11,7 @@ use Dashboard\Controller\UserHomeController;
 use Dashboard\Data\ApiDashboardResource;
 use Dashboard\Factory\Controller\UserHomeControllerFactory;
 use Dashboard\PersonStore;
+use Dashboard\Security\DashboardGuard;
 use Dashboard\Service\TradeRolesAssociationsService;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
@@ -46,6 +47,7 @@ class UserHomeControllerFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager->setService('AuthorisationService', XMock::of(MotAuthorisationServiceInterface::class));
         $serviceManager->setService(ViewTradeRolesAssertion::class, XMock::of(ViewTradeRolesAssertion::class));
         $serviceManager->setService(TradeRolesAssociationsService::class, XMock::of(TradeRolesAssociationsService::class));
+        $serviceManager->setService(DashboardGuard::class, XMock::of(DashboardGuard::class));
 
         $plugins = XMock::of(\Zend\Mvc\Controller\ControllerManager::class, ['getServiceLocator']);
         $plugins->expects($this->any())

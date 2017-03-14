@@ -13,6 +13,7 @@ use Dashboard\Controller\UserHomeController;
 use Dashboard\Data\ApiDashboardResource;
 use Dashboard\Model\PersonalDetails;
 use Dashboard\PersonStore;
+use Dashboard\Security\DashboardGuard;
 use Dashboard\Service\TradeRolesAssociationsService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
@@ -75,6 +76,9 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
     /** @var FrontendIdentityProviderStub $identityProvider */
     private $identityProvider;
 
+    /** @var DashboardGuard|MockObj $dashboardGuardMock */
+    private $dashboardGuardMock;
+
     public function setUp()
     {
         $sm = Bootstrap::getServiceManager();
@@ -114,6 +118,8 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
         $this->identityProvider->setIdentity(new Identity());
         $this->identityProvider->getIdentity()->setUserId(self::USER_ID);
 
+        $this->dashboardGuardMock = XMock::of(DashboardGuard::class);
+
         $this->setController(
             new UserHomeController(
                 $this->loggedInUserManagerMock,
@@ -127,7 +133,8 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
                 $this->authorisationService,
                 $this->mockUserAdminSessionSrv,
                 new ViewTradeRolesAssertion($this->authorisationService, $this->identityProvider),
-                XMock::of(TradeRolesAssociationsService::class)
+                XMock::of(TradeRolesAssociationsService::class),
+                $this->dashboardGuardMock
             )
         );
 
