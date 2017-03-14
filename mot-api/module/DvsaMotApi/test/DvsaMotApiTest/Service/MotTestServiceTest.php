@@ -50,6 +50,8 @@ use DvsaEntities\Entity\MotTestReasonForRejection;
 use DvsaEntities\Entity\MotTestStatus;
 use DvsaEntities\Entity\MotTestType;
 use DvsaEntities\Entity\Organisation;
+use DvsaEntities\Entity\OrganisationBusinessRole;
+use DvsaEntities\Entity\OrganisationBusinessRoleMap;
 use DvsaEntities\Entity\Person;
 use DvsaEntities\Entity\ReasonForRejectionType;
 use DvsaEntities\Entity\Site;
@@ -1062,19 +1064,13 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
 
 
 
-    private function notificationOnTestOutsideOpeningHoursExpected()
+    private function notificationOnTestOutsideOpeningHoursExpectedExactlyTimes($notificationCount = 1)
     {
         list($site, $person, $startedDate) = [ArgCapture::create(), ArgCapture::create(), ArgCapture::create()];
-        $this->mockTestingOutsideOpeningHoursNotificationService->expects($this->once())
+        $this->mockTestingOutsideOpeningHoursNotificationService->expects($this->exactly($notificationCount))
             ->method('notify')->with($site(), $person(), $startedDate());
 
         return [$site, $person, $startedDate];
-    }
-
-    private function notificationOnTestOutsideOpeningHoursNotExpected()
-    {
-        $this->mockTestingOutsideOpeningHoursNotificationService->expects($this->never())
-            ->method('notify');
     }
 
 
@@ -1105,14 +1101,18 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
         $motTest->getVehicleTestingStation()->setSiteTestingSchedule($weekOpeningHours);
     }
 
-    private function setUpForTestUpdateStatusOutsideOpeningHours(MotTest $motTest, $testStartedHour)
-    {
-        $siteBusinesRole = new SiteBusinessRole();
-        $siteBusinesRole->setCode(RoleCode::SITE_MANAGER);
-        $siteManager = new Person();
-        $siteBusinessRoleMap = (new SiteBusinessRoleMap())->setPerson($siteManager)->setSiteBusinessRole($siteBusinesRole);
-
-        $motTest->getVehicleTestingStation()->setPositions([$siteBusinessRoleMap]);
+    private function setUpForTestUpdateStatusOutsideOpeningHours(
+        MotTest $motTest,
+        $siteBusinessRoleMap,
+        $organisationBusinessRoleMap,
+        $testStartedHour
+    ) {
+        $motTest->getVehicleTestingStation()->setPositions($siteBusinessRoleMap);
+        if (!empty($organisationBusinessRoleMap)) {
+            $org = (new Organisation());
+            $org->addPosition($organisationBusinessRoleMap);
+            $motTest->getVehicleTestingStation()->setOrganisation($org);
+        }
 
         MotTestObjectsFactory::addTestAuthorisationForClass(
             $motTest,
@@ -1132,38 +1132,91 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
     public function dataProviderGivenTestOutsideSiteOpeningHoursShouldNotifyOrNot()
     {
         return [
-            ["02", true],
-            ["05", true],
-            ["11", false],
-            ["13", false],
-            ["19", true],
-            ["21", true],
+            ["02", 1, true, 1],
+            ["05", 2, true, 2],
+            ["11", 1, true, 0],
+            ["13", 1, false, 0],
+            ["19", 1, true, 1],
+            ["21", 5, false, 5],
+            ["22", 0, true, 1],
+            ["01", 0, false, 0],
         ];
     }
 
     /**
      * @param $testStartedHour
-     * @param $shouldNotify
+     * @param $SMCount,
+     * @param $AEDMExists,
+     * @param $notificationCount
      *
      * @dataProvider dataProviderGivenTestOutsideSiteOpeningHoursShouldNotifyOrNot
      */
-    public function testForTestOutsideSiteOpeningHoursShouldNotifyOrNot($testStartedHour, $shouldNotify)
+    public function testForTestOutsideSiteOpeningHoursShouldNotifyOrNot($testStartedHour, $SMCount, $AEDMExists, $notificationCount)
     {
         $mocks = $this->getMocksForMotTestService();
         $service = $this->constructMotTestServiceWithMocks($mocks);
-        $this->mockCreateMotTest($this->mockCreateMotTestService, $this->getTestData(), $testStartedHour);
+        $siteBusinessRoleMap = $this->getSiteBusinessRoleMap($SMCount);
 
-        if ($shouldNotify) {
-            $this->notificationOnTestOutsideOpeningHoursExpected();
-        } else {
-            $this->notificationOnTestOutsideOpeningHoursNotExpected();
+        $organisationBusinessRoleMap = null;
+        if ($AEDMExists) {
+            $organisationBusinessRoleMap = $this->getOrganisationBusinessRoleMap();
         }
+
+        $this->mockCreateMotTest(
+            $this->mockCreateMotTestService,
+            $this->getTestData(),
+            $siteBusinessRoleMap,
+            $organisationBusinessRoleMap,
+            $testStartedHour
+        );
+
+        $this->notificationOnTestOutsideOpeningHoursExpectedExactlyTimes($notificationCount);
+
+        $service->createMotTest($this->getTestData());
+    }
+
+    private function getSiteBusinessRoleMap($SMCount = 1) {
+        $siteBusinessRoleMap = [];
+        for ($i = 1; $i <= $SMCount; $i++) {
+            $siteBusinessRole = new SiteBusinessRole();
+            $siteBusinessRole->setCode(RoleCode::SITE_MANAGER);
+            $siteManager = new Person();
+            $siteBusinessRoleMap[] = (new SiteBusinessRoleMap())->setPerson($siteManager)->setSiteBusinessRole($siteBusinessRole);
+        }
+        return $siteBusinessRoleMap;
+    }
+
+    private function getOrganisationBusinessRoleMap() {
+        $organisationBusinessRole = new OrganisationBusinessRole();
+        $role = new \DvsaEntities\Entity\Role();
+        $role->setCode(RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER);
+        $organisationBusinessRole->setRole($role);
+        $siteManager = new Person();
+        return  (new OrganisationBusinessRoleMap())->setPerson($siteManager)->setOrganisationBusinessRole($organisationBusinessRole);
+    }
+
+
+    public function testForTestOutsideSiteOpeningHoursWithManySiteManagers()
+    {
+        $mocks = $this->getMocksForMotTestService();
+        $service = $this->constructMotTestServiceWithMocks($mocks);
+        $this->mockCreateMotTest(
+            $this->mockCreateMotTestService,
+            $this->getTestData(),
+            $this->getSiteBusinessRoleMap(),
+            null,
+            "19"
+        );
+
+        $this->notificationOnTestOutsideOpeningHoursExpectedExactlyTimes(1);
         $service->createMotTest($this->getTestData());
     }
 
     private function mockCreateMotTest(
         PHPUnit_Framework_MockObject_MockObject $mockCreateTestRepository,
         array $data,
+        $siteBusinessRoleMap,
+        $organisationBusinessRoleMap,
         $testStartedHour
     )
     {
@@ -1174,6 +1227,8 @@ class MotTestServiceTest extends AbstractMotTestServiceTest
             ->willReturn(
                 $this->setUpForTestUpdateStatusOutsideOpeningHours(
                     self::getMotTestEntity('1'),
+                    $siteBusinessRoleMap,
+                    $organisationBusinessRoleMap,
                     $testStartedHour
                 )
             );
