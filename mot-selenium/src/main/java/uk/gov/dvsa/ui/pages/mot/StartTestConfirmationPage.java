@@ -8,6 +8,7 @@ import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
+import uk.gov.dvsa.ui.pages.VehicleTestingAdvicePage;
 import uk.gov.dvsa.ui.pages.vehicleinformation.*;
 
 public class StartTestConfirmationPage extends Page {
@@ -33,6 +34,7 @@ public class StartTestConfirmationPage extends Page {
     @FindBy(className = "banner--error") private WebElement vehicleUnderTestBanner;
     @FindBy(className = "heading-medium") private WebElement noTestClassValidation;
     @FindBy(id = "validation-message--success") private WebElement changeDetailsSuccessMessage;
+    @FindBy(id = "vehicle-testing-advice") private WebElement vehicleTestingAdviceUrl;
 
     private By vinLocator = By.id("vehicleVINnumber");
     private By registrationLocator = By.id("vehicleRegistrationNumber");
@@ -89,6 +91,11 @@ public class StartTestConfirmationPage extends Page {
     public ChangeCountryOfRegistrationUnderTestPage clickChangeCountryOfRegistration(){
         changeCountryOfRegistrationButton.click();
         return new ChangeCountryOfRegistrationUnderTestPage (driver);
+    }
+
+    public VehicleTestingAdvicePage clickVehicleTestingAdviceUrl(){
+        vehicleTestingAdviceUrl.click();
+        return new VehicleTestingAdvicePage (driver);
     }
 
     public String getVehicleWeight() {

@@ -97,6 +97,10 @@ public class MotClient {
         return getFrontendRequest(path, sessionCookie, tokenCookie);
     }
 
+    public Response createTestingAdvice(String request, String path) {
+        return postRequestWithoutToken(request, path);
+    }
+
     private Response postRequestWithoutToken(String request, String path) {
         return with()
                 .header("Content-Type", "application/json")

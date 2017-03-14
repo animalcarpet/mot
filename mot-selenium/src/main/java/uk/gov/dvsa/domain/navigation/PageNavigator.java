@@ -13,11 +13,7 @@ import uk.gov.dvsa.domain.service.CookieService;
 import uk.gov.dvsa.framework.config.Configurator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
-import uk.gov.dvsa.ui.pages.HomePage;
-import uk.gov.dvsa.ui.pages.Page;
-import uk.gov.dvsa.ui.pages.PageLocator;
-import uk.gov.dvsa.ui.pages.VehicleSearchPage;
-import uk.gov.dvsa.ui.pages.VehicleSearchResultsPage;
+import uk.gov.dvsa.ui.pages.*;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardPage;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.TwoFactorPinEntryPage;
 import uk.gov.dvsa.ui.pages.dvsa.ManageRolesPage;
@@ -243,6 +239,11 @@ public class PageNavigator {
         SiteTestQualityPage siteTestQualityPage = PageLocator.getSiteTestQualityPage(driver);
 
         return siteTestQualityPage;
+    }
+
+    public VehicleTestingAdvicePage gotoVehicleTestingAdvicePage() throws IOException {
+
+        return PageLocator.getVehicleTestingAdvicePage(driver);
     }
 
     private void navigateToPath(String path) {

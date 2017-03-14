@@ -80,4 +80,8 @@ public abstract class PageLocator {
     public static AuthorisedExaminerViewPage getAuthorisedExaminerPage(MotAppDriver driver) {
         return new AedmAuthorisedExaminerViewPage(driver);
     }
+
+    public static VehicleTestingAdvicePage getVehicleTestingAdvicePage(MotAppDriver driver) {
+        return new VehicleTestingAdvicePage(driver);
+    }
 }

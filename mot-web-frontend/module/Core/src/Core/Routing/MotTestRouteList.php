@@ -18,4 +18,5 @@ class MotTestRouteList
     const MOT_TEST_START_TEST = 'start-test-confirmation';
     const MOT_TEST_START_TRAINING_TEST = 'start-training-test-confirmation';
     const MOT_TEST_START_NON_MOT_TEST = 'start-non-mot-test-confirmation';
+    const MOT_TEST = 'mot-test';
 }

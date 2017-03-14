@@ -2,6 +2,7 @@
 
 use TestSupport\Controller;
 use TestSupport\Controller\GdsSurveyController;
+use TestSupport\Controller\VehicleTestingAdviceController;
 
 return [
     'controllers'  => [
@@ -54,6 +55,7 @@ return [
             Controller\OrganisationRoleNominationController::class => Controller\OrganisationRoleNominationController::class,
             Controller\AnnualAssessmentCertificateController::class => Controller\AnnualAssessmentCertificateController::class,
             GdsSurveyController::class => GdsSurveyController::class,
+            VehicleTestingAdviceController::class => VehicleTestingAdviceController::class
         ],
     ],
     'router'       => [
@@ -553,6 +555,15 @@ return [
                             'route'    => '/org/role/nomination',
                             'defaults' => [
                                 'controller' => Controller\OrganisationRoleNominationController::class
+                            ],
+                        ],
+                    ],
+                    'vehicleTestingAdvice' => [
+                        'type'    => 'Segment',
+                        'options' => [
+                            'route'    => '/vehicle-testing-advice',
+                            'defaults' => [
+                                'controller' => VehicleTestingAdviceController::class
                             ],
                         ],
                     ],

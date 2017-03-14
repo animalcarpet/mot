@@ -61,6 +61,7 @@ use TestSupport\Service\OrganisationRoleNominationService;
 use TestSupport\Factory\RoleNominationServiceFactory;
 use TestSupport\Service\OneHundredMotTestsService;
 use TestSupport\Factory\TestSupportOneHundredMotTestsServiceFactory;
+use TestSupport\Service\VehicleTestingAdviceService;
 
 return [
     'factories' => [
@@ -114,6 +115,9 @@ return [
             function (ServiceLocatorInterface $sm) {
                 return new DvlaVehicleService($sm->get(EntityManager::class));
             },
+        VehicleTestingAdviceService::class => function(ServiceLocatorInterface $sm) {
+            return new VehicleTestingAdviceService($sm->get(EntityManager::class));
+        },
         PaymentNotificationsAuditService::class                  =>
             function (ServiceLocatorInterface $sm) {
                 return new PaymentNotificationsAuditService($sm->get(EntityManager::class));

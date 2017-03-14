@@ -4,6 +4,7 @@ use DvsaMotEnforcement\Controller\MotTestSearchController as EnforcementMotTestS
 use Vehicle\Controller\MaskVehicleController;
 use Vehicle\Controller\UnmaskVehicleController;
 use Vehicle\Controller\VehicleController;
+use Vehicle\TestingAdvice\Controller\AdviceController;
 use Vehicle\CreateVehicle\Controller\ClassController;
 use Vehicle\CreateVehicle\Controller\ColourController;
 use Vehicle\CreateVehicle\Controller\ConfirmationController;
@@ -197,6 +198,16 @@ return [
                                         'action' => 'editColour',
                                     ],
                                 ],
+                            ],
+                        ],
+                    ],
+                    'testing-advice' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route'    => '/testing-advice',
+                            'defaults' => [
+                                'controller' => AdviceController::class,
+                                'action'     => 'display',
                             ],
                         ],
                     ],

@@ -6,6 +6,7 @@ import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.vehicle.*;
 import uk.gov.dvsa.domain.service.VehicleService;
+import uk.gov.dvsa.domain.service.VehicleTestingAdviceService;
 
 import java.io.IOException;
 
@@ -74,6 +75,13 @@ public class VehicleData extends VehicleService {
                 "1889A",
                 "01163"
         );
+    }
+
+    public Vehicle getNewVehicleWithTestingAdvice(User user) throws IOException {
+        Vehicle vehicle = getNewVehicle(user);
+        VehicleTestingAdviceData vehicleTestingAdviceData = new VehicleTestingAdviceData();
+        vehicleTestingAdviceData.create(vehicle);
+        return vehicle;
     }
 
     private String generateCarRegistration() {

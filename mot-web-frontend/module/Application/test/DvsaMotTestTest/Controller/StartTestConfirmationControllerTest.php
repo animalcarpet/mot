@@ -11,6 +11,8 @@ use Dvsa\Mot\ApiClient\Request\TypeConversion\DateTimeConverter;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Service\MotTestService;
 use Dvsa\Mot\ApiClient\Service\VehicleService;
+use Dvsa\Mot\Frontend\GoogleAnalyticsModule\ControllerPlugin\DataLayerPlugin;
+use Dvsa\Mot\Frontend\GoogleAnalyticsModule\TagManager\DataLayer;
 use Dvsa\Mot\Frontend\Test\StubIdentityAdapter;
 use DvsaClient\Mapper\VehicleMapper;
 use DvsaClient\MapperFactory;
@@ -92,6 +94,9 @@ class StartTestConfirmationControllerTest extends AbstractDvsaMotTestTestCase
             XMock::of(StartTestChangeService::class)
             )
         );
+
+        $dataLayerPlugin = new DataLayerPlugin(new DataLayer());
+        $this->getController()->getPluginManager()->setService('gtmDataLayer', $dataLayerPlugin);
 
         $mockMapperFactory = $this->getMapperFactoryMock();
         $serviceManager->setService(MapperFactory::class, $mockMapperFactory);

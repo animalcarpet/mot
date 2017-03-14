@@ -12,6 +12,7 @@ import uk.gov.dvsa.domain.model.vehicle.Model;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.ConfigHelper;
+import uk.gov.dvsa.ui.pages.VehicleTestingAdvicePage;
 import uk.gov.dvsa.ui.pages.mot.*;
 import uk.gov.dvsa.ui.pages.mot.modal.ManualAdvisoryModalPage;
 import uk.gov.dvsa.ui.pages.vehicleinformation.*;
@@ -140,6 +141,11 @@ public class NormalTest {
 
     public String startMotTestForDvlaVehicle(User user, DvlaVehicle dvlaVehicle) throws IOException, URISyntaxException {
         return pageNavigator.goToStartTestConfirmationPage(user, dvlaVehicle).noTestClassValidation();
+    }
+
+    public VehicleTestingAdvicePage goToVehicleTestingAdvice() throws IOException {
+        confirmationPage.clickVehicleTestingAdviceUrl();
+        return pageNavigator.gotoVehicleTestingAdvicePage();
     }
 
     public String changeColour() {
