@@ -173,4 +173,19 @@ class VehicleRoutes extends AbstractRoutes
     {
         return $this->url(VehicleRouteList::VEHICLE_CHANGE_COLOUR,['id' => $obfuscatedVehicleId, "property" => UpdateModelStep::NAME]);
     }
+
+    public function testingAdvice($obfuscatedVehicleId)
+    {
+        return $this->url(VehicleRouteList::VEHICLE_TESTING_ADVICE, ['id' => $obfuscatedVehicleId]);
+    }
+
+    public function testingAdviceWithMotTestNumberParam($obfuscatedVehicleId, $motTestNumber)
+    {
+        return $this->url(VehicleRouteList::VEHICLE_TESTING_ADVICE, ['id' => $obfuscatedVehicleId], ["query" => ["motTestNumber" => $motTestNumber]]);
+    }
+
+    public function testingAdviceWithParams($obfuscatedVehicleId, $noRegistration, $source)
+    {
+        return $this->url(VehicleRouteList::VEHICLE_TESTING_ADVICE, ['id' => $obfuscatedVehicleId], ["query" => ["noRegistration" => $noRegistration, "source" => $source]]);
+    }
 }

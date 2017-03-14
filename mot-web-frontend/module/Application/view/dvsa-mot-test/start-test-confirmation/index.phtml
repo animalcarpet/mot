@@ -237,25 +237,33 @@ if (!empty($checkExpiryResults)) {
         </tr>
         </tbody>
     </table>
-    <fieldset>
 
+    <?php if ($viewModel->hasTestingAdvice()): ?>
+        <div class="banner banner--content banner--info">
+            <span class="banner__heading-large">This vehicle has testing advice</span>
+            <span>See <a id="vehicle-testing-advice" href="<?php echo $viewModel->getTestingAdviceUrl(); ?>">advice for carrying out an MOT test</a> for this vehicle.</span>
+        </div>
+    <?php endif; ?>
+
+    <fieldset>
         <div class="form-group">
             <nav class="content-navigation">
-                <?php if (!$viewModel->isInProgressTestExists()): ?>
-                    <?php if ($viewModel->isNormalTest() || $viewModel->isTrainingTest()): ?>
-                        <input type="submit" value="Confirm and start test" class="button " id="confirm_vehicle_confirmation" />
-                    <?php endif; ?>
-                    <?php if ($viewModel->isNonMotTest()): ?>
-                        <input type="submit" value="Confirm and start non-MOT test" class="button " id="confirm_vehicle_confirmation" />
-                    <?php endif; ?>
-                    <?php if ($viewModel->isRetest()): ?>
-                        <input type="submit" value="Confirm and start retest" class="button " id="retest_vehicle_confirmation" />
-                    <?php endif; ?>
-                <?php endif ?>
-                <ul class="content-navigation__secondary">
-                    <?php if ($viewModel->canRefuseToTest()):  ?>
-                        <li>
-                            <br/>
+                <ul class="list-unstyled content-navigation__split u-clearfix">
+                    <li class="content-navigation__split--left">
+                        <?php if (!$viewModel->isInProgressTestExists()): ?>
+                            <?php if ($viewModel->isNormalTest() || $viewModel->isTrainingTest()): ?>
+                                <input type="submit" value="Confirm and start test" class="button " id="confirm_vehicle_confirmation" />
+                            <?php endif; ?>
+                            <?php if ($viewModel->isNonMotTest()): ?>
+                                <input type="submit" value="Confirm and start non-MOT test" class="button " id="confirm_vehicle_confirmation" />
+                            <?php endif; ?>
+                            <?php if ($viewModel->isRetest()): ?>
+                                <input type="submit" value="Confirm and start retest" class="button " id="retest_vehicle_confirmation" />
+                            <?php endif; ?>
+                        <?php endif ?>
+                    </li>
+                    <li class="content-navigation__split--right">
+                        <?php if ($viewModel->canRefuseToTest()):  ?>
                             <a class="button button--alert" id="refuse-to-test" href="
                         <?php
                             echo $this->url(
@@ -264,8 +272,12 @@ if (!empty($checkExpiryResults)) {
                                 ['query' => ['no-reg' => $viewModel->isNoRegistration(), 'source' => $viewModel->getSafeSource()]],
                                 true
                             ); ?>">Refuse to test</a>
-                        </li>
-                    <?php endif ?>
+
+                        <?php endif ?>
+                    </li>
+                </ul>
+
+                <ul class="content-navigation__secondary">
                     <li>
                         <br />
                         <a href="<?php echo $backToVehicleSearchUrl ?>">Cancel and return to find a vehicle</a>

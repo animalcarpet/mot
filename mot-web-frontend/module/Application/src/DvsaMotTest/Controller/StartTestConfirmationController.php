@@ -6,6 +6,7 @@ use Application\Helper\PrgHelper;
 use Application\Service\ContingencySessionManager;
 use Core\Catalog\CountryOfRegistration\CountryOfRegistrationCatalog;
 use Core\Routing\MotTestRouteList;
+use Core\Routing\VehicleRoutes;
 use Core\Service\RemoteAddress;
 use Dvsa\Mot\ApiClient\Resource\Item\AbstractVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\DvlaVehicle;
@@ -29,6 +30,7 @@ use DvsaMotTest\Constants\VehicleSearchSource;
 use DvsaMotTest\Helper\DvsaVehicleBuilder;
 use DvsaMotTest\Service\StartTestChangeService;
 use DvsaMotTest\ViewModel\StartTestConfirmationViewModel;
+use Vehicle\TestingAdvice\Assertion\ShowTestingAdviceAssertion;
 use Zend\Http\Request;
 use Zend\View\Model\ViewModel;
 
@@ -452,9 +454,27 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
             $this->method = MotTestTypeCode::RE_TEST;
         }
 
+        if ($this->isVehicleSource(VehicleSearchSource::VTR) && (new ShowTestingAdviceAssertion($this->vehicleService))->isGranted($this->vehicleId, $this->method)) {
+            $viewModel->setTestingAdviceUrl(
+                VehicleRoutes::of($this->url())->testingAdviceWithParams(
+                    $this->obfuscatedVehicleId,
+                    $this->noRegistration,
+                    $this->vehicleSource
+                )
+            );
+        }
+        $this->setGdsDataLayer($viewModel->hasTestingAdvice());
+
         $viewData['viewModel'] = $viewModel;
 
         return $viewData;
+    }
+
+    /**
+     * @param boolean $hasTestingAdvice
+     */
+    private function setGdsDataLayer($hasTestingAdvice) {
+        $this->gtmDataLayer(['testingadvice' => var_export($hasTestingAdvice, true)]);
     }
 
     /**

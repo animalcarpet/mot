@@ -14607,6 +14607,405 @@ DELIMITER ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
+-- Table structure for table `model_technical_data`
+--
+
+DROP TABLE IF EXISTS `model_technical_data`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `model_technical_data` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `sub_model_name` varchar(100) DEFAULT NULL COMMENT 'Additional info to differentiate technical data within a model range',
+  `model_id` int(10) unsigned NOT NULL,
+  `fuel_type_id` smallint(6) DEFAULT NULL,
+  `manufacture_start_date` datetime DEFAULT NULL,
+  `manufacture_end_date` datetime DEFAULT NULL,
+  `created_by` int(10) unsigned NOT NULL,
+  `created_on` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `last_updated_by` int(10) unsigned DEFAULT NULL,
+  `last_updated_on` datetime(6) DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(6),
+  `version` int(10) unsigned NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `ix_model_technical_data_created_by` (`created_by`),
+  KEY `ix_model_technical_data_last_updated_by` (`last_updated_by`),
+  KEY `ix_model_technical_data_fuel_type_id` (`fuel_type_id`),
+  KEY `ix_model_technical_data_model_id` (`model_id`),
+  KEY `ix_model_technical_data_model_id_manufacture_date` (`model_id`,`manufacture_start_date`),
+  CONSTRAINT `fk_model_technical_data_created_by_person_id` FOREIGN KEY (`created_by`) REFERENCES `person` (`id`),
+  CONSTRAINT `fk_model_technical_data_last_updated_by_person_id` FOREIGN KEY (`last_updated_by`) REFERENCES `person` (`id`),
+  CONSTRAINT `fk_model_technical_data_model_id_model_id` FOREIGN KEY (`model_id`) REFERENCES `model` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=932 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_ALL_TABLES' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 */ /*!50003 TRIGGER `mot2`.`tr_model_technical_data_bi`
+BEFORE INSERT ON `mot2`.`model_technical_data`
+FOR EACH ROW
+MainBlock: BEGIN
+    
+    DECLARE c_version VARCHAR(256) DEFAULT 'tr_model_technical_data_bi Generated on 2017-01-27 13:42:33. $Id$';
+    
+    IF `mot2`.`is_mot_trigger_disabled`()
+    THEN
+        LEAVE MainBlock;
+    END IF;
+    
+    IF (@app_user_id IS NULL)
+    THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Session variable @app_user_id cannot be NULL if triggers are enabled.';
+    END IF;
+    
+    SET NEW.`version` = 1;
+    SET NEW.`created_by` = COALESCE(@app_user_id, NEW.`last_updated_by`, NEW.`created_by`);
+    SET NEW.`last_updated_by` = NEW.`created_by`;
+    SET NEW.`created_on` = CURRENT_TIMESTAMP;
+    SET NEW.`last_updated_on` = NEW.`created_on`;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_ALL_TABLES' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 */ /*!50003 TRIGGER `mot2`.`tr_model_technical_data_bu`
+BEFORE UPDATE ON `mot2`.`model_technical_data`
+FOR EACH ROW
+MainBlock: BEGIN
+    
+    DECLARE c_version VARCHAR(256) DEFAULT 'tr_model_technical_data_bu Generated on 2017-01-27 13:42:33. $Id$';
+    
+    IF `mot2`.`is_mot_trigger_disabled`()
+    THEN
+        LEAVE MainBlock;
+    END IF;
+    
+    IF (@app_user_id IS NULL)
+    THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Session variable @app_user_id cannot be NULL if triggers are enabled.';
+    END IF;
+    
+    SET NEW.`version` = OLD.`version` + 1;
+    SET NEW.`last_updated_by` = COALESCE(@app_user_id, NEW.`last_updated_by`);
+    SET NEW.`last_updated_on` = CURRENT_TIMESTAMP;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Table structure for table `model_technical_data_category`
+--
+
+DROP TABLE IF EXISTS `model_technical_data_category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `model_technical_data_category` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL COMMENT 'Short description of model technical data category',
+  `display_order` smallint(5) unsigned DEFAULT NULL COMMENT 'To allow VTD to be ordered by category in a prescribed manner',
+  `created_by` int(10) unsigned NOT NULL,
+  `created_on` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `last_updated_by` int(10) unsigned DEFAULT NULL,
+  `last_updated_on` datetime(6) DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(6),
+  `version` int(10) unsigned NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `ix_model_technical_data_category_created_by` (`created_by`),
+  KEY `ix_model_technical_data_category_last_updated_by` (`last_updated_by`),
+  CONSTRAINT `fk_model_technical_data_category_created_by_person_id` FOREIGN KEY (`created_by`) REFERENCES `person` (`id`),
+  CONSTRAINT `fk_model_technical_data_category_last_updated_by_person_id` FOREIGN KEY (`last_updated_by`) REFERENCES `person` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_ALL_TABLES' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 */ /*!50003 TRIGGER `mot2`.`tr_model_technical_data_category_bi`
+BEFORE INSERT ON `mot2`.`model_technical_data_category`
+FOR EACH ROW
+MainBlock: BEGIN
+    
+    DECLARE c_version VARCHAR(256) DEFAULT 'tr_model_technical_data_category_bi Generated on 2017-01-27 13:42:33. $Id$';
+    
+    IF `mot2`.`is_mot_trigger_disabled`()
+    THEN
+        LEAVE MainBlock;
+    END IF;
+    
+    IF (@app_user_id IS NULL)
+    THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Session variable @app_user_id cannot be NULL if triggers are enabled.';
+    END IF;
+    
+    SET NEW.`version` = 1;
+    SET NEW.`created_by` = COALESCE(@app_user_id, NEW.`last_updated_by`, NEW.`created_by`);
+    SET NEW.`last_updated_by` = NEW.`created_by`;
+    SET NEW.`created_on` = CURRENT_TIMESTAMP;
+    SET NEW.`last_updated_on` = NEW.`created_on`;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_ALL_TABLES' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 */ /*!50003 TRIGGER `mot2`.`tr_model_technical_data_category_bu`
+BEFORE UPDATE ON `mot2`.`model_technical_data_category`
+FOR EACH ROW
+MainBlock: BEGIN
+    
+    DECLARE c_version VARCHAR(256) DEFAULT 'tr_model_technical_data_category_bu Generated on 2017-01-27 13:42:33. $Id$';
+    
+    IF `mot2`.`is_mot_trigger_disabled`()
+    THEN
+        LEAVE MainBlock;
+    END IF;
+    
+    IF (@app_user_id IS NULL)
+    THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Session variable @app_user_id cannot be NULL if triggers are enabled.';
+    END IF;
+    
+    SET NEW.`version` = OLD.`version` + 1;
+    SET NEW.`last_updated_by` = COALESCE(@app_user_id, NEW.`last_updated_by`);
+    SET NEW.`last_updated_on` = CURRENT_TIMESTAMP;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Table structure for table `model_technical_data_content`
+--
+
+DROP TABLE IF EXISTS `model_technical_data_content`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `model_technical_data_content` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `short_description` varchar(50) NOT NULL COMMENT 'Short summary of model technical data description',
+  `description` varchar(4000) NOT NULL COMMENT 'Full vehicle technical information for tester',
+  `display_order` smallint(5) unsigned DEFAULT NULL,
+  `model_technical_data_category_id` bigint(20) unsigned NOT NULL,
+  `created_by` int(10) unsigned NOT NULL,
+  `created_on` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `last_updated_by` int(10) unsigned DEFAULT NULL,
+  `last_updated_on` datetime(6) DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(6),
+  `version` int(10) unsigned NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `ix_model_technical_data_content_created_by` (`created_by`),
+  KEY `ix_model_technical_data_content_last_updated_by` (`last_updated_by`),
+  KEY `ix_model_technical_data_content_model_technical_data_category_id` (`model_technical_data_category_id`),
+  CONSTRAINT `fk_model_technical_data_content_created_by_person_id` FOREIGN KEY (`created_by`) REFERENCES `person` (`id`),
+  CONSTRAINT `fk_model_technical_data_content_last_updated_by_person_id` FOREIGN KEY (`last_updated_by`) REFERENCES `person` (`id`),
+  CONSTRAINT `fk_model_technical_data_content_model_technical_data_category_id` FOREIGN KEY (`model_technical_data_category_id`) REFERENCES `model_technical_data_category` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=200 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_ALL_TABLES' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 */ /*!50003 TRIGGER `mot2`.`tr_model_technical_data_content_bi`
+BEFORE INSERT ON `mot2`.`model_technical_data_content`
+FOR EACH ROW
+MainBlock: BEGIN
+    
+    DECLARE c_version VARCHAR(256) DEFAULT 'tr_model_technical_data_content_bi Generated on 2017-01-27 13:42:33. $Id$';
+    
+    IF `mot2`.`is_mot_trigger_disabled`()
+    THEN
+        LEAVE MainBlock;
+    END IF;
+    
+    IF (@app_user_id IS NULL)
+    THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Session variable @app_user_id cannot be NULL if triggers are enabled.';
+    END IF;
+    
+    SET NEW.`version` = 1;
+    SET NEW.`created_by` = COALESCE(@app_user_id, NEW.`last_updated_by`, NEW.`created_by`);
+    SET NEW.`last_updated_by` = NEW.`created_by`;
+    SET NEW.`created_on` = CURRENT_TIMESTAMP;
+    SET NEW.`last_updated_on` = NEW.`created_on`;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_ALL_TABLES' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 */ /*!50003 TRIGGER `mot2`.`tr_model_technical_data_content_bu`
+BEFORE UPDATE ON `mot2`.`model_technical_data_content`
+FOR EACH ROW
+MainBlock: BEGIN
+    
+    DECLARE c_version VARCHAR(256) DEFAULT 'tr_model_technical_data_content_bu Generated on 2017-01-27 13:42:33. $Id$';
+    
+    IF `mot2`.`is_mot_trigger_disabled`()
+    THEN
+        LEAVE MainBlock;
+    END IF;
+    
+    IF (@app_user_id IS NULL)
+    THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Session variable @app_user_id cannot be NULL if triggers are enabled.';
+    END IF;
+    
+    SET NEW.`version` = OLD.`version` + 1;
+    SET NEW.`last_updated_by` = COALESCE(@app_user_id, NEW.`last_updated_by`);
+    SET NEW.`last_updated_on` = CURRENT_TIMESTAMP;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Table structure for table `model_technical_data_content_map`
+--
+
+DROP TABLE IF EXISTS `model_technical_data_content_map`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `model_technical_data_content_map` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `model_technical_data_id` bigint(20) unsigned NOT NULL,
+  `model_technical_data_content_id` bigint(20) unsigned NOT NULL,
+  `created_by` int(10) unsigned NOT NULL,
+  `created_on` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `last_updated_by` int(10) unsigned DEFAULT NULL,
+  `last_updated_on` datetime(6) DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(6),
+  `version` int(10) unsigned NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `ix_model_technical_data_content_map_created_by` (`created_by`),
+  KEY `ix_model_technical_data_content_map_last_updated_by` (`last_updated_by`),
+  KEY `ix_model_technical_data_content_map_model_technical_data_id` (`model_technical_data_id`),
+  KEY `ix_model_technical_data_content_map_mtd_content_id` (`model_technical_data_content_id`),
+  CONSTRAINT `fk_model_technical_data_content_map_created_by_person_id` FOREIGN KEY (`created_by`) REFERENCES `person` (`id`),
+  CONSTRAINT `fk_model_technical_data_content_map_last_updated_by_person_id` FOREIGN KEY (`last_updated_by`) REFERENCES `person` (`id`),
+  CONSTRAINT `fk_model_technical_data_content_map_model_technical_data_id` FOREIGN KEY (`model_technical_data_id`) REFERENCES `model_technical_data` (`id`),
+  CONSTRAINT `fk_model_technical_data_content_map_mtd_content_id` FOREIGN KEY (`model_technical_data_content_id`) REFERENCES `model_technical_data_content` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1378 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_ALL_TABLES' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 */ /*!50003 TRIGGER `mot2`.`tr_model_technical_data_content_map_bi`
+BEFORE INSERT ON `mot2`.`model_technical_data_content_map`
+FOR EACH ROW
+MainBlock: BEGIN
+    
+    DECLARE c_version VARCHAR(256) DEFAULT 'tr_model_technical_data_content_map_bi Generated on 2017-01-27 13:42:33. $Id$';
+    
+    IF `mot2`.`is_mot_trigger_disabled`()
+    THEN
+        LEAVE MainBlock;
+    END IF;
+    
+    IF (@app_user_id IS NULL)
+    THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Session variable @app_user_id cannot be NULL if triggers are enabled.';
+    END IF;
+    
+    SET NEW.`version` = 1;
+    SET NEW.`created_by` = COALESCE(@app_user_id, NEW.`last_updated_by`, NEW.`created_by`);
+    SET NEW.`last_updated_by` = NEW.`created_by`;
+    SET NEW.`created_on` = CURRENT_TIMESTAMP;
+    SET NEW.`last_updated_on` = NEW.`created_on`;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_ALL_TABLES' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 */ /*!50003 TRIGGER `mot2`.`tr_model_technical_data_content_map_bu`
+BEFORE UPDATE ON `mot2`.`model_technical_data_content_map`
+FOR EACH ROW
+MainBlock: BEGIN
+    
+    DECLARE c_version VARCHAR(256) DEFAULT 'tr_model_technical_data_content_map_bu Generated on 2017-01-27 13:42:33. $Id$';
+    
+    IF `mot2`.`is_mot_trigger_disabled`()
+    THEN
+        LEAVE MainBlock;
+    END IF;
+    
+    IF (@app_user_id IS NULL)
+    THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Session variable @app_user_id cannot be NULL if triggers are enabled.';
+    END IF;
+    
+    SET NEW.`version` = OLD.`version` + 1;
+    SET NEW.`last_updated_by` = COALESCE(@app_user_id, NEW.`last_updated_by`);
+    SET NEW.`last_updated_on` = CURRENT_TIMESTAMP;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
 -- Table structure for table `mot1_vts_device_status`
 --
 
@@ -31062,6 +31461,106 @@ MainBlock: BEGIN
     SET NEW.`last_updated_by` = NEW.`created_by`;
     SET NEW.`created_on` = CURRENT_TIMESTAMP;
     SET NEW.`last_updated_on` = NEW.`created_on`;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Table structure for table `vehicle_model_technical_data_map`
+--
+
+DROP TABLE IF EXISTS `vehicle_model_technical_data_map`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `vehicle_model_technical_data_map` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `vehicle_id` int(10) unsigned NOT NULL,
+  `model_technical_data_id` bigint(20) unsigned NOT NULL,
+  `created_by` int(10) unsigned NOT NULL,
+  `created_on` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `last_updated_by` int(10) unsigned DEFAULT NULL,
+  `last_updated_on` datetime(6) DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(6),
+  `version` int(10) unsigned NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `ix_vehicle_model_technical_data_map_created_by` (`created_by`),
+  KEY `ix_vehicle_model_technical_data_map_last_updated_by` (`last_updated_by`),
+  KEY `ix_vehicle_model_technical_data_map_vehicle_id` (`vehicle_id`),
+  KEY `ix_vehicle_model_technical_data_map_model_technical_data_id` (`model_technical_data_id`),
+  CONSTRAINT `fk_vehicle_model_technical_data_map_created_by_person_id` FOREIGN KEY (`created_by`) REFERENCES `person` (`id`),
+  CONSTRAINT `fk_vehicle_model_technical_data_map_model_technical_data_id` FOREIGN KEY (`model_technical_data_id`) REFERENCES `model_technical_data` (`id`),
+  CONSTRAINT `fk_vehicle_model_technical_data_map_updated_by_person_id` FOREIGN KEY (`last_updated_by`) REFERENCES `person` (`id`),
+  CONSTRAINT `fk_vehicle_model_technical_data_map_vehicle_id_vehicle_id` FOREIGN KEY (`vehicle_id`) REFERENCES `vehicle` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_ALL_TABLES' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 */ /*!50003 TRIGGER `mot2`.`tr_vehicle_model_technical_data_map_bi`
+BEFORE INSERT ON `mot2`.`vehicle_model_technical_data_map`
+FOR EACH ROW
+MainBlock: BEGIN
+    
+    DECLARE c_version VARCHAR(256) DEFAULT 'tr_vehicle_model_technical_data_map_bi Generated on 2017-01-27 13:42:33. $Id$';
+    
+    IF `mot2`.`is_mot_trigger_disabled`()
+    THEN
+        LEAVE MainBlock;
+    END IF;
+    
+    IF (@app_user_id IS NULL)
+    THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Session variable @app_user_id cannot be NULL if triggers are enabled.';
+    END IF;
+    
+    SET NEW.`version` = 1;
+    SET NEW.`created_by` = COALESCE(@app_user_id, NEW.`last_updated_by`, NEW.`created_by`);
+    SET NEW.`last_updated_by` = NEW.`created_by`;
+    SET NEW.`created_on` = CURRENT_TIMESTAMP;
+    SET NEW.`last_updated_on` = NEW.`created_on`;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_ALL_TABLES' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 */ /*!50003 TRIGGER `mot2`.`tr_vehicle_model_technical_data_map_bu`
+BEFORE UPDATE ON `mot2`.`vehicle_model_technical_data_map`
+FOR EACH ROW
+MainBlock: BEGIN
+    
+    DECLARE c_version VARCHAR(256) DEFAULT 'tr_vehicle_model_technical_data_map_bu Generated on 2017-01-27 13:42:33. $Id$';
+    
+    IF `mot2`.`is_mot_trigger_disabled`()
+    THEN
+        LEAVE MainBlock;
+    END IF;
+    
+    IF (@app_user_id IS NULL)
+    THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Session variable @app_user_id cannot be NULL if triggers are enabled.';
+    END IF;
+    
+    SET NEW.`version` = OLD.`version` + 1;
+    SET NEW.`last_updated_by` = COALESCE(@app_user_id, NEW.`last_updated_by`);
+    SET NEW.`last_updated_on` = CURRENT_TIMESTAMP;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;

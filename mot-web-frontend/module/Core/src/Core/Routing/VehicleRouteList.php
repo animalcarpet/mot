@@ -23,4 +23,5 @@ class VehicleRouteList
     const VEHICLE_ENFORCEMENT_MASKED_SUCCESSFULLY = 'vehicle/detail/masked-successfully';
     const VEHICLE_ENFORCEMENT_UNMASK = 'vehicle/detail/unmask';
     const VEHICLE_ENFORCEMENT_UNMASKED_SUCCESSFULLY = 'vehicle/detail/unmasked-successfully';
+    const VEHICLE_TESTING_ADVICE = 'vehicle/detail/testing-advice';
 }

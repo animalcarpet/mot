@@ -90,6 +90,12 @@ class StartTestConfirmationViewModel
     /** @var bool */
     private $noTestClassSetOnSubmission;
 
+    /** @var bool */
+    private $showTestingAdvice = false;
+
+    /** @var @var string */
+    private $testingAdviceUrl;
+
     /**
      * @return string
      */
@@ -652,5 +658,22 @@ class StartTestConfirmationViewModel
         $fuelTypeCodesWithOptionalCylinderCapacity = new FuelTypeAndCylinderCapacity();
         return strlen($cylinderCapacity) > 0
         && !in_array($fuelType->getCode(), $fuelTypeCodesWithOptionalCylinderCapacity->getAllFuelTypeCodesWithOptionalCylinderCapacity());
+    }
+
+    public function hasTestingAdvice()
+    {
+        return $this->showTestingAdvice;
+    }
+
+    public function setTestingAdviceUrl($url)
+    {
+        $this->showTestingAdvice = true;
+        $this->testingAdviceUrl = $url;
+        return;
+    }
+
+    public function getTestingAdviceUrl()
+    {
+        return $this->testingAdviceUrl;
     }
 }

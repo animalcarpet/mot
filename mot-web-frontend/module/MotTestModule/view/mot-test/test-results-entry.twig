@@ -11,6 +11,13 @@
     </a>
     for this test.
 </p>
+
+{% if hasTestingAdvice %}
+    <p>
+        See <a href="{{ testingAdviceUrl }}">testing advice</a> for this vehicle.
+    </p>
+{% endif %}
+
 {% if flashMessenger().hasSuccessMessages() %}
     {% for message in flashMessenger().getSuccessMessages() %}
         <div class="message--success" id="validation-message--success">

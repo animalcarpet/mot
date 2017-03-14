@@ -8,6 +8,7 @@
 namespace Dvsa\Mot\Frontend\MotTestModule\Controller;
 
 use Core\Authorisation\Assertion\WebPerformMotTestAssertion;
+use Core\Routing\VehicleRoutes;
 use Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle;
 use Dvsa\Mot\ApiClient\Resource\Item\MotTest;
 use Dvsa\Mot\ApiClient\Service\MotTestService;
@@ -23,6 +24,7 @@ use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use DvsaMotTest\Model\OdometerReadingViewObject;
 use DvsaMotTest\ViewModel\DvsaVehicleViewModel;
+use Vehicle\TestingAdvice\Assertion\ShowTestingAdviceAssertion;
 use Zend\Http\Response;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\View\Model\ViewModel;
@@ -179,7 +181,14 @@ class MotTestResultsController extends AbstractDvsaMotTestController
         $identifiedDefects = IdentifiedDefectCollection::fromMotApiData($motTest);
         $isRetest = $motTest->getTestTypeCode() === MotTestTypeCode::RE_TEST;
 
-        $this->addTestNumberAndTypeToGtmDataLayer($motTest->getMotTestNumber(), $motTest->getTestTypeCode());
+
+        $hasTestingAdvice = false;
+        $testingAdviceUrl = null;
+        if ((new ShowTestingAdviceAssertion($this->getVehicleServiceClient()))->isGranted($vehicle->getId(), $motTest->getTestTypeCode())) {
+            $hasTestingAdvice = true;
+            $testingAdviceUrl = VehicleRoutes::of($this->url())->testingAdviceWithMotTestNumberParam($vehicle->getId(), $motTest->getMotTestNumber());
+        }
+        $this->addTestNumberAndTypeToGtmDataLayer($motTest->getMotTestNumber(), $motTest->getTestTypeCode(), $hasTestingAdvice);
 
         return $this->createViewModel('mot-test/test-results-entry.twig', [
             'isDemo' => $isDemo,
@@ -194,6 +203,8 @@ class MotTestResultsController extends AbstractDvsaMotTestController
             'identifiedDefects' => $identifiedDefects,
             'isRetest' => $isRetest,
             'isNonMotTest' => $isNonMotTest,
+            'hasTestingAdvice' => $hasTestingAdvice,
+            'testingAdviceUrl' => $testingAdviceUrl,
         ]);
     }
 
@@ -259,11 +270,13 @@ class MotTestResultsController extends AbstractDvsaMotTestController
     /**
      * @param string $motTestNumber
      * @param int $testTypeId
+     * @param boolean $hasTestingAdvice
      */
-    private function addTestNumberAndTypeToGtmDataLayer($motTestNumber, $testTypeId)
+    private function addTestNumberAndTypeToGtmDataLayer($motTestNumber, $testTypeId, $hasTestingAdvice)
     {
         $this->gtmDataLayer([
             'testId' => $motTestNumber,
+            'testingadvice' => var_export($hasTestingAdvice, true),
             'testType' => $testTypeId,
         ]);
     }

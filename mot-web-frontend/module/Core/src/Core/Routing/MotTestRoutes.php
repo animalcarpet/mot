@@ -22,6 +22,11 @@ class MotTestRoutes extends AbstractRoutes
         return new MotTestRoutes($object);
     }
 
+    public function motTest($motTestNumber)
+    {
+        return $this->url(MotTestRouteList::MOT_TEST, ['motTestNumber' => $motTestNumber]);
+    }
+
     public function vehicleSearchByVin($vin)
     {
         return $this->url(MotTestRouteList::MOT_TEST_CERTIFICATE_SEARCH_BY_VIN, [], ['query' => ["vin" => $vin]]);

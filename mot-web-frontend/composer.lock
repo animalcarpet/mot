@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c6374395a2a3883efa79771b4b992d23",
-    "content-hash": "b970552b20463350b33db78e5f26e4bb",
+    "hash": "a44e4ee0ecb6726836db2c079bd4fb3f",
+    "content-hash": "47cf97b39a3c32982a00ec5da7ebf646",
     "packages": [
         {
             "name": "cpms/client",
@@ -1144,17 +1144,17 @@
         },
         {
             "name": "dvsa/web-frontend-assets",
-            "version": "v1.0.5",
+            "version": "v1.0.7",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/web-frontend-assets.git",
-                "reference": "e60fa329892b0b184931659ea784c23e2baa5125"
+                "reference": "a56e2efa71de4411e0a6d2c528d4e582af30d88a"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/dvsa-web-frontend-assets-v1.0.5-5e6ff7.tar",
-                "reference": "e60fa329892b0b184931659ea784c23e2baa5125",
-                "shasum": "6dd1dc7eac764701164bb2828d49222a55cd85fe"
+                "url": "https://packages.motdev.org.uk//dist/dvsa-web-frontend-assets-v1.0.7-57792d.tar",
+                "reference": "a56e2efa71de4411e0a6d2c528d4e582af30d88a",
+                "shasum": "a4830b987da497ca7e9c240555b641fd796cf73a"
             },
             "type": "library",
             "authors": [
@@ -1163,7 +1163,7 @@
                     "email": ""
                 }
             ],
-            "time": "2017-03-02 19:50:36"
+            "time": "2017-03-08 14:45:20"
         },
         {
             "name": "erusev/parsedown",
@@ -1717,17 +1717,17 @@
         },
         {
             "name": "mot/api-client-php",
-            "version": "13.6.1",
+            "version": "13.7.1",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.motdev.org.uk:mot/api-client-php.git",
-                "reference": "66e0a9e8194c01d91bd3bc20ce9cdc3016794c9f"
+                "reference": "539c249dd7e85543009da2e4a158ec260cead7ac"
             },
             "dist": {
                 "type": "tar",
-                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-13.6.1-a7150e.tar",
-                "reference": "66e0a9e8194c01d91bd3bc20ce9cdc3016794c9f",
-                "shasum": "0e27fda26e0c8a45a4a0c3cb7796afbacdcca286"
+                "url": "https://packages.motdev.org.uk//dist/mot-api-client-php-13.7.1-dcf82d.tar",
+                "reference": "539c249dd7e85543009da2e4a158ec260cead7ac",
+                "shasum": "041b9523e90c53b02d8e1c11e6636a50a37b2c76"
             },
             "require": {
                 "guzzlehttp/guzzle": "~6.1",
@@ -1774,7 +1774,7 @@
                     "./vendor/bin/phpunit --group integration"
                 ]
             },
-            "time": "2017-02-28 15:09:07"
+            "time": "2017-03-14 08:29:15"
         },
         {
             "name": "noiselabs/zf-debug-utils",

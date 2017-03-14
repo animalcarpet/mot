@@ -1,0 +1,34 @@
+<form method="post" name="VehicleSearch" action="" id="VehicleSearch">
+    <div class="text">
+
+        {% for category in viewModel.getTestingAdvice.getCategories %}
+            {% if category.getContents %}
+                <h3 class="heading-medium">{{ category.getName }}</h3>
+                {% for content in category.getContents %}
+                    <p>{{ content }}</p>
+                {% endfor %}
+            {% endif %}
+
+        {% endfor %}
+
+        <div class="message">
+            <h3 class="message__heading">Testing advice is a new feature</h3>
+            <p>Let us know how it could be improved - <a href="{{ viewModel.getFeedbackLink }}" target="_blank">leave feedback</a> </p>
+        </div>
+
+    </div>
+
+    <div class="form-group">
+        <nav class="content-navigation">
+            <input type="submit" value="Print testing advice" class="button js-only" onclick="window.print();return false;">
+            <ul class="content-navigation__secondary">
+                <li>
+                    <a href="{{ viewModel.getBackLinkUrl }}">{{ viewModel.getBackLinkLabel }}</a>
+
+                </li>
+            </ul>
+        </nav>
+
+    </div>
+
+</form>
