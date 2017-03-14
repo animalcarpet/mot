@@ -3,133 +3,103 @@
 namespace DashboardTest\ViewModel;
 
 use Dashboard\Security\DashboardGuard;
-use Dashboard\Model\Dashboard;
 use Dashboard\ViewModel\HeroActionViewModel;
+use Dashboard\ViewModel\ReplacementDuplicateCertificateViewModel;
 use Dashboard\ViewModel\SlotsViewModel;
+use Dashboard\ViewModel\StartMotViewModel;
 use DvsaCommonTest\TestUtils\XMock;
 use PHPUnit_Framework_TestCase;
 
 class HeroActionViewModelTest extends PHPUnit_Framework_TestCase
 {
-    const USER_ROLE = 'user';
-    const AEDM_ROLE = 'aedm';
-
-    /** @var Dashboard $mockDashboard */
-    private $mockDashboard;
+    /** @var SlotsViewModel $mockSlotsViewModel */
+    private $mockSlotsViewModel;
 
     /** @var DashboardGuard $mockDashboardGuard */
     private $mockDashboardGuard;
 
-    /** @var SlotsViewModel $mockSlotsViewModel */
-    private $mockSlotsViewModel;
+    /** @var  StartMotViewModel $mockStartMotViewModel */
+    private $mockStartMotViewModel;
+
+    /** @var  ReplacementDuplicateCertificateViewModel $mockRdCertificateViewModel */
+    private $mockRdCertificateViewModel;
 
     public function setup()
     {
-        $this->mockDashboard = XMock::of(Dashboard::class);
-        $this->mockDashboardGuard = XMock::of(DashboardGuard::class);
         $this->mockSlotsViewModel = XMock::of(SlotsViewModel::class);
+        $this->mockDashboardGuard = XMock::of(DashboardGuard::class);
+        $this->mockStartMotViewModel = XMock::of(StartMotViewModel::class);
+        $this->mockRdCertificateViewModel = XMock::of(ReplacementDuplicateCertificateViewModel::class);
     }
 
     public function testEmptyHeroAction()
     {
-        $heroAction = $this->createHeroActionViewModel("");
+        $heroAction = $this->heroActionViewModel();
 
         $this->assertFalse($heroAction->isHeroActionVisible());
-    }
-
-    public function testIfHeroActionIsVisibleForAedmRole()
-    {
-        $heroAction = $this->createHeroActionViewModel(self::AEDM_ROLE);
-
-        $this->assertTrue($heroAction->isHeroActionVisible());
-    }
-
-    public function testIfHeroActionIsNotVisibleForUserWithUserRoleOnly()
-    {
-        $heroAction = $this->createHeroActionViewModel(self::USER_ROLE);
-
-        $this->assertFalse($heroAction->isHeroActionVisible());
-    }
-
-    public function testIfSlotCountIsVisibleForAedmRole()
-    {
-        $heroAction = $this->createHeroActionViewModel(self::AEDM_ROLE);
-
-        $this->assertTrue($heroAction->isHeroActionVisible());
-        $this->assertTrue($heroAction->isSlotCountVisible());
-    }
-
-    public function testIfSlotCountIsNotVisibleForUserWithUserRoleOnly()
-    {
-        $heroAction = $this->createHeroActionViewModel(self::USER_ROLE);
-
-        $this->assertTrue(true, $heroAction->isHeroActionVisible());
-        $this->assertFalse($heroAction->isSlotCountVisible());
-    }
-
-    public function testIfSlotCountReturnExpectedSlotCount()
-    {
-        $this->mockSlotsViewModel
-            ->method('getOverallSlotCount')
-            ->willReturn(100);
-
-        $expectedNumberOfSlots = 100;
-
-        $heroAction = $this->createHeroActionViewModel(self::AEDM_ROLE);
-
-        $this->assertTrue(true, $heroAction->isHeroActionVisible());
-        $this->assertEquals($expectedNumberOfSlots, $heroAction->getOverallSlotCount());
-    }
-
-    public function testIfReplacementDuplicateCertificateLinkIsVisibleForAemdRole()
-    {
-        $this->mockSlotsViewModel
-             ->method('isSlotCountVisible')
-             ->willReturn(true);
-
-        $heroAction = $this->createHeroActionViewModel(self::AEDM_ROLE);
-
-        $this->assertTrue(true, $heroAction->isHeroActionVisible());
-        $this->assertTrue($heroAction->isSlotCountVisible());
-    }
-
-    public function testIfReplacementDuplicateCertificateLinkIsNotVisibleForUserWithUserRoleOnly()
-    {
-        $heroAction = $this->createHeroActionViewModel(self::USER_ROLE);
-
-        $this->assertTrue(true, $heroAction->isHeroActionVisible());
-        $this->assertFalse($heroAction->isSlotCountVisible());
-    }
-
-    public function testIfSiteCountIsVisibleForAedmRole()
-    {
-        $heroAction = $this->createHeroActionViewModel(self::AEDM_ROLE);
-
-        $this->assertTrue($heroAction->isHeroActionVisible());
-        $this->assertTrue($heroAction->isSiteCountVisible());
-    }
-
-    public function testIfOverallSiteCountReturnExpectedSiteCountAmount()
-    {
-        $this->mockSlotsViewModel
-            ->method('getOverallSiteCount')
-            ->willReturn(10);
-
-        $expectedNumberOfSites = 10;
-
-        $heroAction = $this->createHeroActionViewModel(self::AEDM_ROLE);
-
-        $this->assertTrue(true, $heroAction->isHeroActionVisible());
-        $this->assertEquals($expectedNumberOfSites, $heroAction->getOverallSiteCount());
     }
 
     /**
-     * @param string $userRole
+     * @dataProvider canViewHeroActionDataProvider
      *
+     * @param bool $canViewRdCertificateLink
+     * @param bool $canViewSlotsBalance
+     * @param bool $canStartMotTest
+     * @param bool $isMotFormsLinkVisible
+     * @param bool $expectedResult
+     */
+    public function testIfHeroActionIsVisible(
+        $canViewRdCertificateLink,
+        $canViewSlotsBalance,
+        $canStartMotTest,
+        $isMotFormsLinkVisible,
+        $expectedResult)
+    {
+        $this->mockRdCertificateViewModel
+            ->method('canViewReplacementDuplicateCertificateLink')
+            ->willReturn($canViewRdCertificateLink);
+
+        $this->mockSlotsViewModel
+            ->method('canViewSlotBalance')
+            ->willReturn($canViewSlotsBalance);
+
+        $this->mockStartMotViewModel
+            ->method('canStartMotTest')
+            ->willReturn($canStartMotTest);
+
+        $this->mockDashboardGuard
+            ->method('isTester')
+            ->willReturn($isMotFormsLinkVisible);
+
+        $heroAction = $this->heroActionViewModel();
+
+        $this->assertEquals($expectedResult, $heroAction->isHeroActionVisible());
+    }
+
+    /**
+     * @return array
+     */
+    public function canViewHeroActionDataProvider()
+    {
+        return [
+            [ true, true, true, true, true ],
+            [ false, true, true, true, true ],
+            [ false, false, true, true, true ],
+            [ false, false, false, true, true ],
+            [ false, false, false, false, false ],
+        ];
+    }
+
+    /**
      * @return HeroActionViewModel
      */
-    private function createHeroActionViewModel($userRole)
+    private function heroActionViewModel()
     {
-        return new HeroActionViewModel($userRole, $this->mockSlotsViewModel, $this->mockDashboardGuard);
+        return new HeroActionViewModel(
+            $this->mockDashboardGuard,
+            $this->mockSlotsViewModel,
+            $this->mockRdCertificateViewModel,
+            $this->mockStartMotViewModel
+        );
     }
 }

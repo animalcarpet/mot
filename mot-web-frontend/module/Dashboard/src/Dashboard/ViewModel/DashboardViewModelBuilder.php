@@ -4,6 +4,8 @@ namespace Dashboard\ViewModel;
 
 use Dashboard\Model\Dashboard;
 use Dashboard\Security\DashboardGuard;
+use Dvsa\Mot\Frontend\AuthenticationModule\Model;
+use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
 use Zend\Mvc\Controller\Plugin\Url;
 
 class DashboardViewModelBuilder
@@ -17,22 +19,26 @@ class DashboardViewModelBuilder
     /** @var Url $url */
     private $url;
 
-    /** @var SlotsViewModel $slotsViewModel */
-    private $slotsViewModel;
+    /** @var MotFrontendIdentityInterface $identity */
+    private $identity;
 
     /**
      * DashboardViewModelBuilder constructor.
      *
+     * @param MotFrontendIdentityInterface $identity
      * @param Dashboard $dashboard
      * @param DashboardGuard $dashboardGuard
      * @param Url $url
      */
     public function __construct(
+        MotFrontendIdentityInterface $identity,
         Dashboard $dashboard,
         DashboardGuard $dashboardGuard,
         Url $url
 
-    ) {
+    )
+    {
+        $this->identity = $identity;
         $this->dashboard = $dashboard;
         $this->dashboardGuard = $dashboardGuard;
         $this->url = $url;
@@ -46,7 +52,7 @@ class DashboardViewModelBuilder
         $dashboardViewModel = new DashboardViewModel(
             $this->buildHeroActionViewModel(),
             $this->buildNotificationsViewModel(),
-            $this->buildDemoTestViewModel(),
+            $this->buildTrainingTestViewModel(),
             $this->buildAuthorisedExaminersViewModel(),
             $this->buildSpecialNoticesViewModel()
         );
@@ -56,48 +62,6 @@ class DashboardViewModelBuilder
         $dashboardViewModel->setShowContingencyTests($this->shouldShowContingencyTests());
 
         return $dashboardViewModel;
-    }
-
-    /**
-     * @return HeroActionViewModel
-     */
-    private function buildHeroActionViewModel()
-    {
-        $this->slotsViewModel = $this->buildSlotsViewModel();
-
-        $heroActionViewModel = new HeroActionViewModel(
-            $this->dashboard->getHero(),
-            $this->slotsViewModel,
-            $this->dashboardGuard
-        );
-
-        return $heroActionViewModel;
-    }
-
-    /**
-     * @return NotificationsViewModel
-     */
-    private function buildNotificationsViewModel()
-    {
-        return NotificationsViewModel::fromNotifications(
-            $this->dashboard->getNotifications(),
-            $this->dashboard->getUnreadNotificationsCount(),
-            $this->url
-        );
-    }
-
-    /**
-     * @return DemoTestViewModel
-     */
-    private function buildDemoTestViewModel()
-    {
-        $demoTestViewModel = new DemoTestViewModel($this->dashboardGuard);
-
-        if ($this->dashboard->hasDemoTestInProgress()) {
-            $demoTestViewModel->setInProgressTestNumber($this->dashboard->getInProgressDemoTestNumber());
-        }
-
-        return $demoTestViewModel;
     }
 
     /**
@@ -121,7 +85,52 @@ class DashboardViewModelBuilder
      */
     public function shouldShowContingencyTests()
     {
-        return $this->dashboardGuard->canViewContingencyTests();
+        return $this->dashboardGuard->isQualifiedTester();
+    }
+
+    /**
+     * @return HeroActionViewModel
+     */
+    private function buildHeroActionViewModel()
+    {
+        $slotsViewModel = $this->buildSlotsViewModel();
+        $rdCertificateViewModel = $this->buildRDCertificateViewModel();
+        $startMotViewModel = $this->buildStartMotViewModel();
+
+        $heroActionViewModel = new HeroActionViewModel(
+            $this->dashboardGuard,
+            $slotsViewModel,
+            $rdCertificateViewModel,
+            $startMotViewModel
+        );
+
+        return $heroActionViewModel;
+    }
+
+    /**
+     * @return NotificationsViewModel
+     */
+    private function buildNotificationsViewModel()
+    {
+        return NotificationsViewModel::fromNotifications(
+            $this->dashboard->getNotifications(),
+            $this->dashboard->getUnreadNotificationsCount(),
+            $this->url
+        );
+    }
+
+    /**
+     * @return TrainingTestViewModel
+     */
+    private function buildTrainingTestViewModel()
+    {
+        $trainingTestViewModel = new TrainingTestViewModel($this->dashboardGuard);
+
+        if ($this->dashboard->hasDemoTestInProgress()) {
+            $trainingTestViewModel->setInProgressTestNumber($this->dashboard->getInProgressDemoTestNumber());
+        }
+
+        return $trainingTestViewModel;
     }
 
     /**
@@ -130,7 +139,7 @@ class DashboardViewModelBuilder
     private function buildAuthorisedExaminersViewModel()
     {
         return AuthorisedExaminersViewModel::fromAuthorisedExaminers($this->dashboardGuard,
-                                                                      $this->dashboard->getAuthorisedExaminers());
+                                                                     $this->dashboard->getAuthorisedExaminers());
     }
 
     /**
@@ -154,6 +163,7 @@ class DashboardViewModelBuilder
     private function buildSlotsViewModel()
     {
         $slotsViewModel = new SlotsViewModel(
+            $this->dashboardGuard->canViewSlotBalance(),
             $this->dashboard->getOverallSlotCount(),
             $this->dashboard->getOverallSiteCount()
         );
@@ -162,22 +172,34 @@ class DashboardViewModelBuilder
     }
 
     /**
-     * @return YourPerformanceViewModel
+     * @return ReplacementDuplicateCertificateViewModel
      */
-    private function buildYourPerformanceViewModel()
+    private function buildRDCertificateViewModel()
     {
-        $yourPerformanceViewModel = new YourPerformanceViewModel($this->dashboardGuard);
+        $rdCertificateViewModel = new ReplacementDuplicateCertificateViewModel(
+            $this->dashboard->hasTestInProgress(),
+            $this->dashboardGuard->canViewReplacementDuplicateCertificateLink()
+        );
 
-        return $yourPerformanceViewModel;
+        return $rdCertificateViewModel;
     }
 
     /**
-     * @return YourPerformanceViewModel
+     * @return StartMotViewModel
      */
-    private function buildContingencyTestsViewModel()
+    private function buildStartMotViewModel()
     {
-        $contingencyTestsViewModel = new ContingencyTestsViewModel($this->dashboardGuard);
+        $testersCurrentVts = $this->identity->getCurrentVts();
 
-        return $contingencyTestsViewModel;
+        $startMotViewModel = new StartMotViewModel(
+            $this->dashboard->isTesterAtAnySite(),
+            $this->dashboard->hasTestInProgress(),
+            $this->dashboard->getEnterTestResultsLabel(),
+            $this->dashboard->getInProgressTestNumber(),
+            $this->dashboardGuard->isTestingEnabled(),
+            $testersCurrentVts
+        );
+
+        return $startMotViewModel;
     }
 }

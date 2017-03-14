@@ -1,0 +1,14 @@
+{% if motTestAction.hasTestInProgress %}
+    <a href="mot-test/{{ motTestAction.getTestNumberInProgress }}"
+       class="button button-start"
+       id="action-resume-mot-test">
+        {{ motTestAction.getEnterResultsLabel }}
+    </a>
+{% elseif not motTestAction.hasSlotsAvailable %}
+    <p>No slots available, please purchase test slots</p>
+{% else %}
+    <a href="{{ url('vehicle-search') }}"
+       class="button button-start"
+       id="action-start-mot-test">Start MOT test
+    </a>
+{% endif %}

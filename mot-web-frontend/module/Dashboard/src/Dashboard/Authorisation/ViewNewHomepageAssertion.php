@@ -2,35 +2,34 @@
 
 namespace Dashboard\Authorisation;
 
-use DvsaCommon\Model\PersonAuthorization;
+use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Enum\RoleCode;
 
 class ViewNewHomepageAssertion
 {
     const ROLES_ALLOWED_TO_VIEW_NEW_HOMEPAGE = [
         RoleCode::USER,
-        RoleCode::TESTER_ACTIVE,
-        RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED,
-        RoleCode::TESTER_APPLICANT_INITIAL_TRAINING_REQUIRED,
         RoleCode::TESTER,
-        RoleCode::TESTER_ACTIVE,
         RoleCode::SITE_ADMIN,
         RoleCode::SITE_MANAGER,
+        RoleCode::TESTER_ACTIVE,
         RoleCode::AUTHORISED_EXAMINER_DELEGATE,
+        RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED,
         RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
+        RoleCode::TESTER_APPLICANT_INITIAL_TRAINING_REQUIRED,
     ];
 
-    /** @var PersonAuthorization $personAuthorization */
-    private $personAuthorization;
+    /** @var MotAuthorisationServiceInterface $authorisationService */
+    private $authorisationService;
 
     /**
-     * UserAuthorisationHelper constructor.
+     * ViewNewHomepageAssertion constructor.
      *
-     * @param PersonAuthorization $personAuthorization
+     * @param MotAuthorisationServiceInterface $authorisationService
      */
-    public function __construct(PersonAuthorization $personAuthorization)
+    public function __construct(MotAuthorisationServiceInterface $authorisationService)
     {
-        $this->personAuthorization = $personAuthorization;
+        $this->authorisationService = $authorisationService;
     }
 
     /**
@@ -38,23 +37,9 @@ class ViewNewHomepageAssertion
      */
     public function canViewNewHomepage()
     {
-        $userRoles = $this->personAuthorization->getAllRoles();
+        $userRoles = $this->authorisationService->getAllRoles();
 
-        if ($this->doesUserHaveNoRoles($userRoles)) {
-            return true;
-        }
-
-        if ($this->isQualifiedTesterAndAssignedToVts($userRoles)) {
-            return false;
-        }
-
-        foreach ($userRoles as $role) {
-            if (!in_array($role, self::ROLES_ALLOWED_TO_VIEW_NEW_HOMEPAGE)) {
-                return false;
-            }
-        }
-
-        return true;
+        return $this->areAllUserRolesAllowedToViewNewHomepage($userRoles);
     }
 
     /**
@@ -62,18 +47,8 @@ class ViewNewHomepageAssertion
      *
      * @return bool
      */
-    private function doesUserHaveNoRoles(array $userRoles)
+    private function areAllUserRolesAllowedToViewNewHomepage(array $userRoles)
     {
-        return count($userRoles) == 1 && in_array(RoleCode::USER, $userRoles);
-    }
-
-    /**
-     * @param array $userRoles
-     *
-     * @return bool
-     */
-    private function isQualifiedTesterAndAssignedToVts(array $userRoles)
-    {
-        return in_array(RoleCode::TESTER, $userRoles) && in_array(RoleCode::TESTER_ACTIVE, $userRoles);
+        return empty(array_diff($userRoles, self::ROLES_ALLOWED_TO_VIEW_NEW_HOMEPAGE));
     }
 }

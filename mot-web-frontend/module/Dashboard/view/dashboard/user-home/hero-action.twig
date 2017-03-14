@@ -1,13 +1,17 @@
 {% if heroAction.isHeroActionVisible %}
     <div id="hero-actions" class="c-home-hero__actions">
-        {% if heroAction.isSlotCountVisible %}
-            {% include '/dashboard/user-home/slots.twig' with {'slotBalanceAction': dashboard.heroActionViewModel} %}
+
+        {% if heroAction.startMotViewModel.canStartMotTest %}
+            {% include '/dashboard/user-home/mot-test.twig' with {'motTestAction': heroAction.startMotViewModel} %}
+        {% endif %}
+
+        {% if heroAction.slotsViewModel.canViewSlotBalance %}
+            {% include '/dashboard/user-home/slots.twig' with {'slotBalanceAction': heroAction.slotsViewModel} %}
         {% endif %}
 
         <ul class="c-action-list">
-            {% if heroAction.isReplacementDuplicateCertificateLinkVisible %}
-                {% include '/dashboard/user-home/replacement-duplicate-certificate.twig'
-                with {'replacementDuplicateCertificateAction': dashboard.heroActionViewModel} %}
+            {% if heroAction.replacementDuplicateCertificateViewModel.canViewReplacementDuplicateCertificateLink %}
+                {% include '/dashboard/user-home/replacement-duplicate-certificate.twig' %}
             {% endif %}
             {% if heroAction.isMotFormsLinkVisible %}
                 {% include '/dashboard/user-home/mot-forms.twig' %}

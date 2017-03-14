@@ -3,11 +3,11 @@
 namespace DashboardTest\ViewModel;
 
 use Dashboard\Model\Dashboard;
-use Dashboard\Model\PersonalDetails;
 use Dashboard\Security\DashboardGuard;
+use Dashboard\ViewModel\DashboardViewModel;
 use Dashboard\ViewModel\DashboardViewModelBuilder;
 use Dashboard\ViewModel\LinkViewModel;
-use DvsaCommon\Auth\PermissionInSystem;
+use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\XMock;
 use PHPUnit_Framework_TestCase;
@@ -21,79 +21,63 @@ class DashboardViewModelBuilderTest extends PHPUnit_Framework_TestCase
     /** @var AuthorisationServiceMock $authorisationServiceMock */
     private $authorisationServiceMock;
 
-    /** @var  array $authenticatedData */
-    private $authenticatedData;
+    /** @var DashboardViewModel $dashboardViewModel */
+    private $mockDashboardViewModel;
+
+    /** @var DashboardGuard $mockDashboardGuard */
+    private $mockDashboardGuard;
 
     public function setUp()
     {
         $this->dashboardData = [];
-        $this->authenticatedData = [];
         $this->authorisationServiceMock = new AuthorisationServiceMock();
+        $this->mockDashboardViewModel = XMock::of(DashboardViewModel::class);
+        $this->mockDashboardGuard = XMock::of(DashboardGuard::class);
     }
 
-    public function testInProgressDemoTestNumberIsPassedToDemoTestViewModel()
+    public function testShouldReturnANewDashboardViewModel()
     {
-        $inProgressDemoTestNumber = '989978';
-        $dashboardViewModelBuilder =
-            $this->withDashboardData(['inProgressDemoTestNumber' => $inProgressDemoTestNumber])
-            ->buildDashboardViewModelBuilder();
+        $this->mockDashboardViewModel
+            ->method('setShowDemoMessage')
+            ->willReturn(true);
 
-        $demoTestViewModel = $dashboardViewModelBuilder->build()->getDemoTestViewModel();
+        $this->mockDashboardViewModel
+            ->method('setShowYourPerformance')
+            ->willReturn(true);
 
-        $this->assertLinkHrefEndsWithDemoTestNumber($inProgressDemoTestNumber, $demoTestViewModel->getLinkViewModel());
-    }
+        $this->mockDashboardViewModel
+            ->method('setShowContingencyTests')
+            ->willReturn(true);
 
-    public function testDemoTestIsVisibleToUserWithPerformDemoTestPermission()
-    {
-        $dashboardViewModelBuilder = $this
-            ->withPermissionGranted(PermissionInSystem::MOT_DEMO_TEST_PERFORM)
-            ->buildDashboardViewModelBuilder();
-
-        $demoTestViewModel = $dashboardViewModelBuilder->build()->getDemoTestViewModel();
-
-        $this->assertTrue($demoTestViewModel->isVisible());
-    }
-
-    public function testDemoTestIsNotVisibleToUserWithoutPerformDemoTestPermission()
-    {
         $dashboardViewModelBuilder = $this->buildDashboardViewModelBuilder();
 
-        $demoTestViewModel = $dashboardViewModelBuilder->build()->getDemoTestViewModel();
+        $dashboardViewModel = $dashboardViewModelBuilder->build();
 
-        $this->assertFalse($demoTestViewModel->isVisible());
+        $this->assertObjectHasAttribute("heroActionViewModel", $dashboardViewModel);
+        $this->assertObjectHasAttribute("notificationsViewModel", $dashboardViewModel);
+        $this->assertObjectHasAttribute("trainingTestViewModel", $dashboardViewModel);
+        $this->assertObjectHasAttribute("authorisedExaminersViewModel", $dashboardViewModel);
+        $this->assertObjectHasAttribute("specialNoticesViewModel", $dashboardViewModel);
+    }
+    
+    public function testInProgressTrainingTestNumberIsPassedToTrainingTestViewModel()
+    {
+        $inProgressTrainingTestNumber = '989978';
+
+        $this->dashboardData = ['inProgressDemoTestNumber' => $inProgressTrainingTestNumber];
+
+        $trainingTestViewModel = $this->buildDashboardViewModelBuilder()->build()->getTrainingTestViewModel();
+
+        $this->assertLinkHrefEndsWithDemoTestNumber($inProgressTrainingTestNumber, $trainingTestViewModel->getLinkViewModel());
     }
 
     /**
-     * @param int           $demoTestNumber
+     * @param int           $trainingTestNumber
      * @param LinkViewModel $linkViewModel
      */
-    private function assertLinkHrefEndsWithDemoTestNumber($demoTestNumber, LinkViewModel $linkViewModel)
+    private function assertLinkHrefEndsWithDemoTestNumber($trainingTestNumber, LinkViewModel $linkViewModel)
     {
-        $this->assertRegExp("/$demoTestNumber\$/", $linkViewModel->getHref());
-    }
-
-    /**
-     * @param string $permission
-     *
-     * @return $this
-     */
-    private function withPermissionGranted($permission)
-    {
-        $this->authorisationServiceMock->granted($permission);
-
-        return $this;
-    }
-
-    /**
-     * @param array $dashboardData
-     *
-     * @return $this
-     */
-    private function withDashboardData(array $dashboardData)
-    {
-        $this->dashboardData = $dashboardData;
-
-        return $this;
+        $this->assertRegExp("/$trainingTestNumber\$/", $linkViewModel->getHref());
     }
 
     /**
@@ -120,10 +104,10 @@ class DashboardViewModelBuilderTest extends PHPUnit_Framework_TestCase
             'unreadNotificationsCount' => 0,
         ];
 
+        $identityMock = XMock::of(MotFrontendIdentityInterface::class);
         $dashboard = new Dashboard(array_merge($dashboardDataDefaults, $this->dashboardData));
-        $dashboardGuard = new DashboardGuard($this->authorisationServiceMock);
-        $url = XMock::of(Url::class);
+        $urlMock = XMock::of(Url::class);
 
-        return new DashboardViewModelBuilder($dashboard, $dashboardGuard, $url);
+        return new DashboardViewModelBuilder($identityMock, $dashboard, $this->mockDashboardGuard, $urlMock);
     }
 }

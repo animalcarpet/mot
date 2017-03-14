@@ -10,8 +10,8 @@ class DashboardViewModel
     /** @var NotificationsViewModel $notificationsViewModel */
     private $notificationsViewModel;
 
-    /** @var DemoTestViewModel $demoTestViewModel */
-    private $demoTestViewModel;
+    /** @var TrainingTestViewModel $trainingTestViewModel */
+    private $trainingTestViewModel;
 
     /** @var AuthorisedExaminersViewModel $authorisedExaminersViewModel */
     private $authorisedExaminersViewModel;
@@ -33,20 +33,20 @@ class DashboardViewModel
      *
      * @param HeroActionViewModel          $heroActionViewModel
      * @param NotificationsViewModel       $notificationsViewModel
-     * @param DemoTestViewModel            $demoTestViewModel
+     * @param TrainingTestViewModel        $trainingTestViewModel
      * @param AuthorisedExaminersViewModel $authorisedExaminersViewModel
      * @param SpecialNoticesViewModel      $specialNoticesViewModel
      */
     public function __construct(
         HeroActionViewModel $heroActionViewModel,
         NotificationsViewModel $notificationsViewModel,
-        DemoTestViewModel $demoTestViewModel,
+        TrainingTestViewModel $trainingTestViewModel,
         AuthorisedExaminersViewModel $authorisedExaminersViewModel,
         SpecialNoticesViewModel $specialNoticesViewModel
     ) {
         $this->heroActionViewModel = $heroActionViewModel;
         $this->notificationsViewModel = $notificationsViewModel;
-        $this->demoTestViewModel = $demoTestViewModel;
+        $this->trainingTestViewModel = $trainingTestViewModel;
         $this->authorisedExaminersViewModel = $authorisedExaminersViewModel;
         $this->specialNoticesViewModel = $specialNoticesViewModel;
     }
@@ -60,11 +60,11 @@ class DashboardViewModel
     }
 
     /**
-     * @return DemoTestViewModel
+     * @return TrainingTestViewModel
      */
-    public function getDemoTestViewModel()
+    public function getTrainingTestViewModel()
     {
-        return $this->demoTestViewModel;
+        return $this->trainingTestViewModel;
     }
 
     /**

@@ -18,6 +18,27 @@
 </section>
 {% do placeholder('hero').captureEnd() %}
 
+{% if layout().flashMessenger.getErrorMessages()|length > 0 %}
+    <div class="validation-summary">
+        <ol>
+            {% for message in layout().flashMessenger.getErrorMessages() %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ol>
+    </div>
+{% endif %}
+
+{% if dashboard.specialNoticeViewModel.isOverdue %}
+    {% do placeholder('banner').captureStart() %}
+    <div class="o-wrapper">
+        <div class="banner--error rf-home-message">
+            <strong class="banner__heading-large">You have an overdue special notice</strong>
+            <span class="font-small"><a href="{{ url('special-notices') }}">Read and acknowledge</a> the Special Notice to be able to perform an MOT test.</span>
+        </div>
+    </div>
+    {% do placeholder('banner').captureEnd() %}
+{% endif %}
+
 <div class="grid-row">
     <div class="column-half">
         {% include '/dashboard/user-home/special-notices.twig' with {'specialNotice': dashboard.specialNoticeViewModel} %}
@@ -32,7 +53,7 @@
             {% include '/dashboard/user-home/your-performance.twig' %}
         {% endif %}
 
-        {% include '/dashboard/user-home/demo-test.twig' with {'demoTest': dashboard.demoTestViewModel} %}
+        {% include '/dashboard/user-home/training-test.twig' with {'trainingTest': dashboard.trainingTestViewModel} %}
 
         {% if dashboard.showContingencyTests %}
             {% include '/dashboard/user-home/contingency-tests.twig' %}
