@@ -17,12 +17,6 @@ class DashboardGuard
         RoleCode::SITE_ADMIN,
     ];
 
-    const TESTER_WITH_DEMO_TEST_NEEDED_ROLES = [
-        RoleCode::USER,
-        RoleCode::TESTER,
-        RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED,
-    ];
-
     /** @var MotAuthorisationServiceInterface $authorisationService */
     protected $authorisationService;
 
@@ -37,6 +31,60 @@ class DashboardGuard
     public function __construct(MotAuthorisationServiceInterface $authorisationService)
     {
         $this->authorisationService = $authorisationService;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canViewReplacementDuplicateCertificateLink()
+    {
+        if ($this->hasHighAuthorityTradeRole() || $this->isTester()) {
+            if ($this->isDemoTestNeeded() && !$this->isQualifiedTester()) {
+                return false;
+            }
+
+            return true;
+        }
+
+        if ($this->isCustomerServiceOperative()) {
+            return true;
+        }
+
+        if ($this->isDVLAOperative()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canViewSlotBalance()
+    {
+        if (!$this->hasHighAuthorityTradeRole()) {
+            return false;
+        }
+
+        if (in_array(RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED, $this->getAllRoles())) {
+            return false;
+        }
+
+        if ($this->isQualifiedTester()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDemoTestNeeded()
+    {
+        $isDemoTestRequired = in_array(RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED, $this->getAllRoles());
+
+        return $this->isTester() ? $isDemoTestRequired && !$this->isTesterActive() : $isDemoTestRequired;
     }
 
     /**
@@ -72,42 +120,49 @@ class DashboardGuard
     /**
      * @return bool
      */
-    public function canViewReplacementDuplicateCertificateLink()
+    public function canViewAeInformationLink()
     {
-        $userRoles = $this->authorisationService->getAllRoles();
-
-        if ($this->hasHighAuthorityTradeRole($userRoles) || $this->isTester()) {
-            if ($this->isDemoTestNeeded() && !$this->isQualifiedTester($userRoles)) {
-                return false;
-            }
-
-            return true;
-        }
-
-        return false;
+        return $this->authorisationService->isGranted(PermissionInSystem::AUTHORISED_EXAMINER_LIST);
     }
 
     /**
      * @return bool
      */
-    public function canViewSlotBalance()
+    public function canViewSiteInformationLink()
     {
-        $roles = $this->authorisationService->getAllRoles();
+        return $this->authorisationService->isGranted(PermissionInSystem::DVSA_SITE_SEARCH);
+    }
 
-        $usersHighAuthorityTradeRoles = array_intersect($roles, self::HIGH_AUTHORITY_TRADE_ROLES);
-        if (empty($usersHighAuthorityTradeRoles)) {
-            return false;
-        }
+    /**
+     * @return bool
+     */
+    public function canViewUserSearchLink()
+    {
+        return $this->authorisationService->isGranted(PermissionInSystem::USER_SEARCH);
+    }
 
-        if (in_array(RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED, $roles)) {
-            return false;
-        }
+    /**
+     * @return bool
+     */
+    public function canViewMotTestsLink()
+    {
+        return $this->authorisationService->isGranted(PermissionInSystem::DVSA_SITE_SEARCH);
+    }
 
-        if ($this->isQualifiedTester()) {
-            return false;
-        }
+    /**
+     * @return bool
+     */
+    public function canViewDemoTestRequestsLink()
+    {
+        return $this->authorisationService->isGranted(PermissionInSystem::VIEW_USERS_IN_DEMO_TEST_NEEDED_STATE);
+    }
 
-        return true;
+    /**
+     * @return bool
+     */
+    public function canViewVehicleSearchLink()
+    {
+        return $this->authorisationService->isGranted(PermissionInSystem::FULL_VEHICLE_MOT_TEST_HISTORY_VIEW);
     }
 
     /**
@@ -137,29 +192,10 @@ class DashboardGuard
     /**
      * @return bool
      */
-    public function isDemoTestNeeded()
-    {
-        $roles = $this->authorisationService->getAllRoles();
-        $isDemoTestRequired = in_array(RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED, $roles);
-
-        return $this->isTester() ? $isDemoTestRequired && !$this->isTesterActive($roles) : $isDemoTestRequired;
-    }
-
-    /**
-     * @return bool
-     */
     public function isTestingEnabled()
     {
         return $this->authorisationService->isGranted(PermissionInSystem::MOT_TEST_START) &&
-        !$this->overdueSpecialNoticeAssertionFailure;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isTester()
-    {
-        return in_array(RoleCode::TESTER, $this->authorisationService->getAllRoles());
+            !$this->overdueSpecialNoticeAssertionFailure;
     }
 
     /**
@@ -173,31 +209,56 @@ class DashboardGuard
     /**
      * @return bool
      */
+    private function hasHighAuthorityTradeRole()
+    {
+        return !empty(array_intersect($this->getAllRoles(), self::HIGH_AUTHORITY_TRADE_ROLES));
+    }
+
+    /**
+     * @return bool
+     */
     public function isQualifiedTester()
     {
-        $roles = $this->authorisationService->getAllRoles();
-
-        return in_array(RoleCode::TESTER, $roles) && $this->isTesterActive($roles);
+        return $this->isTester() && $this->isTesterActive();
     }
 
     /**
-     * @param $userRoles
-     *
      * @return bool
      */
-    private function hasHighAuthorityTradeRole($userRoles)
+    public function isTester()
     {
-        return !empty(array_intersect($userRoles, self::HIGH_AUTHORITY_TRADE_ROLES));
+        return in_array(RoleCode::TESTER, $this->getAllRoles());
     }
 
     /**
-     * @param $userRoles
-     *
      * @return bool
      */
-    public function isTesterActive($userRoles)
+    public function isTesterActive()
     {
-        return in_array(RoleCode::TESTER_ACTIVE, $userRoles);
+        return in_array(RoleCode::TESTER_ACTIVE, $this->getAllRoles());
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCustomerServiceOperative()
+    {
+        return in_array(RoleCode::CUSTOMER_SERVICE_OPERATIVE, $this->getAllRoles());
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDVLAOperative()
+    {
+        return in_array(RoleCode::DVLA_OPERATIVE, $this->getAllRoles());
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getAllRoles()
+    {
+        return $this->authorisationService->getAllRoles();
     }
 }
-

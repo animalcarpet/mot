@@ -4,7 +4,6 @@ namespace Dashboard\ViewModel;
 
 use Dashboard\Model\Dashboard;
 use Dashboard\Security\DashboardGuard;
-use Dvsa\Mot\Frontend\AuthenticationModule\Model;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
 use Zend\Mvc\Controller\Plugin\Url;
 
@@ -26,9 +25,9 @@ class DashboardViewModelBuilder
      * DashboardViewModelBuilder constructor.
      *
      * @param MotFrontendIdentityInterface $identity
-     * @param Dashboard $dashboard
-     * @param DashboardGuard $dashboardGuard
-     * @param Url $url
+     * @param Dashboard                    $dashboard
+     * @param DashboardGuard               $dashboardGuard
+     * @param Url                          $url
      */
     public function __construct(
         MotFrontendIdentityInterface $identity,
@@ -36,8 +35,7 @@ class DashboardViewModelBuilder
         DashboardGuard $dashboardGuard,
         Url $url
 
-    )
-    {
+    ) {
         $this->identity = $identity;
         $this->dashboard = $dashboard;
         $this->dashboardGuard = $dashboardGuard;
@@ -94,13 +92,13 @@ class DashboardViewModelBuilder
     private function buildHeroActionViewModel()
     {
         $slotsViewModel = $this->buildSlotsViewModel();
-        $rdCertificateViewModel = $this->buildRDCertificateViewModel();
+        $replacementDuplicateCertificateViewModel = $this->buildReplacementDuplicateCertificateViewModel();
         $startMotViewModel = $this->buildStartMotViewModel();
 
         $heroActionViewModel = new HeroActionViewModel(
             $this->dashboardGuard,
             $slotsViewModel,
-            $rdCertificateViewModel,
+            $replacementDuplicateCertificateViewModel,
             $startMotViewModel
         );
 
@@ -174,14 +172,14 @@ class DashboardViewModelBuilder
     /**
      * @return ReplacementDuplicateCertificateViewModel
      */
-    private function buildRDCertificateViewModel()
+    private function buildReplacementDuplicateCertificateViewModel()
     {
-        $rdCertificateViewModel = new ReplacementDuplicateCertificateViewModel(
+        $replacementDuplicateCertificateViewModel = new ReplacementDuplicateCertificateViewModel(
             $this->dashboard->hasTestInProgress(),
             $this->dashboardGuard->canViewReplacementDuplicateCertificateLink()
         );
 
-        return $rdCertificateViewModel;
+        return $replacementDuplicateCertificateViewModel;
     }
 
     /**
