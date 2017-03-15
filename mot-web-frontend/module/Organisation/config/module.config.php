@@ -23,6 +23,17 @@ return [
     ],
     'router'         => [
         'routes' => [
+            'authorised-examiner-search' => [
+                'type'          => 'segment',
+                'options'       => [
+                    'route'    => '/authorised-examiner/search',
+                    'defaults'    => [
+                        'controller' => SearchController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+                'may_terminate' => true,
+            ],
             'authorised-examiner' => [
                 'type'          => 'segment',
                 'options'       => [
