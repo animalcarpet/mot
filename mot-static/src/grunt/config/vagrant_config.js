@@ -7,6 +7,8 @@ module.exports = function (grunt, config) {
             grunt.fatal('You must define "dvsa_workspace" enviroment variable (usually it\'s "~/MOTDEV")');
         }
 
+        var vagrantDirectory = workspace + '/mot-vagrant';
+
         // Wrapper: If a VM is unresponsive, answers "" instead of blowing out grunt.
         var getKeyCmd = function (vmName) {
             var cacheFile = './.vagrant_ssh_config_cache/vagrant-ssh-config-' + vmName + '.local.cached';
@@ -16,7 +18,7 @@ module.exports = function (grunt, config) {
             var file = execSync(
                 util.format(
                     'cd %s && vagrant ssh-config %s | grep IdentityFile | awk \'{print $2}\'' ,
-                    workspace + '/mot-vagrant',
+                    vagrantDirectory,
                     vmName
                 )
             ).toString().trim();
@@ -30,6 +32,7 @@ module.exports = function (grunt, config) {
             opendjServiceName: 'opendj',
             mysqlServiceName: 'mysql',
             jasperServiceName: 'tomcat',
+            motTestServiceName: 'mot-test-service',
             authrServiceName: 'authorisation-service'
         });
 
@@ -59,5 +62,9 @@ module.exports = function (grunt, config) {
             logDir: '/var/log',
             workspace: '/home/vagrant/mot',
             mysqlConfigDir: ''
+        });
+        grunt.config('host_machine', {
+            vagrantDirectory: vagrantDirectory,
+            workspace: workspace
         });
 };
