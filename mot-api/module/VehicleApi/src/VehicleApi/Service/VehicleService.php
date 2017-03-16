@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://gitlab.motdev.org.uk/mot/mot
+ */
 
 namespace VehicleApi\Service;
 
@@ -36,6 +41,7 @@ use DvsaEntities\Repository\VehicleV5CRepository;
 use DvsaMotApi\Service\CreateMotTestService;
 use DvsaMotApi\Service\MotTestServiceProvider;
 use DvsaMotApi\Service\Validator\VehicleValidator;
+use VehicleApi\Model\VehicleWeight;
 use VehicleApi\Service\Mapper\DvlaVehicleMapper;
 use VehicleApi\Service\Mapper\VehicleMapper;
 
@@ -351,12 +357,13 @@ class VehicleService
     private function createVehicleFromDvlaVehicleUsingJavaService(
         DvlaVehicle $dvlaVehicle,
         $vehicleClassCode
-    ) {
+    )
+    {
         $vehicleClass = $this->vehicleCatalog->getVehicleClassByCode($vehicleClassCode);
 
         $fuelType = $this->vehicleCatalog->findFuelTypeByPropulsionCode($dvlaVehicle->getFuelType());
         $fuelTypeCode = $fuelType ? $fuelType->getCode() : null;
-        
+
         $bodyType = $this->vehicleCatalog->findBodyTypeByCode($dvlaVehicle->getBodyType());
         if (is_null($bodyType)) {
             $bodyType = $this->vehicleCatalog->findBodyTypeByCode(self::DEFAULT_BODY_TYPE_CODE);
@@ -403,13 +410,14 @@ class VehicleService
             $dvlaVehicleRequest->setDateOfManufacture($dvlaVehicle->getManufactureDate());
         }
 
-        $weightAndSource = $this->tryToGetWiethAndItsSource($dvlaVehicle, $vehicleClass);
+        $weightAndSource = $this->getVehicleWeight($dvlaVehicle, $vehicleClass);
 
-        if (is_array($weightAndSource)) {
-            $dvlaVehicleRequest->setWeight($weightAndSource[self::KEY_WIGHT]);
-            if (!empty($weightAndSource[self::KEY_WIGHT_SOURCE_ID])) {
-                $dvlaVehicleRequest->setWeightSourceId($weightAndSource[self::KEY_WIGHT_SOURCE_ID]);
-            }
+        if ($weightAndSource->hasWeight()) {
+            $dvlaVehicleRequest->setWeight($weightAndSource->getWeight());
+        }
+
+        if ($weightAndSource->hasWeightSource()) {
+            $dvlaVehicleRequest->setWeightSourceId($weightAndSource->getWeightSource());
         }
 
         $dvlaVehicle = $this->newVehicleService->createVehicleFromDvla($dvlaVehicleRequest);
@@ -424,7 +432,8 @@ class VehicleService
      */
     private function createDvsaVehicleUsingJavaService(
         Vehicle $dvsaVehicle
-    ) {
+    )
+    {
         $fuelTypeCode = $dvsaVehicle->getModelDetail()->getFuelType() ? $dvsaVehicle->getModelDetail()->getFuelType()->getCode() : null;
 
         $dvsaVehicleRequest = new CreateDvsaVehicleRequest();
@@ -441,55 +450,49 @@ class VehicleService
             ->setCountryOfRegistrationId($dvsaVehicle->getCountryOfRegistration()->getId())
             ->setFirstUsedDate($dvsaVehicle->getFirstUsedDate());
 
-        if($dvsaVehicle->getCylinderCapacity() != null) {
+        if ($dvsaVehicle->getCylinderCapacity() != null) {
             $dvsaVehicleRequest->setCylinderCapacity($dvsaVehicle->getCylinderCapacity());
-        } 
+        }
 
         $dvsaVehicle = $this->newVehicleService->createDvsaVehicle($dvsaVehicleRequest);
 
         return $dvsaVehicle;
     }
 
-
     /**
      * @param DvlaVehicle $dvlaVehicle
      * @param VehicleClass $vehicleClass
-     * @return array|bool
+     * @return VehicleWeight
+     * @throws \RangeException
      */
-    private function tryToGetWiethAndItsSource(DvlaVehicle $dvlaVehicle, VehicleClass $vehicleClass)
+    private function getVehicleWeight(DvlaVehicle $dvlaVehicle, VehicleClass $vehicleClass)
     {
-        $weightAndSource = false;
+        $vehicleWeight = new VehicleWeight();
 
-        if ($vehicleClass->getCode() === Vehicle::VEHICLE_CLASS_1 ||
-            $vehicleClass->getCode() === Vehicle::VEHICLE_CLASS_2
-        ) {
-            // No weight expected to be carried forward for these vehicle classes.
-            return $weightAndSource;
+        switch ($vehicleClass->getCode()) {
+            case Vehicle::VEHICLE_CLASS_1 :
+            case Vehicle::VEHICLE_CLASS_2 :
+                // No weight expected to be carried forward for group A.
+                break;
+
+            case Vehicle::VEHICLE_CLASS_3 :
+            case Vehicle::VEHICLE_CLASS_4 :
+                $vehicleWeight->setWeight($dvlaVehicle->getMassInServiceWeight())
+                    ->setWeightSource($this->vehicleCatalog->getWeightSourceByCode(WeightSourceCode::MISW)->getId());
+                break;
+
+            case Vehicle::VEHICLE_CLASS_5 :
+            case Vehicle::VEHICLE_CLASS_7 :
+                $vehicleWeight->setWeight($dvlaVehicle->getDesignedGrossWeight())
+                    ->setWeightSource($this->vehicleCatalog->getWeightSourceByCode(WeightSourceCode::DGW)->getId());
+                break;
+            default:
+                throw new \RangeException(
+                    sprintf('"%s" is an unexpected vehicle class code', $vehicleClass->getCode())
+                );
         }
 
-        $massInServiceWeight = $dvlaVehicle->getMassInServiceWeight();
-
-        if (!empty($massInServiceWeight)) {
-            if ($vehicleClass->getCode() === Vehicle::VEHICLE_CLASS_3 ||
-                $vehicleClass->getCode() === Vehicle::VEHICLE_CLASS_4
-            ) {
-                $weightAndSource = [
-                    self::KEY_WIGHT => $massInServiceWeight,
-                    self::KEY_WIGHT_SOURCE_ID => $this->vehicleCatalog->getWeightSourceByCode(WeightSourceCode::MISW)
-                        ->getId(),
-                ];
-            } elseif ($vehicleClass->getCode() === Vehicle::VEHICLE_CLASS_5 ||
-                $vehicleClass->getCode() === Vehicle::VEHICLE_CLASS_7
-            ) {
-                $weightAndSource = [
-                    self::KEY_WIGHT => $massInServiceWeight,
-                    self::KEY_WIGHT_SOURCE_ID => $this->vehicleCatalog->getWeightSourceByCode(WeightSourceCode::DGW)
-                        ->getId(),
-                ];
-            }
-        }
-
-        return $weightAndSource;
+        return $vehicleWeight;
     }
 
     /**
@@ -499,18 +502,5 @@ class VehicleService
     public function getVehicleIdIfAlreadyImportedFromDvla($dvlaVehicleId)
     {
         return $this->dvlaVehicleRepository->findMatchingDvsaVehicleIdForDvlaVehicle($dvlaVehicleId);
-    }
-
-    private function isPinRequired()
-    {
-        if($this->authService->isGranted(PermissionInSystem::MOT_TEST_WITHOUT_OTP)) {
-            return false;
-        }
-
-        if($this->identityProvider->getIdentity()->isSecondFactorRequired()) {
-            return false;
-        }
-
-        return true;
     }
 }

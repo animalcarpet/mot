@@ -7,7 +7,7 @@
         "doctrine/doctrine-orm-module": "~0.9",
         "dvsa/feature-toggle": "~1.0",
         "aws/aws-sdk-php": "3.13.0",
-        "mot/api-client-php": "13.7.1",
+        "mot/api-client-php": "13.7.2",
         "ramsey/uuid": "^3.4"
     },
     "require-dev": {
