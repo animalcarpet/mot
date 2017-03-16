@@ -78,13 +78,15 @@ module.exports = function (grunt, config) {
         grunt.registerTask('dev:restart:authorisation-service', 'Restarts authorisation service', 'sshexec:authr_restart');
         grunt.registerTask('dev:restart:opendj', 'Restarts OpenDJ', 'sshexec:opendj_restart_dev');
         grunt.registerTask('dev:restart:jasper', 'Restarts Jasper', 'sshexec:jasper_restart');
+        grunt.registerTask('dev:restart:mot-test', 'Restarts mot-test service', 'sshexec:mot_test_restart');
         grunt.registerTask('dev:restart:mysql', 'Restarts Mysql', 'sshexec:mysql_restart_dev');
         grunt.registerTask('dev:restart:all', 'Restarts all known services', [
             'apache:restart:all',
             'sshexec:opendj_restart_dev',
             'sshexec:mysql_restart_dev',
             'sshexec:jasper_restart',
-            'sshexec:authorisation_service_restart'
+            'sshexec:authorisation_service_restart',
+            'sshexec:mot_test_restart'
         ]);
         grunt.registerTask('dev:2fa_off', 'Sets 2fa toggle off', ['sshexec:ft2fa_off_dev', 'sshexec:ft2fa_off_dev2', 'sshexec:authr_restart', 'dev:restart:apache']);
         grunt.registerTask('dev:2fa_on', 'Sets 2fa toggle on', ['sshexec:ft2fa_on_dev', 'sshexec:ft2fa_on_dev2', 'sshexec:authr_restart','dev:restart:apache']);
@@ -108,4 +110,9 @@ module.exports = function (grunt, config) {
         ]);
         grunt.registerTask('dev:zend-dev-tools:disable', 'Enable Zend Developer Tools', 'sshexec:zend_dev_tools_disable');
         grunt.registerTask('dev:zend-dev-tools:enable', 'Disable Zend Developer Tools', 'sshexec:zend_dev_tools_enable');
+
+        grunt.registerTask('dev:update-service:all', 'Update all java services', 'shell:update_all_java_services');
+        grunt.registerTask('dev:update-service:authorisation', 'Update authorisation service', 'shell:update_authorisation_service');
+        grunt.registerTask('dev:update-service:mot-test', 'Update mot-test service', 'shell:update_mottest_service');
+        grunt.registerTask('dev:update-service:vehicle', 'Update vehicle service', 'shell:update_vehicle_service');
 };

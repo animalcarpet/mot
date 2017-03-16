@@ -1,5 +1,9 @@
 
 module.exports = function(grunt, config) {
+    function updateJavaService(service) {
+        return "cd <%= host_machine.vagrantDirectory %> && ./scripts/update_java_services.sh jar " + service + " build";
+    }
+
     grunt.config('shell', {
         jasper_remove: {
             command: "curl --user jasperadmin:jasperadmin -v -XDELETE http://jasper:8080/jasperserver/rest/resource/MOT >/dev/null 2>&1"
@@ -57,6 +61,18 @@ module.exports = function(grunt, config) {
             command: function () {
                 return 'curl -s ' + grunt.config.get('url.testsupport') + '/testsupport/clear-statistics-amazon-cache';
             }
+        },
+        update_all_java_services: {
+            command: updateJavaService("all")
+        },
+        update_authorisation_service: {
+            command: updateJavaService("authr")
+        },
+        update_vehicle_service: {
+            command: updateJavaService("vehicle")
+        },
+        update_mottest_service: {
+            command: updateJavaService("mot-test")
         }
     });
 };

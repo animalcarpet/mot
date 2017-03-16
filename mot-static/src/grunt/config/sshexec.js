@@ -124,6 +124,10 @@ module.exports = function (grunt, config) {
                 options: dev2_ssh_options,
                 command: 'sudo service <%= service_config.authrServiceName %> restart'
             },
+            mot_test_restart: {
+                options: dev2_ssh_options,
+                command: 'sudo service <%= service_config.authrServiceName %> restart'
+            },
             papply_dev: {
                 options: dev_ssh_options,
                 command: [
