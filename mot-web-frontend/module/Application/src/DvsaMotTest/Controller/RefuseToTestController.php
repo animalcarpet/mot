@@ -56,7 +56,7 @@ class RefuseToTestController extends AbstractDvsaMotTestController
             if (array_key_exists('refusal', $postData) === false) {
                 $this->addErrorMessages('Please select reason for refusal');
 
-                return $this->createViewModel($testTypeCode, $source, $noReg, $vehicleId);
+                return $this->createViewModel($source, $noReg, $vehicleId);
             }
 
             $selectedReason = ArrayUtils::get($postData, 'refusal');
@@ -83,7 +83,7 @@ class RefuseToTestController extends AbstractDvsaMotTestController
             }
         }
 
-        return $this->createViewModel($testTypeCode, $source, $noReg, $vehicleId);
+        return $this->createViewModel($source, $noReg, $vehicleId);
     }
 
     public function refuseToTestSummaryAction()
@@ -176,27 +176,18 @@ class RefuseToTestController extends AbstractDvsaMotTestController
         }
     }
 
-    private function createBackToConfirmationLink($id, $noRegistration, $source, $testTypeCode)
+    private function createBackToConfirmationLink($id, $noRegistration, $source)
     {
-        $isRetest = $testTypeCode === MotTestTypeCode::RE_TEST;
-        $query =  [
-            StartTestConfirmationController::ROUTE_PARAM_NO_REG => $noRegistration,
-            StartTestConfirmationController::ROUTE_PARAM_SOURCE => $source,
-        ];
-
-        if($isRetest) {
-            $query['retest'] = $isRetest;
-        }
-
         return $this->url()->fromRoute(
             (
                 StartTestConfirmationController::ROUTE_START_TEST_CONFIRMATION
             ),
             [
                 'id' => $id,
+                StartTestConfirmationController::ROUTE_PARAM_NO_REG => $noRegistration,
+                StartTestConfirmationController::ROUTE_PARAM_SOURCE => $source,
             ],
             [
-                'query' => $query,
             ]
         );
     }
@@ -216,7 +207,7 @@ class RefuseToTestController extends AbstractDvsaMotTestController
         );
     }
 
-    private function createViewModel($testTypeCode, $source, $noReg, $vehicleId)
+    private function createViewModel($source, $noReg, $vehicleId)
     {
         $obfuscatedVehicleId = $this->paramObfuscator->obfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, $vehicleId);
 
@@ -227,7 +218,7 @@ class RefuseToTestController extends AbstractDvsaMotTestController
             [
                 'reasonForRefusal'      => $this->getReasonsForRefusal(),
                 'backToSearchLink'      => $this->createBackToConfirmationLink(
-                    $obfuscatedVehicleId, $noReg, $source, $testTypeCode
+                    $obfuscatedVehicleId, $noReg, $source
                 ),
                 'isDisplayRegistration' => $noReg ? false : true,
                 'vehicle'               => $this->getVehicle((int) $vehicleId, $source),
