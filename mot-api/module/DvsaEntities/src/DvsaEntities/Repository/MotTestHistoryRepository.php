@@ -7,8 +7,8 @@ use Doctrine\ORM\NoResultException;
 use DvsaCommon\Constants\SearchParamConst;
 use DvsaCommonApi\Service\Exception\NotFoundException;
 use DvsaEntities\DqlBuilder\SearchParam\MotTestSearchParam;
+use DvsaEntities\Entity\MotTest;
 use DvsaEntities\Entity\MotTestReasonForRejection;
-use DvsaEntities\Repository\Query\MotTestSearchQuery;
 use DvsaMotApi\Helper\MysteryShopperHelper;
 
 /**
@@ -28,7 +28,8 @@ class MotTestHistoryRepository extends MotTestRepository
         $startDate,
         MysteryShopperHelper $mysteryShopperHelper,
         array $mysteryShopperSiteIds = []
-    ) {
+    )
+    {
         try {
             $currentTests = parent::findTestsForVehicle($vehicleId, $startDate, $mysteryShopperHelper, $mysteryShopperSiteIds);
 
@@ -229,8 +230,21 @@ class MotTestHistoryRepository extends MotTestRepository
      */
     public function getMotTestSearchResult(MotTestSearchParam $searchParam, array $optionalMotTestTypes)
     {
-        return (new MotTestSearchQuery($this->getEntityManager(), $this->getClassMetadata()->getTableName()))
-            ->getResult($searchParam, $optionalMotTestTypes);
+        try {
+            $current = parent::getMotTestSearchResult($searchParam, $optionalMotTestTypes);
+
+            if ($searchParam->getRowCount() > 0 && count($current) >= $searchParam->getRowCount()) {
+                return $current;
+            }
+
+            $this->switchToHistory();
+
+            $history = parent::getMotTestSearchResult($searchParam, $optionalMotTestTypes);
+
+            return array_merge($current, $history);
+        } finally {
+            $this->switchToCurrent();
+        }
     }
 
     /**
@@ -238,8 +252,18 @@ class MotTestHistoryRepository extends MotTestRepository
      */
     public function getMotTestSearchResultCount(MotTestSearchParam $searchParam, array $optionalMotTestTypes)
     {
-        return (new MotTestSearchQuery($this->getEntityManager(), $this->getClassMetadata()->getTableName()))
-            ->countResult($searchParam, $optionalMotTestTypes);
+        try {
+            $current = parent::getMotTestSearchResultCount($searchParam, $optionalMotTestTypes);
+
+            $this->switchToHistory();
+
+            $history = parent::getMotTestSearchResultCount($searchParam, $optionalMotTestTypes);
+
+            return $current + $history;
+        } finally {
+            $this->switchToCurrent();
+        }
+
     }
 
     public function switchToHistory()

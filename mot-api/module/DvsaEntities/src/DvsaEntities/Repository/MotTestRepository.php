@@ -1435,6 +1435,73 @@ class MotTestRepository extends AbstractMutableRepository
     }
 
     /**
+     * NOT FINISHED.
+     *
+     * @param MotTestSearchParam $searchParam
+     * @param array $optionalMotTestTypes
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function prepareMotSearch(MotTestSearchParam $searchParam, array $optionalMotTestTypes)
+    {
+        $qb = $this->createQueryBuilder('test');
+
+        $qb
+            ->leftJoin(Site::class, 'site', 'WITH', 'site.id = test.vehicleTestingStation')
+            ->leftJoin(Vehicle::class, 'vehicle', 'WITH', 'vehicle.id = test.vehicle')
+            ->leftJoin(VehicleHistory::class, 'vh', 'WITH', 'vh.vehicle = vehicle.id AND vh.version = test.vehicleVersion')
+            ->innerJoin(ModelDetail::class, 'modelDetail', 'WITH', 'modelDetail.id = vehicle.modelDetail')
+            ->leftJoin(Model::class, 'model', 'WITH', 'model.id = modelDetail.model')
+            ->leftJoin(Make::class, 'make', 'WITH', 'make.id = model.make')
+            ->innerJoin(MotTestType::class, 'testType', 'WITH', 'test.motTestType = testType.id')
+            ->innerJoin(Person::class, 'tester', 'WITH', 'tester.id = test.tester')
+            ->andWhere('testType.code IN (:testTypes)')
+            ->setParameter('testTypes', $this->getMotTestHistoryTestTypes($optionalMotTestTypes));
+
+        if ($searchParam->getDateFrom()) {
+            $qb->andwhere('test.startedDate >= :DATE_FROM')
+                ->setParameter('DATE_FROM', $searchParam->getDateFrom());
+        }
+
+        if ($searchParam->getDateTo()) {
+            $endDate = clone($searchParam->getDateTo());
+            $qb->andwhere('test.startedDate <= :DATE_TO')
+                ->setParameter('DATE_TO', $endDate->add(new \DateInterval('P1M')));
+        }
+
+        if ($searchParam->getSiteNumber()) {
+            $qb->andwhere('site.siteNumber = :SITE_NR')
+                ->setParameter('SITE_NR', $searchParam->getSiteNumber());
+        }
+
+        if ($searchParam->getTesterId()) {
+            $qb->andwhere('test.tester = :TESTER_ID')
+                ->setParameter('TESTER_ID', $searchParam->getTesterId());
+        }
+
+        if ($searchParam->getRegistration()) {
+            $qb->andwhere('vehicle.registration = :VRM')
+                ->setParameter('VRM', $searchParam->getRegistration());
+        }
+
+        if ($searchParam->getVin()) {
+            $qb->andwhere('vehicle.vin = :VIN')
+                ->setParameter('VIN', $searchParam->getVin());
+        }
+
+        if ($searchParam->getVehicleId()) {
+            $qb->andwhere('test.vehicle = :VEHICLE_ID')
+                ->setParameter('VEHICLE_ID', $searchParam->getVehicleId());
+        }
+        if ($searchParam->getTestNumber()) {
+            $qb->andwhere('test.number = :TEST_NUMBER')
+                ->setParameter('TEST_NUMBER', $searchParam->getTestNumber());
+        }
+
+        return $qb;
+    }
+
+    /**
      * @param MotTestSearchParam $searchParam
      * @param array $optionalMotTestTypes
      *
@@ -1442,7 +1509,29 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function getMotTestSearchResult(MotTestSearchParam $searchParam, array $optionalMotTestTypes)
     {
-        throw new \BadMethodCallException('This method is only implemented in the MotTestHistoryRepository.');
+        $dql = $this->prepareMotSearch($searchParam, $optionalMotTestTypes);
+
+        $orderBy = $searchParam->getSortColumnNameDatabase();
+        if (is_array($orderBy)) {
+            foreach ($orderBy as $order) {
+                $dql->addOrderBy($order, $searchParam->getSortDirection());
+            }
+        } else {
+            $dql->orderBy($orderBy, $searchParam->getSortDirection());
+        }
+        if ($searchParam->getStart() > 0) {
+            $dql->setFirstResult($searchParam->getStart());
+        }
+
+        if ($searchParam->getRowCount() > 0) {
+            $dql->setMaxResults($searchParam->getRowCount());
+        }
+
+        $query = $dql->getQuery()
+            ->setFetchMode(MotTest::class, 'make', ClassMetadata::FETCH_EAGER)
+            ->setFetchMode(MotTest::class, 'model', ClassMetadata::FETCH_EAGER);
+
+        return $query->getResult();
     }
 
     /**
@@ -1453,7 +1542,10 @@ class MotTestRepository extends AbstractMutableRepository
      */
     public function getMotTestSearchResultCount(MotTestSearchParam $searchParam, array $optionalMotTestTypes)
     {
-        throw new \BadMethodCallException('This method is only implemented in the MotTestHistoryRepository.');
+        $dql = $this->prepareMotSearch($searchParam, $optionalMotTestTypes);
+        $dql->select('count(test)');
+
+        return (int)$dql->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -1647,7 +1739,7 @@ class MotTestRepository extends AbstractMutableRepository
      *
      * @return array
      */
-    protected function getMotTestHistoryTestTypes(array $optionalMotTestTypes)
+    private function getMotTestHistoryTestTypes(array $optionalMotTestTypes)
     {
         return array_merge(\DvsaCommon\Domain\MotTestType::getMotTestHistoryTypes(), $optionalMotTestTypes);
     }
