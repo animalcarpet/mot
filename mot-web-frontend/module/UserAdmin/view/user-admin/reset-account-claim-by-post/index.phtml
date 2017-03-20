@@ -4,7 +4,7 @@ use UserAdmin\Presenter\UserProfilePresenter;
 /** @var $profilePresenter UserProfilePresenter */
 /** @var string $userProfileUrl */
 /** @var string $resetClaimAccountUrlPost */
-
+$this->headTitle('Reclaim account');
 $personFullnameWithTitle = $profilePresenter->displayTitleAndFullName();
 ?>
 <div id="reclaim-account-notification" class="text">

@@ -176,7 +176,7 @@ class UserTradeRolesController extends AbstractAuthActionController
         }
 
         $this->layout('layout/layout-govuk.phtml');
-
+        $this->setHeadTitle('Roles and associations');
         $urlHelper = $this->getServiceLocator()->get('ViewHelperManager')->get('url');
 
         $previousUrl = $this->personProfileUrlGenerator->toPersonProfile();
