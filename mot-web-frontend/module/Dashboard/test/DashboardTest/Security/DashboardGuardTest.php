@@ -82,20 +82,6 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider userIsTesterDataProvider
-     *
-     * @param array $userRoles
-     * @param bool  $canViewSlotBalance
-     */
-    public function testUserIsTester(array $userRoles, $canViewSlotBalance)
-    {
-        $this->addMethodToMockAuthorisationService('getAllRoles', null, $userRoles);
-        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
-
-        $this->assertEquals($canViewSlotBalance, $dashboardGuard->isTester());
-    }
-
-    /**
      * @dataProvider userHasPermissionDataProvider
      *
      * @param bool $hasPermission
@@ -198,6 +184,36 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider userHasPermissionToViewMotFormsDataProvider
+     *
+     * @param array $userRoles
+     * @param int   $overdueSpecialNoticeCount
+     * @param bool  $canViewMotForms
+     */
+    public function testUserHasPermissionToViewMotForms(array $userRoles, $overdueSpecialNoticeCount, $canViewMotForms)
+    {
+        $this->addMethodToMockAuthorisationService('getAllRoles', null, $userRoles);
+        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
+        $dashboardGuard->setOverdueSpecialNoticeCount($overdueSpecialNoticeCount);
+
+        $this->assertEquals($canViewMotForms, $dashboardGuard->canViewMotFormsLink());
+    }
+
+    /**
+     * @dataProvider userIsTesterDataProvider
+     *
+     * @param array $userRoles
+     * @param bool  $isTester
+     */
+    public function testUserIsTester(array $userRoles, $isTester)
+    {
+        $this->addMethodToMockAuthorisationService('getAllRoles', null, $userRoles);
+        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
+
+        $this->assertEquals($isTester, $dashboardGuard->isTester());
+    }
+
+    /**
      * @dataProvider userCanViewLinkMethodsDataProvider
      *
      * @param string $testMethod
@@ -262,17 +278,6 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function userIsTesterDataProvider()
-    {
-        return [
-            [[RoleCode::TESTER], true],
-            [[RoleCode::AUTHORISED_EXAMINER_DELEGATE], false],
-        ];
-    }
-
     public function userCanPerformMotTestDataProvider()
     {
         return [
@@ -291,6 +296,19 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
         return [
             [[RoleCode::TESTER_ACTIVE, RoleCode::TESTER], true],
             [[RoleCode::TESTER], false],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function userHasPermissionToViewMotFormsDataProvider()
+    {
+        return [
+            [[RoleCode::USER, RoleCode::TESTER], 0, true],
+            [[RoleCode::USER, RoleCode::TESTER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], 0, false],
+            [[RoleCode::USER, RoleCode::TESTER], 1, false],
+            [[RoleCode::USER, RoleCode::TESTER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], 1, false],
         ];
     }
 
@@ -332,6 +350,17 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
             [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_ACTIVE], true],
             [[RoleCode::CUSTOMER_SERVICE_OPERATIVE], true],
             [[RoleCode::DVLA_OPERATIVE], true],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function userIsTesterDataProvider()
+    {
+        return [
+            [[RoleCode::TESTER], true],
+            [[RoleCode::AUTHORISED_EXAMINER_DELEGATE], false],
         ];
     }
 

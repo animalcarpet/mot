@@ -186,6 +186,10 @@ class UserHomeController extends AbstractAuthActionController
             );
         }
 
+        $this->dashboardGuard->setOverdueSpecialNoticeCount(
+            $dashboard->getSpecialNotice()->getOverdueCount()
+        );
+
         $dashboardViewModelBuilder = new DashboardViewModelBuilder(
             $identity,
             $dashboard,

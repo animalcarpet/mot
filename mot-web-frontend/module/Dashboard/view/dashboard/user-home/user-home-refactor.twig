@@ -28,7 +28,7 @@
     </div>
 {% endif %}
 
-{% if dashboard.specialNoticeViewModel.isOverdue %}
+{% if dashboard.specialNoticeViewModel.isOverdue and dashboard.specialNoticeViewModel.dashboardGuard.isQualifiedTester %}
     {% do placeholder('banner').captureStart() %}
     <div class="o-wrapper">
         <div class="banner--error rf-home-message">
