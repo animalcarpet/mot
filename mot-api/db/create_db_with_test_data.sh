@@ -96,31 +96,33 @@ create_from_data_file() {
 
 run_each_release_db_update_script() {
 
-    # We want the mysql to report an error but continue. This is a quick fix that
-    # will allow the script to work.
-    set +e
-
     # load subsequent DB updates from the releases folder
-    for UPDATE_DIR in $BASE_DIR/dev/releases/*/; do
+    for UPDATE_DIR in $BASE_DIR/dev/releases/*; do
         test -d $UPDATE_DIR || continue
 
-        for UPDATE in $UPDATE_DIR/*.sql; do
+        cd $UPDATE_DIR
+
+        test -f ./db_upgrade.sh || continue
+
+        echo $(date) Running ${UPDATE_DIR}/db_upgrade.sh 
+        ./db_upgrade.sh $MyUSER $MyPASS $MyHOST 2> >(grep -v 'Using a password on the command line interface can be insecure')
+        echo $(date) Finished ${UPDATE_DIR}/db_upgrade.sh 
+
+        for UPDATE in ./*.sql; do
             test -f $UPDATE || continue
 
             # skip NOT-FOR-PRODUCTION sql unless using synthetic dataset
-            if [[ $DATASET != "synthetic" ]] && [[ $UPDATE == *"NOT-FOR-PRODUCTION"* ]]
+            if [[ $DATASET == "synthetic" ]] && [[ $UPDATE == *"NOT-FOR-PRODUCTION"* ]]
             then
-                continue
+                 echo "$(date) Running non-production schema or data update $UPDATE"
+                 mysql -u $MyUSER -p$MyPASS -h $MyHOST -D mot2 < $UPDATE 2> >(grep -v 'Using a password on the command line interface can be insecure')
+                 echo "$(date) Finished $UPDATE"
             fi
 
-            echo "$(date) Loading schema or data update $UPDATE"
-            mysql -u $MyUSER -p$MyPASS -h $MyHOST -D mot2 < $UPDATE
         done
     done
-
-    # Switch it back on again...
-    set -e
 }
+
 
 case "$DATASET" in
     synthetic)
