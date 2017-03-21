@@ -95,6 +95,11 @@ create_from_data_file() {
 }
 
 run_each_release_db_update_script() {
+
+    # We want the mysql to report an error but continue. This is a quick fix that
+    # will allow the script to work.
+    set +e
+
     # load subsequent DB updates from the releases folder
     for UPDATE_DIR in $BASE_DIR/dev/releases/*/; do
         test -d $UPDATE_DIR || continue
@@ -112,6 +117,9 @@ run_each_release_db_update_script() {
             mysql -u $MyUSER -p$MyPASS -h $MyHOST -D mot2 < $UPDATE
         done
     done
+
+    # Switch it back on again...
+    set -e
 }
 
 case "$DATASET" in
