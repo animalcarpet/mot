@@ -23,6 +23,9 @@ class DashboardGuard
     /** @var bool $overdueSpecialNoticeAssertionFailure */
     private $overdueSpecialNoticeAssertionFailure = false;
 
+    /** @var int $overdueSpecialNoticeCount */
+    private $overdueSpecialNoticeCount = 0;
+
     /**
      * DashboardGuard constructor.
      *
@@ -88,18 +91,6 @@ class DashboardGuard
     }
 
     /**
-     * @param OverdueSpecialNoticeAssertion $overdueSpecialNoticeAssertion
-     *
-     * @return $this
-     */
-    public function setOverdueSpecialNoticeAssertion(OverdueSpecialNoticeAssertion $overdueSpecialNoticeAssertion)
-    {
-        $this->overdueSpecialNoticeAssertionFailure = !$overdueSpecialNoticeAssertion->canPerformTest();
-
-        return $this;
-    }
-
-    /**
      * @return bool
      */
     public function canViewVehicleTestingStationList()
@@ -131,6 +122,22 @@ class DashboardGuard
     public function canViewSiteInformationLink()
     {
         return $this->authorisationService->isGranted(PermissionInSystem::DVSA_SITE_SEARCH);
+    }
+
+    /**
+     * @return bool
+     */
+    public function canViewMotFormsLink()
+    {
+        if ($this->isTester())
+        {
+            if (!$this->isDemoTestNeeded() && !$this->overdueSpecialNoticeCount > 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -195,7 +202,7 @@ class DashboardGuard
     public function isTestingEnabled()
     {
         return $this->authorisationService->isGranted(PermissionInSystem::MOT_TEST_START) &&
-            !$this->overdueSpecialNoticeAssertionFailure;
+               !$this->overdueSpecialNoticeAssertionFailure;
     }
 
     /**
@@ -204,14 +211,6 @@ class DashboardGuard
     public function canViewYourPerformance()
     {
         return $this->authorisationService->isGranted(PermissionInSystem::DISPLAY_TESTER_STATS_BOX);
-    }
-
-    /**
-     * @return bool
-     */
-    private function hasHighAuthorityTradeRole()
-    {
-        return !empty(array_intersect($this->getAllRoles(), self::HIGH_AUTHORITY_TRADE_ROLES));
     }
 
     /**
@@ -233,7 +232,7 @@ class DashboardGuard
     /**
      * @return bool
      */
-    public function isTesterActive()
+    private function isTesterActive()
     {
         return in_array(RoleCode::TESTER_ACTIVE, $this->getAllRoles());
     }
@@ -241,7 +240,7 @@ class DashboardGuard
     /**
      * @return bool
      */
-    public function isCustomerServiceOperative()
+    private function isCustomerServiceOperative()
     {
         return in_array(RoleCode::CUSTOMER_SERVICE_OPERATIVE, $this->getAllRoles());
     }
@@ -249,9 +248,17 @@ class DashboardGuard
     /**
      * @return bool
      */
-    public function isDVLAOperative()
+    private function isDVLAOperative()
     {
         return in_array(RoleCode::DVLA_OPERATIVE, $this->getAllRoles());
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasHighAuthorityTradeRole()
+    {
+        return !empty(array_intersect($this->getAllRoles(), self::HIGH_AUTHORITY_TRADE_ROLES));
     }
 
     /**
@@ -260,5 +267,29 @@ class DashboardGuard
     private function getAllRoles()
     {
         return $this->authorisationService->getAllRoles();
+    }
+
+    /**
+     * @param OverdueSpecialNoticeAssertion $overdueSpecialNoticeAssertion
+     *
+     * @return $this
+     */
+    public function setOverdueSpecialNoticeAssertion(OverdueSpecialNoticeAssertion $overdueSpecialNoticeAssertion)
+    {
+        $this->overdueSpecialNoticeAssertionFailure = !$overdueSpecialNoticeAssertion->canPerformTest();
+
+        return $this;
+    }
+
+    /**
+     * @param int $overdueSpecialNoticeCount
+     *
+     * @return $this
+     */
+    public function setOverdueSpecialNoticeCount($overdueSpecialNoticeCount)
+    {
+        $this->overdueSpecialNoticeCount = $overdueSpecialNoticeCount;
+
+        return $this;
     }
 }

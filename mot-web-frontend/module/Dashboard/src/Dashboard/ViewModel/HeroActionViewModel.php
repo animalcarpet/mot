@@ -30,7 +30,8 @@ class HeroActionViewModel
         DashboardGuard $dashboardGuard,
         SlotsViewModel $slotsViewModel,
         ReplacementDuplicateCertificateViewModel $replacementDuplicateCertificateViewModel,
-        StartMotViewModel $startMotViewModel)
+        StartMotViewModel $startMotViewModel
+    )
     {
         $this->dashboardGuard = $dashboardGuard;
         $this->slotsViewModel = $slotsViewModel;
@@ -63,7 +64,7 @@ class HeroActionViewModel
         if ($this->replacementDuplicateCertificateViewModel->canViewReplacementDuplicateCertificateLink()) {
             return true;
         }
-        if ($this->dashboardGuard->isTester()) {
+        if ($this->dashboardGuard->canViewMotFormsLink()) {
             return true;
         }
         if ($this->dashboardGuard->canViewDemoTestRequestsLink()) {

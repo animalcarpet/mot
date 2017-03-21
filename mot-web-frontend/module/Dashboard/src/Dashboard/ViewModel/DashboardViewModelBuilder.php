@@ -83,7 +83,7 @@ class DashboardViewModelBuilder
      */
     public function shouldShowContingencyTests()
     {
-        return $this->dashboardGuard->isQualifiedTester();
+        return $this->dashboardGuard->isTestingEnabled();
     }
 
     /**

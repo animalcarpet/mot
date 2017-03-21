@@ -106,4 +106,12 @@ class SpecialNoticesViewModel
     {
         return $this->overdueCount;
     }
+
+    /**
+     * @return DashboardGuard
+     */
+    public function getDashboardGuard()
+    {
+        return $this->dashboardGuard;
+    }
 }
