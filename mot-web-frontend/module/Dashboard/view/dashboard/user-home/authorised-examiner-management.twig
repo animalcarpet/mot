@@ -1,0 +1,23 @@
+<section class="c-home-block">
+    <header class="c-home-block__head">
+        <h2 class="c-home-block__title">Authorised Examiner management</h2>
+    </header>
+    <ul>
+        {% if authorisedExaminerManagement.canCreateAuthorisedExaminer %}
+            <li class="u-space-b10">
+                <a href="{{ url('authorised-examiner-create') }}"
+                   id="createAuthorisedExaminerLink">
+                    Create an Authorised Examiner
+                </a>
+            </li>
+        {% endif %}
+        {% if authorisedExaminerManagement.canCreateVehicleTestingStation %}
+            <li>
+                <a href="{{ url('site/create') }}"
+                   id="action-create-vts">
+                    Create a site
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</section>

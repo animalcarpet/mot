@@ -21,17 +21,16 @@ class HeroActionViewModel
     /**
      * HeroActionViewModel constructor.
      *
-     * @param DashboardGuard                           $dashboardGuard
-     * @param SlotsViewModel                           $slotsViewModel
+     * @param DashboardGuard $dashboardGuard
+     * @param SlotsViewModel $slotsViewModel
      * @param ReplacementDuplicateCertificateViewModel $replacementDuplicateCertificateViewModel
-     * @param StartMotViewModel                        $startMotViewModel
+     * @param StartMotViewModel $startMotViewModel
      */
     public function __construct(
         DashboardGuard $dashboardGuard,
         SlotsViewModel $slotsViewModel,
         ReplacementDuplicateCertificateViewModel $replacementDuplicateCertificateViewModel,
-        StartMotViewModel $startMotViewModel
-    )
+        StartMotViewModel $startMotViewModel)
     {
         $this->dashboardGuard = $dashboardGuard;
         $this->slotsViewModel = $slotsViewModel;

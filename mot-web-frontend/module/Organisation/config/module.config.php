@@ -34,6 +34,17 @@ return [
                 ],
                 'may_terminate' => true,
             ],
+            'authorised-examiner-create' => [
+                'type'          => 'segment',
+                'options'       => [
+                    'route'    => '/authorised-examiner/create',
+                    'defaults'    => [
+                        'controller' => AuthorisedExaminerControllerFactory::class,
+                        'action'     => 'create',
+                    ],
+                ],
+                'may_terminate' => true,
+            ],
             'authorised-examiner' => [
                 'type'          => 'segment',
                 'options'       => [

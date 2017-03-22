@@ -7,6 +7,7 @@ use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Enum\RoleCode;
 use DvsaMotTest\Service\OverdueSpecialNoticeAssertion;
+use Dvsa\Mot\Frontend\SecurityCardModule\Support;
 
 class DashboardGuard
 {
@@ -54,6 +55,10 @@ class DashboardGuard
         }
 
         if ($this->isDVLAOperative()) {
+            return true;
+        }
+
+        if ($this->isAreaOffice1()) {
             return true;
         }
 
@@ -259,6 +264,30 @@ class DashboardGuard
     private function hasHighAuthorityTradeRole()
     {
         return !empty(array_intersect($this->getAllRoles(), self::HIGH_AUTHORITY_TRADE_ROLES));
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAreaOffice1()
+    {
+        return in_array(RoleCode::AREA_OFFICE_1, $this->getAllRoles());
+    }
+
+    /**
+     * @return bool
+     */
+    public function canCreateAuthorisedExaminer()
+    {
+        return $this->authorisationService->isGranted(PermissionInSystem::AUTHORISED_EXAMINER_CREATE);
+    }
+
+    /**
+     * @return bool
+     */
+    public function canCreateVehicleTestingStation()
+    {
+        return $this->authorisationService->isGranted(PermissionInSystem::VEHICLE_TESTING_STATION_CREATE);
     }
 
     /**

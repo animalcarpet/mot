@@ -19,8 +19,14 @@ class DashboardViewModel
     /** @var SpecialNoticesViewModel $specialNoticesViewModel */
     private $specialNoticesViewModel;
 
+    /** @var AuthorisedExaminerManagementViewModel $authorisedExaminerManagementViewModel */
+    private $authorisedExaminerManagementViewModel;
+
     /** @var bool $showDemoMessage */
     private $showDemoMessage = false;
+
+    /** @var bool $showAuthorisedExaminerManagement */
+    private $showAuthorisedExaminerManagement = false;
 
     /** @var bool $showYourPerformance */
     private $showYourPerformance = false;
@@ -31,24 +37,27 @@ class DashboardViewModel
     /**
      * DashboardViewModel constructor.
      *
-     * @param HeroActionViewModel          $heroActionViewModel
-     * @param NotificationsViewModel       $notificationsViewModel
-     * @param TrainingTestViewModel        $trainingTestViewModel
+     * @param HeroActionViewModel $heroActionViewModel
+     * @param NotificationsViewModel $notificationsViewModel
+     * @param TrainingTestViewModel $trainingTestViewModel
      * @param AuthorisedExaminersViewModel $authorisedExaminersViewModel
-     * @param SpecialNoticesViewModel      $specialNoticesViewModel
+     * @param SpecialNoticesViewModel $specialNoticesViewModel
+     * @param AuthorisedExaminerManagementViewModel $authorisedExaminerManagementViewModel
      */
     public function __construct(
         HeroActionViewModel $heroActionViewModel,
         NotificationsViewModel $notificationsViewModel,
         TrainingTestViewModel $trainingTestViewModel,
         AuthorisedExaminersViewModel $authorisedExaminersViewModel,
-        SpecialNoticesViewModel $specialNoticesViewModel
+        SpecialNoticesViewModel $specialNoticesViewModel,
+        AuthorisedExaminerManagementViewModel $authorisedExaminerManagementViewModel
     ) {
         $this->heroActionViewModel = $heroActionViewModel;
         $this->notificationsViewModel = $notificationsViewModel;
         $this->trainingTestViewModel = $trainingTestViewModel;
         $this->authorisedExaminersViewModel = $authorisedExaminersViewModel;
         $this->specialNoticesViewModel = $specialNoticesViewModel;
+        $this->authorisedExaminerManagementViewModel = $authorisedExaminerManagementViewModel;
     }
 
     /**
@@ -137,5 +146,29 @@ class DashboardViewModel
     public function setShowContingencyTests($showContingencyTests)
     {
         $this->showContingencyTests = $showContingencyTests;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getShowAuthorisedExaminerManagement()
+    {
+        return $this->showAuthorisedExaminerManagement;
+    }
+
+    /**
+     * @param bool $showAuthorisedExaminerManagement
+     */
+    public function setShowAuthorisedExaminerManagement($showAuthorisedExaminerManagement)
+    {
+        $this->showAuthorisedExaminerManagement =  $showAuthorisedExaminerManagement;
+    }
+
+    /**
+     * @return AuthorisedExaminerManagementViewModel
+     */
+    public function getAuthorisedExaminerManagementViewModel()
+    {
+        return $this->authorisedExaminerManagementViewModel;
     }
 }
