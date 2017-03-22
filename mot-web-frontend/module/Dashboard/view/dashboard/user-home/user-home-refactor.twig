@@ -53,6 +53,10 @@
             {% include '/dashboard/user-home/your-performance.twig' %}
         {% endif %}
 
+        {% if dashboard.showAuthorisedExaminerManagement %}
+            {% include '/dashboard/user-home/authorised-examiner-management.twig' with {'authorisedExaminerManagement': dashboard.authorisedExaminerManagementViewModel } %}
+        {% endif %}
+
         {% include '/dashboard/user-home/training-test.twig' with {'trainingTest': dashboard.trainingTestViewModel} %}
 
         {% if dashboard.showContingencyTests %}

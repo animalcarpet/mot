@@ -121,6 +121,76 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider isAreaOffice1DataProvider
+     *
+     * @param $userRole
+     * @param $expectedResult
+     */
+    public function testUserHasAreaOffice1Role($userRole, $expectedResult)
+    {
+        $this->addMethodToMockAuthorisationService('getAllRoles', null, $userRole);
+        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
+
+        $this->assertEquals($expectedResult , $dashboardGuard->isAreaOffice1());
+    }
+
+    /**
+     * @dataProvider permissionToCreateAuthorisedExaminerDataProvider
+     *
+     * @param $permission
+     * @param $expectedResult
+     */
+    public function testIfUserHasPermissionToCreateAuthorisedExaminer($permission, $expectedResult)
+    {
+        $this->addMethodToMockAuthorisationService('isGranted', $permission, $expectedResult);
+        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
+
+        $this->assertEquals($expectedResult , $dashboardGuard->canCreateAuthorisedExaminer());
+    }
+
+    /**
+     * @dataProvider permissionToCreateVehicleTestingStationDataProvider
+     *
+     * @param $userPermission
+     * @param $expectedResult
+     */
+    public function testUsesHasPermissionToCreateVehicleTestingStation($userPermission, $expectedResult)
+    {
+        $this->addMethodToMockAuthorisationService('isGranted', $userPermission , $expectedResult);
+        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
+
+        $this->assertEquals($expectedResult, $dashboardGuard->canCreateVehicleTestingStation());
+    }
+
+    public function permissionToCreateAuthorisedExaminerDataProvider()
+    {
+        return [
+            [PermissionInSystem::AUTHORISED_EXAMINER_CREATE, true, true],
+            [null, false, false]
+        ];
+    }
+
+    public function permissionToCreateVehicleTestingStationDataProvider()
+    {
+        return [
+            [PermissionInSystem::VEHICLE_TESTING_STATION_CREATE, true, true],
+            [null, false, false]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function isAreaOffice1DataProvider()
+    {
+        return [
+            [[RoleCode::USER], false],
+            [[RoleCode::AREA_OFFICE_1], true],
+            [[RoleCode::USER, RoleCode::AREA_OFFICE_1], true]
+        ];
+    }
+
+    /**
      * @dataProvider userShouldDoDemoTestDataProvider
      *
      * @param array $userRoles
@@ -350,6 +420,7 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
             [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_ACTIVE], true],
             [[RoleCode::CUSTOMER_SERVICE_OPERATIVE], true],
             [[RoleCode::DVLA_OPERATIVE], true],
+            [[RoleCode::AREA_OFFICE_1], true],
         ];
     }
 

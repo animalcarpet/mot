@@ -25,16 +25,15 @@ class DashboardViewModelBuilder
      * DashboardViewModelBuilder constructor.
      *
      * @param MotFrontendIdentityInterface $identity
-     * @param Dashboard                    $dashboard
-     * @param DashboardGuard               $dashboardGuard
-     * @param Url                          $url
+     * @param Dashboard $dashboard
+     * @param DashboardGuard $dashboardGuard
+     * @param Url $url
      */
     public function __construct(
         MotFrontendIdentityInterface $identity,
         Dashboard $dashboard,
         DashboardGuard $dashboardGuard,
         Url $url
-
     ) {
         $this->identity = $identity;
         $this->dashboard = $dashboard;
@@ -52,12 +51,14 @@ class DashboardViewModelBuilder
             $this->buildNotificationsViewModel(),
             $this->buildTrainingTestViewModel(),
             $this->buildAuthorisedExaminersViewModel(),
-            $this->buildSpecialNoticesViewModel()
+            $this->buildSpecialNoticesViewModel(),
+            $this->buildAuthorisedExaminerManagementViewModel()
         );
 
         $dashboardViewModel->setShowDemoMessage($this->shouldShowDemoMessage());
         $dashboardViewModel->setShowYourPerformance($this->shouldShowYourPerformance());
         $dashboardViewModel->setShowContingencyTests($this->shouldShowContingencyTests());
+        $dashboardViewModel->setShowAuthorisedExaminerManagement($this->shouldShowAuthorisedExaminerManagement());
 
         return $dashboardViewModel;
     }
@@ -84,6 +85,14 @@ class DashboardViewModelBuilder
     public function shouldShowContingencyTests()
     {
         return $this->dashboardGuard->isTestingEnabled();
+    }
+
+    /**
+     * @return bool
+     */
+    public function shouldShowAuthorisedExaminerManagement()
+    {
+        return $this->dashboardGuard->isAreaOffice1();
     }
 
     /**
@@ -199,5 +208,18 @@ class DashboardViewModelBuilder
         );
 
         return $startMotViewModel;
+    }
+
+    /**
+     * @return AuthorisedExaminerManagementViewModel
+     */
+    private function buildAuthorisedExaminerManagementViewModel()
+    {
+        $authorisedExaminerManagementViewModel = new AuthorisedExaminerManagementViewModel(
+            $this->dashboardGuard->canCreateAuthorisedExaminer(),
+            $this->dashboardGuard->canCreateVehicleTestingStation()
+        );
+
+        return $authorisedExaminerManagementViewModel;
     }
 }

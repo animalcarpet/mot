@@ -58,6 +58,7 @@ class DashboardViewModelBuilderTest extends PHPUnit_Framework_TestCase
         $this->assertObjectHasAttribute("trainingTestViewModel", $dashboardViewModel);
         $this->assertObjectHasAttribute("authorisedExaminersViewModel", $dashboardViewModel);
         $this->assertObjectHasAttribute("specialNoticesViewModel", $dashboardViewModel);
+        $this->assertObjectHasAttribute("authorisedExaminerManagementViewModel", $dashboardViewModel);
     }
     
     public function testInProgressTrainingTestNumberIsPassedToTrainingTestViewModel()
@@ -108,6 +109,11 @@ class DashboardViewModelBuilderTest extends PHPUnit_Framework_TestCase
         $dashboard = new Dashboard(array_merge($dashboardDataDefaults, $this->dashboardData));
         $urlMock = XMock::of(Url::class);
 
-        return new DashboardViewModelBuilder($identityMock, $dashboard, $this->mockDashboardGuard, $urlMock);
+        return new DashboardViewModelBuilder(
+            $identityMock,
+            $dashboard,
+            $this->mockDashboardGuard,
+            $urlMock
+        );
     }
 }
