@@ -44,13 +44,16 @@ create_with_synthetic_data() {
 
 #Anonymised data on S3 storage
 create_from_data_file() {
+    # Allow script to deal with errors as there are two ways to attempt to pull the file from S3 aws or curl
+    set +e
+
     echo Using data file $DATAFILE
 
     if [ ! -f ${DATAFILE} ]
     then
     	# download anonymised data from S3 and unzip the tar
-        command -v aws >/dev/null 2>&1 || { echo >&2 "aws client not installed" ; }
-        if [ $? != 0 ]
+        command -v aws >/dev/null 2>&1 
+        if [ $? == 0 ]
         then
             echo $(date) Using aws s3 cp s3://10k-anonymised-data/${DATAFILE} ${DATAFILE} to fetch data file
             aws s3 cp s3://10k-anonymised-data/${DATAFILE} ${DATAFILE}
@@ -59,6 +62,8 @@ create_from_data_file() {
             then
                 echo $(date) aws s3 cp s3://10k-anonymised-data/${DATAFILE} ${DATAFILE} returned non-zero
             fi 
+        else
+            echo $(date) aws client not installed
         fi
     fi
 
@@ -78,6 +83,9 @@ create_from_data_file() {
         echo $(date) Database load file is not present - ${DATAFILE} check download permissions
         exit 1
     fi
+
+    #Turn out automatic err exit
+    set -e
 
     if [ -d temp-dev ]
     then
