@@ -217,7 +217,7 @@ CREATE TABLE `address` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   FULLTEXT KEY `ft_contact_town_postcode` (`town`,`postcode`)
-) ENGINE=InnoDB AUTO_INCREMENT=1000030 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -985,7 +985,7 @@ CREATE TABLE `assembly` (
   KEY `fk_assembly_parent_assembly_id` (`parent_assembly_id`),
   CONSTRAINT `fk_assembly_assembly_type` FOREIGN KEY (`assembly_type_id`) REFERENCES `assembly_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_assembly_parent_assembly_id` FOREIGN KEY (`parent_assembly_id`) REFERENCES `assembly` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='A was of grouping entities in the system i.e. Area, Zone, MEP also Area Offices';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='A was of grouping entities in the system i.e. Area, Zone, MEP also Area Offices';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1043,7 +1043,7 @@ CREATE TABLE `assembly_role_type` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_assembly_role_type_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1100,7 +1100,7 @@ CREATE TABLE `assembly_type` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Classification of a assembly (group i.e. Area, MEP etc)';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Classification of a assembly (group i.e. Area, MEP etc)';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1169,7 +1169,7 @@ CREATE TABLE `auth_for_ae` (
   CONSTRAINT `fk_auth_for_ae_ao_site_id` FOREIGN KEY (`ao_site_id`) REFERENCES `site` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_auth_for_ae_organisation_id` FOREIGN KEY (`organisation_id`) REFERENCES `organisation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_auth_for_ae_status_id` FOREIGN KEY (`status_id`) REFERENCES `auth_for_ae_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4000 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Record of the authorisation of an organisation to be an Authorised Examiner';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Record of the authorisation of an organisation to be an Authorised Examiner';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1422,7 +1422,7 @@ CREATE TABLE `auth_for_ae_person_as_principal_map` (
   KEY `fk_auth_for_ae_person_map_person_id` (`person_id`),
   CONSTRAINT `fk_auth_for_ae_person_map_authorised_examiner` FOREIGN KEY (`auth_for_ae_id`) REFERENCES `auth_for_ae` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_auth_for_ae_person_map_person_id` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1647,7 +1647,7 @@ CREATE TABLE `auth_for_ae_status` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_auth_for_ae_status_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation for the status of an authorisation for an organisation to be an Authorised Examiner.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation for the status of an authorisation for an organisation to be an Authorised Examiner.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1714,7 +1714,7 @@ CREATE TABLE `auth_for_testing_mot` (
   CONSTRAINT `fk_auth_for_testing_mot_person_id` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_auth_for_testing_mot_status_id` FOREIGN KEY (`status_id`) REFERENCES `auth_for_testing_mot_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_auth_for_testing_mot_vehicle_class_id` FOREIGN KEY (`vehicle_class_id`) REFERENCES `vehicle_class` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=676 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Record for the authorisation of a person to conduct an MOT on a particular vehicle class.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Record for the authorisation of a person to conduct an MOT on a particular vehicle class.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1941,7 +1941,7 @@ CREATE TABLE `auth_for_testing_mot_at_site` (
   CONSTRAINT `fk_auth_for_testing_mot_at_site_auth_status_id` FOREIGN KEY (`status_id`) REFERENCES `auth_for_testing_mot_at_site_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_auth_for_testing_mot_at_site_site_id` FOREIGN KEY (`site_id`) REFERENCES `site` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_auth_site_vehicle_class_id` FOREIGN KEY (`vehicle_class_id`) REFERENCES `vehicle_class` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Record of the authorisation for a site to conduct an MOT';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Record of the authorisation for a site to conduct an MOT';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2191,7 +2191,7 @@ CREATE TABLE `auth_for_testing_mot_at_site_status` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_auth_for_testing_mot_at_site_status_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation for the status of an authorisation for a site to conduct an MOT.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation for the status of an authorisation for a site to conduct an MOT.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2283,7 +2283,7 @@ CREATE TABLE `auth_for_testing_mot_role_map` (
   CONSTRAINT `fk_auth_for_testing_mot_role_map_auth_for_testing_mot_status_id` FOREIGN KEY (`auth_status_id`) REFERENCES `auth_for_testing_mot_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_auth_for_testing_mot_role_map_role_id` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_auth_for_testing_mot_role_map_vehicle_class_id` FOREIGN KEY (`vehicle_class_id`) REFERENCES `vehicle_class` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2341,7 +2341,7 @@ CREATE TABLE `auth_for_testing_mot_status` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_auth_for_testing_mot_status_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation for the status of an authorisation for a person to conduct an MOT.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation for the status of an authorisation for a person to conduct an MOT.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2399,7 +2399,7 @@ CREATE TABLE `auth_status` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_auth_status_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation for the status of an authorisation for a person to conduct an MOT.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation for the status of an authorisation for a person to conduct an MOT.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2465,7 +2465,7 @@ CREATE TABLE `authorised_examiner_principal` (
   KEY `fk_aep_contact_detail_id_contact_detail_id` (`contact_detail_id`),
   CONSTRAINT `fk_aep_auth_for_ae_id_auth_for_ae_id` FOREIGN KEY (`auth_for_ae_id`) REFERENCES `auth_for_ae` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_aep_contact_detail_id_contact_detail_id` FOREIGN KEY (`contact_detail_id`) REFERENCES `contact_detail` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2525,7 +2525,7 @@ CREATE TABLE `body_type` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_body_type_code` (`code`),
   UNIQUE KEY `uk_body_type_display_order` (`display_order`)
-) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Will be removed - normalisation of unused data';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Will be removed - normalisation of unused data';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -3875,7 +3875,7 @@ CREATE TABLE `brake_test_type` (
   UNIQUE KEY `uk_brake_test_type_name` (`name`),
   UNIQUE KEY `uk_brake_test_type_code` (`code`),
   UNIQUE KEY `uk_brake_test_type_display_order` (`display_order`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of types of brake test';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of types of brake test';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -3932,7 +3932,7 @@ CREATE TABLE `business_role_status` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Status of a business role in the system';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Status of a business role in the system';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -4168,7 +4168,7 @@ CREATE TABLE `censor_blacklist` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `phrase` (`phrase`)
-) ENGINE=InnoDB AUTO_INCREMENT=343 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='List of blacklisted words which the system can use to filter input to the system';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='List of blacklisted words which the system can use to filter input to the system';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -4226,7 +4226,7 @@ CREATE TABLE `certificate_change_different_tester_reason_lookup` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of why a certificate replacement is being performed by a different tester';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of why a certificate replacement is being performed by a different tester';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -5009,7 +5009,7 @@ CREATE TABLE `certificate_type` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_certificate_type_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the MOT test type';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the MOT test type';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -5068,7 +5068,7 @@ CREATE TABLE `colour_lookup` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='DVLA vehicle colours';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='DVLA vehicle colours';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -5127,7 +5127,7 @@ CREATE TABLE `comment` (
   PRIMARY KEY (`id`),
   KEY `fk_comment_person_id` (`author_person_id`),
   CONSTRAINT `fk_comment_person_id` FOREIGN KEY (`author_person_id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Records comments made about various entities in the system';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Records comments made about various entities in the system';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -5352,7 +5352,7 @@ CREATE TABLE `company_type` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_company_type_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of an organisations legal status';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of an organisations legal status';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -5556,7 +5556,7 @@ CREATE TABLE `company_type_hist` (
   `version` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`hist_id`),
   UNIQUE KEY `uq_company_type_hist` (`id`,`version`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='DDL GENERATED 2016-07-04 12:27:07';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='DDL GENERATED 2016-07-04 12:27:07';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5576,7 +5576,7 @@ CREATE TABLE `configuration` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Configurable values within the system that can be changed without a redeployment';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Configurable values within the system that can be changed without a redeployment';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -5780,7 +5780,7 @@ CREATE TABLE `configuration_hist` (
   `version` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`hist_id`),
   UNIQUE KEY `uq_configuration_hist` (`id`,`version`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='DDL GENERATED 2016-07-04 12:27:07';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='DDL GENERATED 2016-07-04 12:27:07';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5802,7 +5802,7 @@ CREATE TABLE `contact_detail` (
   PRIMARY KEY (`id`),
   KEY `fk_contact_detail_address` (`address_id`),
   CONSTRAINT `fk_contact_detail_address` FOREIGN KEY (`address_id`) REFERENCES `address` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=25024 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Container object to link all the contact elements, such as address, phone and email.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Container object to link all the contact elements, such as address, phone and email.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -6205,7 +6205,7 @@ CREATE TABLE `country_lookup` (
   `iso_code` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_country_lookup_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=261 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the country of registration for a vehicle and certificate replacement records';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the country of registration for a vehicle and certificate replacement records';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -6443,7 +6443,7 @@ CREATE TABLE `country_of_registration_lookup` (
   PRIMARY KEY (`id`),
   KEY `fk_country_of_registration_lookup_country_lookup_id` (`country_lookup_id`),
   CONSTRAINT `fk_country_of_registration_lookup_country_lookup_id` FOREIGN KEY (`country_lookup_id`) REFERENCES `country_lookup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -6571,7 +6571,7 @@ CREATE TABLE `cpms_notification_scope` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `ix_cpms_notification_scope_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -6629,7 +6629,7 @@ CREATE TABLE `cpms_notification_status` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `ix_cpms_notification_status_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -6687,7 +6687,7 @@ CREATE TABLE `cpms_notification_type` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `ix_cpms_notification_type_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -6751,7 +6751,7 @@ CREATE TABLE `ctrl_sequence` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_ctrl_sequence_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Sequences used by the application: use the sp_sequence(:code) stored procedure to get the next sequence to use';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Sequences used by the application: use the sp_sequence(:code) stored procedure to get the next sequence to use';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -6840,7 +6840,7 @@ CREATE TABLE `direct_debit` (
   CONSTRAINT `fk_direct_debit_organisation` FOREIGN KEY (`organisation_id`) REFERENCES `organisation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_direct_debit_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_direct_debit_status` FOREIGN KEY (`status_id`) REFERENCES `direct_debit_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Direct debit mandates of organisations wanting to purchase slots regularly';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Direct debit mandates of organisations wanting to purchase slots regularly';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -7112,7 +7112,7 @@ CREATE TABLE `direct_debit_history` (
   CONSTRAINT `fk_direct_debit_history_dd_id` FOREIGN KEY (`direct_debit_id`) REFERENCES `direct_debit` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_direct_debit_history_status` FOREIGN KEY (`status_id`) REFERENCES `direct_debit_history_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_direct_debit_history_transaction` FOREIGN KEY (`transaction_id`) REFERENCES `test_slot_transaction` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -7169,7 +7169,7 @@ CREATE TABLE `direct_debit_history_status` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -7227,7 +7227,7 @@ CREATE TABLE `direct_debit_status` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   `cpms_code` varchar(5) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of status of direct debit mandate';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of status of direct debit mandate';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -7285,7 +7285,7 @@ CREATE TABLE `dvla_make` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_dvla_make_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=100020 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='DVLA vehicle makes';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='DVLA vehicle makes';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -7512,7 +7512,7 @@ CREATE TABLE `dvla_model` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_dvla_model_make_model_code` (`make_code`,`code`),
   CONSTRAINT `fk_dvla_model_dvla_make_code` FOREIGN KEY (`make_code`) REFERENCES `dvla_make` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=106783 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='DVLA vehicle models';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='DVLA vehicle models';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -7751,7 +7751,7 @@ CREATE TABLE `dvla_model_model_detail_code_map` (
   CONSTRAINT `fk_dvla_model_model_detail_code_map_dvla_model_code` FOREIGN KEY (`dvla_make_code`, `dvla_model_code`) REFERENCES `dvla_model` (`make_code`, `code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_dvla_model_model_detail_code_map_make` FOREIGN KEY (`make_id`) REFERENCES `make` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_dvla_model_model_detail_code_map_model` FOREIGN KEY (`model_id`) REFERENCES `model` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -8026,7 +8026,7 @@ CREATE TABLE `dvla_vehicle` (
   KEY `dvla_vehicle_vin_collapsed_idx` (`vin_collapsed`),
   KEY `fk_dvla_vehicle_vehicle` (`vehicle_id`),
   CONSTRAINT `fk_dvla_vehicle_vehicle` FOREIGN KEY (`vehicle_id`) REFERENCES `vehicle` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Vehicle data imported from the DVLA';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Vehicle data imported from the DVLA';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -8466,7 +8466,7 @@ CREATE TABLE `email` (
   PRIMARY KEY (`id`),
   KEY `fk_email_contact_detail_id` (`contact_detail_id`),
   CONSTRAINT `fk_email_contact_detail_id` FOREIGN KEY (`contact_detail_id`) REFERENCES `contact_detail` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Representation of a email address';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Representation of a email address';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -8697,7 +8697,7 @@ CREATE TABLE `emergency_log` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Log of emergency outages and the codes used';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Log of emergency outages and the codes used';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -8934,7 +8934,7 @@ CREATE TABLE `emergency_reason_lookup` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Codes and descriptions for reasons due to which contingency testing has to take place';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Codes and descriptions for reasons due to which contingency testing has to take place';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -8998,7 +8998,7 @@ CREATE TABLE `empty_reason_map` (
   CONSTRAINT `fk_empty_reason_map_empty_vin_reason_lookup` FOREIGN KEY (`empty_vin_reason_lookup_id`) REFERENCES `empty_vin_reason_lookup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_empty_reason_map_empty_vrm_reason_lookup` FOREIGN KEY (`empty_vrm_reason_lookup_id`) REFERENCES `empty_vrm_reason_lookup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_empty_reason_map_vehicle` FOREIGN KEY (`vehicle_id`) REFERENCES `vehicle` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -9227,7 +9227,7 @@ CREATE TABLE `empty_vin_reason_lookup` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -9284,7 +9284,7 @@ CREATE TABLE `empty_vrm_reason_lookup` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -9342,7 +9342,7 @@ CREATE TABLE `enforcement_condition_appointment_lookup` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Descriptions of conditions of approval for recording a new Site by the VE';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Descriptions of conditions of approval for recording a new Site by the VE';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -9400,7 +9400,7 @@ CREATE TABLE `enforcement_decision_category_lookup` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Enumerates the decisions a VE can make at the RFR level when comparing a VE Test to a Testers Test';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Enumerates the decisions a VE can make at the RFR level when comparing a VE Test to a Testers Test';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -9458,7 +9458,7 @@ CREATE TABLE `enforcement_decision_lookup` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Comparison screen decision results';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Comparison screen decision results';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -9516,7 +9516,7 @@ CREATE TABLE `enforcement_decision_outcome_lookup` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Enforcement decision outcome reasons';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Enforcement decision outcome reasons';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -9574,7 +9574,7 @@ CREATE TABLE `enforcement_decision_reinspection_outcome_lookup` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='List of approved reinspection outcomes';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='List of approved reinspection outcomes';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -9633,7 +9633,7 @@ CREATE TABLE `enforcement_decision_score_lookup` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Comparison screen decision score selections';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Comparison screen decision score selections';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -9690,7 +9690,7 @@ CREATE TABLE `enforcement_fuel_type_lookup` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Permissible fuel types for which a Site is approved';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Permissible fuel types for which a Site is approved';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -9749,7 +9749,7 @@ CREATE TABLE `enforcement_full_partial_retest_lookup` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Record whether the VEs Test is full or partial';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Record whether the VEs Test is full or partial';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -10617,7 +10617,7 @@ CREATE TABLE `enforcement_mot_test_result_witnesses` (
   PRIMARY KEY (`id`),
   KEY `enforcement_mot_test_result_witnesses_ibfk_1` (`enforcement_mot_test_result_id`),
   CONSTRAINT `fk_enforcement_mot_test_result_witnesses_enforcement_mot_result` FOREIGN KEY (`enforcement_mot_test_result_id`) REFERENCES `enforcement_mot_test_result` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Records witnesses to a test';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Records witnesses to a test';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -10689,7 +10689,7 @@ CREATE TABLE `enforcement_site_assessment` (
   CONSTRAINT `fk_enforcement_site_assessment_examiner_person_id` FOREIGN KEY (`examiner_person_id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_enforcement_site_assessment_site_id` FOREIGN KEY (`site_id`) REFERENCES `site` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_enforcement_site_assessment_tester_person_id` FOREIGN KEY (`tester_person_id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Result table for a site assessment visit scoring';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Result table for a site assessment visit scoring';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -10949,7 +10949,7 @@ CREATE TABLE `enforcement_visit_outcome_lookup` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of Enforcement site visit outcomes';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of Enforcement site visit outcomes';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -11016,7 +11016,7 @@ CREATE TABLE `equipment` (
   CONSTRAINT `equipment_ibfk_1` FOREIGN KEY (`equipment_model_id`) REFERENCES `equipment_model` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `equipment_ibfk_2` FOREIGN KEY (`site_id`) REFERENCES `site` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `equipment_ibfk_3` FOREIGN KEY (`equipment_status_id`) REFERENCES `equipment_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='An instance of a piece of equipment at a site';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='An instance of a piece of equipment at a site';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -11074,7 +11074,7 @@ CREATE TABLE `equipment_make` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `bk_equipment_make` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='List of different makes of equipment.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='List of different makes of equipment.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -11146,7 +11146,7 @@ CREATE TABLE `equipment_model` (
   CONSTRAINT `equipment_model_ibfk_1` FOREIGN KEY (`equipment_make_id`) REFERENCES `equipment_make` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `equipment_model_ibfk_2` FOREIGN KEY (`equipment_type_id`) REFERENCES `equipment_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `equipment_model_ibfk_5` FOREIGN KEY (`equipment_model_status_id`) REFERENCES `equipment_model_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -11205,7 +11205,7 @@ CREATE TABLE `equipment_model_status` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_equipment_model_status_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the equipment model status';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the equipment model status';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -11266,7 +11266,7 @@ CREATE TABLE `equipment_model_vehicle_class_link` (
   KEY `fk_equipment_model_vehicle_class_map_vehicle_class_id` (`vehicle_class_id`),
   CONSTRAINT `fk_equipment_model_vehicle_class_map_equipment_model_id` FOREIGN KEY (`equipment_model_id`) REFERENCES `equipment_model` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_equipment_model_vehicle_class_map_vehicle_class_id` FOREIGN KEY (`vehicle_class_id`) REFERENCES `vehicle_class` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Used to link a piece of equipment to the vehicle class(es) it is valid for';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Used to link a piece of equipment to the vehicle class(es) it is valid for';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -11325,7 +11325,7 @@ CREATE TABLE `equipment_status` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_equipment_status_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of a piece of equipments status';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of a piece of equipments status';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -11383,7 +11383,7 @@ CREATE TABLE `equipment_type` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `bk_equipment_type` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -11450,7 +11450,7 @@ CREATE TABLE `event` (
   CONSTRAINT `fk_event_comment_id_comment_id` FOREIGN KEY (`comment_id`) REFERENCES `comment` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_event_event_outcome_id_event_outcome_id` FOREIGN KEY (`event_outcome_id`) REFERENCES `event_outcome_lookup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_event_event_type_id_event_type_id` FOREIGN KEY (`event_type_id`) REFERENCES `event_type_lookup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='System and manual events';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='System and manual events';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -11670,7 +11670,7 @@ CREATE TABLE `event_category_lookup` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_code` (`code`),
   UNIQUE KEY `uk_display_order` (`display_order`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Category of events';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Category of events';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -11759,7 +11759,7 @@ CREATE TABLE `event_organisation_map` (
   KEY `fk_event_org_map_org_id_org_id` (`organisation_id`),
   CONSTRAINT `fk_event_org_map_event_id_event_id` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_event_org_map_org_id_org_id` FOREIGN KEY (`organisation_id`) REFERENCES `organisation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Map table to join event and organisation';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Map table to join event and organisation';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -11986,7 +11986,7 @@ CREATE TABLE `event_outcome_lookup` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_code` (`code`),
   UNIQUE KEY `uk_display_order` (`display_order`)
-) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Event outcomes';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Event outcomes';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -12275,7 +12275,7 @@ CREATE TABLE `event_site_map` (
   KEY `fk_event_site_map_site_id_site_id` (`site_id`),
   CONSTRAINT `fk_event_site_map_event_id_event_id` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_event_site_map_site_id_site_id` FOREIGN KEY (`site_id`) REFERENCES `site` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Map table to join event and site';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Map table to join event and site';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -12504,7 +12504,7 @@ CREATE TABLE `event_type_lookup` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_code` (`code`),
   UNIQUE KEY `uk_display_order` (`display_order`)
-) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Event types lookup table. Populated with MOT1 data';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Event types lookup table. Populated with MOT1 data';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -12568,7 +12568,7 @@ CREATE TABLE `event_type_outcome_category_map` (
   CONSTRAINT `fk_event_type_outcome_category_map_event_category_id` FOREIGN KEY (`event_category_id`) REFERENCES `event_category_lookup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_event_type_outcome_category_map_event_outcome_id` FOREIGN KEY (`event_outcome_id`) REFERENCES `event_outcome_lookup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_event_type_outcome_category_map_event_type_id` FOREIGN KEY (`event_type_id`) REFERENCES `event_type_lookup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=468 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Restrict event outcome for a specific event type by categories';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Restrict event outcome for a specific event type by categories';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -12748,7 +12748,7 @@ CREATE TABLE `facility_type` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_facility_type_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of facility types at a site';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of facility types at a site';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -12865,7 +12865,7 @@ CREATE TABLE `fuel_type` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_fuel_type_code` (`code`),
   UNIQUE KEY `uk_fuel_type_display_order` (`display_order`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Representation of the various fuel types';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Representation of the various fuel types';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -12922,7 +12922,7 @@ CREATE TABLE `gender` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='normalisation of a persons gender';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='normalisation of a persons gender';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -13109,7 +13109,7 @@ CREATE TABLE `jasper_document` (
   PRIMARY KEY (`id`),
   KEY `fk_jasper_document_template` (`template_id`),
   CONSTRAINT `fk_jasper_document_template` FOREIGN KEY (`template_id`) REFERENCES `jasper_template` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Jasper Reports related table.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Jasper Reports related table.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -13397,7 +13397,7 @@ CREATE TABLE `jasper_template` (
   PRIMARY KEY (`id`),
   KEY `fk_jasper_template_jasper_template_type` (`template_type_id`),
   CONSTRAINT `fk_jasper_template_jasper_template_type` FOREIGN KEY (`template_type_id`) REFERENCES `jasper_template_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Jasper Reports related table.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Jasper Reports related table.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -13453,7 +13453,7 @@ CREATE TABLE `jasper_template_type` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Jasper Reports related table.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Jasper Reports related table.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -13513,7 +13513,7 @@ CREATE TABLE `jasper_template_variation` (
   PRIMARY KEY (`id`),
   KEY `jasper_template_variation_ibfk_1` (`template_id`),
   CONSTRAINT `jasper_template_variation_ibfk_1` FOREIGN KEY (`template_id`) REFERENCES `jasper_template` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Jasper Reports related table.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Jasper Reports related table.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -13570,7 +13570,7 @@ CREATE TABLE `language_type` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Written languages used in application';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Written languages used in application';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -13634,7 +13634,7 @@ CREATE TABLE `licence` (
   KEY `fk_licence_licence_type` (`licence_type_id`),
   CONSTRAINT `fk_licence_licence_country_id` FOREIGN KEY (`licence_country_id`) REFERENCES `licence_country_lookup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_licence_licence_type` FOREIGN KEY (`licence_type_id`) REFERENCES `licence_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='License held by a person, such as drivers license';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='License held by a person, such as drivers license';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -13846,7 +13846,7 @@ CREATE TABLE `licence_country_lookup` (
   `last_updated_on` timestamp(6) NULL DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Lookup for a licence''s issuing country';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Lookup for a licence''s issuing country';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -13931,7 +13931,7 @@ CREATE TABLE `licence_type` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_licence_type_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Type of license i.e. Driving Licence';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Type of license i.e. Driving Licence';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -13991,7 +13991,7 @@ CREATE TABLE `make` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `ux_make_name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=100490 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Vehicle makes';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Vehicle makes';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -14364,7 +14364,7 @@ CREATE TABLE `message_type` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_message_type_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Types of messages i.e. Forgotten password, Username reminder etc';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Types of messages i.e. Forgotten password, Username reminder etc';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -14490,7 +14490,7 @@ CREATE TABLE `model` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `ddr_make_id_model_name_unq` (`make_id`,`name`),
   CONSTRAINT `fk_model_make_id` FOREIGN KEY (`make_id`) REFERENCES `make` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=110394 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Vehicle models';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Vehicle models';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -14566,7 +14566,7 @@ CREATE TABLE `model_detail` (
   CONSTRAINT `fk_model_detail_model_id` FOREIGN KEY (`model_id`) REFERENCES `model` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_model_detail_transmission_type_id` FOREIGN KEY (`transmission_type_id`) REFERENCES `transmission_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_model_detail_vehicle_class_id` FOREIGN KEY (`vehicle_class_id`) REFERENCES `vehicle_class` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Model detail that would have come from the VSI.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Model detail that would have come from the VSI.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -14634,7 +14634,7 @@ CREATE TABLE `model_technical_data` (
   CONSTRAINT `fk_model_technical_data_created_by_person_id` FOREIGN KEY (`created_by`) REFERENCES `person` (`id`),
   CONSTRAINT `fk_model_technical_data_last_updated_by_person_id` FOREIGN KEY (`last_updated_by`) REFERENCES `person` (`id`),
   CONSTRAINT `fk_model_technical_data_model_id_model_id` FOREIGN KEY (`model_id`) REFERENCES `model` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=932 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -14730,7 +14730,7 @@ CREATE TABLE `model_technical_data_category` (
   KEY `ix_model_technical_data_category_last_updated_by` (`last_updated_by`),
   CONSTRAINT `fk_model_technical_data_category_created_by_person_id` FOREIGN KEY (`created_by`) REFERENCES `person` (`id`),
   CONSTRAINT `fk_model_technical_data_category_last_updated_by_person_id` FOREIGN KEY (`last_updated_by`) REFERENCES `person` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -14830,7 +14830,7 @@ CREATE TABLE `model_technical_data_content` (
   CONSTRAINT `fk_model_technical_data_content_created_by_person_id` FOREIGN KEY (`created_by`) REFERENCES `person` (`id`),
   CONSTRAINT `fk_model_technical_data_content_last_updated_by_person_id` FOREIGN KEY (`last_updated_by`) REFERENCES `person` (`id`),
   CONSTRAINT `fk_model_technical_data_content_model_technical_data_category_id` FOREIGN KEY (`model_technical_data_category_id`) REFERENCES `model_technical_data_category` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=200 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -14930,7 +14930,7 @@ CREATE TABLE `model_technical_data_content_map` (
   CONSTRAINT `fk_model_technical_data_content_map_last_updated_by_person_id` FOREIGN KEY (`last_updated_by`) REFERENCES `person` (`id`),
   CONSTRAINT `fk_model_technical_data_content_map_model_technical_data_id` FOREIGN KEY (`model_technical_data_id`) REFERENCES `model_technical_data` (`id`),
   CONSTRAINT `fk_model_technical_data_content_map_mtd_content_id` FOREIGN KEY (`model_technical_data_content_id`) REFERENCES `model_technical_data_content` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1378 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -17427,7 +17427,7 @@ CREATE TABLE `mot_test_reason_for_cancel_lookup` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Reasons for canceling a test';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Reasons for canceling a test';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -17488,7 +17488,7 @@ CREATE TABLE `mot_test_reason_for_refusal_lookup` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `mot_test_reason_for_refusal_lookup_code` (`code`),
   UNIQUE KEY `mot_test_reason_for_refusal_lookup_display_order` (`display_order`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Reasons for refusing to test';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Reasons for refusing to test';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -18093,7 +18093,7 @@ CREATE TABLE `mot_test_status` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_mot_test_status_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -18218,7 +18218,7 @@ CREATE TABLE `mot_test_type` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of types of test performed';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of types of test performed';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -18276,7 +18276,7 @@ CREATE TABLE `non_working_day_country_lookup` (
   PRIMARY KEY (`id`),
   KEY `fk_non_working_day_country_lookup_country_lookup_id` (`country_lookup_id`),
   CONSTRAINT `fk_non_working_day_country_lookup_country_lookup_id` FOREIGN KEY (`country_lookup_id`) REFERENCES `country_lookup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -18335,7 +18335,7 @@ CREATE TABLE `non_working_day_lookup` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_non_working_day_lookup_non_working_day_country_id_day,` (`non_working_day_country_lookup_id`,`day`),
   CONSTRAINT `fk_non_working_day_lookup_non_working_day_country_lookup_id` FOREIGN KEY (`non_working_day_country_lookup_id`) REFERENCES `non_working_day_country_lookup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=151 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -18603,7 +18603,7 @@ CREATE TABLE `notification_action_lookup` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_notification_action_lookup_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the types of action that can be taken for all types of notification';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the types of action that can be taken for all types of notification';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -18978,7 +18978,7 @@ CREATE TABLE `notification_template` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Template text of notification including placeholder fields';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Template text of notification including placeholder fields';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -19183,7 +19183,7 @@ CREATE TABLE `notification_template_action` (
   KEY `fk_notification_template_action_2` (`action_id`),
   CONSTRAINT `fk_notification_template_action_1` FOREIGN KEY (`notification_template_id`) REFERENCES `notification_template` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_notification_template_action_2` FOREIGN KEY (`action_id`) REFERENCES `notification_action_lookup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Names of actions that can be taken for a given notification template';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Names of actions that can be taken for a given notification template';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -19244,7 +19244,7 @@ CREATE TABLE `notification_template_hist` (
   `version` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`hist_id`),
   UNIQUE KEY `uq_notification_template_hist` (`id`,`version`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='DDL GENERATED 2016-07-04 12:27:08';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='DDL GENERATED 2016-07-04 12:27:08';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -19322,7 +19322,7 @@ CREATE TABLE `organisation` (
   CONSTRAINT `fk_organisation_company_type_id` FOREIGN KEY (`company_type_id`) REFERENCES `company_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_organisation_organisation_type_id` FOREIGN KEY (`organisation_type_id`) REFERENCES `organisation_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_organisation_transition_status_id` FOREIGN KEY (`transition_status_id`) REFERENCES `transition_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4000 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Representation of an organisation in the system';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Representation of an organisation in the system';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -19680,7 +19680,7 @@ CREATE TABLE `organisation_business_role` (
   UNIQUE KEY `uk_organisation_business_role_code` (`code`),
   KEY `fk_organisation_business_role_role` (`role_id`),
   CONSTRAINT `fk_organisation_business_role_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -19750,7 +19750,7 @@ CREATE TABLE `organisation_business_role_map` (
   CONSTRAINT `fk_organisation_business_role_map_status` FOREIGN KEY (`status_id`) REFERENCES `business_role_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_organisation_role_map_organisation` FOREIGN KEY (`organisation_id`) REFERENCES `organisation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_organisation_role_map_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='A persons business role within an Organisation i.e. AEDM';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='A persons business role within an Organisation i.e. AEDM';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -20006,7 +20006,7 @@ CREATE TABLE `organisation_contact_detail_map` (
   CONSTRAINT `fk_organisation_contact_detail_map_contact_detail_id` FOREIGN KEY (`contact_detail_id`) REFERENCES `contact_detail` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_organisation_contact_detail_map_contact_type_id` FOREIGN KEY (`organisation_contact_type_id`) REFERENCES `organisation_contact_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_organisation_contact_detail_map_organisation_id` FOREIGN KEY (`organisation_id`) REFERENCES `organisation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Link table between an organisation and a set of contact details';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Link table between an organisation and a set of contact details';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -20236,7 +20236,7 @@ CREATE TABLE `organisation_contact_type` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_organisation_contact_type_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of types of contact detail of an organisation';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of types of contact detail of an organisation';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -20350,7 +20350,7 @@ CREATE TABLE `organisation_site_map` (
   CONSTRAINT `fk_organisation_site_map_organisation_id` FOREIGN KEY (`organisation_id`) REFERENCES `organisation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_organisation_site_map_organisation_site_status` FOREIGN KEY (`status_id`) REFERENCES `organisation_site_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_organisation_site_map_site_id` FOREIGN KEY (`site_id`) REFERENCES `site` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -20601,7 +20601,7 @@ CREATE TABLE `organisation_site_status` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_organisation_site_status_code` (`code`),
   UNIQUE KEY `uk_organisation_site_status_name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the status of a site. ';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the status of a site. ';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -20659,7 +20659,7 @@ CREATE TABLE `organisation_type` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_organisation_type_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the type of an organisation i.e. DVSA, DVLA, Examining Body, Authorised Examiner, Other';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the type of an organisation i.e. DVSA, DVLA, Examining Body, Authorised Examiner, Other';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -20953,7 +20953,7 @@ CREATE TABLE `payment` (
   KEY `fk_payment_status_id_payment_status_id` (`status_id`),
   CONSTRAINT `fk_payment_payment_type` FOREIGN KEY (`type`) REFERENCES `payment_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_payment_status_id_payment_status_id` FOREIGN KEY (`status_id`) REFERENCES `payment_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Records payments made for slots. Potentially more than one payment could be made per slot transaction.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Records payments made for slots. Potentially more than one payment could be made per slot transaction.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -21203,7 +21203,7 @@ CREATE TABLE `payment_status` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='CPMS code for given status type';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='CPMS code for given status type';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -21263,7 +21263,7 @@ CREATE TABLE `payment_type` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of types of payment. Not all payment types are currently implemented';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of types of payment. Not all payment types are currently implemented';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -21322,7 +21322,7 @@ CREATE TABLE `permission` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_permission_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=333 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -21555,7 +21555,7 @@ CREATE TABLE `permission_to_assign_role_map` (
   KEY `fk_permission_to_assign_role_map_permission_id` (`permission_id`),
   CONSTRAINT `fk_permission_to_assign_role_map_permission_id` FOREIGN KEY (`permission_id`) REFERENCES `permission` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_permission_to_assign_role_map_role_id` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='A One To One relationship to explain which permission is needed to manage the given role, the user should have this permission granted to them by RBAC';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='A One To One relationship to explain which permission is needed to manage the given role, the user should have this permission granted to them by RBAC';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -21649,7 +21649,7 @@ CREATE TABLE `person` (
   CONSTRAINT `fk_person_gender` FOREIGN KEY (`gender_id`) REFERENCES `gender` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_person_title` FOREIGN KEY (`title_id`) REFERENCES `title` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_person_transition_status` FOREIGN KEY (`transition_status_id`) REFERENCES `transition_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3023 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -22013,7 +22013,7 @@ CREATE TABLE `person_auth_type_lookup` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_person_auth_type_lookup_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Lookup table for the 2FA method for a person';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Lookup table for the 2FA method for a person';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -22077,7 +22077,7 @@ CREATE TABLE `person_contact_detail_map` (
   CONSTRAINT `fk_person_contact_detail_map_contact_details` FOREIGN KEY (`contact_id`) REFERENCES `contact_detail` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_person_contact_detail_map_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_person_contact_detail_map_person_contact_type` FOREIGN KEY (`contact_type_id`) REFERENCES `person_contact_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=302 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Used to link a person to their contact details';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Used to link a person to their contact details';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -22307,7 +22307,7 @@ CREATE TABLE `person_contact_type` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_person_contact_type_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='The contact type for a contact record held against a person';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='The contact type for a contact record held against a person';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -22786,7 +22786,7 @@ CREATE TABLE `person_security_question_map` (
   KEY `fk_person_has_security_question_security_question1` (`security_question_id`),
   CONSTRAINT `fk_person_has_security_question_person1` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_person_has_security_question_security_question1` FOREIGN KEY (`security_question_id`) REFERENCES `security_question` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=405 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -23019,7 +23019,7 @@ CREATE TABLE `person_system_role` (
   PRIMARY KEY (`id`),
   KEY `fk_person_system_role_role` (`role_id`),
   CONSTRAINT `fk_person_system_role_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Roles in the system that are not organisation/site specific. e.g. Root, Admin, Login';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Roles in the system that are not organisation/site specific. e.g. Root, Admin, Login';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -23263,7 +23263,7 @@ CREATE TABLE `person_system_role_map` (
   CONSTRAINT `fk_person_system_role_map` FOREIGN KEY (`person_system_role_id`) REFERENCES `person_system_role` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_person_system_role_map_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_person_system_role_map_status` FOREIGN KEY (`status_id`) REFERENCES `business_role_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=327 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='A persons role within the system  i.e. Admin';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='A persons role within the system  i.e. Admin';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -23513,7 +23513,7 @@ CREATE TABLE `phone` (
   KEY `fk_phone_contact_phone_contact_type_id` (`phone_contact_type_id`),
   CONSTRAINT `fk_phone_contact_detail_id` FOREIGN KEY (`contact_detail_id`) REFERENCES `contact_detail` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_phone_contact_phone_contact_type_id` FOREIGN KEY (`phone_contact_type_id`) REFERENCES `phone_contact_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Representation of a phone number.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Representation of a phone number.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -23722,7 +23722,7 @@ CREATE TABLE `phone_contact_type` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_phone_contact_type_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the type of contact record.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the type of contact record.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -23812,7 +23812,7 @@ CREATE TABLE `qualification` (
   KEY `fk_qualification_qualification_type` (`qualification_type_id`),
   CONSTRAINT `fk_qualification_country_lookup_id` FOREIGN KEY (`country_lookup_id`) REFERENCES `country_lookup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_qualification_qualification_type` FOREIGN KEY (`qualification_type_id`) REFERENCES `qualification_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Qualification held by a person';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Qualification held by a person';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -24181,7 +24181,7 @@ CREATE TABLE `qualification_type` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the type of qualification held by a person';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the type of qualification held by a person';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -24258,7 +24258,7 @@ CREATE TABLE `reason_for_rejection` (
   FULLTEXT KEY `ft_description` (`test_item_selector_name`),
   CONSTRAINT `fk_test_item_selector_rfr_section_test_item_selector_id` FOREIGN KEY (`section_test_item_selector_id`) REFERENCES `test_item_category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_test_item_selector_rfr_test_item_selector_id` FOREIGN KEY (`test_item_category_id`) REFERENCES `test_item_category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=10110 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Reasons For Rejection including advisory only and items not tested';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Reasons For Rejection including advisory only and items not tested';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -24560,7 +24560,7 @@ CREATE TABLE `reason_for_rejection_type` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_reason_for_rejection_type_name` (`name`),
   UNIQUE KEY `uk_reason_for_rejection_type_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of type of RFR';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of type of RFR';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -24687,7 +24687,7 @@ CREATE TABLE `rfr_language_content_map` (
   FULLTEXT KEY `ft_name` (`name`,`test_item_selector_name`),
   CONSTRAINT `fk_rfr_language_media_map_language_type1` FOREIGN KEY (`language_type_id`) REFERENCES `language_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_rfr_language_media_map_reason_for_rejection1` FOREIGN KEY (`rfr_id`) REFERENCES `reason_for_rejection` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=10108 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='How RFRs are displayed in different languages and presented';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='How RFRs are displayed in different languages and presented';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -24751,7 +24751,7 @@ CREATE TABLE `rfr_vehicle_class_map` (
   CONSTRAINT `fk_rfr_vehicle_class_map_business_rule1` FOREIGN KEY (`business_rule_id`) REFERENCES `business_rule` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_rfr_vehicle_class_map_test_item_selector_rfr` FOREIGN KEY (`rfr_id`) REFERENCES `reason_for_rejection` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_rfr_vehicle_class_mapq` FOREIGN KEY (`vehicle_class_id`) REFERENCES `vehicle_class` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=10408 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='reasons for rejection for a specific class';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='reasons for rejection for a specific class';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -24811,7 +24811,7 @@ CREATE TABLE `role` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_role_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -25049,7 +25049,7 @@ CREATE TABLE `role_permission_map` (
   KEY `fk_role_permission_map_permission` (`permission_id`),
   CONSTRAINT `fk_role_permission_map_permission` FOREIGN KEY (`permission_id`) REFERENCES `permission` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_role_permission_map_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2208 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -25281,7 +25281,7 @@ CREATE TABLE `security_card` (
   CONSTRAINT `fk_security_card_created_by_person_id` FOREIGN KEY (`created_by`) REFERENCES `person` (`id`),
   CONSTRAINT `fk_security_card_last_updated_by_person_id` FOREIGN KEY (`last_updated_by`) REFERENCES `person` (`id`),
   CONSTRAINT `fk_security_card_status_id_security_card_status_lookup_id` FOREIGN KEY (`security_card_status_lookup_id`) REFERENCES `security_card_status_lookup` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -26020,7 +26020,7 @@ CREATE TABLE `security_card_status_lookup` (
   KEY `ix_security_card_status_lookup_last_updated_by` (`last_updated_by`),
   CONSTRAINT `fk_security_card_status_lookup_created_by_person_id` FOREIGN KEY (`created_by`) REFERENCES `person` (`id`),
   CONSTRAINT `fk_security_card_status_lookup_last_updated_by_person_id` FOREIGN KEY (`last_updated_by`) REFERENCES `person` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -26245,7 +26245,7 @@ CREATE TABLE `security_question` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -26354,7 +26354,7 @@ CREATE TABLE `site` (
   CONSTRAINT `fk_site_site_status_id_site_status_lookup_id` FOREIGN KEY (`site_status_id`) REFERENCES `site_status_lookup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_site_transition_status_id` FOREIGN KEY (`transition_status_id`) REFERENCES `transition_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_site_type_id` FOREIGN KEY (`type_id`) REFERENCES `site_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3019 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Representation of a site in the system';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Representation of a site in the system';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -26657,7 +26657,7 @@ CREATE TABLE `site_assembly_role_map` (
   CONSTRAINT `fk_site_assembly_role_map_assembly_id` FOREIGN KEY (`assembly_id`) REFERENCES `assembly` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_site_assembly_role_map_assembly_role_id` FOREIGN KEY (`assembly_role_id`) REFERENCES `assembly_role_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_site_assembly_role_map_site_id` FOREIGN KEY (`site_id`) REFERENCES `site` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -26721,7 +26721,7 @@ CREATE TABLE `site_business_role` (
   KEY `fk_site_business_role_role` (`role_id`),
   CONSTRAINT `fk_site_business_role_organisation_type_id` FOREIGN KEY (`organisation_type_id`) REFERENCES `organisation_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_site_business_role_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -26791,7 +26791,7 @@ CREATE TABLE `site_business_role_map` (
   CONSTRAINT `fk_site_role_map_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_site_role_map_site` FOREIGN KEY (`site_id`) REFERENCES `site` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_site_role_map_status` FOREIGN KEY (`status_id`) REFERENCES `business_role_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=151 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -27347,7 +27347,7 @@ CREATE TABLE `site_contact_detail_map` (
   CONSTRAINT `fk_site_contact_detail_map_contact_detail` FOREIGN KEY (`contact_detail_id`) REFERENCES `contact_detail` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_site_contact_detail_map_site` FOREIGN KEY (`site_id`) REFERENCES `site` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_site_contact_detail_map_site_contact_type` FOREIGN KEY (`site_contact_type_id`) REFERENCES `site_contact_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=25020 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Link table between a site and a set of contact details';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Link table between a site and a set of contact details';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -27556,7 +27556,7 @@ CREATE TABLE `site_contact_detail_map_hist` (
   `version` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`hist_id`),
   UNIQUE KEY `uq_site_contact_detail_map_hist` (`id`,`version`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='DDL GENERATED 2016-07-04 12:27:08';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='DDL GENERATED 2016-07-04 12:27:08';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -27577,7 +27577,7 @@ CREATE TABLE `site_contact_type` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_site_contact_type_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of types of contact detail at a site';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of types of contact detail at a site';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -27867,7 +27867,7 @@ CREATE TABLE `site_facility` (
   KEY `fk_site_id` (`site_id`),
   CONSTRAINT `fk_site_fac_facility_type` FOREIGN KEY (`facility_type_id`) REFERENCES `facility_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_site_id` FOREIGN KEY (`site_id`) REFERENCES `site` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Facilities available at sites';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Facilities available at sites';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -28124,7 +28124,7 @@ CREATE TABLE `site_hist` (
   `version` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`hist_id`),
   KEY `uq_site_hist` (`id`,`version`)
-) ENGINE=InnoDB AUTO_INCREMENT=154 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='DDL GENERATED 2016-07-04 12:27:08';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='DDL GENERATED 2016-07-04 12:27:08';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -28210,7 +28210,7 @@ CREATE TABLE `site_status_lookup` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_site_status_lookup_display_order` (`display_order`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='A business approved list of statuses for a site';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='A business approved list of statuses for a site';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -28271,7 +28271,7 @@ CREATE TABLE `site_testing_daily_schedule` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`site_id`,`weekday`),
   CONSTRAINT `site_testing_daily_schedule_ibfk_1` FOREIGN KEY (`site_id`) REFERENCES `site` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Records the normal operating hours of a site. -- Feature depricated';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Records the normal operating hours of a site. -- Feature depricated';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -28505,7 +28505,7 @@ CREATE TABLE `site_type` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of a type of site';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of a type of site';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -28569,7 +28569,7 @@ CREATE TABLE `special_notice` (
   KEY `fk_map_person_special_notice_special_notice` (`special_notice_content_id`),
   CONSTRAINT `fk_map_person_special_notice_special_notice` FOREIGN KEY (`special_notice_content_id`) REFERENCES `special_notice_content` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_map_person_special_notice_user` FOREIGN KEY (`username`) REFERENCES `person` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2151 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Acknowledgement status of each special notice for each person in the system';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Acknowledgement status of each special notice for each person in the system';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -28846,7 +28846,7 @@ CREATE TABLE `special_notice_audience_type` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -28913,7 +28913,7 @@ CREATE TABLE `special_notice_content` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `issue_number` (`issue_number`,`issue_year`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Representation of special notices';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Representation of special notices';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -29492,7 +29492,7 @@ CREATE TABLE `test_item_category` (
   KEY `fk_test_item_category_parent_test_item_category_id` (`parent_test_item_category_id`),
   CONSTRAINT `fk_test_item_category_business_rule_id_business_rule_id` FOREIGN KEY (`business_rule_id`) REFERENCES `business_rule` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_test_item_category_parent_test_item_category_id` FOREIGN KEY (`parent_test_item_category_id`) REFERENCES `test_item_category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=10155 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Groups RFRs hierarchically';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Groups RFRs hierarchically';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -29556,7 +29556,7 @@ CREATE TABLE `test_item_category_vehicle_class_map` (
   CONSTRAINT `fk_test_item_category_vehicle_class_map_business_rule_id` FOREIGN KEY (`business_rule_id`) REFERENCES `business_rule` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_test_item_category_vehicle_class_map_test_item_category_id` FOREIGN KEY (`test_item_category_id`) REFERENCES `test_item_category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_test_item_category_vehicle_class_map_vehicle_class_id` FOREIGN KEY (`vehicle_class_id`) REFERENCES `vehicle_class` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2135 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Maps the vehicle classes of each test item category';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Maps the vehicle classes of each test item category';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -29632,7 +29632,7 @@ CREATE TABLE `test_slot_transaction` (
   CONSTRAINT `fk_test_slot_transaction_organisation_id` FOREIGN KEY (`organisation_id`) REFERENCES `organisation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_test_slot_transaction_payment` FOREIGN KEY (`payment_id`) REFERENCES `payment` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_test_slot_transaction_status` FOREIGN KEY (`status_id`) REFERENCES `test_slot_transaction_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Records slot purchasing transactions - in progress and complete';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Records slot purchasing transactions - in progress and complete';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -30133,7 +30133,7 @@ CREATE TABLE `test_slot_transaction_amendment_reason` (
   UNIQUE KEY `uk_test_slot_transaction_amendment_reason_code` (`code`),
   KEY `fk_test_slot_transaction_amendment_reason_amendment_type_id` (`amendment_type_id`),
   CONSTRAINT `fk_test_slot_transaction_amendment_reason_amendment_type_id` FOREIGN KEY (`amendment_type_id`) REFERENCES `test_slot_transaction_amendment_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of reasons of amendment.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of reasons of amendment.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -30370,7 +30370,7 @@ CREATE TABLE `test_slot_transaction_amendment_type` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_test_slot_transaction_amendment_type_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of types of amendment. Not all amendment types are currently implemented';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of types of amendment. Not all amendment types are currently implemented';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -30638,7 +30638,7 @@ CREATE TABLE `test_slot_transaction_status` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the status of a transaction during the slot purchasing process';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the status of a transaction during the slot purchasing process';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -30703,7 +30703,7 @@ CREATE TABLE `ti_category_language_content_map` (
   KEY `fk_ti_category_language_content_map_test_item_category_id` (`test_item_category_id`),
   CONSTRAINT `fk_ti_category_language_content_map_language_lookup_id` FOREIGN KEY (`language_lookup_id`) REFERENCES `language_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_ti_category_language_content_map_test_item_category_id` FOREIGN KEY (`test_item_category_id`) REFERENCES `test_item_category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2051 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='How test items are displayed in different languages and presented';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='How test items are displayed in different languages and presented';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -30761,7 +30761,7 @@ CREATE TABLE `title` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_title_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation for the Person table';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation for the Person table';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -30876,7 +30876,7 @@ CREATE TABLE `transition_status` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_transition_status_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the current transfer status of an organisation from MOT1 to MOT2';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the current transfer status of an organisation from MOT1 to MOT2';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -30935,7 +30935,7 @@ CREATE TABLE `transmission_type` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_transmission_type_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of a vehicles transmission';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of a vehicles transmission';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -31086,7 +31086,7 @@ CREATE TABLE `vehicle` (
   CONSTRAINT `fk_vehicle_model_detail_id` FOREIGN KEY (`model_detail_id`) REFERENCES `model_detail` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_vehicle_secondary_colour_id` FOREIGN KEY (`secondary_colour_id`) REFERENCES `colour_lookup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_weight_source_id` FOREIGN KEY (`weight_source_id`) REFERENCES `weight_source_lookup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2037 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -31370,7 +31370,7 @@ CREATE TABLE `vehicle_class` (
   UNIQUE KEY `uk_vehicle_class_code` (`code`),
   KEY `fx_vehicle_class_vehicle_class_group_id` (`vehicle_class_group_id`),
   CONSTRAINT `fx_vehicle_class_vehicle_class_group_id` FOREIGN KEY (`vehicle_class_group_id`) REFERENCES `vehicle_class_group` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Records of the various vehicle classes';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Records of the various vehicle classes';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -31672,7 +31672,7 @@ CREATE TABLE `vehicle_hist_pre_refactor` (
   `version` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`hist_id`),
   KEY `uq_vehicle_hist` (`id`,`version`)
-) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='DDL GENERATED 2016-07-04 12:27:09';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='DDL GENERATED 2016-07-04 12:27:09';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -31696,7 +31696,7 @@ CREATE TABLE `vehicle_v5c` (
   PRIMARY KEY (`id`),
   KEY `fk_vehicle_v5c_vehicle` (`vehicle_id`),
   CONSTRAINT `fk_vehicle_v5c_vehicle` FOREIGN KEY (`vehicle_id`) REFERENCES `vehicle` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='History of a vehicles V5C data';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='History of a vehicles V5C data';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -31995,7 +31995,7 @@ CREATE TABLE `visit_reason_lookup` (
   `last_updated_on` datetime(6) DEFAULT NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the reason for a DVSA visit to a site';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of the reason for a DVSA visit to a site';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -32057,7 +32057,7 @@ CREATE TABLE `weight_source_lookup` (
   UNIQUE KEY `uk_weight_source_lookup_name` (`name`),
   UNIQUE KEY `uk_weight_source_lookup_code` (`code`),
   UNIQUE KEY `uk_weight_source_lookup_display_order` (`display_order`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of types of weight used for brake test calculations';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Normalisation of types of weight used for brake test calculations';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -32117,7 +32117,7 @@ CREATE TABLE `wheelplan_type` (
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_wheelplan_type_code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Will be removed - normalisation of unused data';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='Will be removed - normalisation of unused data';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;

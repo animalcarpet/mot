@@ -39,6 +39,7 @@ dump_schema() {
 
     sed -i '' 's/DEFINER=`motdbuser`@`%`//g'  $SCHEMA_FILE
     sed -i '' 's/DEFINER=`mysql_admin`@`%`//g'  $SCHEMA_FILE
+    sed -i '' 's/ AUTO_INCREMENT=[0-9]* / /' $SCHEMA_FILE
 
     echo "Database dumped '$DB' into $SCHEMA_FILE"
     echo
