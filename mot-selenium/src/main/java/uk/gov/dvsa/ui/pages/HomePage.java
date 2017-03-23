@@ -36,7 +36,7 @@ public class HomePage extends Page {
     @FindBy(css = "a[title*='activate your security card']") private WebElement activateCardNotificationLink;
     @FindBy(xpath = "//script[contains(text(),'userId') and contains(text(), 'dataLayer')]") private WebElement googleTagManagerDataLayer;
     @FindBy(id = "action-start-non-mot") private WebElement startNonMotTestButton;
-    @FindBy(linkText = "vehicle information") private WebElement vehicleInformationLink;
+    @FindBy(linkText = "Vehicle information") private WebElement vehicleInformationLink;
 
     private static final By ROLE_NOMINATION_LIST = By.cssSelector("#notifications a");
 

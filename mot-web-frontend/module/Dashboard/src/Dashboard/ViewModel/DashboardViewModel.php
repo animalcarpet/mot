@@ -13,6 +13,9 @@ class DashboardViewModel
     /** @var TrainingTestViewModel $trainingTestViewModel */
     private $trainingTestViewModel;
 
+    /** @var NonMotTestViewModel $nonMotTestViewModel */
+    private $nonMotTestViewModel;
+
     /** @var AuthorisedExaminersViewModel $authorisedExaminersViewModel */
     private $authorisedExaminersViewModel;
 
@@ -37,9 +40,10 @@ class DashboardViewModel
     /**
      * DashboardViewModel constructor.
      *
-     * @param HeroActionViewModel $heroActionViewModel
-     * @param NotificationsViewModel $notificationsViewModel
-     * @param TrainingTestViewModel $trainingTestViewModel
+     * @param HeroActionViewModel          $heroActionViewModel
+     * @param NotificationsViewModel       $notificationsViewModel
+     * @param TrainingTestViewModel        $trainingTestViewModel
+     * @param NonMotTestViewModel          $nonMotTestViewModel
      * @param AuthorisedExaminersViewModel $authorisedExaminersViewModel
      * @param SpecialNoticesViewModel $specialNoticesViewModel
      * @param AuthorisedExaminerManagementViewModel $authorisedExaminerManagementViewModel
@@ -48,6 +52,7 @@ class DashboardViewModel
         HeroActionViewModel $heroActionViewModel,
         NotificationsViewModel $notificationsViewModel,
         TrainingTestViewModel $trainingTestViewModel,
+        NonMotTestViewModel $nonMotTestViewModel,
         AuthorisedExaminersViewModel $authorisedExaminersViewModel,
         SpecialNoticesViewModel $specialNoticesViewModel,
         AuthorisedExaminerManagementViewModel $authorisedExaminerManagementViewModel
@@ -55,6 +60,7 @@ class DashboardViewModel
         $this->heroActionViewModel = $heroActionViewModel;
         $this->notificationsViewModel = $notificationsViewModel;
         $this->trainingTestViewModel = $trainingTestViewModel;
+        $this->nonMotTestViewModel = $nonMotTestViewModel;
         $this->authorisedExaminersViewModel = $authorisedExaminersViewModel;
         $this->specialNoticesViewModel = $specialNoticesViewModel;
         $this->authorisedExaminerManagementViewModel = $authorisedExaminerManagementViewModel;
@@ -74,6 +80,14 @@ class DashboardViewModel
     public function getTrainingTestViewModel()
     {
         return $this->trainingTestViewModel;
+    }
+
+    /**
+     * @return NonMotTestViewModel
+     */
+    public function getNonMotTestViewModel()
+    {
+        return $this->nonMotTestViewModel;
     }
 
     /**

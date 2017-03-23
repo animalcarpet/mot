@@ -57,12 +57,14 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
      * @dataProvider userCanViewReplacementDuplicateCertificateLink
      *
      * @param array $userRoles
+     * @param bool  $hasInProgressTest
      * @param bool  $hasPermission
      */
-    public function testCanViewReplacementDuplicateCertificateLink(array $userRoles, $hasPermission)
+    public function testCanViewReplacementDuplicateCertificateLink(array $userRoles, $hasInProgressTest, $hasPermission)
     {
         $this->addMethodToMockAuthorisationService('getAllRoles', null, $userRoles);
         $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
+        $dashboardGuard->setHasTestInProgress($hasInProgressTest);
 
         $this->assertEquals($hasPermission, $dashboardGuard->canViewReplacementDuplicateCertificateLink());
     }
@@ -409,18 +411,20 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
     public function userCanViewReplacementDuplicateCertificateLink()
     {
         return [
-            [[RoleCode::USER], false],
-            [[RoleCode::TESTER_ACTIVE], false],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER], true],
-            [[RoleCode::TESTER], true],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER], true],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], false],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED, RoleCode::TESTER_ACTIVE], false],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED, RoleCode::TESTER_ACTIVE,  RoleCode::TESTER], true],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_ACTIVE], true],
-            [[RoleCode::CUSTOMER_SERVICE_OPERATIVE], true],
-            [[RoleCode::DVLA_OPERATIVE], true],
-            [[RoleCode::AREA_OFFICE_1], true],
+            [[RoleCode::USER], false, false],
+            [[RoleCode::TESTER_ACTIVE], false, false],
+            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER], false, true],
+            [[RoleCode::TESTER], false, true],
+            [[RoleCode::TESTER], true, false],
+            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER], false, true],
+            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], false, false],
+            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED, RoleCode::TESTER_ACTIVE], false, false],
+            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED, RoleCode::TESTER_ACTIVE,  RoleCode::TESTER], false, true],
+            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_ACTIVE], false, true],
+            [[RoleCode::CUSTOMER_SERVICE_OPERATIVE], false, true],
+            [[RoleCode::DVLA_OPERATIVE], false, true],
+            [[RoleCode::AREA_OFFICE_1], false, true],
+            [[RoleCode::VEHICLE_EXAMINER], false, true],
         ];
     }
 

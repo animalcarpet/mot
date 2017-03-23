@@ -2,16 +2,16 @@
 
 namespace Dashboard\ViewModel;
 
-use Dashboard\Security\DashboardGuard;
-use DvsaCommon\UrlBuilder\MotTestUrlBuilder;
-use DvsaCommon\UrlBuilder\VehicleUrlBuilder;
+use DvsaMotTest\Controller\MotTestController;
+use DvsaMotTest\Controller\VehicleSearchController;
+use Zend\Mvc\Controller\Plugin\Url;
 
 class TrainingTestViewModel
 {
     /**
-     * @var DashboardGuard $dashboardGuard
+     * @var Url
      */
-    private $dashboardGuard;
+    private $url;
 
     /**
      * @var int $inProgressTestNumber
@@ -21,11 +21,11 @@ class TrainingTestViewModel
     /**
      * TrainingTestViewModel constructor.
      *
-     * @param DashboardGuard $dashboardGuard
+     * @param Url            $url
      */
-    public function __construct(DashboardGuard $dashboardGuard)
+    public function __construct(Url $url)
     {
-        $this->dashboardGuard = $dashboardGuard;
+        $this->url = $url;
     }
 
     /**
@@ -41,10 +41,18 @@ class TrainingTestViewModel
      */
     public function getLinkViewModel()
     {
-        $linkText = $this->hasInProgressTest() ? 'Resume training test' : 'Start training test';
-        $linkHref = $this->hasInProgressTest() ?
-            MotTestUrlBuilder::motTest($this->inProgressTestNumber)->toString() :
-            VehicleUrlBuilder::trainingSearch()->toString();
+        if ($this->hasInProgressTest()) {
+            $linkText = 'Resume training test';
+            $linkHref = $this->url->fromRoute(
+                MotTestController::ROUTE_MOT_TEST,
+                ['motTestNumber' => $this->inProgressTestNumber]
+            );
+        } else {
+            $linkText = 'Start training test';
+            $linkHref = $this->url->fromRoute(
+                VehicleSearchController::ROUTE_VEHICLE_SEARCH_TRAINING
+            );
+        }
 
         return new LinkViewModel($linkText, $linkHref);
     }

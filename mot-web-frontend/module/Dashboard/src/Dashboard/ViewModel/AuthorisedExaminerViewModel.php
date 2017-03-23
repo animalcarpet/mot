@@ -4,13 +4,12 @@ namespace Dashboard\ViewModel;
 
 use Dashboard\Model\AuthorisedExaminer;
 use Dashboard\Security\DashboardGuard;
-use DvsaCommon\UrlBuilder\AuthorisedExaminerUrlBuilderWeb;
-use DvsaCommon\UrlBuilder\VehicleTestingStationUrlBuilderWeb;
+use Zend\Mvc\Controller\Plugin\Url;
 
 class AuthorisedExaminerViewModel
 {
-    /** @var AuthorisedExaminerUrlBuilderWeb $url */
-    private $url;
+    /** @var string $authorisedExaminerUrl */
+    private $authorisedExaminerUrl;
 
     /** @var int $vtsCount */
     private $vtsCount;
@@ -30,16 +29,16 @@ class AuthorisedExaminerViewModel
     /**
      * AuthorisedExaminerViewModel constructor.
      *
-     * @param AuthorisedExaminerUrlBuilderWeb  $url
+     * @param string                           $authorisedExaminerUrl
      * @param int                              $vtsCount
      * @param string                           $name
      * @param string                           $reference
      * @param VehicleTestingStationViewModel[] $vts
      * @param int                              $slots
      */
-    public function __construct($url, $vtsCount, $name, $reference, $vts, $slots)
+    public function __construct($authorisedExaminerUrl, $vtsCount, $name, $reference, $vts, $slots)
     {
-        $this->url = $url;
+        $this->authorisedExaminerUrl = $authorisedExaminerUrl;
         $this->vtsCount = $vtsCount;
         $this->name = $name;
         $this->reference = $reference;
@@ -50,12 +49,14 @@ class AuthorisedExaminerViewModel
     /**
      * @param DashboardGuard     $dashboardGuard
      * @param AuthorisedExaminer $authorisedExaminer
+     * @param Url                $url
      *
      * @return AuthorisedExaminerViewModel
      */
-    public static function fromAuthorisedExaminer(DashboardGuard $dashboardGuard, AuthorisedExaminer $authorisedExaminer)
+    public static function fromAuthorisedExaminer(DashboardGuard $dashboardGuard, AuthorisedExaminer $authorisedExaminer, Url $url)
     {
-        $url = AuthorisedExaminerUrlBuilderWeb::of($authorisedExaminer->getId());
+        $authorisedExaminerUrl = $url->fromRoute('authorised-examiner', ['id' => $authorisedExaminer->getId()]);
+
         $name = $authorisedExaminer->getName();
         $reference = $authorisedExaminer->getReference();
 
@@ -64,10 +65,10 @@ class AuthorisedExaminerViewModel
             if ($dashboardGuard->canViewVehicleTestingStation($site->getId()))
             {
                 $vts[] = new VehicleTestingStationViewModel(
-                    VehicleTestingStationUrlBuilderWeb::byId($site->getId()),
+                    $url->fromRoute('vehicle-testing-station', ['id' => $site->getId()]),
                     $site->getSiteNumber(),
                     $site->getName(),
-                    implode(', ', $site->getPositions())
+                    $site->getPositions()
                 );
             }
         }
@@ -77,15 +78,15 @@ class AuthorisedExaminerViewModel
 
         $slots = $authorisedExaminer->getSlots();
 
-        return new AuthorisedExaminerViewModel($url, $vtsCount, $name, $reference, $vts, $slots);
+        return new AuthorisedExaminerViewModel($authorisedExaminerUrl, $vtsCount, $name, $reference, $vts, $slots);
     }
 
     /**
-     * @return AuthorisedExaminerUrlBuilderWeb
+     * @return string
      */
     public function getUrl()
     {
-        return $this->url;
+        return $this->authorisedExaminerUrl;
     }
 
     /**

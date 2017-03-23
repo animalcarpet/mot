@@ -9,33 +9,33 @@ class HeroActionViewModel
     /** @var DashboardGuard $dashboardGuard */
     private $dashboardGuard;
 
-    /** @var ReplacementDuplicateCertificateViewModel $replacementDuplicateCertificateViewModel */
-    private $replacementDuplicateCertificateViewModel;
-
     /** @var SlotsViewModel $slotsViewModel*/
     private $slotsViewModel;
 
     /** @var StartMotViewModel $startMotViewModel */
     private $startMotViewModel;
 
+    /** @var TargetedReinspectionViewModel $targetedReinspectionViewModel */
+    private $targetedReinspectionViewModel;
+
     /**
      * HeroActionViewModel constructor.
      *
-     * @param DashboardGuard $dashboardGuard
-     * @param SlotsViewModel $slotsViewModel
-     * @param ReplacementDuplicateCertificateViewModel $replacementDuplicateCertificateViewModel
-     * @param StartMotViewModel $startMotViewModel
+     * @param DashboardGuard                           $dashboardGuard
+     * @param SlotsViewModel                           $slotsViewModel
+     * @param StartMotViewModel                        $startMotViewModel
+     * @param TargetedReinspectionViewModel            $targetedReinspectionViewModel
      */
     public function __construct(
         DashboardGuard $dashboardGuard,
         SlotsViewModel $slotsViewModel,
-        ReplacementDuplicateCertificateViewModel $replacementDuplicateCertificateViewModel,
-        StartMotViewModel $startMotViewModel)
+        StartMotViewModel $startMotViewModel,
+        TargetedReinspectionViewModel $targetedReinspectionViewModel)
     {
         $this->dashboardGuard = $dashboardGuard;
         $this->slotsViewModel = $slotsViewModel;
-        $this->replacementDuplicateCertificateViewModel = $replacementDuplicateCertificateViewModel;
         $this->startMotViewModel = $startMotViewModel;
+        $this->targetedReinspectionViewModel = $targetedReinspectionViewModel;
     }
 
     /**
@@ -45,6 +45,9 @@ class HeroActionViewModel
      */
     public function isHeroActionVisible()
     {
+        if ($this->dashboardGuard->isTester()) {
+            return true;
+        }
         if ($this->startMotViewModel->canStartMotTest()) {
             return true;
         }
@@ -60,7 +63,7 @@ class HeroActionViewModel
         if ($this->dashboardGuard->canViewUserSearchLink()) {
             return true;
         }
-        if ($this->replacementDuplicateCertificateViewModel->canViewReplacementDuplicateCertificateLink()) {
+        if ($this->dashboardGuard->canViewReplacementDuplicateCertificateLink()) {
             return true;
         }
         if ($this->dashboardGuard->canViewMotFormsLink()) {
@@ -82,14 +85,6 @@ class HeroActionViewModel
     }
 
     /**
-     * @return ReplacementDuplicateCertificateViewModel
-     */
-    public function getReplacementDuplicateCertificateViewModel()
-    {
-        return $this->replacementDuplicateCertificateViewModel;
-    }
-
-    /**
      * @return StartMotViewModel
      */
     public function getStartMotViewModel()
@@ -103,5 +98,13 @@ class HeroActionViewModel
     public function getSlotsViewModel()
     {
         return $this->slotsViewModel;
+    }
+
+    /**
+     * @return TargetedReinspectionViewModel
+     */
+    public function getTargetedReinspectionViewModel()
+    {
+        return $this->targetedReinspectionViewModel;
     }
 }

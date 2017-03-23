@@ -50,6 +50,7 @@ class DashboardViewModelBuilder
             $this->buildHeroActionViewModel(),
             $this->buildNotificationsViewModel(),
             $this->buildTrainingTestViewModel(),
+            $this->buildNonMotTestViewModel(),
             $this->buildAuthorisedExaminersViewModel(),
             $this->buildSpecialNoticesViewModel(),
             $this->buildAuthorisedExaminerManagementViewModel()
@@ -84,7 +85,10 @@ class DashboardViewModelBuilder
      */
     public function shouldShowContingencyTests()
     {
-        return $this->dashboardGuard->isTestingEnabled();
+        $isTesterAtAnySite = $this->dashboard->isTesterAtAnySite();
+        $isTestingEnabled = $this->dashboardGuard->isTestingEnabled();
+
+        return $isTesterAtAnySite && $isTestingEnabled;
     }
 
     /**
@@ -101,14 +105,14 @@ class DashboardViewModelBuilder
     private function buildHeroActionViewModel()
     {
         $slotsViewModel = $this->buildSlotsViewModel();
-        $replacementDuplicateCertificateViewModel = $this->buildReplacementDuplicateCertificateViewModel();
         $startMotViewModel = $this->buildStartMotViewModel();
+        $targetedReinspectionViewModel = $this->buildTargetedReinspectionViewModel();
 
         $heroActionViewModel = new HeroActionViewModel(
             $this->dashboardGuard,
             $slotsViewModel,
-            $replacementDuplicateCertificateViewModel,
-            $startMotViewModel
+            $startMotViewModel,
+            $targetedReinspectionViewModel
         );
 
         return $heroActionViewModel;
@@ -131,7 +135,7 @@ class DashboardViewModelBuilder
      */
     private function buildTrainingTestViewModel()
     {
-        $trainingTestViewModel = new TrainingTestViewModel($this->dashboardGuard);
+        $trainingTestViewModel = new TrainingTestViewModel($this->url);
 
         if ($this->dashboard->hasDemoTestInProgress()) {
             $trainingTestViewModel->setInProgressTestNumber($this->dashboard->getInProgressDemoTestNumber());
@@ -141,12 +145,29 @@ class DashboardViewModelBuilder
     }
 
     /**
+     * @return NonMotTestViewModel
+     */
+    private function buildNonMotTestViewModel()
+    {
+        $nonMotTestViewModel = new NonMotTestViewModel($this->dashboardGuard, $this->url);
+
+        if ($this->dashboard->hasNonMotTestInProgress()) {
+            $nonMotTestViewModel->setInProgressNonMotTestNumber($this->dashboard->getInProgressNonMotTestNumber());
+        }
+
+        return $nonMotTestViewModel;
+    }
+
+    /**
      * @return AuthorisedExaminersViewModel
      */
     private function buildAuthorisedExaminersViewModel()
     {
-        return AuthorisedExaminersViewModel::fromAuthorisedExaminers($this->dashboardGuard,
-                                                                     $this->dashboard->getAuthorisedExaminers());
+        return AuthorisedExaminersViewModel::fromAuthorisedExaminers(
+            $this->dashboardGuard,
+            $this->dashboard->getAuthorisedExaminers(),
+            $this->url
+        );
     }
 
     /**
@@ -179,19 +200,6 @@ class DashboardViewModelBuilder
     }
 
     /**
-     * @return ReplacementDuplicateCertificateViewModel
-     */
-    private function buildReplacementDuplicateCertificateViewModel()
-    {
-        $replacementDuplicateCertificateViewModel = new ReplacementDuplicateCertificateViewModel(
-            $this->dashboard->hasTestInProgress(),
-            $this->dashboardGuard->canViewReplacementDuplicateCertificateLink()
-        );
-
-        return $replacementDuplicateCertificateViewModel;
-    }
-
-    /**
      * @return StartMotViewModel
      */
     private function buildStartMotViewModel()
@@ -199,6 +207,7 @@ class DashboardViewModelBuilder
         $testersCurrentVts = $this->identity->getCurrentVts();
 
         $startMotViewModel = new StartMotViewModel(
+            $this->url,
             $this->dashboard->isTesterAtAnySite(),
             $this->dashboard->hasTestInProgress(),
             $this->dashboard->getEnterTestResultsLabel(),
@@ -221,5 +230,20 @@ class DashboardViewModelBuilder
         );
 
         return $authorisedExaminerManagementViewModel;
+    }
+
+    /**
+     * @return TargetedReinspectionViewModel
+     */
+    private function buildTargetedReinspectionViewModel()
+    {
+        $targetedReinspectionViewModel = new TargetedReinspectionViewModel(
+            $this->url,
+            $this->dashboardGuard->isVehicleExaminer(),
+            $this->dashboard->hasTestInProgress(),
+            $this->dashboard->getInProgressTestNumber()
+        );
+
+        return $targetedReinspectionViewModel;
     }
 }

@@ -5,6 +5,7 @@ namespace Dashboard\ViewModel;
 use Dashboard\Model\AuthorisedExaminer;
 use Dashboard\Security\DashboardGuard;
 use Iterator;
+use Zend\Mvc\Controller\Plugin\Url;
 
 class AuthorisedExaminersViewModel implements Iterator
 {
@@ -40,15 +41,20 @@ class AuthorisedExaminersViewModel implements Iterator
     /**
      * @param DashboardGuard       $dashboardGuard
      * @param AuthorisedExaminer[] $authorisedExaminers
+     * @param Url                  $url
      *
      * @return AuthorisedExaminersViewModel
      */
-    public static function fromAuthorisedExaminers($dashboardGuard, $authorisedExaminers)
+    public static function fromAuthorisedExaminers($dashboardGuard, $authorisedExaminers, $url)
     {
         $authorisedExaminerViewModels = [];
 
         foreach ($authorisedExaminers as $authorisedExaminer) {
-            $authorisedExaminerViewModels[] = AuthorisedExaminerViewModel::fromAuthorisedExaminer($dashboardGuard, $authorisedExaminer);
+            $authorisedExaminerViewModels[] = AuthorisedExaminerViewModel::fromAuthorisedExaminer(
+                $dashboardGuard,
+                $authorisedExaminer,
+                $url
+            );
         }
 
         return new AuthorisedExaminersViewModel($dashboardGuard, $authorisedExaminerViewModels);
