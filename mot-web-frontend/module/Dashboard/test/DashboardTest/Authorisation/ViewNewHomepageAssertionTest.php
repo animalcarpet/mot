@@ -68,7 +68,7 @@ class ViewNewHomepageAssertionTest extends \PHPUnit_Framework_TestCase
             [[RoleCode::USER, RoleCode::TESTER_APPLICANT_INITIAL_TRAINING_REQUIRED], true],
             [[RoleCode::USER, RoleCode::TESTER_INACTIVE], false],
             [[RoleCode::USER], true],
-            [[RoleCode::USER, RoleCode::VEHICLE_EXAMINER], false],
+            [[RoleCode::USER, RoleCode::VEHICLE_EXAMINER], true],
             [[RoleCode::USER, RoleCode::TESTER, RoleCode::TESTER_ACTIVE], true],
             [[RoleCode::USER, RoleCode::AUTHORISED_EXAMINER_DELEGATE, RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER], true],
         ];

@@ -59,6 +59,8 @@
 
         {% include '/dashboard/user-home/training-test.twig' with {'trainingTest': dashboard.trainingTestViewModel} %}
 
+        {% include '/dashboard/user-home/non-mot-test.twig' with {'nonMotTest': dashboard.nonMotTestViewModel} %}
+
         {% if dashboard.showContingencyTests %}
             {% include '/dashboard/user-home/contingency-tests.twig' %}
         {% endif %}

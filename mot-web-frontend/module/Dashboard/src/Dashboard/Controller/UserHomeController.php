@@ -190,6 +190,10 @@ class UserHomeController extends AbstractAuthActionController
             $dashboard->getSpecialNotice()->getOverdueCount()
         );
 
+        $this->dashboardGuard->setHasTestInProgress(
+            $dashboard->hasTestInProgress()
+        );
+
         $dashboardViewModelBuilder = new DashboardViewModelBuilder(
             $identity,
             $dashboard,

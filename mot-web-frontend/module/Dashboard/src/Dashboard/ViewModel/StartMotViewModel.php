@@ -3,9 +3,14 @@
 namespace Dashboard\ViewModel;
 
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\VehicleTestingStation;
+use DvsaMotTest\Controller\MotTestController;
+use Zend\Mvc\Controller\Plugin\Url;
 
 class StartMotViewModel
 {
+    /** @var Url $url */
+    private $url;
+
     /** @var bool $isTestingEnabled */
     private $isTestingEnabled;
 
@@ -24,6 +29,7 @@ class StartMotViewModel
     /**
      * StartMotViewModel constructor.
      *
+     * @param Url $url
      * @param bool $isTestingEnabled
      * @param bool $isTesterAtAnySite
      * @param bool $hasTestInProgress
@@ -32,6 +38,7 @@ class StartMotViewModel
      * @param VehicleTestingStation $testerAtCurrentVts
      */
     public function __construct(
+        $url,
         $isTesterAtAnySite,
         $hasTestInProgress,
         $enterResultsLabel,
@@ -40,12 +47,24 @@ class StartMotViewModel
         $testerAtCurrentVts
     )
     {
+        $this->url = $url;
         $this->isTesterAtAnySite = $isTesterAtAnySite;
         $this->hasTestInProgress = $hasTestInProgress;
         $this->enterResultsLabel = $enterResultsLabel;
         $this->testNumberInProgress = $testNumberInProgress;
         $this->isTestingEnabled = $isTestingEnabled;
         $this->testerAtCurrentVts = $testerAtCurrentVts;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url->fromRoute(
+            MotTestController::ROUTE_MOT_TEST,
+            ['motTestNumber' => $this->getTestNumberInProgress()]
+        );
     }
 
     /**

@@ -2,11 +2,9 @@
 
 namespace Dashboard\ViewModel;
 
-use DvsaCommon\UrlBuilder\VehicleTestingStationUrlBuilderWeb;
-
 class VehicleTestingStationViewModel
 {
-    /** @var VehicleTestingStationUrlBuilderWeb $url */
+    /** @var string $url */
     private $url;
 
     /** @var int $siteNumber */
@@ -21,10 +19,10 @@ class VehicleTestingStationViewModel
     /**
      * VehicleTestingStationViewModel constructor.
      *
-     * @param VehicleTestingStationUrlBuilderWeb $url
-     * @param int                                $siteNumber
-     * @param string                             $name
-     * @param array                              $positions
+     * @param string $url
+     * @param int    $siteNumber
+     * @param string $name
+     * @param array  $positions
      */
     public function __construct($url, $siteNumber, $name, $positions)
     {
@@ -35,7 +33,7 @@ class VehicleTestingStationViewModel
     }
 
     /**
-     * @return VehicleTestingStationUrlBuilderWeb
+     * @return string
      */
     public function getUrl()
     {

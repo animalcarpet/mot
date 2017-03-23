@@ -22,7 +22,7 @@
                                     ({{ vts.siteNumber }}) {{ vts.name }}
                                 </a>
                                 <div class="u-text-meta vts-roles">
-                                    {{ vts.positions }}
+                                    {{ vts.positions | join(', ') }}
                                 </div>
                             </li>
                         {% endfor %}

@@ -7,7 +7,6 @@ use DvsaCommon\Auth\PermissionAtSite;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Enum\RoleCode;
 use DvsaMotTest\Service\OverdueSpecialNoticeAssertion;
-use Dvsa\Mot\Frontend\SecurityCardModule\Support;
 
 class DashboardGuard
 {
@@ -26,6 +25,9 @@ class DashboardGuard
 
     /** @var int $overdueSpecialNoticeCount */
     private $overdueSpecialNoticeCount = 0;
+
+    /** @var bool $hasTestInProgress */
+    private $hasTestInProgress = false;
 
     /**
      * DashboardGuard constructor.
@@ -46,6 +48,9 @@ class DashboardGuard
             if ($this->isDemoTestNeeded() && !$this->isQualifiedTester()) {
                 return false;
             }
+            if ($this->hasTestInProgress){
+                return false;
+            }
 
             return true;
         }
@@ -54,7 +59,11 @@ class DashboardGuard
             return true;
         }
 
-        if ($this->isDVLAOperative()) {
+        if ($this->isDvlaOperative()) {
+            return true;
+        }
+
+        if ($this->isVehicleExaminer()) {
             return true;
         }
 
@@ -221,6 +230,22 @@ class DashboardGuard
     /**
      * @return bool
      */
+    public function canPerformNonMotTest()
+    {
+        return $this->authorisationService->isGranted(PermissionInSystem::ENFORCEMENT_NON_MOT_TEST_PERFORM);
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasHighAuthorityTradeRole()
+    {
+        return !empty(array_intersect($this->getAllRoles(), self::HIGH_AUTHORITY_TRADE_ROLES));
+    }
+
+    /**
+     * @return bool
+     */
     public function isQualifiedTester()
     {
         return $this->isTester() && $this->isTesterActive();
@@ -253,7 +278,7 @@ class DashboardGuard
     /**
      * @return bool
      */
-    private function isDVLAOperative()
+    public function isDvlaOperative()
     {
         return in_array(RoleCode::DVLA_OPERATIVE, $this->getAllRoles());
     }
@@ -261,9 +286,10 @@ class DashboardGuard
     /**
      * @return bool
      */
-    private function hasHighAuthorityTradeRole()
+    public function isVehicleExaminer()
     {
-        return !empty(array_intersect($this->getAllRoles(), self::HIGH_AUTHORITY_TRADE_ROLES));
+
+        return in_array(RoleCode::VEHICLE_EXAMINER, $this->getAllRoles());
     }
 
     /**
@@ -318,6 +344,18 @@ class DashboardGuard
     public function setOverdueSpecialNoticeCount($overdueSpecialNoticeCount)
     {
         $this->overdueSpecialNoticeCount = $overdueSpecialNoticeCount;
+
+        return $this;
+    }
+
+    /**
+     * @param bool $hasTestInProgress
+     *
+     * @return $this
+     */
+    public function setHasTestInProgress($hasTestInProgress)
+    {
+        $this->hasTestInProgress = $hasTestInProgress;
 
         return $this;
     }

@@ -20,6 +20,7 @@ class ViewNewHomepageAssertion
         RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED,
         RoleCode::TESTER_APPLICANT_INITIAL_TRAINING_REQUIRED,
         RoleCode::USER,
+        RoleCode::VEHICLE_EXAMINER,
         RoleCode::AREA_OFFICE_1
     ];
 

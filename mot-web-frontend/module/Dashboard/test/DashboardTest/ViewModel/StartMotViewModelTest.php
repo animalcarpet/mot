@@ -7,18 +7,21 @@ use Dashboard\Model\Dashboard;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\VehicleTestingStation;
 use DvsaCommonTest\TestUtils\XMock;
 use PHPUnit_Framework_TestCase;
+use Zend\Mvc\Controller\Plugin\Url;
 
 class StartMotViewModelTest extends \PHPUnit_Framework_TestCase
 {
     private $mockDashboard;
     private $mockDashboardGuard;
     private $mockVehicleTestingStation;
+    private $mockUrl;
 
     public function setup()
     {
         $this->mockDashboard = XMock::of(Dashboard::class);
         $this->mockDashboardGuard = XMock::of(DashboardGuard::class);
         $this->mockVehicleTestingStation = XMock::of(VehicleTestingStation::class);
+        $this->mockUrl = XMock::of(Url::class);
     }
 
     /**
@@ -47,6 +50,7 @@ class StartMotViewModelTest extends \PHPUnit_Framework_TestCase
             ->willReturn($slotsNumber);
 
         $startMotViewModel = $this->startMotViewModel(
+            $this->mockUrl,
             $isTesterAtAnySite,
             $hasTestInProgress,
             $enterResultsLabel,
@@ -79,6 +83,7 @@ class StartMotViewModelTest extends \PHPUnit_Framework_TestCase
     )
     {
         $startMotViewModel = $this->startMotViewModel(
+            $this->mockUrl,
             $isTesterAtAnySite,
             $hasTestInProgress,
             $enterResultsLabel,
@@ -116,6 +121,7 @@ class StartMotViewModelTest extends \PHPUnit_Framework_TestCase
     }
 
     private function startMotViewModel(
+        $url,
         $isTesterAtAnySite,
         $hasTestInProgress,
         $enterResultsLabel,
@@ -126,6 +132,7 @@ class StartMotViewModelTest extends \PHPUnit_Framework_TestCase
     )
     {
         $startMotViewModel = new StartMotViewModel(
+            $url,
             $isTesterAtAnySite,
             $hasTestInProgress,
             $enterResultsLabel,

@@ -4,9 +4,9 @@ namespace DashboardTest\ViewModel;
 
 use Dashboard\Security\DashboardGuard;
 use Dashboard\ViewModel\HeroActionViewModel;
-use Dashboard\ViewModel\ReplacementDuplicateCertificateViewModel;
 use Dashboard\ViewModel\SlotsViewModel;
 use Dashboard\ViewModel\StartMotViewModel;
+use Dashboard\ViewModel\TargetedReinspectionViewModel;
 use DvsaCommonTest\TestUtils\XMock;
 use PHPUnit_Framework_TestCase;
 
@@ -18,8 +18,8 @@ class HeroActionViewModelTest extends PHPUnit_Framework_TestCase
     /** @var SlotsViewModel | \PHPUnit_Framework_MockObject_MockObject $mockSlotsViewModel */
     private $mockSlotsViewModel;
 
-    /** @var ReplacementDuplicateCertificateViewModel | \PHPUnit_Framework_MockObject_MockObject $mockReplacementDuplicateCertificateViewModel */
-    private $mockReplacementDuplicateCertificateViewModel;
+    /** @var  TargetedReinspectionViewModel | \PHPUnit_Framework_MockObject_MockObject $mockTargetedReinspectionViewModel */
+    private $mockTargetedReinspectionViewModel;
 
     /** @var StartMotViewModel | \PHPUnit_Framework_MockObject_MockObject $mockStartMotViewModel */
     private $mockStartMotViewModel;
@@ -28,8 +28,8 @@ class HeroActionViewModelTest extends PHPUnit_Framework_TestCase
     {
         $this->mockDashboardGuard = XMock::of(DashboardGuard::class);
         $this->mockSlotsViewModel = XMock::of(SlotsViewModel::class);
-        $this->mockReplacementDuplicateCertificateViewModel = XMock::of(ReplacementDuplicateCertificateViewModel::class);
         $this->mockStartMotViewModel = XMock::of(StartMotViewModel::class);
+        $this->mockTargetedReinspectionViewModel = XMock::of(TargetedReinspectionViewModel::class);
     }
 
     public function testEmptyHeroAction()
@@ -53,9 +53,9 @@ class HeroActionViewModelTest extends PHPUnit_Framework_TestCase
             'canViewAeInformationLink' => $this->mockDashboardGuard,
             'canViewSiteInformationLink' => $this->mockDashboardGuard,
             'canViewUserSearchLink' => $this->mockDashboardGuard,
-            'canViewReplacementDuplicateCertificateLink' => $this->mockReplacementDuplicateCertificateViewModel,
             'canViewMotFormsLink' => $this->mockDashboardGuard,
             'canViewDemoTestRequestsLink' => $this->mockDashboardGuard,
+            'isTester' => $this->mockDashboardGuard,
         ];
 
         foreach ($heroActionChildrenVisibilityMethods as $method => $mock) {
@@ -83,9 +83,9 @@ class HeroActionViewModelTest extends PHPUnit_Framework_TestCase
             ['canViewAeInformationLink', true],
             ['canViewSiteInformationLink', true],
             ['canViewUserSearchLink', true],
-            ['canViewReplacementDuplicateCertificateLink', true],
             ['canViewMotFormsLink', true],
             ['canViewDemoTestRequestsLink', true],
+            ['isTester', true],
         ];
     }
 
@@ -97,8 +97,8 @@ class HeroActionViewModelTest extends PHPUnit_Framework_TestCase
         return new HeroActionViewModel(
             $this->mockDashboardGuard,
             $this->mockSlotsViewModel,
-            $this->mockReplacementDuplicateCertificateViewModel,
-            $this->mockStartMotViewModel
+            $this->mockStartMotViewModel,
+            $this->mockTargetedReinspectionViewModel
         );
     }
 }
