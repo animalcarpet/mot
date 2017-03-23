@@ -31,6 +31,7 @@ RemoteSystemsTempFiles/
 /mot-api/data/jasper/Scriptlets/OverflowScriptlet/build/
 /mot-api/data/jasper/Scriptlets/OverflowScriptlet/dist/
 /mot-api/data/DoctrineORMModule/
+/mot-api/db/temp-dev/
 /mot-behat/data/DoctrineORMModule/
 
 # Generated CSS and Javascript files from build tools

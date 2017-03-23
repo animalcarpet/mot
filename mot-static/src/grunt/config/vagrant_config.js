@@ -65,6 +65,7 @@ module.exports = function (grunt, config) {
         });
         grunt.config('host_machine', {
             vagrantDirectory: vagrantDirectory,
-            workspace: workspace
+            workspace: workspace,
+            mysqlHost: 'dev.motdev.org.uk'
         });
 };
