@@ -66,7 +66,20 @@ module.exports = function (grunt, config) {
         var trace_file_opt_dvsa = trace_command + '<%= vagrant_config.motAppDir %>';
         var exportAppConfigLocation = 'export APPLICATION_CONFIG_PATH="/opt/dvsa/mot-api/config/autoload"';
 
-        grunt.config('sshexec', {
+        function resetDb(dataset) {
+            return [
+                'export dev_workspace="<%= vagrant_config.workspace %>"',
+                'cd <%= vagrant_config.workspace %>/mot-api/db && ' +
+                'sudo ./reset_db_with_test_data.sh ' +
+                    '<%= mysql_config.user %> ' +
+                    '<%= mysql_config.password %> ' +
+                    '<%= mysql_config.host %> ' +
+                    '<%= mysql_config.grantuser %> ' +
+                    dataset
+            ];
+        }
+
+    grunt.config('sshexec', {
             options: {
                 host: dev2_ssh_options.host,
                 port: dev2_ssh_options.port,
@@ -181,7 +194,7 @@ module.exports = function (grunt, config) {
             reset_database: {
                 options: dev_ssh_options,
                 command: function () {
-                    return 'export dev_workspace="<%= vagrant_config.workspace %>"; cd <%= vagrant_config.workspace %>/mot-api/db && sudo ./reset_db_with_test_data.sh <%= mysql_config.user %> <%= mysql_config.password %> <%= mysql_config.host %> <%= mysql_config.grantuser %> synthetic && echo "DB Reset"';
+                    return resetDb("synthetic");
                 }
             },
             mysql_proc_fix: {

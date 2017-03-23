@@ -4,6 +4,17 @@ module.exports = function(grunt, config) {
         return "cd <%= host_machine.vagrantDirectory %> && ./scripts/update_java_services.sh jar " + service + " build";
     }
 
+
+    function resetDb(dataset) {
+        return 'cd <%= host_machine.workspace %>/mot/mot-api/db && ' +
+            'sudo ./reset_db_with_test_data.sh ' +
+                '<%= mysql_config.user %> ' +
+                '<%= mysql_config.password %> ' +
+                '<%= host_machine.mysqlHost %> ' +
+                '<%= mysql_config.grantuser %> ' +
+                dataset;
+    }
+
     grunt.config('shell', {
         jasper_remove: {
             command: "curl --user jasperadmin:jasperadmin -v -XDELETE http://jasper:8080/jasperserver/rest/resource/MOT >/dev/null 2>&1"
@@ -73,6 +84,12 @@ module.exports = function(grunt, config) {
         },
         update_mottest_service: {
             command: updateJavaService("mot-test")
+        },
+        reset_database_anonymised: {
+            command: resetDb("anonymised")
+        },
+        reset_database_10k: {
+            command: resetDb("10k")
         }
     });
 };
