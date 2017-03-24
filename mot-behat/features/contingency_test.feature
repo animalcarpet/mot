@@ -54,17 +54,6 @@ Feature: Contingency Test
     | ft-enf-tester   |
     | financeuser     |
     | csco            |
-    | areaoffice1user |
-    | ae              |
-    | areaadmin       |
-    | schememgt       |
-    | aedm            |
-    | aed1            |
-    | site-manager    |
-    | inactivetester  |
-    | ft-enf-tester   |
-    | financeuser     |
-    | csco            |
 
   Scenario: Tester Completes a Contingency - PASSED MOT Test
     Given I am logged in as a Tester
