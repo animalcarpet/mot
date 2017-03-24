@@ -423,10 +423,10 @@ final class DateUtils
     {
         $date = $date instanceof DateTime ? $date : DateUtils::toDateTime($date, false);
         $today = DateUtils::nowAsUserDateTime();
-        $today->setTime(0, 0, 0);
-        $date->setTime(0, 0, 0);
 
-        return $date == $today;
+        return ($date->format("Y") == $today->format("Y"))
+            && ($date->format("m") == $today->format("m"))
+            && ($date->format("d") == $today->format("d"));
     }
 
     /**
