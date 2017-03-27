@@ -13,7 +13,7 @@
         "maglnet/magl-markdown": "1.3.0",
         "soflomo/purifier": "0.1.1",
         "slot-purchase/web-frontend": "3.8.4",
-        "dvsa/web-frontend-assets": "1.0.7",
+        "dvsa/web-frontend-assets": "1.0.8",
         "dvsa/dvsa-application-logger": "~1.4.1",
         "dvsa/dvsa-doctrine-module": "~1.1",
         "zendframework/zendpdf": "2.0.2",
