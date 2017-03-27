@@ -56,6 +56,11 @@ class MotTestRepository extends AbstractMutableRepository
         'TS_PASSED' => MotTestStatusName::PASSED,
         'TS_REFUSED' => MotTestStatusName::REFUSED,
     ];
+    const STATUS_CANCELLED = [
+        MotTestStatusCode::ABANDONED,
+        MotTestStatusCode::ABORTED,
+        MotTestStatusCode::ABORTED_VE
+    ];
 
     /**
      * Test types used commonly in queries.
@@ -76,16 +81,19 @@ class MotTestRepository extends AbstractMutableRepository
      *
      * @return MotTest
      */
-    public function findLastNormalTest($vehicleId, $contingencyDto = null, $vtsId = null)
+    public function findLastNormalNotAbortedTest($vehicleId, $contingencyDto = null, $vtsId = null)
     {
         $qb = $this->createQueryBuilder('mt')
             ->innerJoin('mt.vehicle', 'v')
             ->innerJoin('mt.motTestType', 't')
+            ->innerJoin('mt.status', 's')
             ->where('v.id = :vehicleId')
             ->andWhere('t.code = :code')
+            ->andWhere('s.code NOT IN (:status)')
             ->orderBy('mt.completedDate', 'DESC')
             ->setParameter('vehicleId', $vehicleId)
             ->setParameter('code', MotTestTypeCode::NORMAL_TEST)
+            ->setParameter('status', self::STATUS_CANCELLED)
             ->setMaxResults(1);
 
         if ($contingencyDto instanceof ContingencyTestDto) {
@@ -126,7 +134,7 @@ class MotTestRepository extends AbstractMutableRepository
             ->andWhere('mt.completedDate > :completedDate')
             ->setParameter('vehicleId', $vehicleId)
             ->setParameter('motTestTypeCode', MotTestTypeCode::NORMAL_TEST)
-            ->setParameter('motTestStatusCode', [MotTestStatusCode::ABANDONED, MotTestStatusCode::ABORTED, MotTestStatusCode::ABORTED_VE])
+            ->setParameter('motTestStatusCode', self::STATUS_CANCELLED)
             ->setParameter('completedDate', $from);
 
         if ($contingencyDto instanceof ContingencyTestDto) {

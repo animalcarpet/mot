@@ -84,50 +84,6 @@ class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($isEligible);
     }
 
-    /**
-     * @dataProvider getMotTestCancelledStatus
-     */
-    public function testCheckVehicleIsEligibleForRetestWhenTestCancelledAtDifferentSite($motTestCancelledStatus)
-    {
-        //Given
-        $cancelledTest = $this->mockMotTest($this->currentDate, $motTestCancelledStatus);
-        $cancelledTest->getVehicleTestingStation()->setId(5);
-
-        $this
-            ->motTestRepository
-            ->expects($this->at(0))
-            ->method("findLastNormalTest")
-            ->willReturn($cancelledTest);
-
-        $this
-            ->motTestRepository
-            ->expects($this->at(1))
-            ->method("findLastNormalTest")
-            ->willReturn($this->mockMotTest($this->currentDate, MotTestStatusName::FAILED));
-
-        $this
-            ->motTestRepository
-            ->expects($this->at(0))
-            ->method("countNotAbortedTests")
-            ->willReturn(0);
-
-        // when
-        $validator = $this->createRetestEligibilityValidator();
-        $isEligible = $validator->checkEligibilityForRetest(self::VEHICLE_ID, 6);
-
-        // then
-        $this->assertTrue($isEligible);
-    }
-
-    public function getMotTestCancelledStatus()
-    {
-        return [
-            [MotTestStatusName::ABORTED],
-            [MotTestStatusName::ABORTED_VE],
-            [MotTestStatusName::ABANDONED],
-        ];
-    }
-
     private function exampleNonWorkingDayCountry()
     {
         $country = new CountryOfRegistration();
@@ -146,7 +102,7 @@ class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
         $this
             ->motTestRepository
             ->expects($this->at(0))
-            ->method("findLastNormalTest")
+            ->method("findLastNormalNotAbortedTest")
             ->willReturn($this->mockMotTest($this->currentDate, $motTestStatus));
 
         $validator = $this->createRetestEligibilityValidator();
@@ -169,77 +125,6 @@ class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
             [MotTestStatusName::REFUSED, RetestEligibilityCheckCode::RETEST_REJECTED_ORIGINAL_WAS_NOT_FAILED],
             [MotTestStatusName::FAILED, RetestEligibilityCheckCode::RETEST_REJECTED_ORIGINAL_PERFORMED_AT_A_DIFFERENT_VTS],
         ];
-    }
-
-    public function testCheckVehicleReturnsProperErrorCodeWhenTestPerformedAtDifferentSite()
-    {
-        //Given
-        $cancelledTest = $this->mockMotTest($this->currentDate, MotTestStatusName::ABORTED);
-        $cancelledTest->getVehicleTestingStation()->setId(5);
-
-        $this
-            ->motTestRepository
-            ->expects($this->at(0))
-            ->method("findLastNormalTest")
-            ->willReturn($cancelledTest);
-
-        $this
-            ->motTestRepository
-            ->expects($this->at(1))
-            ->method("findLastNormalTest")
-            ->willReturn($this->mockMotTest($this->currentDate, MotTestStatusName::FAILED));
-
-        $this
-            ->motTestRepository
-            ->expects($this->at(2))
-            ->method("countNotCancelledTests")
-            ->willReturn(1);
-
-        $validator = $this->createRetestEligibilityValidator();
-
-        // when
-        $checkResult = XMock::invokeMethod($validator, 'validateVehicleForRetest', [self::VEHICLE_ID, self::TEST_VTS_ID]);
-
-        // then
-        $this->assertEquals(
-            [RetestEligibilityCheckCode::RETEST_REJECTED_ORIGINAL_PERFORMED_AT_A_DIFFERENT_VTS],
-            $checkResult
-        );
-    }
-
-    public function testValidateVehicleForRetest_twoTests_vtsAandB_cancelledAtA_notEligibleAtB()
-    {
-        //Given
-        $cancelledTest = $this->mockMotTest($this->currentDate, MotTestStatusName::ABORTED);
-        $cancelledTest->getVehicleTestingStation()->setId(5);
-
-        $this
-            ->motTestRepository
-            ->expects($this->at(0))
-            ->method("findLastNormalTest")
-            ->willReturn($cancelledTest);
-
-        $this
-            ->motTestRepository
-            ->expects($this->at(1))
-            ->method("findLastNormalTest")
-            ->willReturn(null);
-
-        $this
-            ->motTestRepository
-            ->expects($this->never())
-            ->method("countNotCancelledTests");
-
-        $validator = $this->createRetestEligibilityValidator();
-
-        // when
-        $checkResult = XMock::invokeMethod($validator, 'validateVehicleForRetest', [self::VEHICLE_ID, self::TEST_VTS_ID]);
-
-        // then
-        $this->assertEquals(
-            [RetestEligibilityCheckCode::RETEST_REJECTED_ORIGINAL_WAS_NOT_FAILED],
-            $checkResult
-        );
     }
 
     private function mockMotTest(\DateTime $completedDate, $status = null)
@@ -283,7 +168,7 @@ class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
     private function setupMotTestRepositoryMockReturnsLastNormalMotTest(MockObj $motTestRepository, $motTest)
     {
         $motTestRepository->expects($this->any())
-            ->method("findLastNormalTest")
+            ->method("findLastNormalNotAbortedTest")
             ->withAnyParameters()
             ->willReturn($motTest);
     }
@@ -409,25 +294,6 @@ class RetestEligibilityValidatorTest extends \PHPUnit_Framework_TestCase
         // then
         $this->assertEquals(
             [RetestEligibilityCheckCode::RETEST_REJECTED_ORIGINAL_PERFORMED_AT_A_DIFFERENT_VTS],
-            $checkResult
-        );
-    }
-
-    public function testCheckVehicleOriginalTestCancelled()
-    {
-        //given
-        $motTest = $this->mockMotTest($this->currentDate, MotTestStatusName::ABORTED);
-        $validator = $this->createRetestEligibilityValidator();
-        $this->setupMotTestRepositoryMockReturnsLastNormalMotTest($this->motTestRepository, $motTest);
-
-        // when
-        $checkResult = XMock::invokeMethod(
-            $validator, 'validateVehicleForRetest', [self::VEHICLE_ID, self::TEST_VTS_ID]
-        );
-
-        // then
-        $this->assertEquals(
-            [RetestEligibilityCheckCode::RETEST_REJECTED_ORIGINAL_CANCELLED],
             $checkResult
         );
     }

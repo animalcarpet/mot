@@ -252,4 +252,13 @@ class VehicleData
     {
         return $this->vehicle->getLastResponse();
     }
+
+    public function getLastOrCreate()
+    {
+        try {
+            return $this->getLast();
+        } catch(\Exception $e) {
+            return $this->create();
+        }
+    }
 }

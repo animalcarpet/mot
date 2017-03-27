@@ -107,7 +107,7 @@ class RetestEligibilityValidator
     private function validateVehicleForRetest($vehicleId, $vtsId, $contingencyDto = null)
     {
         $resultCodes = [];
-        $lastTest = $this->motTestRepository->findLastNormalTest($vehicleId, $contingencyDto);
+        $lastTest = $this->motTestRepository->findLastNormalNotAbortedTest($vehicleId, $contingencyDto);
 
         if (!($lastTest instanceof MotTest)) {
             return [RetestEligibilityCheckCode::RETEST_REJECTED_ORIGINAL_NEVER_PERFORMED];
@@ -115,21 +115,7 @@ class RetestEligibilityValidator
 
         $isDifferentVts = intval($lastTest->getVehicleTestingStation()->getId()) !== intval($vtsId);
 
-        if ($lastTest->isCancelled() && $isDifferentVts) {
-            $lastTest = $this->motTestRepository->findLastNormalTest($vehicleId, $contingencyDto, $vtsId);
-            if ($lastTest == null || !$lastTest->isFailed()) {
-                return [RetestEligibilityCheckCode::RETEST_REJECTED_ORIGINAL_WAS_NOT_FAILED];
-            }
-
-            $count = $this->motTestRepository->countNotCancelledTests($vehicleId, $lastTest->getCompletedDate(),
-                $contingencyDto);
-
-            if ($count > 0) {
-                return [RetestEligibilityCheckCode::RETEST_REJECTED_ORIGINAL_PERFORMED_AT_A_DIFFERENT_VTS];
-            }
-        } elseif ($lastTest->isCancelled()) {
-            return [RetestEligibilityCheckCode::RETEST_REJECTED_ORIGINAL_CANCELLED];
-        } elseif (!$lastTest->isFailed()) {
+        if (!$lastTest->isFailed()) {
             return [RetestEligibilityCheckCode::RETEST_REJECTED_ORIGINAL_WAS_NOT_FAILED];
         } elseif ($isDifferentVts) {
             $resultCodes[] = RetestEligibilityCheckCode::RETEST_REJECTED_ORIGINAL_PERFORMED_AT_A_DIFFERENT_VTS;

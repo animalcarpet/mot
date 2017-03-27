@@ -169,11 +169,7 @@ class MotTestCreationHelper
             $this->retestEligibilityValidator->checkEligibilityForRetest($vehicleId, $vtsId, $contingencyDto);
 
             // after validation there must be id in place
-            $motTest = $this->motTestRepository->findLastNormalTest($vehicleId, $contingencyDto);
-            $isDifferentVts = intval($motTest->getVehicleTestingStation()->getId()) !== intval($vtsId);
-            if ($motTest->isCancelled() && $isDifferentVts) {
-                $motTest = $this->motTestRepository->findLastNormalTest($vehicleId, $contingencyDto, $vtsId);
-            }
+            $motTest = $this->motTestRepository->findLastNormalNotAbortedTest($vehicleId, $contingencyDto);
 
             $motTestNumberOriginal = $motTest->getNumber();
         }

@@ -45,9 +45,9 @@ class MotTestRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->markTestIncomplete('Database fixtures are not set up.');
     }
 
-    public function testItFindsTheLastNormalTest()
+    public function testItFindsTheLastNormalNotAbortedTest()
     {
-        $test = $this->getMotTestRepository()->findLastNormalTest(self::VEHICLE_ID);
+        $test = $this->getMotTestRepository()->findLastNormalNotAbortedTest(self::VEHICLE_ID);
 
         $this->assertInstanceOf(MotTest::class, $test);
     }

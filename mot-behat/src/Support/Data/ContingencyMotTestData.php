@@ -71,9 +71,9 @@ class ContingencyMotTestData extends AbstractMotTestData
         return $this->passMotTestWithDefaultBrakeTestAndMeterReading($mot);
     }
 
-    public function createFailedMotTest(AuthenticatedUser $tester, VehicleDto $vehicle, SiteDto $site)
+    public function createFailedMotTest(AuthenticatedUser $tester, VehicleDto $vehicle, SiteDto $site, $contingencyParams = [])
     {
-        $mot = $this->create($tester, $vehicle, $site);
+        $mot = $this->create($tester, $vehicle, $site, $contingencyParams);
         return $this->failMotTestWithDefaultBrakeTestAndMeterReading($mot);
     }
 
