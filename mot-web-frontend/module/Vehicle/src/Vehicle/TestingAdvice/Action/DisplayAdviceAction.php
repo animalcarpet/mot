@@ -31,7 +31,7 @@ class DisplayAdviceAction implements AutoWireableInterface
         $this->motConfig = $motConfig;
     }
 
-    public function execute($vehicleId, $backLinkUrl, $backLinkLabel)
+    public function execute($vehicleId, $backLinkUrl, $backLinkLabel, array $breadcrumbs)
     {
         $vehicle = $this->vehicleService->getDvsaVehicleById($vehicleId);
         $testingAdvice = $this->vehicleService->getTestingAdvice($vehicleId);
@@ -41,7 +41,7 @@ class DisplayAdviceAction implements AutoWireableInterface
         $actionResult = new ViewActionResult();
         $actionResult->setViewModel($viewModel);
         $actionResult->setTemplate("vehicle/testing-advice/display.twig");
-        $actionResult->layout()->setBreadcrumbs(["MOT testing" => ""]);
+        $actionResult->layout()->setBreadcrumbs($breadcrumbs);
         $actionResult->layout()->setTemplate('layout/layout-govuk.phtml');
         $actionResult->layout()->setPageTitle(self::PAGE_TITLE);
         $actionResult->layout()->setPageTertiaryTitle($this->getTertiaryTitle($vehicle));
