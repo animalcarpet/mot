@@ -198,6 +198,37 @@ class DashboardGuard
     /**
      * @return bool
      */
+    public function canViewPaymentsLink()
+    {
+        if ($this->hasViewPaymentsPermissionButRoleShouldNotViewPaymentsLink()) {
+            return false;
+        }
+
+        return $this->authorisationService->isGranted(PermissionInSystem::SLOTS_TRANSACTION_READ_FULL);
+    }
+
+    /**
+     * @return bool
+     */
+    protected function hasViewPaymentsPermissionButRoleShouldNotViewPaymentsLink()
+    {
+        $allRoles = $this->getAllRoles();
+
+        return in_array(RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, $allRoles) ||
+            in_array(RoleCode::AUTHORISED_EXAMINER_DELEGATE, $allRoles);
+    }
+
+    /**
+     * @return bool
+     */
+    public function canViewDirectDebitLink()
+    {
+        return $this->authorisationService->isGranted(PermissionInSystem::SLOTS_DIRECT_DEBIT_SEARCH);
+    }
+
+    /**
+     * @return bool
+     */
     public function canAcknowledgeSpecialNotices()
     {
         return $this->authorisationService->isGranted(PermissionInSystem::SPECIAL_NOTICE_ACKNOWLEDGE);
@@ -266,6 +297,14 @@ class DashboardGuard
     public function canCreateVehicleTestingStation()
     {
         return $this->authorisationService->isGranted(PermissionInSystem::VEHICLE_TESTING_STATION_CREATE);
+    }
+
+    /**
+     * @return bool
+     */
+    public function canGenerateFinancialReports()
+    {
+        return $this->authorisationService->isGranted(PermissionInSystem::SLOTS_REPORTS_GENERATE);
     }
 
     /**

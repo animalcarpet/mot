@@ -2,12 +2,14 @@
 
 namespace DashboardTest\ViewModel;
 
+use Dashboard\Model\AuthorisedExaminer;
 use Dashboard\Model\Dashboard;
 use Dashboard\Security\DashboardGuard;
 use Dashboard\ViewModel\DashboardViewModel;
 use Dashboard\ViewModel\DashboardViewModelBuilder;
 use Dashboard\ViewModel\LinkViewModel;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\MotFrontendIdentityInterface;
+use DvsaCommon\Enum\SiteBusinessRoleCode;
 use DvsaCommonTest\TestUtils\Auth\AuthorisationServiceMock;
 use DvsaCommonTest\TestUtils\XMock;
 use PHPUnit_Framework_TestCase;
@@ -36,6 +38,9 @@ class DashboardViewModelBuilderTest extends PHPUnit_Framework_TestCase
     /** @var MotFrontendIdentityInterface|\PHPUnit_Framework_MockObject_MockObject $mockMotFrontendIdentityInterface */
     private $mockMotFrontendIdentityInterface;
 
+    /** @var bool $isTesterAtAnySite */
+    private $isTesterAtAnySite = false;
+
     public function setUp()
     {
         $this->dashboardData = [];
@@ -49,22 +54,36 @@ class DashboardViewModelBuilderTest extends PHPUnit_Framework_TestCase
 
     public function testShouldReturnANewDashboardViewModel()
     {
-        $this->mockDashboardViewModel
-            ->method('setShowDemoMessage')
+        $this->mockDashboardGuard
+            ->method('isDemoTestNeeded')
             ->willReturn(true);
 
-        $this->mockDashboardViewModel
-            ->method('setShowYourPerformance')
+        $this->mockDashboardGuard
+            ->method('canViewYourPerformance')
             ->willReturn(true);
 
-        $this->mockDashboardViewModel
-            ->method('setShowContingencyTests')
+        $this->mockDashboardGuard
+            ->method('isQualifiedTester')
             ->willReturn(true);
+
+        $this->mockDashboardGuard
+            ->method('canGenerateFinancialReports')
+            ->willReturn(true);
+
+        $this->mockDashboardGuard
+            ->method('isTestingEnabled')
+            ->willReturn(true);
+
+        $this->isTesterAtAnySite = true;
 
         $dashboardViewModelBuilder = $this->buildDashboardViewModelBuilder();
 
         $dashboardViewModel = $dashboardViewModelBuilder->build();
 
+        $this->assertTrue($dashboardViewModel->getShowDemoMessage());
+        $this->assertTrue($dashboardViewModel->getShowYourPerformance());
+        $this->assertTrue($dashboardViewModel->getShowContingencyTests());
+        $this->assertTrue($dashboardViewModel->getShowFinancialReports());
         $this->assertObjectHasAttribute("heroActionViewModel", $dashboardViewModel);
         $this->assertObjectHasAttribute("notificationsViewModel", $dashboardViewModel);
         $this->assertObjectHasAttribute("trainingTestViewModel", $dashboardViewModel);
@@ -125,6 +144,34 @@ class DashboardViewModelBuilderTest extends PHPUnit_Framework_TestCase
         $this->assertRegExp("/$trainingTestNumber\$/", $linkViewModel->getHref());
     }
 
+    private function buildAuthorisedExaminersForIsTesterAtAnySite()
+    {
+        $this->mockDashboardGuard
+            ->method('canViewVehicleTestingStation')
+            ->willReturn(true);
+
+        $authorisedExaminerData = [
+            'id' => 1,
+            'reference' => 'AE1234',
+            'name' => 'AE1',
+            'tradingAs' => 'AE',
+            'managerId' => 5,
+            'slots' => 200,
+            'slotsWarnings' => 50,
+            'sites' => [
+                0 => [
+                    'id' => 1,
+                    'name' => 'V1234',
+                    'siteNumber' => 'V1',
+                    'positions' => [SiteBusinessRoleCode::TESTER]
+                ]
+            ],
+            'position' => ''
+        ];
+
+        return [new AuthorisedExaminer($authorisedExaminerData)];
+    }
+
     /**
      * @return DashboardViewModelBuilder
      *
@@ -148,7 +195,12 @@ class DashboardViewModelBuilderTest extends PHPUnit_Framework_TestCase
             'inProgressNonMotTestNumber' => '',
             'unreadNotificationsCount' => 0,
         ];
+        
         $dashboard = new Dashboard(array_merge($dashboardDataDefaults, $this->dashboardData));
+
+        if ($this->isTesterAtAnySite) {
+            $dashboard->setAuthorisedExaminers($this->buildAuthorisedExaminersForIsTesterAtAnySite());
+        }
 
         return new DashboardViewModelBuilder(
             $this->mockMotFrontendIdentityInterface,

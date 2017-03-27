@@ -56,7 +56,7 @@ class ViewNewHomepageAssertionTest extends \PHPUnit_Framework_TestCase
             [[RoleCode::USER, RoleCode::CUSTOMER_SERVICE_OPERATIVE], true],
             [[RoleCode::USER, RoleCode::DVLA_MANAGER], false],
             [[RoleCode::USER, RoleCode::DVLA_OPERATIVE], true],
-            [[RoleCode::USER, RoleCode::FINANCE], false],
+            [[RoleCode::USER, RoleCode::FINANCE], true],
             [[RoleCode::USER, RoleCode::SCHEME_MANAGER], true],
             [[RoleCode::USER, RoleCode::SCHEME_USER], true],
             [[RoleCode::USER, RoleCode::SITE_ADMIN], true],

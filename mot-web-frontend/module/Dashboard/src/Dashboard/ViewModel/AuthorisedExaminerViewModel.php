@@ -60,25 +60,27 @@ class AuthorisedExaminerViewModel
         $name = $authorisedExaminer->getName();
         $reference = $authorisedExaminer->getReference();
 
-        $vts = [];
+        $visibleVtsViewModels = [];
+        $visibleVtsDomainObjects = [];
         foreach ($authorisedExaminer->getSites() as $site) {
             if ($dashboardGuard->canViewVehicleTestingStation($site->getId()))
             {
-                $vts[] = new VehicleTestingStationViewModel(
+                $visibleVtsViewModels[] = new VehicleTestingStationViewModel(
                     $url->fromRoute('vehicle-testing-station', ['id' => $site->getId()]),
                     $site->getSiteNumber(),
                     $site->getName(),
                     $site->getPositions()
                 );
+                $visibleVtsDomainObjects[] = $site;
             }
         }
-        $authorisedExaminer->setSites($vts);
+        $authorisedExaminer->setSites($visibleVtsDomainObjects);
 
         $vtsCount = $authorisedExaminer->getSiteCount();
 
         $slots = $authorisedExaminer->getSlots();
 
-        return new AuthorisedExaminerViewModel($authorisedExaminerUrl, $vtsCount, $name, $reference, $vts, $slots);
+        return new AuthorisedExaminerViewModel($authorisedExaminerUrl, $vtsCount, $name, $reference, $visibleVtsViewModels, $slots);
     }
 
     /**
