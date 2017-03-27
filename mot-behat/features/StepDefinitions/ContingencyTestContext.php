@@ -112,10 +112,21 @@ class ContingencyTestContext implements Context
 
     /**
      * @When /^I record a Contingency Test with (.*) at ([0-9]{2}:[0-9]{2}:[0-9]{2}|now)$/
+     * @When /^I start a Contingency MOT Test for (.*)$/
      * @param $date
      * @param $time
      */
-    public function iStartAContingencyMOTTestOnDateAtTime($date, $time)
+    public function iStartAContingencyMOTTestOnDateAtTime($date = "now", $time = "12:00:00")
+    {
+        $this->contingencyMotTestData->create(
+            $this->userData->getCurrentLoggedUser(),
+            $this->vehicleData->createByUser($this->userData->getCurrentLoggedUser()->getAccessToken()),
+            $this->siteData->get(),
+            ["dateTime" => $this->buildDateTime($date, $time)]
+        );
+    }
+
+    private function buildDateTime($date, $time)
     {
         $dateTime = new DateTime();
 
@@ -128,12 +139,7 @@ class ContingencyTestContext implements Context
             $dateTime->setTime($timeParts[0], $timeParts[1], $timeParts[2]);
         }
 
-        $this->contingencyMotTestData->create(
-            $this->userData->getCurrentLoggedUser(),
-            $this->vehicleData->createByUser($this->userData->getCurrentLoggedUser()->getAccessToken()),
-            $this->siteData->get(),
-            ["dateTime" => $dateTime]
-        );
+        return $dateTime;
     }
 
     public function createContingencyCode($contingencyCode, $reasonCode)
@@ -147,6 +153,20 @@ class ContingencyTestContext implements Context
             $this->userData->getCurrentLoggedUser(),
             $this->siteData->get(),
             $data
+        );
+    }
+
+    /**
+     * @Given /^I record failed Contingency MOT Test for (.*)$/
+     * @param string $date
+     */
+    public function iRecordFailedContingencyMOTTestFor($date = "yesterday")
+    {
+        $this->contingencyMotTestData->createFailedMotTest(
+            $this->userData->getCurrentLoggedUser(),
+            $this->vehicleData->getLast(),
+            $this->siteData->get(),
+            ["dateTime" => $this->buildDateTime($date, "12:00:00")]
         );
     }
 }

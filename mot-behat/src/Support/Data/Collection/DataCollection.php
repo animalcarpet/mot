@@ -48,11 +48,13 @@ class DataCollection implements \Iterator, \Countable
 
     public function first()
     {
+        $this->checkIfDataIsNotEmpty();
         return reset($this->data);
     }
 
     public function last()
     {
+        $this->checkIfDataIsNotEmpty();
         return end($this->data);
     }
 
@@ -161,4 +163,12 @@ class DataCollection implements \Iterator, \Countable
     {
         return $this->expectedInstance;
     }
+
+    private function checkIfDataIsNotEmpty()
+    {
+        if(count($this->data) == 0) {
+            throw new \OutOfBoundsException("Data is empty");
+        }
+    }
+
 }

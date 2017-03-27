@@ -96,3 +96,10 @@ Feature: Contingency Test
     When the Tester Aborts the Mot Test
     Then the MOT Test Status is "ABORTED"
     And the Contingency Test is Logged
+
+  Scenario: Tester performs retest after failed Contingency Test and aborted Normal Test
+    Given I am logged in as a Tester
+    And I record aborted MOT Test
+    And I record failed Contingency MOT Test for yesterday
+    When I start Re-Test for vehicle
+    Then Re-Test is started

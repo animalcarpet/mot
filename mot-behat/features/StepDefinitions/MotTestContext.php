@@ -205,6 +205,7 @@ class MotTestContext implements Context, SnippetAcceptingContext
 
     /**
      * @When /^the Tester Fails the Mot Test$/
+     * @When /^I fail the MOT Test$/
      */
     public function theTesterFailsTheMotTest()
     {
@@ -727,6 +728,14 @@ class MotTestContext implements Context, SnippetAcceptingContext
         $this->vehicleHasMotTestStarted(MotTestTypeCode::RE_TEST);
     }
 
+    /**
+     * @When I start Re-Test for vehicle
+     */
+    public function iStartRetestForVehicle()
+    {
+        $this->vehicleHasMotTestStarted(MotTestTypeCode::RE_TEST, $this->vehicleData->getLast());
+    }
+
     protected function vehicleHasMotTestStarted($testType, VehicleDto $vehicle = null)
     {
         if ($vehicle === null) {
@@ -995,5 +1004,27 @@ class MotTestContext implements Context, SnippetAcceptingContext
             $mot->getVehicle()->getId(),
             $this->userData->getCurrentLoggedUser()
         );
+    }
+
+    /**
+     * @Given /^I record aborted MOT Test$/
+     */
+    public function iRecordAbortedMOTTest()
+    {
+        $this->motTestData->createAbortedMotTest(
+            $this->userData->getCurrentLoggedUser(),
+            $this->siteData->get(SiteData::DEFAULT_NAME),
+            $this->vehicleData->getLastOrCreate()
+        );
+    }
+
+    /**
+     * @Then /^Re-Test is started$/
+     */
+    public function reTestIsStarted()
+    {
+        $motTest = $this->motTestData->getLast();
+        PHPUnit::assertEquals(MotTestTypeCode::RE_TEST, $motTest->getTestType()->getCode());
+        PHPUnit::assertEquals(null, $motTest->getCompletedDate());
     }
 }
