@@ -65,6 +65,20 @@
                 </a>
             </li>
             {% endif %}
+            {% if heroAction.DashboardGuard.canViewPaymentsLink %}
+                <li class="c-action-list__item">
+                    <a class="c-action-list__link" href="{{ url('transaction-search') }}" id="transactions" >
+                        Payments
+                    </a>
+                </li>
+            {% endif %}
+            {% if heroAction.DashboardGuard.canViewDirectDebitLink %}
+                <li class="c-action-list__item">
+                    <a class="c-action-list__link" href="{{ url('direct-debit-search') }}" id="transactions" >
+                        Direct Debit
+                    </a>
+                </li>
+            {% endif %}
             {% if heroAction.DashboardGuard.canViewMotFormsLink %}
                 <li class="c-action-list__item">
                     <a class="c-action-list__link" href="{{ url('forms') }}" id="mot-forms">

@@ -53,6 +53,10 @@
             {% include '/dashboard/user-home/your-performance.twig' %}
         {% endif %}
 
+        {% if dashboard.showFinancialReports %}
+          {% include '/dashboard/user-home/financial-reports.twig' %}
+        {% endif %}
+
         {% if dashboard.showAuthorisedExaminerManagement %}
             {% include '/dashboard/user-home/authorised-examiner-management.twig' with {'authorisedExaminerManagement': dashboard.authorisedExaminerManagementViewModel } %}
         {% endif %}

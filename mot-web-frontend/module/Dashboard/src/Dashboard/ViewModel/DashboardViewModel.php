@@ -37,6 +37,9 @@ class DashboardViewModel
     /** @var bool $showContingencyTests */
     private $showContingencyTests = false;
 
+    /** @var bool $showFinancialReports */
+    private $showFinancialReports = false;
+
     /**
      * DashboardViewModel constructor.
      *
@@ -160,6 +163,22 @@ class DashboardViewModel
     public function setShowContingencyTests($showContingencyTests)
     {
         $this->showContingencyTests = $showContingencyTests;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getShowFinancialReports()
+    {
+        return $this->showFinancialReports;
+    }
+
+    /**
+     * @param bool $showFinancialReports
+     */
+    public function setShowFinancialReports($showFinancialReports)
+    {
+        $this->showFinancialReports = $showFinancialReports;
     }
 
     /**

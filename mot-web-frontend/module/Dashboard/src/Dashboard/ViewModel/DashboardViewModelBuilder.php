@@ -60,6 +60,7 @@ class DashboardViewModelBuilder
         $dashboardViewModel->setShowYourPerformance($this->shouldShowYourPerformance());
         $dashboardViewModel->setShowContingencyTests($this->shouldShowContingencyTests());
         $dashboardViewModel->setShowAuthorisedExaminerManagement($this->shouldShowAuthorisedExaminerManagement());
+        $dashboardViewModel->setShowFinancialReports($this->shouldShowFinancialReports());
 
         return $dashboardViewModel;
     }
@@ -85,10 +86,7 @@ class DashboardViewModelBuilder
      */
     public function shouldShowContingencyTests()
     {
-        $isTesterAtAnySite = $this->dashboard->isTesterAtAnySite();
-        $isTestingEnabled = $this->dashboardGuard->isTestingEnabled();
-
-        return $isTesterAtAnySite && $isTestingEnabled;
+        return $this->canStartMotTest();
     }
 
     /**
@@ -97,6 +95,22 @@ class DashboardViewModelBuilder
     public function shouldShowAuthorisedExaminerManagement()
     {
         return $this->dashboardGuard->isAreaOffice1();
+    }
+
+    /**
+     * @return bool
+     */
+    public function shouldShowFinancialReports()
+    {
+        return $this->dashboardGuard->canGenerateFinancialReports();
+    }
+
+    /**
+     * @return bool
+     */
+    private function canStartMotTest()
+    {
+        return $this->dashboardGuard->isTestingEnabled() && $this->dashboard->isTesterAtAnySite();
     }
 
     /**

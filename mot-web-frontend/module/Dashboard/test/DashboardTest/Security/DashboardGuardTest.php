@@ -81,7 +81,7 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider userIsAssignedToAndCanViewVtsDataProvider
+     * @dataProvider userHasPermissionDataProvider
      *
      * @param bool $hasPermission
      */
@@ -92,6 +92,55 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
         $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
 
         $this->assertEquals($hasPermission, $dashboardGuard->canViewVehicleTestingStation($siteId));
+    }
+
+    /**
+     * @dataProvider rolesWithViewPaymentLinkPermissionThatShouldNotSeePaymentLink
+     *
+     * @param string $role
+     */
+    public function testSomeRolesWithViewPaymentsPermissionCannotViewPaymentsLink($role)
+    {
+        $this->addMethodToMockAuthorisationService('getAllRoles', null, [$role]);
+        $this->addMethodToMockAuthorisationService('isGranted', PermissionInSystem::SLOTS_TRANSACTION_READ_FULL, true);
+
+        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
+
+        $this->assertFalse($dashboardGuard->canViewPaymentsLink());
+    }
+
+    public function testRoleWithSlotsTransactionReadFullPermissionCanViewPaymentsLink()
+    {
+        $this->addMethodToMockAuthorisationService('getAllRoles', null, [RoleCode::FINANCE]);
+        $this->addMethodToMockAuthorisationService('isGranted', PermissionInSystem::SLOTS_TRANSACTION_READ_FULL, true);
+
+        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
+
+        $this->assertTrue($dashboardGuard->canViewPaymentsLink());
+    }
+
+    public function testRoleWithoutSlotsTransactionReadFullPermissionCannotViewPaymentsLink()
+    {
+        $this->addMethodToMockAuthorisationService('getAllRoles', null, [RoleCode::FINANCE]);
+        $this->addMethodToMockAuthorisationService('isGranted', PermissionInSystem::SLOTS_TRANSACTION_READ_FULL, false);
+
+        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
+
+        $this->assertFalse($dashboardGuard->canViewPaymentsLink());
+    }
+
+    /**
+     * @dataProvider userHasPermissionDataProvider
+     *
+     * @param bool $hasPermission
+     */
+    public function testUserCanGenerateFinancialReports($hasPermission)
+    {
+        $this->addMethodToMockAuthorisationService('isGranted', PermissionInSystem::SLOTS_REPORTS_GENERATE,
+            $hasPermission);
+        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
+
+        $this->assertEquals($hasPermission, $dashboardGuard->canGenerateFinancialReports());
     }
 
     /**
@@ -147,6 +196,53 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
+    public function userHasPermissionToViewContingencyTestsDataProvider()
+    {
+        return [
+            [[RoleCode::TESTER_ACTIVE, RoleCode::TESTER], true],
+            [[RoleCode::TESTER], false],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function userHasPermissionToViewMotFormsDataProvider()
+    {
+        return [
+            [[RoleCode::USER, RoleCode::TESTER], 0, true],
+            [[RoleCode::USER, RoleCode::TESTER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], 0, false],
+            [[RoleCode::USER, RoleCode::TESTER], 1, false],
+            [[RoleCode::USER, RoleCode::TESTER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], 1, false],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function userCanViewLinkMethodsDataProvider()
+    {
+        return [
+            ['canViewAeInformationLink', 'isGranted', PermissionInSystem::AUTHORISED_EXAMINER_LIST, false, false],
+            ['canViewAeInformationLink', 'isGranted', PermissionInSystem::AUTHORISED_EXAMINER_LIST, true, true],
+            ['canViewSiteInformationLink', 'isGranted', PermissionInSystem::DVSA_SITE_SEARCH, false, false],
+            ['canViewSiteInformationLink', 'isGranted', PermissionInSystem::DVSA_SITE_SEARCH, true, true],
+            ['canViewUserSearchLink', 'isGranted', PermissionInSystem::USER_SEARCH, false, false],
+            ['canViewUserSearchLink', 'isGranted', PermissionInSystem::USER_SEARCH, true, true],
+            ['canViewMotTestsLink', 'isGranted', PermissionInSystem::DVSA_SITE_SEARCH, false, false],
+            ['canViewMotTestsLink', 'isGranted', PermissionInSystem::DVSA_SITE_SEARCH, true, true],
+            ['canViewDemoTestRequestsLink', 'isGranted', PermissionInSystem::VIEW_USERS_IN_DEMO_TEST_NEEDED_STATE, false, false],
+            ['canViewDemoTestRequestsLink', 'isGranted', PermissionInSystem::VIEW_USERS_IN_DEMO_TEST_NEEDED_STATE, true, true],
+            ['canViewVehicleSearchLink', 'isGranted', PermissionInSystem::FULL_VEHICLE_MOT_TEST_HISTORY_VIEW, false, false],
+            ['canViewVehicleSearchLink', 'isGranted', PermissionInSystem::FULL_VEHICLE_MOT_TEST_HISTORY_VIEW, true, true],
+            ['canViewDirectDebitLink', 'isGranted', PermissionInSystem::SLOTS_DIRECT_DEBIT_SEARCH, false, false],
+            ['canViewDirectDebitLink', 'isGranted', PermissionInSystem::SLOTS_DIRECT_DEBIT_SEARCH, true, true],
+        ];
+    }
+
+    /**
+     * @return array
+     */
     public function userCanViewReplacementDuplicateCertificateLinkDataProvider()
     {
         return [
@@ -172,24 +268,22 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function userHasPermissionToViewMotFormsDataProvider()
+    public function userHasPermissionDataProvider()
     {
         return [
-            [[RoleCode::USER, RoleCode::TESTER], 0, true],
-            [[RoleCode::USER, RoleCode::TESTER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], 0, false],
-            [[RoleCode::USER, RoleCode::TESTER], 1, false],
-            [[RoleCode::USER, RoleCode::TESTER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], 1, false],
+            [true],
+            [false],
         ];
     }
 
     /**
      * @return array
      */
-    public function userIsAssignedToAndCanViewVtsDataProvider()
+    public function rolesWithViewPaymentLinkPermissionThatShouldNotSeePaymentLink()
     {
         return [
-            [true],
-            [false],
+            [RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER],
+            [RoleCode::AUTHORISED_EXAMINER_DELEGATE]
         ];
     }
 
