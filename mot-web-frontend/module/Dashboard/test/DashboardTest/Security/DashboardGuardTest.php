@@ -27,186 +27,6 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider userHasPermissionDataProvider
-     *
-     * @param bool $hasPermission
-     */
-    public function testUserHasPermissionToViewAeAndVts($hasPermission)
-    {
-        $this->addMethodToMockAuthorisationService('isGranted', PermissionInSystem::VEHICLE_TESTING_STATION_LIST, $hasPermission);
-        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
-
-        $this->assertEquals($hasPermission, $dashboardGuard->canViewVehicleTestingStationList());
-    }
-
-    /**
-     * @dataProvider userHasPermissionDataProvider
-     *
-     * @param bool $hasPermission
-     */
-    public function testUserIsAssignedToAndCanViewVts($hasPermission)
-    {
-        $siteId = 1;
-        $this->addMethodToMockAuthorisationService('isGrantedAtSite', PermissionAtSite::VEHICLE_TESTING_STATION_READ, $hasPermission);
-        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
-
-        $this->assertEquals($hasPermission, $dashboardGuard->canViewVehicleTestingStation($siteId));
-    }
-
-    /**
-     * @dataProvider userCanViewReplacementDuplicateCertificateLink
-     *
-     * @param array $userRoles
-     * @param bool  $hasInProgressTest
-     * @param bool  $hasPermission
-     */
-    public function testCanViewReplacementDuplicateCertificateLink(array $userRoles, $hasInProgressTest, $hasPermission)
-    {
-        $this->addMethodToMockAuthorisationService('getAllRoles', null, $userRoles);
-        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
-        $dashboardGuard->setHasTestInProgress($hasInProgressTest);
-
-        $this->assertEquals($hasPermission, $dashboardGuard->canViewReplacementDuplicateCertificateLink());
-    }
-
-    /**
-     * @dataProvider userCanViewSlotBalanceDataProvider
-     *
-     * @param array $userRoles
-     * @param bool  $canViewSlotBalance
-     */
-    public function testUserCanViewSlotBalance(array $userRoles, $canViewSlotBalance)
-    {
-        $this->addMethodToMockAuthorisationService('getAllRoles', null, $userRoles);
-        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
-
-        $this->assertEquals($canViewSlotBalance, $dashboardGuard->canViewSlotBalance());
-    }
-
-    /**
-     * @dataProvider userHasPermissionDataProvider
-     *
-     * @param bool $hasPermission
-     */
-    public function testUserHasPermissionToAcknowledgeSpecialNotices($hasPermission)
-    {
-        $this->addMethodToMockAuthorisationService('isGranted', PermissionInSystem::SPECIAL_NOTICE_ACKNOWLEDGE, $hasPermission);
-        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
-
-        $this->assertEquals($hasPermission, $dashboardGuard->canAcknowledgeSpecialNotices());
-    }
-
-    /**
-     * @dataProvider userHasPermissionDataProvider
-     *
-     * @param bool $hasPermission
-     */
-    public function testUserHasPermissionToReadAllSpecialNotices($hasPermission)
-    {
-        $this->addMethodToMockAuthorisationService('isGranted', PermissionInSystem::SPECIAL_NOTICE_READ, $hasPermission);
-        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
-
-        $this->assertEquals($hasPermission, $dashboardGuard->canReadAllSpecialNotices());
-    }
-
-    /**
-     * @dataProvider userHasPermissionDataProvider
-     *
-     * @param bool $hasPermission
-     */
-    public function testUserHasPermissionToReceiveSpecialNotices($hasPermission)
-    {
-        $this->addMethodToMockAuthorisationService('isGranted', PermissionInSystem::SPECIAL_NOTICE_READ_CURRENT, $hasPermission);
-        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
-
-        $this->assertEquals($hasPermission, $dashboardGuard->canReceiveSpecialNotices());
-    }
-
-    /**
-     * @dataProvider isAreaOffice1DataProvider
-     *
-     * @param $userRole
-     * @param $expectedResult
-     */
-    public function testUserHasAreaOffice1Role($userRole, $expectedResult)
-    {
-        $this->addMethodToMockAuthorisationService('getAllRoles', null, $userRole);
-        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
-
-        $this->assertEquals($expectedResult , $dashboardGuard->isAreaOffice1());
-    }
-
-    /**
-     * @dataProvider permissionToCreateAuthorisedExaminerDataProvider
-     *
-     * @param $permission
-     * @param $expectedResult
-     */
-    public function testIfUserHasPermissionToCreateAuthorisedExaminer($permission, $expectedResult)
-    {
-        $this->addMethodToMockAuthorisationService('isGranted', $permission, $expectedResult);
-        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
-
-        $this->assertEquals($expectedResult , $dashboardGuard->canCreateAuthorisedExaminer());
-    }
-
-    /**
-     * @dataProvider permissionToCreateVehicleTestingStationDataProvider
-     *
-     * @param $userPermission
-     * @param $expectedResult
-     */
-    public function testUsesHasPermissionToCreateVehicleTestingStation($userPermission, $expectedResult)
-    {
-        $this->addMethodToMockAuthorisationService('isGranted', $userPermission , $expectedResult);
-        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
-
-        $this->assertEquals($expectedResult, $dashboardGuard->canCreateVehicleTestingStation());
-    }
-
-    public function permissionToCreateAuthorisedExaminerDataProvider()
-    {
-        return [
-            [PermissionInSystem::AUTHORISED_EXAMINER_CREATE, true, true],
-            [null, false, false]
-        ];
-    }
-
-    public function permissionToCreateVehicleTestingStationDataProvider()
-    {
-        return [
-            [PermissionInSystem::VEHICLE_TESTING_STATION_CREATE, true, true],
-            [null, false, false]
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function isAreaOffice1DataProvider()
-    {
-        return [
-            [[RoleCode::USER], false],
-            [[RoleCode::AREA_OFFICE_1], true],
-            [[RoleCode::USER, RoleCode::AREA_OFFICE_1], true]
-        ];
-    }
-
-    /**
-     * @dataProvider userShouldDoDemoTestDataProvider
-     *
-     * @param array $userRoles
-     * @param bool  $shouldDoDemoTest
-     */
-    public function testUserShouldDoDemoTest(array $userRoles, $shouldDoDemoTest)
-    {
-        $this->addMethodToMockAuthorisationService('getAllRoles', null, $userRoles);
-        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
-
-        $this->assertEquals($shouldDoDemoTest, $dashboardGuard->isDemoTestNeeded());
-    }
-
-    /**
      * @dataProvider userCanPerformMotTestDataProvider
      *
      * @param bool $hasMotTestStartPermission
@@ -229,30 +49,19 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider userHasPermissionDataProvider
-     *
-     * @param bool $hasPermission
-     */
-    public function testUserHasPermissionToViewYourPerformance($hasPermission)
-    {
-        $this->addMethodToMockAuthorisationService('isGranted', PermissionInSystem::DISPLAY_TESTER_STATS_BOX, $hasPermission);
-        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
-
-        $this->assertEquals($hasPermission, $dashboardGuard->canViewYourPerformance());
-    }
-
-    /**
-     * @dataProvider userHasPermissionToViewContingencyTestsDataProvider
+     * @dataProvider userCanViewReplacementDuplicateCertificateLinkDataProvider
      *
      * @param array $userRoles
-     * @param bool  $canViewContingencyTests
+     * @param bool  $hasInProgressTest
+     * @param bool  $hasPermission
      */
-    public function testUserHasPermissionToViewContingencyTests(array $userRoles, $canViewContingencyTests)
+    public function testUserCanViewReplacementDuplicateCertificateLink(array $userRoles, $hasInProgressTest, $hasPermission)
     {
         $this->addMethodToMockAuthorisationService('getAllRoles', null, $userRoles);
         $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
+        $dashboardGuard->setHasTestInProgress($hasInProgressTest);
 
-        $this->assertEquals($canViewContingencyTests, $dashboardGuard->isQualifiedTester());
+        $this->assertEquals($hasPermission, $dashboardGuard->canViewReplacementDuplicateCertificateLink());
     }
 
     /**
@@ -272,82 +81,57 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider userIsTesterDataProvider
+     * @dataProvider userIsAssignedToAndCanViewVtsDataProvider
      *
-     * @param array $userRoles
-     * @param bool  $isTester
+     * @param bool $hasPermission
      */
-    public function testUserIsTester(array $userRoles, $isTester)
+    public function testUserIsAssignedToAndCanViewVts($hasPermission)
+    {
+        $siteId = 1;
+        $this->addMethodToMockAuthorisationService('isGrantedAtSite', PermissionAtSite::VEHICLE_TESTING_STATION_READ, $hasPermission);
+        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
+
+        $this->assertEquals($hasPermission, $dashboardGuard->canViewVehicleTestingStation($siteId));
+    }
+
+    /**
+     * @dataProvider userCanViewLinkMethodsInDashboardGuardBasedOnPermissionDataProvider
+     *
+     * @param string $testMethod
+     * @param string $permission
+     * @param bool   $hasPermission
+     * @param bool   $expectedResult
+     */
+    public function testUserCanViewLinkMethodsInDashboardGuardBasedOnPermission(
+        $testMethod,
+        $permission,
+        $hasPermission,
+        $expectedResult
+    )
+    {
+        $this->addMethodToMockAuthorisationService('isGranted', $permission, $hasPermission);
+        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
+
+        $this->assertEquals($dashboardGuard->$testMethod(), $expectedResult);
+    }
+
+    /**
+     * @dataProvider userCanViewLinkMethodsInDashboardGuardBasedOnRoleDataProvider
+     *
+     * @param string $testMethod
+     * @param array  $userRoles
+     * @param bool   $expectedResult
+     */
+    public function testUserCanViewLinkMethodsInDashboardGuardBasedOnRole(
+        $testMethod,
+        $userRoles,
+        $expectedResult
+    )
     {
         $this->addMethodToMockAuthorisationService('getAllRoles', null, $userRoles);
         $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
 
-        $this->assertEquals($isTester, $dashboardGuard->isTester());
-    }
-
-    /**
-     * @dataProvider userCanViewLinkMethodsDataProvider
-     *
-     * @param string $testMethod
-     * @param string $mockMethod
-     * @param string $mockPermission
-     * @param bool   $mockResult
-     * @param string $testResult
-     */
-    public function testUserCanViewLinkMethodsInDashboardGuard(
-        $testMethod,
-        $mockMethod,
-        $mockPermission,
-        $mockResult,
-        $testResult)
-    {
-        $this->addMethodToMockAuthorisationService($mockMethod, $mockPermission, $mockResult);
-        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
-
-        $this->assertEquals($dashboardGuard->$testMethod(), $testResult);
-    }
-
-    /**
-     * @return array
-     */
-    public function userShouldDoDemoTestDataProvider()
-    {
-        return [
-            [[RoleCode::TESTER_ACTIVE, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], true],
-            [[RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], true],
-            [[RoleCode::TESTER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], true],
-            [[RoleCode::TESTER, RoleCode::TESTER_ACTIVE, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], false],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function userCanViewSlotBalanceDataProvider()
-    {
-        return [
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER], true],
-            [[RoleCode::AUTHORISED_EXAMINER_DELEGATE], true],
-            [[RoleCode::SITE_ADMIN], true],
-            [[RoleCode::SITE_MANAGER], true],
-            [[RoleCode::TESTER], false],
-            [[RoleCode::USER], false],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], false],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_ACTIVE], true],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER, RoleCode::TESTER_ACTIVE], false],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER], true],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function userHasPermissionDataProvider()
-    {
-        return [
-            [true],
-            [false],
-        ];
+        $this->assertEquals($dashboardGuard->$testMethod(), $expectedResult);
     }
 
     public function userCanPerformMotTestDataProvider()
@@ -363,11 +147,25 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function userHasPermissionToViewContingencyTestsDataProvider()
+    public function userCanViewReplacementDuplicateCertificateLinkDataProvider()
     {
         return [
-            [[RoleCode::TESTER_ACTIVE, RoleCode::TESTER], true],
-            [[RoleCode::TESTER], false],
+            [[RoleCode::USER], false, false],
+            [[RoleCode::TESTER_ACTIVE], false, false],
+            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER], false, true],
+            [[RoleCode::TESTER], false, true],
+            [[RoleCode::TESTER], true, false],
+            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER], false, true],
+            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], false, false],
+            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED, RoleCode::TESTER_ACTIVE], false, false],
+            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED, RoleCode::TESTER_ACTIVE,  RoleCode::TESTER], false, true],
+            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_ACTIVE], false, true],
+            [[RoleCode::CUSTOMER_SERVICE_OPERATIVE], false, true],
+            [[RoleCode::DVLA_OPERATIVE], false, true],
+            [[RoleCode::AREA_OFFICE_1], false, true],
+            [[RoleCode::VEHICLE_EXAMINER], false, true],
+            [[RoleCode::SCHEME_USER], false, true],
+            [[RoleCode::SCHEME_MANAGER], false, true],
         ];
     }
 
@@ -387,62 +185,85 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function userCanViewLinkMethodsDataProvider()
+    public function userIsAssignedToAndCanViewVtsDataProvider()
     {
         return [
-            ['canViewAeInformationLink', 'isGranted', PermissionInSystem::AUTHORISED_EXAMINER_LIST, false, false],
-            ['canViewAeInformationLink', 'isGranted', PermissionInSystem::AUTHORISED_EXAMINER_LIST, true, true],
-            ['canViewSiteInformationLink', 'isGranted', PermissionInSystem::DVSA_SITE_SEARCH, false, false],
-            ['canViewSiteInformationLink', 'isGranted', PermissionInSystem::DVSA_SITE_SEARCH, true, true],
-            ['canViewUserSearchLink', 'isGranted', PermissionInSystem::USER_SEARCH, false, false],
-            ['canViewUserSearchLink', 'isGranted', PermissionInSystem::USER_SEARCH, true, true],
-            ['canViewMotTestsLink', 'isGranted', PermissionInSystem::DVSA_SITE_SEARCH, false, false],
-            ['canViewMotTestsLink', 'isGranted', PermissionInSystem::DVSA_SITE_SEARCH, true, true],
-            ['canViewDemoTestRequestsLink', 'isGranted', PermissionInSystem::VIEW_USERS_IN_DEMO_TEST_NEEDED_STATE, false, false],
-            ['canViewDemoTestRequestsLink', 'isGranted', PermissionInSystem::VIEW_USERS_IN_DEMO_TEST_NEEDED_STATE, true, true],
-            ['canViewVehicleSearchLink', 'isGranted', PermissionInSystem::FULL_VEHICLE_MOT_TEST_HISTORY_VIEW, false, false],
-            ['canViewVehicleSearchLink', 'isGranted', PermissionInSystem::FULL_VEHICLE_MOT_TEST_HISTORY_VIEW, true, true],
+            [true],
+            [false],
         ];
     }
 
     /**
      * @return array
      */
-    public function userCanViewReplacementDuplicateCertificateLink()
+    public function userCanViewLinkMethodsInDashboardGuardBasedOnPermissionDataProvider()
     {
         return [
-            [[RoleCode::USER], false, false],
-            [[RoleCode::TESTER_ACTIVE], false, false],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER], false, true],
-            [[RoleCode::TESTER], false, true],
-            [[RoleCode::TESTER], true, false],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER], false, true],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], false, false],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED, RoleCode::TESTER_ACTIVE], false, false],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED, RoleCode::TESTER_ACTIVE,  RoleCode::TESTER], false, true],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_ACTIVE], false, true],
-            [[RoleCode::CUSTOMER_SERVICE_OPERATIVE], false, true],
-            [[RoleCode::DVLA_OPERATIVE], false, true],
-            [[RoleCode::AREA_OFFICE_1], false, true],
-            [[RoleCode::VEHICLE_EXAMINER], false, true],
+            ['canViewAeInformationLink', PermissionInSystem::AUTHORISED_EXAMINER_LIST, false, false],
+            ['canViewAeInformationLink', PermissionInSystem::AUTHORISED_EXAMINER_LIST, true, true],
+            ['canViewUserSearchLink', PermissionInSystem::USER_SEARCH, false, false],
+            ['canViewUserSearchLink', PermissionInSystem::USER_SEARCH, true, true],
+            ['canViewDemoTestRequestsLink', PermissionInSystem::VIEW_USERS_IN_DEMO_TEST_NEEDED_STATE, false, false],
+            ['canViewDemoTestRequestsLink', PermissionInSystem::VIEW_USERS_IN_DEMO_TEST_NEEDED_STATE, true, true],
+            ['canViewVehicleSearchLink', PermissionInSystem::FULL_VEHICLE_MOT_TEST_HISTORY_VIEW, false, false],
+            ['canViewVehicleSearchLink', PermissionInSystem::FULL_VEHICLE_MOT_TEST_HISTORY_VIEW, true, true],
+            ['canViewGenerateSurveyReportLink', PermissionInSystem::GENERATE_SATISFACTION_SURVEY_REPORT, false, false],
+            ['canViewGenerateSurveyReportLink', PermissionInSystem::GENERATE_SATISFACTION_SURVEY_REPORT, true, true],
+            ['canViewVehicleTestingStationList', PermissionInSystem::VEHICLE_TESTING_STATION_LIST, false, false],
+            ['canViewVehicleTestingStationList', PermissionInSystem::VEHICLE_TESTING_STATION_LIST, true, true],
+            ['canAcknowledgeSpecialNotices', PermissionInSystem::SPECIAL_NOTICE_ACKNOWLEDGE, false, false],
+            ['canAcknowledgeSpecialNotices', PermissionInSystem::SPECIAL_NOTICE_ACKNOWLEDGE, true, true],
+            ['canReadAllSpecialNotices', PermissionInSystem::SPECIAL_NOTICE_READ, false, false],
+            ['canReadAllSpecialNotices', PermissionInSystem::SPECIAL_NOTICE_READ, true, true],
+            ['canReceiveSpecialNotices', PermissionInSystem::SPECIAL_NOTICE_READ_CURRENT, false, false],
+            ['canReceiveSpecialNotices', PermissionInSystem::SPECIAL_NOTICE_READ_CURRENT, true, true],
+            ['canViewYourPerformance', PermissionInSystem::DISPLAY_TESTER_STATS_BOX, false, false],
+            ['canViewYourPerformance', PermissionInSystem::DISPLAY_TESTER_STATS_BOX, true, true],
+            ['canCreateAuthorisedExaminer', PermissionInSystem::AUTHORISED_EXAMINER_CREATE, false, false],
+            ['canCreateAuthorisedExaminer', PermissionInSystem::AUTHORISED_EXAMINER_CREATE, true, true],
+            ['canCreateVehicleTestingStation', PermissionInSystem::VEHICLE_TESTING_STATION_CREATE, false, false],
+            ['canCreateVehicleTestingStation', PermissionInSystem::VEHICLE_TESTING_STATION_CREATE, true, true],
+            ['canViewSiteInformationLink', PermissionInSystem::DVSA_SITE_SEARCH, false, false],
+            ['canViewSiteInformationLink', PermissionInSystem::DVSA_SITE_SEARCH, true, true],
+            ['canViewMotTestsLink', PermissionInSystem::DVSA_SITE_SEARCH, false, false],
+            ['canViewMotTestsLink', PermissionInSystem::DVSA_SITE_SEARCH, true, true],
         ];
     }
 
     /**
      * @return array
      */
-    public function userIsTesterDataProvider()
+    public function userCanViewLinkMethodsInDashboardGuardBasedOnRoleDataProvider()
     {
         return [
-            [[RoleCode::TESTER], true],
-            [[RoleCode::AUTHORISED_EXAMINER_DELEGATE], false],
+            ['canViewSlotBalance', [RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER], true],
+            ['canViewSlotBalance', [RoleCode::AUTHORISED_EXAMINER_DELEGATE], true],
+            ['canViewSlotBalance', [RoleCode::SITE_ADMIN], true],
+            ['canViewSlotBalance', [RoleCode::SITE_MANAGER], true],
+            ['canViewSlotBalance', [RoleCode::TESTER], false],
+            ['canViewSlotBalance', [RoleCode::USER], false],
+            ['canViewSlotBalance', [RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], false],
+            ['canViewSlotBalance', [RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_ACTIVE], true],
+            ['canViewSlotBalance', [RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER, RoleCode::TESTER_ACTIVE], false],
+            ['canViewSlotBalance', [RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER], true],
+            ['isDemoTestNeeded', [RoleCode::TESTER_ACTIVE, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], true],
+            ['isDemoTestNeeded', [RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], true],
+            ['isDemoTestNeeded', [RoleCode::TESTER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], true],
+            ['isDemoTestNeeded', [RoleCode::TESTER, RoleCode::TESTER_ACTIVE, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], false],
+            ['isQualifiedTester', [RoleCode::TESTER_ACTIVE, RoleCode::TESTER], true],
+            ['isQualifiedTester', [RoleCode::TESTER], false],
+            ['isTester', [RoleCode::TESTER], true],
+            ['isTester', [RoleCode::AUTHORISED_EXAMINER_DELEGATE], false],
+            ['isAreaOffice1', [RoleCode::USER], false],
+            ['isAreaOffice1', [RoleCode::AREA_OFFICE_1], true],
+            ['isAreaOffice1', [RoleCode::USER, RoleCode::AREA_OFFICE_1], true]
         ];
     }
 
     /**
-     * @param $methodName
-     * @param $withParameter
-     * @param $returnValue
+     * @param string     $methodName
+     * @param string     $withParameter
+     * @param array|bool $returnValue
      */
     private function addMethodToMockAuthorisationService($methodName, $withParameter, $returnValue)
     {

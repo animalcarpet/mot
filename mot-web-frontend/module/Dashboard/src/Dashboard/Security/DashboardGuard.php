@@ -17,6 +17,11 @@ class DashboardGuard
         RoleCode::SITE_ADMIN,
     ];
 
+    const HIGH_AUTHORITY_DVSA_ROLES = [
+        RoleCode::SCHEME_USER,
+        RoleCode::SCHEME_MANAGER,
+    ];
+
     /** @var MotAuthorisationServiceInterface $authorisationService */
     protected $authorisationService;
 
@@ -64,6 +69,10 @@ class DashboardGuard
         }
 
         if ($this->isVehicleExaminer()) {
+            return true;
+        }
+
+        if ($this->hasHighAuthorityDvsaRole()) {
             return true;
         }
 
@@ -213,6 +222,14 @@ class DashboardGuard
     /**
      * @return bool
      */
+    public function canViewGenerateSurveyReportLink()
+    {
+        return $this->authorisationService->isGranted(PermissionInSystem::GENERATE_SATISFACTION_SURVEY_REPORT);
+    }
+
+    /**
+     * @return bool
+     */
     public function isTestingEnabled()
     {
         return $this->authorisationService->isGranted(PermissionInSystem::MOT_TEST_START) &&
@@ -238,9 +255,17 @@ class DashboardGuard
     /**
      * @return bool
      */
-    private function hasHighAuthorityTradeRole()
+    public function canCreateAuthorisedExaminer()
     {
-        return !empty(array_intersect($this->getAllRoles(), self::HIGH_AUTHORITY_TRADE_ROLES));
+        return $this->authorisationService->isGranted(PermissionInSystem::AUTHORISED_EXAMINER_CREATE);
+    }
+
+    /**
+     * @return bool
+     */
+    public function canCreateVehicleTestingStation()
+    {
+        return $this->authorisationService->isGranted(PermissionInSystem::VEHICLE_TESTING_STATION_CREATE);
     }
 
     /**
@@ -278,7 +303,7 @@ class DashboardGuard
     /**
      * @return bool
      */
-    public function isDvlaOperative()
+    private function isDvlaOperative()
     {
         return in_array(RoleCode::DVLA_OPERATIVE, $this->getAllRoles());
     }
@@ -303,25 +328,17 @@ class DashboardGuard
     /**
      * @return bool
      */
-    public function canCreateAuthorisedExaminer()
+    private function hasHighAuthorityTradeRole()
     {
-        return $this->authorisationService->isGranted(PermissionInSystem::AUTHORISED_EXAMINER_CREATE);
+        return !empty(array_intersect($this->getAllRoles(), self::HIGH_AUTHORITY_TRADE_ROLES));
     }
 
     /**
      * @return bool
      */
-    public function canCreateVehicleTestingStation()
+    private function hasHighAuthorityDvsaRole()
     {
-        return $this->authorisationService->isGranted(PermissionInSystem::VEHICLE_TESTING_STATION_CREATE);
-    }
-
-    /**
-     * @return mixed
-     */
-    private function getAllRoles()
-    {
-        return $this->authorisationService->getAllRoles();
+        return !empty(array_intersect($this->getAllRoles(), self::HIGH_AUTHORITY_DVSA_ROLES));
     }
 
     /**
@@ -358,5 +375,13 @@ class DashboardGuard
         $this->hasTestInProgress = $hasTestInProgress;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    private function getAllRoles()
+    {
+        return $this->authorisationService->getAllRoles();
     }
 }
