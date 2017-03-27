@@ -162,6 +162,7 @@ class UserHomeController extends AbstractAuthActionController
         );
 
         $this->layout()->setVariable('isHomePage', true);
+        $this->setHeadTitle('Your home');
 
         return $return;
     }
