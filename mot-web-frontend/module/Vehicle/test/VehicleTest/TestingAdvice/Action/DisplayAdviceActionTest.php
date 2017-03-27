@@ -56,7 +56,9 @@ class DisplayAdviceActionTest extends \PHPUnit_Framework_TestCase
 
     public function test_execute_returnsActionResult()
     {
-        $actionResult = $this->displayAction->execute(1, self::BACK_LINK_URL, self::BACK_LINK_LABEL);
+        $breadcrumbs = ["bread" => "", "crumbs" => ""];
+
+        $actionResult = $this->displayAction->execute(1, self::BACK_LINK_URL, self::BACK_LINK_LABEL, $breadcrumbs);
 
         $this->assertInstanceOf(ViewActionResult::class, $actionResult);
         /** @var DisplayAdviseViewModel $viewModel */
@@ -65,5 +67,6 @@ class DisplayAdviceActionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(self::BACK_LINK_URL, $viewModel->getBackLinkUrl());
         $this->assertEquals(self::FEEDBACK_LINK, $viewModel->getFeedbackLink());
         $this->assertEquals($this->testingAdvice, $viewModel->getTestingAdvice());
+        $this->assertEquals($breadcrumbs, $actionResult->layout()->getBreadcrumbs());
     }
 }

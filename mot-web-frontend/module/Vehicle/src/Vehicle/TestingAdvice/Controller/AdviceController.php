@@ -27,14 +27,16 @@ class AdviceController extends AbstractAuthActionController implements AutoWirea
 
         if ($motTestNumber) {
             $backLinkUrl = MotTestRoutes::of($this->url())->motTest($motTestNumber);
-            $backLinkLbel = "Back to MOT test results";
+            $backLinkLabel = "Back to MOT test results";
+            $breadcrumbs = ["MOT test results" => $backLinkUrl, "Testing advice for this vehicle" => ""];
         } else {
             $backLinkUrl = MotTestRoutes::of($this->url())->vehicleMotTestStartTest($vehicleId, $noRegistration, $source);
-            $backLinkLbel = "Back to confirm vehicle";
+            $backLinkLabel = "Back to confirm vehicle";
+            $breadcrumbs = ["MOT testing" => $backLinkUrl, "Testing advice for this vehicle" => ""];
             $vehicleId = $this->paramObfuscator->deobfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, $vehicleId);
         }
 
-        $result = $this->displayAdviceAction->execute((int) $vehicleId, $backLinkUrl, $backLinkLbel);
+        $result = $this->displayAdviceAction->execute((int) $vehicleId, $backLinkUrl, $backLinkLabel, $breadcrumbs);
 
         return $this->applyActionResult($result);
     }
