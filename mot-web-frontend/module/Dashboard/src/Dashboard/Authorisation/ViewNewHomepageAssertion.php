@@ -8,11 +8,14 @@ use DvsaCommon\Enum\RoleCode;
 class ViewNewHomepageAssertion
 {
     const ROLES_ALLOWED_TO_VIEW_NEW_HOMEPAGE = [
+        RoleCode::AREA_OFFICE_1,
         RoleCode::AUTHORISED_EXAMINER_DELEGATE,
         RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
         RoleCode::CUSTOMER_SERVICE_OPERATIVE,
         RoleCode::CUSTOMER_SERVICE_MANAGER,
         RoleCode::DVLA_OPERATIVE,
+        RoleCode::SCHEME_MANAGER,
+        RoleCode::SCHEME_USER,
         RoleCode::SITE_ADMIN,
         RoleCode::SITE_MANAGER,
         RoleCode::TESTER,
@@ -21,7 +24,6 @@ class ViewNewHomepageAssertion
         RoleCode::TESTER_APPLICANT_INITIAL_TRAINING_REQUIRED,
         RoleCode::USER,
         RoleCode::VEHICLE_EXAMINER,
-        RoleCode::AREA_OFFICE_1
     ];
 
     /** @var MotAuthorisationServiceInterface $authorisationService */
