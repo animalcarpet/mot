@@ -50,7 +50,7 @@ class ChangeSecurityQuestionsReviewAction
         $viewModel = $this->populateViewModel();
         $result->setViewModel($viewModel);
         $result->layout()->setPageTitle(self::CHANGE_SECURITY_QUESTIONS_REVIEW_PAGE_TITLE);
-        $result->layout()->setPageSubTitle(self::CHANGE_SECURITY_QUESTIONS_REVIEW_PAGE_TITLE);
+        $result->layout()->setPageSubTitle(self::CHANGE_SECURITY_QUESTIONS_REVIEW_PAGE_SUBTITLE);
         $result->setTemplate(self::CHANGE_SECURITY_QUESTIONS_REVIEW_TEMPLATE);
 
         return $result;

@@ -21,6 +21,7 @@ class ChangeSecurityQuestionsReviewController extends AbstractDvsaActionControll
     {
         $result = $this->action->execute($this->getRequest());
         $this->buildBreadcrumbs();
+        $this->setHeadTitle('Review security question changes');
         return $this->applyActionResult($result);
     }
 

@@ -10,8 +10,6 @@ use DvsaClient\Mapper\TesterGroupAuthorisationMapper;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
-use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\Role;
 use DvsaCommon\Dto\Person\PersonHelpDeskProfileDto;
 use DvsaCommon\Model\TesterAuthorisation;
 use DvsaCommonTest\TestUtils\XMock;
@@ -22,6 +20,13 @@ use UserAdmin\Service\IsEmailDuplicateService;
 use Zend\Http\Request;
 use Zend\Stdlib\ParametersInterface;
 use Zend\View\Model\ViewModel;
+use PHPUnit_Framework_MockObject_MockObject;
+use Zend\Mvc\Service\ViewHelperManagerFactory;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceManager;
+use Zend\View\Helper\Url;
+use Zend\View\HelperPluginManager;
+use Zend\View\Helper\HeadTitle;
 
 class EmailAddressControllerTest extends AbstractLightWebControllerTest
 {
@@ -86,7 +91,10 @@ class EmailAddressControllerTest extends AbstractLightWebControllerTest
         $this->getUserProfileMock();
         $this->setRouteParams(['id' => self::PERSON_ID]);
 
-        $actual = $this->buildController()->indexAction();
+        $controller = $this->buildController();
+        $serviceLocator = $this->getServiceLocatorMock();
+        $controller->setServiceLocator($serviceLocator);
+        $actual = $controller->indexAction();
 
         $this->assertInstanceOf(ViewModel::class, $actual);
         $this->assertSame('user-admin/email-address/form.phtml', $actual->getTemplate());
@@ -103,7 +111,10 @@ class EmailAddressControllerTest extends AbstractLightWebControllerTest
         $this->mockIsGranted(false);
         $this->setRouteParams(['id' => self::PERSON_ID]);
 
-        $this->buildController()->indexAction();
+        $controller = $this->buildController();
+        $serviceLocator = $this->getServiceLocatorMock();
+        $controller->setServiceLocator($serviceLocator);
+        $controller->indexAction();
     }
 
     public function testWhenPost_formIsValid_emailIsNotDuplicated()
@@ -132,7 +143,10 @@ class EmailAddressControllerTest extends AbstractLightWebControllerTest
             ->method('addSuccessMessage')
             ->with(EmailAddressController::MSG_EMAIL_CHANGED_SUCCESS);
 
-        $this->buildController()->indexAction();
+        $controller = $this->buildController();
+        $serviceLocator = $this->getServiceLocatorMock();
+        $controller->setServiceLocator($serviceLocator);
+        $controller->indexAction();
     }
 
     /**
@@ -165,7 +179,10 @@ class EmailAddressControllerTest extends AbstractLightWebControllerTest
             ->method('addErrorMessage')
             ->with(['duplicateEmailValidation' => EmailAddressController::MSG_DUPLICATE_EMAIL_ERROR]);
 
-        $this->buildController()->indexAction();
+        $controller = $this->buildController();
+        $serviceLocator = $this->getServiceLocatorMock();
+        $controller->setServiceLocator($serviceLocator);
+        $controller->indexAction();
     }
 
     public function testWhenGet_shouldDisplayChangeEmailPage()
@@ -180,7 +197,10 @@ class EmailAddressControllerTest extends AbstractLightWebControllerTest
 
         $this->mockIsPost(false, []);
 
-        $actual = $this->buildController()->indexAction();
+        $controller = $this->buildController();
+        $serviceLocator = $this->getServiceLocatorMock();
+        $controller->setServiceLocator($serviceLocator);
+        $actual = $controller->indexAction();
 
         $this->assertInstanceOf(ViewModel::class, $actual);
         $this->assertSame('user-admin/email-address/form.phtml', $actual->getTemplate());
@@ -278,5 +298,28 @@ class EmailAddressControllerTest extends AbstractLightWebControllerTest
         $this->contextProvider
             ->method('getContext')
             ->willReturn($context);
+    }
+
+    /**
+     * @return PHPUnit_Framework_MockObject_MockObject|ServiceLocatorInterface
+     * @throws \Exception
+     */
+    private function getServiceLocatorMock()
+    {
+        $helperPluginManager = XMock::of(HelperPluginManager::class);
+        $helperPluginManager
+            ->expects($this->any())
+            ->method('get')
+            ->with('headTitle')
+            ->willReturn(XMock::of(HeadTitle::class));
+
+        /**  @var ServiceLocatorInterface | PHPUnit_Framework_MockObject_MockObject $serviceLocator */
+        $serviceLocator = XMock::of(ServiceLocatorInterface::class);
+        $serviceLocator
+            ->expects($this->any())
+            ->method('get')
+            ->with('ViewHelperManager')
+            ->willReturn($helperPluginManager);
+        return $serviceLocator;
     }
 }
