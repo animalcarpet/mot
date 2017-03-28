@@ -40,6 +40,8 @@ class SiteTestingDailyScheduleController extends AbstractAuthActionController
         $data = $site->getSiteTestingSchedule();
         $data = $this->extractOpeningHours($data);
 
+        $this->setHeadTitle('Change testing hours');
+
         if ($this->getRequest()->isPost()) {
             $data = $this->getRequest()->getPost()->toArray();
             try {
