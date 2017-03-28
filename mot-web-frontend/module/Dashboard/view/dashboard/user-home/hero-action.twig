@@ -1,3 +1,5 @@
+{# @var heroAction \Dashboard\ViewModel\HeroActionViewModel #}
+
 {% if heroAction.isHeroActionVisible %}
     <div id="hero-actions" class="c-home-hero__actions">
 
@@ -13,8 +15,31 @@
             {% include '/dashboard/user-home/slots.twig' with {'slotBalanceAction': heroAction.slotsViewModel} %}
         {% endif %}
 
+        {% if heroAction.startMotViewModel.hasTestInProgress %}
+            <ul class="c-action-list" style="margin-bottom: 30px">
+                <li class="c-action-list__item">
+                    <a class="c-action-list__link"
+                       href="{{ url('mot-test/options/mot-checklist', {'motTestNumber' : heroAction.startMotViewModel.testNumberInProgress}) }}"
+                       target="_blank">
+                        MOT inspection sheet
+                    </a>
+                </li>
+                {% if heroAction.testingAdviceViewModel.isTestingAdviceAvailable %}
+                    <li class="c-action-list__item">
+                        <a class="c-action-list__link" href="{{ url(
+                        heroAction.testingAdviceViewModel.route,
+                        heroAction.testingAdviceViewModel.routeParameters,
+                        heroAction.testingAdviceViewModel.routeOptions
+                        ) }}">
+                            Testing advice for vehicle
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        {% endif %}
         <ul class="c-action-list">
         {#Links for hero box#}
+
             {% if heroAction.DashboardGuard.canViewAeInformationLink %}
             <li class="c-action-list__item">
                 <a class="c-action-list__link" href="{{ url('authorised-examiner-search') }}">

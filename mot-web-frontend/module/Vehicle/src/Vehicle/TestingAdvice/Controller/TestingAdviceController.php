@@ -8,7 +8,7 @@ use Vehicle\TestingAdvice\Action\DisplayAdviceAction;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 
-class AdviceController extends AbstractAuthActionController implements AutoWireableInterface
+class TestingAdviceController extends AbstractAuthActionController implements AutoWireableInterface
 {
     private $displayAdviceAction;
     private $paramObfuscator;
@@ -24,12 +24,26 @@ class AdviceController extends AbstractAuthActionController implements AutoWirea
         $noRegistration = $this->params()->fromQuery("noRegistration");
         $source = $this->params()->fromQuery("source");
         $motTestNumber = $this->params()->fromQuery("motTestNumber");
+        $navigateFrom = $this->params()->fromQuery("navigateFrom");
 
-        if ($motTestNumber) {
+        if ($navigateFrom == "home-page") {
+            // navigated from home page
+
+            $backLinkUrl = "/";
+            $backLinkLabel = "Return home";
+            $motTestResultsUrl = MotTestRoutes::of($this->url())->motTest($motTestNumber);
+            $breadcrumbs = ["MOT testing" => $motTestResultsUrl, "Testing advice for this vehicle" => ""];
+
+            $vehicleId = $this->paramObfuscator->deobfuscateEntry(ParamObfuscator::ENTRY_VEHICLE_ID, $vehicleId);
+        } else if ($motTestNumber) {
+            // navigated from a running mot test
+
             $backLinkUrl = MotTestRoutes::of($this->url())->motTest($motTestNumber);
             $backLinkLabel = "Back to MOT test results";
             $breadcrumbs = ["MOT test results" => $backLinkUrl, "Testing advice for this vehicle" => ""];
         } else {
+            // navigated from vehicle page, right before starting mot test
+
             $backLinkUrl = MotTestRoutes::of($this->url())->vehicleMotTestStartTest($vehicleId, $noRegistration, $source);
             $backLinkLabel = "Back to confirm vehicle";
             $breadcrumbs = ["MOT testing" => $backLinkUrl, "Testing advice for this vehicle" => ""];

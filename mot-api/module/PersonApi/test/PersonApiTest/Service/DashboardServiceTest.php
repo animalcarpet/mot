@@ -3,8 +3,10 @@
 namespace PersonApi\Service;
 
 use Doctrine\ORM\EntityRepository;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaAuthorisation\Service\AuthorisationService;
 use DvsaCommon\Auth\PermissionInSystem;
+use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonApiTest\Service\AbstractServiceTestCase;
 use Doctrine\ORM\EntityManager;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
@@ -68,6 +70,12 @@ class DashboardServiceTest extends AbstractServiceTestCase
     /** @var SiteBusinessRoleMapRepository */
     private $siteBusinessRoleMapRepository;
 
+    /** @var VehicleService */
+    private $vehicleService;
+
+    /** @var ParamObfuscator */
+    private $paramObfuscator;
+
     public function setUp()
     {
         $this->entityManager = XMock::of(EntityManager::class);
@@ -82,6 +90,8 @@ class DashboardServiceTest extends AbstractServiceTestCase
         $this->organisationRepository = XMock::of(OrganisationRepository::class);
         $this->organisationBusinessRoleRepository = XMock::of(OrganisationBusinessRoleRepository::class);
         $this->siteBusinessRoleMapRepository = XMock::of(SiteBusinessRoleMapRepository::class);
+        $this->vehicleService = XMock::of(VehicleService::class);
+        $this->paramObfuscator = XMock::of(ParamObfuscator::class);
     }
 
     public function testGetAesWithSitesAndPositions_empty()
@@ -393,7 +403,9 @@ class DashboardServiceTest extends AbstractServiceTestCase
             $this->notificationService,
             $this->personalAuthorisationService,
             $this->testerService,
-            $this->afaRepository
+            $this->afaRepository,
+            $this->vehicleService,
+            $this->paramObfuscator
         );
     }
 }

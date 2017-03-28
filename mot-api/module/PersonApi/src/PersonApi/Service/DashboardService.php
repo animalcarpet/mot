@@ -4,10 +4,12 @@ namespace PersonApi\Service;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaAuthorisation\Service\AuthorisationServiceInterface;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommon\Enum\BusinessRoleStatusCode;
 use DvsaCommon\Enum\OrganisationBusinessRoleCode;
+use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonApi\Service\AbstractService;
 use DvsaEntities\Entity;
@@ -19,11 +21,13 @@ use DvsaEntities\Entity\Site;
 use DvsaEntities\Entity\SiteBusinessRoleMap;
 use DvsaEntities\Repository\AuthorisationForAuthorisedExaminerRepository;
 use DvsaMotApi\Service\TesterService;
+use GuzzleHttp\Exception\ClientException;
 use NotificationApi\Service\NotificationService;
 use SiteApi\Service\SiteService;
 use UserApi\Dashboard\Dto\AuthorisationForAuthorisedExaminer;
 use UserApi\Dashboard\Dto\DashboardData;
 use UserApi\SpecialNotice\Service\SpecialNoticeService;
+use DvsaEntities\Entity\MotTest;
 
 /**
  * Data for dashboard
@@ -45,6 +49,10 @@ class DashboardService extends AbstractService
     /** @var $authForAeRepository AuthorisationForAuthorisedExaminerRepository */
     private $authForAeRepository;
 
+    private $vehicleService;
+
+    private $paramObfuscator;
+
     public function __construct(
         EntityManager $entityManager,
         AuthorisationServiceInterface $authorisationService,
@@ -53,7 +61,9 @@ class DashboardService extends AbstractService
         NotificationService $notificationService,
         PersonalAuthorisationForMotTestingService $personalAuthorisationService,
         TesterService $testerService,
-        EntityRepository $authForAeRepository
+        EntityRepository $authForAeRepository,
+        VehicleService $vehicleService,
+        ParamObfuscator $paramObfuscator
     ) {
         parent::__construct($entityManager);
 
@@ -64,6 +74,8 @@ class DashboardService extends AbstractService
         $this->personalAuthorisationService = $personalAuthorisationService;
         $this->testerService = $testerService;
         $this->authForAeRepository = $authForAeRepository;
+        $this->vehicleService = $vehicleService;
+        $this->paramObfuscator = $paramObfuscator;
     }
 
     /**
@@ -82,6 +94,8 @@ class DashboardService extends AbstractService
         $notifications = $this->notificationService->getUnreadByPersonId($personId, 5);
         $unreadNotificationsCount = $this->notificationService->countUnreadByPersonId($personId);
         $inProgressTest = $this->testerService->findInProgressTestForTester($personId);
+        $testedVehicleId = $this->getTestedVehicleId($inProgressTest);
+        $isTechnicalAdvicePresent = $this->isTestingAdvicePresent($inProgressTest);
         $inProgressDemoTestNumber = $this->testerService->findInProgressDemoTestNumberForTester($personId);
         $inProgressNonMotTestNumber = null;
         $isTesterQualified = $person->isQualifiedTester();
@@ -103,10 +117,46 @@ class DashboardService extends AbstractService
             $isTesterQualified,
             $isTesterActive,
             $inProgressTest !== null ? $inProgressTest->getMotTestType()->getCode() : null,
-            $this->authorisationService
+            $this->authorisationService,
+            $testedVehicleId,
+            $isTechnicalAdvicePresent
         );
 
         return $dashboard;
+    }
+
+    private function getTestedVehicleId(MotTest $motTest = null)
+    {
+        // vehicle id is onlt present if the user has a test in progress
+        if ($motTest !== null) {
+            $plainVehicleId = $motTest->getVehicle()->getId();
+
+            return $this->paramObfuscator->obfuscate($plainVehicleId);
+        }  else {
+            return $motTest;
+        }
+    }
+
+    private function isTestingAdvicePresent(MotTest $motTest = null)
+    {
+        if ($motTest === null) {
+            // no mot test, not testing advice
+            return false;
+        }
+
+        $vehicle = $motTest->getVehicle();
+        try {
+            // this will throw 404 if the advice doesn't exist
+            $this->vehicleService->getTestingAdvice($vehicle->getId());
+
+            return true;
+        } catch (ClientException $ex) {
+            if ($ex->getCode() == 404) {
+                return false;
+            } else {
+                throw $ex;
+            }
+        }
     }
 
     /**

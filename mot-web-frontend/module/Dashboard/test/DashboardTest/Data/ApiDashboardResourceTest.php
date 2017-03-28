@@ -101,7 +101,9 @@ class ApiDashboardResourceTest extends \PHPUnit_Framework_TestCase
             'sites'               => [],
             'inProgressTestNumber' => '123456789012',
             'inProgressDemoTestNumber' => '210987654321',
-            'inProgressTestTypeCode' => MotTestTypeCode::NORMAL_TEST
+            'inProgressTestTypeCode' => MotTestTypeCode::NORMAL_TEST,
+            'testedVehicleId' => 17,
+            'isTechnicalAdvicePresent' => true,
         ];
     }
 
@@ -122,7 +124,9 @@ class ApiDashboardResourceTest extends \PHPUnit_Framework_TestCase
             'inProgressTestNumber' => '123456789012',
             'inProgressDemoTestNumber' => null,
             'inProgressNonMotTestNumber' => '210987654321',
-            'inProgressTestTypeCode' => MotTestTypeCode::TARGETED_REINSPECTION
+            'inProgressTestTypeCode' => MotTestTypeCode::TARGETED_REINSPECTION,
+            'testedVehicleId' => 17,
+            'isTechnicalAdvicePresent' => true,
         ];
     }
 }

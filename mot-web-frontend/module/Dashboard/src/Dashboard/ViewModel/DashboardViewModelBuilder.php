@@ -121,15 +121,28 @@ class DashboardViewModelBuilder
         $slotsViewModel = $this->buildSlotsViewModel();
         $startMotViewModel = $this->buildStartMotViewModel();
         $targetedReinspectionViewModel = $this->buildTargetedReinspectionViewModel();
+        $testingAdviceViewModel = $this->buildTestingAdviceViewModel();
 
         $heroActionViewModel = new HeroActionViewModel(
             $this->dashboardGuard,
             $slotsViewModel,
             $startMotViewModel,
-            $targetedReinspectionViewModel
+            $targetedReinspectionViewModel,
+            $testingAdviceViewModel
         );
 
         return $heroActionViewModel;
+    }
+
+    private function buildTestingAdviceViewModel()
+    {
+        $testingAdviceViewModel = new TestingAdviceViewModel(
+            $this->dashboard->getIsTechnicalAdvicePresent(),
+            $this->dashboard->getTestedVehicleId(),
+            $this->dashboard->getInProgressTestNumber()
+        );
+
+        return $testingAdviceViewModel;
     }
 
     /**

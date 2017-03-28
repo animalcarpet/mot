@@ -42,19 +42,25 @@ class DashboardData
     private $authorisationService;
     private $unreadNotificationsCount;
 
+    private $testedVehicleId;
+
+    private $isTechnicalAdvicePresent;
+
     /**
      * @param AuthorisationForAuthorisedExaminer[] $authorisedExaminers
      * @param                                      $specialNotice
      * @param                                      $overdueSpecialNotices
-     * @param Notification[]                       $notifications
-     * @param int                                  $unreadNotificationsCount
+     * @param Notification[] $notifications
+     * @param int $unreadNotificationsCount
      * @param                                      $inProgressTestNumber
      * @param                                      $inProgressDemoTestNumber
      * @param                                      $inProgressNonMotTestNumber
      * @param                                      $isTesterQualified
      * @param                                      $isTesterActive
      * @param                                      $inProgressTestTypeCode
-     * @param MotAuthorisationServiceInterface     $authorisationService
+     * @param MotAuthorisationServiceInterface $authorisationService
+     * @param $testedVehicleId
+     * @param $isTechnicalAdvicePresent
      */
     public function __construct(
         $authorisedExaminers,
@@ -68,7 +74,9 @@ class DashboardData
         $isTesterQualified,
         $isTesterActive,
         $inProgressTestTypeCode,
-        MotAuthorisationServiceInterface $authorisationService
+        MotAuthorisationServiceInterface $authorisationService,
+        $testedVehicleId,
+        $isTechnicalAdvicePresent
     ) {
         $this->setAuthorisedExaminers($authorisedExaminers);
         $this->setSpecialNotice(new SpecialNotice($specialNotice));
@@ -81,6 +89,8 @@ class DashboardData
         $this->setInProgressTestTypeCode($inProgressTestTypeCode);
         $this->authorisationService = $authorisationService;
         $this->setHero($this->authorisationService->getHero());
+        $this->testedVehicleId = $testedVehicleId;
+        $this->isTechnicalAdvicePresent = $isTechnicalAdvicePresent;
     }
 
     /**
@@ -111,7 +121,9 @@ class DashboardData
             'inProgressTestNumber'   => $this->inProgressTestNumber,
             'inProgressTestTypeCode' => $this->inProgressTestTypeCode,
             'inProgressDemoTestNumber' => $this->inProgressDemoTestNumber,
-            'inProgressNonMotTestNumber' => $this->inProgressNonMotTestNumber
+            'inProgressNonMotTestNumber' => $this->inProgressNonMotTestNumber,
+            'testedVehicleId' => $this->testedVehicleId,
+            'isTechnicalAdvicePresent' => $this->isTechnicalAdvicePresent,
         ];
     }
 

@@ -3,7 +3,9 @@
 namespace PersonApiTest\Factory\Service;
 
 use Doctrine\ORM\EntityManager;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
 use DvsaAuthorisation\Service\AuthorisationService;
+use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Repository\AuthorisationForAuthorisedExaminerRepository;
@@ -41,14 +43,16 @@ class DashboardServiceFactoryTest extends \PHPUnit_Framework_TestCase
 
         $mockServiceLocator = XMock::of(ServiceLocatorInterface::class, ['get']);
         $this->mockMethod($mockServiceLocator, 'get', $this->at(0), $entityManager);
-        $this->mockMethod($mockServiceLocator, 'get', $this->at(1), XMock::of(AuthorisationService::class));
-        $this->mockMethod($mockServiceLocator, 'get', $this->at(2), XMock::of(SiteService::class));
-        $this->mockMethod($mockServiceLocator, 'get', $this->at(3), XMock::of(SpecialNoticeService::class));
-        $this->mockMethod($mockServiceLocator, 'get', $this->at(4), XMock::of(NotificationService::class));
+        $this->mockMethod($mockServiceLocator, 'get', $this->at(1), XMock::of(VehicleService::class));
+        $this->mockMethod($mockServiceLocator, 'get', $this->at(2), XMock::of(ParamObfuscator::class));
+        $this->mockMethod($mockServiceLocator, 'get', $this->at(3), XMock::of(AuthorisationService::class));
+        $this->mockMethod($mockServiceLocator, 'get', $this->at(4), XMock::of(SiteService::class));
+        $this->mockMethod($mockServiceLocator, 'get', $this->at(5), XMock::of(SpecialNoticeService::class));
+        $this->mockMethod($mockServiceLocator, 'get', $this->at(6), XMock::of(NotificationService::class));
         $this->mockMethod(
-            $mockServiceLocator, 'get', $this->at(5), XMock::of(PersonalAuthorisationForMotTestingService::class)
+            $mockServiceLocator, 'get', $this->at(7), XMock::of(PersonalAuthorisationForMotTestingService::class)
         );
-        $this->mockMethod($mockServiceLocator, 'get', $this->at(6), XMock::of(TesterService::class));
+        $this->mockMethod($mockServiceLocator, 'get', $this->at(8), XMock::of(TesterService::class));
 
         $this->assertInstanceOf(
             DashboardService::class,

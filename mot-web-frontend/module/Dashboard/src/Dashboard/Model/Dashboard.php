@@ -47,6 +47,10 @@ class Dashboard
     /** @var  $inProgressTestTypeCode string */
     private $inProgressTestTypeCode;
 
+    private $testedVehicleId;
+
+    private $isTechnicalAdvicePresent;
+
     public function __construct($data)
     {
         $this->setHero(ArrayUtils::get($data, 'hero'));
@@ -59,6 +63,8 @@ class Dashboard
         $this->setInProgressTestTypeCode(ArrayUtils::get($data, 'inProgressTestTypeCode'));
         $this->setInProgressDemoTestNumber(ArrayUtils::tryGet($data, 'inProgressDemoTestNumber'));
         $this->setInProgressNonMotTestNumber(ArrayUtils::tryGet($data, 'inProgressNonMotTestNumber'));
+        $this->setTestedVehicleId(ArrayUtils::get($data, 'testedVehicleId'));
+        $this->setIsTechnicalAdvicePresent(ArrayUtils::get($data, 'isTechnicalAdvicePresent'));
     }
 
     /**
@@ -339,6 +345,28 @@ class Dashboard
     public function getInProgressNonMotTestNumber()
     {
         return $this->inProgressNonMotTestNumber;
+    }
+
+    public function getTestedVehicleId()
+    {
+        return $this->testedVehicleId;
+    }
+
+    public function setTestedVehicleId($testedVehicleId)
+    {
+        $this->testedVehicleId = $testedVehicleId;
+        return $this;
+    }
+
+    public function getIsTechnicalAdvicePresent()
+    {
+        return $this->isTechnicalAdvicePresent;
+    }
+
+    public function setIsTechnicalAdvicePresent($isTechnicalAdvicePresent)
+    {
+        $this->isTechnicalAdvicePresent = $isTechnicalAdvicePresent;
+        return $this;
     }
 
     /**
