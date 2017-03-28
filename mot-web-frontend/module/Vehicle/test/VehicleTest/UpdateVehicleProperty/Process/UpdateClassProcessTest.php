@@ -98,7 +98,9 @@ class UpdateClassProcessTest extends \PHPUnit_Framework_TestCase
             ->expects($this->never())
             ->method('getChangedValue')
             ->with(StartTestChangeService::CHANGE_CLASS)
-            ->willReturn('1');
+            ->willReturn([
+                'class' => '1'
+            ]);
         $data = $this->sut->getPrePopulatedData();
 
         $this->assertSame(self::VEHICLE_CLASS, $data[UpdateClassForm::FIELD_CLASS]);
@@ -125,7 +127,9 @@ class UpdateClassProcessTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getChangedValue')
             ->with(StartTestChangeService::CHANGE_CLASS)
-            ->willReturn('1');
+            ->willReturn([
+                'class' => '1'
+            ]);
         $data = $this->sut->getPrePopulatedData();
 
         $this->assertSame(self::SESSION_VEHICLE_CLASS, $data[UpdateClassForm::FIELD_CLASS]);
@@ -143,7 +147,9 @@ class UpdateClassProcessTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getChangedValue')
             ->with(StartTestChangeService::CHANGE_CLASS)
-            ->willReturn('1');
+            ->willReturn([
+                'class' => '1'
+            ]);
         $data = $this->sut->getPrePopulatedData();
 
         $this->assertSame(self::SESSION_VEHICLE_CLASS, $data[UpdateClassForm::FIELD_CLASS]);
