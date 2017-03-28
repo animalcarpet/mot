@@ -596,6 +596,8 @@ class UserHomeControllerTest extends AbstractFrontendControllerTestCase
             'inProgressTestNumber'   => null,
             'inProgressTestTypeCode' => null,
             'authorisedExaminers'    => [],
+            'testedVehicleId' => 17,
+            'isTechnicalAdvicePresent' => true,
         ];
     }
 

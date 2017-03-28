@@ -3,6 +3,8 @@
 namespace PersonApi\Factory\Service;
 
 use Doctrine\ORM\EntityManager;
+use Dvsa\Mot\ApiClient\Service\VehicleService;
+use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaEntities\Entity\AuthorisationForAuthorisedExaminer;
 use NotificationApi\Service\NotificationService;
 use SiteApi\Service\SiteService;
@@ -19,16 +21,11 @@ class DashboardServiceFactory implements FactoryInterface
         /** @var EntityManager $entityManager */
         $entityManager = $serviceLocator->get(EntityManager::class);
 
-        /**
-         * @param EntityManager                             $entityManager
-         * @param AuthorisationServiceInterface             $authorisationService
-         * @param SiteService                               $siteService
-         * @param SpecialNoticeService                      $specialNoticeService
-         * @param NotificationService                       $notificationService
-         * @param PersonalAuthorisationForMotTestingService $personalAuthorisationService
-         * @param TesterService                             $testerService
-         * @param EntityRepository                          $authForAeRepository
-         */
+        /** @var VehicleService $vehicleService */
+        $vehicleService = $serviceLocator->get(VehicleService::class);
+
+        /** @var ParamObfuscator $paramObfuscator */
+        $paramObfuscator = $serviceLocator->get(ParamObfuscator::class);
 
         return new DashboardService(
             $entityManager,
@@ -38,7 +35,9 @@ class DashboardServiceFactory implements FactoryInterface
             $serviceLocator->get(NotificationService::class),
             $serviceLocator->get(PersonalAuthorisationForMotTestingService::class),
             $serviceLocator->get('TesterService'),
-            $entityManager->getRepository(AuthorisationForAuthorisedExaminer::class)
+            $entityManager->getRepository(AuthorisationForAuthorisedExaminer::class),
+            $vehicleService,
+            $paramObfuscator
         );
     }
 }

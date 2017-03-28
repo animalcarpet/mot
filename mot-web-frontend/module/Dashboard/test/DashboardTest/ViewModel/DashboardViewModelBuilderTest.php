@@ -194,6 +194,8 @@ class DashboardViewModelBuilderTest extends PHPUnit_Framework_TestCase
             'inProgressDemoTestNumber' => '',
             'inProgressNonMotTestNumber' => '',
             'unreadNotificationsCount' => 0,
+            'testedVehicleId' => 17,
+            'isTechnicalAdvicePresent' => true,
         ];
         
         $dashboard = new Dashboard(array_merge($dashboardDataDefaults, $this->dashboardData));

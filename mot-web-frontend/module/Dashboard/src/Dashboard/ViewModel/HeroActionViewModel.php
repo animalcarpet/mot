@@ -18,6 +18,8 @@ class HeroActionViewModel
     /** @var TargetedReinspectionViewModel $targetedReinspectionViewModel */
     private $targetedReinspectionViewModel;
 
+    private $testingAdviceViewModel;
+
     /**
      * HeroActionViewModel constructor.
      *
@@ -25,17 +27,21 @@ class HeroActionViewModel
      * @param SlotsViewModel                           $slotsViewModel
      * @param StartMotViewModel                        $startMotViewModel
      * @param TargetedReinspectionViewModel            $targetedReinspectionViewModel
+     * @param TestingAdviceViewModel                   $testingAdviceViewModel
      */
     public function __construct(
         DashboardGuard $dashboardGuard,
         SlotsViewModel $slotsViewModel,
         StartMotViewModel $startMotViewModel,
-        TargetedReinspectionViewModel $targetedReinspectionViewModel)
+        TargetedReinspectionViewModel $targetedReinspectionViewModel,
+        TestingAdviceViewModel $testingAdviceViewModel
+    )
     {
         $this->dashboardGuard = $dashboardGuard;
         $this->slotsViewModel = $slotsViewModel;
         $this->startMotViewModel = $startMotViewModel;
         $this->targetedReinspectionViewModel = $targetedReinspectionViewModel;
+        $this->testingAdviceViewModel = $testingAdviceViewModel;
     }
 
     /**
@@ -106,5 +112,10 @@ class HeroActionViewModel
     public function getTargetedReinspectionViewModel()
     {
         return $this->targetedReinspectionViewModel;
+    }
+
+    public function getTestingAdviceViewModel()
+    {
+        return $this->testingAdviceViewModel;
     }
 }

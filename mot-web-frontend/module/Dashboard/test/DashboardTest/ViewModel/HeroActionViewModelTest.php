@@ -7,6 +7,7 @@ use Dashboard\ViewModel\HeroActionViewModel;
 use Dashboard\ViewModel\SlotsViewModel;
 use Dashboard\ViewModel\StartMotViewModel;
 use Dashboard\ViewModel\TargetedReinspectionViewModel;
+use Dashboard\ViewModel\TestingAdviceViewModel;
 use DvsaCommonTest\TestUtils\XMock;
 use PHPUnit_Framework_TestCase;
 
@@ -98,7 +99,8 @@ class HeroActionViewModelTest extends PHPUnit_Framework_TestCase
             $this->mockDashboardGuard,
             $this->mockSlotsViewModel,
             $this->mockStartMotViewModel,
-            $this->mockTargetedReinspectionViewModel
+            $this->mockTargetedReinspectionViewModel,
+            XMock::of(TestingAdviceViewModel::class)
         );
     }
 }
