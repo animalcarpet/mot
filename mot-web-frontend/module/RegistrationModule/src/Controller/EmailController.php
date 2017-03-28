@@ -75,6 +75,7 @@ class EmailController extends RegistrationBaseController
         }
 
         $this->setLayout($title, $subtitle, $step->getProgress());
+        $this->setHeadTitle('Your email address');
 
         return new ViewModel($step->toViewArray());
     }

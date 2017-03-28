@@ -15,6 +15,14 @@ use Zend\Http\Request;
 use Zend\Mvc\Controller\Plugin\Redirect;
 use Zend\Stdlib\ParametersInterface;
 use Zend\View\Model\ViewModel;
+use PHPUnit_Framework_MockObject_MockObject;
+use Zend\Mvc\Service\ViewHelperManagerFactory;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceManager;
+use Zend\View\Helper\Url;
+use Zend\View\HelperPluginManager;
+use Zend\View\Helper\HeadTitle;
+
 
 class EmailControllerTest extends \PHPUnit_Framework_TestCase
 {
@@ -67,6 +75,9 @@ class EmailControllerTest extends \PHPUnit_Framework_TestCase
 
         $controller->expects($this->once())->method('getRequest')->willReturn($request);
 
+        $serviceLocator = $this->getServiceLocatorMock();
+        $controller->setServiceLocator($serviceLocator);
+
         $result = $controller->indexAction();
 
         $this->assertInstanceOf(ViewModel::class, $result);
@@ -101,6 +112,9 @@ class EmailControllerTest extends \PHPUnit_Framework_TestCase
             ->getMockForAbstractClass();
 
         $controller->expects($this->exactly(2))->method('getRequest')->willReturn($request);
+
+        $serviceLocator = $this->getServiceLocatorMock();
+        $controller->setServiceLocator($serviceLocator);
 
         $result = $controller->indexAction();
 
@@ -148,6 +162,9 @@ class EmailControllerTest extends \PHPUnit_Framework_TestCase
         $controller->expects($this->exactly(2))->method('getRequest')->willReturn($request);
         $controller->expects($this->once())->method('redirect')->willReturn($redirect);
 
+        $serviceLocator = $this->getServiceLocatorMock();
+        $controller->setServiceLocator($serviceLocator);
+
         $controller->indexAction();
     }
 
@@ -188,6 +205,9 @@ class EmailControllerTest extends \PHPUnit_Framework_TestCase
         $controller->expects($this->exactly(2))->method('getRequest')->willReturn($request);
         $controller->expects($this->once())->method('redirect')->willReturn($redirect);
 
+        $serviceLocator = $this->getServiceLocatorMock();
+        $controller->setServiceLocator($serviceLocator);
+
         $controller->indexAction();
     }
 
@@ -197,5 +217,28 @@ class EmailControllerTest extends \PHPUnit_Framework_TestCase
             EmailInputFilter::FIELD_EMAIL     => "test@dvsa.com",
             EmailInputFilter::FIELD_EMAIL_CONFIRM    => "test@dvsa.com",
         ];
+    }
+
+    /**
+     * @return PHPUnit_Framework_MockObject_MockObject|ServiceLocatorInterface
+     * @throws \Exception
+     */
+    private function getServiceLocatorMock()
+    {
+        $helperPluginManager = XMock::of(HelperPluginManager::class);
+        $helperPluginManager
+            ->expects($this->any())
+            ->method('get')
+            ->with('headTitle')
+            ->willReturn(XMock::of(HeadTitle::class));
+
+        /**  @var ServiceLocatorInterface | PHPUnit_Framework_MockObject_MockObject $serviceLocator */
+        $serviceLocator = XMock::of(ServiceLocatorInterface::class);
+        $serviceLocator
+            ->expects($this->any())
+            ->method('get')
+            ->with('ViewHelperManager')
+            ->willReturn($helperPluginManager);
+        return $serviceLocator;
     }
 }

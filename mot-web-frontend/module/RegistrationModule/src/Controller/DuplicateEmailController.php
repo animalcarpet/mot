@@ -20,6 +20,7 @@ class DuplicateEmailController extends AbstractDvsaActionController
             'pageSubTitle' => RegistrationBaseController::DEFAULT_SUB_TITLE,
         ]);
 
+        $this->setHeadTitle('This email is already in use');
         return $viewModel;
     }
 }

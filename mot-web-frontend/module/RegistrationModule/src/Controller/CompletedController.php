@@ -117,6 +117,7 @@ class CompletedController extends RegistrationBaseController
             ? $values[EmailStep::STEP_ID][EmailInputFilter::FIELD_EMAIL]
             : null;
 
+        $this->setHeadTitle('Your account has been created');
         $this->session->destroy();
 
         return new ViewModel([

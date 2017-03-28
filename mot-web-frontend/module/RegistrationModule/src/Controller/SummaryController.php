@@ -48,6 +48,7 @@ class SummaryController extends RegistrationBaseController
             $viewModel->setVariable('helpDesk', $this->helpDeskConfig);
         }
 
+        $this->setHeadTitle('Review your account details');
         return $viewModel;
     }
 }

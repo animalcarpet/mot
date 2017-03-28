@@ -18,6 +18,7 @@ class SecurityQuestionOneController extends RegistrationBaseController
 
     public function indexAction()
     {
+        $this->setHeadTitle('First security question');
         return $this->doStepLogic(SecurityQuestionOneStep::STEP_ID, self::PAGE_TITLE, self::DEFAULT_SUB_TITLE);
     }
 }
