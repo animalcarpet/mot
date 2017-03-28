@@ -20,6 +20,7 @@ class ChangeSecurityQuestionTwoController extends AbstractDvsaActionController
     {
         $result = $this->action->execute($this->getRequest());
         $this->buildBreadcrumbs();
+        $this->setHeadTitle('Second security question');
         return $this->applyActionResult($result);
     }
 

@@ -138,6 +138,9 @@ class PersonProfileController extends AbstractAuthActionController
 
         if($context === ContextProvider::YOUR_PROFILE_CONTEXT) {
             $this->layout()->setVariable('isYourProfile', true);
+            $this->setHeadTitle('Your profile');
+        } else {
+            $this->setHeadTitle('User profile');
         }
 
         $profileSidebar = $this->createProfileSidebar($personId, $personProfileGuard);

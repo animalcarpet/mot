@@ -121,6 +121,8 @@ class ChangeAddressController extends AbstractDvsaMotTestController
         }
 
         $this->layout('layout/layout-govuk.phtml');
+        $this->setHeadTitle('Change address');
+
         $this->layout()->setVariable('pageTitle', self::PAGE_TITLE);
         $this->layout()->setVariable('pageSubTitle',
             $personProfileGuard->isViewingOwnProfile()
@@ -238,6 +240,7 @@ class ChangeAddressController extends AbstractDvsaMotTestController
         }
         $this->layout('layout/layout-govuk.phtml');
         $this->layout()->setVariable('pageTitle', 'Review address change');
+        $this->setHeadTitle('Review address change');
         $this->layout()->setVariable('pageSubTitle',
             $personProfileGuard->isViewingOwnProfile()
                 ? 'Your profile'

@@ -145,6 +145,8 @@ class EmailAddressController extends AbstractDvsaActionController
         }
         $result->setTemplate(self::CHANGE_EMAIL_TEMPLATE);
 
+        $this->setHeadTitle('Change email address');
+
         $presenter = $this->createPresenter($personId);
 
         if ($presenter) {

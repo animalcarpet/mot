@@ -22,6 +22,7 @@ class ChangeSecurityQuestionsConfirmationController extends AbstractDvsaActionCo
     {
         $result = $this->action->execute();
         $this->buildBreadcrumbs();
+        $this->setHeadTitle('Your security questions have been changed');
         return $this->applyActionResult($result);
     }
 

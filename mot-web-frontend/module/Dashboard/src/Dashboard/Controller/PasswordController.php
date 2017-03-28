@@ -37,6 +37,8 @@ class PasswordController extends AbstractAuthActionController
         $this->layout('layout/layout-govuk.phtml');
         $this->layout()->setVariable('pageSubTitle', "Your profile");
         $this->layout()->setVariable('pageTitle', "Change your password");
+        $this->setHeadTitle('Change your password');
+        
         $breadcrumbs = [
             'Your profile'         => '/your-profile',
             'Change your password' => '',

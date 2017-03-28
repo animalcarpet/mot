@@ -125,6 +125,7 @@ class ChangeTelephoneController extends AbstractAuthActionController
         $this->layout('layout/layout-govuk.phtml');
         $this->layout()->setVariable('pageTitle', 'Change telephone number');
         $this->layout()->setVariable('pageSubTitle', $subtitle);
+        $this->setHeadTitle('Change telephone number');
 
         if ($data = $this->sessionService->load(self::SESSION_STORAGE_KEY_PREFIX . $personId)) {
             // If we've come from the summary window, we want to load the phone data stored in the session
