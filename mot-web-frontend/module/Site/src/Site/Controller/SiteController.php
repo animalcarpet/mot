@@ -203,6 +203,8 @@ class SiteController extends AbstractAuthActionController
             $site->getContactByType(SiteContactTypeCode::BUSINESS)->getAddress()->getFullAddressString()
         );
 
+        $this->setHeadTitle('Vehicle Testing Station');
+
         $this->setUpIndexSidebar(
             $site->getStatus(), $testInProgress, is_object($site->getAssessment()), $ragClassifier
         );
@@ -399,6 +401,8 @@ class SiteController extends AbstractAuthActionController
                 ->getAddress()->getFullAddressString()
         );
 
+        $this->setHeadTitle('Change testing facilities');
+
         return $this->prepareViewModel(
             $viewModel,
             self::EDIT_TESTING_FACILITIES,
@@ -461,6 +465,8 @@ class SiteController extends AbstractAuthActionController
             $vtsDto->getContactByType(SiteContactTypeCode::BUSINESS)
                 ->getAddress()->getFullAddressString()
         );
+
+        $this->setHeadTitle('Review change to testing facilities');
 
         return $this->prepareViewModel(
             $viewModel,
