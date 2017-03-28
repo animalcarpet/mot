@@ -18,6 +18,7 @@ class SecurityQuestionTwoController extends RegistrationBaseController
 
     public function indexAction()
     {
+        $this->setHeadTitle('Second security question');
         return $this->doStepLogic(SecurityQuestionTwoStep::STEP_ID, self::PAGE_TITLE, self::DEFAULT_SUB_TITLE);
     }
 }
