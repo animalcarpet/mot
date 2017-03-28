@@ -315,7 +315,7 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getChangedValue')
             ->with(StartTestChangeService::CHANGE_COUNTRY)
-            ->willReturn(CountryOfRegistrationId::CY_CY_CYPRUS);
+            ->willReturn(['country' => CountryOfRegistrationId::CY_CY_CYPRUS]);
 
         $this->updateCountryRegistrationProcess->setContext($updateVehicleContext);
 
@@ -361,7 +361,7 @@ class UpdateCountryOfRegistrationProcessTest extends \PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('getChangedValue')
             ->with(StartTestChangeService::CHANGE_COUNTRY)
-            ->willReturn(CountryOfRegistrationId::CY_CY_CYPRUS);
+            ->willReturn(['country' => CountryOfRegistrationId::CY_CY_CYPRUS]);
 
         $this->updateCountryRegistrationProcess->setContext($updateVehicleContext);
 

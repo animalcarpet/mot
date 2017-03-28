@@ -68,7 +68,10 @@ class UpdateCountryOfRegistrationProcess implements UpdateVehicleInterface, Auto
     public function update($formData)
     {
         if ($this->context->isUpdateVehicleDuringTest()) {
-            $this->startTestChangeService->saveChange(StartTestChangeService::CHANGE_COUNTRY, $formData[CountryOfRegistrationForm::FIELD_COUNTRY_OF_REGISTRATION]);
+            $this->startTestChangeService->saveChange(StartTestChangeService::CHANGE_COUNTRY, [
+                    StartTestChangeService::CHANGE_COUNTRY => $formData[CountryOfRegistrationForm::FIELD_COUNTRY_OF_REGISTRATION
+                ]
+            ]);
             $this->startTestChangeService->updateChangedValueStatus(StartTestChangeService::CHANGE_COUNTRY, true);
         } else {
             $updateRequest = new UpdateDvsaVehicleRequest();
@@ -204,7 +207,7 @@ class UpdateCountryOfRegistrationProcess implements UpdateVehicleInterface, Auto
             }
 
             if ($isCountryOfRegistrationChanged) {
-                return $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_COUNTRY);
+                return $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_COUNTRY)[StartTestChangeService::CHANGE_COUNTRY];
             }
 
             return $this->context->getVehicle()->getCountryOfRegistrationId();

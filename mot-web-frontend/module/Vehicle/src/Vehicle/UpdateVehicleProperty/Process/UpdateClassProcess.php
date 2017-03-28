@@ -60,7 +60,10 @@ class UpdateClassProcess implements UpdateVehicleInterface , AutoWireableInterfa
     public function update($formData)
     {
         if ($this->context->isUpdateVehicleDuringTest()) {
-            $this->startTestChangeService->saveChange(StartTestChangeService::CHANGE_CLASS, $formData[UpdateClassForm::FIELD_CLASS]);
+            $this->startTestChangeService->saveChange(StartTestChangeService::CHANGE_CLASS, [
+                    StartTestChangeService::CHANGE_CLASS => $formData[UpdateClassForm::FIELD_CLASS
+                ]
+            ]);
             $this->startTestChangeService->updateChangedValueStatus(StartTestChangeService::CHANGE_CLASS, true);
         } else {
             $request = new UpdateDvsaVehicleRequest();
@@ -265,7 +268,7 @@ class UpdateClassProcess implements UpdateVehicleInterface , AutoWireableInterfa
     private function getDvsaVehicleClass($isValueChanged, DvsaVehicle $vehicle)
     {
         if ($isValueChanged) {
-            return $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS);
+            return $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS)[StartTestChangeService::CHANGE_CLASS];
         }
 
         return $vehicle->getVehicleClass()->getCode();
@@ -279,7 +282,7 @@ class UpdateClassProcess implements UpdateVehicleInterface , AutoWireableInterfa
     private function getDvlaVehicleClass($isValueChanged)
     {
         if ($isValueChanged) {
-            return $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS);
+            return $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS)[StartTestChangeService::CHANGE_CLASS];
         }
 
         return null;

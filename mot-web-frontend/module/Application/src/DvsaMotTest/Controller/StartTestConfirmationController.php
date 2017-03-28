@@ -285,7 +285,7 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
             : $this->vehicleDetails->getCylinderCapacity();
         $vehicleClassCode = $this->startTestChangeService
             ->isValueChanged(StartTestChangeService::CHANGE_CLASS)
-            ? $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS)
+            ? $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS)[StartTestChangeService::CHANGE_CLASS]
             : $this->vehicleDetails->getVehicleClass()->getCode();
         $vehicleMake = $isMakeAndModelChanged
             ? $makeDetailsFromSession
@@ -294,7 +294,7 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
             ? $modelDetailsFromSession
             : null;
         $countryOfRegistration = $isCountryOfRegistationChangedInSession
-            ? $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_COUNTRY)
+            ? $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_COUNTRY)[StartTestChangeService::CHANGE_COUNTRY]
             : $this->vehicleDetails->getCountryOfRegistrationId();
 
         if (is_null($secondaryColour) || empty($secondaryColour)) {
@@ -403,11 +403,11 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
         }
 
         if ($this->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_CLASS)) {
-            $viewModel->setMotTestClass($this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS));
+            $viewModel->setMotTestClass($this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_CLASS)[StartTestChangeService::CHANGE_CLASS]);
         }
 
         $isCountryOfRegistrationChanged = $this->startTestChangeService->isValueChanged(StartTestChangeService::CHANGE_COUNTRY);
-        $countryOfRegistrationFromSession = $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_COUNTRY);
+        $countryOfRegistrationFromSession = $this->startTestChangeService->getChangedValue(StartTestChangeService::CHANGE_COUNTRY)[StartTestChangeService::CHANGE_COUNTRY];
         $country = $this->countryOfRegistrationCatalog->getByCode(
             $isCountryOfRegistrationChanged
                 ? $countryOfRegistrationFromSession
