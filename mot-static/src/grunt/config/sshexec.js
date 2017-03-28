@@ -89,7 +89,7 @@ module.exports = function (grunt, config) {
                 coverage: {
                     api: {
                         defaultCoverageType: 'html',
-                        baseCmd: 'cd <%= vagrant_config.workspace %>/mot-api && source /opt/rh/php55/enable && vendor/bin/phpunit',
+                        baseCmd: 'cd <%= vagrant_config.workspace %>/mot-api && source /opt/rh/rh-php56/enable && vendor/bin/phpunit',
                         cloverPath: '<%= vagrant_config.workspace %>/coverage/api-coverage.xml',
                         htmlPath: '<%= vagrant_config.workspace %>/coverage/api-coverage'
                     },

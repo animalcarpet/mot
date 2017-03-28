@@ -30,9 +30,10 @@ if ($this->authorisationHelper()->hasRole(\DvsaCommon\Constants\Role::USER)) {
         echo $this->headLink()
             ->appendStylesheet($this->basePath('css/bootstrap.min.css'))
             ->appendStylesheet($this->basePath('css/font-awesome.min.css'))
-            ->appendStylesheet($this->basePath('css/app.css'));
+            ->appendStylesheet($this->basePath('css/app.css'))
+            ->appendStylesheet($this->basePath('css/refactor.css'));
 
-        // Items must be pre-pended in reverse order so that, any items appended will get added
+    // Items must be pre-pended in reverse order so that, any items appended will get added
         // after our files. This guarantees all libraries to be enabled in all pages.
         echo $this->headScript()
             ->prependFile(
@@ -64,42 +65,14 @@ if ($this->authorisationHelper()->hasRole(\DvsaCommon\Constants\Role::USER)) {
     })(window,document,'script','dataLayer','GTM-PS5VXQ');</script>
 <!-- End Google Tag Manager -->
 <?php endif; ?>
-<header class="module-global-header">
-    <div class="container" id="user-info">
-        <a class="global-header_home-link" href="<?php echo $this->basePath('/'); ?>"><img src="<?php echo $this->basePath('img/logo_mot2.gif'); ?>" alt="MOT"></a>
 
-        <?php if ($this->authorisationHelper()->hasRole(\DvsaCommon\Constants\Role::USER)): ?>
-            <p class="global-header_name">
-                <?php echo $this->escapeHtml($this->identityHelper()->getDisplayName()); ?>
-            </p>
-        <?php endif; ?>
+<?php echo $this->partial('partial/fragments/header-govuk',
+    [
+        'hideUserNav' => $this->hideUserNav,
+        'isHomePage' => $this->isHomePage,
+        'isYourProfile' => $this->isYourProfile
+    ]); ?>
 
-        <?php if ($this->authorisationHelper() && $this->authorisationHelper()->isTester()): ?>
-            <p class="global-header_address" id="current-site">
-                <?php
-                /** @var $vts \Dvsa\Mot\Frontend\AuthenticationModule\Model\VehicleTestingStation */
-                $vts = $this->identityHelper()->getCurrentVts(); ?>
-                <?php if (null !== $vts) : ?>
-                    <span><?php echo $this->escapeHtml($vts->getName()); ?></span>,
-                    <span><?php echo $this->escapeHtml($vts->getAddress()); ?></span>
-                    <?php echo $this->locationSelector(); ?>
-                <?php endif; ?>
-            </p>
-        <?php endif; ?>
-
-        <?php if ($this->authorisationHelper()->hasRole(\DvsaCommon\Constants\Role::USER)): ?>
-            <nav class="global-header_navigation">
-                <ul>
-                    <li><a href="<?php echo $this->url(UserHomeController::ROUTE); ?>" class="selected" id="homepage">Home</a></li>
-                    <li><a href="<?php
-                        echo $this->url('newProfile', [], [])
-                    ?>" id="user-profile">Your profile</a></li>
-                    <li><a href="<?php echo $this->url(LogoutController::ROUTE_LOGOUT); ?>" id="logout">Sign out</a></li>
-                </ul>
-            </nav>
-        <?php endif; ?>
-    </div>
-</header>
 <div class="container">
     <div class="module-colour-flash">
     </div>
@@ -163,7 +136,7 @@ if ($this->authorisationHelper()->hasRole(\DvsaCommon\Constants\Role::USER)) {
         <div class="row contents">
             <div class="col-lg-12">
                 <?php echo $this->content; //this is HTML page content!?>
-            </div
+            </div>
         </div>
     <?php endif; ?>
 
