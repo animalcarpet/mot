@@ -103,7 +103,7 @@ public abstract class AbstractReasonsForRejectionPage extends Page {
 
     private boolean isDangerousShownForDefect(Defect defect) {
         return PageInteractionHelper.isElementDisplayed(By.xpath(String.format(
-                "//*[@id='rfrList']//strong[contains(text(), '%s')]/../span[contains(@class, 'defect__is-dangerous')]",
+                "//*[@id='rfrList']//h4[contains(text(),'%s')]/../strong[contains(@class,'defect__is-dangerous')]",
                 defect.getAddOrRemoveName())));
     }
 }

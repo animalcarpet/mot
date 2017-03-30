@@ -38,16 +38,16 @@
 <div class="action-panel">
     <div class="u-clearfix">
         <div class="action-panel__container">
-            <h3 class="action-panel__heading">Odometer</h3>
+            <h2 class="action-panel__heading">Odometer</h2>
         </div>
         <div id="odometerReading" class="action-panel__container">
-            <h3 class="action-panel__value">
+            <span class="action-panel__value">
                 {% if odometerReading.hasNumericValue %}
                     {{ odometerReading.getDisplayValue|escape|number_format }} {{ odometerReading.getUnitName }}
                 {% else %}
                     {{ odometerReading.getDisplayValue }}
                 {% endif %}
-            </h3>
+            </span>
             {% if odometerReading.hasNotice %}
                 <span id="odometerNotice" class="action-panel__meta">{{ odometerReading.getNotice }}</span>
             {% endif %}
@@ -64,8 +64,8 @@
 <div class="action-panel">
     <div class="u-clearfix">
         <div class="action-panel__container">
-            <h3 class="action-panel__heading">Defects</h3>
-            <h4 class="action-panel__sub-heading">Failures, PRS and Advisories</h4>
+            <h2 class="action-panel__heading">Defects</h2>
+            <span class="action-panel__sub-heading">Failures, PRS and Advisories</span>
         </div>
         <div class="action-panel__container--last">
             <a href="{{ url('mot-test-defects/categories', {motTestNumber : motTest.motTestNumber}) }}" id="addDefectButton" class="button">Add a defect</a>
@@ -83,11 +83,11 @@
 <div class="js-brakeTestActionPanel action-panel">
     <div class="u-clearfix">
         <div class="action-panel__container">
-            <h3 class="action-panel__heading">Brake test</h3>
-            <h4 class="action-panel__sub-heading"></h4>
+            <h2 class="action-panel__heading">Brake test</h2>
+            <span class="action-panel__sub-heading"></span>
         </div>
         <div class="action-panel__container">
-            <h3 id="brakeTestResultsNotice" class="js-brakeTestStatus action-panel__value">{{ motTestResults.brakeTestOutcome }}</h3>
+            <span id="brakeTestResultsNotice" class="js-brakeTestStatus action-panel__value">{{ motTestResults.brakeTestOutcome }}</span>
         </div>
 
         <div class="action-panel__container--last">

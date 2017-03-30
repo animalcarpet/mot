@@ -8,11 +8,14 @@
             <li class="defect">
                 <div>
                     {% if failure.isDangerous %}
-                        <span class="defect__is-dangerous">Dangerous</span>
+                        <span class="defect__is-dangerous" aria-hidden="true">Dangerous</span>
                     {% endif %}
-                    <strong class="defect__title">{{ failure.name }}</strong>
+                    <h4 class="defect__title">{{ failure.name }}</h4>
                     <p class="defect__meta">{{ failure.userComment }}</p>
-                    <h4 class="visuallyhidden">Position</h4>
+                    {% if failure.isDangerous %}
+                        <strong class="visuallyhidden">Dangerous</strong>
+                    {% endif %}
+                    <h5 class="visuallyhidden">Position</h5>
                     <ul class="defect__positions">
                         {% if failure.hasLocation %}
                             <li>Lateral: <span class="defect__property-list-value">{{ failure.lateralLocation|default('n/a') }}</span></li>
@@ -23,7 +26,7 @@
                         {% endif %}
                     </ul>
                 </div>
-                <h4 class="visuallyhidden">Actions</h4>
+                <h5 class="visuallyhidden">Actions</h5>
             </li>
         {% endfor %}
     </ol>
