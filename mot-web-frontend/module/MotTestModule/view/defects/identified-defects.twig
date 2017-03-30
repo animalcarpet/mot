@@ -15,11 +15,14 @@
 
         <div>
             {% if failure.isDangerous %}
-            <span class="defect__is-dangerous">Dangerous</span>
+                <strong class="defect__is-dangerous" aria-hidden="true">Dangerous</strong>
             {% endif %}
-            <strong class="defect__title">{{ failure.name }}</strong>
+            <h4 class="defect__title">{{ failure.name }}</h4>
             <p class="defect__meta">{{ failure.userComment }}</p>
-            <h4 class="visuallyhidden">Position</h4>
+            {% if failure.isDangerous %}
+                <strong class="visuallyhidden">Dangerous</strong>
+            {% endif %}
+            <h5 class="visuallyhidden">Position</h5>
             <ul class="defect__positions">
                 {% if failure.hasLocation %}
                     <li>Lateral: <span class="defect__property-list-value">{{ failure.lateralLocation|default('n/a') }}</span></li>
@@ -30,7 +33,7 @@
                 {% endif %}
             </ul>
         </div>
-        <h4 class="visuallyhidden">Actions</h4>
+        <h5 class="visuallyhidden">Actions</h5>
 
         <ul class="defect__edit">
             {% if failure.isRepairable(isRetest) %}
@@ -77,10 +80,13 @@
 
                 <div>
                     {% if prs.isDangerous %}
-                        <span class="defect__is-dangerous">Dangerous</span>
+                        <strong class="defect__is-dangerous" aria-hidden="true">Dangerous</strong>
                     {% endif %}
-                    <strong class="defect__title">{{ prs.name }}</strong>
+                    <h4 class="defect__title">{{ prs.name }}</h4>
                     <p class="defect__meta">{{ prs.userComment }}</p>
+                    {% if prs.isDangerous %}
+                        <strong class="visuallyhidden">Dangerous</strong>
+                    {% endif %}
                     <h4 class="visuallyhidden">Position</h4>
                     <ul class="defect__positions">
                         {% if prs.hasLocation %}
@@ -92,7 +98,7 @@
                         {% endif %}
                     </ul>
                 </div>
-                <h4 class="visuallyhidden">Actions</h4>
+                <h5 class="visuallyhidden">Actions</h5>
                 <ul class="defect__edit">
                     {% if prs.isRemovable %}
                         <li> <a href="{{ defectJourneyUrl().toEditDefect(prs.id) }}" class="">Edit</a></li>
@@ -121,16 +127,19 @@
 
                 <div>
                     {% if advisory.isDangerous %}
-                        <span class="defect__is-dangerous">Dangerous</span>
+                        <strong class="defect__is-dangerous" aria-hidden="true">Dangerous</strong>
                     {% endif %}
                     {% if advisory.isManualAdvisory %}
-                        <strong class="defect__title">{{ advisory.userComment }}</strong>
+                        <h4 class="defect__title">{{ advisory.userComment }}</h4>
                         <p class="defect__meta"></p>
                     {% else %}
-                        <strong class="defect__title">{{ advisory.name }}</strong>
+                        <h4 class="defect__title">{{ advisory.name }}</h4>
                         <p class="defect__meta">{{ advisory.userComment }}</p>
                     {% endif %}
-                    <h4 class="visuallyhidden">Position</h4>
+                    {% if advisory.isDangerous %}
+                        <strong class="visuallyhidden">Dangerous</strong>
+                    {% endif %}
+                    <h5 class="visuallyhidden">Position</h5>
                     <ul class="defect__positions">
                         {% if advisory.hasLocation %}
                             <li>Lateral: <span class="defect__property-list-value">{{ advisory.lateralLocation|default('n/a') }}</span></li>
@@ -141,7 +150,7 @@
                         {% endif %}
                     </ul>
                 </div>
-                <h4 class="visuallyhidden">Actions</h4>
+                <h5 class="visuallyhidden">Actions</h5>
                 <ul class="defect__edit">
                     {% if advisory.isRepairable(isRetest) %}
                         <li class="defect__marked-undo">
