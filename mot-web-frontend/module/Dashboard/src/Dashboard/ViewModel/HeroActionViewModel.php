@@ -78,6 +78,9 @@ class HeroActionViewModel
         if ($this->dashboardGuard->canViewDemoTestRequestsLink()) {
             return true;
         }
+        if ($this->dashboardGuard->canViewSecurityCardOrderListLink()) {
+            return true;
+        }
 
         return false;
     }

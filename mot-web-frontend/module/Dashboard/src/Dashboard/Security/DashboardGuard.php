@@ -53,7 +53,7 @@ class DashboardGuard
             if ($this->isDemoTestNeeded() && !$this->isQualifiedTester()) {
                 return false;
             }
-            if ($this->hasTestInProgress){
+            if ($this->hasTestInProgress) {
                 return false;
             }
 
@@ -152,10 +152,8 @@ class DashboardGuard
      */
     public function canViewMotFormsLink()
     {
-        if ($this->isTester())
-        {
-            if (!$this->isDemoTestNeeded() && !$this->overdueSpecialNoticeCount > 0)
-            {
+        if ($this->isTester()) {
+            if (!$this->isDemoTestNeeded() && !$this->overdueSpecialNoticeCount > 0) {
                 return true;
             }
         }
@@ -261,6 +259,14 @@ class DashboardGuard
     /**
      * @return bool
      */
+    public function canViewSecurityCardOrderListLink()
+    {
+        return $this->authorisationService->isGranted(PermissionInSystem::VIEW_SECURITY_CARD_ORDER);
+    }
+
+    /**
+     * @return bool
+     */
     public function isTestingEnabled()
     {
         return $this->authorisationService->isGranted(PermissionInSystem::MOT_TEST_START) &&
@@ -352,7 +358,6 @@ class DashboardGuard
      */
     public function isVehicleExaminer()
     {
-
         return in_array(RoleCode::VEHICLE_EXAMINER, $this->getAllRoles());
     }
 

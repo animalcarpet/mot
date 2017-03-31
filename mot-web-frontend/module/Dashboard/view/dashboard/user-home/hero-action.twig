@@ -41,26 +41,26 @@
         {#Links for hero box#}
 
             {% if heroAction.DashboardGuard.canViewAeInformationLink %}
-            <li class="c-action-list__item">
-                <a class="c-action-list__link" href="{{ url('authorised-examiner-search') }}">
-                    AE information
-                </a>
-            </li>
+                <li class="c-action-list__item">
+                    <a class="c-action-list__link" href="{{ url('authorised-examiner-search') }}">
+                        AE information
+                    </a>
+                </li>
             {% endif %}
             {% if heroAction.DashboardGuard.canViewSiteInformationLink %}
-            <li class="c-action-list__item">
-                <a class="c-action-list__link" href="{{ url('vehicle-testing-station-search') }}">
-                    Site information
-                </a>
-            </li>
+                <li class="c-action-list__item">
+                    <a class="c-action-list__link" href="{{ url('vehicle-testing-station-search') }}">
+                        Site information
+                    </a>
+                </li>
             {% endif %}
             {% if heroAction.DashboardGuard.canViewUserSearchLink %}
-            <li class="c-action-list__item">
-                <a class="c-action-list__link" href="{{ url('user_admin/user-search') }}"
-                   id="action-start-user-search">
-                    User search
-                </a>
-            </li>
+                <li class="c-action-list__item">
+                    <a class="c-action-list__link" href="{{ url('user_admin/user-search') }}"
+                       id="action-start-user-search">
+                        User search
+                    </a>
+                </li>
             {% endif %}
             {% if heroAction.DashboardGuard.canViewReplacementDuplicateCertificateLink %}
                 <li class="c-action-list__item">
@@ -70,25 +70,25 @@
                 </li>
             {% endif %}
             {% if heroAction.DashboardGuard.canViewVehicleSearchLink %}
-            <li class="c-action-list__item">
-                <a class="c-action-list__link" href="{{ url('vehicle/search') }}">
-                    Vehicle information
-                </a>
-            </li>
+                <li class="c-action-list__item">
+                    <a class="c-action-list__link" href="{{ url('vehicle/search') }}">
+                        Vehicle information
+                    </a>
+                </li>
             {% endif %}
             {% if heroAction.DashboardGuard.canViewMotTestsLink %}
-            <li class="c-action-list__item">
-                <a class="c-action-list__link" href="{{ url('mot-test-search') }}">
-                    MOT tests
-                </a> (comparison of tests available)
-            </li>
+                <li class="c-action-list__item">
+                    <a class="c-action-list__link" href="{{ url('mot-test-search') }}">
+                        MOT tests
+                    </a> (comparison of tests available)
+                </li>
             {% endif %}
             {% if heroAction.DashboardGuard.canViewDemoTestRequestsLink %}
-            <li class="c-action-list__item">
-                <a class="c-action-list__link" href="{{ url('user_admin/demo-test-requests') }}" id="demo-test-requests" >
-                    Demo test requests
-                </a>
-            </li>
+                <li class="c-action-list__item">
+                    <a class="c-action-list__link" href="{{ url('user_admin/demo-test-requests') }}" id="demo-test-requests" >
+                        Demo test requests
+                    </a>
+                </li>
             {% endif %}
             {% if heroAction.DashboardGuard.canViewPaymentsLink %}
                 <li class="c-action-list__item">
@@ -112,11 +112,18 @@
                 </li>
             {% endif %}
             {% if heroAction.DashboardGuard.canViewGenerateSurveyReportLink %}
-            <li class="c-action-list__item">
-                <a class="c-action-list__link" href="{{ url('survey-reports') }}" id="generate-survey-report">
-                    Generate survey report
-                </a>
-            </li>
+                <li class="c-action-list__item">
+                    <a class="c-action-list__link" href="{{ url('survey-reports') }}" id="generate-survey-report">
+                        Generate survey report
+                    </a>
+                </li>
+            {% endif %}
+            {% if heroAction.DashboardGuard.canViewSecurityCardOrderListLink %}
+                <li class="c-action-list__item">
+                    <a class="c-action-list__link" href="{{ url('security-card-order-report-list') }}" id="action-security-card-order-report-list">
+                        Security card order list
+                    </a>
+                </li>
             {% endif %}
         </ul>
     </div>
