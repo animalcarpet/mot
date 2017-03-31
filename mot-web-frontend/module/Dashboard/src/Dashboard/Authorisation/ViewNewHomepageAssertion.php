@@ -11,6 +11,7 @@ class ViewNewHomepageAssertion
         RoleCode::AREA_OFFICE_1,
         RoleCode::AUTHORISED_EXAMINER_DELEGATE,
         RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER,
+        RoleCode::CENTRAL_ADMIN_TEAM,
         RoleCode::CUSTOMER_SERVICE_OPERATIVE,
         RoleCode::CUSTOMER_SERVICE_MANAGER,
         RoleCode::DVLA_OPERATIVE,

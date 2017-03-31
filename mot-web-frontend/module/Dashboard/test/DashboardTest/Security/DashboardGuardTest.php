@@ -321,6 +321,8 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
             ['canViewSiteInformationLink', PermissionInSystem::DVSA_SITE_SEARCH, true, true],
             ['canViewMotTestsLink', PermissionInSystem::DVSA_SITE_SEARCH, false, false],
             ['canViewMotTestsLink', PermissionInSystem::DVSA_SITE_SEARCH, true, true],
+            ['canViewSecurityCardOrderListLink', PermissionInSystem::VIEW_SECURITY_CARD_ORDER, false, false],
+            ['canViewSecurityCardOrderListLink', PermissionInSystem::VIEW_SECURITY_CARD_ORDER, true, true],
         ];
     }
 
@@ -350,7 +352,7 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
             ['isTester', [RoleCode::AUTHORISED_EXAMINER_DELEGATE], false],
             ['isAreaOffice1', [RoleCode::USER], false],
             ['isAreaOffice1', [RoleCode::AREA_OFFICE_1], true],
-            ['isAreaOffice1', [RoleCode::USER, RoleCode::AREA_OFFICE_1], true]
+            ['isAreaOffice1', [RoleCode::USER, RoleCode::AREA_OFFICE_1], true],
         ];
     }
 

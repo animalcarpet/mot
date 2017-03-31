@@ -57,6 +57,7 @@ class HeroActionViewModelTest extends PHPUnit_Framework_TestCase
             'canViewMotFormsLink' => $this->mockDashboardGuard,
             'canViewDemoTestRequestsLink' => $this->mockDashboardGuard,
             'isTester' => $this->mockDashboardGuard,
+            'canViewSecurityCardOrderListLink' => $this->mockDashboardGuard,
         ];
 
         foreach ($heroActionChildrenVisibilityMethods as $method => $mock) {
@@ -87,6 +88,7 @@ class HeroActionViewModelTest extends PHPUnit_Framework_TestCase
             ['canViewMotFormsLink', true],
             ['canViewDemoTestRequestsLink', true],
             ['isTester', true],
+            ['canViewSecurityCardOrderListLink', true],
         ];
     }
 
