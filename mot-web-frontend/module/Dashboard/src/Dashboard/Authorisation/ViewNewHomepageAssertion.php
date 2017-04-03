@@ -15,6 +15,7 @@ class ViewNewHomepageAssertion
         RoleCode::CUSTOMER_SERVICE_OPERATIVE,
         RoleCode::CUSTOMER_SERVICE_MANAGER,
         RoleCode::DVLA_OPERATIVE,
+        RoleCode::DVLA_MANAGER,
         RoleCode::FINANCE,
         RoleCode::SCHEME_MANAGER,
         RoleCode::SCHEME_USER,
