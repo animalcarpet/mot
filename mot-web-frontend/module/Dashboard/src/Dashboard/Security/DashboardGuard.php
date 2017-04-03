@@ -17,11 +17,6 @@ class DashboardGuard
         RoleCode::SITE_ADMIN,
     ];
 
-    const HIGH_AUTHORITY_DVSA_ROLES = [
-        RoleCode::SCHEME_USER,
-        RoleCode::SCHEME_MANAGER,
-    ];
-
     /** @var MotAuthorisationServiceInterface $authorisationService */
     protected $authorisationService;
 
@@ -56,31 +51,9 @@ class DashboardGuard
             if ($this->hasTestInProgress) {
                 return false;
             }
-
-            return true;
         }
 
-        if ($this->isCustomerServiceOperative()) {
-            return true;
-        }
-
-        if ($this->isDvlaOperative()) {
-            return true;
-        }
-
-        if ($this->isVehicleExaminer()) {
-            return true;
-        }
-
-        if ($this->hasHighAuthorityDvsaRole()) {
-            return true;
-        }
-
-        if ($this->isAreaOffice1()) {
-            return true;
-        }
-
-        return false;
+        return $this->authorisationService->isGranted(PermissionInSystem::CERTIFICATE_READ);
     }
 
     /**
@@ -213,7 +186,7 @@ class DashboardGuard
         $allRoles = $this->getAllRoles();
 
         return in_array(RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, $allRoles) ||
-            in_array(RoleCode::AUTHORISED_EXAMINER_DELEGATE, $allRoles);
+               in_array(RoleCode::AUTHORISED_EXAMINER_DELEGATE, $allRoles);
     }
 
     /**
@@ -340,22 +313,6 @@ class DashboardGuard
     /**
      * @return bool
      */
-    private function isCustomerServiceOperative()
-    {
-        return in_array(RoleCode::CUSTOMER_SERVICE_OPERATIVE, $this->getAllRoles());
-    }
-
-    /**
-     * @return bool
-     */
-    private function isDvlaOperative()
-    {
-        return in_array(RoleCode::DVLA_OPERATIVE, $this->getAllRoles());
-    }
-
-    /**
-     * @return bool
-     */
     public function isVehicleExaminer()
     {
         return in_array(RoleCode::VEHICLE_EXAMINER, $this->getAllRoles());
@@ -375,14 +332,6 @@ class DashboardGuard
     private function hasHighAuthorityTradeRole()
     {
         return !empty(array_intersect($this->getAllRoles(), self::HIGH_AUTHORITY_TRADE_ROLES));
-    }
-
-    /**
-     * @return bool
-     */
-    private function hasHighAuthorityDvsaRole()
-    {
-        return !empty(array_intersect($this->getAllRoles(), self::HIGH_AUTHORITY_DVSA_ROLES));
     }
 
     /**

@@ -46,16 +46,16 @@ class ViewNewHomepageAssertionTest extends \PHPUnit_Framework_TestCase
     public function testUserCanViewNewHomepageDataProvider()
     {
         return [
+            [[RoleCode::USER, RoleCode::AREA_OFFICE_1], true],
+            [[RoleCode::USER, RoleCode::AREA_OFFICE_2], false],
             [[RoleCode::USER, RoleCode::AUTHORISED_EXAMINER], false],
             [[RoleCode::USER, RoleCode::AUTHORISED_EXAMINER_DELEGATE], true],
             [[RoleCode::USER, RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER], true],
             [[RoleCode::USER, RoleCode::AUTHORISED_EXAMINER_PRINCIPAL], false],
-            [[RoleCode::USER, RoleCode::AREA_OFFICE_1], true],
-            [[RoleCode::USER, RoleCode::AREA_OFFICE_2], false],
             [[RoleCode::USER, RoleCode::CENTRAL_ADMIN_TEAM], true],
             [[RoleCode::USER, RoleCode::CUSTOMER_SERVICE_MANAGER], true],
             [[RoleCode::USER, RoleCode::CUSTOMER_SERVICE_OPERATIVE], true],
-            [[RoleCode::USER, RoleCode::DVLA_MANAGER], false],
+            [[RoleCode::USER, RoleCode::DVLA_MANAGER], true],
             [[RoleCode::USER, RoleCode::DVLA_OPERATIVE], true],
             [[RoleCode::USER, RoleCode::FINANCE], true],
             [[RoleCode::USER, RoleCode::SCHEME_MANAGER], true],

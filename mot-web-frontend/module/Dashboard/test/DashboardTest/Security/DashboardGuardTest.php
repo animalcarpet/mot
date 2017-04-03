@@ -37,7 +37,8 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
         $hasMotTestStartPermission,
         $hasNoOverdueSpecialNotices,
         $userShouldHavePermissionToPerformMotTest
-    ) {
+    )
+    {
         $this->addMethodToMockAuthorisationService('isGranted', PermissionInSystem::MOT_TEST_START, $hasMotTestStartPermission);
         $this->mockOverdueSpecialNoticeAssertion
             ->method('canPerformTest')
@@ -51,17 +52,26 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider userCanViewReplacementDuplicateCertificateLinkDataProvider
      *
-     * @param array $userRoles
-     * @param bool  $hasInProgressTest
-     * @param bool  $hasPermission
+     * @param array  $userRoles
+     * @param bool   $hasInProgressTest
+     * @param string $permission
+     * @param bool   $hasPermission
+     * @param bool   $expectedResult
      */
-    public function testUserCanViewReplacementDuplicateCertificateLink(array $userRoles, $hasInProgressTest, $hasPermission)
+    public function testUserCanViewReplacementDuplicateCertificateLink(
+        array $userRoles,
+        $hasInProgressTest,
+        $permission,
+        $hasPermission,
+        $expectedResult
+    )
     {
         $this->addMethodToMockAuthorisationService('getAllRoles', null, $userRoles);
+        $this->addMethodToMockAuthorisationService('isGranted', $permission, $hasPermission);
         $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
         $dashboardGuard->setHasTestInProgress($hasInProgressTest);
 
-        $this->assertEquals($hasPermission, $dashboardGuard->canViewReplacementDuplicateCertificateLink());
+        $this->assertEquals($expectedResult, $dashboardGuard->canViewReplacementDuplicateCertificateLink());
     }
 
     /**
@@ -81,7 +91,7 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider userHasPermissionDataProvider
+     * @dataProvider testUserIsAssignedToAndCanViewVtsDataProvider
      *
      * @param bool $hasPermission
      */
@@ -92,55 +102,6 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
         $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
 
         $this->assertEquals($hasPermission, $dashboardGuard->canViewVehicleTestingStation($siteId));
-    }
-
-    /**
-     * @dataProvider rolesWithViewPaymentLinkPermissionThatShouldNotSeePaymentLink
-     *
-     * @param string $role
-     */
-    public function testSomeRolesWithViewPaymentsPermissionCannotViewPaymentsLink($role)
-    {
-        $this->addMethodToMockAuthorisationService('getAllRoles', null, [$role]);
-        $this->addMethodToMockAuthorisationService('isGranted', PermissionInSystem::SLOTS_TRANSACTION_READ_FULL, true);
-
-        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
-
-        $this->assertFalse($dashboardGuard->canViewPaymentsLink());
-    }
-
-    public function testRoleWithSlotsTransactionReadFullPermissionCanViewPaymentsLink()
-    {
-        $this->addMethodToMockAuthorisationService('getAllRoles', null, [RoleCode::FINANCE]);
-        $this->addMethodToMockAuthorisationService('isGranted', PermissionInSystem::SLOTS_TRANSACTION_READ_FULL, true);
-
-        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
-
-        $this->assertTrue($dashboardGuard->canViewPaymentsLink());
-    }
-
-    public function testRoleWithoutSlotsTransactionReadFullPermissionCannotViewPaymentsLink()
-    {
-        $this->addMethodToMockAuthorisationService('getAllRoles', null, [RoleCode::FINANCE]);
-        $this->addMethodToMockAuthorisationService('isGranted', PermissionInSystem::SLOTS_TRANSACTION_READ_FULL, false);
-
-        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
-
-        $this->assertFalse($dashboardGuard->canViewPaymentsLink());
-    }
-
-    /**
-     * @dataProvider userHasPermissionDataProvider
-     *
-     * @param bool $hasPermission
-     */
-    public function testUserCanGenerateFinancialReports($hasPermission)
-    {
-        $this->addMethodToMockAuthorisationService('isGranted', PermissionInSystem::SLOTS_REPORTS_GENERATE,
-            $hasPermission);
-        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
-
-        $this->assertEquals($hasPermission, $dashboardGuard->canGenerateFinancialReports());
     }
 
     /**
@@ -183,6 +144,30 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($dashboardGuard->$testMethod(), $expectedResult);
     }
 
+    /**
+     * @dataProvider userCanViewLinkMethodsInDashboardGuardBasedOnPermissionAndRolesDataProvider
+     *
+     * @param string $testMethod
+     * @param array  $userRoles
+     * @param string $permission
+     * @param bool   $hasPermission
+     * @param bool   $expectedResult
+     */
+    public function testUserCanViewLinkMethodsInDashboardGuardBasedOnPermissionAndRoles(
+        $testMethod,
+        $userRoles,
+        $permission,
+        $hasPermission,
+        $expectedResult
+    )
+    {
+        $this->addMethodToMockAuthorisationService('getAllRoles', null, $userRoles);
+        $this->addMethodToMockAuthorisationService('isGranted', $permission, $hasPermission);
+        $dashboardGuard = new DashboardGuard($this->mockAuthorisationService);
+
+        $this->assertEquals($dashboardGuard->$testMethod(), $expectedResult);
+    }
+
     public function userCanPerformMotTestDataProvider()
     {
         return [
@@ -196,11 +181,31 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function userHasPermissionToViewContingencyTestsDataProvider()
+    public function userCanViewReplacementDuplicateCertificateLinkDataProvider()
     {
         return [
-            [[RoleCode::TESTER_ACTIVE, RoleCode::TESTER], true],
-            [[RoleCode::TESTER], false],
+            [[RoleCode::USER], false, PermissionInSystem::CERTIFICATE_READ, true, true],
+            [[RoleCode::USER], false, PermissionInSystem::CERTIFICATE_READ, false, false],
+            [[RoleCode::USER, RoleCode::SITE_ADMIN], false, PermissionInSystem::CERTIFICATE_READ, true, true],
+            [[RoleCode::USER, RoleCode::SITE_ADMIN], false, PermissionInSystem::CERTIFICATE_READ, false, false],
+            [[RoleCode::USER, RoleCode::TESTER], false, PermissionInSystem::CERTIFICATE_READ, true, true],
+            [[RoleCode::USER, RoleCode::TESTER], false, PermissionInSystem::CERTIFICATE_READ, false, false],
+            [[RoleCode::USER, RoleCode::AREA_OFFICE_1], false, PermissionInSystem::CERTIFICATE_READ, true, true],
+            [[RoleCode::USER, RoleCode::AREA_OFFICE_1], false, PermissionInSystem::CERTIFICATE_READ, false, false],
+            [[RoleCode::USER, RoleCode::SCHEME_MANAGER], false, PermissionInSystem::CERTIFICATE_READ, true, true],
+            [[RoleCode::USER, RoleCode::SCHEME_MANAGER], false, PermissionInSystem::CERTIFICATE_READ, false, false],
+            [[RoleCode::USER, RoleCode::VEHICLE_EXAMINER], false, PermissionInSystem::CERTIFICATE_READ, true, true],
+            [[RoleCode::USER, RoleCode::VEHICLE_EXAMINER], false, PermissionInSystem::CERTIFICATE_READ, false, false],
+            [[RoleCode::USER, RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER], false, PermissionInSystem::CERTIFICATE_READ, true, true],
+            [[RoleCode::USER, RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER], false, PermissionInSystem::CERTIFICATE_READ, false, false],
+            [[RoleCode::USER, RoleCode::DVLA_OPERATIVE], false, PermissionInSystem::CERTIFICATE_READ, true, true],
+            [[RoleCode::USER, RoleCode::DVLA_OPERATIVE], false, PermissionInSystem::CERTIFICATE_READ, false, false],
+            [[RoleCode::USER, RoleCode::DVLA_MANAGER], false, PermissionInSystem::CERTIFICATE_READ, true, true],
+            [[RoleCode::USER, RoleCode::DVLA_MANAGER], false, PermissionInSystem::CERTIFICATE_READ, false, false],
+            [[RoleCode::USER, RoleCode::TESTER, RoleCode::TESTER_ACTIVE], false, PermissionInSystem::CERTIFICATE_READ, true, true],
+            [[RoleCode::USER, RoleCode::TESTER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], false, PermissionInSystem::CERTIFICATE_READ, true, false],
+            [[RoleCode::USER, RoleCode::TESTER, RoleCode::TESTER_ACTIVE, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], false, PermissionInSystem::CERTIFICATE_READ, true, true],
+            [[RoleCode::USER, RoleCode::TESTER], true, PermissionInSystem::CERTIFICATE_READ, true, false],
         ];
     }
 
@@ -220,70 +225,11 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function userCanViewLinkMethodsDataProvider()
-    {
-        return [
-            ['canViewAeInformationLink', 'isGranted', PermissionInSystem::AUTHORISED_EXAMINER_LIST, false, false],
-            ['canViewAeInformationLink', 'isGranted', PermissionInSystem::AUTHORISED_EXAMINER_LIST, true, true],
-            ['canViewSiteInformationLink', 'isGranted', PermissionInSystem::DVSA_SITE_SEARCH, false, false],
-            ['canViewSiteInformationLink', 'isGranted', PermissionInSystem::DVSA_SITE_SEARCH, true, true],
-            ['canViewUserSearchLink', 'isGranted', PermissionInSystem::USER_SEARCH, false, false],
-            ['canViewUserSearchLink', 'isGranted', PermissionInSystem::USER_SEARCH, true, true],
-            ['canViewMotTestsLink', 'isGranted', PermissionInSystem::DVSA_SITE_SEARCH, false, false],
-            ['canViewMotTestsLink', 'isGranted', PermissionInSystem::DVSA_SITE_SEARCH, true, true],
-            ['canViewDemoTestRequestsLink', 'isGranted', PermissionInSystem::VIEW_USERS_IN_DEMO_TEST_NEEDED_STATE, false, false],
-            ['canViewDemoTestRequestsLink', 'isGranted', PermissionInSystem::VIEW_USERS_IN_DEMO_TEST_NEEDED_STATE, true, true],
-            ['canViewVehicleSearchLink', 'isGranted', PermissionInSystem::FULL_VEHICLE_MOT_TEST_HISTORY_VIEW, false, false],
-            ['canViewVehicleSearchLink', 'isGranted', PermissionInSystem::FULL_VEHICLE_MOT_TEST_HISTORY_VIEW, true, true],
-            ['canViewDirectDebitLink', 'isGranted', PermissionInSystem::SLOTS_DIRECT_DEBIT_SEARCH, false, false],
-            ['canViewDirectDebitLink', 'isGranted', PermissionInSystem::SLOTS_DIRECT_DEBIT_SEARCH, true, true],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function userCanViewReplacementDuplicateCertificateLinkDataProvider()
-    {
-        return [
-            [[RoleCode::USER], false, false],
-            [[RoleCode::TESTER_ACTIVE], false, false],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER], false, true],
-            [[RoleCode::TESTER], false, true],
-            [[RoleCode::TESTER], true, false],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER], false, true],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED], false, false],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED, RoleCode::TESTER_ACTIVE], false, false],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_APPLICANT_DEMO_TEST_REQUIRED, RoleCode::TESTER_ACTIVE,  RoleCode::TESTER], false, true],
-            [[RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER, RoleCode::TESTER_ACTIVE], false, true],
-            [[RoleCode::CUSTOMER_SERVICE_OPERATIVE], false, true],
-            [[RoleCode::DVLA_OPERATIVE], false, true],
-            [[RoleCode::AREA_OFFICE_1], false, true],
-            [[RoleCode::VEHICLE_EXAMINER], false, true],
-            [[RoleCode::SCHEME_USER], false, true],
-            [[RoleCode::SCHEME_MANAGER], false, true],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function userHasPermissionDataProvider()
+    public function testUserIsAssignedToAndCanViewVtsDataProvider()
     {
         return [
             [true],
             [false],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function rolesWithViewPaymentLinkPermissionThatShouldNotSeePaymentLink()
-    {
-        return [
-            [RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER],
-            [RoleCode::AUTHORISED_EXAMINER_DELEGATE]
         ];
     }
 
@@ -321,6 +267,8 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
             ['canViewSiteInformationLink', PermissionInSystem::DVSA_SITE_SEARCH, true, true],
             ['canViewMotTestsLink', PermissionInSystem::DVSA_SITE_SEARCH, false, false],
             ['canViewMotTestsLink', PermissionInSystem::DVSA_SITE_SEARCH, true, true],
+            ['canGenerateFinancialReports', PermissionInSystem::SLOTS_REPORTS_GENERATE, false, false],
+            ['canGenerateFinancialReports', PermissionInSystem::SLOTS_REPORTS_GENERATE, true, true],
             ['canViewSecurityCardOrderListLink', PermissionInSystem::VIEW_SECURITY_CARD_ORDER, false, false],
             ['canViewSecurityCardOrderListLink', PermissionInSystem::VIEW_SECURITY_CARD_ORDER, true, true],
         ];
@@ -353,6 +301,19 @@ class DashboardGuardTest extends PHPUnit_Framework_TestCase
             ['isAreaOffice1', [RoleCode::USER], false],
             ['isAreaOffice1', [RoleCode::AREA_OFFICE_1], true],
             ['isAreaOffice1', [RoleCode::USER, RoleCode::AREA_OFFICE_1], true],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function userCanViewLinkMethodsInDashboardGuardBasedOnPermissionAndRolesDataProvider()
+    {
+        return [
+            ['canViewPaymentsLink', [RoleCode::FINANCE], PermissionInSystem::SLOTS_TRANSACTION_READ_FULL, true, true],
+            ['canViewPaymentsLink', [RoleCode::FINANCE], PermissionInSystem::SLOTS_TRANSACTION_READ_FULL, false, false],
+            ['canViewPaymentsLink', [RoleCode::AUTHORISED_EXAMINER_DESIGNATED_MANAGER], PermissionInSystem::SLOTS_TRANSACTION_READ_FULL, true, false],
+            ['canViewPaymentsLink', [RoleCode::AUTHORISED_EXAMINER_DELEGATE], PermissionInSystem::SLOTS_TRANSACTION_READ_FULL, true, false],
         ];
     }
 
