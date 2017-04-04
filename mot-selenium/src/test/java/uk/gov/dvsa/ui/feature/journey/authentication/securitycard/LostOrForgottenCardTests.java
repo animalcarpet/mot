@@ -12,7 +12,7 @@ import static org.hamcrest.core.Is.is;
 
 public class LostOrForgottenCardTests extends DslTest {
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"2fa"})
     public void iCanSignInWhenIForgetMySecurityCardAs2faUser() throws IOException {
         User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
 
@@ -23,7 +23,7 @@ public class LostOrForgottenCardTests extends DslTest {
         assertThat("The User is on the Home Page", motUI.isLoginSuccessful(), is(true));
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"2fa"})
     public void userWithReplacementCardOrderedIsDirectedToAlreadyOrderedCardPage() throws IOException {
         User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
 
@@ -41,7 +41,7 @@ public class LostOrForgottenCardTests extends DslTest {
         assertThat("The User is on the Home Page", motUI.isLoginSuccessful(), is(true));
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"2fa"})
     public void userWithReplacementCardOrderedAndActivatedDirectedTo2FAPinEntryPage() throws IOException {
         User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
 
@@ -62,7 +62,7 @@ public class LostOrForgottenCardTests extends DslTest {
         assertThat("The User is on the Home Page", motUI.isLoginSuccessful(), is(true));
     }
 
-    @Test(testName = "2fa", groups = {"BVT"})
+    @Test(testName = "2fa", groups = {"2fa"})
     public void userDirectedToSecurityQuestionsOnSubsequentDailyLoginsAfterUsingLostForgottenJourney() throws IOException {
 
         step("Given I am 2FA active and logged in today using lost/forgotten journey");

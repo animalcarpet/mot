@@ -33,7 +33,7 @@ public class AnnualAssessmentCertificatesTests extends DslTest {
         );
     }
 
-    @Test(groups = {"BVT"},
+    @Test(groups = {"Regression"},
         testName = "Add Annual Assessment Certificate",
         description = "test that user can add his annual assessment certificate"
     )
@@ -64,7 +64,7 @@ public class AnnualAssessmentCertificatesTests extends DslTest {
 
     }
 
-    @Test(groups = {"BVT"},
+    @Test(groups = {"Regression"},
             testName = "Remove Annual Assessment Certificate",
             description = "test that user can remove his annual assessment certificate"
     )

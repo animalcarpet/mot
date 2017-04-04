@@ -31,7 +31,7 @@ public class CreateNewVehicleTests extends DslTest {
                 containsString("MOT test started"));
     }
 
-    @Test(groups = {"BVT"},
+    @Test(groups = {"Regression"},
             description = "Tester creates a new electric vehicle and starts an MOT test")
     public void createNewElectricVehicleForMotTest() throws IOException, URISyntaxException {
         step("Given I am a MOT tester");

@@ -42,7 +42,7 @@ public class UserRegistrationTests extends DslTest {
         assertThat("message is displayed", message, containsString("This email is already in use"));
     }
 
-    @Test(groups = {"BVT"}, description = "VM-11472")
+    @Test(groups = {"Regression"}, description = "VM-11472")
     public void checkCreateAccountLinkExists() throws IOException {
 
         //Given I am on the Home Page

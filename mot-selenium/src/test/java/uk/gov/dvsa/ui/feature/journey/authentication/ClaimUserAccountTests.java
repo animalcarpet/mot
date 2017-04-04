@@ -21,7 +21,7 @@ public class ClaimUserAccountTests extends DslTest {
          testSite = siteData.createNewSite(aeDetails.getId(), "My_Site");
     }
 
-    @Test(groups = {"BVT", "Regression", "BL-3024"})
+    @Test(groups = {"2fa", "BL-3024"})
     public void testResetAccountSecurity() throws Exception {
 
         // Given I am any 2FA user

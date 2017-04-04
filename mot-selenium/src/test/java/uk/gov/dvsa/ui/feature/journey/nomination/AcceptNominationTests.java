@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.is;
 @Features("Nomination notifications for nominees to accept or reject role")
 public class AcceptNominationTests extends DslTest {
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"nomination"})
     void userCannotAcceptNominationWith2faOn() throws IOException {
         step("Given I have been nominated for a Site Manager role as non 2fa user");
         User not2faActiveUser = motApi.user.createUserWithoutRole();
@@ -34,7 +34,7 @@ public class AcceptNominationTests extends DslTest {
             motUI.nominations.viewMostRecent(not2faActiveUser).isAcceptButtonDisplayed(), is(false));
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"nomination"})
     void userCanAcceptSiteManagerNominationWith2faOn() throws IOException {
         step("Given I have been nominated for a Site Manager role as non 2fa user");
         User user = motApi.user.createUserWithoutRole();
@@ -51,7 +51,7 @@ public class AcceptNominationTests extends DslTest {
 
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"nomination"})
     void userCanAcceptAedNominationWith2faOn() throws IOException {
         step("Given I have been nominated for a AED role as non 2fa user");
         User user = motApi.user.createUserWithoutRole();
@@ -67,7 +67,7 @@ public class AcceptNominationTests extends DslTest {
                 message, containsString("You have accepted the role of Authorised Examiner Delegate"));
     }
 
-    @Test(testName = "2faHardStopDisabled", groups = {"BVT"})
+    @Test(testName = "2faHardStopDisabled", groups = {"2fa"})
     void existingTradeUserCanAcceptSiteAdminNominationWithoutOrdering2faCard() throws IOException {
         step("Given I am a trade user nominated as a site admin as a non 2fa user");
         User nominee = motApi.user.createTester(siteData.createSite().getId(), false);
@@ -80,7 +80,7 @@ public class AcceptNominationTests extends DslTest {
         assertThat("Site Admin Role Confirmation", message, containsString("You have accepted the role of Site admin"));
     }
 
-    @Test(testName = "2faHardStopDisabled", groups = {"BVT"})
+    @Test(testName = "2faHardStopDisabled", groups = {"2fa"})
     void existingTradeUserCanAcceptAedNominationWithoutOrdering2faCard() throws IOException {
         step("Given I am trade user nominated for an AED role as a non 2fa user");
         User nominee = motApi.user.createTester(siteData.createSite().getId(), false);
@@ -94,7 +94,7 @@ public class AcceptNominationTests extends DslTest {
                 message, containsString("You have accepted the role of Authorised Examiner Delegate"));
     }
 
-    @Test(testName = "2faHardStopDisabled", groups = {"BVT"})
+    @Test(testName = "2faHardStopDisabled", groups = {"2fa"})
     void existingTradeUserCanAcceptSiteManagerNominationWithoutActivating2faCard() throws IOException {
         step("Given I am a trade user nominated as a site manager");
         User nominee = motApi.user.createNon2FaTester(siteData.createSite().getId(), false);
@@ -107,7 +107,7 @@ public class AcceptNominationTests extends DslTest {
         assertThat("Site Manager Role Confirmation", message, containsString("You have accepted the role of Site manager"));
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"nomination"})
     void tradeUserAcceptTesterNominationAndArchiveIt() throws IOException {
         step("Given I am nominated as a tester");
         User nominee = motApi.user.createTester(siteData.createSite().getId());
@@ -128,7 +128,7 @@ public class AcceptNominationTests extends DslTest {
         assertThat("Notification was archived successfully", archiveNotificationPage.hasNotification(title));
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"nomination"})
     void tradeUserAcceptSiteAdminNomination() throws IOException {
         step("Given I nominated as a site manager");
         User nominee = motApi.user.createSiteAdmin(siteData.createSite().getId(), false);
@@ -141,7 +141,7 @@ public class AcceptNominationTests extends DslTest {
         assertThat("Site Admin Role Confirmation", message, containsString("You have accepted the role of Site admin"));
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"nomination"})
     void tradeUserAcceptSiteManagerNomination() throws IOException {
         step("Given I nominate a user as a site manager");
         User nominee = motApi.user.createSiteManager(siteData.createSite().getId(), false);

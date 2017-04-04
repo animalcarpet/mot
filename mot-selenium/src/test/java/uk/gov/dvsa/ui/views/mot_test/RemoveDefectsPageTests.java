@@ -71,7 +71,7 @@ public class RemoveDefectsPageTests extends DslTest {
         assertThat(defectsPage.isDefectInReasonsForRejection(defect), is(false));
     }
 
-    @Test(groups = {"BVT", "BL-2405"}, dataProvider = "getDefectArray",
+    @Test(groups = {"Regression", "BL-2405"}, dataProvider = "getDefectArray",
             description = "Checks that you can return to the defects screen without removing a defect")
     public void testCanReturnToDefectsScreenAsTester(Defect defect) throws IOException, URISyntaxException {
 
@@ -85,7 +85,7 @@ public class RemoveDefectsPageTests extends DslTest {
         assertThat(defectsPage.isDefectInReasonsForRejection(defect), is(true));
     }
 
-    @Test(groups = {"BVT", "BL-2405"}, expectedExceptions = TimeoutException.class,
+    @Test(groups = {"Regression", "BL-2405"}, expectedExceptions = TimeoutException.class,
             dataProvider = "getDefectArray", description = "Checks that you can remove a defect from the test results screen")
     public void testCanRemoveADefectFromTestResultsScreenAsTester(Defect defect) throws IOException, URISyntaxException {
 

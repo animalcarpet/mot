@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.is;
 
 public class OrderSecurityCardTests extends DslTest {
 
-    @Test(testName = "2fa", groups = {"BVT"})
+    @Test(testName = "2fa", groups = {"2fa"})
     public void orderNewSecurityCard() throws IOException {
 
         step("Given I am a 2fa authenticated user");
@@ -35,7 +35,7 @@ public class OrderSecurityCardTests extends DslTest {
         assertThat("Card Order was Successful", message, containsString("Your security card has been ordered"));
     }
 
-    @Test(testName = "2fa", groups = {"BVT"})
+    @Test(testName = "2fa", groups = {"2fa"})
     public void cscoOrderCardForTradeUser() throws IOException {
         step("Given I order a card for a trade user as CSCO");
         String result = motUI.authentication.securityCard
@@ -47,7 +47,7 @@ public class OrderSecurityCardTests extends DslTest {
 
     @Issue("BL-2738")
     @Features("New TESTER Sign In - PROMPT")
-    @Test(testName = "2fa", groups = {"BVT"})
+    @Test(testName = "2fa", groups = {"2fa"})
     public void orderSecurityCardPromptIsDisplayedForDemoTestUserWhoHasNotOrderedSecurityCard() throws IOException {
         step("Given I have a status of Demo Test Needed with no card ordered");
         User demoTester = motApi.user.createUserWithoutRole();
@@ -64,7 +64,7 @@ public class OrderSecurityCardTests extends DslTest {
 
     @Issue("BL-2738")
     @Features("New TESTER Sign In - PROMPT")
-    @Test(testName = "2fa", groups = {"BVT"})
+    @Test(testName = "2fa", groups = {"2fa"})
     public void activateSecurityCardPromptIsDisplayedForDemoTestUserWhoHasOrderedSecurityCard() throws IOException {
         step("Given I have a status of Demo Test Needed with card ordered");
         User demoTester = motApi.user.createUserWithoutRole();
@@ -125,7 +125,7 @@ public class OrderSecurityCardTests extends DslTest {
         assertThat("Card Order was Successful", message, containsString("Your security card has been ordered"));
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"Regression"})
     public void orderNewSecurityCardWithHomeAddress() throws IOException {
 
         step("GIVEN I am a 2fa authenticated user");
@@ -139,7 +139,7 @@ public class OrderSecurityCardTests extends DslTest {
         assertThat("Card Order was Successful", message, containsString("Your security card has been ordered"));
     }
 
-    @Test(testName = "2fa", groups = {"BVT"})
+    @Test(testName = "2fa", groups = {"2fa"})
     public void userGetsOrderCardNotificationWhenOrderedByCSCO() throws IOException {
         step("Given I have been nominated as a Site manager");
         User tradeUser = motApi.user.createUserWithoutRole();
@@ -153,7 +153,7 @@ public class OrderSecurityCardTests extends DslTest {
         assertThat("Notification for card order present", homePage.isOrderSecurityCardSuccessNotificationLinkPresent(), is(true));
     }
 
-    @Test(testName = "2fa", groups = {"BVT"})
+    @Test(testName = "2fa", groups = {"2fa"})
     public void userGetsOrderCardNotificationWhenOrderingACard() throws IOException {
         step("Given I have been nominated as a Site manager");
         User tradeUser = motApi.user.createUserWithoutRole();

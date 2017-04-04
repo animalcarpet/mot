@@ -25,7 +25,7 @@ public class UpdateVehicleBeforeMotTests extends DslTest {
         tester = motApi.user.createTester(site.getId());
     }
 
-    @Test(groups = {"BVT"},
+    @Test(groups = {"Regression"},
             description = "Tester can update the vehicle class when starting a MOT test")
     public void testerCanUpdateVehicleClassWhenStartingMotTest() throws IOException, URISyntaxException {
 
@@ -40,7 +40,7 @@ public class UpdateVehicleBeforeMotTests extends DslTest {
         assertThat(message, containsString("Vehicle test class has been successfully changed"));
     }
 
-    @Test(groups = {"BVT"},
+    @Test(groups = {"Regression"},
             description = "Tester can update a DVLA vehicle class when starting a MOT test")
     public void testerCanUpdateDvlaVehicleClassWhenStartingMotTest() throws IOException, URISyntaxException {
 
@@ -70,7 +70,7 @@ public class UpdateVehicleBeforeMotTests extends DslTest {
         assertThat(message, containsString("Vehicle colour has been successfully changed"));
     }
 
-    @Test(groups = {"BVT"},
+    @Test(groups = {"Regression"},
             description = "Tester can update the engine of a vehicle at the start of a mot test")
     public void testerCanUpdateVehicleEngineWhenStartingMotTest() throws IOException, URISyntaxException {
 
@@ -85,7 +85,7 @@ public class UpdateVehicleBeforeMotTests extends DslTest {
         assertThat(message, containsString("Vehicle engine specification has been successfully changed"));
     }
 
-    @Test(groups = {"BVT"},
+    @Test(groups = {"Regression"},
             description = "Tester can update the make and model of a vehicle at the start of a mot test")
     public void testerCanUpdateVehicleMakeAndModelWhenStartingMotTest() throws IOException, URISyntaxException {
 
@@ -100,7 +100,7 @@ public class UpdateVehicleBeforeMotTests extends DslTest {
         assertThat(message, containsString("Vehicle make and model has been successfully changed"));
     }
 
-        @Test(groups = {"BVT"},
+        @Test(groups = {"Regression"},
             description = "Tester can update the make and model of a vehicle to Other at the start of a mot test")
     public void testerCanUpdateVehicleMakeAndModelWithOtherWhenStartingMotTest() throws IOException, URISyntaxException {
 
@@ -115,7 +115,7 @@ public class UpdateVehicleBeforeMotTests extends DslTest {
         assertThat(message, containsString("Vehicle make and model has been successfully changed"));
     }
 
-    @Test(groups = {"BVT"},
+    @Test(groups = {"Regression"},
             description = "Tester can update the make and model of a DVLA vehicle at the start of a mot test")
     public void testerCanUpdateDvlaVehicleMakeAndModelWhenStartingMotTest() throws IOException, URISyntaxException {
 
@@ -161,7 +161,7 @@ public class UpdateVehicleBeforeMotTests extends DslTest {
         assertThat(motUI.normalTest.getNoTestClassValidation(), containsString("You must set the test class"));
     }
 
-    @Test(groups = {"BVT"},
+    @Test(groups = {"Regression"},
             description = "Tester can update the make and model of a vehicle at the start of a mot test")
     public void testerCanUpdateVehicleCountryOfRegistrationWhenStartingMotTest() throws IOException, URISyntaxException {
 

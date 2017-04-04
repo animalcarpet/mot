@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.is;
 public class TradeUserManagingRolesTests extends DslTest {
 
     @Test(dataProvider = "dvsaTesterAndSiteManager",
-            groups = {"BVT", "VM-12321"},
+            groups = {"roles", "VM-12321"},
             description = "Verifies that trade user cant check roles via roles and associations link " +
                     "of other trade user")
     public void tradeUserCantViewAeAssociationOfOtherTradeUser(User tester, User siteManager) throws IOException, URISyntaxException {
@@ -34,7 +34,7 @@ public class TradeUserManagingRolesTests extends DslTest {
 
 
     @Test(dataProvider = "dvsaTester",
-            groups = {"BVT", "BL-94"},
+            groups = {"roles", "BL-94"},
             description = "Verifies that trade user can navigate back from Remove role page to " +
                     "Roles and Associations page via link")
     public void tradeUserCanNavigateFromDeleteRolePageViaLink(User tester) throws IOException, URISyntaxException {
@@ -51,7 +51,7 @@ public class TradeUserManagingRolesTests extends DslTest {
     }
 
     @Test(dataProvider = "dvsaTesterAndVehicle",
-            groups = {"BVT", "BL-94"},
+            groups = {"roles", "BL-94"},
             description = "Verifies that trade user can't remove his own role if he has test in progress")
     public void tradeUserCantRemoveOwnTradeRoleWithTestInProgress(User tester, Vehicle testVehicle) throws IOException, URISyntaxException {
         vehicleReinspectionWorkflow().startMotTestAsATester(tester, testVehicle);
@@ -68,7 +68,7 @@ public class TradeUserManagingRolesTests extends DslTest {
     }
 
     @Test(dataProvider = "dvsaTester",
-            groups = {"BVT", "BL-94"},
+            groups = {"roles", "BL-94"},
             description = "Verifies that trade user can remove his own role")
     public void tradeUserCanRemoveOwnTradeRole(User tester) throws IOException, URISyntaxException {
 
@@ -84,7 +84,7 @@ public class TradeUserManagingRolesTests extends DslTest {
     }
 
     @Test(dataProvider = "dvsaTesterAndSiteAndAreaOfficer",
-            groups = {"BVT", "BL-94"},
+            groups = {"roles", "BL-94"},
             description = "Verifies that when trade user removes his own role it's not assigned to vts")
     public void tradeUserRoleIsNotAssignedToVtsAfterDeletion(User tester, Site site, User areaOffice1User) throws IOException, URISyntaxException {
         tradeUserCanRemoveOwnTradeRole(tester);

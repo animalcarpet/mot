@@ -71,7 +71,7 @@ public class EditDefectsTests extends DslTest {
         assertThat(defectsPage.isDefectEditSuccessMessageDisplayed(defect) && defectsPage.isDefectDangerous(defect), is(true));
     }
 
-    @Test(groups = {"BVT", "BL-2405"}, dataProvider = "getDefectArray",
+    @Test(groups = {"Regression", "BL-2405"}, dataProvider = "getDefectArray",
             description = "Checks that you can return to the defects screen without editing a defect")
     public void testCanReturnToDefectsScreenAsTester(Defect defect) throws IOException, URISyntaxException {
 
@@ -85,7 +85,7 @@ public class EditDefectsTests extends DslTest {
         assertThat(defectsPage.defectsAreDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "BL-2406"}, dataProvider = "getDefectArray",
+    @Test(groups = {"Regression", "BL-2406"}, dataProvider = "getDefectArray",
             description = "Checks that you can edit a defect from the test results screen")
     public void testCanEditADefectFromTestResultsScreenAsTester(Defect defect) throws IOException, URISyntaxException {
 

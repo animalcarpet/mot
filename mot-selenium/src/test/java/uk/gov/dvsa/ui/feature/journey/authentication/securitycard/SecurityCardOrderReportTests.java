@@ -15,7 +15,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class SecurityCardOrderReportTests extends DslTest {
 
-    @Test(testName = "2fa", groups = {"BVT"})
+    @Test(testName = "2fa", groups = {"2fa"})
     public void catUserSeeReportLinksForLast7Days() throws IOException {
 
         step("Given I am Central Admin Team user");
@@ -28,7 +28,7 @@ public class SecurityCardOrderReportTests extends DslTest {
         assertThat("I have seen report links for 7 days", list.containsLinksToOrderReportFor7Days(), is(true));
     }
 
-    @Test(testName = "2fa", groups = {"Regression"})
+    @Test(testName = "2fa", groups = {"2fa"})
     public void catUserCanSeeTheLinkToReportListInHomePage() throws IOException {
 
         step("Given I am Central Admin Team user");
@@ -41,7 +41,7 @@ public class SecurityCardOrderReportTests extends DslTest {
         assertThat("Security card order list displayed", page.isSecurityCardOrderListLinkDisplayed(), is(true));
     }
 
-    @Test(testName = "2fa", groups = {"BVT"})
+    @Test(testName = "2fa", groups = {"2fa"})
     public void cscoCanViewSecurityCardOrderEventForATradeUser() throws IOException, URISyntaxException {
         step("Given I order a card for a trade user as CSCO");
         User csco = motApi.user.createCSCO();

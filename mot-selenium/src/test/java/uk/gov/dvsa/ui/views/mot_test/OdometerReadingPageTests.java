@@ -56,7 +56,7 @@ public class OdometerReadingPageTests extends DslTest {
         assert(testResultsEntryPage.getOdometerReading().contains("1,000 km"));
     }
 
-    @Test(groups = {"BVT", "BL-1947"})
+    @Test(groups = {"Regression", "BL-1947"})
     public void addOdometerReadingWithInvalidValues() throws IOException, URISyntaxException {
         // Given I start an MOT test and I am on the MOT Test Results page
         TestResultsEntryNewPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);

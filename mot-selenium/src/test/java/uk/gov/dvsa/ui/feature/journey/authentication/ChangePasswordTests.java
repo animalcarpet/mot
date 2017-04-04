@@ -37,7 +37,7 @@ public class ChangePasswordTests extends DslTest {
         motUI.profile.viewYourProfile(tester).clickChangePasswordLink().clickCancelLink();
     }
 
-    @Test(groups = {"BVT"}, description = "VM-7668, Tester changes password for the same one")
+    @Test(groups = {"Regression"}, description = "VM-7668, Tester changes password for the same one")
     public void testerChangesPasswordForSameOne() throws Exception {
         step("Given I attempt to change my password with current password");
         String message = motUI.profile.changePasswordExpectingErrorText(tester, tester.getPassword(), tester.getPassword());
@@ -69,7 +69,7 @@ public class ChangePasswordTests extends DslTest {
             containsString("New password - must be 8 or more characters long"));
     }
 
-    @Test(groups = {"BVT"}, description = "VM-7668, Tester types invalid old password")
+    @Test(groups = {"Regression"}, description = "VM-7668, Tester types invalid old password")
     public void testerPutsInvalidOldPassword() throws IOException {
         step("Given I attempt to change my password with incorrect old password");
         String message = motUI.profile.changePasswordExpectingErrorText(tester, "oh no", "pass");
@@ -79,7 +79,7 @@ public class ChangePasswordTests extends DslTest {
             containsString("Current password - enter a valid password"));
     }
 
-    @Test(groups = {"BVT"}, description = "VM-7668, Tester leaves empty fields and click submit")
+    @Test(groups = {"Regression"}, description = "VM-7668, Tester leaves empty fields and click submit")
     public void testerLeavesEmptyFields() throws Exception {
         step("Given I attempt to change my password with inputting any values");
         String message = motUI.profile.changePasswordExpectingErrorText(tester, " ", " ");

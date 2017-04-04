@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.containsString;
 
 public class ReplacementCardTests extends DslTest {
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"2fa"})
     public void activateLinkIsDisplayedAfterReplacementCardOrder() throws IOException {
         step("Given Bob has ordered a replacement card");
         User bob = motApi.user.createTester(siteData.createSite().getId());

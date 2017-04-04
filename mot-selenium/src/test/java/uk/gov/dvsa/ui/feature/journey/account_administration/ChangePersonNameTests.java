@@ -49,7 +49,7 @@ public class ChangePersonNameTests extends DslTest {
         assertThat(motUI.profile.page().isChangeNameLinkDisplayed(), is(isLinkVisible));
     }
 
-    @Test(groups = {"BVT", "BL-59"},
+    @Test(groups = {"Regression", "BL-59"},
             description = "Test that Authorised user can change name on person profile",
             dataProvider = "dvsaUserFroOwnProfileProvider")
     public void dvsaUserCanChangeNameOnOtherPersonProfile(User user) throws IOException {

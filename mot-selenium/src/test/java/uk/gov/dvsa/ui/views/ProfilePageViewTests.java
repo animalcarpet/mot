@@ -72,7 +72,7 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isChangeDrivingLicenceLinkIsDisplayed(), is(isChangeLinkDisplayed));
     }
 
-    @Test(groups = {"BVT", "BL-448"},
+    @Test(groups = {"Regression", "BL-448"},
             description = "Verifies that authorised dvsa user can change trade user email on trade user profile",
             dataProvider = "dvsaUserForContactDetails")
     public void dvsaUserCanSeeUserContactDetails(User user) throws IOException, URISyntaxException {
@@ -84,7 +84,7 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isChangeEmailLinkIsDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "BL-448"},
+    @Test(groups = {"Regression", "BL-448"},
             description = "Verifies that authorised user can see dvsa roles on dvsa user profile",
             dataProvider = "dvsaUserForContactDetails")
     public void dvsaUserCanSeeDvsaUserRoles(User user) throws IOException, URISyntaxException {
@@ -118,7 +118,7 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isAccountSecuritySectionDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "BL-448"},
+    @Test(groups = {"Regression", "BL-448"},
             description = "Verifies that csco user can see account management section on other user profile")
     public void cscoUserCanSeeAccountManagementSectionOnAnyProfile() throws IOException, URISyntaxException {
 
@@ -131,7 +131,7 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isAccountManagementSectionDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "BL-448"},
+    @Test(groups = {"Regression", "BL-448"},
             description = "Verifies that authorised dvsa user can see change qualification links " +
                     "on trade user profile",
             dataProvider = "dvsaUser")
@@ -159,7 +159,7 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isChangeQualificationLinksDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "BL-1963"})
+    @Test(groups = {"2fa", "BL-1963"})
     public void registered2faTradeUserCanSeeSecurityCardPanelOnOwnProfile()  throws IOException, URISyntaxException {
 
         // Given I have registered for two factor authentication
@@ -172,7 +172,7 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isSecurityCardPanelDisplayed(), is(true));
     }
 
-    @Test(testName = "2faHardStopDisabled", groups = {"BVT", "BL-1963"})
+    @Test(testName = "2faHardStopDisabled", groups = {"2fa", "BL-1963"})
     public void notRegistered2faTradeUserCanNotSeeSecurityCardPanelOnOwnProfile()  throws IOException, URISyntaxException {
 
         // Given I have not registered for two factor authentication
@@ -185,7 +185,7 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isSecurityCardPanelDisplayed(), is(false));
     }
 
-    @Test(groups = {"BVT", "BL-1963"}, dataProvider = "dvsaUserForSecurityCard")
+    @Test(groups = {"2fa", "BL-1963"}, dataProvider = "dvsaUserForSecurityCard")
     public void dvsaCanSeeSecurityCardPanelOnRegistered2faTradeUserProfile(User dvsaUser)  throws IOException, URISyntaxException {
 
         step("Given a tester who has registered for two factor authentication");
@@ -198,7 +198,7 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isSecurityCardPanelDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "BL-1963"}, dataProvider = "dvsaUserForSecurityCard")
+    @Test(groups = {"2fa", "BL-1963"}, dataProvider = "dvsaUserForSecurityCard")
     public void dvsaCannotSeeSecurityCardPanelOnNonRegistered2faTradeUserProfile(User dvsaUser)  throws IOException, URISyntaxException {
 
         // Given a tester who has not registered for two factor authentication
@@ -222,7 +222,7 @@ public class ProfilePageViewTests extends DslTest {
         assertThat(motUI.profile.page().isSecurityCardPanelDisplayed(), is(false));
     }
 
-    @Test(testName = "2fa", groups = {"BVT", "BL-2354"})
+    @Test(testName = "2fa", groups = {"2fa", "BL-2354"})
     public void orderSecurityCardLinkShownToUserWhoGoneThroughLostForgottenJourney()  throws IOException {
         User twoFactorTester = motApi.user.createTester(site.getId());
 
