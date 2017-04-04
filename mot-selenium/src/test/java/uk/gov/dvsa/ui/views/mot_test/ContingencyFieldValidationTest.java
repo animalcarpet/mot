@@ -34,7 +34,7 @@ public class ContingencyFieldValidationTest extends DslTest {
         assertThat(motUI.contingency.getValidationListSize(), is(4));
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"Regression"})
     void contingencyCodeValidation() throws IOException, URISyntaxException {
         //Given I am on the record contingency page
         motUI.contingency.testPage(tester);
@@ -47,7 +47,7 @@ public class ContingencyFieldValidationTest extends DslTest {
                 equalToIgnoringCase(ContingencyValidation.CT_CODE_VALIDATION_MESSAGE));
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"Regression"})
     void timeIputValidation() throws IOException, URISyntaxException {
         //Given I am on the record contingency page
         motUI.contingency.testPage(tester);
@@ -60,7 +60,7 @@ public class ContingencyFieldValidationTest extends DslTest {
                 equalToIgnoringCase(ContingencyValidation.TIME_VALIDATION_MESSAGE));
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"Regression"})
     void dateInputValidation() throws IOException, URISyntaxException {
         //Given I am on the record contingency page
         motUI.contingency.testPage(tester);
@@ -73,7 +73,7 @@ public class ContingencyFieldValidationTest extends DslTest {
                 equalToIgnoringCase(ContingencyValidation.DATE_VALIDATION_MESSAGE));
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"Regression"})
     void selectReasonValidation() throws IOException, URISyntaxException {
         //Given I am on the record contingency page
         motUI.contingency.testPage(tester);

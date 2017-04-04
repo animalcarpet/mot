@@ -38,7 +38,7 @@ public class DVSAManagingUserRolesTests extends DslTest {
         tester = motApi.user.createTester(site.getId());
     }
 
-    @Test(groups = {"Regression"})
+    @Test(groups = {"roles"})
     public void areaOfficeUserAddsRoleToVeUser() throws IOException, URISyntaxException {
 
         //Given that I am on Manage roles page as a Area office 1 user
@@ -51,7 +51,7 @@ public class DVSAManagingUserRolesTests extends DslTest {
         assertThat(motUI.manageRoles.confirmRemoveRoleAction(), containsString("added"));
     }
 
-    @Test(groups = {"Regression"})
+    @Test(groups = {"roles"})
     public void areaOfficeUserRemovesRoleFromVeUser() throws IOException, URISyntaxException {
 
         //Given that I am on Manage roles page as a Area office 1 user
@@ -64,7 +64,7 @@ public class DVSAManagingUserRolesTests extends DslTest {
         assertThat(motUI.manageRoles.confirmRemoveRoleAction(), containsString("removed"));
     }
 
-    @Test(groups = {"Regression", "VM-12318"},
+    @Test(groups = {"roles", "VM-12318"},
             description = "Test that validates the authorised DVSA user can search for user by email with " +
                     "expanded additional search criteria section")
     public void areaOfficeUserCanSearchForUserByEmailExpandedSection() throws IOException, URISyntaxException {
@@ -79,7 +79,7 @@ public class DVSAManagingUserRolesTests extends DslTest {
         assertThat(motUI.searchUser.isUserSearchResultAccurate(vehicleExaminer), is(true));
     }
 
-    @Test(groups = {"Regression", "VM-12318"},
+    @Test(groups = {"roles", "VM-12318"},
             description = "Test that validates the authorised DVSA user can't search for user by email with " +
                     "collapsed additional search criteria section")
     public void areaOfficeUserCantSearchForUserByEmailCollapsedSection() throws IOException, URISyntaxException {
@@ -95,7 +95,7 @@ public class DVSAManagingUserRolesTests extends DslTest {
         assertThat(motUI.searchUser.isErrorMessageDisplayed(), is(true));
     }
 
-    @Test(groups = {"Regression", "VM-12168"},
+    @Test(groups = {"roles", "VM-12168"},
             description = "Test that validates the authorised DVSA user cant search for user by invalid email")
     public void areaOfficeUserCantSearchForUserByInvalidEmail() throws IOException, URISyntaxException {
 
@@ -109,7 +109,7 @@ public class DVSAManagingUserRolesTests extends DslTest {
         assertThat(motUI.searchUser.isNoResultsMessageDisplayed(), is(true));
     }
 
-    @Test(groups = {"VM-7646", "Regression"})
+    @Test(groups = {"VM-7646", "roles"})
     public void dvsaUserCanSearchOnTown() throws IOException, URISyntaxException {
 
         //Given that I am on Search user page as a authorised DVSA user
@@ -122,7 +122,7 @@ public class DVSAManagingUserRolesTests extends DslTest {
         assertThat(motUI.searchUser.isSearchResultAccurateWhenSearchingByTown("Bristol"), is(true));
     }
 
-    @Test(groups = {"VM-4741", "Regression"},
+    @Test(groups = {"VM-4741", "roles"},
             description = "Verify that authorised dvsa user can search for user with valid date of birth")
     public void dvsaUserCanSearchForUserByDateOfBirth() throws IOException, URISyntaxException {
 
@@ -136,7 +136,7 @@ public class DVSAManagingUserRolesTests extends DslTest {
         assertThat(motUI.searchUser.isSearchResultAccurateWhenSearchingByDOB("24-11-1961"), is(true));
     }
 
-    @Test(groups = {"VM-4741", "Regression"},
+    @Test(groups = {"VM-4741", "roles"},
             description = "Verify error message is displayed when search user with invalid format date")
     public void dvsaUserCantSearchForUserByInvalidFormatDateOfBirth() throws IOException, URISyntaxException {
 
@@ -150,7 +150,7 @@ public class DVSAManagingUserRolesTests extends DslTest {
         assertThat(motUI.searchUser.isErrorMessageDisplayed(), is(true));
     }
 
-    @Test(groups = {"VM-4741", "Regression"},
+    @Test(groups = {"VM-4741", "roles"},
             description = "Verify proper message was displayed when user search page return too many results")
     public void dvsaUserSearchTooManyResults() throws IOException, URISyntaxException {
         //Given that I am on Search user page as a Area office 1 user
@@ -163,7 +163,7 @@ public class DVSAManagingUserRolesTests extends DslTest {
         assertThat(motUI.searchUser.isTooManyResultsMessageDisplayed("success@simulator.amazonses.com"), is(true));
     }
 
-    @Test(groups = {"VM-4698", "VM-4842", "VM-7724", "Regression"},
+    @Test(groups = {"VM-4698", "VM-4842", "VM-7724", "roles"},
             description = "Verify that authorised dvsa user can search for user by valid username")
     public void dvsaSearchUserByUsername() throws IOException, URISyntaxException {
         //Given that I am on Search user page as a Area office 1 user
@@ -176,7 +176,7 @@ public class DVSAManagingUserRolesTests extends DslTest {
         assertThat(motUI.searchUser.isUserSearchResultAccurate(vehicleExaminer), is(true));
     }
 
-    @Test(groups = {"Regression", "BL-1336"},
+    @Test(groups = {"roles", "BL-1336"},
             description = "Verify that authorised dvsa user can navigate back from user profile to user search for user with valid username")
     public void dvsaCanSeeSearchParametersAfterNavigatingBackFromUserProfile() throws IOException, URISyntaxException {
         //Given that I am on Search user page as a Area office 1 user
@@ -193,7 +193,7 @@ public class DVSAManagingUserRolesTests extends DslTest {
         assertThat(userSearchPage.getUserNameFieldValue(), containsString(vehicleExaminer.getUsername()));
     }
 
-    @Test(groups = {"Regression"}, description = "Verify that authorised dvsa user can search for user and " +
+    @Test(groups = {"roles"}, description = "Verify that authorised dvsa user can search for user and " +
             "get back to user search page with Back to user search link")
     public void dvsaSearchUserByNameAndGetBackToUserSearchPage() throws IOException, URISyntaxException {
         //Given that I am on Search user page as a Area office 1 user
@@ -206,7 +206,7 @@ public class DVSAManagingUserRolesTests extends DslTest {
         assertThat(motUI.searchUser.isSearchButtonDisplayed(), is(true));
     }
 
-    @Test(groups = {"Regression", "VM-12321"},
+    @Test(groups = {"roles", "VM-12321"},
             description = "Verifies that authorised user can check user roles via roles and associations link " +
                     "on user profile page")
     public void dvsaUserCanViewTradesUserRolesAndAssociationsFromUserSearch() throws IOException, URISyntaxException {
@@ -218,7 +218,7 @@ public class DVSAManagingUserRolesTests extends DslTest {
         assertThat(motUI.profile.page().clickRolesAndAssociationsLink().getRoleValues().isEmpty(), is(false));
     }
 
-    @Test(groups = {"Regression", "VM-12321"},
+    @Test(groups = {"roles", "VM-12321"},
             description = "Verifies that authorised DVSA user can check roles via roles and associations link " +
                     "of trade user")
     public void dvsaUserCanViewTradeUsersRolesAndAssociations() throws IOException, URISyntaxException {
@@ -230,7 +230,7 @@ public class DVSAManagingUserRolesTests extends DslTest {
         assertThat(motUI.profile.page().isRolesAndAssociationsLinkDisplayed(), is(true));
     }
 
-    @Test(groups = {"Regression", "VM-12321"},
+    @Test(groups = {"roles", "VM-12321"},
             description = "Verifies that authorised user can navigate back from roles and associations page " +
                     "to user user profile page via link")
     public void dvsaUserNavigatesBackFromRolesAndAssociationsPageViaLink() throws IOException, URISyntaxException {

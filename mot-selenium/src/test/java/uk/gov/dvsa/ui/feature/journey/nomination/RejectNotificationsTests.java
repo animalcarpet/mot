@@ -22,7 +22,7 @@ import static org.hamcrest.Matchers.is;
 @Features("Nomination notification(s) for nominees to accept or reject role")
 public class RejectNotificationsTests extends DslTest {
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"nomination"})
     void non2faUserCannotRejectNominationWith2faOn() throws IOException {
         step("Given I have been nominated for a Site Manager role as non 2fa user");
         User not2faActiveUser = motApi.user.createUserWithoutRole();
@@ -35,7 +35,7 @@ public class RejectNotificationsTests extends DslTest {
                 motUI.nominations.viewMostRecent(not2faActiveUser).isRejectButtonDisplayed(), is(false));
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"nomination"})
     void userRejectsSiteManagerNominationWith2FAon() throws IOException {
         step("Given I have been nominated for a Site Manager role as non 2fa user");
         User user = motApi.user.createUserWithoutRole();
@@ -51,7 +51,7 @@ public class RejectNotificationsTests extends DslTest {
                 message, containsString("You have rejected the role of Site manager"));
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"nomination"})
     void userRejectsSiteAdminNominationWith2FAon() throws IOException {
         step("Given I have been nominated for a Site Admin role as non 2fa user");
         User user = motApi.user.createUserWithoutRole();
@@ -67,7 +67,7 @@ public class RejectNotificationsTests extends DslTest {
                 message, containsString("You have rejected the role of Site admin"));
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"nomination"})
     void userRejectsTesterNominationWith2FAon() throws IOException {
         step("Given I have been nominated for a Tester role as non 2fa user");
         User user = motApi.user.createUserWithoutRole();
@@ -86,7 +86,7 @@ public class RejectNotificationsTests extends DslTest {
                 message, containsString("You have rejected the role of Tester"));
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"nomination"})
     void userRejectsAEDNominationWith2FAon() throws IOException {
         step("Given I have been nominated for an AED role as non 2fa user");
         User user = motApi.user.createUserWithoutRole();

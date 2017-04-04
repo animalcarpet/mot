@@ -29,7 +29,7 @@ public class LoginTests extends DslTest {
         assertThat(motUI.isLoginSuccessful(), is(true));
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"2fa"})
     public void userCanActivateCard() throws IOException {
         //Given I am an authenticated user
         User twoFactorUser = motApi.user.createNon2FaTester(siteData.createSite().getId());
@@ -41,7 +41,7 @@ public class LoginTests extends DslTest {
         assertThat("Activation Successful", activationMessage, containsString("Your security card has been activated"));
     }
 
-    @Test(testName = "2faHardStopDisabled", groups = {"BVT"})
+    @Test(testName = "2faHardStopDisabled", groups = {"2fa"})
     public void userCanSkipActivationFromCardInformation() throws IOException {
         //Given I am not a 2FA activated user
         User tester = motApi.user.createNon2FaTester(siteData.createSite().getId());
@@ -55,7 +55,7 @@ public class LoginTests extends DslTest {
         assertThat("Login Successful", motUI.isLoginSuccessful(), is(true));
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"2fa"})
     public void userCannotActivateInvalidCard() throws IOException {
         //Given I am on the 2fa Activation Page after login in
         User tester = motApi.user.createNon2FaTester(siteData.createSite().getId());
@@ -67,7 +67,7 @@ public class LoginTests extends DslTest {
         assertThat("Activation NOT Successful", motUI.authentication.isValidationSummaryDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"2fa"})
     public void userCanLogInAfterActivation() throws IOException {
         //Given am logged out of my session as a two factor user
         User twoFactorUser = motApi.user.createNon2FaTester(siteData.createSite().getId());
@@ -82,7 +82,7 @@ public class LoginTests extends DslTest {
         assertThat("Login Successful", motUI.isLoginSuccessful(), is(true));
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"roles"})
     public void dvsaUsersWithTradeRoleNotShownActivationInformationScreen() throws IOException
     {
         //Given I am DVSA user with Trade Role
@@ -96,7 +96,7 @@ public class LoginTests extends DslTest {
         assertThat(motUI.isLoginSuccessful(), is(true));
     }
 
-    @Test(testName = "2faHardStopDisabled", groups = {"BVT"})
+    @Test(testName = "2faHardStopDisabled", groups = {"2fa"})
     public void nonRegistered2faUsersDoNotSeeCardInformationPageTwice() throws IOException
     {
         //Given I am test user who has already seen the card information page
@@ -124,7 +124,7 @@ public class LoginTests extends DslTest {
         assertThat(loginPage.isValidationSummaryDisplayed(), is(true));
     }
 
-    @Test(testName = "2faHardStop", groups = {"BVT"})
+    @Test(testName = "2faHardStop", groups = {"2fa"})
     public void loginTradeUserNot2faActivatedShouldDisplay2faHardStopPage() throws IOException {
         step("Given I am a non 2fa activated Trade User ");
         User non2faUser = motApi.user.createNon2FaTester(siteData.createSite().getId());

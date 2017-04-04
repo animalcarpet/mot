@@ -97,7 +97,7 @@ public class BrakeTestResultsTest extends DslTest {
     }
 
     @Test(description = "Verify that brake test result values are removed when adding a 'Brake performance not tested' " +
-                    "defect during an original MOT test")
+                    "defect during an original MOT test", groups = {"Regression"})
     public void removeBrakeTestResultsWhenAddingBrakePerformanceNotTestedDefect() throws IOException, URISyntaxException {
 
         Defect brakePerformanceNotTested = getBrakePerformanceNotTestedDefect();
@@ -118,7 +118,7 @@ public class BrakeTestResultsTest extends DslTest {
     }
 
     @Test(description = "Verify that brake test result values are removed when undoing the 'mark as repaired' action on " +
-                    "a 'Brake performance not tested' defect during an MOT re-test")
+                    "a 'Brake performance not tested' defect during an MOT re-test", groups = {"Regression"})
     public void removeBrakeTestResultsWhenUndoingMarkAsRepairedForBrakePerformanceNotTestedDefectDuringRetest() throws IOException, URISyntaxException {
 
         List<ReasonForRejection> reasonForRejectionsList = new ArrayList<>();

@@ -69,7 +69,7 @@ public class SearchForADefectPageTests extends DslTest {
         // Then I should be navigated to the MOT Test results page
     }
 
-    @Test(groups = {"BVT", "BL-1932"},
+    @Test(groups = {"Regression", "BL-1932"},
             description = "Checks that the Search returns no results for a search string that does not exist")
     public void testSearchForADefectPageNoResults() throws IOException, URISyntaxException {
 
@@ -99,7 +99,7 @@ public class SearchForADefectPageTests extends DslTest {
                 "10mm", "2", "Windscreen has damage to an area in excess of a 10mm circle within zone 'A'"), is(true));
     }
 
-    @Test(groups = {"BVT", "BL-3075"},
+    @Test(groups = {"Regression", "BL-3075"},
             description = "Checks that the Searching returns are not paginated when there are less than 10 results")
     public void testSearchForADefectPageWithNoPagination() throws IOException, URISyntaxException {
 
@@ -142,7 +142,7 @@ public class SearchForADefectPageTests extends DslTest {
                 !searchForADefectPage.isPaginationPreviousDisplayed() && searchForADefectPage.isPaginationNextDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "BL-3075"},
+    @Test(groups = {"Regression", "BL-3075"},
             description = "Checks that after navigating to the middle page of pagination the previous and next button should be displayed")
     public void testSearchResultsPaginationPage2() throws IOException, URISyntaxException {
 
@@ -157,7 +157,7 @@ public class SearchForADefectPageTests extends DslTest {
                 searchForADefectPage.isPaginationPreviousDisplayed() && searchForADefectPage.isPaginationNextDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "BL-3075"},
+    @Test(groups = {"Regression", "BL-3075"},
             description = "Checks that after navigating to the last page of pagination the next link is not displayed")
     public void testSearchResultsPaginationLastPage() throws IOException, URISyntaxException {
 
@@ -172,7 +172,7 @@ public class SearchForADefectPageTests extends DslTest {
                 searchForADefectPage.isPaginationPreviousDisplayed() && !searchForADefectPage.isPaginationNextDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "BL-3075"},
+    @Test(groups = {"Regression", "BL-3075"},
             description = "Checks that after navigating to the 5th page of pagination where there are more than 5 displays the correct pagination numbers")
     public void testSearchResultsPaginationMoreThan5Pages() throws IOException, URISyntaxException {
 

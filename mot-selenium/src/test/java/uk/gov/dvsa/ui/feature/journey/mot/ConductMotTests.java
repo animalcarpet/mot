@@ -76,7 +76,7 @@ public class ConductMotTests extends DslTest {
         assertThat(testCompletePage.isReturnToHomepageLinkDisplayed(), is(true));
     }
 
-    @Test(testName = "2fa", groups = {"BVT"}, description = "Two Factor Authenticated users " +
+    @Test(testName = "2fa", groups = {"2fa"}, description = "Two Factor Authenticated users " +
             "should not be required to enter one time password")
     public void oneTimePasswordBoxNotDisplayedForTwoFactorAuthTester() throws IOException, URISyntaxException {
 
@@ -90,7 +90,7 @@ public class ConductMotTests extends DslTest {
         assertThat(motUI.normalTest.isOneTimeInputBoxDisplayed(), is(false));
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"Regression"})
     public void passSuccessfullyFloorBrakeTestWithLockBoxes() throws IOException, URISyntaxException {
         vehicle = vehicleData.getNewVehicle(tester, VehicleClass.one);
         TestResultsEntryGroupAPageInterface testResultsEntryPage;
@@ -108,7 +108,7 @@ public class ConductMotTests extends DslTest {
         testResultsEntryPage.clickReviewTestButton().clickFinishButton(TestCompletePage.class);
     }
 
-    @Test(groups = {"BVT"})
+    @Test(groups = {"Regression"})
     public void passSuccessfullyRollerBrakeTestWithLockBoxes() throws IOException, URISyntaxException {
         vehicle = vehicleData.getNewVehicle(tester, VehicleClass.one);
         TestResultsEntryGroupAPageInterface testResultsEntryPage;
@@ -140,7 +140,7 @@ public class ConductMotTests extends DslTest {
         assertThat(testAbandonedPage.isVT30messageDisplayed(), is(true));
     }
 
-    @Test(testName = "2fa", groups = {"BVT"} )
+    @Test(testName = "2fa", groups = {"2fa"} )
     public void startAndAbandonTest2FaActiveUser() throws URISyntaxException, IOException {
         //Given I am a 2FA activated user and I am on the Test Results Page
         User twoFactorUser = motApi.user.createTester(site.getId());
@@ -154,7 +154,7 @@ public class ConductMotTests extends DslTest {
         assertThat(testAbandonedPage.isVT30messageDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT"} )
+    @Test(groups = {"Regression"} )
     public void startAndAbortTestAsTester() throws URISyntaxException, IOException {
 
         //Given I start a test and I am on the Test Results Page
@@ -167,7 +167,7 @@ public class ConductMotTests extends DslTest {
         assertThat(testAbortedPage.isVT30messageDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT"} )
+    @Test(groups = {"Regression"} )
     public void startAndAbortTestAsVE() throws URISyntaxException, IOException {
         User vehicleExaminer = motApi.user.createVehicleExaminer("Default-VE", false);
 
@@ -284,7 +284,7 @@ public class ConductMotTests extends DslTest {
         assertThat(testResultsEntryNewPage.isMarkAsRepairedButtonDisplayed(defectName), is(true));
     }
 
-    @Test(groups = {"BVT", "BL-1423"}, description = "Verifies that user is not able to see defect on a summary page after repairing it")
+    @Test(groups = {"Regression", "BL-1423"}, description = "Verifies that user is not able to see defect on a summary page after repairing it")
     public void statusOfRepairedDefectDuringRetestOnSummaryPage() throws IOException, URISyntaxException {
         //Given I have a vehicle with a failed MOT test
         motApi.createTestWithRfr(tester, site.getId(), vehicle, TestOutcome.FAILED, 12345, DateTime.now(), reasonForRejectionsList);

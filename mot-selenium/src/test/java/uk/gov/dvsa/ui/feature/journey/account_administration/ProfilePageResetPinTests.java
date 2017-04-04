@@ -14,7 +14,7 @@ import static org.hamcrest.core.Is.is;
 public class ProfilePageResetPinTests extends DslTest {
 
 
-    @Test(groups = {"BVT", "2fa", "Regression", "BL-1571"},
+    @Test(groups = {"2fa", "BL-1571"},
             testName = "2faHardStopDisabled",
             description = "Test that a non-2fa user can reset their pin from profile")
     public void non2faUserCanResetPinViaProfile() throws IOException {
@@ -26,7 +26,7 @@ public class ProfilePageResetPinTests extends DslTest {
         assertThat(motUI.profile.page().isResetPinLinkDisplayed(), is(true));
     }
 
-    @Test(groups = {"BVT", "2fa", "Regression", "BL-1571"},
+    @Test(groups = {"2fa", "BL-1571"},
             description = "Test that a 2fa user can not reset their pin from profile")
     public void twoFaActiveUserCanNotResetPinViaProfile() throws IOException {
         // Given I am a user who has activated a 2FA card

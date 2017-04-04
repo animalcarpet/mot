@@ -29,7 +29,7 @@ public class PerformTesterFunctionTests extends DslTest {
         tester = motApi.user.createTester(testSite.getId());
     }
 
-    @Test (groups = {"Regression"})
+    @Test (groups = {"roles"})
     public void viewPerformanceDashboard() throws Exception {
 
         //Given I have done only 1 mot test
@@ -47,7 +47,7 @@ public class PerformTesterFunctionTests extends DslTest {
         assertThat(performanceDashBoardPage.getPassedTestText(), equalTo("1"));
     }
 
-    @Test (groups = {"BVT"})
+    @Test (groups = {"roles"})
     public void verifyTheCorrectAeAndVtsIsDisplayed() throws Exception {
 
         //Given I am logged as a Tester and I am on my homepage
@@ -60,7 +60,7 @@ public class PerformTesterFunctionTests extends DslTest {
         assertThat(homePage.getSiteName(), equalTo(testSite.getSiteNameAndNumberInHomePageFormat()));
     }
 
-    @Test (groups = {"BVT"})
+    @Test (groups = {"roles"})
     public void myRoleIsDisplayedAsTester() throws Exception {
 
         //Given I am logged as a Tester and I am on my homepage

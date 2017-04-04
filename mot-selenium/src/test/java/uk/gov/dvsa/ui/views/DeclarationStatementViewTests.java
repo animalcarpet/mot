@@ -30,7 +30,7 @@ public class DeclarationStatementViewTests extends DslTest {
         vehicle = vehicleData.getNewVehicle(tester);
     }
 
-    @Test (testName="2faHardStopDisabled", groups = {"BVT"})
+    @Test (testName="2faHardStopDisabled", groups = {"2fa"})
     public void displayStatementAtTestSummaryPage() throws IOException, URISyntaxException {
 
         //Given I complete a normal test as a tester
@@ -42,7 +42,7 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(true));
     }
 
-    @Test (groups = {"BVT"})
+    @Test (groups = {"2fa"})
     public void display2faStatementAtTestSummaryPage() throws IOException, URISyntaxException {
 
         //Given I complete a normal test as a 2FA tester
@@ -69,7 +69,7 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.retest.isDeclarationStatementDisplayed(), is(true));
     }
 
-    @Test (testName="2faHardStopDisabled", groups = {"Regression"})
+    @Test (testName="2faHardStopDisabled", groups = {"2fa"})
     public void statementShouldNotBeDisplayedForTrainingTest() throws IOException, URISyntaxException {
 
         //Given I am on the review Page of training test
@@ -92,7 +92,7 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(true));
     }
 
-    @Test (groups = {"BVT"})
+    @Test (groups = {"2fa"})
     public void display2faStatementWhenAbortingTest() throws IOException, URISyntaxException {
 
         //Given I have an in progress Mot Test
@@ -106,7 +106,7 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.normalTest.isDeclarationStatementDisplayed(), is(true));
     }
 
-    @Test (testName="2faHardStopDisabled", groups = {"Regression"})
+    @Test (testName="2faHardStopDisabled", groups = {"2fa"})
     public void statementShouldNotBeDisplayedOnTestRefusal() throws IOException, URISyntaxException {
 
         //Given I refuse to test a vehicle
@@ -129,7 +129,7 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.contingency.isDeclarationStatementDisplayed(), is(true));
     }
 
-    @Test (testName = "2faHardStopDisabled", groups = {"Regression"})
+    @Test (testName = "2faHardStopDisabled", groups = {"2fa"})
     public void replacementCertificateDeclarationStatement() throws IOException, URISyntaxException {
 
         //Given I have completed an Mot Test
@@ -144,7 +144,7 @@ public class DeclarationStatementViewTests extends DslTest {
         assertThat(motUI.certificate.isDeclarationStatementDisplayed(), is(true));
     }
 
-    @Test (groups = {"BVT"})
+    @Test (groups = {"2fa"})
     public void displayDeclarationStatementFor2faUserOnReplacementCertificatePage() throws IOException, URISyntaxException {
 
         //Given I have completed an Mot Test as 2fa user

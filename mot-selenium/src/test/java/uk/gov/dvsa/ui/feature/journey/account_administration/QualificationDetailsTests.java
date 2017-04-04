@@ -27,7 +27,7 @@ public class QualificationDetailsTests extends DslTest {
         testSite2 = siteData.createNewSite(aeDetails.getId(), "Test_Site2");
     }
 
-    @Test(groups = {"Regression"},
+    @Test(groups = {"2fa"},
             testName = "2fa",
             description = "test that a user with no qualification can add their qualification details")
     public void userCanAddNewQualificationDetails() throws IOException
@@ -58,7 +58,7 @@ public class QualificationDetailsTests extends DslTest {
             .isOrderCardLinkDisplayed(), is(false));
     }
 
-    @Test(testName = "2fa", groups = {"Regression"})
+    @Test(testName = "2fa", groups = {"2fa"})
     public void userWithNoSecurityCardOrdersSeesOrderSectionOnConfirmation() throws IOException {
 
         step("Given I am a user who has a new certificate with no security card orders");
@@ -99,7 +99,7 @@ public class QualificationDetailsTests extends DslTest {
         Assert.assertTrue(motUI.profile.qualificationDetails().verifyDetailsChangedForGroupA(certificateNumber, "3 April 2016"));
     }
 
-    @Test(groups = {"BVT"},
+    @Test(groups = {"Regression"},
         testName = "Edit qualification details",
         description = "test that new newUser can edit his qualification details"
     )

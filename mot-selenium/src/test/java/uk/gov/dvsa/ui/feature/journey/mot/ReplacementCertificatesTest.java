@@ -89,7 +89,7 @@ public class ReplacementCertificatesTest extends DslTest {
         assertThat(motUI.certificate.isReprintButtonDisplayed(), is(true));
     }
 
-    @Test(groups = {"Regression"})
+    @Test(groups = {"2fa"})
     public void pinBoxNotShownWhenTwoFactorUserEditCertificate() throws IOException, URISyntaxException {
 
         //Given I create a test as a 2FA user
@@ -106,7 +106,7 @@ public class ReplacementCertificatesTest extends DslTest {
         assertThat("Pin Box is not Displayed", motUI.certificate.isPinBoxDisplayed(), is(false));
     }
 
-    @Test(testName="2faHardStopDisabled", groups = {"Regression"})
+    @Test(testName="2faHardStopDisabled", groups = {"2fa"})
     public void pinBoxShownWhenNonTwoFactorUserEditCertificate() throws IOException, URISyntaxException {
 
         //Given I create a test as a non 2fa tester
