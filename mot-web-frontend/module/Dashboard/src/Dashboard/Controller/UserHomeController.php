@@ -207,6 +207,7 @@ class UserHomeController extends AbstractAuthActionController
 
         $this->layout('layout/layout-govuk.phtml');
         $this->layout()->setVariable('isHomePage', true);
+        $this->setHeadTitle('Your home');
 
         return $userHomeViewModel;
     }
