@@ -14,6 +14,13 @@ use Event\Service\EventStepService;
 use Event\Step\RecordStep;
 use Event\Step\SummaryStep;
 use Zend\View\Model\ViewModel;
+use PHPUnit_Framework_MockObject_MockObject;
+use Zend\Mvc\Service\ViewHelperManagerFactory;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceManager;
+use Zend\View\Helper\Url;
+use Zend\View\HelperPluginManager;
+use Zend\View\Helper\HeadTitle;
 
 /**
  * Class EventSummaryControllerTest.
@@ -45,6 +52,9 @@ class EventSummaryControllerTest extends \PHPUnit_Framework_TestCase
             ])
             ->getMock();
 
+        $serviceLocator = $this->getServiceLocatorMock();
+        $controller->setServiceLocator($serviceLocator);
+
         $controller->expects($this->once())->method('extractRouteParams');
         $controller->expects($this->once())->method('loadEventCatalogData');
         $controller->expects($this->once())->method('loadEventCategory');
@@ -61,9 +71,6 @@ class EventSummaryControllerTest extends \PHPUnit_Framework_TestCase
         $session = XMock::of(EventSessionService::class);
 
         $model = XMock::of(ViewModel::class);
-        //$model->expects($this->at(0))->method('setVariable')->willReturn(array('day'=>19,'month'=>9,'year'=>2015));
-        //$model->expects($this->at(1))->method('setVariable')->willReturn(1234);
-        //$model->expects($this->at(2))->method('setVariable')->willReturn(1234);
 
         $step = XMock::of(RecordStep::class);
         $step->expects($this->any())->method('load')->willReturn($step);
@@ -89,6 +96,9 @@ class EventSummaryControllerTest extends \PHPUnit_Framework_TestCase
             ])
             ->getMock();
 
+        $serviceLocator = $this->getServiceLocatorMock();
+        $controller->setServiceLocator($serviceLocator);
+
         $controller->expects($this->once())->method('extractRouteParams');
         $controller->expects($this->once())->method('loadEventCatalogData');
         $controller->expects($this->once())->method('loadEventCategory');
@@ -100,5 +110,28 @@ class EventSummaryControllerTest extends \PHPUnit_Framework_TestCase
         $controller->expects($this->once())->method('makeDate')->willReturn(['day' => 19, 'month' => 9, 'year' => 2015]);
 
         $controller->indexAction();
+    }
+
+    /**
+     * @return PHPUnit_Framework_MockObject_MockObject|ServiceLocatorInterface
+     * @throws \Exception
+     */
+    private function getServiceLocatorMock()
+    {
+        $helperPluginManager = XMock::of(HelperPluginManager::class);
+        $helperPluginManager
+            ->expects($this->any())
+            ->method('get')
+            ->with('headTitle')
+            ->willReturn(XMock::of(HeadTitle::class));
+
+        /**  @var ServiceLocatorInterface | PHPUnit_Framework_MockObject_MockObject $serviceLocator */
+        $serviceLocator = XMock::of(ServiceLocatorInterface::class);
+        $serviceLocator
+            ->expects($this->any())
+            ->method('get')
+            ->with('ViewHelperManager')
+            ->willReturn($helperPluginManager);
+        return $serviceLocator;
     }
 }

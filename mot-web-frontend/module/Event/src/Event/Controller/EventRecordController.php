@@ -75,6 +75,8 @@ class EventRecordController extends EventBaseController
             }
         }
 
+        $this->setHeadTitle('Record an event');
+
         return $viewModel;
     }
 

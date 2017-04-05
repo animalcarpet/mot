@@ -80,6 +80,7 @@ class EventController extends AbstractAuthActionController
         */
 
         $this->layout('layout/layout-govuk.phtml');
+        $this->setHeadTitle('Events history');
 
         $id = $this->params()->fromRoute('id');
         $type = $this->params()->fromRoute('type');
@@ -331,6 +332,7 @@ class EventController extends AbstractAuthActionController
         */
 
         $this->layout('layout/layout-govuk.phtml');
+        $this->setHeadTitle('Event details');
 
         if ($this->getAuthorizationService()->isGranted(PermissionInSystem::EVENT_READ) === false) {
             return $this->redirect()->toUrl(PersonUrlBuilderWeb::home());
