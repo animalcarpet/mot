@@ -56,6 +56,8 @@ class EventSummaryController extends EventBaseController
             );
         }
 
+        $this->setHeadTitle('Event summary');
+
         return $viewModel;
     }
 

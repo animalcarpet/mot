@@ -42,6 +42,8 @@ class EventOutcomeController extends EventBaseController
             );
         }
 
+        $this->setHeadTitle('Record an event outcome');
+
         return $viewModel;
     }
 }

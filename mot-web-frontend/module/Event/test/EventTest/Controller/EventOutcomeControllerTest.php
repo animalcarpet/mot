@@ -14,6 +14,13 @@ use Event\Service\EventStepService;
 use Event\Step\OutcomeStep;
 use Event\Step\RecordStep;
 use Zend\View\Model\ViewModel;
+use PHPUnit_Framework_MockObject_MockObject;
+use Zend\Mvc\Service\ViewHelperManagerFactory;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceManager;
+use Zend\View\Helper\Url;
+use Zend\View\HelperPluginManager;
+use Zend\View\Helper\HeadTitle;
 
 /**
  * Class EventOutcomeControllerTest.
@@ -44,6 +51,9 @@ class EventOutcomeControllerTest extends \PHPUnit_Framework_TestCase
                 'resetOutcomeStep',
             ])
             ->getMock();
+
+        $serviceLocator = $this->getServiceLocatorMock();
+        $controller->setServiceLocator($serviceLocator);
 
         $controller->expects($this->once())->method('extractRouteParams');
         $controller->expects($this->once())->method('loadEventCatalogData');
@@ -83,6 +93,9 @@ class EventOutcomeControllerTest extends \PHPUnit_Framework_TestCase
             ])
             ->getMock();
 
+        $serviceLocator = $this->getServiceLocatorMock();
+        $controller->setServiceLocator($serviceLocator);
+
         $controller->expects($this->once())->method('extractRouteParams');
         $controller->expects($this->once())->method('loadEventCatalogData');
         $controller->expects($this->once())->method('loadEventCategory');
@@ -91,5 +104,28 @@ class EventOutcomeControllerTest extends \PHPUnit_Framework_TestCase
         $controller->expects($this->once())->method('injectViewModelVariables')->willReturn($model);
 
         $controller->indexAction();
+    }
+
+    /**
+     * @return PHPUnit_Framework_MockObject_MockObject|ServiceLocatorInterface
+     * @throws \Exception
+     */
+    private function getServiceLocatorMock()
+    {
+        $helperPluginManager = XMock::of(HelperPluginManager::class);
+        $helperPluginManager
+            ->expects($this->any())
+            ->method('get')
+            ->with('headTitle')
+            ->willReturn(XMock::of(HeadTitle::class));
+
+        /**  @var ServiceLocatorInterface | PHPUnit_Framework_MockObject_MockObject $serviceLocator */
+        $serviceLocator = XMock::of(ServiceLocatorInterface::class);
+        $serviceLocator
+            ->expects($this->any())
+            ->method('get')
+            ->with('ViewHelperManager')
+            ->willReturn($helperPluginManager);
+        return $serviceLocator;
     }
 }
