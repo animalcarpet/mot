@@ -12,6 +12,8 @@ if($authError) {
     $this->gtmDataLayer(['event' => 'user-login-failed', 'reason' => 'wrong-username-or-password']);
 }
 
+$this->headTitle('Sign in');
+
 ?>
 <div class="grid-row">
     <div class="__sign-in">

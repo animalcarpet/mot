@@ -8,6 +8,7 @@ $this->layout()->setVariables([
     'pageSubTitle' => 'Sign in without your security card',
     'hideUserNav' => true
 ]);
+$this->headTitle('First security question');
 ?>
 <form action="<?php echo $this->url('lost-or-forgotten-card/question-one'); ?>" method="post" autocomplete="off">
     <?php echo $this->csrfToken(); ?>

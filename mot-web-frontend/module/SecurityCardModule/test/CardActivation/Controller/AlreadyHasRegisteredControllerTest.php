@@ -14,7 +14,14 @@ use Dvsa\Mot\Frontend\SecurityCardModule\Security\SecurityCardGuard;
 use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
 use DvsaCommon\Auth\MotIdentityProviderInterface;
 use DvsaCommonTest\TestUtils\XMock;
+use PHPUnit_Framework_MockObject_MockObject;
+use Zend\Mvc\Service\ViewHelperManagerFactory;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceManager;
 use Zend\View\Model\ViewModel;
+use Zend\View\Helper\Url;
+use Zend\View\HelperPluginManager;
+use Zend\View\Helper\HeadTitle;
 
 class AlreadyHasRegisteredControllerTest extends AbstractLightWebControllerTest
 {
@@ -141,6 +148,32 @@ class AlreadyHasRegisteredControllerTest extends AbstractLightWebControllerTest
         $this->setController($controller);
         $this->setUpPluginMocks();
 
+        $serviceLocator = $this->getServiceLocatorMock();
+        $controller->setServiceLocator($serviceLocator);
+
         return $controller;
+    }
+
+    /**
+     * @return PHPUnit_Framework_MockObject_MockObject|ServiceLocatorInterface
+     * @throws \Exception
+     */
+    private function getServiceLocatorMock()
+    {
+        $helperPluginManager = XMock::of(HelperPluginManager::class);
+        $helperPluginManager
+            ->expects($this->any())
+            ->method('get')
+            ->with('headTitle')
+            ->willReturn(XMock::of(HeadTitle::class));
+
+        /**  @var ServiceLocatorInterface | PHPUnit_Framework_MockObject_MockObject $serviceLocator */
+        $serviceLocator = XMock::of(ServiceLocatorInterface::class);
+        $serviceLocator
+            ->expects($this->any())
+            ->method('get')
+            ->with('ViewHelperManager')
+            ->willReturn($helperPluginManager);
+        return $serviceLocator;
     }
 }

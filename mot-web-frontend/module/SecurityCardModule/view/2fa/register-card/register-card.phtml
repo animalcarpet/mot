@@ -8,6 +8,7 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\ViewModel\RegisterCardVi
 
 $this->layout('layout/layout-govuk.phtml');
 $this->layout()->setVariable('pageTitle', 'Activate your security card');
+$this->headTitle('Activate your security card');
 
 $gtmData = $viewModel->getGtmData();
 if (!empty($gtmData)) {

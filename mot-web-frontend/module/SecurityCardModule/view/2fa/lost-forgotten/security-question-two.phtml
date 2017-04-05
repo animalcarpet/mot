@@ -9,6 +9,7 @@ $this->layout()->setVariables([
     'pageSubTitle' => 'Sign in without your security card',
     'hideUserNav' => true
 ]);
+$this->headTitle('Second security question');
 
 $successMessages    = $this->layout()->flashMessenger->getSuccessMessages();
 echo $this->partial('partial/gds/general/system-message', ['messages' => $successMessages, 'type' => 'success']);

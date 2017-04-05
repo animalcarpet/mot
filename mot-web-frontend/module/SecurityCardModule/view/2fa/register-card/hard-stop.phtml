@@ -2,10 +2,12 @@
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\ViewModel\RegisterCardHardStopViewModel;
 
 $this->layout('layout/layout-govuk.phtml');
+$this->headTitle('Activate your security card now');
+/** @var  RegisterCardHardStopViewModel $viewModel */
 $this->layout()->setVariables([
     'pageTitle' => '' /* design required empty title */,
 ]);
-/** @var  RegisterCardHardStopViewModel $viewModel */
+
 ?>
 
 <div></div>

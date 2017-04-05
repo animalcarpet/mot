@@ -21,6 +21,9 @@ use Zend\Authentication\AuthenticationService;
 use Zend\Di\ServiceLocator;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\Parameters;
+use Zend\View\Helper\Url;
+use Zend\View\HelperPluginManager;
+use Zend\View\Helper\HeadTitle;
 
 class RegisteredCardControllerTest extends AbstractLightWebControllerTest
 {
@@ -291,10 +294,28 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
         $serviceLocator->setAllowOverride(true);
         $serviceLocator->setService('Feature\FeatureToggles', $this->featureToggle);
 
+        $helperPluginManager = $this->getHelperPluginManager();
+        $serviceLocator->setService('ViewHelperManager', $helperPluginManager);
+
         $controller->setServiceLocator($serviceLocator);
 
         $this->setController($controller);
 
         return $controller;
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @throws \Exception
+     */
+    private function getHelperPluginManager()
+    {
+        $helperPluginManager = XMock::of(HelperPluginManager::class);
+        $helperPluginManager
+            ->expects($this->any())
+            ->method('get')
+            ->with('headTitle')
+            ->willReturn(XMock::of(HeadTitle::class));
+        return $helperPluginManager;
     }
 }

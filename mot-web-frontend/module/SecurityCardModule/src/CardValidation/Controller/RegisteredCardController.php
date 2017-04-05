@@ -95,6 +95,7 @@ class RegisteredCardController extends AbstractDvsaActionController
 
         if ($response instanceof ViewModel) {
             $this->layout('layout/layout-govuk.phtml');
+            $this->setHeadTitle('Your security card PIN');
             $this->layout()->setVariables([
                 'pageTitle' => self::TWO_FACTOR_AUTH_LOGIN_PAGE_TITLE,
                 'pageSubTitle' => self::TWO_FACTOR_AUTH_LOGIN_PAGE_SUBTITLE,
