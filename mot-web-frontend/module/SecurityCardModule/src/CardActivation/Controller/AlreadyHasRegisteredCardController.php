@@ -66,6 +66,7 @@ class AlreadyHasRegisteredCardController extends AbstractAuthActionController
     public function indexAction()
     {
         $this->layout('layout/layout-govuk.phtml');
+        $this->setHeadTitle('You have already activated a security card');
 
         $securityCard = null;
         $identity = $this->identityProvider->getIdentity();

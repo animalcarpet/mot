@@ -6,6 +6,7 @@ $this->layout('layout/layout-govuk.phtml');
 /** @var SecurityCardAddressForm $form */
 $form = $viewModel->getForm();
 $addressIsCustom = ($form->getAddressRadios()->getValue() === SecurityCardAddressForm::CUSTOM_ADDRESS_VALUE);
+$this->headTitle('Choose a delivery address');
 ?>
 <style>
     .customAddressJavascriptDisplay {display: <?php echo $addressIsCustom ? 'block' : 'none'; ?>}
