@@ -14,7 +14,7 @@
         "soflomo/purifier": "0.1.1",
         "slot-purchase/web-frontend": "3.8.4",
         "dvsa/web-frontend-assets": "1.0.8",
-        "dvsa/dvsa-application-logger": "~1.4.1",
+        "dvsa/dvsa-application-logger": "1.4.2",
         "dvsa/dvsa-doctrine-module": "~1.1",
         "zendframework/zendpdf": "2.0.2",
         "zf-commons/zfc-twig": "^1.2",
