@@ -15,20 +15,19 @@ use Dashboard\Authorisation\ViewTradeRolesAssertion;
 use Dashboard\Controller\UserHomeController;
 use Dashboard\Data\ApiDashboardResource;
 use Dashboard\Model\PersonalDetails;
+use Dvsa\Mot\ApiClient\Resource\Item\SecurityCard;
 use Dvsa\Mot\Frontend\PersonModule\Routes\PersonProfileRoutes;
-use Application\Service\CanTestWithoutOtpService;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuard;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuardBuilder;
-use Dvsa\Mot\Frontend\SecurityCardModule\Security\SecurityCardGuard;
-use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
 use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use Dvsa\Mot\Frontend\PersonModule\View\PersonProfileSidebar;
+use Dvsa\Mot\Frontend\SecurityCardModule\Security\SecurityCardGuard;
+use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use DvsaClient\MapperFactory;
 use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use DvsaCommon\UrlBuilder\PersonUrlBuilder;
 use Exception;
-use Dvsa\Mot\ApiClient\Resource\Item\SecurityCard;
 use UserAdmin\Service\UserAdminSessionManager;
 use Zend\View\Model\ViewModel;
 
@@ -66,9 +65,6 @@ class PersonProfileController extends AbstractAuthActionController
     /** @var ContextProvider */
     private $contextProvider;
 
-    /** @var CanTestWithoutOtpService */
-    private $canTestWithoutOtpService;
-
     /** @var SecurityCardService */
     private $securityCardService;
 
@@ -87,7 +83,6 @@ class PersonProfileController extends AbstractAuthActionController
      * @param PersonProfileGuardBuilder $personProfileGuardBuilder
      * @param MapperFactory $mapperFactory
      * @param ContextProvider $contextProvider
-     * @param CanTestWithoutOtpService $canTestWithoutOtpService
      * @param SecurityCardService $securityCardService
      * @param SecurityCardGuard $securityCardGuard
      * @param TwoFaFeatureToggle $twoFaFeatureToggle
@@ -101,7 +96,6 @@ class PersonProfileController extends AbstractAuthActionController
         PersonProfileGuardBuilder $personProfileGuardBuilder,
         MapperFactory $mapperFactory,
         ContextProvider $contextProvider,
-        CanTestWithoutOtpService $canTestWithoutOtpService,
         SecurityCardService $securityCardService,
         SecurityCardGuard $securityCardGuard,
         TwoFaFeatureToggle $twoFaFeatureToggle
@@ -114,7 +108,6 @@ class PersonProfileController extends AbstractAuthActionController
         $this->personProfileGuardBuilder = $personProfileGuardBuilder;
         $this->mapperFactory = $mapperFactory;
         $this->contextProvider = $contextProvider;
-        $this->canTestWithoutOtpService = $canTestWithoutOtpService;
         $this->securityCardService = $securityCardService;
         $this->securityCardGuard = $securityCardGuard;
         $this->twoFaFeatureToggle = $twoFaFeatureToggle;
@@ -427,7 +420,6 @@ class PersonProfileController extends AbstractAuthActionController
             $currentUrl,
             new PersonProfileRoutes($this->contextProvider),
             $this->url(),
-            $this->canTestWithoutOtpService->canTestWithoutOtp(),
             $twoFactorAuthEnabled,
             $canOrderSecurityCard,
             $hasSecurityCardOrders,

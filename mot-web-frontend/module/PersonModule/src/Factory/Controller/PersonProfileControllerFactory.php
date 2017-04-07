@@ -64,9 +64,6 @@ class PersonProfileControllerFactory implements FactoryInterface
         /** @var ContextProvider $contextProvider */
         $contextProvider = $serviceLocator->get(ContextProvider::class);
 
-        /** @var CanTestWithoutOtpService $canTestWithoutOtpService */
-        $canTestWithoutOtpService = $serviceLocator->get(CanTestWithoutOtpService::class);
-
         /** @var SecurityCardService $securityCardService */
         $securityCardService = $serviceLocator->get(SecurityCardService::class);
 
@@ -78,6 +75,6 @@ class PersonProfileControllerFactory implements FactoryInterface
 
         return new PersonProfileController($apiPersonalDetails, $apiDashboardResource, $catalogService,
             $userAdminSessionManager, $viewTradeRolesAssertion, $personProfileGuardBuilder, $mapperFactory,
-            $contextProvider, $canTestWithoutOtpService, $securityCardService, $securityCardGuard, $twoFaFeatureToggle);
+            $contextProvider, $securityCardService, $securityCardGuard, $twoFaFeatureToggle);
     }
 }

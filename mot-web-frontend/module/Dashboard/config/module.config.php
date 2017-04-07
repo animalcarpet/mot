@@ -2,14 +2,13 @@
 
 use Dashboard\Controller\MyApplicationsController;
 use Dashboard\Controller\NotificationController;
-use Dvsa\Mot\Frontend\PersonModule\Controller\QualificationDetailsController;
 use Dashboard\Controller\UserStatsController;
-use Dashboard\Factory\Controller\UserHomeControllerFactory;
-use Dashboard\Factory\Controller\SecurityQuestionControllerFactory;
 use Dashboard\Controller\UserTradeRolesController;
 use Dashboard\Factory\Controller\PasswordControllerFactory;
+use Dashboard\Factory\Controller\UserHomeControllerFactory;
 use Dashboard\Factory\Controller\UserTradeRolesControllerFactory;
 use Dashboard\ViewHelper\NotificationLinkViewHelper;
+use Dvsa\Mot\Frontend\PersonModule\Controller\QualificationDetailsController;
 use Dvsa\Mot\Frontend\PersonModule\Factory\Service\QualificationDetailsServiceFactory;
 
 return [
@@ -22,7 +21,6 @@ return [
         'factories'  => [
             UserHomeControllerFactory::class         => UserHomeControllerFactory::class,
             UserTradeRolesController::class          => UserTradeRolesControllerFactory::class,
-            SecurityQuestionControllerFactory::class => SecurityQuestionControllerFactory::class,
             PasswordControllerFactory::class         => PasswordControllerFactory::class
         ]
     ],

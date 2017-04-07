@@ -7,20 +7,18 @@
 
 namespace Dvsa\Mot\Frontend\PersonModule\View;
 
-use Core\Routing\MotTestRouteList;
+use Core\ViewModel\Badge\Badge;
 use Core\ViewModel\Sidebar\GeneralSidebar;
 use Core\ViewModel\Sidebar\GeneralSidebarItemInterface;
 use Core\ViewModel\Sidebar\GeneralSidebarLink;
 use Core\ViewModel\Sidebar\GeneralSidebarLinkList;
 use Core\ViewModel\Sidebar\GeneralSidebarStatusBox;
 use Core\ViewModel\Sidebar\GeneralSidebarStatusItem;
-use Core\ViewModel\Badge\Badge;
 use Dvsa\Mot\Frontend\PersonModule\Routes\PersonProfileRoutes;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuard;
 use DvsaCommon\Date\DateUtils;
-use DvsaCommon\Model\TesterAuthorisation;
 use DvsaCommon\Enum\AuthorisationForTestingMotStatusCode;
-use DvsaCommon\UrlBuilder\PersonUrlBuilderWeb;
+use DvsaCommon\Model\TesterAuthorisation;
 use Event\Controller\EventController;
 use Zend\Mvc\Controller\Plugin\Url;
 
@@ -51,9 +49,6 @@ class PersonProfileSidebar extends GeneralSidebar
     private $personProfileRoutes;
 
     /** @var bool */
-    private $hideResetPin;
-
-    /** @var bool */
     private $isTwoFactorAuthEnabled;
 
     /** @var bool */
@@ -75,7 +70,6 @@ class PersonProfileSidebar extends GeneralSidebar
      * @param $currentUrl
      * @param PersonProfileRoutes $personProfileRoutes
      * @param Url $urlPlugin
-     * @param $hideResetPin
      * @param $isTwoFactorAuthEnabled
      * @param $canOrderSecurityCard
      * @param $displayResetAccountByEmailButton
@@ -87,7 +81,6 @@ class PersonProfileSidebar extends GeneralSidebar
         $currentUrl,
         PersonProfileRoutes $personProfileRoutes,
         Url $urlPlugin,
-        $hideResetPin,
         $isTwoFactorAuthEnabled,
         $canOrderSecurityCard,
         $hasSecurityCardOrders,
@@ -99,7 +92,6 @@ class PersonProfileSidebar extends GeneralSidebar
         $this->personProfileGuard = $personProfileGuard;
         $this->testerAuthorisation = $testerAuthorisation;
         $this->currentUrl = $currentUrl;
-        $this->hideResetPin = $hideResetPin;
         $this->isTwoFactorAuthEnabled = $isTwoFactorAuthEnabled;
         $this->canOrderSecurityCard = $canOrderSecurityCard;
         $this->personProfileRoutes = $personProfileRoutes;
@@ -191,11 +183,6 @@ class PersonProfileSidebar extends GeneralSidebar
         $accountSecurityBox->setId('account_security');
         $accountSecurityBox->addLink(new GeneralSidebarLink('change-password', 'Change your password', $changePasswordUrl));
         $accountSecurityBox->addLink(new GeneralSidebarLink('change-security-questions', 'Change your security questions', $changeSecurityQuestionsUrl));
-
-        if (!$this->hideResetPin)
-        {
-            $accountSecurityBox->addLink(new GeneralSidebarLink('reset-pin', 'Reset your PIN', $resetPinUrl));
-        }
 
         if ($this->isTwoFactorAuthEnabled)
         {

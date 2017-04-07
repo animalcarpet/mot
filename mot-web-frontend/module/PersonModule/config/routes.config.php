@@ -11,7 +11,6 @@ use Dvsa\Mot\Frontend\PersonModule\Controller\RemoveAnnualAssessmentCertificates
 use Dvsa\Mot\Frontend\PersonModule\Controller\ViewAnnualAssessmentCertificatesController;
 use Dvsa\Mot\Frontend\PersonModule\Controller\EditAnnualAssessmentCertificatesController;
 use Dvsa\Mot\Frontend\PersonModule\Controller\QualificationDetailsController;
-use Dashboard\Factory\Controller\SecurityQuestionControllerFactory;
 use Dvsa\Mot\Frontend\PersonModule\Controller\ChangeNameController;
 use Dvsa\Mot\Frontend\PersonModule\Controller\ChangeAddressController;
 use Dvsa\Mot\Frontend\PersonModule\Controller\ChangeTelephoneController;
@@ -469,19 +468,6 @@ return [
                             'defaults' => [
                                 'controller' => PersonProfileController::class,
                                 'action' => 'securitySettings',
-                            ],
-                        ],
-                    ],
-                    'security-questions' => [
-                        'type'    => 'segment',
-                        'options' => [
-                            'route'    => '/security-question[/:questionNumber]',
-                            'constraints' => [
-                                'questionNumber' => '1|2',
-                            ],
-                            'defaults' => [
-                                'controller' => SecurityQuestionControllerFactory::class,
-                                'action' => 'index',
                             ],
                         ],
                     ],
@@ -1031,18 +1017,6 @@ return [
                             ],
                         ],
                         'may_terminate' => true,
-                    ],
-                    'user-security-question' => [
-                        'type' => 'segment',
-                        'options' => [
-                            'route' => '/security-question/:questionNumber',
-                            'constraints' => [
-                                'questionNumber' => '[0-9]+',
-                            ],
-                            'defaults' => [
-                                'controller' => SecurityQuestionControllerFactory::class,
-                            ],
-                        ],
                     ],
                     'password-reset' => [
                         'type' => 'Segment',
