@@ -180,6 +180,17 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
+                    'password-changed-confirmation'     => [
+                        'type'          => 'Segment',
+                        'options'       => [
+                            'route'    => '/confirmation[/:resetToken]',
+                            'defaults' => [
+                                'controller' => PasswordResetControllerFactory::class,
+                                'action'     => 'passwordChangedConfirmation',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
                 ],
             ],
         ],
