@@ -16,7 +16,6 @@ use DvsaCommon\Dto\Person\PersonDto;
 use DvsaCommon\HttpRestJson\Exception\NotFoundException;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommon\UrlBuilder\AccountUrlBuilderWeb;
-use DvsaCommon\UrlBuilder\UrlBuilder;
 use DvsaCommon\Utility\ArrayUtils;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
@@ -35,15 +34,19 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
     const TOKEN = 'TOKEN_123456789';
     const PERSON_ID = 999999;
 
-    /** @var  MapperFactory|MockObj */
+    /** @var MapperFactory|MockObj $mockMapperFactory */
     private $mockMapperFactory;
-    /** @var  UserAdminSessionManager|MockObj */
+
+    /** @var UserAdminSessionManager|MockObj $mockSessionManager */
     private $mockSessionManager;
-    /** @var  PasswordResetService|MockObj */
+
+    /** @var PasswordResetService|MockObj $mockPasswordResetSrv */
     private $mockPasswordResetSrv;
-    /** @var  AccountMapper|MockObj */
+
+    /** @var AccountMapper|MockObj $mockAccountMapper */
     private $mockAccountMapper;
-    /** @var  ParamObfuscator */
+
+    /** @var ParamObfuscator $mockObfuscator */
     private $mockObfuscator;
 
     protected function setUp()
@@ -75,7 +78,13 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
         );
 
         $this->getController()->setServiceLocator($serviceManager);
-        $serviceManager->setService('config', ['helpdesk'=> [ 'name' => 'DVSA Helpdesk', 'phoneNumber' => '0330 123 5654']]);
+        $serviceManager->setService('config', [
+                'helpdesk'=> [
+                    'name' => 'DVSA Helpdesk',
+                    'phoneNumber' => '0330 123 5654'
+                ]
+            ]
+        );
 
         $this->createHttpRequestForController('Reset');
 
@@ -83,7 +92,13 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
     }
 
     /**
-     * @dataProvider dataProviderTestActionsResultAndAccess
+     * @dataProvider testActionsResultAndAccessDataProvider
+     *
+     * @param string $method
+     * @param string $action
+     * @param array  $params
+     * @param array  $mocks
+     * @param array  $expect
      */
     public function testActionsResultAndAccess($method, $action, $params, $mocks, $expect)
     {
@@ -101,7 +116,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
             }
         }
 
-        //  --  set expected exception  --
+        // Set expected exception
         if (!empty($expect['exception'])) {
             $exception = $expect['exception'];
             $this->setExpectedException($exception['class'], $exception['message']);
@@ -115,7 +130,6 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
             ArrayUtils::tryGet($params, 'post')
         );
 
-        //  --  check   --
         if (!empty($expect['viewModel'])) {
             $this->assertInstanceOf(ViewModel::class, $result);
             $this->assertResponseStatus(self::HTTP_OK_CODE);
@@ -143,10 +157,10 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
         }
     }
 
-    public function dataProviderTestActionsResultAndAccess()
+    public function testActionsResultAndAccessDataProvider()
     {
         return [
-            //  --  username: access action  --
+            // Username: access action
             [
                 'method' => 'get',
                 'action' => 'username',
@@ -158,7 +172,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     'viewModel' => true,
                 ],
             ],
-            //  --  username: post with empty data    --
+            // Username: post with empty data
             [
                 'method' => 'post',
                 'action' => 'username',
@@ -173,7 +187,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     ],
                 ],
             ],
-            //  --  username: post with invalid data  --
+            // Username: post with invalid data
             [
                 'method' => 'post',
                 'action' => 'username',
@@ -197,7 +211,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     ],
                 ],
             ],
-            //  --  username: post success and redirect --
+            // Username: post success and redirect
             [
                 'method' => 'post',
                 'action' => 'username',
@@ -221,7 +235,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     ),
                 ],
             ],
-            //  --  username: post success but no email --
+            // Username: post success but no email
             [
                 'method'   => 'post',
                 'action'   => 'username',
@@ -242,7 +256,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     'url' => AccountUrlBuilderWeb::forgottenPasswordEmailNotFound(),
                 ],
             ],
-            //  --  authenticate: get not auth --
+            // Authenticate: not authenticated
             [
                 'method'   => 'get',
                 'action'   => 'authenticated',
@@ -259,7 +273,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     'url' => AccountUrlBuilderWeb::forgottenPasswordNotAuthenticated()
                 ],
             ],
-            //  --  authenticate: get email sent --
+            // Authenticate: get email sent
             [
                 'method'   => 'get',
                 'action'   => 'authenticated',
@@ -282,7 +296,8 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                 'expect' => [
                     'url' => AccountUrlBuilderWeb::forgottenPasswordConfirmation()
                 ],
-            ],            //  --  authenticate: get is auth, service return exception --
+            ],
+            // Authenticate: get is authenticated, service return exception
             [
                 'method'   => 'get',
                 'action'   => 'authenticated',
@@ -306,7 +321,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     'url' => AccountUrlBuilderWeb::forgottenPasswordNotAuthenticated()
                 ],
             ],
-            //  --  authenticate: get is auth, service return success   --
+            // Authenticate: get is authenticated, service return success
             [
                 'method'   => 'get',
                 'action'   => 'authenticated',
@@ -330,7 +345,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     'url' => AccountUrlBuilderWeb::forgottenPasswordConfirmation(),
                 ],
             ],
-            //  --  confirmation: get not auth --
+            // Confirmation: get not authenticated
             [
                 'method'   => 'get',
                 'action'   => 'confirmation',
@@ -347,7 +362,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     'url' => AccountUrlBuilderWeb::forgottenPasswordNotAuthenticated(),
                 ],
             ],
-            //  --  confirmation: get is auth, service return exception --
+            // Confirmation: get is authenticated, service return exception
             [
                 'method'   => 'get',
                 'action'   => 'confirmation',
@@ -364,7 +379,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     'viewModel' => true,
                 ],
             ],
-            //  --  not authenticated --
+            // Not authenticated
             [
                 'method'   => 'get',
                 'action'   => 'notAuthenticated',
@@ -381,7 +396,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     'viewModel' => true,
                 ],
             ],
-            //  --  not authenticated: but authenticate in fact --
+            // Not authenticated: but authenticate in fact
             [
                 'method'   => 'get',
                 'action'   => 'notAuthenticated',
@@ -398,7 +413,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     'url' => AccountUrlBuilderWeb::forgottenPasswordAuthenticated(),
                 ],
             ],
-            //  --  email not found --
+            // Email not found
             [
                 'method'   => 'get',
                 'action'   => 'emailNotFound',
@@ -415,7 +430,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     'viewModel' => true,
                 ],
             ],
-             //  --  email not found: but authenticate in fact --
+             // Email not found: but authenticate in fact
             [
                 'method'   => 'get',
                 'action'   => 'emailNotFound',
@@ -432,7 +447,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     'url' => AccountUrlBuilderWeb::forgottenPasswordAuthenticated(),
                 ],
             ],
-            //  --  change password: token is not here --
+            // Change password: token is not here
             [
                 'method' => 'get',
                 'action' => 'changePassword',
@@ -447,7 +462,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     ],
                 ],
             ],
-            //  --  change password: token is invalid --
+            // Change password: token is invalid
             [
                 'method' => 'get',
                 'action' => 'changePassword',
@@ -470,7 +485,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                 ],
             ],
 
-            //  --  change password: token already been used --
+            // Change password: token already been used
             [
                 'method' => 'get',
                 'action' => 'changePassword',
@@ -495,7 +510,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                 ],
             ],
 
-            //  --  change password: user disabled  --
+            // Change password: user disabled
             [
                 'method' => 'get',
                 'action' => 'changePassword',
@@ -518,7 +533,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                 ],
             ],
 
-            //  --  change password: first load, token is ok --
+            // Change password: first load, token is ok
             [
                 'method' => 'get',
                 'action' => 'changePassword',
@@ -540,7 +555,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                 ],
             ],
 
-            //  --  change password: post with empty password value --
+            // Change password: post with empty password value
             [
                 'method' => 'post',
                 'action' => 'changePassword',
@@ -564,7 +579,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     ],
                 ],
             ],
-            //  --  change password: post data are ok, request service to change --
+            // Change password: post data are ok, request service to change
             [
                 'method' => 'post',
                 'action' => 'changePassword',
@@ -588,9 +603,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     ],
                 ],
                 'expect' => [
-                    'expect' => [
-                        'url' => UrlBuilder::of()->home(),
-                    ],
+                    'url' => AccountUrlBuilderWeb::of()->passwordChangedSuccessfullyConfirmation(self::TOKEN),
                 ],
             ],
         ];

@@ -54,18 +54,22 @@ class PasswordResetController extends AbstractAuthActionController
     const TEXT_YOU_HAVE_ARRIVED_HERE = 'Now choose a new password to replace your forgotten one';
     const TEXT_YOU_MUST_CHANGE_PWORD = 'Your password has expired. Change it now.';
 
-    /** @var PasswordResetService */
+    /** @var PasswordResetService $passwordResetService */
     protected $passwordResetService;
-    /** @var UserAdminSessionManager */
+
+    /** @var UserAdminSessionManager $userAdminSessionManager */
     protected $userAdminSessionManager;
-    /** @var MapperFactory */
+
+    /** @var MapperFactory $mapperFactory */
     protected $mapperFactory;
-    /** @var  array */
+
+    /** @var array $config */
     protected $config;
-    /** @var ParamObfuscator  */
+
+    /** @var ParamObfuscator $obfuscator */
     protected $obfuscator;
 
-    /** @var PasswordResetFormModel */
+    /** @var PasswordResetFormModel $view */
     protected $view;
 
     public function __construct(
@@ -229,9 +233,10 @@ class PasswordResetController extends AbstractAuthActionController
             throw new NotFoundException('', '', [], 404);
         }
 
-        //  --  check and get token --
+        // Check and get token
         $tokenDto = $this->passwordResetService->getToken($token);
 
+        /** @var int $expiryDateTs */
         $expiryDateTs = null;
         $currentDateTs = (new DateTimeHolder)->getCurrent()->getTimestamp();
         if ($tokenDto instanceof MessageDto) {
@@ -291,7 +296,8 @@ class PasswordResetController extends AbstractAuthActionController
                             ]
                         );
 
-                        return $this->redirect()->toUrl(PersonUrlBuilderWeb::home());
+                        return $this->redirect()
+                            ->toUrl(AccountUrlBuilderWeb::passwordChangedSuccessfullyConfirmation($token));
                     } catch (ValidationException $e) {
                         $passwordError = ArrayUtils::first($e->getErrors())['message'];
                         $this->view->addError(ChangePasswordFormModel::FIELD_PASS, $passwordError);
@@ -301,6 +307,39 @@ class PasswordResetController extends AbstractAuthActionController
         }
 
         return $this->initViewModelInformation(self::PAGE_TITLE_PASSWORD_RESET, self::PAGE_SUBTITLE);
+    }
+
+    public function passwordChangedConfirmationAction()
+    {
+        $token = $this->params('resetToken');
+
+        if (empty($token)) {
+            throw new NotFoundException('', '', [], 404);
+        }
+
+        $tokenDto = $this->passwordResetService->getToken($token);
+
+        /** @var int $tokenExpiryDateTimestamp */
+        $tokenExpiryDateTimestamp = null;
+        $currentDateTimestamp = (new DateTimeHolder)->getCurrent()->getTimestamp();
+        if ($tokenDto instanceof MessageDto) {
+            $tokenExpiryDateTimestamp = DateUtils::toDateTime($tokenDto->getExpiryDate())->getTimestamp();
+        }
+
+        if ($tokenDto === null ||
+            !empty($tokenExpiryDateTimestamp) &&
+            $tokenExpiryDateTimestamp < $currentDateTimestamp) {
+                throw new NotFoundException('', '', [], 404);
+        }
+
+        $passwordChangedConfirmationViewModel = new ViewModel();
+        $passwordChangedConfirmationViewModel->setTemplate('/account/password-reset/password-changed-confirmation.twig');
+
+        $this->layout('layout/layout-govuk.phtml');
+
+        $this->setHeadTitle('Password changed');
+
+        return $passwordChangedConfirmationViewModel;
     }
 
     public function updatePasswordAction()

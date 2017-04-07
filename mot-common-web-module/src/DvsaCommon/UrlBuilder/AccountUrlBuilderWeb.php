@@ -16,15 +16,17 @@ class AccountUrlBuilderWeb extends AbstractUrlBuilder
     const SECURITY_QUESTION = '/security-question/:personId/:questionNumber';
     const RESET_PASSWORD = '/reset/:resetToken';
     const EMAIL_NOT_FOUND = '/email-not-found';
+    const PASSWORD_CHANGED_SUCCESSFULLY_CONFIRMATION = '/confirmation/:resetToken';
 
     const ACCOUNT = '/account';
-    const SIGN_IN = '/';
     const CLAIM = '/claim';
     const CLAIM_EMAIL_AND_PASSWORD = '/confirm-email-and-password';
     const CLAIM_SECURITY_QUESTIONS = '/set-security-question';
     const CLAIM_REVIEW = '/review';
     const CLAIM_DISPLAY_PIN = '/display-pin';
     const CLAIM_RESET = '/reset';
+
+    const SIGN_IN = '/';
 
     protected $routesStructure
         = [
@@ -33,15 +35,16 @@ class AccountUrlBuilderWeb extends AbstractUrlBuilder
                 self::NOT_AUTHENTICATED => '',
                 self::CONFIRMATION => '',
                 self::SECURITY_QUESTION => '',
-                self::EMAIL_NOT_FOUND => '',
                 self::RESET_PASSWORD => '',
+                self::EMAIL_NOT_FOUND => '',
+                self::PASSWORD_CHANGED_SUCCESSFULLY_CONFIRMATION => '',
             ],
             self::ACCOUNT => [
                 self::CLAIM => [
                     self::CLAIM_EMAIL_AND_PASSWORD => '',
                     self::CLAIM_SECURITY_QUESTIONS => '',
-                    self::CLAIM_DISPLAY_PIN => '',
                     self::CLAIM_REVIEW => '',
+                    self::CLAIM_DISPLAY_PIN => '',
                     self::CLAIM_RESET => '',
                 ],
             ],
@@ -65,26 +68,22 @@ class AccountUrlBuilderWeb extends AbstractUrlBuilder
 
     public static function forgottenPasswordAuthenticated()
     {
-        return self::forgottenPassword()
-            ->appendRoutesAndParams(self::AUTHENTICATED);
+        return self::forgottenPassword()->appendRoutesAndParams(self::AUTHENTICATED);
     }
 
     public static function forgottenPasswordNotAuthenticated()
     {
-        return self::forgottenPassword()
-            ->appendRoutesAndParams(self::NOT_AUTHENTICATED);
+        return self::forgottenPassword()->appendRoutesAndParams(self::NOT_AUTHENTICATED);
     }
 
     public static function forgottenPasswordConfirmation()
     {
-        return self::forgottenPassword()
-            ->appendRoutesAndParams(self::CONFIRMATION);
+        return self::forgottenPassword()->appendRoutesAndParams(self::CONFIRMATION);
     }
 
     public static function forgottenPasswordEmailNotFound()
     {
-        return self::forgottenPassword()
-            ->appendRoutesAndParams(self::EMAIL_NOT_FOUND);
+        return self::forgottenPassword()->appendRoutesAndParams(self::EMAIL_NOT_FOUND);
     }
 
     public static function forgottenPasswordSecurityQuestion($personId, $questionNumber)
@@ -93,6 +92,13 @@ class AccountUrlBuilderWeb extends AbstractUrlBuilder
             ->appendRoutesAndParams(self::SECURITY_QUESTION)
             ->routeParam('personId', $personId)
             ->routeParam('questionNumber', $questionNumber);
+    }
+
+    public static function passwordChangedSuccessfullyConfirmation($token)
+    {
+        return self::forgottenPassword()
+            ->appendRoutesAndParams(self::PASSWORD_CHANGED_SUCCESSFULLY_CONFIRMATION)
+            ->routeParam('resetToken', $token);
     }
 
     public static function resetPasswordByToken($token)
