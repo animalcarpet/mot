@@ -559,6 +559,7 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         if ($this->shouldAmendVehicleWeight($motTest)) {
             $brakeTestVehicleWeight = $motTest->getBrakeTestResultClass3AndAbove()->getVehicleWeight();
             if (!$motTest->getMotTestType()->getIsDemo()) {
+                $motTest->setVehicleWeightSource($motTest->getBrakeTestResultClass3AndAbove()->getWeightType());
                 $motTest->setVehicleWeight($brakeTestVehicleWeight);
             }
         }
