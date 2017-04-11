@@ -139,7 +139,7 @@ if ($dateLinks->findOneBy('active', true)) {
         <form id="customDateSearch" action="" method="GET" name="customDateSearch" class="form-vertical">
             <?php echo $this->csrfToken() ?>
 
-            <div class="filter">
+            <div class="filter" id="dateRangeFields">
                 <h3 class="filter__heading">Performed</h3>
 
                 <div class="filter__content">
@@ -151,7 +151,7 @@ if ($dateLinks->findOneBy('active', true)) {
                 <h3 class="filter__heading">Custom date range</h3>
 
                 <div class="filter__content">
-                    <div class="form-group custom-date-range" id="dateRangeFields">
+                    <div class="form-group custom-date-range">
                         <fieldset>
                             <?php
                             echo $this->partial(
@@ -169,7 +169,7 @@ if ($dateLinks->findOneBy('active', true)) {
                         </fieldset>
                     </div>
 
-                    <div class="form-group custom-date-range" id="dateRangeFields">
+                    <div class="form-group custom-date-range">
                         <fieldset>
                             <?php
                             echo $this->partial(
