@@ -234,6 +234,7 @@ class ReplacementCertificateUpdater
         $request['vrm'] = $updateVehicleRequest->getRegistration();
         $request['make'] = $updateVehicleRequest->getMakeOther();
         $request['model'] = $updateVehicleRequest->getModelOther();
+        $request['country'] = $updateVehicleRequest->getCountryOfRegistrationId();
 
 
         $current['colour'] = $vehicle->getColour()->getCode();
@@ -242,6 +243,7 @@ class ReplacementCertificateUpdater
         $current['vrm'] = $vehicle->getRegistration();
         $current['make'] = $vehicle->getMake()->getName();
         $current['model'] = $vehicle->getModel()->getName();
+        $current['country'] = $vehicle->getCountryOfRegistrationId();
 
         $isModified = $request != $current;
 

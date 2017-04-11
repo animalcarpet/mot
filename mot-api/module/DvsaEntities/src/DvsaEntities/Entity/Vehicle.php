@@ -270,6 +270,16 @@ class Vehicle extends VehicleAbstract implements VehicleInterface
     }
 
     /**
+     * @param MotTest $motTest
+     *
+     * @return CountryOfRegistration
+     */
+    public function getCountryOfRegistrationDuringTest(MotTest $motTest)
+    {
+        return $this->getVehicleDetailAtVersion($motTest->getVehicleVersion())->getCountryOfRegistration();
+    }
+
+    /**
      * @return VehicleHistory[]
      */
     public function getVehicleHistory()

@@ -480,7 +480,7 @@ return [
                     'document' => [
                         'type'    => 'Segment',
                         'options' => [
-                            'route'    => '/document[/:id]/',
+                            'route'    => '/document[/:id]',
                             'defaults' => [
                                 'controller' => Controller\DocumentController::class
                             ]

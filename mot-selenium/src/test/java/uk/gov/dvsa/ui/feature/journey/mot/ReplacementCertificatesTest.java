@@ -9,6 +9,7 @@ import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.MotTest;
 import uk.gov.dvsa.domain.model.mot.TestOutcome;
 import uk.gov.dvsa.domain.api.response.Vehicle;
+import uk.gov.dvsa.domain.model.vehicle.CountryOfRegistration;
 import uk.gov.dvsa.ui.DslTest;
 
 import java.io.IOException;
@@ -28,11 +29,10 @@ public class ReplacementCertificatesTest extends DslTest {
 
     @Test(groups = {"BVT"}, dataProvider = "usersWhoCanPrintCertificate")
     public void issuedByUserRoleWithPrintCertificatePermission(User user) throws IOException, URISyntaxException {
-
         //Given I have a PASSED Mot
         User tester = motApi.user.createTester(site.getId());
         Vehicle vehicle = vehicleData.getNewVehicle(tester);
-        MotTest motTest = motApi.createTest(motApi.user.createTester(site.getId()), site.getId(), vehicle,
+        MotTest motTest = motApi.createTest(tester, site.getId(), vehicle,
                 TestOutcome.PASSED, 123456, DateTime.now());
 
         //When I attempt to reprint a duplicate certificate
@@ -44,15 +44,12 @@ public class ReplacementCertificatesTest extends DslTest {
 
     @Test(groups = {"BVT"})
     public void editedAndIssuedByDvsaUser() throws IOException, URISyntaxException {
-
         //Given I have a PASSED Mot
         User tester = motApi.user.createTester(site.getId());
         Vehicle vehicle = vehicleData.getNewVehicle(tester);
-        MotTest motTest = motApi.createPassedTestForVehicle(tester, site.getId(), vehicle);
-
+        MotTest motTest = motApi.createPassedTestForVehicle(motApi.user.createTester(site.getId()), site.getId(), vehicle);
         //When I attempt to reprint a duplicate certificate
-        motUI.certificate.updateCertificate(motApi.user.createAreaOfficeOne("Ao1"), vehicle,
-                motTest.getMotTestNumber()).setOdometerToNull();
+        motUI.certificate.updateCertificate(motApi.user.createAreaOfficeOne("Ao1"), vehicle, motTest.getMotTestNumber()).setOdometerToNull();
 
         //That the edit is successful and Print button is displayed
         assertThat(motUI.certificate.isReprintButtonDisplayed(), is(true));
@@ -60,7 +57,6 @@ public class ReplacementCertificatesTest extends DslTest {
 
     @Test(groups = {"BVT"})
     public void odometerCannotBeEditedAfter7DaysOfFromIssueDate() throws IOException, URISyntaxException {
-
         //Given I conducted an mot test 8 days ago as a tester
         User tester = motApi.user.createTester(site.getId());
         Vehicle vehicle = vehicleData.getNewVehicle(tester);
@@ -76,7 +72,6 @@ public class ReplacementCertificatesTest extends DslTest {
 
     @Test(groups = {"BVT"})
     public void testVeCanReprintCertificate() throws IOException, URISyntaxException {
-
         //Given a Site has an mot test done
         User tester = motApi.user.createTester(site.getId());
         MotTest motTest = motApi.createPassedTest(tester, site.getId());
@@ -91,11 +86,9 @@ public class ReplacementCertificatesTest extends DslTest {
 
     @Test(groups = {"2fa"})
     public void pinBoxNotShownWhenTwoFactorUserEditCertificate() throws IOException, URISyntaxException {
-
         //Given I create a test as a 2FA user
         int siteId = siteData.createSite().getId();
         User twoFactorTester = motApi.user.createTester(siteId);
-
         Vehicle vehicle = vehicleData.getNewVehicle(twoFactorTester);
         MotTest test = motApi.createTest(twoFactorTester, siteId, vehicle, TestOutcome.PASSED, 123456, DateTime.now());
 
@@ -108,7 +101,6 @@ public class ReplacementCertificatesTest extends DslTest {
 
     @Test(testName="2faHardStopDisabled", groups = {"2fa"})
     public void pinBoxShownWhenNonTwoFactorUserEditCertificate() throws IOException, URISyntaxException {
-
         //Given I create a test as a non 2fa tester
         int siteId = siteData.createSite().getId();
         User tester = motApi.user.createNon2FaTester(siteId);
@@ -128,43 +120,60 @@ public class ReplacementCertificatesTest extends DslTest {
         //Given tester performed a test
         User tester = motApi.user.createTester(site.getId());
         Vehicle vehicle = vehicleData.getNewVehicle(tester);
-
-        String testNumber = motApi.createTest(tester, site.getId(), vehicle, TestOutcome.PASSED, 123456, DateTime.now()).getMotTestNumber();
-
-        //When I search vehicle by VIN
+        MotTest motTest = motApi.createPassedTestForVehicle(tester, site.getId(), vehicle);
+        // /When I search vehicle by VIN
         //Then I should be able to view certificate
-        motUI.certificate.viewCertificatePageUsingVinSearch(tester, vehicle, testNumber);
+        motUI.certificate.viewCertificatePageUsingVinSearch(tester, vehicle, motTest.getMotTestNumber());
     }
 
-    @Test(groups = {"Regression"}, dataProvider="twoTestsPerformedForOneVehicle")
-    public void testerCanEditLastCertificate(User tester, Vehicle vehicle, String previousTestNumber, String lastTestNumber) throws IOException, URISyntaxException {
+    @Test(groups = {"Regression"})
+    public void testerCanEditLastCertificate() throws IOException, URISyntaxException {
         //Given tester performed two tests for same vehicle
+        Site site = siteData.createSite();
+        User tester = motApi.user.createTester(site.getId());
+        Vehicle vehicle = vehicleData.getNewVehicle(tester);
+        String lastTestNumber = motApi.createPassedTestForVehicle(tester, site.getId(), vehicle).getMotTestNumber();
+
         //When I view certificate for last test
         motUI.certificate.viewCertificatePage(tester, vehicle, lastTestNumber);
         //Then I can edit certificate
         assertThat("Edit button for last test is displayed", motUI.certificate.isEditButtonDisplayed(), is(true));
     }
 
-    @Test(groups = {"Regression"}, dataProvider="twoTestsPerformedForOneVehicle")
-    public void testerCanNotEditOldCertificates(User tester, Vehicle vehicle, String previousTestNumber, String lastTestNumber) throws IOException, URISyntaxException {
+    @Test(groups = {"Regression"})
+    public void testerCanNotEditOldCertificates() throws IOException, URISyntaxException {
         //Given tester performed two tests for same vehicle
+        Site site = siteData.createSite();
+        User tester = motApi.user.createTester(site.getId());
+        Vehicle vehicle = vehicleData.getNewVehicle(tester);
+        String previousTestNumber = motApi.createPassedTestForVehicle(tester, site.getId(), vehicle).getMotTestNumber();
+        motApi.createPassedTestForVehicle(tester, site.getId(), vehicle);
+
         //When I view certificate for test older than latest one
         motUI.certificate.viewOlderCertificatePage(tester, vehicle, previousTestNumber);
+
         //Then I can't edit certificate
         assertThat("Edit button for last test is not displayed", motUI.certificate.isEditButtonDisplayed(), is(false));
     }
 
-    @DataProvider(name = "twoTestsPerformedForOneVehicle")
-    public Object[][] twoTestsPerformedForOneVehicle() throws IOException {
-        Object[][] data = new Object[1][4];
-        int siteId = siteData.createSite().getId();
-        User tester = motApi.user.createTester(siteId);
+    @Test(groups = {"Regression"})
+    public void areaOfficeOneCanEditCountryOfRegistrationForLastCertificate() throws IOException, URISyntaxException {
+        //Given tester performed two tests for same vehicle
+        User tester = motApi.user.createTester(site.getId());
         Vehicle vehicle = vehicleData.getNewVehicle(tester);
-        String previousTestNumber = motApi.createPassedTestForVehicle(tester, siteId, vehicle).getMotTestNumber();
-        String lastTestNumber = motApi.createPassedTestForVehicle(tester, siteId, vehicle).getMotTestNumber();
-        data[0] = new Object[]{tester, vehicle, previousTestNumber, lastTestNumber};
+        String testNumber = motApi.createPassedTestForVehicle(tester, site.getId(), vehicle).getMotTestNumber();
 
-        return data;
+        //When AreaOffice edits older certificate's Country of Registration
+        User areaOfficeOne = motApi.user.createAreaOfficeOne("aoocecorfoc");
+        CountryOfRegistration country = CountryOfRegistration.Germany;
+        motUI.certificate.changeCertificateCountryOfRegistration(areaOfficeOne, vehicle, testNumber, country);
+
+        //Then Country of Registration is updated on certificate
+        motUI.certificate.updateCertificate(areaOfficeOne, vehicle, testNumber); // view recent changes
+        assertThat(
+            "Country has changed in certificate",
+                motUI.certificate.getCountryOfRegistration().equals(country.getCountry()), is(true)
+        );
     }
 
     @DataProvider(name = "usersWhoCanPrintCertificate")
