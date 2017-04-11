@@ -8,6 +8,7 @@
 namespace DvsaCommon\Dto\MotTesting;
 
 use DateTime;
+use DateTimeZone;
 use Dvsa\Mot\Frontend\MotTestModule\Parameters\ContingencyTestParameters;
 use DvsaCommon\Dto\AbstractDataTransferObject;
 use DvsaCommon\Dto\JsonUnserializable;
@@ -217,7 +218,8 @@ class ContingencyTestDto extends AbstractDataTransferObject implements JsonSeria
         $dto->setPerformedAt(DateTime::createFromFormat('Y-m-d g:ia', sprintf('%s-%s-%s %s:%s%s',
             trim($parameters->get('performed_at_year')), trim($parameters->get('performed_at_month')),
             trim($parameters->get('performed_at_day')), trim($parameters->get('performed_at_hour')),
-            trim($parameters->get('performed_at_minute')), trim($parameters->get('performed_at_am_pm')))));
+            trim($parameters->get('performed_at_minute')), trim($parameters->get('performed_at_am_pm'))), new DateTimeZone("Europe/London")));
+        $dto->getPerformedAt()->setTimezone(new \DateTimeZone('UTC'));
         $dto->setReasonCode($parameters->get('reason_code'));
         $dto->setOtherReasonText($parameters->get('other_reason_text'));
         $dto->setContingencyCode(trim($parameters->get('contingency_code')));
