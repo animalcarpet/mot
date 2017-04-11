@@ -55,7 +55,7 @@ public class ContingencyMotTests extends DslTest {
 
         //When I Conduct a re-test on the vehicle via contingency route
         motUI.contingency.testPage(tester);
-        motUI.contingency.recordReTest(contingencyCode, DateTime.now().minusMinutes(10).withZone(DateTimeZone.UTC), vehicle);
+        motUI.contingency.recordReTest(contingencyCode, DateTime.now().minusMinutes(10).withZone(DateTimeZone.forID("Europe/London")), vehicle);
 
         //Then the retest is successful
         motUI.contingency.isTestSaveSuccessful();
