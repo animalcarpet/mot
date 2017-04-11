@@ -27,6 +27,7 @@ use DvsaMotApi\Service\MotTestSecurityService;
 use DvsaMotApi\Service\ReplacementCertificate\ReplacementCertificateUpdater;
 use DvsaMotApiTest\Factory\MotTestObjectsFactory;
 use DvsaMotApiTest\Factory\ReplacementCertificateObjectsFactory;
+use DvsaMotApiTest\Factory\VehicleObjectsFactory;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -75,8 +76,6 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
         $this->mockVehicleService->expects($this->any())
             ->method('getDvsaVehicleByIdAndVersion')
             ->willReturn($mockDvsaVehicle);
-
-
     }
 
     public function testCreateGivenDraftShouldUpdateCertificate()
@@ -130,6 +129,26 @@ class ReplacementCertificateUpdaterTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($draft->getExpiryDate(), $motTest->getExpiryDate());
         $this->assertNotEquals($draft->getExpiryDate(), $motTest->getPrsMotTest()->getExpiryDate());
 
+    }
+
+    public function testUserWhoUpdatesOdomoterWithPartialPermissionsDoesNotCallUpdateVehicle() {
+
+        $this->userAssignedToVts();
+        $this->userHasId(2);
+        $this->permissionsGranted([PermissionInSystem::CERTIFICATE_REPLACEMENT]);
+        $draft = ReplacementCertificateObjectsFactory::replacementCertificateDraft();
+        $draft->setOdometerValue(6464);
+        $draft->setPrimaryColour(VehicleObjectsFactory::colour(1, "p", "p"));
+        $draft->setSecondaryColour(VehicleObjectsFactory::colour(2, "p", "p"));
+
+        $this->mockVehicleService->expects($this->never())
+            ->method("updateDvsaVehicleAtVersion");
+
+        $this->motTestSecurityService->expects($this->once())
+            ->method("validateOdometerReadingModificationWindowOpen")
+            ->wilLReturn(CheckResult::ok());
+
+        $this->createSut()->update($draft);
     }
 
     public function testCreateGivenDifferentMotTestVersionWhenApplyingShouldThrowForbiddenException()
