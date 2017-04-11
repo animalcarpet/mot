@@ -8,6 +8,7 @@
 namespace DvsaCommon\Validation;
 
 use DateTime;
+use DateTimeZone;
 use DvsaCommon\Enum\EmergencyReasonCode;
 use Zend\Validator\Callback;
 use Zend\Validator\Date;
@@ -226,7 +227,7 @@ class CommonContingencyTestValidator implements GroupValidator
             $now = new DateTime();
             $testDatetime = DateTime::createFromFormat('Y-m-d g:ia', sprintf('%s-%s-%s %s:%s%s',
                 $data['performedAtYear'], $data['performedAtMonth'], $data['performedAtDay'],
-                $data['performedAtHour'], $data['performedAtMinute'], $data['performedAtAmPm']));
+                $data['performedAtHour'], $data['performedAtMinute'], $data['performedAtAmPm']), new DateTimeZone("Europe/London"));
 
             if (!$testDatetime) {
                 return false;
