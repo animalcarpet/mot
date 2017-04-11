@@ -73,7 +73,7 @@ class ReplacementCertificateUpdater
      */
     public function update(CertificateReplacementDraft $draft, $isDvlaImport = false)
     {
-        $hasFullRights = $this->authService->isGranted(PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS);
+        $hasFullUpdateRights = $this->authService->isGranted(PermissionInSystem::CERTIFICATE_REPLACEMENT_SPECIAL_FIELDS);
 
         $motTest = $draft->getMotTest();
 
@@ -83,7 +83,7 @@ class ReplacementCertificateUpdater
                 Please try to edit the certificate again"
             );
         }
-        if (!$hasFullRights) {
+        if (!$hasFullUpdateRights) {
             $checkResult = $this->motTestSecurityService->validateOdometerReadingModificationWindowOpen($motTest);
             CheckResultExceptionTranslator::tryThrowBadRequestException($checkResult);
 
@@ -98,12 +98,12 @@ class ReplacementCertificateUpdater
             }
         }
 
-        $this->updateMotTestFromDraft($draft, $motTest, $hasFullRights);
+        $this->updateMotTestFromDraft($draft, $motTest, $hasFullUpdateRights);
 
         if($isDvlaImport) {
             $vehicle = $this->vehicleService->getDvsaVehicleById($motTest->getVehicle()->getId());
         } else {
-            $vehicle = $this->updateVehicleFromDraftUsingJavaService($draft, $motTest, $hasFullRights);
+            $vehicle = $this->updateVehicleFromDraftUsingJavaService($draft, $motTest, $hasFullUpdateRights);
         }
 
         $motTest->setVehicleVersion($vehicle->getVersion());
@@ -117,7 +117,7 @@ class ReplacementCertificateUpdater
                 $this->updateMotTestFromDraft(
                     $draft,
                     $prsTest,
-                    $hasFullRights,
+                    $hasFullUpdateRights,
                     true
                 )
             );
@@ -138,7 +138,7 @@ class ReplacementCertificateUpdater
     protected function updateMotTestFromDraft(
         CertificateReplacementDraft $draft,
         MotTest $motTest,
-        $hasFullRights,
+        $hasFullUpdateRights,
         $isPsrTest = false
     )
     {
@@ -151,7 +151,7 @@ class ReplacementCertificateUpdater
             $motTest->setExpiryDate($draft->getExpiryDate());
         }
 
-        if ($hasFullRights) {
+        if ($hasFullUpdateRights) {
             $motTest->setVehicleTestingStation($draft->getVehicleTestingStation());
 
         }
@@ -165,7 +165,7 @@ class ReplacementCertificateUpdater
      * @param bool $hasFullRights
      * @return \Dvsa\Mot\ApiClient\Resource\Item\DvsaVehicle
      */
-    private function updateVehicleFromDraftUsingJavaService(CertificateReplacementDraft $draft, MotTest $motTest, $hasFullRights)
+    private function updateVehicleFromDraftUsingJavaService(CertificateReplacementDraft $draft, MotTest $motTest, $hasFullUpdateRights)
     {
         $updateVehicleRequest = new UpdateDvsaVehicleRequest;
 
@@ -177,7 +177,7 @@ class ReplacementCertificateUpdater
             $updateVehicleRequest->setSecondaryColourCode($draft->getSecondaryColour()->getCode());
         }
 
-        if ($hasFullRights) {
+        if ($hasFullUpdateRights) {
             $updateVehicleRequest->setVin($draft->getVin());
             $updateVehicleRequest->setRegistration($draft->getVrm());
 
@@ -203,7 +203,7 @@ class ReplacementCertificateUpdater
             $motTest->getVehicleVersion()
         );
 
-        if ($this->isVehicleModified($updateVehicleRequest, $vehicle)) {
+        if ($this->isVehicleModified($updateVehicleRequest, $vehicle, $hasFullUpdateRights)) {
 
             if (!$this->motTestRepository->isVehicleLatestTest($motTest)) {
                 $updateVehicleRequest->setUpdateHistoricVehicleOnly();
@@ -222,28 +222,33 @@ class ReplacementCertificateUpdater
     /**
      * @param UpdateDvsaVehicleRequest $updateVehicleRequest
      * @param DvsaVehicle $vehicle
+     * @param $hasFullUpdateRights
      * @return bool
      */
-    private function isVehicleModified(UpdateDvsaVehicleRequest $updateVehicleRequest, DvsaVehicle $vehicle)
+    private function isVehicleModified(UpdateDvsaVehicleRequest $updateVehicleRequest, DvsaVehicle $vehicle, $hasFullUpdateRights)
     {
         $request = $current = [];
 
         $request['colour'] = $updateVehicleRequest->getColourCode();
         $request['secondaryColour'] = $updateVehicleRequest->getSecondaryColourCode();
-        $request['vin'] = $updateVehicleRequest->getVin();
-        $request['vrm'] = $updateVehicleRequest->getRegistration();
-        $request['make'] = $updateVehicleRequest->getMakeOther();
-        $request['model'] = $updateVehicleRequest->getModelOther();
-        $request['country'] = $updateVehicleRequest->getCountryOfRegistrationId();
-
 
         $current['colour'] = $vehicle->getColour()->getCode();
         $current['secondaryColour'] = $vehicle->getColourSecondary()->getCode();
-        $current['vin'] = $vehicle->getVin();
-        $current['vrm'] = $vehicle->getRegistration();
-        $current['make'] = $vehicle->getMake()->getName();
-        $current['model'] = $vehicle->getModel()->getName();
-        $current['country'] = $vehicle->getCountryOfRegistrationId();
+
+        if ($hasFullUpdateRights) {
+
+            $request['vin'] = $updateVehicleRequest->getVin();
+            $request['vrm'] = $updateVehicleRequest->getRegistration();
+            $request['make'] = $updateVehicleRequest->getMakeOther();
+            $request['model'] = $updateVehicleRequest->getModelOther();
+            $request['country'] = $updateVehicleRequest->getCountryOfRegistrationId();
+
+            $current['vin'] = $vehicle->getVin();
+            $current['vrm'] = $vehicle->getRegistration();
+            $current['make'] = $vehicle->getMake()->getName();
+            $current['model'] = $vehicle->getModel()->getName();
+            $current['country'] = $vehicle->getCountryOfRegistrationId();
+        }
 
         $isModified = $request != $current;
 
