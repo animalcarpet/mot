@@ -93,6 +93,10 @@ public class MotClient {
         return getWithoutToken(path);
     }
 
+    public Response getJasperDocument(String path) {
+        return getWithoutToken(path);
+    }
+
     public Response downloadFile(String path, Cookie sessionCookie, Cookie tokenCookie) {
         return getFrontendRequest(path, sessionCookie, tokenCookie);
     }

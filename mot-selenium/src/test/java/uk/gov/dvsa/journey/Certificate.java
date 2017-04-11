@@ -2,6 +2,7 @@ package uk.gov.dvsa.journey;
 
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.api.response.Vehicle;
+import uk.gov.dvsa.domain.model.vehicle.CountryOfRegistration;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.ui.pages.mot.MotTestHistoryPage;
 import uk.gov.dvsa.ui.pages.mot.MotTestSearchPage;
@@ -51,6 +52,10 @@ public class Certificate {
         ReplacementCertificateUpdatePage replacementCertificateUpdatePage = replacementCertificateResultsPage.viewTest(motTestId).edit();
         replacementCertificateUpdatePage.submitNoOdometerOption();
 
+        submitReplacementCertificate(replacementCertificateUpdatePage);
+    }
+
+    private ReplacementCertificateReviewPage submitReplacementCertificate(ReplacementCertificateUpdatePage replacementCertificateUpdatePage) {
         ReplacementCertificateReviewPage replacementCertificateReviewPage =
                 replacementCertificateUpdatePage.reviewChangesButton(ReplacementCertificateReviewPage.class);
 
@@ -61,6 +66,7 @@ public class Certificate {
             assertThat(replacementCertificateReviewPage.getDeclarationText(), equalToIgnoringCase(DECLARATION_STATEMENT_2FA));
             declarationFor2FaSuccessful = true;
         }
+        return replacementCertificateReviewPage;
     }
 
     public void printReplacementPage(User user, Vehicle vehicle, String motTestNumber) throws IOException, URISyntaxException {
@@ -100,6 +106,14 @@ public class Certificate {
 
     public Certificate updateCertificate(User user, Vehicle vehicle, String motTestNumber) throws IOException, URISyntaxException {
         updateCertificatePage(user, vehicle, motTestNumber);
+        return this;
+    }
+
+    public Certificate changeCertificateCountryOfRegistration(User user, Vehicle vehicle, String motTestNumber, CountryOfRegistration country) throws IOException, URISyntaxException {
+        updateCertificatePage(user, vehicle, motTestNumber);
+        updatePage.changeCountryOfRegistration(country);
+        reviewPage = submitReplacementCertificate(updatePage);
+        updateSuccessfulPage = reviewPage.confirmAndPrint(ReplacementCertificateUpdateSuccessfulPage.class);
         return this;
     }
 
@@ -143,5 +157,9 @@ public class Certificate {
         ReplacementCertificateReviewPage replacementReviewPage =
                 new ReplacementCertificateReviewPage(pageNavigator.getDriver());
         return replacementReviewPage.isPinBoxDisplayed();
+    }
+
+    public String getCountryOfRegistration() {
+        return updatePage.getCountryOfRegistration();
     }
 }

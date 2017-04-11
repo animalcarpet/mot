@@ -570,7 +570,7 @@ class MotTest extends Entity
             return;
         }
 
-        return $this->getVehicle()->getCountryOfRegistration();
+        return $this->getVehicle()->getCountryOfRegistrationDuringTest($this);
     }
 
     /**
