@@ -308,6 +308,7 @@ class MotTestLogViewModel
     private function setDefaultValues()
     {
         $lastWeek = $this->getDateRange(self::RANGE_LAST_WEEK);
+
         $defValues = new Parameters(
             [
                 // Monday last week

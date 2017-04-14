@@ -61,11 +61,12 @@ class TesterMotTestLogViewModel
     private function setDefaultValues()
     {
         $lastWeek = $this->getDateRange(self::RANGE_LAST_WEEK);
+
         $defValues = new Parameters(
             [
-                //  monday last week
+                // Monday last week
                 SearchParamConst::SEARCH_DATE_FROM_QUERY_PARAM => $lastWeek['from'],
-                //  sunday last week
+                // Sunday last week
                 SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM   => $lastWeek['to'],
             ]
         );

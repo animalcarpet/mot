@@ -32,42 +32,34 @@ class MotTestLogFormViewModel extends AbstractFormModel
         $this->setDateTo(new DateTimeViewModel());
     }
 
-    /**
-     * Map field values from POST/GET data
-     *
-     * @param Parameters $formData
-     *
-     * @return MotTestLogViewModel
-     */
     public function parseData(Parameters $formData)
     {
-        if ($formData->get('_csrf_token', false)) {
-            $date = $formData->get(MotTestLogFormViewModel::FLD_DATE_FROM, []);
+        $dateFrom = $formData->get(MotTestLogFormViewModel::FLD_DATE_FROM);
+        $dateTo = $formData->get(MotTestLogFormViewModel::FLD_DATE_TO);
 
-            if (!empty($date)) {
+        if (is_array($dateFrom)) {
+            if (!empty($dateFrom)) {
                 $this->setDateFrom(
                     new DateTimeViewModel(
-                        ArrayUtils::tryGet($date, 'Year'),
-                        ArrayUtils::tryGet($date, 'Month'),
-                        ArrayUtils::tryGet($date, 'Day')
+                        ArrayUtils::tryGet($dateFrom, 'Year'),
+                        ArrayUtils::tryGet($dateFrom, 'Month'),
+                        ArrayUtils::tryGet($dateFrom, 'Day')
                     )
                 );
             }
 
-            $date = $formData->get(MotTestLogFormViewModel::FLD_DATE_TO, []);
-
-            if (!empty($date)) {
+            if (!empty($dateTo)) {
                 $this->setDateTo(
                     new DateTimeViewModel(
-                        ArrayUtils::tryGet($date, 'Year'),
-                        ArrayUtils::tryGet($date, 'Month'),
-                        ArrayUtils::tryGet($date, 'Day'),
+                        ArrayUtils::tryGet($dateTo, 'Year'),
+                        ArrayUtils::tryGet($dateTo, 'Month'),
+                        ArrayUtils::tryGet($dateTo, 'Day'),
                         23, 59, 59
                     )
                 );
             }
-
-        } else {
+        }
+        else {
             $date = $formData->get(SearchParamConst::SEARCH_DATE_FROM_QUERY_PARAM);
             if (!empty($date)) {
                 $this->setDateFrom((new DateTimeViewModel())->setDate(new \DateTime('@' . $date)));

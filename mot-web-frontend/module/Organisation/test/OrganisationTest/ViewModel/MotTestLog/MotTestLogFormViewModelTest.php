@@ -81,7 +81,6 @@ class MotTestLogFormViewModelTest extends \PHPUnit_Framework_TestCase
             //  both dates are not set
             [
                 'queryParams' => [
-                    '_csrf_token' => 1,
                 ],
                 'expect'      => [
                     'dateFrom' => new DateTimeViewModel(),
@@ -91,7 +90,6 @@ class MotTestLogFormViewModelTest extends \PHPUnit_Framework_TestCase
             //  both dates are set
             [
                 'queryParams' => [
-                    '_csrf_token' => 1,
                     'dateFrom'    => [
                         'Year'  => '2010',
                         'Month' => '09',
@@ -113,7 +111,6 @@ class MotTestLogFormViewModelTest extends \PHPUnit_Framework_TestCase
             //  both dates are not set
             [
                 'queryParams' => [
-                    '_csrf_token' => null,
                 ],
                 'expect'      => [
                     'dateFrom' => new DateTimeViewModel(),
@@ -123,7 +120,6 @@ class MotTestLogFormViewModelTest extends \PHPUnit_Framework_TestCase
             //  both dates are set
             [
                 'queryParams' => [
-                    '_csrf_token'                                  => null,
                     SearchParamConst::SEARCH_DATE_FROM_QUERY_PARAM => (new \DateTime('2005-06-07'))->getTimestamp(),
                     SearchParamConst::SEARCH_DATE_TO_QUERY_PARAM   => (new \DateTime('1990-01-02'))->getTimestamp(),
                 ],
