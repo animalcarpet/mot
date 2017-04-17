@@ -2,18 +2,16 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service;
 
+use Core\Routing\ProfileRoutes;
 use Core\Service\MotFrontendAuthorisationServiceInterface;
 use Core\Service\MotFrontendIdentityProvider;
 use Core\Service\MotFrontendIdentityProviderInterface;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuardBuilder;
-use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use Dvsa\Mot\Frontend\SecurityCardModule\Security\SecurityCardGuard;
-use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
 use DvsaCommon\Auth\MotAuthorisationServiceInterface;
-use DvsaCommon\Auth\PermissionInSystem;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
 use DvsaFeature\FeatureToggles;
+use Zend\View\Helper\Url;
 
 class RegisterCardViewStrategy implements AutoWireableInterface
 {
@@ -35,6 +33,9 @@ class RegisterCardViewStrategy implements AutoWireableInterface
     /** @var  PersonProfileGuardBuilder $personProfileGuardBuilder */
     private $personProfileGuardBuilder;
 
+    /** @var Url $url */
+    private $url;
+
     /**
      * RegisterCardViewStrategy constructor.
      * @param FeatureToggles $featureToggles
@@ -50,7 +51,8 @@ class RegisterCardViewStrategy implements AutoWireableInterface
         MotAuthorisationServiceInterface $authorisationService,
         MotFrontendIdentityProviderInterface $identityProvider,
         SecurityCardGuard $securityCardGuard,
-        PersonProfileGuardBuilder $personProfileGuardBuilder
+        PersonProfileGuardBuilder $personProfileGuardBuilder,
+        Url $url
     ) {
         $this->featureToggles = $featureToggles;
         $this->hardStopCondition = $hardStopCondition;
@@ -58,6 +60,7 @@ class RegisterCardViewStrategy implements AutoWireableInterface
         $this->identityProvider = $identityProvider;
         $this->securityCardGuard = $securityCardGuard;
         $this->personProfileGuardBuilder = $personProfileGuardBuilder;
+        $this->url = $url;
     }
 
     /**
@@ -87,7 +90,7 @@ class RegisterCardViewStrategy implements AutoWireableInterface
     {
         $breadcrumbs = [];
         if (!$this->hardStopCondition->isTrue()) {
-            $breadcrumbs[] = ['Your profile' => ContextProvider::YOUR_PROFILE_CONTEXT];
+            $breadcrumbs[] = ['Your profile' => ProfileRoutes::of($this->url)->yourProfile()];
         }
         $breadcrumbs[] = ['Activate your security card' => ''];
 
