@@ -2,12 +2,11 @@
 
 namespace Dvsa\Mot\Frontend\SecurityCardModuleTest\CardActivation\Service;
 
+use Core\Routing\ProfileRoutes;
 use Core\Service\LazyMotFrontendAuthorisationService;
 use Core\Service\MotFrontendIdentityProviderInterface;
-use Dvsa\Mot\ApiClient\Resource\Item\SecurityCard;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Dvsa\Mot\Frontend\PersonModule\Security\PersonProfileGuardBuilder;
-use Dvsa\Mot\Frontend\PersonModule\View\ContextProvider;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardHardStopCondition;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardViewStrategy;
 use Dvsa\Mot\Frontend\SecurityCardModule\Security\SecurityCardGuard;
@@ -15,6 +14,7 @@ use Dvsa\Mot\Frontend\SecurityCardModule\Service\SecurityCardService;
 use DvsaCommon\Auth\PermissionInSystem;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaFeature\FeatureToggles;
+use Zend\View\Helper\Url;
 
 class RegisterCardViewStrategyTest extends \PHPUnit_Framework_TestCase
 {
@@ -35,6 +35,8 @@ class RegisterCardViewStrategyTest extends \PHPUnit_Framework_TestCase
     /** @var  SecurityCardService */
     private $securityCardService;
 
+    private $url;
+
     public function setUp()
     {
         $this->featureToggles = XMock::of(FeatureToggles::class);
@@ -44,6 +46,7 @@ class RegisterCardViewStrategyTest extends \PHPUnit_Framework_TestCase
         $this->securityCardGuard = XMock::of(SecurityCardGuard::class);
         $this->personProfileGuardBuilder = XMock::of(PersonProfileGuardBuilder::class);
         $this->securityCardService = XMock::of(SecurityCardService::class);
+        $this->url = XMock::of(Url::class);
     }
 
     private function with2FaToggle($ret)
@@ -99,7 +102,7 @@ class RegisterCardViewStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $this->withHardStop(false);
         $this->assertEquals([
-            ['Your profile' => ContextProvider::YOUR_PROFILE_CONTEXT],
+            ['Your profile' => ProfileRoutes::of($this->url)->yourProfile()],
             ['Activate your security card' => '']
         ],
             $this->strategy()->breadcrumbs());
@@ -205,7 +208,8 @@ class RegisterCardViewStrategyTest extends \PHPUnit_Framework_TestCase
             $this->authorisationService,
             $this->identityProvider,
             $this->securityCardGuard,
-            $this->personProfileGuardBuilder
+            $this->personProfileGuardBuilder,
+            $this->url
         );
     }
 }
