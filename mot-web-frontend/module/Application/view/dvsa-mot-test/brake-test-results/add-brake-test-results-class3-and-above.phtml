@@ -13,10 +13,10 @@ use DvsaMotTest\View\Model\MotTestTitleModel;
 /** @var MotTestTitleModel $motTestTitleViewModel */
 $pageSubTitle = $motTestTitleViewModel->getTitle($motTest);
 
-$title = 'Add Brake Test Results';
+$title = 'Add brake test results';
 $this->headTitle($title);
 $this->layout()->setVariable('pageSubTitle', $pageSubTitle);
-$this->layout()->setVariable('pageTitle', "Brake test results");
+$this->layout()->setVariable('pageTitle', "Add brake test results");
 
 $this->placeholder('progressBar')->captureStart();
 echo $this->partial(

@@ -22,10 +22,10 @@ $vehicleClass = $vehicle->getVehicleClass()->getCode();
 
 $viewOnly = isset($this->viewOnly) ? $this->viewOnly : false;
 
-$title = 'Brake Test Summary';
+$title = 'Brake test summary';
 $this->headTitle($title);
-$this->layout()->setVariable('pageSubTitle', $title);
-$this->layout()->setVariable('pageTitle', "Brake test results");
+$this->layout()->setVariable('pageSubTitle', 'MOT testing');
+$this->layout()->setVariable('pageTitle', $title);
 
 $this->placeholder('progressBar')->captureStart();
 echo $this->partial(

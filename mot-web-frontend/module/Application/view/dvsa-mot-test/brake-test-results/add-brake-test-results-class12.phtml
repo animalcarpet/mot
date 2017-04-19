@@ -14,10 +14,10 @@ use DvsaMotTest\View\Model\MotTestTitleModel;
 /** @var MotTestTitleModel $motTestTitleViewModel */
 $pageSubtTitle = $motTestTitleViewModel->getTitle($motTest);
 
-$title = 'Add Brake Test Results';
+$title = 'Add brake test results';
 $this->headTitle($title);
 $this->layout()->setVariable('pageSubTitle', $pageSubtTitle);
-$this->layout()->setVariable('pageTitle', "Brake test results");
+$this->layout()->setVariable('pageTitle', "Add brake test results");
 
 $isSidecarAttached = $brakeTestConfiguration->isSidecarAttached();
 $vehicleClass = $vehicle->getVehicleClass()->getCode();

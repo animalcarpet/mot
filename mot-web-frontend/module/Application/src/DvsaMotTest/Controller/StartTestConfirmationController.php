@@ -503,6 +503,9 @@ class StartTestConfirmationController extends AbstractDvsaMotTestController
             }
             if ($this->startTestConfirmationViewModel->isRetest()) {
                 $this->layout()->setVariable('pageTitle', 'Confirm vehicle for retest');
+                $this->setHeadTitle('Confirm vehicle for retest');
+            } else {
+                $this->setHeadTitle('Confirm vehicle and start test');
             }
         }
 

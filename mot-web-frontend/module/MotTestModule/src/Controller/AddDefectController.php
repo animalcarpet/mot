@@ -248,12 +248,15 @@ class AddDefectController extends AbstractDvsaMotTestController
         switch (strtolower($defectType)) {
             case self::DEFECT_TYPE_ADVISORY:
                 $title = 'Add an advisory';
+                $this->setHeadTitle('Add an advisory');
                 break;
             case self::DEFECT_TYPE_PRS:
                 $title = 'Add a PRS';
+                $this->setHeadTitle('Add a PRS');
                 break;
             case self::DEFECT_TYPE_FAILURE:
                 $title = 'Add a failure';
+                $this->setHeadTitle('Add a failure');
                 break;
             default:
                 throw new DefectTypeNotFoundException();

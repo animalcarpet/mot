@@ -91,6 +91,7 @@ class SearchDefectsController extends AbstractDvsaMotTestController
         $breadcrumbs = $this->getBreadcrumbs($isDemoTest, $isReinspection, $isNonMotTest);
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);
         $this->enableGdsLayout('Search for a defect', '');
+        $this->setHeadTitle('Search for a defect');
 
         if ($searchTerm !== '' && !is_null($searchTerm)) {
             $defects = $this->getSearchResultsFromApi();

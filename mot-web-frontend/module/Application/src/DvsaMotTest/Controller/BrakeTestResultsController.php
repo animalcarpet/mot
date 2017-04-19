@@ -202,6 +202,8 @@ class BrakeTestResultsController extends AbstractDvsaMotTestController
             );
         }
 
+         $this->setHeadTitle('Brake test configuration');
+
         return $brakeTestConfigurationViewModel;
     }
 

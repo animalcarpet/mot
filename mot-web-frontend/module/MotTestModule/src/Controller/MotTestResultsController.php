@@ -157,6 +157,8 @@ class MotTestResultsController extends AbstractDvsaMotTestController
             $breadcrumb = 'MOT test results';
         }
 
+        $this->setHeadTitle('MOT test results');
+
         $this->layout('layout/layout-govuk.phtml');
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => [$breadcrumb => '']]);
         if($isNonMotTest){
