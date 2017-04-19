@@ -128,6 +128,7 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
         }
 
         $this->enableGdsLayout('Defect categories', '');
+        $this->setHeadTitle('Defect categories');
 
         $vehicleFirstUsedDate = $vehicle->getFirstUsedDate();
         $vehicleFirstUsedDate = DateTime::createFromFormat('Y-m-d', $vehicleFirstUsedDate)->format('j M Y');
@@ -180,6 +181,7 @@ class DefectCategoriesController extends AbstractDvsaMotTestController
         $isNonMotTest
     ) {
         $this->enableGdsLayout('Defects', '');
+         $this->setHeadTitle('Defects');
 
         $vehicleClassCode = $vehicle->getVehicleClass()->getCode();
 

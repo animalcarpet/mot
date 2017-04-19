@@ -17,7 +17,7 @@ public class BrakeTestResultsPage extends Page {
     @FindBy(id = "brake_test_summary_done") private WebElement doneButton;
     @FindBy(id = "brake_test_results_cancel") private WebElement cancelButton;
 
-    private static final String PAGE_TITLE = "Brake test results";
+    private static final String PAGE_TITLE = "Add brake test results";
 
     public BrakeTestResultsPage(MotAppDriver driver) {
         super(driver);

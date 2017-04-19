@@ -64,7 +64,7 @@ $isReinspectionSummaryPage = ($isReinspection && (($isTestReadyToFail || $isTest
 //  --  title and header    --
 $testName = AbstractDvsaMotTestController::getTestName($motTestType);
 
-$title = $testName . ' Summary';
+$title = $testName . ' summary';
 $header = $testName . ($isTestActive ? ' summary' : ($isDuplicateCertificate ? ' results' : ' result'));
 
 $this->headTitle($title);

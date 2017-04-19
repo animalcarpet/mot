@@ -88,6 +88,7 @@ class OdometerController extends AbstractDvsaMotTestController
         }
 
         $this->layout('layout/layout-govuk.phtml');
+        $this->setHeadTitle('Odometer reading');
 
         $breadcrumbs = $this->getBreadcrumbs($isDemo, $isReinspection, $isNonMotTest);
         $this->layout()->setVariable('breadcrumbs', ['breadcrumbs' => $breadcrumbs]);

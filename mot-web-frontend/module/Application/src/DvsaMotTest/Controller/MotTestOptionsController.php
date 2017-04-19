@@ -46,6 +46,7 @@ class MotTestOptionsController extends AbstractDvsaMotTestController implements 
 
         $this->layout()->setVariable('pageTitle', $pageTitle);
         $this->layout()->setVariable('pageSubTitle', $presenter->getPageSubTitle());
+        $this->setHeadTitle($pageTitle);
 
         $this->addMotTestLateInfoToGtmDataLayer($dto->getVehicleId(), $dto->getVehicleRegistrationNumber());
 
