@@ -13,7 +13,6 @@ use DvsaCommon\Utility\ArrayUtils;
 class PasswordResetFormModel extends AbstractFormModel
 {
     const FIELD_USERNAME            = 'username';
-
     const USER_NOT_FOUND            = 'This user ID does not match our records';
     const USER_REQUIRED             = 'User Id is required';
 
@@ -23,6 +22,8 @@ class PasswordResetFormModel extends AbstractFormModel
     private $config;
     /** @var integer $cfgExpireTime */
     private $cfgExpireTime;
+    /** @var string $email */
+    private $email;
 
     /**
      * @return string
@@ -112,5 +113,39 @@ class PasswordResetFormModel extends AbstractFormModel
     {
         $this->config = $config;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string $email
+     *
+     * @return $this
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getObscuredEmailAddress()
+    {
+        $numberOfVisibleCharactersInLocalPart = 3;
+
+        $positionOfLastAtSign = strrpos($this->email, '@');
+        $localPartVisible = substr($this->email, 0, min($numberOfVisibleCharactersInLocalPart, $positionOfLastAtSign));
+        $localPartObscured = str_repeat('•', $positionOfLastAtSign - strlen($localPartVisible));
+        $domain = substr($this->email, $positionOfLastAtSign, strlen($this->email));
+
+        return $localPartVisible . $localPartObscured . $domain;
     }
 }

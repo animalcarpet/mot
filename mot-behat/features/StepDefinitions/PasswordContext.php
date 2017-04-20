@@ -204,6 +204,24 @@ class PasswordContext implements Context
     }
 
     /**
+     * @Then /^the response should contain user email address details/
+     */
+    public function theResponseShouldContainUserEmailAddressDetails()
+    {
+        $responseBody = $this->getMotResponse();
+
+        if ($this->response->getStatusCode() == HttpResponse::STATUS_CODE_200){
+            $actualEmailAddress = $responseBody['data']['person']['contactDetails'][0]['emails'][0]['email'];
+        } else {
+            $actualEmailAddress = 'HTTP response code was not ' . HttpResponse::STATUS_CODE_200;
+        }
+        $patternForSuccessEmailAddress = '/^success[\S]+@[\S]+$/';
+        $match = preg_match($patternForSuccessEmailAddress, $actualEmailAddress);
+
+        PHPUnit::assertEquals(1, $match);
+    }
+
+    /**
      * @Given /^that I have a password reset token of type (.*)$/
      */
     public function thatIHaveAPasswordResetTokenOfType($tokenType)

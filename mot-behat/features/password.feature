@@ -78,6 +78,15 @@ Feature: Password
       | userId          | message                 |
       | invalidUserId   | Person not found        |
 
+  @password-reset
+  Scenario Outline: Api response contains email details for users who have forgotten their password
+    Given I am registered as a new user
+    When I reset my password with <userId>
+    Then the response should contain user email address details
+    Examples:
+      | userId          |
+      | validUserId     |
+
   @password-expiry-notification
   Scenario: Send password expiry remainder emails
     Given I am logged in as a Tester

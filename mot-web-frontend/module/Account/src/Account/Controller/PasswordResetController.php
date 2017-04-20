@@ -144,9 +144,12 @@ class PasswordResetController extends AbstractAuthActionController
 
         if (!$this->userAdminSessionManager->getElementOfUserAdminSession(UserAdminSessionManager::EMAIL_SENT)) {
             try {
-                $this->mapperFactory->Account->resetPassword(
+                /* @var MessageDto $apiResponse */
+                $apiResponse = $this->mapperFactory->Account->resetPassword(
                     $this->userAdminSessionManager->getElementOfUserAdminSession(UserAdminSessionManager::USER_KEY)
                 );
+
+                $this->userAdminSessionManager->updateUserAdminSession(UserAdminSessionManager::EMAIL_ADDRESS, $this->getEmailFromApiResponse($apiResponse));
                 $this->userAdminSessionManager->updateUserAdminSession(UserAdminSessionManager::EMAIL_SENT, true);
                 return $this->redirect()->toUrl(AccountUrlBuilderWeb::forgottenPasswordConfirmation());
             } catch (\Exception $e) {
@@ -220,8 +223,20 @@ class PasswordResetController extends AbstractAuthActionController
         $this->view = new PasswordResetFormModel();
         $this->view->setCfgExpireTime($this->config[self::CFG_PASSWORD_RESET][self::CFG_PASSWORD_RESET_EXPIRE_TIME]);
         $this->view->setConfig($this->config);
+        $this->view->setEmail($this->userAdminSessionManager->getElementOfUserAdminSession(UserAdminSessionManager::EMAIL_ADDRESS));
 
-        return $this->initViewModelInformation(self::PAGE_TITLE_CONFIRMATION, self::PAGE_SUBTITLE);
+        $this->layout('layout/layout-govuk.phtml');
+        $this->setHeadTitle('Password forgotten');
+
+        $viewModel =  new ViewModel();
+        $viewModel->setTemplate('/account/password-reset/forgotten-password-confirmation.twig');
+        $viewModel->setVariables([
+            'viewModel' => $this->view,
+            'email' => $this->view->getObscuredEmailAddress(),
+            'config' => $this->view->getConfig()['helpdesk'],
+        ]);
+
+        return $viewModel;
     }
 
     public function changePasswordAction()
@@ -409,5 +424,22 @@ class PasswordResetController extends AbstractAuthActionController
                 'isLoggedIn' => ($this->getIdentity() !== null)
             ]
         );
+    }
+
+    /**
+     * @param MessageDto $apiResponse
+     *
+     * @return string $email
+     */
+    private function getEmailFromApiResponse(MessageDto $apiResponse)
+    {
+        $contactDtoArray = (null !== $apiResponse->getPerson() && null !== $apiResponse->getPerson()->getContactDetails())
+            ? $apiResponse->getPerson()->getContactDetails() : [];
+        $contactDto = reset($contactDtoArray);
+        $emailDtoArray = !empty($contactDto) ? $contactDto->getEmails() : [];
+        $emailDto = reset($emailDtoArray);
+        $email = !empty($emailDto) ? $emailDto->getEmail() : '';
+
+        return $email;
     }
 }

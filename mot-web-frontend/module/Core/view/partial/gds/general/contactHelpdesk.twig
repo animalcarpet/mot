@@ -1,0 +1,14 @@
+{% if startWithLowercase is defined and startWithLowercase == 'true'%}
+    call
+{% else %}
+    Call
+{% endif %}
+the {{ config.name }} on <strong>{{ config.phoneNumber }}</strong>
+
+<p>Opening hours are:</p>
+
+<ul>
+    <li>{{ config.openingHrsWeekdays }}</li>
+    <li>{{ config.openingHrsSaturday }}</li>
+    <li>{{ config.openingHrsSunday }}</li>
+</ul>

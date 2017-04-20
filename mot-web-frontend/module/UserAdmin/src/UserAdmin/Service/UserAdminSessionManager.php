@@ -16,12 +16,11 @@ class UserAdminSessionManager
     const FIRST_QUESTION = 1;
     const SECOND_QUESTION = 2;
     const MAX_NUMBER_ATTEMPT = 3;
-
     const USER_ADMIN_SESSION_NAME = 'userAdminSession';
-
     const USER_KEY = 'user';
     const SEARCH_PARAM_KEY = 'searchParams';
     const EMAIL_SENT = 'email-sent';
+    const EMAIL_ADDRESS = 'emailAddress';
 
     /**
      * @var AbstractContainer
