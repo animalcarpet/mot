@@ -12,6 +12,8 @@ use DvsaClient\Mapper\AccountMapper;
 use DvsaClient\Mapper\PersonMapper;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Dto\Account\MessageDto;
+use DvsaCommon\Dto\Contact\ContactDto;
+use DvsaCommon\Dto\Contact\EmailDto;
 use DvsaCommon\Dto\Person\PersonDto;
 use DvsaCommon\HttpRestJson\Exception\NotFoundException;
 use DvsaCommon\Obfuscate\ParamObfuscator;
@@ -49,6 +51,9 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
     /** @var ParamObfuscator $mockObfuscator */
     private $mockObfuscator;
 
+    /** @var array $config */
+    private $config;
+
     protected function setUp()
     {
         $serviceManager = Bootstrap::getServiceManager();
@@ -61,10 +66,14 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
         $this->mockPasswordResetSrv = XMock::of(PasswordResetService::class);
         $this->mockObfuscator = XMock::of(ParamObfuscator::class);
 
-        $config = [
+        $this->config = [
             PasswordResetController::CFG_PASSWORD_RESET => [
                 PasswordResetController::CFG_PASSWORD_RESET_EXPIRE_TIME => 5400,
             ],
+            'helpdesk'=> [
+                'name' => 'DVSA Helpdesk',
+                'phoneNumber' => '0330 123 5654'
+            ]
         ];
 
         $this->setController(
@@ -72,7 +81,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                 $this->mockPasswordResetSrv,
                 $this->mockSessionManager,
                 $this->mockMapperFactory,
-                $config,
+                $this->config,
                 $this->mockObfuscator
             )
         );
@@ -155,6 +164,102 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
         if (!empty($expect['url'])) {
             $this->assertRedirectLocation2($expect['url']);
         }
+    }
+
+    /**
+     * @dataProvider testGetEmailFromApiResponseDataProvider
+     *
+     * @param messageDto[] $apiResponse
+     * @param string $expectedEmailAddress
+     */
+    public function testGetEmailFromApiResponse($apiResponse, $expectedEmailAddress)
+    {
+        $reflection = new \ReflectionClass(get_class($this->controller));
+        $method = $reflection->getMethod('getEmailFromApiResponse');
+        $method->setAccessible(true);
+        $emailAddressFromApiResponse = $method->invokeArgs($this->controller, $apiResponse);
+
+        $this->assertEquals($expectedEmailAddress, $emailAddressFromApiResponse);
+    }
+
+    public function testGetEmailFromApiResponseDataProvider()
+    {
+        return [
+            [
+                'apiResponse' => [
+                    new messageDto()
+                ],
+                'expectedEmailAddress' => '',
+            ],
+            [
+                'apiResponse' => [
+                    (new messageDto())->setPerson(
+                        new PersonDto()
+                    )
+                ],
+                'expectedEmailAddress' => '',
+            ],
+            [
+                'apiResponse' => [
+                    (new messageDto())->setPerson(
+                        (new PersonDto())->setContactDetails(
+                            [
+                                new ContactDto(),
+                            ]
+                        )
+                    )
+                ],
+                'expectedEmailAddress' => '',
+            ],
+            [
+                'apiResponse' => [
+                    (new messageDto())->setPerson(
+                        (new PersonDto())->setContactDetails(
+                            [
+                                (new ContactDto())->setEmails(
+                                    [
+                                        new EmailDto(),
+                                    ]
+                                ),
+                            ]
+                        )
+                    )
+                ],
+                'expectedEmailAddress' => '',
+            ],
+            [
+                'apiResponse' => [
+                    (new messageDto())->setPerson(
+                        (new PersonDto())->setContactDetails(
+                            [
+                                (new ContactDto())->setEmails(
+                                    [
+                                        (new EmailDto())->setEmail(null),
+                                    ]
+                                ),
+                            ]
+                        )
+                    )
+                ],
+                'expectedEmailAddress' => '',
+            ],
+            [
+                'apiResponse' => [
+                    (new messageDto())->setPerson(
+                        (new PersonDto())->setContactDetails(
+                            [
+                                (new ContactDto())->setEmails(
+                                    [
+                                        (new EmailDto())->setEmail('myemail@domaim.com'),
+                                    ]
+                                ),
+                            ]
+                        )
+                    )
+                ],
+                'expectedEmailAddress' => 'myemail@domaim.com',
+            ],
+        ];
     }
 
     public function testActionsResultAndAccessDataProvider()
@@ -337,7 +442,9 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                         'class'  => 'mockAccountMapper',
                         'method' => 'resetPassword',
                         'params' => [],
-                        'result' => ['token' => self::TOKEN],
+                        'result' => (new MessageDto())
+                            ->setToken(self::TOKEN)
+                            ->setPerson(new PersonDto())
                     ],
 
                 ],

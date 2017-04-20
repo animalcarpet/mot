@@ -2,6 +2,8 @@
 namespace OrganisationApi\Service\Mapper;
 
 use DvsaCommon\Date\DateTimeApiFormat;
+use DvsaCommon\Dto\Contact\ContactDto;
+use DvsaCommon\Dto\Contact\EmailDto;
 use DvsaCommon\Dto\Person\PersonDto;
 use DvsaEntities\Entity\Person;
 
@@ -63,6 +65,7 @@ class PersonMapper
         $personDto->setMiddleName($person->getMiddleName());
         $personDto->setFamilyName($person->getFamilyName());
         $personDto->setGender($person->getGender() ? $person->getGender()->getName() : null);
+        $personDto->setContactDetails($this->createContactDtoArray($person));
 
         $title = '';
 
@@ -77,5 +80,28 @@ class PersonMapper
         }
 
         return $personDto;
+    }
+
+    private function createContactDtoArray(Person $person)
+    {
+        $contactDtoArray = [];
+        $contactDto = new ContactDto();
+        $contactDto->setEmails($this->createEmailDtoArray($person));
+        array_push($contactDtoArray, $contactDto);
+
+        return $contactDtoArray;
+    }
+
+    private function createEmailDtoArray(Person $person)
+    {
+        $emailDto = new EmailDto();
+        if (!empty($person)) {
+            $emailDto->setEmail($person->getPrimaryEmail());
+        }
+        $emailDtoArray = [
+            $emailDto
+        ];
+
+        return $emailDtoArray;
     }
 }

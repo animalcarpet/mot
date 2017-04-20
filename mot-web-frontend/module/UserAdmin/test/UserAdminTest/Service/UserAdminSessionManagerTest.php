@@ -41,7 +41,7 @@ class UserAdminSessionManagerTest extends AbstractFrontendControllerTestCase
 
     public function testUserAdminSessionManager()
     {
-        $this->session->createUserAdminSession(self::PERSON_ID, [], []);
+        $this->session->createUserAdminSession(self::PERSON_ID, []);
 
         $this->assertEquals(1, $this->session->getElementOfUserAdminSession('user'));
         $this->assertEquals(false, $this->session->getElementOfUserAdminSession('question1-success'));
@@ -55,6 +55,21 @@ class UserAdminSessionManagerTest extends AbstractFrontendControllerTestCase
 
         $this->session->deleteUserAdminSession();
         $this->assertEquals(false, $this->session->checkElementOfUserAdminSession('user'));
+    }
+
+    /**
+     * @dataProvider dataProviderTestOptionalElementsOfSessionManager
+     *
+     * @param $key
+     * @param $value
+     */
+    public function testOptionalElementsOfSessionManager($key, $value)
+    {
+        $this->session->createUserAdminSession(self::PERSON_ID, []);
+        $this->assertFalse($this->session->checkElementOfUserAdminSession($key));
+
+        $this->session->updateUserAdminSession($key, $value);
+        $this->assertEquals($value, $this->session->getElementOfUserAdminSession($key));
     }
 
     /**
@@ -81,6 +96,20 @@ class UserAdminSessionManagerTest extends AbstractFrontendControllerTestCase
         $result = $this->session->isUserAuthenticated(self::PERSON_ID);
 
         $this->assertSame($expect, $result);
+    }
+
+    public function dataProviderTestOptionalElementsOfSessionManager()
+    {
+        return [
+            [
+                'key' => UserAdminSessionManager::EMAIL_SENT,
+                'value' => true,
+            ],
+            [
+                'key' => UserAdminSessionManager::EMAIL_ADDRESS,
+                'value' => 'mylocalpart@mydomain.com',
+            ],
+        ];
     }
 
     public function dataProviderTestIsUserAuthenticated()

@@ -7,6 +7,8 @@ use DvsaCommon\Date\DateUtils;
 use DvsaCommon\Dto\Common\ColourDto;
 use DvsaCommon\Dto\Common\MotTestDto;
 use DvsaCommon\Dto\Common\MotTestTypeDto;
+use DvsaCommon\Dto\Contact\ContactDto;
+use DvsaCommon\Dto\Contact\EmailDto;
 use DvsaCommon\Dto\Vehicle\FuelTypeDto;
 use DvsaCommon\Dto\Person\PersonDto;
 use DvsaCommon\Dto\Vehicle\CountryDto;
@@ -193,6 +195,11 @@ class MotTestMapperTest extends AbstractServiceTestCase
                 (new PersonDto())
                     ->setId(1)
                     ->setUsername('tester1')
+                    ->setContactDetails(
+                        [
+                            (new ContactDto())->setEmails(([new EmailDto()]))
+                        ]
+                    )
             )
             ->setVehicle($vehicleDto)
             ->setVehicleTestingStation($vtsData)
