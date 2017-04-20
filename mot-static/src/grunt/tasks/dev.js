@@ -75,10 +75,11 @@ module.exports = function (grunt, config) {
         ]);
 
         grunt.registerTask('dev:restart:apache', 'Restarts Apache', 'apache:restart:all');
-        grunt.registerTask('dev:restart:authorisation-service', 'Restarts authorisation service', 'sshexec:authr_restart');
+        grunt.registerTask('dev:restart:authorisation-service', 'Restarts authorisation service', 'sshexec:authorisation_service_restart');
         grunt.registerTask('dev:restart:opendj', 'Restarts OpenDJ', 'sshexec:opendj_restart_dev');
         grunt.registerTask('dev:restart:jasper', 'Restarts Jasper', 'sshexec:jasper_restart');
         grunt.registerTask('dev:restart:mot-test', 'Restarts mot-test service', 'sshexec:mot_test_restart');
+        grunt.registerTask('dev:restart:vehicle-service', 'Restarts vehicle service', 'sshexec:vehicle_service_restart');
         grunt.registerTask('dev:restart:mysql', 'Restarts Mysql', 'sshexec:mysql_restart_dev');
         grunt.registerTask('dev:restart:all', 'Restarts all known services', [
             'apache:restart:all',
@@ -86,10 +87,11 @@ module.exports = function (grunt, config) {
             'sshexec:mysql_restart_dev',
             'sshexec:jasper_restart',
             'sshexec:authorisation_service_restart',
-            'sshexec:mot_test_restart'
+            'sshexec:mot_test_restart',
+            'sshexec:vehicle_service_restart'
         ]);
-        grunt.registerTask('dev:2fa_off', 'Sets 2fa toggle off', ['sshexec:ft2fa_off_dev', 'sshexec:ft2fa_off_dev2', 'sshexec:authr_restart', 'dev:restart:apache']);
-        grunt.registerTask('dev:2fa_on', 'Sets 2fa toggle on', ['sshexec:ft2fa_on_dev', 'sshexec:ft2fa_on_dev2', 'sshexec:authr_restart','dev:restart:apache']);
+        grunt.registerTask('dev:2fa_off', 'Sets 2fa toggle off', ['sshexec:ft2fa_off_dev', 'sshexec:ft2fa_off_dev2', 'sshexec:authorisation_service_restart', 'dev:restart:apache']);
+        grunt.registerTask('dev:2fa_on', 'Sets 2fa toggle on', ['sshexec:ft2fa_on_dev', 'sshexec:ft2fa_on_dev2', 'sshexec:authorisation_service_restart','dev:restart:apache']);
         grunt.registerTask('dev:2fa_hardstop_off', 'Sets 2fa toggle off', ['sshexec:ft2fahardstop_off_dev', 'dev:restart:apache']);
         grunt.registerTask('dev:2fa_hardstop_on', 'Sets 2fa toggle on', ['sshexec:ft2fahardstop_on_dev', 'dev:restart:apache']);
         grunt.registerTask('dev:ft:enable', 'Enables toggle from --ft=[...] argument, e.g. dev:ft:enable --ft=new_homepage', [

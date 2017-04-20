@@ -33,6 +33,7 @@ module.exports = function (grunt, config) {
             mysqlServiceName: 'mysql',
             jasperServiceName: 'tomcat',
             motTestServiceName: 'mot-test-service',
+            vehicleServiceName: 'vehicle-service',
             authrServiceName: 'authorisation-service'
         });
 

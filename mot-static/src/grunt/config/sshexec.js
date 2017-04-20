@@ -39,6 +39,10 @@ module.exports = function (grunt, config) {
             return toggleFeature(config, 'false');
         }
 
+        function restartService(serviceName) {
+            return 'sudo service ' + serviceName + ' restart';
+        }
+
         var dev_ssh_options = {
             host: '<%= dev_config.host %>',
             username: '<%= dev_config.username %>',
@@ -123,23 +127,39 @@ module.exports = function (grunt, config) {
                 command: 'sudo service <%= service_config.httpdServiceName %> stop; sudo rm -f <%= vagrant_config.phpRootDir %>/var/lib/php/session/sess_*; sudo service <%= service_config.httpdServiceName %> start;'
             },
             apache_restart: {
-                command: 'sudo service <%= service_config.httpdServiceName %> restart'
+                command: restartService("<%= service_config.httpdServiceName %>")
             },
             apache_restart_dev: {
                 options: dev_ssh_options,
-                command: 'sudo service <%= service_config.httpdServiceName %> restart'
+                command: restartService("<%= service_config.httpdServiceName %>")
             },
             apache_restart_dev2: {
                 options: dev2_ssh_options,
-                command: 'sudo service <%= service_config.httpdServiceName %> restart'
+                command: restartService("<%= service_config.httpdServiceName %>")
             },
-            authr_restart: {
+            authorisation_service_restart: {
                 options: dev2_ssh_options,
-                command: 'sudo service <%= service_config.authrServiceName %> restart'
+                command: restartService("<%= service_config.authrServiceName %>")
             },
             mot_test_restart: {
                 options: dev2_ssh_options,
-                command: 'sudo service <%= service_config.authrServiceName %> restart'
+                command: restartService("<%= service_config.motTestServiceName %>")
+            },
+            vehicle_service_restart: {
+                options: dev2_ssh_options,
+                command: restartService("<%= service_config.vehicleServiceName %>")
+            },
+            opendj_restart_dev: {
+                options: dev_ssh_options,
+                command: restartService("<%= service_config.opendjServiceName %>")
+            },
+            jasper_restart: {
+                options: dev_ssh_options,
+                command: restartService("<%= service_config.jasperServiceName %>")
+            },
+            mysql_restart_dev: {
+                options: dev_ssh_options,
+                command: restartService("<%= service_config.mysqlServiceName %>")
             },
             papply_dev: {
                 options: dev_ssh_options,
@@ -154,18 +174,6 @@ module.exports = function (grunt, config) {
                     'sudo cp /tmp/hiera/hiera.yaml /etc/puppetlabs/code/hiera.yaml',
                     'sudo /vagrant/scripts/papply'
                 ]
-            },
-            opendj_restart_dev: {
-                options: dev_ssh_options,
-                command: 'sudo service <%= service_config.opendjServiceName %> restart'
-            },
-            jasper_restart: {
-                options: dev_ssh_options,
-                command: 'sudo service <%= service_config.jasperServiceName %> restart'
-            },
-            mysql_restart_dev: {
-                options: dev_ssh_options,
-                command: 'sudo service <%= service_config.mysqlServiceName %> restart'
             },
             ft_enable_testsupport: {
                 options: dev_ssh_options,
