@@ -79,9 +79,8 @@ class AccountSummaryStep extends AbstractRegistrationStep
         );
 
         // security questions
-        // obscure the values but not the questions
-        $result['answer1Obfuscated'] = $this->obscureValue($result[SecurityQuestionFirstInputFilter::FIELD_ANSWER]);
-        $result['answer2Obfuscated'] = $this->obscureValue($result[SecurityQuestionSecondInputFilter::FIELD_ANSWER]);
+        $result['securityQuestionOneAnswer'] = $result[SecurityQuestionFirstInputFilter::FIELD_ANSWER];
+        $result['securityQuestionTwoAnswer'] = $result[SecurityQuestionSecondInputFilter::FIELD_ANSWER];
 
         // password
         $result['passwordObfuscated'] = $this->obscureValue($result[PasswordInputFilter::FIELD_PASSWORD]);

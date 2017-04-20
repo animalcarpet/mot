@@ -88,7 +88,7 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
         <td id="firstQuestion" class="key-value-list__value">
             <?php echo $this->escapeHtmlAttr($firstQuestion) ?>
             <br>
-            <span id="answer1Obfuscated" class="masked-text"><?php echo $answer1Obfuscated ?></span>
+            <span id="securityQuestionOneAnswer" class="font-small"><?php echo $this->escapeHtml($securityQuestionOneAnswer)  ?></span>
         </td>
         <td class="key-value-list__item-action">
             <a id="change-security-one" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->securityQuestionStepOne());?>">Change<span class="visuallyhidden"> first security question</span></a>
@@ -101,7 +101,7 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
         <td id="secondQuestion" class="key-value-list__value">
             <?php echo $this->escapeHtmlAttr($secondQuestion) ?>
             <br>
-            <span id="answer2Obfuscated" class="masked-text"><?php echo $answer2Obfuscated ?></span>
+            <span id="securityQuestionTwoAnswer" class="font-small"><?php echo $this->escapeHtml($securityQuestionTwoAnswer) ?></span>
         </td>
         <td class="key-value-list__item-action">
             <a id="change-security-two" href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->securityQuestionStepTwo());?>">Change<span class="visuallyhidden"> second security question</span></a>
