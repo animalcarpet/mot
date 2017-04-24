@@ -211,6 +211,7 @@ class RoleController extends AbstractAuthActionController
             'Authorised Examiner'
         );
         $this->layout()->setVariable('pageTitle', 'Remove a role');
+        $this->setHeadTitle('Remove a role');
 
         return new ViewModel(['viewModel' => $model]);
     }
