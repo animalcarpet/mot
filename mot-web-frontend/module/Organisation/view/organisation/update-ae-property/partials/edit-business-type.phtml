@@ -4,8 +4,9 @@ use Organisation\UpdateAeProperty\Process\Form\BusinessTypePropertyForm;
 
 /** @var Organisation\UpdateAeProperty\UpdateAePropertyViewModel $viewModel */
 /** @var BusinessTypePropertyForm $form */
-
 $form = $viewModel->getForm();
+
+$this->headTitle('Change business type');
 ?>
 <fieldset>
     <?php echo $this->partial(

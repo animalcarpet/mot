@@ -105,6 +105,7 @@ class AuthorisedExaminerController extends AbstractDvsaMotTestController
         }
 
         $this->layout("layout/layout-govuk.phtml");
+        $this->setHeadTitle('Authorised Examiner');
 
         $vm = $this->getIndexViewModel($orgId);
         $presenter = $this->getAuthorisedExaminerPresenter();

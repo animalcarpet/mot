@@ -6,6 +6,8 @@ use Organisation\UpdateAeProperty\Process\Form\StatusPropertyForm;
 
 /** @var StatusPropertyForm $form */
 $form = $viewModel->getForm();
+
+$this->headTitle('Change status');
 ?>
 <fieldset>
     <?php echo $this->partial(

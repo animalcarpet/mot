@@ -5,8 +5,11 @@ use Organisation\UpdateAeProperty\UpdateAePropertyViewModel;
 /** @var UpdateAePropertyViewModel $viewModel */
 /** @var PhonePropertyForm $form */
 $form = $viewModel->getForm();
+
+$this->headTitle('Change telephone number');
 ?>
 <fieldset>
+
     <?php  echo $this->partial(
         'partial/gds/form/control',
         [

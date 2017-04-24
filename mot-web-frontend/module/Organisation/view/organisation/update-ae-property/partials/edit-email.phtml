@@ -6,6 +6,7 @@ use Organisation\UpdateAeProperty\UpdateAePropertyViewModel;
 /** @var EmailPropertyForm $form */
 $form = $viewModel->getForm();
 
+$this->headTitle($viewModel->getSubmitButtonText());
 ?>
 <div class="row">
     <div class="col-sm-4">
