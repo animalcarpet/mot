@@ -80,9 +80,9 @@ return [
                         ],
                     ],
                     'security-questions' => [
-                        'type'    => 'literal',
+                        'type'    => 'segment',
                         'options' => [
-                            'route'    => '/security-questions',
+                            'route'    => '/security-questions[/]',
                             'defaults' => [
                                 'controller' => SecurityQuestionsController::class,
                             ],
