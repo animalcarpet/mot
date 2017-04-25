@@ -14,28 +14,28 @@
         <div class="form-group">
             <label for="locationLateral" class="form-label">Lateral</label>
             <select name="locationLateral" id="locationLateral" class="form-control-select">
-                <option value="n/a" {% if identifiedDefect.lateralLocation == "n/a" %} selected {% endif %}>n/a</option>
-                <option value="nearside" {% if identifiedDefect.lateralLocation == "nearside" %} selected {% endif %}>Nearside</option>
-                <option value="central" {% if identifiedDefect.lateralLocation == "central" %} selected {% endif %}>Central</option>
-                <option value="offside" {% if identifiedDefect.lateralLocation == "offside" %} selected {% endif %}>Offside</option>
+                <option value="n/a" {% if identifiedDefect.lateralLocation|lower == "n/a" %} selected {% endif %}>n/a</option>
+                <option value="nearside" {% if identifiedDefect.lateralLocation|lower == "nearside" %} selected {% endif %}>Nearside</option>
+                <option value="central" {% if identifiedDefect.lateralLocation|lower == "central" %} selected {% endif %}>Central</option>
+                <option value="offside" {% if identifiedDefect.lateralLocation|lower == "offside" %} selected {% endif %}>Offside</option>
             </select>
         </div>
         <div class="form-group">
             <label for="locationLongitudinal" class="form-label">Longitudinal</label>
             <select name="locationLongitudinal" id="locationLongitudinal" class="form-control-select">
-                <option value="n/a" {% if identifiedDefect.longitudinalLocation == "n/a" %} selected {% endif %}>n/a</option>
-                <option value="front" {% if identifiedDefect.longitudinalLocation == "front" %} selected {% endif %}>Front</option>
-                <option value="rear" {% if identifiedDefect.longitudinalLocation == "rear" %} selected {% endif %}>Rear</option>
+                <option value="n/a" {% if identifiedDefect.longitudinalLocation|lower == "n/a" %} selected {% endif %}>n/a</option>
+                <option value="front" {% if identifiedDefect.longitudinalLocation|lower == "front" %} selected {% endif %}>Front</option>
+                <option value="rear" {% if identifiedDefect.longitudinalLocation|lower == "rear" %} selected {% endif %}>Rear</option>
             </select>
         </div>
         <div class="form-group">
             <label for="locationVertical" class="form-label">Vertical</label>
             <select name="locationVertical" id="locationVertical" class="form-control-select">
-                <option value="n/a" {% if identifiedDefect.verticalLocation == "n/a" %} selected {% endif %}>n/a</option>
-                <option value="upper" {% if identifiedDefect.verticalLocation == "upper" %} selected {% endif %}>Upper</option>
-                <option value="lower" {% if identifiedDefect.verticalLocation == "lower" %} selected {% endif %}>Lower</option>
-                <option value="inner" {% if identifiedDefect.verticalLocation == "inner" %} selected {% endif %}>Inner</option>
-                <option value="outer" {% if identifiedDefect.verticalLocation == "outer" %} selected {% endif %}>Outer</option>
+                <option value="n/a" {% if identifiedDefect.verticalLocation|lower == "n/a" %} selected {% endif %}>n/a</option>
+                <option value="upper" {% if identifiedDefect.verticalLocation|lower == "upper" %} selected {% endif %}>Upper</option>
+                <option value="lower" {% if identifiedDefect.verticalLocation|lower == "lower" %} selected {% endif %}>Lower</option>
+                <option value="inner" {% if identifiedDefect.verticalLocation|lower == "inner" %} selected {% endif %}>Inner</option>
+                <option value="outer" {% if identifiedDefect.verticalLocation|lower == "outer" %} selected {% endif %}>Outer</option>
             </select>
         </div>
     </fieldset>
