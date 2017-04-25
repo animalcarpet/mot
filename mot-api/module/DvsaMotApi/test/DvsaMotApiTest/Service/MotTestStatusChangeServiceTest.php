@@ -533,6 +533,7 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
         $this->assertEquals(MotTestStatusName::FAILED, $motTest->getStatus());
         $this->assertEquals($testDate, $motTest->getCompletedDate());
         $this->assertEquals($testDate, $motTest->getIssuedDate());
+        $this->assertEquals($testDate, $motTest->getSubmittedDate());
         $this->assertEquals(null, $motTest->getExpiryDate());
 
         //  --  prs mot test    --
@@ -544,6 +545,7 @@ class MotTestStatusChangeServiceTest extends AbstractServiceTestCase
 
         $this->assertEquals($testDate, $prsMotTest->getCompletedDate());
         $this->assertEquals($testDate, $prsMotTest->getIssuedDate());
+        $this->assertEquals($testDate, $prsMotTest->getSubmittedDate());
         $this->assertEquals(new \DateTime($expectedExpiry), $prsMotTest->getExpiryDate());
     }
 
