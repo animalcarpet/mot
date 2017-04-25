@@ -407,6 +407,8 @@ class MotTestStatusChangeService implements TransactionAwareInterface
 
     private function statusAction(MotTest $motTest, $data, $newStatus)
     {
+        $motTest->setSubmittedDate($this->dateTimeHolder->getCurrent());
+
         if ($newStatus === MotTestStatusName::ABORTED) {
             $this->onCancelled($motTest, $data, false);
         } elseif ($newStatus === MotTestStatusName::ABANDONED) {
@@ -429,7 +431,6 @@ class MotTestStatusChangeService implements TransactionAwareInterface
         $motTest->setExpiryDate($this->motTestDateHelper->getExpiryDate($motTest));
 
         $this->updateExpiryDateIfMysteryShopper($motTest);
-        $motTest->setSubmittedDate(new \DateTime('now'));
     }
 
     // NOTE: there should be a cancel status from client point of view that
