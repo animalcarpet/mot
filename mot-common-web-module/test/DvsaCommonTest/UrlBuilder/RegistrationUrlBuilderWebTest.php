@@ -3,13 +3,10 @@
 namespace ApplicationTest\UrlBuilder;
 
 use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
-use DvsaCommonTest\TestUtils\XMock;
 
 class RegistrationUrlBuilderWebTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var RegigrationUrlBuilderWeb
-     */
+    /** @var RegistrationUrlBuilderWeb $obj */
     private $obj;
 
     public function setUp()
@@ -26,14 +23,13 @@ class RegistrationUrlBuilderWebTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider dpChildRoutes
+     * @dataProvider childRoutesDataProvider
+     *
+     * @param string $functionName
+     * @param string $childRoute
      */
     public function testDirectChildRoutes($functionName, $childRoute)
     {
-        /**
-         * Here I use the object in the class to make the call to the function defined
-         * in the dataProvider using call_user_func
-         */
         $url = call_user_func([$this->obj, $functionName]);
         $actual = $url->toString();
         // Concatenate the child route to the main route
@@ -41,7 +37,10 @@ class RegistrationUrlBuilderWebTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function dpChildRoutes()
+    /**
+     * @return array
+     */
+    public function childRoutesDataProvider()
     {
         return [
             ['createStep', RegistrationUrlBuilderWeb::CREATE],
@@ -49,8 +48,7 @@ class RegistrationUrlBuilderWebTest extends \PHPUnit_Framework_TestCase
             ['passwordStep', RegistrationUrlBuilderWeb::PASSWORD],
             ['detailsStep', RegistrationUrlBuilderWeb::DETAILS],
             ['summaryStep', RegistrationUrlBuilderWeb::SUMMARY],
-            ['securityQuestionStepOne', RegistrationUrlBuilderWeb::SECURITY_QUESTION_ONE],
-            ['securityQuestionStepTwo', RegistrationUrlBuilderWeb::SECURITY_QUESTION_TWO]
+            ['securityQuestionsStep', RegistrationUrlBuilderWeb::SECURITY_QUESTIONS],
         ];
     }
 }

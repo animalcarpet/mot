@@ -13,22 +13,22 @@ use Zend\Validator\StringLength;
 use Zend\Validator\Digits;
 
 /**
- * (Account registration) Security question's steps (first and second) input filter.
+ * (Account registration) Security questions step input filter.
  *
  * Class SecurityQuestionAbstractInputFilter
  */
 abstract class SecurityQuestionAbstractInputFilter extends InputFilter
 {
-    /** To be used by firs and second security question's answers */
+    // To be used by first and second security question's answers
     const LIMIT_ANSWER_MAX = 70;
 
-    /** Select a question to answer*/
+    // Select a question to answer
     const MSG_QUESTION_EMPTY = 'choose a question';
     const MSG_QUESTION_NOT_NUMERIC = 'choose a valid question';
 
-    /** Your answer*/
-    const MSG_ANSWER_EMPTY = 'enter a memorable answer';
-    const MSG_ANSWER_MAX = 'must be %d, or less, characters long';
+    // Your answer
+    const MSG_ANSWER_EMPTY = 'enter an answer';
+    const MSG_ANSWER_MAX = 'must be shorter than 71 characters';
 
     public function init()
     {
@@ -43,7 +43,28 @@ abstract class SecurityQuestionAbstractInputFilter extends InputFilter
     {
         $this->add(
             [
-                'name'       => static::FIELD_QUESTION,
+                'name'       => SecurityQuestionsInputFilter::FIELD_QUESTION_1,
+                'required'   => true,
+                'validators' => [
+                    [
+                        'name'    => NotEmpty::class,
+                        'options' => [
+                            'message' => self::MSG_QUESTION_EMPTY,
+                        ],
+                    ],
+                    [
+                        'name' => Digits::class,
+                        'options' => [
+                            'message' => self::MSG_QUESTION_NOT_NUMERIC,
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $this->add(
+            [
+                'name'       => SecurityQuestionsInputFilter::FIELD_QUESTION_2,
                 'required'   => true,
                 'validators' => [
                     [
@@ -70,7 +91,7 @@ abstract class SecurityQuestionAbstractInputFilter extends InputFilter
     {
         $this->add(
             [
-                'name'       => static::FIELD_ANSWER,
+                'name'       => SecurityQuestionsInputFilter::FIELD_ANSWER_1,
                 'required'   => true,
                 'validators' => [
                     [
@@ -83,7 +104,29 @@ abstract class SecurityQuestionAbstractInputFilter extends InputFilter
                         'name'    => StringLength::class,
                         'options' => [
                             'max'     => self::LIMIT_ANSWER_MAX,
-                            'message' => sprintf(self::MSG_ANSWER_MAX, self::LIMIT_ANSWER_MAX),
+                            'message' => self::MSG_ANSWER_MAX,
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $this->add(
+            [
+                'name'       => SecurityQuestionsInputFilter::FIELD_ANSWER_2,
+                'required'   => true,
+                'validators' => [
+                    [
+                        'name'    => NotEmpty::class,
+                        'options' => [
+                            'message' => self::MSG_ANSWER_EMPTY,
+                        ],
+                    ],
+                    [
+                        'name'    => StringLength::class,
+                        'options' => [
+                            'max'     => self::LIMIT_ANSWER_MAX,
+                            'message' => self::MSG_ANSWER_MAX,
                         ],
                     ],
                 ],

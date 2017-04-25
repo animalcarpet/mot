@@ -12,8 +12,7 @@ use Dvsa\Mot\Api\RegistrationModule\Validator\RegistrationValidator;
 use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionSecondInputFilter;
+use DvsaCommon\InputFilter\Registration\SecurityQuestionsInputFilter;
 use DvsaCommonTest\TestUtils\XMock;
 use Zend\ServiceManager\ServiceManager;
 
@@ -38,11 +37,8 @@ class RegistrationServiceFactoryTest extends \PHPUnit_Framework_TestCase
                 PasswordInputFilter::class,
                 XMock::of(PasswordInputFilter::class)
             )->setService(
-                SecurityQuestionFirstInputFilter::class,
-                XMock::of(SecurityQuestionFirstInputFilter::class)
-            )->setService(
-                SecurityQuestionSecondInputFilter::class,
-                XMock::of(SecurityQuestionSecondInputFilter::class)
+                SecurityQuestionsInputFilter::class,
+                XMock::of(SecurityQuestionsInputFilter::class)
             );
 
         $this->assertInstanceOf(

@@ -82,11 +82,9 @@ class AccountRegistrationContext implements Context
     public function iSupplyValidAnswersToTheSecurityQuestions()
     {
         // The API expects question to be an id and not the actual question
-        $this->setRegistrationData('securityQuestionFirst', [
+        $this->setRegistrationData('securityQuestions', [
             'question1' => AccountService::SECURITY_QUESTION_ID_FIRST_KISS,
-            'answer1' => 'Spot'
-        ]);
-        $this->setRegistrationData('securityQuestionSecond', [
+            'answer1' => 'Spot',
             'question2' => AccountService::SECURITY_QUESTION_ID_NAME_OF_DOG,
             'answer2' => 'Fred Flintstone'
         ]);

@@ -7,25 +7,25 @@
 
 namespace DvsaCommon\Factory\InputFilter\Registration;
 
-use DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter;
+use DvsaCommon\InputFilter\Registration\SecurityQuestionsInputFilter;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * To initiate an instance of DetailsInputFilter
- * Class SecurityQuestionSecondInputFilterFactory
+ * To initiate an instance of SecurityQuestionsInputFilter.
+ *
+ * Class SecurityQuestionsInputFilterFactory
  */
-class SecurityQuestionSecondInputFilterFactory implements FactoryInterface
+class SecurityQuestionsInputFilterFactory implements FactoryInterface
 {
     /**
-     * Create service
-     *
      * @param ServiceLocatorInterface $serviceLocator
-     * @return SecurityQuestionFirstInputFilter
+     *
+     * @return SecurityQuestionsInputFilter
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $inputFilter = new SecurityQuestionFirstInputFilter();
+        $inputFilter = new SecurityQuestionsInputFilter();
         $inputFilter->init();
 
         return $inputFilter;

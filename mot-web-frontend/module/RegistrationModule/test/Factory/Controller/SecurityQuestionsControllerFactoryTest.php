@@ -7,18 +7,18 @@
 
 namespace Dvsa\Mot\Frontend\RegistrationModuleTest\Factory\Controller;
 
+use Dvsa\Mot\Frontend\RegistrationModule\Controller\SecurityQuestionsController;
+use Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller\SecurityQuestionsControllerFactory;
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationStepService;
-use Dvsa\MOT\Frontend\RegistrationModule\Controller\SecurityQuestionOneController;
-use Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller\SecurityQuestionOneControllerFactory;
 use DvsaCommonTest\TestUtils\XMock;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class SecurityQuestionOneControllerFactoryTest.
+ * Class SecurityQuestionsControllerFactoryTest.
  */
 
-class SecurityQuestionOneControllerFactoryTest extends \PHPUnit_Framework_TestCase
+class SecurityQuestionsControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @throws \Exception
@@ -35,9 +35,10 @@ class SecurityQuestionOneControllerFactoryTest extends \PHPUnit_Framework_TestCa
             ->method('getServiceLocator')
             ->will($this->returnValue($serviceManager));
 
-        //Create Factory
-        $factory = new SecurityQuestionOneControllerFactory();
+        $factory = new SecurityQuestionsControllerFactory();
         $factoryResult = $factory->createService($plugins);
-        $this->assertInstanceOf(SecurityQuestionOneController::class, $factoryResult);
+
+        $this->assertInstanceOf(SecurityQuestionsController::class, $factoryResult);
     }
 }
+

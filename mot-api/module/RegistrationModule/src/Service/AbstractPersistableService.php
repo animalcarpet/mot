@@ -13,8 +13,7 @@ use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionSecondInputFilter;
+use DvsaCommon\InputFilter\Registration\SecurityQuestionsInputFilter;
 use DvsaCommonApi\Transaction\TransactionAwareInterface;
 use DvsaCommonApi\Transaction\TransactionAwareTrait;
 use DvsaEntities\Entity\Entity;
@@ -102,17 +101,9 @@ class AbstractPersistableService implements TransactionAwareInterface
     /**
      * @return string
      */
-    protected function getSecurityQuestionFirstStepName()
+    protected function getSecurityQuestionsStepName()
     {
-        return ValidatorKeyConverter::inputFilterToStep(SecurityQuestionFirstInputFilter::class);
-    }
-
-    /**
-     * @return string
-     */
-    protected function getSecurityQuestionSecondStepName()
-    {
-        return ValidatorKeyConverter::inputFilterToStep(SecurityQuestionSecondInputFilter::class);
+        return ValidatorKeyConverter::inputFilterToStep(SecurityQuestionsInputFilter::class);
     }
 
     private function persistAndFlush($entity)

@@ -7,11 +7,9 @@
 
 namespace DvsaCommonTest\InputFilter\Registration;
 
-use DvsaCommon\Factory\InputFilter\Registration\SecurityQuestionFirstInputFilterFactory;
-use DvsaCommon\Factory\InputFilter\Registration\SecurityQuestionSecondInputFilterFactory;
+use DvsaCommon\Factory\InputFilter\Registration\SecurityQuestionsInputFilterFactory;
 use DvsaCommon\InputFilter\Registration\SecurityQuestionAbstractInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionSecondInputFilter;
+use DvsaCommon\InputFilter\Registration\SecurityQuestionsInputFilter;
 use DvsaCommonTest\Bootstrap;
 use Zend\Validator\Digits;
 use Zend\Validator\NotEmpty;
@@ -19,30 +17,14 @@ use Zend\Validator\StringLength;
 
 class SecurityQuestionsInputFilterTest extends \PHPUnit_Framework_TestCase
 {
-    const STEP_FIRST = 'first';
-
-    const STEP_SECOND = 'second';
-
-    /**
-     * To identify which step of security questions we are testing
-     * @var string (self::STEP_FIRST|self::STEP_SECOND) default to self::STEP_FIRST
-     */
-    private $targetStep = 'first';
-
-    /** @var SecurityQuestionFirstInputFilter */
-    private $firstSubject;
-
-    /** @var SecurityQuestionSecondInputFilter */
-    private $secondSubject;
-
+    /** @var SecurityQuestionsInputFilterFactory $securityQuestionsInputFilter */
+    private $securityQuestionsInputFilter;
 
     public function setUp()
     {
-        $factory = new SecurityQuestionFirstInputFilterFactory();
-        $this->firstSubject = $factory->createService(Bootstrap::getServiceManager());
+        $factory = new SecurityQuestionsInputFilterFactory();
 
-        $factory = new SecurityQuestionSecondInputFilterFactory();
-        $this->secondSubject = $factory->createService(Bootstrap::getServiceManager());
+        $this->securityQuestionsInputFilter = $factory->createService(Bootstrap::getServiceManager());
     }
 
     public function testInputFilterFactory()
@@ -50,73 +32,72 @@ class SecurityQuestionsInputFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertContainsOnlyInstancesOf(
             SecurityQuestionAbstractInputFilter::class,
             [
-                $this->firstSubject,
-                $this->secondSubject,
+                $this->securityQuestionsInputFilter
             ]
         );
     }
 
     /**
-     * @param string[] $data Represent input fields name and value
-     * @param boolean $isValid Expected state
-     * @param array $messages Nested array of field names and related messages
-     * @dataProvider dpDataAndExpectedResults
+     * @dataProvider securityQuestionDataAndExpectedResults
+     *
+     * @param string[] $data       Represent input fields name and value
+     * @param boolean $isValid     Expected state
+     * @param array $errorMessages Nested array of field names and related messages
      */
     public function testValidators($data, $isValid, $errorMessages)
     {
-        $testSubjects = [
-            self::STEP_FIRST => $this->firstSubject,
-            self::STEP_SECOND => $this->secondSubject
-        ];
+        $this->securityQuestionsInputFilter->setData($data);
 
-        foreach ($testSubjects as $step => $subject) {
+        $this->assertSame(
+            $isValid,
+            $this->securityQuestionsInputFilter->isValid(),
+            sprintf(
+                'Failed asserting isValid method on SecurityQuestionsInputFilter returns %s.',
+                var_export($isValid, true)
+            )
+        );
 
-            $this->targetStep = $step;
-
-            $subject->setData($data);
-
-            $this->assertSame(
-                $isValid,
-                $subject->isValid(),
-                sprintf(
-                    'Failed asserting isValid method on SecurityQuestion%sInputFilter returns %s.',
-                    ucfirst($step),
-                    var_export($isValid, true)
-                )
-            );
-
-            $this->assertEquals(
-                $errorMessages,
-                $subject->getMessages(),
-                sprintf(
-                    'Failed asserting validation message on SecurityQuestion%sInputFilter.',
-                    ucfirst($step)
-                )
-            );
-        }
+        $this->assertEquals(
+            $errorMessages,
+            $this->securityQuestionsInputFilter->getMessages(),
+            'Failed asserting validation message on SecurityQuestion%sInputFilter.'
+        );
     }
 
-    public function dpDataAndExpectedResults()
+    public function securityQuestionDataAndExpectedResults()
     {
         $data = [
             [
-                'data' => $this->prepareDataForStep(
+                'data' => $this->prepareData(
                     1,
+                    'answer',
+                    2,
                     'answer'
                 ),
                 'isValid' => true,
-                'errorMessages' => $this->prepareMessagesForStep(
+                'errorMessages' => $this->prepareMessages(
+                    [],
+                    [],
                     [],
                     []
                 ),
             ],
             [
-                'data' => $this->prepareDataForStep(
+                'data' => $this->prepareData(
+                    '',
+                    '',
                     '',
                     ''
                 ),
                 'isValid' => false,
-                'errorMessages' => $this->prepareMessagesForStep(
+                'errorMessages' => $this->prepareMessages(
+                    [
+                        NotEmpty::IS_EMPTY => SecurityQuestionAbstractInputFilter::MSG_QUESTION_EMPTY,
+                        Digits::STRING_EMPTY => SecurityQuestionAbstractInputFilter::MSG_QUESTION_NOT_NUMERIC,
+                    ],
+                    [
+                        NotEmpty::IS_EMPTY => SecurityQuestionAbstractInputFilter::MSG_ANSWER_EMPTY,
+                    ],
                     [
                         NotEmpty::IS_EMPTY => SecurityQuestionAbstractInputFilter::MSG_QUESTION_EMPTY,
                         Digits::STRING_EMPTY => SecurityQuestionAbstractInputFilter::MSG_QUESTION_NOT_NUMERIC,
@@ -127,12 +108,34 @@ class SecurityQuestionsInputFilterTest extends \PHPUnit_Framework_TestCase
                 ),
             ],
             [
-                'data' => $this->prepareDataForStep(
+                'data' => $this->prepareData(
                     1,
-                    str_repeat('a', SecurityQuestionAbstractInputFilter::LIMIT_ANSWER_MAX + 1)
+                    'answer',
+                    '',
+                    ''
                 ),
                 'isValid' => false,
-                'errorMessages' => $this->prepareMessagesForStep(
+                'errorMessages' => $this->prepareMessages(
+                    [],
+                    [],
+                    [
+                        NotEmpty::IS_EMPTY => SecurityQuestionAbstractInputFilter::MSG_QUESTION_EMPTY,
+                        Digits::STRING_EMPTY => SecurityQuestionAbstractInputFilter::MSG_QUESTION_NOT_NUMERIC,
+                    ],
+                    [
+                        NotEmpty::IS_EMPTY => SecurityQuestionAbstractInputFilter::MSG_ANSWER_EMPTY,
+                    ]
+                ),
+            ],
+            [
+                'data' => $this->prepareData(
+                    1,
+                    str_repeat('a', SecurityQuestionAbstractInputFilter::LIMIT_ANSWER_MAX + 1),
+                    2,
+                    'answer'
+                ),
+                'isValid' => false,
+                'errorMessages' => $this->prepareMessages(
                     [],
                     [
                         StringLength::TOO_LONG =>
@@ -140,16 +143,22 @@ class SecurityQuestionsInputFilterTest extends \PHPUnit_Framework_TestCase
                                 SecurityQuestionAbstractInputFilter::MSG_ANSWER_MAX,
                                 SecurityQuestionAbstractInputFilter::LIMIT_ANSWER_MAX
                             )
-                    ]
+                    ],
+                    [],
+                    []
                 ),
             ],
             [
-                'data' => $this->prepareDataForStep(
+                'data' => $this->prepareData(
                     1,
-                    str_repeat('a', SecurityQuestionAbstractInputFilter::LIMIT_ANSWER_MAX)
+                    str_repeat('a', SecurityQuestionAbstractInputFilter::LIMIT_ANSWER_MAX),
+                    2,
+                    'answer'
                 ),
                 'isValid' => true,
-                'errorMessages' => $this->prepareMessagesForStep(
+                'errorMessages' => $this->prepareMessages(
+                    [],
+                    [],
                     [],
                     []
                 ),
@@ -160,63 +169,59 @@ class SecurityQuestionsInputFilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param $question
-     * @param $answer
+     * @param int    $question1
+     * @param string $answer1
+     * @param int    $question2
+     * @param string $answer2
+     *
      * @return array
      */
-    public function prepareDataForStep(
-        $question,
-        $answer
+    public function prepareData(
+        $question1,
+        $answer1,
+        $question2,
+        $answer2
     ) {
 
-        if (self::STEP_FIRST == $this->targetStep) {
-            $data = [
-                SecurityQuestionFirstInputFilter::FIELD_QUESTION => $question,
-                SecurityQuestionFirstInputFilter::FIELD_ANSWER => $answer,
-            ];
-        } elseif (self::STEP_SECOND == $this->targetStep) {
-            $data = [
-                SecurityQuestionSecondInputFilter::FIELD_QUESTION => $question,
-                SecurityQuestionSecondInputFilter::FIELD_ANSWER => $answer,
-            ];
-        } else {
-            throw new \OutOfRangeException(
-                sprintf('%s is not acceptable, try %s or %s', $this->targetStep, self::STEP_FIRST, self::STEP_SECOND)
-            );
-        }
-
-        return $data;
+        return [
+            SecurityQuestionsInputFilter::FIELD_QUESTION_1 => $question1,
+            SecurityQuestionsInputFilter::FIELD_ANSWER_1 => $answer1,
+            SecurityQuestionsInputFilter::FIELD_QUESTION_2 => $question2,
+            SecurityQuestionsInputFilter::FIELD_ANSWER_2 => $answer2,
+        ];
     }
 
     /**
-     * @param array $questionMessages
-     * @param array $answerMessages
+     * @param array $question1Messages
+     * @param array $answer1Messages
+     * @param array $question2Messages
+     * @param array $answer2Messages
+     *
      * @return array
      */
-    public function prepareMessagesForStep(
-        $questionMessages,
-        $answerMessages
+    public function prepareMessages(
+        $question1Messages,
+        $answer1Messages,
+        $question2Messages,
+        $answer2Messages
     ) {
         $messages = [];
 
-        if (self::STEP_FIRST == $this->targetStep) {
-            if (!empty($questionMessages)) {
-                $messages[SecurityQuestionFirstInputFilter::FIELD_QUESTION] = $questionMessages;
-            }
-            if (!empty($answerMessages)) {
-                $messages[SecurityQuestionFirstInputFilter::FIELD_ANSWER] = $answerMessages;
-            }
-        } elseif (self::STEP_SECOND == $this->targetStep) {
-            if (!empty($questionMessages)) {
-                $messages[SecurityQuestionSecondInputFilter::FIELD_QUESTION] = $questionMessages;
-            }
-            if (!empty($answerMessages)) {
-                $messages[SecurityQuestionSecondInputFilter::FIELD_ANSWER] = $answerMessages;
-            }
-        } else {
-            throw new \OutOfRangeException(
-                sprintf('%s is not acceptable, try %s or %s', $this->targetStep, self::STEP_FIRST, self::STEP_SECOND)
-            );
+
+        if (!empty($question1Messages)) {
+            $messages[SecurityQuestionsInputFilter::FIELD_QUESTION_1] = $question1Messages;
+        }
+
+        if (!empty($answer1Messages)) {
+            $messages[SecurityQuestionsInputFilter::FIELD_ANSWER_1] = $answer1Messages;
+        }
+
+        if (!empty($question2Messages)) {
+            $messages[SecurityQuestionsInputFilter::FIELD_QUESTION_2] = $question2Messages;
+        }
+
+        if (!empty($answer2Messages)) {
+            $messages[SecurityQuestionsInputFilter::FIELD_ANSWER_2] = $answer2Messages;
         }
 
         return $messages;

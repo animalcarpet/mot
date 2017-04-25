@@ -11,8 +11,7 @@ use Dvsa\Mot\Frontend\RegistrationModule\Step\CreateAccountStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\DetailsStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\EmailStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\PasswordStep;
-use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionOneStep;
-use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionTwoStep;
+use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionsStep;
 use DvsaCommonTest\TestUtils\XMock;
 use Zend\ServiceManager\ServiceManager;
 
@@ -57,16 +56,15 @@ class RegistrationStepServiceFactoryTest extends \PHPUnit_Framework_TestCase
 
         $steps = $factory->createSteps($session);
 
-        $this->assertCount(9, $steps);
+        $this->assertCount(8, $steps);
 
         $this->assertInstanceOf(CreateAccountStep::class, $steps[0]);
         $this->assertInstanceOf(EmailStep::class, $steps[1]);
         $this->assertInstanceOf(DetailsStep::class, $steps[2]);
         $this->assertInstanceOf(ContactDetailsStep::class, $steps[3]);
-        $this->assertInstanceOf(SecurityQuestionOneStep::class, $steps[4]);
-        $this->assertInstanceOf(SecurityQuestionTwoStep::class, $steps[5]);
-        $this->assertInstanceOf(PasswordStep::class, $steps[6]);
-        $this->assertInstanceOf(AccountSummaryStep::class, $steps[7]);
-        $this->assertInstanceOf(CompletedStep::class, $steps[8]);
+        $this->assertInstanceOf(SecurityQuestionsStep::class, $steps[4]);
+        $this->assertInstanceOf(PasswordStep::class, $steps[5]);
+        $this->assertInstanceOf(AccountSummaryStep::class, $steps[6]);
+        $this->assertInstanceOf(CompletedStep::class, $steps[7]);
     }
 }

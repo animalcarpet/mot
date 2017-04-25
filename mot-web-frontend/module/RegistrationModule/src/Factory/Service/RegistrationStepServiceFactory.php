@@ -13,14 +13,12 @@ use Dvsa\Mot\Frontend\RegistrationModule\Step\CreateAccountStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\DetailsStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\EmailStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\PasswordStep;
-use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionOneStep;
-use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionTwoStep;
+use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionsStep;
 use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionSecondInputFilter;
+use DvsaCommon\InputFilter\Registration\SecurityQuestionsInputFilter;
 use Zend\InputFilter\InputFilter;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -51,8 +49,7 @@ class RegistrationStepServiceFactory extends StepServiceFactory
             new EmailStep($sessionService, new EmailInputFilter()),
             new DetailsStep($sessionService, new DetailsInputFilter()),
             new ContactDetailsStep($sessionService, new ContactDetailsInputFilter()),
-            new SecurityQuestionOneStep($sessionService, new SecurityQuestionFirstInputFilter()),
-            new SecurityQuestionTwoStep($sessionService, new SecurityQuestionSecondInputFilter()),
+            new SecurityQuestionsStep($sessionService, new SecurityQuestionsInputFilter()),
             new PasswordStep($sessionService, new PasswordInputFilter()),
             new AccountSummaryStep($sessionService, new InputFilter()),
             new CompletedStep($sessionService, new InputFilter()),

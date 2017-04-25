@@ -12,8 +12,7 @@ use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionSecondInputFilter;
+use DvsaCommon\InputFilter\Registration\SecurityQuestionsInputFilter;
 use Zend\InputFilter\InputFilter;
 
 /**
@@ -32,27 +31,25 @@ class RegistrationValidator
 
     /**
      * RegistrationValidator constructor.
-     * @param EmailInputFilter $emailInputFilter
-     * @param DetailsInputFilter $detailsInputFilter
-     * @param ContactDetailsInputFilter $contactDetailsInputFilter
-     * @param PasswordInputFilter $passwordInputFilter
-     * @param SecurityQuestionFirstInputFilter $securityQuestionFirstInputFilter
-     * @param SecurityQuestionSecondInputFilter $securityQuestionSecondInputFilter
+     *
+     * @param EmailInputFilter             $emailInputFilter
+     * @param DetailsInputFilter           $detailsInputFilter
+     * @param ContactDetailsInputFilter    $contactDetailsInputFilter
+     * @param PasswordInputFilter          $passwordInputFilter
+     * @param SecurityQuestionsInputFilter $securityQuestionsInputFilter
      */
     public function __construct(
         EmailInputFilter $emailInputFilter,
         DetailsInputFilter $detailsInputFilter,
         ContactDetailsInputFilter $contactDetailsInputFilter,
         PasswordInputFilter $passwordInputFilter,
-        SecurityQuestionFirstInputFilter $securityQuestionFirstInputFilter,
-        SecurityQuestionSecondInputFilter $securityQuestionSecondInputFilter
+        SecurityQuestionsInputFilter $securityQuestionsInputFilter
     ) {
         $this->attach($emailInputFilter);
         $this->attach($detailsInputFilter);
         $this->attach($contactDetailsInputFilter);
         $this->attach($passwordInputFilter);
-        $this->attach($securityQuestionFirstInputFilter);
-        $this->attach($securityQuestionSecondInputFilter);
+        $this->attach($securityQuestionsInputFilter);
     }
 
     /**

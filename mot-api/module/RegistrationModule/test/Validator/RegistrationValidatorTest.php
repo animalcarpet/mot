@@ -12,8 +12,7 @@ use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionSecondInputFilter;
+use DvsaCommon\InputFilter\Registration\SecurityQuestionsInputFilter;
 use Zend\InputFilter\InputFilterInterface;
 
 /**
@@ -21,7 +20,7 @@ use Zend\InputFilter\InputFilterInterface;
  */
 class RegistrationValidatorTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var RegistrationValidator */
+    /** @var RegistrationValidator $subject */
     private $subject;
 
     public function setUp()
@@ -30,23 +29,20 @@ class RegistrationValidatorTest extends \PHPUnit_Framework_TestCase
         $detailsInputFilter = new DetailsInputFilter();
         $addressInputFilter = new ContactDetailsInputFilter();
         $passwordInputFilter = new PasswordInputFilter();
-        $securityQuestionFirstInputFilter = new SecurityQuestionFirstInputFilter();
-        $securityQuestionSecondInputFilter = new SecurityQuestionSecondInputFilter();
+        $securityQuestionsInputFilter = new SecurityQuestionsInputFilter();
 
         $emailInputFilter->init();
         $detailsInputFilter->init();
         $addressInputFilter->init();
         $passwordInputFilter->init();
-        $securityQuestionFirstInputFilter->init();
-        $securityQuestionSecondInputFilter->init();
+        $securityQuestionsInputFilter->init();
 
         $this->subject = new RegistrationValidator(
             $emailInputFilter,
             $detailsInputFilter,
             $addressInputFilter,
             $passwordInputFilter,
-            $securityQuestionFirstInputFilter,
-            $securityQuestionSecondInputFilter
+            $securityQuestionsInputFilter
         );
     }
 
@@ -78,8 +74,7 @@ class RegistrationValidatorTest extends \PHPUnit_Framework_TestCase
                      DetailsInputFilter::class,
                      ContactDetailsInputFilter::class,
                      PasswordInputFilter::class,
-                     SecurityQuestionFirstInputFilter::class,
-                     SecurityQuestionSecondInputFilter::class,
+                     SecurityQuestionsInputFilter::class,
                  ] as $key) {
             $this->assertArrayHasKey($key, $validatorInputFilters);
         }
@@ -162,13 +157,11 @@ class RegistrationValidatorTest extends \PHPUnit_Framework_TestCase
                 PasswordInputFilter::FIELD_PASSWORD         => 'Password1',
                 PasswordInputFilter::FIELD_PASSWORD_CONFIRM => 'Password1',
             ],
-            SecurityQuestionFirstInputFilter::class => [
-                SecurityQuestionFirstInputFilter::FIELD_QUESTION => 1,
-                SecurityQuestionFirstInputFilter::FIELD_ANSWER   => 'first question answer',
-            ],
-            SecurityQuestionSecondInputFilter::class => [
-                SecurityQuestionSecondInputFilter::FIELD_QUESTION => 1,
-                SecurityQuestionSecondInputFilter::FIELD_ANSWER   => 'second question answer',
+            SecurityQuestionsInputFilter::class => [
+                SecurityQuestionsInputFilter::FIELD_QUESTION_1 => 1,
+                SecurityQuestionsInputFilter::FIELD_ANSWER_1   => 'first question answer',
+                SecurityQuestionsInputFilter::FIELD_QUESTION_2 => 1,
+                SecurityQuestionsInputFilter::FIELD_ANSWER_2   => 'second question answer',
             ],
         ];
 
@@ -181,12 +174,11 @@ class RegistrationValidatorTest extends \PHPUnit_Framework_TestCase
     public function dpInvalidRegistrationData()
     {
         $data = [
-            EmailInputFilter::class                  => [],
-            DetailsInputFilter::class                => [],
-            ContactDetailsInputFilter::class                => [],
-            PasswordInputFilter::class               => [],
-            SecurityQuestionFirstInputFilter::class  => [],
-            SecurityQuestionSecondInputFilter::class => [],
+            EmailInputFilter::class             => [],
+            DetailsInputFilter::class           => [],
+            ContactDetailsInputFilter::class    => [],
+            PasswordInputFilter::class          => [],
+            SecurityQuestionsInputFilter::class => [],
         ];
 
         return $data;

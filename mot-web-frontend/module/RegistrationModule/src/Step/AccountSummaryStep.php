@@ -9,8 +9,7 @@ namespace Dvsa\Mot\Frontend\RegistrationModule\Step;
 
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionSecondInputFilter;
+use DvsaCommon\InputFilter\Registration\SecurityQuestionsInputFilter;
 
 class AccountSummaryStep extends AbstractRegistrationStep
 {
@@ -78,11 +77,11 @@ class AccountSummaryStep extends AbstractRegistrationStep
             $result[DetailsInputFilter::FIELD_LAST_NAME]
         );
 
-        // security questions
-        $result['securityQuestionOneAnswer'] = $result[SecurityQuestionFirstInputFilter::FIELD_ANSWER];
-        $result['securityQuestionTwoAnswer'] = $result[SecurityQuestionSecondInputFilter::FIELD_ANSWER];
+        // Security questions
+        $result['securityQuestionOneAnswer'] = $result[SecurityQuestionsInputFilter::FIELD_ANSWER_1];
+        $result['securityQuestionTwoAnswer'] = $result[SecurityQuestionsInputFilter::FIELD_ANSWER_2];
 
-        // password
+        // Password
         $result['passwordObfuscated'] = $this->obscureValue($result[PasswordInputFilter::FIELD_PASSWORD]);
 
         $result['address'] = $this->makeAddress($result);
@@ -96,19 +95,26 @@ class AccountSummaryStep extends AbstractRegistrationStep
     }
 
     /**
-     * @param $values
+     * @param array $values
+     *
+     * @return string|null
      */
     public function getFirstSelectedQuestion($values)
     {
-        $questionID = $values[SecurityQuestionOneStep::STEP_ID][SecurityQuestionFirstInputFilter::FIELD_QUESTION];
+        $questionID = $values[SecurityQuestionsStep::STEP_ID][SecurityQuestionsInputFilter::FIELD_QUESTION_1];
         $questionSetA = $this->sessionService->load(self::QUESTIONS_GROUP_A);
 
         return isset($questionSetA[$questionID]) ? $questionSetA[$questionID] : null;
     }
 
+    /**
+     * @param array $values
+     *
+     * @return string|null
+     */
     public function getSecondSelectedQuestion($values)
     {
-        $questionID = $values[SecurityQuestionTwoStep::STEP_ID][SecurityQuestionSecondInputFilter::FIELD_QUESTION];
+        $questionID = $values[SecurityQuestionsStep::STEP_ID][SecurityQuestionsInputFilter::FIELD_QUESTION_2];
         $questionSetB = $this->sessionService->load(self::QUESTIONS_GROUP_B);
 
         return isset($questionSetB[$questionID]) ? $questionSetB[$questionID] : null;
@@ -116,7 +122,7 @@ class AccountSummaryStep extends AbstractRegistrationStep
     /**
      * The route for this step.
      *
-     * @return mixed
+     * @return string
      */
     public function route()
     {
@@ -126,7 +132,7 @@ class AccountSummaryStep extends AbstractRegistrationStep
     /**
      * @param array $values
      *
-     * @return mixed
+     * @return mixed|void
      */
     public function readFromArray(array $values)
     {
@@ -136,9 +142,9 @@ class AccountSummaryStep extends AbstractRegistrationStep
     /**
      * @todo Extract to unit tested helper service/class
      *
-     * @param $firstName
-     * @param $middleName
-     * @param $lastName
+     * @param string $firstName
+     * @param string $middleName
+     * @param string $lastName
      *
      * @return string
      */
@@ -150,7 +156,7 @@ class AccountSummaryStep extends AbstractRegistrationStep
     /**
      * @todo Extract to unit tested helper service/class
      *
-     * @param $values
+     * @param array $values
      *
      * @return string
      */
@@ -168,6 +174,11 @@ class AccountSummaryStep extends AbstractRegistrationStep
         );
     }
 
+    /**
+     * @param array $values
+     *
+     * @return string
+     */
     private function makeDateOfBirth($values)
     {
         $dateString = implode('-', array_filter([$values['year'], $values['month'], $values['day']]));
@@ -179,7 +190,7 @@ class AccountSummaryStep extends AbstractRegistrationStep
     /**
      * @todo Extract to unit tested helper service/class
      *
-     * @param $text
+     * @param string $text
      *
      * @return string
      */

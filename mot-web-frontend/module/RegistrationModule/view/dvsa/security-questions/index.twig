@@ -1,0 +1,58 @@
+<p class="lede">These are used to identify you if you forget your password.</p>
+
+{% include 'partial/forms/pageLevelErrorMessage.twig' with {'messages': errorsSummary} %}
+
+<form action="{{ url('account-register/security-questions') }}" method="POST" autocomplete="off">
+    {{ csrfToken() }}
+
+    <fieldset>
+        <legend class="form-title heading-large" id="q-select-1">First security question</legend>
+
+        <div class="form-group">
+            <label class="form-label" for="question1">Choose a question</label>
+            <select class=" form-control form-control-1-2" id="question1" name="question1">
+                {% for key,value in questions1 %}
+                    <option {% if question1 == key %} selected {% endif %} value="{{ key }}">{{ value }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group {% if answer1HasError %}has-error{% endif %}">
+            <label class="form-label" for="answer1">Memorable answer
+                {% if answer1HasError %}
+                    {% include 'partial/forms/fieldLevelErrorMessage.twig' with {'messages': errors['answer1']} %}
+                {% endif %}
+            </label>
+            <input class="form-control form-control-1-4" id="answer1" name="answer1" type="text" value="{{ answer1 }}">
+        </div>
+
+        <legend class="form-title heading-large" id="">Second security question</legend>
+
+        <div class="form-group">
+            <label class="form-label" for="question2">Choose a question</label>
+            <select class=" form-control form-control-1-2" id="question2" name="question2">
+                {% for key,value in questions2 %}
+                    <option {% if question2 == key %} selected {% endif %} value="{{ key }}">{{ value }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group {% if answer2HasError %}has-error{% endif %}">
+            <label class="form-label" for="answer2">Memorable answer
+                {% if answer2HasError %}
+                    {% include 'partial/forms/fieldLevelErrorMessage.twig' with {'messages': errors['answer2']} %}
+                {% endif %}
+            </label>
+            <input class="form-control form-control-1-4" id="answer2" name="answer2" type="text" value="{{ answer2 }}">
+        </div>
+    </fieldset>
+
+    <nav class="content-navigation">
+        <input type="submit" value="Continue" id="continue" class="button">
+        <ul class="content-navigation__secondary">
+            <li>
+                <a href="{{ url('account-register/address') }}" id="back">Back</a>
+            </li>
+        </ul>
+    </nav>
+</form>

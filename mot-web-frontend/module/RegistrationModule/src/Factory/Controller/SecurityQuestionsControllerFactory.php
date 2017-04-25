@@ -7,7 +7,7 @@
 
 namespace Dvsa\Mot\Frontend\RegistrationModule\Factory\Controller;
 
-use Dvsa\Mot\Frontend\RegistrationModule\Controller\SecurityQuestionTwoController;
+use Dvsa\Mot\Frontend\RegistrationModule\Controller\SecurityQuestionsController;
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationStepService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -15,12 +15,12 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 /**
  * Factory for SecurityQuestionsController instances.
  */
-class SecurityQuestionTwoControllerFactory implements FactoryInterface
+class SecurityQuestionsControllerFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return SecurityQuestionTwoController
+     * @return SecurityQuestionsController
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
@@ -28,6 +28,6 @@ class SecurityQuestionTwoControllerFactory implements FactoryInterface
 
         $stepService = $serviceLocator->get(RegistrationStepService::class);
 
-        return new SecurityQuestionTwoController($stepService);
+        return new SecurityQuestionsController($stepService);
     }
 }
