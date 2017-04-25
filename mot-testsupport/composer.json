@@ -30,10 +30,5 @@
             "../mot-common-web-module/Module.php",
             "../mot-api/module/DvsaEntities/Module.php"
         ]
-    },
-    "config" : {
-      "github-oauth" : {
-        "github.com" : "dc42d725f33dea95b619b4fadc8cbf14aed308f9"
-      }
     }
 }

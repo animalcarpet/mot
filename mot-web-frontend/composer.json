@@ -87,9 +87,6 @@
         }
     ],
     "config" : {
-        "github-oauth" : {
-            "github.com" : "dc42d725f33dea95b619b4fadc8cbf14aed308f9"
-        },
         "process-timeout": 600
     }
 }
