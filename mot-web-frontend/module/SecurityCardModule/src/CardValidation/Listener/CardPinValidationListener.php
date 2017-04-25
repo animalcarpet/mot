@@ -26,7 +26,9 @@ class CardPinValidationListener
         '@forgotten-password/(.*)@',
         '@lost-or-forgotten-card@',
         '@account/claim@',
-        '@account/claim/(.*)@'
+        '@account/claim/(.*)@',
+        '@pin-fail-locked@',
+        '@pin-lockout-warn@'
     ];
 
     /**

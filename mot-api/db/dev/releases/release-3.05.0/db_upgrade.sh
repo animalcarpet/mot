@@ -10,6 +10,7 @@ MYSQL_HOST=${3-"mysql"}
 
 # Add files here in intended run order for release.
 upgrade_files+=('2017-04-11-BL-4876-restore-deleted-special-notices-STORY.sql');
+upgrade_files+=('2017-04-13-BL-4999-security-card-pin-failures-schema-STORY.sql');
 
 # Necessary for first deployment.
 $(mysql -h ${MYSQL_HOST} -u ${MYSQL_USER} -p${MYSQL_ADMIN_PASSWORD} ${MYSQL_DB_NAME} -e "CREATE TABLE IF NOT EXISTS db_upgrade (

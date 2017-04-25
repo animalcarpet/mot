@@ -1,0 +1,20 @@
+<?php
+use \Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\ViewModel\PinFailLockedViewModel;
+
+/** @var PinFailLockedViewModel $pinFailLocked */
+?>
+<div class="banner banner--error column-two-thirds">
+    <span class="banner__heading-large">One PIN attempt left</span>
+    <span>Your account will be locked out for <?php echo $pinFailLocked->getLockoutTimeMins() ?> minutes if you enter the wrong PIN again</span>
+</div>
+
+<div class="text">
+    <nav class="content-navigation">
+        <a class="button" href="<?php echo $this->url('lost-or-forgotten-card') ?>">Sign in without your security card</a>
+        <ul class="content-navigation__secondary">
+            <li>
+                <a href='<?php echo $this->url('login-2fa') ?>'>Enter your PIN</a>
+            </li>
+        </ul>
+    </nav>
+</div>

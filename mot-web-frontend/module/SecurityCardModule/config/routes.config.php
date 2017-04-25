@@ -133,6 +133,31 @@ return [
                     ],
                 ],
             ],
+
+            RegisteredCardController::ROUTE_2FA_LOCKED_OUT => [
+                'type' => 'literal',
+                'options' => [
+                    'route' => '/'.RegisteredCardController::ROUTE_2FA_LOCKED_OUT,
+                    'defaults' => [
+                        'controller' => RegisteredCardController::class,
+                        'action' => 'pinFailLocked',
+                    ],
+                ],
+            ],
+
+            RegisteredCardController::ROUTE_2FA_LOCKOUT_WARN => [
+                'type' => 'literal',
+                'options' => [
+                    'route' => '/'.RegisteredCardController::ROUTE_2FA_LOCKOUT_WARN,
+                    'defaults' => [
+                        'controller' => RegisteredCardController::class,
+                        'action' => 'pinLockoutWarn',
+                    ],
+                ],
+            ],
+
+
+
             'security-card-information' => [
                 'type' => 'Segment',
                 'options' => [

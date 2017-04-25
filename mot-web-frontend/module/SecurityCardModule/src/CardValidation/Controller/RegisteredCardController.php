@@ -12,7 +12,9 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\AlreadyLoggedInT
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\RegisteredCardService;
 use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\LostOrForgottenCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\ViewModel\PinFailLockedViewModel;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
+use DvsaCommon\Configuration\MotConfig;
 use Zend\Authentication\AuthenticationService;
 use Zend\Authentication\Result;
 use Zend\Http\Request;
@@ -22,6 +24,7 @@ use Zend\Mvc\MvcEvent;
 use Zend\Session\ManagerInterface;
 use Zend\View\Model\ViewModel;
 
+
 class RegisteredCardController extends AbstractDvsaActionController
 {
     const TWO_FACTOR_AUTH_LOGIN_PAGE_TITLE = 'Your security card PIN';
@@ -29,6 +32,9 @@ class RegisteredCardController extends AbstractDvsaActionController
     const ROUTE_FORGOTTEN_SECURITY_CARD = 'login';
     const ROUTE_SECURITY_CARD_LOST_DAMAGED = 'login';
     const ROUTE = 'login-2fa';
+
+    const ROUTE_2FA_LOCKED_OUT = 'pin-fail-locked';
+    const ROUTE_2FA_LOCKOUT_WARN = 'pin-lockout-warn';
 
     /** @var RegisteredCardService */
     private $registeredCardService;
@@ -45,6 +51,9 @@ class RegisteredCardController extends AbstractDvsaActionController
     /** @var Identity $identity */
     private $identity;
 
+    /** @var MotConfig $config */
+    private $config;
+
     public function __construct
     (
         RegisteredCardService $registeredCardService,
@@ -53,7 +62,8 @@ class RegisteredCardController extends AbstractDvsaActionController
         Response $response,
         TwoFaFeatureToggle $twoFaFeatureToggle,
         AlreadyLoggedInTodayWithLostForgottenCardCookieService $cookieService,
-        Identity $identity
+        Identity $identity,
+        MotConfig $config
     ) {
         $this->registeredCardService = $registeredCardService;
         $this->authenticationService = $authenticationService;
@@ -62,6 +72,7 @@ class RegisteredCardController extends AbstractDvsaActionController
         $this->twoFaFeatureToggle = $twoFaFeatureToggle;
         $this->cookieService = $cookieService;
         $this->identity = $identity;
+        $this->config = $config;
     }
 
     /**
@@ -69,6 +80,10 @@ class RegisteredCardController extends AbstractDvsaActionController
      */
     public function login2FAAction()
     {
+
+        if($this->registeredCardService->isLockedOut()) {
+            return $this->redirect()->toRoute(RegisteredCardController::ROUTE_2FA_LOCKED_OUT);
+        }
         $request = $this->getRequest();
         $isFeatureToggleEnabled = $this->twoFaFeatureToggle->isEnabled();
         $is2FALoginApplicableToCurrentUser = $this->registeredCardService->is2FALoginApplicableToCurrentUser();
@@ -123,10 +138,25 @@ class RegisteredCardController extends AbstractDvsaActionController
         if (!$form->isValid()) {
             return $this->setUpViewData($form)->setVariable('gtmData', $gtmCallback->toGtmData());
         }
-        if ($this->registeredCardService->validatePin($form->getPinField()->getValue())) {
+
+        // Get card validation object.
+        $securityCardValidation = $this->registeredCardService->getSecurityCardValidation($form->getPinField()->getValue());
+
+        // Pin valid, redirect to user home page.
+        if ($securityCardValidation->isPinValid()) {
             return $this->redirect()->toRoute(UserHomeController::ROUTE);
         } else {
-            $form->setCustomError($form->getPinField(), 'Enter a valid PIN number');
+            // Locked out.
+            if($securityCardValidation->isLockedOut()) {
+                return $this->redirect()->toRoute(RegisteredCardController::ROUTE_2FA_LOCKED_OUT);
+            }
+            // Warning before last Pin attempt.
+            if($securityCardValidation->isLockedOutFromNextFailure()) {
+                return $this->redirect()->toRoute(RegisteredCardController::ROUTE_2FA_LOCKOUT_WARN);
+            }
+
+            // Back to PIN entry with failed attempt message.
+            $form->setCustomError($form->getPinField(), "Enter a valid PIN number");
             return $this->setUpViewData($form)
                 ->setVariable('gtmData', ['event' => 'user-login-failed', 'reason' => 'wrong-pin']);
         }
@@ -144,4 +174,45 @@ class RegisteredCardController extends AbstractDvsaActionController
 
         return (new ViewModel($viewModelData))->setTemplate('2fa/registered-card/login-2fa');
     }
+
+
+    private function pinFailViewModel() {
+        $config = $this->config->get('pin_2fa');
+        $pinFailView = new PinFailLockedViewModel();
+        $pinFailView->setLockoutTimeMins($config['lockoutTimeMins']);
+        $pinFailView->setMaxAttempts($config['maxAttempts']);
+        return $pinFailView;
+    }
+
+    public function pinLockoutWarnAction() {
+        $view = new ViewModel(['pinFailLocked' => $this->pinFailViewModel()]);
+        $this->layout('layout/layout-govuk.phtml');
+        $view->setTemplate('2fa/pin-fail-locked/pin-lockout-warn');
+
+        $this->setHeadTitle('Your security card PIN');
+        $this->layout()->setVariables([
+            'pageTitle' => self::TWO_FACTOR_AUTH_LOGIN_PAGE_TITLE,
+            'pageSubTitle' => self::TWO_FACTOR_AUTH_LOGIN_PAGE_SUBTITLE,
+            'hideUserNav' => true
+        ]);
+
+        return ($view);
+    }
+
+    public function pinFailLockedAction() {
+        $view = new ViewModel(['pinFailLocked' => $this->pinFailViewModel()]);
+        $this->layout('layout/layout-govuk.phtml');
+        $view->setTemplate('2fa/pin-fail-locked/pin-fail-locked');
+
+        $this->setHeadTitle('Your security card PIN');
+        $this->layout()->setVariables([
+            'pageTitle' => self::TWO_FACTOR_AUTH_LOGIN_PAGE_TITLE,
+            'pageSubTitle' => self::TWO_FACTOR_AUTH_LOGIN_PAGE_SUBTITLE,
+            'hideUserNav' => true
+        ]);
+        
+        return ($view);
+    }
+
 }
+
