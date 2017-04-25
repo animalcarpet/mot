@@ -4,6 +4,7 @@ namespace Dvsa\Mot\Frontend\SecurityCardModuleTest\Service;
 
 use Dvsa\Mot\ApiClient\Exception\ResourceNotFoundException;
 use Dvsa\Mot\ApiClient\Resource\Item\SecurityCard;
+use Dvsa\Mot\ApiClient\Resource\Item\SecurityCardValidation;
 use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\RegisteredCardService;
@@ -33,6 +34,14 @@ class RegisteredCardServiceTest extends \PHPUnit_Framework_TestCase
 
     public function test_wheniValidatePin_andPinIsValid_iShouldGetTrueAsResponse()
     {
+        $data = new \stdClass();
+        $data->pinValid = true;
+
+        $this->authorisationServiceClient
+            ->expects($this->once())
+            ->method('validatePersonSecurityCard')
+            ->willReturn(new SecurityCardValidation($data));
+
         $pin = '123456';
         $identity = new Identity();
         $this->withCurrentIdentity($identity);
@@ -45,6 +54,14 @@ class RegisteredCardServiceTest extends \PHPUnit_Framework_TestCase
 
     public function test_wheniValidatePin_andPinIsInvalid_iShouldGetFalseAsResponse()
     {
+        $data = new \stdClass();
+        $data->pinValid = false;
+
+        $this->authorisationServiceClient
+            ->expects($this->once())
+            ->method('validatePersonSecurityCard')
+            ->willReturn(new SecurityCardValidation($data));
+
         $pin = '123456';
         $this->clientsReturnsValidationResponseForPin($pin, false);
 
@@ -55,6 +72,14 @@ class RegisteredCardServiceTest extends \PHPUnit_Framework_TestCase
 
     public function test_wheniValidatePin_andPinIsValid_iShouldHaveAuthenticatedWith2FAFlagSetToTrue()
     {
+        $data = new \stdClass();
+        $data->pinValid = true;
+
+        $this->authorisationServiceClient
+            ->expects($this->once())
+            ->method('validatePersonSecurityCard')
+            ->willReturn(new SecurityCardValidation($data));
+
         $pin = '123456';
         $identity = new Identity();
         $this->withCurrentIdentity($identity);

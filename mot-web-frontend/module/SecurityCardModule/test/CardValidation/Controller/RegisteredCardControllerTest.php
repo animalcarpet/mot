@@ -5,6 +5,7 @@ namespace Dvsa\Mot\Frontend\SecurityCardModuleTest\CardValidation\Controller;
 use CoreTest\Controller\AbstractLightWebControllerTest;
 use Dashboard\Controller\UserHomeController;
 use Dvsa\Mot\ApiClient\Resource\Item\SecurityCard;
+use Dvsa\Mot\ApiClient\Resource\Item\SecurityCardValidation;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Controller\RegisteredCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Form\SecurityCardValidationForm;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\AlreadyLoggedInTodayWithLostForgottenCardCookieService;
@@ -12,6 +13,7 @@ use Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service\RegisteredCardSe
 use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\LostOrForgottenCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\Support\TwoFaFeatureToggle;
 use Dvsa\Mot\Frontend\AuthenticationModule\Model\Identity;
+use DvsaCommon\Configuration\MotConfig;
 use Zend\View\Model\ViewModel;
 use Zend\Http\Request;
 use Zend\Http\Response;
@@ -72,6 +74,7 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
         $this->response = new Response();
         $this->pinEntryCookieService = XMock::of(AlreadyLoggedInTodayWithLostForgottenCardCookieService::class);
         $this->identity = XMock::of(Identity::class);
+        $this->config = XMock::of(MotConfig::class);
     }
 
     public function testOn2FALoginAction_when2FALoginNotApplicableToUser_and_2FAFeatureToggleOff_shouldRedirectToUserHome()
@@ -122,6 +125,20 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
 
     public function testOnPostLoginAction_when2FALoginApplicableToUser_and_2FAFeatureToggleOn_and_valid2FAPIN_and_validForm_shouldRedirectToUserHome()
     {
+        $data = new \stdClass();
+        $data->pinValid = true;
+        $data->lockedOut = false;
+
+        $this->registeredCardService
+            ->expects($this->once())
+            ->method('getSecurityCardValidation')
+            ->willReturn(new SecurityCardValidation($data));
+
+        $this->registeredCardService
+            ->expects($this->once())
+            ->method('isLockedOut')
+            ->willReturn(false);
+
         $this
             ->withIs2FALoginApplicableToCurrentUser(true)
             ->withHasFeatureToggle(true)
@@ -136,6 +153,21 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
 
     public function testOnPostLoginAction_when2FALoginApplicableToUser_and_2FAFeatureToggleOn_and_inValidPIN_and_validForm_shouldShowLoginWith2FA()
     {
+        $data = new \stdClass();
+        $data->pinValid = false;
+        $data->lockedOut = false;
+        $data->lockedOutFromNextFailure = false;
+
+        $this->registeredCardService
+            ->expects($this->once())
+            ->method('getSecurityCardValidation')
+            ->willReturn(new SecurityCardValidation($data));
+
+        $this->registeredCardService
+            ->expects($this->once())
+            ->method('isLockedOut')
+            ->willReturn(false);
+
         $this
             ->withIs2FALoginApplicableToCurrentUser(true)
             ->withHasFeatureToggle(true)
@@ -287,7 +319,8 @@ class RegisteredCardControllerTest extends AbstractLightWebControllerTest
             $this->response,
             $this->featureToggle,
             $this->pinEntryCookieService,
-            $this->identity
+            $this->identity,
+            $this->config
         );
 
         $serviceLocator = new ServiceManager;

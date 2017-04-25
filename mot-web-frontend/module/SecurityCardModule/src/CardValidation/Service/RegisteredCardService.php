@@ -3,6 +3,7 @@
 namespace Dvsa\Mot\Frontend\SecurityCardModule\CardValidation\Service;
 
 use Dvsa\Mot\ApiClient\Exception\ResourceNotFoundException;
+use Dvsa\Mot\ApiClient\Resource\Item\SecurityCardValidation;
 use Dvsa\Mot\ApiClient\Service\AuthorisationService;
 use GuzzleHttp\Exception\RequestException;
 use Zend\Authentication\AuthenticationService;
@@ -33,6 +34,7 @@ class RegisteredCardService
     }
 
     /**
+     *
      * @param $pin
      * @return bool
      */
@@ -40,17 +42,45 @@ class RegisteredCardService
     {
         $isValid = false;
         try {
-            $isValid = $this->authorisationServiceClient->validatePersonSecurityCard($pin);
+            $isValid = $this->authorisationServiceClient->validatePersonSecurityCard($pin)->isPinValid();
 
             if ($isValid === true) {
-                $identity = $this->authenticationService->getIdentity();
-                $identity->setAuthenticatedWith2FA(true);
+                $this->setAuthenticatedWith2FA();
             }
 
             return $isValid;
         } catch (RequestException $error) {
             return $isValid;
         }
+    }
+
+    /**
+     * @param $pin
+     * @return SecurityCardValidation
+     */
+    public function getSecurityCardValidation($pin) {
+        $data = null;
+        try {
+            $data = $this->authorisationServiceClient->validatePersonSecurityCard($pin);
+            if($data->isPinValid() === true) {
+                $this->setAuthenticatedWith2FA();
+            }
+            return $data;
+        } catch (RequestException $error) {
+            return $data;
+        }
+    }
+
+    /**
+     * Sets the user as authenticated with 2FA.
+     */
+    public function setAuthenticatedWith2FA() {
+        $identity = $this->authenticationService->getIdentity();
+        $identity->setAuthenticatedWith2FA(true);
+    }
+
+    public function isLockedOut() {
+        return $this->authorisationServiceClient->pinLockedOut();
     }
 
     public function getSerialNumber()
