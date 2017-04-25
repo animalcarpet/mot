@@ -12,8 +12,7 @@ use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionSecondInputFilter;
+use DvsaCommon\InputFilter\Registration\SecurityQuestionsInputFilter;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -35,23 +34,20 @@ class RegistrationValidatorFactory implements FactoryInterface
         $detailsInputFilter = new DetailsInputFilter();
         $contactDetailsInputFilter = new ContactDetailsInputFilter();
         $passwordInputFilter = new PasswordInputFilter();
-        $securityQuestionFirstInputFilter = new SecurityQuestionFirstInputFilter();
-        $securityQuestionSecondInputFilter = new SecurityQuestionSecondInputFilter();
+        $securityQuestionsInputFilter = new SecurityQuestionsInputFilter();
 
         $emailInputFilter->init();
         $detailsInputFilter->init();
         $contactDetailsInputFilter->init();
         $passwordInputFilter->init();
-        $securityQuestionFirstInputFilter->init();
-        $securityQuestionSecondInputFilter->init();
+        $securityQuestionsInputFilter->init();
 
         $service = new RegistrationValidator(
             $emailInputFilter,
             $detailsInputFilter,
             $contactDetailsInputFilter,
             $passwordInputFilter,
-            $securityQuestionFirstInputFilter,
-            $securityQuestionSecondInputFilter
+            $securityQuestionsInputFilter
         );
 
         return $service;

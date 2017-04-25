@@ -15,8 +15,7 @@ use Dvsa\Mot\Api\RegistrationModule\Service\UsernameGenerator;
 use Dvsa\Mot\Api\RegistrationModule\Service\ValidatorKeyConverter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionSecondInputFilter;
+use DvsaCommon\InputFilter\Registration\SecurityQuestionsInputFilter;
 use DvsaCommonApiTest\Transaction\TestTransactionExecutor;
 use DvsaCommonTest\TestUtils\XMock;
 use DvsaEntities\Entity\AuthenticationMethod;
@@ -33,9 +32,7 @@ use DvsaEntities\Repository\TitleRepository;
  */
 class PersonCreatorTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var PersonCreator
-     */
+    /** @var PersonCreator $subject */
     private $subject;
 
     public function setUp()
@@ -45,7 +42,8 @@ class PersonCreatorTest extends \PHPUnit_Framework_TestCase
 
         /** @var EntityManager $mockEntityManager */
         $mockEntityManager = XMock::of(EntityManager::class);
-        $mockEntityManager->expects($this->any())
+        $mockEntityManager
+            ->expects($this->any())
             ->method('getRepository')
             ->willReturnCallback(
                 function ($entity) {
@@ -66,7 +64,8 @@ class PersonCreatorTest extends \PHPUnit_Framework_TestCase
             );
 
         $mockConnection = XMock::of(Connection::class);
-        $mockEntityManager->expects($this->any())
+        $mockEntityManager
+            ->expects($this->any())
             ->method('getConnection')
             ->willReturn($mockConnection);
 
@@ -110,6 +109,9 @@ class PersonCreatorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @return array
+     */
     public function dpStepDetails()
     {
         return [
@@ -125,13 +127,11 @@ class PersonCreatorTest extends \PHPUnit_Framework_TestCase
                             DetailsInputFilter::FIELD_YEAR => '1990',
                         ],
                     ],
-                    ValidatorKeyConverter::inputFilterToStep(SecurityQuestionFirstInputFilter::class) => [
-                        SecurityQuestionFirstInputFilter::FIELD_QUESTION => 1,
-                        SecurityQuestionFirstInputFilter::FIELD_ANSWER   => 'Something',
-                    ],
-                    ValidatorKeyConverter::inputFilterToStep(SecurityQuestionSecondInputFilter::class) => [
-                        SecurityQuestionSecondInputFilter::FIELD_QUESTION => 2,
-                        SecurityQuestionSecondInputFilter::FIELD_ANSWER   => 'Something else',
+                    ValidatorKeyConverter::inputFilterToStep(SecurityQuestionsInputFilter::class) => [
+                        SecurityQuestionsInputFilter::FIELD_QUESTION_1 => 1,
+                        SecurityQuestionsInputFilter::FIELD_ANSWER_1   => 'Something',
+                        SecurityQuestionsInputFilter::FIELD_QUESTION_2 => 2,
+                        SecurityQuestionsInputFilter::FIELD_ANSWER_2   => 'Something else',
                     ],
                     ValidatorKeyConverter::inputFilterToStep(PasswordInputFilter::class) => [
                         PasswordInputFilter::FIELD_PASSWORD => 'password',

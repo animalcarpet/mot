@@ -12,8 +12,7 @@ use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationSessionService;
 use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\EmailInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionSecondInputFilter;
+use DvsaCommon\InputFilter\Registration\SecurityQuestionsInputFilter;
 use Zend\InputFilter\InputFilter;
 
 /**
@@ -41,10 +40,10 @@ abstract class AbstractRegistrationStep extends AbstractStep
             ContactDetailsInputFilter::FIELD_ADDRESS_2 => 'Address line 2',
             ContactDetailsInputFilter::FIELD_ADDRESS_3 => 'Address line 3',
             ContactDetailsInputFilter::FIELD_PHONE => 'Telephone number',
-            SecurityQuestionFirstInputFilter::FIELD_QUESTION => 'Select a question to answer',
-            SecurityQuestionFirstInputFilter::FIELD_ANSWER => 'Your answer',
-            SecurityQuestionSecondInputFilter::FIELD_QUESTION => 'Select a question to answer',
-            SecurityQuestionSecondInputFilter::FIELD_ANSWER => 'Your answer',
+            SecurityQuestionsInputFilter::FIELD_QUESTION_1 => 'Select a question to answer',
+            SecurityQuestionsInputFilter::FIELD_ANSWER_1 => 'First memorable answer',
+            SecurityQuestionsInputFilter::FIELD_QUESTION_2 => 'Select a question to answer',
+            SecurityQuestionsInputFilter::FIELD_ANSWER_2 => 'Second memorable answer',
         ];
 
         return $fieldNameMapping;

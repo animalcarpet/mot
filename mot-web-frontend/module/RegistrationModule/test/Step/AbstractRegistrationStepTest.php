@@ -4,7 +4,6 @@ namespace Dvsa\Mot\Frontend\RegistrationModuleTest\Step;
 
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationSessionService;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\AbstractRegistrationStep;
-use Dvsa\Mot\Frontend\RegistrationModule\Step\CompleteStep;
 use DvsaCommonTest\TestUtils\XMock;
 use Zend\InputFilter\InputFilter;
 
@@ -21,6 +20,10 @@ class AbstractRegistrationStepTest extends \PHPUnit_Framework_TestCase
      * Make sure that save to session is not called when the validator fails.
      *
      * @dataProvider dpSave
+     *
+     * @param bool $expected
+     *
+     * @throws \Exception
      */
     public function testSave($expected)
     {
@@ -68,8 +71,7 @@ class AbstractRegistrationStepTest extends \PHPUnit_Framework_TestCase
      * @covers CreateAccountStep::validate
      * @covers DetailsStep::validate
      * @covers PasswordStep::validate
-     * @covers SecurityQuestionOneStep::validate
-     * @covers SecurityQuestionTwoStep::validate
+     * @covers SecurityQuestionsStep::validate
      */
     public function testValidate()
     {
@@ -95,6 +97,10 @@ class AbstractRegistrationStepTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider dataToClean
      *
+     * @param array $data
+     * @param array $expected
+     * @param array $blackList
+     *
      * @throws \Exception
      */
     public function testClean($data, $expected, $blackList)
@@ -114,6 +120,9 @@ class AbstractRegistrationStepTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $actual);
     }
 
+    /**
+     * @return array
+     */
     public function dataToClean()
     {
         return [

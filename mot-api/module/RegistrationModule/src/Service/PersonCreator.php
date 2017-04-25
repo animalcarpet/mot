@@ -10,8 +10,7 @@ namespace Dvsa\Mot\Api\RegistrationModule\Service;
 use Doctrine\ORM\EntityManager;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionSecondInputFilter;
+use DvsaCommon\InputFilter\Registration\SecurityQuestionsInputFilter;
 use DvsaEntities\Entity\AuthenticationMethod;
 use DvsaEntities\Entity\Gender;
 use DvsaEntities\Entity\Person;
@@ -114,14 +113,14 @@ class PersonCreator extends AbstractPersistableService
             ->addSecurityAnswer(
                 $this->personSecurityAnswerRecorder->create(
                     $this->person,
-                    $this->data[$this->getSecurityQuestionFirstStepName()][SecurityQuestionFirstInputFilter::FIELD_QUESTION],
-                    $this->data[$this->getSecurityQuestionFirstStepName()][SecurityQuestionFirstInputFilter::FIELD_ANSWER]
+                    $this->data[$this->getSecurityQuestionsStepName()][SecurityQuestionsInputFilter::FIELD_QUESTION_1],
+                    $this->data[$this->getSecurityQuestionsStepName()][SecurityQuestionsInputFilter::FIELD_ANSWER_1]
                 )
             )->addSecurityAnswer(
                 $this->personSecurityAnswerRecorder->create(
                     $this->person,
-                    $this->data[$this->getSecurityQuestionSecondStepName()][SecurityQuestionSecondInputFilter::FIELD_QUESTION],
-                    $this->data[$this->getSecurityQuestionSecondStepName()][SecurityQuestionSecondInputFilter::FIELD_ANSWER]
+                    $this->data[$this->getSecurityQuestionsStepName()][SecurityQuestionsInputFilter::FIELD_QUESTION_2],
+                    $this->data[$this->getSecurityQuestionsStepName()][SecurityQuestionsInputFilter::FIELD_ANSWER_2]
                 )
             );
         $date = new \DateTime($this->formatDateOfBirth());

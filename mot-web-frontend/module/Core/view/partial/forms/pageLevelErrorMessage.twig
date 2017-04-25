@@ -1,0 +1,14 @@
+{% if messages is not empty %}
+<div class="row">
+    <div class="col-sm-10">
+        <div id="validation-summary-id" class="validation-summary">
+            <ol>
+                {% for messageGroup in messages %}
+                    <li>{{ messageGroup|first }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+</div>
+{% endif %}
+

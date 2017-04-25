@@ -3,16 +3,11 @@
 namespace Dvsa\Mot\Frontend\RegistrationModuleTest\Step;
 
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegistrationSessionService;
-use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionTwoStep;
+use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionsStep;
 use DvsaCommonTest\TestUtils\XMock;
 use Zend\InputFilter\InputFilter;
 
-/**
- * Class SecurityQuestionTwoStepTest.
- *
- * @group VM-11506
- */
-class SecurityQuestionTwoStepTest extends \PHPUnit_Framework_TestCase
+class SecurityQuestionsStepTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Test the constructor.
@@ -21,12 +16,12 @@ class SecurityQuestionTwoStepTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $step = new SecurityQuestionTwoStep(
+        $step = new SecurityQuestionsStep(
             XMock::of(RegistrationSessionService::class),
             XMock::of(InputFilter::class)
         );
 
-        $this->assertInstanceOf(SecurityQuestionTwoStep::class, $step);
+        $this->assertInstanceOf(SecurityQuestionsStep::class, $step);
     }
 
     /**
@@ -34,12 +29,12 @@ class SecurityQuestionTwoStepTest extends \PHPUnit_Framework_TestCase
      */
     public function testId()
     {
-        $step = new SecurityQuestionTwoStep(
+        $step = new SecurityQuestionsStep(
             XMock::of(RegistrationSessionService::class),
             XMock::of(InputFilter::class)
         );
 
-        $this->assertEquals(SecurityQuestionTwoStep::STEP_ID, $step->getId());
+        $this->assertEquals(SecurityQuestionsStep::STEP_ID, $step->getId());
     }
 
     /**
@@ -54,18 +49,20 @@ class SecurityQuestionTwoStepTest extends \PHPUnit_Framework_TestCase
         $session = XMock::of(RegistrationSessionService::class);
         $session->expects($this->once())
             ->method('load')
-            ->with(SecurityQuestionTwoStep::STEP_ID)
+            ->with(SecurityQuestionsStep::STEP_ID)
             ->willReturn($fixture);
 
-        $step = new SecurityQuestionTwoStep(
+        $step = new SecurityQuestionsStep(
             $session,
             XMock::of(InputFilter::class)
         );
 
         $step->load();
 
-        $this->assertEquals($step->getQuestion(), $fixture['question2']);
-        $this->assertEquals($step->getAnswer(), $fixture['answer2']);
+        $this->assertEquals($step->getQuestion1(), $fixture['question1']);
+        $this->assertEquals($step->getAnswer1(), $fixture['answer1']);
+        $this->assertEquals($step->getQuestion2(), $fixture['question2']);
+        $this->assertEquals($step->getAnswer2(), $fixture['answer2']);
     }
 
     /**
@@ -73,16 +70,20 @@ class SecurityQuestionTwoStepTest extends \PHPUnit_Framework_TestCase
      */
     public function testToArray()
     {
-        $step = new SecurityQuestionTwoStep(
+        $step = new SecurityQuestionsStep(
             XMock::of(RegistrationSessionService::class),
             XMock::of(InputFilter::class)
         );
 
-        $step->setQuestion('question2');
-        $step->setAnswer('answer2');
+        $step->setQuestion1('question1');
+        $step->setAnswer1('answer1');
+        $step->setQuestion2('question2');
+        $step->setAnswer2('answer2');
 
         $values = $step->toArray();
 
+        $this->assertEquals('question1', $values['question1']);
+        $this->assertEquals('answer1', $values['answer1']);
         $this->assertEquals('question2', $values['question2']);
         $this->assertEquals('answer2', $values['answer2']);
     }
@@ -92,16 +93,20 @@ class SecurityQuestionTwoStepTest extends \PHPUnit_Framework_TestCase
      */
     public function testGettersSetters()
     {
-        $step = new SecurityQuestionTwoStep(
+        $step = new SecurityQuestionsStep(
             XMock::of(RegistrationSessionService::class),
             XMock::of(InputFilter::class)
         );
 
-        $step->setQuestion('question2');
-        $step->setAnswer('answer2');
+        $step->setQuestion1('question1');
+        $step->setAnswer1('answer1');
+        $step->setQuestion2('question2');
+        $step->setAnswer2('answer2');
 
-        $this->assertEquals('question2', $step->getQuestion());
-        $this->assertEquals('answer2', $step->getAnswer());
+        $this->assertEquals('question1', $step->getQuestion1());
+        $this->assertEquals('answer1', $step->getAnswer1());
+        $this->assertEquals('question2', $step->getQuestion2());
+        $this->assertEquals('answer2', $step->getAnswer2());
     }
 
     /**
@@ -110,8 +115,10 @@ class SecurityQuestionTwoStepTest extends \PHPUnit_Framework_TestCase
     public function getFixture()
     {
         $fixture = [
-            'question2' => __METHOD__ . '_question2',
-            'answer2'   => __METHOD__ . '_answer2',
+            'question1'          => __METHOD__ . '_question1',
+            'answer1'            => __METHOD__ . '_answer1',
+            'question2'          => __METHOD__ . '_question2',
+            'answer2'            => __METHOD__ . '_answer2',
         ];
 
         return $fixture;

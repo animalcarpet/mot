@@ -11,16 +11,14 @@ use Dvsa\Mot\Frontend\RegistrationModule\Step\ContactDetailsStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\DetailsStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\EmailStep;
 use Dvsa\Mot\Frontend\RegistrationModule\Step\PasswordStep;
-use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionOneStep;
-use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionTwoStep;
+use Dvsa\Mot\Frontend\RegistrationModule\Step\SecurityQuestionsStep;
 use DvsaCommon\HttpRestJson\Client as HttpRestJsonClient;
 use DvsaCommon\HttpRestJson\Exception\GeneralRestException;
 use DvsaCommon\InputFilter\Registration\ContactDetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\DetailsInputFilter;
 use DvsaCommon\InputFilter\Registration\EmailInputFilter;
 use DvsaCommon\InputFilter\Registration\PasswordInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionFirstInputFilter;
-use DvsaCommon\InputFilter\Registration\SecurityQuestionSecondInputFilter;
+use DvsaCommon\InputFilter\Registration\SecurityQuestionsInputFilter;
 use DvsaCommon\UrlBuilder\RegistrationUrlBuilder;
 
 class RegisterUserService
@@ -32,8 +30,7 @@ class RegisterUserService
     const STEP_DETAILS = 'stepDetails';
     const STEP_CONTACT_DETAILS = 'stepContactDetails';
     const STEP_PASSWORD = 'stepPassword';
-    const STEP_SECURITY_QUESTION_ONE = 'stepSecurityQuestionFirst';
-    const STEP_SECURITY_QUESTION_TWO = 'stepSecurityQuestionSecond';
+    const STEP_SECURITY_QUESTIONS = 'stepSecurityQuestions';
 
     const KEY_EMAIL = 'email';
 
@@ -113,16 +110,12 @@ class RegisterUserService
             PasswordInputFilter::FIELD_PASSWORD_CONFIRM => $this->dataExists($passwordData, PasswordInputFilter::FIELD_PASSWORD_CONFIRM),
         ];
 
-        $security1Data = $this->dataExists($sessionData, SecurityQuestionOneStep::STEP_ID);
-        $array[self::STEP_SECURITY_QUESTION_ONE] = [
-            SecurityQuestionFirstInputFilter::FIELD_QUESTION => $this->dataExists($security1Data, SecurityQuestionFirstInputFilter::FIELD_QUESTION),
-            SecurityQuestionFirstInputFilter::FIELD_ANSWER   => $this->dataExists($security1Data, SecurityQuestionFirstInputFilter::FIELD_ANSWER),
-        ];
-
-        $security2Data = $this->dataExists($sessionData, SecurityQuestionTwoStep::STEP_ID);
-        $array[self::STEP_SECURITY_QUESTION_TWO] = [
-            SecurityQuestionSecondInputFilter::FIELD_QUESTION => $this->dataExists($security2Data, SecurityQuestionSecondInputFilter::FIELD_QUESTION),
-            SecurityQuestionSecondInputFilter::FIELD_ANSWER   => $this->dataExists($security2Data, SecurityQuestionSecondInputFilter::FIELD_ANSWER),
+        $securityData = $this->dataExists($sessionData, SecurityQuestionsStep::STEP_ID);
+        $array[self::STEP_SECURITY_QUESTIONS] = [
+            SecurityQuestionsInputFilter::FIELD_QUESTION_1 => $this->dataExists($securityData, SecurityQuestionsInputFilter::FIELD_QUESTION_1),
+            SecurityQuestionsInputFilter::FIELD_ANSWER_1   => $this->dataExists($securityData, SecurityQuestionsInputFilter::FIELD_ANSWER_1),
+            SecurityQuestionsInputFilter::FIELD_QUESTION_2 => $this->dataExists($securityData, SecurityQuestionsInputFilter::FIELD_QUESTION_2),
+            SecurityQuestionsInputFilter::FIELD_ANSWER_2   => $this->dataExists($securityData, SecurityQuestionsInputFilter::FIELD_ANSWER_2),
         ];
 
         return $array;

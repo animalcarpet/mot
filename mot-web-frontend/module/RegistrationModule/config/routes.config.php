@@ -12,8 +12,7 @@ use Dvsa\Mot\Frontend\RegistrationModule\Controller\DetailsController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\DuplicateEmailController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\IndexController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\PasswordController;
-use Dvsa\Mot\Frontend\RegistrationModule\Controller\SecurityQuestionOneController;
-use Dvsa\Mot\Frontend\RegistrationModule\Controller\SecurityQuestionTwoController;
+use Dvsa\Mot\Frontend\RegistrationModule\Controller\SecurityQuestionsController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\SummaryController;
 use Dvsa\Mot\Frontend\RegistrationModule\Controller\EmailController;
 
@@ -25,8 +24,7 @@ use Dvsa\Mot\Frontend\RegistrationModule\Controller\EmailController;
  * http://mot-web-frontend.mot.gov.uk/account/register/email
  * http://mot-web-frontend.mot.gov.uk/account/register/details
  * http://mot-web-frontend.mot.gov.uk/account/register/contact-details
- * http://mot-web-frontend.mot.gov.uk/account/register/security-question/one
- * http://mot-web-frontend.mot.gov.uk/account/register/security-question/two
+ * http://mot-web-frontend.mot.gov.uk/account/register/security-questions
  * http://mot-web-frontend.mot.gov.uk/account/register/password
  * http://mot-web-frontend.mot.gov.uk/account/register/summary
  * http://mot-web-frontend.mot.gov.uk/account/register/completed
@@ -81,21 +79,12 @@ return [
                             ],
                         ],
                     ],
-                    'security-question-one' => [
-                        'type'    => 'segment',
+                    'security-questions' => [
+                        'type'    => 'literal',
                         'options' => [
-                            'route'    => '/security-question-one[/]',
+                            'route'    => '/security-questions',
                             'defaults' => [
-                                'controller' => SecurityQuestionOneController::class,
-                            ],
-                        ],
-                    ],
-                    'security-question-two' => [
-                        'type'    => 'segment',
-                        'options' => [
-                            'route'    => '/security-question-two[/]',
-                            'defaults' => [
-                                'controller' => SecurityQuestionTwoController::class,
+                                'controller' => SecurityQuestionsController::class,
                             ],
                         ],
                     ],

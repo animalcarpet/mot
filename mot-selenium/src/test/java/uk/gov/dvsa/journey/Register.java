@@ -2,7 +2,6 @@ package uk.gov.dvsa.journey;
 
 import uk.gov.dvsa.domain.model.PersonDetails;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
-import uk.gov.dvsa.helper.ContactDetailsHelper;
 import uk.gov.dvsa.ui.pages.userregistration.*;
 
 import java.io.IOException;
@@ -27,7 +26,7 @@ public class Register {
                     email, telephone, personDetails.getDateOfBirthDay(), personDetails.getDateOfBirthMonth(), personDetails.getDateOfBirthYear());
     }
 
-    public void completeDetailsWithCustomValues(String name, String surname, String emailAddress, String telephone,
+    private void completeDetailsWithCustomValues(String name, String surname, String emailAddress, String telephone,
                                                 int dateOfBirthDay, int dateOfBirthMonth, int dateOfYear) throws IOException {
 
         SummaryPage summaryPage = enterDetails(name, surname, emailAddress, telephone,
@@ -48,13 +47,10 @@ public class Register {
         AddressPage addressPage = detailsPage.clickContinue();
         addressPage.enterAddressandTelephone();
 
-        SecurityQuestionOnePage questionOnePage = addressPage.clickContinue();
-        questionOnePage.chooseQuestionAndAnswer();
+        SecurityQuestionsPage securityQuestionsPage = addressPage.clickContinue();
+        securityQuestionsPage.chooseQuestionsAndAnswers();
 
-        SecurityQuestionTwoPage questionTwoPage = questionOnePage.clickContinue();
-        questionTwoPage.chooseQuestionAndAnswer();
-
-        PasswordPage passwordPage = questionTwoPage.clickContinue();
+        PasswordPage passwordPage = securityQuestionsPage.clickContinue();
         passwordPage.enterPassword();
 
         return passwordPage.clickContinue();

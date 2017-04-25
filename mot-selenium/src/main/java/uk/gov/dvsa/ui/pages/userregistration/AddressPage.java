@@ -13,17 +13,11 @@ public class AddressPage extends Page {
     private static final String PAGE_TITLE = "Your contact details";
 
     @FindBy(id = "address1") private WebElement homeAddressLineOne;
-
     @FindBy(id = "address2") private WebElement homeAddressLineTwo;
-
     @FindBy(id = "address3") private WebElement homeAddressLineThree;
-
     @FindBy(id = "townOrCity") private WebElement townCity;
-
     @FindBy(id = "postcode") private WebElement postcode;
-
     @FindBy(id = "continue") private WebElement continueToNextPage;
-
     @FindBy(id = "phone") private WebElement telephoneNumber;
 
     public AddressPage(MotAppDriver driver) {
@@ -36,22 +30,10 @@ public class AddressPage extends Page {
         return PageInteractionHelper.verifyTitle(getTitle(), PAGE_TITLE);
     }
 
-    public SecurityQuestionOnePage clickContinue()
+    public SecurityQuestionsPage clickContinue()
     {
         continueToNextPage.click();
-        return new SecurityQuestionOnePage(driver);
-    }
-
-    public SecurityQuestionOnePage enterAddressAndSubmitExpectingFirstSecurityQuestionPage(String addressLine1, String addressLine2, String addressLine3, String town,
-                                                     String postCode, String telephone) {
-        FormDataHelper.enterText(homeAddressLineOne, addressLine1);
-        FormDataHelper.enterText(homeAddressLineTwo, addressLine2);
-        FormDataHelper.enterText(homeAddressLineThree, addressLine3);
-        FormDataHelper.enterText(townCity, town);
-        FormDataHelper.enterText(postcode, postCode);
-        FormDataHelper.enterText(telephoneNumber, telephone);
-        continueToNextPage.click();
-        return new SecurityQuestionOnePage(driver);
+        return new SecurityQuestionsPage(driver);
     }
 
     public AddressPage enterAddressandTelephone()
@@ -65,6 +47,4 @@ public class AddressPage extends Page {
 
         return this;
     }
-
-
 }

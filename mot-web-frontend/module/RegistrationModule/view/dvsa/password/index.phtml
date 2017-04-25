@@ -53,7 +53,7 @@ use DvsaCommon\UrlBuilder\RegistrationUrlBuilderWeb;
 
         <ul class="content-navigation__secondary">
             <li>
-                <a href="<?php echo $this->escapeHtmlAttr(RegistrationUrlBuilderWeb::of()->securityQuestionStepTwo());?>" id="back">Back</a>
+                <a href="<?php echo $this->escapeHtmlAttr($this->url('account-register/security-questions'));?>" id="back">Back</a>
             </li>
         </ul>
 

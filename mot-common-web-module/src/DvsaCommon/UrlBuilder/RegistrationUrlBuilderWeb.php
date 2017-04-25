@@ -16,12 +16,12 @@ class RegistrationUrlBuilderWeb extends AbstractUrlBuilder
     const DETAILS = '/details';
     const SUMMARY = '/summary';
     const PASSWORD = '/password';
-    const SECURITY_QUESTION_ONE = '/security-question-one';
-    const SECURITY_QUESTION_TWO = '/security-question-two';
+    const SECURITY_QUESTIONS = '/security-questions';
 
     /**
      * Keys define the route, we need to set the value of each because of the way AbstractUrlBuilder checks
-     * the routing when converting back to a string
+     * the routing when converting back to a string.
+     *
      * @see AbstractUrlBuilder::verifyOrderOfRoute
      * @var array
      */
@@ -33,8 +33,7 @@ class RegistrationUrlBuilderWeb extends AbstractUrlBuilder
             self::DETAILS => '',
             self::SUMMARY => '',
             self::PASSWORD => '',
-            self::SECURITY_QUESTION_ONE => '',
-            self::SECURITY_QUESTION_TWO => '',
+            self::SECURITY_QUESTIONS => '',
         ]
     ];
 
@@ -101,25 +100,9 @@ class RegistrationUrlBuilderWeb extends AbstractUrlBuilder
             ->appendRoutesAndParams(self::CREATE);
     }
 
-    /**
-     * @throws \Exception
-     * @return $this
-     */
-    public function securityQuestionStepOne()
+    public function securityQuestionsStep()
     {
-        $this->register()
-            ->appendRoutesAndParams(self::SECURITY_QUESTION_ONE);
-        return $this;
-    }
-
-    /**
-     * @throws \Exception
-     * @return $this
-     */
-    public function securityQuestionStepTwo()
-    {
-        $this->register()
-            ->appendRoutesAndParams(self::SECURITY_QUESTION_TWO);
-        return $this;
+        return $this->register()
+            ->appendRoutesAndParams(self::SECURITY_QUESTIONS);
     }
 }
