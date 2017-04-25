@@ -30,10 +30,5 @@
     "scripts": {
       "test": "./vendor/bin/phpunit",
       "test-coverage": "./vendor/bin/phpunit --coverage-clover build/code-coverage/clover/clover.xml --coverage-html build/code-coverage/html/"
-    },
-    "config" : {
-      "github-oauth" : {
-        "github.com" : "dc42d725f33dea95b619b4fadc8cbf14aed308f9"
-      }
     }
 }

@@ -21,9 +21,6 @@
     ]
   },
   "config": {
-    "bin-dir": "bin",
-    "github-oauth" : {
-      "github.com" : "dc42d725f33dea95b619b4fadc8cbf14aed308f9"
-    }
+    "bin-dir": "bin"
   }
 }

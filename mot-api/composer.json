@@ -78,10 +78,5 @@
       "type": "composer",
       "url": "https://packages.motdev.org.uk"
     }
-  ],
-  "config" : {
-    "github-oauth" : {
-      "github.com" : "dc42d725f33dea95b619b4fadc8cbf14aed308f9"
-    }
-  }
+  ]
 }
