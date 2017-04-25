@@ -9,7 +9,7 @@ import uk.gov.dvsa.ui.pages.login.LoginPage;
 
 public class AccountCreatedPage extends Page {
 
-    private static final String PAGE_TITLE = "Your account has been created";
+    private static final String PAGE_TITLE = "Now check your email";
 
     @FindBy (id = "successBanner") private WebElement accountCreatedText;
 
