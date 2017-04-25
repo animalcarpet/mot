@@ -26,9 +26,8 @@ if ($motTest !== null) {
 
 //  --  title and header    --
 $testName = AbstractDvsaMotTestController::getTestName($motTestType);
-$title = $testName . ' Cancelled';
 $header = $testName . ' ' . $status;
-
+$title = $header;
 $this->headTitle($title);
 ?>
 

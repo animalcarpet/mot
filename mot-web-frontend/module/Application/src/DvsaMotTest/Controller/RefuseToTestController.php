@@ -49,6 +49,7 @@ class RefuseToTestController extends AbstractDvsaMotTestController
         );
 
         $testTypeCode = $this->params()->fromRoute('testTypeCode', MotTestTypeCode::NORMAL_TEST);
+        $this->setHeadTitle('Refuse to test');
 
         if ($request->isPost()) {
             $postData = $request->getPost()->toArray();

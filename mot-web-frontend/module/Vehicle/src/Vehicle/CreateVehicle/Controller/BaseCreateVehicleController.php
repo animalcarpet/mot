@@ -24,5 +24,6 @@ abstract class BaseCreateVehicleController extends AbstractDvsaActionController
             ->layout()
             ->setVariable('pageTitle', $pageTitle)
             ->setVariable('pageSubTitle', $pageSubtitle);
+        $this->setHeadTitle($pageTitle);
     }
 }
