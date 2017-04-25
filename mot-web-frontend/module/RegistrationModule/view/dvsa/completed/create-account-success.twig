@@ -1,0 +1,30 @@
+<header class="transaction-header" id="successBanner">
+    <h1 class="transaction-header__title">Now check your email</h1>
+    <p class="transaction-header__next-step">Your user ID has been sent to <strong>{{ email|escape }}</strong></p>
+</header>
+<h2 class="heading-medium">What happens next?</h2>
+
+<p>Check your email for your user ID.</p>
+
+<p>You can sign in to the MOT testing service with your user ID and password.</p>
+
+<div class="form-group">
+    <details>
+        <summary role="button" aria-controls="dateDetails" id="expandable-link" aria-expanded="false" tabindex="0">
+            <span class="summary">Haven't received the email?</span>
+        </summary>
+        <div class="panel-indent" id="dateDetails" aria-hidden="true">
+            <div class="text">
+                <p>Check your spam folder.</p>
+
+                <p>If you don't see the email after 30 minutes,
+                    {% set helpdeskVariables = {
+                    'startWithLowercase' : 'true',
+                    'config': config,
+                    } %}
+                    {% include 'partial/gds/general/contactHelpdesk.twig' with helpdeskVariables %}
+                </p>
+            </div>
+        </div>
+    </details>
+</div>

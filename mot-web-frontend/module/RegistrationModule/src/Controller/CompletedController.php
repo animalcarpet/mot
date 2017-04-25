@@ -19,7 +19,6 @@ use Zend\View\Model\ViewModel;
  */
 class CompletedController extends RegistrationBaseController
 {
-    const PAGE_TITLE = 'Your account has been created';
     const PAGE_TITLE_FAILURE = 'Your account has not been created';
     const SESSION_CHECK = "SESSION_CHECK";
     const SESSION_RESULT = "SESSION_RESULT";
@@ -109,7 +108,7 @@ class CompletedController extends RegistrationBaseController
             $this->redirectToStart();
         }
 
-        $this->setLayout(self::PAGE_TITLE);
+        $this->layout('layout/layout-govuk.phtml');
 
         $values = $this->session->toArray();
 
@@ -120,10 +119,15 @@ class CompletedController extends RegistrationBaseController
         $this->setHeadTitle('Your account has been created');
         $this->session->destroy();
 
-        return new ViewModel([
-            'email'     => $emailAddress,
-            'helpdesk'  => $this->helpdeskConfig,
+        $viewModel =  new ViewModel();
+        $viewModel->setTemplate('dvsa/completed/create-account-success.twig');
+        $viewModel->setVariables([
+            'email' => $emailAddress,
+            'config'  => $this->helpdeskConfig,
         ]);
+
+        return $viewModel;
+
     }
 
     /**
