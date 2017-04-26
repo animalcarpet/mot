@@ -32,7 +32,7 @@ class SecurityQuestionsInputFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertContainsOnlyInstancesOf(
             SecurityQuestionAbstractInputFilter::class,
             [
-                $this->securityQuestionsInputFilter
+                $this->securityQuestionsInputFilter,
             ]
         );
     }
@@ -40,9 +40,9 @@ class SecurityQuestionsInputFilterTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider securityQuestionDataAndExpectedResults
      *
-     * @param string[] $data       Represent input fields name and value
-     * @param boolean $isValid     Expected state
-     * @param array $errorMessages Nested array of field names and related messages
+     * @param string[] $data          Represent input fields name and value
+     * @param bool     $isValid       Expected state
+     * @param array    $errorMessages Nested array of field names and related messages
      */
     public function testValidators($data, $isValid, $errorMessages)
     {
@@ -130,19 +130,58 @@ class SecurityQuestionsInputFilterTest extends \PHPUnit_Framework_TestCase
             [
                 'data' => $this->prepareData(
                     1,
+                    '',
+                    6,
+                    ''
+                ),
+                'isValid' => false,
+                'errorMessages' => $this->prepareMessages(
+                    [],
+                    [
+                        NotEmpty::IS_EMPTY => SecurityQuestionAbstractInputFilter::MSG_ANSWER_EMPTY,
+                    ],
+                    [],
+                    [
+                        NotEmpty::IS_EMPTY => SecurityQuestionAbstractInputFilter::MSG_ANSWER_EMPTY,
+                    ]
+                ),
+            ],
+            [
+                'data' => $this->prepareData(
+                    '',
+                    'answer',
+                    '',
+                    'answer'
+                ),
+                'isValid' => false,
+                'errorMessages' => $this->prepareMessages(
+                    [
+                        NotEmpty::IS_EMPTY => SecurityQuestionAbstractInputFilter::MSG_QUESTION_EMPTY,
+                        Digits::STRING_EMPTY => SecurityQuestionAbstractInputFilter::MSG_QUESTION_NOT_NUMERIC,
+                    ],
+                    [],
+                    [
+                        NotEmpty::IS_EMPTY => SecurityQuestionAbstractInputFilter::MSG_QUESTION_EMPTY,
+                        Digits::STRING_EMPTY => SecurityQuestionAbstractInputFilter::MSG_QUESTION_NOT_NUMERIC,
+                    ],
+                    []
+                ),
+            ],
+            [
+                'data' => $this->prepareData(
+                    1,
                     str_repeat('a', SecurityQuestionAbstractInputFilter::LIMIT_ANSWER_MAX + 1),
-                    2,
+                    6,
                     'answer'
                 ),
                 'isValid' => false,
                 'errorMessages' => $this->prepareMessages(
                     [],
                     [
-                        StringLength::TOO_LONG =>
-                            sprintf(
+                        StringLength::TOO_LONG => sprintf(
                                 SecurityQuestionAbstractInputFilter::MSG_ANSWER_MAX,
                                 SecurityQuestionAbstractInputFilter::LIMIT_ANSWER_MAX
-                            )
+                            ),
                     ],
                     [],
                     []
@@ -152,7 +191,7 @@ class SecurityQuestionsInputFilterTest extends \PHPUnit_Framework_TestCase
                 'data' => $this->prepareData(
                     1,
                     str_repeat('a', SecurityQuestionAbstractInputFilter::LIMIT_ANSWER_MAX),
-                    2,
+                    6,
                     'answer'
                 ),
                 'isValid' => true,
@@ -182,7 +221,6 @@ class SecurityQuestionsInputFilterTest extends \PHPUnit_Framework_TestCase
         $question2,
         $answer2
     ) {
-
         return [
             SecurityQuestionsInputFilter::FIELD_QUESTION_1 => $question1,
             SecurityQuestionsInputFilter::FIELD_ANSWER_1 => $answer1,
@@ -206,7 +244,6 @@ class SecurityQuestionsInputFilterTest extends \PHPUnit_Framework_TestCase
         $answer2Messages
     ) {
         $messages = [];
-
 
         if (!empty($question1Messages)) {
             $messages[SecurityQuestionsInputFilter::FIELD_QUESTION_1] = $question1Messages;
