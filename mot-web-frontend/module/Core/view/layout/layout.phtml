@@ -14,6 +14,16 @@ $mastheadPresenter = new MastheadPresenter;
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <?php if (getenv('APPLICATION_ENV') != 'development'): ?>
+    <script type="text/javascript"><?php echo $this->gtmDataLayer()->render(); ?></script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-PS5VXQ');</script>
+    <!-- End Google Tag Manager (noscript) -->
+    <?php endif; ?>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <?php echo $this->headTitle('MOT testing service', 'APPEND')->setSeparator(' - '); ?>
@@ -43,18 +53,14 @@ $mastheadPresenter = new MastheadPresenter;
     echo $this->headScript();
     ?>
 
-    <script type="text/javascript"><?php echo $this->gtmDataLayer()->render(); ?></script>
 </head>
 <body>
-<!-- Google Tag Manager -->
+<?php if (getenv('APPLICATION_ENV') != 'development'): ?>
+<!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-PS5VXQ"
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-PS5VXQ');</script>
-<!-- End Google Tag Manager -->
+<!-- End Google Tag Manager (noscript) -->
+<?php endif; ?>
 <script type="text/javascript">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
 
