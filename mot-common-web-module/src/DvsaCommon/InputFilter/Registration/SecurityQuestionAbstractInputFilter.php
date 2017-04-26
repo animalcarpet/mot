@@ -23,8 +23,8 @@ abstract class SecurityQuestionAbstractInputFilter extends InputFilter
     const LIMIT_ANSWER_MAX = 70;
 
     // Select a question to answer
-    const MSG_QUESTION_EMPTY = 'choose a question';
-    const MSG_QUESTION_NOT_NUMERIC = 'choose a valid question';
+    const MSG_QUESTION_EMPTY = 'choose a question from the list';
+    const MSG_QUESTION_NOT_NUMERIC = 'choose a valid question from the list';
 
     // Your answer
     const MSG_ANSWER_EMPTY = 'enter an answer';
@@ -43,11 +43,11 @@ abstract class SecurityQuestionAbstractInputFilter extends InputFilter
     {
         $this->add(
             [
-                'name'       => SecurityQuestionsInputFilter::FIELD_QUESTION_1,
-                'required'   => true,
+                'name' => SecurityQuestionsInputFilter::FIELD_QUESTION_1,
+                'required' => true,
                 'validators' => [
                     [
-                        'name'    => NotEmpty::class,
+                        'name' => NotEmpty::class,
                         'options' => [
                             'message' => self::MSG_QUESTION_EMPTY,
                         ],
@@ -64,11 +64,11 @@ abstract class SecurityQuestionAbstractInputFilter extends InputFilter
 
         $this->add(
             [
-                'name'       => SecurityQuestionsInputFilter::FIELD_QUESTION_2,
-                'required'   => true,
+                'name' => SecurityQuestionsInputFilter::FIELD_QUESTION_2,
+                'required' => true,
                 'validators' => [
                     [
-                        'name'    => NotEmpty::class,
+                        'name' => NotEmpty::class,
                         'options' => [
                             'message' => self::MSG_QUESTION_EMPTY,
                         ],
@@ -91,19 +91,19 @@ abstract class SecurityQuestionAbstractInputFilter extends InputFilter
     {
         $this->add(
             [
-                'name'       => SecurityQuestionsInputFilter::FIELD_ANSWER_1,
-                'required'   => true,
+                'name' => SecurityQuestionsInputFilter::FIELD_ANSWER_1,
+                'required' => true,
                 'validators' => [
                     [
-                        'name'    => NotEmpty::class,
+                        'name' => NotEmpty::class,
                         'options' => [
                             'message' => self::MSG_ANSWER_EMPTY,
                         ],
                     ],
                     [
-                        'name'    => StringLength::class,
+                        'name' => StringLength::class,
                         'options' => [
-                            'max'     => self::LIMIT_ANSWER_MAX,
+                            'max' => self::LIMIT_ANSWER_MAX,
                             'message' => self::MSG_ANSWER_MAX,
                         ],
                     ],
@@ -113,19 +113,19 @@ abstract class SecurityQuestionAbstractInputFilter extends InputFilter
 
         $this->add(
             [
-                'name'       => SecurityQuestionsInputFilter::FIELD_ANSWER_2,
-                'required'   => true,
+                'name' => SecurityQuestionsInputFilter::FIELD_ANSWER_2,
+                'required' => true,
                 'validators' => [
                     [
-                        'name'    => NotEmpty::class,
+                        'name' => NotEmpty::class,
                         'options' => [
                             'message' => self::MSG_ANSWER_EMPTY,
                         ],
                     ],
                     [
-                        'name'    => StringLength::class,
+                        'name' => StringLength::class,
                         'options' => [
-                            'max'     => self::LIMIT_ANSWER_MAX,
+                            'max' => self::LIMIT_ANSWER_MAX,
                             'message' => self::MSG_ANSWER_MAX,
                         ],
                     ],

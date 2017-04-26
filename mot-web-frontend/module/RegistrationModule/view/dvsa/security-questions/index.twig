@@ -8,9 +8,14 @@
     <fieldset>
         <legend class="form-title heading-large" id="q-select-1">First security question</legend>
 
-        <div class="form-group">
-            <label class="form-label" for="question1">Choose a question</label>
-            <select class=" form-control form-control-1-2" id="question1" name="question1">
+        <div class="form-group {% if question1HasError %}has-error{% endif %}">
+            <label class="form-label" for="question1">Choose a question
+                {% if question1HasError %}
+                    {% include 'partial/forms/fieldLevelErrorMessage.twig' with {'messages': errors['question1']} %}
+                {% endif %}
+            </label>
+            <select class="form-control form-control-1-2" id="question1" name="question1">
+                <option value="">Please select</option>
                 {% for key,value in questions1 %}
                     <option {% if question1 == key %} selected {% endif %} value="{{ key }}">{{ value }}</option>
                 {% endfor %}
@@ -28,9 +33,14 @@
 
         <legend class="form-title heading-large" id="">Second security question</legend>
 
-        <div class="form-group">
-            <label class="form-label" for="question2">Choose a question</label>
-            <select class=" form-control form-control-1-2" id="question2" name="question2">
+        <div class="form-group {% if question2HasError %}has-error{% endif %}">
+            <label class="form-label" for="question2">Choose a question
+                {% if question2HasError %}
+                    {% include 'partial/forms/fieldLevelErrorMessage.twig' with {'messages': errors['question2']} %}
+                {% endif %}
+            </label>
+            <select class="form-control form-control-1-2" id="question2" name="question2">
+                <option value="">Please select</option>
                 {% for key,value in questions2 %}
                     <option {% if question2 == key %} selected {% endif %} value="{{ key }}">{{ value }}</option>
                 {% endfor %}
