@@ -47,20 +47,8 @@ class ClaimController extends AbstractDvsaRestfulController
 
             return ApiResponse::jsonOk($response);
         } catch (OpenAmChangePasswordException $e) {
-            $config      = $this->getServiceLocator()->get('Config');
-            $name        = isset($config['helpdesk']['name'])
-                ? $config['helpdesk']['name']
-                : 'DVSA Helpdesk';
-            $phoneNumber = isset($config['helpdesk']['phoneNumber'])
-                ? $config['helpdesk']['phoneNumber']
-                : '01792 454397';
-
             $statusCode       = $e->getCode();
-            $displayMessage   = sprintf("This password has already been used for your account." . PHP_EOL .
-                "Please choose a new password."  . PHP_EOL .
-                PHP_EOL .
-                "If you continue to have problems, please contact the %s on %s who will be able to advise you.",
-                $name, $phoneNumber);
+            $displayMessage   = 'Must be something you haven\'t used before';
 
             /*
              * NOTE: Add 'message' => $e->getMessage() to the $errors array if we need the OpenAM message in the

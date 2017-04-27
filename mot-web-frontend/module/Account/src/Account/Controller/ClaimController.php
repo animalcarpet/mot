@@ -87,10 +87,8 @@ class ClaimController extends AbstractAuthActionController
         
         $stepData['messages'] = $this->claimValidator->getMessages();
         $stepData['summaryMessages'] = $this->getSummaryMessages();
-        if ($this->flashMessenger()->hasErrorMessages()) {
-            $stepData['messages'] = array_merge($stepData['messages'],
-                [array_map('nl2br', $this->flashMessenger()->getErrorMessages())]);
-        }
+
+        $stepData = $this->getReusedPasswordError($stepData);
 
         $this->layout('layout/layout-govuk.phtml');
 
@@ -165,7 +163,7 @@ class ClaimController extends AbstractAuthActionController
                         && isset($apiMessage['displayMessage'])
                         && isset($apiMessage['step'])
                         && (self::STEP_1_NAME == $apiMessage['step'])) {
-                        $this->flashMessenger()->addErrorMessage($apiMessage['displayMessage']);
+                        $this->flashMessenger()->addErrorMessage('New password – '.$apiMessage['displayMessage']);
                     }
 
                     return $this->redirectToStep(self::STEP_1_NAME);
@@ -312,5 +310,25 @@ class ClaimController extends AbstractAuthActionController
 
         return $errorsSummary;
 
+    }
+
+    /**
+     * Check if there is an error relating to a reused password, if there is,
+     * append it to the $steData variable and return it.
+     *
+     * @param array $stepData
+     * @return array
+     */
+    private function getReusedPasswordError(array $stepData)
+    {
+        if ($this->flashMessenger()->hasErrorMessages()) {
+            $msgFromFlashMessenger = array_map('nl2br', $this->flashMessenger()->getErrorMessages());
+            $summaryMsgFromFlashMessenger = array_map('nl2br', $this->flashMessenger()->getErrorMessages());
+            $stepData['messages']['password'] = array_merge($stepData['messages'], $msgFromFlashMessenger);
+            $stepData['summaryMessages']['password'] = array_merge($stepData['summaryMessages'], $summaryMsgFromFlashMessenger);
+            return $stepData;
+        }
+
+        return $stepData;
     }
 }
