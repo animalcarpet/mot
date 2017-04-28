@@ -123,6 +123,7 @@ class ExpiredPasswordListener
             ContextProvider::YOUR_PROFILE_PARENT_ROUTE . '/change-password',
             ContextProvider::YOUR_PROFILE_PARENT_ROUTE . '/change-password/confirmation',
             'survey',
+            'cookies',
         ];
     }
 }
