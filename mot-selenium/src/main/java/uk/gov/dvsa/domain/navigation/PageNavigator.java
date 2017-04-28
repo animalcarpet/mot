@@ -31,6 +31,7 @@ import uk.gov.dvsa.ui.pages.mot.TestResultsEntryNewPage;
 import uk.gov.dvsa.ui.pages.mot.TestResultsEntryPageInterface;
 import uk.gov.dvsa.ui.pages.mot.TestSummaryPage;
 import uk.gov.dvsa.ui.pages.mot.certificates.ReplacementCertificateResultsPage;
+import uk.gov.dvsa.ui.pages.mot.certificates.ReplacementCertificateViewPage;
 import uk.gov.dvsa.ui.pages.mot.retest.ConfirmVehicleRetestPage;
 import uk.gov.dvsa.ui.pages.profile.ProfilePage;
 import uk.gov.dvsa.ui.pages.userregistration.CreateAnAccountPage;
@@ -218,6 +219,13 @@ public class PageNavigator {
                 vehicle.getDvsaRegistration()));
 
         return new ReplacementCertificateResultsPage(driver);
+    }
+
+    public ReplacementCertificateViewPage gotoReplacementCertificateViewPage(User user, Vehicle vehicle, String testNumber) throws IOException {
+        injectOpenAmCookieAndNavigateToPath(user, String.format("/mot-test-certificate/%s?vrm=%s",
+                testNumber, vehicle.getDvsaRegistration()));
+
+        return new ReplacementCertificateViewPage(driver);
     }
 
     public RefuseToTestPage gotoRefuseToTestPage(User user, Vehicle vehicle) throws IOException {

@@ -12,6 +12,8 @@ use Dvsa\Mot\Behat\Support\Data\Transformer\EventTypeToCodeTransformer;
 use Dvsa\Mot\Behat\Support\Data\Transformer\EmergencyReasonToCodeTransformer;
 use Dvsa\Mot\Behat\Support\Data\Transformer\ReasonForCancelToIdTransformer;
 use Dvsa\Mot\Behat\Support\Data\Transformer\AuthorisationForTestingMotStatusToCodeTransformer;
+use Dvsa\Mot\Behat\Support\Data\Transformer\CountryOfRegistrationNameToIdTransformer;
+use Dvsa\Mot\Behat\Support\Data\Transformer\ColourNameToCodeTransformer;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Hook\Scope\AfterStepScope;
