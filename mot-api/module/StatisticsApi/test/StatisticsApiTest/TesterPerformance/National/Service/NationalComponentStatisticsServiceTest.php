@@ -103,6 +103,11 @@ class NationalComponentStatisticsServiceTest extends \PHPUnit_Framework_TestCase
 
     private function getDateTimeHolder()
     {
-        return new TestDateTimeHolder(new \DateTime("2016-06-21"));
+        /**
+         * @todo (ABN) the logic behind it has to be studied and then convert it to a dynamically generated, relative date
+         * the solution might be something like a date 6 month ago i.e.
+         * new \DateTime(date('Y-m-d', strtotime('-6 months')))
+         */
+        return new TestDateTimeHolder(new \DateTime("2016-10-21"));
     }
 }
