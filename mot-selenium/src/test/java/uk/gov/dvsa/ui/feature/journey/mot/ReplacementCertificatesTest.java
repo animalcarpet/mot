@@ -169,7 +169,8 @@ public class ReplacementCertificatesTest extends DslTest {
         motUI.certificate.changeCertificateCountryOfRegistration(areaOfficeOne, vehicle, testNumber, country);
 
         //Then Country of Registration is updated on certificate
-        motUI.certificate.updateCertificate(areaOfficeOne, vehicle, testNumber); // view recent changes
+        motUI.certificate.goToCertificateUpdatePage(areaOfficeOne, vehicle, testNumber); // view recent changes
+
         assertThat(
             "Country has changed in certificate",
                 motUI.certificate.getCountryOfRegistration().equals(country.getCountry()), is(true)

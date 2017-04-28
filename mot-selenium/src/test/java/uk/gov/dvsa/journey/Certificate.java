@@ -79,6 +79,11 @@ public class Certificate {
         updatePage = certificatePage.edit();
     }
 
+    public ReplacementCertificateUpdatePage goToCertificateUpdatePage(User user, Vehicle vehicle, String testNumber) throws IOException {
+        pageNavigator.gotoReplacementCertificateViewPage(user, vehicle, testNumber);
+        return certificatePage.edit();
+    }
+
     public void viewCertificatePage(User user, Vehicle vehicle, String motTestNumber) throws IOException, URISyntaxException  {
         certificatePage = searchVehicle(user, vehicle).viewTest(motTestNumber);
     }
@@ -112,7 +117,7 @@ public class Certificate {
     public Certificate changeCertificateCountryOfRegistration(User user, Vehicle vehicle, String motTestNumber, CountryOfRegistration country) throws IOException, URISyntaxException {
         updateCertificatePage(user, vehicle, motTestNumber);
         updatePage.changeCountryOfRegistration(country);
-        reviewPage = submitReplacementCertificate(updatePage);
+        reviewPage = updatePage.reviewChangesButton(ReplacementCertificateReviewPage.class);
         updateSuccessfulPage = reviewPage.confirmAndPrint(ReplacementCertificateUpdateSuccessfulPage.class);
         return this;
     }
