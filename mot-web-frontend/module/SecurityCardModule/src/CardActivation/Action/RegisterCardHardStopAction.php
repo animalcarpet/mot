@@ -4,12 +4,11 @@ namespace Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Action;
 
 use Core\Action\ViewActionResult;
 use Core\Action\NotFoundActionResult;
+use Dvsa\Mot\Frontend\AuthenticationModule\Controller\LogoutController;
+use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Controller\RegisterCardController;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Service\RegisterCardHardStopCondition;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\ViewModel\RegisterCardHardStopViewModel;
 use DvsaCommon\Factory\AutoWire\AutoWireableInterface;
-use DvsaFeature\FeatureToggles;
-use Zend\Http\Request;
-use Zend\View\Model\ViewModel;
 
 class RegisterCardHardStopAction implements AutoWireableInterface
 {
@@ -30,10 +29,14 @@ class RegisterCardHardStopAction implements AutoWireableInterface
             return new NotFoundActionResult();
         }
 
+        $viewModel = new RegisterCardHardStopViewModel();
+        $viewModel->setRegisterRoute(RegisterCardController::ROUTE_REGISTER_CARD);
+        $viewModel->setHelpdeskConfig($this->helpdeskConfig);
+        $viewModel->setLogoutRoute(LogoutController::ROUTE_LOGOUT);
+
         $result = new ViewActionResult();
-        $result->setViewModel((new RegisterCardHardStopViewModel())
-            ->setHelpdeskConfig($this->helpdeskConfig));
-        $result->setTemplate('2fa/register-card/hard-stop');
+        $result->setViewModel($viewModel);
+        $result->setTemplate('2fa/register-card/activate-card-hard-stop.twig');
 
         return $result;
     }

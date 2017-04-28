@@ -3,8 +3,7 @@
 namespace Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller;
 
 use Core\Controller\AbstractDvsaActionController;
-use Zend\Http\Request;
-use Zend\Mvc\MvcEvent;
+use Dvsa\Mot\Frontend\AuthenticationModule\Controller\LogoutController;
 use Zend\View\Model\ViewModel;
 
 class ForgotSecurityQuestionController extends AbstractDvsaActionController
@@ -18,10 +17,15 @@ class ForgotSecurityQuestionController extends AbstractDvsaActionController
 
     public function forgotQuestionAnswerAction()
     {
-        $helpdesk = $this->config['helpdesk'];
-        $viewModel = new ViewModel([]);
-        $viewModel->setVariable('helpdesk', $helpdesk);
-        $viewModel->setTemplate('2fa/lost-forgotten/forgot-question');
+        $this->layout('layout/layout-govuk.phtml');
+        $this->layout()->setVariable('hideUserNav', true);
+
+        $viewModel = new ViewModel();
+        $viewModel->setTemplate('2fa/lost-forgotten/forgot-questions.twig');
+        $viewModel->setVariable('config', $this->config['helpdesk']);
+        $viewModel->setVariable('logout', LogoutController::ROUTE_LOGOUT);
+        $viewModel->setVariable('headTitle', 'Forgotten security question(s)');
+
         return $viewModel;
     }
 }
