@@ -85,6 +85,16 @@ return [
                     ],
                 ],
             ],
+            'cookies' => [
+                'type'          => 'segment',
+                'options'       => [
+                    'route'     => '/cookies',
+                    'defaults' => [
+                        'controller' => Application\CookiesController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
             'special-notices'                             => [
                 'type'          => 'segment',
                 'options'       => [

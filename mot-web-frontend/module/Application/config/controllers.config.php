@@ -2,6 +2,7 @@
 
 use Application\Controller\FormsController;
 use Application\Controller\ReportController;
+use Application\Controller\CookiesController;
 use DvsaCommon\Factory\AutoWire\AutoWireFactory;
 use DvsaMotEnforcement\Controller\MotTestController as EnforcementMotTestController;
 use DvsaMotEnforcement\Controller\MotTestSearchController as EnforcementMotTestSearchController;
@@ -32,6 +33,7 @@ return [
     'invokables' => [
         FormsController::class              => FormsController::class,
         ReportController::class             => ReportController::class,
+        CookiesController::class            => CookiesController::class,
         LocationSelectController::class     => LocationSelectController::class,
         VehicleDictionaryController::class  => VehicleDictionaryController::class,
         BrakeTestResultsController::class   => BrakeTestResultsController::class,
