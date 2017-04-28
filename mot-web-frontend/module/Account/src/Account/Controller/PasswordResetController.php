@@ -6,6 +6,7 @@ use Account\Service\PasswordResetService;
 use Account\ViewModel\ChangePasswordFormModel;
 use Account\ViewModel\PasswordResetFormModel;
 use Core\Controller\AbstractAuthActionController;
+use Dvsa\Mot\Frontend\AuthenticationModule\Controller\SecurityController;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Date\DateTimeHolder;
 use DvsaCommon\Date\DateUtils;
@@ -22,8 +23,7 @@ use Zend\Http\Response;
 use Zend\View\Model\ViewModel;
 
 /**
- * Class PasswordResetController
- * @package Account\Controller
+ * Class PasswordResetController.
  */
 class PasswordResetController extends AbstractAuthActionController
 {
@@ -87,7 +87,7 @@ class PasswordResetController extends AbstractAuthActionController
     }
 
     /**
-     * This action allow us to ask the username of the user and check if it is valid
+     * This action allow us to ask the username of the user and check if it is valid.
      *
      * @return ViewModel
      */
@@ -128,7 +128,7 @@ class PasswordResetController extends AbstractAuthActionController
     }
 
     /**
-     * This action verify if the user is authenticate and send the forgotten password email
+     * This action verify if the user is authenticate and send the forgotten password email.
      *
      * @return Response
      */
@@ -151,6 +151,7 @@ class PasswordResetController extends AbstractAuthActionController
 
                 $this->userAdminSessionManager->updateUserAdminSession(UserAdminSessionManager::EMAIL_ADDRESS, $this->getEmailFromApiResponse($apiResponse));
                 $this->userAdminSessionManager->updateUserAdminSession(UserAdminSessionManager::EMAIL_SENT, true);
+
                 return $this->redirect()->toUrl(AccountUrlBuilderWeb::forgottenPasswordConfirmation());
             } catch (\Exception $e) {
                 $this->addErrorMessage($e->getMessage());
@@ -163,7 +164,7 @@ class PasswordResetController extends AbstractAuthActionController
     }
 
     /**
-     * This action verify if the user is authenticate and show the confirmation page
+     * This action verify if the user is authenticate and show the confirmation page.
      *
      * @return ViewModel
      */
@@ -186,7 +187,7 @@ class PasswordResetController extends AbstractAuthActionController
     }
 
     /**
-     * This action verify if the user is authenticate and show the confirmation page
+     * This action verify if the user is authenticate and show the confirmation page.
      *
      * @return ViewModel
      */
@@ -201,12 +202,23 @@ class PasswordResetController extends AbstractAuthActionController
         }
 
         $this->view = $this->config;
+        $this->layout('layout/layout-govuk.phtml');
 
-        return $this->initViewModelInformation(self::PAGE_TITLE_FAILURE);
+        $viewModel = new ViewModel();
+        $viewModel->setTemplate('/account/password-reset/forgotten-password-not-authenticated.twig');
+        $viewModel->setVariables(
+            [
+                'viewModel' => $this->view,
+                'config' => $this->view['helpdesk'],
+                'login' => SecurityController::ROUTE_LOGIN_GET,
+            ]
+        );
+
+        return $viewModel;
     }
 
     /**
-     * This action verify if the user is authenticate and show the confirmation page
+     * This action verify if the user is authenticate and show the confirmation page.
      *
      * @return ViewModel
      */
@@ -228,7 +240,7 @@ class PasswordResetController extends AbstractAuthActionController
         $this->layout('layout/layout-govuk.phtml');
         $this->setHeadTitle('Password forgotten');
 
-        $viewModel =  new ViewModel();
+        $viewModel = new ViewModel();
         $viewModel->setTemplate('/account/password-reset/forgotten-password-confirmation.twig');
         $viewModel->setVariables([
             'viewModel' => $this->view,
@@ -253,7 +265,7 @@ class PasswordResetController extends AbstractAuthActionController
 
         /** @var int $expiryDateTs */
         $expiryDateTs = null;
-        $currentDateTs = (new DateTimeHolder)->getCurrent()->getTimestamp();
+        $currentDateTs = (new DateTimeHolder())->getCurrent()->getTimestamp();
         if ($tokenDto instanceof MessageDto) {
             $expiryDateTs = DateUtils::toDateTime($tokenDto->getExpiryDate())->getTimestamp();
         }
@@ -266,7 +278,6 @@ class PasswordResetController extends AbstractAuthActionController
         if ($tokenDto === null) {
             //  --  token invalid or not found  --
             $flashMsgr->addErrorMessage(self::ERR_CHANGE_PASS_TOKEN_NOT_FOUND);
-
         } elseif ($tokenDto->isAcknowledged()) {
             //  --  token was already used  --
             $this->layout()->setVariable('pageLede', self::TEXT_LINK_BEEN_USED);
@@ -276,11 +287,9 @@ class PasswordResetController extends AbstractAuthActionController
             $flashMsgr->addErrorMessage(
                 sprintf(self::ERR_CHANGE_PASS_TOKEN_BEEN_USED, $helpdeskCfg['name'], $helpdeskCfg['phoneNumber'])
             );
-
         } elseif (!$tokenDto->hasPerson()) {
             //  --  person account expired or was disabled  --
             $flashMsgr->addErrorMessage(self::ERR_CHANGE_PASS_USER_DISABLED);
-
         } elseif (isset($expiryDateTs) && $expiryDateTs < $currentDateTs) {
             //  --  token expired   --
             $flashMsgr->addErrorMessage(self::ERR_CHANGE_PASS_TOKEN_INVALID);
@@ -306,8 +315,8 @@ class PasswordResetController extends AbstractAuthActionController
                         $this->getRestClient()->post(
                             'account/password-change',
                             [
-                                'token'       => $token,
-                                'newPassword' => $data['password']
+                                'token' => $token,
+                                'newPassword' => $data['password'],
                             ]
                         );
 
@@ -336,7 +345,7 @@ class PasswordResetController extends AbstractAuthActionController
 
         /** @var int $tokenExpiryDateTimestamp */
         $tokenExpiryDateTimestamp = null;
-        $currentDateTimestamp = (new DateTimeHolder)->getCurrent()->getTimestamp();
+        $currentDateTimestamp = (new DateTimeHolder())->getCurrent()->getTimestamp();
         if ($tokenDto instanceof MessageDto) {
             $tokenExpiryDateTimestamp = DateUtils::toDateTime($tokenDto->getExpiryDate())->getTimestamp();
         }
@@ -344,7 +353,7 @@ class PasswordResetController extends AbstractAuthActionController
         if ($tokenDto === null ||
             !empty($tokenExpiryDateTimestamp) &&
             $tokenExpiryDateTimestamp < $currentDateTimestamp) {
-                throw new NotFoundException('', '', [], 404);
+            throw new NotFoundException('', '', [], 404);
         }
 
         $passwordChangedConfirmationViewModel = new ViewModel();
@@ -376,9 +385,9 @@ class PasswordResetController extends AbstractAuthActionController
                 if ($this->view->isValid()) {
                     try {
                         $this->getRestClient()->put(
-                            'account/password-update/' . $this->getIdentity()->getUserId(),
+                            'account/password-update/'.$this->getIdentity()->getUserId(),
                             [
-                                'password' => $this->obfuscator->obfuscate($data['password'])
+                                'password' => $this->obfuscator->obfuscate($data['password']),
                             ]
                         );
 
@@ -399,7 +408,7 @@ class PasswordResetController extends AbstractAuthActionController
     }
 
     /**
-     * This function initialize the template
+     * This function initialize the template.
      *
      * @param string $title
      * @param string $subtitle
@@ -421,7 +430,7 @@ class PasswordResetController extends AbstractAuthActionController
         return new ViewModel(
             [
                 'viewModel' => $this->view,
-                'isLoggedIn' => ($this->getIdentity() !== null)
+                'isLoggedIn' => ($this->getIdentity() !== null),
             ]
         );
     }

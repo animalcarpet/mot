@@ -4,7 +4,6 @@
  *
  * @link http://gitlab.clb.npm/mot/mot
  */
-
 namespace Dvsa\Mot\Frontend\RegistrationModule\Controller;
 
 use Dvsa\Mot\Frontend\RegistrationModule\Service\RegisterUserService;
@@ -19,9 +18,9 @@ use Zend\View\Model\ViewModel;
  */
 class CompletedController extends RegistrationBaseController
 {
-    const PAGE_TITLE_FAILURE = 'Your account has not been created';
-    const SESSION_CHECK = "SESSION_CHECK";
-    const SESSION_RESULT = "SESSION_RESULT";
+    const SESSION_CHECK = 'SESSION_CHECK';
+    const SESSION_RESULT = 'SESSION_RESULT';
+    const CREATE_ACCOUNT_SUMMARY_ROUTE = 'account-register/summary';
 
     /**
      * @var RegisterUserService
@@ -52,7 +51,6 @@ class CompletedController extends RegistrationBaseController
         $this->helpdeskConfig = $helpdeskConfig;
     }
 
-
     /**
      * To stop dbl clicks on the registration button we only process the request once.
      *
@@ -63,12 +61,11 @@ class CompletedController extends RegistrationBaseController
         $container = $this->session->load(self::SESSION_CHECK);
 
         if (is_array($container) && count($container) == 0) {
-
-            $this->session->save(self::SESSION_CHECK,['PreviousSubmission'=>true]);
+            $this->session->save(self::SESSION_CHECK, ['PreviousSubmission' => true]);
 
             $userCreated = (bool) $this->registerUserService->registerUser($this->session->toArray());
 
-            $this->session->save(self::SESSION_RESULT,['UserCreated'=>$userCreated]);
+            $this->session->save(self::SESSION_RESULT, ['UserCreated' => $userCreated]);
 
             return $this->redirectToRoute($userCreated);
         }
@@ -81,9 +78,10 @@ class CompletedController extends RegistrationBaseController
     }
 
     /**
-     * redirect to the success or failure route
+     * redirect to the success or failure route.
      *
      * @param bool $result
+     *
      * @return \Zend\Http\Response
      */
     protected function redirectToRoute($result)
@@ -119,15 +117,14 @@ class CompletedController extends RegistrationBaseController
         $this->setHeadTitle('Your account has been created');
         $this->session->destroy();
 
-        $viewModel =  new ViewModel();
+        $viewModel = new ViewModel();
         $viewModel->setTemplate('dvsa/completed/create-account-success.twig');
         $viewModel->setVariables([
             'email' => $emailAddress,
-            'config'  => $this->helpdeskConfig,
+            'config' => $this->helpdeskConfig,
         ]);
 
         return $viewModel;
-
     }
 
     /**
@@ -142,11 +139,17 @@ class CompletedController extends RegistrationBaseController
             $this->redirectToStart();
         }
 
-        $this->setLayout(self::PAGE_TITLE_FAILURE, self::DEFAULT_SUB_TITLE);
+        $this->layout('layout/layout-govuk.phtml');
+        $this->setHeadTitle('Your account has not been created');
 
-        return new ViewModel([
-            'helpdesk'  => $this->helpdeskConfig,
+        $viewModel = new ViewModel();
+        $viewModel->setTemplate('dvsa/completed/create-account-fail.twig');
+        $viewModel->setVariables([
+            'config' => $this->helpdeskConfig,
+            'accountSummaryUrl' => $this->url()->fromRoute(self::CREATE_ACCOUNT_SUMMARY_ROUTE),
         ]);
+
+        return $viewModel;
     }
 
     /**

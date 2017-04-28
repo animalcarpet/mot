@@ -4,7 +4,6 @@ namespace Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Controller;
 
 use Core\Controller\AbstractDvsaActionController;
 use Dvsa\Mot\Frontend\SecurityCardModule\CardActivation\Action\RegisterCardHardStopAction;
-use Zend\View\Model\ViewModel;
 
 class RegisterCardHardStopController extends AbstractDvsaActionController
 {
@@ -17,6 +16,10 @@ class RegisterCardHardStopController extends AbstractDvsaActionController
 
     public function indexAction()
     {
+        $this->layout('layout/layout-govuk.phtml');
+        $this->setHeadTitle('Activate your security card now');
+        $this->layout()->setVariable('pageTitle', ''); /* design required empty title */
+
         return $this->applyActionResult($this->action->execute());
     }
 }

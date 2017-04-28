@@ -1,0 +1,25 @@
+<header class="banner--error" id="failBanner">
+    <span class="banner__heading-large">The service was not able to create your account at this time</span>
+</header>
+
+<h2 class="heading-medium">What happens next?</h2>
+
+<p>Please go back and try to
+    <a href={{ accountSummaryUrl | escape }}>create your account</a>
+        again.
+</p>
+
+<div class="form-group">
+    <details>
+        <summary role="button" aria-controls="dateDetails" id="expandable-link" aria-expanded="false" tabindex="0">
+            <span class="summary">If the problem persists</span>
+        </summary>
+        <div class="panel-indent" id="dateDetails" aria-hidden="true">
+            <div class="text">
+                <p>
+                    {% include 'partial/gds/general/contactHelpdesk.twig' with {'config': config} %}
+                </p>
+            </div>
+        </div>
+    </details>
+</div>

@@ -1,0 +1,30 @@
+<div></div>
+<div class="banner--error">
+    <span class="banner__heading-large">Activate your security card now</span>
+    <span>You can only continue with an active card</span>
+</div>
+<div>
+    <p class="lede">You need an active security card to continue using the MOT testing service.
+    </p>
+    <a id="activate-card" href="{{ url( viewModel.getRegisterRoute | escape) }}">Activate your security card</a>
+    <h3 class="heading-medium">Problems with your security card</h3>
+    <p>If you haven’t received a card in the post or are having trouble with activation, contact the helpdesk.</p>
+    <div class="form-group">
+        <details>
+            <summary role="button" aria-controls="dateDetails" id="expandable-link" aria-expanded="false" tabindex="0">
+                <span class="summary">Contact the helpdesk</span>
+            </summary>
+            <div class="panel-indent" id="dateDetails" aria-hidden="true">
+                <div class="text">
+
+                    <p>
+                        {% include 'partial/gds/general/contactHelpdesk.twig' with { 'config': viewModel.getHelpdeskConfig } %}
+                    </p>
+                </div>
+            </div>
+        </details>
+    </div>
+    <nav class="content-navigation">
+        <a href="{{  url( viewModel.getLogoutRoute | escape ) }}" >Cancel and return to sign in</a>
+    </nav>
+</div>

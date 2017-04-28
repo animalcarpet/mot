@@ -4,9 +4,6 @@ namespace Dvsa\Mot\Frontend\SecurityCardModuleTest\LostOrForgottenCard\Controlle
 
 use CoreTest\Controller\AbstractLightWebControllerTest;
 use Dvsa\Mot\Frontend\SecurityCardModule\LostOrForgottenCard\Controller\ForgotSecurityQuestionController;
-use Zend\Http\Request;
-use Zend\Mvc\MvcEvent;
-use Zend\View\Model\ViewModel;
 
 class ForgotSecurityQuestionControllerTest extends AbstractLightWebControllerTest
 {
@@ -21,25 +18,25 @@ class ForgotSecurityQuestionControllerTest extends AbstractLightWebControllerTes
     {
         $controller = $this->buildController();
         $viewModel = $controller->forgotQuestionAnswerAction();
-        $this->assertSame($this->config['helpdesk'], $viewModel->getVariable('helpdesk'));
-        $this->assertSame('2fa/lost-forgotten/forgot-question', $viewModel->getTemplate());
+        $this->assertSame($this->config['helpdesk'], $viewModel->getVariable('config'));
+        $this->assertSame('2fa/lost-forgotten/forgot-questions.twig', $viewModel->getTemplate());
     }
 
-     private function buildController()
-     {
-         $controller = new ForgotSecurityQuestionController(
+    private function buildController()
+    {
+        $controller = new ForgotSecurityQuestionController(
              $this->config
          );
 
-         $this->setController($controller);
-         $this->setUpPluginMocks();
+        $this->setController($controller);
+        $this->setUpPluginMocks();
 
-         $layout = $controller->layout();
-         $layout
+        $layout = $controller->layout();
+        $layout
              ->expects($this->any())
              ->method('setVariable')
              ->willReturn($layout);
 
-         return $controller;
-     }
+        return $controller;
+    }
 }
