@@ -224,14 +224,6 @@ class PasswordResetController extends AbstractAuthActionController
      */
     public function confirmationAction()
     {
-        $success = $this->userAdminSessionManager->isUserAuthenticated(
-            $this->userAdminSessionManager->getElementOfUserAdminSession(UserAdminSessionManager::USER_KEY)
-        );
-
-        if ($success !== true) {
-            return $this->redirect()->toUrl(AccountUrlBuilderWeb::forgottenPasswordNotAuthenticated());
-        }
-
         $this->view = new PasswordResetFormModel();
         $this->view->setCfgExpireTime($this->config[self::CFG_PASSWORD_RESET][self::CFG_PASSWORD_RESET_EXPIRE_TIME]);
         $this->view->setConfig($this->config);
