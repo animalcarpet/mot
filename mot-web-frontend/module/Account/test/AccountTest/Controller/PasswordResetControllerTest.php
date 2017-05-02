@@ -452,36 +452,12 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     'url' => AccountUrlBuilderWeb::forgottenPasswordConfirmation(),
                 ],
             ],
-            // Confirmation: get not authenticated
-            [
-                'method'   => 'get',
-                'action'   => 'confirmation',
-                'params' => [],
-                'mocks'    => [
-                    [
-                        'class'  => 'mockSessionManager',
-                        'method' => 'isUserAuthenticated',
-                        'params' => [],
-                        'result' => false,
-                    ],
-                ],
-                'expect'   => [
-                    'url' => AccountUrlBuilderWeb::forgottenPasswordNotAuthenticated(),
-                ],
-            ],
             // Confirmation: get is authenticated, service return exception
             [
                 'method'   => 'get',
                 'action'   => 'confirmation',
                 'params' => [],
-                'mocks'    => [
-                    [
-                        'class'  => 'mockSessionManager',
-                        'method' => 'isUserAuthenticated',
-                        'params' => [],
-                        'result' => true,
-                    ],
-                ],
+                'mocks'    => [],
                 'expect'   => [
                     'viewModel' => true,
                 ],
