@@ -1,16 +1,16 @@
 <?php
+
 namespace AccountTest\Factory\Controller;
 
 use Account\Controller\SecurityQuestionController;
 use Account\Factory\Controller\SecurityQuestionControllerFactory;
 use Account\Service\SecurityQuestionService;
 use DvsaCommonTest\TestUtils\XMock;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use UserAdmin\Service\UserAdminSessionManager;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class SecurityQuestionControllerFactoryTest
- * @package AccountTest\Factory
+ * Class SecurityQuestionControllerFactoryTest.
  */
 class SecurityQuestionControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,6 +20,9 @@ class SecurityQuestionControllerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $service = XMock::of(SecurityQuestionService::class);
         $serviceManager->setService(SecurityQuestionService::class, $service);
+
+        $service = XMock::of(UserAdminSessionManager::class);
+        $serviceManager->setService(UserAdminSessionManager::class, $service);
 
         $plugins = $this->getMock('Zend\Mvc\Controller\ControllerManager');
         $plugins->expects($this->any())

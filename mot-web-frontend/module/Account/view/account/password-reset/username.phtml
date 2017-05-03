@@ -1,16 +1,15 @@
 <?php
 
 /**
- * @var PasswordResetFormModel   $viewModel
+ * @var PasswordResetFormModel
  */
-
 use Account\ViewModel\PasswordResetFormModel;
 
 $this->headTitle('Forgotten your password');
 
 ?>
 
-<p class="lede">You can reset your password by answering your chosen security questions.</p>
+<p class="lede">Answer your security questions to reset your password.</p>
 
 <?php
 $errorMessages = $this->layout()->flashMessenger->getErrorMessages();
@@ -27,20 +26,20 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $errorM
         echo $this->partial(
            'partial/gds/form/control-legend', [
                 'id' => 'userAccount',
-	            'text' => 'User ID',
+                'text' => 'User ID',
                 'altLegendClass' => 'heading-medium',
              ]
         );
 
-        echo '<p>Tell us your user ID so that we can find your security questions.</p>';
+        echo '<p>For example, SMIT0001</p>';
 
         echo $this->partial(
             'partial/gds/form/control-text-group',
             [
-                'id'            => PasswordResetFormModel::FIELD_USERNAME,
-                'errorMessage'  => $viewModel->getError(PasswordResetFormModel::FIELD_USERNAME),
-                'label'         => 'User ID',
-                'value'         => $viewModel->getUsername(),
+                'id' => PasswordResetFormModel::FIELD_USERNAME,
+                'errorMessage' => $viewModel->getError(PasswordResetFormModel::FIELD_USERNAME),
+                'label' => 'User ID',
+                'value' => $viewModel->getUsername(),
                 'autoCompleteOff' => true,
                 'labelVisuallyHidden' => true,
                 'errorOutsideLabel' => true,
@@ -52,11 +51,11 @@ echo $this->partial('partial/gds/general/system-message', ['messages' => $errorM
     <?php echo $this->partial(
         'partial/gds/form/control-navigation',
         [
-            'id'            => 'submitUserId',
-            'value'         => 'Continue',
-            'navigation'    => [
+            'id' => 'submitUserId',
+            'value' => 'Continue',
+            'navigation' => [
                 'Cancel and return to sign in' => '/',
-            ]
+            ],
         ]
     ); ?>
 </form>

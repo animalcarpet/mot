@@ -4,7 +4,6 @@
  *
  * @link http://gitlab.clb.npm/mot/mot
  */
-
 namespace Account\AbstractClass;
 
 use Account\Service\SecurityQuestionService;
@@ -13,6 +12,7 @@ use DvsaCommon\HttpRestJson\Exception\NotFoundException;
 use DvsaCommon\UrlBuilder\AccountUrlBuilderWeb;
 use DvsaMotTest\Controller\AbstractDvsaMotTestController;
 use DvsaCommon\UrlBuilder\UrlBuilder;
+use UserAdmin\Service\UserAdminSessionManager;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\View\Model\ViewModel;
@@ -32,14 +32,19 @@ abstract class AbstractSecurityQuestionController extends AbstractDvsaMotTestCon
      */
     protected $viewModel;
 
+    /** @var UserAdminSessionManager $userAdminSessionManager */
+    protected $userAdminSessionManager;
+
     /**
      * AbstractSecurityQuestionController constructor.
      *
      * @param SecurityQuestionService $securityQuestionService
      */
-    public function __construct(SecurityQuestionService $securityQuestionService)
+    public function __construct(SecurityQuestionService $securityQuestionService,
+                                UserAdminSessionManager $userAdminSessionManager)
     {
         $this->service = $securityQuestionService;
+        $this->userAdminSessionManager = $userAdminSessionManager;
     }
 
     /**

@@ -1,0 +1,15 @@
+<p class="lede">As there’s no email address for {{ username | escape }} you need to contact the DVSA to reset your password.
+</p>
+
+<div class="message" id="validation-summary-message">
+    <div class="text">
+        <p>
+            {% include 'partial/gds/general/contactHelpdesk.twig' with { 'config': config } %}
+        </p>
+    </div>
+
+</div>
+
+<nav class="content-navigation">
+    <a href="{{ url( login | escape) }}">Back</a>
+</nav>

@@ -6,6 +6,7 @@ use Account\Service\PasswordResetService;
 use Account\ViewModel\ChangePasswordFormModel;
 use Account\ViewModel\PasswordResetFormModel;
 use Core\Controller\AbstractAuthActionController;
+use Dvsa\Mot\Frontend\AuthenticationModule\Controller\LogoutController;
 use Dvsa\Mot\Frontend\AuthenticationModule\Controller\SecurityController;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Date\DateTimeHolder;
@@ -34,14 +35,8 @@ class PasswordResetController extends AbstractAuthActionController
     const PAGE_SUBTITLE = 'MOT testing service';
     const PAGE_TITLE_CONFIRMATION = 'Security questions answered correctly';
     const PAGE_TITLE_FAILURE = 'Forgotten your answers to security questions';
-    const PAGE_TITLE_EMAIL_NOT_FOUND = 'Email address not found';
+    const PAGE_TITLE_EMAIL_NOT_FOUND = 'We don’t have your email address';
     const PAGE_TITLE_PASSWORD_RESET = 'Create a new password';
-
-    const STEP_1 = 'Step 1 of 3';
-    const STEP_2 = 'Step 2 of 3';
-    const STEP_3 = 'Step 3 of 3';
-
-    const QUESTION_1 = 1;
 
     const ERR_CHANGE_PASS_TOKEN_NOT_FOUND = 'Your password reset link is invalid.';
     const ERR_CHANGE_PASS_TOKEN_INVALID = 'Your password reset link has now expired. Please click the link below to reauthenticate and send another password reset link.';
@@ -51,7 +46,7 @@ class PasswordResetController extends AbstractAuthActionController
 
     const TEXT_LINK_EXPIRED = 'The password reset link has expired.';
     const TEXT_LINK_BEEN_USED = 'The password reset link has already been used.';
-    const TEXT_YOU_HAVE_ARRIVED_HERE = 'Now choose a new password to replace your forgotten one';
+    const TEXT_YOU_HAVE_ARRIVED_HERE = 'Now create a new memorable password for your account.';
     const TEXT_YOU_MUST_CHANGE_PWORD = 'Your password has expired. Change it now.';
 
     /** @var PasswordResetService $passwordResetService */
@@ -102,6 +97,7 @@ class PasswordResetController extends AbstractAuthActionController
 
         if ($request->isPost()) {
             $this->view->populateFromPost($request->getPost()->toArray());
+            $this->userAdminSessionManager->updateUserAdminSession(UserAdminSessionManager::USER_NAME_KEY, $this->view->getUsername());
 
             if ($this->view->isValid()) {
                 try {
@@ -124,7 +120,7 @@ class PasswordResetController extends AbstractAuthActionController
             }
         }
 
-        return $this->initViewModelInformation(self::PAGE_TITLE, self::PAGE_SUBTITLE, self::STEP_1);
+        return $this->initViewModelInformation(self::PAGE_TITLE, self::PAGE_SUBTITLE);
     }
 
     /**
@@ -164,7 +160,7 @@ class PasswordResetController extends AbstractAuthActionController
     }
 
     /**
-     * This action verify if the user is authenticate and show the confirmation page.
+     * This action is performed when a user attempts a password reset but no email address is associated with their account.
      *
      * @return ViewModel
      */
@@ -178,16 +174,29 @@ class PasswordResetController extends AbstractAuthActionController
             return $this->redirect()->toUrl(AccountUrlBuilderWeb::forgottenPasswordAuthenticated());
         }
 
-        $this->view = $this->config;
+        $this->view = new PasswordResetFormModel();
+        $this->view->setConfig($this->config);
+        $usernameFromSessionData = $this->userAdminSessionManager->getElementOfUserAdminSession('username');
 
-        return $this->initViewModelInformation(
-            self::PAGE_TITLE_EMAIL_NOT_FOUND,
-            self::PAGE_SUBTITLE
+        $this->initViewModelInformation(self::PAGE_TITLE_EMAIL_NOT_FOUND, self::PAGE_SUBTITLE);
+
+        $viewModel = new ViewModel();
+        $viewModel->setTemplate('/account/password-reset/email-address-not-found.twig');
+        $viewModel->setVariables(
+            [
+                'username' => $username = !empty($usernameFromSessionData) ?
+                        strtoupper($usernameFromSessionData) :
+                        'your User ID',
+                'config' => $this->view->getConfig()['helpdesk'],
+                'login' => LogoutController::ROUTE_LOGOUT,
+            ]
         );
+
+        return $viewModel;
     }
 
     /**
-     * This action verify if the user is authenticate and show the confirmation page.
+     * This action is performed when a user attempts a password reset but cannot successfully answer their security questions.
      *
      * @return ViewModel
      */
@@ -213,6 +222,8 @@ class PasswordResetController extends AbstractAuthActionController
                 'login' => SecurityController::ROUTE_LOGIN_GET,
             ]
         );
+
+        $this->flashMessenger()->clearMessages();
 
         return $viewModel;
     }
@@ -247,6 +258,8 @@ class PasswordResetController extends AbstractAuthActionController
             'email' => $this->view->getObscuredEmailAddress(),
             'config' => $this->view->getConfig()['helpdesk'],
         ]);
+
+        $this->flashMessenger()->clearMessages();
 
         return $viewModel;
     }
@@ -412,20 +425,15 @@ class PasswordResetController extends AbstractAuthActionController
      *
      * @param string $title
      * @param string $subtitle
-     * @param string $step
      *
      * @return ViewModel
      */
-    private function initViewModelInformation($title, $subtitle = null, $step = null)
+    private function initViewModelInformation($title, $subtitle = null)
     {
         $this->layout('layout/layout-govuk.phtml');
 
         $this->layout()->setVariable('pageSubTitle', $subtitle);
         $this->layout()->setVariable('pageTitle', $title);
-
-        if ($step !== null) {
-            $this->layout()->setVariable('progress', $step);
-        }
 
         return new ViewModel(
             [
