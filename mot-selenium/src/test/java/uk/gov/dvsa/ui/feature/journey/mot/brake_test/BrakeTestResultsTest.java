@@ -44,7 +44,6 @@ public class BrakeTestResultsTest extends DslTest {
 
     @Test(groups = {"BVT"}, description = "Verify that the brake test journey can be performed through the new MOT Test results page")
     public void saveBrakeTestResultsHappyPath() throws IOException, URISyntaxException {
-
         // Given I am on the Test Results Entry Page
         TestResultsEntryNewPage testResultsEntryNewPage = pageNavigator.gotoTestResultsEntryNewPage(tester,vehicle);
 

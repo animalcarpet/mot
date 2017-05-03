@@ -75,5 +75,4 @@ public class LostOrForgottenCardTests extends DslTest {
         step("And I am able to complete the sign in journey");
         assertThat("The User is on the Home Page", motUI.isLoginSuccessful(), is(true));
     }
-
 }

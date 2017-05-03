@@ -25,7 +25,6 @@ public class ReInspectionAppealTests extends DslTest {
 
     @Test(groups = {"Regression"})
     public void statutoryAppealDisciplinaryActionReportIssuedFor30andGreaterTotalScore() throws IOException {
-
         //Given I have a Failed MOT
         User tester = motApi.user.createTester(testSite.getId());
         String motTestId = motApi.createTest(

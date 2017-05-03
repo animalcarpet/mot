@@ -45,7 +45,7 @@ public class Register {
         detailsPage.enterYourDetails(name, surname, dateOfBirthDay, dateOfBirthMonth, dateOfYear);
 
         AddressPage addressPage = detailsPage.clickContinue();
-        addressPage.enterAddressandTelephone();
+        addressPage.enterAddressAndTelephone();
 
         SecurityQuestionsPage securityQuestionsPage = addressPage.clickContinue();
         securityQuestionsPage.chooseQuestionsAndAnswers();

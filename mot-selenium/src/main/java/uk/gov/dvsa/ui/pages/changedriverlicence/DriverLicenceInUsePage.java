@@ -30,7 +30,7 @@ public class DriverLicenceInUsePage extends Page {
         return new ReviewDrivingLicencePage(driver);
     }
 
-    public String getFailureMesage() {
+    public String getFailureMessage() {
         return failureMessage.findElement(By.tagName("h2")).getText();
     }
 

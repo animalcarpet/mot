@@ -36,7 +36,7 @@ public class TestShortSummaryPage extends Page {
         return this;
     }
 
-    public boolean isTestAbortedSuccessfull() {
+    public boolean isTestAbortedSuccessfully() {
         return confirmationMessage.getText().contains("MOT test successfully aborted");
     }
 }

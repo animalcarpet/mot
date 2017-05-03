@@ -58,7 +58,7 @@ public class ChangeDOBTests extends DslTest {
         motUI.profile.dvsaViewUserProfile(motApi.user.createAreaOfficeOne("ao1"), motApi.user.createTester(site.getId()));
 
         // When I am trying to change a date of birth for a person with invalid values
-        String validationMessage = motUI.profile.changeDOBwithInvalidValues(day, month, year);
+        String validationMessage = motUI.profile.changeDobWithInvalidValues(day, month, year);
 
         // Then the appropriate validation message should be displayed
         assertThat(validationMessage, containsString(DOB_ERROR_MESSAGE));

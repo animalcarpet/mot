@@ -17,7 +17,6 @@ public class SecurityCardOrderReportTests extends DslTest {
 
     @Test(testName = "2fa", groups = {"2fa"})
     public void catUserSeeReportLinksForLast7Days() throws IOException {
-
         step("Given I am Central Admin Team user");
         User catUser = motApi.user.createCentralAdminTeamUser();
 
@@ -30,7 +29,6 @@ public class SecurityCardOrderReportTests extends DslTest {
 
     @Test(testName = "2fa", groups = {"2fa"})
     public void catUserCanSeeTheLinkToReportListInHomePage() throws IOException {
-
         step("Given I am Central Admin Team user");
         User catUser = motApi.user.createCentralAdminTeamUser();
 
@@ -56,6 +54,5 @@ public class SecurityCardOrderReportTests extends DslTest {
         assertThat("Security card order event link displayed",
                 eventsHistoryPage.isSecurityOrderCardEventLinkDisplayed(), is(true));
     }
-
 }
 

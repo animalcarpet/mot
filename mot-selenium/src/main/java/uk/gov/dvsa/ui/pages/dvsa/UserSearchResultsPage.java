@@ -16,7 +16,7 @@ public class UserSearchResultsPage extends Page {
 
     private static final String PAGE_TITLE = "User search";
     @FindBy(id = "results") private WebElement searchResults;
-    @FindBy(id = "return_to_user_search") private WebElement backtoUserSearchLink;
+    @FindBy(id = "return_to_user_search") private WebElement backToUserSearchLink;
 
     public UserSearchResultsPage(final MotAppDriver driver) {
         super(driver);
@@ -34,7 +34,7 @@ public class UserSearchResultsPage extends Page {
     }
 
     public UserSearchPage clickBackToUserSearch() {
-        backtoUserSearchLink.click();
+        backToUserSearchLink.click();
         return new UserSearchPage(driver);
     }
 

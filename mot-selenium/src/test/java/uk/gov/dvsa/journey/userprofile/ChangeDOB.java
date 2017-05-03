@@ -25,7 +25,7 @@ public class ChangeDOB {
         return profilePage;
     }
 
-    public String changeDOBwithInvalidValues(String day, String month, String year) {
+    public String changeDobWithInvalidValues(String day, String month, String year) {
         return profilePage.clickChangeDOBLink()
                 .fillDay(day)
                 .fillMonth(month)

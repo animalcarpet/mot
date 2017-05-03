@@ -6,6 +6,7 @@ import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
 import uk.gov.dvsa.ui.pages.Page;
+import uk.gov.dvsa.ui.pages.authentication.securitycard.OrderNewCardPage;
 
 public class QualificationDetailsConfirmationPage extends Page {
     public static final String PATH = "/your-profile/qualification-details/a/add/confirmation";
@@ -29,6 +30,11 @@ public class QualificationDetailsConfirmationPage extends Page {
     public QualificationDetailsPage returnToQualificationDetailsPage() {
         returnToQualificationDetails.click();
         return new QualificationDetailsPage(driver);
+    }
+
+    public OrderNewCardPage clickOrderCardLink() {
+        orderCardLink.click();
+        return new OrderNewCardPage(driver);
     }
 
     public boolean isOrderCardLinkDisplayed() {

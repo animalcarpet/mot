@@ -3,18 +3,14 @@ package uk.gov.dvsa.ui.feature.journey.account_administration;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
 import uk.gov.dvsa.domain.model.AeDetails;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
-import uk.gov.dvsa.domain.service.FeaturesService;
 import uk.gov.dvsa.helper.RandomDataGenerator;
 import uk.gov.dvsa.ui.DslTest;
-import uk.gov.dvsa.ui.pages.helpdesk.HelpDeskUserProfilePage;
 
 import java.io.IOException;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class HelpDeskTests extends DslTest {
 
@@ -30,7 +26,7 @@ public class HelpDeskTests extends DslTest {
         tester = motApi.user.createTester(testSite.getId());
     }
 
-    @Test (groups = {"Regression"})
+    @Test(groups = {"Regression"})
     public void successfullyUpdateAUsersEmailAddress() throws IOException {
         User csco = motApi.user.createCustomerServiceOfficer(false);
         User bob = motApi.user.createAedm(false);

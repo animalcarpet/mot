@@ -59,7 +59,7 @@ public class ReInspection {
         AssessmentDetailsConfirmationPage confirmationPage = summaryPage.clickFinishButton(TestCompletePage.class)
                 .clickCompareResultsButton()
                 .completeJustificationWithRandomValues()
-                .recordAssesment();
+                .recordAssessment();
 
         return confirmationPage.getValidationMessageText();
     }

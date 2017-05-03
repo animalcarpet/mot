@@ -23,7 +23,6 @@ public class ClaimUserAccountTests extends DslTest {
 
     @Test(groups = {"2fa", "BL-3024"})
     public void testResetAccountSecurity() throws Exception {
-
         // Given I am any 2FA user
         User twoFaUser = motApi.user.createTester(testSite.getId());
 

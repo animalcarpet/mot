@@ -31,7 +31,6 @@ public class PerformTesterFunctionTests extends DslTest {
 
     @Test (groups = {"roles"})
     public void viewPerformanceDashboard() throws Exception {
-
         //Given I have done only 1 mot test
         motApi.createTest(tester, testSite.getId(),
                 vehicleData.getNewVehicle(tester), TestOutcome.PASSED, 14000, DateTime.now());
@@ -49,7 +48,6 @@ public class PerformTesterFunctionTests extends DslTest {
 
     @Test (groups = {"roles"})
     public void verifyTheCorrectAeAndVtsIsDisplayed() throws Exception {
-
         //Given I am logged as a Tester and I am on my homepage
         HomePage homePage = pageNavigator.navigateToPage(tester, HomePage.PATH, HomePage.class);
 
@@ -62,7 +60,6 @@ public class PerformTesterFunctionTests extends DslTest {
 
     @Test (groups = {"roles"})
     public void myRoleIsDisplayedAsTester() throws Exception {
-
         //Given I am logged as a Tester and I am on my homepage
         HomePage homePage = pageNavigator.navigateToPage(tester, HomePage.PATH, HomePage.class);
 

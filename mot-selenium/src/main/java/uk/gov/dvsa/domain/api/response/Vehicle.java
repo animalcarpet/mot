@@ -254,8 +254,8 @@ public class Vehicle {
         return isIncognito;
     }
 
-    public Vehicle setIsIncognito(boolean isIncognitio) {
-        this.isIncognito = isIncognitio;
+    public Vehicle setIsIncognito(boolean isIncognito) {
+        this.isIncognito = isIncognito;
         return this;
     }
 

@@ -18,7 +18,6 @@ public class OpenAMLockoutWarningTests extends DslTest {
     @Test(groups = {"Regression", "VM-12163"},
             description = "Test that validates the that user is redirected to authentication failed page after 4 incorrect password attempts")
     public void authenticationFailedFor4Times() throws IOException, InterruptedException {
-
         // Given I have entered incorrect login details 3 times
         final User user = motApi.user.createTester(siteData.createSite().getId());
         motApi.createMultipleSession(user.getUsername(), "Wrong", warningAttempts);
@@ -33,7 +32,6 @@ public class OpenAMLockoutWarningTests extends DslTest {
 
     @Test(groups = {"Regression", "VM-12163"})
     public void lockAccountAfterInvalidAttempts() throws IOException, InterruptedException {
-
         // Given I have entered incorrect login details 4 times
         final User user = motApi.user.createTester(siteData.createSite().getId());
         motApi.createMultipleSession(user.getUsername(), "Wrong", lockoutAttempts);

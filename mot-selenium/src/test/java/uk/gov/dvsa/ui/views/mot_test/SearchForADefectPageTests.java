@@ -32,7 +32,6 @@ public class SearchForADefectPageTests extends DslTest {
     @Test(groups = {"BVT", "BL-1932"},
             description = "Checks that the Search for a defect page has the correct page elements")
     public void testSearchForADefectPageElements() throws IOException, URISyntaxException {
-
         // Given I am on the MOT test results screen
         TestResultsEntryNewPage testResultsEntryNewPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);
 
@@ -46,7 +45,6 @@ public class SearchForADefectPageTests extends DslTest {
     @Test(groups = {"BVT", "BL-1932"},
             description = "Checks that the defect categories link navigates to the Defect categories screen")
     public void testDefectCategoriesNavigation() throws IOException, URISyntaxException {
-
         // Given I am on the Search for a defect page
         SearchForADefectPage searchForADefectPage = pageNavigator.gotoSearchForADefectPage(tester, vehicle);
 
@@ -59,7 +57,6 @@ public class SearchForADefectPageTests extends DslTest {
     @Test(groups = {"BVT", "BL-1932"},
             description = "Checks that the Finish and return to MOT test results navigates to the MOT test results page")
     public void testFinishAndReturnToMOTTestResultsNavigation() throws IOException, URISyntaxException {
-
         // Given I am on the Search for a defect page
         SearchForADefectPage searchForADefectPage = pageNavigator.gotoSearchForADefectPage(tester, vehicle);
 
@@ -72,7 +69,6 @@ public class SearchForADefectPageTests extends DslTest {
     @Test(groups = {"Regression", "BL-1932"},
             description = "Checks that the Search returns no results for a search string that does not exist")
     public void testSearchForADefectPageNoResults() throws IOException, URISyntaxException {
-
         // Given I am on the Search for a defect page
         SearchForADefectPage searchForADefectPage = pageNavigator.gotoSearchForADefectPage(tester, vehicle);
 
@@ -87,7 +83,6 @@ public class SearchForADefectPageTests extends DslTest {
     @Test(groups = {"BVT", "BL-1932"},
             description = "Checks that the Searching returns the correct results")
     public void testSearchForADefectPageWithResults() throws IOException, URISyntaxException {
-
         // Given I am on the Search for a defect page
         SearchForADefectPage searchForADefectPage = pageNavigator.gotoSearchForADefectPage(tester, vehicle);
 
@@ -102,7 +97,6 @@ public class SearchForADefectPageTests extends DslTest {
     @Test(groups = {"Regression", "BL-3075"},
             description = "Checks that the Searching returns are not paginated when there are less than 10 results")
     public void testSearchForADefectPageWithNoPagination() throws IOException, URISyntaxException {
-
         // Given I am on the Search for a defect page
         SearchForADefectPage searchForADefectPage = pageNavigator.gotoSearchForADefectPage(tester, vehicle);
 
@@ -116,7 +110,6 @@ public class SearchForADefectPageTests extends DslTest {
     @Test(groups = {"BVT", "BL-3075"},
             description = "Checks that the Searching returns are paginated when there are more than 10 results")
     public void testSearchForADefectPageWithPagination() throws IOException, URISyntaxException {
-
         // Given I am on the Search for a defect page
         SearchForADefectPage searchForADefectPage = pageNavigator.gotoSearchForADefectPage(tester, vehicle);
 
@@ -130,7 +123,6 @@ public class SearchForADefectPageTests extends DslTest {
     @Test(groups = {"BVT", "BL-3075"},
             description = "Checks that the first page pagination does not display a previous link")
     public void testSearchResultsPaginationFirstPage() throws IOException, URISyntaxException {
-
         // Given I am on the Search for a defect page
         SearchForADefectPage searchForADefectPage = pageNavigator.gotoSearchForADefectPage(tester, vehicle);
 
@@ -145,7 +137,6 @@ public class SearchForADefectPageTests extends DslTest {
     @Test(groups = {"Regression", "BL-3075"},
             description = "Checks that after navigating to the middle page of pagination the previous and next button should be displayed")
     public void testSearchResultsPaginationPage2() throws IOException, URISyntaxException {
-
         // Given I am on the Search for a defect page
         SearchForADefectPage searchForADefectPage = pageNavigator.gotoSearchForADefectPage(tester, vehicle);
 
@@ -160,7 +151,6 @@ public class SearchForADefectPageTests extends DslTest {
     @Test(groups = {"Regression", "BL-3075"},
             description = "Checks that after navigating to the last page of pagination the next link is not displayed")
     public void testSearchResultsPaginationLastPage() throws IOException, URISyntaxException {
-
         // Given I am on the Search for a defect page
         SearchForADefectPage searchForADefectPage = pageNavigator.gotoSearchForADefectPage(tester, vehicle);
 
@@ -175,7 +165,6 @@ public class SearchForADefectPageTests extends DslTest {
     @Test(groups = {"Regression", "BL-3075"},
             description = "Checks that after navigating to the 5th page of pagination where there are more than 5 displays the correct pagination numbers")
     public void testSearchResultsPaginationMoreThan5Pages() throws IOException, URISyntaxException {
-
         // Given I am on the Search for a defect page
         SearchForADefectPage searchForADefectPage = pageNavigator.gotoSearchForADefectPage(tester, vehicle);
 

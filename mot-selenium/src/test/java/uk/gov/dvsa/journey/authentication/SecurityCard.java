@@ -66,14 +66,14 @@ public class SecurityCard {
         return pageNavigator.navigateToPage(user, CardOrderReportListPage.PATH, CardOrderReportListPage.class);
     }
 
-    public final String orderSecurityCardWithCustomAddress(User user, String addresssLine1, String townOrCity, String postcode) throws IOException {
+    public final String orderSecurityCardWithCustomAddress(User user, String addressLine1, String townOrCity, String postcode) throws IOException {
         OrderNewCardPage orderNewCardPage = pageNavigator.navigateToPage(user, OrderNewCardPage.PATH, OrderNewCardPage.class);
         isCardDeactivationMessageDisplayed = orderNewCardPage.isCardDeactivationMessageDisplayed();
 
         ReviewSecurityCardAddressPage reviewPage = orderNewCardPage
                         .continueToAddressPage()
                         .chooseCustomAddress()
-                        .fillAddressLine1(addresssLine1)
+                        .fillAddressLine1(addressLine1)
                         .fillTownOrCity(townOrCity)
                         .fillPostcode(postcode)
                         .submitAddress(ReviewSecurityCardAddressPage.class);

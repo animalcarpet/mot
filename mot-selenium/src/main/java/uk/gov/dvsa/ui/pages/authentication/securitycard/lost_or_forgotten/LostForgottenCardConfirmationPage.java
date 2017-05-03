@@ -22,7 +22,6 @@ public class LostForgottenCardConfirmationPage extends AbstractLostForgottenPage
         return new HomePage(driver);
     }
 
-
     public OrderNewCardPage orderSecurityCard() {
         orderCardLink.click();
         return new OrderNewCardPage(driver);

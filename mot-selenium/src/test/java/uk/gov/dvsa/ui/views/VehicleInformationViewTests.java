@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
 public class VehicleInformationViewTests extends DslTest {
@@ -47,7 +46,7 @@ public class VehicleInformationViewTests extends DslTest {
         //Given There are 2 vehicles with the same registration
         vehicleData.getNewVehicle(tester, vehicle.getDvsaRegistration());
 
-        //And i am on the Vehicle Information Page as an AreaOffice1User
+        //And I am on the Vehicle Information Page as an AreaOffice1User
         VehicleInformationSearchPage vehicleInformationSearchPage =
                 pageNavigator.navigateToPage(areaOffice1User, VehicleInformationSearchPage.PATH, VehicleInformationSearchPage.class);
 
@@ -67,7 +66,7 @@ public class VehicleInformationViewTests extends DslTest {
 
     @Test (groups = {"Regression"})
     public void redirectToVehicleInformationIfFoundOnlyOneResult() throws IOException, URISyntaxException {
-        //Given i am on the Vehicle Information Page as an AreaOffice1User
+        //Given I am on the Vehicle Information Page as an AreaOffice1User
         VehicleInformationSearchPage vehicleInformationSearchPage =
                 pageNavigator.navigateToPage(areaOffice1User, VehicleInformationSearchPage.PATH, VehicleInformationSearchPage.class);
 
@@ -76,14 +75,12 @@ public class VehicleInformationViewTests extends DslTest {
             .findVehicleAndRedirectToVehicleInformationPage(vehicle.getDvsaRegistration());
 
         //Then I should be able to view that vehicles information
-
         assertThat("The registration is as expected", vehicleInformationPage.getRegistrationNumber(), is(vehicle.getDvsaRegistration()));
         assertThat("The Vin is as expected",vehicleInformationPage.getVinNumber(), is(vehicle.getVin()));
     }
 
     @Test(groups = {"Regression"}, description = "BL-46")
     public void displayUnknownForVehicleWithNoWeightInStartTestConfirmationPage() throws IOException, URISyntaxException {
-
         //Given I have a vehicle with no registered weight
 
         //When I search for the vehicle to perform a test on it
@@ -95,7 +92,6 @@ public class VehicleInformationViewTests extends DslTest {
 
     @Test(groups = {"Regression"})
     public void vehicleSearchReturnsVehicleOnlyInDvlaTable() throws IOException, URISyntaxException {
-
         //Given I have a vehicle in the DVLA table only
         User tester = motApi.user.createTester(siteData.createSite().getId());
         DvlaVehicle dvlaVehicle = vehicleData.getNewDvlaVehicle(tester);
@@ -110,7 +106,7 @@ public class VehicleInformationViewTests extends DslTest {
 
     @Test(groups = {"Regression"})
     public void vehicleEditEngineCorrectByAreaOffice() throws  IOException, URISyntaxException {
-        //And i am on the Vehicle Information Page as an AreaOffice1User
+        //And I am on the Vehicle Information Page as an AreaOffice1User
         motUI.showVehicleInformationFor(areaOffice1User, vehicle);
 
         //When I change Engine
@@ -122,7 +118,7 @@ public class VehicleInformationViewTests extends DslTest {
 
     @Test(groups = {"Regression"})
     public void vehicleEditMotTestClassCorrectByAreaOffice() throws  IOException, URISyntaxException {
-        //And i am on the Vehicle Information Page as an AreaOffice1User
+        //Given I am on the Vehicle Information Page as an AreaOffice1User
         motUI.showVehicleInformationFor(areaOffice1User, vehicleData.getNewVehicle(tester));
 
         //When I change Mot Test Class
@@ -134,7 +130,7 @@ public class VehicleInformationViewTests extends DslTest {
 
     @Test(groups = {"Regression"})
     public void vehicleEditCountryOfRegistrationCorrectByAreaOffice() throws  IOException, URISyntaxException {
-        //And i am on the Vehicle Information Page as an AreaOffice1User
+        //Given I am on the Vehicle Information Page as an AreaOffice1User
         motUI.showVehicleInformationFor(areaOffice1User, vehicle);
 
         //When I change Country of Registration
@@ -146,7 +142,7 @@ public class VehicleInformationViewTests extends DslTest {
 
     @Test(groups = {"Regression"})
     public void vehicleEditMakeModelCorrectByAreaOffice() throws  IOException, URISyntaxException {
-        //And i am on the Vehicle Information Page as an VehicleExaminer
+        //Given I am on the Vehicle Information Page as an VehicleExaminer
         motUI.showVehicleInformationFor(vehicleExaminer, vehicle);
 
         //When I change Make and Model

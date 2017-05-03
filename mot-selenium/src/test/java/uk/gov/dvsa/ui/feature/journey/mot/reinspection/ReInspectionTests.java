@@ -95,7 +95,7 @@ public class ReInspectionTests extends DslTest {
         TestShortSummaryPage testShortSummaryPage =
                 vehicleReinspectionWorkflow().abortActiveTestOnVtsPage(testVehicleRegistration);
 
-        assertThat(testShortSummaryPage.isTestAbortedSuccessfull(), is(true));
+        assertThat(testShortSummaryPage.isTestAbortedSuccessfully(), is(true));
     }
 
     @Test(groups = {"BVT"}, description = "BL-101")

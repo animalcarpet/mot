@@ -15,7 +15,7 @@ public class ChangeAECorrespondenceAddressPage extends Page {
     @FindBy(id = "submitUpdate") private WebElement submitButton;
     @FindBy (id = "aeAddressLine1") private WebElement contactDetailsAddressLine1;
     @FindBy (id = "town") private WebElement contactDetailsTown;
-    @FindBy (id = "postcode") private WebElement contactDetailsPostconde;
+    @FindBy (id = "postcode") private WebElement contactDetailsPostcode;
 
     public ChangeAECorrespondenceAddressPage(MotAppDriver driver) {
         super(driver);
@@ -43,7 +43,7 @@ public class ChangeAECorrespondenceAddressPage extends Page {
     }
 
     public ChangeAECorrespondenceAddressPage changePostcode(String street) {
-        FormDataHelper.enterText(contactDetailsPostconde, street);
+        FormDataHelper.enterText(contactDetailsPostcode, street);
         return this;
     }
 }

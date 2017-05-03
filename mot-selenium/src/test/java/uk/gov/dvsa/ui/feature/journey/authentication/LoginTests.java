@@ -1,6 +1,7 @@
 package uk.gov.dvsa.ui.feature.journey.authentication;
 
 import org.testng.annotations.Test;
+
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.shared.role.RoleManager;
 import uk.gov.dvsa.domain.shared.role.TradeRoles;
@@ -12,13 +13,13 @@ import java.io.IOException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
+
 import static uk.gov.dvsa.matcher.UrlMatcher.isPresentInCurrentUrl;
 
 public class LoginTests extends DslTest {
 
     @Test(groups = {"BVT"})
     void dvsaUserCanLogInSuccessfullyViaLoginPage() throws IOException {
-
         step("Given I am a DVSA user");
         User validUser = motApi.user.createAreaOfficeOne("dvsa");
 
@@ -83,8 +84,7 @@ public class LoginTests extends DslTest {
     }
 
     @Test(groups = {"roles"})
-    public void dvsaUsersWithTradeRoleNotShownActivationInformationScreen() throws IOException
-    {
+    public void dvsaUsersWithTradeRoleNotShownActivationInformationScreen() throws IOException {
         //Given I am DVSA user with Trade Role
         User dvsaUser = motApi.user.createUserAsAreaOfficeOneUser("haveTradeRole");
         RoleManager.addSiteRole(dvsaUser, siteData.createSite().getId(), TradeRoles.TESTER);
@@ -97,8 +97,7 @@ public class LoginTests extends DslTest {
     }
 
     @Test(testName = "2faHardStopDisabled", groups = {"2fa"})
-    public void nonRegistered2faUsersDoNotSeeCardInformationPageTwice() throws IOException
-    {
+    public void nonRegistered2faUsersDoNotSeeCardInformationPageTwice() throws IOException {
         //Given I am test user who has already seen the card information page
         User testUser = motApi.user.createNon2FaTester(siteData.createSite().getId());
         motUI.loginExpectingCardInformationPage(testUser);
@@ -114,8 +113,7 @@ public class LoginTests extends DslTest {
     }
 
     @Test(groups = {"BVT"})
-    public void userWithInvalidLoginCredentialsShownErrorOnLoginPage() throws IOException
-    {
+    public void userWithInvalidLoginCredentialsShownErrorOnLoginPage() throws IOException {
         step("Given I login with invalid credentials");
         LoginPage loginPage = motUI.loginWithInvalidCredentials("invalidUser", "fakePassword");
 
@@ -128,7 +126,6 @@ public class LoginTests extends DslTest {
     public void loginTradeUserNot2faActivatedShouldDisplay2faHardStopPage() throws IOException {
         step("Given I am a non 2fa activated Trade User ");
         User non2faUser = motApi.user.createNon2FaTester(siteData.createSite().getId());
-
 
         step("When I login to the system");
         motUI.loginExpecting2faHardStopPage(non2faUser);

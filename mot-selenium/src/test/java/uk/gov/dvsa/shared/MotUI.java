@@ -129,7 +129,7 @@ public class MotUI {
         return new LoginPage(pageNavigator.getDriver()).isSignInButtonPresent();
     }
 
-    public TwoFactorPromptPage loginExpecting2faOrderPromtPage(User user) throws IOException {
+    public TwoFactorPromptPage loginExpecting2faOrderPromptPage(User user) throws IOException {
         return loginUser(user, OrderYourCardPromptPage.class);
     }
 

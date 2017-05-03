@@ -1,7 +1,6 @@
 package uk.gov.dvsa.ui.pages.mot;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -18,7 +17,7 @@ public class RefuseToTestPage extends Page {
     @FindBy(id = "registration-mark") private WebElement registrationMark;
     @FindBy(id = "vin") private WebElement vin;
     @FindBy(id = "make-and-model") private WebElement makeAndModel;
-    @FindBy(id = "refusal-1") private WebElement reasonUnabletoIdentifyDateOfFirstUse;
+    @FindBy(id = "refusal-1") private WebElement reasonUnableToIdentifyDateOfFirstUse;
     @FindBy(id = "refusal-2") private WebElement reasonVehicleTooDirtyToExamine;
     @FindBy(id = "refusal-3") private WebElement reasonVehicleIsNotFitToBeDriven;
     @FindBy(id = "refusal-4") private WebElement reasonInsecurityOfLoad;
@@ -88,7 +87,7 @@ public class RefuseToTestPage extends Page {
     }
 
     private void selectUnableToIdentifyDateOfFirstUse() {
-        reasonUnabletoIdentifyDateOfFirstUse.click();
+        reasonUnableToIdentifyDateOfFirstUse.click();
     }
 
     private void selectVehicleTooDirtyToExamine() {

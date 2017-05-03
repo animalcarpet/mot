@@ -1,17 +1,13 @@
 package uk.gov.dvsa.journey;
 
-import org.openqa.selenium.NoSuchElementException;
-import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.api.response.Vehicle;
+import uk.gov.dvsa.domain.model.User;
+import uk.gov.dvsa.domain.model.mot.CancelTestReason;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
-import uk.gov.dvsa.helper.AssertionHelper;
-import uk.gov.dvsa.helper.ConfigHelper;
 import uk.gov.dvsa.ui.pages.Page;
-import uk.gov.dvsa.ui.pages.VehicleSearchPage;
-import uk.gov.dvsa.ui.pages.VehicleSearchResultsPage;
 import uk.gov.dvsa.ui.pages.mot.TestResultsEntryNewPage;
+import uk.gov.dvsa.ui.pages.mot.retest.ReTestAbortedPage;
 import uk.gov.dvsa.ui.pages.mot.retest.ReTestCompletePage;
-import uk.gov.dvsa.ui.pages.mot.retest.ReTestResultsEntryPage;
 import uk.gov.dvsa.ui.pages.mot.retest.ReTestSummaryPage;
 
 import java.io.IOException;
@@ -25,7 +21,8 @@ public class Retest {
 
     PageNavigator pageNavigator;
     private boolean successful = false;
-    private String expectedText;
+    private boolean aborted = false;
+    private String actualText;
     private boolean declarationSuccessful = false;
 
     private static final String TWO_FA_DECLARATION_STATEMENT = "By saving this test result you confirm that you have carried out " +
@@ -52,21 +49,23 @@ public class Retest {
         successful = testCompletePage.verifyBackToHomeDisplayed();
     }
 
+    public void conductRetestAbort(Vehicle vehicle, User tester) throws IOException, URISyntaxException {
+        TestResultsEntryNewPage resultsEntryPage = pageNavigator.gotoReTestResultsEntryPage(tester, vehicle);
+        ReTestAbortedPage reTestAbort = resultsEntryPage.abortMotReTest(CancelTestReason.TEST_EQUIPMENT_ISSUE);
+
+        aborted = reTestAbort.isVt30MessageDisplayed();
+    }
+
     public <T extends Page> T startRetest(Vehicle vehicle, User tester) throws IOException, URISyntaxException {
         return (T) pageNavigator.gotoReTestResultsEntryPage(tester, vehicle);
     }
 
-    public void searchForVehicle(User user, Vehicle vehicle) throws IOException, URISyntaxException {
-        VehicleSearchResultsPage searchPage = pageNavigator.navigateToPage(user,VehicleSearchPage.PATH, VehicleSearchPage.class).searchVehicle(vehicle);
-        expectedText = searchPage.getVehicleRetestStatus();
-    }
-
-    public boolean isTextPresent(String actual) throws NoSuchElementException {
-        return AssertionHelper.compareText(expectedText, actual);
-    }
-
     public void verifyRetestIsSuccessful() {
         assertThat(successful, is(true));
+    }
+
+    public boolean verifyRetestAbortIsSuccessful() {
+        return (aborted);
     }
 
     public void verifyRetestLinkNotPresent(){

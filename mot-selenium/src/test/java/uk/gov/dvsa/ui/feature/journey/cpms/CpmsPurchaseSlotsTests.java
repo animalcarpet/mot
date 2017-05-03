@@ -25,7 +25,6 @@ public class CpmsPurchaseSlotsTests extends DslTest {
 
     @Test (enabled = false, groups = {"Regression"}, description = "SPMS-37 Purchase slots by card successfully", dataProvider = "createAedmAndAe")
     public void purchaseSlotsByCardSuccessfully(User aedm, AeDetails aeDetails, User financeUser) throws IOException, URISyntaxException {
-        
       //Given I am on Buy test slots page as an Aedm
       BuyTestSlotsPage buyTestSlotsPage = pageNavigator
                 .goToPageAsAuthorisedExaminer(aedm, AedmAuthorisedExaminerViewPage.class, AedmAuthorisedExaminerViewPage.PATH, aeDetails.getId())
@@ -46,7 +45,6 @@ public class CpmsPurchaseSlotsTests extends DslTest {
     
     @Test (enabled = false, groups = {"Regression"}, description = "SPMS-264 Finance user processes Card payment", dataProvider = "createFinanceUserAndAe")
     public void financeUserProcessesCardPayment(User financeUser, AeDetails aeDetails) throws IOException, URISyntaxException {
-        
       //Given I am on Choose payment type page as a Finance user
         ChoosePaymentTypePage choosePaymentTypePage = pageNavigator
                 .goToPageAsAuthorisedExaminer(financeUser, FinanceAuthorisedExaminerViewPage.class, FinanceAuthorisedExaminerViewPage.PATH, aeDetails.getId())
@@ -67,14 +65,13 @@ public class CpmsPurchaseSlotsTests extends DslTest {
 
     @Test(enabled = false, groups = {"Regression", "SPMS-77"}, dataProvider = "createAedmAndAe")
     public void financeUserSearchForPaymentByInvoiceReference(User aedm, AeDetails aeDetails, User financeUser) throws IOException, URISyntaxException {
-
         //Given I bought slots with card as an Aedm
         CardPaymentConfirmationPage cardPaymentConfirmationPage = purchaseSlotsAsAedmWithCard(pageNavigator
                 .goToPageAsAuthorisedExaminer(aedm, AedmAuthorisedExaminerViewPage.class, AedmAuthorisedExaminerViewPage.PATH, aeDetails.getId())
                 .clickBuySlotsLink());
 
         //And I copy invoice reference from Transaction details page
-        String invoiceReference = cardPaymentConfirmationPage.clickViewPaymentDetailslink().getInvoiceNumber();
+        String invoiceReference = cardPaymentConfirmationPage.clickViewPaymentDetailsLink().getInvoiceNumber();
 
         //When I search for a invoice reference and navigate to a Transaction details page as a Finance user
         ReferenceSearchPage referenceSearchPage = pageNavigator.navigateToPage(financeUser, ReferenceSearchPage.PATH, ReferenceSearchPage.class);
@@ -85,14 +82,13 @@ public class CpmsPurchaseSlotsTests extends DslTest {
 
     @Test(enabled = false, groups = {"Regression", "SPMS-199"}, dataProvider = "createAedmAndAe")
     public void financeUserSearchForPaymentByPaymentReference(User aedm, AeDetails aeDetails, User financeUser) throws IOException, URISyntaxException {
-
         //Given I bought slots with card as an Aedm
         CardPaymentConfirmationPage cardPaymentConfirmationPage = purchaseSlotsAsAedmWithCard(pageNavigator
                 .goToPageAsAuthorisedExaminer(aedm, AedmAuthorisedExaminerViewPage.class, AedmAuthorisedExaminerViewPage.PATH, aeDetails.getId())
                 .clickBuySlotsLink());
 
         //And I copy payment reference from Transaction details page
-        String paymentReference = cardPaymentConfirmationPage.clickViewPaymentDetailslink().getPaymentReference();
+        String paymentReference = cardPaymentConfirmationPage.clickViewPaymentDetailsLink().getPaymentReference();
 
         //When I search for a payment reference and navigate to a Transaction details page as a Finance user
         ReferenceSearchPage referenceSearchPage = pageNavigator.navigateToPage(financeUser, ReferenceSearchPage.PATH, ReferenceSearchPage.class);
@@ -103,14 +99,13 @@ public class CpmsPurchaseSlotsTests extends DslTest {
 
     @Test(enabled = false, groups = {"Regression", "SPMS-47"}, dataProvider = "createAedmAndAe")
     public void paymentInvoiceDetailsVerificationTest(User aedm, AeDetails aeDetails, User financeUser) throws IOException, URISyntaxException {
-
         //Given I am on Buy test slots page as an Aedm
         BuyTestSlotsPage buyTestSlotsPage = pageNavigator
                 .goToPageAsAuthorisedExaminer(aedm, AedmAuthorisedExaminerViewPage.class, AedmAuthorisedExaminerViewPage.PATH, aeDetails.getId())
                 .clickBuySlotsLink();
 
         //When I click on View payment details link
-        TransactionDetailsPage transactionDetailsPage = purchaseSlotsAsAedmWithCard(buyTestSlotsPage).clickViewPaymentDetailslink();
+        TransactionDetailsPage transactionDetailsPage = purchaseSlotsAsAedmWithCard(buyTestSlotsPage).clickViewPaymentDetailsLink();
 
         //Then transaction details should be displayed
         assertThat("Verifying SupplierDetails displayed",
@@ -125,7 +120,6 @@ public class CpmsPurchaseSlotsTests extends DslTest {
 
     @Test(enabled = false, groups = {"Regression", "SPMS-88"}, dataProvider = "createAedmAndAe")
     public void purchaseSlotsUserCancelsPaymentTest(User aedm, AeDetails aeDetails, User financeUser) throws IOException, URISyntaxException {
-
         //Given I am on Buy test slots page as an Aedm
         BuyTestSlotsPage buyTestSlotsPage = pageNavigator
                 .goToPageAsAuthorisedExaminer(aedm, AedmAuthorisedExaminerViewPage.class, AedmAuthorisedExaminerViewPage.PATH, aeDetails.getId())
@@ -141,7 +135,6 @@ public class CpmsPurchaseSlotsTests extends DslTest {
 
     @Test(enabled = false, groups = {"Regression", "SPMS-47"}, priority = 1)
     public void generalTransactionHistoryElementsTest() throws IOException, URISyntaxException {
-
         //Given I bought slots with card as an Aedm
         CardPaymentConfirmationPage cardPaymentConfirmationPage = purchaseSlotsAsAedmWithCard(pageNavigator
                 .goToPageAsAuthorisedExaminer(aedm, AedmAuthorisedExaminerViewPage.class, AedmAuthorisedExaminerViewPage.PATH, aeDetails.getId())
@@ -163,7 +156,6 @@ public class CpmsPurchaseSlotsTests extends DslTest {
 
     @Test(enabled = false, groups = {"Regression", "SPMS-47"}, priority = 2)
     public void todayTransactionHistoryVerificationTest() throws IOException, URISyntaxException {
-
         //Given I'm on Transaction history page as an Aedm
         TransactionHistoryPage transactionHistoryPage = pageNavigator
                 .goToPageAsAuthorisedExaminer(aedm, AedmAuthorisedExaminerViewPage.class, AedmAuthorisedExaminerViewPage.PATH, aeDetails.getId()).clickTransactionHistoryLink();
@@ -183,7 +175,6 @@ public class CpmsPurchaseSlotsTests extends DslTest {
 
     @Test(enabled = false, groups = {"Regression", "SPMS-47"}, priority = 3)
     public void last7DaysTransactionHistoryVerificationTest() throws IOException, URISyntaxException {
-
         //Given I'm on Transaction history page as an Aedm
         TransactionHistoryPage transactionHistoryPage = pageNavigator
                 .goToPageAsAuthorisedExaminer(aedm, AedmAuthorisedExaminerViewPage.class, AedmAuthorisedExaminerViewPage.PATH, aeDetails.getId()).clickTransactionHistoryLink();
@@ -203,7 +194,6 @@ public class CpmsPurchaseSlotsTests extends DslTest {
 
     @Test(enabled = false, groups = {"Regression", "SPMS-47"}, priority = 4)
     public void last30DaysTransactionHistoryVerificationTest() throws IOException, URISyntaxException {
-
         //Given I'm on Transaction history page as an Aedm
         TransactionHistoryPage transactionHistoryPage = pageNavigator
                 .goToPageAsAuthorisedExaminer(aedm, AedmAuthorisedExaminerViewPage.class, AedmAuthorisedExaminerViewPage.PATH, aeDetails.getId()).clickTransactionHistoryLink();

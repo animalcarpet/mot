@@ -32,7 +32,6 @@ public class DeclarationStatementViewTests extends DslTest {
 
     @Test (testName="2faHardStopDisabled", groups = {"2fa"})
     public void displayStatementAtTestSummaryPage() throws IOException, URISyntaxException {
-
         //Given I complete a normal test as a tester
         motUI.normalTest.conductTestPass(motApi.user.createNon2FaTester(site.getId()), vehicle);
 
@@ -44,7 +43,6 @@ public class DeclarationStatementViewTests extends DslTest {
 
     @Test (groups = {"2fa"})
     public void display2faStatementAtTestSummaryPage() throws IOException, URISyntaxException {
-
         //Given I complete a normal test as a 2FA tester
         User twoFactorTester = motApi.user.createTester(site.getId());
         motUI.normalTest.conductTestPass(twoFactorTester, vehicle);
@@ -57,7 +55,6 @@ public class DeclarationStatementViewTests extends DslTest {
 
     @Test (groups = {"BVT"})
     public void displayStatementAtReTestSummaryPage() throws IOException, URISyntaxException {
-
         //Given I have a vehicle with a failed MOT test
         User tester = motApi.user.createTester(site.getId());
         motApi.createTest(tester, site.getId(), vehicle, TestOutcome.FAILED, 12345, DateTime.now());
@@ -71,7 +68,6 @@ public class DeclarationStatementViewTests extends DslTest {
 
     @Test (testName="2faHardStopDisabled", groups = {"2fa"})
     public void statementShouldNotBeDisplayedForTrainingTest() throws IOException, URISyntaxException {
-
         //Given I am on the review Page of training test
         motUI.normalTest.conductTrainingTest(motApi.user.createNon2FaTester(site.getId()), vehicle);
 
@@ -81,7 +77,6 @@ public class DeclarationStatementViewTests extends DslTest {
 
     @Test (groups = {"BVT"})
     public void displayStatementWhenAbortingTest() throws IOException, URISyntaxException {
-
         //Given I have an in progress Mot Test
         motUI.normalTest.startTest(motApi.user.createTester(site.getId()));
 
@@ -94,7 +89,6 @@ public class DeclarationStatementViewTests extends DslTest {
 
     @Test (groups = {"2fa"})
     public void display2faStatementWhenAbortingTest() throws IOException, URISyntaxException {
-
         //Given I have an in progress Mot Test
         User twoFactorTester = motApi.user.createTester(site.getId());
         motUI.normalTest.startTest(twoFactorTester);
@@ -108,7 +102,6 @@ public class DeclarationStatementViewTests extends DslTest {
 
     @Test (testName="2faHardStopDisabled", groups = {"2fa"})
     public void statementShouldNotBeDisplayedOnTestRefusal() throws IOException, URISyntaxException {
-
         //Given I refuse to test a vehicle
         motUI.normalTest.refuseToTestVehicle(motApi.user.createNon2FaTester(site.getId()), vehicle, ReasonForVehicleRefusal.INSPECTION_MAY_BE_DANGEROUS);
 
@@ -118,7 +111,6 @@ public class DeclarationStatementViewTests extends DslTest {
 
     @Test (groups = {"Regression"})
     public void displayStatementAtContingencySummaryPage() throws IOException, URISyntaxException {
-
         //Given I start a contingency test
         motUI.contingency.testPage(motApi.user.createTester(site.getId()));
 
@@ -131,7 +123,6 @@ public class DeclarationStatementViewTests extends DslTest {
 
     @Test (testName = "2faHardStopDisabled", groups = {"2fa"})
     public void replacementCertificateDeclarationStatement() throws IOException, URISyntaxException {
-
         //Given I have completed an Mot Test
         User tester = motApi.user.createNon2FaTester(site.getId());
         String testId = motApi.createTest(tester, site.getId(), vehicle, TestOutcome.PASSED, 123456,
@@ -146,7 +137,6 @@ public class DeclarationStatementViewTests extends DslTest {
 
     @Test (groups = {"2fa"})
     public void displayDeclarationStatementFor2faUserOnReplacementCertificatePage() throws IOException, URISyntaxException {
-
         //Given I have completed an Mot Test as 2fa user
         int siteId = siteData.createSite().getId();
         User twoFactorTester = motApi.user.createTester(siteId);

@@ -15,7 +15,7 @@ public class ChangeDetailsAddressPage extends Page {
     @FindBy(id = "submitUpdate") private WebElement submitButton;
     @FindBy (id = "vtsAddressLine1") private WebElement contactDetailsAddressLine1;
     @FindBy (id = "town") private WebElement contactDetailsTown;
-    @FindBy (id = "postcode") private WebElement contactDetailsPostconde;
+    @FindBy (id = "postcode") private WebElement contactDetailsPostcode;
 
     public ChangeDetailsAddressPage(MotAppDriver driver) {
         super(driver);
@@ -43,7 +43,7 @@ public class ChangeDetailsAddressPage extends Page {
     }
 
     public ChangeDetailsAddressPage changePostcode(String street) {
-        FormDataHelper.enterText(contactDetailsPostconde, street);
+        FormDataHelper.enterText(contactDetailsPostcode, street);
         return this;
     }
 }

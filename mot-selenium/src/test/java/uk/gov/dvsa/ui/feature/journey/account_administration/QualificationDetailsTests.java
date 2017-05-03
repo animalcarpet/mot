@@ -3,11 +3,14 @@ package uk.gov.dvsa.ui.feature.journey.account_administration;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
 import uk.gov.dvsa.domain.model.AeDetails;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.helper.RandomDataGenerator;
 import uk.gov.dvsa.ui.DslTest;
+import uk.gov.dvsa.ui.pages.authentication.securitycard.ConfirmSecurityCardOrderPage;
+import uk.gov.dvsa.ui.pages.authentication.securitycard.ReviewSecurityCardAddressPage;
 import uk.gov.dvsa.ui.pages.profile.qualificationdetails.QualificationDetailsConfirmationPage;
 
 import java.io.IOException;
@@ -30,8 +33,7 @@ public class QualificationDetailsTests extends DslTest {
     @Test(groups = {"2fa"},
             testName = "2fa",
             description = "test that a user with no qualification can add their qualification details")
-    public void userCanAddNewQualificationDetails() throws IOException
-    {
+    public void userCanAddNewQualificationDetails() throws IOException {
         step("Given I am on my profile page as user who has a new certificate");
         User tester = motApi.user.createUserWithoutRole();
         motUI.profile.viewYourProfile(tester);
@@ -60,7 +62,6 @@ public class QualificationDetailsTests extends DslTest {
 
     @Test(testName = "2fa", groups = {"2fa"})
     public void userWithNoSecurityCardOrdersSeesOrderSectionOnConfirmation() throws IOException {
-
         step("Given I am a user who has a new certificate with no security card orders");
         User tester = motApi.user.createUserWithoutRole();
 
@@ -74,6 +75,30 @@ public class QualificationDetailsTests extends DslTest {
 
         step("Then I will be presented with the order security card section");
         Assert.assertTrue(confirmationPage.isOrderCardLinkDisplayed());
+    }
+
+    @Test(testName = "2fa", groups = {"2fa"})
+    public void userWithNoSecurityCardOrdersAndActivatesSecurityCardWhenAddingGroupQualification() throws IOException {
+        step("Given I am a user who has a new certificate with no security card orders");
+        User tester = motApi.user.createUserWithoutRole();
+
+        step("When I am on my profile page");
+        motUI.profile.viewYourProfile(tester);
+
+        step("And I add the details of the certificate and Order a security card");
+        String certificateNumber = RandomDataGenerator.generateRandomNumber(15, 12);
+        ConfirmSecurityCardOrderPage confirmationPage = motUI.profile.qualificationDetails()
+                .addQualificationDetailsForGroupA(certificateNumber, testSite2.getSiteNumber(), "3", "4", "2016")
+                .clickOrderCardLink()
+                .continueToAddressPage()
+                .chooseHomeAddress()
+                .submitAddress(ReviewSecurityCardAddressPage.class).orderSecurityCard();
+
+        step("And I Activate the security card");
+        motUI.authentication.securityCard.activate2faCard(tester);
+
+        step("Then I will be presented with the security card activation confirmation");
+        Assert.assertTrue(confirmationPage.orderStatusMessage().contains("Your security card has been activated"));
     }
 
     @Test(groups = {"BVT"},

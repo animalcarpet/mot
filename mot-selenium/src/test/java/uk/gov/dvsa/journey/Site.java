@@ -52,7 +52,7 @@ public class Site {
     }
 
     public boolean isRiskScoreDisplayed() {
-        return vehicleTestingStationPage.isRiskAssesmentDisplayed();
+        return vehicleTestingStationPage.isRiskAssessmentDisplayed();
     }
 
     public void gotoAssessment(User user, String siteId) throws IOException, URISyntaxException {

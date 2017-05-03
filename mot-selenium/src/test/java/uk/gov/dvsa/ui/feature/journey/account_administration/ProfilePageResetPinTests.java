@@ -20,8 +20,10 @@ public class ProfilePageResetPinTests extends DslTest {
     public void non2faUserCanResetPinViaProfile() throws IOException {
         // Given I am a trade user who has not activated 2FA
         User tester = motApi.user.createNon2FaTester(siteData.createSite().getId());
+
         // When I navigate to my user profile
         motUI.profile.viewYourProfile(tester);
+
         // Then I should be able to reset my pin via the link
         assertThat(motUI.profile.page().isResetPinLinkDisplayed(), is(true));
     }
@@ -31,8 +33,10 @@ public class ProfilePageResetPinTests extends DslTest {
     public void twoFaActiveUserCanNotResetPinViaProfile() throws IOException {
         // Given I am a user who has activated a 2FA card
         User twoFactorUser = motApi.user.createTester(siteData.createSite().getId());
+
         //When I navigate to my user profile
         motUI.profile.viewYourProfile(twoFactorUser);
+
         // Then I should not be able to reset my pin via the link
         assertThat(motUI.profile.page().isResetPinLinkDisplayed(), is(false));
     }

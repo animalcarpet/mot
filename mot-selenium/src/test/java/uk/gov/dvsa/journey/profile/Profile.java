@@ -97,8 +97,8 @@ public class Profile {
 
     }
 
-    public String changeDOBwithInvalidValues(String day, String month, String year) {
-        return new ChangeDOB(profilePage).changeDOBwithInvalidValues(day, month, year);
+    public String changeDobWithInvalidValues(String day, String month, String year) {
+        return new ChangeDOB(profilePage).changeDobWithInvalidValues(day, month, year);
     }
 
     public ProfilePage changeDateOfBirthTo(String dateOfBirth) {

@@ -16,7 +16,7 @@ public class LoginPage extends Page {
     @FindBy(id = "create-an-account")
     private WebElement createAnAccountLink;
     @FindBy(id = "forgotten-or-change-password")
-    private WebElement forgottenOrChangePasswordLink;
+    private WebElement forgottenPasswordLink;
     @FindBy(id = "do-not-have-account-section")
     private WebElement doNotHaveAccountSection;
     @FindBy(xpath = "//*[contains(@id,'_tid1')]")
@@ -42,6 +42,11 @@ public class LoginPage extends Page {
     public CreateAnAccountPage clickCreateAnAccountLink() {
         createAnAccountLink.click();
         return new CreateAnAccountPage(driver);
+    }
+
+    public ForgottenPasswordUserIdPage clickForgottenPasswordLink() {
+        forgottenPasswordLink.click();
+        return new ForgottenPasswordUserIdPage(driver);
     }
 
     public void expandDoNotHaveAccountSection() {

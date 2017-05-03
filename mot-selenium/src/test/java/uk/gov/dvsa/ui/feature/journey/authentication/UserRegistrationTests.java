@@ -30,7 +30,6 @@ public class UserRegistrationTests extends DslTest {
 
     @Test(groups = {"BVT"})
     public void cannotCreateANewAccountIfEmailIsAlreadyInUse() throws IOException {
-
         step("Given I create an account");
         String email = ContactDetailsHelper.getEmail();
         motUI.register.completeDetailsWithDefaultValues(email, telephone);
@@ -44,7 +43,6 @@ public class UserRegistrationTests extends DslTest {
 
     @Test(groups = {"Regression"}, description = "VM-11472")
     public void checkCreateAccountLinkExists() throws IOException {
-
         //Given I am on the Home Page
         LoginPage loginPage = pageNavigator.goToLoginPage();
 

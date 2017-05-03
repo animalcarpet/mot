@@ -48,6 +48,7 @@ public class ReplacementCertificatesTest extends DslTest {
         User tester = motApi.user.createTester(site.getId());
         Vehicle vehicle = vehicleData.getNewVehicle(tester);
         MotTest motTest = motApi.createPassedTestForVehicle(motApi.user.createTester(site.getId()), site.getId(), vehicle);
+
         //When I attempt to reprint a duplicate certificate
         motUI.certificate.updateCertificate(motApi.user.createAreaOfficeOne("Ao1"), vehicle, motTest.getMotTestNumber()).setOdometerToNull();
 
@@ -121,6 +122,7 @@ public class ReplacementCertificatesTest extends DslTest {
         User tester = motApi.user.createTester(site.getId());
         Vehicle vehicle = vehicleData.getNewVehicle(tester);
         MotTest motTest = motApi.createPassedTestForVehicle(tester, site.getId(), vehicle);
+
         // /When I search vehicle by VIN
         //Then I should be able to view certificate
         motUI.certificate.viewCertificatePageUsingVinSearch(tester, vehicle, motTest.getMotTestNumber());

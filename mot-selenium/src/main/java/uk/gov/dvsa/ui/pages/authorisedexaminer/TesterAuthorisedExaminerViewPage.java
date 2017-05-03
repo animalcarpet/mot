@@ -4,8 +4,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
 import uk.gov.dvsa.helper.PageInteractionHelper;
-import uk.gov.dvsa.ui.pages.cpms.ChoosePaymentTypePage;
-import uk.gov.dvsa.ui.pages.cpms.SlotRefundPage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,7 +11,7 @@ import java.util.List;
 public class TesterAuthorisedExaminerViewPage extends AuthorisedExaminerViewPage {
     private static String PAGE_TITLE = "Authorised Examiner";
 
-    @FindBy(id = "ae-auth-status") private WebElement aeAuthtatus;
+    @FindBy(id = "ae-auth-status") private WebElement aeAuthStatus;
     @FindBy(id = "ae-name-change") private WebElement changeNameLink;
     @FindBy(id = "ae-trading-name-change") private WebElement changeTradingNameLink;
     @FindBy(id = "ae-type-change") private WebElement changeBusinessTypeLink;
@@ -82,7 +80,7 @@ public class TesterAuthorisedExaminerViewPage extends AuthorisedExaminerViewPage
 
     public boolean areAllChangeLinksHidden(){
         List<WebElement> webElements = Arrays.asList(
-                aeAuthtatus,
+                aeAuthStatus,
                 changeNameLink,
                 changeTradingNameLink,
                 changeBusinessTypeLink,
