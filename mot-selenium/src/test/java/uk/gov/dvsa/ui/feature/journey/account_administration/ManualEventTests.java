@@ -31,7 +31,6 @@ public class ManualEventTests extends DslTest {
 
     @Test(groups = {"Regression"}, description = "VM-11545")
     public void recordManualEventSuccessfully() throws IOException, URISyntaxException {
-
         //Given I am on the Events History Page
         EventsHistoryPage eventsHistoryPage = pageNavigator.goToPageAsAuthorisedExaminer(dvsaUser, EventsHistoryPage.class, EventsHistoryPage.AE_PATH, aeId);
 

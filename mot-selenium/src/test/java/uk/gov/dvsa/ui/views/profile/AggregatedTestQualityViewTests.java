@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-public class AggregetedTestQualityViewTests extends DslTest {
+public class AggregatedTestQualityViewTests extends DslTest {
 
     private static final int MILEAGE = 14000;
     private User ao1;
@@ -54,7 +54,7 @@ public class AggregetedTestQualityViewTests extends DslTest {
                 .clickTestQualityInformationLink()
                 .chooseMonth(fourMonthsAgo);
 
-        //Then it contains correct informations
+        //Then it contains correct information
         assertThat("Group A table is displayed", aggregatedTqiPage.isTableForGroupADisplayed(), is(true));
         assertThat("Group A table has 2 rows", aggregatedTqiPage.getTableForGroupARowCount(), is(2));
         assertThat("Group B table is displayed", aggregatedTqiPage.isTableForGroupBDisplayed(), is(true));
@@ -76,7 +76,7 @@ public class AggregetedTestQualityViewTests extends DslTest {
                 .chooseMonth(twoMonthsAgo)
                 .clickGroupAFailures();
 
-        //Then it contains correct informations
+        //Then it contains correct information
         assertThat("Return link is displayed", componentBreakdownPage.isReturnLinkDisplayed(), is(true));
         assertThat("Test count is correct", componentBreakdownPage.getTestCount(), is(1));
     }
@@ -95,7 +95,7 @@ public class AggregetedTestQualityViewTests extends DslTest {
                 .chooseMonth(threeMonthsAgo)
                 .clickFirstSiteInGroupAFailures();
 
-        //Then it contains correct informations
+        //Then it contains correct information
         assertThat("Return link is displayed", componentBreakdownPage.isReturnLinkDisplayed(), is(true));
         assertThat("Test count is correct", componentBreakdownPage.getTestCount(), is(1));
     }

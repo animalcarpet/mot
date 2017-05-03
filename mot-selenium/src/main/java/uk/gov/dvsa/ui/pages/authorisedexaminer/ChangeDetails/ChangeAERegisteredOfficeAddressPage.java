@@ -15,7 +15,7 @@ public class ChangeAERegisteredOfficeAddressPage extends Page {
     @FindBy(id = "submitUpdate") private WebElement submitButton;
     @FindBy (id = "aeAddressLine1") private WebElement contactDetailsAddressLine1;
     @FindBy (id = "town") private WebElement contactDetailsTown;
-    @FindBy (id = "postcode") private WebElement contactDetailsPostconde;
+    @FindBy (id = "postcode") private WebElement contactDetailsPostcode;
 
     public ChangeAERegisteredOfficeAddressPage(MotAppDriver driver) {
         super(driver);
@@ -43,7 +43,7 @@ public class ChangeAERegisteredOfficeAddressPage extends Page {
     }
 
     public ChangeAERegisteredOfficeAddressPage changePostcode(String street) {
-        FormDataHelper.enterText(contactDetailsPostconde, street);
+        FormDataHelper.enterText(contactDetailsPostcode, street);
         return this;
     }
 }

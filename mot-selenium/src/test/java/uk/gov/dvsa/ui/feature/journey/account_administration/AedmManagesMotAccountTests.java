@@ -27,7 +27,6 @@ public class AedmManagesMotAccountTests extends DslTest {
             description = "VM-10253 - Journey 2 - AEDM Manages Mot Account", dataProvider = "createAeAedmSiteAndTester")
     public void viewConnectedAEWithAttachedVtsAndTester(
             User user, AeDetails aeDetails, Site testSite, User tester) throws Exception {
-
         //Given I am on my Homepage as AEDM
         HomePage homePage = pageNavigator.navigateToPage(user, HomePage.PATH, HomePage.class);
 
@@ -45,7 +44,6 @@ public class AedmManagesMotAccountTests extends DslTest {
     @Test(groups = {"Regression"},
             description = "VM-10255 - Journey 2 - AEDM View AE Test logs", dataProvider = "createAeAedmSiteAndTester")
     public void viewAETestLogs(User aedm, AeDetails aeDetails, Site site, User tester) throws IOException, URISyntaxException {
-
         //Given I perform an MOT test for my selected Authorised Examiner
         motApi.createTest(tester, site.getId(),
                 vehicleData.getNewVehicle(tester), TestOutcome.PASSED, 14000, DateTime.now());
@@ -61,7 +59,6 @@ public class AedmManagesMotAccountTests extends DslTest {
     @Test(groups = {"Regression"},
             description = "VM-10255 - Journey 2 - AEDM View AE Slot Usage", dataProvider = "createAeAedmSiteAndTester")
     public void viewSlotReport(User aedm, AeDetails aeDetails, Site site, User tester) throws IOException, URISyntaxException {
-
         //Given I perform an MOT test for my selected Authorised Examiner
         motApi.createTest(tester, site.getId(),
                 vehicleData.getNewVehicle(tester), TestOutcome.PASSED, 14000, DateTime.now());
@@ -76,7 +73,6 @@ public class AedmManagesMotAccountTests extends DslTest {
     @Test(groups = {"Regression"},
             description = "VM-10257 - Journey 2 - AEDM Remove Tester from VTS", dataProvider = "createAedmTester")
     public void removeTesterFromVTS(User user, User tester) throws Exception {
-
         //Given I am on the vehicle testing page
         VehicleTestingStationPage vehicleTestingStationPage = pageNavigator.navigateToPage(user, HomePage.PATH,  HomePage.class)
                 .selectRandomVts();

@@ -44,8 +44,7 @@ public class EnforcementsTests extends DslTest {
     @Test(groups = {"Regression", "BL-3655"},
             description = "Verifies that vehicle examiner can mask a vehicle for enforcement activities")
     public void veCanMaskVehicleSuccessfully() throws IOException, URISyntaxException {
-
-        //Given i am on the Vehicle Information Page as an Vehicle examiner
+        //Given I am on the Vehicle Information Page as an Vehicle examiner
         VehicleInformationPage vehicleInformationPage = pageNavigator
                                     .navigateToPage(vehicleExaminer, VehicleInformationSearchPage.PATH, VehicleInformationSearchPage.class)
                                     .searchVehicleByRegistration(vehicle.getDvsaRegistration(), VehicleInformationPage.class);
@@ -62,8 +61,7 @@ public class EnforcementsTests extends DslTest {
     @Test(groups = {"Regression", "BL-3658"},
             description = "Verifies that vehicle examiner can unmask a vehicle and exclude that from enforcement activities")
     public void veCanUnmaskVehicleSuccessfully() throws IOException, URISyntaxException {
-
-        //Given i am on the Vehicle Information Page as an Vehicle examiner with masked vehicle
+        //Given I am on the Vehicle Information Page as an Vehicle examiner with masked vehicle
         motUI.mysteryShopper.maskVehicle(vehicleExaminer, vehicle);
 
         //When I Unmask the vehicle for enforcement activities
@@ -76,8 +74,7 @@ public class EnforcementsTests extends DslTest {
     @Test(groups = {"Regression", "BL-3655"},
             description = "Verifies that vehicle examiner can navigate back from mask a vehicle page")
     public void veCanNavigateBackFromMaskVehiclePageSuccessfully() throws IOException, URISyntaxException {
-
-        //Given i am on the Vehicle Information Page as an Vehicle examiner
+        //Given I am on the Vehicle Information Page as an Vehicle examiner
         VehicleInformationPage vehicleInformationPage = pageNavigator
                                     .navigateToPage(vehicleExaminer, VehicleInformationSearchPage.PATH, VehicleInformationSearchPage.class)
                                     .searchVehicleByRegistration(vehicle.getDvsaRegistration(), VehicleInformationPage.class);
@@ -92,8 +89,7 @@ public class EnforcementsTests extends DslTest {
     @Test(groups = {"Regression", "BL-3658"},
             description = "Verifies that vehicle examiner can navigate back from unmask a vehicle page")
     public void veCanNavigateBackFromUnmaskVehiclePageSuccessfully() throws IOException, URISyntaxException {
-
-        //Given i am on the Vehicle Information Page as an Vehicle examiner with masked vehicle
+        //Given I am on the Vehicle Information Page as an Vehicle examiner with masked vehicle
         VehicleInformationPage vehicleInformationPage = motUI.mysteryShopper.maskVehicle(vehicleExaminer, vehicle);
 
         //When I navigate back from Unmask the vehicle page
@@ -106,8 +102,7 @@ public class EnforcementsTests extends DslTest {
     @Test(groups = {"Regression", "BL-2489"},
             description = "Verifies that VE can perform Non_MOT inspection")
     public void veCanPerformNonMotInspectionSuccessfully() throws IOException, URISyntaxException {
-
-        //Given i am on the Entry non mot test results Page as an Vehicle examiner
+        //Given I am on the Entry non mot test results Page as an Vehicle examiner
         TestResultsEntryNewPage testResultsEntryNewPage = motUI.nonMotInspection.startNonMotInspection(vehicleExaminer, vehicle);
 
         //When I finish non mot inspection with a pass values
@@ -120,7 +115,6 @@ public class EnforcementsTests extends DslTest {
     @Test(groups = {"Regression", "BL-2489"},
             description = "Verifies that vehicle examiner can see non mot test on vehicle test history page")
     public void veCanSeeNonMotTestOnVehicleHistoryPage() throws IOException, URISyntaxException {
-
         //Given I am started non mot inspection as an Vehicle examiner
         TestResultsEntryNewPage testResultsEntryNewPage = motUI.nonMotInspection.startNonMotInspection(vehicleExaminer, vehicle);
 
@@ -139,8 +133,7 @@ public class EnforcementsTests extends DslTest {
     @Test(groups = {"Regression", "BL-2489"},
             description = "Verifies that VE must provide a vts number during Non MOT inspection")
     public void veMustProvideVtsNumberDuringNonMotInspection() throws IOException, URISyntaxException {
-
-        //Given i am on the Entry non mot test results Page as an Vehicle examiner
+        //Given I am on the Entry non mot test results Page as an Vehicle examiner
         TestResultsEntryNewPage testResultsEntryNewPage = motUI.nonMotInspection.startNonMotInspection(vehicleExaminer, vehicle);
 
         //When I am trying to finish non mot inspection without a valid vts number
@@ -156,7 +149,6 @@ public class EnforcementsTests extends DslTest {
     @Test(groups = {"Regression", "BL-3659"},
             description = "Verify that tester can conduct normal test on masked vehicle")
     public void testerCanConductMysteryShopperTest() throws IOException, URISyntaxException {
-
         //Given I've masked a vehicle for Enforcement activity as an Vehicle examiner
         motUI.mysteryShopper.maskVehicle(vehicleExaminer, vehicle);
 
@@ -173,7 +165,6 @@ public class EnforcementsTests extends DslTest {
     @Test(groups = {"Regression", "BL-3659"},
             description = "Verify that tester sees in his Test logs mystery shopper test as Normal test")
     public void testerSeeMysteryShopperTestAsNormalInHisTestLogs() throws IOException, URISyntaxException {
-
         //Given I've masked a vehicle for Enforcement activity as an Vehicle examiner
         motUI.mysteryShopper.maskVehicle(vehicleExaminer, vehicle);
 

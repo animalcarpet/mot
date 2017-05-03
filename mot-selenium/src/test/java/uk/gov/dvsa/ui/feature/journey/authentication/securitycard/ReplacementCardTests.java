@@ -1,6 +1,8 @@
 package uk.gov.dvsa.ui.feature.journey.authentication.securitycard;
 
+import org.hamcrest.core.Is;
 import org.testng.annotations.Test;
+
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.ui.DslTest;
 
@@ -10,6 +12,20 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 
 public class ReplacementCardTests extends DslTest {
+
+    @Test(groups = {"2fa"})
+    public void securityCardSectionIsNotDisplayedAfterReplacementCardOrder() throws IOException {
+        step("Given Paddy has ordered a replacement card");
+        User paddy = motApi.user.createTester(siteData.createSite().getId());
+        motUI.authentication.securityCard.signInWithoutSecurityCard(paddy);
+        motUI.authentication.securityCard.orderSecurityCardWithHomeAddress(paddy);
+
+        step("When I view my profile");
+        motUI.profile.viewYourProfile(paddy);
+
+        step("Security Card Panel is not displayed");
+        assertThat(motUI.profile.page().isSecurityCardPanelDisplayed(), Is.is(false));
+    }
 
     @Test(groups = {"2fa"})
     public void activateLinkIsDisplayedAfterReplacementCardOrder() throws IOException {

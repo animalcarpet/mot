@@ -32,7 +32,6 @@ public class SpecialNoticeTests extends DslTest {
 
     @Test (groups = {"SpecialNotice"})
     public void createAndBroadcastSpecialNotice() throws Exception{
-
         //Given that I am logged as a Scheme user and I am on the create special notices page
         SpecialNoticeCreationPage specialNoticeCreationPage =
             pageNavigator.navigateToPage(schemeUser, SpecialNoticeCreationPage.PATH, SpecialNoticeCreationPage.class);

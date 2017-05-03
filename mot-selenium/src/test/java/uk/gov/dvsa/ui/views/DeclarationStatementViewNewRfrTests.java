@@ -31,7 +31,6 @@ public class DeclarationStatementViewNewRfrTests extends DslTest {
 
     @Test(groups = {"Regression"})
     public void displayStatementAtContingencySummaryPage() throws IOException, URISyntaxException {
-
         //Given I start a contingency test
         motUI.contingency.testPage(tester);
 

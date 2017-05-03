@@ -21,7 +21,7 @@ public class StartTestConfirmationPage extends Page {
     private final String BANNER_PAGE_TITLE = "This vehicle is currently under test";
 
     @FindBy(id = "confirm_vehicle_confirmation") private WebElement confirmButton;
-    @FindBy(id = "retest_vehicle_confirmation") private WebElement retestvehicleconfirmation;
+    @FindBy(id = "retest_vehicle_confirmation") private WebElement retestVehicleConfirmation;
     @FindBy(id = "vehicleWeight") private WebElement vehicleWeight;
     @FindBy(id = "change-vehicle-class") private WebElement changeClassButton;
     @FindBy(id = "change-vehicle-colour") private WebElement changeColourButton;
@@ -78,7 +78,7 @@ public class StartTestConfirmationPage extends Page {
         return new ChangeColourUnderTestPage(driver);
     }
 
-    public ChangeEngineUnderTestPage clickChangeEngne(){
+    public ChangeEngineUnderTestPage clickChangeEngine(){
         changeEngineButton.click();
         return new ChangeEngineUnderTestPage(driver);
     }

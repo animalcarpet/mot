@@ -50,7 +50,6 @@ public class SiteRagStatusTests extends DslTest {
 
     @Test(groups = {"Regression"}, description = "VM-11544")
     void checkStatusAsTester() throws IOException{
-
         //Given I am on BobBangers VTS page as a Tester in BobBangers
         motUI.site.gotoPage(tester, String.valueOf(bobBangers.getId()));
 
@@ -60,7 +59,6 @@ public class SiteRagStatusTests extends DslTest {
 
     @Test(groups = {"Regression"}, description = "VM-11544, Journey 1", dataProvider = "assessmentValues")
     void addSiteAssessmentScore(AssessmentInfo aInfo) throws IOException, URISyntaxException {
-
         //Given I am on the Enter Site Assessment Page as VE
         motUI.site.gotoAssessment(motApi.user.createVehicleExaminer("ve", false), String.valueOf(bobBangers.getId()));
 
@@ -76,7 +74,6 @@ public class SiteRagStatusTests extends DslTest {
 
     @Test(groups = {"Regression"}, description = "VM-11544, Journey 1")
     void verifyEventsCreated() throws IOException, URISyntaxException {
-
         //Given I have an assessment added to a VTS
         motUI.site.gotoAssessment(motApi.user.createVehicleExaminer("ve", false), String.valueOf(bobBangers.getId()));
         motUI.site.submitAssessment(new AssessmentInfo("200.1", "Green", assessmentActors), DateTime.now());

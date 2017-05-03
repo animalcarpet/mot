@@ -51,14 +51,14 @@ public class ChangeQualificationDetails {
     }
 
     public boolean verifyCertificateAddedForGroupA(String certificateNumber, String newDate) {
-        Boolean certificateNumberIsCorrect = qualificationDetailsPage.getCertifiacateGroupANumber().equals(certificateNumber);
+        Boolean certificateNumberIsCorrect = qualificationDetailsPage.getCertificateGroupANumber().equals(certificateNumber);
         Boolean dateIsCorrect = qualificationDetailsPage.getCertificateGroupADate().contains(newDate);
 
         return certificateNumberIsCorrect && dateIsCorrect;
     }
 
     public boolean verifyDetailsChangedForGroupA(String certificateNumber, String newDate) {
-        Boolean certificateNumberIsCorrect = qualificationDetailsPage.getCertifiacateGroupANumber().equals(certificateNumber);
+        Boolean certificateNumberIsCorrect = qualificationDetailsPage.getCertificateGroupANumber().equals(certificateNumber);
         Boolean dateIsCorrect = qualificationDetailsPage.getCertificateGroupADate().contains(newDate);
         Boolean successMessageIsDisplayed = qualificationDetailsPage.validationMessageSuccessIsDisplayed();
 
@@ -71,13 +71,13 @@ public class ChangeQualificationDetails {
     }
 
     public int countUserCertificates() {
-        int groupA = qualificationDetailsPage.getCertifiacateGroupANumber().isEmpty() ? 0 : 1;
-        int groupB = qualificationDetailsPage.getCertifiacateGroupBNumber().isEmpty() ? 0 : 1;
+        int groupA = qualificationDetailsPage.getCertificateGroupANumber().isEmpty() ? 0 : 1;
+        int groupB = qualificationDetailsPage.getCertificateGroupBNumber().isEmpty() ? 0 : 1;
         return groupA + groupB;
     }
 
     public boolean verifyDetailsAfterRemovedGroupBCertificate() {
-        return qualificationDetailsPage.getAualificationStatusForGroupB().equals("Not Applied");
+        return qualificationDetailsPage.getQualificationStatusForGroupB().equals("Not Applied");
     }
 
     public QualificationDetailsConfirmationPage confirmationPage(User user) throws IOException {

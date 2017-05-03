@@ -34,6 +34,18 @@ public class VehicleTestingStationPage extends Page {
     @FindBy(id = "phone-number") private WebElement vtsPhoneNumber;
     @FindBy(id = "edit-site-details") private WebElement editSiteDetails;
     @FindBy(id = "change-testing-facilities") private WebElement changeTestingFacilitiesLink;
+    @FindBy(id = "configure-brake-test-defaults-link") private WebElement changeDefaultTestSettingsLink;
+    @FindBy(id = "default-brake-test-class-1-and-2") private WebElement defaultBrakeTestClass1And2;
+    @FindBy(id = "default-service-brake-test-class-3-and-above") private WebElement defaultServiceBrakeTestClass3AndAbove;
+    @FindBy(id = "default-parking-brake-test-class-3-and-above") private WebElement defaultParkingBrakeTestClass3AndAbove;
+    @FindBy(id = "change-testing-hours") private WebElement changeTestingHoursLink;
+    @FindBy(id = "monday-hours") private WebElement mondayHours;
+    @FindBy(id = "tuesday-hours") private WebElement tuesdayHours;
+    @FindBy(id = "wednesday-hours") private WebElement wednesdayHours;
+    @FindBy(id = "thursday-hours") private WebElement thursdayHours;
+    @FindBy(id = "friday-hours") private WebElement fridayHours;
+    @FindBy(id = "saturday-hours") private WebElement saturdayHours;
+    @FindBy(id = "sunday-hours") private WebElement sundayHours;
     @FindBy(id = "testing-facility-optl") private WebElement onePersonTestLaneValue;
     @FindBy(id = "testing-facility-tptl") private WebElement twoPersonTestLaneValue;
     @FindBy(css = "#risk-assessment-score span.text-secondary") private WebElement riskAssesmentscore;
@@ -125,7 +137,7 @@ public class VehicleTestingStationPage extends Page {
         return vtsPhoneNumber.isDisplayed();
     }
 
-    public boolean isRiskAssesmentDisplayed() {
+    public boolean isRiskAssessmentDisplayed() {
         return riskAssesmentscore.isDisplayed();
     }
 
@@ -151,6 +163,54 @@ public class VehicleTestingStationPage extends Page {
         changeTestingFacilitiesLink.click();
         return new ChangeTestingFacilitiesPage(driver);
     }
+
+    public ChangeDetailsDefaultTestSettingsPage clickOnChangeDefaultTestSettingsLink() {
+        changeDefaultTestSettingsLink.click();
+        return new ChangeDetailsDefaultTestSettingsPage(driver);
+    }
+
+    public String getDefaultBrakeTestClass1And2() {
+        return defaultBrakeTestClass1And2.getText();
+    }
+
+    public String getDefaultServiceBrakeTestClass3AndAbove() {
+        return defaultServiceBrakeTestClass3AndAbove.getText();
+    }
+
+    public String getDefaultParkingBrakeTestClass3AndAbove() {
+        return defaultParkingBrakeTestClass3AndAbove.getText();
+    }
+
+    public ChangeDetailsTestingHoursPage setTestingHoursForDay() {
+        changeTestingHoursLink.click();
+        return new ChangeDetailsTestingHoursPage(driver);
+    }
+
+    public String getMondayHours() {
+        return mondayHours.getText();
+    }
+
+    public String getTuesdayHours() {
+        return tuesdayHours.getText();
+    }
+
+    public String getWednesdayHours() {
+        return wednesdayHours.getText();
+    }
+
+    public String getThursdayHours() {
+        return thursdayHours.getText();
+    }
+
+    public String getFridayHours() {
+        return fridayHours.getText();
+    }
+
+    public String getSaturdayHours() {
+        return saturdayHours.getText();
+    }
+
+    public String getSundayHours() { return sundayHours.getText(); }
 
     public String verifyOnePersonTestLaneValueDisplayed() {
         return onePersonTestLaneValue.getText();

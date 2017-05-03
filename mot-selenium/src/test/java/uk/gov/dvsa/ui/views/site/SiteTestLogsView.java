@@ -38,8 +38,7 @@ public class SiteTestLogsView extends DslTest {
 
     @Test(groups = {"BVT"}, dataProvider = "users")
     public void permittedUserCanViewTestLogs(User user) throws IOException, URISyntaxException {
-
-        //Given I performed 1 MOT  test Last week
+        //Given I performed 1 MOT test Last week
         motApi.createTest(tester, testSite.getId(), vehicleData.getNewVehicle(tester), TestOutcome.PASSED, 123456, DateTime.now().minusDays(6));
 
         //When I go to the Site Log page as <permitted user>
@@ -55,7 +54,6 @@ public class SiteTestLogsView extends DslTest {
 
     @Test(groups = {"Regression"}, expectedExceptions = PageInstanceNotFoundException.class)
     public void nonPermittedUserCannotViewTestLogs() throws IOException, URISyntaxException {
-
         //Given I am a tester
         Site site = siteData.createSite();
         User tester = motApi.user.createTester(site.getId());
@@ -65,12 +63,10 @@ public class SiteTestLogsView extends DslTest {
 
         //Then I am not able to view the Test log
         assertThat(motUI.testLog.isDisplayed(), is(false));
-
     }
     
     @Test(groups = {"Regression"})
     public void permittedUserCanViewCustomDateRange() throws IOException, URISyntaxException {
-
         //Given I performed 2 Mot tests within 30 days
         AeDetails aeDetails = aeData.createAeWithDefaultValues();
         Site testSite = siteData.createNewSite(aeDetails.getId(), "My_Site");
@@ -84,7 +80,6 @@ public class SiteTestLogsView extends DslTest {
 
         motApi.createTest(tester, testSite.getId(), vehicleData.getNewVehicle(tester),
                 TestOutcome.PASSED, 123456, secondTestDate);
-
 
         // When I go to the VTS Test Log page as <permitted user>
         motUI.testLog.siteLogPage(motApi.user.createAreaOfficeOne("AreaOfficer"), testSite.getId());

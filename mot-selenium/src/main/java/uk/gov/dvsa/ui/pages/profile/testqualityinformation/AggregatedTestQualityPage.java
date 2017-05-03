@@ -57,7 +57,7 @@ public class AggregatedTestQualityPage extends Page {
 
     private Integer getTableRowCount(WebElement tqiTable) {
         try {
-            return tqiTable.findElements(By.cssSelector("tbody tr")).size() - 1; // we substract 1 as it's the header row
+            return tqiTable.findElements(By.cssSelector("tbody tr")).size() - 1; // we subtract 1 as it's the header row
         } catch (StaleElementReferenceException e) {
             return getTableRowCount(tqiTable);
         }

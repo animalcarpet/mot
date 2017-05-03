@@ -2,10 +2,10 @@ package uk.gov.dvsa.ui.pages;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+
 import uk.gov.dvsa.domain.navigation.MotPageFactory;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.ui.pages.mot.StartTestConfirmationPage;
-import uk.gov.dvsa.ui.pages.mot.retest.ConfirmVehicleRetestPage;
+import uk.gov.dvsa.helper.PageInteractionHelper;
 
 public class VehicleSearchResultsPage extends AbstractVehicleSearchResultsPage {
 
@@ -28,6 +28,10 @@ public class VehicleSearchResultsPage extends AbstractVehicleSearchResultsPage {
 
     public String getVehicleRetestStatus() {
         return vehicleRetestStatus.getText();
+    }
+
+    public boolean isVehicleTestTypeARetest() {
+        return PageInteractionHelper.isElementDisplayed(vehicleRetestStatus);
     }
 
     public boolean isResultVehicleDisplayed() {

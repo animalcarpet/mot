@@ -20,7 +20,7 @@ public class ChangeSecurityQuestionsTests extends DslTest {
         tradeUser = motApi.user.createTester(siteData.createSite().getId());
     }
 
-    @Test(groups = "Regressiom")
+    @Test(groups = {"Regression"})
     void changeSecurityQuestionsLinkIsDisplayedOnUserProfile() throws IOException {
         step("Given I am on my profile page as a trade user");
         step("Then change security questions link is displayed");
@@ -28,7 +28,7 @@ public class ChangeSecurityQuestionsTests extends DslTest {
             motUI.profile.viewYourProfile(tradeUser).isChangeSecurityQuestionsLinkDisplayed(), is(true));
     }
 
-    @Test(groups = "Regression")
+    @Test(groups = {"Regression"})
     void CscoCannotChangeSecurityQuestionForUser() throws IOException {
         step("Given I am viewing a trade user profile as CSCO");
         User csco = motApi.user.createCSCO();
@@ -38,7 +38,7 @@ public class ChangeSecurityQuestionsTests extends DslTest {
             motUI.profile.dvsaViewUserProfile(csco, tradeUser).isChangeSecurityQuestionsLinkDisplayed(), is(false));
     }
 
-    @Test(groups = "BVT")
+    @Test(groups = {"BVT"})
     public void userCanChangeTheirSecurityQuestion() throws IOException {
         step("Given I on my profile Page as a trade user");
         motUI.profile.viewYourProfile(tradeUser);

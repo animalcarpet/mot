@@ -258,14 +258,13 @@ public class AEChangeDetailsTests extends DslTest {
     }
 
     @Test(groups = {"Regression"})
-    public void testerInAutorisedExaminerPageNotHaveChangeLinksAndStatusRow() throws IOException, URISyntaxException {
+    public void testerInAuthorisedExaminerPageDoesNotHaveChangeLinksOrStatusRow() throws IOException, URISyntaxException {
         //Given I am logged in as AO1 & I navigate to the authorised examiner page
         TesterAuthorisedExaminerViewPage testerAuthorisedExaminerViewPage = pageNavigator
                 .goToPageAsAuthorisedExaminer(tester, TesterAuthorisedExaminerViewPage.class, TesterAuthorisedExaminerViewPage.PATH, aeDetails.getId());
 
-        //Then There is not change links
-        //And status row
+        //Then There is no change links
+        //And no status row
         assertThat(testerAuthorisedExaminerViewPage.areAllChangeLinksHidden(), is(true));
     }
-
 }

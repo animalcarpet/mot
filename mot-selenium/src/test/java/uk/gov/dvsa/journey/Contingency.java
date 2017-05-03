@@ -6,12 +6,10 @@ import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.OdometerUnit;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
-import uk.gov.dvsa.helper.ConfigHelper;
 import uk.gov.dvsa.ui.pages.VehicleSearchPage;
 import uk.gov.dvsa.ui.pages.mot.*;
 import uk.gov.dvsa.ui.pages.mot.retest.ConfirmVehicleRetestPage;
 import uk.gov.dvsa.ui.pages.mot.retest.ReTestCompletePage;
-import uk.gov.dvsa.ui.pages.mot.retest.ReTestResultsEntryPage;
 import uk.gov.dvsa.ui.pages.mot.retest.ReTestSummaryPage;
 
 import java.io.IOException;
@@ -72,7 +70,7 @@ public class Contingency {
         ConfirmVehicleRetestPage retestPage =
                 vehicleSearchPage.searchVehicle(vehicle).selectVehicle(ConfirmVehicleRetestPage.class);
 
-        TestResultsEntryNewPage resultsEntryPage = retestPage.startContigencyRetest(TestResultsEntryNewPage.class);
+        TestResultsEntryNewPage resultsEntryPage = retestPage.startContingencyRetest(TestResultsEntryNewPage.class);
         resultsEntryPage.completeTestDetailsWithPassValues(true);
         ReTestSummaryPage summaryPage = resultsEntryPage.clickReviewTestButton(true);
 

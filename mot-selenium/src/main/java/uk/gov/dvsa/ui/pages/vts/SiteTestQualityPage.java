@@ -45,7 +45,7 @@ public class SiteTestQualityPage extends Page {
 
     public int getTableForGroupARowCount()
     {
-        return tqiTableA.findElements(By.cssSelector("tbody tr")).size() - 1; // we substract 1 as it's the header row
+        return tqiTableA.findElements(By.cssSelector("tbody tr")).size() - 1; // we subtract 1 as it's the header row
     }
 
     public int getTableForGroupBRowCount()

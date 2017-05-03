@@ -34,7 +34,7 @@ public class ConfirmVehicleRetestPage extends Page{
         return new ReTestOptionsPage(driver);
     }
 
-    public <T extends Page> T startContigencyRetest(Class<T> clazz){
+    public <T extends Page> T startContingencyRetest(Class<T> clazz){
         startRetestButton.click();
         return MotPageFactory.newPage(driver, clazz);
     }

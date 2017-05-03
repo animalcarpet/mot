@@ -40,7 +40,6 @@ public class RemoveDefectsPageTests extends DslTest {
     @Test(groups = {"BVT", "BL-2405"}, dataProvider = "getDefectArray",
             description = "Checks that the Remove a defect page has the correct breadcrumb and button text")
     public void testRemoveDefectPageElements(Defect defect) throws IOException, URISyntaxException {
-
         // Given I am on the defects screen with a defect as a tester
         DefectsPage defectsPage = pageNavigator.gotoDefectsPageWithDefect(tester, vehicle, defect);
 
@@ -57,7 +56,6 @@ public class RemoveDefectsPageTests extends DslTest {
     @Test(groups = {"BVT", "BL-2405"}, expectedExceptions = TimeoutException.class, dataProvider = "getDefectArray",
             description = "Checks that you can remove a defect from the defects screen")
     public void testCanRemoveADefectFromDefectScreenAsTester(Defect defect) throws IOException, URISyntaxException {
-
         // Given I am on the defects screen with a defect as a tester
         DefectsPage defectsPage = pageNavigator.gotoDefectsPageWithDefect(tester, vehicle, defect);
 
@@ -74,7 +72,6 @@ public class RemoveDefectsPageTests extends DslTest {
     @Test(groups = {"Regression", "BL-2405"}, dataProvider = "getDefectArray",
             description = "Checks that you can return to the defects screen without removing a defect")
     public void testCanReturnToDefectsScreenAsTester(Defect defect) throws IOException, URISyntaxException {
-
         // Given I am on the defects screen with a defect as a tester
         DefectsPage defectsPage = pageNavigator.gotoDefectsPageWithDefect(tester, vehicle, defect);
 
@@ -88,7 +85,6 @@ public class RemoveDefectsPageTests extends DslTest {
     @Test(groups = {"Regression", "BL-2405"}, expectedExceptions = TimeoutException.class,
             dataProvider = "getDefectArray", description = "Checks that you can remove a defect from the test results screen")
     public void testCanRemoveADefectFromTestResultsScreenAsTester(Defect defect) throws IOException, URISyntaxException {
-
         // Given I am on the test results screen with a defect as a tester
         TestResultsEntryNewPage testResultsEntryNewPage = pageNavigator.gotoTestResultsPageWithDefect(tester, vehicle, defect);
 
@@ -106,7 +102,6 @@ public class RemoveDefectsPageTests extends DslTest {
     @Test(groups = {"BVT", "BL-2405"}, dataProvider = "getDefectArray",
             description = "Checks that you can remove a defect from the test results screen")
     public void testCanReturnToTestResultsScreenAsTester(Defect defect) throws IOException, URISyntaxException {
-
         // Given I am on the test results screen with a defect as a tester
         TestResultsEntryNewPage testResultsEntryNewPage = pageNavigator.gotoTestResultsPageWithDefect(tester, vehicle, defect);
 

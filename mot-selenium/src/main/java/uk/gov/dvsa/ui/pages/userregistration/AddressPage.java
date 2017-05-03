@@ -36,7 +36,7 @@ public class AddressPage extends Page {
         return new SecurityQuestionsPage(driver);
     }
 
-    public AddressPage enterAddressandTelephone()
+    public AddressPage enterAddressAndTelephone()
     {
         FormDataHelper.enterText(homeAddressLineOne, ContactDetailsHelper.getAddressLine1());
         FormDataHelper.enterText(homeAddressLineTwo, ContactDetailsHelper.getAddressLine2());

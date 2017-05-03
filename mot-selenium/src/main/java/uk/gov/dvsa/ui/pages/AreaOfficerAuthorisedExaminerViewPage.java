@@ -10,7 +10,7 @@ import uk.gov.dvsa.ui.pages.authorisedexaminer.ChangeDetails.*;
 public class AreaOfficerAuthorisedExaminerViewPage extends AuthorisedExaminerViewPage {
 
     private static final String PAGE_TITLE = "Authorised Examiner";
-    @FindBy(id = "ae-auth-status") private WebElement aeAuthtatus;
+    @FindBy(id = "ae-auth-status") private WebElement aeAuthStatus;
     @FindBy(id = "ae-name-change") private WebElement changeNameLink;
     @FindBy(id = "ae-trading-name-change") private WebElement changeTradingNameLink;
     @FindBy(id = "ae-type-change") private WebElement changeBusinessTypeLink;
@@ -89,6 +89,6 @@ public class AreaOfficerAuthorisedExaminerViewPage extends AuthorisedExaminerVie
     }
 
     public String getAEAuthStatus() {
-        return aeAuthtatus.getText();
+        return aeAuthStatus.getText();
     }
 }

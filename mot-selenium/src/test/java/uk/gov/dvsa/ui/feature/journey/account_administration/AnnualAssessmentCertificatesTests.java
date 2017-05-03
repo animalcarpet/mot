@@ -2,8 +2,8 @@ package uk.gov.dvsa.ui.feature.journey.account_administration;
 
 import org.joda.time.DateTime;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.helper.RandomDataGenerator;
 import uk.gov.dvsa.ui.DslTest;
@@ -23,10 +23,12 @@ public class AnnualAssessmentCertificatesTests extends DslTest {
         //When I'm on my profile page
         newUser = motApi.user.createUserWithoutRole();
         ProfilePage page = motUI.profile.viewYourProfile(newUser);
+
         //And I add annual assessment certificate
         String certificateNumber = RandomDataGenerator.generateRandomNumber(15, 15);
         motUI.profile.annualAssessmentCertificates().
                 addAnnualAssessmentCertificate(certificateNumber, 90, "4", "4", "2016");
+
         //Then the assessment should be saved
         Assert.assertTrue(motUI.profile.annualAssessmentCertificates()
                         .verifySavedAssessmentForGroupA(certificateNumber, "4 April 2016", "90%")

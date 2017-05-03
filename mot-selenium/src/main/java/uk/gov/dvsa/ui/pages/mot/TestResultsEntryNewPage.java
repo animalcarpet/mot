@@ -14,6 +14,7 @@ import uk.gov.dvsa.ui.pages.Page;
 import uk.gov.dvsa.ui.pages.PageLocator;
 import uk.gov.dvsa.ui.pages.braketest.BrakeTestConfigurationPage;
 import uk.gov.dvsa.ui.pages.braketest.BrakeTestResultsPage;
+import uk.gov.dvsa.ui.pages.mot.retest.ReTestAbortedPage;
 import uk.gov.dvsa.ui.pages.mot.retest.ReTestSummaryPage;
 
 public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage implements
@@ -71,7 +72,7 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
         return odometerReading.getText();
     }
 
-    public boolean addOdomoterReadingButtonIsDisplayed() {
+    public boolean addOdometerReadingButtonIsDisplayed() {
         return addOdometerReading.isDisplayed();
     }
 
@@ -117,6 +118,12 @@ public class TestResultsEntryNewPage extends AbstractReasonsForRejectionPage imp
         processTestCancellation(reason);
 
         return new TestAbortedPage(driver);
+    }
+
+    public ReTestAbortedPage abortMotReTest(CancelTestReason reason){
+        processTestCancellation(reason);
+
+        return new ReTestAbortedPage(driver);
     }
 
     public TestAbandonedPage abandonMotTest(CancelTestReason reason){

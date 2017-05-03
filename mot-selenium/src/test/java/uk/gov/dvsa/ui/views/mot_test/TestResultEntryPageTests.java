@@ -61,7 +61,7 @@ public class TestResultEntryPageTests extends DslTest {
         TestResultsEntryNewPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);
 
         // Then all the buttons and links required to use the page are displayed
-        assertThat("Add odometer reading button is displayed", testResultsEntryPage.addOdomoterReadingButtonIsDisplayed());
+        assertThat("Add odometer reading button is displayed", testResultsEntryPage.addOdometerReadingButtonIsDisplayed());
         assertThat("Add defect button is displayed", testResultsEntryPage.addDefectButtonIsDisplayed());
         assertThat("Search for defect link is displayed", testResultsEntryPage.searchForDefectIsDisplayed());
         assertThat("Add brake test button is displayed", testResultsEntryPage.addBrakeTestButtonIsDisplayed());
@@ -70,7 +70,6 @@ public class TestResultEntryPageTests extends DslTest {
 
     @Test(groups = {"BVT", "BL-1930"})
     public void startAndAbandonTest() throws URISyntaxException, IOException {
-
         //Given I start a test and I am on the Test Results Page
         TestResultsEntryNewPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);
 
@@ -84,7 +83,6 @@ public class TestResultEntryPageTests extends DslTest {
 
     @Test(groups = {"BVT", "BL-1930"})
     public void startAndAbortTestAsTester() throws URISyntaxException, IOException {
-
         //Given I start a test and I am on the Test Results Page
         TestResultsEntryNewPage testResultsEntryPage = pageNavigator.gotoTestResultsEntryNewPage(tester, vehicle);
 

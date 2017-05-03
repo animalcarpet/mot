@@ -44,7 +44,6 @@ public class EditDefectsTests extends DslTest {
     @Test(groups = {"BVT", "BL-2405"}, dataProvider = "getDefectArray",
             description = "Checks that the Edt a defect page has the correct breadcrumb and button text")
     public void testEditDefectPageElements(Defect defect) throws IOException, URISyntaxException {
-
         // Given I am on the defects screen with a defect as a tester
         DefectsPage defectsPage = pageNavigator.gotoDefectsPageWithDefect(tester, vehicle, defect);
 
@@ -58,7 +57,6 @@ public class EditDefectsTests extends DslTest {
     @Test(groups = {"BVT", "BL-2406"}, dataProvider = "getDefectArray",
             description = "Checks that you can edit a defect from the defects screen")
     public void testCanEditADefectFromDefectScreenAsTester(Defect defect) throws IOException, URISyntaxException {
-
         // Given I am on the defects screen with a defect as a tester
         DefectsPage defectsPage = pageNavigator.gotoDefectsPageWithDefect(tester, vehicle, defect);
 
@@ -74,7 +72,6 @@ public class EditDefectsTests extends DslTest {
     @Test(groups = {"Regression", "BL-2405"}, dataProvider = "getDefectArray",
             description = "Checks that you can return to the defects screen without editing a defect")
     public void testCanReturnToDefectsScreenAsTester(Defect defect) throws IOException, URISyntaxException {
-
         // Given I am on the defects screen with a defect as a tester
         DefectsPage defectsPage = pageNavigator.gotoDefectsPageWithDefect(tester, vehicle, defect);
 
@@ -88,7 +85,6 @@ public class EditDefectsTests extends DslTest {
     @Test(groups = {"Regression", "BL-2406"}, dataProvider = "getDefectArray",
             description = "Checks that you can edit a defect from the test results screen")
     public void testCanEditADefectFromTestResultsScreenAsTester(Defect defect) throws IOException, URISyntaxException {
-
         // Given I am on the test results screen with a defect as a tester
         TestResultsEntryNewPage testResultsEntryNewPage = pageNavigator.
                                                             gotoTestResultsPageWithDefect(tester, vehicle, defect);
@@ -105,7 +101,6 @@ public class EditDefectsTests extends DslTest {
     @Test(groups = {"BVT", "BL-2406"}, dataProvider = "getDefectArray",
             description = "Checks that you can return to the test results entry screen without editing a defect")
     public void testCanReturnToTestResultsScreenAsTester(Defect defect) throws IOException, URISyntaxException {
-
         // Given I am on the test results screen with a defect as a tester
         TestResultsEntryNewPage testResultsEntryNewPage = pageNavigator.gotoTestResultsPageWithDefect(
                 tester, vehicle, defect);

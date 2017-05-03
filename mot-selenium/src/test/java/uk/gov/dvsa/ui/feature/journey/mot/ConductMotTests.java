@@ -15,7 +15,6 @@ import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.CancelTestReason;
 import uk.gov.dvsa.domain.model.mot.TestOutcome;
 import uk.gov.dvsa.domain.model.vehicle.VehicleClass;
-import uk.gov.dvsa.helper.ConfigHelper;
 import uk.gov.dvsa.helper.ReasonForRejection;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.mot.TestAbandonedPage;
@@ -79,7 +78,6 @@ public class ConductMotTests extends DslTest {
     @Test(testName = "2fa", groups = {"2fa"}, description = "Two Factor Authenticated users " +
             "should not be required to enter one time password")
     public void oneTimePasswordBoxNotDisplayedForTwoFactorAuthTester() throws IOException, URISyntaxException {
-
         //Given I am logged in as a tester authenticated by 2fa Card
         User twoFactorTester = motApi.user.createTester(site.getId());
 
@@ -128,7 +126,6 @@ public class ConductMotTests extends DslTest {
 
     @Test(groups = {"BVT"} )
     public void startAndAbandonTest() throws URISyntaxException, IOException {
-
         //Given I start a test and I am on the Test Results Page
         TestResultsEntryGroupAPageInterface testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester, vehicle);
 
@@ -156,7 +153,6 @@ public class ConductMotTests extends DslTest {
 
     @Test(groups = {"Regression"} )
     public void startAndAbortTestAsTester() throws URISyntaxException, IOException {
-
         //Given I start a test and I am on the Test Results Page
         TestResultsEntryGroupAPageInterface testResultsEntryPage = pageNavigator.gotoTestResultsEntryPage(tester, vehicle);
 
@@ -170,7 +166,6 @@ public class ConductMotTests extends DslTest {
     @Test(groups = {"Regression"} )
     public void startAndAbortTestAsVE() throws URISyntaxException, IOException {
         User vehicleExaminer = motApi.user.createVehicleExaminer("Default-VE", false);
-
         //Given I start a test as Tester
         String testId = motUI.normalTest.startTest(motApi.user.createTester(site.getId()));
 
@@ -195,6 +190,18 @@ public class ConductMotTests extends DslTest {
 
         //Then the retest is successful
         motUI.retest.verifyRetestIsSuccessful();
+    }
+
+    @Test(groups = {"Regression"} )
+    public void abortReTestAsTester() throws URISyntaxException, IOException {
+        //Given I have a vehicle with a failed MOT test
+        motApi.createTest(tester, site.getId(), vehicle, TestOutcome.FAILED, 12345, DateTime.now());
+
+        //When I abort the retest on the vehicle
+        motUI.retest.conductRetestAbort(vehicle, tester);
+
+        //Then the retest process should be aborted and a VT30 Certificate generated message is displayed
+        assertThat("Retest is aborted and VT30 is produced", motUI.retest.verifyRetestAbortIsSuccessful(), is(true));
     }
 
     @Test(groups = {"BVT"})

@@ -5,6 +5,8 @@ import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardPage;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardSuccessPage;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.TwoFactorPinEntryPage;
+import uk.gov.dvsa.ui.pages.login.ForgottenPasswordConfirmationPage;
+import uk.gov.dvsa.ui.pages.login.ForgottenPasswordUserIdPage;
 import uk.gov.dvsa.ui.pages.login.LoginPage;
 
 import java.io.IOException;
@@ -12,6 +14,7 @@ import java.io.IOException;
 public class Authentication {
     public final SecurityCard securityCard;
     private PageNavigator pageNavigator;
+    public ForgottenPasswordConfirmationPage resetPasswordViaForgotPasswordLink;
 
     public Authentication(PageNavigator pageNavigator) {
         this.pageNavigator = pageNavigator;
@@ -41,18 +44,30 @@ public class Authentication {
 
     public void skipActivationOnRegisterCard() {
         new RegisterCardPage(pageNavigator.getDriver())
-            .clickSkipActivationLink();
+                .clickSkipActivationLink();
     }
 
     public boolean isValidationSummaryDisplayed() {
         return new RegisterCardPage(
-            pageNavigator.getDriver())
-            .isValidationSummaryBoxDisplayed();
+                pageNavigator.getDriver())
+                .isValidationSummaryBoxDisplayed();
     }
 
     public void registerAndSignInTwoFactorUser(User user) throws IOException {
         securityCard.activate2faCard(user, user.getSerialNumber(true), user.getTwoFactorPin(), RegisterCardSuccessPage.class)
-            .continueToHomePage();
+                .continueToHomePage();
+    }
+
+    public ForgottenPasswordConfirmationPage resetPasswordViaForgotPasswordLink(User user) throws IOException {
+        LoginPage loginPage = pageNavigator.goToLoginPage();
+        ForgottenPasswordUserIdPage forgottenPasswordUserIdPage = loginPage.clickForgottenPasswordLink();
+        forgottenPasswordUserIdPage.enterUserId(user.getUsername());
+
+        return forgottenPasswordUserIdPage.continueToSecurityQuestionOnePage()
+                .enterAnswer("Blah")
+                .continueToQuestionTwoPage()
+                .enterAnswer("Blah")
+                .continueToConfirmationPage();
     }
 }
 

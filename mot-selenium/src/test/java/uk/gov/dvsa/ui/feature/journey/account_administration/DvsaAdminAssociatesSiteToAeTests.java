@@ -2,9 +2,9 @@ package uk.gov.dvsa.ui.feature.journey.account_administration;
 
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
 import uk.gov.dvsa.domain.model.AeDetails;
 import uk.gov.dvsa.domain.model.Site;
-import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.VtsDisassociateStatus;
 import uk.gov.dvsa.ui.DslTest;
 import uk.gov.dvsa.ui.pages.authorisedexaminer.AedmAuthorisedExaminerViewPage;
@@ -36,7 +36,6 @@ public class DvsaAdminAssociatesSiteToAeTests extends DslTest {
 
     @Test(groups = {"Regression"}, description = "VM-11112")
     public void AO1RemovesSiteFromAE() throws IOException, URISyntaxException {
-
         //Given that I'm logged in as AO1, I go to Remove site from AE page
         AuthorisedExaminerViewPage authorisedExaminerViewPage = pageNavigator
                 .goToPageAsAuthorisedExaminer(motApi.user.createAreaOfficeOne("AO1"),
@@ -56,7 +55,6 @@ public class DvsaAdminAssociatesSiteToAeTests extends DslTest {
 
     @Test(groups = {"Regression"}, description = "VM-2526")
     public void AO1AssociatesSiteToAE() throws IOException, URISyntaxException {
-
         //Given that I'm logged in as AO1, I go to Associate a site page
         AssociateASitePage associateASitePage = pageNavigator
                 .goToPageAsAuthorisedExaminer(motApi.user.createAreaOfficeOne("AO1"),

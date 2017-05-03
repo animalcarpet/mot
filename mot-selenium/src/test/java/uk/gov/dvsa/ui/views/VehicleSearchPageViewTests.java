@@ -1,18 +1,18 @@
 package uk.gov.dvsa.ui.views;
 
 import org.joda.time.DateTime;
-import org.openqa.selenium.TimeoutException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.domain.model.AeDetails;
 import uk.gov.dvsa.domain.model.Site;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.domain.model.mot.TestOutcome;
-import uk.gov.dvsa.domain.api.response.Vehicle;
 import uk.gov.dvsa.ui.DslTest;
+import uk.gov.dvsa.ui.pages.AbstractVehicleSearchResultsPage;
 import uk.gov.dvsa.ui.pages.VehicleSearchPage;
 import uk.gov.dvsa.ui.pages.VehicleSearchResultsPage;
-import uk.gov.dvsa.ui.pages.AbstractVehicleSearchResultsPage;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -37,7 +37,6 @@ public class VehicleSearchPageViewTests extends DslTest {
 
     @Test(groups = {"BVT", "VM-9368"}, description = "Test vehicle search page for breadcrumbs, cancel and return link, Unable to provide Reg or VIN link and Search block")
     public void checkExpectedPageElements() throws IOException, URISyntaxException {
-
         //Given I'm on the vehicle search page as a tester
         VehicleSearchPage vehicleSearchPage = pageNavigator.navigateToPage(tester, VehicleSearchPage.PATH, VehicleSearchPage.class);
 
@@ -51,7 +50,6 @@ public class VehicleSearchPageViewTests extends DslTest {
 
     @Test(groups = {"Regression", "VM-9368"}, description = "Test the vehicle search page Unable to provide Reg or VIN link works")
     public void testUnableToProvideRegOrVINLink() throws IOException, URISyntaxException {
-
         //Given I'm on the vehicle search page as a tester
         VehicleSearchPage vehicleSearchPage = pageNavigator.navigateToPage(tester, VehicleSearchPage.PATH, VehicleSearchPage.class);
 
@@ -65,7 +63,6 @@ public class VehicleSearchPageViewTests extends DslTest {
 
     @Test(groups = {"Regression", "VM-9368"}, description = "Tests that no vehicles are returned when searching for a blank Reg and VIN")
     public void testNoResultsReturnedForBlankRegOrVin() throws IOException, URISyntaxException {
-
         //Given I'm on vehicle search page as a tester
         VehicleSearchPage vehicleSearchPage = pageNavigator.navigateToPage(tester, VehicleSearchPage.PATH, VehicleSearchPage.class);
 
@@ -82,7 +79,6 @@ public class VehicleSearchPageViewTests extends DslTest {
 
     @Test(groups = {"BVT", "VM-9368"}, description = "Tests that a vehicle that exists can be searched and found")
     public void validRegAndVinReturnsCorrectVehicle() throws IOException, URISyntaxException {
-
         //Given I'm on vehicle search page as a tester
         VehicleSearchPage vehicleSearchPage = pageNavigator.navigateToPage(tester, VehicleSearchPage.PATH, VehicleSearchPage.class);
 
@@ -103,7 +99,6 @@ public class VehicleSearchPageViewTests extends DslTest {
 
     @Test(groups = {"Regression", "VM-9368"}, description = "Tests that once a vehicle has been found the search again link works")
     public void checkSearchAgainPresentAfterSuccessfulSearch() throws IOException, URISyntaxException {
-
         //Given I'm on vehicle search page as a tester
         VehicleSearchPage vehicleSearchPage = pageNavigator.navigateToPage(tester, VehicleSearchPage.PATH, VehicleSearchPage.class);
 
@@ -117,27 +112,25 @@ public class VehicleSearchPageViewTests extends DslTest {
 
     @Test(groups = {"Regression","VM_9444"}, description = "Tests that a vehicle that has recently failed is marked as for Retest")
     public void forRetestIsDisplayedForVehicleWithFailedMotTest() throws IOException, URISyntaxException {
-
         //Given I have a vehicle with a failed MOT test as a tester
         motApi.createTest(tester, site.getId(), vehicle, TestOutcome.FAILED, 12345, DateTime.now());
 
         //When I search for this vehicle
-        motUI.retest.searchForVehicle(tester, vehicle);
+        VehicleSearchResultsPage searchPage = pageNavigator.navigateToPage(tester,VehicleSearchPage.PATH, VehicleSearchPage.class).searchVehicle(vehicle);
 
         //Then text for "Re-Test" is present on the page
-        motUI.retest.isTextPresent("For retest");
+        assertThat("Test type should have been a Re test", searchPage.getVehicleRetestStatus().contentEquals("For retest"), is (true));
     }
 
-    @Test(groups = {"Regression", "VM-1854"}, description = "Tests that a vehicle that failed outside the retest grace period does not appear as for Retest", expectedExceptions = TimeoutException.class)
+    @Test(groups = {"Regression", "VM-1854"}, description = "Tests that a vehicle that failed outside the retest grace period does not appear as for Retest")
     public void forRetestIsNotDisplayedForVehicleAfter10DayGracePeriod() throws IOException, URISyntaxException {
-
         //Given a vehicle with more than 10days failed mot test as a tester
         motApi.createTest(tester, site.getId(), vehicle, TestOutcome.FAILED, 12000, DateTime.now().minusDays(20));
 
         //When I search for and locate the vehicle
-        motUI.retest.searchForVehicle(tester, vehicle);
+        VehicleSearchResultsPage searchPage = pageNavigator.navigateToPage(tester,VehicleSearchPage.PATH, VehicleSearchPage.class).searchVehicle(vehicle);
 
-        //Then I should not the text for "For retest" on the result - This is a little confusing and only passes because the field can't be found and times out!
-        motUI.retest.isTextPresent("For retest");
+        //Then I should not the text for "For retest" on the result
+        assertThat("Test type should not have been a Re test", searchPage.isVehicleTestTypeARetest(), is (false));
     }
 }

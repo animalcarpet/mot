@@ -34,7 +34,7 @@ public class CardPaymentConfirmationPage extends Page {
         return successfulMessage.getText();
     }
 
-    public TransactionDetailsPage clickViewPaymentDetailslink() {
+    public TransactionDetailsPage clickViewPaymentDetailsLink() {
         viewPaymentDetailsLink.click();
         return new TransactionDetailsPage(driver);
     }

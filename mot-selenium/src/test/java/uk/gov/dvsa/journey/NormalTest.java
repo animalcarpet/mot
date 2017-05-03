@@ -11,10 +11,8 @@ import uk.gov.dvsa.domain.model.vehicle.Make;
 import uk.gov.dvsa.domain.model.vehicle.Model;
 import uk.gov.dvsa.domain.navigation.PageNavigator;
 import uk.gov.dvsa.framework.config.webdriver.MotAppDriver;
-import uk.gov.dvsa.helper.ConfigHelper;
 import uk.gov.dvsa.ui.pages.VehicleTestingAdvicePage;
 import uk.gov.dvsa.ui.pages.mot.*;
-import uk.gov.dvsa.ui.pages.mot.modal.ManualAdvisoryModalPage;
 import uk.gov.dvsa.ui.pages.vehicleinformation.*;
 
 import java.io.IOException;
@@ -154,7 +152,7 @@ public class NormalTest {
     }
 
     public String changeEngine() {
-        StartTestConfirmationPage changeVehicleEngine = confirmationPage.clickChangeEngne().selectFuelType(FuelTypes.Diesel).fillCylinderCapacity("2200").submit();
+        StartTestConfirmationPage changeVehicleEngine = confirmationPage.clickChangeEngine().selectFuelType(FuelTypes.Diesel).fillCylinderCapacity("2200").submit();
         return changeVehicleEngine.getSuccessMessage();
     }
 

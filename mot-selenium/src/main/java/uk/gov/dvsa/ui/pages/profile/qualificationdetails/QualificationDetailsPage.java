@@ -46,11 +46,11 @@ public class QualificationDetailsPage extends Page {
         return new QualificationDetailsRemovePage(driver);
     }
 
-    public String getCertifiacateGroupANumber() {
+    public String getCertificateGroupANumber() {
         return certificateNumberGroupA.getText();
     }
 
-    public String getCertifiacateGroupBNumber() {
+    public String getCertificateGroupBNumber() {
         return certificateNumberGroupB.getText();
     }
 
@@ -62,7 +62,7 @@ public class QualificationDetailsPage extends Page {
         return validationMessageSuccess.isDisplayed();
     }
 
-    public String getAualificationStatusForGroupB()
+    public String getQualificationStatusForGroupB()
     {
         return qualificationStatusGroupB.getText();
     }

@@ -18,7 +18,7 @@ public class DifferenceBetweenTestPage extends Page{
     private By justificationBox = By.cssSelector("[id*='-NT-FAIL-justification']");
     private By totalScore = By.id("totalScore");
     private By caseOutcome = By.id("caseOutcome");
-    private By recordAssesment = By.id("record_assessment_button");
+    private By recordAssessment = By.id("record_assessment_button");
 
     public DifferenceBetweenTestPage(MotAppDriver driver) {
         super(driver);
@@ -44,15 +44,15 @@ public class DifferenceBetweenTestPage extends Page{
         return driver.findElement(totalScore).getText();
     }
 
-    public AssessmentDetailsConfirmationPage recordAssesment(){
-        driver.findElement(recordAssesment).click();
+    public AssessmentDetailsConfirmationPage recordAssessment(){
+        driver.findElement(recordAssessment).click();
         return new AssessmentDetailsConfirmationPage(driver);
     }
 
     public DifferenceBetweenTestPage completeJustificationWithRandomValues(){
-        List<WebElement> justficationBoxes = driver.findElements(justificationBox);
-        if(justficationBoxes.size() > 0) {
-            for (WebElement e : justficationBoxes) {
+        List<WebElement> justificationBoxes = driver.findElements(justificationBox);
+        if(justificationBoxes.size() > 0) {
+            for (WebElement e : justificationBoxes) {
                 FormDataHelper.enterText(e, RandomDataGenerator.generateRandomString());
             }
         }

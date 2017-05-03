@@ -40,7 +40,6 @@ public class DVSAManagingUserRolesTests extends DslTest {
 
     @Test(groups = {"roles"})
     public void areaOfficeUserAddsRoleToVeUser() throws IOException, URISyntaxException {
-
         //Given that I am on Manage roles page as a Area office 1 user
         pageNavigator.goToManageRolesPageViaUserSearch(areaOffice1User, vehicleExaminer);
 
@@ -53,7 +52,6 @@ public class DVSAManagingUserRolesTests extends DslTest {
 
     @Test(groups = {"roles"})
     public void areaOfficeUserRemovesRoleFromVeUser() throws IOException, URISyntaxException {
-
         //Given that I am on Manage roles page as a Area office 1 user
         pageNavigator.goToManageRolesPageViaUserSearch(areaOffice1User, vehicleExaminer);
 
@@ -68,7 +66,6 @@ public class DVSAManagingUserRolesTests extends DslTest {
             description = "Test that validates the authorised DVSA user can search for user by email with " +
                     "expanded additional search criteria section")
     public void areaOfficeUserCanSearchForUserByEmailExpandedSection() throws IOException, URISyntaxException {
-
         //Given that I am on Search user page as a Area office 1 user
         pageNavigator.navigateToPage(areaOffice1User, UserSearchPage.PATH, UserSearchPage.class);
 
@@ -83,7 +80,6 @@ public class DVSAManagingUserRolesTests extends DslTest {
             description = "Test that validates the authorised DVSA user can't search for user by email with " +
                     "collapsed additional search criteria section")
     public void areaOfficeUserCantSearchForUserByEmailCollapsedSection() throws IOException, URISyntaxException {
-
         //Given that I am on Search user page as a Area office 1 user
         pageNavigator.navigateToPage(areaOffice1User, UserSearchPage.PATH, UserSearchPage.class);
 
@@ -98,7 +94,6 @@ public class DVSAManagingUserRolesTests extends DslTest {
     @Test(groups = {"roles", "VM-12168"},
             description = "Test that validates the authorised DVSA user cant search for user by invalid email")
     public void areaOfficeUserCantSearchForUserByInvalidEmail() throws IOException, URISyntaxException {
-
         //Given that I am on Search user page as a Area office 1 user
         pageNavigator.navigateToPage(areaOffice1User, UserSearchPage.PATH, UserSearchPage.class);
 
@@ -111,7 +106,6 @@ public class DVSAManagingUserRolesTests extends DslTest {
 
     @Test(groups = {"VM-7646", "roles"})
     public void dvsaUserCanSearchOnTown() throws IOException, URISyntaxException {
-
         //Given that I am on Search user page as a authorised DVSA user
         pageNavigator.navigateToPage(motApi.user.createAreaOfficeOne("Ao11"), UserSearchPage.PATH, UserSearchPage.class);
 
@@ -125,7 +119,6 @@ public class DVSAManagingUserRolesTests extends DslTest {
     @Test(groups = {"VM-4741", "roles"},
             description = "Verify that authorised dvsa user can search for user with valid date of birth")
     public void dvsaUserCanSearchForUserByDateOfBirth() throws IOException, URISyntaxException {
-
         //Given that I am on Search user page as a authorised DVSA user
         pageNavigator.navigateToPage(areaOffice1User, UserSearchPage.PATH, UserSearchPage.class);
 
@@ -139,7 +132,6 @@ public class DVSAManagingUserRolesTests extends DslTest {
     @Test(groups = {"VM-4741", "roles"},
             description = "Verify error message is displayed when search user with invalid format date")
     public void dvsaUserCantSearchForUserByInvalidFormatDateOfBirth() throws IOException, URISyntaxException {
-
         //Given that I am on Search user page as a authorised DVSA user
         pageNavigator.navigateToPage(areaOffice1User, UserSearchPage.PATH, UserSearchPage.class);
 
@@ -210,7 +202,6 @@ public class DVSAManagingUserRolesTests extends DslTest {
             description = "Verifies that authorised user can check user roles via roles and associations link " +
                     "on user profile page")
     public void dvsaUserCanViewTradesUserRolesAndAssociationsFromUserSearch() throws IOException, URISyntaxException {
-
         //Given that I am on a user profile page as an authorised DVSA user
         motUI.profile.dvsaViewUserProfile(areaOffice1User, tester);
 
@@ -222,7 +213,6 @@ public class DVSAManagingUserRolesTests extends DslTest {
             description = "Verifies that authorised DVSA user can check roles via roles and associations link " +
                     "of trade user")
     public void dvsaUserCanViewTradeUsersRolesAndAssociations() throws IOException, URISyntaxException {
-
         //Given I'm on the profile page of a user as an authorised DVSA user
         motUI.profile.dvsaViewUserProfile(areaOffice1User, tester);
 

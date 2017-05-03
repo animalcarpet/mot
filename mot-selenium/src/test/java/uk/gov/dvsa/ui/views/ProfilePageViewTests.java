@@ -33,7 +33,6 @@ public class ProfilePageViewTests extends DslTest {
 
     @Test(groups = {"BVT"}, description = "VM-10334")
     public void testerQualificationStatusDisplayedOnProfilePage() throws IOException {
-
         //Given I'm on the Your Profile Details page
         motUI.profile.viewYourProfile(motApi.user.createTester(site.getId()));
 
@@ -45,7 +44,6 @@ public class ProfilePageViewTests extends DslTest {
             description = "Verifies that trade user can check own roles via roles and associations link " +
                     "on it's own profile page")
     public void tradeUserCanViewHisOwnRolesAndAssociations() throws IOException, URISyntaxException {
-
         //Given I'm on the Your Profile Details page
         motUI.profile.viewYourProfile(motApi.user.createTester(site.getId()));
 
@@ -61,7 +59,6 @@ public class ProfilePageViewTests extends DslTest {
                     "information on trade user profile",
             dataProvider = "dvsaUserForPersonalDetails")
     public void dvsaUserCanSeeUserPersonalDetails(User user, boolean isChangeLinkDisplayed) throws IOException, URISyntaxException {
-
         //Given I'm on the Trade user New Profile Details page as authorised DVSA user
         motUI.profile.dvsaViewUserProfile(user, tester);
 
@@ -76,7 +73,6 @@ public class ProfilePageViewTests extends DslTest {
             description = "Verifies that authorised dvsa user can change trade user email on trade user profile",
             dataProvider = "dvsaUserForContactDetails")
     public void dvsaUserCanSeeUserContactDetails(User user) throws IOException, URISyntaxException {
-
         //Given I'm on the Trade user New Profile Details page as authorised DVSA user
         motUI.profile.dvsaViewUserProfile(user, tester);
 
@@ -88,7 +84,6 @@ public class ProfilePageViewTests extends DslTest {
             description = "Verifies that authorised user can see dvsa roles on dvsa user profile",
             dataProvider = "dvsaUserForContactDetails")
     public void dvsaUserCanSeeDvsaUserRoles(User user) throws IOException, URISyntaxException {
-
         //Given I'm on the Trade user New Profile Details page as authorised DVSA user
         motUI.profile.dvsaViewUserProfile(user, areaOffice2User);
 
@@ -99,7 +94,6 @@ public class ProfilePageViewTests extends DslTest {
     @Test(groups = {"BVT", "BL-448"},
             description = "Verifies that authorised user can see qualification section on user profile")
     public void anyUserCanSeeQualificationsSection() throws IOException, URISyntaxException {
-
         //Given I'm on the Trade user New Profile Details page as area office user
         motUI.profile.dvsaViewUserProfile(motApi.user.createAreaOfficeOne("Ao1"), tester);
 
@@ -110,7 +104,6 @@ public class ProfilePageViewTests extends DslTest {
     @Test(groups = {"BVT", "BL-448"},
             description = "Verifies that user can see account security section on own user profile")
     public void anyUserCanSeeAccountSecuritySectionOnOwnProfile() throws IOException, URISyntaxException {
-
         //Given I'm on the New Profile Details page as a tester
         motUI.profile.viewYourProfile(motApi.user.createTester(site.getId()));
 
@@ -121,7 +114,6 @@ public class ProfilePageViewTests extends DslTest {
     @Test(groups = {"Regression", "BL-448"},
             description = "Verifies that csco user can see account management section on other user profile")
     public void cscoUserCanSeeAccountManagementSectionOnAnyProfile() throws IOException, URISyntaxException {
-
         //Given I'm on the New Profile Details page as a csco
         motUI.profile.dvsaViewUserProfile(
                 motApi.user.createCustomerServiceOfficer(false), motApi.user.createUserAsAreaOfficeTwo("ao2")
@@ -136,7 +128,6 @@ public class ProfilePageViewTests extends DslTest {
                     "on trade user profile",
             dataProvider = "dvsaUser")
     public void dvsaUserCanSeeChangeQualificationLinksOnTradeProfile(User user) throws IOException, URISyntaxException {
-
         //Given I'm on the New Profile Details page as logged user
         motUI.profile.dvsaViewUserProfile(user, tester);
 
@@ -161,7 +152,6 @@ public class ProfilePageViewTests extends DslTest {
 
     @Test(groups = {"2fa", "BL-1963"})
     public void registered2faTradeUserCanSeeSecurityCardPanelOnOwnProfile()  throws IOException, URISyntaxException {
-
         // Given I have registered for two factor authentication
         User twoFactorTester = motApi.user.createTester(site.getId());
 
@@ -174,7 +164,6 @@ public class ProfilePageViewTests extends DslTest {
 
     @Test(testName = "2faHardStopDisabled", groups = {"2fa", "BL-1963"})
     public void notRegistered2faTradeUserCanNotSeeSecurityCardPanelOnOwnProfile()  throws IOException, URISyntaxException {
-
         // Given I have not registered for two factor authentication
         User nonTwoFactorTester = motApi.user.createNon2FaTester(site.getId());
 
@@ -187,7 +176,6 @@ public class ProfilePageViewTests extends DslTest {
 
     @Test(groups = {"2fa", "BL-1963"}, dataProvider = "dvsaUserForSecurityCard")
     public void dvsaCanSeeSecurityCardPanelOnRegistered2faTradeUserProfile(User dvsaUser)  throws IOException, URISyntaxException {
-
         step("Given a tester who has registered for two factor authentication");
         User twoFactorTester = motApi.user.createTester(site.getId());
 
@@ -200,7 +188,6 @@ public class ProfilePageViewTests extends DslTest {
 
     @Test(groups = {"2fa", "BL-1963"}, dataProvider = "dvsaUserForSecurityCard")
     public void dvsaCannotSeeSecurityCardPanelOnNonRegistered2faTradeUserProfile(User dvsaUser)  throws IOException, URISyntaxException {
-
         // Given a tester who has not registered for two factor authentication
         tester = motApi.user.createNon2FaTester(site.getId());
 

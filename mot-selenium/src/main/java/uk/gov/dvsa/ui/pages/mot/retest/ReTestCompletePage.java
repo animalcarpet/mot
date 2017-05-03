@@ -15,7 +15,7 @@ public class ReTestCompletePage extends Page {
 
     private static final String PAGE_TITLE = "MOT re-test complete";
     private static final String PAGE_TITLE_REINSPECTION = "MOT reinspection complete";
-    private static final String SUCCESSFULL_REINSPECTION_MSG = "Certificate generated successfully";
+    private static final String SUCCESSFUL_REINFECTION_MSG = "Certificate generated successfully";
 
     public ReTestCompletePage(MotAppDriver driver) {
         super(driver);
@@ -40,6 +40,6 @@ public class ReTestCompletePage extends Page {
     }
 
     public boolean isReinspectionSuccessfull() {
-        return reinspectionMsg.getText().contains(SUCCESSFULL_REINSPECTION_MSG);
+        return reinspectionMsg.getText().contains(SUCCESSFUL_REINFECTION_MSG);
     }
 }

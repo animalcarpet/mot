@@ -39,8 +39,8 @@ public class UserSearchPage extends Page {
         return this;
     }
 
-    public UserSearchPage searchForUserByFirstName(String firstname) {
-        FormDataHelper.enterText(userFirstNameInputField, firstname);
+    public UserSearchPage searchForUserByFirstName(String firstName) {
+        FormDataHelper.enterText(userFirstNameInputField, firstName);
         return this;
     }
 
