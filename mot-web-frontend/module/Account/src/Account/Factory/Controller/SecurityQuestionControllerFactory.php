@@ -4,6 +4,7 @@ namespace Account\Factory\Controller;
 
 use Account\Controller\SecurityQuestionController;
 use Account\Service\SecurityQuestionService;
+use UserAdmin\Service\UserAdminSessionManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -13,10 +14,16 @@ class SecurityQuestionControllerFactory implements FactoryInterface
     {
         $appServiceLocator = $controllerManager->getServiceLocator();
 
-        /** @var SecurityQuestionService */
+        /* @var SecurityQuestionService */
         $service = $appServiceLocator->get(SecurityQuestionService::class);
 
-        $controller = new SecurityQuestionController($service);
+        /* @var UserAdminSessionManager */
+        $userAdminSessionManager = $appServiceLocator->get(UserAdminSessionManager::class);
+
+        $controller = new SecurityQuestionController(
+            $service,
+            $userAdminSessionManager
+        );
 
         return $controller;
     }

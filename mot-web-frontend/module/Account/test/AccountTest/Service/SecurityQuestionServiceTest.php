@@ -1,16 +1,13 @@
 <?php
 
-
 namespace AccountTest\Service;
 
-use Account\Controller\PasswordResetController;
 use Account\Service\SecurityQuestionService;
 use DvsaClient\Entity\Person;
 use DvsaClient\Mapper\PersonMapper;
 use DvsaClient\Mapper\UserAdminMapper;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Dto\Security\SecurityQuestionDto;
-use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
 use DvsaCommonTest\TestUtils\XMock;
 use UserAdmin\Service\UserAdminSessionManager;
@@ -20,8 +17,7 @@ use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use Account\Validator\ClaimValidator;
 
 /**
- * Class SecurityQuestionServiceTest
- * @package AccountTest\Service
+ * Class SecurityQuestionServiceTest.
  */
 class SecurityQuestionServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -70,14 +66,12 @@ class SecurityQuestionServiceTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertSame(self::FIRST_QUESTION, $this->service->getQuestionNumber());
         $this->assertSame(self::PERSON_ID, $this->service->getUserId());
-        $this->assertSame(PasswordResetController::STEP_2, $this->service->getStep());
         $this->assertSame(['First security question - your answer was ', 'correct'], $this->service->getSuccessMessage());
         $this->assertSame(['First security question - your answer is ', 'not correct'], $this->service->getErrorMessage());
         $this->assertFalse($this->service->getQuestionSuccess());
 
         $this->service->setUserAndQuestion(self::PERSON_ID, self::SECOND_QUESTION);
         $this->assertSame(self::SECOND_QUESTION, $this->service->getQuestionNumber());
-        $this->assertSame(PasswordResetController::STEP_3, $this->service->getStep());
         $this->assertSame(['Second security question - your answer is ', 'not correct'], $this->service->getErrorMessage());
         $this->assertFalse($this->service->getQuestionSuccess());
     }
@@ -262,7 +256,7 @@ class SecurityQuestionServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testManageSessionQuestionAnswerTooLong()
     {
-        $answer = str_pad('A', ClaimValidator::MAX_ANSWER+1, 'A');
+        $answer = str_pad('A', ClaimValidator::MAX_ANSWER + 1, 'A');
         $request = new FakeRequest(true, $answer);
 
         $this->service->setUserAndQuestion(self::PERSON_ID, self::FIRST_QUESTION);
@@ -293,7 +287,6 @@ class SecurityQuestionServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->service->manageSessionQuestion($request, $this->messenger));
     }
 
-
     public function dataProviderTestManageSessionQuestionInitPostX()
     {
         return [
@@ -323,12 +316,14 @@ class SecurityQuestionServiceTest extends \PHPUnit_Framework_TestCase
     private function getPersonMapperMock()
     {
         $this->person = XMock::of(PersonMapper::class);
+
         return $this->person;
     }
 
     private function getUserAdminMapperMock()
     {
         $this->userAdmin = XMock::of(UserAdminMapper::class);
+
         return $this->userAdmin;
     }
 }

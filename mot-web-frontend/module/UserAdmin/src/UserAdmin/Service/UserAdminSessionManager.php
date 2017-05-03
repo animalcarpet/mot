@@ -3,13 +3,11 @@
 namespace UserAdmin\Service;
 
 use Core\Service\MotFrontendAuthorisationServiceInterface;
-use DvsaCommon\Auth\PermissionInSystem;
-use Zend\Http\Request;
 use Zend\Session\AbstractContainer;
 use Zend\Session\Container;
 
 /**
- * Class UserAdminSessionManager
+ * Class UserAdminSessionManager.
  */
 class UserAdminSessionManager
 {
@@ -18,6 +16,7 @@ class UserAdminSessionManager
     const MAX_NUMBER_ATTEMPT = 3;
     const USER_ADMIN_SESSION_NAME = 'userAdminSession';
     const USER_KEY = 'user';
+    const USER_NAME_KEY = 'username';
     const SEARCH_PARAM_KEY = 'searchParams';
     const EMAIL_SENT = 'email-sent';
     const EMAIL_ADDRESS = 'emailAddress';
@@ -33,8 +32,9 @@ class UserAdminSessionManager
     protected $authorisationService;
 
     /**
-     * Initialization of the User Admin Session Manager
-     * @param \Zend\Session\Container $container
+     * Initialization of the User Admin Session Manager.
+     *
+     * @param \Zend\Session\Container                                $container
      * @param \Core\Service\MotFrontendAuthorisationServiceInterface $authorisationService
      */
     public function __construct(Container $container, MotFrontendAuthorisationServiceInterface $authorisationService)
@@ -44,10 +44,10 @@ class UserAdminSessionManager
     }
 
     /**
-     * This function initialise the user admin session to the default state
+     * This function initialise the user admin session to the default state.
      *
-     * @param int       $personId
-     * @param array     $searchParams
+     * @param int   $personId
+     * @param array $searchParams
      */
     public function createUserAdminSession($personId, $searchParams)
     {
@@ -67,7 +67,7 @@ class UserAdminSessionManager
     }
 
     /**
-     * This function delete the user admin session
+     * This function delete the user admin session.
      */
     public function deleteUserAdminSession()
     {
@@ -75,7 +75,7 @@ class UserAdminSessionManager
     }
 
     /**
-     * This function set the value for one element of the session
+     * This function set the value for one element of the session.
      *
      * @param $key
      * @param $value
@@ -86,9 +86,10 @@ class UserAdminSessionManager
     }
 
     /**
-     * This function return the value for one element of the session
+     * This function return the value for one element of the session.
      *
      * @param $key
+     *
      * @return mixed
      */
     public function getElementOfUserAdminSession($key)
@@ -97,9 +98,10 @@ class UserAdminSessionManager
     }
 
     /**
-     * This function return true if the key exist in the session
+     * This function return true if the key exist in the session.
      *
      * @param $key
+     *
      * @return bool
      */
     public function checkElementOfUserAdminSession($key)
@@ -107,14 +109,13 @@ class UserAdminSessionManager
         return $this->userAdminSession->offsetExists($key);
     }
 
-
     public static function getSuccessKey($questionNr)
     {
-        return join('', ['question', $questionNr, '-success']);
+        return implode('', ['question', $questionNr, '-success']);
     }
 
     public static function getAttemptKey($questionNumber)
     {
-        return join('', ['question', $questionNumber, '-attempt']);
+        return implode('', ['question', $questionNumber, '-attempt']);
     }
 }

@@ -4,7 +4,6 @@
  *
  * @link http://gitlab.clb.npm/mot/mot
  */
-
 namespace AccountTest\Controller;
 
 use Account\Controller\SecurityQuestionController;
@@ -14,11 +13,11 @@ use Account\ViewModel\PasswordResetFormModel;
 use Application\Helper\PrgHelper;
 use CoreTest\Controller\AbstractFrontendControllerTestCase;
 use Dvsa\Mot\Frontend\PersonModule\View\PersonProfileUrlGenerator;
-use DvsaCommon\Constants\FeatureToggle;
 use DvsaCommon\HttpRestJson\Exception\NotFoundException;
 use DvsaCommon\UrlBuilder\AccountUrlBuilderWeb;
 use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
+use UserAdmin\Service\UserAdminSessionManager;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
 
@@ -37,7 +36,12 @@ class SecurityQuestionControllerTest extends AbstractFrontendControllerTestCase
     /**
      * @var SecurityQuestionService
      */
-    protected $securityQuestionService;
+    private $securityQuestionService;
+
+    /**
+     * @var UserAdminSessionManager
+     */
+    private $userAdminSessionManager;
 
     protected function setUp()
     {
@@ -46,6 +50,7 @@ class SecurityQuestionControllerTest extends AbstractFrontendControllerTestCase
         $this->setServiceManager($serviceManager);
 
         $this->securityQuestionService = XMock::of(SecurityQuestionService::class);
+        $this->userAdminSessionManager = XMock::of(UserAdminSessionManager::class);
 
         $personProfileUrlGenerator = $this
             ->getMockBuilder(PersonProfileUrlGenerator::class)
@@ -56,7 +61,10 @@ class SecurityQuestionControllerTest extends AbstractFrontendControllerTestCase
             ->setService(PersonProfileUrlGenerator::class, $personProfileUrlGenerator);
 
         $this->setController(
-            new SecurityQuestionController($this->securityQuestionService)
+            new SecurityQuestionController(
+                $this->securityQuestionService,
+                $this->userAdminSessionManager
+            )
         );
 
         $this->getController()->setServiceLocator($serviceManager);
@@ -121,61 +129,61 @@ class SecurityQuestionControllerTest extends AbstractFrontendControllerTestCase
         return [
             //  --  index: access action  --
             [
-                'method'   => 'get',
-                'action'   => 'index',
+                'method' => 'get',
+                'action' => 'index',
                 'postData' => [],
-                'mocks'    => [],
-                'expect'   => [
+                'mocks' => [],
+                'expect' => [
                     'viewModel' => true,
                 ],
             ],
             //  --  index: post with valid data    --
             [
-                'method'   => 'post',
-                'action'   => 'index',
+                'method' => 'post',
+                'action' => 'index',
                 'postData' => [
                     self::QUESTION_ONE => self::ANSWER,
                 ],
-                'mocks'    => [
+                'mocks' => [
                     [
-                        'class'  => 'securityQuestionService',
+                        'class' => 'securityQuestionService',
                         'method' => 'manageSessionQuestion',
                         'params' => [],
                         'result' => true,
                     ],
                 ],
-                'expect'   => [
+                'expect' => [
                     'url' => AccountUrlBuilderWeb::forgottenPasswordNotAuthenticated(),
                 ],
             ],
             //  --  index: post with invalid data  --
             [
-                'method'   => 'post',
-                'action'   => 'index',
+                'method' => 'post',
+                'action' => 'index',
                 'postData' => [
                     self::QUESTION_ONE => self::ANSWER,
                 ],
-                'mocks'    => [
+                'mocks' => [
                     [
-                        'class'  => 'securityQuestionService',
+                        'class' => 'securityQuestionService',
                         'method' => 'manageSessionQuestion',
                         'params' => [],
                         'result' => false,
                     ],
                     [
-                        'class'  => 'securityQuestionService',
+                        'class' => 'securityQuestionService',
                         'method' => 'getUserId',
                         'params' => null,
                         'result' => self::PERSON_ID,
                     ],
                     [
-                        'class'  => 'securityQuestionService',
+                        'class' => 'securityQuestionService',
                         'method' => 'getQuestionNumber',
                         'params' => [],
                         'result' => self::QUESTION_NUNMBER,
                     ],
                 ],
-                'expect'   => [
+                'expect' => [
                     'url' => AccountUrlBuilderWeb::forgottenPasswordSecurityQuestion(
                         self::PERSON_ID,
                         self::QUESTION_NUNMBER
@@ -189,15 +197,15 @@ class SecurityQuestionControllerTest extends AbstractFrontendControllerTestCase
                 'postData' => [
                     self::QUESTION_ONE => $this->answerTooLong,
                 ],
-                'mocks'    => [
+                'mocks' => [
                     [
-                        'class'  => 'securityQuestionService',
+                        'class' => 'securityQuestionService',
                         'method' => 'getUserId',
                         'params' => null,
                         'result' => self::PERSON_ID,
                     ],
                     [
-                        'class'  => 'securityQuestionService',
+                        'class' => 'securityQuestionService',
                         'method' => 'getQuestionNumber',
                         'params' => [],
                         'result' => self::QUESTION_NUNMBER,
@@ -212,39 +220,39 @@ class SecurityQuestionControllerTest extends AbstractFrontendControllerTestCase
             ],
             //  --  index: get with error get question  --
             [
-                'method'   => 'get',
-                'action'   => 'index',
+                'method' => 'get',
+                'action' => 'index',
                 'postData' => [
                     self::QUESTION_ONE => self::ANSWER,
                 ],
-                'mocks'    => [
+                'mocks' => [
                     [
-                        'class'  => 'securityQuestionService',
+                        'class' => 'securityQuestionService',
                         'method' => 'manageSessionQuestion',
                         'params' => [],
                         'result' => false,
                     ],
                     [
-                        'class'  => 'securityQuestionService',
+                        'class' => 'securityQuestionService',
                         'method' => 'getQuestion',
                         'params' => [],
                         'result' => new NotFoundException('/', 'post', [], 10, 'Question not found'),
                     ],
                 ],
-                'expect'   => [
+                'expect' => [
                     'url' => AccountUrlBuilderWeb::forgottenPasswordNotAuthenticated(),
                 ],
             ],
             //  --  index: post multi data  --
             [
-                'method'   => 'post',
-                'action'   => 'index',
+                'method' => 'post',
+                'action' => 'index',
                 'postData' => [
                     self::QUESTION_ONE => self::ANSWER,
                     PrgHelper::FORM_GUID_FIELD_NAME => 'testToken',
                 ],
-                'mocks'    => [],
-                'expect'   => [
+                'mocks' => [],
+                'expect' => [
                     'url' => 'redirectUrl',
                 ],
             ],

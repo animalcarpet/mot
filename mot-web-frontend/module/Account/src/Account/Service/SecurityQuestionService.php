@@ -2,7 +2,6 @@
 
 namespace Account\Service;
 
-use Account\Controller\PasswordResetController;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Dto\Security\SecurityQuestionDto;
 use UserAdmin\Service\UserAdminSessionManager;
@@ -13,8 +12,7 @@ use DvsaClient\Entity\Person;
 use Account\Validator\ClaimValidator;
 
 /**
- * Class SecurityQuestionService
- * @package Account\Service
+ * Class SecurityQuestionService.
  */
 class SecurityQuestionService
 {
@@ -55,12 +53,13 @@ class SecurityQuestionService
     public function setUserAndQuestion($userId, $questionNumber)
     {
         $this->userId = $userId;
-        $this->questionNumber = (int)$questionNumber;
+        $this->questionNumber = (int) $questionNumber;
+
         return $this;
     }
 
     /**
-     * This function initialize the session to the default value
+     * This function initialize the session to the default value.
      *
      * @param array $searchParams
      */
@@ -72,7 +71,7 @@ class SecurityQuestionService
     }
 
     /**
-     * This function check if the user is starting the security check
+     * This function check if the user is starting the security check.
      *
      * @return bool
      */
@@ -82,31 +81,31 @@ class SecurityQuestionService
             UserAdminSessionManager::getAttemptKey(UserAdminSessionManager::FIRST_QUESTION)
         );
 
-        return (
+        return
             ($this->session->getElementOfUserAdminSession(UserAdminSessionManager::USER_KEY) != $this->userId)
             || (
                 $this->questionNumber === UserAdminSessionManager::FIRST_QUESTION
                 && $countAttempts === UserAdminSessionManager::MAX_NUMBER_ATTEMPT
             )
-        );
+        ;
     }
 
     /**
-     * This function return true if the user needs to go on the next page
+     * This function return true if the user needs to go on the next page.
      *
      * @return bool
      */
     public function isRedirectionIsNeeded()
     {
-        return (
+        return
             $this->isUserAuthenticated()
             || $this->isAnswerCorrect()
             || $this->getNumberOfAttempt() <= 0
-        );
+        ;
     }
 
     /**
-     * This function return if the answer to a question is valid
+     * This function return if the answer to a question is valid.
      *
      * @return bool
      */
@@ -118,7 +117,7 @@ class SecurityQuestionService
     }
 
     /**
-     * This function return true if the user is successfully authenticate
+     * This function return true if the user is successfully authenticate.
      *
      * @return bool
      */
@@ -128,7 +127,7 @@ class SecurityQuestionService
     }
 
     /**
-     * This function return the number of attempt of a question
+     * This function return the number of attempt of a question.
      *
      * @return int
      */
@@ -139,11 +138,11 @@ class SecurityQuestionService
         );
     }
 
-
     /**
-     * This function return the information about a person from the helper desk
+     * This function return the information about a person from the helper desk.
      *
      * @return Person
+     *
      * @throws \Exception
      */
     public function getPerson()
@@ -156,9 +155,10 @@ class SecurityQuestionService
     }
 
     /**
-     * This function return the information about a question for a person
+     * This function return the information about a question for a person.
      *
      * @return SecurityQuestionDto
+     *
      * @throws \Exception
      */
     public function getQuestion()
@@ -171,10 +171,12 @@ class SecurityQuestionService
     }
 
     /**
-     * This function validate the information about a question for a person
+     * This function validate the information about a question for a person.
      *
      * @param string $answer
+     *
      * @return bool
+     *
      * @throws \Exception
      */
     public function validateQuestion($answer)
@@ -189,9 +191,9 @@ class SecurityQuestionService
     }
 
     /**
-     * This function is validating is answer and return the view or the next page in function of it
+     * This function is validating is answer and return the view or the next page in function of it.
      *
-     * @param Request $request
+     * @param Request                                    $request
      * @param \Zend\Mvc\Controller\Plugin\FlashMessenger $flashMessenger
      *
      * @return ViewModel|Response
@@ -199,9 +201,10 @@ class SecurityQuestionService
     public function manageSessionQuestion($request, $flashMessenger)
     {
         if ($request->isPost()) {
-            $answer = $request->getPost('question' . $this->questionNumber);
+            $answer = $request->getPost('question'.$this->questionNumber);
             if (strlen(trim($answer)) <= 0) {
                 $flashMessenger->addErrorMessage(self::NO_VALUE_ENTER);
+
                 return $this->isRedirectionIsNeeded();
             }
 
@@ -212,6 +215,7 @@ class SecurityQuestionService
                         ClaimValidator::MAX_ANSWER
                     )
                 );
+
                 return $this->isRedirectionIsNeeded();
             }
 
@@ -227,7 +231,7 @@ class SecurityQuestionService
     }
 
     /**
-     * This function get the error message depending on success or not
+     * This function get the error message depending on success or not.
      *
      * @param \Zend\Mvc\Controller\Plugin\FlashMessenger $flashMessenger
      * @param $success
@@ -242,9 +246,10 @@ class SecurityQuestionService
     }
 
     /**
-     * This function check the result of the answer
+     * This function check the result of the answer.
      *
      * @param bool $result
+     *
      * @return bool
      */
     private function checkResultOfTheAnswer($result)
@@ -254,6 +259,7 @@ class SecurityQuestionService
 
         if ($result === true) {
             $this->session->updateUserAdminSession($sessionSuccessKey, true);
+
             return true;
         }
 
@@ -268,11 +274,11 @@ class SecurityQuestionService
     }
 
     /**
-     * GETTER
+     * GETTER.
      */
 
     /**
-     * This function return the good message for success
+     * This function return the good message for success.
      *
      * @return array
      */
@@ -282,7 +288,7 @@ class SecurityQuestionService
     }
 
     /**
-     * This function return the good message for error
+     * This function return the good message for error.
      *
      * @return array
      */
@@ -291,11 +297,12 @@ class SecurityQuestionService
         if ($this->questionNumber == 1) {
             return ['First security question - your answer is ', 'not correct'];
         }
+
         return ['Second security question - your answer is ', 'not correct'];
     }
 
     /**
-     * This function return the correct error message for the security question
+     * This function return the correct error message for the security question.
      *
      * @return string
      */
@@ -306,19 +313,8 @@ class SecurityQuestionService
         } elseif ($this->getNumberOfAttempt() === 1) {
             return sprintf(self::NUMBER_ATTEMPT_ONE, $this->getNumberOfAttempt());
         }
+
         return '';
-    }
-
-    /**
-     * This function return the good header text in function of the question we are at
-     *
-     * @return string
-     */
-    public function getStep()
-    {
-        $isFirstQuestion = ($this->questionNumber == UserAdminSessionManager::FIRST_QUESTION);
-
-        return $isFirstQuestion ? PasswordResetController::STEP_2 : PasswordResetController::STEP_3;
     }
 
     /**

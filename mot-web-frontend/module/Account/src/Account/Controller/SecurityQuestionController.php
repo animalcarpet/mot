@@ -4,13 +4,12 @@
  *
  * @link http://gitlab.clb.npm/mot/mot
  */
-
 namespace Account\Controller;
 
 use Account\AbstractClass\AbstractSecurityQuestionController;
 use Account\ViewModel\SecurityQuestionViewModel;
 use Dvsa\Mot\Frontend\PersonModule\View\PersonProfileUrlGenerator;
-use DvsaCommon\Constants\FeatureToggle;
+use UserAdmin\Service\UserAdminSessionManager;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -18,7 +17,7 @@ use Zend\View\Model\ViewModel;
  */
 class SecurityQuestionController extends AbstractSecurityQuestionController
 {
-    const PAGE_TITLE    = 'Forgotten your password';
+    const PAGE_TITLE = 'Forgotten your password';
     const PAGE_SUBTITLE = 'MOT testing service';
 
     /**
@@ -28,7 +27,8 @@ class SecurityQuestionController extends AbstractSecurityQuestionController
      */
     public function indexAction()
     {
-        $personId   = $this->params()->fromRoute('personId');
+        $this->userAdminSessionManager->updateUserAdminSession(UserAdminSessionManager::USER_NAME_KEY, '');
+        $personId = $this->params()->fromRoute('personId');
         $questionNumber = $this->params()->fromRoute('questionNumber');
 
         $viewModel = $this->createViewModel();
@@ -36,7 +36,6 @@ class SecurityQuestionController extends AbstractSecurityQuestionController
 
         $this->layout()->setVariable('pageSubTitle', self::PAGE_SUBTITLE);
         $this->layout()->setVariable('pageTitle', self::PAGE_TITLE);
-        $this->layout()->setVariable('progress', $this->service->getStep());
 
         return $view;
     }
