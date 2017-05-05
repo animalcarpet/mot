@@ -199,6 +199,11 @@ public class PageNavigator {
         return new LoginPage(driver);
     }
 
+    public TwoFactorPinEntryPage goToTwoFactorPinEntryPage() throws IOException {
+        driver.loadBaseUrl();
+        return new TwoFactorPinEntryPage(driver);
+    }
+
     public ManageRolesPage goToManageRolesPageViaUserSearch(User loggedUser, User searchedUser) throws IOException, URISyntaxException {
         return goToUserSearchedProfilePageViaUserSearch(loggedUser, searchedUser).clickManageRolesLink();
     }

@@ -17,6 +17,7 @@ import uk.gov.dvsa.ui.pages.authentication.securitycard.OrderYourCardPromptPage;
 import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostForgottenCardAlreadyOrderedPage;
 import uk.gov.dvsa.ui.pages.authentication.securitycard.lost_or_forgotten.LostForgottenCardQuestionOnePage;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.RegisterCardInformationPage;
+import uk.gov.dvsa.ui.pages.authentication.twofactorauth.TwoFactorLockedAccountWarningPage;
 import uk.gov.dvsa.ui.pages.authentication.twofactorauth.TwoFactorPinEntryPage;
 import uk.gov.dvsa.ui.pages.events.EventsHistoryPage;
 import uk.gov.dvsa.ui.pages.events.HistoryType;
@@ -147,5 +148,15 @@ public class MotUI {
 
     public HardStop2faPage loginExpecting2faHardStopPage(User user) throws IOException {
         return loginUser(user, HardStop2faPage.class);
+    }
+
+    public void enterSecurityPinMultipleTimes(String pin, int numberOfEntries) {
+        for (int i = 0; i < numberOfEntries; i++) {
+            authentication.enterPinAndSubmit(pin);
+        }
+    }
+
+    public TwoFactorLockedAccountWarningPage loginExpectingLockedAccountWarningPage(User user) throws IOException {
+        return loginUser(user, TwoFactorLockedAccountWarningPage.class);
     }
 }

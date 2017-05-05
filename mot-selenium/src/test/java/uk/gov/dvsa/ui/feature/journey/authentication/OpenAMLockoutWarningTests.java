@@ -1,5 +1,6 @@
 package uk.gov.dvsa.ui.feature.journey.authentication;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import uk.gov.dvsa.domain.model.User;
 import uk.gov.dvsa.ui.DslTest;
@@ -27,7 +28,7 @@ public class OpenAMLockoutWarningTests extends DslTest {
         WarningPage warningPage = loginPage.login(user.getUsername(), "Wrong", LockOutWarningPage.class);
 
         // Then I am redirected to Lockout warning page
-        warningPage.isMessageDisplayed();
+        Assert.assertTrue(warningPage.isMessageDisplayed());
     }
 
     @Test(groups = {"Regression", "VM-12163"})
@@ -41,6 +42,6 @@ public class OpenAMLockoutWarningTests extends DslTest {
         WarningPage warningPage = loginPage.login(user.getUsername(), "Wrong", LockedAccountWarningPage.class);
 
         // Then my account should be locked
-        warningPage.isMessageDisplayed();
+        Assert.assertTrue(warningPage.isMessageDisplayed());
     }
 }
