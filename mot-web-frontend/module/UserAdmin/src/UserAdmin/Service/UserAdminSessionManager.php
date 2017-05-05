@@ -13,10 +13,12 @@ class UserAdminSessionManager
 {
     const FIRST_QUESTION = 1;
     const SECOND_QUESTION = 2;
-    const MAX_NUMBER_ATTEMPT = 3;
+    const MAX_NUMBER_ATTEMPT = 10;
+    const WARNING_WHEN_ATTEMPT_LEFT = 3;
     const USER_ADMIN_SESSION_NAME = 'userAdminSession';
     const USER_KEY = 'user';
     const USER_NAME_KEY = 'username';
+    const FORGOTTEN_PASSWORD_REMAINING_ATTEMPTS_KEY = 'forgotten-password-remaining-attempts';
     const SEARCH_PARAM_KEY = 'searchParams';
     const EMAIL_SENT = 'email-sent';
     const EMAIL_ADDRESS = 'emailAddress';
@@ -57,6 +59,15 @@ class UserAdminSessionManager
         $this->userAdminSession->offsetSet(self::getSuccessKey(self::SECOND_QUESTION), false);
         $this->userAdminSession->offsetSet(self::getAttemptKey(self::SECOND_QUESTION), self::MAX_NUMBER_ATTEMPT);
         $this->userAdminSession->offsetSet(self::SEARCH_PARAM_KEY, http_build_query($searchParams));
+    }
+
+    /**
+     * @param int $personId
+     */
+    public function createForgottenPasswordSession($personId)
+    {
+        $this->userAdminSession->offsetSet(self::USER_KEY, $personId);
+        $this->userAdminSession->offsetSet(self::FORGOTTEN_PASSWORD_REMAINING_ATTEMPTS_KEY, self::MAX_NUMBER_ATTEMPT);
     }
 
     public function isUserAuthenticated($personId)

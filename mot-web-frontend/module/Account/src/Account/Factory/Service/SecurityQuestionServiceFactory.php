@@ -21,8 +21,12 @@ class SecurityQuestionServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $mapperFactory = $serviceLocator->get(MapperFactory::class);
+
         return new SecurityQuestionService(
-            $serviceLocator->get(MapperFactory::class),
+            $mapperFactory->Person,
+            $mapperFactory->UserAdmin,
+            $mapperFactory->Account,
             $serviceLocator->get(UserAdminSessionManager::class),
             $serviceLocator->get(ParamObfuscator::class)
         );

@@ -1,12 +1,16 @@
 <?php
 namespace AccountTest\Factory\Service;
 
+use Account\Factory\Service\SecurityQuestionServiceFactory;
+use Account\Service\SecurityQuestionService;
+use CoreTest\Service\StubMapperFactory;
+use DvsaClient\Mapper\AccountMapper;
+use DvsaClient\Mapper\PersonMapper;
+use DvsaClient\Mapper\UserAdminMapper;
 use DvsaClient\MapperFactory;
 use DvsaCommon\Obfuscate\ParamObfuscator;
 use DvsaCommonTest\TestUtils\TestCaseTrait;
 use DvsaCommonTest\TestUtils\XMock;
-use Account\Factory\Service\SecurityQuestionServiceFactory;
-use Account\Service\SecurityQuestionService;
 use UserAdmin\Service\UserAdminSessionManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -22,7 +26,13 @@ class SecurityQuestionServiceFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $mockServiceLocator = XMock::of(ServiceLocatorInterface::class, ['get']);
 
-        $this->mockMethod($mockServiceLocator, 'get', $this->at(0), XMock::of(MapperFactory::class));
+        $mapperFactory = new StubMapperFactory([
+            MapperFactory::PERSON => XMock::of(PersonMapper::class),
+            MapperFactory::USER_ADMIN => XMock::of(UserAdminMapper::class),
+            MapperFactory::ACCOUNT => XMock::of(AccountMapper::class)
+        ]);
+
+        $this->mockMethod($mockServiceLocator, 'get', $this->at(0), $mapperFactory);
         $this->mockMethod($mockServiceLocator, 'get', $this->at(1), XMock::of(UserAdminSessionManager::class));
         $this->mockMethod($mockServiceLocator, 'get', $this->at(2), XMock::of(ParamObfuscator::class));
 

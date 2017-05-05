@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT Frontend project.
+ *
+ * @link https://github.com/dvsa/mot
+ */
 
 namespace Account;
 

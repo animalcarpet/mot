@@ -2,8 +2,9 @@
 /**
  * This file is part of the DVSA MOT Frontend project.
  *
- * @link http://gitlab.clb.npm/mot/mot
+ * @link https://github.com/dvsa/mot
  */
+
 namespace AccountTest\Controller;
 
 use Account\Controller\SecurityQuestionController;

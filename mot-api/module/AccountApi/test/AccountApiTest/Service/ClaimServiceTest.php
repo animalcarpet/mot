@@ -2,8 +2,11 @@
 
 namespace AccountApiTest\Service;
 
+use AccountApi\Crypt\SecurityAnswerHashFunction;
+use AccountApi\Mapper\SecurityQuestionMapper;
 use AccountApi\Service\ClaimService;
 use AccountApi\Service\OpenAmIdentityService;
+use AccountApi\Service\SecurityQuestionService;
 use AccountApi\Service\Validator\ClaimValidator;
 use AccountApi\Service\Validator\PersonSecurityAnswerValidator;
 use Doctrine\ORM\AbstractQuery;
@@ -25,8 +28,6 @@ use DvsaEntities\Repository\PersonRepository;
 use DvsaEntities\Repository\PersonSecurityAnswerRepository;
 use DvsaEntities\Repository\SecurityQuestionRepository;
 use DvsaEventApi\Service\EventService;
-use AccountApi\Mapper\SecurityQuestionMapper;
-use AccountApi\Service\SecurityQuestionService;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 class ClaimServiceTest extends AbstractServiceTestCase
@@ -89,7 +90,9 @@ class ClaimServiceTest extends AbstractServiceTestCase
             XMock::of(PersonSecurityAnswerRepository::class),
             XMock::of(PersonSecurityAnswerValidator::class),
             $this->mockParamObfuscator,
-            $this->mockEntityManager
+            $this->mockEntityManager,
+            new SecurityAnswerHashFunction(),
+            0
         );
 
         $this->mockIdentityService = $this->getMock(MotIdentityProviderInterface::class);

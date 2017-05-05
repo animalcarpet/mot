@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT Frontend project.
+ *
+ * @link https://github.com/dvsa/mot
+ */
 
 namespace Account\Controller;
 
@@ -48,6 +53,8 @@ class PasswordResetController extends AbstractAuthActionController
     const TEXT_LINK_BEEN_USED = 'The password reset link has already been used.';
     const TEXT_YOU_HAVE_ARRIVED_HERE = 'Now create a new memorable password for your account.';
     const TEXT_YOU_MUST_CHANGE_PWORD = 'Your password has expired. Change it now.';
+
+    const SESSION_KEY_EMAIL = 'emailAddress';
 
     /** @var PasswordResetService $passwordResetService */
     protected $passwordResetService;
@@ -107,10 +114,7 @@ class PasswordResetController extends AbstractAuthActionController
                     }
 
                     return $this->redirect()->toUrl(
-                        AccountUrlBuilderWeb::forgottenPasswordSecurityQuestion(
-                            $personId,
-                            UserAdminSessionManager::FIRST_QUESTION
-                        )
+                        $this->url()->fromRoute('forgotten-password/security-questions', ['personId' => $personId])
                     );
                 } catch (NotFoundException $e) {
                     $this->view->addError(
@@ -235,18 +239,19 @@ class PasswordResetController extends AbstractAuthActionController
      */
     public function confirmationAction()
     {
-        $success = $this->userAdminSessionManager->isUserAuthenticated(
-            $this->userAdminSessionManager->getElementOfUserAdminSession(UserAdminSessionManager::USER_KEY)
-        );
 
-        if ($success !== true) {
-            return $this->redirect()->toUrl(AccountUrlBuilderWeb::forgottenPasswordNotAuthenticated());
+        if ($this->flashMessenger()->getContainer()->offsetExists(self::SESSION_KEY_EMAIL)){
+            $emailAddress = $this->flashMessenger()->getContainer()->offsetGet(self::SESSION_KEY_EMAIL);
+        }else{
+            $emailAddress = $this->userAdminSessionManager->getElementOfUserAdminSession(
+                UserAdminSessionManager::EMAIL_ADDRESS
+            );
         }
 
         $this->view = new PasswordResetFormModel();
         $this->view->setCfgExpireTime($this->config[self::CFG_PASSWORD_RESET][self::CFG_PASSWORD_RESET_EXPIRE_TIME]);
         $this->view->setConfig($this->config);
-        $this->view->setEmail($this->userAdminSessionManager->getElementOfUserAdminSession(UserAdminSessionManager::EMAIL_ADDRESS));
+        $this->view->setEmail($emailAddress);
 
         $this->layout('layout/layout-govuk.phtml');
         $this->setHeadTitle('Password forgotten');

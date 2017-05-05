@@ -1,11 +1,22 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://github.com/dvsa/mot
+ */
 
 namespace AccountApi\Controller;
 
 use AccountApi\Service\SecurityQuestionService;
-use Dvsa\Mot\Api\RegistrationModule\Service\PersonSecurityAnswerRecorder;
 use DvsaCommonApi\Controller\AbstractDvsaRestfulController;
 use DvsaCommonApi\Model\ApiResponse;
+use DvsaCommonApi\Service\Exception\InvalidFieldValueException;
+use DvsaCommonApi\Service\Exception\MethodNotAllowedException;
+use DvsaCommonApi\Service\Exception\RequiredFieldException;
+use Zend\Http\Request;
+use Zend\Http\Response;
+use Zend\Json\Json;
+use Zend\View\Model\JsonModel;
 
 /**
  * Class SecurityQuestionController
@@ -24,7 +35,7 @@ class SecurityQuestionController extends AbstractDvsaRestfulController
     /**
      * This endpoint is used to retrieve all the question
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return JsonModel
      */
     public function getList()
     {
@@ -34,7 +45,7 @@ class SecurityQuestionController extends AbstractDvsaRestfulController
     /**
      * @param int $userId
      * @param array $data
-     * @return \Zend\View\Model\JsonModel
+     * @return JsonModel
      */
     public function update($userId, $data)
     {
@@ -49,7 +60,7 @@ class SecurityQuestionController extends AbstractDvsaRestfulController
      *
      * It returns 200 if the answer is correct or 401 otherwise.
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return JsonModel
      */
     public function verifyAnswerAction()
     {
@@ -65,7 +76,7 @@ class SecurityQuestionController extends AbstractDvsaRestfulController
      * This endpoint is used to obtain a question for a specific user
      * and question index.
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return JsonModel
      */
     public function getQuestionForPersonAction()
     {
@@ -73,5 +84,48 @@ class SecurityQuestionController extends AbstractDvsaRestfulController
         $userId = (int)$this->params()->fromRoute('uid', 0);
 
         return ApiResponse::jsonOk($this->securityQuestionService->findQuestionByQuestionNumber($questionId, $userId));
+    }
+
+    /**
+     * @return JsonModel
+     * @throws MethodNotAllowedException
+     */
+    public function getQuestionsForPersonAction()
+    {
+        if (Request::METHOD_GET != $this->getRequest()->getMethod()) {
+            throw new MethodNotAllowedException();
+        }
+
+        $personId = $this->params()->fromRoute('personId');
+
+        return ApiResponse::jsonOk($this->securityQuestionService->getQuestionsForPerson($personId));
+    }
+
+    /**
+     * @return JsonModel
+     * @throws InvalidFieldValueException
+     * @throws MethodNotAllowedException
+     * @throws RequiredFieldException
+     */
+    public function verifyAnswersAction()
+    {
+        if (Request::METHOD_POST != $this->getRequest()->getMethod()) {
+            throw new MethodNotAllowedException();
+        }
+
+        $personId = $this->params()->fromRoute('personId');
+        $questionsAndAnswers = Json::decode($this->request->getContent(), Json::TYPE_ARRAY)['questionsAndAnswers'];
+
+        if (empty($questionsAndAnswers)) {
+            throw new RequiredFieldException(['questionsAndAnswers']);
+        }
+
+        try {
+            return ApiResponse::jsonOk(
+                $this->securityQuestionService->verifySecurityAnswersForPerson($personId, $questionsAndAnswers)
+            );
+        } catch (\InvalidArgumentException $e) {
+            throw new InvalidFieldValueException($e->getMessage());
+        }
     }
 }

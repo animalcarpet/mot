@@ -1,10 +1,14 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://github.com/dvsa/mot
+ */
+
 namespace DvsaCommonApiTest\Controller;
 
 use DvsaAuthentication\Identity;
-use DvsaCommon\Enum\PersonAuthType;
 use DvsaCommonTest\Bootstrap;
-use DvsaEntities\Entity\AuthenticationMethod;
 use DvsaEntities\Entity\Person;
 use HttpResponse;
 use PHPUnit_Framework_MockObject_MockObject;
@@ -179,12 +183,23 @@ abstract class AbstractRestfulControllerTestCase extends BaseRestfulControllerTe
     }
 
     /**
-     * @param string $method
      * @param string $action
-     * @param array  $routeParams
-     * @param array  $queryParams
-     * @param array  $postParams
-     *
+     * @param array $postParams
+     * @param array $routeParams
+     * @return HttpResponse|\Zend\Stdlib\ResponseInterface
+     */
+    public function getPostResultToAction($action, array $postParams, array $routeParams = [])
+    {
+        return $this->getResultForAction(Request::METHOD_POST, $action, $routeParams, [], $postParams);
+    }
+
+    /**
+     * @param string $method
+     * @param string|null $action
+     * @param array $routeParams
+     * @param array $queryParams
+     * @param array $postParams
+     * @param array $putParams
      * @return HttpResponse|\Zend\Stdlib\ResponseInterface
      */
     public function getResultForAction(
@@ -206,8 +221,10 @@ abstract class AbstractRestfulControllerTestCase extends BaseRestfulControllerTe
         //  --  set route params    --
         if (!empty($routeParams) && is_array($routeParams)) {
             $content = null;
-            if (strtoupper($method) === Request::METHOD_PUT) {
-                if (!empty($putParams)) {
+            if (in_array(strtoupper($method) , [Request::METHOD_POST,Request::METHOD_PUT])) {
+                if (!empty($postParams)) {
+                    $content = $postParams;
+                } elseif (!empty($putParams)) {
                     $content = $putParams;
                 } elseif (count($routeParams) > 1) {
                     $content = end($routeParams);

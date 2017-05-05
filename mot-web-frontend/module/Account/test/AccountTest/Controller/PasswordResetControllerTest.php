@@ -23,6 +23,7 @@ use DvsaCommonTest\Bootstrap;
 use DvsaCommonTest\TestUtils\XMock;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use UserAdmin\Service\UserAdminSessionManager;
+use Zend\View\Helper\Url;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -54,6 +55,9 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
     /** @var array $config */
     private $config;
 
+    /** @var  Url */
+    private $urlPlugin;
+
     protected function setUp()
     {
         $serviceManager = Bootstrap::getServiceManager();
@@ -66,6 +70,8 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
         $this->mockPasswordResetSrv = XMock::of(PasswordResetService::class);
         $this->mockObfuscator = XMock::of(ParamObfuscator::class);
 
+        $moduleConfig = include __DIR__ . '/../../../config/module.config.php';
+
         $this->config = [
             PasswordResetController::CFG_PASSWORD_RESET => [
                 PasswordResetController::CFG_PASSWORD_RESET_EXPIRE_TIME => 5400,
@@ -73,8 +79,11 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
             'helpdesk'=> [
                 'name' => 'DVSA Helpdesk',
                 'phoneNumber' => '0330 123 5654'
-            ]
+            ],
+            'router' => $moduleConfig['router'],
         ];
+
+        $serviceManager->setService('config', $this->config);
 
         $this->setController(
             new PasswordResetController(
@@ -87,15 +96,10 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
         );
 
         $this->getController()->setServiceLocator($serviceManager);
-        $serviceManager->setService('config', [
-                'helpdesk'=> [
-                    'name' => 'DVSA Helpdesk',
-                    'phoneNumber' => '0330 123 5654'
-                ]
-            ]
-        );
 
         $this->createHttpRequestForController('Reset');
+
+        $this->urlPlugin = $this->getController()->getPluginManager()->get('url');
 
         parent::setUp();
     }
@@ -161,8 +165,16 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
             );
         }
 
-        if (!empty($expect['url'])) {
-            $this->assertRedirectLocation2($expect['url']);
+        if (!empty($expect['route'])) {
+
+            // This is in preparation of switching from deprecated AccountUrlBuilderWeb to ZF's URL plugin
+            if ($expect['route'] instanceof AccountUrlBuilderWeb) {
+                $url = $expect['route'];
+            } else {
+                $url = $this->urlPlugin->fromRoute($expect['route']['url'], $expect['route']['params']);
+            }
+
+            $this->assertRedirectLocation2($url);
         }
     }
 
@@ -334,10 +346,11 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     ],
                 ],
                 'expect' => [
-                    'url' => AccountUrlBuilderWeb::forgottenPasswordSecurityQuestion(
-                        self::PERSON_ID,
-                        UserAdminSessionManager::FIRST_QUESTION
-                    ),
+                    'route' => [
+                        'url' => 'forgotten-password/security-questions',
+                        'params' => ['personId' => self::PERSON_ID],
+                    ],
+//                    'route' => '/forgotten-password/security-questions/' . self::PERSON_ID,
                 ],
             ],
             // Username: post success but no email
@@ -358,7 +371,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     ],
                 ],
                 'expect'   => [
-                    'url' => AccountUrlBuilderWeb::forgottenPasswordEmailNotFound(),
+                    'route' => AccountUrlBuilderWeb::forgottenPasswordEmailNotFound(),
                 ],
             ],
             // Authenticate: not authenticated
@@ -375,7 +388,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     ],
                 ],
                 'expect' => [
-                    'url' => AccountUrlBuilderWeb::forgottenPasswordNotAuthenticated()
+                    'route' => AccountUrlBuilderWeb::forgottenPasswordNotAuthenticated()
                 ],
             ],
             // Authenticate: get email sent
@@ -399,7 +412,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     ],
                 ],
                 'expect' => [
-                    'url' => AccountUrlBuilderWeb::forgottenPasswordConfirmation()
+                    'route' => AccountUrlBuilderWeb::forgottenPasswordConfirmation()
                 ],
             ],
             // Authenticate: get is authenticated, service return exception
@@ -423,7 +436,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
 
                 ],
                 'expect' => [
-                    'url' => AccountUrlBuilderWeb::forgottenPasswordNotAuthenticated()
+                    'route' => AccountUrlBuilderWeb::forgottenPasswordNotAuthenticated()
                 ],
             ],
             // Authenticate: get is authenticated, service return success
@@ -449,24 +462,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
 
                 ],
                 'expect' => [
-                    'url' => AccountUrlBuilderWeb::forgottenPasswordConfirmation(),
-                ],
-            ],
-            // Confirmation: get not authenticated
-            [
-                'method'   => 'get',
-                'action'   => 'confirmation',
-                'params' => [],
-                'mocks'    => [
-                    [
-                        'class'  => 'mockSessionManager',
-                        'method' => 'isUserAuthenticated',
-                        'params' => [],
-                        'result' => false,
-                    ],
-                ],
-                'expect'   => [
-                    'url' => AccountUrlBuilderWeb::forgottenPasswordNotAuthenticated(),
+                    'route' => AccountUrlBuilderWeb::forgottenPasswordConfirmation(),
                 ],
             ],
             // Confirmation: get is authenticated, service return exception
@@ -474,14 +470,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                 'method'   => 'get',
                 'action'   => 'confirmation',
                 'params' => [],
-                'mocks'    => [
-                    [
-                        'class'  => 'mockSessionManager',
-                        'method' => 'isUserAuthenticated',
-                        'params' => [],
-                        'result' => true,
-                    ],
-                ],
+                'mocks'    => [],
                 'expect'   => [
                     'viewModel' => true,
                 ],
@@ -517,7 +506,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     ],
                 ],
                 'expect'   => [
-                    'url' => AccountUrlBuilderWeb::forgottenPasswordAuthenticated(),
+                    'route' => AccountUrlBuilderWeb::forgottenPasswordAuthenticated(),
                 ],
             ],
             // Email not found
@@ -551,7 +540,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     ],
                 ],
                 'expect'   => [
-                    'url' => AccountUrlBuilderWeb::forgottenPasswordAuthenticated(),
+                    'route' => AccountUrlBuilderWeb::forgottenPasswordAuthenticated(),
                 ],
             ],
             // Change password: token is not here
@@ -710,7 +699,7 @@ class PasswordResetControllerTest extends AbstractFrontendControllerTestCase
                     ],
                 ],
                 'expect' => [
-                    'url' => AccountUrlBuilderWeb::of()->passwordChangedSuccessfullyConfirmation(self::TOKEN),
+                    'route' => AccountUrlBuilderWeb::of()->passwordChangedSuccessfullyConfirmation(self::TOKEN),
                 ],
             ],
         ];

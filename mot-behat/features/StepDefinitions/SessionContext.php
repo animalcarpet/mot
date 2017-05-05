@@ -116,6 +116,15 @@ class SessionContext implements Context
     }
 
     /**
+     * @Given I am registered but not logged in
+     */
+    public function iAmRegisteredButNotLoggedIn()
+    {
+        // createUser does authenticate the user but doesn't set the user's token on the client
+        $this->currentUser = $this->userData->createUser();
+    }
+
+    /**
      * @Given I am logged in as a Tester
      * @Given I am logged in as a Tester at site :name
      */

@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT Common project.
+ *
+ * @link https://github.com/dvsa/mot
+ */
 
 namespace DvsaCommon\UrlBuilder;
 
@@ -13,6 +18,9 @@ class UserAdminUrlBuilder extends AbstractUrlBuilder
     const PERSON_NAME               = 'person/:personId/name';
     const PERSON_ADDRESS            = 'person/:personId/address';
     const PERSON_PHONE              = 'person/:personId/phone-number';
+    const PERSON_FORGOTTEN_PASSWORD = 'person/:personId';
+    const PERSON_GET_SECURITY_QUESTIONS = '/security-questions';
+    const PERSON_VERIFY_SECURITY_ANSWERS = '/verify';
     const SECURITY_QUESTION         = 'security-question';
     const SECURITY_QUESTION_CHECK   = '/check/:questionId/:personId';
     const SECURITY_QUESTION_GET     = '/get/:questionId/:personId';
@@ -22,6 +30,12 @@ class UserAdminUrlBuilder extends AbstractUrlBuilder
             self::SECURITY_QUESTION_CHECK => '',
             self::SECURITY_QUESTION_GET => '',
         ],
+        self::PERSON_FORGOTTEN_PASSWORD => [
+            self::PERSON_GET_SECURITY_QUESTIONS => [
+                self::PERSON_VERIFY_SECURITY_ANSWERS => '',
+            ],
+        ],
+        self::PERSON_VERIFY_SECURITY_ANSWERS => '',
         self::PERSON_CONTACT => '',
         self::LICENCE_DETAILS => '',
         self::PERSON_NAME => '',
@@ -94,6 +108,25 @@ class UserAdminUrlBuilder extends AbstractUrlBuilder
             ->appendRoutesAndParams(self::SECURITY_QUESTION_CHECK)
             ->routeParam('questionId', $questionId)
             ->routeParam('personId', $personId);
+    }
+
+    public static function personForgottenPassword($personId)
+    {
+        return self::of()->appendRoutesAndParams(self::PERSON_FORGOTTEN_PASSWORD)->routeParam('personId', $personId);
+    }
+
+    public static function getSecurityQuestions($personId)
+    {
+        return self::personForgottenPassword($personId)->appendRoutesAndParams(self::PERSON_GET_SECURITY_QUESTIONS);
+    }
+
+    /**
+     * @param integer $personId
+     * @return $this
+     */
+    public static function securityQuestionVerifyAnswers($personId)
+    {
+        return self::getSecurityQuestions($personId)->appendRoutesAndParams(self::PERSON_VERIFY_SECURITY_ANSWERS);
     }
 
 }

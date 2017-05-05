@@ -114,6 +114,20 @@ return [
                         ],
                         'may_terminate' => true
                     ],
+                    'security-questions' => [
+                        'type'          => 'Segment',
+                        'options'       => [
+                            'route'       => '/security-questions/:personId',
+                            'constraints' => [
+                                'personId'       => '[0-9]+',
+                            ],
+                            'defaults' => [
+                                'controller' => SecurityQuestionControllerFactory::class,
+                                'action' => 'getQuestions'
+                            ],
+                        ],
+                        'may_terminate' => true
+                    ],
                     'authenticated' => [
                         'type'    => 'Literal',
                         'options' => [

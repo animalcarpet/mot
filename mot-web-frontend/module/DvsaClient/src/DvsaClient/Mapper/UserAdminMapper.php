@@ -9,6 +9,7 @@ use DvsaCommon\Dto\Person\PersonHelpDeskProfileDto;
 use DvsaCommon\Dto\Person\SearchPersonResultDto;
 use DvsaCommon\Dto\Security\SecurityQuestionDto;
 use DvsaCommon\HttpRestJson\Exception\RestApplicationException;
+use DvsaCommon\UrlBuilder\AccountUrlBuilderWeb;
 use DvsaCommon\UrlBuilder\MessageUrlBuilder;
 use DvsaCommon\UrlBuilder\PersonUrlBuilder;
 use DvsaCommon\UrlBuilder\UserAdminUrlBuilder;
@@ -28,7 +29,7 @@ class UserAdminMapper extends DtoMapper
 
     /**
      * UserAdminMapper constructor.
-     * @param Client             $client
+     * @param Client $client
      */
     public function __construct(
         Client $client
@@ -39,8 +40,8 @@ class UserAdminMapper extends DtoMapper
     }
 
     /**
-     * @param int       $personId
-     * @param int       $questionId
+     * @param int $personId
+     * @param int $questionId
      *
      * @return SecurityQuestionDto
      */
@@ -51,9 +52,18 @@ class UserAdminMapper extends DtoMapper
     }
 
     /**
-     * @param int       $personId
-     * @param int       $questionId
-     * @param string    $answer
+     * @param int $personId
+     * @return mixed
+     */
+    public function getSecurityQuestionsForPerson($personId)
+    {
+        return $this->get(UserAdminUrlBuilder::getSecurityQuestions($personId));
+    }
+
+    /**
+     * @param int $personId
+     * @param int $questionId
+     * @param string $answer
      *
      * @return bool
      */
@@ -64,7 +74,20 @@ class UserAdminMapper extends DtoMapper
     }
 
     /**
-     * @param int    $personId
+     * @param int $personId
+     * @param array $answers
+     * @return array
+     */
+    public function checkSecurityQuestions($personId, array $answers)
+    {
+        return $this->post(
+            UserAdminUrlBuilder::securityQuestionVerifyAnswers($personId),
+            ['questionsAndAnswers' => $answers]
+        );
+    }
+
+    /**
+     * @param int $personId
      * @return PersonHelpDeskProfileDto
      */
     public function getUserProfile($personId)

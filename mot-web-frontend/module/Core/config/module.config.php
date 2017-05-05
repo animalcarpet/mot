@@ -1,8 +1,14 @@
 <?php
+/**
+ * This file is part of the DVSA MOT Frontend project.
+ *
+ * @link http://gitlab.clb.npm/mot/mot
+ */
 
+use Core\Form\View\Helper\MotFormLabel;
+use Core\Form\View\Helper\MotFormRow;
 use Core\View\Helper\Factory\GetReleaseTagFactory;
 use DvsaFeature\Factory\View\Helper\FeatureToggleViewHelperFactory;
-use Core\View\Helper\Factory\MatchCurrentRouteViewHelperFactory;
 
 return [
     'view_manager' => [
@@ -20,7 +26,10 @@ return [
             'getReleaseTag' => GetReleaseTagFactory::class,
             'googleAnalyticsHelper' => \Core\Factory\GoogleAnalyticsHelperFactory::class,
             'featureToggle' => FeatureToggleViewHelperFactory::class,
-            'MatchCurrentRouteViewHelper' => MatchCurrentRouteViewHelperFactory::class,
-        ]
+        ],
+        'invokables'=> [
+            'MotFormRow' => MotFormRow::class,
+            'MotFormLabel' => MotFormLabel::class,
+        ],
     ]
 ];
