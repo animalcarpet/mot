@@ -1,0 +1,37 @@
+
+{%
+include 'partial/forms/validationSummary.twig'
+with {'title' : 'There was a problem','validationMessages' : validationMessages}
+%}
+
+{{ form().openTag(form)|raw }}
+{{ csrfToken() }}
+<fieldset>
+
+    {{ MotFormRow(form.get(
+    constant('DvsaCommon\\InputFilter\\Account\\SecurityQuestionAnswersInputFilter::FIELD_NAME_FIRST_QUESTION_ID'))
+    ) }}
+
+    {{ MotFormRow(form.get(
+    constant('DvsaCommon\\InputFilter\\Account\\SecurityQuestionAnswersInputFilter::FIELD_NAME_FIRST_ANSWER'))
+    ) }}
+
+    {{ MotFormRow(form.get(
+    constant('DvsaCommon\\InputFilter\\Account\\SecurityQuestionAnswersInputFilter::FIELD_NAME_SECOND_QUESTION_ID'))
+    ) }}
+
+    {{ MotFormRow(form.get(
+    constant('DvsaCommon\\InputFilter\\Account\\SecurityQuestionAnswersInputFilter::FIELD_NAME_SECOND_ANSWER'))
+    ) }}
+
+</fieldset>
+<a href="{{ urlForgottenAnswers }}" class="key-value-list__action">Forgotten the answer to your security question?</a>
+<nav class="content-navigation">
+    {{ MotFormRow(form.get('submitSecurityAnswers')) }}
+    <ul class="content-navigation__secondary">
+        <li><br>
+            <a href="{{ urlBack|raw }}">Back</a>
+        </li>
+    </ul>
+</nav>
+{{ form().closeTag()|raw }}

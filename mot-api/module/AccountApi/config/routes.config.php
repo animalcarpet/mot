@@ -1,15 +1,24 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link https://github.com/dvsa/mot
+ */
 
 use AccountApi\Controller\ClaimController;
-use AccountApi\Factory\Controller\PasswordResetControllerFactory;
+use AccountApi\Controller\SecurityQuestionController;
 use AccountApi\Factory\Controller\PasswordChangeControllerFactory;
+use AccountApi\Factory\Controller\PasswordResetControllerFactory;
 use AccountApi\Factory\Controller\PasswordUpdateControllerFactory;
 use AccountApi\Factory\Controller\ValidateUsernameControllerFactory;
-use AccountApi\Factory\Controller\SecurityQuestionControllerFactory;
+use Zend\Http\Request;
+use Zend\Mvc\Router\Http\Literal;
+use Zend\Mvc\Router\Http\Method;
+use Zend\Mvc\Router\Http\Segment;
 
 return [
     'AccountApi' => [
-        'type' => 'Literal',
+        'type' => Literal::class,
         'options' => [
             'route' => '/account',
             'defaults' => [
@@ -19,9 +28,9 @@ return [
         'may_terminate' => true,
         'child_routes' => [
             'password-change' => [
-                'type'    => 'Segment',
+                'type' => Segment::class,
                 'options' => [
-                    'route'    => '/password-change',
+                    'route' => '/password-change',
                     'defaults' => [
                         '__NAMESPACE__' => 'AccountApi\Factory\Controller',
                         'controller' => PasswordChangeControllerFactory::class,
@@ -30,9 +39,9 @@ return [
                 'may_terminate' => true,
             ],
             'password-update' => [
-                'type'    => 'Segment',
+                'type' => Segment::class,
                 'options' => [
-                    'route'    => '/password-update/:id',
+                    'route' => '/password-update/:id',
                     'defaults' => [
                         '__NAMESPACE__' => 'AccountApi\Factory\Controller',
                         'controller' => PasswordUpdateControllerFactory::class,
@@ -41,7 +50,7 @@ return [
                 'may_terminate' => true,
             ],
             'default' => [
-                'type' => 'Segment',
+                'type' => Segment::class,
                 'options' => [
                     'route' => '/claim[/:id]',
                     'constraints' => [
@@ -55,9 +64,9 @@ return [
         ]
     ],
     'send-reset-password' => [
-        'type'    => 'Literal',
+        'type' => Literal::class,
         'options' => [
-            'route'    => '/reset-password',
+            'route' => '/reset-password',
             'defaults' => [
                 'controller' => PasswordResetControllerFactory::class,
             ],
@@ -65,18 +74,18 @@ return [
         'may_terminate' => true,
         'child_routes' => [
             'validate-token' => [
-                'type'    => 'Segment',
+                'type' => Segment::class,
                 'options' => [
-                    'route'    => '/:token',
+                    'route' => '/:token',
                     'defaults' => [
                         'controller' => PasswordResetControllerFactory::class,
                     ],
                 ],
             ],
             'validate-username' => [
-                'type'    => 'Segment',
+                'type' => Segment::class,
                 'options' => [
-                    'route'    => '/validate-username[/:login]',
+                    'route' => '/validate-username[/:login]',
                     'defaults' => [
                         'controller' => ValidateUsernameControllerFactory::class,
                     ],
@@ -85,53 +94,105 @@ return [
         ],
     ],
     'security-question' => [
-        'type'          => 'Segment',
-        'options'       => [
-            'route'    => '/security-question',
+        'type' => Segment::class,
+        'options' => [
+            'route' => '/security-question',
             'defaults' => [
-                'controller' => SecurityQuestionControllerFactory::class,
+                'controller' => SecurityQuestionController::class,
             ],
         ],
         'may_terminate' => true,
-        'child_routes'  => [
+        'child_routes' => [
             'update' => [
-                'type'    => 'Segment',
+                'type' => Segment::class,
                 'options' => [
-                    'route'    => '/:id',
+                    'route' => '/:id',
                     'constraints' => [
                         'uid' => '[0-9]+',
                     ],
                     'verb' => 'put',
                     'defaults' => [
-                        'controller' => SecurityQuestionControllerFactory::class,
+                        'controller' => SecurityQuestionController::class,
                     ],
                 ],
             ],
             'check' => [
-                'type'    => 'Segment',
+                'type' => Segment::class,
                 'options' => [
-                    'route'    => '/check/:qid/:uid',
+                    'route' => '/check/:qid/:uid',
                     'constraints' => [
                         'qid' => '[0-9]+',
                         'uid' => '[0-9]+',
                     ],
                     'defaults' => [
-                        'controller' => SecurityQuestionControllerFactory::class,
-                        'action'     => 'verifyAnswer'
+                        'controller' => SecurityQuestionController::class,
+                        'action' => 'verifyAnswer'
                     ],
                 ],
             ],
             'get' => [
-                'type'    => 'Segment',
+                'type' => Segment::class,
                 'options' => [
-                    'route'    => '/get/:qid/:uid',
+                    'route' => '/get/:qid/:uid',
                     'constraints' => [
                         'qid' => '[0-9]+',
                         'uid' => '[0-9]+',
                     ],
                     'defaults' => [
-                        'controller' => SecurityQuestionControllerFactory::class,
-                        'action'     => 'getQuestionForPerson'
+                        'controller' => SecurityQuestionController::class,
+                        'action' => 'getQuestionForPerson'
+                    ],
+                ],
+            ],
+        ],
+    ],
+    'person-security-questions' => [
+        'type' => Segment::class,
+        'options' => [
+            'route' => '/person/:personId',
+            'constraints' => [
+                'personId' => '[0-9]+',
+            ],
+        ],
+        'may_terminate' => false,
+        'child_routes' => [
+            'get-person-questions' => [
+                'type' => Method::class,
+                'options' => [
+                    'verb' => Request::METHOD_GET,
+                ],
+                'may_terminate' => false,
+                'child_routes' => [
+                    'get-person-questions' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/security-questions',
+                            'defaults' => [
+                                'controller' => SecurityQuestionController::class,
+                                'action' => 'getQuestionsForPerson'
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                ],
+            ],
+            'post-person-answers' => [
+                'type' => Method::class,
+                'options' => [
+                    'verb' => Request::METHOD_POST,
+                ],
+                'may_terminate' => false,
+                'child_routes' => [
+                    'verify-answers' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/security-questions/verify',
+                            'defaults' => [
+                                'controller' => SecurityQuestionController::class,
+                                'action' => 'verifyAnswers'
+                            ],
+                        ],
+                        'may_terminate' => true,
                     ],
                 ],
             ],

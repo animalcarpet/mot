@@ -45,9 +45,11 @@ class UserAdminSessionManagerTest extends AbstractFrontendControllerTestCase
 
         $this->assertEquals(1, $this->session->getElementOfUserAdminSession('user'));
         $this->assertEquals(false, $this->session->getElementOfUserAdminSession('question1-success'));
-        $this->assertEquals(3, $this->session->getElementOfUserAdminSession('question1-attempt'));
+        $this->assertEquals(UserAdminSessionManager::MAX_NUMBER_ATTEMPT,
+            $this->session->getElementOfUserAdminSession('question1-attempt'));
         $this->assertEquals(false, $this->session->getElementOfUserAdminSession('question2-success'));
-        $this->assertEquals(3, $this->session->getElementOfUserAdminSession('question2-attempt'));
+        $this->assertEquals(UserAdminSessionManager::MAX_NUMBER_ATTEMPT,
+            $this->session->getElementOfUserAdminSession('question2-attempt'));
         $this->assertEquals(true, $this->session->checkElementOfUserAdminSession('user'));
 
         $this->session->updateUserAdminSession('question1-attempt', 2);
@@ -55,6 +57,17 @@ class UserAdminSessionManagerTest extends AbstractFrontendControllerTestCase
 
         $this->session->deleteUserAdminSession();
         $this->assertEquals(false, $this->session->checkElementOfUserAdminSession('user'));
+    }
+
+    public function testCreateForgottenPasswordSession()
+    {
+        $this->session->createForgottenPasswordSession(self::PERSON_ID);
+
+        $remainingAttempts = $this->session->checkElementOfUserAdminSession(
+            UserAdminSessionManager::FORGOTTEN_PASSWORD_REMAINING_ATTEMPTS_KEY
+        );
+
+        $this->assertEquals(UserAdminSessionManager::MAX_NUMBER_ATTEMPT, $remainingAttempts);
     }
 
     /**

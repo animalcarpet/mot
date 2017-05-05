@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the DVSA MOT API project.
+ *
+ * @link http://gitlab.clb.npm/mot/mot
+ */
 
 namespace AccountApiTest\Service;
 
@@ -31,21 +36,28 @@ use PHPUnit_Framework_MockObject_MockObject as MockObj;
  */
 class SecurityQuestionServiceTest extends AbstractServiceTestCase
 {
-    const USER_ID = 9999;
+    const PERSON_ID = 9999;
     const QUESTION_ID = 8888;
+    const QUESTION_ID_FOR_NON_EXISTING_ANSWER = 8686;
+    const ANSWER = 'Pointless Answer';
 
     /** @var ServiceManager */
     protected $serviceManager;
 
     protected $mockEntityManager;
+
     /** @var   SecurityQuestionRepository|MockObj */
     protected $mockSqRepo;
+
     /** @var  ParamObfuscator|MockObj */
     private $mockParamObfuscator;
+
     /** @var PersonSecurityAnswerRecorder */
     private $personSecurityAnswerRecorder;
+
     /** @var PersonSecurityAnswerValidator */
     private $mockPersonSecurityAnswerValidator;
+
     /** @var PersonRepository */
     private $mockPersonRepo;
 
@@ -60,7 +72,7 @@ class SecurityQuestionServiceTest extends AbstractServiceTestCase
         //  --  mock repo   --
         $this->mockSqRepo = XMock::of(
             SecurityQuestionRepository::class,
-            ['isAnswerCorrect', 'find', 'findAll', 'findQuestionByQuestionNumber']
+            ['isAnswerCorrect', 'find', 'findAll', 'findQuestionByQuestionNumber', 'findQuestionsByPersonId']
         );
         $this->serviceManager->setService(SecurityQuestionRepository::class, $this->mockSqRepo);
 
@@ -80,8 +92,21 @@ class SecurityQuestionServiceTest extends AbstractServiceTestCase
         // -- PersonSecurityAnswerRecorder --
         $this->personSecurityAnswerRecorder = new PersonSecurityAnswerRecorder($this->mockSqRepo, new SecurityAnswerHashFunction());
 
+        $mockPersonSecurityAnswer = XMock::of(PersonSecurityAnswer::class);
+        $mockPersonSecurityAnswer->expects($this->any())
+            ->method('getAnswer')
+            ->willReturn((new SecurityAnswerHashFunction())->hash(self::ANSWER));
+
         // -- mock person security answer repo
         $mockPersonSecurityAnswerRepo = XMock::of(PersonSecurityAnswerRepository::class);
+        $mockPersonSecurityAnswerRepo->expects($this->any())
+            ->method('getPersonAnswerForQuestion')
+            ->willReturnMap(
+                [
+                    [self::PERSON_ID, self::QUESTION_ID, $mockPersonSecurityAnswer],
+                    [self::PERSON_ID, self::QUESTION_ID_FOR_NON_EXISTING_ANSWER, null],
+                ]
+            );
 
         // -- mock person security answer validator
         $this->mockPersonSecurityAnswerValidator = XMock::of(PersonSecurityAnswerValidator::class);
@@ -99,56 +124,10 @@ class SecurityQuestionServiceTest extends AbstractServiceTestCase
             $mockPersonSecurityAnswerRepo,
             $this->mockPersonSecurityAnswerValidator,
             $this->mockParamObfuscator,
-            $this->mockEntityManager
+            $this->mockEntityManager,
+            new SecurityAnswerHashFunction(),
+            1
         );
-    }
-
-    /**
-    * @expectedException \Exception
-    */
-    public function testThrowsExceptionWhenQuestionIdIsNonInteger()
-    {
-        $this->service->isAnswerCorrect([], 1, '');
-    }
-
-    /**
-    * @expectedException \Exception
-    */
-    public function testThrowsExceptionWhenUserIdIsNonInteger()
-    {
-        $this->service->isAnswerCorrect(1, [], '');
-    }
-
-    /**
-    * @expectedException \Exception
-    */
-    public function testThrowsExceptionWhenAnswerIsNonString()
-    {
-        $this->service->isAnswerCorrect(42, 1, []);
-    }
-
-    /**
-     * @dataProvider dataProviderTestCorrectlyHandlesFailedQuestionByReturning
-     */
-    public function testCorrectlyHandlesFailedQuestionByReturningFalse($result, $expect)
-    {
-        $answer = 'pointless answer';
-
-        $this->mockMethod(
-            $this->mockSqRepo, 'isAnswerCorrect', $this->once(), $result, [self::QUESTION_ID, self::USER_ID, $answer]
-        );
-
-        $actual = $this->service->isAnswerCorrect(self::QUESTION_ID, self::USER_ID, $answer);
-
-        $this->assertEquals($expect, $actual);
-    }
-
-    public function dataProviderTestCorrectlyHandlesFailedQuestionByReturning()
-    {
-        return [
-            [true, true],
-            [false, false],
-        ];
     }
 
     public function testFindAll()
@@ -234,14 +213,210 @@ class SecurityQuestionServiceTest extends AbstractServiceTestCase
         $this->assertSecurityAnswerMatchesExpected($answers[1], $securityQuestion, 'answer to question 2');
     }
 
+    /**
+     * @param $personId
+     * @param \Exception $expectedException
+     * @dataProvider questionsForPersonArgumentAssertionDataProvider
+     */
+    public function testGetQuestionsForPersonArgumentAssertion($personId, $expectedException)
+    {
+        $this->setExpectedException(
+            get_class($expectedException),
+            $expectedException->getMessage()
+        );
+
+        $this->service->getQuestionsForPerson($personId);
+    }
+
+    /**
+     * @return array
+     */
+    public function questionsForPersonArgumentAssertionDataProvider()
+    {
+        $dataSet = [];
+        foreach ($this->getUnexpectedPersonIds() as $personId) {
+
+            $expectedException = new \InvalidArgumentException(
+                sprintf(SecurityQuestionService::ERR_TYPE_PERSON_ID, var_export($personId, true))
+            );
+
+            $dataSet[] = [
+                'personId' => $personId,
+                'expectedException' => $expectedException,
+            ];
+        }
+
+        return $dataSet;
+    }
+
+    public function testGetQuestionsForPersonReturnType()
+    {
+        $securityQuestions = [
+            new SecurityQuestion(),
+            new SecurityQuestion(),
+        ];
+
+        $this->mockSqRepo
+            ->expects($this->once())
+            ->method('findQuestionsByPersonId')
+            ->willReturn($securityQuestions);
+
+        $this->assertContainsOnlyInstancesOf(
+            SecurityQuestionDto::class,
+            $this->service->getQuestionsForPerson(self::PERSON_ID)
+        );
+    }
+
+    /**
+     * @param $personId
+     * @param $questionsAndAnswers
+     * @param \Exception $expectedException
+     * @dataProvider verifySecurityAnswersForPersonDataProvider
+     */
+    public function testVerifySecurityAnswersForPerson($personId, $questionsAndAnswers, $expectedException)
+    {
+        $this->setExpectedException(
+            get_class($expectedException),
+            $expectedException->getMessage()
+        );
+
+        $this->service->verifySecurityAnswersForPerson($personId, $questionsAndAnswers);
+    }
+
+    public function verifySecurityAnswersForPersonDataProvider()
+    {
+        $dataSet = [];
+        foreach ($this->getUnexpectedPersonIds() as $personId) {
+
+            $expectedException = new \InvalidArgumentException(
+                sprintf(SecurityQuestionService::ERR_TYPE_PERSON_ID, var_export($personId, true))
+            );
+
+            $dataSet[] = [
+                'personId' => $personId,
+                'questionsAndAnswers' => [],
+                'expectedException' => $expectedException,
+            ];
+        }
+
+        $unexpectedQuestionsAndAnswersType = $this->getUnexpectedPersonIds();
+
+        $unexpectedQuestionsAndAnswersType[] = [1 => 0];
+        $unexpectedQuestionsAndAnswersType[] = [1 => 1];
+        $unexpectedQuestionsAndAnswersType[] = [1 => null];
+        $unexpectedQuestionsAndAnswersType[] = [1 => true];
+        $unexpectedQuestionsAndAnswersType[] = [1 => false];
+        $unexpectedQuestionsAndAnswersType[] = [1 => []];
+        $unexpectedQuestionsAndAnswersType[] = [0 => 'Acceptable answer'];
+        $unexpectedQuestionsAndAnswersType[] = [null => 'Acceptable answer'];
+        $unexpectedQuestionsAndAnswersType[] = ['string' => 'Acceptable answer'];
+
+        foreach ($unexpectedQuestionsAndAnswersType as $questionsAndAnswers) {
+
+            $expectedException = new \InvalidArgumentException(
+                sprintf(SecurityQuestionService::ERR_MSG_INVALID_ARGUMENT, var_export($questionsAndAnswers, true))
+            );
+
+            $dataSet[] = [
+                'personId' => 105,
+                'questionsAndAnswers' => $questionsAndAnswers,
+                'expectedException' => $expectedException,
+            ];
+        }
+
+        return $dataSet;
+    }
+
+    public function testVerifySecurityAnswersForPersonReturnType()
+    {
+        $map = [
+            self::QUESTION_ID => true,
+            self::QUESTION_ID_FOR_NON_EXISTING_ANSWER => false,
+            self::QUESTION_ID => true,
+        ];
+
+        $acceptableQuestionsAndAnswers = [
+            self::QUESTION_ID => self::ANSWER,
+            self::QUESTION_ID_FOR_NON_EXISTING_ANSWER => 'Answer to question with id 20 assume incorrect',
+            self::QUESTION_ID => self::ANSWER,
+        ];
+
+        $this->assertEquals(
+            $map,
+            $this->service->verifySecurityAnswersForPerson(self::PERSON_ID, $acceptableQuestionsAndAnswers)
+        );
+    }
+
+    private function getUnexpectedPersonIds()
+    {
+        return [-1, null, true, false, '', ' ', 'a', '.'];
+    }
+
     private function assertSecurityAnswerMatchesExpected(
         PersonSecurityAnswer $actualAnswer,
         SecurityQuestion $expectedQuestion,
         $expectedAnswer
-    ) {
+    )
+    {
         $hashFunction = new SecurityAnswerHashFunction();
 
         $this->assertEquals($expectedQuestion, $actualAnswer->getSecurityQuestion());
         $this->assertTrue($hashFunction->verify($expectedAnswer, $actualAnswer->getAnswer()));
+    }
+
+    /**
+     * @param array $questionsAndAnswers
+     * @param integer $expectedDelay
+     * @param string $testSubjectType
+     * @dataProvider testDelayDatProvider
+     */
+    public function testDelay(array $questionsAndAnswers, $expectedDelay, $testSubjectType)
+    {
+        $delayAcceptableMargin = 0.5;
+
+        $start = microtime(true);
+
+        $this->service->verifySecurityAnswersForPerson(self::PERSON_ID, $questionsAndAnswers);
+
+        $respondTime = round(microtime(true) - $start);
+
+        $expectedLowerBound = $expectedDelay - $delayAcceptableMargin;
+        $expectedHigherBound = $expectedDelay + $delayAcceptableMargin;
+
+        $this->assertTrue(
+            $respondTime < $expectedHigherBound &&
+            $respondTime > $expectedLowerBound,
+            sprintf(
+                'Failed to assert calling the verification method with %s caused a delay about %s seconds, ' .
+                'instead we measured a %s second delay',
+                $testSubjectType,
+                $expectedDelay,
+                $respondTime
+            )
+        );
+    }
+
+    public function testDelayDatProvider()
+    {
+        return [
+            [
+                'correctAnswers' => [
+                    self::QUESTION_ID => self::ANSWER,
+                    self::QUESTION_ID => self::ANSWER,
+                    self::QUESTION_ID => self::ANSWER,
+                ],
+                'expectedDelay' => 0,
+                'test subject' => 'correct answers',
+            ],
+            [
+                'incorrectAnswers' => [
+                    self::QUESTION_ID => self::ANSWER,
+                    self::QUESTION_ID_FOR_NON_EXISTING_ANSWER => self::ANSWER,
+                    self::QUESTION_ID => self::ANSWER,
+                ],
+                'expectedDelay' => 1,
+                'test subject' => 'incorrect answers',
+            ]
+        ];
     }
 }

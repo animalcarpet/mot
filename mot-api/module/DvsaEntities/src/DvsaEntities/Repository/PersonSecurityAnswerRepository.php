@@ -1,15 +1,18 @@
 <?php
+
 namespace DvsaEntities\Repository;
+
+use DvsaEntities\Entity\PersonSecurityAnswer;
 
 class PersonSecurityAnswerRepository extends AbstractMutableRepository
 {
     /**
-     * @return PersonSecurityAnswer[]
+     * @param integer $personId
+     * @param integer $questionId
+     * @return null|PersonSecurityAnswer
      */
-    public function findAll()
+    public function getPersonAnswerForQuestion($personId, $questionId)
     {
-        $questions = parent::findAll();
-
-        return $questions;
+        return $this->findOneBy(['person' => $personId, 'securityQuestion' => $questionId]);
     }
 }

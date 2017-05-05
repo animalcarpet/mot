@@ -48,6 +48,11 @@ class SecurityAnswerHashFunction implements HashFunctionInterface
         return strtoupper($answer);
     }
 
+    /**
+     * @param string $secret
+     * @param string $hash
+     * @return bool
+     */
     public function verify($secret, $hash)
     {
         $canonicalized = $this->canonicalizeAnswer($secret);

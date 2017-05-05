@@ -1,15 +1,27 @@
 <?php
+/**
+ * This file is part of the DVSA MOT Frontend project.
+ *
+ * @link https://github.com/dvsa/mot
+ */
 
 namespace Account\Service;
 
-use DvsaClient\MapperFactory;
+use Account\Exception\LimitReachedException;
+use Account\Validator\ClaimValidator;
+use DvsaClient\Entity\Person;
+use DvsaClient\Mapper\AccountMapper;
+use DvsaClient\Mapper\PersonMapper;
+use DvsaClient\Mapper\UserAdminMapper;
+use DvsaCommon\Dto\Account\MessageDto;
+use DvsaCommon\Dto\Contact\ContactDto;
+use DvsaCommon\Dto\Contact\EmailDto;
 use DvsaCommon\Dto\Security\SecurityQuestionDto;
+use DvsaCommon\InputFilter\Account\SecurityQuestionAnswersInputFilter;
 use UserAdmin\Service\UserAdminSessionManager;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\View\Model\ViewModel;
-use DvsaClient\Entity\Person;
-use Account\Validator\ClaimValidator;
 
 /**
  * Class SecurityQuestionService.
@@ -21,40 +33,267 @@ class SecurityQuestionService
 
     const NO_VALUE_ENTER = 'You must enter an answer';
 
-    /** @var MapperFactory $mapper */
-    private $mapper;
+    const EXCEPTION_RESET_PASS = 'Failed to extract "%s" from the API response';
+
+    private $personMapper;
+
+    /** @var AccountMapper */
+    private $accountMapper;
+
+    /** @var UserAdminMapper */
+    private $userAdminMapper;
+
     /** @var UserAdminSessionManager $sessionManager */
     private $session;
+
     /** @var SecurityQuestionDto */
     private $question;
+
     /** @var Person */
     private $person;
-    private $userId;
+
+    private $personId;
+
     private $questionNumber;
 
+    private $incorrectAnswerQuestionIds;
+
     /**
-     * @param MapperFactory           $mapper
+     * @var boolean
+     */
+    private $verified;
+
+    /**
+     * SecurityQuestionService constructor.
+     * @param PersonMapper $personMapper
+     * @param UserAdminMapper $userAdminMapper
+     * @param AccountMapper $accountMapper
      * @param UserAdminSessionManager $session
      */
     public function __construct(
-        MapperFactory $mapper,
+        PersonMapper $personMapper,
+        UserAdminMapper $userAdminMapper,
+        AccountMapper $accountMapper,
         UserAdminSessionManager $session
-    ) {
-        $this->mapper = $mapper;
+    )
+    {
+        $this->personMapper = $personMapper;
+        $this->userAdminMapper = $userAdminMapper;
+        $this->accountMapper = $accountMapper;
         $this->session = $session;
+
+        $this->incorrectAnswerQuestionIds = [];
     }
 
     /**
-     * @param int $userId
+     * @param int $personId
+     * @param array $answers
+     * @return bool
+     */
+    public function areBothAnswersCorrectForPerson($personId, array $answers)
+    {
+        $this->initialiseRemainingAttemptsSession($personId);
+
+        if ($this->hasRemainingAttempts()) {
+            $answerResponse = $this->userAdminMapper->checkSecurityQuestions($personId, $answers);
+            $areBothAnswersCorrect = $this->mapAnswerResponse($answerResponse);
+
+            if (!$areBothAnswersCorrect) {
+                $this->decrementRemainingAttempts();
+            }
+        } else {
+            $areBothAnswersCorrect = false;
+        }
+
+        return $areBothAnswersCorrect;
+    }
+
+    /**
+     * @param integer $personId
+     * @param array $questionsAndAnswersMap
+     * @return array
+     * @throws \Exception
+     */
+    public function verifyAnswers($personId, array $questionsAndAnswersMap)
+    {
+        $this->initialiseRemainingAttemptsSession($personId);
+
+        if (!$this->hasRemainingAttempts()) {
+            throw new LimitReachedException();
+        }
+
+        $response = $this->userAdminMapper->checkSecurityQuestions($personId, $questionsAndAnswersMap);
+
+        $this->verified = array_product($response);
+
+        $this->decrementRemainingAttempts();
+
+        return $this->mapVerificationResponse($response);
+    }
+
+    /**
+     * @param integer $personId
+     * @return string the person email address in event of successful API call
+     * @throws \RuntimeException
+     */
+    public function resetPersonPassword($personId)
+    {
+        /** @var MessageDto $response */
+        $response = $this->accountMapper->resetPassword($personId);
+
+        if (!$response instanceof MessageDto || !$response->hasPerson()) {
+            throw new \RuntimeException(
+                'Can\'t confirm if the reset password email has been sent. ' .
+                sprintf(self::EXCEPTION_RESET_PASS, MessageDto::class)
+            );
+        }
+
+        if ($contactDetails = $response->getPerson()->getContactDetails()) {
+
+            $contactDetail = reset($contactDetails);
+
+            if (!$contactDetail instanceof ContactDto) {
+                throw new \RuntimeException(sprintf(self::EXCEPTION_RESET_PASS, ContactDto::class));
+            }
+
+            if ($emails = $contactDetail->getEmails()) {
+
+                $email = reset($emails);
+
+                if (!$email instanceof EmailDto) {
+                    throw new \RuntimeException(sprintf(self::EXCEPTION_RESET_PASS, EmailDto::class));
+                }
+
+                return $email->getEmail();
+            }
+        }
+
+        throw new \RuntimeException('Failed to retrieve email address');
+    }
+
+    /**
+     * @param array $response
+     * @return array
+     */
+    private function mapVerificationResponse($response)
+    {
+        return array_filter(
+            array_map(
+                function ($verified) {
+                    if (!$verified) {
+                        return SecurityQuestionAnswersInputFilter::MSG_FAILED_VERIFICATION;
+                    }
+                }, $response),
+            function ($element) {
+                return (!empty($element));
+            }
+        );
+    }
+
+    /**
+     * @return boolean
+     * @throws \RuntimeException
+     */
+    public function isVerified()
+    {
+        if (is_null($this->verified)) {
+            throw new \RuntimeException('Answers are not verified yet');
+        }
+
+        return $this->verified;
+    }
+
+    /**
+     * @param array $answerResponse
+     * @return bool
+     */
+    private function mapAnswerResponse(array $answerResponse)
+    {
+        $areBothAnswersCorrect = true;
+        $incorrectAnswerQuestionIds = [];
+
+        foreach ($answerResponse as $questionId => $isAnswerCorrect) {
+            if (!$isAnswerCorrect) {
+                $areBothAnswersCorrect = false;
+                $incorrectAnswerQuestionIds[] = $questionId;
+            }
+        }
+        $this->incorrectAnswerQuestionIds = $incorrectAnswerQuestionIds;
+
+        return $areBothAnswersCorrect;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getRemainingAttempts()
+    {
+        $remainingAttempts = $this->session->getElementOfUserAdminSession(
+            UserAdminSessionManager::FORGOTTEN_PASSWORD_REMAINING_ATTEMPTS_KEY
+        );
+
+        if ($remainingAttempts === null) {
+            return UserAdminSessionManager::MAX_NUMBER_ATTEMPT;
+        }
+
+        return $remainingAttempts;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasRemainingAttempts()
+    {
+        return $this->getRemainingAttempts() > 0;
+    }
+
+    /**
+     * @param $personId
+     */
+    private function initialiseRemainingAttemptsSession($personId)
+    {
+        if ($this->session->getElementOfUserAdminSession(UserAdminSessionManager::USER_KEY) != $personId) {
+            $this->session->createForgottenPasswordSession($personId);
+        }
+    }
+
+    /**
+     */
+    private function decrementRemainingAttempts()
+    {
+        $this->session->updateUserAdminSession(
+            UserAdminSessionManager::FORGOTTEN_PASSWORD_REMAINING_ATTEMPTS_KEY,
+            $this->getRemainingAttempts() - 1
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function getIncorrectAnswerQuestionIds()
+    {
+        return $this->incorrectAnswerQuestionIds;
+    }
+
+    /**
+     * @param $personId
+     * @return SecurityQuestionDto[]
+     */
+    public function getQuestionsForPerson($personId)
+    {
+        return $this->userAdminMapper->getSecurityQuestionsForPerson($personId);
+    }
+
+    /**
+     * @param int $personId
      * @param int $questionNumber
      *
      * @return $this
      */
-    public function setUserAndQuestion($userId, $questionNumber)
+    public function setUserAndQuestion($personId, $questionNumber)
     {
-        $this->userId = $userId;
-        $this->questionNumber = (int) $questionNumber;
-
+        $this->personId = $personId;
+        $this->questionNumber = (int)$questionNumber;
         return $this;
     }
 
@@ -66,7 +305,7 @@ class SecurityQuestionService
     public function initializeSession($searchParams)
     {
         if ($this->isBeginningOfTheJourney()) {
-            $this->session->createUserAdminSession($this->userId, $searchParams);
+            $this->session->createUserAdminSession($this->personId, $searchParams);
         }
     }
 
@@ -82,7 +321,7 @@ class SecurityQuestionService
         );
 
         return
-            ($this->session->getElementOfUserAdminSession(UserAdminSessionManager::USER_KEY) != $this->userId)
+            ($this->session->getElementOfUserAdminSession(UserAdminSessionManager::USER_KEY) != $this->personId)
             || (
                 $this->questionNumber === UserAdminSessionManager::FIRST_QUESTION
                 && $countAttempts === UserAdminSessionManager::MAX_NUMBER_ATTEMPT
@@ -123,7 +362,7 @@ class SecurityQuestionService
      */
     public function isUserAuthenticated()
     {
-        return $this->session->isUserAuthenticated($this->userId);
+        return $this->session->isUserAuthenticated($this->personId);
     }
 
     /**
@@ -148,7 +387,7 @@ class SecurityQuestionService
     public function getPerson()
     {
         if ($this->person == null) {
-            $this->person = $this->mapper->Person->getById($this->userId);
+            $this->person = $this->personMapper->getById($this->personId);
         }
 
         return $this->person;
@@ -164,7 +403,7 @@ class SecurityQuestionService
     public function getQuestion()
     {
         if ($this->question == null) {
-            $this->question = $this->mapper->UserAdmin->getSecurityQuestion($this->questionNumber - 1, $this->userId);
+            $this->question = $this->userAdminMapper->getSecurityQuestion($this->questionNumber - 1, $this->personId);
         }
 
         return $this->question;
@@ -181,9 +420,9 @@ class SecurityQuestionService
      */
     public function validateQuestion($answer)
     {
-        $result = $this->mapper->UserAdmin->checkSecurityQuestion(
+        $result = $this->userAdminMapper->checkSecurityQuestion(
             $this->getQuestion()->getId(),
-            $this->userId,
+            $this->personId,
             ['answer' => $answer]
         );
 
@@ -332,7 +571,7 @@ class SecurityQuestionService
      */
     public function getUserId()
     {
-        return $this->userId;
+        return $this->personId;
     }
 
     /**

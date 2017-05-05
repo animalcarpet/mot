@@ -21,3 +21,14 @@ Feature: user changes their security questions
     Examples:
       | firstAnswer     | secondAnswer           |
       | spot            | 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890  |
+
+  Scenario: Answer security questions correctly
+    Given I am registered but not logged in
+    When I correctly answer my security questions
+    Then my security questions are verified
+
+  Scenario: Answer security questions incorrectly
+    Given I am registered but not logged in
+    When I incorrectly answer my security questions
+    Then my security questions are not verified
+

@@ -1,0 +1,32 @@
+{#
+    validationMessage must be compatible with the ZF form validation message data structure i.e.
+    $validationMessages = [
+        'field_identifier' => [
+            'attached' => 'this message will be prepended by the printable field identifier and a dash',
+        ],
+        [
+            'detachied' => 'this message will be delivered withough a field name indicator',
+        ]
+    ];
+#}
+{% if validationMessages is defined and validationMessages is not empty %}
+<div class="validation-summary">
+
+    {% if title is defined and title is not empty %}
+    <h2 class="heading-medium">{{ title }}</h2>
+    {% endif %}
+
+    <ol>
+        {% for fieldName, messages in validationMessages %}
+            {% for validator, message in messages %}
+                <li>
+                    {% if not(fieldName matches '/^\\d+$/') %}
+                        {{ fieldName|replace({'_': ' '})|capitalize }} -
+                    {% endif %}
+                    {{ message }}
+                </li>
+            {% endfor %}
+        {% endfor %}
+    </ol>
+</div>
+{% endif %}

@@ -690,13 +690,4 @@ abstract class AbstractFrontendControllerTestCase extends PHPUnit_Framework_Test
             true
         );
     }
-
-    protected function mockUrlPlugin()
-    {
-        $mockUrlPlugin = $this->getMockBuilder(\Zend\Mvc\Controller\Plugin\Url::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->getController()->getPluginManager()->setService('url', $mockUrlPlugin);
-    }
 }
