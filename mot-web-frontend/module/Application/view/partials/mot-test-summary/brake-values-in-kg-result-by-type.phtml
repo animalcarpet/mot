@@ -6,14 +6,17 @@ if (!$brakeResult) {
     return;
 }
 
-if($this->dataKey === 'serviceBrake1') {
+if ($this->dataKey === 'serviceBrake1') {
     $brakeData = $brakeResult->getServiceBrake1Data() !== null ? new \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultServiceBrakeData($brakeResult->getServiceBrake1Data()) : null;
-} elseif($this->dataKey === 'serviceBrake2' && $brakeResult->getServiceBrake2Data() !== null) {
+
+} elseif ($this->dataKey === 'serviceBrake2') {
     $brakeData = $brakeResult->getServiceBrake2Data() !== null ? new \Dvsa\Mot\ApiClient\Resource\Item\BrakeTestResultServiceBrakeData($brakeResult->getServiceBrake2Data()) : null;
 }
 
-if (!$brakeData) {
-    return;
+if ($this->dataKey !== 'parkingBrake') {
+    if (!$brakeData) {
+        return;
+    }
 }
 
 //  --  define type of brakes (service or parking)     --
@@ -34,8 +37,7 @@ $canLock = ($brakeTestType == \DvsaCommon\Enum\BrakeTestTypeCode::ROLLER);
 
 //  --
 $body = [];
-$isCol2 = false;
-
+$isColumnTwoShown = false;
 
 //  --  define data of single wheel --
 $isSingleInFront = $brakeResult->getSingleInFront() ? false : $brakeResult->getSingleInFront();
@@ -100,19 +102,21 @@ for ($i = 1; $i <= 3; $i++) {
         }
     }
     if($i === 3){
-        $effortNearsideAxle = $brakeData->getEffortNearsideAxel3();
-        $effortOffsideAxle = $brakeData->getEffortOffsideAxel3();
+        if($this->dataKey !== 'parkingBrake') {
+            $effortNearsideAxle = $brakeData->getEffortNearsideAxel3();
+            $effortOffsideAxle = $brakeData->getEffortOffsideAxel3();
 
-        $lockNearsideAxle = $brakeData->getLockNearsideAxle3();
-        $lockOffsideAxle = $brakeData->getLockOffsideAxle3();
-        $imbalanceAxle = $brakeData->getImbalanceAxle3();
+            $lockNearsideAxle = $brakeData->getLockNearsideAxle3();
+            $lockOffsideAxle = $brakeData->getLockOffsideAxle3();
+            $imbalanceAxle = $brakeData->getImbalanceAxle3();
+        }
     }
 
     if (!$effortNearsideAxle) {
         continue;
     }
 
-    $isCol2 = $isCol2 || isset($val2);
+    $isColumnTwoShown = $isColumnTwoShown || isset($effortOffsideAxle);
 
     $body[] = $this->partial(
         'partials/mot-test-summary/brake-values-in-kg-result-by-type-row',
@@ -154,7 +158,7 @@ if (!$isSingleInFront  && $rowSingle) {
                             <?php echo ($canLock ? 'Lock' : ''); ?>
                         </th>
 
-                        <?php if ($isCol2) : ?>
+                        <?php if ($isColumnTwoShown) : ?>
                             <th style="width:20%;">&nbsp;</th>
                             <th style="width:10%;">&nbsp;</th>
                             <th style="width:10%;" scope="col">
