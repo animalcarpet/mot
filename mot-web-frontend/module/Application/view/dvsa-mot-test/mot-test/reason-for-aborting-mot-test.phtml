@@ -28,14 +28,12 @@ $testerName = $tester->getDisplayName();
 $testStatusName = MotTestController::getTestStatusName($testStatus);
 
 $testType = $motTest->getTestTypeCode();
-$title = 'Abort' . MotTestController::getTestName($testType);
+
+$title = 'Abort ' . MotTestController::getTestName($testType);
 $this->headTitle($title);
 
-$title = 'Vehicle Testing Station';
-$this->headTitle($title);
-
-$this->layout()->setVariable('pageSubTitle', $title);
-$this->layout()->setVariable('pageTitle', 'MOT Test');
+$this->layout()->setVariable('pageSubTitle', 'Vehicle Testing Station');
+$this->layout()->setVariable('pageTitle', 'Abort MOT test');
 
 ?>
 <form action="<?php echo $this->url('mot-test/reason-for-aborting', ['motTestNumber' => $motTestNumber]); ?>" method="POST">
@@ -71,7 +69,7 @@ $this->layout()->setVariable('pageTitle', 'MOT Test');
 
         <div class="col-sm-6 col-sm-pull-6">
             <fieldset>
-                <legend>Abort MOT Test</legend>
+                <legend class="hidden">Abort MOT test</legend>
                 <div class="form-group">
                     <fieldset class="label-reg">
                         <legend class="form-label">Reason for aborting</legend>
@@ -102,7 +100,7 @@ $this->layout()->setVariable('pageTitle', 'MOT Test');
     </div>
 
     <nav class="module-content-navigation">
-        <input type="submit" id="sln-action-abort" value="Abort MOT Test" class="button-warning"/>
+        <input type="submit" id="sln-action-abort" value="Abort MOT test" class="button-warning"/>
         <ul class="content-navigation_secondary">
             <li>
                 <a id="sln-action-return" href="<?php echo $this->url('mot-test/short-summary', ['motTestNumber' => $motTestNumber]) ?>">Back</a>
