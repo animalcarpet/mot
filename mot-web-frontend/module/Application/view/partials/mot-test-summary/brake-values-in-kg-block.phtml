@@ -48,14 +48,15 @@ $parkingBrakeTestType = null;
 
 if (in_array($vehicleClass, [VehicleClassCode::CLASS_1, VehicleClassCode::CLASS_2])) {
     $brakeTestType = 'Brake test type';
-    $serviceBrakeTestType = $brakeResult->getBrakeTestTypeCode();
+    $serviceBrakeTestType = $brakeTestTypeCode2Name[$brakeResult->getBrakeTestTypeCode()];
 
     $vehicleClassGroup = VEHICLE_CLASS_GROUP_12;
 
 } elseif (in_array($vehicleClass, $vehicleClasses3plus)) {
     $brakeTestType = 'Service brake test type';
-    $serviceBrakeTestType = $brakeResult->getServiceBrake1TestType();
-    $parkingBrakeTestType = $brakeResult->getParkingBrakeTestType();
+
+    $serviceBrakeTestType = $brakeTestTypeCode2Name[$brakeResult->getServiceBrake1TestType()];
+    $parkingBrakeTestType = $brakeTestTypeCode2Name[$brakeResult->getParkingBrakeTestType()];
     $vehicleClassGroup = VEHICLE_CLASS_GROUP_3PLUS;
 }
 
