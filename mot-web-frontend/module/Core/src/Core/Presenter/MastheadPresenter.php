@@ -11,7 +11,7 @@ class MastheadPresenter
      * URL for Feedback
      * @var string
      */
-    const FEEDBACK_URL = 'http://www.smartsurvey.co.uk/s/MOTFeedback/';
+    const FEEDBACK_URL = 'http://www.smartsurvey.co.uk/s/MTSFeedback/';
 
     /**
      * @return string

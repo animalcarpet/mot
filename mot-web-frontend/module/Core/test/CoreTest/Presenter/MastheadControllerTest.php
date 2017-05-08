@@ -8,7 +8,7 @@ class MastheadPresenterTest extends \PHPUnit_Framework_TestCase
 {
     protected $presenter;
 
-    protected $expectedUrl = 'http://www.smartsurvey.co.uk/s/MOTFeedback/';
+    protected $expectedUrl = 'http://www.smartsurvey.co.uk/s/MTSFeedback/';
 
     protected function setUp()
     {
